@@ -2353,6 +2353,7 @@ async function loadUserData() {
     isDataLoading = false;
     return;
   }
+  if (isDataLoading) return;
   const cleanEmail = (currentUser.email || '').toLowerCase().trim();
   const userKey = 'nexus_data_' + cleanEmail;
   
@@ -5954,48 +5955,64 @@ async function addAttachment(filesToProcess = null){
     return;
   }
 
-  let addedCount = 0;
-  showToast('Processando anexo(s)...');
+  isDataLoading = true;
 
-  for (const file of files) {
-    try {
-      let dataUrl = null;
-      if (file.type && file.type.startsWith('image/')) {
-        dataUrl = await compressImageIfNeeded(file);
-      }
-      if (!dataUrl) {
-        dataUrl = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = () => resolve(null);
-          reader.readAsDataURL(file);
-        });
-      }
+  try {
+    let addedCount = 0;
+    showToast('Processando anexo(s)...');
 
-      if (dataUrl) {
-        attachments.push({
-          id: nextAttId++,
-          txId: txId,
-          name: file.name,
-          type: file.type || 'application/octet-stream',
-          dataUrl: dataUrl,
-          createdAt: new Date().toISOString()
-        });
-        addedCount++;
+    for (const file of files) {
+      try {
+        let dataUrl = null;
+        if (file.type && file.type.startsWith('image/')) {
+          dataUrl = await compressImageIfNeeded(file);
+        }
+        if (!dataUrl) {
+          dataUrl = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(file);
+          });
+        }
+
+        if (dataUrl) {
+          attachments.push({
+            id: nextAttId++,
+            txId: txId,
+            name: file.name,
+            type: file.type || 'application/octet-stream',
+            dataUrl: dataUrl,
+            createdAt: new Date().toISOString()
+          });
+          addedCount++;
+        }
+      } catch(e) {
+        console.error('Erro ao processar anexo:', e);
       }
-    } catch(e) {
-      console.error('Erro ao processar anexo:', e);
     }
-  }
 
-  if (fileInput) fileInput.value = '';
+    if (fileInput) fileInput.value = '';
 
-  if (addedCount > 0) {
-    render();
-    showToast(addedCount + ' anexo(s) incluído(s) com sucesso!');
-    await saveUserData();
-  } else {
-    showToast('Erro ao ler os arquivos selecionados');
+    if (addedCount > 0) {
+      if (currentUser) {
+        const cleanEmail = (currentUser.email || '').toLowerCase().trim();
+        const userKey = 'nexus_data_' + cleanEmail;
+        const payloadData = {
+          categories, accounts, transactions, budgets, goals, recurringList, alerts, attachments, notifications,
+          nextAccId, nextTxId, nextBudgetId, nextGoalId, nextRecId, nextAlertId, nextAttId, nextNotifId
+        };
+        saveToStorage(userKey, payloadData);
+      }
+
+      render();
+      showToast(addedCount + ' anexo(s) incluído(s) com sucesso!');
+      await saveUserData();
+    } else {
+      showToast('Erro ao ler os arquivos selecionados');
+    }
+  } finally {
+    isDataLoading = false;
   }
 }
 
