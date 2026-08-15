@@ -4134,6 +4134,97 @@ function pageImportar(){
   </div>\`;
 }
 
+function getAttachmentCoverHtml(a, t){
+  const isImage = (a.type && a.type.startsWith('image/')) || (a.dataUrl && a.dataUrl.startsWith('data:image/'));
+  if (isImage && a.dataUrl) {
+    return \`<img src="\${a.dataUrl}" style="width:100%; height:140px; object-fit:cover; border-radius:12px; border:1px solid var(--card-border); transition:transform 0.2s ease;">\`;
+  }
+
+  const nameSearch = ((a.name || '') + ' ' + (t ? t.desc : '')).toLowerCase();
+  let bName = 'Fatura / Comprovante';
+  let bBg = 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)';
+  let bColor = '#38bdf8';
+  let logoContent = '<div style="font-size:26px;">📄</div>';
+
+  if (nameSearch.includes('tim')) {
+    bName = 'TIM GSM';
+    bBg = 'linear-gradient(135deg, #002b66 0%, #004691 100%)';
+    bColor = '#ffffff';
+    logoContent = '<div style="font-size:20px; font-weight:900; letter-spacing:2px; color:#ffffff; background:#0056b3; padding:4px 16px; border-radius:6px; font-family:sans-serif; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.2);">TIM</div>';
+  } else if (nameSearch.includes('claro')) {
+    bName = 'Claro';
+    bBg = 'linear-gradient(135deg, #881337 0%, #e11d48 100%)';
+    bColor = '#ffffff';
+    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#be123c; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">claro_</div>';
+  } else if (nameSearch.includes('vivo')) {
+    bName = 'Vivo';
+    bBg = 'linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%)';
+    bColor = '#ffffff';
+    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#6d28d9; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">vivo</div>';
+  } else if (nameSearch.includes('nu') || nameSearch.includes('nubank')) {
+    bName = 'Nubank';
+    bBg = 'linear-gradient(135deg, #4c057a 0%, #820ad1 100%)';
+    bColor = '#ffffff';
+    logoContent = '<div style="font-size:20px; font-weight:900; color:#ffffff; background:#820ad1; padding:4px 16px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">Nu</div>';
+  } else if (nameSearch.includes('inter')) {
+    bName = 'Banco Inter';
+    bBg = 'linear-gradient(135deg, #9a3412 0%, #ea580c 100%)';
+    bColor = '#ffffff';
+    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#ea580c; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">inter</div>';
+  } else if (nameSearch.includes('itau') || nameSearch.includes('itaú')) {
+    bName = 'Itaú';
+    bBg = 'linear-gradient(135deg, #7c2d12 0%, #c2410c 100%)';
+    bColor = '#ffffff';
+    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#ec5c00; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">Itaú</div>';
+  } else if (nameSearch.includes('bradesco')) {
+    bName = 'Bradesco';
+    bBg = 'linear-gradient(135deg, #881337 0%, #cc092f 100%)';
+    bColor = '#ffffff';
+    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#cc092f; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">Bradesco</div>';
+  } else if (nameSearch.includes('santander')) {
+    bName = 'Santander';
+    bBg = 'linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)';
+    bColor = '#ffffff';
+    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#ec0000; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">Santander</div>';
+  } else if (nameSearch.includes('bb') || nameSearch.includes('banco do brasil')) {
+    bName = 'Banco do Brasil';
+    bBg = 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)';
+    bColor = '#facc15';
+    logoContent = '<div style="font-size:18px; font-weight:900; color:#facc15; background:#1e3a8a; padding:4px 14px; border-radius:6px; border:1px solid #facc15; box-shadow:0 2px 8px rgba(0,0,0,0.3);">BB</div>';
+  } else if (nameSearch.includes('caixa') || nameSearch.includes('cef')) {
+    bName = 'CAIXA';
+    bBg = 'linear-gradient(135deg, #075985 0%, #0284c7 100%)';
+    bColor = '#ffffff';
+    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#005ca9; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">CAIXA</div>';
+  } else if (nameSearch.includes('enel') || nameSearch.includes('cemig') || nameSearch.includes('copel') || nameSearch.includes('cpfl') || nameSearch.includes('light') || nameSearch.includes('luz') || nameSearch.includes('energia')) {
+    bName = 'Energia Elétrica';
+    bBg = 'linear-gradient(135deg, #713f12 0%, #ca8a04 100%)';
+    bColor = '#fef08a';
+    logoContent = '<div style="font-size:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));">⚡</div>';
+  } else if (nameSearch.includes('sabesp') || nameSearch.includes('sanepar') || nameSearch.includes('copasa') || nameSearch.includes('agua') || nameSearch.includes('água')) {
+    bName = 'Água / Saneamento';
+    bBg = 'linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%)';
+    bColor = '#bae6fd';
+    logoContent = '<div style="font-size:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));">💧</div>';
+  } else if (nameSearch.includes('internet') || nameSearch.includes('fibra') || nameSearch.includes('wifi')) {
+    bName = 'Internet / Fibra';
+    bBg = 'linear-gradient(135deg, #164e63 0%, #0891b2 100%)';
+    bColor = '#cffaff';
+    logoContent = '<div style="font-size:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));">🌐</div>';
+  }
+
+  return \`
+  <div style="width:100%; height:140px; background:\${bBg}; border-radius:12px; border:1px solid rgba(255,255,255,0.15); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:12px; position:relative; overflow:hidden; box-shadow:inset 0 1px 1px rgba(255,255,255,0.25), 0 4px 12px rgba(0,0,0,0.25);">
+    <div style="position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.45); backdrop-filter:blur(4px); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700; color:#fff; display:flex; align-items:center; gap:4px; border:1px solid rgba(255,255,255,0.15);">
+      📄 PDF
+    </div>
+    \${logoContent}
+    <div style="font-size:12.5px; font-weight:800; color:\${bColor}; text-align:center; text-shadow:0 1px 3px rgba(0,0,0,0.7); max-width:92%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:0.3px;">
+      \${bName}
+    </div>
+  </div>\`;
+}
+
 function pageAnexos(){
   const sortedTx = transactions.slice().sort((a,b)=>b.date.localeCompare(a.date));
   return \`
@@ -4201,13 +4292,7 @@ function pageAnexos(){
           </div>
 
           <div style="cursor:pointer; text-align:center; margin-bottom:12px;" data-previewatt="\${a.id}" title="Clique para Visualizar">
-            \${isImage && a.dataUrl ? \`
-              <img src="\${a.dataUrl}" style="width:100%; height:140px; object-fit:cover; border-radius:12px; border:1px solid var(--card-border); transition:transform 0.2s ease;">
-            \` : \`
-              <div style="width:100%; height:120px; background:var(--hover); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:42px; color:var(--green);">
-                \${isPdf ? '📄' : '📎'}
-              </div>
-            \`}
+            \${getAttachmentCoverHtml(a, t)}
           </div>
 
           <h4 style="font-size:15px; font-weight:700; margin-bottom:8px; word-break:break-word; color:var(--text); line-height:1.3;">\${a.name}</h4>
