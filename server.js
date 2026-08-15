@@ -4146,92 +4146,91 @@ function pageAnexos(){
 
   <div class="panel" style="margin-bottom:22px;">
     <div style="margin-bottom:14px;">
-      <h3 style="font-size:15px; font-weight:700; display:flex; align-items:center; gap:8px; margin:0;">
+      <h3 style="font-size:18px; font-weight:800; display:flex; align-items:center; gap:8px; margin:0;">
         <span>📎</span> Cadastrar / Incluir Novos Anexos
       </h3>
-      <p style="font-size:12px; color:var(--text-faint); margin-top:3px;">
+      <p style="font-size:13.5px; color:var(--text-faint); margin-top:4px;">
         Selecione os arquivos ou insira arrastando. O anexo será processado automaticamente para visualização.
       </p>
     </div>
 
-    <div id="attDropZone" style="border: 2px dashed var(--card-border); border-radius: 12px; padding: 20px 16px; text-align: center; cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.2s ease; margin-bottom: 16px;">
-      <span style="font-size: 28px; display: block; margin-bottom: 6px;">📂</span>
-      <p style="margin:0; font-weight:700; font-size:13.5px; color:var(--text);">Arraste seus arquivos para cá ou <span style="color:var(--green); text-decoration:underline;">clique para selecionar</span></p>
-      <p style="margin-top:4px; font-size:11.5px; color:var(--text-faint); margin-bottom:0;">Suporta imagens (PNG, JPG, WebP), recibos em PDF e documentos</p>
+    <div id="attDropZone" style="border: 2px dashed var(--card-border); border-radius: 14px; padding: 24px 18px; text-align: center; cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.2s ease; margin-bottom: 20px;">
+      <span style="font-size: 32px; display: block; margin-bottom: 8px;">📂</span>
+      <p style="margin:0; font-weight:700; font-size:15px; color:var(--text);">Arraste seus arquivos para cá ou <span style="color:var(--green); text-decoration:underline;">clique para selecionar</span></p>
+      <p style="margin-top:6px; font-size:12.5px; color:var(--text-faint); margin-bottom:0;">Suporta imagens (PNG, JPG, WebP), recibos em PDF e documentos</p>
     </div>
 
-    <div class="field-row" style="align-items:flex-end; flex-wrap:wrap; gap:12px;">
+    <div class="field-row" style="align-items:flex-end; flex-wrap:wrap; gap:16px;">
       <div class="field" style="flex:1.5; min-width:240px; margin-bottom:0;">
-        <label>Transação Vinculada</label>
-        <select id="attTx" style="width:100%;">
+        <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block;">Transação Vinculada</label>
+        <select id="attTx" style="width:100%; font-size:14px; padding:10px 14px; height:44px; border-radius:8px;">
           <option value="0">Nenhuma (Anexo Avulso / Recibo Padrão)</option>
-          \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})</option>\`).join('')}
+          \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})\</option>\`).join('')}
         </select>
       </div>
       <div class="field" style="flex:1; min-width:200px; margin-bottom:0;">
-        <label>Arquivo(s)</label>
-        <input type="file" id="attFile" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="width:100%; cursor:pointer;">
+        <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block;">Arquivo(s)</label>
+        <input type="file" id="attFile" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="width:100%; cursor:pointer; font-size:13.5px; padding:8px 12px; height:44px; border-radius:8px;">
       </div>
       <div class="field" style="flex:0 0 auto; margin-bottom:0;">
-        <button class="btn-primary" id="btnAddAnexo" type="button" style="padding:10px 20px; font-weight:700; cursor:pointer;">+ Incluir Anexo(s)</button>
+        <button class="btn-primary" id="btnAddAnexo" type="button" style="padding:12px 24px; font-size:14.5px; font-weight:700; cursor:pointer; height:44px; display:inline-flex; align-items:center; gap:6px;">+ Incluir Anexo(s)</button>
       </div>
     </div>
   </div>
 
-  <div style="margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
-    <h3 style="font-size:15px; font-weight:700;">Anexos Cadastrados (\${attachments.length})</h3>
+  <div style="margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+    <h3 style="font-size:17px; font-weight:800;">Anexos Cadastrados (\${attachments.length})</h3>
   </div>
 
-  <div class="cat-cards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px;">
+  <div class="cat-cards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(290px, 1fr)); gap:20px;">
     \${attachments.length? attachments.map(a=>{
       const t = transactions.find(x=>x.id===a.txId);
       const isImage = (a.type && a.type.startsWith('image/')) || (a.dataUrl && a.dataUrl.startsWith('data:image/'));
       const isPdf = (a.type && a.type.includes('pdf')) || (a.dataUrl && a.dataUrl.startsWith('data:application/pdf')) || (a.name && a.name.toLowerCase().endsWith('.pdf'));
 
       return \`
-      <div class="cat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:14px; border-radius:14px; border:1px solid var(--card-border); background:var(--card);">
+      <div class="cat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:18px; border-radius:16px; border:1px solid var(--card-border); background:var(--card); box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
         <div>
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-            <span class="pill" style="background:rgba(232,176,75,0.15); color:var(--green); font-weight:700; font-size:11px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+            <span class="pill" style="background:rgba(232,176,75,0.18); color:var(--green); font-weight:700; font-size:12.5px; padding:5px 12px; border-radius:20px;">
               \${isPdf ? '📄 PDF' : isImage ? '🖼️ Imagem' : '📎 Documento'}
             </span>
             <div class="row-actions">
-              <button data-delatt="\${a.id}" title="Excluir Anexo">🗑</button>
+              <button data-delatt="\${a.id}" title="Excluir Anexo" style="padding:6px 10px; font-size:15px; border-radius:8px; background:rgba(239, 68, 68, 0.15); color:#ef4444; border:none; cursor:pointer;">🗑 Excluir</button>
             </div>
           </div>
 
-          <div style="cursor:pointer; text-align:center; margin-bottom:10px;" data-previewatt="\${a.id}" title="Clique para Visualizar">
+          <div style="cursor:pointer; text-align:center; margin-bottom:12px;" data-previewatt="\${a.id}" title="Clique para Visualizar">
             \${isImage && a.dataUrl ? \`
-              <img src="\${a.dataUrl}" style="width:100%; height:110px; object-fit:cover; border-radius:10px; border:1px solid var(--card-border);">
+              <img src="\${a.dataUrl}" style="width:100%; height:140px; object-fit:cover; border-radius:12px; border:1px solid var(--card-border); transition:transform 0.2s ease;">
             \` : \`
-              <div style="width:100%; height:90px; background:var(--hover); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:34px; color:var(--green);">
+              <div style="width:100%; height:120px; background:var(--hover); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:42px; color:var(--green);">
                 \${isPdf ? '📄' : '📎'}
               </div>
             \`}
           </div>
 
-          <h4 style="font-size:13px; font-weight:700; margin-bottom:4px; word-break:break-word; color:var(--text);">\${a.name}</h4>
+          <h4 style="font-size:15px; font-weight:700; margin-bottom:8px; word-break:break-word; color:var(--text); line-height:1.3;">\${a.name}</h4>
           
-          <!-- Dropdown para alterar/vincular transação ("para não vincular nada errado") -->
-          <div style="margin-top:10px;">
-            <label style="display:block; font-size:10.5px; color:var(--text-faint); margin-bottom:3px; font-weight:600;">Transação Vinculada:</label>
-            <select data-relinkatt="\${a.id}" style="width:100%; font-size:11.5px; padding:5px 8px; border-radius:6px; background:var(--bg); border:1px solid var(--card-border); color:var(--text);">
+          <div style="margin-top:12px;">
+            <label style="display:block; font-size:12.5px; color:var(--text-faint); margin-bottom:5px; font-weight:700;">Transação Vinculada:</label>
+            <select data-relinkatt="\${a.id}" style="width:100%; font-size:13px; padding:8px 12px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600; min-height:38px;">
               <option value="0" \${!a.txId ? 'selected' : ''}>Sem vincular (Anexo Avulso)</option>
               \${sortedTx.map(tx => \`<option value="\${tx.id}" \${tx.id === a.txId ? 'selected' : ''}>\${formatDateBR(tx.date)} — \${tx.desc}</option>\`).join('')}
             </select>
           </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:8px; margin-top:14px; padding-top:10px; border-top:1px solid var(--card-border);">
+        <div style="display:flex; align-items:center; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--card-border);">
           \${a.dataUrl ? \`
-            <a href="\${a.dataUrl}" download="\${a.name || 'comprovante'}" class="btn-primary" style="flex:1; padding:6px 10px; font-size:11.5px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:4px;" title="Baixar Arquivo">
+            <a href="\${a.dataUrl}" download="\${a.name || 'comprovante'}" class="btn-primary" style="flex:1.2; padding:10px 14px; font-size:13.5px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; border-radius:8px; min-height:42px;" title="Baixar Arquivo">
               📥 Baixar
             </a>
-            <button data-previewatt="\${a.id}" class="btn-ghost" style="padding:6px 12px; font-size:11.5px; font-weight:600;" title="Visualizar">
+            <button data-previewatt="\${a.id}" class="btn-ghost" style="flex:1; padding:10px 14px; font-size:13.5px; font-weight:700; border-radius:8px; min-height:42px; background:rgba(255,255,255,0.08); border:1px solid var(--card-border); color:var(--text); display:inline-flex; align-items:center; justify-content:center; gap:6px;" title="Visualizar">
               👁️ Ver
             </button>
           \` : \`
-            <span style="font-size:11px; color:var(--text-faint);">Sem arquivo salvo</span>
+            <span style="font-size:12px; color:var(--text-faint);">Sem arquivo salvo</span>
           \`}
         </div>
       </div>
@@ -5876,26 +5875,26 @@ function previewAttachment(id){
 
   let contentHtml = '';
   if (isImage) {
-    contentHtml = '<div style="text-align:center; max-height:75vh; overflow:auto;"><img src="' + att.dataUrl + '" style="max-width:100%; max-height:70vh; object-fit:contain; border-radius:10px; display:block; margin:0 auto; box-shadow:0 8px 24px rgba(0,0,0,0.3);"></div>';
+    contentHtml = '<div style="text-align:center; max-height:78vh; overflow:auto; padding:10px;"><img src="' + att.dataUrl + '" style="max-width:100%; max-height:72vh; object-fit:contain; border-radius:12px; display:block; margin:0 auto; box-shadow:0 8px 28px rgba(0,0,0,0.4);"></div>';
   } else if (isPdf) {
-    contentHtml = '<iframe src="' + att.dataUrl + '" style="width:100%; height:75vh; border:none; border-radius:10px;"></iframe>';
+    contentHtml = '<iframe src="' + att.dataUrl + '" style="width:100%; height:78vh; border:none; border-radius:12px;"></iframe>';
   } else {
-    contentHtml = '<div style="text-align:center; padding:40px 20px;"><div style="font-size:48px; margin-bottom:12px;">📄</div><h4>' + att.name + '</h4><p style="color:var(--text-dim); margin-top:8px;">Arquivo disponível para visualização e download</p><a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="display:inline-flex; align-items:center; gap:6px; margin-top:16px; text-decoration:none; padding:8px 18px;">📥 Baixar Arquivo Agora</a></div>';
+    contentHtml = '<div style="text-align:center; padding:50px 24px;"><div style="font-size:56px; margin-bottom:14px;">📄</div><h4 style="font-size:18px; font-weight:700;">' + att.name + '</h4><p style="color:var(--text-dim); margin-top:8px; font-size:14px;">Arquivo disponível para visualização e download</p><a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="display:inline-flex; align-items:center; gap:8px; margin-top:20px; text-decoration:none; padding:12px 24px; font-size:15px; font-weight:700; border-radius:10px;">📥 Baixar Arquivo Agora</a></div>';
   }
 
   const modalOverlay = document.createElement('div');
   modalOverlay.className = 'overlay show';
   modalOverlay.style.zIndex = '3000';
-  modalOverlay.innerHTML = '<div class="modal" style="max-width:850px; width:92vw;">' +
-    '<button class="close-x btn-close-modal">✕</button>' +
-    '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--card-border);">' +
-      '<h3 style="font-size:15px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;"><span>📎</span> ' + (att.name || 'Anexo') + '</h3>' +
-      '<div style="display:flex; gap:8px; align-items:center;">' +
-        '<a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="padding:6px 14px; font-size:12px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">📥 Baixar</a>' +
-        '<button class="btn-ghost btn-close-modal" style="padding:6px 14px; font-size:12px; font-weight:600;">Fechar</button>' +
+  modalOverlay.innerHTML = '<div class="modal" style="max-width:920px; width:94vw; padding:20px; border-radius:16px;">' +
+    '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--card-border);">' +
+      '<h3 style="font-size:18px; font-weight:800; margin:0; display:flex; align-items:center; gap:10px; color:var(--text); word-break:break-word;"><span>📎</span> ' + (att.name || 'Anexo') + '</h3>' +
+      '<div style="display:flex; gap:10px; align-items:center;">' +
+        '<a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="padding:10px 20px; font-size:14px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px; border-radius:8px; height:40px;">📥 Baixar</a>' +
+        '<button class="btn-ghost btn-close-modal" style="padding:10px 20px; font-size:14px; font-weight:700; border-radius:8px; height:40px; background:rgba(255,255,255,0.08); border:1px solid var(--card-border); color:var(--text); cursor:pointer;">Fechar</button>' +
+        '<button class="close-x btn-close-modal" style="font-size:20px; font-weight:700; width:38px; height:38px; border-radius:50%; border:none; cursor:pointer; background:rgba(255,255,255,0.1); color:var(--text); display:inline-flex; align-items:center; justify-content:center;">✕</button>' +
       '</div>' +
     '</div>' +
-    '<div style="background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--card-border);">' + contentHtml + '</div>' +
+    '<div style="background:var(--bg); padding:16px; border-radius:14px; border:1px solid var(--card-border);">' + contentHtml + '</div>' +
   '</div>';
   modalOverlay.querySelectorAll('.btn-close-modal').forEach(btn => {
     btn.onclick = () => modalOverlay.remove();
