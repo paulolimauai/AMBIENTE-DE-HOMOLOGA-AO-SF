@@ -4150,8 +4150,14 @@ function pageAnexos(){
         <span>📎</span> Cadastrar / Incluir Novos Anexos
       </h3>
       <p style="font-size:12px; color:var(--text-faint); margin-top:3px;">
-        Selecione a transação vinculada e escolha um ou mais arquivos (imagens, recibos ou PDFs).
+        Selecione os arquivos ou insira arrastando. O anexo será processado automaticamente para visualização.
       </p>
+    </div>
+
+    <div id="attDropZone" style="border: 2px dashed var(--card-border); border-radius: 12px; padding: 20px 16px; text-align: center; cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.2s ease; margin-bottom: 16px;">
+      <span style="font-size: 28px; display: block; margin-bottom: 6px;">📂</span>
+      <p style="margin:0; font-weight:700; font-size:13.5px; color:var(--text);">Arraste seus arquivos para cá ou <span style="color:var(--green); text-decoration:underline;">clique para selecionar</span></p>
+      <p style="margin-top:4px; font-size:11.5px; color:var(--text-faint); margin-bottom:0;">Suporta imagens (PNG, JPG, WebP), recibos em PDF e documentos</p>
     </div>
 
     <div class="field-row" style="align-items:flex-end; flex-wrap:wrap; gap:12px;">
@@ -4159,15 +4165,15 @@ function pageAnexos(){
         <label>Transação Vinculada</label>
         <select id="attTx" style="width:100%;">
           <option value="0">Nenhuma (Anexo Avulso / Recibo Padrão)</option>
-          \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})</option>\`).join('')}
+          \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})\</option>\`).join('')}
         </select>
       </div>
       <div class="field" style="flex:1; min-width:200px; margin-bottom:0;">
         <label>Arquivo(s)</label>
-        <input type="file" id="attFile" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="width:100%;">
+        <input type="file" id="attFile" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="width:100%; cursor:pointer;">
       </div>
       <div class="field" style="flex:0 0 auto; margin-bottom:0;">
-        <button class="btn-primary" id="btnAddAnexo" style="padding:10px 20px; font-weight:700;">+ Incluir Anexo(s)</button>
+        <button class="btn-primary" id="btnAddAnexo" type="button" style="padding:10px 20px; font-weight:700; cursor:pointer;">+ Incluir Anexo(s)</button>
       </div>
     </div>
   </div>
@@ -5797,12 +5803,16 @@ async function compressImageIfNeeded(file) {
   });
 }
 
-async function addAttachment(){
+async function addAttachment(filesToProcess = null){
   const attTxEl = document.getElementById('attTx');
   const txId = attTxEl ? (parseInt(attTxEl.value) || null) : null;
   const fileInput = document.getElementById('attFile');
-  const files = Array.from(fileInput ? fileInput.files : []);
-  if(files.length === 0){ showToast('Selecione ao menos um arquivo'); return; }
+  const files = filesToProcess || Array.from(fileInput ? fileInput.files : []);
+  
+  if(files.length === 0){
+    if(fileInput) fileInput.click();
+    return;
+  }
 
   let addedCount = 0;
   showToast('Processando anexo(s)...');
@@ -5838,9 +5848,11 @@ async function addAttachment(){
     }
   }
 
+  if (fileInput) fileInput.value = '';
+
   if (addedCount > 0) {
     await saveUserData();
-    showToast(\`\${addedCount} anexo(s) incluído(s) com sucesso!\`);
+    showToast(addedCount + ' anexo(s) incluído(s) com sucesso!');
     render();
   } else {
     showToast('Erro ao ler os arquivos selecionados');
@@ -5864,32 +5876,27 @@ function previewAttachment(id){
 
   let contentHtml = '';
   if (isImage) {
-    contentHtml = \`<img src="\${att.dataUrl}" style="max-width:100%; max-height:75vh; object-fit:contain; border-radius:10px; display:block; margin:0 auto;">\`;
+    contentHtml = '<div style="text-align:center; max-height:75vh; overflow:auto;"><img src="' + att.dataUrl + '" style="max-width:100%; max-height:70vh; object-fit:contain; border-radius:10px; display:block; margin:0 auto; box-shadow:0 8px 24px rgba(0,0,0,0.3);"></div>';
   } else if (isPdf) {
-    contentHtml = \`<iframe src="\${att.dataUrl}" style="width:100%; height:75vh; border:none; border-radius:10px;"></iframe>\`;
+    contentHtml = '<iframe src="' + att.dataUrl + '" style="width:100%; height:75vh; border:none; border-radius:10px;"></iframe>';
   } else {
-    contentHtml = \`<div style="text-align:center; padding:40px 20px;"><div style="font-size:48px; margin-bottom:12px;">📄</div><h4>\${att.name}</h4><p style="color:var(--text-dim); margin-top:8px;">Arquivo disponível para download</p><a href="\${att.dataUrl}" download="\${att.name}" class="btn-primary" style="display:inline-flex; align-items:center; gap:6px; margin-top:16px; text-decoration:none; padding:8px 18px;">📥 Baixar Arquivo Agora</a></div>\`;
+    contentHtml = '<div style="text-align:center; padding:40px 20px;"><div style="font-size:48px; margin-bottom:12px;">📄</div><h4>' + att.name + '</h4><p style="color:var(--text-dim); margin-top:8px;">Arquivo disponível para visualização e download</p><a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="display:inline-flex; align-items:center; gap:6px; margin-top:16px; text-decoration:none; padding:8px 18px;">📥 Baixar Arquivo Agora</a></div>';
   }
 
   const modalOverlay = document.createElement('div');
   modalOverlay.className = 'overlay show';
   modalOverlay.style.zIndex = '3000';
-  modalOverlay.innerHTML = \`
-    <div class="modal" style="max-width:850px; width:92vw;">
-      <button class="close-x" onclick="this.closest('.overlay').remove()">✕</button>
-      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--card-border);">
-        <h3 style="font-size:15px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;">
-          <span>📎</span> \${att.name}
-        </h3>
-        <a href="\${att.dataUrl}" download="\${att.name || 'comprovante'}" class="btn-primary" style="padding:6px 14px; font-size:12px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-          📥 Baixar Arquivo
-        </a>
-      </div>
-      <div style="background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--card-border);">
-        \${contentHtml}
-      </div>
-    </div>
-  \`;
+  modalOverlay.innerHTML = '<div class="modal" style="max-width:850px; width:92vw;">' +
+    '<button class="close-x" onclick="this.closest(\'.overlay\').remove()">✕</button>' +
+    '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--card-border);">' +
+      '<h3 style="font-size:15px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;"><span>📎</span> ' + (att.name || 'Anexo') + '</h3>' +
+      '<div style="display:flex; gap:8px; align-items:center;">' +
+        '<a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="padding:6px 14px; font-size:12px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">📥 Baixar</a>' +
+        '<button class="btn-ghost" onclick="this.closest(\'.overlay\').remove()" style="padding:6px 14px; font-size:12px; font-weight:600;">Fechar</button>' +
+      '</div>' +
+    '</div>' +
+    '<div style="background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--card-border);">' + contentHtml + '</div>' +
+  '</div>';
   document.body.appendChild(modalOverlay);
 }
 
@@ -5959,7 +5966,34 @@ function attachPageEvents(){
 
   const importFile = document.getElementById('importFile'); if(importFile) importFile.onchange = handleImportFile;
 
-  const addAtt = document.getElementById('btnAddAnexo'); if(addAtt) addAtt.onclick = addAttachment;
+  const addAtt = document.getElementById('btnAddAnexo');
+  if(addAtt) addAtt.onclick = () => addAttachment();
+
+  const attFile = document.getElementById('attFile');
+  if(attFile) {
+    attFile.onchange = () => {
+      if(attFile.files && attFile.files.length > 0) {
+        addAttachment();
+      }
+    };
+  }
+
+  const dropZone = document.getElementById('attDropZone');
+  if(dropZone) {
+    dropZone.onclick = (e) => {
+      if(e.target !== attFile && attFile) attFile.click();
+    };
+    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--green)'; };
+    dropZone.ondragleave = (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--card-border)'; };
+    dropZone.ondrop = (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--card-border)';
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        addAttachment(Array.from(e.dataTransfer.files));
+      }
+    };
+  }
+
   document.querySelectorAll('[data-delatt]').forEach(el=>el.onclick = ()=>deleteAttachment(parseInt(el.getAttribute('data-delatt'))));
   document.querySelectorAll('[data-relinkatt]').forEach(el=>el.onchange = (e)=>relinkAttachment(parseInt(el.getAttribute('data-relinkatt')), e.target.value));
   document.querySelectorAll('[data-previewatt]').forEach(el=>el.onclick = ()=>previewAttachment(parseInt(el.getAttribute('data-previewatt'))));
