@@ -4109,7 +4109,7 @@ function pageRecorrentes(){
     \${recurringList.length? \`<table><thead><tr><th>Descrição</th><th>Categoria</th><th>Conta</th><th>Frequência</th><th>Dia</th><th>Tipo</th><th>Valor</th><th></th></tr></thead>
     <tbody>\${recurringList.map(r=>\`<tr class="trow">
       <td>\${r.desc}</td>
-      <td><span class="pill" style="background:\${catColor(r.cat)}22;color:\${catColor(r.cat)}">\${r.cat}</span></td>
+          <td><span class="pill" style="background:\${catColor(r.cat)}22;color:\${catColor(r.cat)}">\${r.cat}</span></td>
       <td>\${r.acc}</td><td>\${r.freq}</td><td>Dia \${r.day}</td>
       <td><span class="type-ic \${r.type}">\${r.type==='in'?'↑':'↓'}</span></td>
       <td class="\${r.type==='in'?'val-in':'val-out'}">\${r.type==='in'?'+':'-'}\${fmt(r.val)}</td>
@@ -4137,7 +4137,7 @@ function pageImportar(){
 function getAttachmentCoverHtml(a, t){
   const isImage = (a.type && a.type.startsWith('image/')) || (a.dataUrl && a.dataUrl.startsWith('data:image/'));
   if (isImage && a.dataUrl) {
-    return \`<img src="\${a.dataUrl}" style="width:100%; height:140px; object-fit:cover; border-radius:12px; border:1px solid var(--card-border); transition:transform 0.2s ease;">\`;
+    return \`<img src="\${a.dataUrl}" style="width:100%; height:150px; object-fit:cover; border-radius:12px; border:1px solid var(--card-border); transition:transform 0.2s ease;">\`;
   }
 
   const nameSearch = ((a.name || '') + ' ' + (t ? t.desc : '')).toLowerCase();
@@ -4146,120 +4146,119 @@ function getAttachmentCoverHtml(a, t){
   let bSub = 'Documento Digital';
   let bBg = 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)';
   let accentColor = '#38bdf8';
-  let logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; font-size:22px;">📄</div>\`;
+  let logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; font-size:20px;">📄</div>\`;
 
   if (nameSearch.includes('tim')) {
     bName = 'TIM Brasil';
-    bSub = 'Fatura Telefonia';
-    bBg = 'linear-gradient(135deg, #031738 0%, #004691 100%)';
+    bSub = 'Fatura Telefonia / GSM';
+    bBg = 'linear-gradient(135deg, #021b3b 0%, #004691 100%)';
     accentColor = '#60a5fa';
-    logoBadge = \`<div style="width:46px; height:42px; border-radius:10px; background:#0056b3; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; color:#fff; font-family:sans-serif; letter-spacing:1px; box-shadow:0 4px 12px rgba(0,0,0,0.35);">TIM</div>\`;
+    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#0056b3; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; letter-spacing:1px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">TIM</div>\`;
   } else if (nameSearch.includes('claro')) {
-    bName = 'Claro';
+    bName = 'Claro Telecom';
     bSub = 'Fatura Fixo / Móvel';
-    bBg = 'linear-gradient(135deg, #4c0519 0%, #e11d48 100%)';
+    bBg = 'linear-gradient(135deg, #3f0415 0%, #be123c 100%)';
     accentColor = '#fecdd3';
-    logoBadge = \`<div style="width:52px; height:42px; border-radius:10px; background:#be123c; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">claro_</div>\`;
+    logoBadge = \`<div style="width:48px; height:40px; border-radius:10px; background:#e11d48; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">claro_</div>\`;
   } else if (nameSearch.includes('vivo')) {
-    bName = 'Vivo';
+    bName = 'Vivo Telefonia';
     bSub = 'Fatura Móvel / Fibra';
-    bBg = 'linear-gradient(135deg, #3b0764 0%, #7c3aed 100%)';
+    bBg = 'linear-gradient(135deg, #2e0854 0%, #6d28d9 100%)';
     accentColor = '#ddd6fe';
-    logoBadge = \`<div style="width:46px; height:42px; border-radius:10px; background:#6d28d9; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">vivo</div>\`;
+    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#7c3aed; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">vivo</div>\`;
   } else if (nameSearch.includes('nu') || nameSearch.includes('nubank')) {
     bName = 'Nubank';
-    bSub = 'Fatura Cartão';
-    bBg = 'linear-gradient(135deg, #340656 0%, #820ad1 100%)';
+    bSub = 'Fatura Cartão de Crédito';
+    bBg = 'linear-gradient(135deg, #2a0346 0%, #7609bc 100%)';
     accentColor = '#e9d5ff';
-    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:#820ad1; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">Nu</div>\`;
+    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:#820ad1; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">Nu</div>\`;
   } else if (nameSearch.includes('inter')) {
     bName = 'Banco Inter';
-    bSub = 'Extrato / Fatura';
-    bBg = 'linear-gradient(135deg, #431407 0%, #f97316 100%)';
+    bSub = 'Fatura / Extrato Conta';
+    bBg = 'linear-gradient(135deg, #381005 0%, #ea580c 100%)';
     accentColor = '#ffedd5';
-    logoBadge = \`<div style="width:46px; height:42px; border-radius:10px; background:#ea580c; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">inter</div>\`;
+    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#f97316; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">inter</div>\`;
   } else if (nameSearch.includes('itau') || nameSearch.includes('itaú')) {
-    bName = 'Itaú';
-    bSub = 'Fatura Cartão';
-    bBg = 'linear-gradient(135deg, #431407 0%, #ea580c 100%)';
+    bName = 'Itaú Unibanco';
+    bSub = 'Fatura Cartão / Comprovante';
+    bBg = 'linear-gradient(135deg, #381005 0%, #c2410c 100%)';
     accentColor = '#fed7aa';
-    logoBadge = \`<div style="width:44px; height:42px; border-radius:10px; background:#ec5c00; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">Itaú</div>\`;
+    logoBadge = \`<div style="width:42px; height:40px; border-radius:10px; background:#ec5c00; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">Itaú</div>\`;
   } else if (nameSearch.includes('bradesco')) {
     bName = 'Bradesco';
-    bSub = 'Fatura Cartão';
-    bBg = 'linear-gradient(135deg, #4c0519 0%, #dc2626 100%)';
+    bSub = 'Fatura Cartão / Extrato';
+    bBg = 'linear-gradient(135deg, #3f0415 0%, #cc092f 100%)';
     accentColor = '#fecdd3';
-    logoBadge = \`<div style="width:48px; height:42px; border-radius:10px; background:#cc092f; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">Brad</div>\`;
+    logoBadge = \`<div style="width:46px; height:40px; border-radius:10px; background:#dc2626; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">Brad</div>\`;
   } else if (nameSearch.includes('santander')) {
     bName = 'Santander';
-    bSub = 'Fatura Cartão';
-    bBg = 'linear-gradient(135deg, #450a0a 0%, #ef4444 100%)';
+    bSub = 'Fatura Cartão / Extrato';
+    bBg = 'linear-gradient(135deg, #380707 0%, #dc2626 100%)';
     accentColor = '#fecdd3';
-    logoBadge = \`<div style="width:44px; height:42px; border-radius:10px; background:#ec0000; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">S</div>\`;
+    logoBadge = \`<div style="width:42px; height:40px; border-radius:10px; background:#ec0000; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">S</div>\`;
   } else if (nameSearch.includes('bb') || nameSearch.includes('banco do brasil')) {
     bName = 'Banco do Brasil';
-    bSub = 'Comprovante / Fatura';
-    bBg = 'linear-gradient(135deg, #172554 0%, #1d4ed8 100%)';
+    bSub = 'Comprovante / Extrato';
+    bBg = 'linear-gradient(135deg, #101c42 0%, #1d4ed8 100%)';
     accentColor = '#fef08a';
-    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:#1e3a8a; border:1px solid #facc15; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; color:#facc15; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">BB</div>\`;
+    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:#1e3a8a; border:1px solid #facc15; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#facc15; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">BB</div>\`;
   } else if (nameSearch.includes('caixa') || nameSearch.includes('cef')) {
-    bName = 'CAIXA';
+    bName = 'CAIXA Econômica';
     bSub = 'Comprovante de Pagamento';
-    bBg = 'linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%)';
+    bBg = 'linear-gradient(135deg, #093752 0%, #0284c7 100%)';
     accentColor = '#bae6fd';
-    logoBadge = \`<div style="width:46px; height:42px; border-radius:10px; background:#005ca9; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">CAIXA</div>\`;
+    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#005ca9; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">CAIXA</div>\`;
   } else if (nameSearch.includes('enel') || nameSearch.includes('cemig') || nameSearch.includes('copel') || nameSearch.includes('cpfl') || nameSearch.includes('light') || nameSearch.includes('luz') || nameSearch.includes('energia')) {
     bName = 'Energia Elétrica';
     bSub = 'Conta de Luz';
-    bBg = 'linear-gradient(135deg, #451a03 0%, #ca8a04 100%)';
+    bBg = 'linear-gradient(135deg, #361502 0%, #ca8a04 100%)';
     accentColor = '#fef08a';
-    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:rgba(234,179,8,0.25); border:1px solid rgba(234,179,8,0.5); display:flex; align-items:center; justify-content:center; font-size:22px; color:#fef08a;">⚡</div>\`;
+    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(234,179,8,0.25); border:1px solid rgba(234,179,8,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; color:#fef08a;">⚡</div>\`;
   } else if (nameSearch.includes('sabesp') || nameSearch.includes('sanepar') || nameSearch.includes('copasa') || nameSearch.includes('agua') || nameSearch.includes('água')) {
     bName = 'Água / Saneamento';
     bSub = 'Conta de Água';
-    bBg = 'linear-gradient(135deg, #082f49 0%, #0284c7 100%)';
+    bBg = 'linear-gradient(135deg, #062337 0%, #0284c7 100%)';
     accentColor = '#bae6fd';
-    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:rgba(2,132,199,0.25); border:1px solid rgba(2,132,199,0.5); display:flex; align-items:center; justify-content:center; font-size:22px; color:#bae6fd;">💧</div>\`;
+    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(2,132,199,0.25); border:1px solid rgba(2,132,199,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; color:#bae6fd;">💧</div>\`;
   } else if (nameSearch.includes('internet') || nameSearch.includes('fibra') || nameSearch.includes('wifi')) {
     bName = 'Internet & Fibra';
-    bSub = 'Fatura de Telecom';
-    bBg = 'linear-gradient(135deg, #083344 0%, #0891b2 100%)';
+    bSub = 'Fatura Conectividade';
+    bBg = 'linear-gradient(135deg, #052733 0%, #0891b2 100%)';
     accentColor = '#cffaff';
-    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:rgba(8,145,178,0.25); border:1px solid rgba(8,145,178,0.5); display:flex; align-items:center; justify-content:center; font-size:22px; color:#cffaff;">🌐</div>\`;
+    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(8,145,178,0.25); border:1px solid rgba(8,145,178,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; color:#cffaff;">🌐</div>\`;
   }
 
   return \`
-  <div style="width:100%; height:140px; background:\${bBg}; border-radius:14px; border:1px solid rgba(255,255,255,0.14); display:flex; align-items:center; justify-content:space-between; padding:16px 18px; position:relative; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); transition:all 0.3s ease;">
-    <div style="position:absolute; right:-20px; bottom:-20px; font-size:90px; opacity:0.07; user-select:none; pointer-events:none; font-weight:900;">📄</div>
+  <div style="width:100%; height:150px; background:\${bBg}; border-radius:14px; border:1px solid rgba(255,255,255,0.14); padding:14px 16px; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 8px 24px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.2); transition:all 0.3s ease;">
     <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, transparent, \${accentColor}, transparent);"></div>
+    <div style="position:absolute; right:-15px; bottom:-15px; font-size:80px; opacity:0.06; user-select:none; pointer-events:none; font-weight:900;">📄</div>
 
-    <div style="display:flex; align-items:center; gap:14px; z-index:2; max-width:75%;">
-      \${logoBadge}
-      <div style="text-align:left;">
-        <div style="font-size:16px; font-weight:900; color:#ffffff; letter-spacing:0.2px; text-shadow:0 2px 4px rgba(0,0,0,0.5); line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-          \${bName}
+    <div style="display:flex; align-items:center; justify-content:space-between; z-index:2;">
+      <div style="display:flex; align-items:center; gap:12px; max-width:80%;">
+        \${logoBadge}
+        <div style="text-align:left;">
+          <div style="font-size:15px; font-weight:900; color:#ffffff; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+            \${bName}
+          </div>
+          <div style="font-size:11.5px; font-weight:600; color:rgba(255,255,255,0.75); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+            \${bSub}
+          </div>
         </div>
-        <div style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.78); margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-          \${bSub}
-        </div>
-        <div style="display:flex; gap:2px; margin-top:8px; opacity:0.6;">
-          <span style="width:2px; height:10px; background:#fff;"></span>
-          <span style="width:4px; height:10px; background:#fff;"></span>
-          <span style="width:1px; height:10px; background:#fff;"></span>
-          <span style="width:3px; height:10px; background:#fff;"></span>
-          <span style="width:5px; height:10px; background:#fff;"></span>
-          <span style="width:2px; height:10px; background:#fff;"></span>
-          <span style="width:4px; height:10px; background:#fff;"></span>
-          <span style="width:1px; height:10px; background:#fff;"></span>
-          <span style="width:3px; height:10px; background:#fff;"></span>
-        </div>
+      </div>
+      <div style="background:rgba(0,0,0,0.4); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.18); padding:3px 8px; border-radius:6px; font-size:10.5px; font-weight:800; color:#ffffff; display:flex; align-items:center; gap:4px;">
+        <span style="color:#ef4444; font-size:12px;">📄</span> PDF
       </div>
     </div>
 
-    <div style="z-index:2; display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-      <div style="background:rgba(0,0,0,0.4); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.18); padding:4px 10px; border-radius:8px; font-size:11px; font-weight:800; color:#ffffff; display:flex; align-items:center; gap:5px; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
-        <span style="color:#ef4444; font-size:13px;">📄</span> PDF
+    <div style="background:rgba(0,0,0,0.22); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px 12px; z-index:2; backdrop-filter:blur(4px);">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:5px;">
+        <span style="font-size:11px; color:rgba(255,255,255,0.8); font-weight:700; display:flex; align-items:center; gap:4px;">
+          <span>🧾</span> Recibo / Fatura Digital
+        </span>
+        <span style="font-size:10px; color:#4ade80; font-weight:800; background:rgba(74,222,128,0.15); padding:2px 6px; border-radius:4px;">VERIFICADO</span>
       </div>
+      <div style="height:3px; background:rgba(255,255,255,0.2); border-radius:2px; width:65%; margin-bottom:4px;"></div>
+      <div style="height:3px; background:rgba(255,255,255,0.12); border-radius:2px; width:40%;"></div>
     </div>
   </div>\`;
 }
@@ -4275,36 +4274,28 @@ function pageAnexos(){
   </div>
 
   <div class="panel" style="margin-bottom:22px;">
-    <div style="margin-bottom:14px;">
+    <div style="margin-bottom:16px;">
       <h3 style="font-size:18px; font-weight:800; display:flex; align-items:center; gap:8px; margin:0;">
         <span>📎</span> Cadastrar / Incluir Novos Anexos
       </h3>
       <p style="font-size:13.5px; color:var(--text-faint); margin-top:4px;">
-        Selecione os arquivos ou insira arrastando. O anexo será processado automaticamente para visualização.
+        Vincule a uma transação opcional e selecione os arquivos para salvar automaticamente.
       </p>
     </div>
 
-    <div id="attDropZone" style="border: 2px dashed var(--card-border); border-radius: 14px; padding: 24px 18px; text-align: center; cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.2s ease; margin-bottom: 20px;">
-      <span style="font-size: 32px; display: block; margin-bottom: 8px;">📂</span>
-      <p style="margin:0; font-weight:700; font-size:15px; color:var(--text);">Arraste seus arquivos para cá ou <span style="color:var(--green); text-decoration:underline;">clique para selecionar</span></p>
-      <p style="margin-top:6px; font-size:12.5px; color:var(--text-faint); margin-bottom:0;">Suporta imagens (PNG, JPG, WebP), recibos em PDF e documentos</p>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block; color:var(--text);">Vincular a uma Transação (Opcional)</label>
+      <select id="attTx" style="width:100%; font-size:14px; padding:10px 14px; height:44px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+        <option value="0">Nenhuma (Anexo Avulso / Recibo Padrão)</option>
+        \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})</option>\`).join('')}
+      </select>
     </div>
 
-    <div class="field-row" style="align-items:flex-end; flex-wrap:wrap; gap:16px;">
-      <div class="field" style="flex:1.5; min-width:240px; margin-bottom:0;">
-        <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block;">Transação Vinculada</label>
-        <select id="attTx" style="width:100%; font-size:14px; padding:10px 14px; height:44px; border-radius:8px;">
-          <option value="0">Nenhuma (Anexo Avulso / Recibo Padrão)</option>
-          \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})\</option>\`).join('')}
-        </select>
-      </div>
-      <div class="field" style="flex:1; min-width:200px; margin-bottom:0;">
-        <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block;">Arquivo(s)</label>
-        <input type="file" id="attFile" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="width:100%; cursor:pointer; font-size:13.5px; padding:8px 12px; height:44px; border-radius:8px;">
-      </div>
-      <div class="field" style="flex:0 0 auto; margin-bottom:0;">
-        <button class="btn-primary" id="btnAddAnexo" type="button" style="padding:12px 24px; font-size:14.5px; font-weight:700; cursor:pointer; height:44px; display:inline-flex; align-items:center; gap:6px;">+ Incluir Anexo(s)</button>
-      </div>
+    <div id="attDropZone" style="border: 2px dashed var(--green); border-radius: 16px; padding: 32px 20px; text-align: center; cursor: pointer; background: rgba(34, 197, 94, 0.04); transition: all 0.2s ease; position: relative;">
+      <input type="file" id="attFile" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="display:none;">
+      <span style="font-size: 38px; display: block; margin-bottom: 10px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">☁️</span>
+      <p style="margin:0; font-weight:800; font-size:16px; color:var(--text);">Arraste seus arquivos para cá ou <span style="color:var(--green); text-decoration:underline;">clique para selecionar e anexar</span></p>
+      <p style="margin-top:6px; font-size:13px; color:var(--text-faint); margin-bottom:0;">Suporta imagens (PNG, JPG, WebP), recibos em PDF e documentos</p>
     </div>
   </div>
 
@@ -4322,12 +4313,10 @@ function pageAnexos(){
       <div class="cat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:18px; border-radius:16px; border:1px solid var(--card-border); background:var(--card); box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
         <div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-            <span class="pill" style="background:rgba(232,176,75,0.18); color:var(--green); font-weight:700; font-size:12.5px; padding:5px 12px; border-radius:20px;">
-              \${isPdf ? '📄 PDF' : isImage ? '🖼️ Imagem' : '📎 Documento'}
+            <span style="font-size:12.5px; font-weight:700; color:var(--text-dim); display:flex; align-items:center; gap:6px;">
+              \${isPdf ? '📄 Fatura PDF' : isImage ? '🖼️ Imagem Anexa' : '📎 Documento'}
             </span>
-            <div style="display:flex; align-items:center;">
-              <button data-delatt="\${a.id}" title="Excluir Anexo" style="width:auto; height:34px; padding:0 12px; border-radius:8px; background:rgba(239, 68, 68, 0.15); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.3); font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;">🗑 Excluir</button>
-            </div>
+            <button data-delatt="\${a.id}" title="Excluir Anexo" style="width:auto; height:32px; padding:0 10px; border-radius:8px; background:rgba(239, 68, 68, 0.15); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.3); font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">🗑 Excluir</button>
           </div>
 
           <div style="cursor:pointer; text-align:center; margin-bottom:12px;" data-previewatt="\${a.id}" title="Clique para Visualizar">
