@@ -5890,8 +5890,7 @@ function previewAttachment(id){
       '<h3 style="font-size:18px; font-weight:800; margin:0; display:flex; align-items:center; gap:10px; color:var(--text); word-break:break-word;"><span>📎</span> ' + (att.name || 'Anexo') + '</h3>' +
       '<div style="display:flex; gap:10px; align-items:center;">' +
         '<a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="padding:10px 20px; font-size:14px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px; border-radius:8px; height:40px;">📥 Baixar</a>' +
-        '<button class="btn-ghost btn-close-modal" style="padding:10px 20px; font-size:14px; font-weight:700; border-radius:8px; height:40px; background:rgba(255,255,255,0.08); border:1px solid var(--card-border); color:var(--text); cursor:pointer;">Fechar</button>' +
-        '<button class="close-x btn-close-modal" style="font-size:20px; font-weight:700; width:38px; height:38px; border-radius:50%; border:none; cursor:pointer; background:rgba(255,255,255,0.1); color:var(--text); display:inline-flex; align-items:center; justify-content:center;">✕</button>' +
+        '<button class="btn-ghost btn-close-modal" style="padding:10px 20px; font-size:14px; font-weight:700; border-radius:8px; height:40px; background:rgba(255,255,255,0.08); border:1px solid var(--card-border); color:var(--text); cursor:pointer; display:inline-flex; align-items:center; gap:6px;">✕ Fechar</button>' +
       '</div>' +
     '</div>' +
     '<div style="background:var(--bg); padding:16px; border-radius:14px; border:1px solid var(--card-border);">' + contentHtml + '</div>' +
