@@ -1869,7 +1869,8 @@ async function syncUsersWithServer() {
   } catch(e) {
     registeredUsers = loadFromStorage('nexus_users', [
       { name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
-      { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true }
+      { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true },
+      { name: 'Usuário Padrão', email: 'user@nexusfinanceiro.com', password: '123456', role: 'Usuário', active: true }
     ]);
   }
 }
@@ -6908,7 +6909,8 @@ function getLocalUsers() {
   } catch (e) {}
   return [
     DEFAULT_ADMIN,
-    { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true }
+    { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true },
+    { name: 'Usuário Padrão', email: 'user@nexusfinanceiro.com', password: '123456', role: 'Usuário', active: true }
   ];
 }
 
