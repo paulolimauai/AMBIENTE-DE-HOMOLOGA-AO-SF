@@ -5991,9 +5991,9 @@ async function addAttachment(filesToProcess = null){
   if (fileInput) fileInput.value = '';
 
   if (addedCount > 0) {
-    await saveUserData();
-    showToast(addedCount + ' anexo(s) incluído(s) com sucesso!');
     render();
+    showToast(addedCount + ' anexo(s) incluído(s) com sucesso!');
+    await saveUserData();
   } else {
     showToast('Erro ao ler os arquivos selecionados');
   }
@@ -6003,9 +6003,9 @@ async function relinkAttachment(id, newTxId){
   const att = attachments.find(a => a.id === id);
   if (!att) return;
   att.txId = newTxId ? parseInt(newTxId) : null;
-  await saveUserData();
-  showToast('Vínculo da transação atualizado!');
   render();
+  showToast('Vínculo da transação atualizado!');
+  await saveUserData();
 }
 
 function previewAttachment(id){
@@ -6099,9 +6099,9 @@ async function deleteAttachment(id){
     confirmDanger: true,
     onConfirm: async () => {
       attachments = attachments.filter(a => a.id !== id);
-      await saveUserData();
-      showToast('Anexo removido com sucesso');
       render();
+      showToast('Anexo removido com sucesso');
+      await saveUserData();
     }
   });
 }
