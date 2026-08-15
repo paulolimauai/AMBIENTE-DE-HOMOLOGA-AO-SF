@@ -4165,7 +4165,7 @@ function pageAnexos(){
         <label>Transação Vinculada</label>
         <select id="attTx" style="width:100%;">
           <option value="0">Nenhuma (Anexo Avulso / Recibo Padrão)</option>
-          \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})\</option>\`).join('')}
+          \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})</option>\`).join('')}
         </select>
       </div>
       <div class="field" style="flex:1; min-width:200px; margin-bottom:0;">
@@ -5887,16 +5887,19 @@ function previewAttachment(id){
   modalOverlay.className = 'overlay show';
   modalOverlay.style.zIndex = '3000';
   modalOverlay.innerHTML = '<div class="modal" style="max-width:850px; width:92vw;">' +
-    '<button class="close-x" onclick="this.closest(\'.overlay\').remove()">✕</button>' +
+    '<button class="close-x btn-close-modal">✕</button>' +
     '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--card-border);">' +
       '<h3 style="font-size:15px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;"><span>📎</span> ' + (att.name || 'Anexo') + '</h3>' +
       '<div style="display:flex; gap:8px; align-items:center;">' +
         '<a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="padding:6px 14px; font-size:12px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">📥 Baixar</a>' +
-        '<button class="btn-ghost" onclick="this.closest(\'.overlay\').remove()" style="padding:6px 14px; font-size:12px; font-weight:600;">Fechar</button>' +
+        '<button class="btn-ghost btn-close-modal" style="padding:6px 14px; font-size:12px; font-weight:600;">Fechar</button>' +
       '</div>' +
     '</div>' +
     '<div style="background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--card-border);">' + contentHtml + '</div>' +
   '</div>';
+  modalOverlay.querySelectorAll('.btn-close-modal').forEach(btn => {
+    btn.onclick = () => modalOverlay.remove();
+  });
   document.body.appendChild(modalOverlay);
 }
 
