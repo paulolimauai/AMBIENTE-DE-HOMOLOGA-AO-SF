@@ -1141,11 +1141,25 @@ body.light tr.trow:hover td { background:#f1f5f9 !important; }
 .close-x{position:absolute; top:16px; right:18px; background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer;}
 
 .toast{
-  position:fixed; bottom:24px; right:24px; background:var(--card); border:1px solid var(--green); color:var(--text);
-  padding:12px 18px; border-radius:10px; font-size:13px; box-shadow:var(--shadow); z-index:200; display:none; align-items:center; gap:8px; max-width:320px;
+  position:fixed; top:28px; left:50%; transform:translate(-50%, -20px) scale(0.92);
+  background:#082012; border:1.5px solid #22c55e; color:#ffffff;
+  padding:14px 26px; border-radius:14px; font-size:15px; font-weight:800;
+  box-shadow:0 14px 40px rgba(0,0,0,0.6), 0 0 24px rgba(34, 197, 94, 0.3);
+  z-index:99999; display:flex; align-items:center; gap:12px; max-width:90vw;
+  opacity:0; pointer-events:none; transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.toast.show{display:flex;}
-.toast .d{width:8px; height:8px; border-radius:50%; background:var(--green); flex-shrink:0;}
+.toast.show{
+  opacity:1; pointer-events:auto; transform:translate(-50%, 0) scale(1);
+}
+.toast.toast-danger{
+  background:#2a080c; border-color:#ef4444; box-shadow:0 14px 40px rgba(0,0,0,0.6), 0 0 24px rgba(239, 68, 68, 0.35);
+}
+.toast.toast-danger .d{
+  background:#ef4444; box-shadow:0 0 10px #ef4444;
+}
+.toast .d{
+  width:12px; height:12px; border-radius:50%; background:#22c55e; flex-shrink:0; box-shadow:0 0 10px #22c55e;
+}
 
 /* ==================== Popup de login bem-sucedido (Dashboard Theme 4K) ==================== */
 .login-success-overlay{
@@ -2890,11 +2904,25 @@ function budgetStatus(list=budgets){
   });
 }
 
+let toastTimer = null;
 function showToast(msg){
   const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
+  if(!t) return;
+  const msgEl = document.getElementById('toastMsg');
+  if(msgEl) msgEl.textContent = msg;
+
+  const isDanger = /remov|exclu|erro|inválid|atençã|⚠️|🗑/i.test(msg);
+  if(isDanger) {
+    t.classList.add('toast-danger');
+  } else {
+    t.classList.remove('toast-danger');
+  }
+
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2400);
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    t.classList.remove('show');
+  }, 3200);
 }
 
 function timeAgo(ts){
