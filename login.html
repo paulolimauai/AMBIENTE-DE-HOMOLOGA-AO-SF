@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login 4K Ultra | Sistema Financeiro Hub</title>
+    <script>
+        (function() {
+            try {
+                var t = localStorage.getItem('nexus_theme');
+                if (t === 'light') {
+                    document.documentElement.classList.add('light');
+                } else {
+                    document.documentElement.classList.remove('light');
+                }
+
+                function detectDevice() {
+                    var w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                    var ua = navigator.userAgent || '';
+                    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) || w <= 640;
+                    var isTablet = !isMobile && (/iPad|Tablet/i.test(ua) || (w > 640 && w <= 1024));
+                    var isUltrawide = w >= 1700;
+                    if (isMobile) return 'mobile';
+                    if (isTablet) return 'tablet';
+                    if (isUltrawide) return 'ultrawide';
+                    return 'desktop';
+                }
+
+                var dev = detectDevice();
+                document.documentElement.setAttribute('data-device-type', dev);
+
+                var scale = localStorage.getItem('nexus_display_scale') || 'auto';
+                var actualScale = scale;
+                if (scale === 'auto') {
+                    if (dev === 'mobile') actualScale = '100%';
+                    else if (dev === 'tablet') actualScale = '95%';
+                    else if (dev === 'ultrawide') actualScale = '110%';
+                    else actualScale = '100%';
+                }
+                var scaleNum = parseFloat(actualScale) / 100 || 1;
+                document.documentElement.style.setProperty('--app-zoom', scaleNum);
+                if ('zoom' in document.documentElement.style) {
+                    document.documentElement.style.zoom = scaleNum;
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    if (localStorage.getItem('nexus_theme') === 'light') {
+                        document.body.classList.add('light');
+                    } else {
+                        document.body.classList.remove('light');
+                    }
+                });
+            } catch(e){}
+        })();
+    </script>
+    <!-- Fontes do Google: Plus Jakarta Sans & Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        display: ['Outfit', '"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        finance: {
+                            dark: '#080B15',
+                            card: '#0E1322',
+                            gold: '#E5A93C',
+                            goldBorder: '#C89B3C',
+                            blue: '#5B94D9',
+                            steel: '#4C84C4',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow-pulse': 'glowPulse 3s infinite alternate',
+                    },
+                    keyframes: {
+                        glowPulse: {
+                            '0%': { opacity: 0.35, transform: 'scale(1)' },
+                            '100%': { opacity: 0.75, transform: 'scale(1.06)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            background-color: #07090e;
+            color: #F8FAFC;
+            overflow-x: hidden;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+        body.light, html.light body {
+            background-color: #F1F5F9 !important;
+            color: #0F172A !important;
+        }
+        .auth-card-exact {
+            background: rgba(14, 19, 32, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 28px;
+            box-shadow: 0 30px 70px -12px rgba(0, 0, 0, 0.8), 0 0 45px rgba(229, 169, 60, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+            transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+        }
+        body.light .auth-card-exact {
+            background: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08) !important;
+        }
+        body.light .auth-card-exact h2 {
+            color: #0F172A !important;
+        }
+        body.light .auth-card-exact p {
+            color: #475569 !important;
+        }
+        body.light .auth-card-exact label {
+            color: #475569 !important;
+        }
+        body.light .input-wrapper-exact {
+            background: #F8FAFC !important;
+            border-color: #CBD5E1 !important;
+        }
+        body.light .input-wrapper-exact input {
+            color: #0F172A !important;
+        }
+        body.light .input-wrapper-exact input::placeholder {
+            color: #94A3B8 !important;
+        }
+        .input-wrapper-exact {
+            position: relative;
+            background: rgba(11, 15, 23, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 14px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .input-wrapper-exact:focus-within {
+            border-color: #E5A93C !important;
+            background: rgba(16, 22, 34, 0.95);
+            box-shadow: 0 0 24px rgba(229, 169, 60, 0.35), inset 0 2px 4px rgba(0,0,0,0.4) !important;
+            transform: translateY(-1px);
+        }
+        .input-wrapper-exact.field-highlight {
+            border-color: #E5A93C !important;
+            box-shadow: 0 0 28px rgba(229, 169, 60, 0.6) !important;
+        }
+        .btn-gold-blue-gradient {
+            background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 50%, #b45309 100%);
+            color: #0A0F1A;
+            border-radius: 14px;
+            font-weight: 800;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.35), 0 0 20px rgba(245, 158, 11, 0.2);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-gold-blue-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            transition: left 0.6s ease;
+        }
+        .btn-gold-blue-gradient:hover {
+            filter: brightness(1.06);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 36px -4px rgba(245, 158, 11, 0.55), 0 0 28px rgba(245, 158, 11, 0.4);
+        }
+        .btn-gold-blue-gradient:hover::before {
+            left: 100%;
+        }
+        .btn-gold-blue-gradient:active {
+            transform: translateY(0) scale(0.98);
+        }
+        .custom-checkbox {
+            accent-color: #E5A93C;
+        }
+        .form-fade {
+            animation: fadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 4K Success Modal Ultra Precision Animation */
+        .check-circle {
+            stroke: #F59E0B;
+            stroke-width: 2.5;
+            stroke-miterlimit: 10;
+            stroke-dasharray: 160;
+            stroke-dashoffset: 160;
+            animation: strokeCircle 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.15s;
+        }
+        .check-tick {
+            stroke: #FFFFFF;
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: strokeTick 0.5s ease forwards 0.65s;
+        }
+        @keyframes strokeCircle {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes strokeTick {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes rotateRing {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: rotateRing 20s linear infinite;
+        }
+        .sparkle-twinkle {
+            animation: twinkle 2.5s ease-in-out infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.25) rotate(45deg); filter: drop-shadow(0 0 6px #F59E0B); }
+        }
+    </style>
+    <script>
+        // Determinar endpoint de API relativo ou fallback
+        const targetOrigin = (window.location.origin && window.location.origin.includes('http')) 
+            ? window.location.origin 
+            : 'http://localhost:3000';
+
+        // Áudio Sintetizado Háptico (Web Audio API)
+        let audioCtx = null;
+        function playChime() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const now = audioCtx.currentTime;
+                const freqs = [523.25, 659.25, 783.99, 1046.50];
+                freqs.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0, now + idx * 0.08);
+                    gain.gain.linearRampToValueAtTime(0.04, now + idx * 0.08 + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.85);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.9);
+                });
+            } catch(e){}
+        }
+
+        // Sistema de Alerta Inline (Substitui alert nativo)
+        window.showAlert = function(message, type = 'error') {
+            const alertBox = document.getElementById('authAlert');
+            if (!alertBox) return;
+
+            alertBox.classList.remove('hidden', 'bg-rose-950/90', 'border-rose-500/60', 'text-rose-200',
+                'bg-amber-950/90', 'border-amber-500/60', 'text-amber-200');
+
+            let icon = '⚠️';
+            if (type === 'success') {
+                icon = '✨';
+                alertBox.className = 'mb-4 p-3.5 rounded-xl text-xs font-semibold border bg-amber-950/90 border-amber-500/60 text-amber-200 shadow-lg shadow-amber-950/50 flex items-center gap-2.5 form-fade';
+            } else if (type === 'info') {
+                icon = '💡';
+                alertBox.className = 'mb-4 p-3.5 rounded-xl text-xs font-semibold border bg-blue-950/90 border-blue-500/60 text-blue-200 shadow-lg shadow-blue-950/50 flex items-center gap-2.5 form-fade';
+            } else {
+                icon = '⚠️';
+                alertBox.className = 'mb-4 p-3.5 rounded-xl text-xs font-semibold border bg-rose-950/90 border-rose-500/60 text-rose-200 shadow-lg shadow-rose-950/50 flex items-center gap-2.5 form-fade';
+            }
+
+            alertBox.innerHTML = `
+                <span class="text-base shrink-0">${icon}</span>
+                <span class="flex-1 leading-snug">${message}</span>
+                <button type="button" onclick="document.getElementById('authAlert').classList.add('hidden')" class="opacity-70 hover:opacity-100 text-current ml-2 font-bold focus:outline-none">✕</button>
+            `;
+        };
+
+        window.hideAlert = function() {
+            const alertBox = document.getElementById('authAlert');
+            if (alertBox) alertBox.classList.add('hidden');
+        };
+
+        // Função Global de Troca de Abas
+        window.switchAuthTab = function(tabName) {
+            hideAlert();
+            const loginBox = document.getElementById('loginBox');
+            const registerBox = document.getElementById('registerBox');
+            const forgotBox = document.getElementById('forgotBox');
+
+            const authTitle = document.getElementById('authTitle');
+            const authSub = document.getElementById('authSub');
+
+            if (loginBox) loginBox.style.display = 'none';
+            if (registerBox) registerBox.style.display = 'none';
+            if (forgotBox) forgotBox.style.display = 'none';
+
+            if (tabName === 'register') {
+                if (registerBox) {
+                    registerBox.style.display = 'block';
+                    registerBox.classList.add('form-fade');
+                }
+                if (authTitle) authTitle.innerText = "Criar Nova Conta";
+                if (authSub) authSub.innerText = "Cadastre-se para gerenciar suas finanças com inteligência.";
+            } else if (tabName === 'forgot') {
+                if (forgotBox) {
+                    forgotBox.style.display = 'block';
+                    forgotBox.classList.add('form-fade');
+                }
+                if (authTitle) authTitle.innerText = "Recuperar Senha";
+                if (authSub) authSub.innerText = "Informe seu e-mail para receber um acesso temporário.";
+            } else {
+                if (loginBox) {
+                    loginBox.style.display = 'block';
+                    loginBox.classList.add('form-fade');
+                }
+                if (authTitle) authTitle.innerText = "Bem-vindo de volta";
+                if (authSub) authSub.innerText = "Acesse sua conta para gerenciar suas finanças.";
+            }
+        };
+
+        // Alternador de Visibilidade de Senha
+        window.togglePasswordVisibility = function(inputId, btnId) {
+            const input = document.getElementById(inputId);
+            const btn = document.getElementById(btnId);
+            if (!input || !btn) return;
+
+            const eyeOpen = `<svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>`;
+            const eyeClosed = `<svg class="w-4 h-4 text-gray-500 hover:text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.05 10.05 0 013.682-.963c4.478 0 8.268 2.943 9.543 7a9.97 9.97 0 01-2.16 3.633m-1.503 1.503A9.956 9.956 0 0112 15c-1.42 0-2.755-.296-3.955-.831M3 3l18 18"/></svg>`;
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = eyeOpen;
+            } else {
+                input.type = 'password';
+                btn.innerHTML = eyeClosed;
+            }
+        };
+
+        // Função de Acesso Rápido de Teste
+        window.fillDemoCredentials = function(email, password, roleName) {
+            const emailInput = document.getElementById('loginEmail');
+            const passInput = document.getElementById('loginPassword');
+            if (!emailInput || !passInput) return;
+
+            emailInput.value = email;
+            passInput.value = password;
+
+            const emailWrapper = emailInput.closest('.input-wrapper-exact');
+            const passWrapper = passInput.closest('.input-wrapper-exact');
+
+            if (emailWrapper) emailWrapper.classList.add('field-highlight');
+            if (passWrapper) passWrapper.classList.add('field-highlight');
+
+            setTimeout(() => {
+                if (emailWrapper) emailWrapper.classList.remove('field-highlight');
+                if (passWrapper) passWrapper.classList.remove('field-highlight');
+            }, 1200);
+        };
+
+        window.toggleLoginTheme = function() {
+            const isCurrentlyLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
+            const nextIsLight = !isCurrentlyLight;
+            document.body.classList.toggle('light', nextIsLight);
+            document.documentElement.classList.toggle('light', nextIsLight);
+            localStorage.setItem('nexus_theme', nextIsLight ? 'light' : 'dark');
+            const btn = document.getElementById('loginThemeBtn');
+            const moonSvg = `<svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>`;
+            const sunSvg = `<svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>`;
+            if (btn) btn.innerHTML = nextIsLight ? sunSvg : moonSvg;
+        };
+
+        // 4K Ultra Success Modal Function
+        window.showLoginSuccessModal = function(subtitleMsg) {
+            const overlay = document.getElementById('loginSuccessOverlay');
+            if (!overlay) return;
+            
+            const subEl = document.getElementById('loginSuccessSub');
+            if (subEl && subtitleMsg) {
+                subEl.textContent = subtitleMsg;
+            }
+
+            playChime();
+
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            overlay.style.display = 'flex';
+            void overlay.offsetHeight;
+            overlay.classList.remove('opacity-0');
+            overlay.classList.add('opacity-100');
+            
+            const box = document.getElementById('successModalBox');
+            if (box) {
+                box.classList.remove('scale-90', 'translate-y-6');
+                box.classList.add('scale-100', 'translate-y-0');
+            }
+
+            // Animate progress bar
+            const bar = document.getElementById('successRedirectProgress');
+            if (bar) {
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.transition = 'width 2.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                    bar.style.width = '100%';
+                }, 50);
+            }
+        };
+    </script>
+</head>
+<body class="h-full bg-[#07090E] light:bg-[#F1F5F9] text-gray-100 font-sans antialiased flex flex-col justify-center items-center min-h-screen py-10 px-4 relative">
+
+    <!-- 4K ULTRA SUCCESS MODAL OVERLAY (Redesenhado em Alta Precisão) -->
+    <div class="fixed inset-0 bg-black/85 backdrop-blur-xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300" id="loginSuccessOverlay" style="display:none;">
+        <!-- Ambient Golden Pulse Behind Modal -->
+        <!-- Ambient Aura Glow (Dashboard Colors) -->
+        <div class="absolute w-[360px] h-[360px] rounded-full bg-blue-500/20 blur-[90px] pointer-events-none animate-pulse"></div>
+
+        <div id="successModalBox" class="bg-gradient-to-br from-[#111827]/95 to-[#0A0F1D]/98 light:bg-white border border-blue-500/35 light:border-blue-200 rounded-[28px] p-8 w-full max-w-[420px] text-center shadow-[0_30px_70px_rgba(0,0,0,0.85),0_0_40px_rgba(59,130,246,0.25)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden">
+            
+            <!-- Sparkles -->
+            <span class="absolute top-4 right-6 text-blue-400 font-serif text-sm sparkle-twinkle">✦</span>
+            <span class="absolute bottom-6 left-6 text-emerald-400 font-serif text-xs sparkle-twinkle" style="animation-delay: 1s;">✦</span>
+
+            <!-- 4K Multi-Ring Emerald/Sapphire Badge -->
+            <div class="relative w-24 h-24 mx-auto mb-5 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full border border-dashed border-blue-500/30 animate-spin-slow"></div>
+                <div class="absolute inset-2 rounded-full border border-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.25)]"></div>
+                <div class="absolute inset-3 rounded-full bg-gradient-to-br from-emerald-500/20 via-[#111827] to-[#0A0F1D] border border-emerald-400/70 shadow-[inset_0_0_15px_rgba(16,185,129,0.30)]"></div>
+                
+                <svg class="relative z-10 w-12 h-12" viewBox="0 0 52 52">
+                    <circle class="check-circle stroke-emerald-400/40" cx="26" cy="26" r="23" fill="none"/>
+                    <path class="check-tick stroke-emerald-400" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+
+            <!-- Pill Badge -->
+            <div class="inline-block px-3 py-1 mb-2.5 rounded-full bg-blue-500/15 border border-blue-500/30 text-[10px] font-extrabold uppercase tracking-widest text-blue-400">
+                Acesso Autorizado
+            </div>
+
+            <!-- Título & Subtítulo Polidos -->
+            <h3 class="text-2xl font-black text-white light:text-slate-900 mb-1.5 tracking-tight font-display">
+                Login efetuado com sucesso!
+            </h3>
+            <p class="text-[#94A3B8] light:text-slate-600 font-medium text-xs sm:text-sm mb-5" id="loginSuccessSub">
+                Redirecionando para o seu dashboard...
+            </p>
+
+            <!-- Barra de Redirecionamento Automático -->
+            <div class="w-full bg-white/5 light:bg-slate-200 h-1.5 rounded-full overflow-hidden mb-2">
+                <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 rounded-full w-0"></div>
+            </div>
+            <span class="text-[11px] font-semibold text-[#64748B]">Carregando ambiente financeiro...</span>
+        </div>
+    </div>
+
+    <!-- BOTÃO FLUTUANTE DE ALTERNÂNCIA DE TEMA (CLARO/ESCURO) -->
+    <div class="fixed top-5 right-5 z-50">
+        <button type="button" id="loginThemeBtn" onclick="toggleLoginTheme()" title="Alternar Tema Claro / Escuro"
+            class="w-11 h-11 rounded-2xl bg-[#141A28] light:bg-white border border-[#232D42] light:border-slate-300 flex items-center justify-center shadow-lg hover:scale-105 transition-all focus:outline-none">
+            <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+    </div>
+
+    <!-- Canvas de Linhas Orbitais & Partículas de Fundo -->
+    <canvas id="bgOrbitalCanvas" class="absolute inset-0 pointer-events-none z-0 opacity-75"></canvas>
+
+    <!-- Ambient Aura Glows -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[170px] animate-glow-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/3 w-[650px] h-[650px] bg-blue-500/10 rounded-full blur-[170px] animate-glow-pulse"></div>
+    </div>
+
+    <!-- MAIN CONTAINER CENTRALIZADO DA IMAGEM DE REFERÊNCIA -->
+    <div class="w-full max-w-md z-10 flex flex-col items-center justify-center my-auto">
+        
+        <!-- CARD DE AUTENTICAÇÃO PRINCIPAL (4K ULTRA UI) -->
+        <div class="auth-card-exact w-full p-8 sm:p-10 relative overflow-hidden">
+            
+            <!-- TOPO: LOGO BADGE + BRAND TEXT ("S SISTEMA") -->
+            <div class="flex items-center justify-center gap-3 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#E6C675] via-[#D4A84B] to-[#76A5D9] flex items-center justify-center text-[#0A0D18] font-black text-2xl shadow-lg shadow-amber-500/30 shrink-0 border border-white/20">
+                    S
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl sm:text-2xl font-black tracking-wider text-white uppercase font-display">
+                        SISTEMA
+                    </span>
+                    <span class="text-[10px] font-bold text-amber-400 tracking-widest uppercase">FINANCEIRO HUB</span>
+                </div>
+            </div>
+
+            <!-- TÍTULO & SUBTÍTULO -->
+            <div class="text-center mb-6">
+                <h2 id="authTitle" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-display">Bem-vindo de volta</h2>
+                <p id="authSub" class="mt-1.5 text-xs sm:text-sm text-[#8E9BAE]">
+                    Acesse sua conta para gerenciar suas finanças.
+                </p>
+            </div>
+
+            <!-- ALERTA INLINE DINÂMICO -->
+            <div id="authAlert" class="hidden"></div>
+
+            <!-- FORMULÁRIO DE LOGIN -->
+            <div id="loginBox" class="form-fade" style="display: block;">
+                <form id="loginForm" class="space-y-4" onsubmit="handleLoginSubmit(event); return false;">
+                    
+                    <!-- Campo E-mail -->
+                    <div>
+                        <label class="block text-xs font-semibold text-[#9AA8BA] mb-1.5">E-mail corporativo</label>
+                        <div class="input-wrapper-exact">
+                            <input id="loginEmail" name="email" type="email" autocomplete="username" required 
+                                class="block w-full bg-transparent px-4 py-3.5 text-white placeholder-[#4C596D] text-sm focus:outline-none"
+                                placeholder="seu.email@exemplo.com">
+                        </div>
+                    </div>
+
+                    <!-- Campo Senha -->
+                    <div>
+                        <label class="block text-xs font-semibold text-[#9AA8BA] mb-1.5">Senha</label>
+                        <div class="input-wrapper-exact flex items-center">
+                            <input id="loginPassword" name="password" type="password" autocomplete="current-password" required 
+                                class="block w-full bg-transparent pl-4 pr-10 py-3.5 text-white placeholder-[#4C596D] text-sm focus:outline-none"
+                                placeholder="••••••••">
+                            <button type="button" id="btnToggleLoginPass" onclick="togglePasswordVisibility('loginPassword', 'btnToggleLoginPass')" class="pr-3 text-gray-500 hover:text-amber-400 transition-colors focus:outline-none">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Options: Lembrar de Mim & Esqueceu a Senha -->
+                    <div class="flex items-center justify-between pt-1 text-xs">
+                        <label class="flex items-center gap-2 cursor-pointer select-none text-[#8E9BAE]">
+                            <input type="checkbox" id="rememberMe" class="custom-checkbox rounded border-gray-700 w-4 h-4 bg-[#141A28] focus:ring-0 cursor-pointer" checked>
+                            <span>Lembrar de mim</span>
+                        </label>
+                        <a href="javascript:void(0)" onclick="switchAuthTab('forgot')" class="font-bold text-[#E5A93C] hover:underline transition-colors">
+                            Esqueceu a senha?
+                        </a>
+                    </div>
+
+                    <!-- Botão Principal de Login (Efeito Gradiente Ouro a Azul) -->
+                    <div class="pt-2">
+                        <button type="submit" id="btnLoginSubmit"
+                            class="btn-gold-blue-gradient w-full py-4 text-sm font-extrabold flex items-center justify-center gap-2 focus:outline-none">
+                            Entrar na Conta →
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Divisor "OU ACESSO RÁPIDO" -->
+                <div class="relative my-6 text-center">
+                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-[#1C2436]"></div></div>
+                    <span class="relative px-3 bg-[#0E1322] text-[11px] font-bold text-[#5C6B80] uppercase tracking-widest">
+                        ACESSO RÁPIDO DEMO
+                    </span>
+                </div>
+
+                <!-- Botões de Login Social / Demo -->
+                <div class="flex items-center justify-center gap-3">
+                    <!-- Google -->
+                    <button type="button" onclick="fillDemoCredentials('admin@nexusfinanceiro.com', '86266049', 'Administrador')" title="Acesso Administrador"
+                        class="w-12 h-12 rounded-2xl bg-[#141A28] border border-[#232D42] flex items-center justify-center hover:bg-[#1A2234] hover:border-amber-500/50 transition-all">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.4 8.9 5 12 5z"/>
+                            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                            <path fill="#FBBC05" d="M5.3 14.7c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.6 7.2C.6 9.2 0 11.5 0 14s.6 4.8 1.6 6.8l3.7-2.9z"/>
+                            <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.4-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"/>
+                        </svg>
+                    </button>
+                    <!-- Apple -->
+                    <button type="button" onclick="fillDemoCredentials('paulolp0101@gmail.com', '86266049', 'Paulo Lima')" title="Acesso Paulo Lima"
+                        class="w-12 h-12 rounded-2xl bg-[#141A28] border border-[#232D42] flex items-center justify-center hover:bg-[#1A2234] hover:border-amber-500/50 transition-all">
+                        <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.32c.67-.82 1.12-1.96.99-3.1-.96.04-2.14.64-2.83 1.44-.61.71-1.15 1.87-1 3.01 1.08.08 2.17-.53 2.84-1.35z"/>
+                        </svg>
+                    </button>
+                    <!-- SSO Key -->
+                    <button type="button" onclick="fillDemoCredentials('admin@nexusfinanceiro.com', '86266049', 'Administrador')" title="Acesso SSO Seguro"
+                        class="w-12 h-12 rounded-2xl bg-[#141A28] border border-[#232D42] flex items-center justify-center hover:bg-[#1A2234] hover:border-amber-500/50 transition-all text-amber-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Link de Cadastro -->
+                <p class="mt-6 text-center text-xs text-[#8E9BAE]">
+                    Não tem uma conta? <a href="javascript:void(0)" onclick="switchAuthTab('register')" class="text-[#E5A93C] hover:underline font-extrabold ml-1">Cadastrar-se</a>
+                </p>
+            </div>
+
+            <!-- FORMULÁRIO DE REGISTRO (CRIAR CONTA) -->
+            <div id="registerBox" class="form-fade" style="display: none;">
+                <form id="registerForm" class="space-y-4" onsubmit="handleRegisterSubmit(event); return false;">
+                    <div>
+                        <label class="block text-xs font-semibold text-[#9AA8BA] mb-1.5">Nome Completo</label>
+                        <div class="input-wrapper-exact">
+                            <input id="regName" name="regName" type="text" required 
+                                class="block w-full bg-transparent px-4 py-3.5 text-white placeholder-[#4C596D] text-sm focus:outline-none"
+                                placeholder="Seu nome completo">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-[#9AA8BA] mb-1.5">E-mail</label>
+                        <div class="input-wrapper-exact">
+                            <input id="regEmail" name="regEmail" type="email" autocomplete="email" required 
+                                class="block w-full bg-transparent px-4 py-3.5 text-white placeholder-[#4C596D] text-sm focus:outline-none"
+                                placeholder="seu.email@exemplo.com">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-[#9AA8BA] mb-1.5">Senha (mínimo 6 caracteres)</label>
+                        <div class="input-wrapper-exact flex items-center">
+                            <input id="regPassword" name="regPassword" type="password" minlength="6" required
+                                class="block w-full bg-transparent pl-4 pr-10 py-3.5 text-white placeholder-[#4C596D] text-sm focus:outline-none"
+                                placeholder="••••••••">
+                            <button type="button" id="btnToggleRegPass" onclick="togglePasswordVisibility('regPassword', 'btnToggleRegPass')" class="pr-3 text-gray-500 hover:text-amber-400 transition-colors focus:outline-none">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" id="btnRegisterSubmit"
+                            class="btn-gold-blue-gradient w-full py-4 text-sm font-extrabold flex items-center justify-center gap-2 focus:outline-none">
+                            Criar Minha Conta →
+                        </button>
+                    </div>
+                </form>
+                <p class="mt-6 text-center text-xs text-[#8E9BAE]">
+                    Já possui uma conta? <a href="javascript:void(0)" onclick="switchAuthTab('login')" class="text-[#E5A93C] hover:underline font-extrabold ml-1">Fazer Login</a>
+                </p>
+            </div>
+
+            <!-- FORMULÁRIO DE RECUPERAÇÃO -->
+            <div id="forgotBox" class="form-fade" style="display: none;">
+                <form id="forgotForm" class="space-y-4" onsubmit="handleForgotSubmit(event); return false;">
+                    <div>
+                        <label class="block text-xs font-semibold text-[#9AA8BA] mb-1.5">E-mail Cadastrado</label>
+                        <div class="input-wrapper-exact">
+                            <input id="forgotEmail" name="forgotEmail" type="email" autocomplete="email" required 
+                                class="block w-full bg-transparent px-4 py-3.5 text-white placeholder-[#4C596D] text-sm focus:outline-none"
+                                placeholder="seu.email@exemplo.com">
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" id="btnSendPassword"
+                            class="btn-gold-blue-gradient w-full py-4 text-sm font-extrabold flex items-center justify-center gap-2 focus:outline-none">
+                            Gerar Nova Senha →
+                        </button>
+                    </div>
+                </form>
+                <p class="mt-6 text-center text-xs text-[#8E9BAE]">
+                    Lembrou da senha? <a href="javascript:void(0)" onclick="switchAuthTab('login')" class="text-[#E5A93C] hover:underline font-extrabold ml-1">Voltar ao Login</a>
+                </p>
+            </div>
+
+        </div>
+
+        <!-- ASSINATURA EXECUTIVA DO DESENVOLVEDOR PAULO LIMA (Ultra-Refined) -->
+        <div class="mt-6 flex justify-center">
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] light:bg-slate-900/[0.04] border border-white/[0.09] light:border-slate-300 shadow-[0_6px_20px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] hover:border-blue-400/40 hover:shadow-[0_8px_25px_rgba(0,0,0,0.5),0_0_18px_rgba(59,130,246,0.20)]">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center shadow-[0_2px_8px_rgba(37,99,235,0.4)]">
+                    <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                </div>
+                <div class="flex items-baseline gap-1.5">
+                    <span class="text-[11.5px] font-medium text-slate-400 light:text-slate-600 tracking-tight">Desenvolvido por</span>
+                    <strong class="text-[12.5px] font-bold text-white light:text-slate-900 tracking-wide">Paulo Lima</strong>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+    // 1. Submit Login
+    async function handleLoginSubmit(e) {
+        if (e) e.preventDefault();
+        hideAlert();
+
+        const emailInput = document.getElementById('loginEmail');
+        const passInput = document.getElementById('loginPassword');
+        const btn = document.getElementById('btnLoginSubmit');
+
+        const email = emailInput ? emailInput.value.trim() : '';
+        const password = passInput ? passInput.value.trim() : '';
+
+        if (!email || !password) {
+            showAlert('Por favor, preencha o e-mail e a senha.');
+            return false;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Entrando...`;
+
+        try {
+            const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/login' : targetOrigin + '/api/login';
+            const res = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                showAlert(data.error || 'E-mail ou senha incorretos!', 'error');
+                btn.disabled = false;
+                btn.innerHTML = 'Entrar na Conta →';
+                return false;
+            }
+
+            // Exibir modal 4K ultra profissional com mensagem amigável e limpa
+            showLoginSuccessModal('Sua sessão criptografada de alta segurança está ativa.');
+            localStorage.setItem('nexus_session', JSON.stringify({ email: email }));
+            localStorage.setItem('nexus_token', data.token);
+            localStorage.setItem('nexus_cached_user', JSON.stringify(data.user));
+            localStorage.setItem('nexus_just_logged_in', 'true');
+            sessionStorage.setItem('nexus_just_logged_in', 'true');
+
+            setTimeout(() => {
+                window.location.href = targetOrigin;
+            }, 3000);
+
+        } catch (err) {
+            showAlert('Erro ao conectar ao servidor backend (porta 3000). Verifique se o comando "npm start" está rodando.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = 'Entrar na Conta →';
+        }
+        return false;
+    }
+
+    // 2. Submit Register
+    async function handleRegisterSubmit(e) {
+        if (e) e.preventDefault();
+        hideAlert();
+
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value.trim();
+        const btn = document.getElementById('btnRegisterSubmit');
+
+        if (!name || !email || !password) {
+            showAlert('Por favor, preencha todos os campos obrigatórios.');
+            return false;
+        }
+
+        if (password.length < 6) {
+            showAlert('A senha deve ter no mínimo 6 caracteres.');
+            return false;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Criando conta...`;
+
+        try {
+            const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/register' : targetOrigin + '/api/register';
+            const res = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                showAlert(data.error || 'Erro ao criar conta.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = 'Criar Minha Conta →';
+                return false;
+            }
+
+            showAlert('Conta criada com sucesso! Preenchemos suas credenciais para entrar.', 'success');
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+            setTimeout(() => {
+                switchAuthTab('login');
+            }, 1000);
+
+        } catch (err) {
+            showAlert('Erro ao conectar ao servidor backend (porta 3000). Verifique se o comando "npm start" está rodando.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Criar Minha Conta →';
+        }
+        return false;
+    }
+
+    // 3. Submit Forgot Password
+    async function handleForgotSubmit(e) {
+        if (e) e.preventDefault();
+        hideAlert();
+
+        const email = document.getElementById('forgotEmail').value.trim();
+        const btn = document.getElementById('btnSendPassword');
+
+        if (!email) {
+            showAlert('Por favor, informe seu e-mail cadastrado.');
+            return false;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Enviando...`;
+
+        try {
+            const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/send-password' : targetOrigin + '/api/send-password';
+            const res = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                showAlert(data.error || 'E-mail não encontrado no sistema.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = 'Gerar Nova Senha →';
+                return false;
+            }
+
+            if (data.mode === 'direct' && data.tempPassword) {
+                showAlert(`<strong>Senha temporária gerada:</strong> <code class="bg-black/50 px-2 py-0.5 rounded text-amber-300 font-mono text-sm">${data.tempPassword}</code>. Preenchemos para você entrar.`, 'success');
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = data.tempPassword;
+                setTimeout(() => {
+                    switchAuthTab('login');
+                }, 1800);
+            } else {
+                showAlert('Instruções de redefinição enviadas para o seu e-mail com sucesso!', 'success');
+            }
+
+        } catch (err) {
+            showAlert('Erro ao conectar ao servidor backend (porta 3000). Verifique se o comando "npm start" está rodando.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Gerar Nova Senha →';
+        }
+        return false;
+    }
+
+    // Engine de Linhas Orbitais Glowing no Fundo (Idêntico ao Fundo da Foto)
+    (function initBgOrbital() {
+        const canvas = document.getElementById('bgOrbitalCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        let angle = 0;
+        function render() {
+            ctx.clearRect(0, 0, width, height);
+            angle += 0.002;
+
+            const cx = width / 2;
+            const cy = height / 2;
+
+            // Desenhar elipses e espirais luminosas douradas e azuis
+            for (let i = 1; i <= 6; i++) {
+                const rx = (width * 0.38) + (i * 45);
+                const ry = (height * 0.42) + (i * 35);
+
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(angle * (i % 2 === 0 ? 1 : -1) + (i * 0.2));
+
+                ctx.beginPath();
+                ctx.ellipse(0, 0, rx, ry, Math.PI / 6, 0, Math.PI * 2);
+                ctx.lineWidth = 1;
+
+                if (i % 2 === 0) {
+                    ctx.strokeStyle = `rgba(200, 155, 60, ${0.12 - (i * 0.015)})`;
+                } else {
+                    ctx.strokeStyle = `rgba(91, 148, 217, ${0.12 - (i * 0.015)})`;
+                }
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            requestAnimationFrame(render);
+        }
+        render();
+    })();
+    </script>
+</body>
+</html>
