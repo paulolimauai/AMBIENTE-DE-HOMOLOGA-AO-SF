@@ -4141,86 +4141,125 @@ function getAttachmentCoverHtml(a, t){
   }
 
   const nameSearch = ((a.name || '') + ' ' + (t ? t.desc : '')).toLowerCase();
+  
   let bName = 'Fatura / Comprovante';
-  let bBg = 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)';
-  let bColor = '#38bdf8';
-  let logoContent = '<div style="font-size:26px;">📄</div>';
+  let bSub = 'Documento Digital';
+  let bBg = 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)';
+  let accentColor = '#38bdf8';
+  let logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; font-size:22px;">📄</div>\`;
 
   if (nameSearch.includes('tim')) {
-    bName = 'TIM GSM';
-    bBg = 'linear-gradient(135deg, #002b66 0%, #004691 100%)';
-    bColor = '#ffffff';
-    logoContent = '<div style="font-size:20px; font-weight:900; letter-spacing:2px; color:#ffffff; background:#0056b3; padding:4px 16px; border-radius:6px; font-family:sans-serif; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.2);">TIM</div>';
+    bName = 'TIM Brasil';
+    bSub = 'Fatura Telefonia';
+    bBg = 'linear-gradient(135deg, #031738 0%, #004691 100%)';
+    accentColor = '#60a5fa';
+    logoBadge = \`<div style="width:46px; height:42px; border-radius:10px; background:#0056b3; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; color:#fff; font-family:sans-serif; letter-spacing:1px; box-shadow:0 4px 12px rgba(0,0,0,0.35);">TIM</div>\`;
   } else if (nameSearch.includes('claro')) {
     bName = 'Claro';
-    bBg = 'linear-gradient(135deg, #881337 0%, #e11d48 100%)';
-    bColor = '#ffffff';
-    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#be123c; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">claro_</div>';
+    bSub = 'Fatura Fixo / Móvel';
+    bBg = 'linear-gradient(135deg, #4c0519 0%, #e11d48 100%)';
+    accentColor = '#fecdd3';
+    logoBadge = \`<div style="width:52px; height:42px; border-radius:10px; background:#be123c; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">claro_</div>\`;
   } else if (nameSearch.includes('vivo')) {
     bName = 'Vivo';
-    bBg = 'linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%)';
-    bColor = '#ffffff';
-    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#6d28d9; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">vivo</div>';
+    bSub = 'Fatura Móvel / Fibra';
+    bBg = 'linear-gradient(135deg, #3b0764 0%, #7c3aed 100%)';
+    accentColor = '#ddd6fe';
+    logoBadge = \`<div style="width:46px; height:42px; border-radius:10px; background:#6d28d9; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">vivo</div>\`;
   } else if (nameSearch.includes('nu') || nameSearch.includes('nubank')) {
     bName = 'Nubank';
-    bBg = 'linear-gradient(135deg, #4c057a 0%, #820ad1 100%)';
-    bColor = '#ffffff';
-    logoContent = '<div style="font-size:20px; font-weight:900; color:#ffffff; background:#820ad1; padding:4px 16px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">Nu</div>';
+    bSub = 'Fatura Cartão';
+    bBg = 'linear-gradient(135deg, #340656 0%, #820ad1 100%)';
+    accentColor = '#e9d5ff';
+    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:#820ad1; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">Nu</div>\`;
   } else if (nameSearch.includes('inter')) {
     bName = 'Banco Inter';
-    bBg = 'linear-gradient(135deg, #9a3412 0%, #ea580c 100%)';
-    bColor = '#ffffff';
-    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#ea580c; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">inter</div>';
+    bSub = 'Extrato / Fatura';
+    bBg = 'linear-gradient(135deg, #431407 0%, #f97316 100%)';
+    accentColor = '#ffedd5';
+    logoBadge = \`<div style="width:46px; height:42px; border-radius:10px; background:#ea580c; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">inter</div>\`;
   } else if (nameSearch.includes('itau') || nameSearch.includes('itaú')) {
     bName = 'Itaú';
-    bBg = 'linear-gradient(135deg, #7c2d12 0%, #c2410c 100%)';
-    bColor = '#ffffff';
-    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#ec5c00; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">Itaú</div>';
+    bSub = 'Fatura Cartão';
+    bBg = 'linear-gradient(135deg, #431407 0%, #ea580c 100%)';
+    accentColor = '#fed7aa';
+    logoBadge = \`<div style="width:44px; height:42px; border-radius:10px; background:#ec5c00; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">Itaú</div>\`;
   } else if (nameSearch.includes('bradesco')) {
     bName = 'Bradesco';
-    bBg = 'linear-gradient(135deg, #881337 0%, #cc092f 100%)';
-    bColor = '#ffffff';
-    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#cc092f; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">Bradesco</div>';
+    bSub = 'Fatura Cartão';
+    bBg = 'linear-gradient(135deg, #4c0519 0%, #dc2626 100%)';
+    accentColor = '#fecdd3';
+    logoBadge = \`<div style="width:48px; height:42px; border-radius:10px; background:#cc092f; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">Brad</div>\`;
   } else if (nameSearch.includes('santander')) {
     bName = 'Santander';
-    bBg = 'linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)';
-    bColor = '#ffffff';
-    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#ec0000; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">Santander</div>';
+    bSub = 'Fatura Cartão';
+    bBg = 'linear-gradient(135deg, #450a0a 0%, #ef4444 100%)';
+    accentColor = '#fecdd3';
+    logoBadge = \`<div style="width:44px; height:42px; border-radius:10px; background:#ec0000; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">S</div>\`;
   } else if (nameSearch.includes('bb') || nameSearch.includes('banco do brasil')) {
     bName = 'Banco do Brasil';
-    bBg = 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)';
-    bColor = '#facc15';
-    logoContent = '<div style="font-size:18px; font-weight:900; color:#facc15; background:#1e3a8a; padding:4px 14px; border-radius:6px; border:1px solid #facc15; box-shadow:0 2px 8px rgba(0,0,0,0.3);">BB</div>';
+    bSub = 'Comprovante / Fatura';
+    bBg = 'linear-gradient(135deg, #172554 0%, #1d4ed8 100%)';
+    accentColor = '#fef08a';
+    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:#1e3a8a; border:1px solid #facc15; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; color:#facc15; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">BB</div>\`;
   } else if (nameSearch.includes('caixa') || nameSearch.includes('cef')) {
     bName = 'CAIXA';
-    bBg = 'linear-gradient(135deg, #075985 0%, #0284c7 100%)';
-    bColor = '#ffffff';
-    logoContent = '<div style="font-size:18px; font-weight:900; color:#ffffff; background:#005ca9; padding:4px 14px; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">CAIXA</div>';
+    bSub = 'Comprovante de Pagamento';
+    bBg = 'linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%)';
+    accentColor = '#bae6fd';
+    logoBadge = \`<div style="width:46px; height:42px; border-radius:10px; background:#005ca9; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 12px rgba(0,0,0,0.35);">CAIXA</div>\`;
   } else if (nameSearch.includes('enel') || nameSearch.includes('cemig') || nameSearch.includes('copel') || nameSearch.includes('cpfl') || nameSearch.includes('light') || nameSearch.includes('luz') || nameSearch.includes('energia')) {
     bName = 'Energia Elétrica';
-    bBg = 'linear-gradient(135deg, #713f12 0%, #ca8a04 100%)';
-    bColor = '#fef08a';
-    logoContent = '<div style="font-size:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));">⚡</div>';
+    bSub = 'Conta de Luz';
+    bBg = 'linear-gradient(135deg, #451a03 0%, #ca8a04 100%)';
+    accentColor = '#fef08a';
+    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:rgba(234,179,8,0.25); border:1px solid rgba(234,179,8,0.5); display:flex; align-items:center; justify-content:center; font-size:22px; color:#fef08a;">⚡</div>\`;
   } else if (nameSearch.includes('sabesp') || nameSearch.includes('sanepar') || nameSearch.includes('copasa') || nameSearch.includes('agua') || nameSearch.includes('água')) {
     bName = 'Água / Saneamento';
-    bBg = 'linear-gradient(135deg, #0c4a6e 0%, #0284c7 100%)';
-    bColor = '#bae6fd';
-    logoContent = '<div style="font-size:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));">💧</div>';
+    bSub = 'Conta de Água';
+    bBg = 'linear-gradient(135deg, #082f49 0%, #0284c7 100%)';
+    accentColor = '#bae6fd';
+    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:rgba(2,132,199,0.25); border:1px solid rgba(2,132,199,0.5); display:flex; align-items:center; justify-content:center; font-size:22px; color:#bae6fd;">💧</div>\`;
   } else if (nameSearch.includes('internet') || nameSearch.includes('fibra') || nameSearch.includes('wifi')) {
-    bName = 'Internet / Fibra';
-    bBg = 'linear-gradient(135deg, #164e63 0%, #0891b2 100%)';
-    bColor = '#cffaff';
-    logoContent = '<div style="font-size:26px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));">🌐</div>';
+    bName = 'Internet & Fibra';
+    bSub = 'Fatura de Telecom';
+    bBg = 'linear-gradient(135deg, #083344 0%, #0891b2 100%)';
+    accentColor = '#cffaff';
+    logoBadge = \`<div style="width:42px; height:42px; border-radius:10px; background:rgba(8,145,178,0.25); border:1px solid rgba(8,145,178,0.5); display:flex; align-items:center; justify-content:center; font-size:22px; color:#cffaff;">🌐</div>\`;
   }
 
   return \`
-  <div style="width:100%; height:140px; background:\${bBg}; border-radius:12px; border:1px solid rgba(255,255,255,0.15); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:12px; position:relative; overflow:hidden; box-shadow:inset 0 1px 1px rgba(255,255,255,0.25), 0 4px 12px rgba(0,0,0,0.25);">
-    <div style="position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.45); backdrop-filter:blur(4px); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700; color:#fff; display:flex; align-items:center; gap:4px; border:1px solid rgba(255,255,255,0.15);">
-      📄 PDF
+  <div style="width:100%; height:140px; background:\${bBg}; border-radius:14px; border:1px solid rgba(255,255,255,0.14); display:flex; align-items:center; justify-content:space-between; padding:16px 18px; position:relative; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2); transition:all 0.3s ease;">
+    <div style="position:absolute; right:-20px; bottom:-20px; font-size:90px; opacity:0.07; user-select:none; pointer-events:none; font-weight:900;">📄</div>
+    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, transparent, \${accentColor}, transparent);"></div>
+
+    <div style="display:flex; align-items:center; gap:14px; z-index:2; max-width:75%;">
+      \${logoBadge}
+      <div style="text-align:left;">
+        <div style="font-size:16px; font-weight:900; color:#ffffff; letter-spacing:0.2px; text-shadow:0 2px 4px rgba(0,0,0,0.5); line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          \${bName}
+        </div>
+        <div style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.78); margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          \${bSub}
+        </div>
+        <div style="display:flex; gap:2px; margin-top:8px; opacity:0.6;">
+          <span style="width:2px; height:10px; background:#fff;"></span>
+          <span style="width:4px; height:10px; background:#fff;"></span>
+          <span style="width:1px; height:10px; background:#fff;"></span>
+          <span style="width:3px; height:10px; background:#fff;"></span>
+          <span style="width:5px; height:10px; background:#fff;"></span>
+          <span style="width:2px; height:10px; background:#fff;"></span>
+          <span style="width:4px; height:10px; background:#fff;"></span>
+          <span style="width:1px; height:10px; background:#fff;"></span>
+          <span style="width:3px; height:10px; background:#fff;"></span>
+        </div>
+      </div>
     </div>
-    \${logoContent}
-    <div style="font-size:12.5px; font-weight:800; color:\${bColor}; text-align:center; text-shadow:0 1px 3px rgba(0,0,0,0.7); max-width:92%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:0.3px;">
-      \${bName}
+
+    <div style="z-index:2; display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+      <div style="background:rgba(0,0,0,0.4); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.18); padding:4px 10px; border-radius:8px; font-size:11px; font-weight:800; color:#ffffff; display:flex; align-items:center; gap:5px; letter-spacing:0.5px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+        <span style="color:#ef4444; font-size:13px;">📄</span> PDF
+      </div>
     </div>
   </div>\`;
 }
