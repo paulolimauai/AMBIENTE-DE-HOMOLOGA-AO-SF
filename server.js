@@ -4195,8 +4195,8 @@ function pageAnexos(){
             <span class="pill" style="background:rgba(232,176,75,0.18); color:var(--green); font-weight:700; font-size:12.5px; padding:5px 12px; border-radius:20px;">
               \${isPdf ? '📄 PDF' : isImage ? '🖼️ Imagem' : '📎 Documento'}
             </span>
-            <div class="row-actions">
-              <button data-delatt="\${a.id}" title="Excluir Anexo" style="padding:6px 10px; font-size:15px; border-radius:8px; background:rgba(239, 68, 68, 0.15); color:#ef4444; border:none; cursor:pointer;">🗑 Excluir</button>
+            <div style="display:flex; align-items:center;">
+              <button data-delatt="\${a.id}" title="Excluir Anexo" style="width:auto; height:34px; padding:0 12px; border-radius:8px; background:rgba(239, 68, 68, 0.15); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.3); font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;">🗑 Excluir</button>
             </div>
           </div>
 
