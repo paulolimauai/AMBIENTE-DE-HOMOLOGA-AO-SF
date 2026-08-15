@@ -6014,12 +6014,68 @@ function previewAttachment(id){
   document.body.appendChild(modalOverlay);
 }
 
+function showConfirmModal(opts) {
+  const title = opts.title || 'Confirmar Ação';
+  const message = opts.message || 'Tem certeza que deseja prosseguir?';
+  const confirmText = opts.confirmText || 'Confirmar';
+  const cancelText = opts.cancelText || 'Cancelar';
+  const confirmDanger = opts.confirmDanger !== false;
+  const onConfirm = opts.onConfirm;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay show';
+  overlay.style.zIndex = '4000';
+  overlay.style.backdropFilter = 'blur(6px)';
+
+  const btnBg = confirmDanger ? '#ef4444' : 'var(--green)';
+
+  overlay.innerHTML = '<div class="modal" style="max-width:440px; width:90vw; padding:26px 24px; border-radius:20px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.5); border:1px solid var(--card-border); transform:scale(0.92); transition:transform 0.2s ease;">' +
+    '<div style="width:58px; height:58px; border-radius:50%; background:' + (confirmDanger ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)') + '; color:' + (confirmDanger ? '#ef4444' : 'var(--green)') + '; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px auto; border:1px solid ' + (confirmDanger ? 'rgba(239,68,68,0.3)' : 'rgba(34,197,94,0.3)') + ';">' +
+      (confirmDanger ? '🗑️' : '❓') +
+    '</div>' +
+    '<h3 style="font-size:20px; font-weight:800; margin:0 0 8px 0; color:var(--text);">' + title + '</h3>' +
+    '<p style="font-size:14px; color:var(--text-dim); margin:0 0 24px 0; line-height:1.5;">' + message + '</p>' +
+    '<div style="display:flex; gap:12px; justify-content:center;">' +
+      '<button class="btn-cancel-modal" style="flex:1; height:44px; font-size:14px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.08); border:1px solid var(--card-border); color:var(--text); cursor:pointer;">' + cancelText + '</button>' +
+      '<button class="btn-confirm-modal" style="flex:1; height:44px; font-size:14px; font-weight:700; border-radius:10px; background:' + btnBg + '; border:none; color:#ffffff; cursor:pointer; box-shadow:0 4px 12px ' + (confirmDanger ? 'rgba(239,68,68,0.3)' : 'rgba(34,197,94,0.3)') + ';">' + confirmText + '</button>' +
+    '</div>' +
+  '</div>';
+
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    const modalEl = overlay.querySelector('.modal');
+    if (modalEl) modalEl.style.transform = 'scale(1)';
+  }, 10);
+
+  overlay.querySelector('.btn-cancel-modal').onclick = () => overlay.remove();
+  overlay.onclick = (e) => {
+    if (e.target === overlay) overlay.remove();
+  };
+
+  overlay.querySelector('.btn-confirm-modal').onclick = async () => {
+    overlay.remove();
+    if (onConfirm) await onConfirm();
+  };
+}
+
 async function deleteAttachment(id){
-  if(!confirm('Remover este anexo?')) return;
-  attachments = attachments.filter(a=>a.id!==id);
-  await saveUserData();
-  showToast('Anexo removido');
-  render();
+  const att = attachments.find(a => a.id === id);
+  const nameLabel = att ? ('"' + att.name + '"') : 'este anexo';
+
+  showConfirmModal({
+    title: 'Excluir Anexo?',
+    message: 'Tem certeza que deseja remover ' + nameLabel + '? Esta ação não poderá ser desfeita.',
+    confirmText: '🗑 Sim, Excluir',
+    cancelText: 'Cancelar',
+    confirmDanger: true,
+    onConfirm: async () => {
+      attachments = attachments.filter(a => a.id !== id);
+      await saveUserData();
+      showToast('Anexo removido com sucesso');
+      render();
+    }
+  });
 }
 
 /* ==================== Eventos de página ==================== */
