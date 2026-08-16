@@ -703,6 +703,84 @@ body.light .menu button:hover .ic{background:rgba(15,23,42,0.12); color:#0F172A;
 body.light .menu button.active{background:linear-gradient(135deg, #0F172A 0%, #1E293B 100%) !important; color:#FFFFFF !important; border-color:#0F172A !important; box-shadow:0 8px 24px rgba(15,23,42,0.3) !important;}
 body.light .menu button.active .ic{background:rgba(255,255,255,0.2); color:#FFFFFF; border-color:rgba(255,255,255,0.3);}
 
+/* ==================== Correção Completa de Contraste do Modo Claro (Light Mode Contrast Fix) ==================== */
+body.light .topheader,
+html.light .topheader {
+  background: #ffffff !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.light .topheader .brand .name,
+html.light .topheader .brand .name {
+  color: #0f172a !important;
+}
+
+body.light .topheader .brand .name span,
+html.light .topheader .brand .name span {
+  color: #2563eb !important;
+}
+
+body.light .topheader .icon-btn,
+html.light .topheader .icon-btn {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+body.light .topheader .icon-btn:hover,
+html.light .topheader .icon-btn:hover {
+  background: #e2e8f0 !important;
+  color: #2563eb !important;
+}
+
+body.light .topheader .user,
+html.light .topheader .user {
+  background: #f8fafc !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+body.light .topheader .uname,
+html.light .topheader .uname {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+body.light .topheader .urole,
+html.light .topheader .urole {
+  color: #64748b !important;
+}
+
+body.light .topheader #logoutBtn,
+html.light .topheader #logoutBtn {
+  color: #dc2626 !important;
+  border: 1px solid #fca5a5 !important;
+  background: #fef2f2 !important;
+}
+
+body.light .topheader #logoutBtn:hover,
+html.light .topheader #logoutBtn:hover {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+}
+
+body.light .page-head h1,
+html.light .page-head h1 {
+  color: #0f172a !important;
+}
+
+body.light .page-head p,
+html.light .page-head p {
+  color: #475569 !important;
+}
+
+body.light code,
+html.light code {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
 /* ==================== Assinatura Executiva do Desenvolvedor (Ultra-Refined) ==================== */
 .auth-dev-credit{
   margin-top:24px; z-index:10;
