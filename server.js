@@ -473,6 +473,22 @@ body.light .auth-blob{opacity:.16;}
   font-weight:900 !important; font-size:22px !important; width:52px !important; height:52px !important; border-radius:16px !important;
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
+.env-badge-homolog {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-left: 6px !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.22) !important;
+}
 .auth-box .brand .name{font-size:20px; font-weight:800; color:var(--text); letter-spacing:0.05em;}
 @keyframes logoPulse{
   0%,100%{box-shadow:0 0 0 0 rgba(200,155,60,.5);}
@@ -1742,6 +1758,7 @@ body.light .scale-dropdown {
       <div class="brand">
         <div class="logo">N</div>
         <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
+        <span class="env-badge-homolog" title="Ambiente de Testes e Homologação">Homologação 🧪</span>
       </div>
       <div class="right" style="margin-left:auto;">
         <div class="notif-wrap">
