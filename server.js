@@ -314,10 +314,42 @@ body{
 button, input, select{font-family:inherit; color:inherit;}
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
 
-/* Prevenção de Piscamento/Flicker */
+/* ==================== Estabilidade de Renderização para Screenshot & Print ==================== */
+* {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
 #pageContent {
-  contain: content;
-  will-change: auto;
+  position: relative;
+  width: 100%;
+}
+
+.topheader, nav.menu, .panel, .kpi, .table-panel, .auth-box, .cards-summary-panel, .tx-footer-summary {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+@media print {
+  body, html {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    overflow: visible !important;
+  }
+  .topheader {
+    position: relative !important;
+    top: auto !important;
+    background: var(--sidebar) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .app-dev-credit {
+    position: relative !important;
+    bottom: auto !important;
+  }
+  .app-bg-scene, .app-bg-grid, .app-bg-chart, .app-blob {
+    display: none !important;
+  }
 }
 
 /* ==================== Tela de Auth (Design UI de Alta Performance) ==================== */
