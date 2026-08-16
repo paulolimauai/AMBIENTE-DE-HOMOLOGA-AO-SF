@@ -1309,6 +1309,44 @@ body.light tr.trow:hover td { background:#f1f5f9 !important; }
   line-height: 1.6 !important;
 }
 
+/* ==================== Estilo Executivo da Tela de Importação OFX / CSV ==================== */
+#importFile {
+  width: 100% !important;
+  padding: 24px 20px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(145deg, rgba(15,23,42,0.85) 0%, rgba(10,15,29,0.95) 100%) !important;
+  border: 2px dashed rgba(59,130,246,0.45) !important;
+  color: var(--text) !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  font-size: 14px !important;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3) !important;
+}
+
+#importFile:hover {
+  border-color: #3B82F6 !important;
+  background: rgba(59,130,246,0.12) !important;
+  box-shadow: 0 0 25px rgba(59,130,246,0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+#impConta, #impCategoria {
+  font-size: 14px !important;
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+  background: var(--bg) !important;
+  border: 1px solid var(--card-border) !important;
+  color: var(--text) !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  transition: border-color 0.2s ease !important;
+}
+
+#impConta:focus, #impCategoria:focus {
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 14px rgba(59,130,246,0.3) !important;
+}
+
 .cat-cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; justify-content:center;}
 .cat-card{
   background:linear-gradient(145deg, #12151A 0%, #0D0F13 100%);
