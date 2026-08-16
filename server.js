@@ -349,32 +349,51 @@ html, body {
   visibility: visible !important;
 }
 
-@media print, screen {
-  #appMain, #pageContent, .topheader, .main, .panel, .kpi, .table-panel {
+@media print {
+  @page {
+    size: auto;
+    margin: 10mm;
+  }
+  html, body {
+    background: #0A0D14 !important;
+    color: #F8FAFC !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .app-bg-scene, .app-bg-grid, .app-bg-chart, .app-blob, .mobile-drawer-overlay, .mobile-drawer, .scale-dropdown, .notif-panel {
+    display: none !important;
+  }
+  #appMain, #pageContent, .main, .topheader, .topheader-row, nav.menu, .kpis, .kpi, .panel, .table-panel, .tx-footer-summary, .app-dev-credit {
+    display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
-  }
-}
-
-@media print {
-  body, html {
-    background: var(--bg) !important;
-    color: var(--text) !important;
-    overflow: visible !important;
-  }
-  .topheader {
     position: relative !important;
     top: auto !important;
-    background: var(--sidebar) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-  .app-dev-credit {
-    position: relative !important;
+    left: auto !important;
+    right: auto !important;
     bottom: auto !important;
+    float: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
-  .app-bg-scene, .app-bg-grid, .app-bg-chart, .app-blob {
-    display: none !important;
+  nav.menu {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  .kpis {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .grid3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+    width: 100% !important;
   }
 }
 
@@ -6772,6 +6791,15 @@ function applyDisplayScale(scaleVal) {
     });
   } catch(e){}
 })();
+
+// Intercepta Ctrl + S / Cmd + S para gerar impressão limpa em vez de abrir modal do navegador que esconde elementos
+window.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || e.keyCode === 83)) {
+    e.preventDefault();
+    e.stopPropagation();
+    window.print();
+  }
+});
 
 const scaleMenuBtn = document.getElementById('scaleMenuBtn');
 const scaleDropdown = document.getElementById('scaleDropdown');
