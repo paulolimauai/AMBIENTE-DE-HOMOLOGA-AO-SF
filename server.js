@@ -7426,7 +7426,8 @@ const server = http.createServer((req, res) => {
   // Rota GET de Usuários
   if (req.method === 'GET' && parsedUrl.pathname === '/api/users') {
     if (pool) {
-      pool.query('SELECT name, email, password, role, active FROM usuarios ORDER BY id ASC')
+      initDatabase()
+        .then(() => pool.query('SELECT name, email, password, role, active FROM usuarios ORDER BY id ASC'))
         .then(result => {
           saveLocalUsers(result.rows);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
