@@ -303,7 +303,7 @@ body.light, html.light body{
   --shadow:0 10px 30px rgba(15,23,42,0.06);
 }
 *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
-html, body{overflow-x:hidden; width:100%;}
+html, body{overflow-x:clip !important; width:100%;}
 body{
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
   background:var(--bg); color:var(--text); min-height:100vh; transition:background .25s,color .25s;
@@ -320,6 +320,7 @@ code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5
 html, body {
   width: 100% !important;
   min-height: 100vh !important;
+  overflow-x: clip !important;
 }
 
 #appMain {
@@ -329,6 +330,7 @@ html, body {
   min-height: 100vh !important;
   display: flex !important;
   flex-direction: column !important;
+  overflow: visible !important;
   visibility: visible !important;
   opacity: 1 !important;
 }
@@ -524,7 +526,14 @@ body.light .app-blob.a3{opacity:.05;}
 
 /* ==================== Cabeçalho superior (nav horizontal & drawer mobile) ==================== */
 .topheader{
-  position:relative; width:100%; z-index:50; background:var(--sidebar); border-bottom:1px solid var(--card-border);
+  position:-webkit-sticky !important;
+  position:sticky !important;
+  top:0 !important;
+  z-index:9999 !important;
+  width:100% !important;
+  background:#0D111A !important;
+  border-bottom:1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow:0 4px 25px rgba(0,0,0,0.6) !important;
   padding-top:env(safe-area-inset-top);
 }
 .topheader-row{
