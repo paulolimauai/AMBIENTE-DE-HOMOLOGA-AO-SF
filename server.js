@@ -768,6 +768,114 @@ body.light .dev-signature-name{
 .user .urole{font-size:12px; color:var(--text-faint); white-space:nowrap;}
 .topheader-row .btn-ghost{padding:10px 18px; font-size:13px; flex-shrink:0;}
 
+/* ==================== Estilo Universal para Botões de Ação (Editar, Excluir, Ações) ==================== */
+.row-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.row-actions button,
+.btn-action-edit,
+.btn-action-del,
+.row-edit,
+[data-edit], [data-del],
+[data-editacc], [data-delacc],
+[data-editcat], [data-delcat],
+[data-editorc], [data-delorc],
+[data-editmeta], [data-delmeta],
+[data-editrec], [data-delrec], [data-lancar],
+[data-editalert], [data-delalert],
+[data-edituser],
+[data-mgedit], [data-mgdel] {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 9px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important;
+  outline: none !important;
+  flex-shrink: 0 !important;
+}
+
+/* Botão de Editar (Pencil ✎) */
+.btn-action-edit,
+.row-edit,
+[data-edit], [data-editacc], [data-editcat], [data-editorc], [data-editmeta], [data-editrec], [data-editalert], [data-edituser], [data-mgedit] {
+  background: rgba(59, 130, 246, 0.18) !important;
+  color: #60A5FA !important;
+  border: 1px solid rgba(59, 130, 246, 0.35) !important;
+}
+.btn-action-edit:hover,
+.row-edit:hover,
+[data-edit]:hover, [data-editacc]:hover, [data-editcat]:hover, [data-editorc]:hover, [data-editmeta]:hover, [data-editrec]:hover, [data-editalert]:hover, [data-edituser]:hover, [data-mgedit]:hover {
+  background: rgba(59, 130, 246, 0.35) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(96, 165, 250, 0.75) !important;
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.40) !important;
+}
+
+/* Botão de Excluir (Lixeira 🗑) */
+.btn-action-del,
+[data-del], [data-delacc], [data-delcat], [data-delorc], [data-delmeta], [data-delrec], [data-delalert], [data-mgdel] {
+  background: rgba(244, 63, 94, 0.18) !important;
+  color: #F87171 !important;
+  border: 1px solid rgba(244, 63, 94, 0.35) !important;
+}
+.btn-action-del:hover,
+[data-del]:hover, [data-delacc]:hover, [data-delcat]:hover, [data-delorc]:hover, [data-delmeta]:hover, [data-delrec]:hover, [data-delalert]:hover, [data-mgdel]:hover {
+  background: rgba(244, 63, 94, 0.35) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(248, 113, 113, 0.75) !important;
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.40) !important;
+}
+
+/* Botão de Lançar (▶) */
+[data-lancar] {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34D399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+[data-lancar]:hover {
+  background: rgba(16, 185, 129, 0.35) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(52, 211, 153, 0.75) !important;
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.40) !important;
+}
+
+/* Modo Claro / Light Theme Overrides */
+body.light .row-actions button,
+body.light .btn-action-edit,
+body.light .btn-action-del,
+body.light [data-edit], body.light [data-del],
+body.light [data-editacc], body.light [data-delacc],
+body.light [data-editcat], body.light [data-delcat],
+body.light [data-editorc], body.light [data-delorc],
+body.light [data-editmeta], body.light [data-delmeta],
+body.light [data-editrec], body.light [data-delrec], body.light [data-lancar],
+body.light [data-editalert], body.light [data-delalert],
+body.light [data-edituser], body.light [data-mgedit], body.light [data-mgdel] {
+  box-shadow: 0 2px 4px rgba(15,23,42,0.08) !important;
+}
+body.light .btn-action-edit, body.light .row-edit, body.light [data-edit], body.light [data-editacc], body.light [data-editcat], body.light [data-editorc], body.light [data-editmeta], body.light [data-editrec], body.light [data-editalert], body.light [data-edituser], body.light [data-mgedit] {
+  background: rgba(37, 99, 235, 0.10) !important;
+  color: #1D4ED8 !important;
+  border-color: rgba(37, 99, 235, 0.25) !important;
+}
+body.light .btn-action-del, body.light [data-del], body.light [data-delacc], body.light [data-delcat], body.light [data-delorc], body.light [data-delmeta], body.light [data-delrec], body.light [data-delalert], body.light [data-mgdel] {
+  background: rgba(220, 38, 38, 0.10) !important;
+  color: #DC2626 !important;
+  border-color: rgba(220, 38, 38, 0.25) !important;
+}
+
 /* Suporte de Tema Claro para Cards de Resumo */
 .cards-summary-panel, .tx-footer-summary {
   background: var(--card);
