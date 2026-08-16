@@ -545,14 +545,15 @@ body.light .app-blob.a3{opacity:.05;}
 
 /* ==================== Cabeçalho superior (nav horizontal & drawer mobile) ==================== */
 .topheader{
-  position:-webkit-sticky !important;
-  position:sticky !important;
+  position:fixed !important;
   top:0 !important;
-  z-index:9999 !important;
+  left:0 !important;
+  right:0 !important;
+  z-index:99999 !important;
   width:100% !important;
   background:#0D111A !important;
   border-bottom:1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow:0 4px 25px rgba(0,0,0,0.6) !important;
+  box-shadow:0 6px 25px rgba(0,0,0,0.7) !important;
   padding-top:env(safe-area-inset-top);
 }
 .topheader-row{
@@ -752,7 +753,8 @@ body.light .dev-signature-name{
 /* Centralização do conteúdo principal */
 .main{
   flex:1; min-width:0; padding:22px 28px 30px;
-  max-width:1440px; margin:0 auto; width:100%;
+  margin-top:140px !important;
+  max-width:1440px; margin-left:auto; margin-right:auto; width:100%;
 }
 .right{display:flex; align-items:center; gap:16px; flex-shrink:0;}
 .icon-btn{
@@ -1398,10 +1400,10 @@ body.light .login-success-box p{
   .donut-wrap{flex-direction:column; text-align:center; gap:14px;}
   .donut-side.r{text-align:center;}
   .cat-cards{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
-  .main{padding:18px 16px 90px;}
+  .main{margin-top:85px !important; padding:18px 16px 90px;}
 }
 @media(max-width:480px){
-  .main{padding:14px 12px 90px;}
+  .main{margin-top:75px !important; padding:14px 12px 90px;}
   .kpis{grid-template-columns:repeat(2,1fr); gap:8px;}
   .kpi{padding:14px 12px;}
   .kpi .val{font-size:17px;}
