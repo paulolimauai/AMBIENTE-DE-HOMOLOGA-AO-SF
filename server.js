@@ -2998,16 +2998,13 @@ function refreshTxTable(){
   const fStatus = document.getElementById('txFiltroStatus');
   const fConta = document.getElementById('txFiltroConta');
   const tableWrap = document.getElementById('txTableWrap');
-  if(!search || !tableWrap) return false;
-
-  // Proteção contra autofill do navegador preenchendo email/nome no campo de busca
-  if (currentUser && search.value && (search.value.trim() === currentUser.email || search.value.trim() === currentUser.name)) {
-    search.value = '';
-  }
+  if(!tableWrap) return false;
 
   let list = transactions.filter(inPeriod);
-  const q = search.value.trim().toLowerCase();
-  if(q) list = list.filter(t=>t.desc && t.desc.toLowerCase().includes(q));
+  if (search && search.value) {
+    const q = search.value.trim().toLowerCase();
+    if(q) list = list.filter(t=>t.desc && t.desc.toLowerCase().includes(q));
+  }
   if(fTipo && fTipo.value) list = list.filter(t=>t.type===fTipo.value);
   if(fCat && fCat.value) list = list.filter(t=>t.cat===fCat.value);
   if(fStatus && fStatus.value) list = list.filter(t=>t.status===fStatus.value);
@@ -3920,7 +3917,6 @@ function pageTransacoes(){
   </div>
   <div class="table-panel">
     <div class="filters">
-      <input id="txSearch" placeholder="Buscar por descrição...">
       <select id="txFiltroConta"><option value="">Todas as Contas / Cartões</option>\${accOptsHTML}</select>
       <select id="txFiltroTipo"><option value="">Todos os tipos</option><option value="in">Receitas</option><option value="out">Despesas</option></select>
       <select id="txFiltroCat"><option value="">Todas categorias</option>\${catOptionsHTML(null)}</select>
@@ -6402,7 +6398,7 @@ function attachPageEvents(){
   const fCat = document.getElementById('txFiltroCat');
   const fStatus = document.getElementById('txFiltroStatus');
   const fConta = document.getElementById('txFiltroConta');
-  if(search){
+  if(fTipo || fCat || fStatus || fConta || search){
     [search,fTipo,fCat,fStatus,fConta].forEach(el=>{
       if(el) {
         el.addEventListener('input', refreshTxTable);
