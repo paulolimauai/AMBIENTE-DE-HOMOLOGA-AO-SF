@@ -271,6 +271,14 @@ const htmlContent = `<!DOCTYPE html>
 html.user-logged-in #authPage { display: none !important; }
 html.user-logged-in #appMain { display: flex !important; flex-direction: column !important; min-height: 100vh !important; width: 100% !important; }
 
+html:not(.user-logged-in) #appMain,
+html:not(.user-logged-in) .topheader {
+  display: none !important;
+}
+html:not(.user-logged-in) #authPage {
+  display: flex !important;
+}
+
 html.is-admin nav.menu button:not(#menuUsuariosBtn):not(#menuLogsBtn):not(#menuFuncoesBtn),
 html.is-admin nav.mobile-drawer-nav button:not(#mobileDrawerUsuariosBtn):not(#mobileDrawerLogsBtn):not(#mobileDrawerFuncoesBtn) {
   display: none !important;
@@ -2335,8 +2343,17 @@ document.getElementById('logoutBtn').onclick = async () => {
   localStorage.removeItem('nexus_token');
   localStorage.removeItem('nexus_viewing_user');
   document.documentElement.classList.remove('user-logged-in');
-  document.getElementById('appMain').classList.remove('show');
-  document.getElementById('authPage').classList.add('show');
+  document.documentElement.classList.remove('is-admin');
+  const appMain = document.getElementById('appMain');
+  const authPage = document.getElementById('authPage');
+  if (appMain) {
+    appMain.classList.remove('show');
+    appMain.style.display = 'none';
+  }
+  if (authPage) {
+    authPage.classList.add('show');
+    authPage.style.display = 'flex';
+  }
   showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas.');
 };
 
