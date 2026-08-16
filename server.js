@@ -4605,17 +4605,41 @@ function pageRecorrentes(){
 
 function pageImportar(){
   return \`
-  <div class="page-head"><div><h1>Importar OFX / CSV</h1><p>Importe extratos bancários em lote</p></div></div>
-  <div class="panel">
-    <p style="color:var(--text-dim);font-size:12.5px;margin-bottom:14px;">
-      Formato CSV esperado: <code>data,descricao,valor</code>. Arquivos <b>.ofx</b> também são aceitos.
-    </p>
-    <div class="field-row">
-      <div class="field"><label>Conta de destino</label><select id="impConta">\${accounts.map(a=>\`<option>\${a.name} — \${a.type}</option>\`).join('')}</select></div>
-      <div class="field"><label>Categoria padrão</label><select id="impCategoria">\${categories.map(c=>\`<option>\${c.name}</option>\`).join('')}</select></div>
+  <div class="page-head">
+    <div>
+      <h1>Importar OFX / CSV</h1>
+      <p>Importe extratos bancários em lote</p>
     </div>
-    <div class="field"><label>Arquivo</label><input type="file" id="importFile" accept=".csv,.ofx,.txt"></div>
-    <div id="importPreview"></div>
+  </div>
+
+  <div class="panel" style="margin-bottom:22px;">
+    <p style="color:var(--text-dim); font-size:13.5px; margin-bottom:16px;">
+      Formato CSV esperado: <code style="background:var(--hover); padding:3px 8px; border-radius:6px; font-size:12.5px;">data,descricao,valor</code>. Arquivos <b>.ofx</b> também são aceitos.
+    </p>
+
+    <div class="field-row" style="margin-bottom:16px;">
+      <div class="field">
+        <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block; color:var(--text);">Conta de destino</label>
+        <select id="impConta" style="width:100%; font-size:14px; padding:10px 14px; height:44px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+          \${accounts.map(a=>\`<option>\${a.name} — \${a.type}</option>\`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block; color:var(--text);">Categoria padrão</label>
+        <select id="impCategoria" style="width:100%; font-size:14px; padding:10px 14px; height:44px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+          \${categories.map(c=>\`<option>\${c.name}</option>\`).join('')}
+        </select>
+      </div>
+    </div>
+
+    <div id="importDropZone" onclick="document.getElementById('importFile').click()" style="border: 2px dashed var(--green); border-radius: 16px; padding: 32px 20px; text-align: center; cursor: pointer; background: rgba(34, 197, 94, 0.04); transition: all 0.2s ease; position: relative;">
+      <input type="file" id="importFile" accept=".csv,.ofx,.txt" style="display:none;">
+      <span style="font-size: 38px; display: block; margin-bottom: 10px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">☁️</span>
+      <p style="margin:0; font-weight:800; font-size:16px; color:var(--text);">Arraste seus arquivos para cá ou <span style="color:var(--green); text-decoration:underline;">clique para selecionar e importar</span></p>
+      <p style="margin-top:6px; font-size:13.5px; color:var(--text-faint); margin-bottom:0;">Suporta extratos em arquivos .OFX, .CSV e .TXT</p>
+    </div>
+
+    <div id="importPreview" style="margin-top:16px;"></div>
   </div>\`;
 }
 
@@ -6636,6 +6660,19 @@ function attachPageEvents(){
   document.querySelectorAll('[data-toggleuser]').forEach(el=>el.onclick = ()=>toggleUserActive(el.getAttribute('data-toggleuser')));
 
   const importFile = document.getElementById('importFile'); if(importFile) importFile.onchange = handleImportFile;
+  const importDropZone = document.getElementById('importDropZone');
+  if(importDropZone) {
+    importDropZone.ondragover = (e) => { e.preventDefault(); importDropZone.style.borderColor = 'var(--green)'; importDropZone.style.background = 'rgba(34,197,94,0.1)'; };
+    importDropZone.ondragleave = () => { importDropZone.style.borderColor = 'var(--green)'; importDropZone.style.background = 'rgba(34,197,94,0.04)'; };
+    importDropZone.ondrop = (e) => {
+      e.preventDefault();
+      importDropZone.style.borderColor = 'var(--green)';
+      importDropZone.style.background = 'rgba(34,197,94,0.04)';
+      if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleImportFile({ target: { files: e.dataTransfer.files } });
+      }
+    };
+  }
 
   const addAtt = document.getElementById('btnAddAnexo');
   if(addAtt) addAtt.onclick = () => addAttachment();
