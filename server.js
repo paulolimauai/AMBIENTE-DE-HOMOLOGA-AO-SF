@@ -524,8 +524,8 @@ body.light .app-blob.a3{opacity:.05;}
 
 /* ==================== Cabeçalho superior (nav horizontal & drawer mobile) ==================== */
 .topheader{
-  position:sticky; top:0; z-index:50; background:var(--sidebar); border-bottom:1px solid var(--card-border);
-  backdrop-filter:blur(10px); padding-top:env(safe-area-inset-top);
+  position:relative; width:100%; z-index:50; background:var(--sidebar); border-bottom:1px solid var(--card-border);
+  padding-top:env(safe-area-inset-top);
 }
 .topheader-row{
   display:flex; align-items:center; gap:20px; padding:15px 28px; max-width:1440px; margin:0 auto;
@@ -596,11 +596,10 @@ nav.menu{
   display:flex; align-items:center; flex-wrap:nowrap; gap:8px; width:100%;
   padding:8px 12px; max-width:1440px; margin:0 auto 16px;
   overflow-x:auto; scrollbar-width:thin;
-  background:linear-gradient(135deg, rgba(17, 22, 33, 0.92) 0%, rgba(11, 15, 23, 0.96) 100%);
+  background:#0F1420;
   border:1px solid rgba(255, 255, 255, 0.12);
   border-radius:20px;
   box-shadow:0 20px 45px -10px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.15);
-  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
 }
 /* Scrollbars Globais Slim & Elegantes */
 *::-webkit-scrollbar{width:5px; height:5px;}
@@ -657,10 +656,9 @@ body.light .menu button.active .ic{background:rgba(255,255,255,0.2); color:#FFFF
   display:flex; justify-content:center; pointer-events:auto;
 }
 .app-dev-credit{
-  position:fixed; left:0; right:0; bottom:0; z-index:100;
-  display:flex; justify-content:center; padding:7px 16px calc(7px + env(safe-area-inset-bottom));
-  background:rgba(10, 14, 23, 0.88); border-top:1px solid rgba(255,255,255,0.06);
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  position:relative; width:100%; z-index:10; margin-top:auto;
+  display:flex; justify-content:center; padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:var(--sidebar); border-top:1px solid var(--card-border);
 }
 .dev-signature{
   position:relative;
@@ -725,7 +723,7 @@ body.light .dev-signature-name{
 
 /* Centralização do conteúdo principal */
 .main{
-  flex:1; min-width:0; padding:22px 28px 80px;
+  flex:1; min-width:0; padding:22px 28px 30px;
   max-width:1440px; margin:0 auto; width:100%;
 }
 .right{display:flex; align-items:center; gap:16px; flex-shrink:0;}
