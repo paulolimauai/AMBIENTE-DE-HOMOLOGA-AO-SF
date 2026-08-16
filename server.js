@@ -1031,57 +1031,48 @@ body.light tr.trow:hover td { background:#f1f5f9 !important; }
 .icon-picker button.sel{border-color:var(--green); background:var(--green-soft);}
 .cat-manage-tabs{display:flex; gap:8px;}
 .cat-manage-tabs .cat-tab{flex:1; padding:9.5px; border-radius:10px; border:1px solid var(--card-border); background:var(--bg); color:var(--text-dim); font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s ease;}
-.cat-manage-tabs .cat-tab.active{background:linear-gradient(135deg, rgba(229,169,60,0.3), rgba(200,155,60,0.4)); color:#E5A93C; border-color:rgba(200,155,60,0.7);}
-.cat-manage-row{display:flex; align-items:center; gap:10px;}
-.cat-manage-row .cat-badge{font-size:16px;}
-.cat-manage-row .info{min-width:0; flex:1;}
-.cat-manage-row .n{font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.cat-manage-row .u{font-size:11px; color:var(--text-faint);}
-.filters{display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
-.filters input, .filters select{
-  background:var(--bg); border:1px solid var(--card-border); border-radius:10px; padding:9px 14px; font-size:12.5px; outline:none; transition:all 0.2s ease;
-}
-.filters input:focus, .filters select:focus{border-color:#E5A93C; box-shadow:0 0 15px rgba(229,169,60,0.3);}
-.filters input{flex:1; min-width:180px;}
+.cat-manage-tabs .cat-tab.active{background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.35)); color:#60A5FA; border-color:rgba(59,130,246,0.6);}
+#catManageList.cat-cards{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:12px;}
 
-.placeholder{padding:60px 20px; text-align:center; color:var(--text-dim);}
-.placeholder .big{font-size:38px; margin-bottom:10px;}
-.placeholder h3{color:var(--text); font-size:16px; margin-bottom:6px;}
+.cat-card-item{
+  padding:12px 14px !important;
+  background:linear-gradient(145deg, rgba(20,25,36,0.95) 0%, rgba(14,18,27,0.98) 100%) !important;
+  border:1px solid rgba(255,255,255,0.09) !important;
+  border-radius:14px !important;
+  box-shadow:0 4px 14px rgba(0,0,0,0.3) !important;
+  min-height:64px !important;
+  justify-content:center !important;
+}
+.cat-card-item:hover{
+  border-color:rgba(59,130,246,0.4) !important;
+  transform:translateY(-1px) !important;
+  box-shadow:0 6px 18px rgba(0,0,0,0.45) !important;
+}
 
-.cat-cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; justify-content:center;}
-.cat-card{
-  background:linear-gradient(145deg, #12151A 0%, #0D0F13 100%);
-  border:1.5px solid rgba(200,155,60,0.35); border-radius:16px; padding:18px; display:flex; flex-direction:column;
-  box-shadow:0 10px 26px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.12);
-  transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.cat-card:hover{
-  transform:translateY(-3px) scale(1.02);
-  border-color:rgba(229,169,60,0.65);
-  box-shadow:0 18px 36px rgba(0,0,0,0.7), 0 0 22px rgba(200,155,60,0.22);
-}
-.cat-card .top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px;}
-.cat-card .id-group{display:flex; align-items:center; gap:10px; min-width:0;}
-.cat-card .dot{width:20px; height:20px; border-radius:6px; flex-shrink:0; box-shadow:0 0 0 3px rgba(255,255,255,.08), 0 2px 5px rgba(0,0,0,.4);}
-.cat-card h4{font-size:14px; font-weight:800; color:#ffffff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.cat-card .amt{font-size:18px; font-weight:800; color:#E5A93C;}
-.cat-card .row-actions{flex-shrink:0;}
-.cat-badge{
-  width:36px; height:36px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-  font-size:13px; font-weight:800;
-}
-.cat-card-stats{display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-top:auto;}
-.cat-card-stats .amt{font-size:18px; font-weight:800;}
-.cat-count{color:var(--text-faint); font-size:11.5px; white-space:nowrap;}
+.cat-manage-row{display:flex !important; align-items:center !important; justify-content:space-between !important; width:100% !important; gap:10px !important;}
+.cat-manage-row .cat-badge{width:38px !important; height:38px !important; border-radius:11px !important; display:flex !important; align-items:center !important; justify-content:center !important; font-size:17px !important; flex-shrink:0 !important;}
+.cat-manage-row .info{flex:1 !important; min-width:0 !important; display:flex !important; flex-direction:column !important; gap:2px !important;}
+.cat-manage-row .n{font-size:13.5px !important; font-weight:700 !important; color:var(--text) !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;}
+.cat-manage-row .u{font-size:11.5px !important; color:var(--text-faint) !important; font-weight:500 !important;}
+
 .cat-card-add{
-  border:1.5px dashed rgba(200,155,60,0.4); background:rgba(229,169,60,0.04); cursor:pointer;
-  border-radius:16px; padding:18px;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-  color:var(--text-dim); font-size:13px; font-weight:700; min-height:100px; font-family:inherit;
-  transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border:1px dashed rgba(59,130,246,0.4) !important;
+  background:rgba(59,130,246,0.06) !important;
+  color:#60A5FA !important;
+  border-radius:14px !important;
+  padding:12px 14px !important;
+  min-height:64px !important;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  cursor:pointer !important;
+  transition:all 0.2s ease !important;
 }
-.cat-card-add:hover{border-color:#E5A93C; color:#E5A93C; background:rgba(229,169,60,0.12); transform:translateY(-2px);}
-.cat-card-add .plus{font-size:24px; line-height:1; font-weight:400;}e-height:1; font-weight:400;}
+.cat-card-add:hover{border-color:rgba(59,130,246,0.7) !important; color:#FFFFFF !important; background:rgba(59,130,246,0.15) !important; transform:translateY(-1px) !important;}
 
 /* ==================== Admin: Usuários Cadastrados ==================== */
 .user-admin-list{display:flex; flex-direction:column; gap:8px;}
@@ -1718,15 +1709,15 @@ body.light .scale-dropdown {
 
 <!-- Modal Gerenciar Categorias -->
 <div class="overlay" id="overlayCatManage">
-  <div class="modal" style="max-width:600px;">
+  <div class="modal" style="max-width:680px; width:95%; max-height:88vh; display:flex; flex-direction:column;">
     <button class="close-x" id="closeCatManageModal">✕</button>
-    <h2>Gerenciar Categorias</h2>
-    <div class="cat-manage-tabs">
+    <h2 style="margin-bottom:14px; font-size:20px; font-weight:800;">Gerenciar Categorias</h2>
+    <div class="cat-manage-tabs" style="margin-bottom:4px;">
       <button type="button" class="cat-tab" data-cattab="despesa">↓ Despesas</button>
       <button type="button" class="cat-tab" data-cattab="receita">↑ Receitas</button>
     </div>
-    <div id="catManageList" class="cat-cards" style="margin-top:14px;"></div>
-    <div class="modal-actions">
+    <div id="catManageList" class="cat-cards" style="margin-top:12px; max-height:55vh; overflow-y:auto; padding-right:4px;"></div>
+    <div class="modal-actions" style="margin-top:16px;">
       <button id="catManageCloseBtn">Fechar</button>
       <button class="save" id="catManageAddBtn">+ Nova Categoria</button>
     </div>
@@ -5563,13 +5554,13 @@ function renderCatManageList(type){
   const wrap = document.getElementById('catManageList');
   if(!wrap) return;
   let html = list.map(c=>
-    '<div class="cat-card"><div class="cat-manage-row">'
-    + '<span class="cat-badge" style="background:'+c.color+'22;color:'+c.color+'">'+(c.icon||'📁')+'</span>'
-    + '<div class="info"><div class="n">'+c.name+'</div><div class="u">'+(c.count||0)+' uso'+((c.count||0)===1?'':'s')+'</div></div>'
-    + '<div class="row-actions"><button data-mgedit="'+c.name+'" title="Editar">✎</button><button data-mgdel="'+c.name+'" title="Excluir">🗑</button></div>'
+    '<div class="cat-card cat-card-item"><div class="cat-manage-row">'
+    + '<span class="cat-badge" style="background:'+c.color+'22;color:'+c.color+';border:1px solid '+c.color+'44;">'+(c.icon||'📁')+'</span>'
+    + '<div class="info"><div class="n" title="'+c.name+'">'+c.name+'</div><div class="u">'+(c.count||0)+' uso'+((c.count||0)===1?'':'s')+'</div></div>'
+    + '<div class="row-actions"><button class="btn-action-edit" data-mgedit="'+c.name+'" title="Editar Categoria">✎</button><button class="btn-action-del" data-mgdel="'+c.name+'" title="Excluir Categoria">🗑</button></div>'
     + '</div></div>'
   ).join('');
-  html += '<button type="button" class="cat-card cat-card-add" id="catManageAddInline"><span class="plus">+</span>Nova categoria</button>';
+  html += '<button type="button" class="cat-card cat-card-add" id="catManageAddInline"><span style="font-size:16px;font-weight:800;">+</span>Nova categoria</button>';
   wrap.innerHTML = html;
   wrap.querySelectorAll('[data-mgedit]').forEach(el=>el.onclick = ()=>openCategoryModal(el.getAttribute('data-mgedit')));
   wrap.querySelectorAll('[data-mgdel]').forEach(el=>el.onclick = ()=>deleteCategory(el.getAttribute('data-mgdel')));
