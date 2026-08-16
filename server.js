@@ -233,9 +233,6 @@ const htmlContent = `<!DOCTYPE html>
     }
     var scaleNum = parseFloat(actualScale) / 100 || 1;
     document.documentElement.style.setProperty('--app-zoom', scaleNum);
-    if ('zoom' in document.documentElement.style) {
-      document.documentElement.style.zoom = scaleNum;
-    }
 
     document.addEventListener('DOMContentLoaded', function() {
       if (localStorage.getItem('nexus_theme') === 'light') {
@@ -272,7 +269,7 @@ const htmlContent = `<!DOCTYPE html>
 </script>
 <style>
 html.user-logged-in #authPage { display: none !important; }
-html.user-logged-in #appMain { display: block !important; }
+html.user-logged-in #appMain { display: flex !important; flex-direction: column !important; min-height: 100vh !important; width: 100% !important; }
 
 html.is-admin nav.menu button:not(#menuUsuariosBtn):not(#menuLogsBtn):not(#menuFuncoesBtn),
 html.is-admin nav.mobile-drawer-nav button:not(#mobileDrawerUsuariosBtn):not(#mobileDrawerLogsBtn):not(#mobileDrawerFuncoesBtn) {
@@ -320,14 +317,41 @@ code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5
   print-color-adjust: exact !important;
 }
 
+html, body {
+  width: 100% !important;
+  min-height: 100vh !important;
+}
+
+#appMain {
+  position: relative !important;
+  z-index: 1 !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 #pageContent {
-  position: relative;
-  width: 100%;
+  position: relative !important;
+  width: 100% !important;
+  flex: 1 0 auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .topheader, nav.menu, .panel, .kpi, .table-panel, .auth-box, .cards-summary-panel, .tx-footer-summary {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  visibility: visible !important;
+}
+
+@media print, screen {
+  #appMain, #pageContent, .topheader, .main, .panel, .kpi, .table-panel {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
 }
 
 @media print {
@@ -6699,10 +6723,6 @@ function applyDisplayScale(scaleVal) {
 
   var scaleNum = parseFloat(effectiveScale) / 100 || 1;
   document.documentElement.style.setProperty('--app-zoom', scaleNum);
-
-  if ('zoom' in document.documentElement.style) {
-    document.documentElement.style.zoom = scaleNum;
-  }
 
   var lbl = document.getElementById('currentScaleLabel');
   if (lbl) {
