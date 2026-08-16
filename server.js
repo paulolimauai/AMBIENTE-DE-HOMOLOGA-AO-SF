@@ -7637,7 +7637,13 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  res.writeHead(200, { ...corsHeaders, 'Content-Type': 'text/html; charset=utf-8' });
+  res.writeHead(200, {
+    ...corsHeaders,
+    'Content-Type': 'text/html; charset=utf-8',
+    'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
   res.end(htmlContent);
 });
 
