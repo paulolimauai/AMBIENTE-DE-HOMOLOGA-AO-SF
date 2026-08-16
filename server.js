@@ -31,7 +31,7 @@ if (Pool) {
         port: process.env.DB_PORT || 5432,
         user: process.env.DB_USER || 'postgres',
         password: process.env.DB_PASSWORD || '86266049',
-        database: process.env.DB_NAME || 'FINANCEIRO',
+        database: process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇÃO SF',
         ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
       });
 
@@ -981,17 +981,49 @@ body.light .table-panel { background:#ffffff !important; border-color:#cbd5e1 !i
 body.light td { border-top-color:#e2e8f0 !important; }
 body.light tr.trow:hover td { background:#f1f5f9 !important; }
 
-.pill{padding:5px 11px; border-radius:8px; font-size:11.5px; font-weight:700; display:inline-block; letter-spacing:0.01em;}
-.status-pago{background:rgba(16,185,129,0.14); color:#10B981; border:1px solid rgba(16,185,129,0.30);}
-.status-recebido{background:rgba(16,185,129,0.14); color:#10B981; border:1px solid rgba(16,185,129,0.30);}
-.status-pendente{background:rgba(245,158,11,0.14); color:#F59E0B; border:1px solid rgba(245,158,11,0.30);}
-.val-in{color:#10B981; font-weight:800; font-variant-numeric:tabular-nums;}
-.val-out{color:#F43F5E; font-weight:800; font-variant-numeric:tabular-nums;}
-.type-ic.in{color:#10B981; font-weight:800;}
-.type-ic.out{color:#F43F5E; font-weight:800;}
+.tx-date-badge{font-weight:700; color:var(--text); font-size:12.5px; letter-spacing:0.02em;}
+.tx-desc{color:var(--text); font-weight:700; font-size:13.5px;}
+.pill{padding:5px 12px; border-radius:999px; font-size:11.5px; font-weight:700; display:inline-flex; align-items:center; gap:5px; letter-spacing:0.01em; transition:all 0.2s ease;}
+.cat-pill{font-size:11.5px; font-weight:700;}
+.acc-pill{font-size:11.5px; background:rgba(255,255,255,0.05); color:var(--text-dim); border:1px solid rgba(255,255,255,0.08); font-weight:600;}
+.type-pill{display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:800;}
+.type-pill.in{background:rgba(16,185,129,0.14); color:#10B981; border:1px solid rgba(16,185,129,0.30);}
+.type-pill.out{background:rgba(244,63,94,0.14); color:#F43F5E; border:1px solid rgba(244,63,94,0.30);}
+
+.status-toggle-btn{cursor:pointer; user-select:none; transition:transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;}
+.status-toggle-btn:hover{transform:translateY(-1px) scale(1.04); filter:brightness(1.12); box-shadow:0 4px 12px rgba(0,0,0,0.25);}
+.status-pago, .status-recebido{background:rgba(16,185,129,0.16) !important; color:#10B981 !important; border:1px solid rgba(16,185,129,0.35) !important; box-shadow:0 2px 8px rgba(16,185,129,0.15);}
+.status-pendente{background:rgba(245,158,11,0.16) !important; color:#F59E0B !important; border:1px solid rgba(245,158,11,0.35) !important; box-shadow:0 2px 8px rgba(245,158,11,0.15);}
+
+.val-in{color:#10B981; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
+.val-out{color:#F43F5E; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
 .row-actions{display:flex; gap:6px;}
-.row-actions button{background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:var(--text-dim); width:30px; height:30px; border-radius:9px; cursor:pointer; font-size:12.5px; flex-shrink:0; transition:all 0.2s ease;}
-.row-actions button:hover{background:rgba(59,130,246,0.22); color:#ffffff; border-color:rgba(59,130,246,0.5);}
+.btn-action-edit, .btn-action-del{width:32px; height:32px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.10); background:rgba(255,255,255,0.04); color:var(--text-dim); cursor:pointer; transition:all 0.2s ease; font-size:13px;}
+.btn-action-edit:hover{background:rgba(59,130,246,0.22); border-color:rgba(59,130,246,0.5); color:#60A5FA; transform:translateY(-1px); box-shadow:0 4px 12px rgba(59,130,246,0.3);}
+.btn-action-del:hover{background:rgba(244,63,94,0.22); border-color:rgba(244,63,94,0.5); color:#F43F5E; transform:translateY(-1px); box-shadow:0 4px 12px rgba(244,63,94,0.3);}
+
+.tfoot-row{background:rgba(255,255,255,0.02); font-weight:700; border-top:2px solid var(--card-border);}
+.tfoot-label{text-align:right; font-size:12.5px; color:var(--text-dim); letter-spacing:0.03em; padding:14px 12px;}
+.tfoot-value{color:#F43F5E; font-size:15px; font-weight:800; padding:14px 12px; font-variant-numeric:tabular-nums;}
+
+/* Executive KPI Footer Cards */
+.tx-footer-summary{margin-top:22px; display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;}
+.tx-summary-card{padding:18px 20px; border-radius:16px; background:linear-gradient(145deg, rgba(17,23,34,0.92) 0%, rgba(11,15,24,0.96) 100%); border:1px solid var(--card-border); display:flex; align-items:center; gap:14px; box-shadow:0 12px 30px -8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08); transition:transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;}
+.tx-summary-card:hover{transform:translateY(-2px); box-shadow:0 16px 36px -6px rgba(0,0,0,0.75);}
+.tx-summary-card.expense{border-color:rgba(244,63,94,0.35);}
+.tx-summary-card.income{border-color:rgba(16,185,129,0.35);}
+.tx-summary-card.balance{border-color:rgba(59,130,246,0.35);}
+
+.tx-summary-icon{width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; flex-shrink:0;}
+.tx-summary-icon.expense{background:rgba(244,63,94,0.14); color:#F43F5E; border:1px solid rgba(244,63,94,0.3); box-shadow:0 4px 14px rgba(244,63,94,0.20);}
+.tx-summary-icon.income{background:rgba(16,185,129,0.14); color:#10B981; border:1px solid rgba(16,185,129,0.3); box-shadow:0 4px 14px rgba(16,185,129,0.20);}
+.tx-summary-icon.balance{background:rgba(59,130,246,0.14); color:#3B82F6; border:1px solid rgba(59,130,246,0.3); box-shadow:0 4px 14px rgba(59,130,246,0.20);}
+
+.tx-summary-label{font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;}
+.tx-summary-val{font-size:21px; font-weight:800; margin-top:2px; font-variant-numeric:tabular-nums;}
+.tx-summary-val.expense{color:#F43F5E;}
+.tx-summary-val.income{color:#10B981;}
+.tx-summary-sub{font-size:11.5px; color:var(--text-dim); margin-top:2px;}
 
 .icon-picker{display:flex; gap:6px; flex-wrap:wrap;}
 .icon-picker button{width:34px; height:34px; border-radius:9px; border:1px solid var(--card-border); background:var(--bg); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s, background .15s;}
@@ -3005,6 +3037,13 @@ function refreshTxTable(){
       if (!isNaN(id)) deleteTransaction(id);
     };
   });
+  document.querySelectorAll('[data-togglestatus]').forEach(el => {
+    el.onclick = (e) => {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      const id = parseInt(el.getAttribute('data-togglestatus'));
+      if (!isNaN(id)) toggleTransactionStatus(id);
+    };
+  });
   return true;
 }
 
@@ -3775,6 +3814,15 @@ function pageDashboard(){
   \`;
 }
 
+function getAccountIcon(accName) {
+  if (!accName) return '💳';
+  const name = accName.toLowerCase();
+  if (name.includes('banco') || name.includes('brasil') || name.includes('itau') || name.includes('bradesco') || name.includes('santander') || name.includes('caixa') || name.includes('nubank') || name.includes('inter') || name.includes('sifre')) return '🏦';
+  if (name.includes('dinheiro') || name.includes('espécie') || name.includes('carteira')) return '💵';
+  if (name.includes('boleto') || name.includes('pix') || name.includes('outros')) return '⚡';
+  return '💳';
+}
+
 function transactionsTable(list, showActions){
   if (typeof isDataLoading !== 'undefined' && isDataLoading && list.length === 0) {
     return \`<div class="placeholder" style="padding:40px 20px;"><div class="big" style="font-size:30px;margin-bottom:12px;">⏳</div><h3>Carregando suas transações...</h3><p>Sincronizando seus dados financeiros com o servidor.</p></div>\`;
@@ -3789,55 +3837,70 @@ function transactionsTable(list, showActions){
 
   return \`
   <table>
-    <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Conta / Cartão</th><th>Tipo</th><th>Valor</th><th>Status</th>\${showActions?'<th></th>':''}</tr></thead>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Categoria</th>
+        <th>Conta / Cartão</th>
+        <th>Tipo</th>
+        <th>Valor</th>
+        <th>Status</th>
+        \${showActions?'<th style="text-align:center;">Ações</th>':''}
+      </tr>
+    </thead>
     <tbody>
       \${list.map(t=>\`
         <tr class="trow">
-          <td>\${formatDateBR(t.date)}</td>
-          <td>\${t.desc}</td>
-          <td><span class="pill" style="background:\${catColor(t.cat)}22; color:\${catColor(t.cat)}">\${catIcon(t.cat)} \${t.cat}</span></td>
-          <td><span class="pill" style="background:rgba(255,255,255,0.05); color:var(--text-dim); font-weight:600;">\${t.acc || '—'}</span></td>
-          <td><span class="type-ic \${t.type}">\${t.type==='in'?'↑':'↓'}</span></td>
+          <td><span class="tx-date-badge">\${formatDateBR(t.date)}</span></td>
+          <td class="tx-desc">\${t.desc}</td>
+          <td><span class="pill cat-pill" style="background:\${catColor(t.cat)}18; color:\${catColor(t.cat)}; border:1px solid \${catColor(t.cat)}35">\${catIcon(t.cat)} \${t.cat}</span></td>
+          <td><span class="pill acc-pill">\${getAccountIcon(t.acc)} \${t.acc || '—'}</span></td>
+          <td><span class="type-pill \${t.type}">\${t.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
           <td class="\${t.type==='in'?'val-in':'val-out'}">\${t.type==='in'?'+':'-'}\${fmt(t.val)}</td>
-          <td><span class="pill status-\${t.status.toLowerCase()}">\${t.status}</span></td>
-          \${showActions?\`<td><div class="row-actions"><button data-edit="\${t.id}">✎</button><button data-del="\${t.id}">🗑</button></div></td>\`:''}
+          <td>
+            <span class="pill status-\${t.status.toLowerCase()} status-toggle-btn" data-togglestatus="\${t.id}" title="Clique para alternar o status (Pendente / Pago)">
+              \${t.status === 'Pendente' ? '⏳ Pendente' : (t.type === 'in' ? '✓ Recebido' : '✓ Pago')}
+            </span>
+          </td>
+          \${showActions?\`<td><div class="row-actions" style="justify-content:center;"><button data-edit="\${t.id}" title="Editar Transação" class="btn-action-edit">✎</button><button data-del="\${t.id}" title="Excluir Transação" class="btn-action-del">🗑</button></div></td>\`:''}
         </tr>\`).join('')}
     </tbody>
     <tfoot>
-      <tr style="background:var(--hover); font-weight:700; border-top:2px solid var(--card-border);">
-        <td colspan="5" style="text-align:right; font-size:12.5px; color:var(--text-dim); letter-spacing:0.02em;">TOTAL DE GASTOS (\${countDespesas} despesa\${countDespesas===1?'':'s'}):</td>
-        <td style="color:var(--red); font-size:14.5px; font-weight:800;">-\${fmt(totalDespesas)}</td>
+      <tr class="tfoot-row">
+        <td colspan="5" class="tfoot-label">TOTAL DE GASTOS (\${countDespesas} despesa\${countDespesas===1?'':'s'}):</td>
+        <td class="tfoot-value">-\${fmt(totalDespesas)}</td>
         <td colspan="\${showActions?2:1}"></td>
       </tr>
     </tfoot>
   </table>
 
   <!-- Aba / Card com Cálculo Consolidado dos Gastos ao final -->
-  <div class="tx-footer-summary" style="margin-top:20px; padding:18px 20px; border:1px solid rgba(232,176,75,0.25); border-radius:14px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px;">
-    <div style="display:flex; align-items:center; gap:12px; min-width:200px;">
-      <div style="width:44px; height:44px; border-radius:12px; background:var(--red-soft); color:var(--red); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; flex-shrink:0; box-shadow:0 2px 8px rgba(239,90,90,0.2);">↓</div>
+  <div class="tx-footer-summary">
+    <div class="tx-summary-card expense">
+      <div class="tx-summary-icon expense">↓</div>
       <div>
-        <div style="font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;">Cálculo Total de Gastos</div>
-        <div style="font-size:20px; font-weight:800; color:var(--red); margin-top:2px;">-\${fmt(totalDespesas)}</div>
-        <div style="font-size:11px; color:var(--text-dim); margin-top:1px;">\${countDespesas} lançamento(s) de despesa</div>
+        <div class="tx-summary-label">Cálculo Total de Gastos</div>
+        <div class="tx-summary-val expense">-\${fmt(totalDespesas)}</div>
+        <div class="tx-summary-sub">\${countDespesas} lançamento(s) de despesa</div>
       </div>
     </div>
 
-    <div style="display:flex; align-items:center; gap:12px; min-width:200px;">
-      <div style="width:44px; height:44px; border-radius:12px; background:var(--green-soft); color:var(--green); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; flex-shrink:0; box-shadow:0 2px 8px rgba(232,176,75,0.2);">↑</div>
+    <div class="tx-summary-card income">
+      <div class="tx-summary-icon income">↑</div>
       <div>
-        <div style="font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;">Total de Entradas (Receitas)</div>
-        <div style="font-size:20px; font-weight:800; color:var(--green); margin-top:2px;">+\${fmt(totalReceitas)}</div>
-        <div style="font-size:11px; color:var(--text-dim); margin-top:1px;">\${countReceitas} lançamento(s) de receita</div>
+        <div class="tx-summary-label">Total de Entradas (Receitas)</div>
+        <div class="tx-summary-val income">+\${fmt(totalReceitas)}</div>
+        <div class="tx-summary-sub">\${countReceitas} lançamento(s) de receita</div>
       </div>
     </div>
 
-    <div style="display:flex; align-items:center; gap:12px; min-width:200px;">
-      <div style="width:44px; height:44px; border-radius:12px; background:\${saldoPeriodo<0?'var(--red-soft)':'rgba(74,144,226,.14)'}; color:\${saldoPeriodo<0?'var(--red)':'var(--blue)'}; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; flex-shrink:0;">⇄</div>
+    <div class="tx-summary-card \${saldoPeriodo < 0 ? 'expense' : 'balance'}">
+      <div class="tx-summary-icon \${saldoPeriodo < 0 ? 'expense' : 'balance'}">⇄</div>
       <div>
-        <div style="font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;">Balanço do Período</div>
-        <div style="font-size:20px; font-weight:800; color:\${saldoPeriodo<0?'var(--red)':'var(--green)'}; margin-top:2px;">\${fmt(saldoPeriodo)}</div>
-        <div style="font-size:11px; color:var(--text-dim); margin-top:1px;">\${list.length} registro(s) no filtro</div>
+        <div class="tx-summary-label">Balanço do Período</div>
+        <div class="tx-summary-val \${saldoPeriodo < 0 ? 'expense' : 'income'}">\${fmt(saldoPeriodo)}</div>
+        <div class="tx-summary-sub">\${list.length} registro(s) no filtro</div>
       </div>
     </div>
   </div>\`;
@@ -7388,7 +7451,7 @@ const server = http.createServer((req, res) => {
 initDatabase()
   .then(() => {
     if (pool) {
-      console.log(`[BANCO] Conectado com sucesso ao PostgreSQL (banco: ${process.env.DB_NAME || 'FINANCEIRO'})`);
+      console.log(`[BANCO] Conectado com sucesso ao PostgreSQL (banco: ${process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇÃO SF'})`);
     } else {
       console.log(`[BANCO LOCAL] Operando com alta resiliência e persistência em arquivos JSON locais.`);
     }
