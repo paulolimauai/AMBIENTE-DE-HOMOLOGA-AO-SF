@@ -7446,40 +7446,46 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Rota POST de Usuários (Sincronização do Administrador)
+  // Rota POST de Usuários (Sincronização Segura sem Deleção Involuntária)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/users') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
       try {
-        const users = JSON.parse(body);
-        if (!Array.isArray(users)) throw new Error('Formato inválido');
+        const parsed = JSON.parse(body);
+        const users = Array.isArray(parsed) ? parsed : [parsed];
+        if (!users.length) throw new Error('Formato inválido');
 
-        saveLocalUsers(users);
-        recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Sincronização', 'Usuários', 'Administrador atualizou a lista de usuários');
+        // Mescla localmente com cadastros existentes no servidor
+        const existingLocal = getLocalUsers();
+        const userMap = new Map();
+        existingLocal.forEach(u => userMap.set(u.email.toLowerCase(), u));
+        users.forEach(u => {
+          if (u && u.email) userMap.set(u.email.toLowerCase(), u);
+        });
+        const finalUsers = Array.from(userMap.values());
+        saveLocalUsers(finalUsers);
+
+        recordSystemLog('Sistema', 'cadastro@nexusfinanceiro.com', 'Sincronização', 'Usuários', 'Sincronização de usuários salva com sucesso');
 
         if (pool) {
           try {
             const client = await pool.connect();
             try {
               await client.query('BEGIN');
-              const emails = users.map(u => u.email);
-              await client.query(
-                `DELETE FROM usuarios WHERE email <> ALL($1::text[])`,
-                [emails.length ? emails : ['__nunca__']]
-              );
-
               for (const u of users) {
-                await client.query(
-                  `INSERT INTO usuarios (name, email, password, role, active)
-                   VALUES ($1, $2, $3, $4, $5)
-                   ON CONFLICT (email) DO UPDATE
-                   SET name = EXCLUDED.name,
-                       password = EXCLUDED.password,
-                       role = EXCLUDED.role,
-                       active = EXCLUDED.active;`,
-                  [u.name, u.email, u.password, u.role, u.active !== false]
-                );
+                if (u && u.email && u.name) {
+                  await client.query(
+                    `INSERT INTO usuarios (name, email, password, role, active)
+                     VALUES ($1, $2, $3, $4, $5)
+                     ON CONFLICT (email) DO UPDATE
+                     SET name = EXCLUDED.name,
+                         password = EXCLUDED.password,
+                         role = EXCLUDED.role,
+                         active = EXCLUDED.active;`,
+                    [u.name, u.email, u.password || '123456', u.role || 'Usuário', u.active !== false]
+                  );
+                }
               }
               await client.query('COMMIT');
             } catch(e) {
