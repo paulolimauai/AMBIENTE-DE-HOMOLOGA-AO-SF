@@ -1326,6 +1326,102 @@ body.light .due-bill-row {
   background: #f8fafc !important;
 }
 
+/* ==================== Modal Dialog 4K Executivo Centralizado ==================== */
+.executive-4k-modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  background: rgba(5, 8, 15, 0.82) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  animation: fadeInModal 0.25s ease forwards;
+}
+
+.executive-4k-card {
+  background: linear-gradient(145deg, #121722 0%, #0A0E17 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 40px rgba(59, 130, 246, 0.2) !important;
+  border-radius: 26px !important;
+  padding: 36px 32px 30px !important;
+  width: 100% !important;
+  max-width: 440px !important;
+  text-align: center !important;
+  transform: scale(0.92);
+  animation: popIn4k 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes popIn4k {
+  to { transform: scale(1); }
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.executive-4k-badge {
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 34px !important;
+  margin: 0 auto 20px !important;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+.executive-4k-title {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  margin-bottom: 10px !important;
+  letter-spacing: -0.01em !important;
+}
+
+.executive-4k-message {
+  font-size: 14.5px !important;
+  color: #94A3B8 !important;
+  line-height: 1.6 !important;
+  margin-bottom: 26px !important;
+}
+
+.executive-4k-btn {
+  width: 100% !important;
+  padding: 14px 24px !important;
+  border-radius: 14px !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  letter-spacing: 0.02em !important;
+}
+
+.executive-4k-btn:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.1) !important;
+}
+
+body.light .executive-4k-card {
+  background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.25) !important;
+}
+
+body.light .executive-4k-title {
+  color: #0F172A !important;
+}
+
+body.light .executive-4k-message {
+  color: #475569 !important;
+}
+
 /* Alinhamento Multidispositivo de Painéis e Cards */
 .due-bills-panel {
   width: 100%;
@@ -3866,6 +3962,71 @@ function budgetStatus(list=budgets){
     return {...b, spent, pct};
   });
 }
+
+function showCustomAlert(title, message, type = 'success', onConfirm = null) {
+  let modal = document.getElementById('executive4kModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'executive4kModal';
+    modal.className = 'executive-4k-modal-overlay';
+    document.body.appendChild(modal);
+  }
+
+  let iconHtml = '✨';
+  let badgeStyle = 'background:rgba(59,130,246,0.15); border:1.5px solid rgba(59,130,246,0.4); color:#60A5FA;';
+  let btnStyle = 'background:linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); box-shadow:0 8px 24px rgba(59,130,246,0.4);';
+
+  if (type === 'success') {
+    iconHtml = '✅';
+    badgeStyle = 'background:rgba(16,185,129,0.18); border:1.5px solid rgba(16,185,129,0.45); color:#34D399;';
+    btnStyle = 'background:linear-gradient(135deg, #059669 0%, #10B981 100%); box-shadow:0 8px 24px rgba(16,185,129,0.4);';
+  } else if (type === 'error') {
+    iconHtml = '⚠️';
+    badgeStyle = 'background:rgba(239,68,68,0.18); border:1.5px solid rgba(239,68,68,0.45); color:#F87171;';
+    btnStyle = 'background:linear-gradient(135deg, #DC2626 0%, #EF4444 100%); box-shadow:0 8px 24px rgba(239,68,68,0.4);';
+  }
+
+  modal.innerHTML = \`
+    <div class="executive-4k-card">
+      <div class="executive-4k-badge" style="\${badgeStyle}">
+        \${iconHtml}
+      </div>
+      <h3 class="executive-4k-title">\${title}</h3>
+      <p class="executive-4k-message">\${message}</p>
+      <button type="button" class="executive-4k-btn" style="\${btnStyle}" id="exec4kOkBtn">
+        Entendido
+      </button>
+    </div>
+  \`;
+
+  modal.style.display = 'flex';
+
+  const closeAlert = () => {
+    modal.style.display = 'none';
+    if (typeof onConfirm === 'function') onConfirm();
+  };
+
+  const okBtn = document.getElementById('exec4kOkBtn');
+  if (okBtn) okBtn.onclick = closeAlert;
+  modal.onclick = (e) => {
+    if (e.target === modal) closeAlert();
+  };
+}
+
+window.alert = function(msg) {
+  let type = 'info';
+  let title = 'Notificação do Sistema';
+  if (typeof msg === 'string') {
+    if (msg.toLowerCase().includes('sucesso') || msg.toLowerCase().includes('criada') || msg.toLowerCase().includes('salv')) {
+      type = 'success';
+      title = 'Sucesso! 🎉';
+    } else if (msg.toLowerCase().includes('erro') || msg.toLowerCase().includes('falha') || msg.toLowerCase().includes('incorreto') || msg.toLowerCase().includes('verifique')) {
+      type = 'error';
+      title = 'Atenção';
+    }
+  }
+  showCustomAlert(title, msg, type);
+};
 
 let toastTimer = null;
 function showToast(msg){
