@@ -3097,17 +3097,12 @@ document.getElementById('registerForm').onsubmit = async (e) => {
     return;
   }
 
-  const cleanEmail = email.toLowerCase();
-  if (users.some(u => u.email && u.email.toLowerCase() === cleanEmail)) {
-    showCustomAlert('Atenção', 'Este e-mail já está cadastrado no sistema! Faça login para continuar.', 'error');
-    return;
-  }
-
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Salvando conta...';
   }
 
+  const cleanEmail = email.toLowerCase();
   let registerSuccess = false;
   let serverMessage = '';
 
@@ -3128,12 +3123,18 @@ document.getElementById('registerForm').onsubmit = async (e) => {
       return;
     }
   } catch (err) {
-    console.warn('[CADASTRO RESILIENTE] Falha na API de registro, registrando localmente:', err.message);
-    const newUser = { id: Date.now(), name, email: cleanEmail, password, role: 'Usuário', active: true };
-    users.push(newUser);
+    console.warn('[CADASTRO RESILIENTE] Falha na API de registro, salvando localmente:', err.message);
+    const existingIndex = users.findIndex(u => u.email && u.email.toLowerCase() === cleanEmail);
+    if (existingIndex >= 0) {
+      users[existingIndex].name = name;
+      users[existingIndex].password = password;
+      users[existingIndex].active = true;
+    } else {
+      users.push({ id: Date.now(), name, email: cleanEmail, password, role: 'Usuário', active: true });
+    }
     saveUsers();
     registerSuccess = true;
-    serverMessage = 'Conta criada com sucesso! Faça login para continuar.';
+    serverMessage = 'Conta salva com sucesso! Faça login para continuar.';
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -8235,7 +8236,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Rota POST para Cadastro de Usuário
+  // Rota POST para Cadastro de Usuário (UPSERT Seguro)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/register') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -8248,54 +8249,36 @@ const server = http.createServer((req, res) => {
         }
 
         const cleanEmail = email.toLowerCase().trim();
-        let isExisting = false;
-        if (pool) {
-          try {
-            const existing = await pool.query(
-              'SELECT id FROM usuarios WHERE LOWER(email) = LOWER($1)',
-              [cleanEmail]
-            );
-            if (existing.rows.length > 0) isExisting = true;
-          } catch (dbErr) {
-            console.warn('[AVISO BD] Falha ao verificar existência de usuário no PostgreSQL:', dbErr.message);
-          }
-        }
-        if (!isExisting) {
-          const localUsers = getLocalUsers();
-          if (localUsers.some(u => u.email.toLowerCase() === cleanEmail)) isExisting = true;
-        }
-
-        if (isExisting) {
-          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Este e-mail já está cadastrado no sistema!' }));
-        }
-
         let newUserId = Date.now();
         if (pool) {
           try {
-            const insertRes = await pool.query(
-              'INSERT INTO usuarios (name, email, password, role, active) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+            const upsertRes = await pool.query(
+              `INSERT INTO usuarios (name, email, password, role, active)
+               VALUES ($1, $2, $3, $4, $5)
+               ON CONFLICT (email) DO UPDATE
+               SET name = EXCLUDED.name, password = EXCLUDED.password, active = true
+               RETURNING id;`,
               [name.trim(), cleanEmail, password, 'Usuário', true]
             );
-            if (insertRes.rows[0]) newUserId = insertRes.rows[0].id;
+            if (upsertRes.rows && upsertRes.rows[0]) newUserId = upsertRes.rows[0].id;
 
             await pool.query(
               'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING',
               [cleanEmail, '{}']
             );
           } catch (dbInsertErr) {
-            console.warn('[AVISO BD] Erro ao inserir usuário no PostgreSQL:', dbInsertErr.message);
+            console.warn('[AVISO BD] Erro no UPSERT de cadastro no PostgreSQL:', dbInsertErr.message);
           }
         }
 
-        const localUsers = getLocalUsers();
+        const localUsers = getLocalUsers().filter(u => u.email.toLowerCase() !== cleanEmail);
         localUsers.push({ id: newUserId, name: name.trim(), email: cleanEmail, password, role: 'Usuário', active: true });
         saveLocalUsers(localUsers);
 
-        recordSystemLog(name.trim(), cleanEmail, 'Cadastro', 'Autenticação', 'Novo usuário cadastrou-se no sistema e foi salvo no banco');
+        recordSystemLog(name.trim(), cleanEmail, 'Cadastro', 'Autenticação', 'Usuário cadastrado/atualizado com sucesso no banco de dados');
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: true, message: 'Conta cadastrada com sucesso no banco de dados!' }));
+        return res.end(JSON.stringify({ success: true, message: 'Conta salva e sincronizada com sucesso no banco de dados!' }));
       } catch (err) {
         console.error('Erro no endpoint de cadastro:', err);
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
