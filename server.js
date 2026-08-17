@@ -415,129 +415,437 @@ html, body {
   }
 }
 
-/* ==================== Tela de Auth (Design UI de Alta Performance) ==================== */
-.auth-container{
-  --auth-accent:#E5A93C; --auth-accent-2:#5B94D9; --auth-accent-3:#E6C675;
-  --auth-accent-soft:rgba(229,169,60,.20); --auth-text-on:#0A0F1A;
-  position:relative; overflow:hidden;
-  display:none; align-items:center; justify-content:center; flex-direction:column; min-height:100vh; padding:20px;
-  background:var(--bg);
+/* ==================== Tela de Auth Ultra Moderna 4K ==================== */
+.auth-container {
+  --auth-gold: #E5A93C;
+  --auth-gold-dark: #C89B3C;
+  --auth-blue: #5B94D9;
+  --auth-card: rgba(14, 19, 34, 0.88);
+  --auth-border: rgba(255, 255, 255, 0.10);
+  --auth-input-bg: rgba(9, 13, 22, 0.82);
+  --auth-text: #F8FAFC;
+  --auth-text-dim: #94A3B8;
+  position: relative;
+  overflow: hidden;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 24px 16px;
+  background: #07090E;
 }
 .auth-container.show { display: flex; }
-.auth-grid{
-  position:absolute; inset:0; z-index:0; pointer-events:none;
-  background-image:
-    linear-gradient(rgba(200,155,60,.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(160,175,200,.06) 1px, transparent 1px);
-  background-size:54px 54px;
-  -webkit-mask-image:radial-gradient(circle at 50% 42%, #000 0%, transparent 72%);
-  mask-image:radial-gradient(circle at 50% 42%, #000 0%, transparent 72%);
-}
-.auth-chart{
-  position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:.38;
-  -webkit-mask-image:linear-gradient(to bottom, transparent, #000 22%, #000 92%, transparent);
-  mask-image:radial-gradient(circle at 50% 42%, #000 0%, transparent 72%);
-}
-.auth-chart .chart-area{animation:chartBreathe 7s ease-in-out infinite;}
-.auth-chart .chart-line{
-  stroke-dasharray:2600; stroke-dashoffset:2600;
-  animation:chartDraw 3.2s ease-out forwards, chartGlow 4s ease-in-out 3.2s infinite;
-}
-.auth-chart .chart-candles{animation:candlesFade 1.4s ease-out .6s backwards;}
-@keyframes chartDraw{to{stroke-dashoffset:0;}}
-@keyframes chartBreathe{0%,100%{opacity:1;} 50%{opacity:.65;}}
-@keyframes chartGlow{0%,100%{filter:drop-shadow(0 0 0px var(--auth-accent));} 50%{filter:drop-shadow(0 0 6px var(--auth-accent));}}
-@keyframes candlesFade{from{opacity:0;} to{opacity:.8;}}
-body.light .auth-grid{opacity:.5;}
-body.light .auth-chart{opacity:.3;}
-.auth-blob{position:absolute; border-radius:50%; filter:blur(70px); opacity:.28; pointer-events:none; will-change:transform;}
-.auth-blob.b1{width:360px; height:360px; background:var(--auth-accent); top:-110px; left:-100px; animation:blobFloat 24s ease-in-out infinite;}
-.auth-blob.b2{width:320px; height:320px; background:var(--auth-accent-2); bottom:-130px; right:-90px; animation:blobFloat 28s ease-in-out infinite; animation-delay:-8s;}
-body.light .auth-blob{opacity:.16;}
-@keyframes blobFloat{
-  0%,100%{transform:translate(0,0) scale(1);}
-  33%{transform:translate(35px,-40px) scale(1.1);}
-  66%{transform:translate(-30px,28px) scale(.92);}
+
+body.light .auth-container {
+  --auth-card: #FFFFFF;
+  --auth-border: #CBD5E1;
+  --auth-input-bg: #F8FAFC;
+  --auth-text: #0F172A;
+  --auth-text-dim: #475569;
+  background: #F1F5F9 !important;
 }
 
-@keyframes authIn{
-  from{opacity:0; transform:translateY(26px) scale(.96);}
-  to{opacity:1; transform:translateY(0) scale(1);}
+.auth-top-bar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 20;
 }
-@keyframes fieldIn{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:translateY(0);}
+
+.auth-theme-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--auth-border);
+  color: var(--auth-text);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
 }
-.auth-box{
-  position:relative; z-index:1;
-  background:var(--card); border:1px solid var(--card-border); border-radius:24px;
-  padding:38px 34px; width:100%; max-width:420px;
-  box-shadow:0 25px 65px -10px rgba(0,0,0,0.65), 0 0 35px rgba(229,169,60,0.10), inset 0 1px 1px rgba(255,255,255,0.08);
-  backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px);
-  animation:authIn .55s cubic-bezier(.16,1,.3,1);
+.auth-theme-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
 }
-.auth-box .brand{display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:20px; padding:0;}
-.auth-box .brand .logo{
-  background:linear-gradient(135deg,#E6C675 0%, #D4A84B 45%, #76A5D9 100%) !important; color:#0A0D18 !important;
-  animation:logoPulse 3s ease-in-out infinite; box-shadow:0 0 20px rgba(200,155,60,0.5);
-  font-weight:900 !important; font-size:22px !important; width:52px !important; height:52px !important; border-radius:16px !important;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+body.light .auth-theme-btn {
+  background: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
-.env-badge-homolog {
-  background: rgba(245, 158, 11, 0.18) !important;
-  color: #F59E0B !important;
-  border: 1px solid rgba(245, 158, 11, 0.45) !important;
-  padding: 3px 10px !important;
-  border-radius: 20px !important;
-  font-size: 10.5px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.05em !important;
-  text-transform: uppercase !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  margin-left: 6px !important;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.22) !important;
+
+.auth-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(229, 169, 60, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 148, 217, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
 }
-.auth-box .brand .name{font-size:20px; font-weight:800; color:var(--text); letter-spacing:0.05em;}
-@keyframes logoPulse{
-  0%,100%{box-shadow:0 0 0 0 rgba(200,155,60,.5);}
-  50%{box-shadow:0 0 0 9px rgba(200,155,60,0);}
+
+.auth-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  pointer-events: none;
+  will-change: transform;
 }
-.auth-box h2{font-size:24px; font-weight:800; margin-bottom:6px; text-align:center; color:var(--text); letter-spacing:-0.01em;}
-.auth-box p.sub{font-size:13.5px; color:var(--text-dim); text-align:center; margin-bottom:24px; transition:color .2s;}
-.auth-box .field{margin-bottom:16px; animation:fieldIn .45s ease backwards;}
-.auth-box .field:nth-of-type(1){animation-delay:.05s;}
-.auth-box .field:nth-of-type(2){animation-delay:.1s;}
-.auth-box .field label{display:block; font-size:13px; font-weight:600; color:var(--text-dim); margin-bottom:6px;}
-.auth-box .field input{
-  background:rgba(255,255,255,0.035); border:1px solid var(--card-border); border-radius:14px;
-  padding:14px 16px; color:var(--text); font-size:14px; width:100%; transition:border-color .25s, box-shadow .25s, transform .15s;
+.auth-blob.b1 {
+  width: 400px;
+  height: 400px;
+  background: #E5A93C;
+  top: -120px;
+  left: -120px;
+  animation: blobFloat 22s ease-in-out infinite;
 }
-.auth-box .field input:focus, .auth-box .field select:focus{
-  border-color:#E5A93C; box-shadow:0 0 20px rgba(229,169,60,0.30); transform:translateY(-1px);
+.auth-blob.b2 {
+  width: 380px;
+  height: 380px;
+  background: #3B82F6;
+  bottom: -140px;
+  right: -100px;
+  animation: blobFloat 26s ease-in-out infinite;
+  animation-delay: -9s;
 }
-.auth-forgot{display:block; text-align:right; font-size:12.5px; color:#E5A93C; font-weight:700; margin-top:8px; cursor:pointer; transition:color .15s;}
-.auth-forgot:hover{color:#f5c26b; text-decoration:underline;}
-.auth-box .btn-auth{
-  position:relative; overflow:hidden;
-  width:100%; padding:14px; background:linear-gradient(90deg, #E5A93C 0%, #D4952B 35%, #5B94D9 70%, #4C84C4 100%); color:#0A0F1A; border:none;
-  border-radius:14px; font-weight:800; font-size:15px; letter-spacing:0.03em; text-transform:none; cursor:pointer; margin-top:12px;
-  box-shadow:0 10px 30px rgba(229,169,60,0.30), 0 0 20px rgba(76,132,196,0.30);
-  transition:all .25s cubic-bezier(0.16, 1, 0.3, 1);
+body.light .auth-blob { opacity: 0.14; }
+
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -45px) scale(1.08); }
+  66% { transform: translate(-35px, 30px) scale(0.94); }
 }
-.auth-box .btn-auth::after{
-  content:''; position:absolute; top:0; left:-75%; width:45%; height:100%;
-  background:linear-gradient(120deg, transparent, rgba(255,255,255,.6), transparent);
-  transform:skewX(-20deg);
+
+@keyframes authCardEntrance {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
-.auth-box .btn-auth:hover{filter:brightness(1.08); transform:translateY(-2px); box-shadow:0 14px 34px -4px rgba(229,169,60,0.55);}
-.auth-box .btn-auth:hover::after{animation:shimmer .9s ease;}
-.auth-box .btn-auth:active{transform:translateY(0) scale(.98);}
-@keyframes shimmer{from{left:-75%;} to{left:130%;}}
-.auth-toggle{text-align:center; font-size:13px; color:#8E9BAE; margin-top:22px; padding-top:18px; border-top:1px solid #1C2436;}
-.auth-toggle a{color:#E5A93C; text-decoration:none; font-weight:800; cursor:pointer;}
-.auth-toggle a:hover{text-decoration:underline;}
+
+.auth-card-nexus {
+  position: relative;
+  z-index: 2;
+  background: var(--auth-card);
+  border: 1px solid var(--auth-border);
+  border-radius: 28px;
+  padding: 38px 36px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.75), 0 0 50px rgba(229, 169, 60, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
+}
+body.light .auth-card-nexus {
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08), 0 0 1px rgba(0,0,0,0.1) !important;
+}
+
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-logo-badge {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 45%, #4C84C4 100%);
+  color: #0A0F1A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 26px;
+  font-family: 'Outfit', sans-serif;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45), inset 0 2px 2px rgba(255, 255, 255, 0.5);
+  margin-bottom: 12px;
+  position: relative;
+}
+.auth-logo-badge::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(245,158,11,0.4), transparent, rgba(76,132,196,0.3));
+  z-index: -1;
+}
+
+.auth-title {
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--auth-text);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.auth-title span {
+  color: var(--auth-gold);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  color: var(--auth-text-dim);
+  margin-top: 4px;
+}
+
+/* Abas de Navegação Segmentada (Entrar / Criar Conta) */
+.auth-tabs-nav {
+  display: flex;
+  background: var(--auth-input-bg);
+  border: 1px solid var(--auth-border);
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 24px;
+  gap: 4px;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--auth-text-dim);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.auth-tab-btn.active {
+  background: linear-gradient(135deg, rgba(229,169,60,0.18), rgba(229,169,60,0.06));
+  color: var(--auth-gold);
+  border: 1px solid rgba(229,169,60,0.4);
+  box-shadow: 0 4px 14px rgba(229,169,60,0.15);
+}
+body.light .auth-tab-btn.active {
+  background: #FFFFFF;
+  color: #B45309;
+  border-color: #CBD5E1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Campos de Formulário Modernos com Ícones */
+.auth-field {
+  margin-bottom: 18px;
+}
+.auth-field label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--auth-text-dim);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--auth-input-bg);
+  border: 1px solid var(--auth-border);
+  border-radius: 14px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.auth-input-wrapper:focus-within {
+  border-color: var(--auth-gold) !important;
+  background: rgba(16, 22, 36, 0.95);
+  box-shadow: 0 0 24px rgba(229, 169, 60, 0.35), inset 0 2px 4px rgba(0,0,0,0.3) !important;
+  transform: translateY(-1px);
+}
+body.light .auth-input-wrapper:focus-within {
+  background: #FFFFFF !important;
+  box-shadow: 0 0 20px rgba(229, 169, 60, 0.25) !important;
+}
+
+.auth-input-wrapper.highlight-glow {
+  border-color: var(--auth-gold) !important;
+  box-shadow: 0 0 28px rgba(229, 169, 60, 0.6) !important;
+}
+
+.auth-input-icon {
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--auth-text-dim);
+  flex-shrink: 0;
+}
+
+.auth-input-wrapper input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 14px 12px 14px 0;
+  color: var(--auth-text);
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  width: 100%;
+}
+.auth-input-wrapper input::placeholder {
+  color: #64748B;
+}
+
+.auth-pass-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--auth-text-dim);
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.auth-pass-toggle-btn:hover {
+  color: var(--auth-gold);
+}
+
+/* Botão Primário 4K */
+.btn-auth-primary {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #B45309 100%);
+  color: #0A0F1A;
+  border: none;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 0 10px 28px rgba(245, 158, 11, 0.35), 0 0 20px rgba(245, 158, 11, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-auth-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transition: left 0.6s ease;
+}
+.btn-auth-primary:hover {
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px -4px rgba(245, 158, 11, 0.55), 0 0 28px rgba(245, 158, 11, 0.4);
+}
+.btn-auth-primary:hover::before {
+  left: 100%;
+}
+.btn-auth-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+.btn-auth-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Seção de Acesso Rápido de Teste */
+.auth-quick-access {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--auth-border);
+}
+.auth-quick-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--auth-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.auth-quick-title::before, .auth-quick-title::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: var(--auth-border);
+}
+
+.auth-quick-pills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.auth-pill-btn {
+  background: var(--auth-input-bg);
+  border: 1px solid var(--auth-border);
+  color: var(--auth-text);
+  border-radius: 12px;
+  padding: 8px 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.auth-pill-btn span.tag-role {
+  font-size: 9.5px;
+  color: var(--auth-gold);
+  font-weight: 800;
+}
+.auth-pill-btn:hover {
+  border-color: var(--auth-gold);
+  background: rgba(229, 169, 60, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(229, 169, 60, 0.2);
+}
+
+.auth-forgot-link {
+  font-size: 12.5px;
+  color: var(--auth-gold);
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.15s;
+  text-decoration: none;
+}
+.auth-forgot-link:hover {
+  text-decoration: underline;
+  color: #FCD34D;
+}
+
+/* ==================== App principal Centralizado ==================== */
 
 /* ==================== App principal Centralizado ==================== */
 .app{
@@ -1765,141 +2073,180 @@ body.light .scale-dropdown {
 </head>
 <body>
 
-<!-- TELA DE LOGIN / CADASTRO -->
+<!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
-  <div class="auth-grid" aria-hidden="true"></div>
-  <svg class="auth-chart" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <defs>
-      <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="var(--auth-accent)" stop-opacity="0.35"/>
-        <stop offset="100%" stop-color="var(--auth-accent)" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <path class="chart-area" d="M 0.0,380 L 27.1,385.0 L 54.2,400.1 L 81.4,386.1 L 108.5,405.7 L 135.6,398.4 L 162.7,401.0 L 189.8,421.5 L 216.9,415.8 L 244.1,437.5 L 271.2,436.1 L 298.3,455.8 L 325.4,474.4 L 352.5,473.6 L 379.7,449.4 L 406.8,466.0 L 433.9,476.9 L 461.0,464.3 L 488.1,433.1 L 515.3,423.4 L 542.4,424.2 L 569.5,391.4 L 596.6,412.5 L 623.7,386.5 L 650.8,393.5 L 678.0,409.0 L 705.1,425.9 L 732.2,431.8 L 759.3,408.3 L 786.4,421.6 L 813.6,411.7 L 840.7,398.4 L 867.8,400.6 L 894.9,392.7 L 922.0,412.8 L 949.2,433.2 L 976.3,445.0 L 1003.4,429.4 L 1030.5,428.4 L 1057.6,433.9 L 1084.7,423.8 L 1111.9,421.3 L 1139.0,427.7 L 1166.1,405.4 L 1193.2,388.7 L 1220.3,398.3 L 1247.5,388.8 L 1274.6,382.1 L 1301.7,355.2 L 1328.8,336.7 L 1355.9,343.8 L 1383.1,310.7 L 1410.2,327.7 L 1437.3,327.2 L 1464.4,307.1 L 1491.5,322.1 L 1518.6,317.5 L 1545.8,339.1 L 1572.9,324.1 L 1600.0,303.6 L 1600.0,800 L 0.0,800 Z" fill="url(#chartFill)" stroke="none"/>
-    <path class="chart-line" d="M 0.0,380 L 27.1,385.0 L 54.2,400.1 L 81.4,386.1 L 108.5,405.7 L 135.6,398.4 L 162.7,401.0 L 189.8,421.5 L 216.9,415.8 L 244.1,437.5 L 271.2,436.1 L 298.3,455.8 L 325.4,474.4 L 352.5,473.6 L 379.7,449.4 L 406.8,466.0 L 433.9,476.9 L 461.0,464.3 L 488.1,433.1 L 515.3,423.4 L 542.4,424.2 L 569.5,391.4 L 596.6,412.5 L 623.7,386.5 L 650.8,393.5 L 678.0,409.0 L 705.1,425.9 L 732.2,431.8 L 759.3,408.3 L 786.4,421.6 L 813.6,411.7 L 840.7,398.4 L 867.8,400.6 L 894.9,392.7 L 922.0,412.8 L 949.2,433.2 L 976.3,445.0 L 1003.4,429.4 L 1030.5,428.4 L 1057.6,433.9 L 1084.7,423.8 L 1111.9,421.3 L 1139.0,427.7 L 1166.1,405.4 L 1193.2,388.7 L 1220.3,398.3 L 1247.5,388.8 L 1274.6,382.1 L 1301.7,355.2 L 1328.8,336.7 L 1355.9,343.8 L 1383.1,310.7 L 1410.2,327.7 L 1437.3,327.2 L 1464.4,307.1 L 1491.5,322.1 L 1518.6,317.5 L 1545.8,339.1 L 1572.9,324.1 L 1600.0,303.6" fill="none" stroke="var(--auth-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
+  <div class="auth-top-bar">
+    <span class="env-badge-homolog">Homologação 🧪</span>
+    <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
+      <svg id="authThemeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
+      </svg>
+    </button>
+  </div>
 
+  <div class="auth-grid" aria-hidden="true"></div>
   <div class="auth-blob b1"></div>
   <div class="auth-blob b2"></div>
 
-  <!-- Login -->
-  <div class="auth-box" id="loginBox">
-    <div class="brand">
-      <div class="logo">S</div>
-      <div class="name">SISTEMA</div>
+  <div class="auth-card-nexus">
+    <!-- Brand Header -->
+    <div class="auth-brand">
+      <div class="auth-logo-badge">N</div>
+      <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
+      <div class="auth-subtitle" id="authBoxSubtitle">Plataforma Inteligente de Gestão Financeira Pessoal</div>
     </div>
-    <h2>Bem-vindo de volta</h2>
-    <p class="sub">Acesse sua conta para gerenciar suas finanças.</p>
-    <form id="loginForm">
-      <div class="field">
-        <label>E-mail</label>
-        <input type="email" id="loginEmail" placeholder="seu.email@exemplo.com" required autocomplete="username">
-      </div>
-      <div class="field">
-        <label>Senha</label>
-        <div class="pass-field">
-          <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
-          <button type="button" class="pass-toggle" id="loginPasswordToggle" tabindex="-1" aria-label="Mostrar senha"></button>
+
+    <!-- Navegação por Abas Segmentadas -->
+    <div class="auth-tabs-nav" id="authTabsNav">
+      <button type="button" class="auth-tab-btn active" id="tabBtnLogin">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Entrar na Conta
+      </button>
+      <button type="button" class="auth-tab-btn" id="tabBtnRegister">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+        Criar Conta
+      </button>
+    </div>
+
+    <!-- Box 1: Formulário de Login -->
+    <div id="loginBox">
+      <form id="loginForm">
+        <div class="auth-field">
+          <label>E-mail</label>
+          <div class="auth-input-wrapper" id="wrapLoginEmail">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </span>
+            <input type="email" id="loginEmail" placeholder="seu.email@exemplo.com" required autocomplete="username">
+          </div>
         </div>
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px; font-size:12.5px;">
-          <label style="display:flex; align-items:center; gap:6px; cursor:pointer; color:#8E9BAE;">
-            <input type="checkbox" id="rememberMe" checked style="accent-color:#E5A93C;">
-            <span>Lembrar de mim</span>
-          </label>
-          <a class="auth-forgot" id="goForgot" style="margin-top:0;">Esqueceu a senha?</a>
+
+        <div class="auth-field">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="margin-bottom:0;">Senha</label>
+            <a class="auth-forgot-link" id="goForgot">Esqueceu a senha?</a>
+          </div>
+          <div class="auth-input-wrapper" id="wrapLoginPass">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="auth-pass-toggle-btn" id="loginPasswordToggle" title="Mostrar/Ocultar Senha">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div style="margin-top:10px;">
+            <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px; font-weight:600; text-transform:none; color:var(--auth-text-dim);">
+              <input type="checkbox" id="rememberMe" checked style="accent-color:var(--auth-gold); width:15px; height:15px;">
+              <span>Permanecer conectado com segurança</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
+          Entrar na Conta →
+        </button>
+      </form>
+
+      <!-- Acesso Rápido de Teste -->
+      <div class="auth-quick-access">
+        <div class="auth-quick-title">Acesso Rápido de Teste</div>
+        <div class="auth-quick-pills">
+          <button type="button" class="auth-pill-btn" onclick="fillDemoCredentials('admin@nexusfinanceiro.com', '86266049', 'Administrador')" title="Acessar como Administrador">
+            <span class="tag-role">👑 ADMIN</span>
+            <span>Paulo Lima</span>
+          </button>
+          <button type="button" class="auth-pill-btn" onclick="fillDemoCredentials('paulolp0101@gmail.com', '86266049', 'Paulo Lima')" title="Acessar com E-mail Gmail">
+            <span class="tag-role">👤 GMAIL</span>
+            <span>paulolp0101</span>
+          </button>
+          <button type="button" class="auth-pill-btn" onclick="fillDemoCredentials('user@nexusfinanceiro.com', '123456', 'Usuário')" title="Acessar como Usuário Padrão">
+            <span class="tag-role">🛡️ USUÁRIO</span>
+            <span>Padrão</span>
+          </button>
         </div>
       </div>
-      <button type="submit" class="btn-auth">Entrar na Conta →</button>
-    </form>
-    <div style="position:relative; margin:22px 0 16px; text-align:center;">
-      <div style="position:absolute; inset:0; display:flex; align-items:center;"><div style="width:100%; height:1px; background:#1C2436;"></div></div>
-      <span style="position:relative; padding:0 12px; background:#0E1322; font-size:11px; font-weight:700; color:#5C6B80; text-transform:uppercase; letter-spacing:0.1em;">OU ENTRE COM</span>
     </div>
-    <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:16px;">
-      <button type="button" onclick="fillDemoCredentials('admin@nexusfinanceiro.com', '86266049', 'Administrador')" title="Google" style="width:48px; height:48px; border-radius:14px; background:#141A28; border:1px solid #232D42; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-        <svg style="width:20px; height:20px;" viewBox="0 0 24 24">
-          <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.9C6.2 7.4 8.9 5 12 5z"/>
-          <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
-          <path fill="#FBBC05" d="M5.3 14.7c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.6 7.2C.6 9.2 0 11.5 0 14s.6 4.8 1.6 6.8l3.7-2.9z"/>
-          <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.4-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"/>
-        </svg>
-      </button>
-      <button type="button" onclick="fillDemoCredentials('paulolp0101@gmail.com', '86266049', 'Paulo Lima')" title="Apple" style="width:48px; height:48px; border-radius:14px; background:#141A28; border:1px solid #232D42; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-        <svg style="width:20px; height:20px; fill:#ffffff;" viewBox="0 0 24 24">
-          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.32c.67-.82 1.12-1.96.99-3.1-.96.04-2.14.64-2.83 1.44-.61.71-1.15 1.87-1 3.01 1.08.08 2.17-.53 2.84-1.35z"/>
-        </svg>
-      </button>
-      <button type="button" onclick="fillDemoCredentials('admin@nexusfinanceiro.com', '86266049', 'Administrador')" title="LinkedIn" style="width:48px; height:48px; border-radius:14px; background:#141A28; border:1px solid #232D42; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-        <svg style="width:20px; height:20px; fill:#0A66C2;" viewBox="0 0 24 24">
-          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.7a1.6 1.6 0 1 0 1.6 1.6 1.61 1.61 0 0 0-1.6-1.6z"/>
-        </svg>
-      </button>
-    </div>
-    <div class="auth-toggle">
-      Não tem uma conta? <a id="goRegister" style="color:#E5A93C; font-weight:800;">Cadastrar-se</a>
-    </div>
-  </div>
 
-  <!-- Recuperar Senha -->
-  <div class="auth-box" id="forgotBox" style="display:none;">
-    <div class="brand">
-      <div class="logo">N</div>
-      <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
-    </div>
-    <h2>Recuperar Senha</h2>
-    <p class="sub" id="forgotSub">Informe seu e-mail para enviarmos sua senha</p>
+    <!-- Box 2: Formulário de Cadastro -->
+    <div id="registerBox" style="display:none;">
+      <form id="registerForm">
+        <div class="auth-field">
+          <label>Nome Completo</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <input type="text" id="regName" placeholder="Ex: Paulo Lima" required>
+          </div>
+        </div>
 
-    <form id="forgotStep1">
-      <div class="field">
-        <label>E-mail</label>
-        <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" required>
-      </div>
-      <button type="submit" class="btn-auth" id="btnSendPassword">Enviar Senha por E-mail</button>
-    </form>
+        <div class="auth-field">
+          <label>E-mail Corporativo ou Pessoal</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </span>
+            <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required>
+          </div>
+        </div>
 
-    <div class="auth-toggle">
-      Lembrou a senha? <a id="goLoginFromForgot">Fazer Login</a>
-    </div>
-  </div>
+        <div class="auth-field">
+          <label>Criar Senha Segura</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+          </div>
+        </div>
 
-  <!-- Cadastro -->
-  <div class="auth-box" id="registerBox" style="display:none;">
-    <div class="brand">
-      <div class="logo">N</div>
-      <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
+        <button type="submit" class="btn-auth-primary" id="regSubmitBtn">
+          Criar Minha Conta →
+        </button>
+      </form>
     </div>
-    <h2>Criar Conta</h2>
-    <p class="sub">Preencha seus dados para começar</p>
-    <form id="registerForm">
-      <div class="field">
-        <label>Nome Completo</label>
-        <input type="text" id="regName" placeholder="Ex: Maria Silva" required>
+
+    <!-- Box 3: Recuperação de Senha -->
+    <div id="forgotBox" style="display:none;">
+      <p style="font-size:13.5px; color:var(--auth-text-dim); margin-bottom:20px; line-height:1.5;">
+        Informe seu e-mail cadastrado para enviarmos sua senha ou gerar uma credencial de acesso imediato.
+      </p>
+
+      <form id="forgotStep1">
+        <div class="auth-field">
+          <label>E-mail Cadastrado</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </span>
+            <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-auth-primary" id="btnSendPassword">
+          Recuperar Minha Senha →
+        </button>
+      </form>
+
+      <div style="text-align:center; margin-top:18px;">
+        <a class="auth-forgot-link" id="goLoginFromForgot">← Voltar para o Login</a>
       </div>
-      <div class="field">
-        <label>E-mail</label>
-        <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required>
-      </div>
-      <div class="field">
-        <label>Senha</label>
-        <input type="password" id="regPassword" placeholder="••••••••" required minlength="6">
-      </div>
-      <button type="submit" class="btn-auth">Cadastrar Conta</button>
-    </form>
-    <div class="auth-toggle">
-      Já tem uma conta? <a id="goLogin">Fazer Login</a>
     </div>
-  </div>
-  <div class="auth-dev-credit">
-    <div class="dev-signature">
-      <div class="dev-signature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="16 18 22 12 16 6"></polyline>
-          <polyline points="8 6 2 12 8 18"></polyline>
-        </svg>
-      </div>
-      <div class="dev-signature-text">
-        <span class="dev-signature-label">Desenvolvido por</span>
-        <strong class="dev-signature-name">Paulo Lima</strong>
+
+    <!-- Assinatura do Desenvolvedor -->
+    <div class="auth-dev-credit" style="margin-top:24px; padding-top:16px; border-top:1px solid var(--auth-border); text-align:center;">
+      <div class="dev-signature" style="justify-content:center;">
+        <div class="dev-signature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </div>
+        <div class="dev-signature-text">
+          <span class="dev-signature-label">Desenvolvido por</span>
+          <strong class="dev-signature-name">Paulo Lima</strong>
+        </div>
       </div>
     </div>
   </div>
@@ -2290,15 +2637,87 @@ let registeredUsers = [];
 
 // Função global para preenchimento de credenciais nos botões de acesso rápido
 window.fillDemoCredentials = function(email, password, roleName) {
+  window.switchAuthTab('login');
   const emailInput = document.getElementById('loginEmail');
   const passInput = document.getElementById('loginPassword');
   if (emailInput) emailInput.value = email;
   if (passInput) passInput.value = password;
+
+  const wrapEmail = document.getElementById('wrapLoginEmail');
+  const wrapPass = document.getElementById('wrapLoginPass');
+  if (wrapEmail) wrapEmail.classList.add('highlight-glow');
+  if (wrapPass) wrapPass.classList.add('highlight-glow');
+
+  setTimeout(() => {
+    if (wrapEmail) wrapEmail.classList.remove('highlight-glow');
+    if (wrapPass) wrapPass.classList.remove('highlight-glow');
+  }, 1400);
+};
+
+// Alternador de Abas de Autenticação (Entrar / Criar Conta)
+window.switchAuthTab = function(tab) {
   const loginBox = document.getElementById('loginBox');
-  if (loginBox && loginBox.style.display === 'none') {
-    document.getElementById('registerBox').style.display = 'none';
-    document.getElementById('forgotBox').style.display = 'none';
-    loginBox.style.display = 'block';
+  const regBox = document.getElementById('registerBox');
+  const forgotBox = document.getElementById('forgotBox');
+  const tabsNav = document.getElementById('authTabsNav');
+  const tabLogin = document.getElementById('tabBtnLogin');
+  const tabReg = document.getElementById('tabBtnRegister');
+  const subTitle = document.getElementById('authBoxSubtitle');
+
+  if (tab === 'register') {
+    if (loginBox) loginBox.style.display = 'none';
+    if (forgotBox) forgotBox.style.display = 'none';
+    if (regBox) regBox.style.display = 'block';
+    if (tabsNav) tabsNav.style.display = 'flex';
+    if (tabLogin) tabLogin.classList.remove('active');
+    if (tabReg) tabReg.classList.add('active');
+    if (subTitle) subTitle.textContent = 'Crie sua conta para começar a gerenciar suas finanças';
+  } else if (tab === 'forgot') {
+    if (loginBox) loginBox.style.display = 'none';
+    if (regBox) regBox.style.display = 'none';
+    if (forgotBox) forgotBox.style.display = 'block';
+    if (tabsNav) tabsNav.style.display = 'none';
+    if (subTitle) subTitle.textContent = 'Recuperação segura de acesso';
+  } else {
+    if (regBox) regBox.style.display = 'none';
+    if (forgotBox) forgotBox.style.display = 'none';
+    if (loginBox) loginBox.style.display = 'block';
+    if (tabsNav) tabsNav.style.display = 'flex';
+    if (tabLogin) tabLogin.classList.add('active');
+    if (tabReg) tabReg.classList.remove('active');
+    if (subTitle) subTitle.textContent = 'Plataforma Inteligente de Gestão Financeira Pessoal';
+  }
+};
+
+// Alternador de Tema na Tela de Login
+window.toggleAuthTheme = function() {
+  const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
+  const nextLight = !isLight;
+  document.body.classList.toggle('light', nextLight);
+  document.documentElement.classList.toggle('light', nextLight);
+  saveToStorage('nexus_theme', nextLight ? 'light' : 'dark');
+
+  const icon = document.getElementById('authThemeIcon');
+  if (icon) {
+    if (nextLight) {
+      icon.innerHTML = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>';
+    } else {
+      icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
+    }
+  }
+};
+
+// Mostrar/Ocultar Senha do Login
+window.togglePasswordVisibility = function(inputId, btnId) {
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  if (!input || !btn) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17.94 17.94-2.83-2.83M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/><path d="M1 12s4-8 11-8c1.3 0 2.5.3 3.6.8M5.8 5.8C3.6 7.6 2 10.3 1 12c0 0 4 8 11 8 2.6 0 5-.8 7-2.2"/><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/></svg>';
+  } else {
+    input.type = 'password';
+    btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   }
 };
 
@@ -2344,32 +2763,24 @@ let currentUser = null;
 let isViewingOtherUser = false;
 let adminOriginalUser = null;
 
-// Formulários de Login/Cadastro
-document.getElementById('goRegister').onclick = () => {
-  document.getElementById('loginBox').style.display = 'none';
-  document.getElementById('forgotBox').style.display = 'none';
-  document.getElementById('registerBox').style.display = 'block';
-};
-document.getElementById('goLogin').onclick = () => {
-  document.getElementById('registerBox').style.display = 'none';
-  document.getElementById('forgotBox').style.display = 'none';
-  document.getElementById('loginBox').style.display = 'block';
-};
+// Event Listeners das Abas e Tema de Autenticação
+const tabLoginBtn = document.getElementById('tabBtnLogin');
+if (tabLoginBtn) tabLoginBtn.onclick = () => window.switchAuthTab('login');
 
-// Esqueceu a senha - Enviar por E-mail
-document.getElementById('goForgot').onclick = async (e) => {
-  e.preventDefault();
-  document.getElementById('loginBox').style.display = 'none';
-  document.getElementById('registerBox').style.display = 'none';
-  document.getElementById('forgotBox').style.display = 'block';
-  document.getElementById('forgotStep1').reset();
-  document.getElementById('forgotSub').textContent = 'Informe seu e-mail para enviarmos sua senha';
-};
+const tabRegBtn = document.getElementById('tabBtnRegister');
+if (tabRegBtn) tabRegBtn.onclick = () => window.switchAuthTab('register');
 
-document.getElementById('goLoginFromForgot').onclick = () => {
-  document.getElementById('forgotBox').style.display = 'none';
-  document.getElementById('loginBox').style.display = 'block';
-};
+const authThemeBtn = document.getElementById('authThemeToggleBtn');
+if (authThemeBtn) authThemeBtn.onclick = () => window.toggleAuthTheme();
+
+const loginPassToggle = document.getElementById('loginPasswordToggle');
+if (loginPassToggle) loginPassToggle.onclick = () => window.togglePasswordVisibility('loginPassword', 'loginPasswordToggle');
+
+const goForgot = document.getElementById('goForgot');
+if (goForgot) goForgot.onclick = (e) => { e.preventDefault(); window.switchAuthTab('forgot'); };
+
+const goLoginFromForgot = document.getElementById('goLoginFromForgot');
+if (goLoginFromForgot) goLoginFromForgot.onclick = (e) => { e.preventDefault(); window.switchAuthTab('login'); };
 
 document.getElementById('forgotStep1').onsubmit = async (e) => {
   e.preventDefault();
@@ -2400,13 +2811,12 @@ document.getElementById('forgotStep1').onsubmit = async (e) => {
     }
 
     document.getElementById('loginEmail').value = email;
-    document.getElementById('forgotBox').style.display = 'none';
-    document.getElementById('loginBox').style.display = 'block';
+    window.switchAuthTab('login');
   } catch(err) {
     alert('Erro ao processar solicitação de e-mail. Verifique suas credenciais SMTP no servidor.');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Enviar Senha por E-mail';
+    btn.textContent = 'Recuperar Minha Senha →';
   }
 };
 
