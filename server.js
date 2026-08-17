@@ -695,7 +695,7 @@ body.light .auth-input-wrapper:focus-within {
 
 .auth-input-wrapper input {
   flex: 1;
-  background: transparent;
+  background: transparent !important;
   border: none;
   padding: 14px 12px 14px 0;
   color: var(--auth-text);
@@ -706,6 +706,27 @@ body.light .auth-input-wrapper:focus-within {
 }
 .auth-input-wrapper input::placeholder {
   color: #64748B;
+}
+
+/* Override Nativo de Autofill do Navegador (Elimina Caixas Brancas/Azuis) */
+.auth-input-wrapper input:-webkit-autofill,
+.auth-input-wrapper input:-webkit-autofill:hover,
+.auth-input-wrapper input:-webkit-autofill:focus,
+.auth-input-wrapper input:-webkit-autofill:active {
+  -webkit-text-fill-color: #FFFFFF !important;
+  -webkit-box-shadow: 0 0 0px 1000px #0F172A inset !important;
+  box-shadow: 0 0 0px 1000px #0F172A inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  border-radius: 0 14px 14px 0 !important;
+}
+
+body.light .auth-input-wrapper input:-webkit-autofill,
+body.light .auth-input-wrapper input:-webkit-autofill:hover,
+body.light .auth-input-wrapper input:-webkit-autofill:focus,
+body.light .auth-input-wrapper input:-webkit-autofill:active {
+  -webkit-text-fill-color: #0F172A !important;
+  -webkit-box-shadow: 0 0 0px 1000px #F8FAFC inset !important;
+  box-shadow: 0 0 0px 1000px #F8FAFC inset !important;
 }
 
 .auth-pass-toggle-btn {
@@ -810,7 +831,7 @@ body.light .auth-input-wrapper:focus-within {
   border: 1px solid var(--auth-border);
   color: var(--auth-text);
   border-radius: 12px;
-  padding: 8px 6px;
+  padding: 10px 6px;
   font-size: 11.5px;
   font-weight: 700;
   cursor: pointer;
@@ -819,6 +840,15 @@ body.light .auth-input-wrapper:focus-within {
   align-items: center;
   gap: 3px;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  width: 100%;
+}
+.auth-pill-btn span {
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .auth-pill-btn span.tag-role {
   font-size: 9.5px;
