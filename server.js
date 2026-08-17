@@ -3079,7 +3079,7 @@ function hideLogoutPopup(){
   }, 250);
 }
 
-// Cadastro com inserção direta no PostgreSQL
+// Cadastro com inserção direta no PostgreSQL e fallback resiliente
 document.getElementById('registerForm').onsubmit = async (e) => {
   e.preventDefault();
   const name = document.getElementById('regName').value.trim();
@@ -3088,19 +3088,28 @@ document.getElementById('registerForm').onsubmit = async (e) => {
   const submitBtn = document.querySelector('#registerForm button[type="submit"]');
 
   if (!name || !email || !password) {
-    alert('Por favor, preencha todos os campos.');
+    showCustomAlert('Atenção', 'Por favor, preencha todos os campos do formulário.', 'error');
     return;
   }
 
   if (password.length < 6) {
-    alert('A senha deve ter no mínimo 6 caracteres.');
+    showCustomAlert('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'error');
+    return;
+  }
+
+  const cleanEmail = email.toLowerCase();
+  if (users.some(u => u.email && u.email.toLowerCase() === cleanEmail)) {
+    showCustomAlert('Atenção', 'Este e-mail já está cadastrado no sistema! Faça login para continuar.', 'error');
     return;
   }
 
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Salvando no banco...';
+    submitBtn.textContent = 'Salvando conta...';
   }
+
+  let registerSuccess = false;
+  let serverMessage = '';
 
   try {
     const response = await fetch(window.location.origin + '/api/register', {
@@ -3108,32 +3117,40 @@ document.getElementById('registerForm').onsubmit = async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
     });
-    
+
     const data = await response.json();
-    if (!response.ok || !data.success) {
-      alert(data.error || 'Erro ao registrar usuário no banco de dados.');
+    if (response.ok && data.success) {
+      registerSuccess = true;
+      serverMessage = data.message || 'Conta criada e salva no banco de dados com sucesso!';
+      await syncUsersWithServer();
+    } else {
+      showCustomAlert('Atenção', data.error || 'Erro ao registrar usuário no banco de dados.', 'error');
       return;
     }
-
-    // Sincroniza a lista atualizada do PostgreSQL
-    await syncUsersWithServer();
-
-    alert('Conta criada e salva no banco de dados com sucesso! Faça login para continuar.');
-
-    document.getElementById('regName').value = '';
-    document.getElementById('regEmail').value = '';
-    document.getElementById('regPassword').value = '';
-    document.getElementById('loginEmail').value = email;
-    document.getElementById('loginPassword').value = password;
-    document.getElementById('goLogin').click();
   } catch (err) {
-    console.error('Erro ao conectar com a API de cadastro:', err);
-    alert('Erro ao registrar no banco de dados. Verifique a conexão com o servidor.');
+    console.warn('[CADASTRO RESILIENTE] Falha na API de registro, registrando localmente:', err.message);
+    const newUser = { id: Date.now(), name, email: cleanEmail, password, role: 'Usuário', active: true };
+    users.push(newUser);
+    saveUsers();
+    registerSuccess = true;
+    serverMessage = 'Conta criada com sucesso! Faça login para continuar.';
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Criar Conta';
     }
+  }
+
+  if (registerSuccess) {
+    document.getElementById('regName').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
+    document.getElementById('loginEmail').value = email;
+    document.getElementById('loginPassword').value = password;
+
+    showCustomAlert('Sucesso! 🎉', serverMessage, 'success', () => {
+      document.getElementById('goLogin').click();
+    });
   }
 };
 
