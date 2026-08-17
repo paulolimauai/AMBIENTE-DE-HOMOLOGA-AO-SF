@@ -794,74 +794,6 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
   transform: none;
 }
 
-/* Seção de Acesso Rápido de Teste */
-.auth-quick-access {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--auth-border);
-}
-.auth-quick-title {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--auth-text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  text-align: center;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.auth-quick-title::before, .auth-quick-title::after {
-  content: '';
-  height: 1px;
-  flex: 1;
-  background: var(--auth-border);
-}
-
-.auth-quick-pills {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.auth-pill-btn {
-  background: var(--auth-input-bg);
-  border: 1px solid var(--auth-border);
-  color: var(--auth-text);
-  border-radius: 12px;
-  padding: 10px 6px;
-  font-size: 11.5px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-  width: 100%;
-}
-.auth-pill-btn span {
-  width: 100%;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.auth-pill-btn span.tag-role {
-  font-size: 9.5px;
-  color: var(--auth-gold);
-  font-weight: 800;
-}
-.auth-pill-btn:hover {
-  border-color: var(--auth-gold);
-  background: rgba(229, 169, 60, 0.12);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(229, 169, 60, 0.2);
-}
-
 .auth-forgot-link {
   font-size: 12.5px;
   color: var(--auth-gold);
@@ -2273,25 +2205,6 @@ body.light .scale-dropdown {
           Entrar na Conta →
         </button>
       </form>
-
-      <!-- Acesso Rápido de Teste -->
-      <div class="auth-quick-access">
-        <div class="auth-quick-title">Acesso Rápido de Teste</div>
-        <div class="auth-quick-pills">
-          <button type="button" class="auth-pill-btn" onclick="fillDemoCredentials('admin@nexusfinanceiro.com', '86266049', 'Administrador')" title="Acessar como Administrador">
-            <span class="tag-role">👑 ADMIN</span>
-            <span>Paulo Lima</span>
-          </button>
-          <button type="button" class="auth-pill-btn" onclick="fillDemoCredentials('paulolp0101@gmail.com', '86266049', 'Paulo Lima')" title="Acessar com E-mail Gmail">
-            <span class="tag-role">👤 GMAIL</span>
-            <span>paulolp0101</span>
-          </button>
-          <button type="button" class="auth-pill-btn" onclick="fillDemoCredentials('user@nexusfinanceiro.com', '123456', 'Usuário')" title="Acessar como Usuário Padrão">
-            <span class="tag-role">🛡️ USUÁRIO</span>
-            <span>Padrão</span>
-          </button>
-        </div>
-      </div>
     </div>
 
     <!-- Box 2: Formulário de Cadastro -->
@@ -2760,25 +2673,6 @@ function saveToStorage(key, val) {
 }
 
 let registeredUsers = [];
-
-// Função global para preenchimento de credenciais nos botões de acesso rápido
-window.fillDemoCredentials = function(email, password, roleName) {
-  window.switchAuthTab('login');
-  const emailInput = document.getElementById('loginEmail');
-  const passInput = document.getElementById('loginPassword');
-  if (emailInput) emailInput.value = email;
-  if (passInput) passInput.value = password;
-
-  const wrapEmail = document.getElementById('wrapLoginEmail');
-  const wrapPass = document.getElementById('wrapLoginPass');
-  if (wrapEmail) wrapEmail.classList.add('highlight-glow');
-  if (wrapPass) wrapPass.classList.add('highlight-glow');
-
-  setTimeout(() => {
-    if (wrapEmail) wrapEmail.classList.remove('highlight-glow');
-    if (wrapPass) wrapPass.classList.remove('highlight-glow');
-  }, 1400);
-};
 
 // Alternador de Abas de Autenticação (Entrar / Criar Conta)
 window.switchAuthTab = function(tab) {

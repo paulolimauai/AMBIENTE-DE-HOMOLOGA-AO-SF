@@ -352,27 +352,6 @@
             }
         };
 
-        // Função de Acesso Rápido de Teste
-        window.fillDemoCredentials = function(email, password, roleName) {
-            const emailInput = document.getElementById('loginEmail');
-            const passInput = document.getElementById('loginPassword');
-            if (!emailInput || !passInput) return;
-
-            emailInput.value = email;
-            passInput.value = password;
-
-            const emailWrapper = emailInput.closest('.input-wrapper-exact');
-            const passWrapper = passInput.closest('.input-wrapper-exact');
-
-            if (emailWrapper) emailWrapper.classList.add('field-highlight');
-            if (passWrapper) passWrapper.classList.add('field-highlight');
-
-            setTimeout(() => {
-                if (emailWrapper) emailWrapper.classList.remove('field-highlight');
-                if (passWrapper) passWrapper.classList.remove('field-highlight');
-            }, 1200);
-        };
-
         window.toggleLoginTheme = function() {
             const isCurrentlyLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
             const nextIsLight = !isCurrentlyLight;
@@ -562,33 +541,6 @@
                         </button>
                     </div>
                 </form>
-
-                <!-- Divisor "ACESSO RÁPIDO DE TESTE" -->
-                <div class="relative my-6 text-center">
-                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-[#1C2436]"></div></div>
-                    <span class="relative px-3 bg-[#0E1322] text-[11px] font-bold text-[#5C6B80] uppercase tracking-widest">
-                        ACESSO RÁPIDO DE TESTE
-                    </span>
-                </div>
-
-                <!-- Botões de Acesso Rápido em Grid de 3 Colunas -->
-                <div class="grid grid-cols-3 gap-2">
-                    <button type="button" onclick="fillDemoCredentials('admin@nexusfinanceiro.com', '86266049', 'Administrador')" title="Acesso Administrador"
-                        class="p-2.5 rounded-xl bg-[#111624] border border-[#232D42] flex flex-col items-center gap-1 hover:bg-[#1A2234] hover:border-amber-500/50 hover:-translate-y-0.5 transition-all text-xs text-slate-200">
-                        <span class="text-[9.5px] font-extrabold text-amber-400 tracking-wider">👑 ADMIN</span>
-                        <span class="font-bold text-[11.5px]">Paulo Lima</span>
-                    </button>
-                    <button type="button" onclick="fillDemoCredentials('paulolp0101@gmail.com', '86266049', 'Paulo Lima')" title="Acesso Paulo Lima"
-                        class="p-2.5 rounded-xl bg-[#111624] border border-[#232D42] flex flex-col items-center gap-1 hover:bg-[#1A2234] hover:border-amber-500/50 hover:-translate-y-0.5 transition-all text-xs text-slate-200">
-                        <span class="text-[9.5px] font-extrabold text-amber-400 tracking-wider">👤 GMAIL</span>
-                        <span class="font-bold text-[11.5px]">paulolp0101</span>
-                    </button>
-                    <button type="button" onclick="fillDemoCredentials('user@nexusfinanceiro.com', '123456', 'Usuário')" title="Acesso Usuário Padrão"
-                        class="p-2.5 rounded-xl bg-[#111624] border border-[#232D42] flex flex-col items-center gap-1 hover:bg-[#1A2234] hover:border-amber-500/50 hover:-translate-y-0.5 transition-all text-xs text-slate-200">
-                        <span class="text-[9.5px] font-extrabold text-amber-400 tracking-wider">🛡️ USUÁRIO</span>
-                        <span class="font-bold text-[11.5px]">Padrão</span>
-                    </button>
-                </div>
 
                 <!-- Link de Cadastro -->
                 <p class="mt-6 text-center text-xs text-[#8E9BAE]">
