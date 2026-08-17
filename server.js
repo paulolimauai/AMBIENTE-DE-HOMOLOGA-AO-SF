@@ -186,6 +186,16 @@ async function initDatabase() {
      ON CONFLICT (email) DO NOTHING;`,
     ['Paulo Lima', 'paulolp0101@gmail.com', '86266049', 'Administrador', true]
   );
+
+  try {
+    const res = await pool.query('SELECT id, name, email, password, role, active FROM usuarios ORDER BY id ASC');
+    if (res.rows && res.rows.length > 0) {
+      saveLocalUsers(res.rows);
+      console.log(`[BANCO] ${res.rows.length} usuário(s) sincronizado(s) diretamente do PostgreSQL para persistência local.`);
+    }
+  } catch(syncErr) {
+    console.warn('[BANCO AVISO] Erro ao sincronizar cache local de usuários:', syncErr.message);
+  }
 }
 
 // Conteúdo HTML/JS/CSS da aplicação centralizada com isolamento por usuário
@@ -2278,19 +2288,44 @@ function saveToStorage(key, val) {
 
 let registeredUsers = [];
 
+// Função global para preenchimento de credenciais nos botões de acesso rápido
+window.fillDemoCredentials = function(email, password, roleName) {
+  const emailInput = document.getElementById('loginEmail');
+  const passInput = document.getElementById('loginPassword');
+  if (emailInput) emailInput.value = email;
+  if (passInput) passInput.value = password;
+  const loginBox = document.getElementById('loginBox');
+  if (loginBox && loginBox.style.display === 'none') {
+    document.getElementById('registerBox').style.display = 'none';
+    document.getElementById('forgotBox').style.display = 'none';
+    loginBox.style.display = 'block';
+  }
+};
+
 async function syncUsersWithServer() {
   try {
     const res = await fetch(window.location.origin + '/api/users');
     if (res.ok) {
-      registeredUsers = await res.json();
-      saveToStorage('nexus_users', registeredUsers);
+      const usersData = await res.json();
+      if (Array.isArray(usersData) && usersData.length > 0) {
+        registeredUsers = usersData;
+        saveToStorage('nexus_users', registeredUsers);
+        return;
+      }
     }
   } catch(e) {
-    registeredUsers = loadFromStorage('nexus_users', [
+    console.warn('Aviso: operando em modo offline ao sincronizar usuários:', e);
+  }
+  const cached = loadFromStorage('nexus_users', null);
+  if (Array.isArray(cached) && cached.length > 0) {
+    registeredUsers = cached;
+  } else {
+    registeredUsers = [
       { name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
       { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true },
       { name: 'Usuário Padrão', email: 'user@nexusfinanceiro.com', password: '123456', role: 'Usuário', active: true }
-    ]);
+    ];
+    saveToStorage('nexus_users', registeredUsers);
   }
 }
 
@@ -2357,50 +2392,124 @@ document.getElementById('forgotStep1').onsubmit = async (e) => {
       return;
     }
 
-    alert('Sua senha foi enviada para o seu e-mail com sucesso!');
+    if (data.mode === 'direct' && data.tempPassword) {
+      alert('Sua senha temporária de acesso é: ' + data.tempPassword);
+      document.getElementById('loginPassword').value = data.tempPassword;
+    } else {
+      alert('Sua senha foi enviada para o seu e-mail com sucesso!');
+    }
+
     document.getElementById('loginEmail').value = email;
     document.getElementById('forgotBox').style.display = 'none';
     document.getElementById('loginBox').style.display = 'block';
   } catch(err) {
-    alert('Erro ao processar solicitação de e-mail. Verifique suas credenciais SMTP no Render.');
+    alert('Erro ao processar solicitação de e-mail. Verifique suas credenciais SMTP no servidor.');
   } finally {
     btn.disabled = false;
     btn.textContent = 'Enviar Senha por E-mail';
   }
 };
 
-// Login
+// Login direto contra o PostgreSQL / API com Fallback Offline Resiliente
 document.getElementById('loginForm').onsubmit = async (e) => {
   e.preventDefault();
-  await syncUsersWithServer();
   const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value.trim();
+  const submitBtn = document.querySelector('#loginForm button[type="submit"]');
 
-  const user = registeredUsers.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
-  if (user) {
-    if (user.active === false) {
-      showAccountDisabledPopup('Seu usuário foi desativado pelo administrador. Entre em contato para mais informações.');
+  if (!email || !password) {
+    alert('Por favor, preencha o e-mail e a senha.');
+    return;
+  }
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Entrando...';
+  }
+
+  try {
+    const res = await fetch(window.location.origin + '/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      alert(data.error || 'E-mail ou senha incorretos!');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Entrar na Conta →';
+      }
       return;
     }
-    currentUser = user;
-    saveToStorage('nexus_session', { email: user.email });
-    saveToStorage('nexus_cached_user', user);
-    saveToStorage('nexus_token', 'token_' + Date.now());
+
+    currentUser = data.user;
+    saveToStorage('nexus_session', { email: currentUser.email });
+    saveToStorage('nexus_cached_user', currentUser);
+    saveToStorage('nexus_token', data.token || ('token_' + Date.now()));
+
+    // Mantém o cache local atualizado com os usuários do banco
+    await syncUsersWithServer();
+
     document.documentElement.classList.add('user-logged-in');
-    await loadUserData();
-    if (user.role === 'Administrador' && !isViewingOtherUser) {
+    if (currentUser.role === 'Administrador') {
+      document.documentElement.classList.add('is-admin');
       currentPage = 'usuarios';
     } else {
+      document.documentElement.classList.remove('is-admin');
       currentPage = 'dashboard';
     }
-    showLoginSuccessPopup('Redirecionando para o seu dashboard...');
+
+    await loadUserData();
+    showLoginSuccessPopup('Redirecionando para o seu sistema...');
     setTimeout(() => {
       document.getElementById('authPage').classList.remove('show');
+      document.getElementById('authPage').style.display = 'none';
       document.getElementById('appMain').classList.add('show');
+      document.getElementById('appMain').style.display = 'flex';
       render();
-    }, 3000);
-  } else {
-    alert('E-mail ou senha incorretos!');
+    }, 1200);
+
+  } catch (err) {
+    console.warn('Servidor indisponível ou offline. Validando credenciais pelo cache local:', err);
+    await syncUsersWithServer();
+    const user = registeredUsers.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    if (user) {
+      if (user.active === false) {
+        showAccountDisabledPopup('Seu usuário foi desativado pelo administrador.');
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
+        return;
+      }
+      currentUser = user;
+      saveToStorage('nexus_session', { email: user.email });
+      saveToStorage('nexus_cached_user', user);
+      saveToStorage('nexus_token', 'token_' + Date.now());
+      document.documentElement.classList.add('user-logged-in');
+      if (user.role === 'Administrador') {
+        document.documentElement.classList.add('is-admin');
+        currentPage = 'usuarios';
+      } else {
+        document.documentElement.classList.remove('is-admin');
+        currentPage = 'dashboard';
+      }
+      await loadUserData();
+      showLoginSuccessPopup('Acesso offline autenticado com sucesso!');
+      setTimeout(() => {
+        document.getElementById('authPage').classList.remove('show');
+        document.getElementById('authPage').style.display = 'none';
+        document.getElementById('appMain').classList.add('show');
+        document.getElementById('appMain').style.display = 'flex';
+        render();
+      }, 1200);
+    } else {
+      alert('E-mail ou senha incorretos!');
+    }
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Entrar na Conta →';
+    }
   }
 };
 
@@ -2413,7 +2522,7 @@ function showLoginSuccessPopup(msg){
   }
   overlay.style.display = 'flex';
   overlay.classList.add('show');
-  void overlay.offsetHeight; // Forçar reflow síncrono do browser
+  void overlay.offsetHeight;
   overlay.classList.add('in');
   setTimeout(()=>{
     overlay.classList.remove('in');
@@ -2421,7 +2530,7 @@ function showLoginSuccessPopup(msg){
       overlay.classList.remove('show');
       overlay.style.display = 'none';
     }, 350);
-  }, 3000);
+  }, 2500);
 }
 
 function showAccountDisabledPopup(msg){
@@ -2444,13 +2553,11 @@ function showLogoutPopup(msg){
   overlay.classList.add('show');
   requestAnimationFrame(()=> overlay.classList.add('in'));
 
-  // Foco imediato no campo de email para permitir digitar sem travar
   setTimeout(() => {
     const loginEmailInput = document.getElementById('loginEmail');
     if (loginEmailInput) loginEmailInput.focus();
   }, 50);
 
-  // Auto-dismiss em 1.8 segundos para NUNCA prender a tela do próximo login
   if (logoutTimer) clearTimeout(logoutTimer);
   logoutTimer = setTimeout(() => {
     hideLogoutPopup();
@@ -2466,35 +2573,46 @@ function hideLogoutPopup(){
   }, 250);
 }
 
-// Cadastro absoluto com requisição direta para o Render
+// Cadastro com inserção direta no PostgreSQL
 document.getElementById('registerForm').onsubmit = async (e) => {
   e.preventDefault();
-  await syncUsersWithServer();
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim();
   const password = document.getElementById('regPassword').value.trim();
+  const submitBtn = document.querySelector('#registerForm button[type="submit"]');
 
-  if (registeredUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-    alert('Este e-mail já está cadastrado!');
+  if (!name || !email || !password) {
+    alert('Por favor, preencha todos os campos.');
     return;
   }
 
-  const newUser = { name, email, password, role: 'Usuário', active: true };
-  registeredUsers.push(newUser);
+  if (password.length < 6) {
+    alert('A senha deve ter no mínimo 6 caracteres.');
+    return;
+  }
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Salvando no banco...';
+  }
 
   try {
-    const response = await fetch(window.location.origin + '/api/users', {
+    const response = await fetch(window.location.origin + '/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(registeredUsers)
+      body: JSON.stringify({ name, email, password })
     });
     
-    if (!response.ok) {
-      throw new Error('Falha ao comunicar com o servidor');
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      alert(data.error || 'Erro ao registrar usuário no banco de dados.');
+      return;
     }
 
-    saveToStorage('nexus_users', registeredUsers);
-    alert('Conta criada com sucesso! Faça login para continuar.');
+    // Sincroniza a lista atualizada do PostgreSQL
+    await syncUsersWithServer();
+
+    alert('Conta criada e salva no banco de dados com sucesso! Faça login para continuar.');
 
     document.getElementById('regName').value = '';
     document.getElementById('regEmail').value = '';
@@ -2503,12 +2621,17 @@ document.getElementById('registerForm').onsubmit = async (e) => {
     document.getElementById('loginPassword').value = password;
     document.getElementById('goLogin').click();
   } catch (err) {
-    registeredUsers.pop();
-    alert('Erro ao registrar no servidor. Verifique sua conexão e tente novamente.');
+    console.error('Erro ao conectar com a API de cadastro:', err);
+    alert('Erro ao registrar no banco de dados. Verifique a conexão com o servidor.');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Criar Conta';
+    }
   }
 };
 
-// Logout
+// Logout seguro sem deletar as credenciais persistidas
 document.getElementById('logoutBtn').onclick = async () => {
   try { await saveUserData(); } catch(e){}
   resetUserDataState();
@@ -2532,7 +2655,7 @@ document.getElementById('logoutBtn').onclick = async () => {
     authPage.classList.add('show');
     authPage.style.display = 'flex';
   }
-  showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas.');
+  showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.');
 };
 
 /* ==================== Isolamento de Dados por Usuário ==================== */
@@ -7467,21 +7590,22 @@ const server = http.createServer((req, res) => {
           return res.end(JSON.stringify({ success: false, error: 'E-mail e senha são obrigatórios' }));
         }
 
+        const cleanEmail = email.toLowerCase().trim();
         let user = null;
         if (pool) {
           try {
             const result = await pool.query(
               'SELECT id, name, email, password, role, active FROM usuarios WHERE LOWER(email) = LOWER($1)',
-              [email]
+              [cleanEmail]
             );
             if (result.rows.length > 0) user = result.rows[0];
           } catch (dbErr) {
-            console.warn('[AVISO BD] Falha ao consultar PostgreSQL. Usando banco local.');
+            console.warn('[AVISO BD] Falha ao consultar PostgreSQL no login. Usando cache local:', dbErr.message);
           }
         }
         if (!user) {
           const localUsers = getLocalUsers();
-          user = localUsers.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+          user = localUsers.find(u => u.email.toLowerCase() === cleanEmail) || null;
         }
 
         if (!user || user.password !== password) {
@@ -7496,12 +7620,23 @@ const server = http.createServer((req, res) => {
 
         recordSystemLog(user.name, user.email, 'Login', 'Autenticação', 'Usuário realizou login com sucesso no sistema');
 
+        try {
+          const localUsers = getLocalUsers();
+          const idx = localUsers.findIndex(u => u.email.toLowerCase() === user.email.toLowerCase());
+          if (idx >= 0) {
+            localUsers[idx] = { ...localUsers[idx], ...user };
+          } else {
+            localUsers.push(user);
+          }
+          saveLocalUsers(localUsers);
+        } catch(e){}
+
         const token = 'token_' + Date.now() + '_' + Math.random().toString(36).substring(2);
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
           token: token,
-          user: { id: user.id || Date.now(), name: user.name, email: user.email, role: user.role }
+          user: { id: user.id || Date.now(), name: user.name, email: user.email, role: user.role, active: user.active }
         }));
       } catch (err) {
         console.error('Erro no endpoint de login:', err);
@@ -7533,7 +7668,9 @@ const server = http.createServer((req, res) => {
               [cleanEmail]
             );
             if (existing.rows.length > 0) isExisting = true;
-          } catch (dbErr) {}
+          } catch (dbErr) {
+            console.warn('[AVISO BD] Falha ao verificar existência de usuário no PostgreSQL:', dbErr.message);
+          }
         }
         if (!isExisting) {
           const localUsers = getLocalUsers();
@@ -7542,26 +7679,35 @@ const server = http.createServer((req, res) => {
 
         if (isExisting) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Este e-mail já está cadastrado!' }));
+          return res.end(JSON.stringify({ success: false, error: 'Este e-mail já está cadastrado no sistema!' }));
         }
 
+        let newUserId = Date.now();
         if (pool) {
           try {
-            await pool.query(
-              'INSERT INTO usuarios (name, email, password, role, active) VALUES ($1, $2, $3, $4, $5)',
-              [name, cleanEmail, password, 'Usuário', true]
+            const insertRes = await pool.query(
+              'INSERT INTO usuarios (name, email, password, role, active) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+              [name.trim(), cleanEmail, password, 'Usuário', true]
             );
-          } catch (e) {}
+            if (insertRes.rows[0]) newUserId = insertRes.rows[0].id;
+
+            await pool.query(
+              'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING',
+              [cleanEmail, '{}']
+            );
+          } catch (dbInsertErr) {
+            console.warn('[AVISO BD] Erro ao inserir usuário no PostgreSQL:', dbInsertErr.message);
+          }
         }
 
         const localUsers = getLocalUsers();
-        localUsers.push({ id: Date.now(), name, email: cleanEmail, password, role: 'Usuário', active: true });
+        localUsers.push({ id: newUserId, name: name.trim(), email: cleanEmail, password, role: 'Usuário', active: true });
         saveLocalUsers(localUsers);
 
-        recordSystemLog(name, cleanEmail, 'Cadastro', 'Autenticação', 'Novo usuário cadastrou-se no sistema');
+        recordSystemLog(name.trim(), cleanEmail, 'Cadastro', 'Autenticação', 'Novo usuário cadastrou-se no sistema e foi salvo no banco');
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: true, message: 'Conta criada com sucesso!' }));
+        return res.end(JSON.stringify({ success: true, message: 'Conta cadastrada com sucesso no banco de dados!' }));
       } catch (err) {
         console.error('Erro no endpoint de cadastro:', err);
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -7641,12 +7787,17 @@ const server = http.createServer((req, res) => {
   // Rota GET de Usuários
   if (req.method === 'GET' && parsedUrl.pathname === '/api/users') {
     if (pool) {
-      initDatabase()
-        .then(() => pool.query('SELECT name, email, password, role, active FROM usuarios ORDER BY id ASC'))
+      pool.query('SELECT id, name, email, password, role, active FROM usuarios ORDER BY id ASC')
         .then(result => {
-          saveLocalUsers(result.rows);
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(result.rows));
+          if (result.rows && result.rows.length > 0) {
+            saveLocalUsers(result.rows);
+            res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(result.rows));
+          } else {
+            const localUsers = getLocalUsers();
+            res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(localUsers));
+          }
         })
         .catch(err => {
           console.warn('Usando lista de usuários do backup local:', err.message);
