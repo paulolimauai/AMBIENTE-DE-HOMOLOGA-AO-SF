@@ -1834,7 +1834,30 @@ body.light tr.trow:hover td { background:#f1f5f9 !important; }
   transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .cat-card-add:hover{border-color:#E5A93C; color:#E5A93C; background:rgba(229,169,60,0.12); transform:translateY(-2px);}
-.cat-card-add .plus{font-size:24px; line-height:1; font-weight:400;}e-height:1; font-weight:400;}
+.cat-card-add .plus{font-size:24px; line-height:1; font-weight:400;}
+
+/* Enhanced Budget, Goal, & Bank Card Styles */
+.budget-card, .goal-card, .recurring-card {
+  position:relative; overflow:hidden;
+  background:linear-gradient(145deg, rgba(17,23,34,0.94) 0%, rgba(11,15,24,0.98) 100%);
+  border:1px solid rgba(255,255,255,0.09); border-radius:18px; padding:20px;
+  box-shadow:0 14px 34px -8px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.10);
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.budget-card:hover, .goal-card:hover, .recurring-card:hover {
+  transform:translateY(-3px);
+  border-color:rgba(59,130,246,0.45);
+  box-shadow:0 20px 42px -6px rgba(0,0,0,0.85), 0 0 25px rgba(59,130,246,0.18);
+}
+body.light .budget-card, body.light .goal-card, body.light .recurring-card, body.light .cat-card {
+  background:#ffffff !important; border-color:#cbd5e1 !important;
+  box-shadow:0 6px 20px rgba(15,23,42,0.06) !important;
+}
+body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
+  color:#0f172a !important;
+}
 
 /* ==================== Admin: Usuários Cadastrados ==================== */
 .user-admin-list{display:flex; flex-direction:column; gap:8px;}
@@ -4938,21 +4961,62 @@ function transactionsTable(list, showActions){
 function pageTransacoes(){
   const periodTx = transactions.filter(inPeriod);
   const accOptsHTML = accounts.slice().sort((a,b)=>a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' })).map(a => '<option value="' + a.name + '">' + a.name + ' (' + a.type + ')</option>').join('');
+  const totalDesp = periodTx.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val),0);
+  const totalRec = periodTx.filter(t=>t.type==='in').reduce((s,t)=>s+parseInputValue(t.val),0);
+  const saldoPer = totalRec - totalDesp;
+
   return \`
   <div class="page-head">
-    <div><h1>Transações — \${periodLabel()}</h1><p>Gerencie suas receitas e despesas do mês selecionado</p></div>
-    <div class="head-actions">
+    <div>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Transações — <span style="color:var(--green);">\${periodLabel()}</span>
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Gerencie e filtre todas as suas receitas e despesas com atualização em tempo real
+      </p>
+    </div>
+    <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
       \${periodPickerHTML()}
-      <button class="btn-ghost" id="btnGerenciarCategorias">🏷️ Categorias</button>
-      <button class="btn-primary" id="btnNovaTransacao">+ Nova Transação</button>
+      <button class="btn-ghost" id="btnGerenciarCategorias" style="display:flex; align-items:center; gap:6px;">🏷️ Categorias</button>
+      <button class="btn-primary" id="btnNovaTransacao" style="display:flex; align-items:center; gap:6px; font-weight:700;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nova Transação
+      </button>
     </div>
   </div>
+
+  <div class="kpis" id="txStatsRow" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:18px;">
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Total de Receitas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green);">↑</span></div>
+      <div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">\${fmt(totalRec)}</div>
+      <div class="sub" style="font-size:11px;">Entradas no período</div>
+    </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Total de Despesas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">↓</span></div>
+      <div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">\${fmt(totalDesp)}</div>
+      <div class="sub" style="font-size:11px;">Saídas no período</div>
+    </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Balanço Líquido</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:\${saldoPer < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(59,130,246,0.14)'}; color:\${saldoPer < 0 ? 'var(--red)' : 'var(--blue)'};">⇄</span></div>
+      <div class="val" style="font-size:20px; color:\${saldoPer < 0 ? 'var(--red)' : 'var(--green)'}; margin-bottom:2px;">\${fmt(saldoPer)}</div>
+      <div class="sub" style="font-size:11px;">Receitas − Despesas</div>
+    </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Total de Registros</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple);">📋</span></div>
+      <div class="val" style="font-size:20px; margin-bottom:2px;">\${periodTx.length}</div>
+      <div class="sub" style="font-size:11px;">Lançamentos no período</div>
+    </div>
+  </div>
+
   <div class="table-panel">
-    <div class="filters">
-      <select id="txFiltroConta"><option value="">Todas as Contas / Cartões</option>\${accOptsHTML}</select>
-      <select id="txFiltroTipo"><option value="">Todos os tipos</option><option value="in">Receitas</option><option value="out">Despesas</option></select>
-      <select id="txFiltroCat"><option value="">Todas categorias</option>\${catOptionsHTML(null)}</select>
-      <select id="txFiltroStatus"><option value="">Todos status</option><option>Pago</option><option>Recebido</option><option>Pendente</option></select>
+    <div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
+      <div style="position:relative; flex:1.5; min-width:200px;">
+        <input id="txSearch" type="text" placeholder="🔍 Buscar por descrição ou valor..." style="width:100%; font-size:13px;">
+      </div>
+      <select id="txFiltroConta" style="flex:1; min-width:160px;"><option value="">Todas as Contas / Cartões</option>\${accOptsHTML}</select>
+      <select id="txFiltroTipo" style="flex:0.8; min-width:120px;"><option value="">Todos os tipos</option><option value="in">Receitas</option><option value="out">Despesas</option></select>
+      <select id="txFiltroCat" style="flex:1; min-width:140px;"><option value="">Todas categorias</option>\${catOptionsHTML(null)}</select>
+      <select id="txFiltroStatus" style="flex:0.8; min-width:120px;"><option value="">Todos status</option><option>Pago</option><option>Recebido</option><option>Pendente</option></select>
     </div>
     <div id="txTableWrap">\${transactionsTable(periodTx.slice().sort((a,b)=>b.date.localeCompare(a.date)), true)}</div>
   </div>\`;
@@ -4965,12 +5029,19 @@ function pageContas(){
   return \`
   <div class="page-head">
     <div>
-      <h1>Cartões e Contas</h1>
-      <p>Acompanhe o limite disponível dos seus cartões de crédito e o saldo das suas contas</p>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Cartões e Contas Bancárias
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Acompanhe o limite disponível dos cartões de crédito e os saldos consolidados de suas contas
+      </p>
     </div>
-    <div class="head-actions">
+    <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
       \${periodPickerHTML()}
-      <button class="btn-primary" id="btnNovaConta">+ Novo Cartão/Conta</button>
+      <button class="btn-primary" id="btnNovaConta" style="display:flex; align-items:center; gap:6px; font-weight:700;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo Cartão / Conta
+      </button>
     </div>
   </div>
 
@@ -4982,33 +5053,33 @@ function pageContas(){
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
         Visão Geral dos Cartões de Crédito
       </h3>
-      <span class="tag" style="cursor:default; background:var(--green-soft); color:var(--green);">\${summary.creditCards.length} cartão(ões)</span>
+      <span class="tag" style="cursor:default; background:var(--green-soft); color:var(--green); font-weight:700;">\${summary.creditCards.length} cartão(ões)</span>
     </div>
     <div class="kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px;">
-      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px;">Limite Disponível Total</div>
+      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
+        <div class="row1" style="color:var(--text-dim); font-size:12px; font-weight:600;">Limite Disponível Total</div>
         <div class="val" style="font-size:22px; font-weight:800; color:var(--green); margin-top:4px;">\${fmt(summary.availableLimitGeral)}</div>
         <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Disponível para compras</div>
       </div>
-      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px;">Fatura do Mês (\${periodLabel()})</div>
+      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
+        <div class="row1" style="color:var(--text-dim); font-size:12px; font-weight:600;">Fatura do Mês (\${periodLabel()})</div>
         <div class="val" style="font-size:22px; font-weight:800; color:var(--orange); margin-top:4px;">\${fmt(summary.spentPeriodGeral)}</div>
         <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Gastos no mês selecionado</div>
       </div>
-      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px;">Fatura Acumulada em Aberto</div>
+      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
+        <div class="row1" style="color:var(--text-dim); font-size:12px; font-weight:600;">Fatura Acumulada em Aberto</div>
         <div class="val" style="font-size:22px; font-weight:800; color:var(--red); margin-top:4px;">\${fmt(summary.spentTotalGeral)}</div>
-        <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Compras minus pagamentos</div>
+        <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Compras menos pagamentos</div>
       </div>
-      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px;">Limite Total Aprovado</div>
+      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
+        <div class="row1" style="color:var(--text-dim); font-size:12px; font-weight:600;">Limite Total Aprovado</div>
         <div class="val" style="font-size:22px; font-weight:800; color:var(--blue); margin-top:4px;">\${fmt(summary.totalLimitGeral)}</div>
         <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Soma de todos os cartões</div>
       </div>
     </div>
     <div style="margin-top:14px;">
       <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim); margin-bottom:6px;">
-        <span>Uso global do limite de crédito</span>
+        <span>Comprometimento global do limite de crédito</span>
         <span style="font-weight:700; color:\${summary.usagePctGeral>=90?'var(--red)':summary.usagePctGeral>=70?'var(--orange)':'var(--green)'};">\${summary.usagePctGeral}% comprometido</span>
       </div>
       <div class="bar-split" style="height:8px; background:var(--card-border); border-radius:6px; overflow:hidden;">
@@ -5018,61 +5089,71 @@ function pageContas(){
   </div>
   \` : ''}
 
-  <div class="grid3" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:16px; align-items:stretch;">
+  <div class="grid3" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:18px; align-items:stretch;">
     \${list.length ? list.map(a => {
       const stats = getCardStats(a);
       return \`
-      <div class="acc-card" style="position:relative; background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:18px; display:flex; flex-direction:column; justify-content:space-between; min-height:260px; box-sizing:border-box;">
+      <div class="acc-card" style="position:relative; background:linear-gradient(145deg, rgba(18,24,36,0.92) 0%, rgba(12,16,26,0.96) 100%); border:1px solid rgba(255,255,255,0.10); border-left:4px solid \${a.color}; border-radius:18px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; min-height:270px; box-sizing:border-box; box-shadow:0 12px 30px -6px rgba(0,0,0,0.6);">
         <div>
           <div class="top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
-            <div class="id-group" style="display:flex; align-items:center; gap:10px; min-width:0;">
-              <span class="acc-ic" style="background:\${a.color}; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; font-size:14px; flex-shrink:0;">\${a.name.slice(0,2).toUpperCase()}</span>
+            <div class="id-group" style="display:flex; align-items:center; gap:12px; min-width:0;">
+              <span class="acc-ic" style="background:\${a.color}; width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; font-size:15px; flex-shrink:0; box-shadow:0 4px 14px rgba(0,0,0,0.4); text-shadow:0 1px 2px rgba(0,0,0,0.5);">
+                \${a.name.slice(0,2).toUpperCase()}
+              </span>
               <div style="min-width:0;">
-                <h3 style="font-size:15px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; color:var(--text);">\${a.name}</h3>
-                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${stats.isCreditCard ? 'rgba(155,107,216,0.15)' : 'var(--green-soft)'}; color:\${stats.isCreditCard ? 'var(--purple)' : 'var(--green)'}; font-weight:600;">\${a.type}</span>
+                <h3 style="font-size:16px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; color:var(--text); letter-spacing:-0.01em;">\${a.name}</h3>
+                <span class="pill" style="font-size:11px; padding:3px 9px; border-radius:8px; background:\${stats.isCreditCard ? 'rgba(168,85,247,0.16)' : 'var(--green-soft)'}; color:\${stats.isCreditCard ? 'var(--purple)' : 'var(--green)'}; font-weight:700; border:1px solid \${stats.isCreditCard ? 'rgba(168,85,247,0.3)' : 'rgba(16,185,129,0.3)'};">
+                  \${stats.isCreditCard ? '💳 ' : '🏦 '}\${a.type}
+                </span>
               </div>
             </div>
-            <div class="row-actions" style="display:flex; gap:6px;"><button data-editacc="\${a.id}" title="Editar">✎</button><button data-delacc="\${a.id}" title="Excluir">🗑</button></div>
+            <div class="row-actions" style="display:flex; gap:6px;">
+              <button data-editacc="\${a.id}" title="Editar Conta" class="btn-action-edit">✎</button>
+              <button data-delacc="\${a.id}" title="Excluir Conta" class="btn-action-del">🗑</button>
+            </div>
           </div>
 
           \${stats.isCreditCard ? \`
-            <div style="background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:10px; padding:12px; margin-top:4px;">
-              <div style="font-size:11.5px; color:var(--text-faint); margin-bottom:2px;">Limite Disponível</div>
-              <div class="val" style="font-size:22px; font-weight:800; color:\${stats.availableLimit < 200 ? 'var(--red)' : 'var(--green)'}">
+            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px; margin-top:4px;">
+              <div style="font-size:11.5px; color:var(--text-faint); margin-bottom:2px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Limite Disponível</div>
+              <div class="val" style="font-size:24px; font-weight:800; color:\${stats.availableLimit < 200 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums; letter-spacing:-0.02em;">
                 \${fmt(stats.availableLimit)}
               </div>
-              <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-top:8px; padding-top:8px; border-top:1px dashed var(--card-border);">
-                <span>Fatura: <strong style="color:var(--orange);">\${fmt(stats.spentTotal)}</strong></span>
-                <span>Limite Total: <strong style="color:var(--text);">\${fmt(stats.totalLimit)}</strong></span>
+              <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim); margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.08);">
+                <span>Fatura do Mês: <strong style="color:var(--orange); font-variant-numeric:tabular-nums;">\${fmt(stats.spentTotal)}</strong></span>
+                <span>Limite Total: <strong style="color:var(--text); font-variant-numeric:tabular-nums;">\${fmt(stats.totalLimit)}</strong></span>
               </div>
-              <div style="margin-top:8px;">
-                <div class="bar-split" style="height:6px; background:var(--card-border); border-radius:4px; overflow:hidden;">
-                  <div class="g" style="width:\${stats.usagePct}%; height:100%; background:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'}; border-radius:4px;"></div>
+              <div style="margin-top:10px;">
+                <div class="bar-split" style="height:6px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;">
+                  <div class="g" style="width:\${stats.usagePct}%; height:100%; background:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'}; border-radius:4px; transition:width .4s ease;"></div>
                 </div>
-                <div style="text-align:right; font-size:10.5px; color:var(--text-faint); margin-top:4px;">\${stats.usagePct}% utilizado</div>
+                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-faint); margin-top:4px;">
+                  <span>Uso do Cartão</span>
+                  <span style="font-weight:700; color:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'};">\${stats.usagePct}% utilizado</span>
+                </div>
               </div>
             </div>
           \` : \`
-            <div style="background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:10px; padding:12px; margin-top:4px;">
-              <div style="font-size:11.5px; color:var(--text-faint); margin-bottom:2px;">Saldo Atual da Conta</div>
-              <div class="val" style="font-size:22px; font-weight:800; color:\${stats.currentBalance < 0 ? 'var(--red)' : 'var(--green)'}">
+            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px; margin-top:4px;">
+              <div style="font-size:11.5px; color:var(--text-faint); margin-bottom:2px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Saldo Atual em Conta</div>
+              <div class="val" style="font-size:24px; font-weight:800; color:\${stats.currentBalance < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums; letter-spacing:-0.02em;">
                 \${fmt(stats.currentBalance)}
               </div>
-              <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-top:8px; padding-top:8px; border-top:1px dashed var(--card-border);">
-                <span>Entradas: <strong style="color:var(--green);">\${fmt(stats.periodIn)}</strong></span>
-                <span>Saídas: <strong style="color:var(--red);">\${fmt(stats.spentTotal)}</strong></span>
+              <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim); margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.08);">
+                <span>Entradas: <strong style="color:var(--green); font-variant-numeric:tabular-nums;">+\${fmt(stats.periodIn)}</strong></span>
+                <span>Saídas: <strong style="color:var(--red); font-variant-numeric:tabular-nums;">-\${fmt(stats.spentTotal)}</strong></span>
               </div>
-              <div style="margin-top:8px; min-height:22px; display:flex; align-items:center; justify-content:flex-end;">
-                <span style="font-size:10.5px; color:var(--text-faint);">Saldo inicial: \${fmt(stats.initialBalance)}</span>
+              <div style="margin-top:8px; display:flex; align-items:center; justify-content:flex-end;">
+                <span style="font-size:11px; color:var(--text-faint);">Saldo inicial cadastrado: <strong>\${fmt(stats.initialBalance)}</strong></span>
               </div>
             </div>
           \`}
         </div>
-        <button class="btn-ghost" data-viewcardtx="\${a.name}" style="padding:6px 12px; font-size:11.5px; margin-top:12px; width:100%; border-radius:8px; border:1px solid var(--card-border); background:rgba(255,255,255,0.03); color:var(--text-dim); display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+        <button class="btn-ghost" data-viewcardtx="\${a.name}" style="padding:8px 14px; font-size:12px; font-weight:700; margin-top:14px; width:100%; border-radius:10px; border:1px solid var(--card-border); background:rgba(255,255,255,0.03); color:var(--text); display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
           🔍 Ver lançamentos desta conta (\${stats.txCount})
         </button>
       </div>\`;
-    }).join('') : \`<div class="placeholder"><div class="big">🏦</div><h3>Nenhuma conta cadastrada</h3></div>\`}
+    }).join('') : \`<div class="placeholder"><div class="big">🏦</div><h3>Nenhuma conta cadastrada</h3><p>Cadastre suas contas bancárias e cartões de crédito para gerenciar seus saldos.</p></div>\`}
   </div>\`;
 }
 
@@ -5080,46 +5161,138 @@ function pageOrcamentos(){
   const list = budgetStatus();
   return \`
   <div class="page-head">
-    <div><h1>Orçamentos</h1><p>Limites de gastos por categoria — \${periodLabel()}</p></div>
-    <div class="head-actions">\${periodPickerHTML()}<button class="btn-primary" id="btnNovoOrcamento">+ Novo Orçamento</button></div>
+    <div>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Orçamentos por Categoria
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Defina e acompanhe limites de gastos para manter seu planejamento sob controle — <strong style="color:var(--green);">\${periodLabel()}</strong>
+      </p>
+    </div>
+    <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
+      \${periodPickerHTML()}
+      <button class="btn-primary" id="btnNovoOrcamento" style="display:flex; align-items:center; gap:6px; font-weight:700;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo Orçamento
+      </button>
+    </div>
   </div>
-  <div class="cat-cards">
-    \${list.length? list.map(b=>{
-      const color = b.pct>=100?'var(--red)': b.pct>=80?'var(--orange)':'var(--green)';
-      return \`<div class="cat-card">
-        <div class="top">
-          <div class="id-group"><span class="dot" style="background:\${catColor(b.category)}"></span><h4>\${b.category}</h4></div>
-          <div class="row-actions"><button data-editorc="\${b.id}" title="Editar">✎</button><button data-delorc="\${b.id}" title="Excluir">🗑</button></div>
+  <div class="cat-cards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;">
+    \${list.length ? list.map(b => {
+      const color = b.pct >= 100 ? 'var(--red)' : b.pct >= 80 ? 'var(--orange)' : 'var(--green)';
+      const remaining = b.limit - b.spent;
+      const isOver = remaining < 0;
+      return \`
+      <div class="budget-card">
+        <div>
+          <div class="top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px;">
+            <div class="id-group" style="display:flex; align-items:center; gap:10px; min-width:0;">
+              <span class="dot" style="background:\${catColor(b.category)}; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:0 2px 8px \${catColor(b.category)}35;">
+                \${catIcon(b.category)}
+              </span>
+              <div style="min-width:0;">
+                <h4 style="font-size:15px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${b.category}</h4>
+                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${b.pct>=100?'rgba(239,68,68,0.14)':b.pct>=80?'rgba(245,158,11,0.14)':'rgba(16,185,129,0.14)'}; color:\${color}; font-weight:700; border:1px solid \${b.pct>=100?'rgba(239,68,68,0.3)':b.pct>=80?'rgba(245,158,11,0.3)':'rgba(16,185,129,0.3)'};">
+                  \${b.pct>=100 ? '🚨 Excedido' : b.pct>=80 ? '⚠️ Alerta' : '✓ Normal'} (\${b.pct}%)
+                </span>
+              </div>
+            </div>
+            <div class="row-actions" style="display:flex; gap:6px;">
+              <button data-editorc="\${b.id}" title="Editar Orçamento" class="btn-action-edit">✎</button>
+              <button data-delorc="\${b.id}" title="Excluir Orçamento" class="btn-action-del">🗑</button>
+            </div>
+          </div>
+          
+          <div style="margin:14px 0 10px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-size:22px; font-weight:800; color:\${color}; font-variant-numeric:tabular-nums;">\${fmt(b.spent)}</span>
+              <span style="font-size:13px; color:var(--text-faint); font-weight:600;">Limite: \${fmt(b.limit)}</span>
+            </div>
+            <div class="bar-split" style="height:7px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; margin-top:8px;">
+              <div class="g" style="width:\${Math.min(b.pct, 100)}%; background:\${color}; border-radius:5px; transition:width .4s ease;"></div>
+            </div>
+          </div>
         </div>
-        <span style="color:\${color};font-size:11.5px;font-weight:600">\${b.pct}% usado</span>
-        <div class="amt" style="margin-top:6px">\${fmt(b.spent)} <span style="color:var(--text-faint);font-size:12px;font-weight:400"> / \${fmt(b.limit)}</span></div>
-        <div class="bar-split" style="background:var(--card-border)"><div class="g" style="width:\${Math.min(b.pct,100)}%; background:\${color}"></div></div>
+
+        <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
+          <span style="color:var(--text-dim); font-weight:500;">
+            \${isOver ? 'Excedido em:' : 'Restante disponível:'}
+          </span>
+          <strong style="color:\${isOver ? 'var(--red)' : 'var(--green)'}; font-weight:800; font-variant-numeric:tabular-nums;">
+            \${isOver ? '-' + fmt(Math.abs(remaining)) : fmt(remaining)}
+          </strong>
+        </div>
       </div>\`;
-    }).join('') : \`<div class="placeholder"><div class="big">◔</div><h3>Nenhum orçamento definido</h3><p>Crie limites de gastos por categoria para acompanhar seu mês.</p></div>\`}
+    }).join('') : \`<div class="placeholder"><div class="big">◔</div><h3>Nenhum orçamento definido</h3><p>Crie limites mensais por categoria para controlar suas despesas e poupar mais.</p></div>\`}
   </div>\`;
 }
 
 function pageMetas(){
   return \`
   <div class="page-head">
-    <div><h1>Metas</h1><p>Acompanhe seus objetivos financeiros</p></div>
-    <div class="head-actions"><button class="btn-primary" id="btnNovaMeta">+ Nova Meta</button></div>
+    <div>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Metas e Objetivos Financeiros
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Planeje e alcance seus sonhos com metas estruturadas e controle de progresso
+      </p>
+    </div>
+    <div class="head-actions">
+      <button class="btn-primary" id="btnNovaMeta" style="display:flex; align-items:center; gap:6px; font-weight:700;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nova Meta
+      </button>
+    </div>
   </div>
-  <div class="cat-cards">
-    \${goals.length? goals.map(g=>{
-      const pct = Math.min(100, Math.round(g.current/g.target*100));
-      return \`<div class="acc-card">
-        <div class="top">
-          <h3 style="font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">\${g.name}</h3>
-          <div class="row-actions"><button data-editmeta="\${g.id}" title="Editar">✎</button><button data-delmeta="\${g.id}" title="Excluir">🗑</button></div>
+  <div class="cat-cards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(290px, 1fr)); gap:18px;">
+    \${goals.length ? goals.map(g => {
+      const pct = Math.min(100, Math.round(g.current / g.target * 100));
+      const remaining = Math.max(0, g.target - g.current);
+      const isCompleted = pct >= 100;
+      return \`
+      <div class="goal-card">
+        <div>
+          <div class="top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px;">
+            <div style="min-width:0;">
+              <h3 style="font-size:16px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text); letter-spacing:-0.01em;">
+                🎯 \${g.name}
+              </h3>
+              <div style="font-size:11.5px; color:var(--text-faint); margin-top:2px; font-weight:600;">
+                📅 Prazo: \${formatDateBR(g.deadline)}
+              </div>
+            </div>
+            <div class="row-actions" style="display:flex; gap:6px;">
+              <button data-editmeta="\${g.id}" title="Editar Meta" class="btn-action-edit">✎</button>
+              <button data-delmeta="\${g.id}" title="Excluir Meta" class="btn-action-del">🗑</button>
+            </div>
+          </div>
+
+          <div style="margin:14px 0 10px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <span style="font-size:22px; font-weight:800; color:var(--green); font-variant-numeric:tabular-nums;">\${fmt(g.current)}</span>
+              <span style="font-size:13px; color:var(--text-faint); font-weight:600;">Alvo: \${fmt(g.target)}</span>
+            </div>
+            <div class="bar-split" style="height:7px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; margin-top:8px;">
+              <div class="g" style="width:\${pct}%; background:\${isCompleted ? 'linear-gradient(90deg, #10B981, #34D399)' : 'linear-gradient(90deg, #3B82F6, #60A5FA)'}; border-radius:5px; transition:width .4s ease;"></div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; margin-bottom:12px;">
+            <span class="pill" style="font-size:11px; padding:2px 8px; border-radius:6px; background:\${isCompleted ? 'rgba(16,185,129,0.16)' : 'rgba(59,130,246,0.16)'}; color:\${isCompleted ? 'var(--green)' : 'var(--blue)'}; font-weight:700;">
+              \${isCompleted ? '🎉 Concluída (100%)' : pct + '% concluído'}
+            </span>
+            <span style="color:var(--text-faint); font-weight:600;">
+              \${isCompleted ? 'Meta atingida!' : 'Faltam ' + fmt(remaining)}
+            </span>
+          </div>
         </div>
-        <p style="color:var(--text-faint);font-size:11.5px;margin-bottom:10px;">Prazo: \${formatDateBR(g.deadline)}</p>
-        <div class="val" style="font-size:18px;">\${fmt(g.current)} <span style="color:var(--text-faint);font-size:12px;font-weight:400"> / \${fmt(g.target)}</span></div>
-        <div class="bar-split" style="background:var(--card-border);margin-top:10px"><div class="g" style="width:\${pct}%"></div></div>
-        <div class="split-labels" style="margin-top:6px"><span>\${pct}% concluído</span></div>
-        <button class="btn-ghost" style="width:100%;margin-top:12px" data-addcontrib="\${g.id}">+ Adicionar valor</button>
+
+        <button class="btn-ghost" style="width:100%; padding:10px; font-weight:700; border-radius:10px; font-size:13px; display:flex; align-items:center; justify-content:center; gap:6px;" data-addcontrib="\${g.id}">
+          💰 Adicionar valor à meta
+        </button>
       </div>\`;
-    }).join('') : \`<div class="placeholder"><div class="big">◎</div><h3>Nenhuma meta cadastrada</h3></div>\`}
+    }).join('') : \`<div class="placeholder"><div class="big">🎯</div><h3>Nenhuma meta cadastrada</h3><p>Defina objetivos de economia (ex: Reserva de Emergência, Viagem, Carro Novo) e acompanhe seu avanço.</p></div>\`}
   </div>\`;
 }
 
@@ -5129,6 +5302,7 @@ function pageRelatorios(){
   const totalReceitas = list.filter(t=>t.type==='in').reduce((s,t)=>s+(parseFloat(t.val)||0),0);
   const totalDespesas = list.filter(t=>t.type==='out').reduce((s,t)=>s+(parseFloat(t.val)||0),0);
   const resultado = totalReceitas - totalDespesas;
+  const savingsPct = totalReceitas > 0 ? Math.max(0, Math.round((resultado / totalReceitas) * 100)) : 0;
 
   const totalReceitasGeral = transactions.filter(t=>t.type==='in').reduce((s,t)=>s+(parseFloat(t.val)||0),0);
   const totalDespesasGeral = transactions.filter(t=>t.type==='out').reduce((s,t)=>s+(parseFloat(t.val)||0),0);
@@ -5139,39 +5313,48 @@ function pageRelatorios(){
   return \`
   <div class="page-head">
     <div>
-      <h1>Relatórios Financeiros</h1>
-      <p>Análise consolidada das suas transações — <strong>\${periodLabel()}</strong></p>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Relatórios e Análises Financeiras
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Análise consolidada de receitas, despesas e distribuição percentual — <strong style="color:var(--green);">\${periodLabel()}</strong>
+      </p>
     </div>
-    <div class="head-actions">
+    <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
       \${periodPickerHTML()}
     </div>
   </div>
 
-  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:20px;">
-    <div class="kpi">
-      <div class="row1">Total de Receitas <span class="ic" style="background:var(--green-soft);color:var(--green)">↑</span></div>
-      <div class="val" style="color:var(--green)">\${fmt(totalReceitas)}</div>
+  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:20px;">
+    <div class="kpi kpi-income">
+      <div class="row1"><span>Total de Receitas</span><span class="ic" style="background:rgba(16,185,129,0.14); color:var(--green);">↑</span></div>
+      <div class="val" style="color:var(--green);">\${fmt(totalReceitas)}</div>
       <div class="sub">\${isAllDates ? 'Consolidado histórico geral' : periodLabel()}</div>
     </div>
-    <div class="kpi">
-      <div class="row1">Total de Despesas <span class="ic" style="background:var(--red-soft);color:var(--red)">↓</span></div>
-      <div class="val" style="color:var(--red)">\${fmt(totalDespesas)}</div>
+    <div class="kpi kpi-expense">
+      <div class="row1"><span>Total de Despesas</span><span class="ic" style="background:rgba(239,68,68,0.14); color:var(--red);">↓</span></div>
+      <div class="val" style="color:var(--red);">\${fmt(totalDespesas)}</div>
       <div class="sub">\${isAllDates ? 'Consolidado histórico geral' : periodLabel()}</div>
     </div>
-    <div class="kpi">
-      <div class="row1">Balanço do Período <span class="ic" style="background:rgba(74,144,226,.14);color:var(--blue)">⇄</span></div>
-      <div class="val" style="color:\${resultado<0?'var(--red)':'var(--green)'}">\${fmt(resultado)}</div>
+    <div class="kpi kpi-net">
+      <div class="row1"><span>Balanço do Período</span><span class="ic" style="background:\${resultado < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(59,130,246,0.14)'}; color:\${resultado < 0 ? 'var(--red)' : 'var(--blue)'};">⇄</span></div>
+      <div class="val" style="color:\${resultado < 0 ? 'var(--red)' : 'var(--green)'};">\${fmt(resultado)}</div>
       <div class="sub">\${isAllDates ? 'Resultado acumulado geral' : 'Receitas menos Despesas do mês'}</div>
+    </div>
+    <div class="kpi kpi-balance">
+      <div class="row1"><span>Taxa de Poupança</span><span class="ic" style="background:rgba(168,85,247,0.14); color:var(--purple);">📈</span></div>
+      <div class="val" style="color:var(--purple);">\${savingsPct}%</div>
+      <div class="sub">da receita economizada</div>
     </div>
   </div>
 
   \${!isAllDates ? \`
-  <div class="panel" style="margin-bottom:20px; padding:14px 18px; background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-    <div style="font-size:12.5px; color:var(--text-dim);">
-      💡 <strong>Comparativo Geral Histórico (Todas as Datas):</strong> Receitas <strong>\${fmt(totalReceitasGeral)}</strong> | Despesas <strong>\${fmt(totalDespesasGeral)}</strong> | Saldo Acumulado <strong style="color:\${resultadoGeral<0?'var(--red)':'var(--green)'}">\${fmt(resultadoGeral)}</strong>
+  <div class="panel" style="margin-bottom:20px; padding:16px 20px; background:rgba(255,255,255,0.025); border:1px solid var(--card-border); border-radius:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
+    <div style="font-size:13px; color:var(--text-dim); line-height:1.5;">
+      💡 <strong>Comparativo Geral Histórico (Todas as Datas):</strong> Receitas: <strong style="color:var(--green);">\${fmt(totalReceitasGeral)}</strong> | Despesas: <strong style="color:var(--red);">\${fmt(totalDespesasGeral)}</strong> | Saldo Acumulado: <strong style="color:\${resultadoGeral<0?'var(--red)':'var(--green)'};">\${fmt(resultadoGeral)}</strong>
     </div>
-    <button class="btn-ghost" onclick="currentPeriod={year:new Date().getFullYear(), month:0}; try{localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod));}catch(e){} render();" style="font-size:11.5px; padding:4px 10px; border-radius:6px; cursor:pointer;">
-      🌐 Ver Relatório Geral (Histórico Completo)
+    <button class="btn-ghost" onclick="currentPeriod={year:new Date().getFullYear(), month:0}; try{localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod));}catch(e){} render();" style="font-size:12px; font-weight:700; padding:6px 14px; border-radius:8px; cursor:pointer;">
+      🌐 Ver Histórico Completo
     </button>
   </div>
   \` : ''}
@@ -5179,7 +5362,7 @@ function pageRelatorios(){
   <div class="table-panel">
     <div class="panel-head">
       <h3>Despesas por Categoria — \${periodLabel()}</h3>
-      <span class="tag">\${list.filter(t=>t.type==='out').length} despesa(s) no período</span>
+      <span class="tag" style="font-weight:700;">\${list.filter(t=>t.type==='out').length} despesa(s) no período</span>
     </div>
     \${allCats.length ? \`
     <table>
@@ -5187,55 +5370,121 @@ function pageRelatorios(){
         <tr>
           <th>Categoria</th>
           <th>Total Gasto</th>
-          <th>% do Total de Despesas</th>
+          <th>Distribuição Percentual</th>
         </tr>
       </thead>
       <tbody>
         \${allCats.map(c=>\`
           <tr class="trow">
-            <td><span class="pill" style="background:\${c.color}22;color:\${c.color}">\${catIcon(c.name)} \${c.name}</span></td>
+            <td>
+              <span class="pill cat-pill" style="background:\${c.color}18; color:\${c.color}; border:1px solid \${c.color}35">
+                \${catIcon(c.name)} \${c.name}
+              </span>
+            </td>
             <td class="val-out">\${fmt(c.val)}</td>
             <td>
-              <div style="display:flex; align-items:center; gap:10px;">
-                <div class="bar-split" style="flex:1; max-width:120px; height:6px; background:var(--card-border); border-radius:4px; overflow:hidden;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div class="bar-split" style="flex:1; max-width:180px; height:8px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;">
                   <div class="g" style="width:\${Math.round(c.val/(totalDespesas||1)*100)}%; height:100%; background:\${c.color}; border-radius:4px;"></div>
                 </div>
-                <span style="font-weight:700; font-size:12px; color:var(--text-dim);">\${Math.round(c.val/(totalDespesas||1)*100)}%</span>
+                <span style="font-weight:800; font-size:12.5px; color:var(--text); min-width:40px;">\${Math.round(c.val/(totalDespesas||1)*100)}%</span>
               </div>
             </td>
           </tr>
         \`).join('')}
       </tbody>
       <tfoot>
-        <tr style="background:var(--hover); font-weight:700; border-top:2px solid var(--card-border);">
-          <td style="font-size:12.5px; color:var(--text-dim);">TOTAL DAS DESPESAS DO PERÍODO:</td>
-          <td style="color:var(--red); font-size:14.5px; font-weight:800;">\${fmt(totalDespesas)}</td>
-          <td>100%</td>
+        <tr class="tfoot-row">
+          <td class="tfoot-label">TOTAL DAS DESPESAS DO PERÍODO:</td>
+          <td class="tfoot-value">-\${fmt(totalDespesas)}</td>
+          <td style="padding:14px 12px; font-weight:800; color:var(--text);">100%</td>
         </tr>
       </tfoot>
     </table>
     \` : \`
-    <div class="placeholder"><div class="big">▥</div><h3>Nenhuma despesa no período</h3><p>Não foram encontradas despesas cadastradas para \${periodLabel()}.</p></div>
+    <div class="placeholder"><div class="big">📊</div><h3>Nenhuma despesa no período</h3><p>Não foram encontradas despesas cadastradas para \${periodLabel()}.</p></div>
     \`}
   </div>\`;
 }
 
 function pageRecorrentes(){
+  const totalDespRec = recurringList.filter(r=>r.type==='out').reduce((s,r)=>s+parseInputValue(r.val),0);
+  const totalRecRec = recurringList.filter(r=>r.type==='in').reduce((s,r)=>s+parseInputValue(r.val),0);
+  const totalLctos = recurringList.length;
+
   return \`
   <div class="page-head">
-    <div><h1>Lançamentos Recorrentes</h1><p>Transações que se repetem automaticamente</p></div>
-    <div class="head-actions"><button class="btn-primary" id="btnNovoRecorrente">+ Novo Recorrente</button></div>
+    <div>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Lançamentos Recorrentes & Assinaturas
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Automatize contas fixas, faturas e rendimentos mensais com lançamento em 1 clique
+      </p>
+    </div>
+    <div class="head-actions">
+      <button class="btn-primary" id="btnNovoRecorrente" style="display:flex; align-items:center; gap:6px; font-weight:700;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo Recorrente
+      </button>
+    </div>
   </div>
+
+  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:18px;">
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Despesas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">↓</span></div>
+      <div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">\${fmt(totalDespRec)}</div>
+      <div class="sub" style="font-size:11px;">Total de saídas programadas</div>
+    </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Receitas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green);">↑</span></div>
+      <div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">\${fmt(totalRecRec)}</div>
+      <div class="sub" style="font-size:11px;">Total de entradas programadas</div>
+    </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Total Recorrentes</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple);">🔄</span></div>
+      <div class="val" style="font-size:20px; margin-bottom:2px;">\${totalLctos}</div>
+      <div class="sub" style="font-size:11px;">Contratos / Assinaturas</div>
+    </div>
+  </div>
+
   <div class="table-panel">
-    \${recurringList.length? \`<table><thead><tr><th>Descrição</th><th>Categoria</th><th>Conta</th><th>Frequência</th><th>Dia</th><th>Tipo</th><th>Valor</th><th></th></tr></thead>
-    <tbody>\${recurringList.map(r=>\`<tr class="trow">
-      <td>\${r.desc}</td>
-          <td><span class="pill" style="background:\${catColor(r.cat)}22;color:\${catColor(r.cat)}">\${r.cat}</span></td>
-      <td>\${r.acc}</td><td>\${r.freq}</td><td>Dia \${r.day}</td>
-      <td><span class="type-ic \${r.type}">\${r.type==='in'?'↑':'↓'}</span></td>
-      <td class="\${r.type==='in'?'val-in':'val-out'}">\${r.type==='in'?'+':'-'}\${fmt(r.val)}</td>
-      <td><div class="row-actions"><button data-lancar="\${r.id}" title="Lançar agora">▶</button><button data-editrec="\${r.id}">✎</button><button data-delrec="\${r.id}">🗑</button></div></td>
-    </tr>\`).join('')}</tbody></table>\` : \`<div class="placeholder"><div class="big">↻</div><h3>Nenhum lançamento recorrente</h3></div>\`}
+    \${recurringList.length ? \`
+    <table>
+      <thead>
+        <tr>
+          <th>Descrição</th>
+          <th>Categoria</th>
+          <th>Conta de Cobrança</th>
+          <th>Frequência</th>
+          <th>Vencimento</th>
+          <th>Tipo</th>
+          <th>Valor</th>
+          <th style="text-align:center;">Ações Rápidas</th>
+        </tr>
+      </thead>
+      <tbody>
+        \${recurringList.map(r=>\`
+        <tr class="trow">
+          <td class="tx-desc">\${r.desc}</td>
+          <td><span class="pill cat-pill" style="background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
+          <td><span class="pill acc-pill">\${getAccountIcon(r.acc)} \${r.acc}</span></td>
+          <td><span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text); font-weight:600;">\${r.freq}</span></td>
+          <td><span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-weight:700;">Dia \${r.day}</span></td>
+          <td><span class="type-pill \${r.type}">\${r.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
+          <td class="\${r.type==='in'?'val-in':'val-out'}">\${r.type==='in'?'+':'-'}\${fmt(r.val)}</td>
+          <td>
+            <div class="row-actions" style="justify-content:center;">
+              <button data-lancar="\${r.id}" title="Lançar agora na conta" class="btn-primary" style="padding:4px 10px; font-size:11.5px; border-radius:8px; height:32px; width:auto;">▶ Lançar</button>
+              <button data-editrec="\${r.id}" title="Editar" class="btn-action-edit">✎</button>
+              <button data-delrec="\${r.id}" title="Excluir" class="btn-action-del">🗑</button>
+            </div>
+          </td>
+        </tr>\`).join('')}
+      </tbody>
+    </table>\` : \`
+    <div class="placeholder"><div class="big">🔄</div><h3>Nenhum lançamento recorrente</h3><p>Cadastre despesas e receitas fixas (ex: Aluguel, Internet, Netflix, Salário) para lançar rapidamente a cada mês.</p></div>
+    \`}
   </div>\`;
 }
 
@@ -5243,39 +5492,50 @@ function pageImportar(){
   return \`
   <div class="page-head">
     <div>
-      <h1>Importar OFX / CSV</h1>
-      <p>Importe extratos bancários em lote</p>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Importar Extratos (OFX / CSV)
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Importe extratos do seu banco de forma rápida e segura para conciliação automática
+      </p>
     </div>
   </div>
 
-  <div class="panel" style="margin-bottom:22px;">
-    <p style="color:var(--text-dim); font-size:13.5px; margin-bottom:16px;">
-      Formato CSV esperado: <code style="background:var(--hover); padding:3px 8px; border-radius:6px; font-size:12.5px;">data,descricao,valor</code>. Arquivos <b>.ofx</b> também são aceitos.
-    </p>
+  <div class="panel" style="margin-bottom:22px; padding:22px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; padding:12px 16px; background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:12px;">
+      <span style="font-size:20px;">💡</span>
+      <div style="font-size:12.5px; color:var(--text); line-height:1.4;">
+        Formato CSV esperado: <code style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; font-size:12px; font-weight:700; color:var(--green);">data,descricao,valor</code>. Arquivos padrão bancário <strong>.OFX</strong> e <strong>.TXT</strong> também são aceitos automaticamente.
+      </div>
+    </div>
 
-    <div class="field-row" style="margin-bottom:16px;">
-      <div class="field">
-        <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block; color:var(--text);">Conta de destino</label>
-        <select id="impConta" style="width:100%; font-size:14px; padding:10px 14px; height:44px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+    <div class="field-row" style="margin-bottom:18px; display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
+      <div class="field" style="margin:0;">
+        <label style="font-size:13px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Conta / Cartão de Destino</label>
+        <select id="impConta" style="width:100%; font-size:13.5px; padding:10px 14px; height:46px; border-radius:10px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
           \${accounts.map(a=>\`<option>\${a.name} — \${a.type}</option>\`).join('')}
         </select>
       </div>
-      <div class="field">
-        <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block; color:var(--text);">Categoria padrão</label>
-        <select id="impCategoria" style="width:100%; font-size:14px; padding:10px 14px; height:44px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+      <div class="field" style="margin:0;">
+        <label style="font-size:13px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Categoria Padrão</label>
+        <select id="impCategoria" style="width:100%; font-size:13.5px; padding:10px 14px; height:46px; border-radius:10px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
           \${categories.map(c=>\`<option>\${c.name}</option>\`).join('')}
         </select>
       </div>
     </div>
 
-    <div id="importDropZone" onclick="document.getElementById('importFile').click()" style="border: 2px dashed var(--green); border-radius: 16px; padding: 32px 20px; text-align: center; cursor: pointer; background: rgba(34, 197, 94, 0.04); transition: all 0.2s ease; position: relative;">
+    <div id="importDropZone" onclick="document.getElementById('importFile').click()" style="border: 2px dashed rgba(34, 197, 94, 0.4); border-radius: 18px; padding: 36px 20px; text-align: center; cursor: pointer; background: rgba(34, 197, 94, 0.03); transition: all 0.25s ease; position: relative;">
       <input type="file" id="importFile" accept=".csv,.ofx,.txt" style="display:none;">
-      <span style="font-size: 38px; display: block; margin-bottom: 10px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">☁️</span>
-      <p style="margin:0; font-weight:800; font-size:16px; color:var(--text);">Arraste seus arquivos para cá ou <span style="color:var(--green); text-decoration:underline;">clique para selecionar e importar</span></p>
-      <p style="margin-top:6px; font-size:13.5px; color:var(--text-faint); margin-bottom:0;">Suporta extratos em arquivos .OFX, .CSV e .TXT</p>
+      <span style="font-size: 42px; display: block; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(34,197,94,0.3));">☁️</span>
+      <p style="margin:0; font-weight:800; font-size:16px; color:var(--text);">Arraste seus arquivos bancários para cá ou <span style="color:var(--green); text-decoration:underline;">clique para navegar</span></p>
+      <div style="display:flex; justify-content:center; gap:8px; margin-top:10px;">
+        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">.OFX</span>
+        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">.CSV</span>
+        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">.TXT</span>
+      </div>
     </div>
 
-    <div id="importPreview" style="margin-top:16px;"></div>
+    <div id="importPreview" style="margin-top:20px;"></div>
   </div>\`;
 }
 
@@ -5413,78 +5673,86 @@ function pageAnexos(){
   return \`
   <div class="page-head">
     <div>
-      <h1>Anexos & Comprovantes</h1>
-      <p>Cadastre novos comprovantes, vincule a transações e faça downloads dos arquivos</p>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Anexos & Comprovantes Digitais
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Cadastre comprovantes, faturas em PDF e recibos vinculados aos seus lançamentos
+      </p>
     </div>
   </div>
 
-  <div class="panel" style="margin-bottom:22px;">
+  <div class="panel" style="margin-bottom:22px; padding:22px;">
     <div style="margin-bottom:16px;">
-      <h3 style="font-size:18px; font-weight:800; display:flex; align-items:center; gap:8px; margin:0;">
-        <span>📎</span> Cadastrar / Incluir Novos Anexos
+      <h3 style="font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px; margin:0;">
+        <span>📎</span> Vincular & Enviar Novo Comprovante
       </h3>
-      <p style="font-size:13.5px; color:var(--text-faint); margin-top:4px;">
-        Vincule a uma transação opcional e selecione os arquivos para salvar automaticamente.
+      <p style="font-size:12.5px; color:var(--text-dim); margin-top:4px;">
+        Selecione uma transação existente ou envie um anexo avulso para guarda segura.
       </p>
     </div>
 
     <div style="margin-bottom:16px;">
-      <label style="font-size:13.5px; font-weight:700; margin-bottom:6px; display:block; color:var(--text);">Vincular a uma Transação (Opcional)</label>
-      <select id="attTx" style="width:100%; font-size:14px; padding:10px 14px; height:44px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+      <label style="font-size:13px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Vincular a uma Transação (Opcional)</label>
+      <select id="attTx" style="width:100%; font-size:13.5px; padding:10px 14px; height:46px; border-radius:10px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
         <option value="0">Nenhuma (Anexo Avulso / Recibo Padrão)</option>
         \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})</option>\`).join('')}
       </select>
     </div>
 
-    <div id="attDropZone" style="border: 2px dashed var(--green); border-radius: 16px; padding: 32px 20px; text-align: center; cursor: pointer; background: rgba(34, 197, 94, 0.04); transition: all 0.2s ease; position: relative;">
+    <div id="attDropZone" style="border: 2px dashed rgba(34, 197, 94, 0.4); border-radius: 18px; padding: 36px 20px; text-align: center; cursor: pointer; background: rgba(34, 197, 94, 0.03); transition: all 0.25s ease; position: relative;">
       <input type="file" id="attFile" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="display:none;">
-      <span style="font-size: 38px; display: block; margin-bottom: 10px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">☁️</span>
-      <p style="margin:0; font-weight:800; font-size:16px; color:var(--text);">Arraste seus arquivos para cá ou <span style="color:var(--green); text-decoration:underline;">clique para selecionar e anexar</span></p>
-      <p style="margin-top:6px; font-size:13px; color:var(--text-faint); margin-bottom:0;">Suporta imagens (PNG, JPG, WebP), recibos em PDF e documentos</p>
+      <span style="font-size: 42px; display: block; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(34,197,94,0.3));">☁️</span>
+      <p style="margin:0; font-weight:800; font-size:16px; color:var(--text);">Arraste comprovantes para cá ou <span style="color:var(--green); text-decoration:underline;">clique para anexar</span></p>
+      <div style="display:flex; justify-content:center; gap:8px; margin-top:10px;">
+        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">PNG / JPG / WEBP</span>
+        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">PDF</span>
+        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">DOCX / TXT</span>
+      </div>
     </div>
   </div>
 
   <div style="margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
-    <h3 style="font-size:17px; font-weight:800;">Anexos Cadastrados (\${attachments.length})</h3>
+    <h3 style="font-size:17px; font-weight:800;">Comprovantes Armazenados (\${attachments.length})</h3>
   </div>
 
-  <div class="cat-cards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(290px, 1fr)); gap:20px;">
+  <div class="cat-cards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(290px, 1fr)); gap:18px;">
     \${attachments.length? attachments.map(a=>{
       const t = transactions.find(x=>x.id===a.txId);
       const isImage = (a.type && a.type.startsWith('image/')) || (a.dataUrl && a.dataUrl.startsWith('data:image/'));
       const isPdf = (a.type && a.type.includes('pdf')) || (a.dataUrl && a.dataUrl.startsWith('data:application/pdf')) || (a.name && a.name.toLowerCase().endsWith('.pdf'));
 
       return \`
-      <div class="cat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:18px; border-radius:16px; border:1px solid var(--card-border); background:var(--card); box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
+      <div class="budget-card" style="min-height:260px;">
         <div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-            <span style="font-size:12.5px; font-weight:700; color:var(--text-dim); display:flex; align-items:center; gap:6px;">
+            <span class="pill" style="font-size:11px; padding:3px 9px; border-radius:8px; background:\${isPdf ? 'rgba(239,68,68,0.14)' : isImage ? 'rgba(59,130,246,0.14)' : 'rgba(168,85,247,0.14)'}; color:\${isPdf ? 'var(--red)' : isImage ? 'var(--blue)' : 'var(--purple)'}; font-weight:700;">
               \${isPdf ? '📄 Fatura PDF' : isImage ? '🖼️ Imagem Anexa' : '📎 Documento'}
             </span>
-            <button data-delatt="\${a.id}" title="Excluir Anexo" style="width:auto; height:32px; padding:0 10px; border-radius:8px; background:rgba(239, 68, 68, 0.15); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.3); font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">🗑 Excluir</button>
+            <button data-delatt="\${a.id}" title="Excluir Anexo" class="btn-action-del">🗑</button>
           </div>
 
           <div style="cursor:pointer; text-align:center; margin-bottom:12px;" data-previewatt="\${a.id}" title="Clique para Visualizar">
             \${getAttachmentCoverHtml(a, t)}
           </div>
 
-          <h4 style="font-size:15px; font-weight:700; margin-bottom:8px; word-break:break-word; color:var(--text); line-height:1.3;">\${a.name}</h4>
+          <h4 style="font-size:14.5px; font-weight:800; margin-bottom:8px; word-break:break-word; color:var(--text); line-height:1.3;">\${a.name}</h4>
           
-          <div style="margin-top:12px;">
-            <label style="display:block; font-size:12.5px; color:var(--text-faint); margin-bottom:5px; font-weight:700;">Transação Vinculada:</label>
-            <select data-relinkatt="\${a.id}" style="width:100%; font-size:13px; padding:8px 12px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600; min-height:38px;">
+          <div style="margin-top:10px;">
+            <label style="display:block; font-size:11.5px; color:var(--text-faint); margin-bottom:4px; font-weight:700;">Transação Vinculada:</label>
+            <select data-relinkatt="\${a.id}" style="width:100%; font-size:12.5px; padding:6px 10px; border-radius:8px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
               <option value="0" \${!a.txId ? 'selected' : ''}>Sem vincular (Anexo Avulso)</option>
               \${sortedTx.map(tx => \`<option value="\${tx.id}" \${tx.id === a.txId ? 'selected' : ''}>\${formatDateBR(tx.date)} — \${tx.desc}</option>\`).join('')}
             </select>
           </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--card-border);">
+        <div style="display:flex; align-items:center; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">
           \${a.dataUrl ? \`
-            <a href="\${a.dataUrl}" download="\${a.name || 'comprovante'}" class="btn-primary" style="flex:1.2; padding:10px 14px; font-size:13.5px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; border-radius:8px; min-height:42px;" title="Baixar Arquivo">
+            <a href="\${a.dataUrl}" download="\${a.name || 'comprovante'}" class="btn-primary" style="flex:1.2; padding:8px 12px; font-size:12.5px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; border-radius:8px;" title="Baixar Arquivo">
               📥 Baixar
             </a>
-            <button data-previewatt="\${a.id}" class="btn-ghost" style="flex:1; padding:10px 14px; font-size:13.5px; font-weight:700; border-radius:8px; min-height:42px; background:rgba(255,255,255,0.08); border:1px solid var(--card-border); color:var(--text); display:inline-flex; align-items:center; justify-content:center; gap:6px;" title="Visualizar">
+            <button data-previewatt="\${a.id}" class="btn-ghost" style="flex:1; padding:8px 12px; font-size:12.5px; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px;" title="Visualizar">
               👁️ Ver
             </button>
           \` : \`
@@ -5507,47 +5775,128 @@ function pageAlertas(){
   const bstat = budgetStatus();
   return \`
   <div class="page-head">
-    <div><h1>Alertas</h1><p>Avisos automáticos de orçamento — \${periodLabel()}</p></div>
-    <div class="head-actions"><button class="btn-primary" id="btnNovoAlerta">+ Novo Alerta</button></div>
+    <div>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Alertas de Orçamento
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Avisos inteligentes acionados automaticamente quando o gasto se aproxima do limite — <strong style="color:var(--green);">\${periodLabel()}</strong>
+      </p>
+    </div>
+    <div class="head-actions">
+      <button class="btn-primary" id="btnNovoAlerta" style="display:flex; align-items:center; gap:6px; font-weight:700;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo Alerta
+      </button>
+    </div>
   </div>
-  <div class="cat-cards">
-    \${alerts.length? alerts.map(al=>{
-      const b = bstat.find(x=>x.category===al.category);
-      const pct = b? b.pct : null;
-      const triggered = pct!==null && pct>=al.threshold;
-      return \`<div class="cat-card">
-        <div class="top">
-          <div class="id-group"><span class="dot" style="background:\${triggered?'var(--red)':'var(--green)'}"></span><h4>\${al.category}</h4></div>
-          <div class="row-actions"><button data-editalert="\${al.id}" title="Editar">✎</button><button data-delalert="\${al.id}" title="Excluir">🗑</button></div>
+  <div class="cat-cards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;">
+    \${alerts.length ? alerts.map(al => {
+      const b = bstat.find(x => x.category === al.category);
+      const pct = b ? b.pct : null;
+      const triggered = pct !== null && pct >= al.threshold;
+      return \`
+      <div class="budget-card" style="border-color:\${triggered ? 'rgba(239,68,68,0.45)' : 'rgba(255,255,255,0.09)'};">
+        <div>
+          <div class="top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px;">
+            <div class="id-group" style="display:flex; align-items:center; gap:10px; min-width:0;">
+              <span class="dot" style="background:\${triggered ? 'var(--red)' : 'var(--green)'}; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px;">
+                \${triggered ? '⚠️' : '🔔'}
+              </span>
+              <div style="min-width:0;">
+                <h4 style="font-size:15px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${al.category}</h4>
+                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${triggered ? 'rgba(239,68,68,0.16)' : 'rgba(16,185,129,0.16)'}; color:\${triggered ? 'var(--red)' : 'var(--green)'}; font-weight:700; border:1px solid \${triggered ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'};">
+                  \${triggered ? '🚨 Gatilho Acionado' : '✓ Monitoramento OK'}
+                </span>
+              </div>
+            </div>
+            <div class="row-actions" style="display:flex; gap:6px;">
+              <button data-editalert="\${al.id}" title="Editar Alerta" class="btn-action-edit">✎</button>
+              <button data-delalert="\${al.id}" title="Excluir Alerta" class="btn-action-del">🗑</button>
+            </div>
+          </div>
+
+          <div style="margin:14px 0 10px;">
+            <div style="font-size:12px; color:var(--text-dim); margin-bottom:4px;">
+              Gatilho: Dispara ao atingir <strong style="color:var(--text);">\${al.threshold}%</strong> do orçamento
+            </div>
+            \${b ? \`
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:8px;">
+                <span style="font-size:20px; font-weight:800; color:\${triggered ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(b.spent)}</span>
+                <span style="font-size:12.5px; color:var(--text-faint); font-weight:600;">Limite: \${fmt(b.limit)}</span>
+              </div>
+              <div class="bar-split" style="height:7px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; margin-top:8px;">
+                <div class="g" style="width:\${Math.min(pct, 100)}%; background:\${triggered ? 'var(--red)' : 'var(--green)'}; border-radius:5px; transition:width .4s ease;"></div>
+              </div>
+              <div style="text-align:right; font-size:11px; color:\${triggered ? 'var(--red)' : 'var(--text-faint)'}; font-weight:700; margin-top:4px;">
+                \${pct}% consumido
+              </div>
+            \` : \`
+              <div style="font-size:12px; color:var(--text-faint); margin-top:10px; padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:8px;">
+                Sem orçamento ativo cadastrado para esta categoria
+              </div>
+            \`}
+          </div>
         </div>
-        <span class="pill" style="background:\${triggered?'var(--red-soft)':'var(--green-soft)'};color:\${triggered?'var(--red)':'var(--green)'}">\${triggered?'⚠ Alerta ativo':'OK'}</span>
-        <p style="color:var(--text-faint);font-size:11.5px;margin-top:8px;">Aciona em \${al.threshold}% do orçamento</p>
-        <div class="amt" style="font-size:14px;margin-top:4px;">\${b? \`\${pct}% usado (\${fmt(b.spent)} / \${fmt(b.limit)})\` : 'Sem orçamento definido para esta categoria'}</div>
       </div>\`;
-    }).join('') : \`<div class="placeholder"><div class="big">🔔</div><h3>Nenhum alerta configurado</h3><p>Crie alertas para ser avisado quando o gasto de uma categoria se aproximar do limite.</p></div>\`}
+    }).join('') : \`<div class="placeholder"><div class="big">🔔</div><h3>Nenhum alerta configurado</h3><p>Crie alertas para ser avisado automaticamente quando os gastos de qualquer categoria atingirem percentuais críticos.</p></div>\`}
   </div>\`;
 }
 
 function pageConfig(){
   return \`
-  <div class="page-head"><div><h1>Configurações</h1><p>Preferências da conta, aparência e tamanho de visualização por dispositivo</p></div></div>
-  \${isViewingOtherUser ? \`
-  <div class="panel" style="margin-bottom:18px;">
-    <p class="cfg-hint" style="margin:0;">Você está em modo de visualização (somente leitura) dos dados de <strong style="color:var(--green);">\${currentUser ? currentUser.name : ''}</strong>. Edições de conta ficam disponíveis apenas na sua própria conta.</p>
-  </div>\` : \`
-  <div class="cfg-grid">
-    <div class="panel">
-      <div class="panel-head"><h3>Minha Conta</h3></div>
-      <div class="field"><label>Nome</label><input id="cfgName" value="\${currentUser ? currentUser.name : ''}" placeholder="Seu nome completo" autocomplete="name"></div>
-      <div class="field" style="margin-bottom:0;"><label>E-mail</label><input id="cfgEmail" type="text" value="\${currentUser ? currentUser.email : ''}" placeholder="seu.email@exemplo.com" autocomplete="email"></div>
+  <div class="page-head">
+    <div>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Configurações do Sistema
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Preferências da conta, segurança, tema visual e proporção de exibição por dispositivo
+      </p>
     </div>
-    <div class="panel">
-      <div class="panel-head"><h3>Aparência & Escala da Tela</h3></div>
-      <div class="field"><label>Tema do Sistema</label>
-        <select id="cfgTheme"><option value="dark">Escuro 🌙</option><option value="light">Claro ☀️</option></select>
+  </div>
+
+  \${isViewingOtherUser ? \`
+  <div class="panel" style="margin-bottom:18px; padding:16px 20px; background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.25);">
+    <p class="cfg-hint" style="margin:0; font-size:13px; color:var(--text);">
+      👁️ Você está em modo de visualização dos dados de <strong style="color:var(--green);">\${currentUser ? currentUser.name : ''}</strong>. As configurações da conta só podem ser editadas pelo próprio titular.
+    </p>
+  </div>\` : \`
+  <div class="cfg-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+    <!-- 1. Minha Conta -->
+    <div class="panel" style="padding:22px;">
+      <div class="panel-head" style="margin-bottom:16px;">
+        <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800;">
+          <span>👤</span> Minha Conta
+        </h3>
       </div>
-      <div class="field" style="margin-bottom:10px;"><label>Tamanho de Visualização</label>
-        <select id="cfgScale">
+      <div class="field" style="margin-bottom:14px;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Nome Completo</label>
+        <input id="cfgName" value="\${currentUser ? currentUser.name : ''}" placeholder="Seu nome completo" autocomplete="name" style="width:100%; height:44px; font-size:13.5px;">
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">E-mail de Acesso</label>
+        <input id="cfgEmail" type="text" value="\${currentUser ? currentUser.email : ''}" placeholder="seu.email@exemplo.com" autocomplete="email" style="width:100%; height:44px; font-size:13.5px;">
+      </div>
+    </div>
+
+    <!-- 2. Aparência & Escala -->
+    <div class="panel" style="padding:22px;">
+      <div class="panel-head" style="margin-bottom:16px;">
+        <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800;">
+          <span>🎨</span> Aparência & Escala da Tela
+        </h3>
+      </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Tema Visual</label>
+        <select id="cfgTheme" style="width:100%; height:44px; font-size:13.5px;">
+          <option value="dark">🌙 Escuro (Alta Performance)</option>
+          <option value="light">☀️ Claro (Executivo Clean)</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:10px;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Tamanho de Visualização</label>
+        <select id="cfgScale" style="width:100%; height:44px; font-size:13.5px;">
           <option value="auto">⚡ Auto (Adequar ao Dispositivo Logado)</option>
           <option value="80%">🔍 80% (Compacto)</option>
           <option value="90%">🔍 90% (Reduzido)</option>
@@ -5557,28 +5906,40 @@ function pageConfig(){
           <option value="150%">🔍 150% (Extra Grande)</option>
         </select>
       </div>
-      <div id="cfgDeviceInfo"></div>
+      <div id="cfgDeviceInfo" style="margin-top:12px;"></div>
     </div>
-    <div class="panel">
-      <div class="panel-head"><h3>Alterar Senha</h3></div>
-      <p class="cfg-hint">Preencha apenas se quiser alterar sua senha de acesso</p>
-      <div class="field">
-        <label>Nova Senha <span style="color:var(--text-faint); font-size:11px;">(opcional)</span></label>
+
+    <!-- 3. Alterar Senha -->
+    <div class="panel" style="padding:22px;">
+      <div class="panel-head" style="margin-bottom:16px;">
+        <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800;">
+          <span>🔒</span> Segurança & Senha
+        </h3>
+      </div>
+      <p class="cfg-hint" style="font-size:12px; margin-bottom:14px;">Preencha apenas se desejar trocar sua senha de acesso</p>
+      <div class="field" style="margin-bottom:14px;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Nova Senha <span style="color:var(--text-faint); font-weight:400;">(mínimo 6 dígitos)</span></label>
         <div class="pass-field">
-          <input id="cfgPassword" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password">
+          <input id="cfgPassword" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
           <button type="button" class="pass-toggle" id="cfgPasswordToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
         </div>
       </div>
       <div class="field" style="margin-bottom:0;">
-        <label>Confirmar Nova Senha <span style="color:var(--text-faint); font-size:11px;">(opcional)</span></label>
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Confirmar Nova Senha</label>
         <div class="pass-field">
-          <input id="cfgPasswordConfirm" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password">
+          <input id="cfgPasswordConfirm" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
           <button type="button" class="pass-toggle" id="cfgPasswordConfirmToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
         </div>
       </div>
     </div>
   </div>
-  <div class="cfg-save-bar"><button class="btn-primary" id="btnSalvarConfig">Salvar Alterações</button></div>\`}\`;
+
+  <div class="cfg-save-bar" style="margin-top:24px; display:flex; justify-content:flex-end;">
+    <button class="btn-primary" id="btnSalvarConfig" style="padding:12px 28px; font-size:14px; font-weight:800; border-radius:12px; display:flex; align-items:center; gap:8px;">
+      <span>💾</span> Salvar Todas as Configurações
+    </button>
+  </div>\`}
+  \`;
 }
 
 /* ==================== Aba 4K: Central de Funções & Permissões ==================== */
@@ -5754,27 +6115,72 @@ function pageUsuarios(){
   if(!isAdmin || isViewingOtherUser){
     return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
   }
+  const totalUsers = registeredUsers ? registeredUsers.length : 1;
+  const adminCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Administrador').length : 1;
+  const activeCount = registeredUsers ? registeredUsers.filter(u => u.active !== false).length : 1;
+  const inactiveCount = totalUsers - activeCount;
+
   return \`
-  <div class="page-head"><div><h1>Usuários Cadastrados</h1><p>Administre as contas do sistema e acompanhe a atividade de cada usuário</p></div></div>
-  <div class="panel" style="margin-bottom:0;">
-    <div class="panel-head"><h3>Todos os usuários</h3><span class="tag" style="cursor:default;">\${registeredUsers.length} usuário\${registeredUsers.length===1?'':'s'}</span></div>
-    <p class="cfg-hint" style="margin-bottom:14px;">Clique no ícone 👁 para entrar na conta de um usuário em modo de visualização e ver tudo que ele cadastrou (transações, cartões, orçamentos, metas, relatórios, anexos etc.).</p>
+  <div class="page-head">
+    <div>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Usuários Cadastrados
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Administre contas de acesso, permissões e utilize o modo de visualização espelhada
+      </p>
+    </div>
+  </div>
+
+  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:20px;">
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Total de Usuários</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue);">👥</span></div>
+      <div class="val" style="font-size:22px; color:var(--blue); margin-bottom:2px;">\${totalUsers}</div>
+      <div class="sub" style="font-size:11px;">Contas no sistema</div>
+    </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Administradores</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(232,176,75,0.14); color:var(--orange);">👑</span></div>
+      <div class="val" style="font-size:22px; color:var(--orange); margin-bottom:2px;">\${adminCount}</div>
+      <div class="sub" style="font-size:11px;">Acesso irrestrito</div>
+    </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Usuários Ativos</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green);">✅</span></div>
+      <div class="val" style="font-size:22px; color:var(--green); margin-bottom:2px;">\${activeCount}</div>
+      <div class="sub" style="font-size:11px;">Contas liberadas</div>
+    </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Desativados</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">🚫</span></div>
+      <div class="val" style="font-size:22px; color:var(--red); margin-bottom:2px;">\${inactiveCount}</div>
+      <div class="sub" style="font-size:11px;">Bloqueados</div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:0; padding:22px;">
+    <div class="panel-head" style="margin-bottom:14px;">
+      <h3>Lista Geral de Usuários</h3>
+      <span class="tag" style="cursor:default; font-weight:700;">\${registeredUsers.length} cadastrado(s)</span>
+    </div>
+    <p class="cfg-hint" style="margin-bottom:16px; font-size:12.5px;">
+      💡 Clique no ícone <strong>👁 Modo Espelho</strong> para entrar na conta do usuário em modo somente-leitura e inspecionar todos os seus lançamentos e relatórios.
+    </p>
     <div class="user-admin-list">
       \${registeredUsers.map(u=>{
         const stats = getUserActivitySummary(u.email);
         return \`
-        <div class="user-row \${u.active===false?'inactive':''}">
-          <div class="user-ic">\${u.name.slice(0,2).toUpperCase()}</div>
+        <div class="user-row \${u.active===false?'inactive':''}" style="padding:14px 16px; border-radius:14px;">
+          <div class="user-ic" style="width:42px; height:42px; font-size:15px; border-radius:12px;">\${u.name.slice(0,2).toUpperCase()}</div>
           <div class="user-info">
-            <div class="n">\${u.name}</div>
-            <div class="e">\${u.email}</div>
-            <div class="stats">\${stats.hasData ? \`\${stats.txCount} transaç\${stats.txCount===1?'ão':'ões'} · \${stats.accCount} conta\${stats.accCount===1?'':'s'} · \${stats.budCount} orçamento\${stats.budCount===1?'':'s'} · \${stats.goalCount} meta\${stats.goalCount===1?'':'s'}\${stats.lastDate ? \` · última mov. em \${formatDateBR(stats.lastDate)}\` : ''}\` : 'Ainda sem atividade registrada'}</div>
+            <div class="n" style="font-size:15px; font-weight:700;">\${u.name}</div>
+            <div class="e" style="font-size:12px; color:var(--text-dim);">\${u.email}</div>
+            <div class="stats" style="font-size:11.5px; margin-top:3px;">\${stats.hasData ? \`\${stats.txCount} transaç\${stats.txCount===1?'ão':'ões'} · \${stats.accCount} conta\${stats.accCount===1?'':'s'} · \${stats.budCount} orçamento\${stats.budCount===1?'':'s'} · \${stats.goalCount} meta\${stats.goalCount===1?'':'s'}\${stats.lastDate ? \` · última mov. em \${formatDateBR(stats.lastDate)}\` : ''}\` : 'Ainda sem atividade registrada'}</div>
           </div>
-          <span class="role-badge \${u.role==='Administrador'?'admin':'user'}">\${u.role}</span>
-          \${u.active===false ? '<span class="role-badge inactive">Desativado</span>' : ''}
-          \${u.email!==currentUser.email ? \`<button class="row-view" data-viewuser="\${u.email}" title="Visualizar tudo que este usuário fez">👁</button>\` : ''}
-          \${u.email!==currentUser.email ? \`<button class="row-toggle" data-toggleuser="\${u.email}" title="\${u.active===false?'Ativar usuário':'Desativar usuário'}">\${u.active===false?'✅':'🚫'}</button>\` : ''}
-          <button class="row-edit" data-edituser="\${u.email}" title="Editar usuário">✎</button>
+          <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:11px; padding:4px 10px; border-radius:8px;">\${u.role}</span>
+          \${u.active===false ? '<span class="role-badge inactive" style="font-size:11px; padding:4px 10px; border-radius:8px;">Desativado</span>' : ''}
+          <div style="display:flex; gap:6px; align-items:center;">
+            \${u.email!==currentUser.email ? \`<button class="row-view" data-viewuser="\${u.email}" title="Visualizar conta (Modo Espelho)" style="padding:6px 10px; font-size:13px; border-radius:8px;">👁</button>\` : ''}
+            \${u.email!==currentUser.email ? \`<button class="row-toggle" data-toggleuser="\${u.email}" title="\${u.active===false?'Ativar usuário':'Desativar usuário'}" style="padding:6px 10px; font-size:13px; border-radius:8px;">\${u.active===false?'✅':'🚫'}</button>\` : ''}
+            <button class="row-edit" data-edituser="\${u.email}" title="Editar usuário" style="padding:6px 10px; font-size:13px; border-radius:8px;">✎</button>
+          </div>
         </div>\`;
       }).join('')}
     </div>
@@ -5939,51 +6345,58 @@ function pageLogs(){
   return \`
   <div class="page-head">
     <div>
-      <h1>Logs do Sistema</h1>
-      <p>Histórico completo de auditoria com dados de login e alterações de dados em tempo real</p>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Logs & Auditoria do Sistema
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Histórico completo de auditoria com rastreabilidade de acessos, logins e alterações de dados
+      </p>
     </div>
     <div class="head-actions">
-      <button class="btn-ghost" onclick="loadSystemLogs().then(render)">🔄 Atualizar Logs</button>
+      <button class="btn-ghost" onclick="loadSystemLogs().then(render)" style="display:flex; align-items:center; gap:6px; font-weight:700;">🔄 Atualizar Logs</button>
     </div>
   </div>
 
-  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); margin-bottom:20px;">
-    <div class="kpi">
-      <div class="row1">Total de Registros <span class="ic" style="background:rgba(74,144,226,.14);color:var(--blue)">📋</span></div>
-      <div class="val">\${countTotal}</div>
-      <div class="sub">eventos de auditoria</div>
+  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:20px;">
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Total de Registros</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(74,144,226,.14); color:var(--blue);">📋</span></div>
+      <div class="val" style="font-size:22px; color:var(--blue); margin-bottom:2px;">\${countTotal}</div>
+      <div class="sub" style="font-size:11px;">Eventos registrados</div>
     </div>
-    <div class="kpi">
-      <div class="row1">Criações <span class="ic" style="background:var(--green-soft);color:var(--green)">➕</span></div>
-      <div class="val" style="color:var(--green)">\${countCriacao}</div>
-      <div class="sub">novos dados cadastrados</div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Criações</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green);">➕</span></div>
+      <div class="val" style="font-size:22px; color:var(--green); margin-bottom:2px;">\${countCriacao}</div>
+      <div class="sub" style="font-size:11px;">Novos dados</div>
     </div>
-    <div class="kpi">
-      <div class="row1">Edições <span class="ic" style="background:rgba(232,176,75,0.15);color:var(--orange)">✎</span></div>
-      <div class="val" style="color:var(--orange)">\${countEdicao}</div>
-      <div class="sub">registros alterados</div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Edições</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(232,176,75,0.14); color:var(--orange);">✎</span></div>
+      <div class="val" style="font-size:22px; color:var(--orange); margin-bottom:2px;">\${countEdicao}</div>
+      <div class="sub" style="font-size:11px;">Registros alterados</div>
     </div>
-    <div class="kpi">
-      <div class="row1">Exclusões <span class="ic" style="background:var(--red-soft);color:var(--red)">🗑</span></div>
-      <div class="val" style="color:var(--red)">\${countExclusao}</div>
-      <div class="sub">registros removidos</div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Exclusões</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">🗑</span></div>
+      <div class="val" style="font-size:22px; color:var(--red); margin-bottom:2px;">\${countExclusao}</div>
+      <div class="sub" style="font-size:11px;">Registros removidos</div>
     </div>
   </div>
 
-  <div class="panel">
+  <div class="table-panel">
     <div class="panel-head" style="margin-bottom:14px;">
-      <h3>Filtros de Log</h3>
+      <h3>Trilha de Auditoria Detalhada</h3>
+      <span class="tag" style="font-weight:700;">\${logs.length} evento(s)</span>
     </div>
-    <div class="filters" style="margin-bottom:16px;">
-      <input id="logSearch" placeholder="Buscar por usuário, e-mail, ação ou detalhe..." onkeyup="filterLogsTable()">
-      <select id="logFilterAction" onchange="filterLogsTable()">
+    <div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
+      <div style="position:relative; flex:1.5; min-width:200px;">
+        <input id="logSearch" placeholder="🔍 Buscar por usuário, e-mail, ação ou detalhe..." onkeyup="filterLogsTable()" style="width:100%; font-size:13px;">
+      </div>
+      <select id="logFilterAction" onchange="filterLogsTable()" style="flex:1; min-width:140px;">
         <option value="">Todas as ações</option>
         <option value="cria">Criação</option>
         <option value="ediç">Edição</option>
         <option value="excl">Exclusão</option>
         <option value="login">Login / Acesso</option>
       </select>
-      <select id="logFilterEntity" onchange="filterLogsTable()">
+      <select id="logFilterEntity" onchange="filterLogsTable()" style="flex:1; min-width:140px;">
         <option value="">Todas as entidades</option>
         <option value="transa">Transação</option>
         <option value="conta">Conta / Cartão</option>
