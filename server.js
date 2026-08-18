@@ -1859,64 +1859,579 @@ body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
   color:#0f172a !important;
 }
 
-/* ==================== Admin: Usuários Cadastrados ==================== */
-.user-admin-list{display:flex; flex-direction:column; gap:8px;}
-.user-row{
-  display:flex; align-items:center; gap:12px; padding:11px 12px; border:1px solid var(--card-border);
-  border-radius:12px; background:var(--bg); transition:border-color .15s;
+/* ==================== Dashboard Welcome Hero Banner (4K Executive) ==================== */
+.dashboard-welcome-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.94) 0%, rgba(10, 15, 29, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 22px;
+  padding: 24px 28px;
+  margin-bottom: 22px;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.user-row:hover{border-color:var(--green);}
-.user-row.inactive{opacity:.6;}
-.user-row.inactive .user-ic{filter:grayscale(1);}
-.user-ic{
-  width:36px; height:36px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg,var(--green),#c9862a); color:#08130c; font-weight:800; font-size:13px;
+.dashboard-welcome-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3B82F6 0%, #E5A93C 50%, #10B981 100%);
+  border-radius: 22px 22px 0 0;
 }
-.user-info{flex:1; min-width:0;}
-.user-info .n{font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.user-info .e{font-size:11.5px; color:var(--text-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.user-info .stats{font-size:11px; color:var(--text-faint); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.role-badge{
-  font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; flex-shrink:0; white-space:nowrap;
+.hero-backdrop-glow {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.20) 0%, transparent 70%);
+  pointer-events: none;
+  filter: blur(40px);
 }
-.role-badge.admin{background:var(--green-soft); color:var(--green);}
-.role-badge.user{background:rgba(138,147,163,.14); color:var(--text-dim);}
-.role-badge.inactive{background:var(--red-soft); color:var(--red);}
-.funcoes-badge{
-  display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; padding:5px 12px; border-radius:8px; white-space:nowrap;
+.hero-backdrop-glow.admin-glow {
+  background: radial-gradient(circle, rgba(229, 169, 60, 0.24) 0%, transparent 70%);
 }
-.funcoes-badge.full{background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);}
-.funcoes-badge.read{background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3);}
-.funcoes-badge.lock{background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3);}
-.row-edit{
-  flex-shrink:0; background:none; border:1px solid var(--card-border); color:var(--text-dim); width:30px; height:30px;
-  border-radius:8px; cursor:pointer; font-size:13px; transition:background .15s,color .15s;
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
 }
-.row-edit:hover{background:var(--hover); color:var(--text);}
-.row-view{
-  flex-shrink:0; background:none; border:1px solid var(--card-border); color:var(--text-dim); width:30px; height:30px;
-  border-radius:8px; cursor:pointer; font-size:13px; transition:background .15s,color .15s;
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 280px;
+  flex: 1;
 }
-.row-view:hover{background:var(--green-soft); color:var(--green); border-color:var(--green);}
-.row-toggle{
-  flex-shrink:0; background:none; border:1px solid var(--card-border); color:var(--text-dim); width:30px; height:30px;
-  border-radius:8px; cursor:pointer; font-size:13px; transition:background .15s,color .15s;
+.hero-badge-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
-.row-toggle:hover{background:var(--red-soft); color:var(--red); border-color:var(--red);}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #94A3B8;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.hero-badge.live-dot {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #34D399;
+}
+.hero-badge.admin-badge {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
+}
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+.hero-greeting {
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.25;
+}
+.hero-name-gradient {
+  background: linear-gradient(135deg, #FFFFFF 0%, #93C5FD 50%, #60A5FA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 13px;
+  color: #94A3B8;
+  margin: 0;
+  font-weight: 500;
+}
+.hero-period-highlight {
+  color: #E5A93C;
+  font-weight: 700;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn-hero-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #B45309 100%);
+  color: #0A0F1A;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 800;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35), inset 0 1px 1px rgba(255,255,255,0.4);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+.btn-hero-primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(245, 158, 11, 0.5);
+}
+.btn-hero-ghost {
+  background: rgba(255, 255, 255, 0.05);
+  color: #F8FAFC;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.btn-hero-ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(96, 165, 250, 0.4);
+  color: #FFFFFF;
+  transform: translateY(-1.5px);
+}
+
+/* Light Mode Overrides for Hero */
+body.light .dashboard-welcome-hero {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08) !important;
+}
+body.light .hero-greeting { color: #0F172A !important; }
+body.light .hero-name-gradient {
+  background: linear-gradient(135deg, #0F172A 0%, #2563EB 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+body.light .hero-sub { color: #475569 !important; }
+body.light .hero-badge {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
+}
+body.light .btn-hero-ghost {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+body.light .btn-hero-ghost:hover {
+  background: #F1F5F9 !important;
+  border-color: #2563EB !important;
+  color: #2563EB !important;
+}
+
+/* ==================== Executive Welcome Toast (Non-blocking) ==================== */
+.executive-welcome-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 999999;
+  max-width: 430px;
+  width: calc(100vw - 48px);
+  background: linear-gradient(145deg, rgba(17, 24, 39, 0.97) 0%, rgba(10, 15, 29, 0.99) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 20px;
+  padding: 16px 18px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(59, 130, 246, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transform: translateX(120%) scale(0.95);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+  pointer-events: auto;
+}
+.executive-welcome-toast.show {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+}
+.toast-content-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.toast-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(37, 99, 235, 0.16) 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.5);
+  color: #10B981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+.toast-icon-wrap svg {
+  width: 22px;
+  height: 22px;
+}
+.toast-body {
+  flex: 1;
+  min-width: 0;
+}
+.toast-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.toast-badge {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(59, 130, 246, 0.18);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  color: #60A5FA;
+}
+.toast-time {
+  font-size: 10.5px;
+  color: #64748B;
+  font-weight: 600;
+}
+.toast-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0 0 3px 0;
+  letter-spacing: -0.01em;
+}
+.toast-desc {
+  font-size: 12px;
+  color: #94A3B8;
+  margin: 0;
+  line-height: 1.4;
+}
+.toast-desc strong {
+  color: #E2E8F0;
+}
+.toast-close-btn {
+  background: transparent;
+  border: none;
+  color: #64748B;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+.toast-close-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.1);
+}
+.toast-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3B82F6, #10B981, #E5A93C);
+  border-radius: 0 0 20px 20px;
+  animation: toastBarFill 4.5s linear forwards;
+}
+@keyframes toastBarFill {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+body.light .executive-welcome-toast {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15) !important;
+}
+body.light .toast-title { color: #0F172A !important; }
+body.light .toast-desc { color: #475569 !important; }
+body.light .toast-desc strong { color: #0F172A !important; }
+
+/* ==================== Admin Center: Usuários Cadastrados 4K ==================== */
+.admin-toolbar-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.admin-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 240px;
+}
+.admin-search-wrap svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--text-dim);
+  pointer-events: none;
+}
+.admin-search-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 10px 14px 10px 38px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+.admin-search-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+.admin-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.admin-filter-btn {
+  padding: 7px 13px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-dim);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.admin-filter-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+.admin-filter-btn.active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.12));
+  border-color: rgba(59, 130, 246, 0.45);
+  color: #60A5FA;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+body.light .admin-filter-btn.active {
+  background: #EFF6FF;
+  border-color: #3B82F6;
+  color: #1D4ED8;
+}
+
+.user-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.user-card-4k {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(17, 23, 34, 0.85) 0%, rgba(11, 15, 24, 0.92) 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.user-card-4k:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.15);
+}
+.user-card-4k.inactive {
+  opacity: 0.65;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+.user-card-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1;
+}
+.user-card-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 15px;
+  color: #FFFFFF;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+.user-card-avatar.admin-av {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+}
+.user-card-avatar.user-av {
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  border: 1px solid rgba(59, 130, 246, 0.5);
+}
+.user-status-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--sidebar);
+}
+.user-status-dot.online { background: #10B981; box-shadow: 0 0 6px #10B981; }
+.user-status-dot.offline { background: #EF4444; }
+
+.user-card-info {
+  min-width: 0;
+  flex: 1;
+}
+.user-card-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.user-card-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-card-email {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-card-stats-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+.user-stat-chip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--text-faint);
+}
+.user-stat-chip strong {
+  color: var(--text);
+}
+
+.user-card-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.role-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 11px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.role-badge.admin {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
+}
+.role-badge.user {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #60A5FA;
+}
+.role-badge.inactive {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #F87171;
+}
+
+body.light .user-card-4k {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+}
+body.light .user-card-name { color: #0F172A !important; }
+body.light .user-card-email { color: #475569 !important; }
+body.light .user-stat-chip {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #64748B !important;
+}
+body.light .user-stat-chip strong { color: #0F172A !important; }
 
 /* ==================== Banner: Modo Visualização (Admin) ==================== */
 .view-mode-banner{
   display:none; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
-  padding:9px 16px; background:linear-gradient(135deg, rgba(232,176,75,.16), rgba(232,176,75,.08));
-  border-bottom:1.5px solid var(--green); font-size:13px; color:var(--text); text-align:center;
+  padding:10px 18px; background:linear-gradient(135deg, rgba(232,176,75,.18), rgba(232,176,75,.10));
+  border-bottom:1.5px solid var(--gold); font-size:13px; color:var(--text); text-align:center;
 }
 .view-mode-banner.show{display:flex;}
-.view-mode-banner strong{color:var(--green);}
+.view-mode-banner strong{color:var(--gold);}
 .view-mode-banner button{
-  background:var(--green); color:#08130c; border:none; font-weight:700; font-size:12.5px;
-  padding:6px 14px; border-radius:8px; cursor:pointer; flex-shrink:0;
+  background:var(--gold); color:#08130c; border:none; font-weight:800; font-size:12.5px;
+  padding:6px 14px; border-radius:8px; cursor:pointer; flex-shrink:0; transition:all 0.2s ease;
 }
-.view-mode-banner button:hover{filter:brightness(1.08);}
+.view-mode-banner button:hover{filter:brightness(1.1); transform:scale(1.02);}
 
 .acc-card{background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:18px; display:flex; flex-direction:column;}
 .acc-card .top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; gap:10px;}
@@ -2965,6 +3480,63 @@ document.getElementById('loginForm').onsubmit = async (e) => {
     }
   }
 };
+
+function getGreetingTime() {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return { text: 'Bom dia', icon: '☀️' };
+  if (h >= 12 && h < 18) return { text: 'Boa tarde', icon: '🌤️' };
+  return { text: 'Boa noite', icon: '🌙' };
+}
+
+function getFormattedToday() {
+  const d = new Date();
+  const weekDays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+  const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  return weekDays[d.getDay()] + ', ' + d.getDate() + ' de ' + months[d.getMonth()] + ' de ' + d.getFullYear();
+}
+
+function showExecutiveWelcomeToast(msg, subMsg) {
+  let toastEl = document.getElementById('executiveWelcomeToast');
+  if (!toastEl) {
+    toastEl = document.createElement('div');
+    toastEl.id = 'executiveWelcomeToast';
+    toastEl.className = 'executive-welcome-toast';
+    document.body.appendChild(toastEl);
+  }
+  const userName = currentUser ? currentUser.name : 'Usuário';
+  const userRole = currentUser ? (currentUser.role || 'Usuário') : 'Usuário';
+  const roleBadge = userRole === 'Administrador' ? '👑 Administrador Master' : '👤 Usuário';
+  
+  toastEl.innerHTML = \`
+    <div class="toast-content-box">
+      <div class="toast-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="toast-body">
+        <div class="toast-top-row">
+          <span class="toast-badge">\${roleBadge}</span>
+          <span class="toast-time">Sessão Ativa</span>
+        </div>
+        <h4 class="toast-title">\${msg || 'Sessão Autenticada com Sucesso'}</h4>
+        <p class="toast-desc">\${subMsg || ('Ambiente financeiro sincronizado e protegido para <strong>' + userName + '</strong>.')}</p>
+      </div>
+      <button type="button" class="toast-close-btn" onclick="document.getElementById('executiveWelcomeToast').classList.remove('show')" title="Fechar">✕</button>
+    </div>
+    <div class="toast-progress-bar"></div>
+  \`;
+
+  requestAnimationFrame(() => {
+    toastEl.classList.add('show');
+  });
+
+  if (toastEl._timeout) clearTimeout(toastEl._timeout);
+  toastEl._timeout = setTimeout(() => {
+    if (toastEl) toastEl.classList.remove('show');
+  }, 4500);
+}
 
 function showLoginSuccessPopup(msg){
   const overlay = document.getElementById('loginSuccessOverlay');
@@ -4352,22 +4924,51 @@ function pageDashboard(){
   const cardSummary = computeCardSummary();
   const pendingSummary = getPendingBillsSummary();
 
+  const greeting = getGreetingTime();
+  const formattedToday = getFormattedToday();
+  const firstName = currentUser ? currentUser.name.split(' ')[0] : 'Usuário';
+
   return \`
-  <div class="page-head">
-    <div>
-      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
-        Olá, \${currentUser ? currentUser.name.split(' ')[0] : 'Usuário'} <span style="font-size:22px;">👋</span>
-      </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
-        Aqui está o resumo da sua vida financeira
-      </p>
-    </div>
-    <div class="head-actions" style="display:flex; align-items:center; gap:12px;">
-      \${periodPickerHTML()}
-      <button class="btn-primary" id="btnNovaTransacao" style="display:flex; align-items:center; gap:6px; font-weight:700;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nova Transação
-      </button>
+  <!-- 4K EXECUTIVE DASHBOARD WELCOME HERO -->
+  <div class="dashboard-welcome-hero">
+    <div class="hero-backdrop-glow"></div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-badge-strip">
+          <span class="hero-badge live-dot">
+            <span class="pulse-dot"></span>
+            Sistema Online & Sincronizado
+          </span>
+          <span class="hero-badge">
+            🛡️ Sessão Segura SSL 256-bit
+          </span>
+          <span class="hero-badge hide-mobile">
+            📅 \${formattedToday}
+          </span>
+        </div>
+        <h1 class="hero-greeting">
+          \${greeting.icon} \${greeting.text}, <span class="hero-name-gradient">\${firstName}</span>
+        </h1>
+        <p class="hero-sub">
+          Visão Consolidada & Gestão Patrimonial Inteligente · <span class="hero-period-highlight">\${periodLabel()}</span>
+        </p>
+      </div>
+
+      <div class="hero-actions">
+        \${periodPickerHTML()}
+        <button class="btn-hero-primary" id="btnNovaTransacao" title="Lançar Nova Receita ou Despesa">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Nova Transação</span>
+        </button>
+        <button class="btn-hero-ghost" data-nav="cartoes" title="Gerenciar Contas & Cartões">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          <span>Contas</span>
+        </button>
+        <button class="btn-hero-ghost" data-nav="relatorios" title="Visualizar Relatórios Executivos">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8" rx="1"/><rect x="12" y="5" width="3" height="13" rx="1"/><rect x="17" y="13" width="3" height="5" rx="1"/></svg>
+          <span>Relatórios</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -4378,8 +4979,11 @@ function pageDashboard(){
         <span>Saldo Total</span>
         <span class="ic" style="background:rgba(59,130,246,0.14); color:var(--blue); border-color:rgba(59,130,246,0.25);">💳</span>
       </div>
-      <div class="val" style="color:\${saldo < 0 ? 'var(--red)' : 'var(--green)'};">\${fmt(saldo)}</div>
-      <div class="sub">Saldo atual de todas as contas</div>
+      <div class="val" style="color:\${saldo < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
+      <div class="sub" style="display:flex; align-items:center; gap:5px;">
+        <span style="display:inline-block; width:5px; height:5px; border-radius:50%; background:\${saldo < 0 ? 'var(--red)' : 'var(--green)'};"></span>
+        <span>\${saldo < 0 ? 'Atenção ao Saldo' : 'Patrimônio Consolidado'}</span>
+      </div>
     </div>
 
     <!-- 2. Receitas -->
@@ -4388,8 +4992,8 @@ function pageDashboard(){
         <span>Receitas</span>
         <span class="ic" style="background:rgba(16,185,129,0.14); color:var(--green); border-color:rgba(16,185,129,0.25);">↑</span>
       </div>
-      <div class="val" style="color:var(--green);">\${fmt(receitas)}</div>
-      <div class="sub up">\${periodLabel()}</div>
+      <div class="val" style="color:var(--green); font-variant-numeric:tabular-nums;">+\${fmt(receitas)}</div>
+      <div class="sub up">↑ Entradas em \${periodLabel()}</div>
     </div>
 
     <!-- 3. Despesas -->
@@ -4398,8 +5002,8 @@ function pageDashboard(){
         <span>Despesas</span>
         <span class="ic" style="background:rgba(239,68,68,0.14); color:var(--red); border-color:rgba(239,68,68,0.25);">↓</span>
       </div>
-      <div class="val" style="color:var(--red);">\${fmt(despesas)}</div>
-      <div class="sub" style="color:var(--red);">\${periodLabel()}</div>
+      <div class="val" style="color:var(--red); font-variant-numeric:tabular-nums;">-\${fmt(despesas)}</div>
+      <div class="sub" style="color:var(--red);">↓ Saídas em \${periodLabel()}</div>
     </div>
 
     <!-- 4. Saldo do Mês -->
@@ -4408,18 +5012,20 @@ function pageDashboard(){
         <span>Saldo do Mês</span>
         <span class="ic" style="background:\${(receitas-despesas) < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(59,130,246,0.14)'}; color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--blue)'}; border-color:\${(receitas-despesas) < 0 ? 'rgba(239,68,68,0.25)' : 'rgba(59,130,246,0.25)'};">⇄</span>
       </div>
-      <div class="val" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'};">\${fmt(receitas-despesas)}</div>
-      <div class="sub" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}">\${periodLabel()}</div>
+      <div class="val" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(receitas-despesas)}</div>
+      <div class="sub" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}">
+        \${(receitas-despesas) >= 0 ? '✓ Superávit Operacional' : '⚠ Déficit no Período'}
+      </div>
     </div>
 
     <!-- 5. Transações -->
     <div class="kpi kpi-tx">
       <div class="row1">
-        <span>Transações</span>
+        <span>Lançamentos</span>
         <span class="ic" style="background:rgba(155,107,216,0.14); color:var(--purple); border-color:rgba(155,107,216,0.25);">☰</span>
       </div>
-      <div class="val">\${periodTx.length}</div>
-      <div class="sub">Registros no período</div>
+      <div class="val" style="font-variant-numeric:tabular-nums;">\${periodTx.length}</div>
+      <div class="sub">Registros em \${periodLabel()}</div>
     </div>
   </div>
 
@@ -6110,76 +6716,223 @@ function getUserActivitySummary(email){
   };
 }
 
+let currentAdminUserFilter = 'all';
+let currentAdminUserSearch = '';
+
+function setAdminUserFilter(filterType, btnEl) {
+  currentAdminUserFilter = filterType;
+  document.querySelectorAll('.admin-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  applyAdminUserFiltering();
+}
+
+function handleAdminUserSearch(query) {
+  currentAdminUserSearch = (query || '').toLowerCase().trim();
+  applyAdminUserFiltering();
+}
+
+function applyAdminUserFiltering() {
+  const cards = document.querySelectorAll('.user-card-4k');
+  cards.forEach(card => {
+    const email = card.getAttribute('data-user-email') || '';
+    const name = (card.querySelector('.user-card-name') ? card.querySelector('.user-card-name').textContent : '').toLowerCase();
+    const role = card.getAttribute('data-user-role') || '';
+    const status = card.getAttribute('data-user-status') || '';
+
+    let matchesFilter = true;
+    if (currentAdminUserFilter === 'admin') matchesFilter = (role === 'admin');
+    else if (currentAdminUserFilter === 'user') matchesFilter = (role === 'user');
+    else if (currentAdminUserFilter === 'active') matchesFilter = (status === 'active');
+    else if (currentAdminUserFilter === 'inactive') matchesFilter = (status === 'inactive');
+
+    let matchesSearch = true;
+    if (currentAdminUserSearch) {
+      matchesSearch = email.includes(currentAdminUserSearch) || name.includes(currentAdminUserSearch);
+    }
+
+    card.style.display = (matchesFilter && matchesSearch) ? 'flex' : 'none';
+  });
+}
+
 function pageUsuarios(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   if(!isAdmin || isViewingOtherUser){
     return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
   }
-  const totalUsers = registeredUsers ? registeredUsers.length : 1;
-  const adminCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Administrador').length : 1;
-  const activeCount = registeredUsers ? registeredUsers.filter(u => u.active !== false).length : 1;
-  const inactiveCount = totalUsers - activeCount;
+  const formattedToday = getFormattedToday();
+  const userName = currentUser ? currentUser.name : 'Administrador';
+  const totalUsers = registeredUsers.length;
+  const activeCount = registeredUsers.filter(u => u.active !== false).length;
+  const adminCount = registeredUsers.filter(u => u.role === 'Administrador').length;
+  const standardCount = totalUsers - adminCount;
 
   return \`
-  <div class="page-head">
-    <div>
-      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
-        Usuários Cadastrados
-      </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
-        Administre contas de acesso, permissões e utilize o modo de visualização espelhada
-      </p>
+  <!-- 4K EXECUTIVE ADMIN WELCOME HERO -->
+  <div class="dashboard-welcome-hero admin-hero">
+    <div class="hero-backdrop-glow admin-glow"></div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-badge-strip">
+          <span class="hero-badge live-dot">
+            <span class="pulse-dot"></span>
+            Painel Master
+          </span>
+          <span class="hero-badge admin-badge">
+            👑 Administrador
+          </span>
+          <span class="hero-badge hide-mobile">
+            ⚡ PostgreSQL Sincronizado
+          </span>
+          <span class="hero-badge hide-mobile">
+            📅 \${formattedToday}
+          </span>
+        </div>
+        <h1 class="hero-greeting">
+          🛡️ Painel Administrativo, <span class="hero-name-gradient">\${userName.split(' ')[0]}</span>
+        </h1>
+        <p class="hero-sub">
+          Gestão Global de Contas, Auditoria de Acessos e Segurança do Sistema
+        </p>
+      </div>
+
+      <div class="hero-actions">
+        <button class="btn-hero-primary" id="btnAdminNovoUsuario" onclick="openAdminCreateUserModal()" title="Cadastrar Novo Usuário">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>+ Novo Usuário</span>
+        </button>
+        <button class="btn-hero-ghost" onclick="syncUsersWithServer().then(()=>showExecutiveWelcomeToast('Sincronização Concluída', 'Tabela de usuários atualizada com o servidor.'));" title="Sincronizar com o Banco de Dados">
+          <span>🔄 Sincronizar BD</span>
+        </button>
+        <button class="btn-hero-ghost" data-nav="logs" title="Ver Logs de Auditoria">
+          <span>📜 Logs do Sistema</span>
+        </button>
+        <button class="btn-hero-ghost" data-nav="funcoes" title="Ver Funções & Permissões">
+          <span>🛡️ Permissões</span>
+        </button>
+      </div>
     </div>
   </div>
 
-  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:20px;">
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Total de Usuários</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue);">👥</span></div>
-      <div class="val" style="font-size:22px; color:var(--blue); margin-bottom:2px;">\${totalUsers}</div>
-      <div class="sub" style="font-size:11px;">Contas no sistema</div>
+  <!-- 4 Admin KPI Cards -->
+  <div class="kpis admin-kpis" style="margin-bottom:22px;">
+    <div class="kpi kpi-balance">
+      <div class="row1">
+        <span>Total de Contas</span>
+        <span class="ic" style="background:rgba(59,130,246,0.14); color:var(--blue); border-color:rgba(59,130,246,0.25);">👥</span>
+      </div>
+      <div class="val" style="font-variant-numeric:tabular-nums;">\${totalUsers}</div>
+      <div class="sub">Usuários cadastrados no Hub</div>
     </div>
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Administradores</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(232,176,75,0.14); color:var(--orange);">👑</span></div>
-      <div class="val" style="font-size:22px; color:var(--orange); margin-bottom:2px;">\${adminCount}</div>
-      <div class="sub" style="font-size:11px;">Acesso irrestrito</div>
+
+    <div class="kpi kpi-income">
+      <div class="row1">
+        <span>Usuários Ativos</span>
+        <span class="ic" style="background:rgba(16,185,129,0.14); color:var(--green); border-color:rgba(16,185,129,0.25);">✓</span>
+      </div>
+      <div class="val" style="color:var(--green); font-variant-numeric:tabular-nums;">\${activeCount}</div>
+      <div class="sub up">Acessos liberados e operacionais</div>
     </div>
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Usuários Ativos</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green);">✅</span></div>
-      <div class="val" style="font-size:22px; color:var(--green); margin-bottom:2px;">\${activeCount}</div>
-      <div class="sub" style="font-size:11px;">Contas liberadas</div>
+
+    <div class="kpi kpi-net">
+      <div class="row1">
+        <span>Administradores</span>
+        <span class="ic" style="background:rgba(245,158,11,0.14); color:var(--orange); border-color:rgba(245,158,11,0.25);">👑</span>
+      </div>
+      <div class="val" style="color:var(--orange); font-variant-numeric:tabular-nums;">\${adminCount}</div>
+      <div class="sub">Nível 1 de privilégios globais</div>
     </div>
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Desativados</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">🚫</span></div>
-      <div class="val" style="font-size:22px; color:var(--red); margin-bottom:2px;">\${inactiveCount}</div>
-      <div class="sub" style="font-size:11px;">Bloqueados</div>
+
+    <div class="kpi kpi-tx">
+      <div class="row1">
+        <span>Status do Banco</span>
+        <span class="ic" style="background:rgba(139,92,246,0.14); color:var(--purple); border-color:rgba(139,92,246,0.25);">⚡</span>
+      </div>
+      <div class="val" style="font-size:18px; color:#60A5FA;">PostgreSQL</div>
+      <div class="sub">Sincronização contínua com fallback</div>
     </div>
   </div>
 
-  <div class="panel" style="margin-bottom:0; padding:22px;">
-    <div class="panel-head" style="margin-bottom:14px;">
-      <h3>Lista Geral de Usuários</h3>
-      <span class="tag" style="cursor:default; font-weight:700;">\${registeredUsers.length} cadastrado(s)</span>
+  <!-- Painel de Gerenciamento de Usuários com Busca & Filtros -->
+  <div class="panel" style="margin-bottom:0;">
+    <div class="panel-head" style="margin-bottom:16px;">
+      <div>
+        <h3 style="display:flex; align-items:center; gap:8px;">
+          <span>👥</span> Contas de Usuários Cadastrados
+        </h3>
+        <p class="cfg-hint" style="margin:4px 0 0 0;">
+          Clique em <strong style="color:var(--blue);">👁 Modo Espelho</strong> para entrar na conta do usuário e auditar seus lançamentos em tempo real.
+        </p>
+      </div>
+      <span class="tag" style="cursor:default; background:rgba(59,130,246,0.12); color:var(--blue); border:1px solid rgba(59,130,246,0.25); font-weight:700;">
+        \${totalUsers} conta\${totalUsers===1?'':'s'}
+      </span>
     </div>
-    <p class="cfg-hint" style="margin-bottom:16px; font-size:12.5px;">
-      💡 Clique no ícone <strong>👁 Modo Espelho</strong> para entrar na conta do usuário em modo somente-leitura e inspecionar todos os seus lançamentos e relatórios.
-    </p>
-    <div class="user-admin-list">
-      \${registeredUsers.map(u=>{
+
+    <!-- Barra de Ferramentas de Busca & Filtros -->
+    <div class="admin-toolbar-panel">
+      <div class="admin-search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="adminUserSearchInput" class="admin-search-input" placeholder="Buscar por nome ou e-mail..." oninput="handleAdminUserSearch(this.value)">
+      </div>
+      <div class="admin-filter-bar">
+        <button type="button" class="admin-filter-btn active" data-adminfilter="all" onclick="setAdminUserFilter('all', this)">Todos (\${totalUsers})</button>
+        <button type="button" class="admin-filter-btn" data-adminfilter="admin" onclick="setAdminUserFilter('admin', this)">👑 Admins (\${adminCount})</button>
+        <button type="button" class="admin-filter-btn" data-adminfilter="user" onclick="setAdminUserFilter('user', this)">👤 Usuários (\${standardCount})</button>
+        <button type="button" class="admin-filter-btn" data-adminfilter="active" onclick="setAdminUserFilter('active', this)">🟢 Ativos (\${activeCount})</button>
+        <button type="button" class="admin-filter-btn" data-adminfilter="inactive" onclick="setAdminUserFilter('inactive', this)">🚫 Desativados (\${totalUsers - activeCount})</button>
+      </div>
+    </div>
+
+    <!-- Lista de Usuários 4K -->
+    <div class="user-admin-list" id="adminUsersListContainer">
+      \${registeredUsers.map(u => {
         const stats = getUserActivitySummary(u.email);
+        const isAdminUser = u.role === 'Administrador';
+        const isActive = u.active !== false;
+        const initials = u.name.trim().split(/\\s+/).map(n => n[0]).slice(0,2).join('').toUpperCase();
         return \`
-        <div class="user-row \${u.active===false?'inactive':''}" style="padding:14px 16px; border-radius:14px;">
-          <div class="user-ic" style="width:42px; height:42px; font-size:15px; border-radius:12px;">\${u.name.slice(0,2).toUpperCase()}</div>
-          <div class="user-info">
-            <div class="n" style="font-size:15px; font-weight:700;">\${u.name}</div>
-            <div class="e" style="font-size:12px; color:var(--text-dim);">\${u.email}</div>
-            <div class="stats" style="font-size:11.5px; margin-top:3px;">\${stats.hasData ? \`\${stats.txCount} transaç\${stats.txCount===1?'ão':'ões'} · \${stats.accCount} conta\${stats.accCount===1?'':'s'} · \${stats.budCount} orçamento\${stats.budCount===1?'':'s'} · \${stats.goalCount} meta\${stats.goalCount===1?'':'s'}\${stats.lastDate ? \` · última mov. em \${formatDateBR(stats.lastDate)}\` : ''}\` : 'Ainda sem atividade registrada'}</div>
+        <div class="user-card-4k \${!isActive ? 'inactive' : ''}" data-user-email="\${u.email.toLowerCase()}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isActive ? 'active' : 'inactive'}">
+          <div class="user-card-left">
+            <div class="user-card-avatar \${isAdminUser ? 'admin-av' : 'user-av'}">
+              \${initials}
+              <span class="user-status-dot \${isActive ? 'online' : 'offline'}" title="\${isActive ? 'Usuário Ativo' : 'Usuário Desativado'}"></span>
+            </div>
+            <div class="user-card-info">
+              <div class="user-card-name-row">
+                <span class="user-card-name">\${u.name}</span>
+                <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
+                \${!isActive ? '<span class="role-badge inactive">Desativado</span>' : ''}
+              </div>
+              <div class="user-card-email">\${u.email}</div>
+              <div class="user-card-stats-strip">
+                \${stats.hasData ? \`
+                  <span class="user-stat-chip"><strong>\${stats.txCount}</strong> transaç\${stats.txCount===1?'ão':'ões'}</span>
+                  <span class="user-stat-chip"><strong>\${stats.accCount}</strong> conta\${stats.accCount===1?'':'s'}</span>
+                  <span class="user-stat-chip"><strong>\${stats.budCount}</strong> orçamento\${stats.budCount===1?'':'s'}</span>
+                  \${stats.lastDate ? \`<span class="user-stat-chip">Último mov: <strong>\${formatDateBR(stats.lastDate)}</strong></span>\` : ''}
+                \` : \`
+                  <span class="user-stat-chip" style="opacity:0.6;">Ainda sem atividade registrada</span>
+                \`}
+              </div>
+            </div>
           </div>
-          <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:11px; padding:4px 10px; border-radius:8px;">\${u.role}</span>
-          \${u.active===false ? '<span class="role-badge inactive" style="font-size:11px; padding:4px 10px; border-radius:8px;">Desativado</span>' : ''}
-          <div style="display:flex; gap:6px; align-items:center;">
-            \${u.email!==currentUser.email ? \`<button class="row-view" data-viewuser="\${u.email}" title="Visualizar conta (Modo Espelho)" style="padding:6px 10px; font-size:13px; border-radius:8px;">👁</button>\` : ''}
-            \${u.email!==currentUser.email ? \`<button class="row-toggle" data-toggleuser="\${u.email}" title="\${u.active===false?'Ativar usuário':'Desativar usuário'}" style="padding:6px 10px; font-size:13px; border-radius:8px;">\${u.active===false?'✅':'🚫'}</button>\` : ''}
-            <button class="row-edit" data-edituser="\${u.email}" title="Editar usuário" style="padding:6px 10px; font-size:13px; border-radius:8px;">✎</button>
+
+          <div class="user-card-right">
+            \${u.email.toLowerCase() !== currentUser.email.toLowerCase() ? \`
+              <button class="row-view" data-viewuser="\${u.email}" title="👁 Modo Espelho: Entrar na conta deste usuário" style="display:flex; align-items:center; gap:5px; width:auto; padding:0 10px; font-weight:700; font-size:12px;">
+                <span>👁</span> <span class="hide-mobile">Espelho</span>
+              </button>
+            \` : ''}
+            \${u.email.toLowerCase() !== currentUser.email.toLowerCase() ? \`
+              <button class="row-toggle" data-toggleuser="\${u.email}" title="\${isActive ? 'Desativar acesso do usuário' : 'Reativar acesso do usuário'}">
+                \${isActive ? '🚫' : '✅'}
+              </button>
+            \` : ''}
+            <button class="row-edit" data-edituser="\${u.email}" title="Editar dados e senha do usuário">
+              ✎
+            </button>
           </div>
         </div>\`;
       }).join('')}
@@ -7319,30 +8072,98 @@ async function deleteAlert(id){
   render();
 }
 
+let isCreatingNewUserAdmin = false;
+
+async function openAdminCreateUserModal(){
+  await syncUsersWithServer();
+  if(!currentUser || currentUser.role !== 'Administrador') return;
+  isCreatingNewUserAdmin = true;
+  editingUserEmail = null;
+  const modalTitle = document.querySelector('#overlayUserAdmin h2');
+  if(modalTitle) modalTitle.textContent = 'Novo Usuário';
+  const emailInput = document.getElementById('userAdminEmail');
+  if(emailInput) {
+    emailInput.disabled = false;
+    emailInput.style.opacity = '1';
+    emailInput.value = '';
+    emailInput.placeholder = 'email.usuario@exemplo.com';
+  }
+  document.getElementById('userAdminName').value = '';
+  document.getElementById('userAdminRole').value = 'Usuário';
+  document.getElementById('userAdminPassword').value = '';
+  document.getElementById('userAdminPassword').type = 'password';
+  bindPasswordToggle('userAdminPassword', 'userAdminPasswordToggle');
+  document.getElementById('overlayUserAdmin').classList.add('show');
+}
+
 async function openUserAdminModal(email){
   await syncUsersWithServer();
   if(!currentUser || currentUser.role !== 'Administrador') return;
-  const u = registeredUsers.find(x=>x.email===email);
+  const u = registeredUsers.find(x=>x.email.toLowerCase()===email.toLowerCase());
   if(!u) return;
+  isCreatingNewUserAdmin = false;
   editingUserEmail = email;
+  const modalTitle = document.querySelector('#overlayUserAdmin h2');
+  if(modalTitle) modalTitle.textContent = 'Editar Usuário';
+  const emailInput = document.getElementById('userAdminEmail');
+  if(emailInput) {
+    emailInput.disabled = true;
+    emailInput.style.opacity = '0.6';
+    emailInput.value = u.email;
+  }
   document.getElementById('userAdminName').value = u.name;
-  document.getElementById('userAdminEmail').value = u.email;
   document.getElementById('userAdminRole').value = u.role;
   document.getElementById('userAdminPassword').value = '';
   document.getElementById('userAdminPassword').type = 'password';
   bindPasswordToggle('userAdminPassword', 'userAdminPasswordToggle');
   document.getElementById('overlayUserAdmin').classList.add('show');
 }
-function closeUserAdminModal(){ document.getElementById('overlayUserAdmin').classList.remove('show'); editingUserEmail = null; }
+
+function closeUserAdminModal(){
+  document.getElementById('overlayUserAdmin').classList.remove('show');
+  editingUserEmail = null;
+  isCreatingNewUserAdmin = false;
+}
+
 async function saveUserAdmin(){
-  if(!editingUserEmail) return;
   await syncUsersWithServer();
-  const u = registeredUsers.find(x=>x.email===editingUserEmail);
-  if(!u) return;
   const name = document.getElementById('userAdminName').value.trim();
   const role = document.getElementById('userAdminRole').value;
   const newPass = document.getElementById('userAdminPassword').value.trim();
+
   if(!name){ showToast('Informe um nome para o usuário'); return; }
+
+  if (isCreatingNewUserAdmin) {
+    const email = document.getElementById('userAdminEmail').value.trim().toLowerCase();
+    if(!email || !email.includes('@')){ showToast('Informe um e-mail válido'); return; }
+    if(registeredUsers.some(x => x.email.toLowerCase() === email)){
+      showToast('Este e-mail já está cadastrado no sistema');
+      return;
+    }
+    if(!newPass || newPass.length < 6){
+      showToast('A senha inicial deve ter no mínimo 6 caracteres');
+      return;
+    }
+    const newUser = {
+      name,
+      email,
+      password: newPass,
+      role,
+      active: true,
+      created_at: new Date().toISOString()
+    };
+    registeredUsers.push(newUser);
+    await saveUsersToServer();
+    showToast('Usuário cadastrado com sucesso!');
+    logActivity('Criação', 'Usuário', 'Administrador cadastrou novo usuário: ' + email + ' (' + name + ', ' + role + ')');
+    closeUserAdminModal();
+    render();
+    return;
+  }
+
+  if(!editingUserEmail) return;
+  const u = registeredUsers.find(x=>x.email.toLowerCase()===editingUserEmail.toLowerCase());
+  if(!u) return;
   if(u.role === 'Administrador' && role !== 'Administrador' && registeredUsers.filter(x=>x.role==='Administrador').length <= 1){
     showToast('É necessário manter ao menos um administrador');
     return;
@@ -7351,7 +8172,7 @@ async function saveUserAdmin(){
   u.role = role;
   if(newPass) u.password = newPass;
   await saveUsersToServer();
-  if(currentUser && currentUser.email === u.email){
+  if(currentUser && currentUser.email.toLowerCase() === u.email.toLowerCase()){
     currentUser.name = u.name;
     currentUser.role = u.role;
   }
@@ -8334,8 +9155,9 @@ if (scaleMenuBtn && scaleDropdown) {
         localStorage.removeItem('nexus_just_logged_in');
         sessionStorage.removeItem('nexus_just_logged_in');
         setTimeout(() => {
-          showLoginSuccessPopup('Login efetuado com sucesso!');
-        }, 200);
+          const uName = currentUser ? currentUser.name : 'Usuário';
+          showExecutiveWelcomeToast('Sessão Autenticada com Sucesso', 'Bem-vindo de volta, <strong>' + uName + '</strong>! Ambiente financeiro sincronizado e protegido.');
+        }, 350);
       }
     } catch(e){}
   }
@@ -8489,7 +9311,17 @@ function saveLocalData(email, data) {
 
 // Servidor HTTP de Alta Performance e Resiliência
 const server = http.createServer((req, res) => {
-  const parsedUrl = url.parse(req.url, true);
+  let parsedUrl;
+  try {
+    const fullUrl = new URL(req.url, 'http://' + (req.headers.host || 'localhost:3000'));
+    parsedUrl = {
+      pathname: fullUrl.pathname,
+      query: Object.fromEntries(fullUrl.searchParams),
+      search: fullUrl.search
+    };
+  } catch (e) {
+    parsedUrl = { pathname: req.url.split('?')[0] || '/', query: {} };
+  }
 
   // Cabeçalhos globais de CORS
   const corsHeaders = {
@@ -8952,6 +9784,15 @@ const server = http.createServer((req, res) => {
     'Expires': '0'
   });
   res.end(htmlContent);
+});
+
+// Proteção Global de Processo contra Exceções Não Tratadas
+process.on('uncaughtException', (err) => {
+  console.error('[PROCESSO] Erro não capturado tratado com segurança:', err.message);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.warn('[PROCESSO] Rejeição de Promise tratada com segurança:', reason);
 });
 
 initDatabase()
