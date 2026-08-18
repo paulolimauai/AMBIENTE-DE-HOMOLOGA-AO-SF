@@ -6759,180 +6759,71 @@ function pageUsuarios(){
   if(!isAdmin || isViewingOtherUser){
     return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
   }
-  const formattedToday = getFormattedToday();
-  const userName = currentUser ? currentUser.name : 'Administrador';
-  const totalUsers = registeredUsers.length;
-  const activeCount = registeredUsers.filter(u => u.active !== false).length;
-  const adminCount = registeredUsers.filter(u => u.role === 'Administrador').length;
-  const standardCount = totalUsers - adminCount;
+  const totalUsers = registeredUsers ? registeredUsers.length : 1;
+  const adminCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Administrador').length : 1;
+  const activeCount = registeredUsers ? registeredUsers.filter(u => u.active !== false).length : 1;
+  const inactiveCount = totalUsers - activeCount;
 
   return \`
-  <!-- 4K EXECUTIVE ADMIN WELCOME HERO -->
-  <div class="dashboard-welcome-hero admin-hero">
-    <div class="hero-backdrop-glow admin-glow"></div>
-    <div class="hero-content">
-      <div class="hero-left">
-        <div class="hero-badge-strip">
-          <span class="hero-badge live-dot">
-            <span class="pulse-dot"></span>
-            Painel Master
-          </span>
-          <span class="hero-badge admin-badge">
-            👑 Administrador
-          </span>
-          <span class="hero-badge hide-mobile">
-            ⚡ PostgreSQL Sincronizado
-          </span>
-          <span class="hero-badge hide-mobile">
-            📅 \${formattedToday}
-          </span>
-        </div>
-        <h1 class="hero-greeting">
-          🛡️ Painel Administrativo, <span class="hero-name-gradient">\${userName.split(' ')[0]}</span>
-        </h1>
-        <p class="hero-sub">
-          Gestão Global de Contas, Auditoria de Acessos e Segurança do Sistema
-        </p>
-      </div>
-
-      <div class="hero-actions">
-        <button class="btn-hero-primary" id="btnAdminNovoUsuario" onclick="openAdminCreateUserModal()" title="Cadastrar Novo Usuário">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span>+ Novo Usuário</span>
-        </button>
-        <button class="btn-hero-ghost" onclick="syncUsersWithServer().then(()=>showExecutiveWelcomeToast('Sincronização Concluída', 'Tabela de usuários atualizada com o servidor.'));" title="Sincronizar com o Banco de Dados">
-          <span>🔄 Sincronizar BD</span>
-        </button>
-        <button class="btn-hero-ghost" data-nav="logs" title="Ver Logs de Auditoria">
-          <span>📜 Logs do Sistema</span>
-        </button>
-        <button class="btn-hero-ghost" data-nav="funcoes" title="Ver Funções & Permissões">
-          <span>🛡️ Permissões</span>
-        </button>
-      </div>
+  <div class="page-head">
+    <div>
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Usuários Cadastrados
+      </h1>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Administre contas de acesso, permissões e utilize o modo de visualização espelhada
+      </p>
     </div>
   </div>
 
-  <!-- 4 Admin KPI Cards -->
-  <div class="kpis admin-kpis" style="margin-bottom:22px;">
-    <div class="kpi kpi-balance">
-      <div class="row1">
-        <span>Total de Contas</span>
-        <span class="ic" style="background:rgba(59,130,246,0.14); color:var(--blue); border-color:rgba(59,130,246,0.25);">👥</span>
-      </div>
-      <div class="val" style="font-variant-numeric:tabular-nums;">\${totalUsers}</div>
-      <div class="sub">Usuários cadastrados no Hub</div>
+  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:20px;">
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Total de Usuários</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue);">👥</span></div>
+      <div class="val" style="font-size:22px; color:var(--blue); margin-bottom:2px;">\${totalUsers}</div>
+      <div class="sub" style="font-size:11px;">Contas no sistema</div>
     </div>
-
-    <div class="kpi kpi-income">
-      <div class="row1">
-        <span>Usuários Ativos</span>
-        <span class="ic" style="background:rgba(16,185,129,0.14); color:var(--green); border-color:rgba(16,185,129,0.25);">✓</span>
-      </div>
-      <div class="val" style="color:var(--green); font-variant-numeric:tabular-nums;">\${activeCount}</div>
-      <div class="sub up">Acessos liberados e operacionais</div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Administradores</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(232,176,75,0.14); color:var(--orange);">👑</span></div>
+      <div class="val" style="font-size:22px; color:var(--orange); margin-bottom:2px;">\${adminCount}</div>
+      <div class="sub" style="font-size:11px;">Acesso irrestrito</div>
     </div>
-
-    <div class="kpi kpi-net">
-      <div class="row1">
-        <span>Administradores</span>
-        <span class="ic" style="background:rgba(245,158,11,0.14); color:var(--orange); border-color:rgba(245,158,11,0.25);">👑</span>
-      </div>
-      <div class="val" style="color:var(--orange); font-variant-numeric:tabular-nums;">\${adminCount}</div>
-      <div class="sub">Nível 1 de privilégios globais</div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Usuários Ativos</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green);">✅</span></div>
+      <div class="val" style="font-size:22px; color:var(--green); margin-bottom:2px;">\${activeCount}</div>
+      <div class="sub" style="font-size:11px;">Contas liberadas</div>
     </div>
-
-    <div class="kpi kpi-tx">
-      <div class="row1">
-        <span>Status do Banco</span>
-        <span class="ic" style="background:rgba(139,92,246,0.14); color:var(--purple); border-color:rgba(139,92,246,0.25);">⚡</span>
-      </div>
-      <div class="val" style="font-size:18px; color:#60A5FA;">PostgreSQL</div>
-      <div class="sub">Sincronização contínua com fallback</div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Desativados</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">🚫</span></div>
+      <div class="val" style="font-size:22px; color:var(--red); margin-bottom:2px;">\${inactiveCount}</div>
+      <div class="sub" style="font-size:11px;">Bloqueados</div>
     </div>
   </div>
 
-  <!-- Painel de Gerenciamento de Usuários com Busca & Filtros -->
-  <div class="panel" style="margin-bottom:0;">
-    <div class="panel-head" style="margin-bottom:16px;">
-      <div>
-        <h3 style="display:flex; align-items:center; gap:8px;">
-          <span>👥</span> Contas de Usuários Cadastrados
-        </h3>
-        <p class="cfg-hint" style="margin:4px 0 0 0;">
-          Clique em <strong style="color:var(--blue);">👁 Modo Espelho</strong> para entrar na conta do usuário e auditar seus lançamentos em tempo real.
-        </p>
-      </div>
-      <span class="tag" style="cursor:default; background:rgba(59,130,246,0.12); color:var(--blue); border:1px solid rgba(59,130,246,0.25); font-weight:700;">
-        \${totalUsers} conta\${totalUsers===1?'':'s'}
-      </span>
+  <div class="panel" style="margin-bottom:0; padding:22px;">
+    <div class="panel-head" style="margin-bottom:14px;">
+      <h3>Lista Geral de Usuários</h3>
+      <span class="tag" style="cursor:default; font-weight:700;">\${registeredUsers.length} cadastrado(s)</span>
     </div>
-
-    <!-- Barra de Ferramentas de Busca & Filtros -->
-    <div class="admin-toolbar-panel">
-      <div class="admin-search-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input type="text" id="adminUserSearchInput" class="admin-search-input" placeholder="Buscar por nome ou e-mail..." oninput="handleAdminUserSearch(this.value)">
-      </div>
-      <div class="admin-filter-bar">
-        <button type="button" class="admin-filter-btn active" data-adminfilter="all" onclick="setAdminUserFilter('all', this)">Todos (\${totalUsers})</button>
-        <button type="button" class="admin-filter-btn" data-adminfilter="admin" onclick="setAdminUserFilter('admin', this)">👑 Admins (\${adminCount})</button>
-        <button type="button" class="admin-filter-btn" data-adminfilter="user" onclick="setAdminUserFilter('user', this)">👤 Usuários (\${standardCount})</button>
-        <button type="button" class="admin-filter-btn" data-adminfilter="active" onclick="setAdminUserFilter('active', this)">🟢 Ativos (\${activeCount})</button>
-        <button type="button" class="admin-filter-btn" data-adminfilter="inactive" onclick="setAdminUserFilter('inactive', this)">🚫 Desativados (\${totalUsers - activeCount})</button>
-      </div>
-    </div>
-
-    <!-- Lista de Usuários 4K -->
-    <div class="user-admin-list" id="adminUsersListContainer">
-      \${registeredUsers.map(u => {
+    <p class="cfg-hint" style="margin-bottom:16px; font-size:12.5px;">
+      💡 Clique no ícone <strong>👁 Modo Espelho</strong> para entrar na conta do usuário em modo somente-leitura e inspecionar todos os seus lançamentos e relatórios.
+    </p>
+    <div class="user-admin-list">
+      \${registeredUsers.map(u=>{
         const stats = getUserActivitySummary(u.email);
-        const isAdminUser = u.role === 'Administrador';
-        const isActive = u.active !== false;
-        const initials = u.name.trim().split(/\\s+/).map(n => n[0]).slice(0,2).join('').toUpperCase();
         return \`
-        <div class="user-card-4k \${!isActive ? 'inactive' : ''}" data-user-email="\${u.email.toLowerCase()}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isActive ? 'active' : 'inactive'}">
-          <div class="user-card-left">
-            <div class="user-card-avatar \${isAdminUser ? 'admin-av' : 'user-av'}">
-              \${initials}
-              <span class="user-status-dot \${isActive ? 'online' : 'offline'}" title="\${isActive ? 'Usuário Ativo' : 'Usuário Desativado'}"></span>
-            </div>
-            <div class="user-card-info">
-              <div class="user-card-name-row">
-                <span class="user-card-name">\${u.name}</span>
-                <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
-                \${!isActive ? '<span class="role-badge inactive">Desativado</span>' : ''}
-              </div>
-              <div class="user-card-email">\${u.email}</div>
-              <div class="user-card-stats-strip">
-                \${stats.hasData ? \`
-                  <span class="user-stat-chip"><strong>\${stats.txCount}</strong> transaç\${stats.txCount===1?'ão':'ões'}</span>
-                  <span class="user-stat-chip"><strong>\${stats.accCount}</strong> conta\${stats.accCount===1?'':'s'}</span>
-                  <span class="user-stat-chip"><strong>\${stats.budCount}</strong> orçamento\${stats.budCount===1?'':'s'}</span>
-                  \${stats.lastDate ? \`<span class="user-stat-chip">Último mov: <strong>\${formatDateBR(stats.lastDate)}</strong></span>\` : ''}
-                \` : \`
-                  <span class="user-stat-chip" style="opacity:0.6;">Ainda sem atividade registrada</span>
-                \`}
-              </div>
-            </div>
+        <div class="user-row \${u.active===false?'inactive':''}" style="padding:14px 16px; border-radius:14px;">
+          <div class="user-ic" style="width:42px; height:42px; font-size:15px; border-radius:12px;">\${u.name.slice(0,2).toUpperCase()}</div>
+          <div class="user-info">
+            <div class="n" style="font-size:15px; font-weight:700;">\${u.name}</div>
+            <div class="e" style="font-size:12px; color:var(--text-dim);">\${u.email}</div>
+            <div class="stats" style="font-size:11.5px; margin-top:3px;">\${stats.hasData ? \`\${stats.txCount} transaç\${stats.txCount===1?'ão':'ões'} · \${stats.accCount} conta\${stats.accCount===1?'':'s'} · \${stats.budCount} orçamento\${stats.budCount===1?'':'s'} · \${stats.goalCount} meta\${stats.goalCount===1?'':'s'}\${stats.lastDate ? \` · última mov. em \${formatDateBR(stats.lastDate)}\` : ''}\` : 'Ainda sem atividade registrada'}</div>
           </div>
-
-          <div class="user-card-right">
-            \${u.email.toLowerCase() !== currentUser.email.toLowerCase() ? \`
-              <button class="row-view" data-viewuser="\${u.email}" title="👁 Modo Espelho: Entrar na conta deste usuário" style="display:flex; align-items:center; gap:5px; width:auto; padding:0 10px; font-weight:700; font-size:12px;">
-                <span>👁</span> <span class="hide-mobile">Espelho</span>
-              </button>
-            \` : ''}
-            \${u.email.toLowerCase() !== currentUser.email.toLowerCase() ? \`
-              <button class="row-toggle" data-toggleuser="\${u.email}" title="\${isActive ? 'Desativar acesso do usuário' : 'Reativar acesso do usuário'}">
-                \${isActive ? '🚫' : '✅'}
-              </button>
-            \` : ''}
-            <button class="row-edit" data-edituser="\${u.email}" title="Editar dados e senha do usuário">
-              ✎
-            </button>
+          <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:11px; padding:4px 10px; border-radius:8px;">\${u.role}</span>
+          \${u.active===false ? '<span class="role-badge inactive" style="font-size:11px; padding:4px 10px; border-radius:8px;">Desativado</span>' : ''}
+          <div style="display:flex; gap:6px; align-items:center;">
+            \${u.email!==currentUser.email ? \`<button class="row-view" data-viewuser="\${u.email}" title="Visualizar conta (Modo Espelho)" style="padding:6px 10px; font-size:13px; border-radius:8px;">👁</button>\` : ''}
+            \${u.email!==currentUser.email ? \`<button class="row-toggle" data-toggleuser="\${u.email}" title="\${u.active===false?'Ativar usuário':'Desativar usuário'}" style="padding:6px 10px; font-size:13px; border-radius:8px;">\${u.active===false?'✅':'🚫'}</button>\` : ''}
+            <button class="row-edit" data-edituser="\${u.email}" title="Editar usuário" style="padding:6px 10px; font-size:13px; border-radius:8px;">✎</button>
           </div>
         </div>\`;
       }).join('')}
