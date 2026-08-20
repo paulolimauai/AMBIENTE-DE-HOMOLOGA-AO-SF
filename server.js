@@ -9207,11 +9207,50 @@ function attachPageEvents(){
 
   const periodBtn = document.getElementById('periodBtn');
   if(periodBtn){
+    const yearSel = document.getElementById('periodYearSel');
+    const monthSel = document.getElementById('periodMonthSel');
+    const availableYears = getAvailableYears();
+
+    const buildMonths = (keepSelectedMonth = false)=>{
+      if(!yearSel || !monthSel) return;
+      const currentSelectedMonth = keepSelectedMonth ? parseInt(monthSel.value) : NaN;
+      const y = parseInt(yearSel.value) || new Date().getFullYear();
+      let start=1, end=12;
+      if(y===PERIOD_MIN.year) start = PERIOD_MIN.month;
+      if(y===PERIOD_MAX.year) end = PERIOD_MAX.month;
+      const opts = [];
+      for(let m=start; m<=end; m++) opts.push(m);
+      monthSel.innerHTML = opts.map(m=>\`<option value="\${m}">\${MONTHS[m-1]}</option>\`).join('');
+
+      let targetMonth;
+      if (!isNaN(currentSelectedMonth) && currentSelectedMonth >= 1 && currentSelectedMonth <= 12) {
+        targetMonth = currentSelectedMonth;
+      } else if (currentPeriod.month > 0) {
+        targetMonth = currentPeriod.month;
+      } else {
+        targetMonth = new Date().getMonth() + 1;
+      }
+      monthSel.value = opts.includes(targetMonth) ? targetMonth : opts[0];
+    };
+
+    const syncPeriodSelectors = ()=>{
+      if(yearSel){
+        yearSel.innerHTML = availableYears.map(y=>\`<option value="\${y}">\${y}</option>\`).join('');
+        yearSel.value = currentPeriod.year || new Date().getFullYear();
+      }
+      buildMonths(false);
+    };
+
+    syncPeriodSelectors();
+
     periodBtn.onclick = (e)=>{
       e.stopPropagation();
       const panel = document.getElementById('periodPanel');
       if(panel){
         const willShow = !panel.classList.contains('show');
+        if(willShow){
+          syncPeriodSelectors();
+        }
         panel.classList.toggle('show', willShow);
         periodBtn.classList.toggle('open', willShow);
       }
@@ -9222,44 +9261,33 @@ function attachPageEvents(){
       periodPanelEl.onclick = (e) => e.stopPropagation();
     }
 
-    const yearSel = document.getElementById('periodYearSel');
-    const availableYears = getAvailableYears();
     if(yearSel){
-      yearSel.innerHTML = availableYears.map(y=>\`<option value="\${y}">\${y}</option>\`).join('');
-      yearSel.value = currentPeriod.year || new Date().getFullYear();
+      yearSel.onchange = () => buildMonths(true);
     }
-    const buildMonths = ()=>{
-      const y = parseInt(yearSel.value);
-      let start=1, end=12;
-      if(y===PERIOD_MIN.year) start = PERIOD_MIN.month;
-      if(y===PERIOD_MAX.year) end = PERIOD_MAX.month;
-      const monthSel = document.getElementById('periodMonthSel');
-      const opts = [];
-      for(let m=start; m<=end; m++) opts.push(m);
-      monthSel.innerHTML = opts.map(m=>\`<option value="\${m}">\${MONTHS[m-1]}</option>\`).join('');
-      const prevMonthVal = parseInt(monthSel.value);
-      const targetMonth = (!isNaN(prevMonthVal) && prevMonthVal >= 1 && prevMonthVal <= 12) 
-        ? prevMonthVal 
-        : (currentPeriod.month > 0 ? currentPeriod.month : (new Date().getMonth() + 1));
-      monthSel.value = opts.includes(targetMonth) ? targetMonth : opts[0];
-    };
-    buildMonths();
-    yearSel.onchange = buildMonths;
-    document.getElementById('periodApplyBtn').onclick = ()=>{
-      currentPeriod = { year: parseInt(yearSel.value), month: parseInt(document.getElementById('periodMonthSel').value) };
-      try { localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod)); } catch(e){}
-      document.getElementById('periodPanel').classList.remove('show');
-      periodBtn.classList.remove('open');
-      render();
-    };
-    document.getElementById('periodTodayBtn').onclick = ()=>{
-      const now = new Date();
-      currentPeriod = { year: now.getFullYear(), month: now.getMonth() + 1 };
-      try { localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod)); } catch(e){}
-      document.getElementById('periodPanel').classList.remove('show');
-      periodBtn.classList.remove('open');
-      render();
-    };
+
+    const applyBtn = document.getElementById('periodApplyBtn');
+    if(applyBtn){
+      applyBtn.onclick = ()=>{
+        currentPeriod = { year: parseInt(yearSel.value), month: parseInt(document.getElementById('periodMonthSel').value) };
+        try { localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod)); } catch(e){}
+        document.getElementById('periodPanel').classList.remove('show');
+        periodBtn.classList.remove('open');
+        render();
+      };
+    }
+
+    const todayBtn = document.getElementById('periodTodayBtn');
+    if(todayBtn){
+      todayBtn.onclick = ()=>{
+        const now = new Date();
+        currentPeriod = { year: now.getFullYear(), month: now.getMonth() + 1 };
+        try { localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod)); } catch(e){}
+        document.getElementById('periodPanel').classList.remove('show');
+        periodBtn.classList.remove('open');
+        render();
+      };
+    }
+
     const allDatesBtn = document.getElementById('periodAllDatesBtn');
     if (allDatesBtn) {
       allDatesBtn.onclick = () => {
