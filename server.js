@@ -6302,9 +6302,39 @@ function pageRecorrentes(){
           return \`
           <tr class="trow">
             <td class="tx-desc">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span>\${r.desc}</span>
-                \${isFixed ? \`<span class="pill" style="padding:2px 7px; font-size:10px; background:rgba(59,130,246,0.14); color:var(--blue); border:1px solid rgba(59,130,246,0.25);">\${appliedM}/\${totalM}m</span>\` : ''}
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-weight:700;">\${r.desc}</span>
+                  \${isFixed ? \`<span class="pill" style="padding:2px 7px; font-size:10px; background:rgba(59,130,246,0.14); color:var(--blue); border:1px solid rgba(59,130,246,0.25);">\${appliedM}/\${totalM}m</span>\` : ''}
+                </div>
+                \${isFixed ? \`
+                  <details style="font-size:10.5px; margin-top:2px;">
+                    <summary style="cursor:pointer; color:var(--blue); font-weight:600; user-select:none;">
+                      🗓️ Cronograma mês a mês (1 a \${totalM})
+                    </summary>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(135px, 1fr)); gap:4px; margin-top:6px; padding:6px; background:rgba(0,0,0,0.25); border-radius:8px; border:1px solid var(--card-border); max-height:160px; overflow-y:auto;">
+                      \${(function(){
+                        const items = [];
+                        const sM = r.startMonth || 1;
+                        const sY = r.startYear || new Date().getFullYear();
+                        for(let k=1; k<=totalM; k++){
+                          const mZero = (sM - 1) + (k - 1);
+                          const y = sY + Math.floor(mZero / 12);
+                          const m = (mZero % 12) + 1;
+                          const isApplied = k <= appliedM;
+                          const mName = MONTHS[m-1] ? MONTHS[m-1].substring(0,3) : m;
+                          items.push(
+                            \`<div style="padding:3px 6px; border-radius:5px; background:\${isApplied ? 'rgba(16,185,129,0.12)' : 'rgba(255,255,255,0.03)'}; border:1px solid \${isApplied ? 'rgba(16,185,129,0.25)' : 'rgba(255,255,255,0.06)'}; display:flex; justify-content:space-between; align-items:center;">\` +
+                              \`<span>Mês \${k}: <strong style="color:var(--text);">\${mName}/\${y}</strong></span>\` +
+                              \`<span style="font-weight:700; font-size:9.5px; color:\${isApplied ? 'var(--green)' : 'var(--text-dim)'}">\${isApplied ? '✓ Gerado' : 'Pendente'}</span>\` +
+                            \`</div>\`
+                          );
+                        }
+                        return items.join('');
+                      })()}
+                    </div>
+                  </details>
+                \` : ''}
               </div>
             </td>
             <td><span class="pill cat-pill" style="background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
@@ -8248,9 +8278,43 @@ async function saveRecurring(){
     showToast('Recorrente atualizado!');
     logActivity('Edição', 'Recorrente', 'Editou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses' : '') + ')');
   } else {
-    recurringList.push({id: nextRecId++, desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths:0,appliedPeriods:[]});
-    showToast(totalMonths > 0 ? 'Recorrente cadastrado para ' + totalMonths + ' meses!' : 'Recorrente contínuo cadastrado!');
-    logActivity('Criação', 'Recorrente', 'Cadastrou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses' : '') + ')');
+    const newRec = {id: nextRecId++, desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths:0,appliedPeriods:[]};
+    
+    // Gera mês a mês no extrato até finalizar a duração cadastrada
+    const targetAcc = accounts.find(a => a.name === accSel);
+    const accId = targetAcc ? targetAcc.id : null;
+    const finalAccName = targetAcc ? targetAcc.name : accSel;
+    const genCount = totalMonths > 0 ? totalMonths : 1;
+
+    for (let k = 1; k <= genCount; k++) {
+      const monthZero = (startMonth - 1) + (k - 1);
+      const y = startYear + Math.floor(monthZero / 12);
+      const m = (monthZero % 12) + 1;
+      const date = pdCustom(y, m, day);
+      const itemDesc = totalMonths > 0 ? (desc + ' (' + k + '/' + totalMonths + ')') : desc;
+
+      transactions.unshift({
+        id: nextTxId++,
+        desc: itemDesc,
+        val: val,
+        date: date,
+        cat: cat,
+        acc: finalAccName,
+        accId: accId,
+        status: currentRecType === 'in' ? 'Recebido' : 'Pago',
+        type: currentRecType,
+        installment: totalMonths > 0 ? (k + '/' + totalMonths) : null,
+        recurringId: newRec.id
+      });
+
+      newRec.appliedPeriods.push(y + '-' + String(m).padStart(2, '0'));
+    }
+
+    newRec.appliedMonths = genCount;
+    recurringList.push(newRec);
+
+    showToast(totalMonths > 0 ? ('Recorrente cadastrado! ' + totalMonths + ' meses gerados mês a mês no extrato até finalizar.') : 'Recorrente contínuo cadastrado!');
+    logActivity('Criação', 'Recorrente', 'Cadastrou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses gerados mês a mês' : '') + ')');
   }
   await saveUserData();
   closeRecurringModal();
