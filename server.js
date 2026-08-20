@@ -4241,9 +4241,70 @@ async function toggleUserActive(email){
 
 /* ==================== Período ==================== */
 const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const YEARS = [2024,2025,2026,2027,2028,2029,2030];
-const PERIOD_MIN = {year:2024, month:1};
-const PERIOD_MAX = {year:2030, month:12};
+const PERIOD_MIN = {year:2000, month:1};
+const PERIOD_MAX = {year:2100, month:12};
+
+function parseDateParts(dateVal) {
+  if (!dateVal) return null;
+  const str = String(dateVal).trim().split('T')[0];
+  if (str.includes('-')) {
+    const p = str.split('-');
+    if (p.length === 3) {
+      if (p[0].length === 4) return { year: parseInt(p[0]), month: parseInt(p[1]), day: parseInt(p[2]) };
+      return { year: parseInt(p[2]), month: parseInt(p[1]), day: parseInt(p[0]) };
+    }
+  }
+  if (str.includes('/')) {
+    const p = str.split('/');
+    if (p.length === 3) {
+      if (p[2].length === 4) return { year: parseInt(p[2]), month: parseInt(p[1]), day: parseInt(p[0]) };
+      return { year: parseInt(p[0]), month: parseInt(p[1]), day: parseInt(p[2]) };
+    }
+  }
+  const d = new Date(dateVal);
+  if (!isNaN(d.getTime())) {
+    return { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
+  }
+  return null;
+}
+
+function getAvailableYears() {
+  const yearSet = new Set();
+  const now = new Date().getFullYear();
+  yearSet.add(now);
+  yearSet.add(now - 1);
+  yearSet.add(now + 1);
+  if (typeof currentPeriod !== 'undefined' && currentPeriod && currentPeriod.year) {
+    yearSet.add(currentPeriod.year);
+  }
+  
+  const addDateStr = (dateStr) => {
+    if (!dateStr) return;
+    const p = parseDateParts(dateStr);
+    if (p && p.year && p.year >= 2000 && p.year <= 2100) yearSet.add(p.year);
+  };
+  
+  if (typeof transactions !== 'undefined' && Array.isArray(transactions)) {
+    transactions.forEach(t => addDateStr(t.date));
+  }
+  if (typeof cardTx !== 'undefined' && Array.isArray(cardTx)) {
+    cardTx.forEach(t => addDateStr(t.date));
+  }
+  if (typeof recurrentes !== 'undefined' && Array.isArray(recurrentes)) {
+    recurrentes.forEach(r => addDateStr(r.startDate || r.date));
+  }
+  
+  const minYr = Math.min(...yearSet);
+  const maxYr = Math.max(...yearSet);
+  const startYr = Math.min(2020, minYr);
+  const endYr = Math.max(now + 5, maxYr);
+  
+  for (let y = startYr; y <= endYr; y++) {
+    yearSet.add(y);
+  }
+  
+  return Array.from(yearSet).sort((a, b) => a - b);
+}
 const EYE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
 const EYE_OFF_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.8 21.8 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
 
@@ -4364,14 +4425,9 @@ const inPeriod = t => {
   if (!t || !t.date) return false;
   if (currentPeriod.month === 0) return true;
   
-  const dParts = String(t.date).split('T')[0].split('-');
-  if (dParts.length === 3) {
-    const y = parseInt(dParts[0]);
-    const m = parseInt(dParts[1]);
-    return m === currentPeriod.month && y === currentPeriod.year;
-  }
-  const d = new Date(t.date);
-  return (d.getMonth() + 1) === currentPeriod.month && d.getFullYear() === currentPeriod.year;
+  const parsed = parseDateParts(t.date);
+  if (!parsed) return false;
+  return parsed.month === currentPeriod.month && parsed.year === currentPeriod.year;
 };
 
 /* ==================== Cálculos de Cartões e Limites ==================== */
@@ -5090,13 +5146,6 @@ function pageDashboard(){
     <div class="hero-content">
       <div class="hero-left">
         <div class="hero-badge-strip">
-          <span class="hero-badge live-dot">
-            <span class="pulse-dot"></span>
-            Sistema Online & Sincronizado
-          </span>
-          <span class="hero-badge">
-            🛡️ Sessão Segura SSL 256-bit
-          </span>
           <span class="hero-badge hide-mobile">
             📅 \${formattedToday}
           </span>
@@ -9097,13 +9146,25 @@ function attachPageEvents(){
   if(periodBtn){
     periodBtn.onclick = (e)=>{
       e.stopPropagation();
-      const willShow = !document.getElementById('periodPanel').classList.contains('show');
-      document.getElementById('periodPanel').classList.toggle('show', willShow);
-      periodBtn.classList.toggle('open', willShow);
+      const panel = document.getElementById('periodPanel');
+      if(panel){
+        const willShow = !panel.classList.contains('show');
+        panel.classList.toggle('show', willShow);
+        periodBtn.classList.toggle('open', willShow);
+      }
     };
+
+    const periodPanelEl = document.getElementById('periodPanel');
+    if(periodPanelEl){
+      periodPanelEl.onclick = (e) => e.stopPropagation();
+    }
+
     const yearSel = document.getElementById('periodYearSel');
-    yearSel.innerHTML = YEARS.map(y=>\`<option value="\${y}">\${y}</option>\`).join('');
-    yearSel.value = currentPeriod.year;
+    const availableYears = getAvailableYears();
+    if(yearSel){
+      yearSel.innerHTML = availableYears.map(y=>\`<option value="\${y}">\${y}</option>\`).join('');
+      yearSel.value = currentPeriod.year || new Date().getFullYear();
+    }
     const buildMonths = ()=>{
       const y = parseInt(yearSel.value);
       let start=1, end=12;
@@ -9113,7 +9174,11 @@ function attachPageEvents(){
       const opts = [];
       for(let m=start; m<=end; m++) opts.push(m);
       monthSel.innerHTML = opts.map(m=>\`<option value="\${m}">\${MONTHS[m-1]}</option>\`).join('');
-      monthSel.value = (opts.includes(currentPeriod.month) && y===currentPeriod.year) ? currentPeriod.month : opts[0];
+      const prevMonthVal = parseInt(monthSel.value);
+      const targetMonth = (!isNaN(prevMonthVal) && prevMonthVal >= 1 && prevMonthVal <= 12) 
+        ? prevMonthVal 
+        : (currentPeriod.month > 0 ? currentPeriod.month : (new Date().getMonth() + 1));
+      monthSel.value = opts.includes(targetMonth) ? targetMonth : opts[0];
     };
     buildMonths();
     yearSel.onchange = buildMonths;
