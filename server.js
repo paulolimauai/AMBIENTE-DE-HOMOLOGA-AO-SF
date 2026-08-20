@@ -5155,7 +5155,7 @@ function pageDashboard(){
           \${greeting.icon} \${greeting.text}, <span class="hero-name-gradient">\${firstName}</span>
         </h1>
         <p class="hero-sub">
-          Visão Consolidada & Gestão Patrimonial Inteligente · <span class="hero-period-highlight">\${periodLabel()}</span>
+          Visão Consolidada & Gestão Financeira Pessoal
         </p>
       </div>
 
