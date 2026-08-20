@@ -1859,6 +1859,45 @@ body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
   color:#0f172a !important;
 }
 
+/* Recorrentes & Duração Styles */
+.rec-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+body.light .rec-progress-bar {
+  background: rgba(0,0,0,0.08);
+}
+.rec-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.rec-chip-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.rec-chip-btn:hover {
+  background: rgba(59,130,246,0.15);
+  border-color: var(--blue);
+  color: #fff;
+}
+.rec-chip-btn.active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
 /* ==================== Dashboard Welcome Hero Banner (4K Executive) ==================== */
 .dashboard-welcome-hero {
   position: relative;
@@ -2728,14 +2767,22 @@ body.light .scale-dropdown {
             </span>
             <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
             <button type="button" class="auth-pass-toggle-btn" id="loginPasswordToggle" title="Mostrar/Ocultar Senha">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
-          <div style="margin-top:10px;">
+          <div id="capsLockWarningLogin" style="display:none; margin-top:6px; font-size:11.5px; font-weight:700; color:#fbbf24; align-items:center; gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>Caps Lock está ativado</span>
+          </div>
+          <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
             <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px; font-weight:600; text-transform:none; color:var(--auth-text-dim);">
               <input type="checkbox" id="rememberMe" checked style="accent-color:var(--auth-gold); width:15px; height:15px;">
-              <span>Permanecer conectado com segurança</span>
+              <span>Lembrar meu acesso</span>
             </label>
+            <button type="button" onclick="fillAdminDemo()" style="background:none; border:none; color:#60a5fa; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>Preencher Admin</span>
+            </button>
           </div>
         </div>
 
@@ -3088,26 +3135,111 @@ body.light .scale-dropdown {
 
 <!-- Modal Recorrente -->
 <div class="overlay" id="overlayRecurring">
-  <div class="modal">
+  <div class="modal" style="max-width: 490px;">
     <button class="close-x" id="closeRecModal">✕</button>
     <h2 id="recModalTitle">Novo Lançamento Recorrente</h2>
     <div class="toggle-type">
       <button type="button" id="recTypeInBtn">↓ Receita</button>
       <button type="button" id="recTypeOutBtn">↑ Despesa</button>
     </div>
-    <div class="field"><label>Descrição</label><input id="recDesc" placeholder="Ex: Internet"></div>
+    <div class="field"><label>Descrição</label><input id="recDesc" placeholder="Ex: Internet Claro, Aluguel, Seguro Auto"></div>
     <div class="field-row">
-      <div class="field"><label>Valor (R$)</label><input id="recVal" type="number" step="0.01"></div>
-      <div class="field"><label>Dia do mês</label><input id="recDay" type="number" min="1" max="31"></div>
+      <div class="field"><label>Valor (R$)</label><input id="recVal" type="number" step="0.01" placeholder="0,00"></div>
+      <div class="field"><label>Dia do mês (Vencimento)</label><input id="recDay" type="number" min="1" max="31" value="5"></div>
     </div>
     <div class="field-row">
       <div class="field"><label>Categoria</label><select id="recCategoria"></select></div>
-      <div class="field"><label>Conta</label><select id="recConta"></select></div>
+      <div class="field"><label>Conta / Cartão</label><select id="recConta"></select></div>
     </div>
-    <div class="field"><label>Frequência</label><select id="recFreq"><option>Mensal</option><option>Semanal</option><option>Anual</option></select></div>
+    <div class="field-row">
+      <div class="field"><label>Frequência</label><select id="recFreq"><option>Mensal</option><option>Semanal</option><option>Bimestral</option><option>Trimestral</option><option>Semestral</option><option>Anual</option></select></div>
+      <div class="field">
+        <label>Tipo de Duração</label>
+        <select id="recDurationMode">
+          <option value="custom">📅 Definir Quantidade de Meses</option>
+          <option value="infinite">♾️ Contínuo (Sem limite / Indeterminado)</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="recCustomMonthsBox" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09); border-radius:12px; padding:13px; margin-bottom:14px;">
+      <div class="field" style="margin-bottom:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <label style="margin:0; font-weight:700; color:var(--text);">Para quantos meses cadastrar?</label>
+          <span id="recMonthsCountPreview" style="font-size:11.5px; color:var(--green); font-weight:700;">12 meses</span>
+        </div>
+        <input id="recTotalMonths" type="number" min="1" max="360" value="12" placeholder="Digite quantos meses for necessário (ex: 12)">
+      </div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+        <button type="button" class="rec-chip-btn" data-months="3">3 meses</button>
+        <button type="button" class="rec-chip-btn" data-months="6">6 meses</button>
+        <button type="button" class="rec-chip-btn active" data-months="12">12 meses (1 ano)</button>
+        <button type="button" class="rec-chip-btn" data-months="24">24 meses (2 anos)</button>
+        <button type="button" class="rec-chip-btn" data-months="36">36 meses (3 anos)</button>
+        <button type="button" class="rec-chip-btn" data-months="48">48 meses (4 anos)</button>
+        <button type="button" class="rec-chip-btn" data-months="60">60 meses (5 anos)</button>
+      </div>
+      <div class="field-row" style="margin-bottom:0;">
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:11.5px;">Mês Inicial</label>
+          <select id="recStartMonth" style="font-size:12.5px; padding:8px 10px;"></select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:11.5px;">Ano Inicial</label>
+          <input id="recStartYear" type="number" min="2020" max="2050" style="font-size:12.5px; padding:8px 10px;">
+        </div>
+        <div class="field" id="recAppliedField" style="margin-bottom:0; display:none;">
+          <label style="font-size:11.5px;">Meses já Lançados</label>
+          <input id="recAppliedMonths" type="number" min="0" max="360" value="0" style="font-size:12.5px; padding:8px 10px;">
+        </div>
+      </div>
+    </div>
+
     <div class="modal-actions">
       <button id="recCancelBtn">Cancelar</button>
       <button class="save" id="recSaveBtn">Salvar Recorrente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Aplicar Recorrente -->
+<div class="overlay" id="overlayLaunchRecurring">
+  <div class="modal" style="max-width: 480px;">
+    <button class="close-x" id="closeLaunchRecModal">✕</button>
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+      <span style="font-size:22px; background:rgba(34,197,94,0.15); width:42px; height:42px; display:flex; align-items:center; justify-content:center; border-radius:12px; color:var(--green); flex-shrink:0;">⚡</span>
+      <div>
+        <h2 style="margin:0; font-size:17px; font-weight:800; color:var(--text);">Aplicar Lançamento Recorrente</h2>
+        <p style="margin:2px 0 0 0; font-size:12px; color:var(--text-dim);" id="launchRecSubtitle">Selecione como deseja lançar esta conta no sistema</p>
+      </div>
+    </div>
+
+    <div id="launchRecSummaryCard" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px; margin-bottom:18px;">
+      <!-- Preenchido via JS com detalhes da conta, total de meses, já lançados, restantes, valor total, etc. -->
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn-primary" id="btnLaunchNextMonth" style="padding:12px 16px; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:space-between; width:100%; border-radius:10px;">
+        <span style="display:flex; align-items:center; gap:8px;">▶ <span id="btnLaunchNextMonthLabel">Lançar Próximo Mês</span></span>
+        <span class="pill" id="launchNextMonthPill" style="background:rgba(0,0,0,0.25); color:#fff; font-size:11px;">Mês 1 de 12</span>
+      </button>
+
+      <button class="btn-ghost" id="btnLaunchAllMonths" style="padding:12px 16px; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:space-between; width:100%; border-radius:10px; border:1px solid rgba(59,130,246,0.35); background:rgba(59,130,246,0.08); color:var(--blue);">
+        <span style="display:flex; align-items:center; gap:8px;">⚡ <span id="btnLaunchAllMonthsLabel">Lançar Todos os Meses Restantes em Lote</span></span>
+        <span class="pill" id="launchAllMonthsPill" style="background:rgba(59,130,246,0.2); color:var(--blue); font-size:11px;">Restam 11 meses</span>
+      </button>
+
+      <button class="btn-ghost" id="btnLaunchSelectedPeriod" style="padding:10px 14px; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px; width:100%; border-radius:10px;">
+        📅 Lançar no Período Selecionado (<span id="launchSelectedPeriodLabel">Mês Atual</span>)
+      </button>
+
+      <button class="btn-ghost" id="btnResetRecCount" style="padding:8px 12px; font-size:11.5px; color:var(--text-dim); display:none; align-items:center; justify-content:center; gap:6px; width:100%;">
+        🔄 Reiniciar Contagem de Meses Lançados
+      </button>
+    </div>
+
+    <div class="modal-actions" style="margin-top:14px;">
+      <button id="launchRecCancelBtn" style="width:100%;">Fechar</button>
     </div>
   </div>
 </div>
@@ -3278,6 +3410,29 @@ window.togglePasswordVisibility = function(inputId, btnId) {
     btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   }
 };
+
+// Preenchimento Rápido do Admin Demo
+window.fillAdminDemo = function() {
+  const emailInput = document.getElementById('loginEmail');
+  const passInput = document.getElementById('loginPassword');
+  if (emailInput) emailInput.value = 'admin@nexusfinanceiro.com';
+  if (passInput) passInput.value = '86266049';
+  showExecutiveWelcomeToast('Credenciais Preenchidas', 'Admin demo configurado. Clique em Entrar na Conta.');
+};
+
+// Detecção de Caps Lock no Login
+document.addEventListener('keydown', function(e) {
+  const capsWarn = document.getElementById('capsLockWarningLogin');
+  if (capsWarn && e.getModifierState) {
+    capsWarn.style.display = e.getModifierState('CapsLock') ? 'flex' : 'none';
+  }
+});
+document.addEventListener('keyup', function(e) {
+  const capsWarn = document.getElementById('capsLockWarningLogin');
+  if (capsWarn && e.getModifierState) {
+    capsWarn.style.display = e.getModifierState('CapsLock') ? 'flex' : 'none';
+  }
+});
 
 async function syncUsersWithServer() {
   try {
@@ -3643,15 +3798,15 @@ document.getElementById('registerForm').onsubmit = async (e) => {
     }
   } catch (err) {
     console.warn('[CADASTRO RESILIENTE] Falha na API de registro, salvando localmente:', err.message);
-    const existingIndex = users.findIndex(u => u.email && u.email.toLowerCase() === cleanEmail);
+    const existingIndex = registeredUsers.findIndex(u => u.email && u.email.toLowerCase() === cleanEmail);
     if (existingIndex >= 0) {
-      users[existingIndex].name = name;
-      users[existingIndex].password = password;
-      users[existingIndex].active = true;
+      registeredUsers[existingIndex].name = name;
+      registeredUsers[existingIndex].password = password;
+      registeredUsers[existingIndex].active = true;
     } else {
-      users.push({ id: Date.now(), name, email: cleanEmail, password, role: 'Usuário', active: true });
+      registeredUsers.push({ id: Date.now(), name, email: cleanEmail, password, role: 'Usuário', active: true });
     }
-    saveUsers();
+    saveUsersToServer();
     registerSuccess = true;
     serverMessage = 'Conta salva com sucesso! Faça login para continuar.';
   } finally {
@@ -3669,7 +3824,7 @@ document.getElementById('registerForm').onsubmit = async (e) => {
     document.getElementById('loginPassword').value = password;
 
     showCustomAlert('Sucesso! 🎉', serverMessage, 'success', () => {
-      document.getElementById('goLogin').click();
+      window.switchAuthTab('login');
     });
   }
 };
@@ -6017,6 +6172,13 @@ function pageRecorrentes(){
   const totalDespRec = recurringList.filter(r=>r.type==='out').reduce((s,r)=>s+parseInputValue(r.val),0);
   const totalRecRec = recurringList.filter(r=>r.type==='in').reduce((s,r)=>s+parseInputValue(r.val),0);
   const totalLctos = recurringList.length;
+  const totalComPrazo = recurringList.filter(r => (r.totalMonths && parseInt(r.totalMonths) > 0)).length;
+  const totalContinuos = totalLctos - totalComPrazo;
+  const totalConcluidos = recurringList.filter(r => {
+    const tm = parseInt(r.totalMonths) || 0;
+    const am = parseInt(r.appliedMonths) || 0;
+    return tm > 0 && am >= tm;
+  }).length;
 
   return \`
   <div class="page-head">
@@ -6025,10 +6187,11 @@ function pageRecorrentes(){
         Lançamentos Recorrentes & Assinaturas
       </h1>
       <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
-        Automatize contas fixas, faturas e rendimentos mensais com lançamento em 1 clique
+        Automatize contas fixas, parcelamentos e rendimentos com controle exato de meses e aplicação em 1 clique
       </p>
     </div>
-    <div class="head-actions">
+    <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
+      \${periodPickerHTML()}
       <button class="btn-primary" id="btnNovoRecorrente" style="display:flex; align-items:center; gap:6px; font-weight:700;">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Novo Recorrente
@@ -6050,7 +6213,12 @@ function pageRecorrentes(){
     <div class="kpi" style="padding:14px 16px;">
       <div class="row1" style="margin-bottom:6px;"><span>Total Recorrentes</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple);">🔄</span></div>
       <div class="val" style="font-size:20px; margin-bottom:2px;">\${totalLctos}</div>
-      <div class="sub" style="font-size:11px;">Contratos / Assinaturas</div>
+      <div class="sub" style="font-size:11px;">\${totalComPrazo} com prazo · \${totalContinuos} contínuos</div>
+    </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Status de Conclusão</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue);">📊</span></div>
+      <div class="val" style="font-size:20px; color:var(--blue); margin-bottom:2px;">\${totalConcluidos} / \${totalComPrazo || totalLctos}</div>
+      <div class="sub" style="font-size:11px;">\${totalConcluidos} contratos 100% aplicados</div>
     </div>
   </div>
 
@@ -6064,32 +6232,91 @@ function pageRecorrentes(){
           <th>Conta de Cobrança</th>
           <th>Frequência</th>
           <th>Vencimento</th>
+          <th>Duração Cadastrada</th>
+          <th>Progresso / Meses</th>
           <th>Tipo</th>
           <th>Valor</th>
           <th style="text-align:center;">Ações Rápidas</th>
         </tr>
       </thead>
       <tbody>
-        \${recurringList.map(r=>\`
-        <tr class="trow">
-          <td class="tx-desc">\${r.desc}</td>
-          <td><span class="pill cat-pill" style="background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
-          <td><span class="pill acc-pill">\${getAccountIcon(r.acc)} \${r.acc}</span></td>
-          <td><span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text); font-weight:600;">\${r.freq}</span></td>
-          <td><span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-weight:700;">Dia \${r.day}</span></td>
-          <td><span class="type-pill \${r.type}">\${r.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
-          <td class="\${r.type==='in'?'val-in':'val-out'}">\${r.type==='in'?'+':'-'}\${fmt(r.val)}</td>
-          <td>
-            <div class="row-actions" style="justify-content:center;">
-              <button data-lancar="\${r.id}" title="Lançar agora na conta" class="btn-primary" style="padding:4px 10px; font-size:11.5px; border-radius:8px; height:32px; width:auto;">▶ Lançar</button>
-              <button data-editrec="\${r.id}" title="Editar" class="btn-action-edit">✎</button>
-              <button data-delrec="\${r.id}" title="Excluir" class="btn-action-del">🗑</button>
-            </div>
-          </td>
-        </tr>\`).join('')}
+        \${recurringList.map(r=>{
+          const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
+          const appliedM = r.appliedMonths ? parseInt(r.appliedMonths) : 0;
+          const isFixed = totalM > 0;
+          const isCompleted = isFixed && appliedM >= totalM;
+          const pct = isFixed ? Math.min(100, Math.round((appliedM / totalM) * 100)) : 0;
+          const remainingM = isFixed ? Math.max(0, totalM - appliedM) : 0;
+          const nextInstallmentNum = appliedM + 1;
+
+          return \`
+          <tr class="trow">
+            <td class="tx-desc">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span>\${r.desc}</span>
+                \${isFixed ? \`<span class="pill" style="padding:2px 7px; font-size:10px; background:rgba(59,130,246,0.14); color:var(--blue); border:1px solid rgba(59,130,246,0.25);">\${appliedM}/\${totalM}m</span>\` : ''}
+              </div>
+            </td>
+            <td><span class="pill cat-pill" style="background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
+            <td><span class="pill acc-pill">\${getAccountIcon(r.acc)} \${r.acc}</span></td>
+            <td><span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text); font-weight:600;">\${r.freq || 'Mensal'}</span></td>
+            <td><span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-weight:700;">Dia \${r.day}</span></td>
+            <td>
+              \${isFixed ? \`
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                  <span class="pill" style="background:rgba(59,130,246,0.12); color:var(--blue); font-weight:700; font-size:11px;">
+                    📅 \${totalM} \${totalM === 1 ? 'mês' : 'meses'}
+                  </span>
+                  \${r.startMonth && r.startYear ? \`<span style="font-size:10px; color:var(--text-dim);">Início: \${MONTHS[r.startMonth-1] ? MONTHS[r.startMonth-1].substring(0,3) : r.startMonth}/\${r.startYear}</span>\` : ''}
+                </div>
+              \` : \`
+                <span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text-dim); font-weight:600; font-size:11px;">
+                  ♾️ Contínuo
+                </span>
+              \`}
+            </td>
+            <td>
+              \${isFixed ? \`
+                <div style="min-width:130px; display:flex; flex-direction:column; gap:4px;">
+                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700;">
+                    <span style="color:\${isCompleted ? 'var(--green)' : 'var(--text)'};">\${isCompleted ? '✓ Concluído' : \`\${appliedM}/\${totalM} aplicados\`}</span>
+                    <span style="color:var(--text-dim);">\${pct}%</span>
+                  </div>
+                  <div class="rec-progress-bar">
+                    <div class="rec-progress-fill" style="width:\${pct}%; background:\${isCompleted ? 'var(--green)' : (pct > 50 ? 'var(--blue)' : 'var(--orange)')};"></div>
+                  </div>
+                  <div style="font-size:10px; color:var(--text-dim);">
+                    \${isCompleted ? \`Total de \${totalM} meses gerados\` : \`\${remainingM} \${remainingM === 1 ? 'mês restante' : 'meses restantes'}\`}
+                  </div>
+                </div>
+              \` : \`
+                <div style="display:flex; align-items:center; gap:5px;">
+                  <span class="pill" style="background:rgba(16,185,129,0.12); color:var(--green); font-size:11px;">
+                    ✓ \${appliedM} \${appliedM === 1 ? 'lançamento' : 'lançamentos'}
+                  </span>
+                </div>
+              \`}
+            </td>
+            <td><span class="type-pill \${r.type}">\${r.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
+            <td class="\${r.type==='in'?'val-in':'val-out'}">\${r.type==='in'?'+':'-'}\${fmt(r.val)}</td>
+            <td>
+              <div class="row-actions" style="justify-content:center; gap:6px;">
+                \${isFixed && isCompleted ? \`
+                  <button data-lancar="\${r.id}" title="Conta concluída (\${totalM}/\${totalM} meses). Clique para ver opções ou renovar." class="btn-primary" style="padding:4px 10px; font-size:11px; border-radius:8px; height:32px; width:auto; background:rgba(16,185,129,0.18); color:var(--green); border:1px solid rgba(16,185,129,0.4); font-weight:700;">✓ Concluído</button>
+                \` : isFixed ? \`
+                  <button data-lancar="\${r.id}" title="Aplicar / Lançar parcela no sistema" class="btn-primary" style="padding:4px 10px; font-size:11px; border-radius:8px; height:32px; width:auto; font-weight:700; white-space:nowrap;">▶ Lançar (\${nextInstallmentNum}/\${totalM})</button>
+                \` : \`
+                  <button data-lancar="\${r.id}" title="Lançar agora na conta" class="btn-primary" style="padding:4px 10px; font-size:11.5px; border-radius:8px; height:32px; width:auto;">▶ Lançar</button>
+                \`}
+                <button data-editrec="\${r.id}" title="Editar Recorrente" class="btn-action-edit">✎</button>
+                <button data-delrec="\${r.id}" title="Excluir Recorrente" class="btn-action-del">🗑</button>
+              </div>
+            </td>
+          </tr>\`;
+        }).join('')}
       </tbody>
     </table>\` : \`
-    <div class="placeholder"><div class="big">🔄</div><h3>Nenhum lançamento recorrente</h3><p>Cadastre despesas e receitas fixas (ex: Aluguel, Internet, Netflix, Salário) para lançar rapidamente a cada mês.</p></div>
+    <div class="placeholder"><div class="big">🔄</div><h3>Nenhum lançamento recorrente</h3><p>Cadastre despesas e receitas fixas com prazo determinado ou contínuo (ex: Aluguel 12 meses, Seguro 10 meses, Internet, Salário) para lançar rapidamente a cada mês.</p></div>
     \`}
   </div>\`;
 }
@@ -7801,6 +8028,8 @@ async function addContribution(id){
   render();
 }
 
+let launchingRecId = null;
+
 function populateRecAccountOptions(selectedAcc) {
   const aSel = document.getElementById('recConta');
   if(!aSel) return;
@@ -7830,9 +8059,44 @@ function populateRecAccountOptions(selectedAcc) {
   }).join('');
 }
 
+function populateRecStartMonthOptions() {
+  const mSel = document.getElementById('recStartMonth');
+  if(!mSel) return;
+  mSel.innerHTML = MONTHS.map((m, idx) => '<option value="' + (idx+1) + '">' + m + '</option>').join('');
+}
+
+function toggleRecDurationMode() {
+  const mode = document.getElementById('recDurationMode') ? document.getElementById('recDurationMode').value : 'custom';
+  const box = document.getElementById('recCustomMonthsBox');
+  if(box) box.style.display = mode === 'custom' ? 'block' : 'none';
+}
+
+function setRecQuickMonths(num) {
+  const totalInput = document.getElementById('recTotalMonths');
+  if(totalInput) {
+    totalInput.value = num;
+    updateRecMonthsPreview();
+  }
+}
+
+function updateRecMonthsPreview() {
+  const totalInput = document.getElementById('recTotalMonths');
+  const preview = document.getElementById('recMonthsCountPreview');
+  if(!totalInput) return;
+  const num = parseInt(totalInput.value) || 0;
+  if(preview) {
+    preview.textContent = num > 0 ? (num + (num === 1 ? ' mês selecionado' : ' meses selecionados')) : 'Indeterminado';
+  }
+  document.querySelectorAll('.rec-chip-btn').forEach(btn => {
+    const m = parseInt(btn.getAttribute('data-months'));
+    btn.classList.toggle('active', m === num);
+  });
+}
+
 function openRecurringModal(id){
   if(categories.length===0){ showToast('Cadastre uma categoria antes de criar um recorrente'); return; }
   editingRecId = id || null;
+  populateRecStartMonthOptions();
   document.getElementById('overlayRecurring').classList.add('show');
   
   let selectedAcc = accounts[0] ? accounts[0].name : 'Boleto / Outros';
@@ -7843,19 +8107,35 @@ function openRecurringModal(id){
     document.getElementById('recDesc').value = r.desc;
     document.getElementById('recVal').value = r.val;
     document.getElementById('recDay').value = r.day;
-    document.getElementById('recFreq').value = r.freq;
+    document.getElementById('recFreq').value = r.freq || 'Mensal';
     if(r.acc) selectedAcc = r.acc;
     setRecType(r.type);
     const cSel = document.getElementById('recCategoria');
     if(cSel) cSel.value = r.cat;
+    
+    const isFixed = (r.totalMonths && parseInt(r.totalMonths) > 0);
+    document.getElementById('recDurationMode').value = isFixed ? 'custom' : 'infinite';
+    document.getElementById('recTotalMonths').value = isFixed ? r.totalMonths : 12;
+    document.getElementById('recStartMonth').value = r.startMonth || (currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month);
+    document.getElementById('recStartYear').value = r.startYear || currentPeriod.year || (new Date().getFullYear());
+    document.getElementById('recAppliedMonths').value = r.appliedMonths || 0;
+    document.getElementById('recAppliedField').style.display = 'block';
   } else {
     document.getElementById('recModalTitle').textContent = 'Novo Lançamento Recorrente';
     document.getElementById('recDesc').value = '';
     document.getElementById('recVal').value = '';
     document.getElementById('recDay').value = '5';
     document.getElementById('recFreq').value = 'Mensal';
+    document.getElementById('recDurationMode').value = 'custom';
+    document.getElementById('recTotalMonths').value = '12';
+    document.getElementById('recStartMonth').value = (currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month);
+    document.getElementById('recStartYear').value = currentPeriod.year || (new Date().getFullYear());
+    document.getElementById('recAppliedMonths').value = '0';
+    document.getElementById('recAppliedField').style.display = 'none';
     setRecType('out');
   }
+  toggleRecDurationMode();
+  updateRecMonthsPreview();
   populateRecAccountOptions(selectedAcc);
 }
 
@@ -7890,20 +8170,43 @@ async function saveRecurring(){
   const cat = document.getElementById('recCategoria').value;
   const accSel = document.getElementById('recConta') ? document.getElementById('recConta').value : '';
   const freq = document.getElementById('recFreq').value;
-  if(!desc || isNaN(val) || val<=0 || isNaN(day) || day<1 || day>31){ showToast('Preencha os campos corretamente'); return; }
-  if(editingRecId){
-    Object.assign(recurringList.find(r=>r.id===editingRecId), {desc,val,day,cat,acc:accSel,freq,type:currentRecType});
-    showToast('Recorrente atualizado!');
-    logActivity('Edição', 'Recorrente', 'Editou lançamento recorrente "' + desc + '" (' + fmt(val) + ')');
+  const durMode = document.getElementById('recDurationMode').value;
+  
+  let totalMonths = 0;
+  let startMonth = currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month;
+  let startYear = currentPeriod.year || (new Date().getFullYear());
+  let appliedMonths = 0;
+
+  if (durMode === 'custom') {
+    totalMonths = parseInt(document.getElementById('recTotalMonths').value) || 12;
+    startMonth = parseInt(document.getElementById('recStartMonth').value) || startMonth;
+    startYear = parseInt(document.getElementById('recStartYear').value) || startYear;
+    if (editingRecId) {
+      appliedMonths = parseInt(document.getElementById('recAppliedMonths').value) || 0;
+    }
   } else {
-    recurringList.push({id: nextRecId++, desc,val,day,cat,acc:accSel,freq,type:currentRecType});
-    showToast('Recorrente criado!');
-    logActivity('Criação', 'Recorrente', 'Cadastrou lançamento recorrente "' + desc + '" (' + fmt(val) + ')');
+    if (editingRecId) {
+      const existing = recurringList.find(r=>r.id===editingRecId);
+      if (existing) appliedMonths = existing.appliedMonths || 0;
+    }
+  }
+
+  if(!desc || isNaN(val) || val<=0 || isNaN(day) || day<1 || day>31){ showToast('Preencha os campos corretamente'); return; }
+  
+  if(editingRecId){
+    Object.assign(recurringList.find(r=>r.id===editingRecId), {desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths});
+    showToast('Recorrente atualizado!');
+    logActivity('Edição', 'Recorrente', 'Editou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses' : '') + ')');
+  } else {
+    recurringList.push({id: nextRecId++, desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths:0,appliedPeriods:[]});
+    showToast(totalMonths > 0 ? 'Recorrente cadastrado para ' + totalMonths + ' meses!' : 'Recorrente contínuo cadastrado!');
+    logActivity('Criação', 'Recorrente', 'Cadastrou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses' : '') + ')');
   }
   await saveUserData();
   closeRecurringModal();
   render();
 }
+
 async function deleteRecurring(id){
   if(!confirm('Excluir este lançamento recorrente?')) return;
   recurringList = recurringList.filter(r=>r.id!==id);
@@ -7911,16 +8214,271 @@ async function deleteRecurring(id){
   showToast('Recorrente removido');
   render();
 }
-async function lancarRecorrente(id){
+
+function openLaunchRecurringModal(id){
   const r = recurringList.find(x=>x.id===id);
-  const date = pdCustom(currentPeriod.year, currentPeriod.month, r.day);
+  if(!r) return;
+  launchingRecId = id;
+
+  const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
+  const appliedM = r.appliedMonths ? parseInt(r.appliedMonths) : 0;
+  const remainingM = Math.max(0, totalM - appliedM);
+  const nextInstallmentNum = appliedM + 1;
+  const isCompleted = totalM > 0 && appliedM >= totalM;
+  const pct = totalM > 0 ? Math.min(100, Math.round((appliedM / totalM) * 100)) : 0;
+
+  const startM = r.startMonth || (currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month);
+  const startY = r.startYear || currentPeriod.year || (new Date().getFullYear());
+  const monthZero = (startM - 1) + (nextInstallmentNum - 1);
+  const nextTargetYear = startY + Math.floor(monthZero / 12);
+  const nextTargetMonth = (monthZero % 12) + 1;
+  const nextMonthName = (MONTHS[nextTargetMonth - 1] || ('Mês ' + nextTargetMonth)) + ' / ' + nextTargetYear;
+
+  const totalValContratado = totalM > 0 ? (r.val * totalM) : r.val;
+
+  const summaryEl = document.getElementById('launchRecSummaryCard');
+  if (summaryEl) {
+    summaryEl.innerHTML = 
+      '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">' +
+        '<div>' +
+          '<h3 style="margin:0 0 4px 0; font-size:15px; font-weight:800; color:var(--text);">' + r.desc + '</h3>' +
+          '<div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">' +
+            '<span class="pill cat-pill" style="background:' + catColor(r.cat) + '18; color:' + catColor(r.cat) + '; border:1px solid ' + catColor(r.cat) + '35; font-size:10.5px; padding:2px 8px;">' + catIcon(r.cat) + ' ' + r.cat + '</span>' +
+            '<span class="pill acc-pill" style="font-size:10.5px; padding:2px 8px;">' + getAccountIcon(r.acc) + ' ' + r.acc + '</span>' +
+            '<span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-size:10.5px; padding:2px 8px; font-weight:700;">Dia ' + r.day + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div style="text-align:right;">' +
+          '<div style="font-size:16px; font-weight:800; color:' + (r.type==='in'?'var(--green)':'var(--red)') + ';">' + (r.type==='in'?'+':'-') + fmt(r.val) + '/mês</div>' +
+          (totalM > 0 ? ('<div style="font-size:11px; color:var(--text-dim);">Total: ' + fmt(totalValContratado) + '</div>') : '') +
+        '</div>' +
+      '</div>' +
+      '<div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:5px;">' +
+          '<span style="color:var(--text); font-weight:700;">Duração Cadastrada: <strong style="color:var(--blue);">' + totalM + ' meses</strong></span>' +
+          '<span style="font-weight:800; color:' + (isCompleted ? 'var(--green)' : 'var(--text-dim)') + ';">' + appliedM + '/' + totalM + ' lançados (' + pct + '%)</span>' +
+        '</div>' +
+        '<div class="rec-progress-bar" style="height:7px;">' +
+          '<div class="rec-progress-fill" style="width:' + pct + '%; background:' + (isCompleted ? 'var(--green)' : (pct > 50 ? 'var(--blue)' : 'var(--orange)')) + ';"></div>' +
+        '</div>' +
+        '<div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-dim); margin-top:5px;">' +
+          '<span>Início: ' + (MONTHS[startM-1] || startM) + '/' + startY + '</span>' +
+          '<span>' + (isCompleted ? '✓ 100% aplicado' : ('Próximo: ' + nextMonthName)) + '</span>' +
+        '</div>' +
+      '</div>';
+  }
+
+  const btnNext = document.getElementById('btnLaunchNextMonth');
+  const btnNextLabel = document.getElementById('btnLaunchNextMonthLabel');
+  const btnNextPill = document.getElementById('launchNextMonthPill');
+  if (btnNext) {
+    if (isCompleted) {
+      if (btnNextLabel) btnNextLabel.textContent = 'Lançar Mês Extra (' + nextInstallmentNum + '/' + totalM + ')';
+      if (btnNextPill) btnNextPill.textContent = 'Mês ' + nextInstallmentNum + ' (Adicional)';
+    } else {
+      if (btnNextLabel) btnNextLabel.textContent = 'Lançar Próximo Mês (' + nextMonthName + ')';
+      if (btnNextPill) btnNextPill.textContent = 'Mês ' + nextInstallmentNum + ' de ' + totalM;
+    }
+    btnNext.onclick = () => executeLaunchRecurring(id, 'single');
+  }
+
+  const btnAll = document.getElementById('btnLaunchAllMonths');
+  const btnAllLabel = document.getElementById('btnLaunchAllMonthsLabel');
+  const btnAllPill = document.getElementById('launchAllMonthsPill');
+  if (btnAll) {
+    if (isCompleted || remainingM <= 1) {
+      btnAll.style.display = 'none';
+    } else {
+      btnAll.style.display = 'flex';
+      if (btnAllLabel) btnAllLabel.textContent = 'Lançar Todos os ' + remainingM + ' Meses Restantes em Lote';
+      if (btnAllPill) btnAllPill.textContent = 'Gera ' + remainingM + ' meses';
+      btnAll.onclick = () => executeLaunchRecurring(id, 'all');
+    }
+  }
+
+  const btnSelected = document.getElementById('btnLaunchSelectedPeriod');
+  const selectedLabel = document.getElementById('launchSelectedPeriodLabel');
+  if (btnSelected) {
+    if (selectedLabel) selectedLabel.textContent = periodLabel();
+    btnSelected.onclick = () => executeLaunchRecurring(id, 'current_period');
+  }
+
+  const btnReset = document.getElementById('btnResetRecCount');
+  if (btnReset) {
+    btnReset.style.display = appliedM > 0 ? 'flex' : 'none';
+    btnReset.onclick = () => resetRecurringProgress(id);
+  }
+
+  document.getElementById('overlayLaunchRecurring').classList.add('show');
+}
+
+function closeLaunchRecurringModal(){
+  document.getElementById('overlayLaunchRecurring').classList.remove('show');
+  launchingRecId = null;
+}
+
+async function resetRecurringProgress(id){
+  const r = recurringList.find(x=>x.id===id);
+  if(!r) return;
+  if(!confirm('Deseja reiniciar a contagem de meses lançados de "' + r.desc + '" para 0? (As transações já geradas permanecerão intactas no extrato)')) return;
+  r.appliedMonths = 0;
+  r.appliedPeriods = [];
+  await saveUserData();
+  showToast('Contagem de meses reiniciada com sucesso!');
+  closeLaunchRecurringModal();
+  render();
+}
+
+async function executeLaunchRecurring(id, mode){
+  const r = recurringList.find(x=>x.id===id);
+  if(!r) return;
+
+  const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
   const targetAcc = accounts.find(a => a.name === r.acc);
   const accId = targetAcc ? targetAcc.id : null;
   const finalAccName = targetAcc ? targetAcc.name : r.acc;
-  transactions.unshift({id: nextTxId++, desc:r.desc, val:r.val, date, cat:r.cat, acc:finalAccName, accId, status: r.type==='in'?'Recebido':'Pago', type:r.type});
-  await saveUserData();
-  showToast(\`Lançamento gerado em \${periodLabel()}!\`);
-  render();
+
+  if (!Array.isArray(r.appliedPeriods)) r.appliedPeriods = [];
+
+  const startM = r.startMonth || (currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month);
+  const startY = r.startYear || currentPeriod.year || (new Date().getFullYear());
+
+  if (mode === 'single') {
+    const k = (parseInt(r.appliedMonths) || 0) + 1;
+    const monthZero = (startM - 1) + (k - 1);
+    const y = startY + Math.floor(monthZero / 12);
+    const m = (monthZero % 12) + 1;
+    const date = pdCustom(y, m, r.day);
+    const desc = totalM > 0 ? (r.desc + ' (' + k + '/' + totalM + ')') : r.desc;
+
+    transactions.unshift({
+      id: nextTxId++,
+      desc,
+      val: r.val,
+      date,
+      cat: r.cat,
+      acc: finalAccName,
+      accId,
+      status: r.type==='in'?'Recebido':'Pago',
+      type: r.type,
+      installment: totalM > 0 ? (k + '/' + totalM) : null,
+      recurringId: r.id
+    });
+
+    r.appliedMonths = k;
+    r.appliedPeriods.push(y + '-' + String(m).padStart(2,'0'));
+    await saveUserData();
+    closeLaunchRecurringModal();
+    showToast(totalM > 0 ? ('Lançado mês ' + k + ' de ' + totalM + ' ("' + r.desc + '") com sucesso em ' + (MONTHS[m-1] || m) + '/' + y + '!') : ('Lançamento gerado em ' + (MONTHS[m-1] || m) + '/' + y + '!'));
+    logActivity('Lançamento', 'Recorrente', 'Aplicou mês ' + k + '/' + (totalM || '∞') + ' do recorrente "' + r.desc + '" (' + fmt(r.val) + ')');
+    render();
+  }
+  else if (mode === 'all') {
+    const startK = (parseInt(r.appliedMonths) || 0) + 1;
+    const endK = totalM;
+    if (startK > endK) {
+      showToast('Todos os meses já foram lançados!');
+      return;
+    }
+
+    let addedCount = 0;
+    for (let k = startK; k <= endK; k++) {
+      const monthZero = (startM - 1) + (k - 1);
+      const y = startY + Math.floor(monthZero / 12);
+      const m = (monthZero % 12) + 1;
+      const date = pdCustom(y, m, r.day);
+      const desc = r.desc + ' (' + k + '/' + totalM + ')';
+
+      transactions.unshift({
+        id: nextTxId++,
+        desc,
+        val: r.val,
+        date,
+        cat: r.cat,
+        acc: finalAccName,
+        accId,
+        status: r.type==='in'?'Recebido':'Pago',
+        type: r.type,
+        installment: k + '/' + totalM,
+        recurringId: r.id
+      });
+      r.appliedPeriods.push(y + '-' + String(m).padStart(2,'0'));
+      addedCount++;
+    }
+
+    r.appliedMonths = endK;
+    await saveUserData();
+    closeLaunchRecurringModal();
+    showToast('Todos os ' + addedCount + ' meses restantes de "' + r.desc + '" foram gerados com sucesso!');
+    logActivity('Lançamento', 'Recorrente', 'Gerou em lote ' + addedCount + ' meses do recorrente "' + r.desc + '" (total de ' + totalM + ' meses)');
+    render();
+  }
+  else if (mode === 'current_period') {
+    const k = (parseInt(r.appliedMonths) || 0) + 1;
+    const y = currentPeriod.year;
+    const m = currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month;
+    const date = pdCustom(y, m, r.day);
+    const desc = totalM > 0 ? (r.desc + ' (' + k + '/' + totalM + ')') : r.desc;
+
+    transactions.unshift({
+      id: nextTxId++,
+      desc,
+      val: r.val,
+      date,
+      cat: r.cat,
+      acc: finalAccName,
+      accId,
+      status: r.type==='in'?'Recebido':'Pago',
+      type: r.type,
+      installment: totalM > 0 ? (k + '/' + totalM) : null,
+      recurringId: r.id
+    });
+
+    r.appliedMonths = k;
+    r.appliedPeriods.push(y + '-' + String(m).padStart(2,'0'));
+    await saveUserData();
+    closeLaunchRecurringModal();
+    showToast('Lançamento gerado em ' + periodLabel() + '!');
+    logActivity('Lançamento', 'Recorrente', 'Lançou recorrente "' + r.desc + '" em ' + periodLabel());
+    render();
+  }
+}
+
+async function lancarRecorrente(id){
+  const r = recurringList.find(x=>x.id===id);
+  if (!r) return;
+
+  const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
+  if (totalM > 0) {
+    openLaunchRecurringModal(id);
+  } else {
+    // Contínuo
+    const y = currentPeriod.year;
+    const m = currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month;
+    const date = pdCustom(y, m, r.day);
+    const targetAcc = accounts.find(a => a.name === r.acc);
+    const accId = targetAcc ? targetAcc.id : null;
+    const finalAccName = targetAcc ? targetAcc.name : r.acc;
+
+    transactions.unshift({
+      id: nextTxId++,
+      desc: r.desc,
+      val: r.val,
+      date,
+      cat: r.cat,
+      acc: finalAccName,
+      accId,
+      status: r.type==='in'?'Recebido':'Pago',
+      type: r.type,
+      recurringId: r.id
+    });
+
+    r.appliedMonths = (parseInt(r.appliedMonths) || 0) + 1;
+    await saveUserData();
+    showToast('Lançamento gerado em ' + periodLabel() + '!');
+    logActivity('Lançamento', 'Recorrente', 'Lançou recorrente contínuo "' + r.desc + '" em ' + periodLabel());
+    render();
+  }
 }
 
 function openAlertModal(id){
@@ -8779,6 +9337,35 @@ document.getElementById('recSaveBtn').onclick = saveRecurring;
 document.getElementById('overlayRecurring').addEventListener('click', e=>{ if(e.target.id==='overlayRecurring') closeRecurringModal(); });
 document.getElementById('recTypeInBtn').onclick = ()=>setRecType('in');
 document.getElementById('recTypeOutBtn').onclick = ()=>setRecType('out');
+
+const recDurModeEl = document.getElementById('recDurationMode');
+if(recDurModeEl) recDurModeEl.onchange = toggleRecDurationMode;
+
+const recTotalMonthsEl = document.getElementById('recTotalMonths');
+if(recTotalMonthsEl) {
+  recTotalMonthsEl.oninput = updateRecMonthsPreview;
+  recTotalMonthsEl.onchange = updateRecMonthsPreview;
+}
+
+document.querySelectorAll('.rec-chip-btn').forEach(btn => {
+  btn.onclick = () => {
+    const m = parseInt(btn.getAttribute('data-months'));
+    if (!isNaN(m)) setRecQuickMonths(m);
+  };
+});
+
+const closeLaunchRecBtn = document.getElementById('closeLaunchRecModal');
+if(closeLaunchRecBtn) closeLaunchRecBtn.onclick = closeLaunchRecurringModal;
+
+const launchRecCancelBtn = document.getElementById('launchRecCancelBtn');
+if(launchRecCancelBtn) launchRecCancelBtn.onclick = closeLaunchRecurringModal;
+
+const overlayLaunchRecEl = document.getElementById('overlayLaunchRecurring');
+if(overlayLaunchRecEl) {
+  overlayLaunchRecEl.addEventListener('click', e => {
+    if(e.target.id === 'overlayLaunchRecurring') closeLaunchRecurringModal();
+  });
+}
 
 function toggleTheme(){
   const isCurrentlyLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
