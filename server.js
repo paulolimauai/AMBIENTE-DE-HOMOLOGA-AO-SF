@@ -1399,7 +1399,7 @@ body.light .executive-4k-message {
 .page-head h1{font-size:23px; font-weight:700;}
 .page-head p{color:var(--text-dim); font-size:13px; margin-top:3px;}
 .head-actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
-.period-wrap{position:relative;}
+.period-wrap{position:relative; z-index:100;}
 .period{
   display:flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--card-border);
   padding:6px 14px 6px 6px; border-radius:12px; font-size:13px; cursor:pointer; white-space:nowrap;
@@ -1419,7 +1419,7 @@ body.light .executive-4k-message {
 .period.open .period-chevron{transform:rotate(180deg); color:var(--green);}
 .period-panel{
   display:none; position:absolute; top:calc(100% + 10px); right:0; background:var(--card); border:1px solid var(--card-border);
-  border-radius:14px; padding:16px; z-index:60; width:236px; box-shadow:var(--shadow); transform-origin:top right;
+  border-radius:14px; padding:16px; z-index:99999 !important; width:236px; box-shadow:0 16px 40px rgba(0,0,0,0.75); transform-origin:top right;
 }
 .period-panel.show{display:block; animation:periodPanelIn .22s cubic-bezier(.16,1,.3,1);}
 @keyframes periodPanelIn{
@@ -1901,7 +1901,8 @@ body.light .rec-progress-bar {
 /* ==================== Dashboard Welcome Hero Banner (4K Executive) ==================== */
 .dashboard-welcome-hero {
   position: relative;
-  overflow: hidden;
+  overflow: visible !important;
+  z-index: 50;
   background: linear-gradient(135deg, rgba(17, 24, 39, 0.94) 0%, rgba(10, 15, 29, 0.98) 100%);
   border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 22px;
