@@ -7593,11 +7593,7 @@ function openModal(id){
     document.getElementById('fValor').value = '';
     
     const now = new Date();
-    let defaultDate = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
-    if (currentPeriod.year !== now.getFullYear() || currentPeriod.month !== (now.getMonth() + 1)) {
-      const targetDay = Math.min(now.getDate(), new Date(currentPeriod.year, currentPeriod.month, 0).getDate());
-      defaultDate = pd(targetDay);
-    }
+    const defaultDate = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
     document.getElementById('fData').value = defaultDate;
     document.getElementById('fStatus').value = 'Pago';
     setType('out');
@@ -8201,6 +8197,7 @@ function openRecurringModal(id){
     document.getElementById('recAppliedMonths').value = r.appliedMonths || 0;
     document.getElementById('recAppliedField').style.display = 'block';
   } else {
+    const now = new Date();
     document.getElementById('recModalTitle').textContent = 'Novo Lançamento Recorrente';
     document.getElementById('recDesc').value = '';
     document.getElementById('recVal').value = '';
@@ -8208,8 +8205,8 @@ function openRecurringModal(id){
     document.getElementById('recFreq').value = 'Mensal';
     document.getElementById('recDurationMode').value = 'custom';
     document.getElementById('recTotalMonths').value = '12';
-    document.getElementById('recStartMonth').value = (currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month);
-    document.getElementById('recStartYear').value = currentPeriod.year || (new Date().getFullYear());
+    document.getElementById('recStartMonth').value = now.getMonth() + 1;
+    document.getElementById('recStartYear').value = now.getFullYear();
     document.getElementById('recAppliedMonths').value = '0';
     document.getElementById('recAppliedField').style.display = 'none';
     setRecType('out');
@@ -8252,9 +8249,10 @@ async function saveRecurring(){
   const freq = document.getElementById('recFreq').value;
   const durMode = document.getElementById('recDurationMode').value;
   
+  const nowRec = new Date();
   let totalMonths = 0;
-  let startMonth = currentPeriod.month === 0 ? (new Date().getMonth() + 1) : currentPeriod.month;
-  let startYear = currentPeriod.year || (new Date().getFullYear());
+  let startMonth = nowRec.getMonth() + 1;
+  let startYear = nowRec.getFullYear();
   let appliedMonths = 0;
 
   if (durMode === 'custom') {
