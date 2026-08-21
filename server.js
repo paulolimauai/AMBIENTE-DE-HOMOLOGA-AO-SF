@@ -3267,14 +3267,14 @@ body.light .scale-dropdown {
   <div class="modal">
     <button class="close-x" id="closeUserAdminModal">✕</button>
     <h2>Editar Usuário</h2>
-    <div class="field"><label>Nome</label><input id="userAdminName"></div>
-    <div class="field"><label>E-mail</label><input id="userAdminEmail" disabled style="opacity:0.6;"></div>
-    <div class="field"><label>Perfil de acesso</label>
+    <div class="field"><label>Nome Completo</label><input id="userAdminName" placeholder="Ex: Paulo Lima"></div>
+    <div class="field"><label>E-mail de Acesso</label><input id="userAdminEmail" disabled style="opacity:0.6;" placeholder="email@exemplo.com"></div>
+    <div class="field"><label>Perfil de Acesso</label>
       <select id="userAdminRole"><option value="Usuário">Usuário</option><option value="Administrador">Administrador</option></select>
     </div>
     <div class="field">
-      <label>Nova senha</label>
-      <p class="cfg-hint" style="margin:-2px 0 8px;">Deixe em branco para manter a senha atual</p>
+      <label>Senha de Acesso</label>
+      <p class="cfg-hint" id="userAdminPasswordHint" style="margin:-2px 0 8px;">Deixe em branco para manter a senha atual</p>
       <div class="pass-field">
         <input id="userAdminPassword" type="password" placeholder="••••••••">
         <button type="button" class="pass-toggle" id="userAdminPasswordToggle" tabindex="-1" aria-label="Mostrar senha"></button>
@@ -7075,15 +7075,19 @@ function pageUsuarios(){
   const inactiveCount = totalUsers - activeCount;
 
   return \`
-  <div class="page-head">
+  <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:20px;">
     <div>
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
         Usuários Cadastrados
       </h1>
       <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
-        Administre contas de acesso, permissões e utilize o modo de visualização espelhada
+        Administre contas de acesso, permissões, novos cadastros e utilize o modo de visualização espelhada
       </p>
     </div>
+    <button id="btnNovoUsuarioAdmin" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:12px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#fff; font-size:13px; font-weight:700; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(59,130,246,0.35); transition:all 0.2s ease;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>+ Novo Usuário</span>
+    </button>
   </div>
 
   <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:20px;">
@@ -7109,31 +7113,72 @@ function pageUsuarios(){
     </div>
   </div>
 
+  <div class="admin-toolbar-panel">
+    <div class="admin-search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="admin-search-input" placeholder="Buscar por nome ou e-mail..." oninput="handleAdminUserSearch(this.value)" value="\${currentAdminUserSearch}">
+    </div>
+    <div class="admin-filter-bar">
+      <button class="admin-filter-btn \${currentAdminUserFilter==='all'?'active':''}" onclick="setAdminUserFilter('all', this)">Todos (\${totalUsers})</button>
+      <button class="admin-filter-btn \${currentAdminUserFilter==='admin'?'active':''}" onclick="setAdminUserFilter('admin', this)">Admins (\${adminCount})</button>
+      <button class="admin-filter-btn \${currentAdminUserFilter==='user'?'active':''}" onclick="setAdminUserFilter('user', this)">Usuários (\${totalUsers - adminCount})</button>
+      <button class="admin-filter-btn \${currentAdminUserFilter==='active'?'active':''}" onclick="setAdminUserFilter('active', this)">Ativos (\${activeCount})</button>
+      <button class="admin-filter-btn \${currentAdminUserFilter==='inactive'?'active':''}" onclick="setAdminUserFilter('inactive', this)">Desativados (\${inactiveCount})</button>
+    </div>
+  </div>
+
   <div class="panel" style="margin-bottom:0; padding:22px;">
-    <div class="panel-head" style="margin-bottom:14px;">
+    <div class="panel-head" style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
       <h3>Lista Geral de Usuários</h3>
       <span class="tag" style="cursor:default; font-weight:700;">\${registeredUsers.length} cadastrado(s)</span>
     </div>
     <p class="cfg-hint" style="margin-bottom:16px; font-size:12.5px;">
-      💡 Clique no ícone <strong>👁 Modo Espelho</strong> para entrar na conta do usuário em modo somente-leitura e inspecionar todos os seus lançamentos e relatórios.
+      💡 Clique no botão <strong>👁 Espelho</strong> para entrar na conta do usuário em modo somente-leitura e inspecionar seus lançamentos.
     </p>
     <div class="user-admin-list">
       \${registeredUsers.map(u=>{
         const stats = getUserActivitySummary(u.email);
+        const isAdminUser = u.role === 'Administrador';
+        const isInactive = u.active === false;
         return \`
-        <div class="user-row \${u.active===false?'inactive':''}" style="padding:14px 16px; border-radius:14px;">
-          <div class="user-ic" style="width:42px; height:42px; font-size:15px; border-radius:12px;">\${u.name.slice(0,2).toUpperCase()}</div>
-          <div class="user-info">
-            <div class="n" style="font-size:15px; font-weight:700;">\${u.name}</div>
-            <div class="e" style="font-size:12px; color:var(--text-dim);">\${u.email}</div>
-            <div class="stats" style="font-size:11.5px; margin-top:3px;">\${stats.hasData ? \`\${stats.txCount} transaç\${stats.txCount===1?'ão':'ões'} · \${stats.accCount} conta\${stats.accCount===1?'':'s'} · \${stats.budCount} orçamento\${stats.budCount===1?'':'s'} · \${stats.goalCount} meta\${stats.goalCount===1?'':'s'}\${stats.lastDate ? \` · última mov. em \${formatDateBR(stats.lastDate)}\` : ''}\` : 'Ainda sem atividade registrada'}</div>
+        <div class="user-card-4k \${isInactive ? 'inactive' : ''}" data-user-email="\${u.email.toLowerCase()}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isInactive ? 'inactive' : 'active'}">
+          <div class="user-card-left">
+            <div class="user-card-avatar \${isAdminUser ? 'admin-av' : 'user-av'}">
+              \${u.name.slice(0,2).toUpperCase()}
+              <span class="user-status-dot \${isInactive ? 'offline' : 'online'}"></span>
+            </div>
+            <div class="user-card-info">
+              <div class="user-card-name-row">
+                <span class="user-card-name">\${u.name}</span>
+                <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
+                \${isInactive ? '<span class="role-badge inactive">Desativado</span>' : ''}
+              </div>
+              <div class="user-card-email">\${u.email}</div>
+              <div class="user-card-stats-strip">
+                \${stats.hasData ? \`
+                  <span class="user-stat-chip">Transações: <strong>\${stats.txCount}</strong></span>
+                  <span class="user-stat-chip">Contas: <strong>\${stats.accCount}</strong></span>
+                  <span class="user-stat-chip">Orçamentos: <strong>\${stats.budCount}</strong></span>
+                  <span class="user-stat-chip">Metas: <strong>\${stats.goalCount}</strong></span>
+                  \${stats.lastDate ? \`<span class="user-stat-chip">Última mov: <strong>\${formatDateBR(stats.lastDate)}</strong></span>\` : ''}
+                \` : '<span class="user-stat-chip">Ainda sem atividade registrada</span>'}
+              </div>
+            </div>
           </div>
-          <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:11px; padding:4px 10px; border-radius:8px;">\${u.role}</span>
-          \${u.active===false ? '<span class="role-badge inactive" style="font-size:11px; padding:4px 10px; border-radius:8px;">Desativado</span>' : ''}
-          <div style="display:flex; gap:6px; align-items:center;">
-            \${u.email!==currentUser.email ? \`<button class="row-view" data-viewuser="\${u.email}" title="Visualizar conta (Modo Espelho)" style="padding:6px 10px; font-size:13px; border-radius:8px;">👁</button>\` : ''}
-            \${u.email!==currentUser.email ? \`<button class="row-toggle" data-toggleuser="\${u.email}" title="\${u.active===false?'Ativar usuário':'Desativar usuário'}" style="padding:6px 10px; font-size:13px; border-radius:8px;">\${u.active===false?'✅':'🚫'}</button>\` : ''}
-            <button class="row-edit" data-edituser="\${u.email}" title="Editar usuário" style="padding:6px 10px; font-size:13px; border-radius:8px;">✎</button>
+          <div class="user-card-right">
+            \${u.email!==currentUser.email ? \`
+              <button class="row-view btn-action-view" data-viewuser="\${u.email}" title="Visualizar conta (Modo Espelho)" style="padding:7px 12px; font-size:12.5px; border-radius:10px; background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); color:#60A5FA; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:5px; transition:all 0.2s ease;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Espelho</span>
+              </button>
+              <button class="row-toggle btn-action-toggle" data-toggleuser="\${u.email}" title="\${isInactive?'Ativar usuário':'Desativar usuário'}" style="padding:7px 12px; font-size:12.5px; border-radius:10px; background:\${isInactive?'rgba(16,185,129,0.12)':'rgba(239,68,68,0.12)'}; border:1px solid \${isInactive?'rgba(16,185,129,0.3)':'rgba(239,68,68,0.3)'}; color:\${isInactive?'#34D399':'#F87171'}; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:5px; transition:all 0.2s ease;">
+                \${isInactive ? '<span>✅ Ativar</span>' : '<span>🚫 Desativar</span>'}
+              </button>
+            \` : ''}
+            <button class="row-edit btn-action-edit" data-edituser="\${u.email}" title="Editar usuário" style="padding:7px 12px; font-size:12.5px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:var(--text); cursor:pointer; font-weight:600; display:flex; align-items:center; gap:5px; transition:all 0.2s ease;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span>Editar</span>
+            </button>
           </div>
         </div>\`;
       }).join('')}
@@ -8644,7 +8689,9 @@ async function openAdminCreateUserModal(){
   isCreatingNewUserAdmin = true;
   editingUserEmail = null;
   const modalTitle = document.querySelector('#overlayUserAdmin h2');
-  if(modalTitle) modalTitle.textContent = 'Novo Usuário';
+  if(modalTitle) modalTitle.textContent = 'Cadastrar Novo Usuário';
+  const passHint = document.getElementById('userAdminPasswordHint');
+  if(passHint) passHint.textContent = 'Informe a senha inicial do novo usuário (mínimo 6 caracteres)';
   const emailInput = document.getElementById('userAdminEmail');
   if(emailInput) {
     emailInput.disabled = false;
@@ -8669,6 +8716,8 @@ async function openUserAdminModal(email){
   editingUserEmail = email;
   const modalTitle = document.querySelector('#overlayUserAdmin h2');
   if(modalTitle) modalTitle.textContent = 'Editar Usuário';
+  const passHint = document.getElementById('userAdminPasswordHint');
+  if(passHint) passHint.textContent = 'Deixe em branco para manter a senha atual';
   const emailInput = document.getElementById('userAdminEmail');
   if(emailInput) {
     emailInput.disabled = true;
