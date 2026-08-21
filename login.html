@@ -102,21 +102,23 @@
     <style>
         :root {
             --auth-bg: #07090E;
-            --auth-card: rgba(14, 19, 34, 0.90);
+            --auth-card: rgba(14, 19, 34, 0.92);
             --auth-border: rgba(255, 255, 255, 0.10);
+            --auth-border-hover: rgba(229, 169, 60, 0.40);
             --auth-input-bg: rgba(9, 13, 22, 0.85);
             --auth-input-border: rgba(255, 255, 255, 0.12);
             --auth-text: #F8FAFC;
             --auth-text-dim: #94A3B8;
             --auth-gold: #E5A93C;
             --auth-gold-glow: rgba(229, 169, 60, 0.25);
-            --auth-tab-bg: rgba(0, 0, 0, 0.40);
+            --auth-tab-bg: rgba(0, 0, 0, 0.45);
         }
 
         body.light, html.light body {
-            --auth-bg: #F1F5F9;
+            --auth-bg: #F0F4F8;
             --auth-card: rgba(255, 255, 255, 0.98);
             --auth-border: #CBD5E1;
+            --auth-border-hover: #D97706;
             --auth-input-bg: #F8FAFC;
             --auth-input-border: #CBD5E1;
             --auth-text: #0F172A;
@@ -144,19 +146,33 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* Fundo Geométrico Sutil */
+        .auth-bg-cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        body.light .auth-bg-cyber-grid {
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+        }
+
         /* Card de Autenticação Ultra 4K */
         .auth-card-nexus {
             background: var(--auth-card);
             border: 1px solid var(--auth-border);
             border-radius: 28px;
-            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.8), 0 0 50px var(--auth-gold-glow), inset 0 1px 1px rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.8), 0 0 50px var(--auth-gold-glow), inset 0 1px 1px rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(40px) saturate(190%);
+            -webkit-backdrop-filter: blur(40px) saturate(190%);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         body.light .auth-card-nexus {
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08), 0 0 1px rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08), 0 0 1px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
         }
 
         /* Headers & Textos em Modo Claro */
@@ -170,11 +186,12 @@
             color: #64748B !important;
         }
 
-        /* Wrappers de Input com Glow e Ícones Alinhados */
+        /* Wrappers de Input com Ícones Perfeitamente Alinhados */
         .auth-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
+            height: 48px;
             background: var(--auth-input-bg);
             border: 1px solid var(--auth-input-border);
             border-radius: 14px;
@@ -190,10 +207,12 @@
         body.light .auth-input-wrapper:focus-within {
             background: #FFFFFF !important;
             border-color: var(--auth-gold) !important;
+            box-shadow: 0 0 20px rgba(217, 119, 6, 0.2) !important;
         }
 
         .auth-input-icon {
-            width: 42px;
+            width: 44px;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -208,9 +227,10 @@
 
         .auth-input-wrapper input {
             flex: 1;
+            height: 100%;
             background: transparent !important;
             border: none;
-            padding: 13px 12px 13px 0;
+            padding: 0 12px 0 0;
             color: var(--auth-text);
             font-size: 14px;
             font-weight: 500;
@@ -220,6 +240,7 @@
 
         .auth-input-wrapper input::placeholder {
             color: #64748B;
+            font-weight: 400;
         }
 
         body.light .auth-input-wrapper input {
@@ -245,13 +266,13 @@
         body.light .auth-input-wrapper input:-webkit-autofill:focus,
         body.light .auth-input-wrapper input:-webkit-autofill:active {
             -webkit-text-fill-color: #0F172A !important;
-            -webkit-box-shadow: 0 0 0px 1000px #F8FAFC inset !important;
-            box-shadow: 0 0 0px 1000px #F8FAFC inset !important;
+            -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
+            box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
         }
 
         /* Botão Primário Dourado / Safira */
         .btn-auth-gradient {
-            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #B45309 100%);
+            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 45%, #B45309 100%);
             color: #0A0F1A;
             border-radius: 14px;
             font-weight: 800;
@@ -261,6 +282,10 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-auth-gradient::before {
@@ -294,12 +319,12 @@
             transform: none;
         }
 
-        /* Abas Segmentadas */
+        /* Abas Segmentadas Ultra Alinhadas */
         .auth-tab-btn {
             flex: 1;
-            padding: 9px 12px;
+            height: 40px;
             border-radius: 10px;
-            border: none;
+            border: 1px solid transparent;
             background: transparent;
             color: var(--auth-text-dim);
             font-size: 13px;
@@ -308,14 +333,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 7px;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .auth-tab-btn.active {
-            background: linear-gradient(135deg, rgba(229, 169, 60, 0.2), rgba(229, 169, 60, 0.08));
+            background: linear-gradient(135deg, rgba(229, 169, 60, 0.22), rgba(229, 169, 60, 0.08));
             color: var(--auth-gold);
-            border: 1px solid rgba(229, 169, 60, 0.4);
+            border-color: rgba(229, 169, 60, 0.45);
             box-shadow: 0 4px 14px rgba(229, 169, 60, 0.15);
         }
 
@@ -382,10 +407,10 @@
         }
     </style>
 </head>
-<body class="h-full flex flex-col justify-center items-center min-h-screen py-8 px-4 relative select-none">
+<body class="h-full flex flex-col justify-between items-center min-h-screen py-6 px-4 relative select-none auth-bg-cyber-grid">
 
     <!-- 4K ULTRA SUCCESS MODAL OVERLAY -->
-    <div class="fixed inset-0 bg-black/85 backdrop-blur-xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="loginSuccessOverlay" style="display:none;">
+    <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="loginSuccessOverlay" style="display:none;">
         <div class="absolute w-[380px] h-[380px] rounded-full bg-blue-500/20 blur-[100px] pointer-events-none animate-pulse"></div>
 
         <div id="successModalBox" class="bg-gradient-to-br from-[#111827]/95 to-[#0A0F1D]/98 border border-blue-500/35 rounded-[28px] p-8 w-full max-w-[420px] text-center shadow-[0_30px_70px_rgba(0,0,0,0.85),0_0_40px_rgba(59,130,246,0.25)] transform translate-y-6 scale-90 transition-all duration-300 relative overflow-hidden pointer-events-auto">
@@ -415,46 +440,55 @@
                 Login Efetuado!
             </h3>
             <p class="text-[#94A3B8] font-medium text-xs sm:text-sm mb-5" id="loginSuccessSub">
-                Redirecionando para o seu dashboard...
+                Redirecionando para o seu painel financeiro...
             </p>
 
             <!-- Barra de Progresso do Redirecionamento -->
             <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mb-2">
                 <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 rounded-full w-0"></div>
             </div>
-            <span class="text-[11px] font-semibold text-[#64748B]">Carregando ambiente financeiro seguro...</span>
+            <span class="text-[11px] font-semibold text-[#64748B]">Carregando ambiente seguro de alta precisão...</span>
         </div>
     </div>
 
-    <!-- TOPO FLUTUANTE: BADGE HOMOLOGAÇÃO & TEMA (CLARO/ESCURO) -->
-    <div class="fixed top-5 right-5 z-50 flex items-center gap-3">
-        <span class="px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold backdrop-blur-md hidden sm:inline-flex items-center gap-1.5 shadow-md">
-            <span>🧪</span> Homologação
-        </span>
-        <button type="button" id="loginThemeBtn" onclick="toggleLoginTheme()" title="Alternar Tema Claro / Escuro"
-            class="w-10 h-10 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center shadow-lg hover:scale-105 transition-all focus:outline-none backdrop-blur-md">
-            <svg id="themeIconSvg" class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
-        </button>
-    </div>
+    <!-- BARRA SUPERIOR FIXA: BADGE DE SEGURANÇA, HOMOLOGAÇÃO & TEMA -->
+    <header class="w-full max-w-[1200px] flex items-center justify-between z-30 mb-4 px-2">
+        <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-semibold backdrop-blur-md shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>SSL 256-Bit Protegido</span>
+            </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold backdrop-blur-md hidden sm:inline-flex items-center gap-1.5 shadow-sm">
+                <span>🧪</span> Homologação
+            </span>
+            <button type="button" id="loginThemeBtn" onclick="toggleLoginTheme()" title="Alternar Tema Claro / Escuro"
+                class="w-9 h-9 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center shadow-lg hover:scale-105 transition-all focus:outline-none backdrop-blur-md" style="background-color: var(--auth-tab-bg); border-color: var(--auth-border);">
+                <svg id="themeIconSvg" class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
+            </button>
+        </div>
+    </header>
 
     <!-- Canvas de Linhas Orbitais & Partículas 4K -->
     <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-70"></canvas>
 
     <!-- Ambient Aura Glows -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[170px] animate-glow-pulse"></div>
-        <div class="absolute bottom-1/4 right-1/3 w-[650px] h-[650px] bg-blue-500/10 rounded-full blur-[170px] animate-glow-pulse" style="animation-delay: -2s;"></div>
+        <div class="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-amber-500/10 rounded-full blur-[160px] animate-glow-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -2s;"></div>
     </div>
 
     <!-- CONTAINER CENTRAL DO CARD -->
-    <div class="w-full max-w-[440px] z-10 flex flex-col items-center justify-center my-auto">
+    <main class="w-full max-w-[440px] z-10 flex flex-col items-center justify-center my-auto">
         
         <!-- CARD PRINCIPAL DE AUTENTICAÇÃO -->
         <div class="auth-card-nexus w-full p-7 sm:p-9 relative overflow-hidden">
             
             <!-- BRAND HEADER -->
             <div class="flex flex-col items-center text-center mb-6">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FCD34D] via-[#F59E0B] to-[#3B82F6] flex items-center justify-center text-[#0A0D18] font-black text-2xl shadow-lg shadow-amber-500/30 mb-3 border border-white/30 relative">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FCD34D] via-[#F59E0B] to-[#3B82F6] flex items-center justify-center text-[#0A0D18] font-black text-2xl shadow-lg shadow-amber-500/30 mb-3.5 border border-white/40 relative">
                     <span>N</span>
                     <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#0A0D18]" title="Sistema Operacional Online"></div>
                 </div>
@@ -462,13 +496,13 @@
                     <span class="text-xl sm:text-2xl font-black tracking-tight auth-brand-nexus text-white font-display">NEXUS</span>
                     <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-amber-500 font-display">FINANCEIRO HUB</span>
                 </div>
-                <p id="authSubtitle" class="text-xs auth-subtitle-text text-[#94A3B8] mt-1 font-medium">
+                <p id="authSubtitle" class="text-xs auth-subtitle-text text-[#94A3B8] mt-1.5 font-medium leading-relaxed">
                     Plataforma Inteligente de Gestão Financeira Pessoal
                 </p>
             </div>
 
             <!-- NAVEGAÇÃO SEGMENTADA POR ABAS -->
-            <div class="flex bg-black/40 border border-white/10 rounded-xl p-1 mb-5 gap-1" id="authTabsNav" style="background-color: var(--auth-tab-bg); border-color: var(--auth-border);">
+            <div class="flex rounded-xl p-1 mb-5 gap-1" id="authTabsNav" style="background-color: var(--auth-tab-bg); border: 1px solid var(--auth-border);">
                 <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="switchAuthTab('login')">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                     <span>Entrar na Conta</span>
@@ -488,7 +522,7 @@
                     
                     <!-- Campo E-mail -->
                     <div>
-                        <label class="block text-[11.5px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail</label>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail</label>
                         <div class="auth-input-wrapper">
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -501,7 +535,7 @@
                     <!-- Campo Senha -->
                     <div>
                         <div class="flex items-center justify-between mb-1.5">
-                            <label class="text-[11.5px] font-bold uppercase tracking-wider auth-label text-[#94A3B8]">Senha</label>
+                            <label class="text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8]">Senha</label>
                             <button type="button" onclick="switchAuthTab('forgot')" class="text-xs font-bold text-amber-500 hover:text-amber-400 transition-colors focus:outline-none">
                                 Esqueceu a senha?
                             </button>
@@ -513,7 +547,7 @@
                             <input id="loginPassword" name="password" type="password" autocomplete="current-password" required 
                                 placeholder="••••••••">
                             <button type="button" id="btnToggleLoginPass" onclick="togglePasswordVisibility('loginPassword', 'btnToggleLoginPass')" 
-                                class="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-amber-400 transition-colors focus:outline-none" title="Mostrar/Ocultar Senha">
+                                class="w-11 h-full flex items-center justify-center text-gray-400 hover:text-amber-400 transition-colors focus:outline-none" title="Mostrar/Ocultar Senha">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                         </div>
@@ -556,7 +590,7 @@
             <div id="registerBox" class="form-fade hidden">
                 <form id="registerForm" class="space-y-3.5" onsubmit="handleRegisterSubmit(event); return false;">
                     <div>
-                        <label class="block text-[11.5px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Nome Completo</label>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Nome Completo</label>
                         <div class="auth-input-wrapper">
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -566,7 +600,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11.5px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail</label>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail</label>
                         <div class="auth-input-wrapper">
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -576,14 +610,14 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11.5px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Criar Senha</label>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Criar Senha</label>
                         <div class="auth-input-wrapper">
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                             </span>
                             <input id="regPassword" name="password" type="password" minlength="6" required placeholder="Mínimo 6 caracteres" oninput="checkPasswordStrength(this.value)">
                             <button type="button" id="btnToggleRegPass" onclick="togglePasswordVisibility('regPassword', 'btnToggleRegPass')" 
-                                class="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-amber-400 transition-colors focus:outline-none" title="Mostrar/Ocultar Senha">
+                                class="w-11 h-full flex items-center justify-center text-gray-400 hover:text-amber-400 transition-colors focus:outline-none" title="Mostrar/Ocultar Senha">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                         </div>
@@ -604,7 +638,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11.5px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Confirmar Senha</label>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Confirmar Senha</label>
                         <div class="auth-input-wrapper">
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -638,7 +672,7 @@
 
                 <form id="forgotForm" class="space-y-4" onsubmit="handleForgotSubmit(event); return false;">
                     <div>
-                        <label class="block text-[11.5px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail Cadastrado</label>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail Cadastrado</label>
                         <div class="auth-input-wrapper">
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -666,7 +700,7 @@
         </div>
 
         <!-- ASSINATURA EXECUTIVA DO DESENVOLVEDOR PAULO LIMA -->
-        <div class="mt-6 flex justify-center">
+        <div class="mt-6 flex flex-col items-center gap-1.5">
             <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.09] shadow-[0_6px_20px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] hover:border-blue-400/40 hover:shadow-[0_8px_25px_rgba(0,0,0,0.5),0_0_18px_rgba(59,130,246,0.20)]" style="border-color: var(--auth-border);">
                 <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center shadow-[0_2px_8px_rgba(37,99,235,0.4)]">
                     <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -679,9 +713,14 @@
                     <strong class="text-[12.5px] font-bold auth-brand-nexus text-white tracking-wide">Paulo Lima</strong>
                 </div>
             </div>
+            <span class="text-[10.5px] font-semibold text-slate-500">Nexus Financeiro Hub • v2.5 Homologação</span>
         </div>
 
-    </div>
+    </main>
+
+    <footer class="w-full max-w-[1200px] text-center text-[11px] text-slate-500 z-10 mt-3">
+        <span>© 2026 Nexus Financeiro Hub. Todos os direitos reservados.</span>
+    </footer>
 
     <script>
         const targetOrigin = (window.location.origin && window.location.origin.includes('http')) 
