@@ -2711,13 +2711,21 @@ body.light .scale-dropdown {
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
-  <div class="auth-top-bar">
-    <span class="env-badge-homolog">Homologação 🧪</span>
-    <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
-      <svg id="authThemeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
-      </svg>
-    </button>
+  <div class="auth-top-bar" style="width:100%; max-width:1200px; padding:0 24px; display:flex; justify-content:space-between; align-items:center; position:absolute; top:20px; z-index:20;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border-radius:9999px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.28); color:#34d399; font-size:12px; font-weight:600; backdrop-filter:blur(12px);">
+        <span style="width:7px; height:7px; border-radius:50%; background:#34d399;"></span>
+        <span>SSL 256-Bit Protegido</span>
+      </span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="env-badge-homolog">Homologação 🧪</span>
+      <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
+        <svg id="authThemeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <div class="auth-grid" aria-hidden="true"></div>
@@ -2860,7 +2868,7 @@ body.light .scale-dropdown {
     </div>
 
     <!-- Assinatura do Desenvolvedor -->
-    <div class="auth-dev-credit" style="margin-top:24px; padding-top:16px; border-top:1px solid var(--auth-border); text-align:center;">
+    <div class="auth-dev-credit" style="margin-top:24px; padding-top:16px; border-top:1px solid var(--auth-border); text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
       <div class="dev-signature" style="justify-content:center;">
         <div class="dev-signature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -2873,6 +2881,7 @@ body.light .scale-dropdown {
           <strong class="dev-signature-name">Paulo Lima</strong>
         </div>
       </div>
+      <span style="font-size:11px; font-weight:600; color:var(--auth-text-dim); opacity:0.85;">Nexus Financeiro Hub • v2.5 Homologação</span>
     </div>
   </div>
 </div>
