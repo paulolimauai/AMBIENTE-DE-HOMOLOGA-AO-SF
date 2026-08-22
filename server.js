@@ -289,6 +289,11 @@ html:not(.user-logged-in) #authPage {
   display: flex !important;
 }
 
+html.is-admin nav.menu button:not(#menuUsuariosBtn):not(#menuLogsBtn):not(#menuFuncoesBtn),
+html.is-admin nav.mobile-drawer-nav button:not(#mobileDrawerUsuariosBtn):not(#mobileDrawerLogsBtn):not(#mobileDrawerFuncoesBtn) {
+  display: none !important;
+}
+
 html.is-admin #menuUsuariosBtn,
 html.is-admin #menuLogsBtn,
 html.is-admin #menuFuncoesBtn,
@@ -4939,7 +4944,18 @@ function render(){
   const el = document.getElementById('pageContent');
   if (!el) return;
 
-  if (!currentPage) currentPage = 'dashboard';
+  const isAdmin = currentUser && currentUser.role === 'Administrador';
+  const isAdminView = isAdmin && !isViewingOtherUser;
+
+  if (isAdminView) {
+    if (!['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
+      currentPage = 'usuarios';
+    }
+  } else {
+    if (['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
+      currentPage = 'dashboard';
+    }
+  }
 
   let newHTML = '';
   if(currentPage==='usuarios') {
@@ -4986,13 +5002,17 @@ function render(){
 }
 
 function updateActiveMenu(){
-  const validPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'funcoes', 'usuarios', 'logs', 'config'];
-  const financialPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'];
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
 
-  if (!isAdminView && ['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
-    currentPage = 'dashboard';
+  if (isAdminView) {
+    if (!['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
+      currentPage = 'usuarios';
+    }
+  } else {
+    if (['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
+      currentPage = 'dashboard';
+    }
   }
 
   const buttons = document.querySelectorAll('button[data-page]');
@@ -5015,7 +5035,7 @@ function updateAdminMenuVisibility(){
   const financialPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
   financialPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
-      btn.style.display = 'flex';
+      btn.style.display = isAdminView ? 'none' : 'flex';
     });
   });
 
