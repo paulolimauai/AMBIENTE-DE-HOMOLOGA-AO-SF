@@ -1168,11 +1168,10 @@ body.light .dev-signature-name{
 [data-editmeta], [data-delmeta],
 [data-editrec], [data-delrec], [data-lancar],
 [data-editalert], [data-delalert],
-[data-edituser],
 [data-mgedit], [data-mgdel] {
   width: 32px !important;
   height: 32px !important;
-  border-radius: 9px !important;
+  border-radius: 9999px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -1188,14 +1187,14 @@ body.light .dev-signature-name{
 /* Botão de Editar (Pencil ✎) */
 .btn-action-edit,
 .row-edit,
-[data-edit], [data-editacc], [data-editcat], [data-editorc], [data-editmeta], [data-editrec], [data-editalert], [data-edituser], [data-mgedit] {
+[data-edit], [data-editacc], [data-editcat], [data-editorc], [data-editmeta], [data-editrec], [data-editalert], [data-mgedit] {
   background: rgba(59, 130, 246, 0.18) !important;
   color: #60A5FA !important;
   border: 1px solid rgba(59, 130, 246, 0.35) !important;
 }
 .btn-action-edit:hover,
 .row-edit:hover,
-[data-edit]:hover, [data-editacc]:hover, [data-editcat]:hover, [data-editorc]:hover, [data-editmeta]:hover, [data-editrec]:hover, [data-editalert]:hover, [data-edituser]:hover, [data-mgedit]:hover {
+[data-edit]:hover, [data-editacc]:hover, [data-editcat]:hover, [data-editorc]:hover, [data-editmeta]:hover, [data-editrec]:hover, [data-editalert]:hover, [data-mgedit]:hover {
   background: rgba(59, 130, 246, 0.35) !important;
   color: #FFFFFF !important;
   border-color: rgba(96, 165, 250, 0.75) !important;
@@ -1233,6 +1232,80 @@ body.light .dev-signature-name{
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.40) !important;
 }
 
+/* Botões da Lista de Usuários (User Card Actions) */
+.user-card-right {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  flex-shrink: 0 !important;
+}
+.user-card-btn {
+  height: 38px !important;
+  padding: 0 16px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease-in-out !important;
+  white-space: nowrap !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+  width: auto !important;
+  outline: none !important;
+}
+.user-card-btn.btn-espelho {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border: 1px solid rgba(59, 130, 246, 0.4) !important;
+  color: #60A5FA !important;
+}
+.user-card-btn.btn-espelho:hover {
+  background: rgba(59, 130, 246, 0.3) !important;
+  border-color: #60A5FA !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35) !important;
+}
+.user-card-btn.btn-desativar {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  color: #F87171 !important;
+}
+.user-card-btn.btn-desativar:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  border-color: #F87171 !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35) !important;
+}
+.user-card-btn.btn-ativar {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  color: #34D399 !important;
+}
+.user-card-btn.btn-ativar:hover {
+  background: rgba(16, 185, 129, 0.3) !important;
+  border-color: #34D399 !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+}
+.user-card-btn.btn-editar {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #F8FAFC !important;
+}
+.user-card-btn.btn-editar:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15) !important;
+}
+
 /* Modo Claro / Light Theme Overrides */
 body.light .row-actions button,
 body.light .btn-action-edit,
@@ -1244,10 +1317,10 @@ body.light [data-editorc], body.light [data-delorc],
 body.light [data-editmeta], body.light [data-delmeta],
 body.light [data-editrec], body.light [data-delrec], body.light [data-lancar],
 body.light [data-editalert], body.light [data-delalert],
-body.light [data-edituser], body.light [data-mgedit], body.light [data-mgdel] {
+body.light [data-mgedit], body.light [data-mgdel] {
   box-shadow: 0 2px 4px rgba(15,23,42,0.08) !important;
 }
-body.light .btn-action-edit, body.light .row-edit, body.light [data-edit], body.light [data-editacc], body.light [data-editcat], body.light [data-editorc], body.light [data-editmeta], body.light [data-editrec], body.light [data-editalert], body.light [data-edituser], body.light [data-mgedit] {
+body.light .btn-action-edit, body.light .row-edit, body.light [data-edit], body.light [data-editacc], body.light [data-editcat], body.light [data-editorc], body.light [data-editmeta], body.light [data-editrec], body.light [data-editalert], body.light [data-mgedit] {
   background: rgba(37, 99, 235, 0.10) !important;
   color: #1D4ED8 !important;
   border-color: rgba(37, 99, 235, 0.25) !important;
@@ -7349,17 +7422,25 @@ function pageUsuarios(){
             </div>
           </div>
           <div class="user-card-right">
-            \${u.email!==currentUser.email ? \`
-              <button class="row-view btn-action-view" data-viewuser="\${u.email}" title="Visualizar conta (Modo Espelho)" style="height:36px; padding:0 14px; font-size:12.5px; border-radius:10px; background:rgba(59,130,246,0.16); border:1px solid rgba(59,130,246,0.4); color:#60A5FA; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s ease;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            \${u.email.toLowerCase() !== currentUser.email.toLowerCase() ? \`
+              <button class="user-card-btn btn-espelho" data-viewuser="\${u.email}" title="Visualizar conta em Modo Espelho">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 <span>Espelho</span>
               </button>
-              <button class="row-toggle btn-action-toggle" data-toggleuser="\${u.email}" title="\${isInactive?'Ativar usuário':'Desativar usuário'}" style="height:36px; padding:0 14px; font-size:12.5px; border-radius:10px; background:\${isInactive?'rgba(16,185,129,0.16)':'rgba(239,68,68,0.16)'}; border:1px solid \${isInactive?'rgba(16,185,129,0.4)':'rgba(239,68,68,0.4)'}; color:\${isInactive?'#34D399':'#F87171'}; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s ease;">
-                \${isInactive ? '<span>✅ Ativar</span>' : '<span>🚫 Desativar</span>'}
+              <button class="user-card-btn \${isInactive ? 'btn-ativar' : 'btn-desativar'}" data-toggleuser="\${u.email}" title="\${isInactive ? 'Ativar usuário' : 'Desativar usuário'}">
+                \${isInactive ? \`
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Ativar</span>
+                \` : \`
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                  <span>Desativar</span>
+                \`}
               </button>
-            \` : ''}
-            <button class="row-edit btn-action-edit" data-edituser="\${u.email}" title="Editar usuário" style="height:36px; padding:0 14px; font-size:12.5px; border-radius:10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16); color:#FFFFFF; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s ease;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            \` : \`
+              <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:700; font-size:11.5px; padding:4px 12px; border-radius:12px; height:34px;">Sua Conta (Atual)</span>
+            \`}
+            <button class="user-card-btn btn-editar" data-edituser="\${u.email}" title="Editar informações do usuário">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               <span>Editar</span>
             </button>
           </div>
