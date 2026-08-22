@@ -6956,7 +6956,7 @@ function exportPermissionsMatrixCSV() {
     ['Central de Funções & Permissões', 'Controle Total (Nível 1)', 'Sem Acesso', 'Sem Acesso', 'Sem Acesso'],
     ['Logs de Auditoria & Segurança', 'Auditoria Geral + Filtro IP/Email', 'Logs Próprios', 'Sem Acesso', 'Leitura de Eventos']
   ];
-  let csvContent = 'data:text/csv;charset=utf-8,' + rows.map(function(e){ return e.map(function(x){ return '"' + x + '"'; }).join(','); }).join('\n');
+  let csvContent = 'data:text/csv;charset=utf-8,' + rows.map(function(e){ return e.map(function(x){ return '"' + x + '"'; }).join(','); }).join('\\n');
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement('a');
   link.setAttribute('href', encodedUri);
@@ -7190,28 +7190,6 @@ function pageFuncoes(){
       </div>
     </div>
   </div>\`;
-}der:1px solid var(--card-border);">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b; box-shadow:0 0 10px #f59e0b;"></span>
-            <div><strong style="font-size:13.5px; color:var(--text);">Auditoria beacon & API Logs</strong><div style="font-size:11px; color:var(--text-faint);">Rastreamento de ações do sistema</div></div>
-          </div>
-          <span style="font-size:11px; font-weight:700; color:#f59e0b; background:rgba(245,158,11,0.15); padding:3px 8px; border-radius:6px;">Gravando</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel" style="border:1px solid rgba(232,176,75,0.2); background:var(--card);">
-      <div class="panel-head"><h3>🛠️ Ferramentas & Teste de Função</h3></div>
-      <p class="cfg-hint" style="margin-bottom:14px;">Utilize as ferramentas abaixo para validar o estado e o recálculo imediato de todas as funções ativas.</p>
-      <div style="display:flex; flex-direction:column; gap:10px;">
-        <button class="btn-primary" onclick="if(typeof recalculateAllBalances==='function') recalculateAllBalances(); showLoginSuccessPopup('Saldos e funções reprocessados com sucesso!');" style="display:flex; align-items:center; justify-content:center; gap:8px;">
-          <span>🔄</span> Recalcular Saldos & Projeções
-        </button>
-        <button class="btn-ghost" onclick="syncUsersWithServer().then(()=>showLoginSuccessPopup('Funções de usuários atualizadas com o servidor!'));" style="display:flex; align-items:center; justify-content:center; gap:8px; border-color:rgba(232,176,75,0.3); color:#fbbf24;">
-          <span>⚡</span> Sincronizar Tabela de Funções & Usuários
-        </button>
-      </div>
-  \`;
 }
 
 /* ==================== Admin: Usuários Cadastrados ==================== */
