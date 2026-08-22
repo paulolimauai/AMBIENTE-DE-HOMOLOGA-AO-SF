@@ -289,11 +289,6 @@ html:not(.user-logged-in) #authPage {
   display: flex !important;
 }
 
-html.is-admin nav.menu button:not(#menuUsuariosBtn):not(#menuLogsBtn):not(#menuFuncoesBtn),
-html.is-admin nav.mobile-drawer-nav button:not(#mobileDrawerUsuariosBtn):not(#mobileDrawerLogsBtn):not(#mobileDrawerFuncoesBtn) {
-  display: none !important;
-}
-
 html.is-admin #menuUsuariosBtn,
 html.is-admin #menuLogsBtn,
 html.is-admin #menuFuncoesBtn,
@@ -4944,11 +4939,7 @@ function render(){
   const el = document.getElementById('pageContent');
   if (!el) return;
 
-  const isAdmin = currentUser && currentUser.role === 'Administrador';
-  const isAdminView = isAdmin && !isViewingOtherUser;
-  if (isAdminView && !['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
-    currentPage = 'usuarios';
-  }
+  if (!currentPage) currentPage = 'dashboard';
 
   let newHTML = '';
   if(currentPage==='usuarios') {
@@ -5000,30 +4991,8 @@ function updateActiveMenu(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
 
-  if (isAdminView) {
-    if (!currentPage || financialPages.includes(currentPage) || !['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
-      currentPage = 'usuarios';
-      try {
-        localStorage.setItem('nexus_current_page', 'usuarios');
-        if (window.history && window.history.replaceState) {
-          window.history.replaceState(null, null, '#usuarios');
-        } else {
-          window.location.hash = 'usuarios';
-        }
-      } catch(e){}
-    }
-  } else {
-    if (!currentPage || !financialPages.includes(currentPage) || ['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
-      const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
-      const savedPage = localStorage.getItem('nexus_current_page');
-      if (hashPage && financialPages.includes(hashPage)) {
-        currentPage = hashPage;
-      } else if (savedPage && financialPages.includes(savedPage)) {
-        currentPage = savedPage;
-      } else {
-        currentPage = 'dashboard';
-      }
-    }
+  if (!isAdminView && ['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
+    currentPage = 'dashboard';
   }
 
   const buttons = document.querySelectorAll('button[data-page]');
@@ -5046,7 +5015,7 @@ function updateAdminMenuVisibility(){
   const financialPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
   financialPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
-      btn.style.display = isAdminView ? 'none' : 'flex';
+      btn.style.display = 'flex';
     });
   });
 
