@@ -2243,6 +2243,21 @@ body.light .toast-desc strong { color: #0F172A !important; }
   letter-spacing: 0.01em;
   backdrop-filter: blur(8px);
 }
+/* ==================== Admin Center: Usuários Cadastrados ==================== */
+.env-badge-homolog {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(8px);
+}
 .admin-toolbar-panel {
   display: flex;
   align-items: center;
@@ -2268,10 +2283,10 @@ body.light .toast-desc strong { color: #0F172A !important; }
 }
 .admin-search-input {
   width: 100%;
-  height: 42px;
+  height: 40px;
   background: var(--card);
   border: 1px solid var(--card-border);
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 0 16px 0 42px;
   color: #FFFFFF;
   font-size: 13.5px;
@@ -2293,7 +2308,7 @@ body.light .toast-desc strong { color: #0F172A !important; }
   flex-wrap: wrap;
 }
 .admin-filter-btn {
-  height: 38px;
+  height: 40px;
   padding: 0 16px;
   border-radius: 10px;
   border: 1px solid var(--card-border);
@@ -2334,6 +2349,7 @@ body.light .admin-filter-btn.active {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  min-height: 76px;
   padding: 14px 20px;
   border: 1px solid var(--card-border);
   border-radius: 14px;
@@ -2394,6 +2410,10 @@ body.light .admin-filter-btn.active {
 .user-card-info {
   min-width: 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
 }
 .user-card-name-row {
   display: flex;
@@ -2408,12 +2428,13 @@ body.light .admin-filter-btn.active {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
 }
 .user-card-email {
   font-size: 13px;
   color: #94A3B8;
   font-weight: 500;
-  margin-top: 2px;
+  margin-top: 1px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2422,17 +2443,20 @@ body.light .admin-filter-btn.active {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 6px;
+  margin-top: 5px;
   flex-wrap: wrap;
 }
 .user-stat-chip {
   font-size: 11.5px;
   font-weight: 600;
-  padding: 3px 9px;
+  padding: 2.5px 8px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #94A3B8;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 .user-stat-chip strong {
   color: #FFFFFF;
@@ -2442,8 +2466,10 @@ body.light .admin-filter-btn.active {
 .user-card-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-end;
+  gap: 8px;
   flex-shrink: 0;
+  min-width: 290px;
 }
 .role-badge {
   font-size: 11.5px;
@@ -2453,6 +2479,8 @@ body.light .admin-filter-btn.active {
   flex-shrink: 0;
   white-space: nowrap;
   letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
 }
 .role-badge.admin {
   background: rgba(245, 158, 11, 0.18);
