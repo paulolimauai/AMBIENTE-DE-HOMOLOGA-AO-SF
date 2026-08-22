@@ -4946,7 +4946,7 @@ function render(){
 
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
-  if (isAdminView && currentPage !== 'usuarios' && currentPage !== 'logs') {
+  if (isAdminView && !['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
     currentPage = 'usuarios';
   }
 
@@ -5050,7 +5050,7 @@ function updateAdminMenuVisibility(){
     });
   });
 
-  const adminPages = ['usuarios', 'logs'];
+  const adminPages = ['usuarios', 'logs', 'funcoes'];
   adminPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdminView ? 'flex' : 'none';
@@ -6912,6 +6912,72 @@ function pageConfig(){
 }
 
 /* ==================== Aba 4K: Central de Funções & Permissões ==================== */
+let currentFuncoesRoleFilter = 'all';
+
+function setFuncoesRoleFilter(roleFilter, btnEl) {
+  currentFuncoesRoleFilter = roleFilter;
+  document.querySelectorAll('.funcoes-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  
+  const cols = document.querySelectorAll('.perm-matrix-th, .perm-matrix-td');
+  cols.forEach(col => {
+    const roleAttr = col.getAttribute('data-perm-role');
+    if (!roleAttr || currentFuncoesRoleFilter === 'all') {
+      col.style.display = '';
+      col.style.opacity = '1';
+      col.style.background = '';
+    } else if (roleAttr === currentFuncoesRoleFilter) {
+      col.style.display = '';
+      col.style.opacity = '1';
+      col.style.background = 'rgba(232,176,75,0.08)';
+    } else {
+      col.style.display = 'none';
+    }
+  });
+}
+
+async function changeUserRoleFromFuncoes(email, newRole) {
+  await syncUsersWithServer();
+  const u = registeredUsers.find(x => x.email.toLowerCase() === (email || '').toLowerCase());
+  if (!u) {
+    if (typeof showToast === 'function') showToast('Usuário não encontrado');
+    return;
+  }
+  const oldRole = u.role;
+  u.role = newRole;
+  await saveUsersToServer();
+  if (typeof logActivity === 'function') {
+    logActivity('Alteração de Função', 'Usuário / Permissões', 'Administrador alterou a função do usuário ' + u.email + ' (' + u.name + ') de ' + oldRole + ' para ' + newRole);
+  }
+  if (typeof showLoginSuccessPopup === 'function') {
+    showLoginSuccessPopup('Função do usuário ' + u.name + ' alterada para ' + newRole + '!');
+  } else if (typeof showToast === 'function') {
+    showToast('Função de ' + u.name + ' alterada para ' + newRole + '!');
+  }
+  render();
+}
+
+function exportPermissionsMatrixCSV() {
+  const rows = [
+    ['Modulo', 'Administrador', 'Gerente Financeiro', 'Usuario / Operador', 'Auditor'],
+    ['Dashboard Executivo', 'Total (Criar/Editar/Excluir)', 'Total', 'Total Próprio', 'Somente Leitura'],
+    ['Gestão de Transações & Cartões', 'Total (Qualquer Usuário)', 'Total Próprio', 'Total Próprio', 'Somente Leitura'],
+    ['Orçamentos, Metas & Relatórios', 'Total + Exportação 4K', 'Total + Exportação', 'Total Próprio', 'Exportação CSV/PDF'],
+    ['Gerenciamento de Usuários & Contas', 'Controle Total + Modo Espelho', 'Sem Acesso', 'Sem Acesso', 'Lista de Contas'],
+    ['Central de Funções & Permissões', 'Controle Total (Nível 1)', 'Sem Acesso', 'Sem Acesso', 'Sem Acesso'],
+    ['Logs de Auditoria & Segurança', 'Auditoria Geral + Filtro IP/Email', 'Logs Próprios', 'Sem Acesso', 'Leitura de Eventos']
+  ];
+  let csvContent = 'data:text/csv;charset=utf-8,' + rows.map(function(e){ return e.map(function(x){ return '"' + x + '"'; }).join(','); }).join('\n');
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', 'matriz_de_permissoes_' + new Date().toISOString().slice(0,10) + '.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  if (typeof showToast === 'function') showToast('Matriz de Permissões exportada em CSV com sucesso!');
+}
+
 function pageFuncoes(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   if(!isAdmin || isViewingOtherUser){
@@ -6920,21 +6986,27 @@ function pageFuncoes(){
   const userRole = (currentUser && currentUser.role) || 'Usuário';
   const totalUsers = registeredUsers ? registeredUsers.length : 1;
   const adminCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Administrador').length : 1;
-  const standardCount = totalUsers - adminCount;
+  const managerCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Gerente Financeiro').length : 0;
+  const auditorCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Auditor').length : 0;
+  const standardCount = totalUsers - adminCount - managerCount - auditorCount;
 
   return \`
-  <div class="page-head">
+  <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:20px;">
     <div>
-      <h1 style="display:flex; align-items:center; gap:10px;">
+      <h1 style="display:flex; align-items:center; gap:10px; font-size:22px; font-weight:800; color:#FFFFFF;">
         <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, rgba(232,176,75,0.25), rgba(201,134,42,0.15)); border:1px solid rgba(232,176,75,0.4); color:#fbbf24; font-size:18px;">🛡️</span>
         Central de Funções & Permissões
       </h1>
-      <p>Gerencie papéis de usuários, matriz de controle de acessos, privilégios e rotinas funcionais do sistema em 4K</p>
+      <p style="font-size:13.5px; color:#94A3B8; margin:4px 0 0 0;">Gerencie papéis de usuários, atribuição rápida de funções, matriz de controle de acessos e permissões do sistema em tempo real.</p>
     </div>
     <div style="display:flex; gap:10px; align-items:center;">
-      <span class="tag" style="background:rgba(232,176,75,0.15); color:#fbbf24; border:1px solid rgba(232,176,75,0.3); font-weight:700; padding:6px 12px; border-radius:20px; font-size:12px;">
-        ⚡ Modo \${userRole}
+      <span class="tag" style="background:rgba(232,176,75,0.15); color:#fbbf24; border:1px solid rgba(232,176,75,0.3); font-weight:700; padding:6px 14px; border-radius:20px; font-size:12px;">
+        👑 Modo Administrador (Acesso Irrestrito)
       </span>
+      <button onclick="exportPermissionsMatrixCSV()" class="btn-ghost" style="height:36px; padding:0 14px; border-radius:10px; border-color:rgba(232,176,75,0.3); color:#fbbf24; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Exportar CSV</span>
+      </button>
     </div>
   </div>
 
@@ -6943,74 +7015,144 @@ function pageFuncoes(){
     <div class="kpi" style="border:1px solid rgba(232,176,75,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95)); shadow:0 10px 30px rgba(0,0,0,0.5);">
       <div class="kpi-head"><span class="lbl">Sua Função Atual</span><span class="ic" style="background:rgba(232,176,75,0.2); color:#fbbf24;">👑</span></div>
       <div class="val" style="color:#fbbf24; font-size:22px;">\${userRole}</div>
-      <div class="sub" style="color:var(--text-dim); margin-top:4px;">Nível de Privilégio: \${isAdmin ? 'Acesso Total (Nível 1)' : 'Acesso Padrão (Nível 2)'}</div>
+      <div class="sub" style="color:var(--text-dim); margin-top:4px;">Nível de Privilégio: Acesso Total (Nível 1)</div>
     </div>
     <div class="kpi" style="border:1px solid rgba(16,185,129,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95));">
-      <div class="kpi-head"><span class="lbl">Usuários & Administradores</span><span class="ic" style="background:rgba(16,185,129,0.2); color:#10b981;">👥</span></div>
-      <div class="val" style="color:#10b981; font-size:22px;">\${totalUsers} Cadastrado\${totalUsers===1?'':'s'}</div>
-      <div class="sub" style="color:var(--text-dim); margin-top:4px;">\${adminCount} Admins · \${standardCount} Operadores</div>
+      <div class="kpi-head"><span class="lbl">Administradores</span><span class="ic" style="background:rgba(16,185,129,0.2); color:#10b981;">👥</span></div>
+      <div class="val" style="color:#10b981; font-size:22px;">\${adminCount} Admin\${adminCount===1?'':'s'}</div>
+      <div class="sub" style="color:var(--text-dim); margin-top:4px;">Gestores com Acesso Irrestrito</div>
     </div>
     <div class="kpi" style="border:1px solid rgba(59,130,246,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95));">
-      <div class="kpi-head"><span class="lbl">Módulos & Capacidades</span><span class="ic" style="background:rgba(59,130,246,0.2); color:#3b82f6;">⚙️</span></div>
-      <div class="val" style="color:#3b82f6; font-size:22px;">12 Módulos Ativos</div>
-      <div class="sub" style="color:var(--text-dim); margin-top:4px;">Proteção Criptografada SSL / JWT</div>
+      <div class="kpi-head"><span class="lbl">Operadores & Outras Funções</span><span class="ic" style="background:rgba(59,130,246,0.2); color:#3b82f6;">👤</span></div>
+      <div class="val" style="color:#3b82f6; font-size:22px;">\${totalUsers - adminCount} Usuário\${(totalUsers - adminCount)===1?'':'s'}</div>
+      <div class="sub" style="color:var(--text-dim); margin-top:4px;">\${standardCount} Operadores · \${managerCount} Gerentes · \${auditorCount} Auditores</div>
     </div>
   </div>
 
-  <!-- Matriz de Funções & Controle de Acessos 4K -->
+  <!-- Atribuição Direta de Funções aos Usuários -->
   <div class="panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25); background:var(--card);">
-    <div class="panel-head">
-      <h3>Matriz de Permissões por Função do Sistema</h3>
-      <span class="tag" style="cursor:default; background:rgba(232,176,75,0.12); color:#fbbf24; border-color:rgba(232,176,75,0.3);">Visão 4K HD</span>
+    <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h3 style="font-size:16px; font-weight:700; color:#FFFFFF;">⚡ Atribuição Direta de Funções aos Usuários</h3>
+        <p class="cfg-hint" style="margin-top:4px;">Altere o perfil e nível de acesso de qualquer usuário cadastrado instantaneamente.</p>
+      </div>
+      <span class="tag" style="background:rgba(16,185,129,0.15); color:#34D399; border-color:rgba(16,185,129,0.3); font-weight:700;">\${totalUsers} Conta(s) no Sistema</span>
     </div>
-    <p class="cfg-hint" style="margin-bottom:16px;">Tabela detalhada de acessos, privilégios de edição e permissões ativas para cada nível de usuário.</p>
     
-    <div class="table-panel" style="padding:0; border:none; background:transparent;">
+    <div class="table-panel" style="padding:0; border:none; background:transparent; overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; text-align:left;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.3);">
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">Usuário</th>
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">E-mail</th>
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">Função Atual</th>
+            <th style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase;">Alterar Função do Usuário</th>
+          </tr>
+        </thead>
+        <tbody>
+          \${(registeredUsers || []).map(u => {
+            const isMe = currentUser && u.email.toLowerCase() === currentUser.email.toLowerCase();
+            return \`
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+              <td style="padding:14px 16px; font-weight:600; color:#FFFFFF;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #3b82f6, #1d4ed8); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px;">
+                    \${u.name.slice(0,2).toUpperCase()}
+                  </div>
+                  <div>
+                    <span>\${u.name}</span>
+                    \${isMe ? ' <span style="font-size:10px; color:#fbbf24; background:rgba(232,176,75,0.15); padding:1px 6px; border-radius:6px; font-weight:700;">Você</span>' : ''}
+                  </div>
+                </div>
+              </td>
+              <td style="padding:14px 16px; color:#94A3B8; font-size:13px;">\${u.email}</td>
+              <td style="padding:14px 16px;">
+                <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:12px; padding:4px 10px;">\${u.role}</span>
+              </td>
+              <td style="padding:14px 16px;">
+                <select onchange="changeUserRoleFromFuncoes('\${u.email}', this.value)" style="height:36px; padding:0 12px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; font-weight:700; font-size:13px; cursor:pointer;">
+                  <option value="Administrador" \${u.role==='Administrador'?'selected':''}>👑 Administrador (Acesso Irrestrito)</option>
+                  <option value="Gerente Financeiro" \${u.role==='Gerente Financeiro'?'selected':''}>💼 Gerente Financeiro</option>
+                  <option value="Usuário" \${u.role==='Usuário'?'selected':''}>👤 Usuário / Operador Padrão</option>
+                  <option value="Auditor" \${u.role==='Auditor'?'selected':''}>🔍 Auditor (Somente Leitura)</option>
+                </select>
+              </td>
+            </tr>\`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Matriz de Permissões por Função do Sistema -->
+  <div class="panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25); background:var(--card);">
+    <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h3 style="font-size:16px; font-weight:700; color:#FFFFFF;">Matriz de Permissões e Capacidades do Sistema</h3>
+        <p class="cfg-hint" style="margin-top:4px;">Tabela detalhada de acessos, privilégios de edição e permissões ativas para cada nível de usuário.</p>
+      </div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button onclick="setFuncoesRoleFilter('all', this)" class="funcoes-filter-btn active" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; cursor:pointer;">Todas</button>
+        <button onclick="setFuncoesRoleFilter('admin', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(232,176,75,0.12); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; cursor:pointer;">👑 Administrador</button>
+        <button onclick="setFuncoesRoleFilter('gerente', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#34d399; cursor:pointer;">💼 Gerente</button>
+        <button onclick="setFuncoesRoleFilter('usuario', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); color:#60a5fa; cursor:pointer;">👤 Usuário</button>
+        <button onclick="setFuncoesRoleFilter('auditor', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.3); color:#c084fc; cursor:pointer;">🔍 Auditor</button>
+      </div>
+    </div>
+    
+    <div class="table-panel" style="padding:0; border:none; background:transparent; overflow-x:auto;">
       <table style="width:100%; border-collapse:collapse; text-align:left;">
         <thead>
           <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.25);">
             <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Módulo do Sistema</th>
-            <th style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👑 Administrador</th>
-            <th style="padding:14px 16px; color:#34d399; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">💼 Gerente Financeiro</th>
-            <th style="padding:14px 16px; color:#60a5fa; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👤 Usuário / Operador</th>
-            <th style="padding:14px 16px; color:#c084fc; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">🔍 Auditor (Leitura)</th>
+            <th class="perm-matrix-th" data-perm-role="admin" style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👑 Administrador</th>
+            <th class="perm-matrix-th" data-perm-role="gerente" style="padding:14px 16px; color:#34d399; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">💼 Gerente Financeiro</th>
+            <th class="perm-matrix-th" data-perm-role="usuario" style="padding:14px 16px; color:#60a5fa; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👤 Usuário / Operador</th>
+            <th class="perm-matrix-th" data-perm-role="auditor" style="padding:14px 16px; color:#c084fc; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">🔍 Auditor (Leitura)</th>
           </tr>
         </thead>
         <tbody>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
             <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">📊</span> Dashboard Executivo</td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total (Criar/Editar/Excluir)</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Somente Leitura</span></td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total (Criar/Editar/Excluir)</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Somente Leitura</span></td>
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
             <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">💳</span> Gestão de Transações & Cartões</td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total (Qualquer Usuário)</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Somente Leitura</span></td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total (Qualquer Usuário)</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Somente Leitura</span></td>
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
             <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">🎯</span> Orçamentos, Metas & Relatórios</td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total + Exportação 4K</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total + Exportação</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Exportação CSV/PDF</span></td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total + Exportação 4K</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total + Exportação</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Exportação CSV/PDF</span></td>
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
             <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">👥</span> Gerenciamento de Usuários & Contas</td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Controle Total + Modo Espelho 👁️</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Lista de Contas</span></td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Controle Total + Modo Espelho 👁️</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Lista de Contas</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">🛡️</span> Central de Funções & Permissões</td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Controle Total (Nível 1)</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
             <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">📜</span> Logs de Auditoria & Segurança</td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge full">✅ Auditoria Geral + Filtro IP/Email</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Logs Próprios</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
-            <td style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Leitura de Eventos</span></td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Auditoria Geral + Filtro IP/Email</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Logs Próprios</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Leitura de Eventos</span></td>
           </tr>
         </tbody>
       </table>
@@ -7025,14 +7167,14 @@ function pageFuncoes(){
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow:0 0 10px #10b981;"></span>
-            <div><strong style="font-size:13.5px; color:var(--text);">Persistência PostgreSQL</strong><div style="font-size:11px; color:var(--text-faint);">Sincronização em tempo real</div></div>
+            <div><strong style="font-size:13.5px; color:var(--text);">Persistência PostgreSQL / JSON</strong><div style="font-size:11px; color:var(--text-faint);">Sincronização em tempo real</div></div>
           </div>
           <span style="font-size:11px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.15); padding:3px 8px; border-radius:6px;">Online</span>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="width:10px; height:10px; border-radius:50%; background:#3b82f6; box-shadow:0 0 10px #3b82f6;"></span>
-            <div><strong style="font-size:13.5px; color:var(--text);">Engine de Cálculos 4K</strong><div style="font-size:11px; color:var(--text-faint);">Saldos, faturas & projeções</div></div>
+            <div><strong style="font-size:13.5px; color:var(--text);">Engine de Funções & Permissões</strong><div style="font-size:11px; color:var(--text-faint);">Validação de Acesso JWT / Sessão</div></div>
           </div>
           <span style="font-size:11px; font-weight:700; color:#3b82f6; background:rgba(59,130,246,0.15); padding:3px 8px; border-radius:6px;">Ativo</span>
         </div>
@@ -7053,12 +7195,33 @@ function pageFuncoes(){
         <button class="btn-primary" onclick="if(typeof recalculateAllBalances==='function') recalculateAllBalances(); showLoginSuccessPopup('Saldos e funções reprocessados com sucesso!');" style="display:flex; align-items:center; justify-content:center; gap:8px;">
           <span>🔄</span> Recalcular Saldos & Projeções
         </button>
-        <button class="btn-ghost" onclick="syncUsersWithServer().then(()=>showLoginSuccessPopup('Funções de usuários atualizadas!'));" style="display:flex; align-items:center; justify-content:center; gap:8px; border-color:rgba(232,176,75,0.3); color:#fbbf24;">
+        <button class="btn-ghost" onclick="syncUsersWithServer().then(()=>showLoginSuccessPopup('Funções de usuários atualizadas com o servidor!'));" style="display:flex; align-items:center; justify-content:center; gap:8px; border-color:rgba(232,176,75,0.3); color:#fbbf24;">
           <span>⚡</span> Sincronizar Tabela de Funções & Usuários
         </button>
       </div>
     </div>
-  </div>
+  </div>\`;
+}der:1px solid var(--card-border);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b; box-shadow:0 0 10px #f59e0b;"></span>
+            <div><strong style="font-size:13.5px; color:var(--text);">Auditoria beacon & API Logs</strong><div style="font-size:11px; color:var(--text-faint);">Rastreamento de ações do sistema</div></div>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:#f59e0b; background:rgba(245,158,11,0.15); padding:3px 8px; border-radius:6px;">Gravando</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="border:1px solid rgba(232,176,75,0.2); background:var(--card);">
+      <div class="panel-head"><h3>🛠️ Ferramentas & Teste de Função</h3></div>
+      <p class="cfg-hint" style="margin-bottom:14px;">Utilize as ferramentas abaixo para validar o estado e o recálculo imediato de todas as funções ativas.</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn-primary" onclick="if(typeof recalculateAllBalances==='function') recalculateAllBalances(); showLoginSuccessPopup('Saldos e funções reprocessados com sucesso!');" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+          <span>🔄</span> Recalcular Saldos & Projeções
+        </button>
+        <button class="btn-ghost" onclick="syncUsersWithServer().then(()=>showLoginSuccessPopup('Funções de usuários atualizadas com o servidor!'));" style="display:flex; align-items:center; justify-content:center; gap:8px; border-color:rgba(232,176,75,0.3); color:#fbbf24;">
+          <span>⚡</span> Sincronizar Tabela de Funções & Usuários
+        </button>
+      </div>
   \`;
 }
 
@@ -9797,8 +9960,8 @@ if (scaleMenuBtn && scaleDropdown) {
           const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
           const savedPage = localStorage.getItem('nexus_current_page');
           const pageTarget = hashPage || savedPage;
-          if (pageTarget === 'logs') {
-            currentPage = 'logs';
+          if (['logs', 'funcoes', 'usuarios'].includes(pageTarget)) {
+            currentPage = pageTarget;
           } else {
             currentPage = 'usuarios';
           }
@@ -9877,8 +10040,8 @@ if (scaleMenuBtn && scaleDropdown) {
     const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
     const savedPage = localStorage.getItem('nexus_current_page');
     const pageTarget = hashPage || savedPage || currentPage;
-    if (pageTarget === 'logs') {
-      currentPage = 'logs';
+    if (['logs', 'funcoes', 'usuarios'].includes(pageTarget)) {
+      currentPage = pageTarget;
     } else {
       currentPage = 'usuarios';
     }
