@@ -6,7 +6,7 @@ Write-Host "==================================================" -ForegroundColor
 git add .
 $msg = Read-Host "Digite a mensagem do commit (pressione Enter para padrão)"
 if ([string]::IsNullOrWhiteSpace($msg)) {
-    $msg = "auto: atualização do sistema"
+    $msg = "auto: atualização do ambiente de homologação"
 }
 
 git commit -m "$msg"

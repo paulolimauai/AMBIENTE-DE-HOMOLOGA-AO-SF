@@ -31,7 +31,7 @@ if (Pool) {
         port: process.env.DB_PORT || 5432,
         user: process.env.DB_USER || 'postgres',
         password: process.env.DB_PASSWORD || '86266049',
-        database: process.env.DB_NAME || 'NEXUS_FINANCEIRO_DB',
+        database: process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇAO SF',
         ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
       });
 
@@ -46,8 +46,8 @@ if (Pool) {
 
 // Usuário admin padrão, inserido no banco na primeira execução
 const DEFAULT_ADMIN = {
-  name: 'Administrador',
-  email: 'admin@nexusfinanceirohub.com.br',
+  name: 'Paulo Lima',
+  email: 'admin@nexusfinanceiro.com',
   password: '86266049',
   role: 'Administrador',
   active: true
@@ -179,6 +179,12 @@ async function initDatabase() {
      VALUES ($1, $2, $3, $4, $5)
      ON CONFLICT (email) DO NOTHING;`,
     [DEFAULT_ADMIN.name, DEFAULT_ADMIN.email, DEFAULT_ADMIN.password, DEFAULT_ADMIN.role, DEFAULT_ADMIN.active]
+  );
+  await pool.query(
+    `INSERT INTO usuarios (name, email, password, role, active)
+     VALUES ($1, $2, $3, $4, $5)
+     ON CONFLICT (email) DO NOTHING;`,
+    ['Paulo Lima', 'paulolp0101@gmail.com', '86266049', 'Administrador', true]
   );
 
   try {
@@ -2296,7 +2302,7 @@ body.light .toast-desc { color: #475569 !important; }
 body.light .toast-desc strong { color: #0F172A !important; }
 
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
-.env-badge-prod {
+.env-badge-homolog {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -2311,7 +2317,7 @@ body.light .toast-desc strong { color: #0F172A !important; }
   backdrop-filter: blur(8px);
 }
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
-.env-badge-prod {
+.env-badge-homolog {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -2834,6 +2840,7 @@ body.light .scale-dropdown {
   <div class="auth-top-bar" style="width:100%; max-width:1200px; padding:0 24px; display:flex; justify-content:space-between; align-items:center; position:absolute; top:20px; z-index:20;">
     <div style="display:flex; align-items:center; gap:8px;"></div>
     <div style="display:flex; align-items:center; gap:12px;">
+      <span class="env-badge-homolog">Homologação 🧪</span>
       <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
         <svg id="authThemeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
@@ -2902,6 +2909,10 @@ body.light .scale-dropdown {
               <input type="checkbox" id="rememberMe" checked style="accent-color:var(--auth-gold); width:15px; height:15px;">
               <span>Lembrar meu acesso</span>
             </label>
+            <button type="button" onclick="fillAdminDemo()" style="background:none; border:none; color:#60a5fa; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>Preencher Admin</span>
+            </button>
           </div>
         </div>
 
@@ -2941,22 +2952,6 @@ body.light .scale-dropdown {
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </span>
             <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
-            <button type="button" class="auth-pass-toggle-btn" id="regPasswordToggle" title="Mostrar/Ocultar Senha">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="auth-field">
-          <label>Confirmar Senha</label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            </span>
-            <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6">
-            <button type="button" class="auth-pass-toggle-btn" id="regConfirmPasswordToggle" title="Mostrar/Ocultar Senha">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
           </div>
         </div>
 
@@ -2968,11 +2963,11 @@ body.light .scale-dropdown {
 
     <!-- Box 3: Recuperação de Senha -->
     <div id="forgotBox" style="display:none;">
-      <p style="font-size:13.5px; color:var(--auth-text-dim); margin-bottom:16px; line-height:1.5;">
-        Confirme seus dados cadastrados para redefinir e alterar sua senha com segurança.
+      <p style="font-size:13.5px; color:var(--auth-text-dim); margin-bottom:20px; line-height:1.5;">
+        Informe seu e-mail cadastrado para enviarmos sua senha ou gerar uma credencial de acesso imediato.
       </p>
 
-      <form id="forgotForm" onsubmit="handleForgotSubmit(event); return false;">
+      <form id="forgotStep1">
         <div class="auth-field">
           <label>E-mail Cadastrado</label>
           <div class="auth-input-wrapper">
@@ -2983,46 +2978,13 @@ body.light .scale-dropdown {
           </div>
         </div>
 
-        <div class="auth-field">
-          <label>Nome Completo Cadastrado</label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </span>
-            <input type="text" id="forgotName" placeholder="Ex: Paulo Lima">
-          </div>
-        </div>
-
-        <div class="auth-field">
-          <label>Nova Senha</label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </span>
-            <input type="password" id="forgotNewPassword" placeholder="Digite sua nova senha" required minlength="6">
-            <button type="button" class="auth-pass-toggle-btn" id="forgotNewPassToggle" title="Mostrar/Ocultar Senha">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="auth-field">
-          <label>Confirmar Nova Senha</label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            </span>
-            <input type="password" id="forgotConfirmPassword" placeholder="Repita a nova senha" required minlength="6">
-          </div>
-        </div>
-
-        <button type="submit" class="btn-auth-primary" id="btnResetPasswordSubmit">
-          Alterar Minha Senha →
+        <button type="submit" class="btn-auth-primary" id="btnSendPassword">
+          Recuperar Minha Senha →
         </button>
       </form>
 
       <div style="text-align:center; margin-top:18px;">
-        <a class="auth-forgot-link" id="goLoginFromForgot" onclick="switchAuthTab('login')">← Voltar para o Login</a>
+        <a class="auth-forgot-link" id="goLoginFromForgot">← Voltar para o Login</a>
       </div>
     </div>
 
@@ -3068,6 +3030,7 @@ body.light .scale-dropdown {
       <div class="brand">
         <div class="logo">N</div>
         <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
+        <span class="env-badge-homolog" title="Ambiente de Testes e Homologação">Homologação 🧪</span>
       </div>
       <div class="right" style="margin-left:auto;">
         <div class="notif-wrap">
@@ -3582,7 +3545,7 @@ window.togglePasswordVisibility = function(inputId, btnId) {
 window.fillAdminDemo = function() {
   const emailInput = document.getElementById('loginEmail');
   const passInput = document.getElementById('loginPassword');
-  if (emailInput) emailInput.value = 'admin@nexusfinanceirohub.com.br';
+  if (emailInput) emailInput.value = 'admin@nexusfinanceiro.com';
   if (passInput) passInput.value = '86266049';
   showExecutiveWelcomeToast('Credenciais Preenchidas', 'Admin demo configurado. Clique em Entrar na Conta.');
 };
@@ -3620,7 +3583,9 @@ async function syncUsersWithServer() {
     registeredUsers = cached;
   } else {
     registeredUsers = [
-      { name: 'Administrador', email: 'admin@nexusfinanceirohub.com.br', password: '86266049', role: 'Administrador', active: true }
+      { name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
+      { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true },
+      { name: 'Usuário Padrão', email: 'user@nexusfinanceiro.com', password: '123456', role: 'Usuário', active: true }
     ];
     saveToStorage('nexus_users', registeredUsers);
   }
@@ -3653,15 +3618,6 @@ if (authThemeBtn) authThemeBtn.onclick = () => window.toggleAuthTheme();
 
 const loginPassToggle = document.getElementById('loginPasswordToggle');
 if (loginPassToggle) loginPassToggle.onclick = () => window.togglePasswordVisibility('loginPassword', 'loginPasswordToggle');
-
-const regPassToggle = document.getElementById('regPasswordToggle');
-if (regPassToggle) regPassToggle.onclick = () => window.togglePasswordVisibility('regPassword', 'regPasswordToggle');
-
-const regConfirmPassToggle = document.getElementById('regConfirmPasswordToggle');
-if (regConfirmPassToggle) regConfirmPassToggle.onclick = () => window.togglePasswordVisibility('regConfirmPassword', 'regConfirmPasswordToggle');
-
-const forgotNewPassToggle = document.getElementById('forgotNewPassToggle');
-if (forgotNewPassToggle) forgotNewPassToggle.onclick = () => window.togglePasswordVisibility('forgotNewPassword', 'forgotNewPassToggle');
 
 const goForgot = document.getElementById('goForgot');
 if (goForgot) goForgot.onclick = (e) => { e.preventDefault(); window.switchAuthTab('forgot'); };
@@ -10270,7 +10226,9 @@ function getLocalUsers() {
     }
   } catch (e) {}
   return [
-    DEFAULT_ADMIN
+    DEFAULT_ADMIN,
+    { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true },
+    { name: 'Usuário Padrão', email: 'user@nexusfinanceiro.com', password: '123456', role: 'Usuário', active: true }
   ];
 }
 
@@ -10511,87 +10469,6 @@ const server = http.createServer((req, res) => {
         console.error('Erro ao processar recuperação de senha:', err);
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: 'Falha ao processar solicitação de senha.' }));
-      }
-    });
-    return;
-  }
-
-  // Rota POST para Redefinição / Alteração de Senha com Confirmação de Dados
-  if (req.method === 'POST' && parsedUrl.pathname === '/api/reset-password') {
-    let body = '';
-    req.on('data', chunk => body += chunk.toString());
-    req.on('end', async () => {
-      try {
-        const { email, name, newPassword } = JSON.parse(body);
-        if (!email || !newPassword) {
-          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'E-mail e nova senha são obrigatórios.' }));
-        }
-
-        if (newPassword.length < 6) {
-          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'A nova senha deve possuir pelo menos 6 caracteres.' }));
-        }
-
-        let user = null;
-        if (pool) {
-          try {
-            const result = await pool.query(
-              'SELECT id, name, email FROM usuarios WHERE LOWER(email) = LOWER($1)',
-              [email.trim()]
-            );
-            if (result.rows.length > 0) user = result.rows[0];
-          } catch(e) {}
-        }
-        if (!user) {
-          const localUsers = getLocalUsers();
-          user = localUsers.find(u => u.email.toLowerCase() === email.trim().toLowerCase()) || null;
-        }
-
-        if (!user) {
-          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'E-mail informado não foi encontrado no sistema.' }));
-        }
-
-        if (name && name.trim()) {
-          const nameInput = name.trim().toLowerCase();
-          const userStoredName = (user.name || '').trim().toLowerCase();
-          const firstInput = nameInput.split(' ')[0];
-          const firstStored = userStoredName.split(' ')[0];
-          if (userStoredName && !userStoredName.includes(nameInput) && !nameInput.includes(firstStored) && firstInput !== firstStored) {
-            res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-            return res.end(JSON.stringify({ success: false, error: 'O nome informado não confere com os dados de cadastro.' }));
-          }
-        }
-
-        if (pool) {
-          try {
-            await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [newPassword, user.email]);
-          } catch(e) {
-            console.error('Erro ao atualizar senha no Postgres:', e);
-          }
-        }
-
-        const localUsers = getLocalUsers();
-        const lu = localUsers.find(u => u.email.toLowerCase() === user.email.toLowerCase());
-        if (lu) {
-          lu.password = newPassword;
-          saveLocalUsers(localUsers);
-        }
-
-        recordSystemLog(user.name || name || 'Usuário', user.email, 'Alteração de Senha', 'Autenticação', 'Redefiniu a senha com confirmação de dados');
-
-        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ 
-          success: true, 
-          message: 'Senha alterada com sucesso! Você já pode entrar com sua nova senha.',
-          email: user.email 
-        }));
-
-      } catch (err) {
-        console.error('Erro ao redefinir senha:', err);
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: 'Falha ao processar redefinição de senha.' }));
       }
     });
     return;
@@ -10871,7 +10748,7 @@ process.on('unhandledRejection', (reason, promise) => {
 initDatabase()
   .then(() => {
     if (pool) {
-      console.log(`[BANCO] Conectado com sucesso ao PostgreSQL (banco: ${process.env.DB_NAME || 'NEXUS_FINANCEIRO_DB'})`);
+      console.log(`[BANCO] Conectado com sucesso ao PostgreSQL (banco: ${process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇÃO SF'})`);
     } else {
       console.log(`[BANCO LOCAL] Operando com alta resiliência e persistência em arquivos JSON locais.`);
     }
