@@ -3707,16 +3707,11 @@ document.getElementById('forgotStep1').onsubmit = async (e) => {
   }
 };
 
-// Login direto contra o PostgreSQL / API com Fallback Offline Resiliente
-document.getElementById('loginForm').onsubmit = async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value.trim();
+window.performLogin = async function(email, password) {
   const submitBtn = document.querySelector('#loginForm button[type="submit"]');
-
   if (!email || !password) {
-    alert('Por favor, preencha o e-mail e a senha.');
-    return;
+    showCustomAlert('Atenção', 'Por favor, preencha o e-mail e a senha.', 'error');
+    return false;
   }
 
   if (submitBtn) {
@@ -3733,12 +3728,12 @@ document.getElementById('loginForm').onsubmit = async (e) => {
     const data = await res.json();
 
     if (!res.ok || !data.success) {
-      alert(data.error || 'E-mail ou senha incorretos!');
+      showCustomAlert('Erro no Login', data.error || 'E-mail ou senha incorretos!', 'error');
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Entrar na Conta →';
       }
-      return;
+      return false;
     }
 
     currentUser = data.user;
@@ -3761,12 +3756,19 @@ document.getElementById('loginForm').onsubmit = async (e) => {
     await loadUserData();
     showLoginSuccessPopup('Redirecionando para o seu sistema...');
     setTimeout(() => {
-      document.getElementById('authPage').classList.remove('show');
-      document.getElementById('authPage').style.display = 'none';
-      document.getElementById('appMain').classList.add('show');
-      document.getElementById('appMain').style.display = 'flex';
+      const authPage = document.getElementById('authPage');
+      const appMain = document.getElementById('appMain');
+      if (authPage) {
+        authPage.classList.remove('show');
+        authPage.style.display = 'none';
+      }
+      if (appMain) {
+        appMain.classList.add('show');
+        appMain.style.display = 'flex';
+      }
       render();
     }, 1200);
+    return true;
 
   } catch (err) {
     console.warn('Servidor indisponível ou offline. Validando credenciais pelo cache local:', err);
@@ -3776,7 +3778,7 @@ document.getElementById('loginForm').onsubmit = async (e) => {
       if (user.active === false) {
         showAccountDisabledPopup('Seu usuário foi desativado pelo administrador.');
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
-        return;
+        return false;
       }
       currentUser = user;
       saveToStorage('nexus_session', { email: user.email });
@@ -3793,14 +3795,26 @@ document.getElementById('loginForm').onsubmit = async (e) => {
       await loadUserData();
       showLoginSuccessPopup('Acesso offline autenticado com sucesso!');
       setTimeout(() => {
-        document.getElementById('authPage').classList.remove('show');
-        document.getElementById('authPage').style.display = 'none';
-        document.getElementById('appMain').classList.add('show');
-        document.getElementById('appMain').style.display = 'flex';
+        const authPage = document.getElementById('authPage');
+        const appMain = document.getElementById('appMain');
+        if (authPage) {
+          authPage.classList.remove('show');
+          authPage.style.display = 'none';
+        }
+        if (appMain) {
+          appMain.classList.add('show');
+          appMain.style.display = 'flex';
+        }
         render();
       }, 1200);
+      return true;
     } else {
-      alert('E-mail ou senha incorretos!');
+      showCustomAlert('Erro no Login', 'E-mail ou senha incorretos!', 'error');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Entrar na Conta →';
+      }
+      return false;
     }
   } finally {
     if (submitBtn) {
