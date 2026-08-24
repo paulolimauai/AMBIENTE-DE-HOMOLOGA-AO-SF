@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "deploy": "git add . && git commit -m \"auto: atualizacao homologacao\" && git push origin main"
+    "deploy": "git add . && git commit -m \"auto: atualizacao sistema\" && git push origin main"
   },
   "dependencies": {
     "@google/genai": "^2.16.0",

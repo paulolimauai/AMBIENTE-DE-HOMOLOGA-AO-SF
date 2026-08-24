@@ -31,7 +31,7 @@ if (Pool) {
         port: process.env.DB_PORT || 5432,
         user: process.env.DB_USER || 'postgres',
         password: process.env.DB_PASSWORD || '86266049',
-        database: process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇAO SF',
+        database: process.env.DB_NAME || 'NEXUS_FINANCEIRO_DB',
         ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
       });
 
@@ -2302,7 +2302,7 @@ body.light .toast-desc { color: #475569 !important; }
 body.light .toast-desc strong { color: #0F172A !important; }
 
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
-.env-badge-homolog {
+.env-badge-prod {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -2317,7 +2317,7 @@ body.light .toast-desc strong { color: #0F172A !important; }
   backdrop-filter: blur(8px);
 }
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
-.env-badge-homolog {
+.env-badge-prod {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -2840,7 +2840,6 @@ body.light .scale-dropdown {
   <div class="auth-top-bar" style="width:100%; max-width:1200px; padding:0 24px; display:flex; justify-content:space-between; align-items:center; position:absolute; top:20px; z-index:20;">
     <div style="display:flex; align-items:center; gap:8px;"></div>
     <div style="display:flex; align-items:center; gap:12px;">
-      <span class="env-badge-homolog">Homologação 🧪</span>
       <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
         <svg id="authThemeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
@@ -3030,7 +3029,6 @@ body.light .scale-dropdown {
       <div class="brand">
         <div class="logo">N</div>
         <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
-        <span class="env-badge-homolog" title="Ambiente de Testes e Homologação">Homologação 🧪</span>
       </div>
       <div class="right" style="margin-left:auto;">
         <div class="notif-wrap">
@@ -10829,7 +10827,7 @@ process.on('unhandledRejection', (reason, promise) => {
 initDatabase()
   .then(() => {
     if (pool) {
-      console.log(`[BANCO] Conectado com sucesso ao PostgreSQL (banco: ${process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇÃO SF'})`);
+      console.log(`[BANCO] Conectado com sucesso ao PostgreSQL (banco: ${process.env.DB_NAME || 'NEXUS_FINANCEIRO_DB'})`);
     } else {
       console.log(`[BANCO LOCAL] Operando com alta resiliência e persistência em arquivos JSON locais.`);
     }
