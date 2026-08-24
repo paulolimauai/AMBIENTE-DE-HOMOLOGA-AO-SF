@@ -665,7 +665,11 @@
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                             </span>
-                            <input id="regConfirmPassword" type="password" required placeholder="Repita sua senha" oninput="checkPasswordMatch()">
+                            <input id="regConfirmPassword" type="password" required class="has-toggle-btn" placeholder="Repita sua senha" oninput="checkPasswordMatch()">
+                            <button type="button" id="btnToggleRegConfirmPass" onclick="togglePasswordVisibility('regConfirmPassword', 'btnToggleRegConfirmPass')" 
+                                class="auth-input-toggle-btn focus:outline-none" title="Mostrar/Ocultar Senha">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
                         </div>
                         <div id="pwdMatchMsg" class="hidden mt-1 text-[11px] font-semibold"></div>
                     </div>
