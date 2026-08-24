@@ -2902,10 +2902,6 @@ body.light .scale-dropdown {
               <input type="checkbox" id="rememberMe" checked style="accent-color:var(--auth-gold); width:15px; height:15px;">
               <span>Lembrar meu acesso</span>
             </label>
-            <button type="button" onclick="fillAdminDemo()" style="background:none; border:none; color:#60a5fa; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              <span>Preencher Admin</span>
-            </button>
           </div>
         </div>
 
