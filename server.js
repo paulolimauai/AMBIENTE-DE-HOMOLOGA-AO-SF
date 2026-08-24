@@ -10474,6 +10474,87 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Rota POST para Redefinição / Alteração de Senha com Confirmação de Dados
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/reset-password') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        const { email, name, newPassword } = JSON.parse(body);
+        if (!email || !newPassword) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'E-mail e nova senha são obrigatórios.' }));
+        }
+
+        if (newPassword.length < 6) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'A nova senha deve possuir pelo menos 6 caracteres.' }));
+        }
+
+        let user = null;
+        if (pool) {
+          try {
+            const result = await pool.query(
+              'SELECT id, name, email FROM usuarios WHERE LOWER(email) = LOWER($1)',
+              [email.trim()]
+            );
+            if (result.rows.length > 0) user = result.rows[0];
+          } catch(e) {}
+        }
+        if (!user) {
+          const localUsers = getLocalUsers();
+          user = localUsers.find(u => u.email.toLowerCase() === email.trim().toLowerCase()) || null;
+        }
+
+        if (!user) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'E-mail informado não foi encontrado no sistema.' }));
+        }
+
+        if (name && name.trim()) {
+          const nameInput = name.trim().toLowerCase();
+          const userStoredName = (user.name || '').trim().toLowerCase();
+          const firstInput = nameInput.split(' ')[0];
+          const firstStored = userStoredName.split(' ')[0];
+          if (userStoredName && !userStoredName.includes(nameInput) && !nameInput.includes(firstStored) && firstInput !== firstStored) {
+            res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, error: 'O nome informado não confere com os dados de cadastro.' }));
+          }
+        }
+
+        if (pool) {
+          try {
+            await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [newPassword, user.email]);
+          } catch(e) {
+            console.error('Erro ao atualizar senha no Postgres:', e);
+          }
+        }
+
+        const localUsers = getLocalUsers();
+        const lu = localUsers.find(u => u.email.toLowerCase() === user.email.toLowerCase());
+        if (lu) {
+          lu.password = newPassword;
+          saveLocalUsers(localUsers);
+        }
+
+        recordSystemLog(user.name || name || 'Usuário', user.email, 'Alteração de Senha', 'Autenticação', 'Redefiniu a senha com confirmação de dados');
+
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ 
+          success: true, 
+          message: 'Senha alterada com sucesso! Você já pode entrar com sua nova senha.',
+          email: user.email 
+        }));
+
+      } catch (err) {
+        console.error('Erro ao redefinir senha:', err);
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Falha ao processar redefinição de senha.' }));
+      }
+    });
+    return;
+  }
+
   // Rota GET de Usuários
   if (req.method === 'GET' && parsedUrl.pathname === '/api/users') {
     if (pool) {
