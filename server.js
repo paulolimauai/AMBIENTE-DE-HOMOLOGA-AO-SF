@@ -2945,6 +2945,22 @@ body.light .scale-dropdown {
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </span>
             <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+            <button type="button" class="auth-pass-toggle-btn" id="regPasswordToggle" title="Mostrar/Ocultar Senha">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label>Confirmar Senha</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6">
+            <button type="button" class="auth-pass-toggle-btn" id="regConfirmPasswordToggle" title="Mostrar/Ocultar Senha">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
           </div>
         </div>
 
@@ -2956,11 +2972,11 @@ body.light .scale-dropdown {
 
     <!-- Box 3: Recuperação de Senha -->
     <div id="forgotBox" style="display:none;">
-      <p style="font-size:13.5px; color:var(--auth-text-dim); margin-bottom:20px; line-height:1.5;">
-        Informe seu e-mail cadastrado para enviarmos sua senha ou gerar uma credencial de acesso imediato.
+      <p style="font-size:13.5px; color:var(--auth-text-dim); margin-bottom:16px; line-height:1.5;">
+        Confirme seus dados cadastrados para redefinir e alterar sua senha com segurança.
       </p>
 
-      <form id="forgotStep1">
+      <form id="forgotForm" onsubmit="handleForgotSubmit(event); return false;">
         <div class="auth-field">
           <label>E-mail Cadastrado</label>
           <div class="auth-input-wrapper">
@@ -2971,13 +2987,46 @@ body.light .scale-dropdown {
           </div>
         </div>
 
-        <button type="submit" class="btn-auth-primary" id="btnSendPassword">
-          Recuperar Minha Senha →
+        <div class="auth-field">
+          <label>Nome Completo Cadastrado</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <input type="text" id="forgotName" placeholder="Ex: Paulo Lima">
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label>Nova Senha</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="forgotNewPassword" placeholder="Digite sua nova senha" required minlength="6">
+            <button type="button" class="auth-pass-toggle-btn" id="forgotNewPassToggle" title="Mostrar/Ocultar Senha">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label>Confirmar Nova Senha</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <input type="password" id="forgotConfirmPassword" placeholder="Repita a nova senha" required minlength="6">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-auth-primary" id="btnResetPasswordSubmit">
+          Alterar Minha Senha →
         </button>
       </form>
 
       <div style="text-align:center; margin-top:18px;">
-        <a class="auth-forgot-link" id="goLoginFromForgot">← Voltar para o Login</a>
+        <a class="auth-forgot-link" id="goLoginFromForgot" onclick="switchAuthTab('login')">← Voltar para o Login</a>
       </div>
     </div>
 
@@ -3608,6 +3657,15 @@ if (authThemeBtn) authThemeBtn.onclick = () => window.toggleAuthTheme();
 
 const loginPassToggle = document.getElementById('loginPasswordToggle');
 if (loginPassToggle) loginPassToggle.onclick = () => window.togglePasswordVisibility('loginPassword', 'loginPasswordToggle');
+
+const regPassToggle = document.getElementById('regPasswordToggle');
+if (regPassToggle) regPassToggle.onclick = () => window.togglePasswordVisibility('regPassword', 'regPasswordToggle');
+
+const regConfirmPassToggle = document.getElementById('regConfirmPasswordToggle');
+if (regConfirmPassToggle) regConfirmPassToggle.onclick = () => window.togglePasswordVisibility('regConfirmPassword', 'regConfirmPasswordToggle');
+
+const forgotNewPassToggle = document.getElementById('forgotNewPassToggle');
+if (forgotNewPassToggle) forgotNewPassToggle.onclick = () => window.togglePasswordVisibility('forgotNewPassword', 'forgotNewPassToggle');
 
 const goForgot = document.getElementById('goForgot');
 if (goForgot) goForgot.onclick = (e) => { e.preventDefault(); window.switchAuthTab('forgot'); };
