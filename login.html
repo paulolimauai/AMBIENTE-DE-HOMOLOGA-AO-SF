@@ -138,14 +138,11 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', 'Outfit', 'Inter', -apple-system, sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
             background-color: var(--auth-bg);
             color: var(--auth-text);
             min-height: 100vh;
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
@@ -167,7 +164,7 @@
         .auth-card-nexus {
             background: var(--auth-card);
             border: 1px solid var(--auth-border);
-            border-radius: 26px;
+            border-radius: 28px;
             box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.8), 0 0 50px var(--auth-gold-glow), inset 0 1px 1px rgba(255, 255, 255, 0.14);
             backdrop-filter: blur(40px) saturate(190%);
             -webkit-backdrop-filter: blur(40px) saturate(190%);
@@ -233,37 +230,12 @@
             height: 100%;
             background: transparent !important;
             border: none;
-            padding: 0 14px 0 0;
+            padding: 0 12px 0 0;
             color: var(--auth-text);
             font-size: 14px;
             font-weight: 500;
             outline: none;
             width: 100%;
-        }
-
-        .auth-input-wrapper input.has-toggle-btn,
-        .auth-input-wrapper input[type="password"] {
-            padding-right: 46px;
-        }
-
-        .auth-input-toggle-btn {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64748B;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-
-        .auth-input-toggle-btn:hover {
-            color: var(--auth-gold);
         }
 
         .auth-input-wrapper input::placeholder {
@@ -300,13 +272,12 @@
 
         /* Botão Primário Dourado / Safira */
         .btn-auth-gradient {
-            background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%);
-            color: #070B14;
+            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 45%, #B45309 100%);
+            color: #0A0F1A;
             border-radius: 14px;
             font-weight: 800;
-            letter-spacing: 0.01em;
             border: none;
-            box-shadow: 0 8px 24px -4px rgba(245, 158, 11, 0.4), 0 0 16px rgba(245, 158, 11, 0.2);
+            box-shadow: 0 10px 28px rgba(245, 158, 11, 0.35), 0 0 20px rgba(245, 158, 11, 0.2);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
@@ -324,14 +295,14 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
             transition: left 0.6s ease;
         }
 
         .btn-auth-gradient:hover:not(:disabled) {
-            filter: brightness(1.08);
-            transform: translateY(-1.5px);
-            box-shadow: 0 12px 32px -4px rgba(245, 158, 11, 0.55), 0 0 24px rgba(245, 158, 11, 0.35);
+            filter: brightness(1.06);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 36px -4px rgba(245, 158, 11, 0.55), 0 0 28px rgba(245, 158, 11, 0.4);
         }
 
         .btn-auth-gradient:hover:not(:disabled)::before {
@@ -359,11 +330,10 @@
             font-size: 13px;
             font-weight: 700;
             cursor: pointer;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 7px;
-            box-sizing: border-box;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -481,11 +451,14 @@
         </div>
     </div>
 
-    <!-- BARRA SUPERIOR FIXA: CONTROLE DE TEMA -->
+    <!-- BARRA SUPERIOR FIXA: BADGE DE SEGURANÇA, HOMOLOGAÇÃO & TEMA -->
     <header class="w-full max-w-[1200px] flex items-center justify-between z-30 mb-4 px-2">
         <div class="flex items-center gap-2"></div>
 
         <div class="flex items-center gap-3">
+            <span class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold backdrop-blur-md hidden sm:inline-flex items-center gap-1.5 shadow-sm">
+                <span>🧪</span> Homologação
+            </span>
             <button type="button" id="loginThemeBtn" onclick="toggleLoginTheme()" title="Alternar Tema Claro / Escuro"
                 class="w-9 h-9 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center shadow-lg hover:scale-105 transition-all focus:outline-none backdrop-blur-md" style="background-color: var(--auth-tab-bg); border-color: var(--auth-border);">
                 <svg id="themeIconSvg" class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
@@ -514,9 +487,9 @@
                     <span>N</span>
                     <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#0A0D18]" title="Sistema Operacional Online"></div>
                 </div>
-                <div class="flex items-center justify-center gap-2">
-                    <span class="text-2xl sm:text-[25px] font-black tracking-tight text-white font-display">NEXUS</span>
-                    <span class="text-2xl sm:text-[25px] font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 bg-clip-text text-transparent font-display">FINANCEIRO HUB</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-xl sm:text-2xl font-black tracking-tight auth-brand-nexus text-white font-display">NEXUS</span>
+                    <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-amber-500 font-display">FINANCEIRO HUB</span>
                 </div>
                 <p id="authSubtitle" class="text-xs auth-subtitle-text text-[#94A3B8] mt-1.5 font-medium leading-relaxed">
                     Plataforma Inteligente de Gestão Financeira Pessoal
@@ -566,10 +539,10 @@
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                             </span>
-                            <input id="loginPassword" name="password" type="password" autocomplete="current-password" required class="has-toggle-btn"
+                            <input id="loginPassword" name="password" type="password" autocomplete="current-password" required 
                                 placeholder="••••••••">
                             <button type="button" id="btnToggleLoginPass" onclick="togglePasswordVisibility('loginPassword', 'btnToggleLoginPass')" 
-                                class="auth-input-toggle-btn focus:outline-none" title="Mostrar/Ocultar Senha">
+                                class="w-11 h-full flex items-center justify-center text-gray-400 hover:text-amber-400 transition-colors focus:outline-none" title="Mostrar/Ocultar Senha">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                         </div>
@@ -579,12 +552,16 @@
                         </div>
                     </div>
 
-                    <!-- Lembrar de Mim -->
+                    <!-- Lembrar de Mim & Atalho Admin -->
                     <div class="flex items-center justify-between pt-0.5 text-xs text-[#94A3B8] auth-label">
                         <label class="flex items-center gap-2 cursor-pointer select-none">
                             <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer" checked>
                             <span>Lembrar meu acesso</span>
                         </label>
+                        <button type="button" onclick="fillAdminDemo()" class="text-[11.5px] text-blue-400 hover:text-blue-300 font-bold transition-colors flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            <span>Preencher Admin</span>
+                        </button>
                     </div>
 
                     <!-- Botão de Login -->
@@ -633,9 +610,9 @@
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                             </span>
-                            <input id="regPassword" name="password" type="password" minlength="6" required class="has-toggle-btn" placeholder="Mínimo 6 caracteres" oninput="checkPasswordStrength(this.value)">
+                            <input id="regPassword" name="password" type="password" minlength="6" required placeholder="Mínimo 6 caracteres" oninput="checkPasswordStrength(this.value)">
                             <button type="button" id="btnToggleRegPass" onclick="togglePasswordVisibility('regPassword', 'btnToggleRegPass')" 
-                                class="auth-input-toggle-btn focus:outline-none" title="Mostrar/Ocultar Senha">
+                                class="w-11 h-full flex items-center justify-center text-gray-400 hover:text-amber-400 transition-colors focus:outline-none" title="Mostrar/Ocultar Senha">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                         </div>
@@ -661,11 +638,7 @@
                             <span class="auth-input-icon">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                             </span>
-                            <input id="regConfirmPassword" type="password" required class="has-toggle-btn" placeholder="Repita sua senha" oninput="checkPasswordMatch()">
-                            <button type="button" id="btnToggleRegConfirmPass" onclick="togglePasswordVisibility('regConfirmPassword', 'btnToggleRegConfirmPass')" 
-                                class="auth-input-toggle-btn focus:outline-none" title="Mostrar/Ocultar Senha">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            </button>
+                            <input id="regConfirmPassword" type="password" required placeholder="Repita sua senha" oninput="checkPasswordMatch()">
                         </div>
                         <div id="pwdMatchMsg" class="hidden mt-1 text-[11px] font-semibold"></div>
                     </div>
@@ -686,14 +659,13 @@
                 </p>
             </div>
 
-            <!-- 3. FORMULÁRIO DE RECUPERAÇÃO E ALTERAÇÃO DE SENHA -->
+            <!-- 3. FORMULÁRIO DE RECUPERAÇÃO DE SENHA -->
             <div id="forgotBox" class="form-fade hidden">
                 <p class="text-xs auth-subtitle-text text-[#94A3B8] mb-4 leading-relaxed">
-                    Confirme seus dados cadastrados para redefinir e alterar sua senha com segurança.
+                    Informe seu e-mail cadastrado para receber sua credencial de acesso ou gerar uma senha temporária segura.
                 </p>
 
-                <form id="forgotForm" class="space-y-3.5" onsubmit="handleForgotSubmit(event); return false;">
-                    <!-- E-mail Cadastrado -->
+                <form id="forgotForm" class="space-y-4" onsubmit="handleForgotSubmit(event); return false;">
                     <div>
                         <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail Cadastrado</label>
                         <div class="auth-input-wrapper">
@@ -704,66 +676,20 @@
                         </div>
                     </div>
 
-                    <!-- Nome Cadastrado (Confirmação de Identidade) -->
-                    <div>
-                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Nome Completo Cadastrado</label>
-                        <div class="auth-input-wrapper">
-                            <span class="auth-input-icon">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            </span>
-                            <input id="forgotName" name="forgotName" type="text" placeholder="Ex: Paulo Lima (para confirmação de dados)">
-                        </div>
-                    </div>
-
-                    <!-- Nova Senha -->
-                    <div>
-                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Nova Senha</label>
-                        <div class="auth-input-wrapper">
-                            <span class="auth-input-icon">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            </span>
-                            <input id="forgotNewPassword" name="forgotNewPassword" type="password" minlength="6" required class="has-toggle-btn" placeholder="Digite sua nova senha">
-                            <button type="button" id="btnToggleForgotPass" onclick="togglePasswordVisibility('forgotNewPassword', 'btnToggleForgotPass')" 
-                                class="auth-input-toggle-btn focus:outline-none" title="Mostrar/Ocultar Senha">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Confirmar Nova Senha -->
-                    <div>
-                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Confirmar Nova Senha</label>
-                        <div class="auth-input-wrapper">
-                            <span class="auth-input-icon">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                            </span>
-                            <input id="forgotConfirmPassword" type="password" required class="has-toggle-btn" placeholder="Repita a nova senha">
-                        </div>
-                    </div>
-
-                    <div class="pt-2">
-                        <button type="submit" id="btnResetPasswordSubmit" class="btn-auth-gradient w-full py-3.5 text-sm font-black flex items-center justify-center gap-2 focus:outline-none">
-                            <span>Alterar Minha Senha</span>
+                    <div class="pt-1">
+                        <button type="submit" id="btnSendPassword" class="btn-auth-gradient w-full py-3.5 text-sm font-black flex items-center justify-center gap-2 focus:outline-none">
+                            <span>Recuperar Minha Senha</span>
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                         </button>
                     </div>
                 </form>
 
-                <div class="mt-4 text-center">
+                <div class="mt-5 text-center">
                     <button type="button" onclick="switchAuthTab('login')" class="text-xs font-bold text-amber-500 hover:text-amber-400 transition-colors focus:outline-none flex items-center justify-center gap-1.5 mx-auto">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                         <span>Voltar para o Login</span>
                     </button>
                 </div>
-            </div>
-
-            <!-- SELO DE SEGURANÇA AMBIENTE FINANCEIRO -->
-            <div class="mt-6 pt-3.5 border-t border-white/[0.08] flex items-center justify-center gap-1.5 text-[10.5px] font-semibold text-slate-400 select-none">
-                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <path d="m9 12 2 2 4-4"/>
-                </svg>
-                <span>Criptografia SSL 256-bit &bull; Conexão Bancária Segura</span>
             </div>
 
         </div>
@@ -926,7 +852,7 @@
         window.fillAdminDemo = function() {
             const emailInput = document.getElementById('loginEmail');
             const passInput = document.getElementById('loginPassword');
-            if (emailInput) emailInput.value = 'admin@nexusfinanceirohub.com.br';
+            if (emailInput) emailInput.value = 'admin@nexusfinanceiro.com';
             if (passInput) passInput.value = '86266049';
             showAlert('Credenciais do Administrador preenchidas. Clique em Entrar na Conta.', 'info');
         };
@@ -1172,71 +1098,54 @@
             return false;
         }
 
-        // 3. Submit Forgot Password / Reset Password
+        // 3. Submit Forgot Password
         async function handleForgotSubmit(e) {
             if (e) e.preventDefault();
             hideAlert();
 
-            const email = document.getElementById('forgotEmail') ? document.getElementById('forgotEmail').value.trim() : '';
-            const name = document.getElementById('forgotName') ? document.getElementById('forgotName').value.trim() : '';
-            const newPassword = document.getElementById('forgotNewPassword') ? document.getElementById('forgotNewPassword').value.trim() : '';
-            const confirmPassword = document.getElementById('forgotConfirmPassword') ? document.getElementById('forgotConfirmPassword').value.trim() : '';
-            const btn = document.getElementById('btnResetPasswordSubmit');
+            const email = document.getElementById('forgotEmail').value.trim();
+            const btn = document.getElementById('btnSendPassword');
 
-            if (!email || !newPassword) {
-                showAlert('Por favor, preencha o e-mail e a nova senha.', 'error');
+            if (!email) {
+                showAlert('Por favor, informe seu e-mail cadastrado.');
                 return false;
             }
 
-            if (newPassword.length < 6) {
-                showAlert('A nova senha deve possuir pelo menos 6 caracteres.', 'error');
-                return false;
-            }
-
-            if (newPassword !== confirmPassword) {
-                showAlert('A confirmação da nova senha não confere com a senha digitada.', 'error');
-                return false;
-            }
-
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processando alteração...';
-            }
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Enviando...';
 
             try {
-                const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/reset-password' : targetOrigin + '/api/reset-password';
+                const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/send-password' : targetOrigin + '/api/send-password';
                 const res = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email, name: name, newPassword: newPassword })
+                    body: JSON.stringify({ email: email })
                 });
                 const data = await res.json();
 
                 if (!res.ok || !data.success) {
-                    showAlert(data.error || 'Erro ao redefinir a senha.', 'error');
-                    if (btn) {
-                        btn.disabled = false;
-                        btn.innerHTML = '<span>Alterar Minha Senha</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
-                    }
+                    showAlert(data.error || 'E-mail não encontrado no sistema.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Recuperar Minha Senha</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
                     return false;
                 }
 
-                showAlert('🎉 Senha alterada com sucesso! Preenchemos a nova senha para você entrar.', 'success');
-                const loginEmailInput = document.getElementById('loginEmail');
-                const loginPassInput = document.getElementById('loginPassword');
-                if (loginEmailInput) loginEmailInput.value = email;
-                if (loginPassInput) loginPassInput.value = newPassword;
-                setTimeout(function() {
-                    switchAuthTab('login');
-                }, 1500);
+                if (data.mode === 'direct' && data.tempPassword) {
+                    showAlert('<strong>Senha gerada com sucesso:</strong> <code class="bg-black/50 px-2 py-0.5 rounded text-amber-300 font-mono text-sm">' + data.tempPassword + '</code>. Preenchemos para você entrar.', 'success');
+                    document.getElementById('loginEmail').value = email;
+                    document.getElementById('loginPassword').value = data.tempPassword;
+                    setTimeout(function() {
+                        switchAuthTab('login');
+                    }, 2000);
+                } else {
+                    showAlert('Instruções e dados de acesso enviados para o seu e-mail com sucesso!', 'success');
+                }
 
             } catch (err) {
-                showAlert('Erro ao conectar ao servidor backend (porta 3000). Verifique se o servidor está ativo.', 'error');
+                showAlert('Erro ao conectar ao servidor backend. Verifique suas credenciais SMTP.', 'error');
             } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>Alterar Minha Senha</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
-                }
+                btn.disabled = false;
+                btn.innerHTML = '<span>Recuperar Minha Senha</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
             }
             return false;
         }
