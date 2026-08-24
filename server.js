@@ -46,8 +46,8 @@ if (Pool) {
 
 // Usuário admin padrão, inserido no banco na primeira execução
 const DEFAULT_ADMIN = {
-  name: 'Paulo Lima',
-  email: 'admin@nexusfinanceiro.com',
+  name: 'Administrador',
+  email: 'admin@nexusfinanceirohub.com.br',
   password: '86266049',
   role: 'Administrador',
   active: true
@@ -179,12 +179,6 @@ async function initDatabase() {
      VALUES ($1, $2, $3, $4, $5)
      ON CONFLICT (email) DO NOTHING;`,
     [DEFAULT_ADMIN.name, DEFAULT_ADMIN.email, DEFAULT_ADMIN.password, DEFAULT_ADMIN.role, DEFAULT_ADMIN.active]
-  );
-  await pool.query(
-    `INSERT INTO usuarios (name, email, password, role, active)
-     VALUES ($1, $2, $3, $4, $5)
-     ON CONFLICT (email) DO NOTHING;`,
-    ['Paulo Lima', 'paulolp0101@gmail.com', '86266049', 'Administrador', true]
   );
 
   try {
@@ -3543,7 +3537,7 @@ window.togglePasswordVisibility = function(inputId, btnId) {
 window.fillAdminDemo = function() {
   const emailInput = document.getElementById('loginEmail');
   const passInput = document.getElementById('loginPassword');
-  if (emailInput) emailInput.value = 'admin@nexusfinanceiro.com';
+  if (emailInput) emailInput.value = 'admin@nexusfinanceirohub.com.br';
   if (passInput) passInput.value = '86266049';
   showExecutiveWelcomeToast('Credenciais Preenchidas', 'Admin demo configurado. Clique em Entrar na Conta.');
 };
@@ -3581,9 +3575,7 @@ async function syncUsersWithServer() {
     registeredUsers = cached;
   } else {
     registeredUsers = [
-      { name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
-      { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true },
-      { name: 'Usuário Padrão', email: 'user@nexusfinanceiro.com', password: '123456', role: 'Usuário', active: true }
+      { name: 'Administrador', email: 'admin@nexusfinanceirohub.com.br', password: '86266049', role: 'Administrador', active: true }
     ];
     saveToStorage('nexus_users', registeredUsers);
   }
@@ -10224,9 +10216,7 @@ function getLocalUsers() {
     }
   } catch (e) {}
   return [
-    DEFAULT_ADMIN,
-    { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true },
-    { name: 'Usuário Padrão', email: 'user@nexusfinanceiro.com', password: '123456', role: 'Usuário', active: true }
+    DEFAULT_ADMIN
   ];
 }
 
