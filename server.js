@@ -180,12 +180,6 @@ async function initDatabase() {
      ON CONFLICT (email) DO NOTHING;`,
     [DEFAULT_ADMIN.name, DEFAULT_ADMIN.email, DEFAULT_ADMIN.password, DEFAULT_ADMIN.role, DEFAULT_ADMIN.active]
   );
-  await pool.query(
-    `INSERT INTO usuarios (name, email, password, role, active)
-     VALUES ($1, $2, $3, $4, $5)
-     ON CONFLICT (email) DO NOTHING;`,
-    ['Paulo Lima', 'paulolp0101@gmail.com', '86266049', 'Administrador', true]
-  );
 
   try {
     const res = await pool.query('SELECT id, name, email, password, role, active FROM usuarios ORDER BY id ASC');
@@ -3583,9 +3577,7 @@ async function syncUsersWithServer() {
     registeredUsers = cached;
   } else {
     registeredUsers = [
-      { name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
-      { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true },
-      { name: 'Usuário Padrão', email: 'user@nexusfinanceiro.com', password: '123456', role: 'Usuário', active: true }
+      { name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true }
     ];
     saveToStorage('nexus_users', registeredUsers);
   }
@@ -4046,7 +4038,7 @@ function isCurrentAdmin() {
   if (!currentUser) return false;
   if (currentUser.role === 'Administrador') return true;
   const e = (currentUser.email || '').toLowerCase().trim();
-  return e.includes('admin') || e.includes('paulolp0101') || e.includes('paulodelima');
+  return e === 'admin@nexusfinanceiro.com';
 }
 
 function resetUserDataState() {
@@ -10226,9 +10218,7 @@ function getLocalUsers() {
     }
   } catch (e) {}
   return [
-    DEFAULT_ADMIN,
-    { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Administrador', active: true },
-    { name: 'Usuário Padrão', email: 'user@nexusfinanceiro.com', password: '123456', role: 'Usuário', active: true }
+    DEFAULT_ADMIN
   ];
 }
 
