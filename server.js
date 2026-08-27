@@ -3073,9 +3073,6 @@ body.light .scale-dropdown {
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
             </span>
             <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="checkServerRegPasswordMatch()">
-            <button type="button" class="auth-pass-toggle-btn" id="regConfirmPasswordToggle" title="Mostrar/Ocultar Senha">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
           </div>
           <div id="regPwdMatchMsg" style="display:none; margin-top:6px; font-size:11.5px; font-weight:700;"></div>
         </div>
@@ -4591,6 +4588,20 @@ function bindPasswordToggle(inputId, btnId){
     inp.type = show ? 'text' : 'password';
     btn.innerHTML = show ? EYE_OFF_ICON : EYE_ICON;
     btn.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha');
+  };
+}
+function bindDualPasswordToggle(primaryInputId, secondaryInputId, btnId){
+  const inp1 = document.getElementById(primaryInputId);
+  const inp2 = document.getElementById(secondaryInputId);
+  const btn = document.getElementById(btnId);
+  if(!inp1 || !btn) return;
+  btn.innerHTML = EYE_ICON;
+  btn.onclick = ()=>{
+    const show = inp1.type === 'password';
+    inp1.type = show ? 'text' : 'password';
+    if(inp2) inp2.type = show ? 'text' : 'password';
+    btn.innerHTML = show ? EYE_OFF_ICON : EYE_ICON;
+    btn.setAttribute('aria-label', show ? 'Ocultar senhas' : 'Mostrar senhas');
   };
 }
 function getDefaultPeriod(){
@@ -10023,8 +10034,7 @@ document.getElementById('overlayUserAdmin').addEventListener('click', e=>{ if(e.
 document.getElementById('viewModeExitBtn').onclick = exitViewMode;
 document.getElementById('accountDisabledCloseBtn').onclick = hideAccountDisabledPopup;
 bindPasswordToggle('loginPassword', 'loginPasswordToggle');
-bindPasswordToggle('regPassword', 'regPasswordToggle');
-bindPasswordToggle('regConfirmPassword', 'regConfirmPasswordToggle');
+bindDualPasswordToggle('regPassword', 'regConfirmPassword', 'regPasswordToggle');
 
 /* ==================== Controle de Escala & Dispositivo Logado ==================== */
 function detectDeviceType() {
