@@ -104,15 +104,15 @@
             --auth-bg: #02040A;
             --auth-card: rgba(8, 12, 22, 0.94);
             --auth-border: rgba(255, 255, 255, 0.10);
-            --auth-border-hover: rgba(16, 185, 129, 0.50);
-            --auth-input-bg: rgba(4, 7, 14, 0.92);
-            --auth-input-border: rgba(255, 255, 255, 0.10);
+            --auth-border-hover: rgba(245, 158, 11, 0.50);
+            --auth-input-bg: #050811;
+            --auth-input-border: rgba(255, 255, 255, 0.12);
             --auth-text: #F8FAFC;
             --auth-text-dim: #94A3B8;
-            --auth-gold: #E5A93C;
+            --auth-gold: #F59E0B;
             --auth-emerald: #10B981;
             --auth-teal: #0D9488;
-            --auth-gold-glow: rgba(16, 185, 129, 0.16);
+            --auth-gold-glow: rgba(245, 158, 11, 0.25);
             --auth-tab-bg: rgba(3, 5, 10, 0.75);
         }
 
@@ -120,17 +120,17 @@
             --auth-bg: #F8FAFC;
             --auth-card: rgba(255, 255, 255, 0.98);
             --auth-border: #CBD5E1;
-            --auth-border-hover: #10B981;
+            --auth-border-hover: #D97706;
             --auth-input-bg: #F8FAFC;
             --auth-input-border: #CBD5E1;
             --auth-text: #0F172A;
             --auth-text-dim: #475569;
             --auth-gold: #D97706;
-            --auth-gold-glow: rgba(16, 185, 129, 0.15);
+            --auth-gold-glow: rgba(217, 119, 6, 0.18);
             --auth-tab-bg: #E2E8F0;
             background-color: #F8FAFC !important;
             background-image: 
-                radial-gradient(at 12% 15%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+                radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
                 radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
                 radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.06) 0px, transparent 50%),
                 linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%) !important;
@@ -149,10 +149,10 @@
             font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
             background-color: #02040A;
             background-image: 
-                radial-gradient(at 12% 15%, rgba(16, 185, 129, 0.12) 0px, transparent 55%),
-                radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.14) 0px, transparent 55%),
-                radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.08) 0px, transparent 60%),
-                radial-gradient(at 80% 85%, rgba(13, 148, 136, 0.10) 0px, transparent 50%),
+                radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.14) 0px, transparent 55%),
+                radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.12) 0px, transparent 55%),
+                radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.10) 0px, transparent 60%),
+                radial-gradient(at 80% 85%, rgba(13, 148, 136, 0.08) 0px, transparent 50%),
                 linear-gradient(180deg, #02040A 0%, #050812 50%, #010205 100%);
             background-attachment: fixed;
             color: var(--auth-text);
@@ -180,7 +180,7 @@
             background: var(--auth-card);
             border: 1px solid var(--auth-border);
             border-radius: 28px;
-            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.85), 0 0 50px rgba(16, 185, 129, 0.18), 0 0 35px rgba(37, 99, 235, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.90), 0 0 50px rgba(245, 158, 11, 0.18), 0 0 35px rgba(217, 119, 6, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(45px) saturate(200%);
             -webkit-backdrop-filter: blur(45px) saturate(200%);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -207,7 +207,7 @@
             display: flex;
             align-items: center;
             height: 48px;
-            background: var(--auth-input-bg);
+            background: #050811 !important;
             border: 1px solid var(--auth-input-border);
             border-radius: 14px;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -277,8 +277,8 @@
         .auth-input-wrapper input:-webkit-autofill:focus,
         .auth-input-wrapper input:-webkit-autofill:active {
             -webkit-text-fill-color: #F8FAFC !important;
-            -webkit-box-shadow: 0 0 0px 1000px #0F172A inset !important;
-            box-shadow: 0 0 0px 1000px #0F172A inset !important;
+            -webkit-box-shadow: 0 0 0px 1000px #050811 inset !important;
+            box-shadow: 0 0 0px 1000px #050811 inset !important;
             transition: background-color 5000s ease-in-out 0s !important;
         }
 
@@ -291,18 +291,23 @@
             box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
         }
 
-        /* Botão Primário Dourado / Safira */
+        /* Botão Primário Dourado Champagne */
         .btn-auth-gradient {
-            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 45%, #B45309 100%);
-            color: #0A0F1A;
+            background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 45%, #B45309 100%);
+            color: #050811;
             border-radius: 14px;
             font-weight: 800;
             border: none;
-            box-shadow: 0 10px 28px rgba(245, 158, 11, 0.35), 0 0 20px rgba(245, 158, 11, 0.2);
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.40), 0 0 20px rgba(245, 158, 11, 0.25);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
             height: 48px;
             display: flex;
             align-items: center;
@@ -759,16 +764,16 @@
 
         <!-- ASSINATURA EXECUTIVA DO DESENVOLVEDOR PAULO LIMA -->
         <div class="mt-6 flex flex-col items-center gap-1.5">
-            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.09] shadow-[0_6px_20px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] hover:border-blue-400/40 hover:shadow-[0_8px_25px_rgba(0,0,0,0.5),0_0_18px_rgba(59,130,246,0.20)]" style="border-color: var(--auth-border);">
-                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center shadow-[0_2px_8px_rgba(37,99,235,0.4)]">
-                    <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.09] shadow-[0_6px_20px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] hover:border-amber-500/40 hover:shadow-[0_8px_25px_rgba(0,0,0,0.5),0_0_18px_rgba(245,158,11,0.25)]" style="border-color: var(--auth-border);">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 text-[#050811] flex items-center justify-center shadow-[0_2px_10px_rgba(245,158,11,0.45)]">
+                    <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="16 18 22 12 16 6"></polyline>
                         <polyline points="8 6 2 12 8 18"></polyline>
                     </svg>
                 </div>
                 <div class="flex items-baseline gap-1.5">
                     <span class="text-[11.5px] font-medium auth-subtitle-text text-slate-400 tracking-tight">Desenvolvido por</span>
-                    <strong class="text-[12.5px] font-bold auth-brand-nexus text-white tracking-wide">Paulo Lima</strong>
+                    <strong class="text-[12.5px] font-bold text-amber-400 tracking-wide">Paulo Lima</strong>
                 </div>
             </div>
         </div>
