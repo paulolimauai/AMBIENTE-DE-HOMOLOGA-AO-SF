@@ -3018,7 +3018,7 @@ body.light .scale-dropdown {
           </div>
           <div style="margin-top:10px; display:flex; align-items:center;">
             <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px; font-weight:600; text-transform:none; color:var(--auth-text-dim);">
-              <input type="checkbox" id="rememberMe" checked style="accent-color:var(--auth-gold); width:15px; height:15px;">
+              <input type="checkbox" id="rememberMe" style="accent-color:var(--auth-gold); width:15px; height:15px;">
               <span>Lembrar meu acesso</span>
             </label>
           </div>

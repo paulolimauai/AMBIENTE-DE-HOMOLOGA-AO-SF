@@ -759,7 +759,7 @@
                     <!-- Lembrar de Mim -->
                     <div class="flex items-center pt-0.5 text-xs text-[#94A3B8] auth-label">
                         <label class="flex items-center gap-2 cursor-pointer select-none">
-                            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer" checked>
+                            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer">
                             <span>Lembrar meu acesso</span>
                         </label>
                     </div>
@@ -1382,13 +1382,15 @@
         // Recuperar e-mail lembrado
         document.addEventListener('DOMContentLoaded', function() {
             const rememberedEmail = localStorage.getItem('nexus_remembered_email');
+            const rememberCheck = document.getElementById('rememberMe');
             if (rememberedEmail) {
                 const emailInput = document.getElementById('loginEmail');
                 if (emailInput) {
                     emailInput.value = rememberedEmail;
-                    const passInput = document.getElementById('loginPassword');
-                    if (passInput) passInput.focus();
                 }
+                if (rememberCheck) rememberCheck.checked = true;
+            } else {
+                if (rememberCheck) rememberCheck.checked = false;
             }
         });
 
