@@ -411,14 +411,15 @@ html, body {
 
 /* ==================== Tela de Auth Ultra Moderna ==================== */
 .auth-container {
-  --auth-gold: #E5A93C;
-  --auth-gold-dark: #C89B3C;
-  --auth-blue: #5B94D9;
+  --auth-gold: #C084FC;
+  --auth-gold-dark: #A855F7;
+  --auth-blue: #06B6D4;
   --auth-emerald: #10B981;
+  --auth-violet: #8B5CF6;
   --auth-teal: #0D9488;
-  --auth-card: rgba(8, 12, 22, 0.94);
-  --auth-border: rgba(255, 255, 255, 0.10);
-  --auth-input-bg: rgba(4, 7, 14, 0.92);
+  --auth-card: rgba(9, 11, 24, 0.94);
+  --auth-border: rgba(255, 255, 255, 0.12);
+  --auth-input-bg: #050713;
   --auth-text: #F8FAFC;
   --auth-text-dim: #94A3B8;
   position: relative;
@@ -429,13 +430,13 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   padding: 24px 16px;
-  background-color: #02040A;
+  background-color: #03040C;
   background-image: 
-    radial-gradient(at 12% 15%, rgba(16, 185, 129, 0.12) 0px, transparent 55%),
-    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.14) 0px, transparent 55%),
-    radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.08) 0px, transparent 60%),
-    radial-gradient(at 80% 85%, rgba(13, 148, 136, 0.10) 0px, transparent 50%),
-    linear-gradient(180deg, #02040A 0%, #050812 50%, #010205 100%);
+    radial-gradient(at 12% 15%, rgba(139, 92, 246, 0.16) 0px, transparent 55%),
+    radial-gradient(at 88% 18%, rgba(6, 182, 212, 0.16) 0px, transparent 55%),
+    radial-gradient(at 50% 82%, rgba(168, 85, 247, 0.12) 0px, transparent 60%),
+    radial-gradient(at 80% 85%, rgba(79, 70, 229, 0.12) 0px, transparent 50%),
+    linear-gradient(180deg, #03040C 0%, #07091B 50%, #020308 100%);
   background-attachment: fixed;
 }
 .auth-container.show { display: flex; }
@@ -448,9 +449,9 @@ body.light .auth-container {
   --auth-text-dim: #475569;
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(at 12% 15%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
-    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.06) 0px, transparent 50%),
+    radial-gradient(at 12% 15%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 88% 18%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 82%, rgba(168, 85, 247, 0.06) 0px, transparent 50%),
     linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%) !important;
   background-attachment: fixed !important;
 }
@@ -494,8 +495,8 @@ body.light .auth-theme-btn {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91, 148, 217, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
   background-size: 48px 48px;
   -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
   mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
@@ -512,7 +513,7 @@ body.light .auth-theme-btn {
 .auth-blob.b1 {
   width: 420px;
   height: 420px;
-  background: #10B981;
+  background: #8B5CF6;
   top: -120px;
   left: -120px;
   animation: blobFloat 22s ease-in-out infinite;
@@ -520,7 +521,7 @@ body.light .auth-theme-btn {
 .auth-blob.b2 {
   width: 400px;
   height: 400px;
-  background: #3B82F6;
+  background: #06B6D4;
   bottom: -140px;
   right: -100px;
   animation: blobFloat 26s ease-in-out infinite;
@@ -529,7 +530,7 @@ body.light .auth-theme-btn {
 .auth-blob.b3 {
   width: 380px;
   height: 380px;
-  background: #F59E0B;
+  background: #4F46E5;
   top: 30%;
   right: 15%;
   opacity: 0.12;
@@ -558,7 +559,7 @@ body.light .auth-blob { opacity: 0.12; }
   padding: 38px 36px;
   width: 100%;
   max-width: 460px;
-  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.85), 0 0 50px rgba(16, 185, 129, 0.15), 0 0 30px rgba(229, 169, 60, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.14);
+  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.90), 0 0 50px rgba(139, 92, 246, 0.22), 0 0 35px rgba(6, 182, 212, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
   animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
@@ -580,15 +581,15 @@ body.light .auth-card-nexus {
   width: 58px;
   height: 58px;
   border-radius: 18px;
-  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #B45309 100%);
-  color: #050811;
+  background: linear-gradient(135deg, #E9D5FF 0%, #8B5CF6 50%, #06B6D4 100%);
+  color: #03040C;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   font-size: 26px;
   font-family: 'Outfit', sans-serif;
-  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45), inset 0 2px 2px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.45), inset 0 2px 2px rgba(255, 255, 255, 0.5);
   margin-bottom: 12px;
   position: relative;
 }
@@ -597,7 +598,7 @@ body.light .auth-card-nexus {
   position: absolute;
   inset: -4px;
   border-radius: 22px;
-  background: linear-gradient(135deg, rgba(245,158,11,0.4), transparent, rgba(245,158,11,0.2));
+  background: linear-gradient(135deg, rgba(139,92,246,0.4), transparent, rgba(6,182,212,0.3));
   z-index: -1;
 }
 
@@ -612,7 +613,7 @@ body.light .auth-card-nexus {
   gap: 8px;
 }
 .auth-title span {
-  color: #FBBF24;
+  color: #C084FC;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -627,7 +628,7 @@ body.light .auth-card-nexus {
 /* Abas de Navegação Segmentada (Entrar / Criar Conta) */
 .auth-tabs-nav {
   display: flex;
-  background: #050811;
+  background: #050713;
   border: 1px solid var(--auth-border);
   border-radius: 14px;
   padding: 4px;
@@ -652,10 +653,10 @@ body.light .auth-card-nexus {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(245,158,11,0.20), rgba(180,83,9,0.08));
-  color: #F59E0B;
-  border: 1px solid rgba(245,158,11,0.45);
-  box-shadow: 0 4px 14px rgba(245,158,11,0.20);
+  background: linear-gradient(135deg, rgba(139,92,246,0.22), rgba(6,182,212,0.10));
+  color: #C084FC;
+  border: 1px solid rgba(139,92,246,0.45);
+  box-shadow: 0 4px 14px rgba(139,92,246,0.25);
 }
 body.light .auth-tab-btn.active {
   background: #FFFFFF;
@@ -777,8 +778,8 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
   overflow: hidden;
   width: 100%;
   padding: 14px 20px;
-  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 45%, #B45309 100%);
-  color: #050811;
+  background: linear-gradient(135deg, #E9D5FF 0%, #8B5CF6 45%, #6D28D9 100%);
+  color: #FFFFFF;
   border: none;
   border-radius: 14px;
   font-weight: 800;
@@ -786,7 +787,7 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
   letter-spacing: 0.02em;
   cursor: pointer;
   margin-top: 8px;
-  box-shadow: 0 12px 30px rgba(245, 158, 11, 0.40), 0 0 20px rgba(245, 158, 11, 0.25);
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.45), 0 0 20px rgba(6, 182, 212, 0.30);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
@@ -806,7 +807,7 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
 .btn-auth-primary:hover {
   filter: brightness(1.06);
   transform: translateY(-2px);
-  box-shadow: 0 14px 36px -4px rgba(245, 158, 11, 0.55), 0 0 28px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 14px 36px -4px rgba(139, 92, 246, 0.60), 0 0 28px rgba(6, 182, 212, 0.45);
 }
 .btn-auth-primary:hover::before {
   left: 100%;
@@ -1127,16 +1128,16 @@ html.light code {
 }
 .dev-signature:hover{
   background:rgba(255, 255, 255, 0.06);
-  border-color:rgba(245, 158, 11, 0.40);
-  box-shadow:0 8px 25px rgba(0,0,0,0.5), 0 0 18px rgba(245,158,11,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+  border-color:rgba(139, 92, 246, 0.40);
+  box-shadow:0 8px 25px rgba(0,0,0,0.5), 0 0 18px rgba(139,92,246,0.30), inset 0 1px 0 rgba(255,255,255,0.2);
   transform:translateY(-1.5px);
 }
 .dev-signature-icon{
   width:24px; height:24px; border-radius:50%; flex-shrink:0;
-  background:linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #B45309 100%);
-  color:#050811;
+  background:linear-gradient(135deg, #C084FC 0%, #8B5CF6 50%, #06B6D4 100%);
+  color:#03040C;
   display:flex; align-items:center; justify-content:center;
-  box-shadow:0 2px 10px rgba(245,158,11,0.45);
+  box-shadow:0 2px 10px rgba(139,92,246,0.45);
 }
 .dev-signature-icon svg{
   width:11px; height:11px; stroke-width:2.5px; display:block;

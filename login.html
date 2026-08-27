@@ -101,38 +101,38 @@
 
     <style>
         :root {
-            --auth-bg: #02040A;
-            --auth-card: rgba(8, 12, 22, 0.94);
-            --auth-border: rgba(255, 255, 255, 0.10);
-            --auth-border-hover: rgba(245, 158, 11, 0.50);
-            --auth-input-bg: #050811;
+            --auth-bg: #03040C;
+            --auth-card: rgba(9, 11, 24, 0.94);
+            --auth-border: rgba(255, 255, 255, 0.12);
+            --auth-border-hover: rgba(139, 92, 246, 0.50);
+            --auth-input-bg: #050713;
             --auth-input-border: rgba(255, 255, 255, 0.12);
             --auth-text: #F8FAFC;
             --auth-text-dim: #94A3B8;
-            --auth-gold: #F59E0B;
-            --auth-emerald: #10B981;
-            --auth-teal: #0D9488;
-            --auth-gold-glow: rgba(245, 158, 11, 0.25);
-            --auth-tab-bg: rgba(3, 5, 10, 0.75);
+            --auth-gold: #C084FC;
+            --auth-violet: #8B5CF6;
+            --auth-cyan: #06B6D4;
+            --auth-gold-glow: rgba(139, 92, 246, 0.28);
+            --auth-tab-bg: rgba(4, 6, 16, 0.75);
         }
 
         body.light, html.light body {
             --auth-bg: #F8FAFC;
             --auth-card: rgba(255, 255, 255, 0.98);
             --auth-border: #CBD5E1;
-            --auth-border-hover: #D97706;
+            --auth-border-hover: #8B5CF6;
             --auth-input-bg: #F8FAFC;
             --auth-input-border: #CBD5E1;
             --auth-text: #0F172A;
             --auth-text-dim: #475569;
-            --auth-gold: #D97706;
-            --auth-gold-glow: rgba(217, 119, 6, 0.18);
+            --auth-gold: #7C3AED;
+            --auth-gold-glow: rgba(124, 58, 237, 0.18);
             --auth-tab-bg: #E2E8F0;
             background-color: #F8FAFC !important;
             background-image: 
-                radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
-                radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
-                radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.06) 0px, transparent 50%),
+                radial-gradient(at 12% 15%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+                radial-gradient(at 88% 18%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+                radial-gradient(at 50% 82%, rgba(168, 85, 247, 0.06) 0px, transparent 50%),
                 linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%) !important;
             background-attachment: fixed !important;
             color: var(--auth-text) !important;
@@ -147,13 +147,13 @@
 
         body {
             font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-            background-color: #02040A;
+            background-color: #03040C;
             background-image: 
-                radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.14) 0px, transparent 55%),
-                radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.12) 0px, transparent 55%),
-                radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.10) 0px, transparent 60%),
-                radial-gradient(at 80% 85%, rgba(13, 148, 136, 0.08) 0px, transparent 50%),
-                linear-gradient(180deg, #02040A 0%, #050812 50%, #010205 100%);
+                radial-gradient(at 12% 15%, rgba(139, 92, 246, 0.16) 0px, transparent 55%),
+                radial-gradient(at 88% 18%, rgba(6, 182, 212, 0.16) 0px, transparent 55%),
+                radial-gradient(at 50% 82%, rgba(168, 85, 247, 0.12) 0px, transparent 60%),
+                radial-gradient(at 80% 85%, rgba(79, 70, 229, 0.12) 0px, transparent 50%),
+                linear-gradient(180deg, #03040C 0%, #07091B 50%, #020308 100%);
             background-attachment: fixed;
             color: var(--auth-text);
             min-height: 100vh;
@@ -180,7 +180,7 @@
             background: var(--auth-card);
             border: 1px solid var(--auth-border);
             border-radius: 28px;
-            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.90), 0 0 50px rgba(245, 158, 11, 0.18), 0 0 35px rgba(217, 119, 6, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.90), 0 0 50px rgba(139, 92, 246, 0.22), 0 0 35px rgba(6, 182, 212, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(45px) saturate(200%);
             -webkit-backdrop-filter: blur(45px) saturate(200%);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -207,7 +207,7 @@
             display: flex;
             align-items: center;
             height: 48px;
-            background: #050811 !important;
+            background: #050713 !important;
             border: 1px solid var(--auth-input-border);
             border-radius: 14px;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -222,7 +222,7 @@
         body.light .auth-input-wrapper:focus-within {
             background: #FFFFFF !important;
             border-color: var(--auth-gold) !important;
-            box-shadow: 0 0 20px rgba(217, 119, 6, 0.2) !important;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.2) !important;
         }
 
         .auth-input-icon {
@@ -277,8 +277,8 @@
         .auth-input-wrapper input:-webkit-autofill:focus,
         .auth-input-wrapper input:-webkit-autofill:active {
             -webkit-text-fill-color: #F8FAFC !important;
-            -webkit-box-shadow: 0 0 0px 1000px #050811 inset !important;
-            box-shadow: 0 0 0px 1000px #050811 inset !important;
+            -webkit-box-shadow: 0 0 0px 1000px #050713 inset !important;
+            box-shadow: 0 0 0px 1000px #050713 inset !important;
             transition: background-color 5000s ease-in-out 0s !important;
         }
 
@@ -291,14 +291,14 @@
             box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
         }
 
-        /* Botão Primário Dourado Champagne */
+        /* Botão Primário Roxo Violeta */
         .btn-auth-gradient {
-            background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 45%, #B45309 100%);
-            color: #050811;
+            background: linear-gradient(135deg, #E9D5FF 0%, #8B5CF6 45%, #6D28D9 100%);
+            color: #FFFFFF;
             border-radius: 14px;
             font-weight: 800;
             border: none;
-            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.40), 0 0 20px rgba(245, 158, 11, 0.25);
+            box-shadow: 0 12px 30px rgba(139, 92, 246, 0.45), 0 0 20px rgba(6, 182, 212, 0.30);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
@@ -530,11 +530,11 @@
     <!-- Canvas de Animação Financeira 4K (Símbolos, Métricas & Gráficos Vivos) -->
     <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-85"></canvas>
 
-    <!-- Ambient Financial Aura Glows (Esmeralda, Dourado & Safira) -->
+    <!-- Ambient Financial Aura Glows (Roxo Violeta, Ciano & Índigo) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-emerald-500/15 rounded-full blur-[160px] animate-glow-pulse"></div>
-        <div class="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-amber-500/12 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -1.5s;"></div>
-        <div class="absolute bottom-1/4 left-1/3 w-[600px] h-[600px] bg-blue-600/12 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -3s;"></div>
+        <div class="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-purple-600/18 rounded-full blur-[160px] animate-glow-pulse"></div>
+        <div class="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-cyan-500/15 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -1.5s;"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-[600px] h-[600px] bg-indigo-600/15 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -3s;"></div>
     </div>
 
     <!-- CONTAINER CENTRAL DO CARD -->
@@ -545,13 +545,13 @@
             
             <!-- BRAND HEADER -->
             <div class="flex flex-col items-center text-center mb-6">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FCD34D] via-[#F59E0B] to-[#3B82F6] flex items-center justify-center text-[#0A0D18] font-black text-2xl shadow-lg shadow-amber-500/30 mb-3.5 border border-white/40 relative">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#E9D5FF] via-[#8B5CF6] to-[#06B6D4] flex items-center justify-center text-[#03040C] font-black text-2xl shadow-lg shadow-purple-500/35 mb-3.5 border border-white/40 relative">
                     <span>N</span>
-                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#0A0D18]" title="Sistema Operacional Online"></div>
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-cyan-400 rounded-full border-2 border-[#03040C]" title="Sistema Operacional Online"></div>
                 </div>
                 <div class="flex items-center gap-1.5">
                     <span class="text-xl sm:text-2xl font-black tracking-tight auth-brand-nexus text-white font-display">NEXUS</span>
-                    <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-amber-500 font-display">FINANCEIRO HUB</span>
+                    <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-purple-400 font-display">FINANCEIRO HUB</span>
                 </div>
                 <p id="authSubtitle" class="text-xs auth-subtitle-text text-[#94A3B8] mt-1.5 font-medium leading-relaxed">
                     Plataforma Inteligente de Gestão Financeira Pessoal
@@ -764,8 +764,8 @@
 
         <!-- ASSINATURA EXECUTIVA DO DESENVOLVEDOR PAULO LIMA -->
         <div class="mt-6 flex flex-col items-center gap-1.5">
-            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.09] shadow-[0_6px_20px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] hover:border-amber-500/40 hover:shadow-[0_8px_25px_rgba(0,0,0,0.5),0_0_18px_rgba(245,158,11,0.25)]" style="border-color: var(--auth-border);">
-                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 text-[#050811] flex items-center justify-center shadow-[0_2px_10px_rgba(245,158,11,0.45)]">
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.09] shadow-[0_6px_20px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] hover:border-purple-500/40 hover:shadow-[0_8px_25px_rgba(0,0,0,0.5),0_0_18px_rgba(139,92,246,0.30)]" style="border-color: var(--auth-border);">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-purple-300 via-purple-500 to-indigo-700 text-[#03040C] flex items-center justify-center shadow-[0_2px_10px_rgba(139,92,246,0.45)]">
                     <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="16 18 22 12 16 6"></polyline>
                         <polyline points="8 6 2 12 8 18"></polyline>
@@ -773,7 +773,7 @@
                 </div>
                 <div class="flex items-baseline gap-1.5">
                     <span class="text-[11.5px] font-medium auth-subtitle-text text-slate-400 tracking-tight">Desenvolvido por</span>
-                    <strong class="text-[12.5px] font-bold text-amber-400 tracking-wide">Paulo Lima</strong>
+                    <strong class="text-[12.5px] font-bold text-purple-400 tracking-wide">Paulo Lima</strong>
                 </div>
             </div>
         </div>
