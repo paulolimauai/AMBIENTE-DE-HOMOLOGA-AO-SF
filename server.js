@@ -206,7 +206,9 @@ const htmlContent = `<!DOCTYPE html>
 (function() {
   try {
     var t = localStorage.getItem('nexus_theme');
-    if (t === 'light') {
+    if (t) t = t.replace(/"/g, '').trim();
+    var isLight = (t === 'light');
+    if (isLight) {
       document.documentElement.classList.add('light');
     } else {
       document.documentElement.classList.remove('light');
@@ -239,10 +241,21 @@ const htmlContent = `<!DOCTYPE html>
     document.documentElement.style.setProperty('--app-zoom', scaleNum);
 
     document.addEventListener('DOMContentLoaded', function() {
-      if (localStorage.getItem('nexus_theme') === 'light') {
+      var saved = localStorage.getItem('nexus_theme');
+      if (saved) saved = saved.replace(/"/g, '').trim();
+      var lightMode = (saved === 'light');
+      if (lightMode) {
         document.body.classList.add('light');
+        document.documentElement.classList.add('light');
       } else {
         document.body.classList.remove('light');
+        document.documentElement.classList.remove('light');
+      }
+      var authThemeIcon = document.getElementById('authThemeIcon');
+      if (authThemeIcon) {
+        authThemeIcon.innerHTML = lightMode ?
+          '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>' :
+          '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
       }
       try {
         var cu = localStorage.getItem('nexus_cached_user');
@@ -3608,7 +3621,7 @@ window.toggleAuthTheme = function() {
   const nextLight = !isLight;
   document.body.classList.toggle('light', nextLight);
   document.documentElement.classList.toggle('light', nextLight);
-  saveToStorage('nexus_theme', nextLight ? 'light' : 'dark');
+  localStorage.setItem('nexus_theme', nextLight ? 'light' : 'dark');
 
   const icon = document.getElementById('authThemeIcon');
   if (icon) {

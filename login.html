@@ -13,7 +13,9 @@
         (function() {
             try {
                 var t = localStorage.getItem('nexus_theme');
-                if (t === 'light') {
+                if (t) t = t.replace(/"/g, '').trim();
+                var isLight = (t === 'light');
+                if (isLight) {
                     document.documentElement.classList.add('light');
                 } else {
                     document.documentElement.classList.remove('light');
@@ -45,13 +47,27 @@
                 var scaleNum = parseFloat(actualScale) / 100 || 1;
                 document.documentElement.style.setProperty('--app-zoom', scaleNum);
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    if (localStorage.getItem('nexus_theme') === 'light') {
+                function applyBodyTheme() {
+                    var themeVal = localStorage.getItem('nexus_theme');
+                    if (themeVal) themeVal = themeVal.replace(/"/g, '').trim();
+                    var light = (themeVal === 'light');
+                    if (light) {
                         document.body.classList.add('light');
+                        document.documentElement.classList.add('light');
                     } else {
                         document.body.classList.remove('light');
+                        document.documentElement.classList.remove('light');
                     }
-                });
+                    var btn = document.getElementById('loginThemeBtn');
+                    if (btn) {
+                        var moonSvg = '<svg id="themeIconSvg" class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
+                        var sunSvg = '<svg id="themeIconSvg" class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+                        btn.innerHTML = light ? sunSvg : moonSvg;
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', applyBodyTheme);
+                window.addEventListener('load', applyBodyTheme);
             } catch(e){}
         })();
     </script>
@@ -934,8 +950,8 @@
             localStorage.setItem('nexus_theme', nextIsLight ? 'light' : 'dark');
 
             const btn = document.getElementById('loginThemeBtn');
-            const moonSvg = '<svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
-            const sunSvg = '<svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+            const moonSvg = '<svg id="themeIconSvg" class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
+            const sunSvg = '<svg id="themeIconSvg" class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
             if (btn) btn.innerHTML = nextIsLight ? sunSvg : moonSvg;
         };
 
