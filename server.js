@@ -849,13 +849,29 @@ body.light .app-blob.a3{opacity:.05;}
   right:0 !important;
   z-index:99999 !important;
   width:100% !important;
-  background:#0D111A !important;
-  border-bottom:1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow:0 6px 25px rgba(0,0,0,0.7) !important;
+  background:rgba(13, 17, 26, 0.94) !important;
+  border-bottom:1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow:0 10px 30px rgba(0,0,0,0.7) !important;
+  backdrop-filter:blur(24px) !important;
+  -webkit-backdrop-filter:blur(24px) !important;
   padding-top:env(safe-area-inset-top);
 }
 .topheader-row{
-  display:flex; align-items:center; gap:20px; padding:15px 28px; max-width:1440px; margin:0 auto;
+  display:flex; align-items:center; gap:16px; padding:12px 28px; max-width:1440px; margin:0 auto;
+}
+.header-live-time {
+  display:inline-flex; align-items:center; gap:7px; padding:5px 12px;
+  border-radius:999px; background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08); color:#94A3B8;
+  font-size:12px; font-weight:600; letter-spacing:0.02em;
+  backdrop-filter:blur(12px); user-select:none;
+}
+.header-live-time .time-dot {
+  width:7px; height:7px; border-radius:50%; background:#10B981;
+  box-shadow:0 0 8px #10B981; animation:pulseDot 2s infinite ease-in-out;
+}
+body.light .header-live-time {
+  background:#F1F5F9 !important; border-color:#CBD5E1 !important; color:#475569 !important;
 }
 .mobile-menu-btn {
   display:none; width:40px; height:40px; border-radius:11px;
@@ -3025,6 +3041,10 @@ body.light .scale-dropdown {
         <div class="logo">N</div>
         <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
         <span class="env-badge-homolog" title="Ambiente de Testes e Homologação">Homologação 🧪</span>
+      </div>
+      <div class="header-live-time hide-mobile" id="headerLiveTime">
+        <span class="time-dot"></span>
+        <span id="headerLiveTimeText">Carregando...</span>
       </div>
       <div class="right" style="margin-left:auto;">
         <div class="notif-wrap">
@@ -10105,6 +10125,20 @@ if (scaleMenuBtn && scaleDropdown) {
   }
   checkAndShowJustLoggedInPopup();
   document.addEventListener('DOMContentLoaded', checkAndShowJustLoggedInPopup);
+})();
+
+// Relógio e Data em Tempo Real no Topo
+(function initHeaderClock() {
+  function updateClock() {
+    const el = document.getElementById('headerLiveTimeText');
+    if (!el) return;
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const dateStr = now.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '');
+    el.textContent = dateStr + ' • ' + timeStr;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
 })();
 
 // Animação de Fundo de Linhas Orbitais 4K (Mesmo visual da tela de login)
