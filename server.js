@@ -1263,10 +1263,10 @@ body.light .dev-signature-name{
   display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; font-size:16px; flex-shrink:0;
 }
 .icon-btn .dot{position:absolute; top:8px; right:8px; width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 0 2px var(--sidebar);}
-.user{display:flex; align-items:center; gap:10px; cursor:pointer; min-width:0;}
-.avatar{width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,#f0a63a,#d85bb0); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; color:#1b1200; flex-shrink:0;}
-.user .uname{font-size:15.5px; font-weight:700; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;}
-.user .urole{font-size:12px; color:var(--text-faint); white-space:nowrap;}
+.user{display:flex; align-items:center; gap:10px; cursor:pointer; min-width:140px; min-height:42px;}
+.avatar{width:42px; height:42px; min-width:42px; min-height:42px; border-radius:50%; background:linear-gradient(135deg,#f0a63a,#d85bb0); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; color:#1b1200; flex-shrink:0;}
+.user .uname{font-size:15.5px; font-weight:700; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px; min-height:19px;}
+.user .urole{font-size:12px; color:var(--text-faint); white-space:nowrap; min-height:15px;}
 .topheader-row .btn-ghost{padding:10px 18px; font-size:13px; flex-shrink:0;}
 
 /* ==================== Estilo Universal para Botões de Ação (Editar, Excluir, Ações) ==================== */
@@ -3194,6 +3194,24 @@ body.light .scale-dropdown {
           <div class="avatar" id="headerAvatar"></div>
           <div><div class="uname" id="headerName"></div><div class="urole" id="headerRole"></div></div>
         </div>
+        <script>
+        (function(){
+          try {
+            var cu = localStorage.getItem('nexus_cached_user');
+            if (cu) {
+              var u = JSON.parse(cu);
+              if (u && u.name) {
+                var n = document.getElementById('headerName');
+                var r = document.getElementById('headerRole');
+                var a = document.getElementById('headerAvatar');
+                if (n) n.textContent = u.name;
+                if (r) r.textContent = u.role || 'Usuário';
+                if (a) a.textContent = u.name.trim().split(/\s+/).map(function(x){return x[0];}).slice(0,2).join('').toUpperCase();
+              }
+            }
+          } catch(e){}
+        })();
+        </script>
         <button class="btn-ghost" id="logoutBtn">Sair</button>
       </div>
     </div>
