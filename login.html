@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="h-full">
 <head>
+    <script>
+        (function() {
+            try {
+                var t = localStorage.getItem('nexus_theme');
+                if (t) t = t.replace(/"/g, '').trim();
+                if (t === 'light') {
+                    document.documentElement.classList.add('light');
+                }
+            } catch(e){}
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
@@ -506,6 +517,7 @@
     </style>
 </head>
 <body class="h-full flex flex-col justify-between items-center min-h-screen py-6 px-4 relative select-none auth-bg-cyber-grid">
+    <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
 
     <!-- 4K ULTRA SUCCESS MODAL OVERLAY -->
     <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="loginSuccessOverlay" style="display:none;">
