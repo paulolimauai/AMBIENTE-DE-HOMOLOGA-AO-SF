@@ -1177,59 +1177,65 @@ html.light code {
 }
 .dev-signature{
   position:relative;
-  display:inline-flex; align-items:center; gap:9px;
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border:1px solid rgba(255, 255, 255, 0.09);
+  display:inline-flex; align-items:center; gap:10px;
+  background:linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.88) 50%, rgba(180, 83, 9, 0.10) 100%);
+  border:1px solid rgba(245, 158, 11, 0.38);
   border-radius:999px;
-  padding:5px 16px 5px 6px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
-  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-  transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding:6px 20px 6px 7px;
+  box-shadow:0 10px 30px -5px rgba(0,0,0,0.85), 0 0 24px rgba(245,158,11,0.25), inset 0 1px 1px rgba(255,255,255,0.20);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration:none;
 }
 .dev-signature:hover{
-  background:rgba(255, 255, 255, 0.06);
-  border-color:rgba(245, 158, 11, 0.40);
-  box-shadow:0 8px 25px rgba(0,0,0,0.5), 0 0 18px rgba(245,158,11,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
-  transform:translateY(-1.5px);
+  background:linear-gradient(135deg, rgba(245, 158, 11, 0.20) 0%, rgba(15, 23, 42, 0.92) 50%, rgba(245, 158, 11, 0.15) 100%);
+  border-color:rgba(245, 158, 11, 0.70);
+  box-shadow:0 14px 38px rgba(0,0,0,0.85), 0 0 32px rgba(245,158,11,0.45), inset 0 1px 1px rgba(255,255,255,0.30);
+  transform:translateY(-2px) scale(1.03);
 }
 .dev-signature-icon{
-  width:24px; height:24px; border-radius:50%; flex-shrink:0;
-  background:linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #B45309 100%);
+  width:28px; height:28px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg, #FFFBEB 0%, #FDE68A 35%, #F59E0B 70%, #B45309 100%);
   color:#050811;
   display:flex; align-items:center; justify-content:center;
-  box-shadow:0 2px 10px rgba(245,158,11,0.45);
+  box-shadow:0 3px 12px rgba(245,158,11,0.65), inset 0 1px 2px rgba(255,255,255,0.80);
 }
 .dev-signature-icon svg{
-  width:11px; height:11px; stroke-width:2.5px; display:block;
+  width:13px; height:13px; stroke-width:2.8px; display:block;
 }
 .dev-signature-text{
-  display:flex; align-items:baseline; gap:5px;
+  display:flex; align-items:baseline; gap:6px;
 }
 .dev-signature-label{
-  font-size:11.5px; font-weight:500; color:#94A3B8; letter-spacing:0.01em;
+  font-size:11px; font-weight:700; color:#94A3B8; letter-spacing:0.06em; text-transform:uppercase;
 }
 .dev-signature-name{
-  font-size:12.5px; font-weight:700; color:#FFFFFF; letter-spacing:0.02em;
+  font-size:13.5px; font-weight:900;
+  background:linear-gradient(135deg, #FFFFFF 0%, #FDE68A 45%, #F59E0B 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  letter-spacing:0.04em; filter:drop-shadow(0 2px 8px rgba(245,158,11,0.35));
 }
 body.light .app-dev-credit{
   background:rgba(255,255,255,0.90) !important;
   border-top-color:#e2e8f0 !important;
 }
 body.light .dev-signature{
-  background:rgba(15,23,42,0.035) !important;
-  border-color:#cbd5e1 !important;
-  box-shadow:0 2px 10px rgba(15,23,42,0.05) !important;
+  background:linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+  border-color:rgba(245, 158, 11, 0.45) !important;
+  box-shadow:0 6px 20px rgba(15,23,42,0.08), 0 0 16px rgba(245,158,11,0.18) !important;
 }
 body.light .dev-signature:hover{
-  background:rgba(15,23,42,0.06) !important;
-  border-color:#94a3b8 !important;
+  background:#FFFFFF !important;
+  border-color:#D97706 !important;
+  box-shadow:0 8px 25px rgba(217,119,6,0.30) !important;
 }
 body.light .dev-signature-label{
-  color:#64748b !important;
+  color:#475569 !important;
 }
 body.light .dev-signature-name{
-  color:#0f172a !important;
+  background:linear-gradient(135deg, #D97706 0%, #B45309 100%) !important;
+  -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important;
+  filter:none !important;
 }
 
 .cfg-divider{display:flex; align-items:center; gap:10px; margin:22px 0 14px;}
@@ -2964,7 +2970,7 @@ body.light .scale-dropdown {
     <div class="auth-brand">
       <div class="auth-logo-badge">N</div>
       <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
-      <div class="auth-subtitle" id="authBoxSubtitle">Plataforma Inteligente de Gestão Financeira Pessoal</div>
+      <div class="auth-subtitle" id="authBoxSubtitle">Plataforma Inteligente de Gestão Financeira</div>
     </div>
 
     <!-- Navegação por Abas Segmentadas -->
@@ -3623,7 +3629,7 @@ window.switchAuthTab = function(tab) {
     if (tabsNav) tabsNav.style.display = 'flex';
     if (tabLogin) tabLogin.classList.add('active');
     if (tabReg) tabReg.classList.remove('active');
-    if (subTitle) subTitle.textContent = 'Plataforma Inteligente de Gestão Financeira Pessoal';
+    if (subTitle) subTitle.textContent = 'Plataforma Inteligente de Gestão Financeira';
   }
 };
 
