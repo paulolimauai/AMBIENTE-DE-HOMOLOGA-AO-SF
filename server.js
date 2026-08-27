@@ -295,6 +295,7 @@ const htmlContent = `<!DOCTYPE html>
   } catch(e){}
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 html.user-logged-in #authPage { display: none !important; }
 html.user-logged-in #appMain { display: flex !important; flex-direction: column !important; min-height: 100vh !important; width: 100% !important; }
@@ -7855,45 +7856,50 @@ function pageLogs(){
 
 /* ==================== Charts ==================== */
 function drawDashboardCharts(){
-  const periodTx = transactions.filter(inPeriod);
-  const {receitas,despesas} = computeTotals(periodTx);
-  Object.values(charts).forEach(c=>c && c.destroy && c.destroy());
-  const ctx1 = document.getElementById('chartResumo');
-  if(ctx1) charts.resumo = new Chart(ctx1, {
-    type:'doughnut',
-    data:{ 
-      labels: ['Receitas', 'Despesas'],
-      datasets:[{
-        data:[receitas||0.0001,despesas||0.0001], 
-        backgroundColor:['#10B981','#EF4444'],
-        hoverBackgroundColor:['#34D399','#F87171'],
-        borderWidth:2,
-        borderColor:'rgba(11,15,24,0.6)'
-      }] 
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      cutout:'75%',
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          callbacks:{
-            label: function(context) {
-              return ' ' + context.label + ': ' + fmt(context.raw);
+  if (typeof Chart === 'undefined') return;
+  try {
+    const periodTx = Array.isArray(transactions) ? transactions.filter(inPeriod) : [];
+    const {receitas,despesas} = computeTotals(periodTx);
+    Object.values(charts).forEach(c=>c && c.destroy && c.destroy());
+    const ctx1 = document.getElementById('chartResumo');
+    if(ctx1) charts.resumo = new Chart(ctx1, {
+      type:'doughnut',
+      data:{ 
+        labels: ['Receitas', 'Despesas'],
+        datasets:[{
+          data:[receitas||0.0001,despesas||0.0001], 
+          backgroundColor:['#10B981','#EF4444'],
+          hoverBackgroundColor:['#34D399','#F87171'],
+          borderWidth:2,
+          borderColor:'rgba(11,15,24,0.6)'
+        }] 
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        cutout:'75%',
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            callbacks:{
+              label: function(context) {
+                return ' ' + context.label + ': ' + fmt(context.raw);
+              }
             }
           }
         }
       }
-    }
-  });
-  const cats = despesasPorCategoria(periodTx);
-  const ctx2 = document.getElementById('chartCategorias');
-  if(ctx2) charts.categorias = new Chart(ctx2, {
-    type:'doughnut',
-    data:{ labels:cats.map(c=>c.name), datasets:[{data: cats.length?cats.map(c=>c.val):[1], backgroundColor: cats.length?cats.map(c=>c.color):['#2a2f3a'], borderWidth:0}] },
-    options:{cutout:'62%', plugins:{legend:{display:false}}}
-  });
+    });
+    const cats = despesasPorCategoria(periodTx);
+    const ctx2 = document.getElementById('chartCategorias');
+    if(ctx2) charts.categorias = new Chart(ctx2, {
+      type:'doughnut',
+      data:{ labels:cats.map(c=>c.name), datasets:[{data: cats.length?cats.map(c=>c.val):[1], backgroundColor: cats.length?cats.map(c=>c.color):['#2a2f3a'], borderWidth:0}] },
+      options:{cutout:'62%', plugins:{legend:{display:false}}}
+    });
+  } catch(e) {
+    console.warn("Aviso ao gerar gráficos:", e);
+  }
 }
 
 function populateAccountOptions(selectedAcc) {
