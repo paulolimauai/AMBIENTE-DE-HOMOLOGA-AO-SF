@@ -2958,7 +2958,7 @@ body.light .scale-dropdown {
     <div id="loginBox">
       <form id="loginForm">
         <div class="auth-field">
-          <label>E-mail</label>
+          <label>E-mail Corporativo ou Pessoal</label>
           <div class="auth-input-wrapper" id="wrapLoginEmail">
             <span class="auth-input-icon">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -3063,7 +3063,7 @@ body.light .scale-dropdown {
 
       <form id="forgotStep1">
         <div class="auth-field">
-          <label>E-mail Cadastrado</label>
+          <label>E-mail Corporativo ou Pessoal</label>
           <div class="auth-input-wrapper">
             <span class="auth-input-icon">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
