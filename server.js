@@ -5501,9 +5501,6 @@ function pageDashboard(){
           <span class="hero-badge hide-mobile">
             📅 \${formattedToday}
           </span>
-          <span class="hero-badge live-dot hide-mobile">
-            <span class="pulse-dot"></span> Painel Consolidado
-          </span>
         </div>
         <h1 class="hero-greeting">
           \${greeting.icon} \${greeting.text}, <span class="hero-name-gradient">\${firstName}</span>
