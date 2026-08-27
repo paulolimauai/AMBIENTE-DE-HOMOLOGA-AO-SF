@@ -1283,7 +1283,6 @@ body.light .dev-signature-name{
   gap: 6px !important;
 }
 
-.row-actions button,
 .btn-action-edit,
 .btn-action-del,
 .row-edit,
@@ -1292,7 +1291,7 @@ body.light .dev-signature-name{
 [data-editcat], [data-delcat],
 [data-editorc], [data-delorc],
 [data-editmeta], [data-delmeta],
-[data-editrec], [data-delrec], [data-lancar],
+[data-editrec], [data-delrec],
 [data-editalert], [data-delalert],
 [data-mgedit], [data-mgdel] {
   width: 32px !important;
@@ -1344,17 +1343,34 @@ body.light .dev-signature-name{
   box-shadow: 0 4px 14px rgba(244, 63, 94, 0.40) !important;
 }
 
-/* Botão de Lançar (▶) */
+/* Botão de Lançar / Concluído (Pílula com Texto Nítido) */
 [data-lancar] {
+  width: auto !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  padding: 0 12px !important;
+  border-radius: 9999px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
   background: rgba(16, 185, 129, 0.18) !important;
   color: #34D399 !important;
-  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  border: 1px solid rgba(16, 185, 129, 0.38) !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important;
+  outline: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  flex-shrink: 0 !important;
 }
 [data-lancar]:hover {
   background: rgba(16, 185, 129, 0.35) !important;
   color: #FFFFFF !important;
   border-color: rgba(52, 211, 153, 0.75) !important;
-  transform: translateY(-1px) scale(1.05) !important;
+  transform: translateY(-1px) scale(1.03) !important;
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.40) !important;
 }
 
