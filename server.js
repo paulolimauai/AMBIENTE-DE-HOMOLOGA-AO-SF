@@ -196,6 +196,17 @@ async function initDatabase() {
 const htmlContent = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<script>
+(function() {
+  try {
+    var t = localStorage.getItem('nexus_theme');
+    if (t) t = t.replace(/"/g, '').trim();
+    if (t === 'light') {
+      document.documentElement.classList.add('light');
+    }
+  } catch(e){}
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
@@ -2927,6 +2938,7 @@ body.light .scale-dropdown {
 </style>
 </head>
 <body>
+<script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
