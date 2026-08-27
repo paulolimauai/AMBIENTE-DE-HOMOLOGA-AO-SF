@@ -101,32 +101,33 @@
 
     <style>
         :root {
-            --auth-bg: #07090E;
-            --auth-card: rgba(14, 19, 34, 0.92);
-            --auth-border: rgba(255, 255, 255, 0.10);
-            --auth-border-hover: rgba(229, 169, 60, 0.40);
-            --auth-input-bg: rgba(9, 13, 22, 0.85);
+            --auth-bg: #070B14;
+            --auth-card: rgba(13, 18, 32, 0.90);
+            --auth-border: rgba(255, 255, 255, 0.12);
+            --auth-border-hover: rgba(16, 185, 129, 0.50);
+            --auth-input-bg: rgba(7, 11, 20, 0.88);
             --auth-input-border: rgba(255, 255, 255, 0.12);
             --auth-text: #F8FAFC;
             --auth-text-dim: #94A3B8;
             --auth-gold: #E5A93C;
-            --auth-gold-glow: rgba(229, 169, 60, 0.25);
-            --auth-tab-bg: rgba(0, 0, 0, 0.45);
+            --auth-emerald: #10B981;
+            --auth-gold-glow: rgba(16, 185, 129, 0.20);
+            --auth-tab-bg: rgba(5, 8, 15, 0.60);
         }
 
         body.light, html.light body {
             --auth-bg: #F0F4F8;
             --auth-card: rgba(255, 255, 255, 0.98);
             --auth-border: #CBD5E1;
-            --auth-border-hover: #D97706;
+            --auth-border-hover: #10B981;
             --auth-input-bg: #F8FAFC;
             --auth-input-border: #CBD5E1;
             --auth-text: #0F172A;
             --auth-text-dim: #475569;
             --auth-gold: #D97706;
-            --auth-gold-glow: rgba(217, 119, 6, 0.18);
+            --auth-gold-glow: rgba(16, 185, 129, 0.15);
             --auth-tab-bg: #E2E8F0;
-            background-color: var(--auth-bg) !important;
+            background: #F0F4F8 !important;
             color: var(--auth-text) !important;
         }
 
@@ -139,11 +140,11 @@
 
         body {
             font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-            background-color: var(--auth-bg);
+            background: radial-gradient(circle at 50% 25%, #0B132B 0%, #060A14 60%, #030408 100%);
             color: var(--auth-text);
             min-height: 100vh;
             overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Fundo Geométrico Sutil */
@@ -160,12 +161,12 @@
                 linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
         }
 
-        /* Card de Autenticação Ultra 4K */
+        /* Card de Autenticação Ultra 4K Financeiro */
         .auth-card-nexus {
             background: var(--auth-card);
             border: 1px solid var(--auth-border);
             border-radius: 28px;
-            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.8), 0 0 50px var(--auth-gold-glow), inset 0 1px 1px rgba(255, 255, 255, 0.14);
+            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.85), 0 0 50px rgba(16, 185, 129, 0.15), 0 0 30px rgba(229, 169, 60, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.14);
             backdrop-filter: blur(40px) saturate(190%);
             -webkit-backdrop-filter: blur(40px) saturate(190%);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -507,13 +508,14 @@
         </div>
     </header>
 
-    <!-- Canvas de Linhas Orbitais & Partículas 4K -->
-    <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-70"></canvas>
+    <!-- Canvas de Animação Financeira 4K (Símbolos, Métricas & Gráficos Vivos) -->
+    <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-85"></canvas>
 
-    <!-- Ambient Aura Glows -->
+    <!-- Ambient Financial Aura Glows (Esmeralda, Dourado & Safira) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-amber-500/10 rounded-full blur-[160px] animate-glow-pulse"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -2s;"></div>
+        <div class="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-emerald-500/15 rounded-full blur-[160px] animate-glow-pulse"></div>
+        <div class="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-amber-500/12 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -1.5s;"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-[600px] h-[600px] bg-blue-600/12 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -3s;"></div>
     </div>
 
     <!-- CONTAINER CENTRAL DO CARD -->
@@ -1229,11 +1231,12 @@
             }
         });
 
-        // Engine de Linhas Orbitais & Partículas 4K
-        (function initBgOrbital() {
+        // Engine de Animação Financeira 4K (Símbolos, Métricas & Gráfico de Tendência Vivo)
+        (function initFinancialCanvasEngine() {
             const canvas = document.getElementById('bgOrbitalCanvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
+
             let width = canvas.width = window.innerWidth;
             let height = canvas.height = window.innerHeight;
 
@@ -1242,65 +1245,130 @@
                 height = canvas.height = window.innerHeight;
             });
 
-            // Partículas flutuantes
-            const particles = [];
-            for (let p = 0; p < 28; p++) {
-                particles.push({
+            // Símbolos e métricas financeiras flutuantes
+            const financialSymbols = ['R$', '$', '€', '£', '▲', '+14.2%', '📈', '₿', '%', '+$2.8k', '✦', '+9.5%', '+$500'];
+            const colors = ['#10B981', '#F59E0B', '#3B82F6', '#34D399', '#FBBF24', '#60A5FA'];
+
+            const items = [];
+            const itemCount = 38;
+
+            for (let i = 0; i < itemCount; i++) {
+                items.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    r: Math.random() * 1.8 + 0.5,
-                    vx: (Math.random() - 0.5) * 0.3,
-                    vy: (Math.random() - 0.5) * 0.3,
-                    alpha: Math.random() * 0.5 + 0.2,
-                    color: Math.random() > 0.5 ? '#E5A93C' : '#5B94D9'
+                    text: financialSymbols[Math.floor(Math.random() * financialSymbols.length)],
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.floor(Math.random() * 11) + 12, // 12px a 23px
+                    vy: -(Math.random() * 0.45 + 0.15),
+                    vx: (Math.random() - 0.5) * 0.35,
+                    baseAlpha: Math.random() * 0.45 + 0.35,
+                    pulseSpeed: Math.random() * 0.02 + 0.008,
+                    pulse: Math.random() * Math.PI * 2,
+                    rotation: (Math.random() - 0.5) * 0.2
                 });
             }
 
-            let angle = 0;
+            let waveOffset = 0;
+
             function render() {
                 ctx.clearRect(0, 0, width, height);
-                angle += 0.0015;
 
-                const cx = width / 2;
-                const cy = height / 2;
+                const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
 
-                // Órbitas Elípticas
-                for (let i = 1; i <= 6; i++) {
-                    const rx = (width * 0.38) + (i * 45);
-                    const ry = (height * 0.42) + (i * 35);
+                // 1. Gráfico Animado de Tendência Financeira no Fundo (Onda Viva)
+                waveOffset += 0.012;
+                ctx.save();
+                ctx.beginPath();
+                const waveY = height * 0.72;
+                ctx.moveTo(0, height);
+                ctx.lineTo(0, waveY);
 
-                    ctx.save();
-                    ctx.translate(cx, cy);
-                    ctx.rotate(angle * (i % 2 === 0 ? 1 : -1) + (i * 0.2));
+                for (let x = 0; x <= width; x += 18) {
+                    const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(width, height);
+                ctx.closePath();
 
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, rx, ry, Math.PI / 6, 0, Math.PI * 2);
-                    ctx.lineWidth = 1;
+                const waveGrad = ctx.createLinearGradient(0, waveY - 50, 0, height);
+                if (isLight) {
+                    waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.09)');
+                    waveGrad.addColorStop(0.5, 'rgba(59, 130, 246, 0.04)');
+                    waveGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                } else {
+                    waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
+                    waveGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.06)');
+                    waveGrad.addColorStop(1, 'rgba(7, 11, 20, 0)');
+                }
+                ctx.fillStyle = waveGrad;
+                ctx.fill();
 
-                    if (i % 2 === 0) {
-                        ctx.strokeStyle = 'rgba(229, 169, 60, ' + (0.10 - (i * 0.012)) + ')';
-                    } else {
-                        ctx.strokeStyle = 'rgba(91, 148, 217, ' + (0.10 - (i * 0.012)) + ')';
+                // Contorno Brilhante do Gráfico de Mercado
+                ctx.beginPath();
+                for (let x = 0; x <= width; x += 18) {
+                    const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.strokeStyle = isLight ? 'rgba(16, 185, 129, 0.40)' : 'rgba(16, 185, 129, 0.50)';
+                ctx.lineWidth = 2.2;
+                ctx.shadowColor = '#10B981';
+                ctx.shadowBlur = isLight ? 4 : 14;
+                ctx.stroke();
+                ctx.restore();
+
+                // 2. Conexões de Rede entre Elementos Financeiros Próximos
+                for (let i = 0; i < items.length; i++) {
+                    for (let j = i + 1; j < items.length; j++) {
+                        const dx = items[i].x - items[j].x;
+                        const dy = items[i].y - items[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 140) {
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.moveTo(items[i].x, items[i].y);
+                            ctx.lineTo(items[j].x, items[j].y);
+                            const connAlpha = (1 - dist / 140) * 0.20;
+                            ctx.strokeStyle = isLight 
+                                ? `rgba(16, 185, 129, ${connAlpha})` 
+                                : `rgba(229, 169, 60, ${connAlpha})`;
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                            ctx.restore();
+                        }
                     }
-                    ctx.stroke();
-                    ctx.restore();
                 }
 
-                // Partículas
-                particles.forEach(pt => {
-                    pt.x += pt.vx;
-                    pt.y += pt.vy;
-                    if (pt.x < 0) pt.x = width;
-                    if (pt.x > width) pt.x = 0;
-                    if (pt.y < 0) pt.y = height;
-                    if (pt.y > height) pt.y = 0;
+                // 3. Desenhar Símbolos & Métricas Financeiras Flutuantes
+                items.forEach(it => {
+                    it.y += it.vy;
+                    it.x += it.vx + Math.sin(it.y * 0.008) * 0.25;
+                    it.pulse += it.pulseSpeed;
+                    const currentAlpha = Math.max(0.15, Math.min(0.9, it.baseAlpha + Math.sin(it.pulse) * 0.25));
 
-                    ctx.beginPath();
-                    ctx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
-                    ctx.fillStyle = pt.color;
-                    ctx.globalAlpha = pt.alpha;
-                    ctx.fill();
-                    ctx.globalAlpha = 1.0;
+                    if (it.y < -35) {
+                        it.y = height + 35;
+                        it.x = Math.random() * width;
+                    }
+                    if (it.x < -35) it.x = width + 35;
+                    if (it.x > width + 35) it.x = -35;
+
+                    ctx.save();
+                    ctx.translate(it.x, it.y);
+                    ctx.rotate(it.rotation);
+
+                    ctx.font = `800 ${it.size}px "Outfit", "Plus Jakarta Sans", sans-serif`;
+                    ctx.fillStyle = it.color;
+                    ctx.globalAlpha = isLight ? currentAlpha * 0.75 : currentAlpha;
+
+                    if (!isLight) {
+                        ctx.shadowColor = it.color;
+                        ctx.shadowBlur = 10;
+                    }
+
+                    ctx.fillText(it.text, 0, 0);
+                    ctx.restore();
                 });
 
                 requestAnimationFrame(render);
