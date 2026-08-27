@@ -10192,40 +10192,53 @@ if (scaleMenuBtn && scaleDropdown) {
   setInterval(updateClock, 1000);
 })();
 
-// Animação de Fundo Financeira 4K (Símbolos, Métricas & Gráfico de Tendência Vivo)
+// Animação de Fundo Financeira Ultra-HD 8K HiDPI (Badges de Lucro, Moedas, Candlesticks & Terminal)
 (function initFinancialCanvasEngine() {
   function setupCanvas(canvasId) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
+    let dpr = 1;
+    let width = 0;
+    let height = 0;
 
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.scale(dpr, dpr);
+    }
+    resize();
+    window.addEventListener('resize', resize);
 
-    const financialSymbols = ['R$', '$', '€', '£', '▲', '+14.2%', '📈', '₿', '%', '+$2.8k', '✦', '+9.5%', '+$500'];
+    const badgeTexts = ['▲ +18.4%', '+$2.5k', '+12.8%', 'R$ 1.8M', '▲ +24.5%', '+$840', '+9.2%', 'R$ 350k'];
+    const currencyCoins = ['R$', '$', '€', '£', '₿'];
     const colors = ['#10B981', '#F59E0B', '#3B82F6', '#34D399', '#FBBF24', '#60A5FA'];
 
     const items = [];
-    const itemCount = 38;
+    const itemCount = 34;
 
     for (let i = 0; i < itemCount; i++) {
+      const kind = i % 3;
       items.push({
+        kind: kind,
         x: Math.random() * width,
         y: Math.random() * height,
-        text: financialSymbols[Math.floor(Math.random() * financialSymbols.length)],
+        text: kind === 0 ? badgeTexts[Math.floor(Math.random() * badgeTexts.length)] : currencyCoins[Math.floor(Math.random() * currencyCoins.length)],
         color: colors[Math.floor(Math.random() * colors.length)],
-        size: Math.floor(Math.random() * 11) + 12,
-        vy: -(Math.random() * 0.45 + 0.15),
-        vx: (Math.random() - 0.5) * 0.35,
+        size: Math.floor(Math.random() * 6) + 12,
+        vy: -(Math.random() * 0.4 + 0.15),
+        vx: (Math.random() - 0.5) * 0.3,
         baseAlpha: Math.random() * 0.45 + 0.35,
         pulseSpeed: Math.random() * 0.02 + 0.008,
         pulse: Math.random() * Math.PI * 2,
-        rotation: (Math.random() - 0.5) * 0.2
+        candleHeight: Math.floor(Math.random() * 20) + 14,
+        candleGreen: Math.random() > 0.3
       });
     }
 
@@ -10235,61 +10248,108 @@ if (scaleMenuBtn && scaleDropdown) {
       ctx.clearRect(0, 0, width, height);
       const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
 
-      // 1. Gráfico Animado de Mercado / Tendência Financeira (Onda Viva)
-      waveOffset += 0.012;
+      // A. Grid Terminal Financeiro (Cruzes de Coordenadas +)
+      const step = 70;
+      ctx.save();
+      ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.035)' : 'rgba(255, 255, 255, 0.035)';
+      ctx.lineWidth = 1;
+      for (let gx = step; gx < width; gx += step) {
+        for (let gy = step; gy < height; gy += step) {
+          ctx.beginPath();
+          ctx.moveTo(gx - 3, gy); ctx.lineTo(gx + 3, gy);
+          ctx.moveTo(gx, gy - 3); ctx.lineTo(gx, gy + 3);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+
+      // B. Onda Financeira Secundária de Fundo (Azul Safira)
+      waveOffset += 0.01;
+      const waveY = height * 0.74;
       ctx.save();
       ctx.beginPath();
-      const waveY = height * 0.72;
+      ctx.moveTo(0, height);
+      ctx.lineTo(0, waveY + 20);
+      for (let x = 0; x <= width; x += 25) {
+        const y = waveY + 20 + Math.sin(x * 0.003 - waveOffset * 0.7) * 45;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      ctx.fillStyle = isLight ? 'rgba(59, 130, 246, 0.03)' : 'rgba(37, 99, 235, 0.06)';
+      ctx.fill();
+      ctx.restore();
+
+      // C. Onda Financeira Principal (Verde Esmeralda de Lucro Mercado)
+      ctx.save();
+      ctx.beginPath();
       ctx.moveTo(0, height);
       ctx.lineTo(0, waveY);
-
-      for (let x = 0; x <= width; x += 18) {
+      const wavePoints = [];
+      for (let x = 0; x <= width; x += 20) {
         const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
         ctx.lineTo(x, y);
+        if (x % 160 === 0) wavePoints.push({ x: x, y: y });
       }
       ctx.lineTo(width, height);
       ctx.closePath();
 
       const waveGrad = ctx.createLinearGradient(0, waveY - 50, 0, height);
       if (isLight) {
-        waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.09)');
-        waveGrad.addColorStop(0.5, 'rgba(59, 130, 246, 0.04)');
+        waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.10)');
+        waveGrad.addColorStop(0.5, 'rgba(59, 130, 246, 0.03)');
         waveGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
       } else {
-        waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
-        waveGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.06)');
+        waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
+        waveGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.05)');
         waveGrad.addColorStop(1, 'rgba(7, 11, 20, 0)');
       }
       ctx.fillStyle = waveGrad;
       ctx.fill();
 
-      // Linha Contorno Esmeralda do Gráfico
+      // Linha de Contorno Esmeralda com Sombra Glow
       ctx.beginPath();
-      for (let x = 0; x <= width; x += 18) {
+      for (let x = 0; x <= width; x += 20) {
         const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = isLight ? 'rgba(16, 185, 129, 0.40)' : 'rgba(16, 185, 129, 0.50)';
-      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = isLight ? 'rgba(16, 185, 129, 0.45)' : 'rgba(16, 185, 129, 0.60)';
+      ctx.lineWidth = 2.4;
       ctx.shadowColor = '#10B981';
-      ctx.shadowBlur = isLight ? 4 : 14;
+      ctx.shadowBlur = isLight ? 6 : 16;
       ctx.stroke();
       ctx.restore();
 
-      // 2. Conexões de Rede entre Nódulos Financeiros
+      // Nódulos de Pico com Indicadores ▲
+      wavePoints.forEach(pt => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#10B981';
+        ctx.shadowColor = '#10B981';
+        ctx.shadowBlur = 10;
+        ctx.fill();
+
+        ctx.font = '700 9px "Outfit", sans-serif';
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.85)';
+        ctx.fillText('▲', pt.x - 3, pt.y - 8);
+        ctx.restore();
+      });
+
+      // D. Conexões de Rede Interativa entre Nós Próximos
       for (let i = 0; i < items.length; i++) {
         for (let j = i + 1; j < items.length; j++) {
           const dx = items[i].x - items[j].x;
           const dy = items[i].y - items[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 140) {
+          if (dist < 130) {
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(items[i].x, items[i].y);
             ctx.lineTo(items[j].x, items[j].y);
-            const connAlpha = (1 - dist / 140) * 0.20;
+            const connAlpha = (1 - dist / 130) * 0.18;
             ctx.strokeStyle = isLight 
               ? 'rgba(16, 185, 129, ' + connAlpha + ')' 
               : 'rgba(229, 169, 60, ' + connAlpha + ')';
@@ -10300,34 +10360,89 @@ if (scaleMenuBtn && scaleDropdown) {
         }
       }
 
-      // 3. Desenhar Símbolos & Métricas Financeiras Flutuantes
+      // E. Renderização de Elementos Financeiros Profissionais (Badges, Moedas & Candlesticks)
       items.forEach(it => {
         it.y += it.vy;
         it.x += it.vx + Math.sin(it.y * 0.008) * 0.25;
         it.pulse += it.pulseSpeed;
-        const currentAlpha = Math.max(0.15, Math.min(0.9, it.baseAlpha + Math.sin(it.pulse) * 0.25));
+        const currentAlpha = Math.max(0.2, Math.min(0.9, it.baseAlpha + Math.sin(it.pulse) * 0.25));
 
-        if (it.y < -35) {
-          it.y = height + 35;
+        if (it.y < -40) {
+          it.y = height + 40;
           it.x = Math.random() * width;
         }
-        if (it.x < -35) it.x = width + 35;
-        if (it.x > width + 35) it.x = -35;
+        if (it.x < -40) it.x = width + 40;
+        if (it.x > width + 40) it.x = -40;
 
         ctx.save();
         ctx.translate(it.x, it.y);
-        ctx.rotate(it.rotation);
 
-        ctx.font = '800 ' + it.size + 'px "Outfit", "Plus Jakarta Sans", sans-serif';
-        ctx.fillStyle = it.color;
-        ctx.globalAlpha = isLight ? currentAlpha * 0.75 : currentAlpha;
+        if (it.kind === 0) {
+          // TYPE 0: BADGE DE LUCRO GLASSMORPHIC (Ex: "▲ +18.4%")
+          ctx.font = '700 11px "Outfit", "Plus Jakarta Sans", sans-serif';
+          const textWidth = ctx.measureText(it.text).width;
+          const padX = 8;
+          const padY = 4;
+          const rw = textWidth + padX * 2;
+          const rh = 20;
 
-        if (!isLight) {
-          ctx.shadowColor = it.color;
-          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.roundRect(-rw/2, -rh/2, rw, rh, 10);
+          ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(13, 18, 32, 0.75)';
+          ctx.globalAlpha = currentAlpha;
+          ctx.fill();
+
+          ctx.strokeStyle = it.color;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          ctx.fillStyle = it.color;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(it.text, 0, 1);
+
+        } else if (it.kind === 1) {
+          // TYPE 1: MOEDA DE CRIPTO/CAMBIO GLASS (Ex: "R$", "$", "€")
+          const radius = 13;
+          ctx.beginPath();
+          ctx.arc(0, 0, radius, 0, Math.PI * 2);
+          ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(15, 23, 42, 0.75)';
+          ctx.globalAlpha = currentAlpha;
+          ctx.fill();
+
+          ctx.strokeStyle = it.color;
+          ctx.lineWidth = 1.2;
+          if (!isLight) {
+            ctx.shadowColor = it.color;
+            ctx.shadowBlur = 8;
+          }
+          ctx.stroke();
+
+          ctx.font = '800 11px "Outfit", sans-serif';
+          ctx.fillStyle = it.color;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(it.text, 0, 1);
+
+        } else {
+          // TYPE 2: CANDLESTICK DE TRADING PROFISSIONAL
+          const color = it.candleGreen ? '#10B981' : '#F43F5E';
+          const h = it.candleHeight;
+          ctx.globalAlpha = isLight ? currentAlpha * 0.7 : currentAlpha * 0.85;
+
+          // Pavio / Wick
+          ctx.beginPath();
+          ctx.moveTo(0, -h/2 - 4);
+          ctx.lineTo(0, h/2 + 4);
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+
+          // Corpo / Body
+          ctx.fillStyle = color;
+          ctx.fillRect(-3, -h/2, 6, h);
         }
 
-        ctx.fillText(it.text, 0, 0);
         ctx.restore();
       });
 
