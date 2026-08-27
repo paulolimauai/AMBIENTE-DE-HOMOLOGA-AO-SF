@@ -416,9 +416,9 @@ html, body {
   --auth-blue: #5B94D9;
   --auth-emerald: #10B981;
   --auth-teal: #0D9488;
-  --auth-card: rgba(12, 17, 30, 0.90);
-  --auth-border: rgba(255, 255, 255, 0.12);
-  --auth-input-bg: rgba(6, 10, 19, 0.88);
+  --auth-card: rgba(8, 12, 22, 0.94);
+  --auth-border: rgba(255, 255, 255, 0.10);
+  --auth-input-bg: rgba(4, 7, 14, 0.92);
   --auth-text: #F8FAFC;
   --auth-text-dim: #94A3B8;
   position: relative;
@@ -429,13 +429,13 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   padding: 24px 16px;
-  background-color: #060913;
+  background-color: #02040A;
   background-image: 
-    radial-gradient(at 12% 15%, rgba(16, 185, 129, 0.22) 0px, transparent 55%),
-    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.24) 0px, transparent 55%),
-    radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.16) 0px, transparent 60%),
-    radial-gradient(at 80% 85%, rgba(13, 148, 136, 0.18) 0px, transparent 50%),
-    linear-gradient(135deg, #060913 0%, #0A1021 50%, #04060E 100%);
+    radial-gradient(at 12% 15%, rgba(16, 185, 129, 0.12) 0px, transparent 55%),
+    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.14) 0px, transparent 55%),
+    radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.08) 0px, transparent 60%),
+    radial-gradient(at 80% 85%, rgba(13, 148, 136, 0.10) 0px, transparent 50%),
+    linear-gradient(180deg, #02040A 0%, #050812 50%, #010205 100%);
   background-attachment: fixed;
 }
 .auth-container.show { display: flex; }
