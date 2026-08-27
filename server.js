@@ -5229,11 +5229,14 @@ function render(){
     else if(currentPage==='funcoes') newHTML = pageFuncoes();
     else newHTML = pageDashboard();
 
-    el.innerHTML = newHTML;
+    if (el.innerHTML !== newHTML) {
+      el.innerHTML = newHTML;
+    }
   } catch(err) {
     console.error("Erro na geracao do HTML da pagina:", err);
     try {
-      el.innerHTML = pageDashboard();
+      const fallback = pageDashboard();
+      if (el.innerHTML !== fallback) el.innerHTML = fallback;
     } catch(e2){}
   }
 
@@ -10184,38 +10187,39 @@ if (scaleMenuBtn && scaleDropdown) {
       document.documentElement.classList.add('user-logged-in');
       document.getElementById('authPage').classList.remove('show');
       document.getElementById('appMain').classList.add('show');
-      if (cachedUser) {
-        currentUser = cachedUser;
-        const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
-        const savedPage = localStorage.getItem('nexus_current_page');
-        const pageTarget = hashPage || savedPage;
+      
+      const em = (cachedUser && cachedUser.email) || (session && session.email);
+      currentUser = cachedUser || { email: em, name: em.split('@')[0], role: 'Usuário' };
 
-        if (currentUser.role === 'Administrador') {
-          document.documentElement.classList.add('is-admin');
-          if (['logs', 'funcoes', 'usuarios'].includes(pageTarget)) {
-            currentPage = pageTarget;
-          } else {
-            currentPage = 'usuarios';
-          }
+      const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
+      const savedPage = localStorage.getItem('nexus_current_page');
+      const pageTarget = hashPage || savedPage;
+
+      if (currentUser.role === 'Administrador') {
+        document.documentElement.classList.add('is-admin');
+        if (['logs', 'funcoes', 'usuarios'].includes(pageTarget)) {
+          currentPage = pageTarget;
         } else {
-          document.documentElement.classList.remove('is-admin');
-          if (['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(pageTarget)) {
-            currentPage = pageTarget;
-          } else {
-            currentPage = 'dashboard';
-          }
+          currentPage = 'usuarios';
         }
-        if (typeof updateHeaderUser === 'function') updateHeaderUser();
-        if (typeof updateAdminMenuVisibility === 'function') updateAdminMenuVisibility();
-
-        const cleanEmail = (currentUser.email || '').toLowerCase().trim();
-        const userKey = 'nexus_data_' + cleanEmail;
-        const localData = loadFromStorage(userKey, null);
-        if (localData) {
-          applyDataPayload(localData);
+      } else {
+        document.documentElement.classList.remove('is-admin');
+        if (['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(pageTarget)) {
+          currentPage = pageTarget;
+        } else {
+          currentPage = 'dashboard';
         }
-        if (typeof render === 'function') render();
       }
+      if (typeof updateHeaderUser === 'function') updateHeaderUser();
+      if (typeof updateAdminMenuVisibility === 'function') updateAdminMenuVisibility();
+
+      const cleanEmail = (currentUser.email || '').toLowerCase().trim();
+      const userKey = 'nexus_data_' + cleanEmail;
+      const localData = loadFromStorage(userKey, null);
+      if (localData) {
+        applyDataPayload(localData);
+      }
+      if (typeof render === 'function') render();
     }
   } catch(e){}
 })();
