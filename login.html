@@ -514,6 +514,97 @@
             border-color: #A7F3D0;
             color: #059669;
         }
+
+        /* Assinatura Executiva do Desenvolvedor High-End */
+        .dev-signature {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.88) 50%, rgba(180, 83, 9, 0.10) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.38);
+            border-radius: 999px;
+            padding: 6px 20px 6px 7px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.85), 0 0 24px rgba(245, 158, 11, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.20);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+        }
+
+        .dev-signature:hover {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.20) 0%, rgba(15, 23, 42, 0.92) 50%, rgba(245, 158, 11, 0.15) 100%);
+            border-color: rgba(245, 158, 11, 0.70);
+            box-shadow: 0 14px 38px rgba(0, 0, 0, 0.85), 0 0 32px rgba(245, 158, 11, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.30);
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .dev-signature-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 35%, #F59E0B 70%, #B45309 100%);
+            color: #050811;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 12px rgba(245, 158, 11, 0.65), inset 0 1px 2px rgba(255, 255, 255, 0.80);
+        }
+
+        .dev-signature-icon svg {
+            width: 13px;
+            height: 13px;
+            stroke-width: 2.8px;
+            display: block;
+        }
+
+        .dev-signature-text {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .dev-signature-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94A3B8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .dev-signature-name {
+            font-size: 13.5px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FDE68A 45%, #F59E0B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.04em;
+            filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.35));
+        }
+
+        body.light .dev-signature {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+            border-color: rgba(245, 158, 11, 0.45) !important;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08), 0 0 16px rgba(245, 158, 11, 0.18) !important;
+        }
+
+        body.light .dev-signature:hover {
+            background: #FFFFFF !important;
+            border-color: #D97706 !important;
+            box-shadow: 0 8px 25px rgba(217, 119, 6, 0.30) !important;
+        }
+
+        body.light .dev-signature-label {
+            color: #475569 !important;
+        }
+
+        body.light .dev-signature-name {
+            background: linear-gradient(135deg, #D97706 0%, #B45309 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            filter: none !important;
+        }
     </style>
 </head>
 <body class="h-full flex flex-col justify-between items-center min-h-screen py-6 px-4 relative select-none auth-bg-cyber-grid">
@@ -815,16 +906,16 @@
 
         <!-- ASSINATURA EXECUTIVA DO DESENVOLVEDOR PAULO LIMA -->
         <div class="mt-6 flex flex-col items-center gap-1.5">
-            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.09] shadow-[0_6px_20px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] hover:border-amber-500/40 hover:shadow-[0_8px_25px_rgba(0,0,0,0.5),0_0_18px_rgba(245,158,11,0.25)]" style="border-color: var(--auth-border);">
-                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 text-[#050811] flex items-center justify-center shadow-[0_2px_10px_rgba(245,158,11,0.45)]">
-                    <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+            <div class="dev-signature">
+                <div class="dev-signature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="16 18 22 12 16 6"></polyline>
                         <polyline points="8 6 2 12 8 18"></polyline>
                     </svg>
                 </div>
-                <div class="flex items-baseline gap-1.5">
-                    <span class="text-[11.5px] font-medium auth-subtitle-text text-slate-400 tracking-tight">Desenvolvido por</span>
-                    <strong class="text-[12.5px] font-bold text-amber-400 tracking-wide">Paulo Lima</strong>
+                <div class="dev-signature-text">
+                    <span class="dev-signature-label">Desenvolvido por</span>
+                    <strong class="dev-signature-name">Paulo Lima</strong>
                 </div>
             </div>
         </div>
