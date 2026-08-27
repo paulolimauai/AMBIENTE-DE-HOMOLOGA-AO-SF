@@ -2160,24 +2160,27 @@ body.light .rec-progress-bar {
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 11px;
+  gap: 7px;
+  padding: 5px 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  color: #94A3B8;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  color: #CBD5E1;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .hero-badge.live-dot {
-  background: rgba(16, 185, 129, 0.12);
-  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.35);
   color: #34D399;
 }
 .hero-badge.admin-badge {
-  background: rgba(245, 158, 11, 0.14);
-  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.4);
   color: #FBBF24;
 }
 .pulse-dot {
@@ -2185,35 +2188,40 @@ body.light .rec-progress-bar {
   height: 7px;
   border-radius: 50%;
   background: #10B981;
-  box-shadow: 0 0 8px #10B981;
+  box-shadow: 0 0 10px #10B981;
   animation: pulseDot 2s infinite ease-in-out;
 }
 @keyframes pulseDot {
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.7; }
+  50% { transform: scale(1.35); opacity: 0.65; }
 }
 .hero-greeting {
   font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #F8FAFC;
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   display: flex;
   align-items: center;
-  gap: 10px;
-  line-height: 1.25;
+  gap: 12px;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 .hero-name-gradient {
-  background: linear-gradient(135deg, #FFFFFF 0%, #93C5FD 50%, #60A5FA 100%);
+  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 45%, #F59E0B 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.35));
+  font-weight: 900;
+  letter-spacing: 0.01em;
 }
 .hero-sub {
-  font-size: 13px;
+  font-size: 13.5px;
   color: #94A3B8;
   margin: 0;
   font-weight: 500;
+  letter-spacing: 0.01em;
 }
 .hero-period-highlight {
   color: #E5A93C;
@@ -2276,17 +2284,19 @@ body.light .dashboard-welcome-hero {
   border-color: #CBD5E1 !important;
   box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08) !important;
 }
-body.light .hero-greeting { color: #0F172A !important; }
+body.light .hero-greeting { color: #0F172A !important; text-shadow: none !important; }
 body.light .hero-name-gradient {
-  background: linear-gradient(135deg, #0F172A 0%, #2563EB 100%) !important;
+  background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #D97706 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.25)) !important;
 }
 body.light .hero-sub { color: #475569 !important; }
 body.light .hero-badge {
-  background: #F1F5F9 !important;
+  background: #FFFFFF !important;
   border-color: #CBD5E1 !important;
-  color: #475569 !important;
+  color: #334155 !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
 }
 body.light .btn-hero-ghost {
   background: #FFFFFF !important;
@@ -5490,6 +5500,9 @@ function pageDashboard(){
         <div class="hero-badge-strip">
           <span class="hero-badge hide-mobile">
             📅 \${formattedToday}
+          </span>
+          <span class="hero-badge live-dot hide-mobile">
+            <span class="pulse-dot"></span> Painel Consolidado
           </span>
         </div>
         <h1 class="hero-greeting">
