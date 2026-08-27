@@ -3040,11 +3040,6 @@ body.light .scale-dropdown {
       <div class="brand">
         <div class="logo">N</div>
         <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
-        <span class="env-badge-homolog" title="Ambiente de Testes e Homologação">Homologação 🧪</span>
-      </div>
-      <div class="header-live-time hide-mobile" id="headerLiveTime">
-        <span class="time-dot"></span>
-        <span id="headerLiveTimeText">Carregando...</span>
       </div>
       <div class="right" style="margin-left:auto;">
         <div class="notif-wrap">
