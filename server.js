@@ -636,12 +636,17 @@ body.light .auth-card-nexus {
 /* Abas de Navegação Segmentada (Entrar / Criar Conta) */
 .auth-tabs-nav {
   display: flex;
-  background: #050811;
+  background: var(--auth-input-bg);
   border: 1px solid var(--auth-border);
   border-radius: 14px;
   padding: 4px;
   margin-bottom: 24px;
   gap: 4px;
+}
+
+body.light .auth-tabs-nav {
+  background: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
 }
 
 .auth-tab-btn {
@@ -666,11 +671,17 @@ body.light .auth-card-nexus {
   border: 1px solid rgba(245,158,11,0.45);
   box-shadow: 0 4px 14px rgba(245,158,11,0.20);
 }
+body.light .auth-tab-btn {
+  color: #64748B !important;
+}
+body.light .auth-tab-btn:hover {
+  color: #0F172A !important;
+}
 body.light .auth-tab-btn.active {
-  background: #FFFFFF;
-  color: #B45309;
-  border-color: #CBD5E1;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  background: #FFFFFF !important;
+  color: #B45309 !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.08) !important;
 }
 
 /* Campos de Formulário Modernos com Ícones */
@@ -691,20 +702,26 @@ body.light .auth-tab-btn.active {
   position: relative;
   display: flex;
   align-items: center;
-  background: #050811 !important;
+  background: var(--auth-input-bg);
   border: 1px solid var(--auth-border);
   border-radius: 14px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
+body.light .auth-input-wrapper {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+
 .auth-input-wrapper:focus-within {
   border-color: var(--auth-gold) !important;
-  background: #050811 !important;
+  background: var(--auth-input-bg);
   box-shadow: 0 0 24px rgba(245, 158, 11, 0.35), inset 0 2px 4px rgba(0,0,0,0.3) !important;
   transform: translateY(-1px);
 }
 body.light .auth-input-wrapper:focus-within {
   background: #FFFFFF !important;
-  box-shadow: 0 0 20px rgba(229, 169, 60, 0.25) !important;
+  border-color: #D97706 !important;
+  box-shadow: 0 0 20px rgba(217, 119, 6, 0.20) !important;
 }
 
 .auth-input-wrapper.highlight-glow {
@@ -719,6 +736,12 @@ body.light .auth-input-wrapper:focus-within {
   justify-content: center;
   color: var(--auth-text-dim);
   flex-shrink: 0;
+}
+body.light .auth-input-icon {
+  color: #64748B !important;
+}
+body.light .auth-input-wrapper:focus-within .auth-input-icon {
+  color: #D97706 !important;
 }
 
 .auth-input-wrapper input {
@@ -770,6 +793,12 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
   cursor: pointer;
   flex-shrink: 0;
   transition: color 0.15s;
+}
+body.light .auth-pass-toggle-btn {
+  color: #64748B !important;
+}
+body.light .auth-pass-toggle-btn:hover {
+  color: #D97706 !important;
 }
 .auth-pass-toggle-btn svg {
   width: 17px !important;
