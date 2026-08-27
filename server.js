@@ -212,7 +212,7 @@ const htmlContent = `<!DOCTYPE html>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0b0e12" id="metaThemeColor">
+<meta name="theme-color" content="#060913" id="metaThemeColor">
 <script>
 (function() {
   try {
@@ -322,15 +322,15 @@ html.is-admin #mobileDrawerFuncoesBtn {
 }
 
 :root{
-  --bg:#0A0D14; --sidebar:#0F131D; --card:#111622; --card-border:rgba(255,255,255,0.09);
+  --bg:#060913; --sidebar:#0A0F24; --card:rgba(12, 19, 42, 0.85); --card-border:rgba(59, 130, 246, 0.18);
   --text:#F8FAFC; --text-dim:#94A3B8; --text-faint:#64748B;
   --green:#10B981; --green-soft:rgba(16,185,129,.14);
   --emerald:#10B981; --emerald-soft:rgba(16,185,129,.14);
   --red:#F43F5E; --red-soft:rgba(244,63,94,.14);
   --blue:#3B82F6; --purple:#A855F7; --orange:#F59E0B; --teal:#06B6D4; --pink:#EC4899;
-  --hover:rgba(255,255,255,.06);
+  --hover:rgba(255,255,255,.08);
   --radius:16px;
-  --shadow:0 16px 40px -10px rgba(0,0,0,.85), 0 0 1px 1px rgba(255,255,255,0.1);
+  --shadow:0 16px 40px -10px rgba(2,6,23,.85), 0 0 1px 1px rgba(59,130,246,0.15);
 }
 body.light, html.light body{
   --bg:#F1F5F9; --sidebar:#FFFFFF; --card:#FFFFFF; --card-border:#CBD5E1;
@@ -342,7 +342,14 @@ body.light, html.light body{
 html, body{overflow-x:clip !important; width:100%;}
 body{
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-  background:var(--bg); color:var(--text); min-height:100vh; transition:background .25s,color .25s;
+  background-color:#060913;
+  background-image:
+    radial-gradient(at 15% 15%, rgba(14, 116, 144, 0.15) 0px, transparent 55%),
+    radial-gradient(at 85% 20%, rgba(30, 58, 138, 0.18) 0px, transparent 55%),
+    radial-gradient(at 50% 85%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+    linear-gradient(180deg, #060913 0%, #080E21 50%, #050814 100%);
+  background-attachment:fixed;
+  color:var(--text); min-height:100vh; transition:background .25s,color .25s;
 }
 button, input, select{font-family:inherit; color:inherit;}
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
