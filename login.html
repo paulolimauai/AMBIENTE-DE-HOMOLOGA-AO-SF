@@ -405,6 +405,36 @@
             0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
             50% { opacity: 1; transform: scale(1.25) rotate(45deg); filter: drop-shadow(0 0 6px #F59E0B); }
         }
+
+        /* Checklist de Segurança da Senha */
+        .pwd-req-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10.5px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94A3B8;
+            transition: all 0.2s ease;
+        }
+        .pwd-req-pill.valid {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.35);
+            color: #34D399;
+        }
+        body.light .pwd-req-pill {
+            background: #F1F5F9;
+            border-color: #E2E8F0;
+            color: #64748B;
+        }
+        body.light .pwd-req-pill.valid {
+            background: #ECFDF5;
+            border-color: #A7F3D0;
+            color: #059669;
+        }
     </style>
 </head>
 <body class="h-full flex flex-col justify-between items-center min-h-screen py-6 px-4 relative select-none auth-bg-cyber-grid">
@@ -453,11 +483,16 @@
 
     <!-- BARRA SUPERIOR FIXA: BADGE DE SEGURANÇA, HOMOLOGAÇÃO & TEMA -->
     <header class="w-full max-w-[1200px] flex items-center justify-between z-30 mb-4 px-2">
-        <div class="flex items-center gap-2"></div>
+        <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-blue-400 text-xs font-semibold backdrop-blur-md hidden sm:inline-flex items-center gap-1.5 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Sistema Online</span>
+            </span>
+        </div>
 
         <div class="flex items-center gap-3">
             <span class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold backdrop-blur-md hidden sm:inline-flex items-center gap-1.5 shadow-sm">
-                <span>🧪</span> Homologação
+                <span>🧪</span> Homologação Segura
             </span>
             <button type="button" id="loginThemeBtn" onclick="toggleLoginTheme()" title="Alternar Tema Claro / Escuro"
                 class="w-9 h-9 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center shadow-lg hover:scale-105 transition-all focus:outline-none backdrop-blur-md" style="background-color: var(--auth-tab-bg); border-color: var(--auth-border);">
@@ -617,17 +652,23 @@
                             </button>
                         </div>
                         
-                        <!-- Barra Indicadora de Força da Senha -->
-                        <div class="mt-2" id="pwdStrengthContainer">
+                        <!-- Barra Indicadora de Força da Senha & Checklist -->
+                        <div class="mt-2.5" id="pwdStrengthContainer">
                             <div class="flex items-center justify-between text-[10.5px] font-semibold text-[#64748B] mb-1">
-                                <span>Força da senha:</span>
+                                <span>Segurança da senha:</span>
                                 <span id="pwdStrengthText" class="text-rose-400 font-bold">Muito Fraca</span>
                             </div>
-                            <div class="grid grid-cols-4 gap-1.5 h-1.5">
+                            <div class="grid grid-cols-4 gap-1.5 h-1.5 mb-2">
                                 <div id="pwdBar1" class="h-full rounded-full bg-rose-500 transition-all duration-300"></div>
                                 <div id="pwdBar2" class="h-full rounded-full bg-white/10 transition-all duration-300"></div>
                                 <div id="pwdBar3" class="h-full rounded-full bg-white/10 transition-all duration-300"></div>
                                 <div id="pwdBar4" class="h-full rounded-full bg-white/10 transition-all duration-300"></div>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span id="reqLength" class="pwd-req-pill"><span>•</span> 6+ caracteres</span>
+                                <span id="reqUpperLower" class="pwd-req-pill"><span>•</span> Maiúsc./Minúsc.</span>
+                                <span id="reqNumber" class="pwd-req-pill"><span>•</span> Número</span>
+                                <span id="reqSpecial" class="pwd-req-pill"><span>•</span> Símbolo</span>
                             </div>
                         </div>
                     </div>
@@ -857,20 +898,48 @@
             showAlert('Credenciais do Administrador preenchidas. Clique em Entrar na Conta.', 'info');
         };
 
-        // Verificação de Força da Senha
+        // Verificação de Força da Senha & Checklist em Tempo Real
         window.checkPasswordStrength = function(pwd) {
             const txt = document.getElementById('pwdStrengthText');
             const b1 = document.getElementById('pwdBar1');
             const b2 = document.getElementById('pwdBar2');
             const b3 = document.getElementById('pwdBar3');
             const b4 = document.getElementById('pwdBar4');
+
+            const reqLength = document.getElementById('reqLength');
+            const reqUpperLower = document.getElementById('reqUpperLower');
+            const reqNumber = document.getElementById('reqNumber');
+            const reqSpecial = document.getElementById('reqSpecial');
+
+            const hasLength = pwd.length >= 6;
+            const hasUpperLower = /[a-z]/.test(pwd) && /[A-Z]/.test(pwd);
+            const hasNumber = /[0-9]/.test(pwd);
+            const hasSpecial = /[^A-Za-z0-9]/.test(pwd);
+
+            if (reqLength) {
+                reqLength.className = 'pwd-req-pill' + (hasLength ? ' valid' : '');
+                reqLength.innerHTML = '<span>' + (hasLength ? '✓' : '•') + '</span> 6+ caracteres';
+            }
+            if (reqUpperLower) {
+                reqUpperLower.className = 'pwd-req-pill' + (hasUpperLower ? ' valid' : '');
+                reqUpperLower.innerHTML = '<span>' + (hasUpperLower ? '✓' : '•') + '</span> Maiúsc./Minúsc.';
+            }
+            if (reqNumber) {
+                reqNumber.className = 'pwd-req-pill' + (hasNumber ? ' valid' : '');
+                reqNumber.innerHTML = '<span>' + (hasNumber ? '✓' : '•') + '</span> Número';
+            }
+            if (reqSpecial) {
+                reqSpecial.className = 'pwd-req-pill' + (hasSpecial ? ' valid' : '');
+                reqSpecial.innerHTML = '<span>' + (hasSpecial ? '✓' : '•') + '</span> Símbolo';
+            }
+
             if (!txt || !b1) return;
 
             let score = 0;
-            if (pwd.length >= 6) score++;
-            if (pwd.length >= 10) score++;
-            if (/[A-Z]/.test(pwd) && /[0-9]/.test(pwd)) score++;
-            if (/[^A-Za-z0-9]/.test(pwd)) score++;
+            if (hasLength) score++;
+            if (hasUpperLower) score++;
+            if (hasNumber) score++;
+            if (hasSpecial) score++;
 
             b1.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 1 ? (score === 1 ? 'bg-rose-500' : 'bg-amber-500') : 'bg-white/10');
             b2.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 2 ? (score === 2 ? 'bg-amber-500' : 'bg-blue-500') : 'bg-white/10');
@@ -1176,14 +1245,29 @@
                 height = canvas.height = window.innerHeight;
             });
 
+            // Partículas flutuantes
+            const particles = [];
+            for (let p = 0; p < 28; p++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 1.8 + 0.5,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    alpha: Math.random() * 0.5 + 0.2,
+                    color: Math.random() > 0.5 ? '#E5A93C' : '#5B94D9'
+                });
+            }
+
             let angle = 0;
             function render() {
                 ctx.clearRect(0, 0, width, height);
-                angle += 0.0018;
+                angle += 0.0015;
 
                 const cx = width / 2;
                 const cy = height / 2;
 
+                // Órbitas Elípticas
                 for (let i = 1; i <= 6; i++) {
                     const rx = (width * 0.38) + (i * 45);
                     const ry = (height * 0.42) + (i * 35);
@@ -1197,13 +1281,30 @@
                     ctx.lineWidth = 1;
 
                     if (i % 2 === 0) {
-                        ctx.strokeStyle = 'rgba(229, 169, 60, ' + (0.11 - (i * 0.015)) + ')';
+                        ctx.strokeStyle = 'rgba(229, 169, 60, ' + (0.10 - (i * 0.012)) + ')';
                     } else {
-                        ctx.strokeStyle = 'rgba(91, 148, 217, ' + (0.11 - (i * 0.015)) + ')';
+                        ctx.strokeStyle = 'rgba(91, 148, 217, ' + (0.10 - (i * 0.012)) + ')';
                     }
                     ctx.stroke();
                     ctx.restore();
                 }
+
+                // Partículas
+                particles.forEach(pt => {
+                    pt.x += pt.vx;
+                    pt.y += pt.vy;
+                    if (pt.x < 0) pt.x = width;
+                    if (pt.x > width) pt.x = 0;
+                    if (pt.y < 0) pt.y = height;
+                    if (pt.y > height) pt.y = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
+                    ctx.fillStyle = pt.color;
+                    ctx.globalAlpha = pt.alpha;
+                    ctx.fill();
+                    ctx.globalAlpha = 1.0;
+                });
 
                 requestAnimationFrame(render);
             }
