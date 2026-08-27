@@ -6740,9 +6740,7 @@ function pageRecorrentes(){
             <td class="\${r.type==='in'?'val-in':'val-out'}">\${r.type==='in'?'+':'-'}\${fmt(r.val)}</td>
             <td>
               <div class="row-actions" style="justify-content:center; gap:6px;">
-                \${isFixed && isCompleted ? \`
-                  <button data-lancar="\${r.id}" title="Conta concluída (\${totalM}/\${totalM} meses). Clique para ver opções ou renovar." class="btn-primary" style="padding:4px 10px; font-size:11px; border-radius:8px; height:32px; width:auto; background:rgba(16,185,129,0.18); color:var(--green); border:1px solid rgba(16,185,129,0.4); font-weight:700;">✓ Concluído</button>
-                \` : isFixed ? \`
+                \${isFixed && isCompleted ? '' : isFixed ? \`
                   <button data-lancar="\${r.id}" title="Aplicar / Lançar parcela no sistema" class="btn-primary" style="padding:4px 10px; font-size:11px; border-radius:8px; height:32px; width:auto; font-weight:700; white-space:nowrap;">▶ Lançar (\${nextInstallmentNum}/\${totalM})</button>
                 \` : \`
                   <button data-lancar="\${r.id}" title="Lançar agora na conta" class="btn-primary" style="padding:4px 10px; font-size:11.5px; border-radius:8px; height:32px; width:auto;">▶ Lançar</button>
