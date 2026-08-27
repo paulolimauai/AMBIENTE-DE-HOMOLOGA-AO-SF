@@ -1091,8 +1091,9 @@ body.light .menu button{color:#334155 !important; background:rgba(15,23,42,0.04)
 body.light .menu button .ic{background:rgba(15,23,42,0.05); border-color:rgba(15,23,42,0.1); color:#64748B;}
 body.light .menu button:hover{background:rgba(15,23,42,0.08); color:#0F172A !important; border-color:rgba(15,23,42,0.2);}
 body.light .menu button:hover .ic{background:rgba(15,23,42,0.12); color:#0F172A;}
-body.light .menu button.active{background:linear-gradient(135deg, #0F172A 0%, #1E293B 100%) !important; color:#FFFFFF !important; border-color:#0F172A !important; box-shadow:0 8px 24px rgba(15,23,42,0.3) !important;}
-body.light .menu button.active .ic{background:rgba(255,255,255,0.2); color:#FFFFFF; border-color:rgba(255,255,255,0.3);}
+body.light .menu button.active{background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important; color:#FFFFFF !important; border-color:#2563EB !important; box-shadow:0 8px 24px rgba(37,99,235,0.35) !important;}
+body.light .menu button.active .ic{background:rgba(255,255,255,0.22) !important; color:#FFFFFF !important; border-color:rgba(255,255,255,0.4) !important;}
+body.light .menu button.active::after{background:linear-gradient(90deg, transparent, #2563EB, transparent) !important; box-shadow:0 0 10px #2563EB !important;}
 
 /* ==================== Correção Completa de Contraste do Modo Claro (Light Mode Contrast Fix) ==================== */
 body.light .topheader,
