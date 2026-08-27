@@ -5187,53 +5187,67 @@ function render(){
       currentPage = 'usuarios';
     }
   } else {
-    if (['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
+    if (!['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(currentPage)) {
       currentPage = 'dashboard';
     }
   }
 
   let newHTML = '';
-  if(currentPage==='usuarios') {
-    newHTML = pageUsuarios();
-    syncUsersWithServer().then(() => {
-      const uEl = document.getElementById('pageContent');
-      if (uEl && currentPage === 'usuarios') {
-        const freshHTML = pageUsuarios();
-        if (uEl.innerHTML !== freshHTML) uEl.innerHTML = freshHTML;
-      }
-    }).catch(() => {});
-  }
-  else if(currentPage==='logs') {
-    newHTML = pageLogs();
-    loadSystemLogs().then(() => {
-      const lEl = document.getElementById('pageContent');
-      if (lEl && currentPage === 'logs') {
-        const freshHTML = pageLogs();
-        if (lEl.innerHTML !== freshHTML) lEl.innerHTML = freshHTML;
-      }
-    }).catch(() => {});
-  }
-  else if(currentPage==='dashboard') newHTML = pageDashboard();
-  else if(currentPage==='transacoes') newHTML = pageTransacoes();
-  else if(currentPage==='cartoes') newHTML = pageContas();
-  else if(currentPage==='orcamentos') newHTML = pageOrcamentos();
-  else if(currentPage==='metas') newHTML = pageMetas();
-  else if(currentPage==='relatorios') newHTML = pageRelatorios();
-  else if(currentPage==='recorrentes') newHTML = pageRecorrentes();
-  else if(currentPage==='importar') newHTML = pageImportar();
-  else if(currentPage==='anexos') newHTML = pageAnexos();
-  else if(currentPage==='alertas') newHTML = pageAlertas();
-  else if(currentPage==='config') newHTML = pageConfig();
-  else if(currentPage==='funcoes') newHTML = pageFuncoes();
+  try {
+    if(currentPage==='usuarios') {
+      newHTML = pageUsuarios();
+      syncUsersWithServer().then(() => {
+        const uEl = document.getElementById('pageContent');
+        if (uEl && currentPage === 'usuarios') {
+          const freshHTML = pageUsuarios();
+          if (uEl.innerHTML !== freshHTML) uEl.innerHTML = freshHTML;
+        }
+      }).catch(() => {});
+    }
+    else if(currentPage==='logs') {
+      newHTML = pageLogs();
+      loadSystemLogs().then(() => {
+        const lEl = document.getElementById('pageContent');
+        if (lEl && currentPage === 'logs') {
+          const freshHTML = pageLogs();
+          if (lEl.innerHTML !== freshHTML) lEl.innerHTML = freshHTML;
+        }
+      }).catch(() => {});
+    }
+    else if(currentPage==='dashboard') newHTML = pageDashboard();
+    else if(currentPage==='transacoes') newHTML = pageTransacoes();
+    else if(currentPage==='cartoes') newHTML = pageContas();
+    else if(currentPage==='orcamentos') newHTML = pageOrcamentos();
+    else if(currentPage==='metas') newHTML = pageMetas();
+    else if(currentPage==='relatorios') newHTML = pageRelatorios();
+    else if(currentPage==='recorrentes') newHTML = pageRecorrentes();
+    else if(currentPage==='importar') newHTML = pageImportar();
+    else if(currentPage==='anexos') newHTML = pageAnexos();
+    else if(currentPage==='alertas') newHTML = pageAlertas();
+    else if(currentPage==='config') newHTML = pageConfig();
+    else if(currentPage==='funcoes') newHTML = pageFuncoes();
+    else newHTML = pageDashboard();
 
-  el.innerHTML = newHTML;
-  attachPageEvents();
-  updateHeaderUser();
-  renderNotifications();
-  updateViewModeBanner();
-  updateAdminMenuVisibility();
-  updateActiveMenu();
-  if(currentPage==='dashboard') drawDashboardCharts();
+    el.innerHTML = newHTML;
+  } catch(err) {
+    console.error("Erro na geracao do HTML da pagina:", err);
+    try {
+      el.innerHTML = pageDashboard();
+    } catch(e2){}
+  }
+
+  try {
+    attachPageEvents();
+    updateHeaderUser();
+    renderNotifications();
+    updateViewModeBanner();
+    updateAdminMenuVisibility();
+    updateActiveMenu();
+    if(currentPage==='dashboard') drawDashboardCharts();
+  } catch(err) {
+    console.error("Erro no pós-render:", err);
+    updateActiveMenu();
+  }
 }
 
 function updateActiveMenu(){
@@ -10166,11 +10180,12 @@ if (scaleMenuBtn && scaleDropdown) {
       document.getElementById('appMain').classList.add('show');
       if (cachedUser) {
         currentUser = cachedUser;
+        const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
+        const savedPage = localStorage.getItem('nexus_current_page');
+        const pageTarget = hashPage || savedPage;
+
         if (currentUser.role === 'Administrador') {
           document.documentElement.classList.add('is-admin');
-          const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
-          const savedPage = localStorage.getItem('nexus_current_page');
-          const pageTarget = hashPage || savedPage;
           if (['logs', 'funcoes', 'usuarios'].includes(pageTarget)) {
             currentPage = pageTarget;
           } else {
@@ -10178,9 +10193,22 @@ if (scaleMenuBtn && scaleDropdown) {
           }
         } else {
           document.documentElement.classList.remove('is-admin');
+          if (['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(pageTarget)) {
+            currentPage = pageTarget;
+          } else {
+            currentPage = 'dashboard';
+          }
         }
         if (typeof updateHeaderUser === 'function') updateHeaderUser();
         if (typeof updateAdminMenuVisibility === 'function') updateAdminMenuVisibility();
+
+        const cleanEmail = (currentUser.email || '').toLowerCase().trim();
+        const userKey = 'nexus_data_' + cleanEmail;
+        const localData = loadFromStorage(userKey, null);
+        if (localData) {
+          applyDataPayload(localData);
+        }
+        if (typeof render === 'function') render();
       }
     }
   } catch(e){}
@@ -10247,14 +10275,21 @@ if (scaleMenuBtn && scaleDropdown) {
   isViewingOtherUser = false;
   localStorage.removeItem('nexus_viewing_user');
 
+  const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
+  const savedPage = localStorage.getItem('nexus_current_page');
+  const pageTarget = hashPage || savedPage || currentPage;
+
   if (currentUser.role === 'Administrador') {
-    const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
-    const savedPage = localStorage.getItem('nexus_current_page');
-    const pageTarget = hashPage || savedPage || currentPage;
     if (['logs', 'funcoes', 'usuarios'].includes(pageTarget)) {
       currentPage = pageTarget;
     } else {
       currentPage = 'usuarios';
+    }
+  } else {
+    if (['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(pageTarget)) {
+      currentPage = pageTarget;
+    } else {
+      currentPage = 'dashboard';
     }
   }
 
