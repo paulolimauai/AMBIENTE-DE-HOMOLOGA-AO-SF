@@ -689,6 +689,7 @@ body.light .auth-input-wrapper:focus-within {
 
 .auth-input-wrapper input {
   flex: 1;
+  min-width: 0;
   background: transparent !important;
   border: none;
   padding: 14px 12px 14px 0;
@@ -2892,7 +2893,7 @@ body.light .scale-dropdown {
             <span class="auth-input-icon">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </span>
-            <input type="email" id="loginEmail" placeholder="seu.email@exemplo.com" required autocomplete="username">
+            <input type="email" id="loginEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
           </div>
         </div>
 
@@ -2905,7 +2906,7 @@ body.light .scale-dropdown {
             <span class="auth-input-icon">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </span>
-            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" spellcheck="false">
             <button type="button" class="auth-pass-toggle-btn" id="loginPasswordToggle" title="Mostrar/Ocultar Senha">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
@@ -2914,15 +2915,11 @@ body.light .scale-dropdown {
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <span>Caps Lock está ativado</span>
           </div>
-          <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="margin-top:10px; display:flex; align-items:center;">
             <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px; font-weight:600; text-transform:none; color:var(--auth-text-dim);">
               <input type="checkbox" id="rememberMe" checked style="accent-color:var(--auth-gold); width:15px; height:15px;">
               <span>Lembrar meu acesso</span>
             </label>
-            <button type="button" onclick="fillAdminDemo()" style="background:none; border:none; color:#60a5fa; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              <span>Preencher Admin</span>
-            </button>
           </div>
         </div>
 
@@ -2941,7 +2938,7 @@ body.light .scale-dropdown {
             <span class="auth-input-icon">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </span>
-            <input type="text" id="regName" placeholder="Ex: Paulo Lima" required>
+            <input type="text" id="regName" placeholder="Ex: Paulo Lima" required autocomplete="name" spellcheck="false">
           </div>
         </div>
 
@@ -2951,7 +2948,7 @@ body.light .scale-dropdown {
             <span class="auth-input-icon">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </span>
-            <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required>
+            <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
           </div>
         </div>
 
@@ -2961,8 +2958,25 @@ body.light .scale-dropdown {
             <span class="auth-input-icon">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </span>
-            <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+            <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="checkServerRegPasswordMatch()">
+            <button type="button" class="auth-pass-toggle-btn" id="regPasswordToggle" title="Mostrar/Ocultar Senha">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
           </div>
+        </div>
+
+        <div class="auth-field">
+          <label>Confirmar Senha</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="checkServerRegPasswordMatch()">
+            <button type="button" class="auth-pass-toggle-btn" id="regConfirmPasswordToggle" title="Mostrar/Ocultar Senha">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div id="regPwdMatchMsg" style="display:none; margin-top:6px; font-size:11.5px; font-weight:700;"></div>
         </div>
 
         <button type="submit" class="btn-auth-primary" id="regSubmitBtn">
@@ -2984,7 +2998,7 @@ body.light .scale-dropdown {
             <span class="auth-input-icon">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </span>
-            <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" required>
+            <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
           </div>
         </div>
 
@@ -3550,15 +3564,6 @@ window.togglePasswordVisibility = function(inputId, btnId) {
   }
 };
 
-// Preenchimento Rápido do Admin Demo
-window.fillAdminDemo = function() {
-  const emailInput = document.getElementById('loginEmail');
-  const passInput = document.getElementById('loginPassword');
-  if (emailInput) emailInput.value = 'admin@nexusfinanceiro.com';
-  if (passInput) passInput.value = '86266049';
-  showExecutiveWelcomeToast('Credenciais Preenchidas', 'Admin demo configurado. Clique em Entrar na Conta.');
-};
-
 // Detecção de Caps Lock no Login
 document.addEventListener('keydown', function(e) {
   const capsWarn = document.getElementById('capsLockWarningLogin');
@@ -3890,21 +3895,48 @@ function hideLogoutPopup(){
   }, 250);
 }
 
+window.checkServerRegPasswordMatch = function() {
+  const p1 = document.getElementById('regPassword') ? document.getElementById('regPassword').value : '';
+  const p2 = document.getElementById('regConfirmPassword') ? document.getElementById('regConfirmPassword').value : '';
+  const msg = document.getElementById('regPwdMatchMsg');
+  if (!msg) return;
+
+  if (!p2) {
+    msg.style.display = 'none';
+    return;
+  }
+
+  msg.style.display = 'flex';
+  if (p1 === p2) {
+    msg.textContent = '✓ As senhas conferem';
+    msg.style.color = '#34d399';
+  } else {
+    msg.textContent = '✕ As senhas não conferem';
+    msg.style.color = '#f87171';
+  }
+};
+
 // Cadastro com inserção direta no PostgreSQL e fallback resiliente
 document.getElementById('registerForm').onsubmit = async (e) => {
   e.preventDefault();
   const name = document.getElementById('regName').value.trim();
   const email = document.getElementById('regEmail').value.trim();
   const password = document.getElementById('regPassword').value.trim();
+  const confirmPassword = document.getElementById('regConfirmPassword') ? document.getElementById('regConfirmPassword').value.trim() : '';
   const submitBtn = document.querySelector('#registerForm button[type="submit"]');
 
-  if (!name || !email || !password) {
-    showCustomAlert('Atenção', 'Por favor, preencha todos os campos do formulário.', 'error');
+  if (!name || !email || !password || !confirmPassword) {
+    showCustomAlert('Atenção', 'Por favor, preencha todos os campos do formulário, incluindo a confirmação de senha.', 'error');
     return;
   }
 
   if (password.length < 6) {
     showCustomAlert('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'error');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showCustomAlert('Atenção', 'As senhas não conferem. Por favor, digite a mesma senha nos dois campos.', 'error');
     return;
   }
 
@@ -3957,6 +3989,9 @@ document.getElementById('registerForm').onsubmit = async (e) => {
     document.getElementById('regName').value = '';
     document.getElementById('regEmail').value = '';
     document.getElementById('regPassword').value = '';
+    if (document.getElementById('regConfirmPassword')) document.getElementById('regConfirmPassword').value = '';
+    const regMsg = document.getElementById('regPwdMatchMsg');
+    if (regMsg) regMsg.style.display = 'none';
     document.getElementById('loginEmail').value = email;
     document.getElementById('loginPassword').value = password;
 
@@ -9887,6 +9922,8 @@ document.getElementById('overlayUserAdmin').addEventListener('click', e=>{ if(e.
 document.getElementById('viewModeExitBtn').onclick = exitViewMode;
 document.getElementById('accountDisabledCloseBtn').onclick = hideAccountDisabledPopup;
 bindPasswordToggle('loginPassword', 'loginPasswordToggle');
+bindPasswordToggle('regPassword', 'regPasswordToggle');
+bindPasswordToggle('regConfirmPassword', 'regConfirmPasswordToggle');
 
 /* ==================== Controle de Escala & Dispositivo Logado ==================== */
 function detectDeviceType() {
