@@ -409,14 +409,15 @@ html, body {
   }
 }
 
-/* ==================== Tela de Auth Ultra Moderna 4K ==================== */
+/* ==================== Tela de Auth Ultra Moderna ==================== */
 .auth-container {
   --auth-gold: #E5A93C;
   --auth-gold-dark: #C89B3C;
   --auth-blue: #5B94D9;
-  --auth-card: rgba(14, 19, 34, 0.88);
-  --auth-border: rgba(255, 255, 255, 0.10);
-  --auth-input-bg: rgba(9, 13, 22, 0.82);
+  --auth-emerald: #10B981;
+  --auth-card: rgba(13, 18, 32, 0.90);
+  --auth-border: rgba(255, 255, 255, 0.12);
+  --auth-input-bg: rgba(7, 11, 20, 0.88);
   --auth-text: #F8FAFC;
   --auth-text-dim: #94A3B8;
   position: relative;
@@ -427,7 +428,7 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   padding: 24px 16px;
-  background: #07090E;
+  background: radial-gradient(circle at 50% 25%, #0B132B 0%, #060A14 60%, #030408 100%);
 }
 .auth-container.show { display: flex; }
 
@@ -437,7 +438,7 @@ body.light .auth-container {
   --auth-input-bg: #F8FAFC;
   --auth-text: #0F172A;
   --auth-text-dim: #475569;
-  background: #F1F5F9 !important;
+  background: #F0F4F8 !important;
 }
 
 .auth-top-bar {
@@ -453,20 +454,20 @@ body.light .auth-container {
 .auth-theme-btn {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid var(--auth-border);
-  color: var(--auth-text);
-  width: 40px;
-  height: 40px;
+  color: var(--auth-gold);
+  width: 38px;
+  height: 38px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
   transition: all 0.2s ease;
 }
 .auth-theme-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  transform: translateY(-1px);
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.10);
 }
 body.light .auth-theme-btn {
   background: #FFFFFF;
@@ -479,8 +480,8 @@ body.light .auth-theme-btn {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(229, 169, 60, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91, 148, 217, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 148, 217, 0.04) 1px, transparent 1px);
   background-size: 48px 48px;
   -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
   mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
@@ -489,29 +490,39 @@ body.light .auth-theme-btn {
 .auth-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(90px);
   opacity: 0.25;
   pointer-events: none;
   will-change: transform;
 }
 .auth-blob.b1 {
-  width: 400px;
-  height: 400px;
-  background: #E5A93C;
+  width: 420px;
+  height: 420px;
+  background: #10B981;
   top: -120px;
   left: -120px;
   animation: blobFloat 22s ease-in-out infinite;
 }
 .auth-blob.b2 {
-  width: 380px;
-  height: 380px;
+  width: 400px;
+  height: 400px;
   background: #3B82F6;
   bottom: -140px;
   right: -100px;
   animation: blobFloat 26s ease-in-out infinite;
   animation-delay: -9s;
 }
-body.light .auth-blob { opacity: 0.14; }
+.auth-blob.b3 {
+  width: 380px;
+  height: 380px;
+  background: #F59E0B;
+  top: 30%;
+  right: 15%;
+  opacity: 0.12;
+  animation: blobFloat 28s ease-in-out infinite;
+  animation-delay: -14s;
+}
+body.light .auth-blob { opacity: 0.12; }
 
 @keyframes blobFloat {
   0%, 100% { transform: translate(0, 0) scale(1); }
@@ -533,7 +544,7 @@ body.light .auth-blob { opacity: 0.14; }
   padding: 38px 36px;
   width: 100%;
   max-width: 460px;
-  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.75), 0 0 50px rgba(229, 169, 60, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.85), 0 0 50px rgba(16, 185, 129, 0.15), 0 0 30px rgba(229, 169, 60, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
   animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2866,9 +2877,11 @@ body.light .scale-dropdown {
     </div>
   </div>
 
+  <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
   <div class="auth-grid" aria-hidden="true"></div>
   <div class="auth-blob b1"></div>
   <div class="auth-blob b2"></div>
+  <div class="auth-blob b3"></div>
 
   <div class="auth-card-nexus">
     <!-- Brand Header -->
@@ -10179,51 +10192,153 @@ if (scaleMenuBtn && scaleDropdown) {
   setInterval(updateClock, 1000);
 })();
 
-// Animação de Fundo de Linhas Orbitais 4K (Mesmo visual da tela de login)
-(function initAppBgOrbital() {
-  const canvas = document.getElementById('appBgOrbitalCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let width = canvas.width = window.innerWidth;
-  let height = canvas.height = window.innerHeight;
+// Animação de Fundo Financeira 4K (Símbolos, Métricas & Gráfico de Tendência Vivo)
+(function initFinancialCanvasEngine() {
+  function setupCanvas(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
 
-  window.addEventListener('resize', () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-  });
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
 
-  let angle = 0;
-  function renderOrbital() {
-    ctx.clearRect(0, 0, width, height);
-    angle += 0.0018;
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
 
-    const cx = width / 2;
-    const cy = height / 2;
+    const financialSymbols = ['R$', '$', '€', '£', '▲', '+14.2%', '📈', '₿', '%', '+$2.8k', '✦', '+9.5%', '+$500'];
+    const colors = ['#10B981', '#F59E0B', '#3B82F6', '#34D399', '#FBBF24', '#60A5FA'];
 
-    for (let i = 1; i <= 7; i++) {
-      const rx = (width * 0.38) + (i * 45);
-      const ry = (height * 0.42) + (i * 35);
+    const items = [];
+    const itemCount = 38;
 
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(angle * (i % 2 === 0 ? 1 : -1) + (i * 0.2));
-
-      ctx.beginPath();
-      ctx.ellipse(0, 0, rx, ry, Math.PI / 6, 0, Math.PI * 2);
-      ctx.lineWidth = 1;
-
-      if (i % 2 === 0) {
-        ctx.strokeStyle = 'rgba(200, 155, 60, ' + (0.14 - (i * 0.015)) + ')';
-      } else {
-        ctx.strokeStyle = 'rgba(91, 148, 217, ' + (0.14 - (i * 0.015)) + ')';
-      }
-      ctx.stroke();
-      ctx.restore();
+    for (let i = 0; i < itemCount; i++) {
+      items.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        text: financialSymbols[Math.floor(Math.random() * financialSymbols.length)],
+        color: colors[Math.floor(Math.random() * colors.length)],
+        size: Math.floor(Math.random() * 11) + 12,
+        vy: -(Math.random() * 0.45 + 0.15),
+        vx: (Math.random() - 0.5) * 0.35,
+        baseAlpha: Math.random() * 0.45 + 0.35,
+        pulseSpeed: Math.random() * 0.02 + 0.008,
+        pulse: Math.random() * Math.PI * 2,
+        rotation: (Math.random() - 0.5) * 0.2
+      });
     }
 
-    requestAnimationFrame(renderOrbital);
+    let waveOffset = 0;
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+      const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
+
+      // 1. Gráfico Animado de Mercado / Tendência Financeira (Onda Viva)
+      waveOffset += 0.012;
+      ctx.save();
+      ctx.beginPath();
+      const waveY = height * 0.72;
+      ctx.moveTo(0, height);
+      ctx.lineTo(0, waveY);
+
+      for (let x = 0; x <= width; x += 18) {
+        const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+
+      const waveGrad = ctx.createLinearGradient(0, waveY - 50, 0, height);
+      if (isLight) {
+        waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.09)');
+        waveGrad.addColorStop(0.5, 'rgba(59, 130, 246, 0.04)');
+        waveGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      } else {
+        waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
+        waveGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.06)');
+        waveGrad.addColorStop(1, 'rgba(7, 11, 20, 0)');
+      }
+      ctx.fillStyle = waveGrad;
+      ctx.fill();
+
+      // Linha Contorno Esmeralda do Gráfico
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 18) {
+        const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = isLight ? 'rgba(16, 185, 129, 0.40)' : 'rgba(16, 185, 129, 0.50)';
+      ctx.lineWidth = 2.2;
+      ctx.shadowColor = '#10B981';
+      ctx.shadowBlur = isLight ? 4 : 14;
+      ctx.stroke();
+      ctx.restore();
+
+      // 2. Conexões de Rede entre Nódulos Financeiros
+      for (let i = 0; i < items.length; i++) {
+        for (let j = i + 1; j < items.length; j++) {
+          const dx = items[i].x - items[j].x;
+          const dy = items[i].y - items[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 140) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(items[i].x, items[i].y);
+            ctx.lineTo(items[j].x, items[j].y);
+            const connAlpha = (1 - dist / 140) * 0.20;
+            ctx.strokeStyle = isLight 
+              ? 'rgba(16, 185, 129, ' + connAlpha + ')' 
+              : 'rgba(229, 169, 60, ' + connAlpha + ')';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }
+
+      // 3. Desenhar Símbolos & Métricas Financeiras Flutuantes
+      items.forEach(it => {
+        it.y += it.vy;
+        it.x += it.vx + Math.sin(it.y * 0.008) * 0.25;
+        it.pulse += it.pulseSpeed;
+        const currentAlpha = Math.max(0.15, Math.min(0.9, it.baseAlpha + Math.sin(it.pulse) * 0.25));
+
+        if (it.y < -35) {
+          it.y = height + 35;
+          it.x = Math.random() * width;
+        }
+        if (it.x < -35) it.x = width + 35;
+        if (it.x > width + 35) it.x = -35;
+
+        ctx.save();
+        ctx.translate(it.x, it.y);
+        ctx.rotate(it.rotation);
+
+        ctx.font = '800 ' + it.size + 'px "Outfit", "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = it.color;
+        ctx.globalAlpha = isLight ? currentAlpha * 0.75 : currentAlpha;
+
+        if (!isLight) {
+          ctx.shadowColor = it.color;
+          ctx.shadowBlur = 10;
+        }
+
+        ctx.fillText(it.text, 0, 0);
+        ctx.restore();
+      });
+
+      requestAnimationFrame(render);
+    }
+
+    render();
   }
-  renderOrbital();
+
+  setupCanvas('authBgCanvas');
+  setupCanvas('appBgOrbitalCanvas');
 })();
 </script>
 </body>
