@@ -297,6 +297,13 @@ const htmlContent = `<!DOCTYPE html>
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
+html:not(.app-ready) .icon-btn,
+html:not(.app-ready) .topheader,
+html:not(.app-ready) .user,
+html:not(.app-ready) .btn-ghost {
+  transition: none !important;
+  animation: none !important;
+}
 html.user-logged-in #authPage { display: none !important; }
 html.user-logged-in #appMain { display: flex !important; flex-direction: column !important; min-height: 100vh !important; width: 100% !important; }
 
@@ -3197,6 +3204,21 @@ body.light .scale-dropdown {
         <script>
         (function(){
           try {
+            var savedTheme = localStorage.getItem('nexus_theme');
+            if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim();
+            var isLight = (savedTheme === 'light');
+            var miniBtn = document.getElementById('miniThemeBtn');
+            if (miniBtn) {
+              miniBtn.innerHTML = isLight ?
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>' :
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
+            }
+            var savedScale = localStorage.getItem('nexus_display_scale') || 'auto';
+            var scaleLabel = document.getElementById('currentScaleLabel');
+            if (scaleLabel) {
+              scaleLabel.textContent = (savedScale === 'auto') ? 'Auto' : savedScale;
+            }
+
             var cu = localStorage.getItem('nexus_cached_user');
             if (cu) {
               var u = JSON.parse(cu);
@@ -3209,6 +3231,9 @@ body.light .scale-dropdown {
                 if (a) a.textContent = u.name.trim().split(/\s+/).map(function(x){return x[0];}).slice(0,2).join('').toUpperCase();
               }
             }
+            setTimeout(function(){
+              document.documentElement.classList.add('app-ready');
+            }, 50);
           } catch(e){}
         })();
         </script>
