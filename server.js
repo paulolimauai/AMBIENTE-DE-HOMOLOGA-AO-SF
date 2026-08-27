@@ -466,26 +466,35 @@ body.light .auth-container {
 }
 
 .auth-theme-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--auth-border);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.35);
   color: var(--auth-gold);
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.20);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.auth-theme-btn svg {
+  width: 24px !important;
+  height: 24px !important;
+  stroke-width: 2.2px;
 }
 .auth-theme-btn:hover {
-  transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.10);
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(245, 158, 11, 0.60);
+  box-shadow: 0 6px 22px rgba(245, 158, 11, 0.35);
 }
 body.light .auth-theme-btn {
   background: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
 .auth-grid {
@@ -2883,7 +2892,7 @@ body.light .scale-dropdown {
     <div style="display:flex; align-items:center; gap:8px;"></div>
     <div style="display:flex; align-items:center; gap:12px;">
       <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
-        <svg id="authThemeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg id="authThemeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
         </svg>
       </button>
