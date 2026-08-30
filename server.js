@@ -1686,6 +1686,18 @@ body.light .dev-signature-name{
   transform: translateY(-1.5px) !important;
   box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15) !important;
 }
+.user-card-btn.btn-excluir {
+  background: rgba(239, 68, 68, 0.14) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  color: #F87171 !important;
+}
+.user-card-btn.btn-excluir:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  border-color: #EF4444 !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35) !important;
+}
 
 /* Modo Claro / Light Theme Overrides */
 body.light .row-actions button,
@@ -2834,58 +2846,62 @@ body.light .admin-filter-btn.active {
 .user-admin-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 .user-card-4k {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 76px;
-  padding: 14px 20px;
-  border: 1px solid var(--card-border);
-  border-radius: 14px;
-  background: linear-gradient(145deg, rgba(17, 23, 34, 0.9) 0%, rgba(11, 15, 24, 0.95) 100%);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  transition: all 0.2s ease;
+  min-height: 80px;
+  padding: 16px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(10, 15, 29, 0.78) 100%) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.20) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 .user-card-4k:hover {
-  border-color: rgba(59, 130, 246, 0.45);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 18px rgba(59, 130, 246, 0.15);
+  border-color: rgba(96, 165, 250, 0.45) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 18px 45px -4px rgba(0, 0, 0, 0.8), 0 0 24px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
 }
 .user-card-4k.inactive {
   opacity: 0.75;
-  border-color: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.35) !important;
 }
 .user-card-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   min-width: 0;
   flex: 1;
 }
 .user-card-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
-  font-size: 15px;
+  font-weight: 900;
+  font-size: 15.5px;
   color: #FFFFFF;
   position: relative;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
 }
 .user-card-avatar.admin-av {
-  background: linear-gradient(135deg, #F59E0B, #D97706);
-  border: 1px solid rgba(245, 158, 11, 0.5);
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #B45309 100%);
+  border: 1.5px solid rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.35), inset 0 1px 1px rgba(255,255,255,0.5);
 }
 .user-card-avatar.user-av {
-  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
-  border: 1px solid rgba(59, 130, 246, 0.5);
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 60%, #1D4ED8 100%);
+  border: 1.5px solid rgba(96, 165, 250, 0.5);
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.35), inset 0 1px 1px rgba(255,255,255,0.5);
 }
 .user-status-dot {
   position: absolute;
@@ -3479,7 +3495,7 @@ body.light .scale-dropdown {
         </div>
         <div class="dev-signature-text">
           <span class="dev-signature-label">Desenvolvido por</span>
-          <strong class="dev-signature-name">Paulo Lima</strong>
+          <strong class="dev-signature-name">PAULO LIMA</strong>
         </div>
       </div>
     </div>
@@ -3642,7 +3658,7 @@ body.light .scale-dropdown {
       </div>
       <div class="dev-signature-text">
         <span class="dev-signature-label">Desenvolvido por</span>
-        <strong class="dev-signature-name">Paulo Lima</strong>
+        <strong class="dev-signature-name">PAULO LIMA</strong>
       </div>
     </div>
   </div>
@@ -5043,6 +5059,38 @@ async function toggleUserActive(email){
   showToast(willDeactivate ? 'Usuário desativado.' : 'Usuário ativado novamente.');
   logActivity('Edição', 'Usuário', 'Administrador ' + (willDeactivate ? 'desativou' : 'ativou') + ' o acesso do usuário ' + u.email + ' (' + u.name + ')');
   render();
+}
+
+async function deleteUserAdmin(email){
+  await syncUsersWithServer();
+  if(!currentUser || currentUser.role !== 'Administrador') return;
+  const cleanEmail = (email || '').toLowerCase().trim();
+  const u = registeredUsers.find(x => (x.email || '').toLowerCase() === cleanEmail);
+  if(!u) return;
+  if(cleanEmail === (currentUser.email || '').toLowerCase()){
+    showCustomAlert('Ação não permitida', 'Você não pode excluir sua própria conta enquanto estiver conectado nela.', 'error');
+    return;
+  }
+  if(u.role === 'Administrador' && registeredUsers.filter(x => x.role === 'Administrador').length <= 1){
+    showCustomAlert('Ação não permitida', 'É necessário manter ao menos um administrador ativo no sistema.', 'error');
+    return;
+  }
+
+  showCustomAlert(
+    'Excluir Usuário?',
+    'Tem certeza que deseja excluir permanentemente o usuário "' + u.name + '" (' + u.email + ')? Esta ação não pode ser desfeita.',
+    'error',
+    async () => {
+      registeredUsers = registeredUsers.filter(x => (x.email || '').toLowerCase() !== cleanEmail);
+      await saveUsersToServer();
+      try {
+        await fetch(window.location.origin + '/api/users?email=' + encodeURIComponent(cleanEmail), { method: 'DELETE' });
+      } catch(e){}
+      logActivity('Exclusão', 'Usuário', 'Administrador excluiu o usuário ' + u.email + ' (' + u.name + ')');
+      showCustomAlert('Sucesso!', 'Usuário excluído com sucesso do banco de dados.', 'success');
+      render();
+    }
+  );
 }
 
 /* ==================== Período ==================== */
@@ -8024,7 +8072,7 @@ function handleAdminUserSearch(query) {
 function applyAdminUserFiltering() {
   const cards = document.querySelectorAll('.user-card-4k');
   cards.forEach(card => {
-    const email = card.getAttribute('data-user-email') || '';
+    const email = (card.getAttribute('data-user-email') || '').toLowerCase();
     const name = (card.querySelector('.user-card-name') ? card.querySelector('.user-card-name').textContent : '').toLowerCase();
     const role = card.getAttribute('data-user-role') || '';
     const status = card.getAttribute('data-user-status') || '';
@@ -8049,56 +8097,80 @@ function pageUsuarios(){
   if(!isAdmin || isViewingOtherUser){
     return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
   }
-  const totalUsers = registeredUsers ? registeredUsers.length : 1;
-  const adminCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Administrador').length : 1;
-  const activeCount = registeredUsers ? registeredUsers.filter(u => u.active !== false).length : 1;
+
+  // Deduplica e garante lista limpa com dados do PostgreSQL
+  const userMap = new Map();
+  (registeredUsers || []).forEach(u => {
+    if (u && u.email) userMap.set(u.email.toLowerCase(), u);
+  });
+  const users = Array.from(userMap.values());
+
+  const totalUsers = users.length;
+  const adminCount = users.filter(u => u.role === 'Administrador').length;
+  const activeCount = users.filter(u => u.active !== false).length;
   const inactiveCount = totalUsers - activeCount;
 
   return \`
-  <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:20px;">
+  <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">
     <div>
-      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.01em; margin:0; display:flex; align-items:center; gap:8px; color:#FFFFFF;">
-        Usuários Cadastrados
+      <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:#FFFFFF;">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">👥</span>
+        Usuários & Contas de Acesso
       </h1>
-      <p style="font-size:13.5px; color:#94A3B8; margin:4px 0 0 0; font-weight:500;">
-        Administre contas de acesso, permissões, novos cadastros e utilize o modo espelhado.
+      <p style="font-size:13.5px; color:#94A3B8; margin:5px 0 0 0; font-weight:500;">
+        Gerenciamento de contas, permissões, modo espelhado e sincronização segura com o banco de dados.
       </p>
     </div>
-    <button id="btnNovoUsuarioAdmin" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-size:13.5px; font-weight:700; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(59,130,246,0.35); transition:all 0.2s ease;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      <span>Cadastrar Usuário</span>
+    <button id="btnNovoUsuarioAdmin" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:9px; height:42px; padding:0 22px; border-radius:14px; background:linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%); color:#ffffff; font-size:13.5px; font-weight:800; border:1px solid rgba(255,255,255,0.25); cursor:pointer; box-shadow:0 8px 24px -4px rgba(59,130,246,0.5), inset 0 1px 1px rgba(255,255,255,0.4); transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>Cadastrar Novo Usuário</span>
     </button>
   </div>
 
-  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:20px;">
-    <div class="kpi" style="padding:16px 18px;">
-      <div class="row1" style="margin-bottom:6px;"><span style="font-size:13px; font-weight:700; color:#94A3B8;">Total de Usuários</span><span class="ic" style="width:34px; height:34px; font-size:15px; background:rgba(59,130,246,0.16); color:#60A5FA;">👥</span></div>
-      <div class="val" style="font-size:26px; font-weight:800; color:#60A5FA; margin-bottom:2px;">\${totalUsers}</div>
-      <div class="sub" style="font-size:12px; color:#64748B; font-weight:500; margin-top:4px;">Contas no sistema</div>
+  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:16px; margin-bottom:22px;">
+    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
+      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Total de Usuários</span>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(59,130,246,0.3); font-size:16px;">👥</div>
+      </div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#FFFFFF; margin-bottom:2px; letter-spacing:-0.02em;">\${totalUsers}</div>
+      <div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Contas sincronizadas</div>
     </div>
-    <div class="kpi" style="padding:16px 18px;">
-      <div class="row1" style="margin-bottom:6px;"><span style="font-size:13px; font-weight:700; color:#94A3B8;">Administradores</span><span class="ic" style="width:34px; height:34px; font-size:15px; background:rgba(245,158,11,0.16); color:#FBBF24;">👑</span></div>
-      <div class="val" style="font-size:26px; font-weight:800; color:#FBBF24; margin-bottom:2px;">\${adminCount}</div>
-      <div class="sub" style="font-size:12px; color:#64748B; font-weight:500; margin-top:4px;">Acesso irrestrito</div>
+
+    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
+      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Administradores</span>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(245,158,11,0.3); font-size:16px;">👑</div>
+      </div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px; letter-spacing:-0.02em;">\${adminCount}</div>
+      <div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Controle irrestrito</div>
     </div>
-    <div class="kpi" style="padding:16px 18px;">
-      <div class="row1" style="margin-bottom:6px;"><span style="font-size:13px; font-weight:700; color:#94A3B8;">Usuários Ativos</span><span class="ic" style="width:34px; height:34px; font-size:15px; background:rgba(16,185,129,0.16); color:#34D399;">✅</span></div>
-      <div class="val" style="font-size:26px; font-weight:800; color:#34D399; margin-bottom:2px;">\${activeCount}</div>
-      <div class="sub" style="font-size:12px; color:#64748B; font-weight:500; margin-top:4px;">Contas liberadas</div>
+
+    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
+      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Usuários Ativos</span>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.15)); border:1.5px solid rgba(52,211,153,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(16,185,129,0.3); font-size:16px;">✅</div>
+      </div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#34D399; margin-bottom:2px; letter-spacing:-0.02em;">\${activeCount}</div>
+      <div class="sub" style="font-size:12px; color:#A7F3D0; font-weight:600; margin-top:4px;">Acesso liberado</div>
     </div>
-    <div class="kpi" style="padding:16px 18px;">
-      <div class="row1" style="margin-bottom:6px;"><span style="font-size:13px; font-weight:700; color:#94A3B8;">Desativados</span><span class="ic" style="width:34px; height:34px; font-size:15px; background:rgba(239,68,68,0.16); color:#F87171;">🚫</span></div>
-      <div class="val" style="font-size:26px; font-weight:800; color:#F87171; margin-bottom:2px;">\${inactiveCount}</div>
-      <div class="sub" style="font-size:12px; color:#64748B; font-weight:500; margin-top:4px;">Bloqueados</div>
+
+    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
+      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Desativados</span>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(239,68,68,0.25), rgba(185,28,28,0.15)); border:1.5px solid rgba(248,113,113,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(239,68,68,0.3); font-size:16px;">🚫</div>
+      </div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#F87171; margin-bottom:2px; letter-spacing:-0.02em;">\${inactiveCount}</div>
+      <div class="sub" style="font-size:12px; color:#FECACA; font-weight:600; margin-top:4px;">Acesso bloqueado</div>
     </div>
   </div>
 
-  <div class="admin-toolbar-panel">
-    <div class="admin-search-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" class="admin-search-input" placeholder="Buscar por nome ou e-mail..." oninput="handleAdminUserSearch(this.value)" value="\${currentAdminUserSearch}">
+  <div class="admin-toolbar-panel" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:18px; padding:12px 16px; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 8px 30px rgba(0,0,0,0.35); margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+    <div class="admin-search-wrap" style="position:relative; flex:1; min-width:240px;">
+      <svg style="position:absolute; left:14px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#94A3B8; pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="adminUserSearchInput" class="admin-search-input" placeholder="Buscar por nome ou e-mail..." oninput="handleAdminUserSearch(this.value)" autocomplete="off" spellcheck="false" value="\${currentAdminUserSearch}" style="width:100%; height:42px; padding:0 14px 0 40px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14); color:#FFFFFF; font-size:13.5px; font-weight:600; outline:none; transition:all 0.2s ease;">
     </div>
-    <div class="admin-filter-bar">
+    <div class="admin-filter-bar" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
       <button class="admin-filter-btn \${currentAdminUserFilter==='all'?'active':''}" onclick="setAdminUserFilter('all', this)">Todos (\${totalUsers})</button>
       <button class="admin-filter-btn \${currentAdminUserFilter==='admin'?'active':''}" onclick="setAdminUserFilter('admin', this)">Admins (\${adminCount})</button>
       <button class="admin-filter-btn \${currentAdminUserFilter==='user'?'active':''}" onclick="setAdminUserFilter('user', this)">Usuários (\${totalUsers - adminCount})</button>
@@ -8107,24 +8179,29 @@ function pageUsuarios(){
     </div>
   </div>
 
-  <div class="panel" style="margin-bottom:0; padding:22px 24px;">
+  <div class="panel" style="margin-bottom:0; padding:24px 26px;">
     <div class="panel-head" style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
-      <h3 style="font-size:16px; font-weight:700; color:#FFFFFF;">Lista Geral de Usuários</h3>
-      <span class="tag" style="cursor:default; font-weight:700; font-size:12px; padding:4px 12px; border-radius:20px;">\${registeredUsers.length} cadastrado(s)</span>
+      <h3 style="font-size:16.5px; font-weight:800; color:#FFFFFF; display:flex; align-items:center; gap:8px;">
+        <span>📋</span> Lista Geral de Usuários
+      </h3>
+      <span class="tag" style="cursor:default; font-weight:800; font-size:12px; padding:5px 14px; border-radius:20px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#60A5FA;">\${totalUsers} cadastrado(s)</span>
     </div>
-    <p class="cfg-hint" style="margin-bottom:16px; font-size:13px; color:#94A3B8;">
-      💡 Clique em <strong>👁 Espelho</strong> para acessar a conta do usuário em modo de visualização somente-leitura.
+    <p class="cfg-hint" style="margin-bottom:18px; font-size:13px; color:#94A3B8; line-height:1.5;">
+      💡 Clique em <strong>👁 Espelho</strong> para inspecionar a conta do usuário em modo somente-leitura ou <strong>✏️ Editar</strong> para atualizar credenciais e papéis de acesso.
     </p>
     <div class="user-admin-list">
-      \${registeredUsers.map(u=>{
+      \${users.map(u=>{
         const stats = getUserActivitySummary(u.email);
         const isAdminUser = u.role === 'Administrador';
         const isInactive = u.active === false;
+        const isSelf = currentUser && currentUser.email && u.email && (currentUser.email.toLowerCase() === u.email.toLowerCase());
+        const initials = (u.name || 'U').trim().split(/\\s+/).map(w => w[0]).filter(Boolean).slice(0,2).join('').toUpperCase() || 'US';
+
         return \`
-        <div class="user-card-4k \${isInactive ? 'inactive' : ''}" data-user-email="\${u.email.toLowerCase()}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isInactive ? 'inactive' : 'active'}">
+        <div class="user-card-4k \${isInactive ? 'inactive' : ''}" data-user-email="\${(u.email||'').toLowerCase()}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isInactive ? 'inactive' : 'active'}">
           <div class="user-card-left">
             <div class="user-card-avatar \${isAdminUser ? 'admin-av' : 'user-av'}">
-              \${u.name.slice(0,2).toUpperCase()}
+              \${initials}
               <span class="user-status-dot \${isInactive ? 'offline' : 'online'}"></span>
             </div>
             <div class="user-card-info">
@@ -8146,9 +8223,9 @@ function pageUsuarios(){
             </div>
           </div>
           <div class="user-card-right">
-            \${u.email.toLowerCase() !== currentUser.email.toLowerCase() ? \`
+            \${!isSelf ? \`
               <button class="user-card-btn btn-espelho" data-viewuser="\${u.email}" title="Visualizar conta em Modo Espelho">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 <span>Espelho</span>
               </button>
               <button class="user-card-btn \${isInactive ? 'btn-ativar' : 'btn-desativar'}" data-toggleuser="\${u.email}" title="\${isInactive ? 'Ativar usuário' : 'Desativar usuário'}">
@@ -8160,8 +8237,12 @@ function pageUsuarios(){
                   <span>Desativar</span>
                 \`}
               </button>
+              <button class="user-card-btn btn-excluir" data-deluser="\${u.email}" title="Excluir usuário permanentemente">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>Excluir</span>
+              </button>
             \` : \`
-              <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:700; font-size:11.5px; padding:4px 12px; border-radius:12px; height:34px;">Sua Conta (Atual)</span>
+              <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:800; font-size:12px; padding:6px 14px; border-radius:12px; height:38px;">⭐ Sua Conta (Atual)</span>
             \`}
             <button class="user-card-btn btn-editar" data-edituser="\${u.email}" title="Editar informações do usuário">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -10134,6 +10215,37 @@ function attachPageEvents(){
   document.querySelectorAll('[data-edituser]').forEach(el=>el.onclick = ()=>openUserAdminModal(el.getAttribute('data-edituser')));
   document.querySelectorAll('[data-viewuser]').forEach(el=>el.onclick = ()=>viewUserData(el.getAttribute('data-viewuser')));
   document.querySelectorAll('[data-toggleuser]').forEach(el=>el.onclick = ()=>toggleUserActive(el.getAttribute('data-toggleuser')));
+  document.querySelectorAll('[data-deluser]').forEach(el=>el.onclick = ()=>deleteUserAdmin(el.getAttribute('data-deluser')));
+
+  if (!window._adminUserEventsDelegated) {
+    window._adminUserEventsDelegated = true;
+    document.addEventListener('click', (e) => {
+      const editBtn = e.target.closest('[data-edituser]');
+      if (editBtn) {
+        e.preventDefault();
+        openUserAdminModal(editBtn.getAttribute('data-edituser'));
+        return;
+      }
+      const viewBtn = e.target.closest('[data-viewuser]');
+      if (viewBtn) {
+        e.preventDefault();
+        viewUserData(viewBtn.getAttribute('data-viewuser'));
+        return;
+      }
+      const toggleBtn = e.target.closest('[data-toggleuser]');
+      if (toggleBtn) {
+        e.preventDefault();
+        toggleUserActive(toggleBtn.getAttribute('data-toggleuser'));
+        return;
+      }
+      const delBtn = e.target.closest('[data-deluser]');
+      if (delBtn) {
+        e.preventDefault();
+        deleteUserAdmin(delBtn.getAttribute('data-deluser'));
+        return;
+      }
+    });
+  }
 
   const importFile = document.getElementById('importFile'); if(importFile) importFile.onchange = handleImportFile;
   const importDropZone = document.getElementById('importDropZone');
@@ -11590,6 +11702,32 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ success: false }));
       }
     });
+    return;
+  }
+
+  if (req.method === 'DELETE' && parsedUrl.pathname === '/api/users') {
+    const emailToDelete = (parsedUrl.query.email || '').toLowerCase().trim();
+    if (!emailToDelete) {
+      res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
+    }
+    const localUsers = getLocalUsers().filter(u => (u.email || '').toLowerCase() !== emailToDelete);
+    saveLocalUsers(localUsers);
+    if (pool) {
+      pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [emailToDelete])
+        .then(() => {
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true }));
+        })
+        .catch(err => {
+          console.warn('Erro ao deletar usuário no PostgreSQL:', err.message);
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, warning: err.message }));
+        });
+    } else {
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true }));
+    }
     return;
   }
 
