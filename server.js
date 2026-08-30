@@ -1320,62 +1320,66 @@ html.light code {
 .dev-signature{
   position:relative;
   display:inline-flex; align-items:center; gap:10px;
-  background:linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.88) 50%, rgba(180, 83, 9, 0.10) 100%);
-  border:1px solid rgba(245, 158, 11, 0.38);
+  background:linear-gradient(135deg, rgba(239, 68, 68, 0.14) 0%, rgba(15, 15, 20, 0.78) 50%, rgba(0, 0, 0, 0.88) 100%) !important;
+  border:1px solid rgba(239, 68, 68, 0.45) !important;
   border-radius:999px;
   padding:6px 20px 6px 7px;
-  box-shadow:0 10px 30px -5px rgba(0,0,0,0.85), 0 0 24px rgba(245,158,11,0.25), inset 0 1px 1px rgba(255,255,255,0.20);
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 10px 30px -5px rgba(0,0,0,0.85), 0 0 22px rgba(239,68,68,0.28), inset 0 1px 1px rgba(255,255,255,0.30) !important;
+  backdrop-filter:blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter:blur(20px) saturate(180%) !important;
   transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration:none;
 }
 .dev-signature:hover{
-  background:linear-gradient(135deg, rgba(245, 158, 11, 0.20) 0%, rgba(15, 23, 42, 0.92) 50%, rgba(245, 158, 11, 0.15) 100%);
-  border-color:rgba(245, 158, 11, 0.70);
-  box-shadow:0 14px 38px rgba(0,0,0,0.85), 0 0 32px rgba(245,158,11,0.45), inset 0 1px 1px rgba(255,255,255,0.30);
+  background:linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(20, 20, 25, 0.85) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
+  border-color:rgba(239, 68, 68, 0.80) !important;
+  box-shadow:0 14px 38px rgba(0,0,0,0.90), 0 0 32px rgba(239,68,68,0.50), inset 0 1px 1px rgba(255,255,255,0.45) !important;
   transform:translateY(-2px) scale(1.03);
 }
 .dev-signature-icon{
   width:28px; height:28px; border-radius:50%; flex-shrink:0;
-  background:linear-gradient(135deg, #FFFBEB 0%, #FDE68A 35%, #F59E0B 70%, #B45309 100%);
-  color:#050811;
+  background:linear-gradient(135deg, #EF4444 0%, #DC2626 40%, #991B1B 70%, #000000 100%) !important;
+  color:#FFFFFF !important;
   display:flex; align-items:center; justify-content:center;
-  box-shadow:0 3px 12px rgba(245,158,11,0.65), inset 0 1px 2px rgba(255,255,255,0.80);
+  border:1.5px solid rgba(255,255,255,0.40) !important;
+  box-shadow:0 0 14px rgba(239,68,68,0.65), inset 0 1px 2px rgba(255,255,255,0.75) !important;
 }
 .dev-signature-icon svg{
   width:13px; height:13px; stroke-width:2.8px; display:block;
+  stroke:#FFFFFF !important;
 }
 .dev-signature-text{
   display:flex; align-items:baseline; gap:6px;
 }
 .dev-signature-label{
-  font-size:11px; font-weight:700; color:#94A3B8; letter-spacing:0.06em; text-transform:uppercase;
+  font-size:11px; font-weight:700; color:#E2E8F0 !important; letter-spacing:0.06em; text-transform:uppercase;
 }
 .dev-signature-name{
   font-size:13.5px; font-weight:900;
-  background:linear-gradient(135deg, #FFFFFF 0%, #FDE68A 45%, #F59E0B 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  letter-spacing:0.04em; filter:drop-shadow(0 2px 8px rgba(245,158,11,0.35));
+  color:#FFFFFF !important;
+  background:linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 55%, #FCA5A5 80%, #EF4444 100%) !important;
+  -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important;
+  letter-spacing:0.04em; filter:drop-shadow(0 2px 8px rgba(239,68,68,0.45)) !important;
 }
 body.light .app-dev-credit{
   background:rgba(255,255,255,0.90) !important;
   border-top-color:#e2e8f0 !important;
 }
 body.light .dev-signature{
-  background:linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
-  border-color:rgba(245, 158, 11, 0.45) !important;
-  box-shadow:0 6px 20px rgba(15,23,42,0.08), 0 0 16px rgba(245,158,11,0.18) !important;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 242, 242, 0.90) 100%) !important;
+  border-color:rgba(239, 68, 68, 0.40) !important;
+  box-shadow:0 6px 20px rgba(15,23,42,0.08), 0 0 16px rgba(239,68,68,0.20) !important;
 }
 body.light .dev-signature:hover{
   background:#FFFFFF !important;
-  border-color:#D97706 !important;
-  box-shadow:0 8px 25px rgba(217,119,6,0.30) !important;
+  border-color:#DC2626 !important;
+  box-shadow:0 8px 25px rgba(220,38,38,0.30) !important;
 }
 body.light .dev-signature-label{
   color:#475569 !important;
 }
 body.light .dev-signature-name{
-  background:linear-gradient(135deg, #D97706 0%, #B45309 100%) !important;
+  background:linear-gradient(135deg, #000000 0%, #DC2626 100%) !important;
   -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important;
   filter:none !important;
 }
