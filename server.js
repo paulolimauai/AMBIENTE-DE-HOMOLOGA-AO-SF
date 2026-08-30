@@ -776,6 +776,51 @@ body.light .auth-input-wrapper:focus-within {
   box-shadow: 0 0 28px rgba(245, 158, 11, 0.6) !important;
 }
 
+@keyframes authShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.auth-input-wrapper.input-error {
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25), 0 0 20px rgba(239, 68, 68, 0.4) !important;
+  animation: authShake 0.35s ease;
+}
+
+.auth-feedback-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 14px 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: authShake 0.35s ease;
+  transition: all 0.25s ease;
+}
+.auth-feedback-banner.error {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(185, 28, 28, 0.10) 100%) !important;
+  border: 1px solid rgba(248, 113, 113, 0.45) !important;
+  color: #FEE2E2 !important;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+}
+.auth-feedback-banner.warning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(180, 83, 9, 0.10) 100%) !important;
+  border: 1px solid rgba(251, 191, 36, 0.45) !important;
+  color: #FEF3C7 !important;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+}
+.auth-feedback-banner.success {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.10) 100%) !important;
+  border: 1px solid rgba(52, 211, 153, 0.45) !important;
+  color: #D1FAE5 !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+}
+
 .auth-input-icon {
   width: 42px;
   display: flex;
@@ -3263,6 +3308,8 @@ body.light .scale-dropdown {
           </div>
         </div>
 
+        <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
+
         <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
           Entrar na Conta →
         </button>
@@ -3316,6 +3363,8 @@ body.light .scale-dropdown {
           <div id="regPwdMatchMsg" style="display:none; margin-top:6px; font-size:11.5px; font-weight:700;"></div>
         </div>
 
+        <div id="registerFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
+
         <button type="submit" class="btn-auth-primary" id="regSubmitBtn">
           Criar Minha Conta →
         </button>
@@ -3338,6 +3387,8 @@ body.light .scale-dropdown {
             <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
           </div>
         </div>
+
+        <div id="forgotFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
         <button type="submit" class="btn-auth-primary" id="btnSendPassword">
           Recuperar Minha Senha →
@@ -3875,6 +3926,11 @@ let registeredUsers = [];
 
 // Alternador de Abas de Autenticação (Entrar / Criar Conta)
 window.switchAuthTab = function(tab) {
+  if (window.clearAuthFeedback) {
+    window.clearAuthFeedback('login');
+    window.clearAuthFeedback('register');
+    window.clearAuthFeedback('forgot');
+  }
   const loginBox = document.getElementById('loginBox');
   const regBox = document.getElementById('registerBox');
   const forgotBox = document.getElementById('forgotBox');
@@ -3905,6 +3961,42 @@ window.switchAuthTab = function(tab) {
     if (tabLogin) tabLogin.classList.add('active');
     if (tabReg) tabReg.classList.remove('active');
     if (subTitle) subTitle.textContent = 'Plataforma Inteligente de Gestão Financeira';
+  }
+};
+
+window.showAuthFeedback = function(box, type, title, message, actionHtml) {
+  const banner = document.getElementById(box + 'FeedbackBanner');
+  if (!banner) return;
+
+  banner.className = 'auth-feedback-banner ' + (type || 'error');
+  const icon = type === 'success' ? '✅' : (type === 'warning' ? '⚠️' : '❌');
+
+  banner.innerHTML = \`
+    <span style="font-size:18px; line-height:1; flex-shrink:0; margin-top:2px;">\${icon}</span>
+    <div style="flex:1;">
+      <strong style="display:block; font-size:13.5px; font-weight:800; margin-bottom:2px; letter-spacing:-0.01em;">\${title}</strong>
+      <span style="font-size:12.5px; opacity:0.95; line-height:1.4;">\${message}</span>
+      \${actionHtml ? \`<div style="margin-top:8px;">\${actionHtml}</div>\` : ''}
+    </div>
+  \`;
+  banner.style.display = 'flex';
+};
+
+window.clearAuthFeedback = function(box) {
+  const banner = document.getElementById(box + 'FeedbackBanner');
+  if (banner) banner.style.display = 'none';
+  const emailWrap = document.getElementById('wrapLoginEmail');
+  const passWrap = document.getElementById('wrapLoginPass');
+  if (emailWrap) emailWrap.classList.remove('input-error');
+  if (passWrap) passWrap.classList.remove('input-error');
+};
+
+window.switchToRegisterWithEmail = function(email) {
+  window.switchAuthTab('register');
+  const regEmailInput = document.getElementById('regEmail');
+  if (regEmailInput) {
+    regEmailInput.value = email;
+    regEmailInput.focus();
   }
 };
 
@@ -4051,21 +4143,65 @@ document.getElementById('forgotStep1').onsubmit = async (e) => {
   }
 };
 
-// Login direto contra o PostgreSQL / API com Fallback Offline Resiliente
+// Limpa erros em tempo real conforme o usuário digita
+const loginEmailEl = document.getElementById('loginEmail');
+if (loginEmailEl) {
+  loginEmailEl.addEventListener('input', () => {
+    const wrap = document.getElementById('wrapLoginEmail');
+    if (wrap) wrap.classList.remove('input-error');
+    const banner = document.getElementById('loginFeedbackBanner');
+    if (banner && banner.style.display !== 'none') banner.style.display = 'none';
+  });
+}
+const loginPasswordEl = document.getElementById('loginPassword');
+if (loginPasswordEl) {
+  loginPasswordEl.addEventListener('input', () => {
+    const wrap = document.getElementById('wrapLoginPass');
+    if (wrap) wrap.classList.remove('input-error');
+    const banner = document.getElementById('loginFeedbackBanner');
+    if (banner && banner.style.display !== 'none') banner.style.display = 'none';
+  });
+}
+
+// Login direto contra o PostgreSQL / API com Validação Precisa em Tela e Fallback Offline
 document.getElementById('loginForm').onsubmit = async (e) => {
   e.preventDefault();
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value.trim();
-  const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+  if (window.clearAuthFeedback) window.clearAuthFeedback('login');
 
-  if (!email || !password) {
-    alert('Por favor, preencha o e-mail e a senha.');
+  const emailInput = document.getElementById('loginEmail');
+  const passwordInput = document.getElementById('loginPassword');
+  const email = emailInput ? emailInput.value.trim() : '';
+  const password = passwordInput ? passwordInput.value.trim() : '';
+  const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+  const emailWrap = document.getElementById('wrapLoginEmail');
+  const passWrap = document.getElementById('wrapLoginPass');
+
+  if (!email) {
+    if (emailWrap) emailWrap.classList.add('input-error');
+    if (emailInput) emailInput.focus();
+    window.showAuthFeedback('login', 'error', 'E-mail não informado', 'Por favor, digite o seu endereço de e-mail para acessar sua conta.');
+    return;
+  }
+
+  // Validação do formato do e-mail
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    if (emailWrap) emailWrap.classList.add('input-error');
+    if (emailInput) emailInput.focus();
+    window.showAuthFeedback('login', 'error', 'E-mail em formato inválido', 'O e-mail digitado parece incompleto ou inválido. Exemplo: <strong>seu.nome@gmail.com</strong>');
+    return;
+  }
+
+  if (!password) {
+    if (passWrap) passWrap.classList.add('input-error');
+    if (passwordInput) passwordInput.focus();
+    window.showAuthFeedback('login', 'error', 'Senha não informada', 'Por favor, digite a sua senha de acesso.');
     return;
   }
 
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Entrando...';
+    submitBtn.textContent = 'Verificando credenciais...';
   }
 
   try {
@@ -4077,7 +4213,35 @@ document.getElementById('loginForm').onsubmit = async (e) => {
     const data = await res.json();
 
     if (!res.ok || !data.success) {
-      alert(data.error || 'E-mail ou senha incorretos!');
+      if (data.errorType === 'user_not_found') {
+        if (emailWrap) emailWrap.classList.add('input-error');
+        if (emailInput) emailInput.focus();
+        window.showAuthFeedback(
+          'login',
+          'warning',
+          'Usuário não cadastrado',
+          'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + email + '</strong>.',
+          '<button type="button" onclick="window.switchToRegisterWithEmail(\\'' + email + '\\')" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(220,38,38,0.35) 100%); border:1px solid rgba(248,113,113,0.5); color:#FFFFFF; border-radius:8px; cursor:pointer;">Criar Conta com este E-mail →</button>'
+        );
+      } else if (data.errorType === 'invalid_password') {
+        if (passWrap) passWrap.classList.add('input-error');
+        if (passwordInput) {
+          passwordInput.select();
+          passwordInput.focus();
+        }
+        window.showAuthFeedback(
+          'login',
+          'error',
+          'Senha incorreta',
+          'A senha digitada está incorreta para este e-mail. Verifique se o Caps Lock está ativado ou recupere o acesso.',
+          '<button type="button" onclick="window.switchAuthTab(\\'forgot\\')" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.35); color:#FFFFFF; border-radius:8px; cursor:pointer;">Esqueci Minha Senha →</button>'
+        );
+      } else if (data.errorType === 'user_inactive') {
+        window.showAuthFeedback('login', 'error', 'Conta desativada', data.error || 'Seu usuário foi desativado pelo administrador.');
+      } else {
+        window.showAuthFeedback('login', 'error', 'Falha na autenticação', data.error || 'E-mail ou senha incorretos.');
+      }
+
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Entrar na Conta →';
@@ -4113,39 +4277,65 @@ document.getElementById('loginForm').onsubmit = async (e) => {
     }, 1200);
 
   } catch (err) {
-    console.warn('Servidor indisponível ou offline. Validando credenciais pelo cache local:', err);
+    console.warn('Servidor indisponível ou falha de rede. Validando pelo cache local:', err);
     await syncUsersWithServer();
-    const user = registeredUsers.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
-    if (user) {
-      if (user.active === false) {
-        showAccountDisabledPopup('Seu usuário foi desativado pelo administrador.');
-        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
-        return;
-      }
-      currentUser = user;
-      saveToStorage('nexus_session', { email: user.email });
-      saveToStorage('nexus_cached_user', user);
-      saveToStorage('nexus_token', 'token_' + Date.now());
-      document.documentElement.classList.add('user-logged-in');
-      if (user.role === 'Administrador') {
-        document.documentElement.classList.add('is-admin');
-        currentPage = 'usuarios';
-      } else {
-        document.documentElement.classList.remove('is-admin');
-        currentPage = 'dashboard';
-      }
-      await loadUserData();
-      showLoginSuccessPopup('Acesso offline autenticado com sucesso!');
-      setTimeout(() => {
-        document.getElementById('authPage').classList.remove('show');
-        document.getElementById('authPage').style.display = 'none';
-        document.getElementById('appMain').classList.add('show');
-        document.getElementById('appMain').style.display = 'flex';
-        render();
-      }, 1200);
-    } else {
-      alert('E-mail ou senha incorretos!');
+    const existingUser = registeredUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+    if (!existingUser) {
+      if (emailWrap) emailWrap.classList.add('input-error');
+      if (emailInput) emailInput.focus();
+      window.showAuthFeedback(
+        'login',
+        'warning',
+        'Usuário não cadastrado',
+        'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + email + '</strong>.',
+        '<button type="button" onclick="window.switchToRegisterWithEmail(\\'' + email + '\\')" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(220,38,38,0.35) 100%); border:1px solid rgba(248,113,113,0.5); color:#FFFFFF; border-radius:8px; cursor:pointer;">Criar Conta com este E-mail →</button>'
+      );
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
+      return;
     }
+
+    if (existingUser.password !== password) {
+      if (passWrap) passWrap.classList.add('input-error');
+      if (passwordInput) { passwordInput.select(); passwordInput.focus(); }
+      window.showAuthFeedback(
+        'login',
+        'error',
+        'Senha incorreta',
+        'A senha digitada está incorreta para este e-mail. Verifique se o Caps Lock está ativado.',
+        '<button type="button" onclick="window.switchAuthTab(\\'forgot\\')" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.35); color:#FFFFFF; border-radius:8px; cursor:pointer;">Esqueci Minha Senha →</button>'
+      );
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
+      return;
+    }
+
+    if (existingUser.active === false) {
+      window.showAuthFeedback('login', 'error', 'Conta desativada', 'Seu usuário foi desativado pelo administrador.');
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
+      return;
+    }
+
+    currentUser = existingUser;
+    saveToStorage('nexus_session', { email: existingUser.email });
+    saveToStorage('nexus_cached_user', existingUser);
+    saveToStorage('nexus_token', 'token_' + Date.now());
+    document.documentElement.classList.add('user-logged-in');
+    if (existingUser.role === 'Administrador') {
+      document.documentElement.classList.add('is-admin');
+      currentPage = 'usuarios';
+    } else {
+      document.documentElement.classList.remove('is-admin');
+      currentPage = 'dashboard';
+    }
+    await loadUserData();
+    showLoginSuccessPopup('Acesso offline autenticado com sucesso!');
+    setTimeout(() => {
+      document.getElementById('authPage').classList.remove('show');
+      document.getElementById('authPage').style.display = 'none';
+      document.getElementById('appMain').classList.add('show');
+      document.getElementById('appMain').style.display = 'flex';
+      render();
+    }, 1200);
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -11054,14 +11244,31 @@ const server = http.createServer((req, res) => {
           user = localUsers.find(u => u.email.toLowerCase() === cleanEmail) || null;
         }
 
-        if (!user || user.password !== password) {
+        if (!user) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({
+            success: false,
+            errorType: 'user_not_found',
+            error: 'Este e-mail não possui cadastro no sistema. Clique em "Criar Conta" para se cadastrar.'
+          }));
+        }
+
+        if (user.password !== password) {
           res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'E-mail ou senha incorretos!' }));
+          return res.end(JSON.stringify({
+            success: false,
+            errorType: 'invalid_password',
+            error: 'Senha incorreta para este e-mail. Verifique a senha digitada ou clique em "Esqueceu a senha?".'
+          }));
         }
 
         if (user.active === false) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Seu usuário foi desativado pelo administrador.' }));
+          return res.end(JSON.stringify({
+            success: false,
+            errorType: 'user_inactive',
+            error: 'Seu usuário foi desativado pelo administrador.'
+          }));
         }
 
         recordSystemLog(user.name, user.email, 'Login', 'Autenticação', 'Usuário realizou login com sucesso no sistema');
