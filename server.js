@@ -3026,18 +3026,111 @@ body.light .user-stat-chip {
 body.light .user-stat-chip strong { color: #0F172A !important; }
 
 /* ==================== Banner: Modo Visualização (Admin) ==================== */
-.view-mode-banner{
-  display:none; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
-  padding:10px 18px; background:linear-gradient(135deg, rgba(232,176,75,.18), rgba(232,176,75,.10));
-  border-bottom:1.5px solid var(--gold); font-size:13px; color:var(--text); text-align:center;
+.view-mode-banner {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000000 !important;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 10px 24px !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.96) 0%, rgba(217, 119, 6, 0.98) 100%) !important;
+  border-bottom: 2px solid #FDE68A !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.4) !important;
+  color: #060B18 !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  transition: all 0.3s ease !important;
 }
-.view-mode-banner.show{display:flex;}
-.view-mode-banner strong{color:var(--gold);}
-.view-mode-banner button{
-  background:var(--gold); color:#08130c; border:none; font-weight:800; font-size:12.5px;
-  padding:6px 14px; border-radius:8px; cursor:pointer; flex-shrink:0; transition:all 0.2s ease;
+.view-mode-banner.show {
+  display: flex !important;
 }
-.view-mode-banner button:hover{filter:brightness(1.1); transform:scale(1.02);}
+.view-mode-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #060B18 !important;
+}
+.view-mode-icon {
+  font-size: 18px;
+}
+.view-mode-banner strong {
+  color: #000000 !important;
+  background: rgba(255, 255, 255, 0.35);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 900 !important;
+}
+.view-mode-banner button,
+.view-mode-exit-btn {
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #FDE68A !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  padding: 8px 18px !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  transition: all 0.2s ease !important;
+}
+.view-mode-banner button:hover,
+.view-mode-exit-btn:hover {
+  background: #1E293B !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.has-view-mode-banner .topheader {
+  top: 50px !important;
+}
+body.has-view-mode-banner .main {
+  padding-top: 140px !important;
+}
+body.has-view-mode-banner .sidebar {
+  top: 125px !important;
+}
+
+/* Floating FAB Button para Sair do Espelho */
+.floating-mirror-exit-fab {
+  position: fixed !important;
+  bottom: 28px !important;
+  right: 28px !important;
+  z-index: 1000001 !important;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+  color: #060B18 !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  border: 2px solid #FEF08A !important;
+  box-shadow: 0 12px 35px -5px rgba(245, 158, 11, 0.7), 0 0 25px rgba(245, 158, 11, 0.4) !important;
+  cursor: pointer !important;
+  animation: pulseFab 2.2s infinite;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.floating-mirror-exit-fab:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  filter: brightness(1.1) !important;
+  box-shadow: 0 16px 45px -2px rgba(245, 158, 11, 0.9) !important;
+}
+@keyframes pulseFab {
+  0%, 100% { box-shadow: 0 12px 35px -5px rgba(245, 158, 11, 0.7), 0 0 25px rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 14px 45px 2px rgba(245, 158, 11, 1), 0 0 35px rgba(245, 158, 11, 0.75); }
+}
 
 .acc-card{background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:18px; display:flex; flex-direction:column;}
 .acc-card .top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; gap:10px;}
@@ -3510,8 +3603,14 @@ body.light .scale-dropdown {
 <!-- APLICAÇÃO PRINCIPAL -->
 <div class="app" id="appMain">
   <div class="view-mode-banner" id="viewModeBanner">
-    <span>👁 Visualizando dados de <strong id="viewModeUserName"></strong> (modo administrador)</span>
-    <button id="viewModeExitBtn">Voltar para minha conta</button>
+    <div class="view-mode-content">
+      <span class="view-mode-icon">👁️</span>
+      <span>MODO ESPELHO ATIVO: Visualizando conta de <strong id="viewModeUserName"></strong> (Somente Leitura)</span>
+    </div>
+    <button type="button" id="viewModeExitBtn" class="view-mode-exit-btn" onclick="exitViewMode()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+      <span>Voltar para Modo Administrador</span>
+    </button>
   </div>
   <div class="app-bg-scene" aria-hidden="true">
     <canvas id="appBgOrbitalCanvas" class="app-bg-orbital-canvas"></canvas>
@@ -3603,6 +3702,10 @@ body.light .scale-dropdown {
           } catch(e){}
         })();
         </script>
+        <button type="button" class="btn-primary" id="headerMirrorExitBtn" onclick="exitViewMode()" style="display:none; background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important; color:#060B18 !important; font-weight:800 !important; font-size:12px !important; padding:6px 14px !important; border-radius:10px !important; border:1.5px solid #FDE68A !important; box-shadow:0 0 16px rgba(245,158,11,0.5) !important; cursor:pointer !important; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+          <span>Voltar ao Admin</span>
+        </button>
         <button class="btn-ghost" id="logoutBtn">Sair</button>
       </div>
     </div>
@@ -3653,6 +3756,12 @@ body.light .scale-dropdown {
   <main class="main">
     <div id="pageContent"></div>
   </main>
+
+  <!-- Floating Action Button: Voltar do Modo Espelho -->
+  <button type="button" id="floatingExitMirrorBtn" class="floating-mirror-exit-fab" onclick="exitViewMode()" title="Sair do Modo Espelho e voltar para Administrador" style="display:none;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+    <span>Voltar para Admin</span>
+  </button>
   <div class="app-dev-credit">
     <div class="dev-signature">
       <div class="dev-signature-icon">
@@ -5017,11 +5126,13 @@ async function viewUserData(email){
   }
   currentUser = target;
   isViewingOtherUser = true;
+  document.body.classList.add('has-view-mode-banner');
   saveToStorage('nexus_viewing_user', target.email);
   await loadUserData();
   currentPage = 'dashboard';
   render();
-  showToast('Visualizando dados de ' + target.name);
+  updateViewModeBanner();
+  showToast('Modo Espelho ativado: visualizando conta de ' + target.name);
 }
 
 async function exitViewMode(){
@@ -5029,6 +5140,7 @@ async function exitViewMode(){
   currentUser = adminOriginalUser;
   adminOriginalUser = null;
   isViewingOtherUser = false;
+  document.body.classList.remove('has-view-mode-banner');
   localStorage.removeItem('nexus_viewing_user');
   localStorage.setItem('nexus_current_page', 'usuarios');
   try {
@@ -5043,6 +5155,7 @@ async function exitViewMode(){
   await loadUserData();
   currentPage = 'usuarios';
   render();
+  updateViewModeBanner();
   showToast('Você voltou para sua conta de Administrador.');
 }
 
@@ -5915,12 +6028,26 @@ function updateAdminMenuVisibility(){
 
 function updateViewModeBanner(){
   const banner = document.getElementById('viewModeBanner');
-  if(!banner) return;
+  const floatingBtn = document.getElementById('floatingExitMirrorBtn');
+  const headerMirrorExitBtn = document.getElementById('headerMirrorExitBtn');
+  const exitBtn = document.getElementById('viewModeExitBtn');
+
+  if (exitBtn) exitBtn.onclick = exitViewMode;
+  if (floatingBtn) floatingBtn.onclick = exitViewMode;
+  if (headerMirrorExitBtn) headerMirrorExitBtn.onclick = exitViewMode;
+
   if(isViewingOtherUser && currentUser){
-    document.getElementById('viewModeUserName').textContent = currentUser.name;
-    banner.classList.add('show');
+    const nameEl = document.getElementById('viewModeUserName');
+    if(nameEl) nameEl.textContent = currentUser.name;
+    if(banner) banner.classList.add('show');
+    if(floatingBtn) floatingBtn.style.display = 'inline-flex';
+    if(headerMirrorExitBtn) headerMirrorExitBtn.style.display = 'inline-flex';
+    document.body.classList.add('has-view-mode-banner');
   } else {
-    banner.classList.remove('show');
+    if(banner) banner.classList.remove('show');
+    if(floatingBtn) floatingBtn.style.display = 'none';
+    if(headerMirrorExitBtn) headerMirrorExitBtn.style.display = 'none';
+    document.body.classList.remove('has-view-mode-banner');
   }
 }
 
@@ -5931,7 +6058,13 @@ function updateHeaderUser(){
   const roleEl = document.getElementById('headerRole');
 
   if(unameEl) unameEl.textContent = currentUser.name;
-  if(roleEl) roleEl.textContent = currentUser.role || 'Usuário';
+  if(roleEl) {
+    if (isViewingOtherUser) {
+      roleEl.innerHTML = '<span style="color:#FBBF24; font-weight:800;">👁️ Modo Espelho</span>';
+    } else {
+      roleEl.textContent = currentUser.role || 'Usuário';
+    }
+  }
   if(avatarEl) {
     const rawParts = currentUser.name.trim().split(/\s+/);
     let inits = 'PL';
@@ -8250,11 +8383,11 @@ function pageUsuarios(){
           </div>
           <div class="user-card-right">
             \${!isSelf ? \`
-              <button class="user-card-btn btn-espelho" data-viewuser="\${u.email}" title="Visualizar conta em Modo Espelho">
+              <button type="button" class="user-card-btn btn-espelho" data-viewuser="\${u.email}" onclick="viewUserData('\${u.email}')" title="Visualizar conta em Modo Espelho">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 <span>Espelho</span>
               </button>
-              <button class="user-card-btn \${isInactive ? 'btn-ativar' : 'btn-desativar'}" data-toggleuser="\${u.email}" title="\${isInactive ? 'Ativar usuário' : 'Desativar usuário'}">
+              <button type="button" class="user-card-btn \${isInactive ? 'btn-ativar' : 'btn-desativar'}" data-toggleuser="\${u.email}" onclick="toggleUserActive('\${u.email}')" title="\${isInactive ? 'Ativar usuário' : 'Desativar usuário'}">
                 \${isInactive ? \`
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   <span>Ativar</span>
@@ -8263,14 +8396,14 @@ function pageUsuarios(){
                   <span>Desativar</span>
                 \`}
               </button>
-              <button class="user-card-btn btn-excluir" data-deluser="\${u.email}" title="Excluir usuário permanentemente">
+              <button type="button" class="user-card-btn btn-excluir" data-deluser="\${u.email}" onclick="deleteUserAdmin('\${u.email}')" title="Excluir usuário permanentemente">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 <span>Excluir</span>
               </button>
             \` : \`
               <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:800; font-size:12px; padding:6px 14px; border-radius:12px; height:38px;">⭐ Sua Conta (Atual)</span>
             \`}
-            <button class="user-card-btn btn-editar" data-edituser="\${u.email}" title="Editar informações do usuário">
+            <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Editar informações do usuário">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               <span>Editar</span>
             </button>
