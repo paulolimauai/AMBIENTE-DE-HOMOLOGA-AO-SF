@@ -46,7 +46,7 @@ if (Pool) {
 
 // Usuário admin padrão, inserido no banco na primeira execução
 const DEFAULT_ADMIN = {
-  name: 'Paulo Lima',
+  name: 'Administrador',
   email: 'admin@nexusfinanceiro.com',
   password: '86266049',
   role: 'Administrador',
@@ -1747,9 +1747,9 @@ body.light .due-bill-row {
   position: fixed !important;
   inset: 0 !important;
   z-index: 999999 !important;
-  background: rgba(5, 8, 15, 0.82) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+  background: rgba(4, 7, 15, 0.75) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   display: none;
   align-items: center !important;
   justify-content: center !important;
@@ -1758,16 +1758,32 @@ body.light .due-bill-row {
 }
 
 .executive-4k-card {
-  background: linear-gradient(145deg, #121722 0%, #0A0E17 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 40px rgba(59, 130, 246, 0.2) !important;
-  border-radius: 26px !important;
-  padding: 36px 32px 30px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(15, 23, 42, 0.78) 45%, rgba(6, 11, 22, 0.88) 100%) !important;
+  backdrop-filter: blur(36px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 35px 90px -10px rgba(0, 0, 0, 0.88), 0 0 50px rgba(16, 185, 129, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.5) !important;
+  border-radius: 28px !important;
+  padding: 40px 34px 34px !important;
   width: 100% !important;
   max-width: 440px !important;
   text-align: center !important;
   transform: scale(0.92);
   animation: popIn4k 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.executive-4k-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.8), transparent);
+  filter: blur(0.5px);
+  pointer-events: none;
 }
 
 @keyframes popIn4k {
@@ -1780,52 +1796,61 @@ body.light .due-bill-row {
 }
 
 .executive-4k-badge {
-  width: 72px !important;
-  height: 72px !important;
+  width: 76px !important;
+  height: 76px !important;
   border-radius: 50% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   font-size: 34px !important;
-  margin: 0 auto 20px !important;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.3) !important;
+  margin: 0 auto 22px !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 60%, rgba(0, 0, 0, 0.4) 100%) !important;
+  border: 1.5px solid rgba(52, 211, 153, 0.45) !important;
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
 }
 
 .executive-4k-title {
-  font-size: 22px !important;
-  font-weight: 800 !important;
+  font-size: 23px !important;
+  font-weight: 900 !important;
   color: #FFFFFF !important;
   margin-bottom: 10px !important;
-  letter-spacing: -0.01em !important;
+  letter-spacing: -0.02em !important;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5) !important;
 }
 
 .executive-4k-message {
   font-size: 14.5px !important;
-  color: #94A3B8 !important;
+  color: #CBD5E1 !important;
   line-height: 1.6 !important;
-  margin-bottom: 26px !important;
+  margin-bottom: 28px !important;
+  font-weight: 500 !important;
 }
 
 .executive-4k-btn {
   width: 100% !important;
-  padding: 14px 24px !important;
-  border-radius: 14px !important;
+  padding: 15px 24px !important;
+  border-radius: 16px !important;
   font-size: 15px !important;
   font-weight: 800 !important;
   color: #FFFFFF !important;
-  border: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  background: linear-gradient(135deg, #10B981 0%, #059669 60%, #047857 100%) !important;
+  box-shadow: 0 12px 28px -4px rgba(16, 185, 129, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
   cursor: pointer !important;
-  transition: all 0.2s ease !important;
-  letter-spacing: 0.02em !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  letter-spacing: 0.03em !important;
 }
 
 .executive-4k-btn:hover {
-  transform: translateY(-2px) !important;
-  filter: brightness(1.1) !important;
+  transform: translateY(-2px) scale(1.01) !important;
+  filter: brightness(1.06) !important;
+  box-shadow: 0 16px 36px -2px rgba(16, 185, 129, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.6) !important;
 }
 
 body.light .executive-4k-card {
-  background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%) !important;
   border: 1px solid #CBD5E1 !important;
   box-shadow: 0 25px 70px rgba(15, 23, 42, 0.25) !important;
 }
@@ -5472,18 +5497,34 @@ function showCustomAlert(title, message, type = 'success', onConfirm = null) {
     document.body.appendChild(modal);
   }
 
-  let iconHtml = '✨';
-  let badgeStyle = 'background:rgba(59,130,246,0.15); border:1.5px solid rgba(59,130,246,0.4); color:#60A5FA;';
-  let btnStyle = 'background:linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); box-shadow:0 8px 24px rgba(59,130,246,0.4);';
+  let iconHtml = \`
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 8px rgba(59,130,246,0.7));">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="16" x2="12" y2="12"/>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </svg>
+  \`;
+  let badgeStyle = 'background:linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(37,99,235,0.12) 60%, rgba(0,0,0,0.35) 100%) !important; border:1.5px solid rgba(96,165,250,0.5) !important; box-shadow:0 0 30px rgba(59,130,246,0.4), inset 0 1px 2px rgba(255,255,255,0.6) !important;';
+  let btnStyle = 'background:linear-gradient(135deg, #3B82F6 0%, #2563EB 60%, #1D4ED8 100%) !important; box-shadow:0 12px 28px -4px rgba(59,130,246,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;';
 
   if (type === 'success') {
-    iconHtml = '✅';
-    badgeStyle = 'background:rgba(16,185,129,0.18); border:1.5px solid rgba(16,185,129,0.45); color:#34D399;';
-    btnStyle = 'background:linear-gradient(135deg, #059669 0%, #10B981 100%); box-shadow:0 8px 24px rgba(16,185,129,0.4);';
+    iconHtml = \`
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 10px rgba(52,211,153,0.8));">
+        <path d="M20 6 9 17l-5-5"/>
+      </svg>
+    \`;
+    badgeStyle = 'background:linear-gradient(135deg, rgba(16,185,129,0.22) 0%, rgba(5,150,105,0.12) 60%, rgba(0,0,0,0.35) 100%) !important; border:1.5px solid rgba(52,211,153,0.5) !important; box-shadow:0 0 30px rgba(16,185,129,0.4), inset 0 1px 2px rgba(255,255,255,0.6) !important;';
+    btnStyle = 'background:linear-gradient(135deg, #10B981 0%, #059669 60%, #047857 100%) !important; box-shadow:0 12px 28px -4px rgba(16,185,129,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;';
   } else if (type === 'error') {
-    iconHtml = '⚠️';
-    badgeStyle = 'background:rgba(239,68,68,0.18); border:1.5px solid rgba(239,68,68,0.45); color:#F87171;';
-    btnStyle = 'background:linear-gradient(135deg, #DC2626 0%, #EF4444 100%); box-shadow:0 8px 24px rgba(239,68,68,0.4);';
+    iconHtml = \`
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 10px rgba(239,68,68,0.8));">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    \`;
+    badgeStyle = 'background:linear-gradient(135deg, rgba(239,68,68,0.22) 0%, rgba(185,28,28,0.12) 60%, rgba(0,0,0,0.35) 100%) !important; border:1.5px solid rgba(248,113,113,0.5) !important; box-shadow:0 0 30px rgba(239,68,68,0.4), inset 0 1px 2px rgba(255,255,255,0.6) !important;';
+    btnStyle = 'background:linear-gradient(135deg, #EF4444 0%, #DC2626 60%, #991B1B 100%) !important; box-shadow:0 12px 28px -4px rgba(239,68,68,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;';
   }
 
   modal.innerHTML = \`
