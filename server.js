@@ -252,6 +252,7 @@ const htmlContent = `<!DOCTYPE html>
     document.documentElement.style.setProperty('--app-zoom', scaleNum);
 
     document.addEventListener('DOMContentLoaded', function() {
+      if (document.body) document.body.style.zoom = scaleNum;
       var saved = localStorage.getItem('nexus_theme');
       if (saved) saved = saved.replace(/"/g, '').trim();
       var lightMode = (saved === 'light');
@@ -358,6 +359,7 @@ body{
     linear-gradient(180deg, #060913 0%, #080E21 50%, #050814 100%);
   background-attachment:fixed;
   color:var(--text); min-height:100vh; transition:background .25s,color .25s;
+  zoom:var(--app-zoom, 1);
 }
 button, input, select{font-family:inherit; color:inherit;}
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
@@ -1429,7 +1431,7 @@ body.light .dev-signature-name{
   box-shadow:0 0 14px rgba(245, 158, 11, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
   flex-shrink:0 !important;
 }
-.user .uname{font-size:13px !important; font-weight:700 !important; color:#F8FAFC !important; white-space:nowrap !important; letter-spacing:-0.01em !important; text-transform:capitalize !important;}
+.user .uname{font-size:13px !important; font-weight:700 !important; color:#F8FAFC !important; white-space:nowrap !important; letter-spacing:-0.01em !important;}
 .user .urole{
   display:inline-block !important; padding:2px 8px !important; border-radius:999px !important;
   background:rgba(59, 130, 246, 0.16) !important; border:1px solid rgba(96, 165, 250, 0.35) !important;
@@ -3434,10 +3436,7 @@ body.light .scale-dropdown {
                 var n = document.getElementById('headerName');
                 var r = document.getElementById('headerRole');
                 var a = document.getElementById('headerAvatar');
-                var formatted = u.name.toLowerCase().split(' ').map(function(w){
-                  return (['de','da','do','dos','das','e'].indexOf(w) !== -1) ? w : (w.charAt(0).toUpperCase() + w.slice(1));
-                }).join(' ');
-                if (n) n.textContent = formatted;
+                if (n) n.textContent = u.name;
                 if (r) r.textContent = u.role || 'Usuário';
                 if (a) {
                   var p = u.name.trim().split(/\s+/);
@@ -5568,21 +5567,13 @@ function updateViewModeBanner(){
   }
 }
 
-function formatDisplayName(str){
-  if (!str) return '';
-  return str.toLowerCase().split(' ').map(w => {
-    if (['de', 'da', 'do', 'dos', 'das', 'e'].includes(w)) return w;
-    return w.charAt(0).toUpperCase() + w.slice(1);
-  }).join(' ');
-}
-
 function updateHeaderUser(){
   if (!currentUser) return;
   const unameEl = document.getElementById('headerName');
   const avatarEl = document.getElementById('headerAvatar');
   const roleEl = document.getElementById('headerRole');
 
-  if(unameEl) unameEl.textContent = formatDisplayName(currentUser.name);
+  if(unameEl) unameEl.textContent = currentUser.name;
   if(roleEl) roleEl.textContent = currentUser.role || 'Usuário';
   if(avatarEl) {
     const rawParts = currentUser.name.trim().split(/\s+/);
@@ -10370,6 +10361,9 @@ function applyDisplayScale(scaleVal) {
 
   var scaleNum = parseFloat(effectiveScale) / 100 || 1;
   document.documentElement.style.setProperty('--app-zoom', scaleNum);
+  if (document.body) {
+    document.body.style.zoom = scaleNum;
+  }
 
   var lbl = document.getElementById('currentScaleLabel');
   if (lbl) {
