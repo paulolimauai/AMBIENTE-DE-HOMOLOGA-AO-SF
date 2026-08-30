@@ -1961,16 +1961,17 @@ body.light .kpi .val { color:#0f172a !important; text-shadow:none; }
 .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:20px; align-items:stretch;}
 .panel{
   position:relative; overflow:hidden;
-  background:linear-gradient(145deg, rgba(17,23,34,0.90) 0%, rgba(11,15,24,0.95) 100%);
-  border:1px solid rgba(255,255,255,0.09); border-radius:20px; padding:20px 22px;
-  box-shadow:0 16px 40px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.12);
-  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.68) 50%, rgba(10, 15, 29, 0.78) 100%) !important;
+  border:1px solid rgba(255, 255, 255, 0.12) !important; border-radius:24px !important; padding:22px 26px;
+  box-shadow:0 20px 50px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter:blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter:blur(24px) saturate(190%) !important;
   transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;
 }
 .panel:hover{
-  border-color:rgba(255,255,255,0.18);
-  box-shadow:0 20px 48px rgba(0,0,0,0.85);
+  border-color:rgba(96, 165, 250, 0.35) !important;
+  box-shadow:0 24px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
 }
 .panel-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:10px; flex-wrap:wrap;}
 .panel-head h3{font-size:15px; font-weight:800; color:#ffffff; letter-spacing:-0.01em; display:flex; align-items:center; gap:8px;}
@@ -2130,10 +2131,12 @@ body.light tr.trow:hover td { background:#f1f5f9 !important; }
   max-width: 860px !important;
   margin: 20px auto !important;
   padding: 48px 24px !important;
-  background: var(--card) !important;
-  border: 1px solid var(--card-border) !important;
-  border-radius: 22px !important;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.68) 50%, rgba(10, 15, 29, 0.78) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -2248,17 +2251,17 @@ body.light tr.trow:hover td { background:#f1f5f9 !important; }
 /* Enhanced Budget, Goal, & Bank Card Styles */
 .budget-card, .goal-card, .recurring-card {
   position:relative; overflow:hidden;
-  background:linear-gradient(145deg, rgba(17,23,34,0.94) 0%, rgba(11,15,24,0.98) 100%);
-  border:1px solid rgba(255,255,255,0.09); border-radius:18px; padding:20px;
-  box-shadow:0 14px 34px -8px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.10);
-  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(10, 15, 29, 0.78) 100%) !important;
+  border:1px solid rgba(255,255,255,0.12) !important; border-radius:20px !important; padding:22px;
+  box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22) !important;
+  backdrop-filter:blur(24px) saturate(190%) !important; -webkit-backdrop-filter:blur(24px) saturate(190%) !important;
   transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   display:flex; flex-direction:column; justify-content:space-between;
 }
 .budget-card:hover, .goal-card:hover, .recurring-card:hover {
   transform:translateY(-3px);
-  border-color:rgba(59,130,246,0.45);
-  box-shadow:0 20px 42px -6px rgba(0,0,0,0.85), 0 0 25px rgba(59,130,246,0.18);
+  border-color:rgba(96,165,250,0.45) !important;
+  box-shadow:0 22px 50px -6px rgba(0,0,0,0.85), 0 0 25px rgba(59,130,246,0.25), inset 0 1px 0 rgba(255,255,255,0.35) !important;
 }
 body.light .budget-card, body.light .goal-card, body.light .recurring-card, body.light .cat-card {
   background:#ffffff !important; border-color:#cbd5e1 !important;
@@ -7158,9 +7161,9 @@ function pageAnexos(){
     </div>
   </div>
 
-  <div class="panel" style="margin-bottom:22px; padding:22px;">
-    <div style="margin-bottom:16px;">
-      <h3 style="font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px; margin:0;">
+  <div class="panel" style="margin-bottom:22px; padding:26px;">
+    <div style="margin-bottom:18px;">
+      <h3 style="font-size:16.5px; font-weight:800; display:flex; align-items:center; gap:8px; margin:0; color:#FFFFFF;">
         <span>📎</span> Vincular & Enviar Novo Comprovante
       </h3>
       <p style="font-size:12.5px; color:var(--text-dim); margin-top:4px;">
@@ -7168,22 +7171,24 @@ function pageAnexos(){
       </p>
     </div>
 
-    <div style="margin-bottom:16px;">
+    <div style="margin-bottom:18px;">
       <label style="font-size:13px; font-weight:700; margin-bottom:8px; display:block; color:var(--text);">Vincular a uma Transação (Opcional)</label>
-      <select id="attTx" style="width:100%; font-size:13.5px; padding:10px 14px; height:46px; border-radius:10px; background:var(--bg); border:1px solid var(--card-border); color:var(--text); font-weight:600;">
+      <select id="attTx" style="width:100%; font-size:13.5px; padding:11px 16px; height:48px; border-radius:14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14); color:var(--text); font-weight:600; backdrop-filter:blur(16px); box-shadow:inset 0 1px 1px rgba(255,255,255,0.15);">
         <option value="0">Nenhuma (Anexo Avulso / Recibo Padrão)</option>
         \${sortedTx.map(t=>\`<option value="\${t.id}">\${formatDateBR(t.date)} — \${t.desc} (\${fmt(t.val)})</option>\`).join('')}
       </select>
     </div>
 
-    <div id="attDropZone" style="border: 2px dashed rgba(34, 197, 94, 0.4); border-radius: 18px; padding: 36px 20px; text-align: center; cursor: pointer; background: rgba(34, 197, 94, 0.03); transition: all 0.25s ease; position: relative;">
+    <div id="attDropZone" style="border: 2px dashed rgba(96, 165, 250, 0.4); border-radius: 22px; padding: 42px 20px; text-align: center; cursor: pointer; background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(59, 130, 246, 0.06) 50%, rgba(16, 185, 129, 0.04) 100%); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22), 0 10px 30px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative;">
       <input type="file" id="attFile" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="display:none;">
-      <span style="font-size: 42px; display: block; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(34,197,94,0.3));">☁️</span>
-      <p style="margin:0; font-weight:800; font-size:16px; color:var(--text);">Arraste comprovantes para cá ou <span style="color:var(--green); text-decoration:underline;">clique para anexar</span></p>
-      <div style="display:flex; justify-content:center; gap:8px; margin-top:10px;">
-        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">PNG / JPG / WEBP</span>
-        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">PDF</span>
-        <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">DOCX / TXT</span>
+      <div style="display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(59,130,246,0.25) 100%); border:1px solid rgba(255,255,255,0.35); box-shadow:0 8px 24px rgba(59,130,246,0.35); margin-bottom:14px;">
+        <span style="font-size: 32px; display: block; filter: drop-shadow(0 2px 8px rgba(255,255,255,0.5));">☁️</span>
+      </div>
+      <p style="margin:0; font-weight:800; font-size:16px; color:#FFFFFF; letter-spacing:-0.01em;">Arraste comprovantes para cá ou <span style="color:#60A5FA; text-decoration:underline;">clique para anexar</span></p>
+      <div style="display:flex; justify-content:center; gap:8px; margin-top:12px;">
+        <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700; backdrop-filter:blur(10px);">PNG / JPG / WEBP</span>
+        <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700; backdrop-filter:blur(10px);">PDF</span>
+        <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700; backdrop-filter:blur(10px);">DOCX / TXT</span>
       </div>
     </div>
   </div>
