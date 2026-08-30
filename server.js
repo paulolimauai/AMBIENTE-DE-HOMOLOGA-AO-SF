@@ -3069,52 +3069,72 @@ body.light .user-stat-chip strong { color: #0F172A !important; }
   width:12px; height:12px; border-radius:50%; background:#22c55e; flex-shrink:0; box-shadow:0 0 10px #22c55e;
 }
 
-/* ==================== Popup de login bem-sucedido (Dashboard Theme 4K) ==================== */
+/* ==================== Popup de login bem-sucedido (Dashboard Theme 4K Glass) ==================== */
 .login-success-overlay{
-  position:fixed; inset:0; background:rgba(6, 10, 20, 0.85);
-  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  position:fixed; inset:0; background:rgba(4, 7, 15, 0.75) !important;
+  backdrop-filter:blur(28px) saturate(190%) !important; -webkit-backdrop-filter:blur(28px) saturate(190%) !important;
   display:none; align-items:center; justify-content:center; z-index:99999 !important; padding:20px; opacity:0;
   transition:opacity .3s ease;
 }
 .login-success-overlay.show{display:flex;}
 .login-success-overlay.in{opacity:1;}
 .login-success-box{
-  background:linear-gradient(145deg, rgba(17, 24, 39, 0.96) 0%, rgba(10, 15, 29, 0.98) 100%);
-  border:1px solid rgba(59, 130, 246, 0.35);
-  border-radius:22px;
-  padding:34px 28px 26px;
-  width:100%; max-width:360px; text-align:center;
-  box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 35px rgba(59, 130, 246, 0.22), inset 0 1px 1px rgba(255,255,255,0.2);
+  position:relative !important;
+  overflow:hidden !important;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(15, 23, 42, 0.78) 45%, rgba(6, 11, 24, 0.88) 100%) !important;
+  backdrop-filter:blur(36px) saturate(200%) !important;
+  -webkit-backdrop-filter:blur(36px) saturate(200%) !important;
+  border:1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius:26px !important;
+  padding:38px 30px 30px !important;
+  width:100% !important; max-width:380px !important; text-align:center !important;
+  box-shadow:0 35px 90px -10px rgba(0,0,0,0.9), 0 0 45px rgba(59, 130, 246, 0.2), inset 0 1px 1px rgba(255,255,255,0.38), inset 0 -1px 0 rgba(0,0,0,0.5) !important;
   transform:translateY(16px) scale(.94); opacity:0;
   transition:transform .35s cubic-bezier(.16,1,.3,1), opacity .35s ease;
 }
+.login-success-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.8), rgba(52, 211, 153, 0.8), transparent);
+  filter: blur(0.5px);
+  pointer-events: none;
+}
 .login-success-overlay.in .login-success-box{transform:translateY(0) scale(1); opacity:1;}
 .login-success-check{
-  width:64px; height:64px; margin:0 auto 18px; border-radius:50%;
-  background:linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(37, 99, 235, 0.16) 100%);
-  border:1.5px solid rgba(16, 185, 129, 0.5);
-  box-shadow:0 0 25px rgba(16, 185, 129, 0.35), inset 0 1px 1px rgba(255,255,255,0.3);
-  display:flex; align-items:center; justify-content:center;
+  width:72px !important; height:72px !important; margin:0 auto 20px !important; border-radius:50% !important;
+  background:linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 60%, rgba(0, 0, 0, 0.4) 100%) !important;
+  border:1.5px solid rgba(52, 211, 153, 0.5) !important;
+  box-shadow:0 0 30px rgba(16, 185, 129, 0.45), inset 0 1px 2px rgba(255,255,255,0.6) !important;
+  backdrop-filter:blur(16px) !important;
+  -webkit-backdrop-filter:blur(16px) !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
 }
-.login-success-check svg{width:34px; height:34px;}
+.login-success-check svg{width:36px; height:36px;}
 .login-success-check circle{stroke:rgba(16, 185, 129, 0.4); stroke-width:2.5;}
 .login-success-check path{
   stroke:#10B981; stroke-width:4; stroke-linecap:round; stroke-linejoin:round;
   stroke-dasharray:40; stroke-dashoffset:40; animation:loginCheckDraw .45s ease .15s forwards;
-  filter:drop-shadow(0 0 6px rgba(16,185,129,0.8));
+  filter:drop-shadow(0 0 8px rgba(16,185,129,0.85));
 }
 @keyframes loginCheckDraw{to{stroke-dashoffset:0;}}
 .login-success-box h3{
-  font-size:18px; font-weight:800; color:#FFFFFF; margin-bottom:6px; letter-spacing:-0.01em;
+  font-size:20px !important; font-weight:900 !important; color:#FFFFFF !important; margin-bottom:8px !important; letter-spacing:-0.015em !important;
+  text-shadow:0 2px 12px rgba(0,0,0,0.5);
 }
 .login-success-box p{
-  color:#94A3B8; font-size:13px; font-weight:500; margin:0 0 16px;
+  color:#CBD5E1 !important; font-size:13.5px !important; font-weight:500 !important; margin:0 0 20px !important; line-height:1.5 !important;
 }
 .login-success-progress-bar{
-  width:100%; height:4.5px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;
+  width:100% !important; height:5px !important; background:rgba(255,255,255,0.08) !important; border-radius:999px !important; overflow:hidden !important;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.5) !important;
 }
 .login-success-progress-fill{
-  height:100%; width:0; background:linear-gradient(90deg, #3B82F6, #10B981); border-radius:3px;
+  height:100% !important; width:0; background:linear-gradient(90deg, #3B82F6 0%, #06D6A0 50%, #10B981 100%) !important; border-radius:999px !important;
+  box-shadow:0 0 12px rgba(16, 185, 129, 0.8) !important;
   animation:loginProgressFill 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 @keyframes loginProgressFill{
@@ -3122,7 +3142,7 @@ body.light .user-stat-chip strong { color: #0F172A !important; }
   to{width:100%;}
 }
 body.light .login-success-box{
-  background:#FFFFFF !important;
+  background:linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%) !important;
   border-color:#cbd5e1 !important;
   box-shadow:0 25px 60px rgba(0,0,0,0.15) !important;
 }
@@ -3135,41 +3155,64 @@ body.light .login-success-box p{
 
 /* ==================== Popup de conta desativada ==================== */
 .account-disabled-icon{
-  width:64px; height:64px; margin:0 auto 18px; border-radius:50%;
-  background:var(--red-soft); display:flex; align-items:center; justify-content:center;
+  width:72px !important; height:72px !important; margin:0 auto 20px !important; border-radius:50% !important;
+  background:linear-gradient(135deg, rgba(239, 68, 68, 0.22) 0%, rgba(185, 28, 28, 0.12) 60%, rgba(0, 0, 0, 0.4) 100%) !important;
+  border:1.5px solid rgba(248, 113, 113, 0.5) !important;
+  box-shadow:0 0 30px rgba(239, 68, 68, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter:blur(16px) !important;
+  -webkit-backdrop-filter:blur(16px) !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
 }
-.account-disabled-icon svg{width:30px; height:30px;}
-.account-disabled-icon path, .account-disabled-icon circle{stroke:var(--red); stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round;}
+.account-disabled-icon svg{width:34px; height:34px;}
+.account-disabled-icon path, .account-disabled-icon circle{stroke:#EF4444; stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 8px rgba(239,68,68,0.8));}
 .login-success-box .account-disabled-btn{
-  margin-top:20px; width:100%; background:var(--red); color:#fff; border:none; font-weight:700;
-  font-size:13.5px; padding:11px; border-radius:10px; cursor:pointer; transition:filter .15s;
+  margin-top:20px; width:100%; background:linear-gradient(135deg, #EF4444 0%, #DC2626 60%, #991B1B 100%) !important;
+  box-shadow:0 12px 28px -4px rgba(239,68,68,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;
+  color:#fff; border:1px solid rgba(255,255,255,0.25) !important; font-weight:800;
+  font-size:14px; padding:13px; border-radius:14px; cursor:pointer; transition:all .2s ease;
 }
-.login-success-box .account-disabled-btn:hover{filter:brightness(1.08);}
+.login-success-box .account-disabled-btn:hover{transform:translateY(-2px) scale(1.01); filter:brightness(1.08);}
 
 /* ==================== Popup de Logout (Sessão Encerrada) ==================== */
+.logout-box {
+  position:relative !important;
+  overflow:hidden !important;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(15, 23, 42, 0.78) 45%, rgba(6, 11, 24, 0.88) 100%) !important;
+  backdrop-filter:blur(36px) saturate(200%) !important;
+  -webkit-backdrop-filter:blur(36px) saturate(200%) !important;
+  border:1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius:26px !important;
+  padding:38px 30px 30px !important;
+  box-shadow:0 35px 90px -10px rgba(0,0,0,0.9), 0 0 45px rgba(6, 214, 160, 0.2), inset 0 1px 1px rgba(255,255,255,0.38) !important;
+}
 .logout-success-icon {
-  width: 68px; height: 68px; margin: 0 auto 18px; border-radius: 50%;
-  background: rgba(6, 214, 160, 0.15); border: 1px solid rgba(6, 214, 160, 0.35);
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 25px rgba(6, 214, 160, 0.25);
+  width: 72px !important; height: 72px !important; margin: 0 auto 20px !important; border-radius: 50% !important;
+  background: linear-gradient(135deg, rgba(6, 214, 160, 0.22) 0%, rgba(0, 229, 255, 0.12) 60%, rgba(0, 0, 0, 0.4) 100%) !important;
+  border: 1.5px solid rgba(6, 214, 160, 0.5) !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  box-shadow: 0 0 30px rgba(6, 214, 160, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
 }
 .logout-success-icon svg {
-  width: 32px; height: 32px; stroke: #06D6A0;
+  width: 34px; height: 34px; stroke: #06D6A0; filter: drop-shadow(0 0 8px rgba(6, 214, 160, 0.8));
 }
 .logout-box h3 {
-  font-size: 19px; font-weight: 800; color: #ffffff; margin-bottom: 8px; tracking-tight;
+  font-size: 20px !important; font-weight: 900 !important; color: #ffffff; margin-bottom: 8px; letter-spacing: -0.015em;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 .logout-box p {
-  color: #9ca3af; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;
+  color: #CBD5E1 !important; font-size: 13.5px !important; line-height: 1.5; margin-bottom: 22px; font-weight: 500;
 }
 .logout-btn-action {
-  width: 100%; padding: 12px 16px; border-radius: 12px; font-weight: 700; font-size: 13.5px;
-  background: linear-gradient(135deg, #06D6A0, #00E5FF); color: #060B18; border: none;
-  cursor: pointer; box-shadow: 0 4px 14px rgba(6, 214, 160, 0.3);
+  width: 100%; padding: 14px 20px; border-radius: 14px; font-weight: 800; font-size: 14px;
+  background: linear-gradient(135deg, #06D6A0, #00E5FF) !important; color: #060B18 !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  cursor: pointer; box-shadow: 0 10px 24px rgba(6, 214, 160, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
   transition: transform 0.2s ease, filter 0.2s ease;
 }
 .logout-btn-action:hover {
-  transform: translateY(-1px); filter: brightness(1.08);
+  transform: translateY(-2px) scale(1.01); filter: brightness(1.08);
 }
 
 /* ==================== Responsividade Master Fluida em Todos os Dispositivos ==================== */
