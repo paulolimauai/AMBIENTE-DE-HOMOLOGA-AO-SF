@@ -1035,23 +1035,63 @@ body.light .header-live-time {
   background:rgba(255,255,255,0.22); color:#FFFFFF; border:1px solid rgba(255,255,255,0.4);
 }
 .mobile-drawer-nav button .ic svg { width:18px; height:18px; display:block; stroke-width:2.2px; }
-.brand{display:flex; align-items:center; gap:11px; flex-shrink:0;}
+.brand{display:flex; align-items:center; gap:12px; flex-shrink:0;}
 .brand .logo{
-  width:42px; height:42px; border-radius:11px; background:linear-gradient(135deg,#3B82F6,#2563EB);
-  display:flex; align-items:center; justify-content:center; font-weight:800; color:#ffffff; font-size:18px; flex-shrink:0;
-  box-shadow:0 0 15px rgba(59,130,246,0.5);
+  width:40px; height:40px; border-radius:12px;
+  background:linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900; color:#ffffff; font-size:18px; flex-shrink:0;
+  box-shadow:0 4px 18px rgba(59,130,246,0.45), inset 0 1px 1px rgba(255,255,255,0.4);
 }
-.brand .name{font-weight:700; font-size:16px; line-height:1.25; white-space:nowrap;}
-.brand .name span{display:block; color:#60a5fa; font-size:11px; letter-spacing:.06em; font-weight:700;}
+.brand .name{font-weight:800; font-size:15px; line-height:1.2; white-space:nowrap; letter-spacing:-0.01em;}
+.brand .name span{display:block; color:#F59E0B; font-size:10px; letter-spacing:.08em; font-weight:800; text-transform:uppercase;}
+
+.user{
+  display:flex; align-items:center; gap:10px; padding:4px 12px 4px 6px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09);
+  border-radius:14px; backdrop-filter:blur(12px); cursor:pointer;
+  transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.user:hover{
+  background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.18);
+  transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,0.3);
+}
+.user .avatar{
+  width:34px; height:34px; border-radius:50%;
+  background:linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:12.5px; color:#FFFFFF; flex-shrink:0;
+  border:2px solid rgba(245,158,11,0.4); box-shadow:0 0 12px rgba(245,158,11,0.35);
+}
+.user .uname{font-size:13px; font-weight:700; color:#F8FAFC; white-space:nowrap;}
+.user .urole{
+  display:inline-block; padding:1px 7px; border-radius:999px;
+  background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.25);
+  color:#60A5FA; font-weight:700; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em;
+}
+
+#logoutBtn{
+  background:rgba(239, 68, 68, 0.09) !important;
+  border:1px solid rgba(239, 68, 68, 0.25) !important;
+  color:#FCA5A5 !important; font-weight:700 !important; font-size:12.5px !important;
+  border-radius:11px !important; padding:7px 15px !important; transition:all 0.2s ease !important;
+}
+#logoutBtn:hover{
+  background:rgba(239, 68, 68, 0.22) !important; color:#FFFFFF !important;
+  border-color:rgba(239, 68, 68, 0.45) !important; transform:translateY(-1px) !important;
+  box-shadow:0 4px 14px rgba(239, 68, 68, 0.3) !important;
+}
 
 nav.menu{
-  display:flex; align-items:center; flex-wrap:nowrap; gap:8px; width:100%;
-  padding:8px 12px; max-width:1440px; margin:0 auto 16px;
-  overflow-x:auto; scrollbar-width:thin;
-  background:#0F1420;
-  border:1px solid rgba(255, 255, 255, 0.12);
-  border-radius:20px;
-  box-shadow:0 20px 45px -10px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.15);
+  display:flex; align-items:center; flex-wrap:nowrap; gap:6px; width:100%;
+  padding:6px 8px; max-width:1440px; margin:4px auto 14px;
+  overflow-x:auto; scrollbar-width:none;
+  background:rgba(15, 20, 32, 0.72) !important;
+  backdrop-filter:blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter:blur(20px) saturate(180%) !important;
+  border:1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius:16px !important;
+  box-shadow:0 12px 32px -8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1) !important;
 }
 /* Scrollbars Globais Slim & Elegantes */
 *::-webkit-scrollbar{width:5px; height:5px;}
@@ -1059,46 +1099,45 @@ nav.menu{
 *::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12); border-radius:10px;}
 *::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.25);}
 *{scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.12) transparent;}
-nav.menu::-webkit-scrollbar{height:4px;}
-nav.menu::-webkit-scrollbar-track{background:rgba(0,0,0,0.25); border-radius:10px;}
-nav.menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2); border-radius:10px;}
-nav.menu::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.4);}
+nav.menu::-webkit-scrollbar{height:3px;}
+nav.menu::-webkit-scrollbar-track{background:transparent;}
+nav.menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15); border-radius:10px;}
 
 .menu button{
-  position:relative; display:flex; align-items:center; gap:9px; text-align:left;
-  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
-  color:#CBD5E1 !important; padding:9px 16px; border-radius:13px; font-size:13px; font-weight:600; letter-spacing:0.015em; cursor:pointer;
-  white-space:nowrap; flex-shrink:0; transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1); user-select:none;
+  position:relative; display:flex; align-items:center; gap:8px; text-align:left;
+  background:transparent; border:1px solid transparent;
+  color:#94A3B8 !important; padding:8px 15px; border-radius:12px; font-size:13px; font-weight:600; letter-spacing:0.01em; cursor:pointer;
+  white-space:nowrap; flex-shrink:0; transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1); user-select:none;
 }
 .menu button:hover{
-  background:rgba(255,255,255,0.10); color:#FFFFFF !important; border-color:rgba(255,255,255,0.22);
-  transform:translateY(-2px); box-shadow:0 8px 22px rgba(0,0,0,0.45);
+  background:rgba(255,255,255,0.06); color:#F8FAFC !important; border-color:rgba(255,255,255,0.12);
+  transform:translateY(-1px);
 }
 .menu button.active{
   background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
-  color:#FFFFFF !important; font-weight:700; border:1px solid rgba(255,255,255,0.35) !important;
-  box-shadow:0 8px 25px rgba(37,99,235,0.48), inset 0 1px 1px rgba(255,255,255,0.35); transform:translateY(-2px);
+  color:#FFFFFF !important; font-weight:700 !important; border:1px solid rgba(147, 197, 253, 0.45) !important;
+  box-shadow:0 6px 20px rgba(37,99,235,0.38), inset 0 1px 0 rgba(255,255,255,0.4) !important; transform:translateY(-1px);
   text-shadow:0 1px 2px rgba(0,0,0,0.2);
 }
 .menu button.active::after{
-  content:''; position:absolute; bottom:-2px; left:15%; right:15%; height:3px;
-  background:linear-gradient(90deg, transparent, #60A5FA, transparent); border-radius:999px; box-shadow:0 0 12px #60A5FA;
+  content:''; position:absolute; bottom:-2px; left:18%; right:18%; height:2.5px;
+  background:linear-gradient(90deg, transparent, #60A5FA, transparent); border-radius:999px; box-shadow:0 0 10px #60A5FA;
 }
 .menu button .ic{
-  width:28px; height:28px; border-radius:9px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); color:#94A3B8;
+  width:26px; height:26px; border-radius:8px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); color:#94A3B8;
   display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s ease;
 }
-.menu button:hover .ic{background:rgba(255,255,255,0.18); color:#FFFFFF; border-color:rgba(255,255,255,0.25);}
+.menu button:hover .ic{background:rgba(255,255,255,0.14); color:#FFFFFF; border-color:rgba(255,255,255,0.2);}
 .menu button.active .ic{
-  background:rgba(255,255,255,0.22); color:#FFFFFF; border:1px solid rgba(255,255,255,0.4); box-shadow:inset 0 1px 0 rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.22) !important; color:#FFFFFF !important; border:1px solid rgba(255,255,255,0.38) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3);
 }
-.menu button .ic svg, .icon-btn svg{width:17px; height:17px; display:block; stroke-width:2.2px;}
+.menu button .ic svg, .icon-btn svg{width:16px; height:16px; display:block; stroke-width:2.2px;}
 
-body.light nav.menu{background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-color:#cbd5e1; box-shadow:0 10px 30px rgba(15,23,42,0.08);}
-body.light .menu button{color:#334155 !important; background:rgba(15,23,42,0.04); border-color:rgba(15,23,42,0.09); text-shadow:none;}
-body.light .menu button .ic{background:rgba(15,23,42,0.05); border-color:rgba(15,23,42,0.1); color:#64748B;}
-body.light .menu button:hover{background:rgba(15,23,42,0.08); color:#0F172A !important; border-color:rgba(15,23,42,0.2);}
-body.light .menu button:hover .ic{background:rgba(15,23,42,0.12); color:#0F172A;}
+body.light nav.menu{background:rgba(255, 255, 255, 0.85) !important; border-color:#cbd5e1 !important; box-shadow:0 10px 30px rgba(15,23,42,0.08) !important;}
+body.light .menu button{color:#475569 !important; background:transparent; border-color:transparent;}
+body.light .menu button .ic{background:rgba(15,23,42,0.04); border-color:rgba(15,23,42,0.08); color:#64748B;}
+body.light .menu button:hover{background:rgba(15,23,42,0.06); color:#0F172A !important;}
+body.light .menu button:hover .ic{background:rgba(15,23,42,0.1); color:#0F172A;}
 body.light .menu button.active{background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important; color:#FFFFFF !important; border-color:#2563EB !important; box-shadow:0 8px 24px rgba(37,99,235,0.35) !important;}
 body.light .menu button.active .ic{background:rgba(255,255,255,0.22) !important; color:#FFFFFF !important; border-color:rgba(255,255,255,0.4) !important;}
 body.light .menu button.active::after{background:linear-gradient(90deg, transparent, #2563EB, transparent) !important; box-shadow:0 0 10px #2563EB !important;}
