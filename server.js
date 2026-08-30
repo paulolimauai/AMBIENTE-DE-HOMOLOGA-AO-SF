@@ -240,15 +240,21 @@ const htmlContent = `<!DOCTYPE html>
     var dev = detectDevice();
     document.documentElement.setAttribute('data-device-type', dev);
 
-    var scale = localStorage.getItem('nexus_display_scale') || 'auto';
-    var actualScale = scale;
-    if (scale === 'auto') {
-      if (dev === 'mobile') actualScale = '100%';
-      else if (dev === 'tablet') actualScale = '95%';
-      else if (dev === 'ultrawide') actualScale = '110%';
-      else actualScale = '100%';
+    function computeOptimalScale() {
+      var w = window.innerWidth || screen.width || 1366;
+      var h = window.innerHeight || screen.height || 768;
+      if (w <= 640) return 1.0;
+      if (w <= 1024) return 0.88;
+      if (w < 1280 || h < 720) return 0.80;
+      if (w < 1440 || h < 820) return 0.85;
+      if (w < 1680 || h < 950) return 0.92;
+      if (w <= 1920 && h <= 1080) return 1.0;
+      if (w < 2560) return 1.10;
+      return 1.20;
     }
-    var scaleNum = parseFloat(actualScale) / 100 || 1;
+
+    var scale = localStorage.getItem('nexus_display_scale') || 'auto';
+    var scaleNum = (scale === 'auto') ? computeOptimalScale() : (parseFloat(scale) / 100 || 1);
     document.documentElement.style.setProperty('--app-zoom', scaleNum);
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -10352,14 +10358,42 @@ function applyDisplayScale(scaleVal) {
   document.documentElement.setAttribute('data-device-type', devType);
 
   var effectiveScale = scaleVal;
+  var scaleNum = 1;
+
   if (scaleVal === 'auto') {
-    if (devType === 'mobile') effectiveScale = '100%';
-    else if (devType === 'tablet') effectiveScale = '95%';
-    else if (devType === 'ultrawide') effectiveScale = '110%';
-    else effectiveScale = '100%';
+    var w = window.innerWidth || screen.width || 1366;
+    var h = window.innerHeight || screen.height || 768;
+
+    if (w <= 640) {
+      scaleNum = 1.0;
+      effectiveScale = '100%';
+    } else if (w <= 1024) {
+      scaleNum = 0.88;
+      effectiveScale = '88%';
+    } else if (w < 1280 || h < 720) {
+      scaleNum = 0.80;
+      effectiveScale = '80%';
+    } else if (w < 1440 || h < 820) {
+      scaleNum = 0.85;
+      effectiveScale = '85%';
+    } else if (w < 1680 || h < 950) {
+      scaleNum = 0.92;
+      effectiveScale = '92%';
+    } else if (w <= 1920 && h <= 1080) {
+      scaleNum = 1.0;
+      effectiveScale = '100%';
+    } else if (w < 2560) {
+      scaleNum = 1.10;
+      effectiveScale = '110%';
+    } else {
+      scaleNum = 1.20;
+      effectiveScale = '120%';
+    }
+  } else {
+    scaleNum = parseFloat(scaleVal) / 100 || 1;
+    effectiveScale = scaleVal;
   }
 
-  var scaleNum = parseFloat(effectiveScale) / 100 || 1;
   document.documentElement.style.setProperty('--app-zoom', scaleNum);
   if (document.body) {
     document.body.style.zoom = scaleNum;
