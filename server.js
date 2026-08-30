@@ -1022,9 +1022,12 @@ body.light .header-live-time {
   transform:translateX(4px);
 }
 .mobile-drawer-nav button.active {
-  background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-  color:#FFFFFF; font-weight:700; border-color:rgba(255,255,255,0.35);
-  box-shadow:0 8px 25px rgba(37,99,235,0.45);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.22) 0%, rgba(37, 99, 235, 0.12) 100%) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  color: #FFFFFF !important; font-weight: 700;
+  border: 1px solid rgba(96, 165, 250, 0.48) !important;
+  box-shadow: 0 6px 24px rgba(37, 99, 235, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
 }
 .mobile-drawer-nav button .ic {
   width:28px; height:28px; border-radius:9px; background:rgba(255,255,255,0.06);
@@ -1032,7 +1035,7 @@ body.light .header-live-time {
   display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s ease;
 }
 .mobile-drawer-nav button.active .ic {
-  background:rgba(255,255,255,0.22); color:#FFFFFF; border:1px solid rgba(255,255,255,0.4);
+  background: rgba(59, 130, 246, 0.28) !important; color: #60A5FA !important; border: 1px solid rgba(147, 197, 253, 0.5) !important; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
 .mobile-drawer-nav button .ic svg { width:18px; height:18px; display:block; stroke-width:2.2px; }
 .brand{display:flex; align-items:center; gap:12px; flex-shrink:0;}
@@ -1114,14 +1117,17 @@ nav.menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15); border-radi
   transform:translateY(-1px);
 }
 .menu button.active{
-  background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
-  color:#FFFFFF !important; font-weight:700 !important; border:1px solid rgba(147, 197, 253, 0.45) !important;
-  box-shadow:0 6px 20px rgba(37,99,235,0.38), inset 0 1px 0 rgba(255,255,255,0.4) !important; transform:translateY(-1px);
-  text-shadow:0 1px 2px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.22) 0%, rgba(37, 99, 235, 0.12) 100%) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  color:#FFFFFF !important; font-weight:700 !important;
+  border:1px solid rgba(96, 165, 250, 0.48) !important;
+  box-shadow:0 6px 24px rgba(37,99,235,0.28), inset 0 1px 1px rgba(255,255,255,0.45) !important; transform:translateY(-1px);
+  text-shadow:0 0 10px rgba(96,165,250,0.4);
 }
 .menu button.active::after{
   content:''; position:absolute; bottom:-2px; left:18%; right:18%; height:2.5px;
-  background:linear-gradient(90deg, transparent, #60A5FA, transparent); border-radius:999px; box-shadow:0 0 10px #60A5FA;
+  background:linear-gradient(90deg, transparent, #60A5FA, #3B82F6, transparent); border-radius:999px; box-shadow:0 0 12px #60A5FA, 0 0 4px #3B82F6;
 }
 .menu button .ic{
   width:26px; height:26px; border-radius:8px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); color:#94A3B8;
@@ -1129,7 +1135,7 @@ nav.menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15); border-radi
 }
 .menu button:hover .ic{background:rgba(255,255,255,0.14); color:#FFFFFF; border-color:rgba(255,255,255,0.2);}
 .menu button.active .ic{
-  background:rgba(255,255,255,0.22) !important; color:#FFFFFF !important; border:1px solid rgba(255,255,255,0.38) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,0.3);
+  background:rgba(59, 130, 246, 0.28) !important; color:#60A5FA !important; border:1px solid rgba(147, 197, 253, 0.5) !important; box-shadow:0 0 10px rgba(59,130,246,0.3), inset 0 1px 0 rgba(255,255,255,0.35);
 }
 .menu button .ic svg, .icon-btn svg{width:16px; height:16px; display:block; stroke-width:2.2px;}
 
@@ -1138,8 +1144,8 @@ body.light .menu button{color:#475569 !important; background:transparent; border
 body.light .menu button .ic{background:rgba(15,23,42,0.04); border-color:rgba(15,23,42,0.08); color:#64748B;}
 body.light .menu button:hover{background:rgba(15,23,42,0.06); color:#0F172A !important;}
 body.light .menu button:hover .ic{background:rgba(15,23,42,0.1); color:#0F172A;}
-body.light .menu button.active{background:linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important; color:#FFFFFF !important; border-color:#2563EB !important; box-shadow:0 8px 24px rgba(37,99,235,0.35) !important;}
-body.light .menu button.active .ic{background:rgba(255,255,255,0.22) !important; color:#FFFFFF !important; border-color:rgba(255,255,255,0.4) !important;}
+body.light .menu button.active{background:linear-gradient(135deg, rgba(37, 99, 235, 0.16) 0%, rgba(29, 78, 216, 0.08) 100%) !important; color:#1D4ED8 !important; border-color:rgba(37, 99, 235, 0.35) !important; box-shadow:0 6px 20px rgba(37,99,235,0.15), inset 0 1px 1px rgba(255,255,255,0.8) !important;}
+body.light .menu button.active .ic{background:rgba(37, 99, 235, 0.15) !important; color:#1D4ED8 !important; border-color:rgba(37, 99, 235, 0.3) !important;}
 body.light .menu button.active::after{background:linear-gradient(90deg, transparent, #2563EB, transparent) !important; box-shadow:0 0 10px #2563EB !important;}
 
 /* ==================== Correção Completa de Contraste do Modo Claro (Light Mode Contrast Fix) ==================== */
