@@ -1382,17 +1382,81 @@ body.light .dev-signature-name{
   margin-top:140px !important;
   max-width:1440px; margin-left:auto; margin-right:auto; width:100%;
 }
-.right{display:flex; align-items:center; gap:16px; flex-shrink:0;}
+.right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
 .icon-btn{
-  width:40px; height:40px; border-radius:11px; background:var(--card); border:1px solid var(--card-border);
-  display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; font-size:16px; flex-shrink:0;
+  width:38px; height:38px; border-radius:12px;
+  background:rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter:blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter:blur(16px) saturate(180%) !important;
+  border:1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow:0 4px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.22) !important;
+  color:#E2E8F0 !important; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; position:relative; font-size:16px; flex-shrink:0;
+  transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-.icon-btn .dot{position:absolute; top:8px; right:8px; width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 0 2px var(--sidebar);}
-.user{display:flex; align-items:center; gap:10px; cursor:pointer; min-width:140px; min-height:42px;}
-.avatar{width:42px; height:42px; min-width:42px; min-height:42px; border-radius:50%; background:linear-gradient(135deg,#f0a63a,#d85bb0); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; color:#1b1200; flex-shrink:0;}
-.user .uname{font-size:15.5px; font-weight:700; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px; min-height:19px;}
-.user .urole{font-size:12px; color:var(--text-faint); white-space:nowrap; min-height:15px;}
-.topheader-row .btn-ghost{padding:10px 18px; font-size:13px; flex-shrink:0;}
+.icon-btn:hover{
+  background:rgba(255, 255, 255, 0.12) !important;
+  border-color:rgba(255, 255, 255, 0.28) !important;
+  transform:translateY(-1.5px) !important;
+  box-shadow:0 8px 24px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.4) !important;
+  color:#FFFFFF !important;
+}
+.icon-btn .dot{position:absolute; top:7px; right:7px; width:7px; height:7px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981;}
+.user{
+  display:inline-flex !important; align-items:center !important; gap:10px !important;
+  padding:4px 14px 4px 6px !important; border-radius:999px !important;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+  backdrop-filter:blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter:blur(20px) saturate(190%) !important;
+  border:1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow:0 8px 24px -4px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  cursor:pointer !important; min-width:unset; min-height:unset;
+  transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.user:hover{
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.06) 100%) !important;
+  border-color:rgba(255, 255, 255, 0.3) !important;
+  transform:translateY(-1.5px) !important;
+  box-shadow:0 12px 32px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+}
+.avatar{
+  width:32px !important; height:32px !important; min-width:32px !important; min-height:32px !important;
+  border-radius:50% !important;
+  background:linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%) !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  font-weight:800 !important; font-size:12px !important; color:#FFFFFF !important;
+  border:1.5px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow:0 0 14px rgba(245, 158, 11, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  flex-shrink:0 !important;
+}
+.user .uname{font-size:13px !important; font-weight:700 !important; color:#F8FAFC !important; white-space:nowrap !important; letter-spacing:-0.01em !important; text-transform:capitalize !important;}
+.user .urole{
+  display:inline-block !important; padding:2px 8px !important; border-radius:999px !important;
+  background:rgba(59, 130, 246, 0.16) !important; border:1px solid rgba(96, 165, 250, 0.35) !important;
+  color:#93C5FD !important; font-weight:700 !important; font-size:9.5px !important;
+  letter-spacing:0.06em !important; text-transform:uppercase !important;
+  backdrop-filter:blur(8px) !important; min-height:unset;
+}
+.topheader-row .btn-ghost,
+.topheader-row #logoutBtn{
+  height:36px !important; border-radius:12px !important; padding:0 16px !important;
+  background:linear-gradient(135deg, rgba(239, 68, 68, 0.14) 0%, rgba(185, 28, 28, 0.06) 100%) !important;
+  backdrop-filter:blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter:blur(16px) saturate(180%) !important;
+  border:1px solid rgba(248, 113, 113, 0.35) !important;
+  color:#FCA5A5 !important; font-weight:700 !important; font-size:12.5px !important;
+  box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 14px rgba(239, 68, 68, 0.15) !important;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  cursor:pointer !important; flex-shrink:0 !important;
+  transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.topheader-row .btn-ghost:hover,
+.topheader-row #logoutBtn:hover{
+  background:linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.2) 100%) !important;
+  border-color:rgba(248, 113, 113, 0.6) !important; color:#FFFFFF !important;
+  transform:translateY(-1.5px) !important;
+  box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 24px rgba(239, 68, 68, 0.4) !important;
+}
 
 /* ==================== Estilo Universal para Botões de Ação (Editar, Excluir, Ações) ==================== */
 .row-actions {
@@ -3370,9 +3434,15 @@ body.light .scale-dropdown {
                 var n = document.getElementById('headerName');
                 var r = document.getElementById('headerRole');
                 var a = document.getElementById('headerAvatar');
-                if (n) n.textContent = u.name;
+                var formatted = u.name.toLowerCase().split(' ').map(function(w){
+                  return (['de','da','do','dos','das','e'].indexOf(w) !== -1) ? w : (w.charAt(0).toUpperCase() + w.slice(1));
+                }).join(' ');
+                if (n) n.textContent = formatted;
                 if (r) r.textContent = u.role || 'Usuário';
-                if (a) a.textContent = u.name.trim().split(/\s+/).map(function(x){return x[0];}).slice(0,2).join('').toUpperCase();
+                if (a) {
+                  var p = u.name.trim().split(/\s+/);
+                  a.textContent = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
+                }
               }
             }
             setTimeout(function(){
@@ -5498,15 +5568,32 @@ function updateViewModeBanner(){
   }
 }
 
+function formatDisplayName(str){
+  if (!str) return '';
+  return str.toLowerCase().split(' ').map(w => {
+    if (['de', 'da', 'do', 'dos', 'das', 'e'].includes(w)) return w;
+    return w.charAt(0).toUpperCase() + w.slice(1);
+  }).join(' ');
+}
+
 function updateHeaderUser(){
   if (!currentUser) return;
   const unameEl = document.getElementById('headerName');
   const avatarEl = document.getElementById('headerAvatar');
   const roleEl = document.getElementById('headerRole');
 
-  if(unameEl) unameEl.textContent = currentUser.name;
+  if(unameEl) unameEl.textContent = formatDisplayName(currentUser.name);
   if(roleEl) roleEl.textContent = currentUser.role || 'Usuário';
-  if(avatarEl) avatarEl.textContent = currentUser.name.trim().split(/\s+/).map(n=>n[0]).slice(0,2).join('').toUpperCase();
+  if(avatarEl) {
+    const rawParts = currentUser.name.trim().split(/\s+/);
+    let inits = 'PL';
+    if (rawParts.length >= 2) {
+      inits = (rawParts[0][0] + rawParts[1][0]).toUpperCase();
+    } else if (rawParts.length === 1) {
+      inits = rawParts[0].slice(0, 2).toUpperCase();
+    }
+    avatarEl.textContent = inits;
+  }
 }
 
 function periodPickerHTML(){
