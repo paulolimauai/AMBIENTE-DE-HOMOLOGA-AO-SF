@@ -1049,40 +1049,113 @@ body.light .header-live-time {
 .brand .name{font-weight:800; font-size:15px; line-height:1.2; white-space:nowrap; letter-spacing:-0.01em;}
 .brand .name span{display:block; color:#F59E0B; font-size:10px; letter-spacing:.08em; font-weight:800; text-transform:uppercase;}
 
-.user{
-  display:flex; align-items:center; gap:10px; padding:4px 12px 4px 6px;
-  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09);
-  border-radius:14px; backdrop-filter:blur(12px); cursor:pointer;
-  transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.user:hover{
-  background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.18);
-  transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,0.3);
-}
-.user .avatar{
-  width:34px; height:34px; border-radius:50%;
-  background:linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
-  display:flex; align-items:center; justify-content:center;
-  font-weight:800; font-size:12.5px; color:#FFFFFF; flex-shrink:0;
-  border:2px solid rgba(245,158,11,0.4); box-shadow:0 0 12px rgba(245,158,11,0.35);
-}
-.user .uname{font-size:13px; font-weight:700; color:#F8FAFC; white-space:nowrap;}
-.user .urole{
-  display:inline-block; padding:1px 7px; border-radius:999px;
-  background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.25);
-  color:#60A5FA; font-weight:700; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em;
+.icon-btn,
+.scale-selector-wrap #scaleMenuBtn,
+#miniThemeBtn,
+#notifBtn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  color: #CBD5E1 !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-#logoutBtn{
-  background:rgba(239, 68, 68, 0.09) !important;
-  border:1px solid rgba(239, 68, 68, 0.25) !important;
-  color:#FCA5A5 !important; font-weight:700 !important; font-size:12.5px !important;
-  border-radius:11px !important; padding:7px 15px !important; transition:all 0.2s ease !important;
+.icon-btn:hover,
+.scale-selector-wrap #scaleMenuBtn:hover,
+#miniThemeBtn:hover,
+#notifBtn:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%) !important;
+  border-color: rgba(96, 165, 250, 0.45) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 20px rgba(59, 130, 246, 0.3) !important;
 }
-#logoutBtn:hover{
-  background:rgba(239, 68, 68, 0.22) !important; color:#FFFFFF !important;
-  border-color:rgba(239, 68, 68, 0.45) !important; transform:translateY(-1px) !important;
-  box-shadow:0 4px 14px rgba(239, 68, 68, 0.3) !important;
+
+.user {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 5px 14px 5px 6px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.28), 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.user:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  border-color: rgba(96, 165, 250, 0.45) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 10px 28px rgba(59, 130, 246, 0.35) !important;
+}
+
+.user .avatar {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  color: #FFFFFF !important;
+  flex-shrink: 0 !important;
+  border: 2px solid rgba(253, 230, 138, 0.6) !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+}
+
+.user .uname {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #F8FAFC !important;
+  white-space: nowrap !important;
+  letter-spacing: -0.01em !important;
+}
+
+.user .urole {
+  display: inline-block !important;
+  padding: 2px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(59, 130, 246, 0.18) !important;
+  border: 1px solid rgba(147, 197, 253, 0.35) !important;
+  color: #93C5FD !important;
+  font-weight: 800 !important;
+  font-size: 9.5px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+#logoutBtn,
+.topheader-row #logoutBtn {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.16) 0%, rgba(185, 28, 28, 0.08) 100%) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid rgba(248, 113, 113, 0.38) !important;
+  color: #FCA5A5 !important;
+  font-weight: 800 !important;
+  font-size: 12.5px !important;
+  border-radius: 12px !important;
+  padding: 7px 16px !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 4px 16px rgba(239, 68, 68, 0.22) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#logoutBtn:hover,
+.topheader-row #logoutBtn:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35) 0%, rgba(220, 38, 38, 0.22) 100%) !important;
+  border-color: rgba(248, 113, 113, 0.65) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
 nav.menu{
