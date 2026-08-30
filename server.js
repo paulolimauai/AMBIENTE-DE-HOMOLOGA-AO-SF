@@ -149,9 +149,14 @@ async function initDatabase() {
       password VARCHAR(255) NOT NULL,
       role VARCHAR(50) NOT NULL DEFAULT 'Usuário',
       active BOOLEAN NOT NULL DEFAULT true,
-      created_at TIMESTAMP NOT NULL DEFAULT now()
+      created_at TIMESTAMP NOT NULL DEFAULT now(),
+      last_login TIMESTAMP WITH TIME ZONE
     );
   `);
+
+  try {
+    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;');
+  } catch(e) {}
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS dados_financeiros (
@@ -5289,6 +5294,23 @@ function formatDateBR(dateVal) {
   return String(dateVal);
 }
 
+function formatDateTimeWithSeconds(dateVal) {
+  if (!dateVal) return 'Primeiro acesso pendente';
+  try {
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return 'Primeiro acesso pendente';
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const seconds = String(d.getSeconds()).padStart(2, '0');
+    return day + '/' + month + '/' + year + ' às ' + hours + ':' + minutes + ':' + seconds;
+  } catch(e){
+    return 'Primeiro acesso pendente';
+  }
+}
+
 const inPeriod = t => {
   if (!t || !t.date) return false;
   if (currentPeriod.month === 0) return true;
@@ -8218,7 +8240,11 @@ function pageUsuarios(){
                   <span class="user-stat-chip">Orçamentos: <strong>\${stats.budCount}</strong></span>
                   <span class="user-stat-chip">Metas: <strong>\${stats.goalCount}</strong></span>
                   \${stats.lastDate ? \`<span class="user-stat-chip">Última mov: <strong>\${formatDateBR(stats.lastDate)}</strong></span>\` : ''}
-                \` : '<span class="user-stat-chip">Ainda sem atividade registrada</span>'}
+                \` : '<span class="user-stat-chip">Ainda sem movimentações</span>'}
+                <span class="user-stat-chip user-last-login-chip" style="background:rgba(59,130,246,0.14); border:1px solid rgba(96,165,250,0.35); color:#93C5FD; display:inline-flex; align-items:center; gap:5px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Último login: <strong style="color:#FFFFFF;">\${formatDateTimeWithSeconds(u.last_login)}</strong>
+                </span>
               </div>
             </div>
           </div>
@@ -11427,7 +11453,7 @@ const server = http.createServer((req, res) => {
         if (pool) {
           try {
             const result = await pool.query(
-              'SELECT id, name, email, password, role, active FROM usuarios WHERE LOWER(email) = LOWER($1)',
+              'SELECT id, name, email, password, role, active, last_login FROM usuarios WHERE LOWER(email) = LOWER($1)',
               [cleanEmail]
             );
             if (result.rows.length > 0) user = result.rows[0];
@@ -11467,15 +11493,24 @@ const server = http.createServer((req, res) => {
           }));
         }
 
+        const nowTimestamp = new Date().toISOString();
+        user.last_login = nowTimestamp;
+
+        if (pool) {
+          try {
+            await pool.query('UPDATE usuarios SET last_login = NOW() WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+          } catch(e) {}
+        }
+
         recordSystemLog(user.name, user.email, 'Login', 'Autenticação', 'Usuário realizou login com sucesso no sistema');
 
         try {
           const localUsers = getLocalUsers();
           const idx = localUsers.findIndex(u => u.email.toLowerCase() === user.email.toLowerCase());
           if (idx >= 0) {
-            localUsers[idx] = { ...localUsers[idx], ...user };
+            localUsers[idx] = { ...localUsers[idx], ...user, last_login: nowTimestamp };
           } else {
-            localUsers.push(user);
+            localUsers.push({ ...user, last_login: nowTimestamp });
           }
           saveLocalUsers(localUsers);
         } catch(e){}
@@ -11485,7 +11520,7 @@ const server = http.createServer((req, res) => {
         return res.end(JSON.stringify({
           success: true,
           token: token,
-          user: { id: user.id || Date.now(), name: user.name, email: user.email, role: user.role, active: user.active }
+          user: { id: user.id || Date.now(), name: user.name, email: user.email, role: user.role, active: user.active, last_login: nowTimestamp }
         }));
       } catch (err) {
         console.error('Erro no endpoint de login:', err);
@@ -11618,7 +11653,7 @@ const server = http.createServer((req, res) => {
   // Rota GET de Usuários
   if (req.method === 'GET' && parsedUrl.pathname === '/api/users') {
     if (pool) {
-      pool.query('SELECT id, name, email, password, role, active FROM usuarios ORDER BY id ASC')
+      pool.query('SELECT id, name, email, password, role, active, created_at, last_login FROM usuarios ORDER BY id ASC')
         .then(result => {
           if (result.rows && result.rows.length > 0) {
             saveLocalUsers(result.rows);
@@ -11674,14 +11709,15 @@ const server = http.createServer((req, res) => {
               for (const u of users) {
                 if (u && u.email && u.name) {
                   await client.query(
-                    `INSERT INTO usuarios (name, email, password, role, active)
-                     VALUES ($1, $2, $3, $4, $5)
+                    `INSERT INTO usuarios (name, email, password, role, active, last_login)
+                     VALUES ($1, $2, $3, $4, $5, $6)
                      ON CONFLICT (email) DO UPDATE
                      SET name = EXCLUDED.name,
                          password = EXCLUDED.password,
                          role = EXCLUDED.role,
-                         active = EXCLUDED.active;`,
-                    [u.name, u.email, u.password || '123456', u.role || 'Usuário', u.active !== false]
+                         active = EXCLUDED.active,
+                         last_login = COALESCE(EXCLUDED.last_login, usuarios.last_login);`,
+                    [u.name, u.email, u.password || '123456', u.role || 'Usuário', u.active !== false, u.last_login || null]
                   );
                 }
               }
