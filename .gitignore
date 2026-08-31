@@ -6,3 +6,4 @@ local_users.json
 system_logs.json
 .DS_Store
 Thumbs.db
+supabase/.temp/

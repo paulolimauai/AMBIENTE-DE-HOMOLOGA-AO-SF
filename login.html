@@ -515,132 +515,225 @@
             color: #059669;
         }
 
-        /* Assinatura Executiva do Desenvolvedor High-End */
+        /* ==================== Assinatura Executiva Ultra Brilhosa & Animada (Paulo Lima) ==================== */
+        @keyframes devGlowPulse {
+            0% {
+                box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 16px rgba(239, 68, 68, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.40), inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+                border-color: rgba(239, 68, 68, 0.55);
+            }
+            50% {
+                box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.90), 0 0 32px rgba(239, 68, 68, 0.75), 0 0 55px rgba(239, 68, 68, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.70), inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+                border-color: rgba(248, 113, 113, 0.90);
+            }
+            100% {
+                box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 16px rgba(239, 68, 68, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.40), inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+                border-color: rgba(239, 68, 68, 0.55);
+            }
+        }
+
+        @keyframes devShimmerSweep {
+            0% { transform: translateX(-150%) skewX(-24deg); }
+            35%, 100% { transform: translateX(260%) skewX(-24deg); }
+        }
+
+        @keyframes devIconPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 16px rgba(239, 68, 68, 0.80), inset 0 2px 4px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 0 28px rgba(248, 113, 113, 0.98), inset 0 2px 5px rgba(255, 255, 255, 0.95), inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        @keyframes devTextShine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        @keyframes devSparkleTwinkle {
+            0%, 100% { opacity: 0.35; transform: scale(0.8) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.3) rotate(180deg); filter: drop-shadow(0 0 6px #F87171); }
+        }
+
         .dev-signature {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.88) 50%, rgba(180, 83, 9, 0.10) 100%);
-            border: 1px solid rgba(245, 158, 11, 0.38);
-            border-radius: 999px;
-            padding: 6px 20px 6px 7px;
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.85), 0 0 24px rgba(245, 158, 11, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.20);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            text-decoration: none;
+            position: relative !important;
+            overflow: hidden !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.20) 0%, rgba(18, 18, 26, 0.88) 45%, rgba(6, 6, 10, 0.96) 100%) !important;
+            border: 1.5px solid rgba(239, 68, 68, 0.60) !important;
+            border-radius: 999px !important;
+            padding: 6px 20px 6px 7px !important;
+            backdrop-filter: blur(24px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+            animation: devGlowPulse 3s ease-in-out infinite !important;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            user-select: none !important;
+        }
+
+        /* Feixe de luz cintilante (Shimmer Sweep) atravessando a cápsula */
+        .dev-signature::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 55% !important;
+            height: 100% !important;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 25%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0.08) 75%, transparent 100%) !important;
+            pointer-events: none !important;
+            animation: devShimmerSweep 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+            z-index: 1 !important;
         }
 
         .dev-signature:hover {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.20) 0%, rgba(15, 23, 42, 0.92) 50%, rgba(245, 158, 11, 0.15) 100%);
-            border-color: rgba(245, 158, 11, 0.70);
-            box-shadow: 0 14px 38px rgba(0, 0, 0, 0.85), 0 0 32px rgba(245, 158, 11, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.30);
-            transform: translateY(-2px) scale(1.03);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.32) 0%, rgba(26, 26, 36, 0.94) 45%, rgba(10, 10, 15, 0.98) 100%) !important;
+            border-color: rgba(248, 113, 113, 0.98) !important;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.95), 0 0 45px rgba(239, 68, 68, 0.85), inset 0 1px 2px rgba(255, 255, 255, 0.75) !important;
+            transform: translateY(-3px) scale(1.045) !important;
         }
 
+        /* Ícone 3D Rubi / Vidro com pulso animado */
         .dev-signature-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 35%, #F59E0B 70%, #B45309 100%);
-            color: #050811;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 12px rgba(245, 158, 11, 0.65), inset 0 1px 2px rgba(255, 255, 255, 0.80);
+            width: 30px !important;
+            height: 30px !important;
+            border-radius: 50% !important;
+            flex-shrink: 0 !important;
+            background: radial-gradient(circle at 35% 28%, #FFA4A4 0%, #EF4444 38%, #DC2626 70%, #7F1D1D 100%) !important;
+            color: #FFFFFF !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.70) !important;
+            animation: devIconPulse 2.8s ease-in-out infinite !important;
+            position: relative !important;
+            z-index: 2 !important;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+
+        .dev-signature:hover .dev-signature-icon {
+            transform: scale(1.15) rotate(-6deg) !important;
         }
 
         .dev-signature-icon svg {
-            width: 13px;
-            height: 13px;
-            stroke-width: 2.8px;
-            display: block;
+            width: 14px !important;
+            height: 14px !important;
+            stroke-width: 2.8px !important;
+            display: block !important;
+            stroke: #FFFFFF !important;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) !important;
+            transition: transform 0.25s ease !important;
+        }
+        .dev-signature:hover .dev-signature-icon svg {
+            transform: scale(1.1) !important;
         }
 
         .dev-signature-text {
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
+            display: flex !important;
+            align-items: baseline !important;
+            gap: 7px !important;
+            position: relative !important;
+            z-index: 2 !important;
         }
 
         .dev-signature-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: #94A3B8;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            color: #E2E8F0 !important;
+            letter-spacing: 0.08em !important;
+            text-transform: uppercase !important;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8) !important;
         }
 
+        /* Nome com animação contínua de brilho metálico luminoso */
         .dev-signature-name {
-            font-size: 13.5px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #FFFFFF 0%, #FDE68A 45%, #F59E0B 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 0.04em;
-            filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.35));
-        }
-
-        body.light .dev-signature {
-            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
-            border-color: rgba(245, 158, 11, 0.45) !important;
-            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08), 0 0 16px rgba(245, 158, 11, 0.18) !important;
-        }
-
-        body.light .dev-signature:hover {
-            background: #FFFFFF !important;
-            border-color: #D97706 !important;
-            box-shadow: 0 8px 25px rgba(217, 119, 6, 0.30) !important;
-        }
-
-        body.light .dev-signature-label {
-            color: #475569 !important;
-        }
-
-        body.light .dev-signature-name {
-            background: linear-gradient(135deg, #D97706 0%, #B45309 100%) !important;
+            font-size: 14px !important;
+            font-weight: 900 !important;
+            background: linear-gradient(90deg, #FFFFFF 0%, #FEE2E2 20%, #EF4444 40%, #F87171 60%, #FFFFFF 80%, #FEE2E2 100%) !important;
+            background-size: 200% auto !important;
+            animation: devTextShine 3.2s linear infinite !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
-            filter: none !important;
+            letter-spacing: 0.05em !important;
+            filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.65)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+        }
+
+        .dev-sparkle {
+            display: inline-block !important;
+            font-size: 11px !important;
+            color: #F87171 !important;
+            -webkit-text-fill-color: #F87171 !important;
+            animation: devSparkleTwinkle 2.4s ease-in-out infinite !important;
+        }
+
+        /* Suporte Refinado para Tema Claro */
+        body.light .dev-signature {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(254, 242, 242, 0.92) 50%, rgba(255, 255, 255, 0.98) 100%) !important;
+            border-color: rgba(239, 68, 68, 0.50) !important;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.10), 0 0 20px rgba(239, 68, 68, 0.25) !important;
+        }
+        body.light .dev-signature:hover {
+            background: #FFFFFF !important;
+            border-color: #DC2626 !important;
+            box-shadow: 0 12px 32px rgba(220, 38, 38, 0.35), 0 0 35px rgba(239, 68, 68, 0.40) !important;
+        }
+        body.light .dev-signature-label {
+            color: #475569 !important;
+            text-shadow: none !important;
+        }
+        body.light .dev-signature-name {
+            background: linear-gradient(90deg, #991B1B 0%, #DC2626 25%, #EF4444 50%, #DC2626 75%, #991B1B 100%) !important;
+            background-size: 200% auto !important;
+            animation: devTextShine 3.2s linear infinite !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            filter: drop-shadow(0 1px 4px rgba(239, 68, 68, 0.35)) !important;
         }
     </style>
 </head>
 <body class="h-full flex flex-col justify-between items-center min-h-screen py-6 px-4 relative select-none auth-bg-cyber-grid">
     <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
 
-    <!-- 4K ULTRA SUCCESS MODAL OVERLAY -->
+    <!-- 4K ULTRA SUCCESS MODAL OVERLAY (ENTRADA) -->
     <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="loginSuccessOverlay" style="display:none;">
         <div class="absolute w-[380px] h-[380px] rounded-full bg-blue-500/20 blur-[100px] pointer-events-none animate-pulse"></div>
 
-        <div id="successModalBox" class="bg-gradient-to-br from-[#111827]/95 to-[#0A0F1D]/98 border border-blue-500/35 rounded-[28px] p-8 w-full max-w-[420px] text-center shadow-[0_30px_70px_rgba(0,0,0,0.85),0_0_40px_rgba(59,130,246,0.25)] transform translate-y-6 scale-90 transition-all duration-300 relative overflow-hidden pointer-events-auto">
+        <div id="successModalBox" class="bg-gradient-to-br from-[#111827]/95 via-[#0F172A]/96 to-[#0A0F1D]/98 border border-white/15 border-t-white/35 rounded-[28px] p-8 w-full max-w-[440px] text-center shadow-[0_35px_90px_rgba(0,0,0,0.88),0_0_40px_rgba(59,130,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto">
+            <div class="absolute top-0 left-[10%] right-[10%] h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none"></div>
             
             <span class="absolute top-4 right-6 text-blue-400 font-serif text-sm sparkle-twinkle">✦</span>
             <span class="absolute bottom-6 left-6 text-emerald-400 font-serif text-xs sparkle-twinkle" style="animation-delay: 1s;">✦</span>
 
             <!-- Multi-Ring Emerald/Sapphire Badge -->
-            <div class="relative w-24 h-24 mx-auto mb-5 flex items-center justify-center">
+            <div class="relative w-22 h-22 mx-auto mb-4 flex items-center justify-center">
                 <div class="absolute inset-0 rounded-full border border-dashed border-blue-500/30 animate-spin-slow"></div>
                 <div class="absolute inset-2 rounded-full border border-emerald-500/40 shadow-[0_0_25px_rgba(16,185,129,0.25)]"></div>
-                <div class="absolute inset-3 rounded-full bg-gradient-to-br from-emerald-500/20 via-[#111827] to-[#0A0F1D] border border-emerald-400/70 shadow-[inset_0_0_15px_rgba(16,185,129,0.30)]"></div>
-                
-                <svg class="relative z-10 w-12 h-12" viewBox="0 0 52 52">
-                    <circle class="check-circle" cx="26" cy="26" r="23" fill="none"/>
-                    <path class="check-tick" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                </svg>
+                <div class="absolute inset-2.5 rounded-full bg-gradient-to-br from-emerald-500/20 via-[#111827] to-[#0A0F1D] border border-emerald-400/70 shadow-[inset_0_0_15px_rgba(16,185,129,0.30)] flex items-center justify-center">
+                    <svg class="relative z-10 w-11 h-11" viewBox="0 0 52 52">
+                        <circle class="check-circle" cx="26" cy="26" r="23" fill="none"/>
+                        <path class="check-tick" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
             </div>
 
             <!-- Pill Badge -->
-            <div class="inline-block px-3.5 py-1 mb-2.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-extrabold uppercase tracking-widest text-emerald-400">
-                Acesso Autorizado
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 mb-2.5 rounded-full bg-blue-500/15 border border-blue-500/30 text-[10.5px] font-extrabold uppercase tracking-wider text-blue-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+                <span>Acesso Autorizado</span>
             </div>
 
             <!-- Título & Subtítulo Polidos -->
-            <h3 class="text-2xl font-black text-white mb-1.5 tracking-tight font-display" id="loginSuccessTitle">
+            <h3 class="text-2xl font-black text-white mb-2 tracking-tight font-display" id="loginSuccessTitle">
                 Login Efetuado!
             </h3>
-            <p class="text-[#94A3B8] font-medium text-xs sm:text-sm mb-5" id="loginSuccessSub">
+            <p class="text-[#94A3B8] font-medium text-xs sm:text-sm mb-5 leading-relaxed max-w-[340px] mx-auto" id="loginSuccessSub">
                 Redirecionando para o seu painel financeiro...
             </p>
 
@@ -649,6 +742,56 @@
                 <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 rounded-full w-0"></div>
             </div>
             <span class="text-[11px] font-semibold text-[#64748B]">Carregando ambiente seguro de alta precisão...</span>
+        </div>
+    </div>
+
+    <!-- 4K ULTRA LOGOUT MODAL OVERLAY (SAÍDA) -->
+    <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="logoutSuccessOverlay" style="display:none;" onclick="if(event.target===this) hideLogoutModal()">
+        <div class="absolute w-[380px] h-[380px] rounded-full bg-emerald-500/20 blur-[100px] pointer-events-none animate-pulse"></div>
+
+        <div id="logoutModalBox" class="bg-gradient-to-br from-[#111827]/95 via-[#0F172A]/96 to-[#0A0F1D]/98 border border-white/15 border-t-white/35 rounded-[28px] p-8 sm:p-9 w-full max-w-[440px] text-center shadow-[0_35px_90px_rgba(0,0,0,0.88),0_0_45px_rgba(16,185,129,0.22),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto">
+            
+            <div class="absolute top-0 left-[10%] right-[10%] h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none"></div>
+
+            <!-- Multi-Ring Emerald Badge Orb -->
+            <div class="relative w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full border border-dashed border-emerald-500/35 animate-spin-slow"></div>
+                <div class="absolute inset-2 rounded-full border border-emerald-400/50 shadow-[0_0_30px_rgba(16,185,129,0.35)]"></div>
+                <div class="absolute inset-2.5 rounded-full bg-gradient-to-br from-emerald-500/25 via-[#111827] to-[#0A0F1D] border border-emerald-400/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] flex items-center justify-center">
+                    <svg class="w-8 h-8 text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.85)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Pill Badge -->
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 mb-2.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10.5px] font-extrabold uppercase tracking-wider text-emerald-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Sessão Finalizada com Sucesso</span>
+            </div>
+
+            <!-- Título & Subtítulo Polidos -->
+            <h3 class="text-2xl font-black text-white mb-2 tracking-tight font-display" id="logoutSuccessTitle">
+                Sessão Encerrada
+            </h3>
+            <p class="text-[#94A3B8] font-medium text-xs sm:text-sm mb-6 leading-relaxed max-w-[340px] mx-auto" id="logoutSuccessMsg">
+                Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.
+            </p>
+
+            <!-- Botão de Ação -->
+            <button type="button" onclick="hideLogoutModal()" class="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm text-white bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-700 border border-white/25 shadow-[0_12px_28px_rgba(16,185,129,0.45),inset_0_1px_2px_rgba(255,255,255,0.6)] hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group cursor-pointer">
+                <span>Fazer Login Novamente</span>
+                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+
+            <!-- Barra de Progresso Inteligente -->
+            <div class="w-full bg-white/10 h-1 rounded-full overflow-hidden mt-4">
+                <div id="logoutRedirectProgress" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full w-full"></div>
+            </div>
         </div>
     </div>
 
@@ -911,7 +1054,7 @@
                 </div>
                 <div class="dev-signature-text">
                     <span class="dev-signature-label">Desenvolvido por</span>
-                    <strong class="dev-signature-name">Paulo Lima</strong>
+                    <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
                 </div>
             </div>
         </div>
@@ -1180,7 +1323,7 @@
             }
         });
 
-        // 4K Ultra Success Modal Function
+        // 4K Ultra Success Modal Function (Entrada)
         window.showLoginSuccessModal = function(titleMsg, subtitleMsg) {
             const overlay = document.getElementById('loginSuccessOverlay');
             if (!overlay) return;
@@ -1213,6 +1356,102 @@
                 }, 50);
             }
         };
+
+        // 4K Ultra Logout Modal Function (Saída)
+        let loginPageLogoutTimer = null;
+        window.showLogoutModal = function(titleMsg, subtitleMsg) {
+            const overlay = document.getElementById('logoutSuccessOverlay');
+            if (!overlay) return;
+
+            const titleEl = document.getElementById('logoutSuccessTitle');
+            const msgEl = document.getElementById('logoutSuccessMsg');
+            if (titleEl && titleMsg) titleEl.textContent = titleMsg;
+            if (msgEl && subtitleMsg) msgEl.textContent = subtitleMsg;
+
+            overlay.style.display = 'flex';
+            overlay.classList.remove('pointer-events-none');
+            void overlay.offsetHeight;
+            overlay.classList.remove('opacity-0');
+            overlay.classList.add('opacity-100');
+
+            const box = document.getElementById('logoutModalBox');
+            if (box) {
+                box.classList.remove('scale-90', 'translate-y-6');
+                box.classList.add('scale-100', 'translate-y-0');
+            }
+
+            const bar = document.getElementById('logoutRedirectProgress');
+            if (bar) {
+                bar.style.transition = 'none';
+                bar.style.width = '100%';
+                void bar.offsetHeight;
+                bar.style.transition = 'width 4.5s linear';
+                bar.style.width = '0%';
+            }
+
+            if (loginPageLogoutTimer) clearTimeout(loginPageLogoutTimer);
+            loginPageLogoutTimer = setTimeout(function() {
+                hideLogoutModal();
+            }, 4500);
+
+            if (box) {
+                box.onmouseenter = function() {
+                    if (loginPageLogoutTimer) clearTimeout(loginPageLogoutTimer);
+                    if (bar) {
+                        const computedWidth = window.getComputedStyle(bar).width;
+                        bar.style.transition = 'none';
+                        bar.style.width = computedWidth;
+                    }
+                };
+                box.onmouseleave = function() {
+                    if (loginPageLogoutTimer) clearTimeout(loginPageLogoutTimer);
+                    loginPageLogoutTimer = setTimeout(function() { hideLogoutModal(); }, 2500);
+                };
+            }
+        };
+
+        window.hideLogoutModal = function() {
+            const overlay = document.getElementById('logoutSuccessOverlay');
+            if (!overlay) return;
+            if (loginPageLogoutTimer) {
+                clearTimeout(loginPageLogoutTimer);
+                loginPageLogoutTimer = null;
+            }
+
+            const box = document.getElementById('logoutModalBox');
+            if (box) {
+                box.classList.remove('scale-100', 'translate-y-0');
+                box.classList.add('scale-95', 'translate-y-4');
+            }
+
+            overlay.classList.remove('opacity-100');
+            overlay.classList.add('opacity-0');
+
+            setTimeout(function() {
+                overlay.style.display = 'none';
+                overlay.classList.add('pointer-events-none');
+                const emailInput = document.getElementById('loginEmail');
+                if (emailInput) emailInput.focus();
+            }, 320);
+        };
+
+        // Verifica parâmetro ?logout=true na URL
+        try {
+            if (new URLSearchParams(window.location.search).get('logout') === 'true') {
+                setTimeout(function() {
+                    window.showLogoutModal();
+                }, 300);
+            }
+        } catch(e){}
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const overlay = document.getElementById('logoutSuccessOverlay');
+                if (overlay && overlay.style.display === 'flex') {
+                    window.hideLogoutModal();
+                }
+            }
+        });
 
         // 1. Submit Login
         async function handleLoginSubmit(e) {

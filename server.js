@@ -1367,71 +1367,186 @@ html.light code {
   display:flex; justify-content:center; padding:14px 16px calc(14px + env(safe-area-inset-bottom));
   background:var(--sidebar); border-top:1px solid var(--card-border);
 }
-.dev-signature{
-  position:relative;
-  display:inline-flex; align-items:center; gap:10px;
-  background:linear-gradient(135deg, rgba(239, 68, 68, 0.14) 0%, rgba(15, 15, 20, 0.78) 50%, rgba(0, 0, 0, 0.88) 100%) !important;
-  border:1px solid rgba(239, 68, 68, 0.45) !important;
-  border-radius:999px;
-  padding:6px 20px 6px 7px;
-  box-shadow:0 10px 30px -5px rgba(0,0,0,0.85), 0 0 22px rgba(239,68,68,0.28), inset 0 1px 1px rgba(255,255,255,0.30) !important;
-  backdrop-filter:blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter:blur(20px) saturate(180%) !important;
-  transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  text-decoration:none;
+/* ==================== Assinatura Executiva Ultra Brilhosa & Animada (Paulo Lima) ==================== */
+@keyframes devGlowPulse {
+  0% {
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 16px rgba(239, 68, 68, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.40), inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+    border-color: rgba(239, 68, 68, 0.55);
+  }
+  50% {
+    box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.90), 0 0 32px rgba(239, 68, 68, 0.75), 0 0 55px rgba(239, 68, 68, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.70), inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+    border-color: rgba(248, 113, 113, 0.90);
+  }
+  100% {
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 16px rgba(239, 68, 68, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.40), inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+    border-color: rgba(239, 68, 68, 0.55);
+  }
 }
-.dev-signature:hover{
-  background:linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(20, 20, 25, 0.85) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
-  border-color:rgba(239, 68, 68, 0.80) !important;
-  box-shadow:0 14px 38px rgba(0,0,0,0.90), 0 0 32px rgba(239,68,68,0.50), inset 0 1px 1px rgba(255,255,255,0.45) !important;
-  transform:translateY(-2px) scale(1.03);
+
+@keyframes devShimmerSweep {
+  0% { transform: translateX(-150%) skewX(-24deg); }
+  35%, 100% { transform: translateX(260%) skewX(-24deg); }
 }
-.dev-signature-icon{
-  width:28px; height:28px; border-radius:50%; flex-shrink:0;
-  background:linear-gradient(135deg, #EF4444 0%, #DC2626 40%, #991B1B 70%, #000000 100%) !important;
-  color:#FFFFFF !important;
-  display:flex; align-items:center; justify-content:center;
-  border:1.5px solid rgba(255,255,255,0.40) !important;
-  box-shadow:0 0 14px rgba(239,68,68,0.65), inset 0 1px 2px rgba(255,255,255,0.75) !important;
+
+@keyframes devIconPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.80), inset 0 2px 4px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 28px rgba(248, 113, 113, 0.98), inset 0 2px 5px rgba(255, 255, 255, 0.95), inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
 }
-.dev-signature-icon svg{
-  width:13px; height:13px; stroke-width:2.8px; display:block;
-  stroke:#FFFFFF !important;
+
+@keyframes devTextShine {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
 }
-.dev-signature-text{
-  display:flex; align-items:baseline; gap:6px;
+
+@keyframes devSparkleTwinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.3) rotate(180deg); filter: drop-shadow(0 0 6px #F87171); }
 }
-.dev-signature-label{
-  font-size:11px; font-weight:700; color:#E2E8F0 !important; letter-spacing:0.06em; text-transform:uppercase;
+
+.dev-signature {
+  position: relative !important;
+  overflow: hidden !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.20) 0%, rgba(18, 18, 26, 0.88) 45%, rgba(6, 6, 10, 0.96) 100%) !important;
+  border: 1.5px solid rgba(239, 68, 68, 0.60) !important;
+  border-radius: 999px !important;
+  padding: 6px 20px 6px 7px !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  animation: devGlowPulse 3s ease-in-out infinite !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  user-select: none !important;
 }
-.dev-signature-name{
-  font-size:13.5px; font-weight:900;
-  color:#FFFFFF !important;
-  background:linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 55%, #FCA5A5 80%, #EF4444 100%) !important;
-  -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important;
-  letter-spacing:0.04em; filter:drop-shadow(0 2px 8px rgba(239,68,68,0.45)) !important;
+
+/* Feixe de luz cintilante (Shimmer Sweep) atravessando a cápsula */
+.dev-signature::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 55% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 25%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0.08) 75%, transparent 100%) !important;
+  pointer-events: none !important;
+  animation: devShimmerSweep 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+  z-index: 1 !important;
 }
-body.light .app-dev-credit{
-  background:rgba(255,255,255,0.90) !important;
-  border-top-color:#e2e8f0 !important;
+
+.dev-signature:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.32) 0%, rgba(26, 26, 36, 0.94) 45%, rgba(10, 10, 15, 0.98) 100%) !important;
+  border-color: rgba(248, 113, 113, 0.98) !important;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.95), 0 0 45px rgba(239, 68, 68, 0.85), inset 0 1px 2px rgba(255, 255, 255, 0.75) !important;
+  transform: translateY(-3px) scale(1.045) !important;
 }
-body.light .dev-signature{
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 242, 242, 0.90) 100%) !important;
-  border-color:rgba(239, 68, 68, 0.40) !important;
-  box-shadow:0 6px 20px rgba(15,23,42,0.08), 0 0 16px rgba(239,68,68,0.20) !important;
+
+/* Ícone 3D Rubi / Vidro com pulso animado */
+.dev-signature-icon {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+  background: radial-gradient(circle at 35% 28%, #FFA4A4 0%, #EF4444 38%, #DC2626 70%, #7F1D1D 100%) !important;
+  color: #FFFFFF !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.70) !important;
+  animation: devIconPulse 2.8s ease-in-out infinite !important;
+  position: relative !important;
+  z-index: 2 !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-body.light .dev-signature:hover{
-  background:#FFFFFF !important;
-  border-color:#DC2626 !important;
-  box-shadow:0 8px 25px rgba(220,38,38,0.30) !important;
+
+.dev-signature:hover .dev-signature-icon {
+  transform: scale(1.15) rotate(-6deg) !important;
 }
-body.light .dev-signature-label{
-  color:#475569 !important;
+
+.dev-signature-icon svg {
+  width: 14px !important;
+  height: 14px !important;
+  stroke-width: 2.8px !important;
+  display: block !important;
+  stroke: #FFFFFF !important;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) !important;
+  transition: transform 0.25s ease !important;
 }
-body.light .dev-signature-name{
-  background:linear-gradient(135deg, #000000 0%, #DC2626 100%) !important;
-  -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important;
-  filter:none !important;
+.dev-signature:hover .dev-signature-icon svg {
+  transform: scale(1.1) !important;
+}
+
+.dev-signature-text {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 7px !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.dev-signature-label {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  color: #E2E8F0 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Nome com animação contínua de brilho metálico luminoso */
+.dev-signature-name {
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  background: linear-gradient(90deg, #FFFFFF 0%, #FEE2E2 20%, #EF4444 40%, #F87171 60%, #FFFFFF 80%, #FEE2E2 100%) !important;
+  background-size: 200% auto !important;
+  animation: devTextShine 3.2s linear infinite !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: 0.05em !important;
+  filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.65)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+.dev-sparkle {
+  display: inline-block !important;
+  font-size: 11px !important;
+  color: #F87171 !important;
+  -webkit-text-fill-color: #F87171 !important;
+  animation: devSparkleTwinkle 2.4s ease-in-out infinite !important;
+}
+
+/* Suporte Refinado para Tema Claro */
+body.light .dev-signature {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(254, 242, 242, 0.92) 50%, rgba(255, 255, 255, 0.98) 100%) !important;
+  border-color: rgba(239, 68, 68, 0.50) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.10), 0 0 20px rgba(239, 68, 68, 0.25) !important;
+}
+body.light .dev-signature:hover {
+  background: #FFFFFF !important;
+  border-color: #DC2626 !important;
+  box-shadow: 0 12px 32px rgba(220, 38, 38, 0.35), 0 0 35px rgba(239, 68, 68, 0.40) !important;
+}
+body.light .dev-signature-label {
+  color: #475569 !important;
+  text-shadow: none !important;
+}
+body.light .dev-signature-name {
+  background: linear-gradient(90deg, #991B1B 0%, #DC2626 25%, #EF4444 50%, #DC2626 75%, #991B1B 100%) !important;
+  background-size: 200% auto !important;
+  animation: devTextShine 3.2s linear infinite !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 1px 4px rgba(239, 68, 68, 0.35)) !important;
 }
 
 .cfg-divider{display:flex; align-items:center; gap:10px; margin:22px 0 14px;}
@@ -3183,150 +3298,351 @@ body.has-view-mode-banner .sidebar {
   width:12px; height:12px; border-radius:50%; background:#22c55e; flex-shrink:0; box-shadow:0 0 10px #22c55e;
 }
 
-/* ==================== Popup de login bem-sucedido (Dashboard Theme 4K Glass) ==================== */
-.login-success-overlay{
-  position:fixed; inset:0; background:rgba(4, 7, 15, 0.75) !important;
-  backdrop-filter:blur(28px) saturate(190%) !important; -webkit-backdrop-filter:blur(28px) saturate(190%) !important;
-  display:none; align-items:center; justify-content:center; z-index:99999 !important; padding:20px; opacity:0;
-  transition:opacity .3s ease;
+/* ==================== Popups de Autenticação 4K Glass (Entrada & Saída) ==================== */
+.login-success-overlay {
+  position: fixed; inset: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(6, 12, 28, 0.75) 0%, rgba(2, 5, 12, 0.88) 100%) !important;
+  backdrop-filter: blur(36px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(210%) !important;
+  display: none; align-items: center; justify-content: center;
+  z-index: 99999 !important; padding: 24px; opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.35s ease;
 }
-.login-success-overlay.show{display:flex;}
-.login-success-overlay.in{opacity:1;}
-.login-success-box{
-  position:relative !important;
-  overflow:hidden !important;
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(15, 23, 42, 0.78) 45%, rgba(6, 11, 24, 0.88) 100%) !important;
-  backdrop-filter:blur(36px) saturate(200%) !important;
-  -webkit-backdrop-filter:blur(36px) saturate(200%) !important;
-  border:1px solid rgba(255, 255, 255, 0.16) !important;
-  border-radius:26px !important;
-  padding:38px 30px 30px !important;
-  width:100% !important; max-width:380px !important; text-align:center !important;
-  box-shadow:0 35px 90px -10px rgba(0,0,0,0.9), 0 0 45px rgba(59, 130, 246, 0.2), inset 0 1px 1px rgba(255,255,255,0.38), inset 0 -1px 0 rgba(0,0,0,0.5) !important;
-  transform:translateY(16px) scale(.94); opacity:0;
-  transition:transform .35s cubic-bezier(.16,1,.3,1), opacity .35s ease;
+.login-success-overlay.show { display: flex; }
+.login-success-overlay.in { opacity: 1; }
+
+.login-success-box {
+  position: relative !important;
+  overflow: hidden !important;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 26, 48, 0.76) 40%, rgba(7, 12, 24, 0.94) 100%) !important;
+  backdrop-filter: blur(48px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(48px) saturate(220%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 28px !important;
+  padding: 42px 34px 34px !important;
+  width: 100% !important; max-width: 440px !important;
+  text-align: center !important;
+  box-shadow: 0 35px 95px -12px rgba(0, 0, 0, 0.88), 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 1px 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 2px rgba(0, 0, 0, 0.5) !important;
+  transform: translateY(22px) scale(0.92); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease !important;
 }
+
 .login-success-box::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 15%;
-  right: 15%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.8), rgba(52, 211, 153, 0.8), transparent);
+  left: 10%;
+  right: 10%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), rgba(52, 211, 153, 0.85), rgba(96, 165, 250, 0.75), transparent);
   filter: blur(0.5px);
   pointer-events: none;
 }
-.login-success-overlay.in .login-success-box{transform:translateY(0) scale(1); opacity:1;}
-.login-success-check{
-  width:72px !important; height:72px !important; margin:0 auto 20px !important; border-radius:50% !important;
-  background:linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 60%, rgba(0, 0, 0, 0.4) 100%) !important;
-  border:1.5px solid rgba(52, 211, 153, 0.5) !important;
-  box-shadow:0 0 30px rgba(16, 185, 129, 0.45), inset 0 1px 2px rgba(255,255,255,0.6) !important;
-  backdrop-filter:blur(16px) !important;
-  -webkit-backdrop-filter:blur(16px) !important;
-  display:flex !important; align-items:center !important; justify-content:center !important;
+
+.login-success-overlay.in .login-success-box {
+  transform: translateY(0) scale(1) !important;
+  opacity: 1 !important;
 }
-.login-success-check svg{width:36px; height:36px;}
-.login-success-check circle{stroke:rgba(16, 185, 129, 0.4); stroke-width:2.5;}
-.login-success-check path{
-  stroke:#10B981; stroke-width:4; stroke-linecap:round; stroke-linejoin:round;
-  stroke-dasharray:40; stroke-dashoffset:40; animation:loginCheckDraw .45s ease .15s forwards;
-  filter:drop-shadow(0 0 8px rgba(16,185,129,0.85));
+
+/* Brilho atmosférico de fundo */
+.auth-ambient-glow {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  height: 160px;
+  filter: blur(44px);
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0.75;
+}
+.auth-ambient-glow.glow-blue {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.35) 0%, rgba(14, 165, 233, 0.15) 55%, transparent 75%);
+}
+.auth-ambient-glow.glow-emerald {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.35) 0%, rgba(6, 182, 212, 0.18) 55%, transparent 75%);
+}
+.auth-ambient-glow.glow-red {
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.35) 0%, rgba(220, 38, 38, 0.15) 55%, transparent 75%);
+}
+
+/* Badge de status em vidro */
+.auth-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 2;
+}
+.auth-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.auth-badge-logout {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: #34D399;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
+}
+.auth-badge-logout .auth-badge-dot {
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+}
+.auth-badge-success {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  color: #60A5FA;
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.15);
+}
+.auth-badge-success .auth-badge-dot {
+  background: #3B82F6;
+  box-shadow: 0 0 8px #3B82F6;
+}
+.auth-badge-error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  color: #F87171;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.15);
+}
+.auth-badge-error .auth-badge-dot {
+  background: #EF4444;
+  box-shadow: 0 0 8px #EF4444;
+}
+
+/* Ícone de Entrada (Checkmark 4K) */
+.login-success-check {
+  width: 80px !important;
+  height: 80px !important;
+  margin: 0 auto 18px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 30%, rgba(16, 185, 129, 0.28) 0%, rgba(59, 130, 246, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
+  border: 1.5px solid rgba(52, 211, 153, 0.55) !important;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative;
+  z-index: 2;
+}
+.login-success-check svg { width: 38px; height: 38px; }
+.login-success-check circle { stroke: rgba(16, 185, 129, 0.35); stroke-width: 2.5; }
+.login-success-check path {
+  stroke: #10B981; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 40; stroke-dashoffset: 40; animation: loginCheckDraw .45s ease .15s forwards;
+  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.85));
 }
 @keyframes loginCheckDraw{to{stroke-dashoffset:0;}}
-.login-success-box h3{
-  font-size:20px !important; font-weight:900 !important; color:#FFFFFF !important; margin-bottom:8px !important; letter-spacing:-0.015em !important;
-  text-shadow:0 2px 12px rgba(0,0,0,0.5);
+
+/* Ícone de Saída (Logout 4K Glass Orb) */
+.logout-success-icon {
+  width: 80px !important;
+  height: 80px !important;
+  margin: 0 auto 18px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 30%, rgba(16, 185, 129, 0.28) 0%, rgba(6, 182, 212, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
+  border: 1.5px solid rgba(52, 211, 153, 0.55) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.38), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.login-success-box p{
-  color:#CBD5E1 !important; font-size:13.5px !important; font-weight:500 !important; margin:0 0 20px !important; line-height:1.5 !important;
+.logout-box:hover .logout-success-icon {
+  transform: scale(1.04);
 }
-.login-success-progress-bar{
-  width:100% !important; height:5px !important; background:rgba(255,255,255,0.08) !important; border-radius:999px !important; overflow:hidden !important;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,0.5) !important;
+.logout-success-icon svg {
+  width: 36px;
+  height: 36px;
+  stroke: #34D399;
+  filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.85));
 }
-.login-success-progress-fill{
-  height:100% !important; width:0; background:linear-gradient(90deg, #3B82F6 0%, #06D6A0 50%, #10B981 100%) !important; border-radius:999px !important;
-  box-shadow:0 0 12px rgba(16, 185, 129, 0.8) !important;
-  animation:loginProgressFill 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+/* Tipografia Refinada 4K */
+.login-success-box h3 {
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  color: #FFFFFF !important;
+  margin-bottom: 9px !important;
+  letter-spacing: -0.02em !important;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 2;
+}
+.login-success-box p {
+  color: #94A3B8 !important;
+  font-size: 13.8px !important;
+  line-height: 1.6 !important;
+  font-weight: 500 !important;
+  margin: 0 auto 24px !important;
+  max-width: 370px !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Botão de Ação de Saída 4K ("Fazer Login Novamente →") */
+.logout-btn-action {
+  width: 100% !important;
+  padding: 15px 24px !important;
+  border-radius: 16px !important;
+  font-weight: 800 !important;
+  font-size: 14.5px !important;
+  letter-spacing: 0.01em !important;
+  background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  cursor: pointer !important;
+  box-shadow: 0 14px 30px -4px rgba(16, 185, 129, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 9px !important;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.logout-btn-action:hover {
+  transform: translateY(-2px) scale(1.015) !important;
+  background: linear-gradient(135deg, #34D399 0%, #10B981 50%, #059669 100%) !important;
+  box-shadow: 0 18px 36px -4px rgba(16, 185, 129, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+  filter: brightness(1.04);
+}
+.logout-btn-action:active {
+  transform: translateY(1px) scale(0.985) !important;
+}
+.logout-btn-arrow {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s ease;
+}
+.logout-btn-action:hover .logout-btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Barra de Tempo do Logout (Progresso Inteligente) */
+.logout-timer-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  margin-top: 18px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+.logout-timer-progress {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #10B981 0%, #06B6D4 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+}
+
+/* Barra de Progresso do Login */
+.login-success-progress-bar {
+  width: 100% !important;
+  height: 5px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+  position: relative;
+  z-index: 2;
+}
+.login-success-progress-fill {
+  height: 100% !important;
+  width: 0;
+  background: linear-gradient(90deg, #3B82F6 0%, #06B6D4 50%, #10B981 100%) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.85) !important;
+  animation: loginProgressFill 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 @keyframes loginProgressFill{
   from{width:0%;}
   to{width:100%;}
 }
-body.light .login-success-box{
-  background:linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%) !important;
-  border-color:#cbd5e1 !important;
-  box-shadow:0 25px 60px rgba(0,0,0,0.15) !important;
+
+/* Popup de Conta Desativada */
+.account-disabled-icon {
+  width: 80px !important;
+  height: 80px !important;
+  margin: 0 auto 18px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 30%, rgba(239, 68, 68, 0.28) 0%, rgba(185, 28, 28, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
+  border: 1.5px solid rgba(248, 113, 113, 0.55) !important;
+  box-shadow: 0 0 35px rgba(239, 68, 68, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative;
+  z-index: 2;
 }
-body.light .login-success-box h3{
-  color:#0f172a !important;
+.account-disabled-icon svg { width: 36px; height: 36px; }
+.account-disabled-icon path, .account-disabled-icon circle {
+  stroke: #EF4444; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8));
 }
-body.light .login-success-box p{
-  color:#64748b !important;
+.login-success-box .account-disabled-btn {
+  margin-top: 6px;
+  width: 100%;
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 60%, #991B1B 100%) !important;
+  box-shadow: 0 12px 28px -4px rgba(239, 68, 68, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.5) !important;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  font-weight: 800;
+  font-size: 14.5px;
+  padding: 14px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 2;
+}
+.login-success-box .account-disabled-btn:hover {
+  transform: translateY(-2px) scale(1.015);
+  filter: brightness(1.08);
+  box-shadow: 0 16px 32px -4px rgba(239, 68, 68, 0.65) !important;
 }
 
-/* ==================== Popup de conta desativada ==================== */
-.account-disabled-icon{
-  width:72px !important; height:72px !important; margin:0 auto 20px !important; border-radius:50% !important;
-  background:linear-gradient(135deg, rgba(239, 68, 68, 0.22) 0%, rgba(185, 28, 28, 0.12) 60%, rgba(0, 0, 0, 0.4) 100%) !important;
-  border:1.5px solid rgba(248, 113, 113, 0.5) !important;
-  box-shadow:0 0 30px rgba(239, 68, 68, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
-  backdrop-filter:blur(16px) !important;
-  -webkit-backdrop-filter:blur(16px) !important;
-  display:flex !important; align-items:center !important; justify-content:center !important;
+/* Suporte Refinado para Tema Claro */
+body.light .login-success-box {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.94) 0%, rgba(241, 245, 249, 0.97) 100%) !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
+  border-top: 1px solid rgba(255, 255, 255, 1) !important;
+  box-shadow: 0 30px 80px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.9), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
 }
-.account-disabled-icon svg{width:34px; height:34px;}
-.account-disabled-icon path, .account-disabled-icon circle{stroke:#EF4444; stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 8px rgba(239,68,68,0.8));}
-.login-success-box .account-disabled-btn{
-  margin-top:20px; width:100%; background:linear-gradient(135deg, #EF4444 0%, #DC2626 60%, #991B1B 100%) !important;
-  box-shadow:0 12px 28px -4px rgba(239,68,68,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;
-  color:#fff; border:1px solid rgba(255,255,255,0.25) !important; font-weight:800;
-  font-size:14px; padding:13px; border-radius:14px; cursor:pointer; transition:all .2s ease;
+body.light .login-success-box h3 {
+  color: #0F172A !important;
+  text-shadow: none !important;
 }
-.login-success-box .account-disabled-btn:hover{transform:translateY(-2px) scale(1.01); filter:brightness(1.08);}
-
-/* ==================== Popup de Logout (Sessão Encerrada) ==================== */
-.logout-box {
-  position:relative !important;
-  overflow:hidden !important;
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(15, 23, 42, 0.78) 45%, rgba(6, 11, 24, 0.88) 100%) !important;
-  backdrop-filter:blur(36px) saturate(200%) !important;
-  -webkit-backdrop-filter:blur(36px) saturate(200%) !important;
-  border:1px solid rgba(255, 255, 255, 0.16) !important;
-  border-radius:26px !important;
-  padding:38px 30px 30px !important;
-  box-shadow:0 35px 90px -10px rgba(0,0,0,0.9), 0 0 45px rgba(6, 214, 160, 0.2), inset 0 1px 1px rgba(255,255,255,0.38) !important;
+body.light .login-success-box p {
+  color: #475569 !important;
 }
-.logout-success-icon {
-  width: 72px !important; height: 72px !important; margin: 0 auto 20px !important; border-radius: 50% !important;
-  background: linear-gradient(135deg, rgba(6, 214, 160, 0.22) 0%, rgba(0, 229, 255, 0.12) 60%, rgba(0, 0, 0, 0.4) 100%) !important;
-  border: 1.5px solid rgba(6, 214, 160, 0.5) !important;
-  display: flex !important; align-items: center !important; justify-content: center !important;
-  box-shadow: 0 0 30px rgba(6, 214, 160, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+body.light .auth-ambient-glow {
+  opacity: 0.35;
 }
-.logout-success-icon svg {
-  width: 34px; height: 34px; stroke: #06D6A0; filter: drop-shadow(0 0 8px rgba(6, 214, 160, 0.8));
-}
-.logout-box h3 {
-  font-size: 20px !important; font-weight: 900 !important; color: #ffffff; margin-bottom: 8px; letter-spacing: -0.015em;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
-}
-.logout-box p {
-  color: #CBD5E1 !important; font-size: 13.5px !important; line-height: 1.5; margin-bottom: 22px; font-weight: 500;
-}
-.logout-btn-action {
-  width: 100%; padding: 14px 20px; border-radius: 14px; font-weight: 800; font-size: 14px;
-  background: linear-gradient(135deg, #06D6A0, #00E5FF) !important; color: #060B18 !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
-  cursor: pointer; box-shadow: 0 10px 24px rgba(6, 214, 160, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
-  transition: transform 0.2s ease, filter 0.2s ease;
-}
-.logout-btn-action:hover {
-  transform: translateY(-2px) scale(1.01); filter: brightness(1.08);
+body.light .logout-timer-bar {
+  background: rgba(0, 0, 0, 0.08);
 }
 
 /* ==================== Responsividade Master Fluida em Todos os Dispositivos ==================== */
@@ -3593,7 +3909,7 @@ body.light .scale-dropdown {
         </div>
         <div class="dev-signature-text">
           <span class="dev-signature-label">Desenvolvido por</span>
-          <strong class="dev-signature-name">PAULO LIMA</strong>
+          <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
         </div>
       </div>
     </div>
@@ -3772,7 +4088,7 @@ body.light .scale-dropdown {
       </div>
       <div class="dev-signature-text">
         <span class="dev-signature-label">Desenvolvido por</span>
-        <strong class="dev-signature-name">PAULO LIMA</strong>
+        <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
       </div>
     </div>
   </div>
@@ -4063,42 +4379,65 @@ body.light .scale-dropdown {
 
 <div class="toast" id="toast"><span class="d"></span><span id="toastMsg">Salvo com sucesso!</span></div>
 
-<div class="login-success-overlay" id="loginSuccessOverlay">
+<div class="login-success-overlay" id="loginSuccessOverlay" role="dialog" aria-modal="true">
   <div class="login-success-box">
+    <div class="auth-ambient-glow glow-blue"></div>
     <div class="login-success-check">
       <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
     </div>
+    <div class="auth-modal-badge auth-badge-success">
+      <span class="auth-badge-dot"></span>
+      <span>Acesso Autorizado</span>
+    </div>
     <h3 id="loginSuccessTitle">Login efetuado com sucesso!</h3>
-    <p id="loginSuccessMsg">Redirecionando para o seu painel...</p>
+    <p id="loginSuccessMsg">Redirecionando para o seu painel financeiro...</p>
     <div class="login-success-progress-bar">
       <div class="login-success-progress-fill"></div>
     </div>
   </div>
 </div>
 
-<div class="login-success-overlay" id="accountDisabledOverlay">
+<div class="login-success-overlay" id="accountDisabledOverlay" role="dialog" aria-modal="true">
   <div class="login-success-box">
+    <div class="auth-ambient-glow glow-red"></div>
     <div class="account-disabled-icon">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 8l8 8M16 8l-8 8"/></svg>
     </div>
+    <div class="auth-modal-badge auth-badge-error">
+      <span class="auth-badge-dot"></span>
+      <span>Acesso Restrito</span>
+    </div>
     <h3>Usuário desativado</h3>
     <p id="accountDisabledMsg">Seu usuário foi desativado pelo administrador. Entre em contato para mais informações.</p>
-    <button type="button" class="account-disabled-btn" id="accountDisabledCloseBtn">Entendi</button>
+    <button type="button" class="account-disabled-btn" id="accountDisabledCloseBtn" onclick="hideAccountDisabledPopup()">Entendi</button>
   </div>
 </div>
 
-<div class="login-success-overlay" id="logoutSuccessOverlay">
+<div class="login-success-overlay" id="logoutSuccessOverlay" role="dialog" aria-modal="true" onclick="if(event.target===this) hideLogoutPopup()">
   <div class="login-success-box logout-box">
+    <div class="auth-ambient-glow glow-emerald"></div>
     <div class="logout-success-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
         <polyline points="16 17 21 12 16 7"></polyline>
         <line x1="21" y1="12" x2="9" y2="12"></line>
       </svg>
     </div>
+    <div class="auth-modal-badge auth-badge-logout">
+      <span class="auth-badge-dot"></span>
+      <span>Sessão Finalizada com Sucesso</span>
+    </div>
     <h3>Sessão Encerrada</h3>
-    <p id="logoutSuccessMsg">Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas.</p>
-    <button type="button" class="logout-btn-action" id="logoutSuccessCloseBtn" onclick="hideLogoutPopup()">Fazer Login Novamente →</button>
+    <p id="logoutSuccessMsg">Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.</p>
+    <button type="button" class="logout-btn-action" id="logoutSuccessCloseBtn" onclick="hideLogoutPopup()">
+      <span>Fazer Login Novamente</span>
+      <svg class="logout-btn-arrow" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    <div class="logout-timer-bar" title="Fechamento automático">
+      <div class="logout-timer-progress" id="logoutTimerProgress"></div>
+    </div>
   </div>
 </div>
 
@@ -4617,47 +4956,100 @@ function showLoginSuccessPopup(msg){
       overlay.style.display = 'none';
     }, 350);
   }, 2500);
-}
+
 
 function showAccountDisabledPopup(msg){
   const overlay = document.getElementById('accountDisabledOverlay');
+  if(!overlay) return;
   if(msg) document.getElementById('accountDisabledMsg').textContent = msg;
+  overlay.style.display = 'flex';
   overlay.classList.add('show');
-  requestAnimationFrame(()=> overlay.classList.add('in'));
+  void overlay.offsetHeight;
+  overlay.classList.add('in');
 }
 function hideAccountDisabledPopup(){
   const overlay = document.getElementById('accountDisabledOverlay');
+  if(!overlay) return;
   overlay.classList.remove('in');
-  setTimeout(()=> overlay.classList.remove('show'), 250);
+  setTimeout(()=> {
+    overlay.classList.remove('show');
+    overlay.style.display = 'none';
+  }, 300);
 }
 
 let logoutTimer = null;
 function showLogoutPopup(msg){
   const overlay = document.getElementById('logoutSuccessOverlay');
   if(!overlay) return;
-  if(msg) document.getElementById('logoutSuccessMsg').textContent = msg;
+  if(msg) {
+    const msgEl = document.getElementById('logoutSuccessMsg');
+    if(msgEl) msgEl.textContent = msg;
+  }
+  overlay.style.display = 'flex';
   overlay.classList.add('show');
-  requestAnimationFrame(()=> overlay.classList.add('in'));
+  void overlay.offsetHeight;
+  overlay.classList.add('in');
+
+  const prog = document.getElementById('logoutTimerProgress');
+  if (prog) {
+    prog.style.transition = 'none';
+    prog.style.width = '100%';
+    void prog.offsetHeight;
+    prog.style.transition = 'width 4.5s linear';
+    prog.style.width = '0%';
+  }
 
   setTimeout(() => {
     const loginEmailInput = document.getElementById('loginEmail');
     if (loginEmailInput) loginEmailInput.focus();
-  }, 50);
+  }, 80);
 
   if (logoutTimer) clearTimeout(logoutTimer);
   logoutTimer = setTimeout(() => {
     hideLogoutPopup();
-  }, 1800);
+  }, 4500);
+
+  const box = overlay.querySelector('.logout-box');
+  if (box) {
+    box.onmouseenter = () => {
+      if (logoutTimer) clearTimeout(logoutTimer);
+      if (prog) {
+        const computedWidth = window.getComputedStyle(prog).width;
+        prog.style.transition = 'none';
+        prog.style.width = computedWidth;
+      }
+    };
+    box.onmouseleave = () => {
+      if (logoutTimer) clearTimeout(logoutTimer);
+      logoutTimer = setTimeout(() => hideLogoutPopup(), 2500);
+    };
+  }
 }
 
 function hideLogoutPopup(){
   const overlay = document.getElementById('logoutSuccessOverlay');
   if(!overlay) return;
+  if (logoutTimer) {
+    clearTimeout(logoutTimer);
+    logoutTimer = null;
+  }
   overlay.classList.remove('in');
   setTimeout(()=> {
     overlay.classList.remove('show');
-  }, 250);
+    overlay.style.display = 'none';
+    const loginEmailInput = document.getElementById('loginEmail');
+    if (loginEmailInput) loginEmailInput.focus();
+  }, 320);
 }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const logoutOverlay = document.getElementById('logoutSuccessOverlay');
+    if (logoutOverlay && logoutOverlay.classList.contains('show')) {
+      hideLogoutPopup();
+    }
+  }
+});
 
 window.checkServerRegPasswordMatch = function() {
   const p1 = document.getElementById('regPassword') ? document.getElementById('regPassword').value : '';
