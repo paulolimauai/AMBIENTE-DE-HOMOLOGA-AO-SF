@@ -1138,11 +1138,119 @@ body.light .auth-pass-toggle-btn:hover {
   margin-bottom: 14px;
   transition: all 0.2s ease;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+/* Suporte a Tema Claro - Botões e Modais de O.S. */
+body.light .btn-open-os,
+html.light .btn-open-os {
+  background: linear-gradient(135deg, #F0F7FF 0%, #E0EEFE 50%, #CFE2FE 100%) !important;
+  border: 1.5px solid #93C5FD !important;
+  border-top: 1.5px solid #BFDBFE !important;
+  color: #1D4ED8 !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12), inset 0 1px 1px #FFFFFF !important;
 }
-.os-consult-card:hover {
-  border-color: rgba(96, 165, 250, 0.45);
-  background: rgba(255, 255, 255, 0.06);
-  transform: translateY(-2px);
+body.light .btn-open-os:hover,
+html.light .btn-open-os:hover {
+  background: linear-gradient(135deg, #E0EEFE 0%, #CFE2FE 50%, #BFDBFE 100%) !important;
+  border-color: #3B82F6 !important;
+  color: #1E3A8A !important;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.22), inset 0 1px 1px #FFFFFF !important;
+}
+
+body.light .btn-consult-os,
+html.light .btn-consult-os {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+}
+body.light .btn-consult-os:hover,
+html.light .btn-consult-os:hover {
+  background: #E2E8F0 !important;
+  border-color: #94A3B8 !important;
+  color: #0F172A !important;
+}
+
+body.light .os-tabs-nav,
+html.light .os-tabs-nav {
+  border-bottom-color: #E2E8F0 !important;
+}
+body.light .os-tab-btn,
+html.light .os-tab-btn {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #64748B !important;
+}
+body.light .os-tab-btn:hover,
+html.light .os-tab-btn:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+body.light .os-tab-btn.active,
+html.light .os-tab-btn.active {
+  background: #EFF6FF !important;
+  border-color: #3B82F6 !important;
+  color: #1D4ED8 !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15) !important;
+}
+
+body.light .os-consult-card,
+html.light .os-consult-card {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+  color: #0F172A !important;
+}
+body.light .os-consult-card:hover,
+html.light .os-consult-card:hover {
+  border-color: #93C5FD !important;
+  background: #F8FAFC !important;
+}
+
+body.light #overlayNovaOrdem .modal,
+html.light #overlayNovaOrdem .modal {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15), 0 0 35px rgba(59, 130, 246, 0.08) !important;
+  color: #0F172A !important;
+}
+body.light #overlayNovaOrdem h2,
+html.light #overlayNovaOrdem h2 {
+  color: #0F172A !important;
+}
+body.light #overlayNovaOrdem p,
+html.light #overlayNovaOrdem p {
+  color: #475569 !important;
+}
+body.light #overlayNovaOrdem label,
+html.light #overlayNovaOrdem label {
+  color: #334155 !important;
+}
+body.light #overlayNovaOrdem input,
+body.light #overlayNovaOrdem textarea,
+body.light #overlayNovaOrdem select,
+html.light #overlayNovaOrdem input,
+html.light #overlayNovaOrdem textarea,
+html.light #overlayNovaOrdem select {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+body.light #overlayNovaOrdem input:focus,
+body.light #overlayNovaOrdem textarea:focus,
+body.light #overlayNovaOrdem select:focus,
+html.light #overlayNovaOrdem input:focus,
+html.light #overlayNovaOrdem textarea:focus,
+html.light #overlayNovaOrdem select:focus {
+  background: #FFFFFF !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+body.light #overlayNovaOrdem .close-x,
+html.light #overlayNovaOrdem .close-x {
+  color: #64748B !important;
+}
+body.light #overlayNovaOrdem .close-x:hover,
+html.light #overlayNovaOrdem .close-x:hover {
+  color: #0F172A !important;
 }
 
 /* ==================== App principal Centralizado ==================== */
