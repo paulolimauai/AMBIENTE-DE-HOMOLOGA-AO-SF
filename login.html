@@ -550,6 +550,90 @@
             transform: scale(1.15);
         }
 
+        /* Botão 4K Glass para Consultar / Acompanhar O.S. */
+        .btn-consult-os {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 255, 255, 0.14);
+            border-radius: 14px;
+            color: #E2E8F0;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+            transition: all 0.2s ease;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+        .btn-consult-os:hover {
+            background: rgba(59, 130, 246, 0.16);
+            border-color: rgba(96, 165, 250, 0.6);
+            color: #93C5FD;
+            transform: translateY(-1px);
+        }
+        .btn-consult-os svg {
+            transition: transform 0.2s ease;
+        }
+        .btn-consult-os:hover svg {
+            transform: scale(1.12);
+        }
+
+        /* Abas do Modal de O.S. */
+        .os-tabs-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+        }
+        .os-tab-btn {
+            flex: 1;
+            padding: 9px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: #94A3B8;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-family: inherit;
+        }
+        .os-tab-btn:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .os-tab-btn.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.15));
+            border-color: rgba(96, 165, 250, 0.55);
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+        }
+
+        /* Cards de O.S. Consultada */
+        .os-consult-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 14px;
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            text-align: left;
+        }
+        .os-consult-card:hover {
+            border-color: rgba(96, 165, 250, 0.45);
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-2px);
+        }
+
         /* ==================== Assinatura Executiva Ultra Brilhosa & Animada (Paulo Lima) ==================== */
         @keyframes devGlowPulse {
             0% {
@@ -830,11 +914,21 @@
         </div>
     </div>
 
-    <!-- MODAL ABRIR NOVA ORDEM DE SERVIÇO (PÚBLICO) -->
+    <!-- MODAL ABRIR E CONSULTAR ORDEM DE SERVIÇO (PÚBLICO) -->
     <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="overlayNovaOrdem" style="display:none;" onclick="if(event.target===this) closeNovaOrdemModal()">
-        <div id="boxNovaOrdemModal" class="bg-gradient-to-br from-[#111827]/96 via-[#0F172A]/96 to-[#0A0F1D]/98 border border-white/15 border-t-white/35 rounded-[28px] p-7 sm:p-8 w-full max-w-[540px] text-left shadow-[0_35px_90px_rgba(0,0,0,0.88),0_0_45px_rgba(59,130,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto max-h-[90vh] overflow-y-auto">
+        <div id="boxNovaOrdemModal" class="bg-gradient-to-br from-[#111827]/96 via-[#0F172A]/96 to-[#0A0F1D]/98 border border-white/15 border-t-white/35 rounded-[28px] p-7 sm:p-8 w-full max-w-[560px] text-left shadow-[0_35px_90px_rgba(0,0,0,0.88),0_0_45px_rgba(59,130,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto max-h-[90vh] overflow-y-auto">
             <button class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg font-bold focus:outline-none" type="button" onclick="closeNovaOrdemModal()">✕</button>
             
+            <!-- Abas de Navegação: Abrir Nova O.S. vs Consultar O.S. -->
+            <div class="os-tabs-nav">
+                <button type="button" id="tabBtnNovaOrdem" class="os-tab-btn active" onclick="switchOsModalTab('abrir')">
+                    ⚡ Abrir Nova O.S.
+                </button>
+                <button type="button" id="tabBtnConsultarOrdem" class="os-tab-btn" onclick="switchOsModalTab('consultar')">
+                    🔍 Consultar por Nome ou E-mail
+                </button>
+            </div>
+
             <div id="boxNovaOrdemForm">
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-500/35 text-blue-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
@@ -915,13 +1009,50 @@
                 <div class="bg-white/5 border border-blue-500/30 rounded-2xl p-4 mb-5">
                     <span class="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">Número do Protocolo</span>
                     <div class="text-2xl font-black text-blue-400 tracking-wider" id="osSuccessProtocol">OS-000000</div>
-                    <button type="button" onclick="copyOsProtocol()" class="mt-2.5 px-3 py-1 rounded-lg bg-blue-500/20 border border-blue-500/40 text-blue-300 text-xs font-bold hover:bg-blue-500/30 transition-colors">
-                        📋 Copiar Protocolo
-                    </button>
+                    <div class="flex items-center justify-center gap-2 mt-3 flex-wrap">
+                        <button type="button" onclick="copyOsProtocol()" class="px-3 py-1.5 rounded-lg bg-blue-500/20 border border-blue-500/40 text-blue-300 text-xs font-bold hover:bg-blue-500/30 transition-colors">
+                            📋 Copiar Protocolo
+                        </button>
+                        <button type="button" onclick="consultarProtocoloRecente()" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold hover:bg-emerald-500/30 transition-colors">
+                            🔍 Visualizar Chamado
+                        </button>
+                    </div>
                 </div>
                 <button type="button" onclick="closeNovaOrdemModal()" class="w-full py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 transition-all">
                     Concluir e Voltar
                 </button>
+            </div>
+
+            <!-- Aba de Consulta de O.S. Aberta por Nome ou E-mail -->
+            <div id="boxConsultarOrdem" class="hidden">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-500/35 text-blue-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                    <span>Acompanhamento de Chamados</span>
+                </div>
+                <h2 class="text-xl font-black text-white mb-1.5 flex items-center gap-2">
+                    Visualizar O.S. Aberta
+                </h2>
+                <p class="text-xs text-slate-400 mb-5 leading-relaxed">
+                    Consulte suas solicitações informando seu <strong>Nome Completo</strong> ou seu <strong>E-mail</strong> cadastrado.
+                </p>
+
+                <form id="formConsultarOrdem" onsubmit="executarConsultaOrdens(event)" class="mb-4">
+                    <div class="flex gap-2.5 flex-wrap sm:flex-nowrap">
+                        <input id="osConsultarQuery" required placeholder="Digite seu Nome ou E-mail cadastrado..." class="flex-1 bg-black/40 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                        <button type="submit" id="btnExecutarConsultaOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-white/20 shadow-md shadow-blue-500/30 transition-all shrink-0">
+                            🔍 Buscar O.S.
+                        </button>
+                    </div>
+                </form>
+
+                <div id="osConsultarFeedback" class="hidden p-3 rounded-xl text-xs font-semibold border bg-rose-950/90 border-rose-500/60 text-rose-200 mb-3"></div>
+
+                <div id="osConsultarResultados" class="max-h-[360px] overflow-y-auto pr-1">
+                    <div class="text-center py-8 text-slate-400 text-xs">
+                        <div class="text-3xl mb-2">🔎</div>
+                        Digite seu Nome ou E-mail acima para consultar o status de suas solicitações em tempo real.
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1174,11 +1305,15 @@
 
         </div>
 
-        <!-- Botão de Abertura de Ordem de Serviço (O.S. / Suporte) -->
-        <div class="mt-4 w-full max-w-[440px]">
-            <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
+        <!-- Ações de Ordem de Serviço (O.S. / Suporte) -->
+        <div class="mt-4 w-full max-w-[440px] flex flex-col gap-2">
+            <button type="button" class="btn-open-os" onclick="openNovaOrdemModal('abrir')">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
-                <span>Abrir Ordem de Serviço (O.S.) / Suporte Técnico</span>
+                <span>Abrir Ordem de Serviço (O.S.)</span>
+            </button>
+            <button type="button" class="btn-consult-os" onclick="openNovaOrdemModal('consultar')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>🔍 Visualizar O.S. Aberta por Nome ou E-mail</span>
             </button>
         </div>
 
@@ -1592,8 +1727,54 @@
             }
         });
 
-        // ==================== Módulo de Abertura de Ordem de Serviço (O.S.) ====================
-        window.openNovaOrdemModal = function(preselectedType) {
+        // ==================== Módulo de Ordem de Serviço & Consulta (O.S.) ====================
+        function escapeOsHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
+
+        window.switchOsModalTab = function(tab) {
+            const btnAbrir = document.getElementById('tabBtnNovaOrdem');
+            const btnConsultar = document.getElementById('tabBtnConsultarOrdem');
+            const boxForm = document.getElementById('boxNovaOrdemForm');
+            const boxSuccess = document.getElementById('boxNovaOrdemSuccess');
+            const boxConsultar = document.getElementById('boxConsultarOrdem');
+            const feedback = document.getElementById('osFormFeedback');
+
+            if (boxSuccess) boxSuccess.classList.add('hidden');
+            if (feedback) feedback.classList.add('hidden');
+
+            if (tab === 'consultar') {
+                if (btnAbrir) btnAbrir.classList.remove('active');
+                if (btnConsultar) btnConsultar.classList.add('active');
+                if (boxForm) boxForm.classList.add('hidden');
+                if (boxConsultar) boxConsultar.classList.remove('hidden');
+                const queryInput = document.getElementById('osConsultarQuery');
+                if (queryInput) setTimeout(() => queryInput.focus(), 80);
+            } else {
+                if (btnAbrir) btnAbrir.classList.add('active');
+                if (btnConsultar) btnConsultar.classList.remove('active');
+                if (boxForm) boxForm.classList.remove('hidden');
+                if (boxConsultar) boxConsultar.classList.add('hidden');
+                const nameInput = document.getElementById('osClientName');
+                if (nameInput) setTimeout(() => nameInput.focus(), 80);
+            }
+        };
+
+        window.consultarProtocoloRecente = function() {
+            const protoEl = document.getElementById('osSuccessProtocol');
+            const proto = protoEl ? protoEl.textContent.trim().replace('#', '') : '';
+            switchOsModalTab('consultar');
+            const queryInput = document.getElementById('osConsultarQuery');
+            if (queryInput && proto) {
+                queryInput.value = proto;
+                executarConsultaOrdens();
+            }
+        };
+
+        window.openNovaOrdemModal = function(preselectedTypeOrTab) {
             const overlay = document.getElementById('overlayNovaOrdem');
             if (!overlay) return;
 
@@ -1607,18 +1788,6 @@
             if (feedback) feedback.classList.add('hidden');
             if (form) form.reset();
 
-            if (preselectedType) {
-                const typeSelect = document.getElementById('osServiceType');
-                if (typeSelect) {
-                    for (let i = 0; i < typeSelect.options.length; i++) {
-                        if (typeSelect.options[i].value.toLowerCase().includes(preselectedType.toLowerCase())) {
-                            typeSelect.selectedIndex = i;
-                            break;
-                        }
-                    }
-                }
-            }
-
             overlay.style.display = 'flex';
             overlay.classList.remove('pointer-events-none');
             void overlay.offsetHeight;
@@ -1631,8 +1800,145 @@
                 box.classList.add('scale-100', 'translate-y-0');
             }
 
-            const nameInput = document.getElementById('osClientName');
-            if (nameInput) setTimeout(() => nameInput.focus(), 100);
+            if (preselectedTypeOrTab === 'consultar') {
+                switchOsModalTab('consultar');
+            } else {
+                switchOsModalTab('abrir');
+                if (preselectedTypeOrTab && preselectedTypeOrTab !== 'abrir') {
+                    const typeSelect = document.getElementById('osServiceType');
+                    if (typeSelect) {
+                        for (let i = 0; i < typeSelect.options.length; i++) {
+                            if (typeSelect.options[i].value.toLowerCase().includes(preselectedTypeOrTab.toLowerCase())) {
+                                typeSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        window.executarConsultaOrdens = async function(e) {
+            if (e && e.preventDefault) e.preventDefault();
+
+            const queryInput = document.getElementById('osConsultarQuery');
+            const btn = document.getElementById('btnExecutarConsultaOs');
+            const feedback = document.getElementById('osConsultarFeedback');
+            const resultsWrap = document.getElementById('osConsultarResultados');
+
+            const query = (queryInput?.value || '').trim();
+            if (!query) {
+                if (feedback) {
+                    feedback.textContent = 'Por favor, informe seu Nome Completo ou E-mail cadastrado.';
+                    feedback.classList.remove('hidden');
+                }
+                return;
+            }
+
+            if (feedback) feedback.classList.add('hidden');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Buscando...';
+            }
+            if (resultsWrap) {
+                resultsWrap.innerHTML = '<div class="text-center py-8 text-slate-400 text-xs"><div class="text-2xl mb-2">⏳</div>Localizando suas ordens de serviço...</div>';
+            }
+
+            try {
+                const res = await fetch(targetOrigin + '/api/ordens/consultar?query=' + encodeURIComponent(query));
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    const list = data.ordens || [];
+                    if (list.length === 0) {
+                        resultsWrap.innerHTML = `
+                            <div class="text-center py-8 px-4 text-slate-400 bg-white/[0.02] rounded-2xl border border-dashed border-white/10">
+                                <div class="text-3xl mb-2">📭</div>
+                                <h4 class="text-sm font-bold text-white mb-1">Nenhum chamado encontrado</h4>
+                                <p class="text-xs">Não encontramos nenhuma O.S. aberta para "<strong>${escapeOsHtml(query)}</strong>". Verifique se digitou o mesmo nome ou e-mail cadastrado.</p>
+                            </div>
+                        `;
+                    } else {
+                        let cardsHtml = `
+                            <div class="text-xs font-bold text-blue-400 mb-3 flex justify-between items-center">
+                                <span>${list.length} chamado(s) encontrado(s):</span>
+                                <span class="text-[11px] text-slate-400 font-normal">Atualizado em tempo real</span>
+                            </div>
+                        `;
+
+                        list.forEach(o => {
+                            let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
+                            const st = (o.status || '').toLowerCase();
+                            if (st.includes('anda')) {
+                                statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Em Andamento';
+                            } else if (st.includes('concl') || st.includes('final')) {
+                                statusBg = 'rgba(16,185,129,0.18)'; statusColor = '#34D399'; statusBorder = 'rgba(16,185,129,0.4)'; statusLabel = '✅ Concluído';
+                            } else if (st.includes('canc') || st.includes('recus')) {
+                                statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
+                            }
+
+                            let dateFormatted = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Data não informada';
+
+                            cardsHtml += `
+                                <div class="os-consult-card">
+                                    <div class="flex justify-between items-start mb-2.5 gap-2 flex-wrap">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-mono font-bold text-xs px-2.5 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/35">
+                                                #${o.protocol || o.id}
+                                            </span>
+                                            <span class="text-[11px] text-slate-400">${dateFormatted}</span>
+                                        </div>
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold" style="background:${statusBg}; color:${statusColor}; border:1px solid ${statusBorder};">
+                                            ${statusLabel}
+                                        </span>
+                                    </div>
+
+                                    <h4 class="text-sm font-bold text-white mb-1.5">
+                                        ${escapeOsHtml(o.title || 'Solicitação sem assunto')}
+                                    </h4>
+
+                                    <div class="flex gap-3 text-xs text-slate-300 mb-2.5 flex-wrap">
+                                        <span><strong>Solicitante:</strong> ${escapeOsHtml(o.client_name || 'Anônimo')}</span>
+                                        <span><strong>Tipo:</strong> ${escapeOsHtml(o.service_type || 'Geral')}</span>
+                                        <span><strong>Prioridade:</strong> ${escapeOsHtml(o.priority || 'Normal')}</span>
+                                    </div>
+
+                                    <div class="bg-black/30 rounded-xl p-2.5 text-xs text-slate-200 mb-2 border border-white/5 leading-relaxed">
+                                        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Descrição do seu pedido:</span>
+                                        ${escapeOsHtml(o.description || 'Sem descrição informada.')}
+                                    </div>
+
+                                    ${o.admin_notes ? `
+                                        <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 mt-2.5">
+                                            <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">
+                                                <span>💬 Resposta / Parecer da Equipe Técnica:</span>
+                                            </div>
+                                            <div class="text-xs text-slate-100 font-semibold leading-relaxed">
+                                                ${escapeOsHtml(o.admin_notes)}
+                                            </div>
+                                        </div>
+                                    ` : `
+                                        <div class="text-[11px] text-slate-400 italic mt-1.5">
+                                            ℹ️ Chamado em triagem. Aguarde o retorno técnico nesta mesma tela.
+                                        </div>
+                                    `}
+                                </div>
+                            `;
+                        });
+
+                        resultsWrap.innerHTML = cardsHtml;
+                    }
+                } else {
+                    resultsWrap.innerHTML = '<div class="text-rose-400 text-center py-4">' + (data.message || 'Erro ao consultar ordens.') + '</div>';
+                }
+            } catch(err) {
+                resultsWrap.innerHTML = '<div class="text-rose-400 text-center py-4">Falha de comunicação com o servidor. Verifique sua conexão.</div>';
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = '🔍 Buscar O.S.';
+                }
+            }
         };
 
         window.closeNovaOrdemModal = function() {

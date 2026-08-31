@@ -1022,6 +1022,89 @@ body.light .auth-pass-toggle-btn:hover {
   transform: scale(1.15);
 }
 
+/* Botão 4K Glass para Consultar / Acompanhar O.S. */
+.btn-consult-os {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  color: #E2E8F0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s ease;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.btn-consult-os:hover {
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(96, 165, 250, 0.6);
+  color: #93C5FD;
+  transform: translateY(-1px);
+}
+.btn-consult-os svg {
+  transition: transform 0.2s ease;
+}
+.btn-consult-os:hover svg {
+  transform: scale(1.12);
+}
+
+/* Abas do Modal de O.S. */
+.os-tabs-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+.os-tab-btn {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #94A3B8;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-family: inherit;
+}
+.os-tab-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+}
+.os-tab-btn.active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.15));
+  border-color: rgba(96, 165, 250, 0.55);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+}
+
+/* Cards de O.S. Consultada */
+.os-consult-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+.os-consult-card:hover {
+  border-color: rgba(96, 165, 250, 0.45);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
+}
+
 /* ==================== App principal Centralizado ==================== */
 
 /* ==================== App principal Centralizado ==================== */
@@ -3952,11 +4035,15 @@ body.light .scale-dropdown {
       </div>
     </div>
 
-    <!-- Botão de Abertura de Ordem de Serviço (O.S. / Suporte) -->
-    <div style="margin-top:18px; width:100%;">
-      <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
+    <!-- Ações de Ordem de Serviço (O.S. / Suporte) -->
+    <div style="margin-top:18px; width:100%; display:flex; flex-direction:column; gap:8px;">
+      <button type="button" class="btn-open-os" onclick="openNovaOrdemModal('abrir')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
-        <span>Abrir Ordem de Serviço (O.S.) / Suporte Técnico</span>
+        <span>Abrir Ordem de Serviço (O.S.)</span>
+      </button>
+      <button type="button" class="btn-consult-os" onclick="openNovaOrdemModal('consultar')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span>🔍 Visualizar O.S. Aberta por Nome ou E-mail</span>
       </button>
     </div>
 
@@ -4443,8 +4530,19 @@ body.light .scale-dropdown {
 
 <!-- Modal Abrir Nova Ordem de Serviço (Público / Tela de Login) -->
 <div class="overlay" id="overlayNovaOrdem" onclick="if(event.target===this) closeNovaOrdemModal()">
-  <div class="modal" style="max-width:540px; border-radius:24px; border:1px solid rgba(59, 130, 246, 0.35); box-shadow:0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(59,130,246,0.2);">
+  <div class="modal" style="max-width:560px; border-radius:24px; border:1px solid rgba(59, 130, 246, 0.35); box-shadow:0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(59,130,246,0.2);">
     <button class="close-x" type="button" onclick="closeNovaOrdemModal()">✕</button>
+
+    <!-- Abas de Navegação: Abrir Nova O.S. vs Consultar O.S. -->
+    <div class="os-tabs-nav">
+      <button type="button" id="tabBtnNovaOrdem" class="os-tab-btn active" onclick="switchOsModalTab('abrir')">
+        ⚡ Abrir Nova O.S.
+      </button>
+      <button type="button" id="tabBtnConsultarOrdem" class="os-tab-btn" onclick="switchOsModalTab('consultar')">
+        🔍 Consultar por Nome ou E-mail
+      </button>
+    </div>
+
     <div id="boxNovaOrdemForm">
       <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
         <span style="width:6px; height:6px; border-radius:50%; background:#3B82F6; box-shadow:0 0 8px #3B82F6;"></span>
@@ -4524,13 +4622,51 @@ body.light .scale-dropdown {
       <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(59,130,246,0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
         <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Número do Protocolo</span>
         <div style="font-size:22px; font-weight:900; color:#60A5FA; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
-        <button type="button" onclick="copyOsProtocol()" style="margin-top:10px; background:rgba(59,130,246,0.2); border:1px solid rgba(96,165,250,0.4); color:#BFDBFE; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
+        <div style="display:flex; justify-content:center; gap:8px; margin-top:10px; flex-wrap:wrap;">
+          <button type="button" onclick="copyOsProtocol()" style="background:rgba(59,130,246,0.2); border:1px solid rgba(96,165,250,0.4); color:#BFDBFE; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
+          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(16,185,129,0.2); border:1px solid rgba(52,211,153,0.4); color:#A7F3D0; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Visualizar Chamado</button>
+        </div>
       </div>
 
       <button type="button" class="btn-auth-primary" onclick="closeNovaOrdemModal()" style="width:100%; height:42px;">
         Concluir e Voltar
       </button>
     </div>
+
+    <!-- Aba de Consulta de O.S. Aberta por Nome ou E-mail -->
+    <div id="boxConsultarOrdem" style="display:none;">
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#3B82F6; box-shadow:0 0 8px #3B82F6;"></span>
+        <span>Acompanhamento de Chamados</span>
+      </div>
+      <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+        Visualizar O.S. Aberta
+      </h2>
+      <p style="font-size:13px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.45;">
+        Consulte suas solicitações informando seu <strong>Nome Completo</strong> ou seu <strong>E-mail</strong> cadastrado.
+      </p>
+
+      <form id="formConsultarOrdem" onsubmit="executarConsultaOrdens(event)" style="margin-bottom:16px;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:240px; position:relative;">
+            <input id="osConsultarQuery" required placeholder="Digite seu Nome ou E-mail cadastrado..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
+          </div>
+          <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#FFFFFF; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(59,130,246,0.35);">
+            🔍 Buscar O.S.
+          </button>
+        </div>
+      </form>
+
+      <div id="osConsultarFeedback" style="display:none; padding:12px 14px; border-radius:12px; font-size:12.5px; font-weight:700; margin-bottom:14px;"></div>
+
+      <div id="osConsultarResultados" style="max-height:360px; overflow-y:auto; padding-right:4px;">
+        <div style="text-align:center; padding:30px 14px; color:var(--text-dim); font-size:12.5px;">
+          <div style="font-size:32px; margin-bottom:8px;">🔎</div>
+          Digite seu Nome ou E-mail acima para consultar o status de suas solicitações em tempo real.
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -9310,8 +9446,55 @@ function updateOrdensBadge() {
   }
 }
 
-// Abertura de O.S. (Público na Tela de Login)
-window.openNovaOrdemModal = function(preselectedType) {
+// Helper para sanitização no cliente
+function escapeOsHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, function(m) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+  });
+}
+
+window.switchOsModalTab = function(tab) {
+  const btnAbrir = document.getElementById('tabBtnNovaOrdem');
+  const btnConsultar = document.getElementById('tabBtnConsultarOrdem');
+  const boxForm = document.getElementById('boxNovaOrdemForm');
+  const boxSuccess = document.getElementById('boxNovaOrdemSuccess');
+  const boxConsultar = document.getElementById('boxConsultarOrdem');
+  const feedback = document.getElementById('osFormFeedback');
+
+  if (boxSuccess) boxSuccess.style.display = 'none';
+  if (feedback) feedback.style.display = 'none';
+
+  if (tab === 'consultar') {
+    if (btnAbrir) btnAbrir.classList.remove('active');
+    if (btnConsultar) btnConsultar.classList.add('active');
+    if (boxForm) boxForm.style.display = 'none';
+    if (boxConsultar) boxConsultar.style.display = 'block';
+    const queryInput = document.getElementById('osConsultarQuery');
+    if (queryInput) setTimeout(() => queryInput.focus(), 60);
+  } else {
+    if (btnAbrir) btnAbrir.classList.add('active');
+    if (btnConsultar) btnConsultar.classList.remove('active');
+    if (boxForm) boxForm.style.display = 'block';
+    if (boxConsultar) boxConsultar.style.display = 'none';
+    const nameInput = document.getElementById('osClientName');
+    if (nameInput) setTimeout(() => nameInput.focus(), 60);
+  }
+};
+
+window.consultarProtocoloRecente = function() {
+  const protoEl = document.getElementById('osSuccessProtocol');
+  const proto = protoEl ? protoEl.textContent.trim().replace('#', '') : '';
+  switchOsModalTab('consultar');
+  const queryInput = document.getElementById('osConsultarQuery');
+  if (queryInput && proto) {
+    queryInput.value = proto;
+    executarConsultaOrdens();
+  }
+};
+
+// Abertura e Consulta de O.S. (Público na Tela de Login)
+window.openNovaOrdemModal = function(preselectedTypeOrTab) {
   const overlay = document.getElementById('overlayNovaOrdem');
   if (!overlay) return;
   
@@ -9325,22 +9508,151 @@ window.openNovaOrdemModal = function(preselectedType) {
   if (feedback) feedback.style.display = 'none';
   if (form) form.reset();
 
-  if (preselectedType) {
-    const typeSelect = document.getElementById('osServiceType');
-    if (typeSelect) {
-      for (let i = 0; i < typeSelect.options.length; i++) {
-        if (typeSelect.options[i].value.toLowerCase().includes(preselectedType.toLowerCase())) {
-          typeSelect.selectedIndex = i;
-          break;
+  overlay.classList.add('show');
+  overlay.style.display = 'flex';
+
+  if (preselectedTypeOrTab === 'consultar') {
+    switchOsModalTab('consultar');
+  } else {
+    switchOsModalTab('abrir');
+    if (preselectedTypeOrTab && preselectedTypeOrTab !== 'abrir') {
+      const typeSelect = document.getElementById('osServiceType');
+      if (typeSelect) {
+        for (let i = 0; i < typeSelect.options.length; i++) {
+          if (typeSelect.options[i].value.toLowerCase().includes(preselectedTypeOrTab.toLowerCase())) {
+            typeSelect.selectedIndex = i;
+            break;
+          }
         }
       }
     }
   }
+};
 
-  overlay.classList.add('show');
-  overlay.style.display = 'flex';
-  const nameInput = document.getElementById('osClientName');
-  if (nameInput) setTimeout(() => nameInput.focus(), 80);
+window.executarConsultaOrdens = async function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+
+  const queryInput = document.getElementById('osConsultarQuery');
+  const btn = document.getElementById('btnExecutarConsultaOs');
+  const feedback = document.getElementById('osConsultarFeedback');
+  const resultsWrap = document.getElementById('osConsultarResultados');
+
+  const query = (queryInput?.value || '').trim();
+  if (!query) {
+    if (feedback) {
+      feedback.style.background = 'rgba(239,68,68,0.18)';
+      feedback.style.color = '#FCA5A5';
+      feedback.style.border = '1px solid rgba(239,68,68,0.4)';
+      feedback.textContent = 'Por favor, digite seu Nome Completo ou E-mail cadastrado.';
+      feedback.style.display = 'block';
+    }
+    return;
+  }
+
+  if (feedback) feedback.style.display = 'none';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Buscando...';
+  }
+  if (resultsWrap) {
+    resultsWrap.innerHTML = '<div style="text-align:center; padding:30px 14px; color:#94A3B8;"><div style="font-size:26px; margin-bottom:8px;">⏳</div>Localizando suas ordens de serviço...</div>';
+  }
+
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens/consultar?query=' + encodeURIComponent(query));
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      const list = data.ordens || [];
+      if (list.length === 0) {
+        resultsWrap.innerHTML = \`
+          <div style="text-align:center; padding:30px 14px; color:#94A3B8; background:rgba(255,255,255,0.02); border-radius:14px; border:1px dashed rgba(255,255,255,0.12);">
+            <div style="font-size:32px; margin-bottom:6px;">📭</div>
+            <h4 style="font-size:15px; color:#FFFFFF; margin:0 0 4px 0; font-weight:800;">Nenhum chamado encontrado</h4>
+            <p style="font-size:12px; margin:0; line-height:1.4;">Não encontramos nenhuma O.S. aberta para "<strong>\${escapeOsHtml(query)}</strong>". Verifique se digitou o mesmo nome ou e-mail cadastrado.</p>
+          </div>
+        \`;
+      } else {
+        let cardsHtml = \`
+          <div style="font-size:12px; font-weight:800; color:#93C5FD; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+            <span>\${list.length} chamado(s) encontrado(s):</span>
+            <span style="font-size:11px; color:#94A3B8;">Atualizado em tempo real</span>
+          </div>
+        \`;
+
+        list.forEach(o => {
+          let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
+          const st = (o.status || '').toLowerCase();
+          if (st.includes('anda')) {
+            statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Em Andamento';
+          } else if (st.includes('concl') || st.includes('final')) {
+            statusBg = 'rgba(16,185,129,0.18)'; statusColor = '#34D399'; statusBorder = 'rgba(16,185,129,0.4)'; statusLabel = '✅ Concluído';
+          } else if (st.includes('canc') || st.includes('recus')) {
+            statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
+          }
+
+          let dateFormatted = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Data não informada';
+
+          cardsHtml += \`
+            <div class="os-consult-card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-weight:900; font-family:monospace; font-size:12.5px; padding:3px 9px; border-radius:6px; background:rgba(59,130,246,0.18); color:#93C5FD; border:1px solid rgba(59,130,246,0.35);">
+                    #\${o.protocol || o.id}
+                  </span>
+                  <span style="font-size:11.5px; color:#94A3B8;">\${dateFormatted}</span>
+                </div>
+                <span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:\${statusBg}; color:\${statusColor}; border:1px solid \${statusBorder};">
+                  \${statusLabel}
+                </span>
+              </div>
+
+              <h4 style="font-size:14.5px; font-weight:800; color:#FFFFFF; margin:0 0 6px 0;">
+                \${escapeOsHtml(o.title || 'Solicitação sem assunto')}
+              </h4>
+
+              <div style="display:flex; gap:12px; font-size:12px; color:#CBD5E1; margin-bottom:10px; flex-wrap:wrap;">
+                <span><strong>Solicitante:</strong> \${escapeOsHtml(o.client_name || 'Anônimo')}</span>
+                <span><strong>Tipo:</strong> \${escapeOsHtml(o.service_type || 'Geral')}</span>
+                <span><strong>Prioridade:</strong> \${escapeOsHtml(o.priority || 'Normal')}</span>
+              </div>
+
+              <div style="background:rgba(0,0,0,0.25); border-radius:10px; padding:10px 12px; font-size:12px; color:#E2E8F0; margin-bottom:10px; line-height:1.45; border:1px solid rgba(255,255,255,0.06);">
+                <span style="display:block; font-size:10.5px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:3px;">Descrição do seu pedido:</span>
+                \${escapeOsHtml(o.description || 'Sem descrição informada.')}
+              </div>
+
+              \${o.admin_notes ? \`
+                <div style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(5,150,105,0.08)); border:1.5px solid rgba(52,211,153,0.35); border-radius:12px; padding:12px; margin-top:10px;">
+                  <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:800; color:#34D399; margin-bottom:4px; text-transform:uppercase;">
+                    <span>💬 Parecer / Resposta da Equipe Técnica:</span>
+                  </div>
+                  <div style="font-size:12.5px; color:#F1F5F9; font-weight:600; line-height:1.45;">
+                    \${escapeOsHtml(o.admin_notes)}
+                  </div>
+                </div>
+              \` : \`
+                <div style="font-size:11.5px; color:#94A3B8; font-style:italic; margin-top:6px;">
+                  ℹ️ Chamado em triagem. Aguarde o retorno técnico nesta mesma tela.
+                </div>
+              \`}
+            </div>
+          \`;
+        });
+
+        resultsWrap.innerHTML = cardsHtml;
+      }
+    } else {
+      resultsWrap.innerHTML = '<div style="color:#F87171; text-align:center; padding:20px;">' + (data.message || 'Erro ao consultar ordens.') + '</div>';
+    }
+  } catch(err) {
+    resultsWrap.innerHTML = '<div style="color:#F87171; text-align:center; padding:20px;">Falha de comunicação com o servidor. Verifique sua conexão.</div>';
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '🔍 Buscar O.S.';
+    }
+  }
 };
 
 window.closeNovaOrdemModal = function() {
@@ -13162,6 +13474,78 @@ const server = http.createServer((req, res) => {
   }
 
   // ==================== ROTAS DE ORDENS DE SERVIÇO (O.S.) ====================
+
+  // Rota GET/POST para Consultar Ordens de Serviço por Nome, E-mail ou Protocolo (Público)
+  if ((req.method === 'GET' && parsedUrl.pathname === '/api/ordens/consultar') || (req.method === 'POST' && parsedUrl.pathname === '/api/ordens/consultar')) {
+    const handleConsultQuery = (qStr) => {
+      const q = (qStr || '').toLowerCase().trim();
+      if (!q) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'Informe o Nome, E-mail ou Protocolo para consulta.', ordens: [] }));
+      }
+
+      if (pool) {
+        pool.query(
+          `SELECT id, protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at
+           FROM ordens_servico
+           WHERE LOWER(client_email) = $1
+              OR LOWER(client_name) LIKE $2
+              OR LOWER(protocol) = $1
+              OR LOWER(title) LIKE $2
+           ORDER BY id DESC LIMIT 50`,
+          [q, '%' + q + '%']
+        ).then(result => {
+          let rows = result.rows || [];
+          if (rows.length === 0) {
+            // Fallback para arquivo local caso não retorne no banco
+            const localList = getLocalOrdens();
+            rows = localList.filter(o =>
+              (o.client_email && o.client_email.toLowerCase().includes(q)) ||
+              (o.client_name && o.client_name.toLowerCase().includes(q)) ||
+              (o.protocol && o.protocol.toLowerCase().includes(q))
+            );
+          }
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, count: rows.length, ordens: rows }));
+        }).catch(err => {
+          const localList = getLocalOrdens();
+          const rows = localList.filter(o =>
+            (o.client_email && o.client_email.toLowerCase().includes(q)) ||
+            (o.client_name && o.client_name.toLowerCase().includes(q)) ||
+            (o.protocol && o.protocol.toLowerCase().includes(q))
+          );
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, count: rows.length, ordens: rows }));
+        });
+      } else {
+        const localList = getLocalOrdens();
+        const rows = localList.filter(o =>
+          (o.client_email && o.client_email.toLowerCase().includes(q)) ||
+          (o.client_name && o.client_name.toLowerCase().includes(q)) ||
+          (o.protocol && o.protocol.toLowerCase().includes(q))
+        );
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, count: rows.length, ordens: rows }));
+      }
+    };
+
+    if (req.method === 'GET') {
+      const q = parsedUrl.query.query || parsedUrl.query.q || parsedUrl.query.email || parsedUrl.query.nome || '';
+      return handleConsultQuery(q);
+    } else {
+      let body = '';
+      req.on('data', chunk => body += chunk.toString());
+      req.on('end', () => {
+        let q = '';
+        try {
+          const p = JSON.parse(body);
+          q = p.query || p.q || p.email || p.name || p.nome || '';
+        } catch(e) {}
+        handleConsultQuery(q);
+      });
+      return;
+    }
+  }
 
   // Rota GET para Listar Ordens de Serviço
   if (req.method === 'GET' && parsedUrl.pathname === '/api/ordens') {
