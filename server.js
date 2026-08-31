@@ -13261,7 +13261,7 @@ const server = http.createServer((req, res) => {
   if ((req.method === 'POST' && parsedUrl.pathname === '/api/ordens/update') || (req.method === 'PUT' && parsedUrl.pathname === '/api/ordens')) {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
-    req.on('end', () => {
+    req.on('end', async () => {
       let payload;
       try {
         payload = JSON.parse(body);
@@ -13276,7 +13276,7 @@ const server = http.createServer((req, res) => {
       const nowIso = new Date().toISOString();
 
       const localList = getLocalOrdens();
-      const target = localList.find(o => String(o.id) === String(id));
+      const target = localList.find(o => String(o.id) === String(id) || String(o.protocol) === String(id));
       if (target) {
         target.status = status;
         target.admin_notes = adminNotes;
@@ -13287,12 +13287,14 @@ const server = http.createServer((req, res) => {
       recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Atualização de O.S.', 'Ordem de Serviço', 'Atualizou O.S. #' + (target ? target.protocol : id) + ' para status: ' + status);
 
       if (pool) {
-        pool.query(
-          `UPDATE ordens_servico SET status = $1, admin_notes = $2, updated_at = $3 WHERE id = $4 OR protocol = $5`,
-          [status, adminNotes, nowIso, isNaN(id) ? -1 : parseInt(id), String(id)]
-        ).catch(err => {
+        try {
+          await pool.query(
+            `UPDATE ordens_servico SET status = $1, admin_notes = $2, updated_at = $3 WHERE id = $4 OR protocol = $5`,
+            [status, adminNotes, nowIso, isNaN(id) ? -1 : parseInt(id), String(id)]
+          );
+        } catch(err) {
           console.warn('[AVISO BD O.S.] Erro ao atualizar no PostgreSQL:', err.message);
-        });
+        }
       }
 
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -13319,7 +13321,14 @@ const server = http.createServer((req, res) => {
       pool.query(
         'DELETE FROM ordens_servico WHERE id = $1 OR protocol = $2',
         [isNaN(idToDelete) ? -1 : parseInt(idToDelete), String(idToDelete)]
-      ).catch(err => {});
+      ).then(() => {
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true }));
+      }).catch(err => {
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true }));
+      });
+      return;
     }
 
     res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
