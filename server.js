@@ -1063,6 +1063,7 @@ body.light .auth-pass-toggle-btn:hover {
   margin-bottom: 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 12px;
+  padding-right: 42px;
 }
 .os-tab-btn {
   flex: 1;
@@ -4035,15 +4036,11 @@ body.light .scale-dropdown {
       </div>
     </div>
 
-    <!-- Ações de Ordem de Serviço (O.S. / Suporte) -->
-    <div style="margin-top:18px; width:100%; display:flex; flex-direction:column; gap:8px;">
-      <button type="button" class="btn-open-os" onclick="openNovaOrdemModal('abrir')">
+    <!-- Ação de Ordem de Serviço (O.S. / Consulta) -->
+    <div style="margin-top:18px; width:100%;">
+      <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
-        <span>Abrir Ordem de Serviço (O.S.)</span>
-      </button>
-      <button type="button" class="btn-consult-os" onclick="openNovaOrdemModal('consultar')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <span>🔍 Visualizar O.S. Aberta por Nome ou E-mail</span>
+        <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
       </button>
     </div>
 
@@ -4533,13 +4530,13 @@ body.light .scale-dropdown {
   <div class="modal" style="max-width:560px; border-radius:24px; border:1px solid rgba(59, 130, 246, 0.35); box-shadow:0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(59,130,246,0.2);">
     <button class="close-x" type="button" onclick="closeNovaOrdemModal()">✕</button>
 
-    <!-- Abas de Navegação: Abrir Nova O.S. vs Consultar O.S. -->
+    <!-- Abas de Navegação: Abrir Ordem de Serviço OS vs Consulta de OS -->
     <div class="os-tabs-nav">
       <button type="button" id="tabBtnNovaOrdem" class="os-tab-btn active" onclick="switchOsModalTab('abrir')">
-        ⚡ Abrir Nova O.S.
+        ⚡ Abrir Ordem de Serviço OS
       </button>
       <button type="button" id="tabBtnConsultarOrdem" class="os-tab-btn" onclick="switchOsModalTab('consultar')">
-        🔍 Consultar por Nome ou E-mail
+        🔍 Consulta de OS
       </button>
     </div>
 
@@ -4640,7 +4637,7 @@ body.light .scale-dropdown {
         <span>Acompanhamento de Chamados</span>
       </div>
       <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
-        Visualizar O.S. Aberta
+        Consulta de OS
       </h2>
       <p style="font-size:13px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.45;">
         Consulte suas solicitações informando seu <strong>Nome Completo</strong> ou seu <strong>E-mail</strong> cadastrado.

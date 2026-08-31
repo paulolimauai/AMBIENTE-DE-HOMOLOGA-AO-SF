@@ -591,6 +591,7 @@
             margin-bottom: 18px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 12px;
+            padding-right: 42px;
         }
         .os-tab-btn {
             flex: 1;
@@ -919,13 +920,13 @@
         <div id="boxNovaOrdemModal" class="bg-gradient-to-br from-[#111827]/96 via-[#0F172A]/96 to-[#0A0F1D]/98 border border-white/15 border-t-white/35 rounded-[28px] p-7 sm:p-8 w-full max-w-[560px] text-left shadow-[0_35px_90px_rgba(0,0,0,0.88),0_0_45px_rgba(59,130,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto max-h-[90vh] overflow-y-auto">
             <button class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg font-bold focus:outline-none" type="button" onclick="closeNovaOrdemModal()">✕</button>
             
-            <!-- Abas de Navegação: Abrir Nova O.S. vs Consultar O.S. -->
+            <!-- Abas de Navegação: Abrir Ordem de Serviço OS vs Consulta de OS -->
             <div class="os-tabs-nav">
                 <button type="button" id="tabBtnNovaOrdem" class="os-tab-btn active" onclick="switchOsModalTab('abrir')">
-                    ⚡ Abrir Nova O.S.
+                    ⚡ Abrir Ordem de Serviço OS
                 </button>
                 <button type="button" id="tabBtnConsultarOrdem" class="os-tab-btn" onclick="switchOsModalTab('consultar')">
-                    🔍 Consultar por Nome ou E-mail
+                    🔍 Consulta de OS
                 </button>
             </div>
 
@@ -1030,7 +1031,7 @@
                     <span>Acompanhamento de Chamados</span>
                 </div>
                 <h2 class="text-xl font-black text-white mb-1.5 flex items-center gap-2">
-                    Visualizar O.S. Aberta
+                    Consulta de OS
                 </h2>
                 <p class="text-xs text-slate-400 mb-5 leading-relaxed">
                     Consulte suas solicitações informando seu <strong>Nome Completo</strong> ou seu <strong>E-mail</strong> cadastrado.
