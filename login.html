@@ -515,6 +515,41 @@
             color: #059669;
         }
 
+        /* Botão 4K Glass para Abertura de Ordem de Serviço */
+        .btn-open-os {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            width: 100%;
+            padding: 11px 16px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.16) 0%, rgba(15, 23, 42, 0.90) 50%, rgba(30, 58, 138, 0.22) 100%);
+            border: 1.5px solid rgba(96, 165, 250, 0.40);
+            border-radius: 14px;
+            color: #93C5FD;
+            font-size: 12.5px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .btn-open-os:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.30) 0%, rgba(30, 41, 59, 0.95) 50%, rgba(59, 130, 246, 0.28) 100%);
+            border-color: rgba(147, 197, 253, 0.85);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(59, 130, 246, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.45);
+        }
+        .btn-open-os svg {
+            transition: transform 0.2s ease;
+        }
+        .btn-open-os:hover svg {
+            transform: scale(1.15);
+        }
+
         /* ==================== Assinatura Executiva Ultra Brilhosa & Animada (Paulo Lima) ==================== */
         @keyframes devGlowPulse {
             0% {
@@ -795,6 +830,102 @@
         </div>
     </div>
 
+    <!-- MODAL ABRIR NOVA ORDEM DE SERVIÇO (PÚBLICO) -->
+    <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="overlayNovaOrdem" style="display:none;" onclick="if(event.target===this) closeNovaOrdemModal()">
+        <div id="boxNovaOrdemModal" class="bg-gradient-to-br from-[#111827]/96 via-[#0F172A]/96 to-[#0A0F1D]/98 border border-white/15 border-t-white/35 rounded-[28px] p-7 sm:p-8 w-full max-w-[540px] text-left shadow-[0_35px_90px_rgba(0,0,0,0.88),0_0_45px_rgba(59,130,246,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto max-h-[90vh] overflow-y-auto">
+            <button class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg font-bold focus:outline-none" type="button" onclick="closeNovaOrdemModal()">✕</button>
+            
+            <div id="boxNovaOrdemForm">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-500/35 text-blue-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                    <span>Suporte Técnico & Chamados</span>
+                </div>
+                <h2 class="text-xl font-black text-white mb-1.5 flex items-center gap-2">
+                    Abrir Ordem de Serviço (O.S.)
+                </h2>
+                <p class="text-xs text-slate-400 mb-5 leading-relaxed">
+                    Envie sua solicitação para a equipe técnica. Você receberá um protocolo único para acompanhamento.
+                </p>
+
+                <form id="formNovaOrdem" onsubmit="enviarNovaOrdem(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Seu Nome Completo *</label>
+                            <div class="auth-input-wrapper">
+                                <input id="osClientName" required placeholder="Ex: Paulo Lima" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Seu E-mail de Contato *</label>
+                            <div class="auth-input-wrapper">
+                                <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Tipo de Serviço *</label>
+                            <select id="osServiceType" required class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+                                <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
+                                <option value="Reset de Senha">🔑 Reset / Recuperação de Senha</option>
+                                <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais/Financeiros</option>
+                                <option value="Relato de Bug">🐛 Relato de Bug ou Erro</option>
+                                <option value="Outro Suporte">💬 Outro Chamado Técnico</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Prioridade</label>
+                            <select id="osPriority" class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+                                <option value="Normal">🟢 Normal</option>
+                                <option value="Alta">🟡 Alta</option>
+                                <option value="Urgente">🔴 Urgente</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Assunto Resumido *</label>
+                        <input id="osTitle" required placeholder="Ex: Solicito reset de senha para meu e-mail" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Descrição Detalhada do Pedido *</label>
+                        <textarea id="osDescription" rows="4" required placeholder="Explique com detalhes o que precisa ser feito..." class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none resize-none"></textarea>
+                    </div>
+
+                    <div id="osFormFeedback" class="hidden p-3 rounded-xl text-xs font-semibold border bg-rose-950/90 border-rose-500/60 text-rose-200"></div>
+
+                    <div class="flex items-center justify-end gap-3 pt-2">
+                        <button type="button" onclick="closeNovaOrdemModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white border border-white/10 transition-colors">Cancelar</button>
+                        <button type="submit" id="btnSubmitOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-white/20 shadow-lg shadow-blue-500/30 transition-all">
+                            Enviar Ordem de Serviço 🚀
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Box Sucesso -->
+            <div id="boxNovaOrdemSuccess" class="hidden text-center py-4">
+                <div class="w-14 h-14 rounded-full bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 text-2xl flex items-center justify-center mx-auto mb-3 shadow-[0_0_24px_rgba(16,185,129,0.4)]">
+                    ✓
+                </div>
+                <h3 class="text-lg font-black text-white mb-1">Ordem de Serviço Aberta!</h3>
+                <p class="text-xs text-slate-400 mb-5">Sua solicitação foi registrada no sistema e já está disponível para análise da equipe de administração.</p>
+                <div class="bg-white/5 border border-blue-500/30 rounded-2xl p-4 mb-5">
+                    <span class="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">Número do Protocolo</span>
+                    <div class="text-2xl font-black text-blue-400 tracking-wider" id="osSuccessProtocol">OS-000000</div>
+                    <button type="button" onclick="copyOsProtocol()" class="mt-2.5 px-3 py-1 rounded-lg bg-blue-500/20 border border-blue-500/40 text-blue-300 text-xs font-bold hover:bg-blue-500/30 transition-colors">
+                        📋 Copiar Protocolo
+                    </button>
+                </div>
+                <button type="button" onclick="closeNovaOrdemModal()" class="w-full py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 transition-all">
+                    Concluir e Voltar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- BARRA SUPERIOR FIXA: BADGE DE SEGURANÇA, HOMOLOGAÇÃO & TEMA -->
     <header class="w-full max-w-[1200px] flex items-center justify-between z-30 mb-4 px-2">
         <div class="flex items-center gap-2">
@@ -1041,6 +1172,14 @@
                 </div>
             </div>
 
+        </div>
+
+        <!-- Botão de Abertura de Ordem de Serviço (O.S. / Suporte) -->
+        <div class="mt-4 w-full max-w-[440px]">
+            <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
+                <span>Abrir Ordem de Serviço (O.S.) / Suporte Técnico</span>
+            </button>
         </div>
 
         <!-- ASSINATURA EXECUTIVA DO DESENVOLVEDOR PAULO LIMA -->
@@ -1452,6 +1591,146 @@
                 }
             }
         });
+
+        // ==================== Módulo de Abertura de Ordem de Serviço (O.S.) ====================
+        window.openNovaOrdemModal = function(preselectedType) {
+            const overlay = document.getElementById('overlayNovaOrdem');
+            if (!overlay) return;
+
+            const formBox = document.getElementById('boxNovaOrdemForm');
+            const successBox = document.getElementById('boxNovaOrdemSuccess');
+            const feedback = document.getElementById('osFormFeedback');
+            const form = document.getElementById('formNovaOrdem');
+
+            if (formBox) formBox.classList.remove('hidden');
+            if (successBox) successBox.classList.add('hidden');
+            if (feedback) feedback.classList.add('hidden');
+            if (form) form.reset();
+
+            if (preselectedType) {
+                const typeSelect = document.getElementById('osServiceType');
+                if (typeSelect) {
+                    for (let i = 0; i < typeSelect.options.length; i++) {
+                        if (typeSelect.options[i].value.toLowerCase().includes(preselectedType.toLowerCase())) {
+                            typeSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            overlay.style.display = 'flex';
+            overlay.classList.remove('pointer-events-none');
+            void overlay.offsetHeight;
+            overlay.classList.remove('opacity-0');
+            overlay.classList.add('opacity-100');
+
+            const box = document.getElementById('boxNovaOrdemModal');
+            if (box) {
+                box.classList.remove('scale-90', 'translate-y-6');
+                box.classList.add('scale-100', 'translate-y-0');
+            }
+
+            const nameInput = document.getElementById('osClientName');
+            if (nameInput) setTimeout(() => nameInput.focus(), 100);
+        };
+
+        window.closeNovaOrdemModal = function() {
+            const overlay = document.getElementById('overlayNovaOrdem');
+            if (!overlay) return;
+
+            const box = document.getElementById('boxNovaOrdemModal');
+            if (box) {
+                box.classList.remove('scale-100', 'translate-y-0');
+                box.classList.add('scale-90', 'translate-y-6');
+            }
+
+            overlay.classList.remove('opacity-100');
+            overlay.classList.add('opacity-0');
+
+            setTimeout(function() {
+                overlay.style.display = 'none';
+                overlay.classList.add('pointer-events-none');
+            }, 300);
+        };
+
+        window.enviarNovaOrdem = async function(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const btn = document.getElementById('btnSubmitOs');
+            const feedback = document.getElementById('osFormFeedback');
+
+            const clientName = (document.getElementById('osClientName')?.value || '').trim();
+            const clientEmail = (document.getElementById('osClientEmail')?.value || '').trim();
+            const serviceType = document.getElementById('osServiceType')?.value || 'Melhoria no Sistema';
+            const priority = document.getElementById('osPriority')?.value || 'Normal';
+            const title = (document.getElementById('osTitle')?.value || '').trim();
+            const description = (document.getElementById('osDescription')?.value || '').trim();
+
+            if (!clientName || !clientEmail || !title || !description) {
+                if (feedback) {
+                    feedback.textContent = 'Por favor, preencha todos os campos obrigatórios (*).';
+                    feedback.classList.remove('hidden');
+                }
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Enviando Ordem de Serviço...';
+            }
+
+            try {
+                const res = await fetch(targetOrigin + '/api/ordens', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        client_name: clientName,
+                        client_email: clientEmail,
+                        service_type: serviceType,
+                        priority: priority,
+                        title: title,
+                        description: description
+                    })
+                });
+
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    const formBox = document.getElementById('boxNovaOrdemForm');
+                    const successBox = document.getElementById('boxNovaOrdemSuccess');
+                    const protocolEl = document.getElementById('osSuccessProtocol');
+
+                    if (protocolEl) protocolEl.textContent = result.protocol || '#OS-CONFIRMADO';
+                    if (formBox) formBox.classList.add('hidden');
+                    if (successBox) successBox.classList.remove('hidden');
+                } else {
+                    if (feedback) {
+                        feedback.textContent = result.message || 'Erro ao registrar ordem de serviço. Tente novamente.';
+                        feedback.classList.remove('hidden');
+                    }
+                }
+            } catch(err) {
+                if (feedback) {
+                    feedback.textContent = 'Falha de comunicação com o servidor. Verifique sua conexão.';
+                    feedback.classList.remove('hidden');
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Enviar Ordem de Serviço 🚀';
+                }
+            }
+        };
+
+        window.copyOsProtocol = function() {
+            const protocolEl = document.getElementById('osSuccessProtocol');
+            if (!protocolEl) return;
+            const proto = protocolEl.textContent.trim();
+            navigator.clipboard.writeText(proto).then(() => {
+                showAlert('Protocolo ' + proto + ' copiado com sucesso!', 'success');
+            }).catch(() => {
+                showAlert('Protocolo: ' + proto, 'info');
+            });
+        };
 
         // 1. Submit Login
         async function handleLoginSubmit(e) {

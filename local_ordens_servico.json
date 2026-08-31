@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1788176634374,
+    "protocol": "OS-63437370",
+    "client_name": "Paulo Lima",
+    "client_email": "paulolp0101@gmail.com",
+    "service_type": "Melhoria no Sistema",
+    "priority": "Alta",
+    "title": "Exporta��o de Relat�rios em Excel e PDF 4K",
+    "description": "Solicito a funcionalidade de exporta��o customizada nos relat�rios mensais e trimestrais para an�lise executiva.",
+    "status": "Pendente",
+    "admin_notes": "",
+    "created_at": "2026-08-31T11:43:54.373Z",
+    "updated_at": "2026-08-31T11:43:54.373Z"
+  }
+]
