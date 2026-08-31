@@ -4956,7 +4956,7 @@ function showLoginSuccessPopup(msg){
       overlay.style.display = 'none';
     }, 350);
   }, 2500);
-
+}
 
 function showAccountDisabledPopup(msg){
   const overlay = document.getElementById('accountDisabledOverlay');
