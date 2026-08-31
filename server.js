@@ -500,13 +500,14 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   padding: 24px 16px;
-  background-color: #02040A;
+  background-color: #020409;
   background-image: 
-    radial-gradient(at 15% 15%, rgba(16, 185, 129, 0.18) 0px, transparent 50%),
-    radial-gradient(at 85% 18%, rgba(59, 130, 246, 0.22) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.12) 0px, transparent 55%),
-    radial-gradient(at 50% 85%, rgba(245, 158, 11, 0.15) 0px, transparent 55%),
-    linear-gradient(180deg, #02040A 0%, #050814 50%, #010206 100%);
+    radial-gradient(at 10% 12%, rgba(56, 189, 248, 0.20) 0px, transparent 50%),
+    radial-gradient(at 90% 15%, rgba(99, 102, 241, 0.22) 0px, transparent 55%),
+    radial-gradient(at 50% 48%, rgba(245, 158, 11, 0.16) 0px, transparent 52%),
+    radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.14) 0px, transparent 50%),
+    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.20) 0px, transparent 55%),
+    linear-gradient(180deg, #020409 0%, #060B18 50%, #010206 100%);
   background-attachment: fixed;
 }
 .auth-container.show { display: flex; }
@@ -12626,7 +12627,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
     const badgeTexts = ['▲ +18.4%', '+$2.5k', '+12.8%', 'R$ 1.8M', '▲ +24.5%', '+$840', '+9.2%', 'R$ 350k'];
     const currencyCoins = ['R$', '$', '€', '£', '₿'];
-    const colors = ['#10B981', '#F59E0B', '#3B82F6', '#34D399', '#FBBF24', '#60A5FA'];
+    const colors = ['#38BDF8', '#F59E0B', '#34D399', '#818CF8', '#FBBF24', '#60A5FA', '#A78BFA'];
 
     const items = [];
     const itemCount = 34;
@@ -12659,7 +12660,7 @@ if (scaleMenuBtn && scaleDropdown) {
       // A. Grid Terminal Financeiro (Cruzes de Coordenadas +)
       const step = 70;
       ctx.save();
-      ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.035)' : 'rgba(255, 255, 255, 0.035)';
+      ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.035)' : 'rgba(255, 255, 255, 0.04)';
       ctx.lineWidth = 1;
       for (let gx = step; gx < width; gx += step) {
         for (let gy = step; gy < height; gy += step) {
@@ -12671,7 +12672,7 @@ if (scaleMenuBtn && scaleDropdown) {
       }
       ctx.restore();
 
-      // B. Onda Financeira Secundária de Fundo (Azul Safira)
+      // B. Onda Financeira Secundária de Fundo (Índigo Real / Safira)
       waveOffset += 0.01;
       const waveY = height * 0.74;
       ctx.save();
@@ -12684,11 +12685,11 @@ if (scaleMenuBtn && scaleDropdown) {
       }
       ctx.lineTo(width, height);
       ctx.closePath();
-      ctx.fillStyle = isLight ? 'rgba(59, 130, 246, 0.03)' : 'rgba(37, 99, 235, 0.06)';
+      ctx.fillStyle = isLight ? 'rgba(99, 102, 241, 0.04)' : 'rgba(99, 102, 241, 0.09)';
       ctx.fill();
       ctx.restore();
 
-      // C. Onda Financeira Principal (Verde Esmeralda de Lucro Mercado)
+      // C. Onda Financeira Principal (Ciano Elétrico & Safira Lucro Mercado)
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(0, height);
@@ -12704,44 +12705,45 @@ if (scaleMenuBtn && scaleDropdown) {
 
       const waveGrad = ctx.createLinearGradient(0, waveY - 50, 0, height);
       if (isLight) {
-        waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.10)');
-        waveGrad.addColorStop(0.5, 'rgba(59, 130, 246, 0.03)');
+        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.16)');
+        waveGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.06)');
         waveGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
       } else {
-        waveGrad.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
-        waveGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.05)');
-        waveGrad.addColorStop(1, 'rgba(7, 11, 20, 0)');
+        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.25)');
+        waveGrad.addColorStop(0.45, 'rgba(59, 130, 246, 0.12)');
+        waveGrad.addColorStop(0.8, 'rgba(30, 58, 138, 0.05)');
+        waveGrad.addColorStop(1, 'rgba(2, 4, 10, 0)');
       }
       ctx.fillStyle = waveGrad;
       ctx.fill();
 
-      // Linha de Contorno Esmeralda com Sombra Glow
+      // Linha de Contorno Ciano Elétrico com Sombra Neon
       ctx.beginPath();
       for (let x = 0; x <= width; x += 20) {
         const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = isLight ? 'rgba(16, 185, 129, 0.45)' : 'rgba(16, 185, 129, 0.60)';
-      ctx.lineWidth = 2.4;
-      ctx.shadowColor = '#10B981';
-      ctx.shadowBlur = isLight ? 6 : 16;
+      ctx.strokeStyle = isLight ? 'rgba(14, 165, 233, 0.75)' : 'rgba(56, 189, 248, 0.90)';
+      ctx.lineWidth = 2.6;
+      ctx.shadowColor = '#38BDF8';
+      ctx.shadowBlur = isLight ? 8 : 20;
       ctx.stroke();
       ctx.restore();
 
-      // Nódulos de Pico com Indicadores ▲
+      // Nódulos de Pico com Indicadores ▲ Luminous Ciano
       wavePoints.forEach(pt => {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = '#10B981';
-        ctx.shadowColor = '#10B981';
-        ctx.shadowBlur = 10;
+        ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#38BDF8';
+        ctx.shadowColor = '#38BDF8';
+        ctx.shadowBlur = 12;
         ctx.fill();
 
-        ctx.font = '700 9px "Outfit", sans-serif';
-        ctx.fillStyle = 'rgba(16, 185, 129, 0.85)';
-        ctx.fillText('▲', pt.x - 3, pt.y - 8);
+        ctx.font = '800 10px "Outfit", sans-serif';
+        ctx.fillStyle = '#7DD3FC';
+        ctx.fillText('▲', pt.x - 3.5, pt.y - 8);
         ctx.restore();
       });
 
@@ -12757,10 +12759,10 @@ if (scaleMenuBtn && scaleDropdown) {
             ctx.beginPath();
             ctx.moveTo(items[i].x, items[i].y);
             ctx.lineTo(items[j].x, items[j].y);
-            const connAlpha = (1 - dist / 130) * 0.18;
+            const connAlpha = (1 - dist / 130) * 0.20;
             ctx.strokeStyle = isLight 
-              ? 'rgba(16, 185, 129, ' + connAlpha + ')' 
-              : 'rgba(229, 169, 60, ' + connAlpha + ')';
+              ? 'rgba(14, 165, 233, ' + connAlpha + ')' 
+              : 'rgba(56, 189, 248, ' + (connAlpha * 1.3) + ')';
             ctx.lineWidth = 1;
             ctx.stroke();
             ctx.restore();
