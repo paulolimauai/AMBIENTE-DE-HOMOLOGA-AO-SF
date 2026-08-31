@@ -5186,8 +5186,13 @@ document.getElementById('loginForm').onsubmit = async (e) => {
   }
 
   // Validação do formato do e-mail
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  const isValidEmail = (str) => {
+    if (!str || typeof str !== 'string') return false;
+    const at = str.indexOf('@');
+    const dot = str.lastIndexOf('.');
+    return at > 0 && dot > at + 1 && dot < str.length - 1 && !str.includes(' ');
+  };
+  if (!isValidEmail(email)) {
     if (emailWrap) emailWrap.classList.add('input-error');
     if (emailInput) emailInput.focus();
     window.showAuthFeedback('login', 'error', 'E-mail em formato inválido', 'O e-mail digitado parece incompleto ou inválido. Exemplo: <strong>seu.nome@gmail.com</strong>');
@@ -12000,8 +12005,13 @@ function attachPageEvents(){
         const newPass = document.getElementById('cfgPassword').value.trim();
         const newPassConfirm = document.getElementById('cfgPasswordConfirm').value.trim();
 
-        if(!newName){ showToast('Informe um nome válido'); return; }
-        if(!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)){ showToast('Informe um e-mail válido'); return; }
+        const isValidEmail = (str) => {
+          if (!str || typeof str !== 'string') return false;
+          const at = str.indexOf('@');
+          const dot = str.lastIndexOf('.');
+          return at > 0 && dot > at + 1 && dot < str.length - 1 && !str.includes(' ');
+        };
+        if(!newEmail || !isValidEmail(newEmail)){ showToast('Informe um e-mail válido'); return; }
         const emailTaken = registeredUsers.some(u => u.email.toLowerCase()===newEmail.toLowerCase() && u.email.toLowerCase()!==currentUser.email.toLowerCase());
         if(emailTaken){ showToast('Este e-mail já está em uso por outro usuário'); return; }
         
