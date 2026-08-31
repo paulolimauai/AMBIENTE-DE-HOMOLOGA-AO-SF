@@ -697,9 +697,8 @@ body.light .auth-card-nexus {
   position: absolute;
   inset: -6px;
   border-radius: 26px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.5) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.45) 0%, transparent 70%);
   z-index: -1;
-  animation: devGlowPulse 2.8s ease-in-out infinite alternate;
 }
 
 .auth-title {
@@ -1544,108 +1543,68 @@ html.light code {
   display:flex; justify-content:center; padding:14px 16px calc(14px + env(safe-area-inset-bottom));
   background:var(--sidebar); border-top:1px solid var(--card-border);
 }
-/* ==================== Assinatura Executiva Ultra Brilhosa & Animada (Paulo Lima) ==================== */
-@keyframes devGlowPulse {
-  0% {
-    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 16px rgba(239, 68, 68, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.40), inset 0 -1px 2px rgba(0, 0, 0, 0.5);
-    border-color: rgba(239, 68, 68, 0.55);
-  }
-  50% {
-    box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.90), 0 0 32px rgba(239, 68, 68, 0.75), 0 0 55px rgba(239, 68, 68, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.70), inset 0 -1px 2px rgba(0, 0, 0, 0.4);
-    border-color: rgba(248, 113, 113, 0.90);
-  }
-  100% {
-    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 16px rgba(239, 68, 68, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.40), inset 0 -1px 2px rgba(0, 0, 0, 0.5);
-    border-color: rgba(239, 68, 68, 0.55);
-  }
-}
-
-@keyframes devShimmerSweep {
-  0% { transform: translateX(-150%) skewX(-24deg); }
-  35%, 100% { transform: translateX(260%) skewX(-24deg); }
-}
-
-@keyframes devIconPulse {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 16px rgba(239, 68, 68, 0.80), inset 0 2px 4px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.5);
-  }
-  50% {
-    transform: scale(1.08);
-    box-shadow: 0 0 28px rgba(248, 113, 113, 0.98), inset 0 2px 5px rgba(255, 255, 255, 0.95), inset 0 -2px 4px rgba(0, 0, 0, 0.3);
-  }
-}
-
-@keyframes devTextShine {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-@keyframes devSparkleTwinkle {
-  0%, 100% { opacity: 0.35; transform: scale(0.8) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.3) rotate(180deg); filter: drop-shadow(0 0 6px #F87171); }
-}
-
+/* ==================== Assinatura Executiva Ultra 4K Glass Estável (Paulo Lima) ==================== */
 .dev-signature {
   position: relative !important;
   overflow: hidden !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 10px !important;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.20) 0%, rgba(18, 18, 26, 0.88) 45%, rgba(6, 6, 10, 0.96) 100%) !important;
-  border: 1.5px solid rgba(239, 68, 68, 0.60) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.85) 45%, rgba(8, 12, 22, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.35) !important;
   border-radius: 999px !important;
   padding: 6px 20px 6px 7px !important;
   backdrop-filter: blur(24px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-  animation: devGlowPulse 3s ease-in-out infinite !important;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   text-decoration: none !important;
   cursor: pointer !important;
   user-select: none !important;
+  animation: none !important;
 }
 
-/* Feixe de luz cintilante (Shimmer Sweep) atravessando a cápsula */
 .dev-signature::before {
   content: '' !important;
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
-  width: 55% !important;
+  width: 100% !important;
   height: 100% !important;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 25%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0.08) 75%, transparent 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent) !important;
   pointer-events: none !important;
-  animation: devShimmerSweep 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
   z-index: 1 !important;
 }
 
 .dev-signature:hover {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.32) 0%, rgba(26, 26, 36, 0.94) 45%, rgba(10, 10, 15, 0.98) 100%) !important;
-  border-color: rgba(248, 113, 113, 0.98) !important;
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.95), 0 0 45px rgba(239, 68, 68, 0.85), inset 0 1px 2px rgba(255, 255, 255, 0.75) !important;
-  transform: translateY(-3px) scale(1.045) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(30, 41, 59, 0.90) 45%, rgba(15, 23, 42, 0.98) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.32) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.60), inset 0 1px 1px rgba(255, 255, 255, 0.28) !important;
+  transform: translateY(-2px) !important;
 }
 
-/* Ícone 3D Rubi / Vidro com pulso animado */
+/* Ícone 3D Rubi / Vidro Estável */
 .dev-signature-icon {
   width: 30px !important;
   height: 30px !important;
   border-radius: 50% !important;
   flex-shrink: 0 !important;
-  background: radial-gradient(circle at 35% 28%, #FFA4A4 0%, #EF4444 38%, #DC2626 70%, #7F1D1D 100%) !important;
+  background: radial-gradient(circle at 35% 28%, #FFA4A4 0%, #EF4444 42%, #DC2626 70%, #7F1D1D 100%) !important;
   color: #FFFFFF !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   border: 1.5px solid rgba(255, 255, 255, 0.70) !important;
-  animation: devIconPulse 2.8s ease-in-out infinite !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.65) !important;
   position: relative !important;
   z-index: 2 !important;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 0.25s ease !important;
+  animation: none !important;
 }
 
 .dev-signature:hover .dev-signature-icon {
-  transform: scale(1.15) rotate(-6deg) !important;
+  transform: scale(1.08) !important;
 }
 
 .dev-signature-icon svg {
@@ -1654,11 +1613,7 @@ html.light code {
   stroke-width: 2.8px !important;
   display: block !important;
   stroke: #FFFFFF !important;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) !important;
-  transition: transform 0.25s ease !important;
-}
-.dev-signature:hover .dev-signature-icon svg {
-  transform: scale(1.1) !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)) !important;
 }
 
 .dev-signature-text {
@@ -1672,46 +1627,48 @@ html.light code {
 .dev-signature-label {
   font-size: 11px !important;
   font-weight: 800 !important;
-  color: #E2E8F0 !important;
+  color: #94A3B8 !important;
   letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8) !important;
 }
 
-/* Nome com animação contínua de brilho metálico luminoso */
+/* Nome Executivo Estável sem piscar */
 .dev-signature-name {
   font-size: 14px !important;
   font-weight: 900 !important;
-  background: linear-gradient(90deg, #FFFFFF 0%, #FEE2E2 20%, #EF4444 40%, #F87171 60%, #FFFFFF 80%, #FEE2E2 100%) !important;
-  background-size: 200% auto !important;
-  animation: devTextShine 3.2s linear infinite !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  letter-spacing: 0.05em !important;
-  filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.65)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) !important;
+  color: #FFFFFF !important;
+  letter-spacing: 0.04em !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 5px !important;
+  animation: none !important;
 }
 
 .dev-sparkle {
   display: inline-block !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
   color: #F87171 !important;
-  -webkit-text-fill-color: #F87171 !important;
-  animation: devSparkleTwinkle 2.4s ease-in-out infinite !important;
+  animation: none !important;
 }
 
 /* Suporte Refinado para Tema Claro */
 body.light .dev-signature {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(254, 242, 242, 0.92) 50%, rgba(255, 255, 255, 0.98) 100%) !important;
-  border-color: rgba(239, 68, 68, 0.50) !important;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.10), 0 0 20px rgba(239, 68, 68, 0.25) !important;
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
 }
 body.light .dev-signature:hover {
-  background: #FFFFFF !important;
-  border-color: #DC2626 !important;
-  box-shadow: 0 12px 32px rgba(220, 38, 38, 0.35), 0 0 35px rgba(239, 68, 68, 0.40) !important;
+  background: #F8FAFC !important;
+  border-color: #94A3B8 !important;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12) !important;
+}
+body.light .dev-signature-label {
+  color: #64748B !important;
+}
+body.light .dev-signature-name {
+  color: #0F172A !important;
+  text-shadow: none !important;
 }
 body.light .dev-signature-label {
   color: #475569 !important;
