@@ -179,6 +179,23 @@ async function initDatabase() {
     );
   `);
 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS ordens_servico (
+      id SERIAL PRIMARY KEY,
+      protocol VARCHAR(50) UNIQUE NOT NULL,
+      client_name VARCHAR(150) NOT NULL,
+      client_email VARCHAR(150) NOT NULL,
+      service_type VARCHAR(100) NOT NULL,
+      priority VARCHAR(50) NOT NULL DEFAULT 'Normal',
+      title VARCHAR(200) NOT NULL,
+      description TEXT NOT NULL,
+      status VARCHAR(50) NOT NULL DEFAULT 'Pendente',
+      admin_notes TEXT DEFAULT '',
+      created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+      updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+    );
+  `);
+
   await pool.query(
     `INSERT INTO usuarios (name, email, password, role, active)
      VALUES ($1, $2, $3, $4, $5)
@@ -327,17 +344,19 @@ html:not(.user-logged-in) #authPage {
   display: flex !important;
 }
 
-html.is-admin nav.menu button:not(#menuUsuariosBtn):not(#menuLogsBtn):not(#menuFuncoesBtn),
-html.is-admin nav.mobile-drawer-nav button:not(#mobileDrawerUsuariosBtn):not(#mobileDrawerLogsBtn):not(#mobileDrawerFuncoesBtn) {
+html.is-admin nav.menu button:not(#menuUsuariosBtn):not(#menuLogsBtn):not(#menuFuncoesBtn):not(#menuOrdensBtn),
+html.is-admin nav.mobile-drawer-nav button:not(#mobileDrawerUsuariosBtn):not(#mobileDrawerLogsBtn):not(#mobileDrawerFuncoesBtn):not(#mobileDrawerOrdensBtn) {
   display: none !important;
 }
 
 html.is-admin #menuUsuariosBtn,
 html.is-admin #menuLogsBtn,
 html.is-admin #menuFuncoesBtn,
+html.is-admin #menuOrdensBtn,
 html.is-admin #mobileDrawerUsuariosBtn,
 html.is-admin #mobileDrawerLogsBtn,
-html.is-admin #mobileDrawerFuncoesBtn {
+html.is-admin #mobileDrawerFuncoesBtn,
+html.is-admin #mobileDrawerOrdensBtn {
   display: flex !important;
 }
 
@@ -966,6 +985,41 @@ body.light .auth-pass-toggle-btn:hover {
 .auth-forgot-link:hover {
   text-decoration: underline;
   color: #FCD34D;
+}
+
+/* Botão 4K Glass para Abertura de Ordem de Serviço */
+.btn-open-os {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  padding: 11px 16px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.16) 0%, rgba(15, 23, 42, 0.90) 50%, rgba(30, 58, 138, 0.22) 100%);
+  border: 1.5px solid rgba(96, 165, 250, 0.40);
+  border-radius: 14px;
+  color: #93C5FD;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.btn-open-os:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.30) 0%, rgba(30, 41, 59, 0.95) 50%, rgba(59, 130, 246, 0.28) 100%);
+  border-color: rgba(147, 197, 253, 0.85);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(59, 130, 246, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.45);
+}
+.btn-open-os svg {
+  transition: transform 0.2s ease;
+}
+.btn-open-os:hover svg {
+  transform: scale(1.15);
 }
 
 /* ==================== App principal Centralizado ==================== */
@@ -3898,6 +3952,14 @@ body.light .scale-dropdown {
       </div>
     </div>
 
+    <!-- Botão de Abertura de Ordem de Serviço (O.S. / Suporte) -->
+    <div style="margin-top:18px; width:100%;">
+      <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
+        <span>Abrir Ordem de Serviço (O.S.) / Suporte Técnico</span>
+      </button>
+    </div>
+
     <!-- Assinatura do Desenvolvedor -->
     <div class="auth-dev-credit" style="margin-top:24px; padding-top:16px; border-top:1px solid var(--auth-border); text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
       <div class="dev-signature" style="justify-content:center;">
@@ -4039,6 +4101,7 @@ body.light .scale-dropdown {
       <button data-page="funcoes" id="menuFuncoesBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> Funções & Permissões</button>
       <button data-page="usuarios" id="menuUsuariosBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
       <button data-page="logs" id="menuLogsBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
+      <button data-page="ordens" id="menuOrdensBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço <span id="osBadgeCount" style="margin-left:4px; padding:2px 7px; border-radius:999px; font-size:10px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
     </nav>
   </div>
 
@@ -4066,6 +4129,7 @@ body.light .scale-dropdown {
       <button data-page="funcoes" id="mobileDrawerFuncoesBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> Funções & Permissões</button>
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
       <button data-page="logs" id="mobileDrawerLogsBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
+      <button data-page="ordens" id="mobileDrawerOrdensBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço</button>
     </nav>
   </div>
 
@@ -4373,6 +4437,169 @@ body.light .scale-dropdown {
     <div class="modal-actions">
       <button id="userAdminCancelBtn">Cancelar</button>
       <button class="save" id="userAdminSaveBtn">Salvar Usuário</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Abrir Nova Ordem de Serviço (Público / Tela de Login) -->
+<div class="overlay" id="overlayNovaOrdem" onclick="if(event.target===this) closeNovaOrdemModal()">
+  <div class="modal" style="max-width:540px; border-radius:24px; border:1px solid rgba(59, 130, 246, 0.35); box-shadow:0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(59,130,246,0.2);">
+    <button class="close-x" type="button" onclick="closeNovaOrdemModal()">✕</button>
+    <div id="boxNovaOrdemForm">
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#3B82F6; box-shadow:0 0 8px #3B82F6;"></span>
+        <span>Suporte Técnico & Chamados</span>
+      </div>
+      <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+        Abrir Ordem de Serviço (O.S.)
+      </h2>
+      <p style="font-size:13px; color:var(--text-dim); margin:0 0 18px 0; line-height:1.45;">
+        Envie sua solicitação para a equipe técnica. Você receberá um protocolo único para acompanhamento.
+      </p>
+
+      <form id="formNovaOrdem" onsubmit="enviarNovaOrdem(event)">
+        <div class="field-row" style="display:flex; gap:12px;">
+          <div class="field" style="flex:1;">
+            <label>Seu Nome Completo *</label>
+            <input id="osClientName" required placeholder="Ex: Paulo Lima">
+          </div>
+          <div class="field" style="flex:1;">
+            <label>Seu E-mail de Contato *</label>
+            <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com">
+          </div>
+        </div>
+
+        <div class="field-row" style="display:flex; gap:12px;">
+          <div class="field" style="flex:1;">
+            <label>Tipo de Serviço *</label>
+            <select id="osServiceType" required>
+              <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
+              <option value="Reset de Senha">🔑 Reset / Recuperação de Senha</option>
+              <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais/Financeiros</option>
+              <option value="Relato de Bug">🐛 Relato de Bug ou Erro</option>
+              <option value="Outro Suporte">💬 Outro Chamado Técnico</option>
+            </select>
+          </div>
+          <div class="field" style="flex:1;">
+            <label>Nível de Prioridade</label>
+            <select id="osPriority">
+              <option value="Normal">🟢 Normal</option>
+              <option value="Alta">🟡 Alta</option>
+              <option value="Urgente">🔴 Urgente</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Assunto Resumido *</label>
+          <input id="osTitle" required placeholder="Ex: Solicito ajuste no cálculo do gráfico ou reset de senha">
+        </div>
+
+        <div class="field">
+          <label>Descrição Detalhada do Pedido *</label>
+          <textarea id="osDescription" rows="4" required style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;" placeholder="Explique com detalhes o que precisa ser feito ou corrigido..."></textarea>
+        </div>
+
+        <div id="osFormFeedback" style="display:none; padding:10px 14px; border-radius:10px; font-size:12px; font-weight:700; margin-bottom:14px;"></div>
+
+        <div class="modal-actions" style="margin-top:16px;">
+          <button type="button" onclick="closeNovaOrdemModal()">Cancelar</button>
+          <button type="submit" class="save" id="btnSubmitOs" style="background:linear-gradient(135deg, #3B82F6, #1D4ED8); font-weight:800; border:1px solid rgba(255,255,255,0.25);">
+            Enviar Ordem de Serviço 🚀
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tela de Sucesso após Abertura -->
+    <div id="boxNovaOrdemSuccess" style="display:none; text-align:center; padding:12px 6px;">
+      <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.35)); border:2px solid #10B981; color:#34D399; font-size:26px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 0 24px rgba(16,185,129,0.4);">
+        ✓
+      </div>
+      <h3 style="font-size:20px; font-weight:900; margin-bottom:6px;">Ordem de Serviço Aberta!</h3>
+      <p style="font-size:13px; color:var(--text-dim); margin-bottom:18px;">
+        Sua solicitação foi registrada no sistema e já está disponível para análise da equipe de administração.
+      </p>
+
+      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(59,130,246,0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
+        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Número do Protocolo</span>
+        <div style="font-size:22px; font-weight:900; color:#60A5FA; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
+        <button type="button" onclick="copyOsProtocol()" style="margin-top:10px; background:rgba(59,130,246,0.2); border:1px solid rgba(96,165,250,0.4); color:#BFDBFE; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
+      </div>
+
+      <button type="button" class="btn-auth-primary" onclick="closeNovaOrdemModal()" style="width:100%; height:42px;">
+        Concluir e Voltar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Visualizar e Atender Ordem de Serviço (Administrador) -->
+<div class="overlay" id="overlayOrdemAdmin" onclick="if(event.target===this) closeOrdemAdminModal()">
+  <div class="modal" style="max-width:600px; border-radius:24px; border:1px solid rgba(59, 130, 246, 0.35); box-shadow:0 24px 60px rgba(0,0,0,0.85);">
+    <button class="close-x" type="button" onclick="closeOrdemAdminModal()">✕</button>
+    
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap;">
+      <div>
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11px; font-weight:800; margin-bottom:6px;">
+          <span id="osAdminProtocolBadge">#OS-000000</span>
+        </div>
+        <h2 style="font-size:19px; font-weight:900; margin:0;" id="osAdminTitle">Título da Solicitação</h2>
+        <span style="font-size:12px; color:var(--text-dim);" id="osAdminDate">Aberta em: --/--/----</span>
+      </div>
+      <div id="osAdminPriorityBadge" style="padding:5px 12px; border-radius:999px; font-size:11.5px; font-weight:800;">Normal</div>
+    </div>
+
+    <!-- Informações do Solicitante -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:14px; padding:14px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div>
+        <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Solicitante</span>
+        <strong style="font-size:13.5px; color:#FFFFFF;" id="osAdminClientName">Nome</strong>
+      </div>
+      <div>
+        <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">E-mail</span>
+        <a href="#" id="osAdminClientEmail" style="font-size:13px; color:#60A5FA; text-decoration:none;">email@exemplo.com</a>
+      </div>
+      <div style="grid-column:1 / -1;">
+        <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Tipo de Serviço</span>
+        <span style="font-size:13px; color:#E2E8F0; font-weight:600;" id="osAdminServiceType">Melhoria</span>
+      </div>
+    </div>
+
+    <!-- Descrição Completa -->
+    <div class="field" style="margin-bottom:16px;">
+      <label style="font-weight:700; color:var(--text-dim);">Descrição do Chamado:</label>
+      <div id="osAdminDescription" style="background:rgba(0,0,0,0.25); border:1px solid var(--card-border); border-radius:12px; padding:12px; font-size:13px; line-height:1.5; color:#F8FAFC; white-space:pre-wrap; max-height:160px; overflow-y:auto;"></div>
+    </div>
+
+    <!-- Área de Resolução e Status (Admin) -->
+    <div style="border-top:1px solid var(--card-border); padding-top:14px; margin-top:14px;">
+      <h3 style="font-size:14px; font-weight:800; margin-bottom:12px; color:#93C5FD;">⚙️ Atendimento do Administrador</h3>
+      
+      <div class="field">
+        <label>Status do Chamado:</label>
+        <select id="osAdminStatusSelect" style="font-weight:700;">
+          <option value="Pendente">⏳ Pendente (Aguardando Análise)</option>
+          <option value="Em Andamento">⚙️ Em Andamento (Em Atendimento)</option>
+          <option value="Concluído">✅ Concluído (Finalizado)</option>
+          <option value="Cancelado">❌ Cancelado / Recusado</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Parecer / Observações do Administrador:</label>
+        <textarea id="osAdminNotes" rows="3" placeholder="Ex: Senha resetada para o padrão inicial e enviada ao e-mail, ou melhoria implantada..." style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;"></textarea>
+      </div>
+    </div>
+
+    <input type="hidden" id="osAdminCurrentId">
+
+    <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+      <button type="button" class="btn-ghost" onclick="excluirOrdemAdmin()" style="color:#F87171; border-color:rgba(239,68,68,0.3);">🗑️ Excluir O.S.</button>
+      <div style="display:flex; gap:10px;">
+        <button type="button" onclick="closeOrdemAdminModal()">Fechar</button>
+        <button type="button" class="save" onclick="salvarOrdemAdmin()" style="background:linear-gradient(135deg, #10B981, #059669); font-weight:800;">Salvar Atualização ✓</button>
+      </div>
     </div>
   </div>
 </div>
@@ -5730,7 +5957,7 @@ let catManageType = 'despesa';
 let currentType='out', currentRecType='out';
 let currentPage = (function getInitialPage() {
   try {
-    const validPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'funcoes', 'usuarios', 'logs', 'config'];
+    const validPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'funcoes', 'usuarios', 'logs', 'ordens', 'config'];
     const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
     const savedPage = localStorage.getItem('nexus_current_page');
     if (hashPage && validPages.includes(hashPage)) return hashPage;
@@ -6302,7 +6529,7 @@ function render(){
   const isAdminView = isAdmin && !isViewingOtherUser;
 
   if (isAdminView) {
-    if (!['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
+    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
       currentPage = 'usuarios';
     }
   } else {
@@ -6333,6 +6560,16 @@ function render(){
         }
       }).catch(() => {});
     }
+    else if(currentPage==='ordens') {
+      newHTML = pageOrdens();
+      syncOrdensWithServer().then(() => {
+        const oEl = document.getElementById('pageContent');
+        if (oEl && currentPage === 'ordens') {
+          const freshHTML = pageOrdens();
+          if (oEl.innerHTML !== freshHTML) oEl.innerHTML = freshHTML;
+        }
+      }).catch(() => {});
+    }
     else if(currentPage==='dashboard') newHTML = pageDashboard();
     else if(currentPage==='transacoes') newHTML = pageTransacoes();
     else if(currentPage==='cartoes') newHTML = pageContas();
@@ -6351,10 +6588,9 @@ function render(){
       el.innerHTML = newHTML;
     }
   } catch(err) {
-    console.error("Erro na geracao do HTML da pagina:", err);
+    console.error("Erro ao renderizar tela " + currentPage + ":", err);
     try {
-      const fallback = pageDashboard();
-      if (el.innerHTML !== fallback) el.innerHTML = fallback;
+      el.innerHTML = '<div class="placeholder"><div class="big">⚠️</div><h3>Erro ao carregar módulo</h3><p>Tente recarregar ou voltar para a aba de Usuários.</p></div>';
     } catch(e2){}
   }
 
@@ -6377,11 +6613,11 @@ function updateActiveMenu(){
   const isAdminView = isAdmin && !isViewingOtherUser;
 
   if (isAdminView) {
-    if (!['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
+    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
       currentPage = 'usuarios';
     }
   } else {
-    if (['usuarios', 'logs', 'funcoes'].includes(currentPage)) {
+    if (['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
       currentPage = 'dashboard';
     }
   }
@@ -6410,7 +6646,7 @@ function updateAdminMenuVisibility(){
     });
   });
 
-  const adminPages = ['usuarios', 'logs', 'funcoes'];
+  const adminPages = ['usuarios', 'logs', 'funcoes', 'ordens'];
   adminPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdminView ? 'flex' : 'none';
@@ -9033,6 +9269,490 @@ function pageLogs(){
   \`;
 }
 
+/* ==================== Módulo de Ordens de Serviço (O.S.) & Suporte ==================== */
+let systemOrdens = [];
+
+async function syncOrdensWithServer() {
+  return loadSystemOrdens();
+}
+
+async function loadSystemOrdens() {
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens');
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.ordens)) {
+        systemOrdens = data.ordens;
+        saveToStorage('nexus_ordens_servico', systemOrdens);
+        updateOrdensBadge();
+        return systemOrdens;
+      }
+    }
+  } catch(e) {}
+
+  const cached = loadFromStorage('nexus_ordens_servico', null);
+  if (Array.isArray(cached) && cached.length > 0) {
+    systemOrdens = cached;
+    updateOrdensBadge();
+  }
+  return systemOrdens;
+}
+
+function updateOrdensBadge() {
+  const badge = document.getElementById('osBadgeCount');
+  if (!badge) return;
+  const pendingCount = (systemOrdens || []).filter(o => (o.status || '').toLowerCase() === 'pendente').length;
+  if (pendingCount > 0) {
+    badge.textContent = pendingCount;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// Abertura de O.S. (Público na Tela de Login)
+window.openNovaOrdemModal = function(preselectedType) {
+  const overlay = document.getElementById('overlayNovaOrdem');
+  if (!overlay) return;
+  
+  const formBox = document.getElementById('boxNovaOrdemForm');
+  const successBox = document.getElementById('boxNovaOrdemSuccess');
+  const feedback = document.getElementById('osFormFeedback');
+  const form = document.getElementById('formNovaOrdem');
+  
+  if (formBox) formBox.style.display = 'block';
+  if (successBox) successBox.style.display = 'none';
+  if (feedback) feedback.style.display = 'none';
+  if (form) form.reset();
+
+  if (preselectedType) {
+    const typeSelect = document.getElementById('osServiceType');
+    if (typeSelect) {
+      for (let i = 0; i < typeSelect.options.length; i++) {
+        if (typeSelect.options[i].value.toLowerCase().includes(preselectedType.toLowerCase())) {
+          typeSelect.selectedIndex = i;
+          break;
+        }
+      }
+    }
+  }
+
+  overlay.classList.add('show');
+  overlay.style.display = 'flex';
+  const nameInput = document.getElementById('osClientName');
+  if (nameInput) setTimeout(() => nameInput.focus(), 80);
+};
+
+window.closeNovaOrdemModal = function() {
+  const overlay = document.getElementById('overlayNovaOrdem');
+  if (!overlay) return;
+  overlay.classList.remove('show');
+  setTimeout(() => overlay.style.display = 'none', 200);
+};
+
+window.enviarNovaOrdem = async function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const btn = document.getElementById('btnSubmitOs');
+  const feedback = document.getElementById('osFormFeedback');
+
+  const clientName = (document.getElementById('osClientName')?.value || '').trim();
+  const clientEmail = (document.getElementById('osClientEmail')?.value || '').trim();
+  const serviceType = document.getElementById('osServiceType')?.value || 'Melhoria no Sistema';
+  const priority = document.getElementById('osPriority')?.value || 'Normal';
+  const title = (document.getElementById('osTitle')?.value || '').trim();
+  const description = (document.getElementById('osDescription')?.value || '').trim();
+
+  if (!clientName || !clientEmail || !title || !description) {
+    if (feedback) {
+      feedback.className = 'auth-feedback-banner error';
+      feedback.textContent = 'Por favor, preencha todos os campos obrigatórios (*).';
+      feedback.style.display = 'block';
+    }
+    return;
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Enviando Ordem de Serviço...';
+  }
+
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_name: clientName,
+        client_email: clientEmail,
+        service_type: serviceType,
+        priority: priority,
+        title: title,
+        description: description
+      })
+    });
+
+    const result = await res.json();
+    if (res.ok && result.success) {
+      const formBox = document.getElementById('boxNovaOrdemForm');
+      const successBox = document.getElementById('boxNovaOrdemSuccess');
+      const protocolEl = document.getElementById('osSuccessProtocol');
+
+      if (protocolEl) protocolEl.textContent = result.protocol || '#OS-CONFIRMADO';
+      if (formBox) formBox.style.display = 'none';
+      if (successBox) successBox.style.display = 'block';
+
+      if (typeof syncOrdensWithServer === 'function') {
+        syncOrdensWithServer();
+      }
+    } else {
+      if (feedback) {
+        feedback.className = 'auth-feedback-banner error';
+        feedback.textContent = result.message || 'Erro ao registrar ordem de serviço. Tente novamente.';
+        feedback.style.display = 'block';
+      }
+    }
+  } catch(err) {
+    if (feedback) {
+      feedback.className = 'auth-feedback-banner error';
+      feedback.textContent = 'Falha de comunicação com o servidor. Verifique sua conexão.';
+      feedback.style.display = 'block';
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Enviar Ordem de Serviço 🚀';
+    }
+  }
+};
+
+window.copyOsProtocol = function() {
+  const protocolEl = document.getElementById('osSuccessProtocol');
+  if (!protocolEl) return;
+  const proto = protocolEl.textContent.trim();
+  navigator.clipboard.writeText(proto).then(() => {
+    showToast('Protocolo ' + proto + ' copiado para a área de transferência!');
+  }).catch(() => {
+    showToast('Protocolo: ' + proto);
+  });
+};
+
+// Admin: Tabela e Gestão de O.S.
+function renderOrdensTable(list) {
+  if (!list || list.length === 0) {
+    return \`<div class="placeholder" style="padding:40px 20px;"><div class="big">📋</div><h3>Nenhuma Ordem de Serviço encontrada</h3><p>Quando usuários abrirem chamados na tela de login ou suporte, eles aparecerão aqui em tempo real.</p></div>\`;
+  }
+
+  let html = \`
+  <div style="overflow-x:auto;">
+    <table class="table" style="width:100%; border-collapse:collapse; min-width:850px;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--card-border); text-align:left;">
+          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Protocolo</th>
+          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Data/Hora</th>
+          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Solicitante</th>
+          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Tipo de Serviço</th>
+          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Prioridade</th>
+          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Status</th>
+          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800; text-align:right;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+  \`;
+
+  list.forEach(o => {
+    let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
+    const st = (o.status || '').toLowerCase();
+    if (st.includes('anda')) {
+      statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Em Andamento';
+    } else if (st.includes('concl') || st.includes('final')) {
+      statusBg = 'rgba(16,185,129,0.18)'; statusColor = '#34D399'; statusBorder = 'rgba(16,185,129,0.4)'; statusLabel = '✅ Concluído';
+    } else if (st.includes('canc') || st.includes('recus')) {
+      statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
+    }
+
+    let prioBg = 'rgba(16,185,129,0.12)', prioColor = '#34D399', prioBorder = 'rgba(16,185,129,0.3)';
+    const prio = (o.priority || '').toLowerCase();
+    if (prio.includes('urg')) {
+      prioBg = 'rgba(239,68,68,0.18)'; prioColor = '#F87171'; prioBorder = 'rgba(239,68,68,0.4)';
+    } else if (prio.includes('alt')) {
+      prioBg = 'rgba(245,158,11,0.18)'; prioColor = '#FBBF24'; prioBorder = 'rgba(245,158,11,0.4)';
+    }
+
+    let dateFormatted = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Hoje';
+
+    html += \`
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s ease;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+        <td style="padding:13px 14px; white-space:nowrap;">
+          <span style="display:inline-block; font-weight:800; font-family:monospace; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.12); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">
+            #\${o.protocol || o.id}
+          </span>
+        </td>
+        <td style="padding:13px 14px; font-size:12px; color:var(--text-dim); white-space:nowrap;">
+          \${dateFormatted}
+        </td>
+        <td style="padding:13px 14px;">
+          <div style="font-weight:700; color:#FFFFFF; font-size:13px;">\${o.client_name || 'Anônimo'}</div>
+          <div style="font-size:11.5px; color:#94A3B8;">\${o.client_email || ''}</div>
+        </td>
+        <td style="padding:13px 14px; font-size:12.5px; color:#E2E8F0; font-weight:600; white-space:nowrap;">
+          \${o.service_type || 'Melhoria'}
+        </td>
+        <td style="padding:13px 14px; white-space:nowrap;">
+          <span style="display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:800; background:\${prioBg}; color:\${prioColor}; border:1px solid \${prioBorder};">
+            \${o.priority || 'Normal'}
+          </span>
+        </td>
+        <td style="padding:13px 14px; white-space:nowrap;">
+          <span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:\${statusBg}; color:\${statusColor}; border:1px solid \${statusBorder};">
+            \${statusLabel}
+          </span>
+        </td>
+        <td style="padding:13px 14px; text-align:right; white-space:nowrap;">
+          <button type="button" onclick="openOrdemAdminModal(\${o.id})" style="padding:6px 12px; border-radius:8px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-size:12px; font-weight:800; border:none; cursor:pointer; margin-right:6px; box-shadow:0 2px 8px rgba(59,130,246,0.3);">
+            👁️ Visualizar & Atender
+          </button>
+          <button type="button" onclick="excluirOrdemAdmin(\${o.id})" style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:12px; cursor:pointer;" title="Excluir O.S.">
+            🗑️
+          </button>
+        </td>
+      </tr>
+    \`;
+  });
+
+  html += \`
+      </tbody>
+    </table>
+  </div>
+  \`;
+  return html;
+}
+
+function filterOrdensTable() {
+  const query = (document.getElementById('osSearchInput')?.value || '').toLowerCase().trim();
+  const statusFilter = (document.getElementById('osFilterStatus')?.value || '').toLowerCase().trim();
+  const typeFilter = (document.getElementById('osFilterType')?.value || '').toLowerCase().trim();
+
+  const filtered = (systemOrdens || []).filter(o => {
+    const text = ((o.protocol||'') + ' ' + (o.client_name||'') + ' ' + (o.client_email||'') + ' ' + (o.title||'') + ' ' + (o.description||'')).toLowerCase();
+    const matchQuery = !query || text.includes(query);
+    const matchStatus = !statusFilter || (o.status || '').toLowerCase().includes(statusFilter);
+    const matchType = !typeFilter || (o.service_type || '').toLowerCase().includes(typeFilter);
+    return matchQuery && matchStatus && matchType;
+  });
+
+  const wrap = document.getElementById('osTableWrap');
+  if (wrap) wrap.innerHTML = renderOrdensTable(filtered);
+}
+
+function pageOrdens(){
+  const isAdmin = currentUser && currentUser.role === 'Administrador';
+  if(!isAdmin || isViewingOtherUser){
+    return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área de Ordens de Serviço é exclusiva para administradores.</p></div>\`;
+  }
+
+  const ordens = systemOrdens || [];
+  const countTotal = ordens.length;
+  const countPendentes = ordens.filter(o => (o.status||'').toLowerCase() === 'pendente').length;
+  const countAndamento = ordens.filter(o => (o.status||'').toLowerCase().includes('anda')).length;
+  const countConcluidas = ordens.filter(o => (o.status||'').toLowerCase().includes('concl') || (o.status||'').toLowerCase().includes('final')).length;
+
+  return \`
+  <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">
+    <div>
+      <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:#FFFFFF;">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">📋</span>
+        Central de Ordens de Serviço & Suporte
+      </h1>
+      <p style="font-size:13.5px; color:#94A3B8; margin:5px 0 0 0; font-weight:500;">
+        Gerenciamento de solicitações de melhorias, resets de senha e correções abertas pelos usuários.
+      </p>
+    </div>
+    <div class="head-actions" style="display:flex; gap:10px;">
+      <button class="btn-ghost" onclick="syncOrdensWithServer().then(render)" style="display:flex; align-items:center; gap:6px; font-weight:700;">
+        🔄 Atualizar Chamados
+      </button>
+    </div>
+  </div>
+
+  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:22px;">
+    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
+      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Total de Chamados</span>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">📋</div>
+      </div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#FFFFFF; margin-bottom:2px;">\${countTotal}</div>
+      <div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Todas as solicitações</div>
+    </div>
+
+    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
+      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Pendentes</span>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⏳</div>
+      </div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px;">\${countPendentes}</div>
+      <div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Aguardando atendimento</div>
+    </div>
+
+    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
+      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Em Andamento</span>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⚙️</div>
+      </div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#60A5FA; margin-bottom:2px;">\${countAndamento}</div>
+      <div class="sub" style="font-size:12px; color:#BFDBFE; font-weight:600; margin-top:4px;">Sendo atendidos</div>
+    </div>
+
+    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
+      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Concluídos</span>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.15)); border:1.5px solid rgba(52,211,153,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">✅</div>
+      </div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#10B981; margin-bottom:2px;">\${countConcluidas}</div>
+      <div class="sub" style="font-size:12px; color:#A7F3D0; font-weight:600; margin-top:4px;">Finalizados com sucesso</div>
+    </div>
+  </div>
+
+  <div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:20px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,0.5);">
+    <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h3 style="font-size:16px; font-weight:800; margin:0;">Fila de Solicitações</h3>
+      <span class="tag" style="font-weight:700;">\${ordens.length} O.S. registradas</span>
+    </div>
+
+    <div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; align-items:center;">
+      <div style="position:relative; flex:1.5; min-width:220px;">
+        <input id="osSearchInput" placeholder="🔍 Buscar por protocolo, solicitante, e-mail ou assunto..." onkeyup="filterOrdensTable()" style="width:100%; font-size:13px; padding:9px 12px; border-radius:10px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+      </div>
+      <select id="osFilterStatus" onchange="filterOrdensTable()" style="flex:1; min-width:140px; padding:9px 12px; border-radius:10px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+        <option value="">Todos os Status</option>
+        <option value="pendente">⏳ Pendentes</option>
+        <option value="andamento">⚙️ Em Andamento</option>
+        <option value="concl">✅ Concluídos</option>
+        <option value="canc">❌ Cancelados</option>
+      </select>
+      <select id="osFilterType" onchange="filterOrdensTable()" style="flex:1; min-width:160px; padding:9px 12px; border-radius:10px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+        <option value="">Todos os Tipos</option>
+        <option value="melhoria">Melhoria no Sistema</option>
+        <option value="senha">Reset de Senha</option>
+        <option value="correção">Correção de Dados</option>
+        <option value="bug">Relato de Bug</option>
+      </select>
+    </div>
+
+    <div id="osTableWrap">
+      \${renderOrdensTable(ordens)}
+    </div>
+  </div>
+  \`;
+}
+
+window.openOrdemAdminModal = function(id) {
+  const ordem = (systemOrdens || []).find(o => String(o.id) === String(id));
+  if (!ordem) return;
+
+  const overlay = document.getElementById('overlayOrdemAdmin');
+  if (!overlay) return;
+
+  document.getElementById('osAdminCurrentId').value = ordem.id;
+  document.getElementById('osAdminProtocolBadge').textContent = '#' + (ordem.protocol || ordem.id);
+  document.getElementById('osAdminTitle').textContent = ordem.title || 'Solicitação sem assunto';
+  document.getElementById('osAdminDate').textContent = 'Aberta em: ' + (ordem.created_at ? new Date(ordem.created_at).toLocaleString('pt-BR') : 'Data não informada');
+  document.getElementById('osAdminClientName').textContent = ordem.client_name || 'Não informado';
+  
+  const emailEl = document.getElementById('osAdminClientEmail');
+  if (emailEl) {
+    emailEl.textContent = ordem.client_email || '';
+    emailEl.href = 'mailto:' + (ordem.client_email || '');
+  }
+
+  document.getElementById('osAdminServiceType').textContent = ordem.service_type || 'Melhoria no Sistema';
+  document.getElementById('osAdminDescription').textContent = ordem.description || 'Sem descrição detalhada.';
+  
+  const statusSel = document.getElementById('osAdminStatusSelect');
+  if (statusSel) statusSel.value = ordem.status || 'Pendente';
+
+  const notesEl = document.getElementById('osAdminNotes');
+  if (notesEl) notesEl.value = ordem.admin_notes || '';
+
+  const prioBadge = document.getElementById('osAdminPriorityBadge');
+  if (prioBadge) {
+    prioBadge.textContent = ordem.priority || 'Normal';
+    const prio = (ordem.priority || '').toLowerCase();
+    if (prio.includes('urg')) {
+      prioBadge.style.background = 'rgba(239,68,68,0.2)';
+      prioBadge.style.color = '#F87171';
+      prioBadge.style.border = '1px solid rgba(239,68,68,0.4)';
+    } else if (prio.includes('alt')) {
+      prioBadge.style.background = 'rgba(245,158,11,0.2)';
+      prioBadge.style.color = '#FBBF24';
+      prioBadge.style.border = '1px solid rgba(245,158,11,0.4)';
+    } else {
+      prioBadge.style.background = 'rgba(16,185,129,0.2)';
+      prioBadge.style.color = '#34D399';
+      prioBadge.style.border = '1px solid rgba(16,185,129,0.4)';
+    }
+  }
+
+  overlay.classList.add('show');
+  overlay.style.display = 'flex';
+};
+
+window.closeOrdemAdminModal = function() {
+  const overlay = document.getElementById('overlayOrdemAdmin');
+  if (!overlay) return;
+  overlay.classList.remove('show');
+  setTimeout(() => overlay.style.display = 'none', 200);
+};
+
+window.salvarOrdemAdmin = async function() {
+  const id = document.getElementById('osAdminCurrentId')?.value;
+  const status = document.getElementById('osAdminStatusSelect')?.value || 'Pendente';
+  const notes = (document.getElementById('osAdminNotes')?.value || '').trim();
+
+  if (!id) return;
+
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id, status: status, admin_notes: notes })
+    });
+
+    if (res.ok) {
+      showToast('Ordem de Serviço atualizada com sucesso!');
+      closeOrdemAdminModal();
+      await syncOrdensWithServer();
+      render();
+    } else {
+      showToast('Erro ao atualizar Ordem de Serviço.');
+    }
+  } catch(e) {
+    showToast('Falha na comunicação com o servidor.');
+  }
+};
+
+window.excluirOrdemAdmin = async function(paramId) {
+  const id = paramId || document.getElementById('osAdminCurrentId')?.value;
+  if (!id) return;
+
+  if (!confirm('Deseja realmente excluir esta Ordem de Serviço?')) return;
+
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens?id=' + id, {
+      method: 'DELETE'
+    });
+
+    if (res.ok) {
+      showToast('Ordem de Serviço removida com sucesso!');
+      closeOrdemAdminModal();
+      await syncOrdensWithServer();
+      render();
+    } else {
+      showToast('Erro ao excluir Ordem de Serviço.');
+    }
+  } catch(e) {
+    showToast('Falha na comunicação com o servidor.');
+  }
+};
+
 /* ==================== Charts ==================== */
 function drawDashboardCharts(){
   if (typeof Chart === 'undefined') return;
@@ -11057,7 +11777,7 @@ function navigate(page){
 }
 
 window.addEventListener('hashchange', ()=>{
-  const validPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'funcoes', 'usuarios', 'logs', 'config'];
+  const validPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'funcoes', 'usuarios', 'logs', 'ordens', 'config'];
   const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
   if(hashPage && validPages.includes(hashPage) && hashPage !== currentPage){
     navigate(hashPage);
@@ -11435,7 +12155,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
       if (currentUser.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
-        if (['logs', 'funcoes', 'usuarios'].includes(pageTarget)) {
+        if (['logs', 'funcoes', 'usuarios', 'ordens'].includes(pageTarget)) {
           currentPage = pageTarget;
         } else {
           currentPage = 'usuarios';
@@ -11528,7 +12248,7 @@ if (scaleMenuBtn && scaleDropdown) {
   const pageTarget = hashPage || savedPage || currentPage;
 
   if (currentUser.role === 'Administrador') {
-    if (['logs', 'funcoes', 'usuarios'].includes(pageTarget)) {
+    if (['logs', 'funcoes', 'usuarios', 'ordens'].includes(pageTarget)) {
       currentPage = pageTarget;
     } else {
       currentPage = 'usuarios';
@@ -11911,6 +12631,28 @@ function saveLocalUsers(users) {
   try {
     fs.writeFileSync(LOCAL_USERS_PATH, JSON.stringify(users, null, 2), 'utf8');
   } catch (e) {}
+}
+
+const LOCAL_ORDENS_PATH = path.join(__dirname, 'local_ordens_servico.json');
+
+function getLocalOrdens() {
+  try {
+    if (fs.existsSync(LOCAL_ORDENS_PATH)) {
+      const content = fs.readFileSync(LOCAL_ORDENS_PATH, 'utf8');
+      return JSON.parse(content) || [];
+    }
+  } catch (e) {
+    console.error('Erro ao ler local_ordens_servico.json:', e);
+  }
+  return [];
+}
+
+function saveLocalOrdens(ordens) {
+  try {
+    fs.writeFileSync(LOCAL_ORDENS_PATH, JSON.stringify(ordens, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Erro ao salvar local_ordens_servico.json:', e);
+  }
 }
 
 function getLocalData(email) {
@@ -12416,6 +13158,172 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true }));
     });
+    return;
+  }
+
+  // ==================== ROTAS DE ORDENS DE SERVIÇO (O.S.) ====================
+
+  // Rota GET para Listar Ordens de Serviço
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/ordens') {
+    if (pool) {
+      pool.query('SELECT id, protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at FROM ordens_servico ORDER BY id DESC LIMIT 500')
+        .then(result => {
+          if (result.rows && result.rows.length > 0) {
+            saveLocalOrdens(result.rows);
+          }
+          const ordens = (result.rows && result.rows.length > 0) ? result.rows : getLocalOrdens();
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, ordens: ordens }));
+        })
+        .catch(err => {
+          const ordens = getLocalOrdens();
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, ordens: ordens }));
+        });
+    } else {
+      const ordens = getLocalOrdens();
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, ordens: ordens }));
+    }
+    return;
+  }
+
+  // Rota POST para Abertura de Nova Ordem de Serviço (Público na Tela de Login)
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/ordens') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', () => {
+      let payload;
+      try {
+        payload = JSON.parse(body);
+      } catch(e) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'JSON inválido' }));
+      }
+
+      const clientName = (payload.client_name || '').trim();
+      const clientEmail = (payload.client_email || '').toLowerCase().trim();
+      const serviceType = payload.service_type || 'Melhoria no Sistema';
+      const priority = payload.priority || 'Normal';
+      const title = (payload.title || '').trim();
+      const description = (payload.description || '').trim();
+
+      if (!clientName || !clientEmail || !title || !description) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'Preencha todos os campos obrigatórios.' }));
+      }
+
+      const nowIso = new Date().toISOString();
+      const protocol = 'OS-' + Date.now().toString().slice(-6) + Math.floor(10 + Math.random() * 90);
+
+      const newOrder = {
+        id: Date.now(),
+        protocol: protocol,
+        client_name: clientName,
+        client_email: clientEmail,
+        service_type: serviceType,
+        priority: priority,
+        title: title,
+        description: description,
+        status: 'Pendente',
+        admin_notes: '',
+        created_at: nowIso,
+        updated_at: nowIso
+      };
+
+      const localList = getLocalOrdens();
+      localList.unshift(newOrder);
+      saveLocalOrdens(localList);
+
+      recordSystemLog(clientName, clientEmail, 'Abertura de O.S.', 'Ordem de Serviço', 'Nova solicitação #' + protocol + ': ' + title);
+
+      if (pool) {
+        pool.query(
+          `INSERT INTO ordens_servico (protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
+          [newOrder.protocol, newOrder.client_name, newOrder.client_email, newOrder.service_type, newOrder.priority, newOrder.title, newOrder.description, newOrder.status, newOrder.admin_notes, newOrder.created_at, newOrder.updated_at]
+        ).then(resDb => {
+          if (resDb.rows && resDb.rows[0]) {
+            newOrder.id = resDb.rows[0].id;
+          }
+        }).catch(err => {
+          console.warn('[AVISO BD O.S.] Erro ao gravar no PostgreSQL, mantido localmente:', err.message);
+        });
+      }
+
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, protocol: protocol, ordem: newOrder }));
+    });
+    return;
+  }
+
+  // Rota POST/PUT para Atualizar Status / Parecer de Ordem de Serviço (Admin)
+  if ((req.method === 'POST' && parsedUrl.pathname === '/api/ordens/update') || (req.method === 'PUT' && parsedUrl.pathname === '/api/ordens')) {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', () => {
+      let payload;
+      try {
+        payload = JSON.parse(body);
+      } catch(e) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'JSON inválido' }));
+      }
+
+      const id = payload.id;
+      const status = payload.status || 'Pendente';
+      const adminNotes = payload.admin_notes || '';
+      const nowIso = new Date().toISOString();
+
+      const localList = getLocalOrdens();
+      const target = localList.find(o => String(o.id) === String(id));
+      if (target) {
+        target.status = status;
+        target.admin_notes = adminNotes;
+        target.updated_at = nowIso;
+        saveLocalOrdens(localList);
+      }
+
+      recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Atualização de O.S.', 'Ordem de Serviço', 'Atualizou O.S. #' + (target ? target.protocol : id) + ' para status: ' + status);
+
+      if (pool) {
+        pool.query(
+          `UPDATE ordens_servico SET status = $1, admin_notes = $2, updated_at = $3 WHERE id = $4 OR protocol = $5`,
+          [status, adminNotes, nowIso, isNaN(id) ? -1 : parseInt(id), String(id)]
+        ).catch(err => {
+          console.warn('[AVISO BD O.S.] Erro ao atualizar no PostgreSQL:', err.message);
+        });
+      }
+
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true }));
+    });
+    return;
+  }
+
+  // Rota DELETE para Excluir Ordem de Serviço (Admin)
+  if (req.method === 'DELETE' && parsedUrl.pathname === '/api/ordens') {
+    const idToDelete = parsedUrl.query.id || '';
+    if (!idToDelete) {
+      res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, message: 'ID ausente' }));
+    }
+
+    const localList = getLocalOrdens();
+    const updatedList = localList.filter(o => String(o.id) !== String(idToDelete) && String(o.protocol) !== String(idToDelete));
+    saveLocalOrdens(updatedList);
+
+    recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Exclusão de O.S.', 'Ordem de Serviço', 'Excluiu O.S. id/protocolo: ' + idToDelete);
+
+    if (pool) {
+      pool.query(
+        'DELETE FROM ordens_servico WHERE id = $1 OR protocol = $2',
+        [isNaN(idToDelete) ? -1 : parseInt(idToDelete), String(idToDelete)]
+      ).catch(err => {});
+    }
+
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ success: true }));
     return;
   }
 
