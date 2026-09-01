@@ -4321,46 +4321,44 @@ body.light .scale-dropdown {
     <div class="auth-showcase-panel">
       <div class="auth-showcase-badge">
         <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
-        <span>SEGURANÇA BANCÁRIA TLS 1.3 • CRIPTOGRAFIA SCRYPT</span>
+        <span>CONTROLE FINANCEIRO PESSOAL • PRIVACIDADE TOTAL</span>
       </div>
 
       <div class="auth-showcase-title">
-        Gestão Patrimonial & <span>Inteligência Financeira</span> de Alta Precisão
+        Controle Total do seu Dinheiro & <span>Planejamento Inteligente</span>
       </div>
 
       <div class="auth-showcase-desc">
-        Controle seu fluxo de caixa, transações multi-contas, orçamentos e auditoria automatizada com o poder da inteligência artificial preditiva Google Gemini.
+        Organize suas contas, acompanhe despesas e receitas, gerencie seus cartões e conquiste suas metas de economia com facilidade e clareza no dia a dia.
       </div>
 
       <div class="auth-showcase-metrics">
         <div class="auth-metric-card">
-          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Fluxo Mensal</div>
-          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">R$ 148.920</div>
-          <div style="font-size:11px; font-weight:700; color:#10B981; margin-top:2px;">+14.8% no mês ↗</div>
+          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Economia do Mês</div>
+          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">R$ 3.850</div>
+          <div style="font-size:11px; font-weight:700; color:#10B981; margin-top:2px;">+18% guardado 🎯</div>
         </div>
 
         <div class="auth-metric-card">
-          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">IA Gemini Core</div>
-          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">Auditoria IA</div>
-          <div style="font-size:11px; font-weight:700; color:#F59E0B; margin-top:2px;">Economia Preditiva ✦</div>
+          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Orçamento & Gastos</div>
+          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">Sob Controle</div>
+          <div style="font-size:11px; font-weight:700; color:#F59E0B; margin-top:2px;">Sem sustos no fim do mês 💡</div>
         </div>
 
         <div class="auth-metric-card">
-          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Persistência</div>
-          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">PostgreSQL</div>
-          <div style="font-size:11px; font-weight:700; color:#38BDF8; margin-top:2px;">Resiliência Dual 🐘</div>
+          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Metas & Sonhos</div>
+          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">84% Concluído</div>
+          <div style="font-size:11px; font-weight:700; color:#38BDF8; margin-top:2px;">Rumo à sua conquista 🚀</div>
         </div>
       </div>
 
       <div style="display:flex; align-items:center; gap:16px; font-size:12px; font-weight:600; color:#94A3B8; margin-top:4px;">
         <span style="display:flex; align-items:center; gap:6px;">
           <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block;"></span>
-          Homologação SF Online
+          Seus dados 100% seguros e confidenciais
         </span>
         <span>•</span>
-        <span>Latência: <strong style="color:#10B981;">8ms</strong></span>
-        <span>•</span>
-        <span>Ambiente: <strong style="color:#FFFFFF;">Produção 4K</strong></span>
+        <span>Acesso Rápido e Descomplicado</span>
       </div>
     </div>
 
@@ -4370,7 +4368,7 @@ body.light .scale-dropdown {
       <div class="auth-brand">
         <div class="auth-logo-badge">N</div>
         <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
-        <div class="auth-subtitle" id="authBoxSubtitle">Plataforma Inteligente de Gestão Financeira</div>
+        <div class="auth-subtitle" id="authBoxSubtitle">Sua Gestão Financeira Pessoal Inteligente</div>
       </div>
 
       <!-- Navegação por Abas Segmentadas -->
