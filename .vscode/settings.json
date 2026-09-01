@@ -2,5 +2,13 @@
   "git.autofetch": true,
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
-  "git.autoStash": true
+  "git.autoStash": true,
+  "terminal.integrated.defaultProfile.windows": "Antigravity CLI",
+  "terminal.integrated.profiles.windows": {
+    "Antigravity CLI": {
+      "path": "C:\\Users\\Nitro\\AppData\\Local\\agy\\bin\\agy.exe",
+      "icon": "sparkle",
+      "color": "terminal.ansiCyan"
+    }
+  }
 }
