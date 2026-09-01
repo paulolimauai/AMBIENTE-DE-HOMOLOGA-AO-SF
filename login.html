@@ -1053,17 +1053,7 @@
             color: #475569 !important;
         }
 
-        /* Banner de Novo Cadastro & Checklist de Senha em Modo Claro */
-        body.light #newRegLogonBanner {
-            background: #ECFDF5 !important;
-            border-color: #A7F3D0 !important;
-        }
-        body.light #newRegLogonTitle {
-            color: #065F46 !important;
-        }
-        body.light #newRegLogonDesc {
-            color: #047857 !important;
-        }
+        /* Checklist de Senha em Modo Claro */
         body.light #pwdStrengthContainer span {
             color: #475569 !important;
         }
@@ -1639,20 +1629,6 @@
 
                     <!-- 1. FORMULÁRIO DE LOGIN -->
                     <div id="loginBox" class="form-fade block">
-                        <!-- Banner Dinâmico para Novo Usuário Cadastrado -->
-                        <div id="newRegLogonBanner" class="hidden mb-4 p-3 rounded-2xl bg-gradient-to-r from-emerald-950/85 via-[#0F2231]/90 to-blue-950/85 border border-emerald-500/60 shadow-[0_4px_20px_rgba(16,185,129,0.3)] form-fade">
-                            <div class="flex items-center justify-between gap-2 mb-1">
-                                <div class="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-black">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    <span id="newRegLogonTitle">Novo Cadastro Pronto para Logon!</span>
-                                </div>
-                                <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-400/40 text-[9.5px] font-black text-emerald-300 uppercase tracking-wider">Apresentado</span>
-                            </div>
-                            <p class="text-[11.5px] text-slate-300 leading-snug" id="newRegLogonDesc">
-                                Suas credenciais foram automaticamente transferidas para o formulário abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar sua sessão.
-                            </p>
-                        </div>
-
                         <form id="loginForm" class="space-y-4" onsubmit="handleLoginSubmit(event); return false;">
                             
                             <!-- Campo E-mail -->
@@ -2792,15 +2768,6 @@
 
             switchAuthTab('login');
             
-            const banner = document.getElementById('newRegLogonBanner');
-            const titleEl = document.getElementById('newRegLogonTitle');
-            const descEl = document.getElementById('newRegLogonDesc');
-            if (banner && titleEl && descEl) {
-                titleEl.textContent = 'Usuário Carregado: ' + name;
-                descEl.innerHTML = 'Credenciais de <strong>' + email + '</strong> preenchidas no formulário de Logon. Clique em Entrar.';
-                banner.classList.remove('hidden');
-            }
-
             showAlert('Usuário <strong>' + name + '</strong> carregado no formulário de logon.', 'info');
             const submitBtn = document.getElementById('btnLoginSubmit');
             if (submitBtn) submitBtn.focus();
@@ -2893,16 +2860,6 @@
                 const loginPassEl = document.getElementById('loginPassword');
                 if (loginEmailEl) loginEmailEl.value = email;
                 if (loginPassEl) loginPassEl.value = password;
-
-                // Configura Banner de Boas-Vindas no Logon
-                const banner = document.getElementById('newRegLogonBanner');
-                const titleEl = document.getElementById('newRegLogonTitle');
-                const descEl = document.getElementById('newRegLogonDesc');
-                if (banner && titleEl && descEl) {
-                    titleEl.textContent = '🎉 ' + name + ', sua conta foi criada!';
-                    descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Entrando automaticamente no sistema...';
-                    banner.classList.remove('hidden');
-                }
 
                 showAlert('🎉 Conta criada com sucesso! Entrando na sua conta com suas novas credenciais...', 'success');
 
