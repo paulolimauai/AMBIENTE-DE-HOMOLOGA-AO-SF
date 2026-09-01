@@ -857,6 +857,106 @@ body.light .auth-card-nexus {
   -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
 }
 
+/* Layout Executivo 2 Colunas para o Login no server.js */
+.auth-exec-layout {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1240px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 48px;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+@media (max-width: 1024px) {
+  .auth-exec-layout {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    gap: 32px;
+    padding: 20px 10px;
+  }
+  .auth-showcase-panel {
+    display: none;
+  }
+}
+
+.auth-showcase-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  text-align: left;
+}
+
+.auth-showcase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(59, 130, 246, 0.12));
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FCD34D;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  width: fit-content;
+  backdrop-filter: blur(12px);
+}
+
+.auth-showcase-title {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1.15;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+}
+
+.auth-showcase-title span {
+  background: linear-gradient(90deg, #FCD34D 0%, #F59E0B 50%, #FBBF24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-showcase-desc {
+  font-size: 15px;
+  color: #CBD5E1;
+  line-height: 1.6;
+  max-width: 520px;
+}
+
+.auth-showcase-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.auth-metric-card {
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.auth-metric-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.6);
+}
+
+body.light .auth-showcase-title { color: #0F172A; }
+body.light .auth-showcase-desc { color: #475569; }
+body.light .auth-metric-card {
+  background: #FFFFFF;
+  border-color: #CBD5E1;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+}
+
 .auth-brand {
   display: flex;
   flex-direction: column;
@@ -4216,186 +4316,216 @@ body.light .scale-dropdown {
   <div class="auth-blob b2"></div>
   <div class="auth-blob b3"></div>
 
-  <div class="auth-card-nexus">
-    <!-- Brand Header -->
-    <div class="auth-brand">
-      <div class="auth-logo-badge">N</div>
-      <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
-      <div class="auth-subtitle" id="authBoxSubtitle">Plataforma Inteligente de Gestão Financeira</div>
-    </div>
-
-    <!-- Navegação por Abas Segmentadas -->
-    <div class="auth-tabs-nav" id="authTabsNav">
-      <button type="button" class="auth-tab-btn active" id="tabBtnLogin">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Entrar na Conta
-      </button>
-      <button type="button" class="auth-tab-btn" id="tabBtnRegister">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-        Criar Conta
-      </button>
-    </div>
-
-    <!-- Box 1: Formulário de Login -->
-    <div id="loginBox">
-      <!-- Banner Dinâmico para Novo Cadastro Apresentado no Logon -->
-      <div id="newRegLogonBannerServer" style="display:none; margin-bottom:16px; padding:12px 14px; border-radius:16px; background:linear-gradient(135deg, rgba(16,185,129,0.22) 0%, rgba(59,130,246,0.18) 100%); border:1px solid rgba(16,185,129,0.55); box-shadow:0 4px 18px rgba(16,185,129,0.25);">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
-          <strong style="color:#34D399; font-size:12.5px; font-weight:800;" id="newRegLogonTitleServer">✨ Novo Usuário Cadastrado!</strong>
-          <span style="font-size:10px; font-weight:800; text-transform:uppercase; padding:2px 6px; border-radius:6px; background:rgba(16,185,129,0.25); color:#A7F3D0; border:1px solid rgba(16,185,129,0.4);">Apresentado</span>
-        </div>
-        <p style="color:#E2E8F0; font-size:11.5px; margin:0; line-height:1.4;" id="newRegLogonDescServer">Suas credenciais foram preenchidas no formulário abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar o logon.</p>
+  <div class="auth-exec-layout">
+    <!-- Showcase Institucional Executivo -->
+    <div class="auth-showcase-panel">
+      <div class="auth-showcase-badge">
+        <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
+        <span>SEGURANÇA BANCÁRIA TLS 1.3 • CRIPTOGRAFIA SCRYPT</span>
       </div>
 
-      <form id="loginForm">
-        <div class="auth-field">
-          <label>E-mail Corporativo ou Pessoal</label>
-          <div class="auth-input-wrapper" id="wrapLoginEmail">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            </span>
-            <input type="email" id="loginEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
-          </div>
+      <div class="auth-showcase-title">
+        Gestão Patrimonial & <span>Inteligência Financeira</span> de Alta Precisão
+      </div>
+
+      <div class="auth-showcase-desc">
+        Controle seu fluxo de caixa, transações multi-contas, orçamentos e auditoria automatizada com o poder da inteligência artificial preditiva Google Gemini.
+      </div>
+
+      <div class="auth-showcase-metrics">
+        <div class="auth-metric-card">
+          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Fluxo Mensal</div>
+          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">R$ 148.920</div>
+          <div style="font-size:11px; font-weight:700; color:#10B981; margin-top:2px;">+14.8% no mês ↗</div>
         </div>
 
-        <div class="auth-field">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <label style="margin-bottom:0;">Senha</label>
-            <a class="auth-forgot-link" id="goForgot">Esqueceu a senha?</a>
-          </div>
-          <div class="auth-input-wrapper" id="wrapLoginPass">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </span>
-            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" spellcheck="false">
-            <button type="button" class="auth-pass-toggle-btn" id="loginPasswordToggle" title="Mostrar/Ocultar Senha">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-          <div id="capsLockWarningLogin" style="display:none; margin-top:6px; font-size:11.5px; font-weight:700; color:#fbbf24; align-items:center; gap:5px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <span>Caps Lock está ativado</span>
-          </div>
-          <div style="margin-top:10px; display:flex; align-items:center;">
-            <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px; font-weight:600; text-transform:none; color:var(--auth-text-dim);">
-              <input type="checkbox" id="rememberMe" style="accent-color:var(--auth-gold); width:15px; height:15px;">
-              <span>Lembrar meu acesso</span>
-            </label>
-          </div>
+        <div class="auth-metric-card">
+          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">IA Gemini Core</div>
+          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">Auditoria IA</div>
+          <div style="font-size:11px; font-weight:700; color:#F59E0B; margin-top:2px;">Economia Preditiva ✦</div>
         </div>
 
-        <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
-
-        <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
-          Entrar na Conta →
-        </button>
-      </form>
-    </div>
-
-    <!-- Box 2: Formulário de Cadastro -->
-    <div id="registerBox" style="display:none;">
-      <form id="registerForm">
-        <div class="auth-field">
-          <label>Nome Completo</label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </span>
-            <input type="text" id="regName" placeholder="Ex: Paulo Lima" required autocomplete="name" spellcheck="false">
-          </div>
+        <div class="auth-metric-card">
+          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Persistência</div>
+          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">PostgreSQL</div>
+          <div style="font-size:11px; font-weight:700; color:#38BDF8; margin-top:2px;">Resiliência Dual 🐘</div>
         </div>
+      </div>
 
-        <div class="auth-field">
-          <label>E-mail Corporativo ou Pessoal</label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            </span>
-            <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
-          </div>
-        </div>
-
-        <div class="auth-field">
-          <label>Criar Senha Segura</label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </span>
-            <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="checkServerRegPasswordMatch()">
-            <button type="button" class="auth-pass-toggle-btn" id="regPasswordToggle" title="Mostrar/Ocultar Senha">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="auth-field">
-          <label>Confirmar Senha</label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            </span>
-            <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="checkServerRegPasswordMatch()">
-          </div>
-          <div id="regPwdMatchMsg" style="display:none; margin-top:6px; font-size:11.5px; font-weight:700;"></div>
-        </div>
-
-        <div id="registerFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
-
-        <button type="submit" class="btn-auth-primary" id="regSubmitBtn">
-          Criar Minha Conta →
-        </button>
-      </form>
-    </div>
-
-    <!-- Box 3: Recuperação de Senha -->
-    <div id="forgotBox" style="display:none;">
-      <p style="font-size:13.5px; color:var(--auth-text-dim); margin-bottom:20px; line-height:1.5;">
-        Informe seu e-mail cadastrado para enviarmos sua senha ou gerar uma credencial de acesso imediato.
-      </p>
-
-      <form id="forgotStep1">
-        <div class="auth-field">
-          <label>E-mail Corporativo ou Pessoal</label>
-          <div class="auth-input-wrapper">
-            <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            </span>
-            <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
-          </div>
-        </div>
-
-        <div id="forgotFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
-
-        <button type="submit" class="btn-auth-primary" id="btnSendPassword">
-          Recuperar Minha Senha →
-        </button>
-      </form>
-
-      <div style="text-align:center; margin-top:18px;">
-        <a class="auth-forgot-link" id="goLoginFromForgot">← Voltar para o Login</a>
+      <div style="display:flex; align-items:center; gap:16px; font-size:12px; font-weight:600; color:#94A3B8; margin-top:4px;">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block;"></span>
+          Homologação SF Online
+        </span>
+        <span>•</span>
+        <span>Latência: <strong style="color:#10B981;">8ms</strong></span>
+        <span>•</span>
+        <span>Ambiente: <strong style="color:#FFFFFF;">Produção 4K</strong></span>
       </div>
     </div>
 
-    <!-- Ação de Ordem de Serviço (O.S. / Consulta) -->
-    <div style="margin-top:18px; width:100%;">
-      <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
-        <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
-      </button>
-    </div>
+    <!-- Card Principal de Autenticação -->
+    <div class="auth-card-nexus">
+      <!-- Brand Header -->
+      <div class="auth-brand">
+        <div class="auth-logo-badge">N</div>
+        <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
+        <div class="auth-subtitle" id="authBoxSubtitle">Plataforma Inteligente de Gestão Financeira</div>
+      </div>
 
-    <!-- Assinatura do Desenvolvedor -->
-    <div class="auth-dev-credit" style="margin-top:24px; padding-top:16px; border-top:1px solid var(--auth-border); text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
-      <div class="dev-signature" style="justify-content:center;">
-        <div class="dev-signature-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="16 18 22 12 16 6"></polyline>
-            <polyline points="8 6 2 12 8 18"></polyline>
-          </svg>
+      <!-- Navegação por Abas Segmentadas -->
+      <div class="auth-tabs-nav" id="authTabsNav">
+        <button type="button" class="auth-tab-btn active" id="tabBtnLogin">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Entrar na Conta
+        </button>
+        <button type="button" class="auth-tab-btn" id="tabBtnRegister">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          Criar Conta
+        </button>
+      </div>
+
+      <!-- Box 1: Formulário de Login -->
+      <div id="loginBox">
+        <form id="authLoginForm">
+          <div class="auth-field">
+            <label>E-mail Corporativo ou Pessoal</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </span>
+              <input type="email" id="loginEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label style="margin-bottom:0;">Senha</label>
+              <a class="auth-forgot-link" id="goForgotFromLogin">Esqueceu a senha?</a>
+            </div>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" spellcheck="false">
+              <button type="button" class="auth-pass-toggle" id="toggleLoginPassBtn" title="Mostrar/Ocultar Senha">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
+
+          <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
+            Entrar na Conta →
+          </button>
+        </form>
+      </div>
+
+      <!-- Box 2: Formulário de Registro -->
+      <div id="registerBox" style="display:none;">
+        <form id="authRegisterForm">
+          <div class="auth-field">
+            <label>Nome Completo</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input type="text" id="regName" placeholder="Ex: Paulo Lima" required autocomplete="name" spellcheck="false">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label>E-mail</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </span>
+              <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label>Criar Senha</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false">
+              <button type="button" class="auth-pass-toggle" id="toggleRegPassBtn" title="Mostrar/Ocultar Senha">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label>Confirmar Senha</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              </span>
+              <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false">
+            </div>
+          </div>
+
+          <div id="registerFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
+
+          <button type="submit" class="btn-auth-primary" id="regSubmitBtn">
+            Criar Minha Conta →
+          </button>
+        </form>
+      </div>
+
+      <!-- Box 3: Recuperação de Senha -->
+      <div id="forgotBox" style="display:none;">
+        <p style="font-size:13.5px; color:var(--auth-text-dim); margin-bottom:20px; line-height:1.5;">
+          Informe seu e-mail cadastrado para enviarmos sua senha ou gerar uma credencial de acesso imediato.
+        </p>
+
+        <form id="forgotStep1">
+          <div class="auth-field">
+            <label>E-mail Corporativo ou Pessoal</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </span>
+              <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
+            </div>
+          </div>
+
+          <div id="forgotFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
+
+          <button type="submit" class="btn-auth-primary" id="btnSendPassword">
+            Recuperar Minha Senha →
+          </button>
+        </form>
+
+        <div style="text-align:center; margin-top:18px;">
+          <a class="auth-forgot-link" id="goLoginFromForgot">← Voltar para o Login</a>
         </div>
-        <div class="dev-signature-text">
-          <span class="dev-signature-label">Desenvolvido por</span>
-          <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
+      </div>
+
+      <!-- Ação de Ordem de Serviço (O.S. / Consulta) -->
+      <div style="margin-top:18px; width:100%;">
+        <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
+          <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
+        </button>
+      </div>
+
+      <!-- Assinatura do Desenvolvedor -->
+      <div class="auth-dev-credit" style="margin-top:24px; padding-top:16px; border-top:1px solid var(--auth-border); text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div class="dev-signature" style="justify-content:center;">
+          <div class="dev-signature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <div class="dev-signature-text">
+            <span class="dev-signature-label">Desenvolvido por</span>
+            <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
+          </div>
         </div>
       </div>
     </div>
