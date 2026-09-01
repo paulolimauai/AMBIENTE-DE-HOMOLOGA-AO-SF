@@ -4579,14 +4579,14 @@ body.light .scale-dropdown {
             </div>
           </div>
 
-          <div class="auth-field">
+            <div class="auth-field">
             <label>Criar Senha</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </span>
               <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false">
-              <button type="button" class="auth-pass-toggle-btn" id="toggleRegPassBtn" onclick="window.togglePasswordVisibility('regPassword', 'toggleRegPassBtn')" title="Visualizar Senha" aria-label="Visualizar Senha">
+              <button type="button" class="auth-pass-toggle-btn" id="toggleRegPassBtn" onclick="window.toggleRegisterBothPasswords('toggleRegPassBtn')" title="Visualizar Senhas" aria-label="Visualizar Senhas">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
@@ -4599,9 +4599,6 @@ body.light .scale-dropdown {
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
               </span>
               <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false">
-              <button type="button" class="auth-pass-toggle-btn" id="toggleRegConfirmPassBtn" onclick="window.togglePasswordVisibility('regConfirmPassword', 'toggleRegConfirmPassBtn')" title="Visualizar Senha" aria-label="Visualizar Senha">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
             </div>
           </div>
 
@@ -5686,6 +5683,30 @@ window.togglePasswordVisibility = function(inputId, btnId) {
     btn.setAttribute('aria-label', 'Visualizar Senha');
   }
 };
+
+// Alternância de Visibilidade Unificada das Senhas no Cadastro (Olho Único que Revela Ambos os Campos)
+window.toggleRegisterBothPasswords = function(btnId) {
+  const p1 = document.getElementById('regPassword');
+  const p2 = document.getElementById('regConfirmPassword');
+  const btn = document.getElementById(btnId || 'toggleRegPassBtn');
+  if (!p1) return;
+  const isPassword = (p1.type === 'password');
+  const nextType = isPassword ? 'text' : 'password';
+  p1.type = nextType;
+  if (p2) p2.type = nextType;
+  if (btn) {
+    if (isPassword) {
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+      btn.title = 'Ocultar Senhas';
+      btn.setAttribute('aria-label', 'Ocultar Senhas');
+    } else {
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+      btn.title = 'Visualizar Senhas';
+      btn.setAttribute('aria-label', 'Visualizar Senhas');
+    }
+  }
+};
+window.toggleRegistrationPasswords = window.toggleRegisterBothPasswords;
 
 // Detecção de Caps Lock no Login
 document.addEventListener('keydown', function(e) {
@@ -13784,12 +13805,16 @@ const server = http.createServer((req, res) => {
     parsedUrl = { pathname: req.url.split('?')[0] || '/', query: {} };
   }
 
-  // Cabeçalhos globais de CORS
+  // Cabeçalhos globais de CORS e Segurança HTTP
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Credentials': 'true'
+    'Access-Control-Allow-Credentials': 'true',
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+    'X-XSS-Protection': '1; mode=block',
+    'Referrer-Policy': 'strict-origin-when-cross-origin'
   };
 
   if (req.method === 'OPTIONS') {
@@ -14700,6 +14725,30 @@ process.on('unhandledRejection', (reason, promise) => {
   console.warn('[PROCESSO] Rejeição de Promise tratada com segurança:', reason);
 });
 
+// Encerramento Gracioso em Ambientes de Nuvem / Contêineres (Graceful Shutdown)
+function gracefulShutdown(signal) {
+  console.log(`[PROCESSO] Recebido sinal ${signal}. Encerrando conexões com segurança...`);
+  server.close(() => {
+    console.log('[PROCESSO] Servidor HTTP finalizado.');
+    if (pool) {
+      pool.end(() => {
+        console.log('[BANCO] Pool de conexões PostgreSQL encerrado.');
+        process.exit(0);
+      });
+    } else {
+      process.exit(0);
+    }
+  });
+
+  setTimeout(() => {
+    console.error('[PROCESSO] Encerramento forçado após timeout de 10s.');
+    process.exit(1);
+  }, 10000).unref();
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
 initDatabase()
   .then(() => {
     if (pool) {
@@ -14712,10 +14761,11 @@ initDatabase()
     console.warn(`[BANCO AVISO] PostgreSQL indisponível. O sistema funcionará com alta resiliência e fallback JSON local: ${err.message}`);
   })
   .finally(() => {
-    server.listen(PORT, () => {
+    server.listen(PORT, '0.0.0.0', () => {
       console.log(`==================================================`);
-      console.log(`🚀 Servidor Nexus Financeiro Hub rodando na porta ${PORT}`);
-      console.log(`📋 Logs do banco disponíveis em tempo real no VS Code: system_logs.json`);
+      console.log(`🚀 Servidor Nexus Financeiro Hub rodando em 0.0.0.0:${PORT}`);
+      console.log(`📋 Logs do banco disponíveis em tempo real: system_logs.json`);
+      console.log(`⚡ Endpoint de Diagnóstico / Healthcheck: GET /api/health`);
       console.log(`==================================================`);
     });
   });
