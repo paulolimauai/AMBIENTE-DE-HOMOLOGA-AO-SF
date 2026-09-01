@@ -2669,13 +2669,18 @@
             hideAlert();
 
             const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
-            const confirmPassword = document.getElementById('regConfirmPassword').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
             const btn = document.getElementById('btnRegisterSubmit');
 
             if (!name || !email || !password || !confirmPassword) {
                 showAlert('Por favor, preencha todos os campos, incluindo a confirmação de senha.');
+                return false;
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                showAlert('Por favor, informe um endereço de e-mail válido (ex: seu.email@exemplo.com).');
                 return false;
             }
 

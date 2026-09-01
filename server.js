@@ -552,12 +552,16 @@ html, body {
   padding: clamp(8px, 1.5vh, 18px) 14px;
   background-color: #02040A;
   background-image: 
-    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.32) 0px, transparent 50%),
-    radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.35) 0px, transparent 55%),
-    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.26) 0px, transparent 55%),
-    radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.24) 0px, transparent 50%),
-    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.32) 0px, transparent 55%),
-    linear-gradient(180deg, #02040A 0%, #060D20 50%, #010308 100%);
+    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.25) 0px, transparent 50%),
+    radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.28) 0px, transparent 55%),
+    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.20) 0px, transparent 55%),
+    radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.18) 0px, transparent 50%),
+    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.25) 0px, transparent 55%),
+    linear-gradient(180deg, rgba(2, 4, 10, 0.72) 0%, rgba(5, 10, 28, 0.85) 50%, rgba(1, 3, 8, 0.94) 100%),
+    url('/images/nexus_bg_4k.jpg');
+  background-size: auto, auto, auto, auto, auto, auto, cover;
+  background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
 }
 .auth-container.show { display: flex; }
@@ -568,10 +572,10 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.24) 0%, rgba(56, 189, 248, 0.20) 40%, rgba(16, 185, 129, 0.14) 65%, transparent 75%);
-  filter: blur(70px);
+  width: 750px;
+  height: 750px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, rgba(56, 189, 248, 0.18) 40%, rgba(16, 185, 129, 0.12) 65%, transparent 75%);
+  filter: blur(90px);
   pointer-events: none;
   z-index: 1;
   border-radius: 50%;
@@ -593,7 +597,11 @@ body.light .auth-container {
     radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.12) 0px, transparent 50%),
     radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.10) 0px, transparent 50%),
     radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
-    linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%) !important;
+    linear-gradient(135deg, rgba(248, 250, 252, 0.88) 0%, rgba(241, 245, 249, 0.92) 50%, rgba(226, 232, 240, 0.95) 100%),
+    url('/images/nexus_bg_4k.jpg') !important;
+  background-size: auto, auto, auto, auto, cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
   background-attachment: fixed !important;
 }
 
@@ -4431,6 +4439,20 @@ body.light .scale-dropdown {
 
       <!-- Box 1: Formulário de Login -->
       <div id="loginBox">
+        <!-- Banner Dinâmico para Novo Usuário Cadastrado -->
+        <div id="newRegLogonBannerServer" style="display:none; margin-bottom:16px; padding:12px 14px; border-radius:14px; background:linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(6,78,59,0.25) 100%); border:1px solid rgba(52,211,153,0.5); box-shadow:0 4px 20px rgba(16,185,129,0.2);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; color:#34d399; font-size:12px; font-weight:800;">
+              <span style="width:8px; height:8px; border-radius:50%; background:#34d399; display:inline-block;"></span>
+              <span id="newRegLogonTitleServer">🎉 Cadastro Realizado com Sucesso!</span>
+            </div>
+            <span style="padding:2px 6px; border-radius:6px; background:rgba(52,211,153,0.2); border:1px solid rgba(52,211,153,0.4); font-size:9.5px; font-weight:800; color:#6ee7b7; text-transform:uppercase;">Pronto para Logon</span>
+          </div>
+          <p id="newRegLogonDescServer" style="font-size:11.5px; color:#d1d5db; margin:0; line-height:1.4;">
+            Suas credenciais foram preenchidas no formulário abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar.
+          </p>
+        </div>
+
         <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
             <label>E-mail Corporativo ou Pessoal</label>
@@ -4464,6 +4486,10 @@ body.light .scale-dropdown {
             Entrar na Conta →
           </button>
         </form>
+
+        <p style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
+          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#f59e0b; font-weight:700; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
+        </p>
       </div>
 
       <!-- Box 2: Formulário de Registro -->
@@ -4489,7 +4515,7 @@ body.light .scale-dropdown {
             </div>
           </div>
 
-            <div class="auth-field">
+          <div class="auth-field">
             <label>Criar Senha</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
@@ -4518,6 +4544,10 @@ body.light .scale-dropdown {
             Criar Minha Conta →
           </button>
         </form>
+
+        <p style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
+          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#f59e0b; font-weight:700; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
+        </p>
       </div>
 
       <!-- Box 3: Recuperação de Senha -->
@@ -6133,8 +6163,15 @@ window.handleRegisterSubmit = async function(e) {
   const confirmPassword = confirmPasswordInput ? confirmPasswordInput.value.trim() : '';
   const submitBtn = document.getElementById('regSubmitBtn') || document.querySelector('#registerForm button[type="submit"]') || document.querySelector('#authRegisterForm button[type="submit"]');
 
-  if (!name || !email || !password || !confirmPassword) {
+  const cleanEmail = email.toLowerCase().trim();
+
+  if (!name || !cleanEmail || !password || !confirmPassword) {
     showCustomAlert('Atenção', 'Por favor, preencha todos os campos do formulário, incluindo a confirmação de senha.', 'error');
+    return false;
+  }
+
+  if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+    showCustomAlert('Atenção', 'Por favor, informe um endereço de e-mail válido (ex: seu.email@exemplo.com).', 'error');
     return false;
   }
 
@@ -6153,7 +6190,6 @@ window.handleRegisterSubmit = async function(e) {
     submitBtn.textContent = 'Salvando conta...';
   }
 
-  const cleanEmail = email.toLowerCase();
   let registerSuccess = false;
   let serverMessage = '';
 
@@ -6161,7 +6197,7 @@ window.handleRegisterSubmit = async function(e) {
     const response = await fetch(window.location.origin + '/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password })
+      body: JSON.stringify({ name, email: cleanEmail, password })
     });
 
     const data = await response.json();
@@ -11261,23 +11297,61 @@ function openAccountModal(id){
 }
 function closeAccountModal(){ document.getElementById('overlayAccount').classList.remove('show'); }
 async function saveAccount(){
-  const name = document.getElementById('accName').value.trim();
-  const type = document.getElementById('accType').value;
-  const balance = parseInputValue(document.getElementById('accBalance').value);
-  const color = document.getElementById('accColor').value;
-  if(!name || isNaN(balance)){ showToast('Preencha nome e saldo/limite corretamente'); return; }
+  const nameEl = document.getElementById('accName');
+  const typeEl = document.getElementById('accType');
+  const balanceEl = document.getElementById('accBalance');
+  const colorEl = document.getElementById('accColor');
+
+  const name = nameEl ? nameEl.value.trim() : '';
+  const type = typeEl ? typeEl.value : 'Conta Corrente';
+  const balanceRaw = balanceEl ? balanceEl.value : '';
+  const balance = parseInputValue(balanceRaw);
+  const color = colorEl ? colorEl.value : '#e8b04b';
+
+  if(!name){
+    showToast('⚠️ Por favor, informe o nome da conta ou cartão');
+    if (nameEl) nameEl.focus();
+    return;
+  }
+
+  const numBalance = isNaN(balance) ? 0 : balance;
+  const isCredit = (type === 'Cartão de Crédito');
+
   if(editingAccId){
     const a = accounts.find(x=>x.id===editingAccId);
-    const oldName = a.name;
-    Object.assign(a, {name, type, balance, color});
-    if(oldName!==name) transactions.forEach(t=>{ if(t.acc===oldName) t.acc = name; });
-    showToast('Conta/Cartão atualizado!');
-    logActivity('Edição', 'Conta / Cartão', 'Editou conta/cartão "' + name + '" (' + type + ') com limite/saldo inicial ' + fmt(balance));
+    if (a) {
+      const oldName = a.name;
+      Object.assign(a, {
+        name,
+        type,
+        balance: numBalance,
+        limit: isCredit ? numBalance : (a.limit || 0),
+        color,
+        isCard: isCredit,
+        isCreditCard: isCredit
+      });
+      if(oldName!==name) transactions.forEach(t=>{ if(t.acc===oldName) t.acc = name; });
+      showToast('Conta/Cartão atualizado com sucesso!');
+      logActivity('Edição', 'Conta / Cartão', 'Editou conta/cartão "' + name + '" (' + type + ') com limite/saldo ' + fmt(numBalance));
+    }
   } else {
-    accounts.push({id: nextAccId++, name, type, balance, color});
-    showToast('Conta/Cartão adicionado!');
+    if (!nextAccId || isNaN(nextAccId)) {
+      nextAccId = (accounts.reduce((max, acc) => Math.max(max, acc.id || 0), 0) || 0) + 1;
+    }
+    const newAcc = {
+      id: nextAccId++,
+      name,
+      type,
+      balance: numBalance,
+      limit: isCredit ? numBalance : 0,
+      color,
+      isCard: isCredit,
+      isCreditCard: isCredit
+    };
+    accounts.push(newAcc);
+    showToast('Conta/Cartão cadastrado com sucesso!');
     await pushNotification('Nova conta/cartão cadastrado: ' + name + ' (' + type + ')', '🏦');
-    logActivity('Criação', 'Conta / Cartão', 'Cadastrou nova conta/cartão "' + name + '" (' + type + ') com limite/saldo inicial ' + fmt(balance));
+    logActivity('Criação', 'Conta / Cartão', 'Cadastrou nova conta/cartão "' + name + '" (' + type + ') com limite/saldo ' + fmt(numBalance));
   }
   await saveUserData();
   closeAccountModal();
@@ -12902,6 +12976,22 @@ if (accNameInput) {
       }
     }
   });
+  accNameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveAccount();
+    }
+  });
+}
+
+const accBalanceInput = document.getElementById('accBalance');
+if (accBalanceInput) {
+  accBalanceInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveAccount();
+    }
+  });
 }
 
 document.getElementById('closeModal').onclick = closeModal;
@@ -13956,6 +14046,16 @@ const server = http.createServer((req, res) => {
         }
 
         const cleanEmail = email.toLowerCase().trim();
+        if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Por favor, informe um e-mail válido (ex: seu.email@exemplo.com).' }));
+        }
+
+        if (password.length < 6) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'A senha deve ter no mínimo 6 caracteres.' }));
+        }
+
         const secureHashedPassword = hashPassword(password);
         let newUserId = Date.now();
         if (pool) {
@@ -14007,7 +14107,7 @@ const server = http.createServer((req, res) => {
         console.log('='.repeat(70) + '\n');
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: true, message: 'Conta salva e sincronizada com sucesso no banco de dados!' }));
+        return res.end(JSON.stringify({ success: true, message: 'Conta criada e sincronizada com sucesso no banco de dados!' }));
       } catch (err) {
         console.error('Erro no endpoint de cadastro:', err);
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -14026,27 +14126,25 @@ const server = http.createServer((req, res) => {
         const { email } = JSON.parse(body);
         if (!email) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'E-mail é obrigatório' }));
+          return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
         }
 
+        const cleanEmail = email.toLowerCase().trim();
         let user = null;
         if (pool) {
           try {
-            const result = await pool.query(
-              'SELECT id, name, email, password FROM usuarios WHERE LOWER(email) = LOWER($1)',
-              [email]
-            );
+            const result = await pool.query('SELECT id, name, email, password, role FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
             if (result.rows.length > 0) user = result.rows[0];
-          } catch(e) {}
+          } catch(e){}
         }
         if (!user) {
           const localUsers = getLocalUsers();
-          user = localUsers.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+          user = localUsers.find(u => u.email.toLowerCase() === cleanEmail) || null;
         }
 
         if (!user) {
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'E-mail não cadastrado.' }));
+          return res.end(JSON.stringify({ success: false, error: 'E-mail não encontrado no sistema.' }));
         }
 
         let sendPassword = user.password;
@@ -14112,7 +14210,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Rota POST de Usuários (Sincronização Segura sem Deleção Involuntária)
+  // Rota POST de Usuários (Sincronização Segura sem Deleção Involuntária e com Preservação de Senhas)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/users') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -14122,12 +14220,36 @@ const server = http.createServer((req, res) => {
         const users = Array.isArray(parsed) ? parsed : [parsed];
         if (!users.length) throw new Error('Formato inválido');
 
-        // Mescla localmente com cadastros existentes no servidor
+        // Mescla localmente com cadastros existentes no servidor preservando credenciais
         const existingLocal = getLocalUsers();
         const userMap = new Map();
-        existingLocal.forEach(u => userMap.set(u.email.toLowerCase(), u));
+        existingLocal.forEach(u => {
+          if (u && u.email) userMap.set(u.email.toLowerCase().trim(), u);
+        });
+
         users.forEach(u => {
-          if (u && u.email) userMap.set(u.email.toLowerCase(), u);
+          if (u && u.email) {
+            const emailKey = u.email.toLowerCase().trim();
+            const existing = userMap.get(emailKey);
+            let finalPassword = existing ? existing.password : '';
+            if (u.password && typeof u.password === 'string' && u.password.trim() !== '') {
+              finalPassword = u.password.startsWith('scrypt:') ? u.password : hashPassword(u.password);
+            }
+            if (!finalPassword) {
+              finalPassword = hashPassword('123456');
+            }
+
+            userMap.set(emailKey, {
+              id: u.id || (existing ? existing.id : Date.now()),
+              name: (u.name || (existing ? existing.name : 'Usuário')).trim(),
+              email: emailKey,
+              password: finalPassword,
+              role: u.role || (existing ? existing.role : 'Usuário'),
+              active: u.active !== false,
+              created_at: u.created_at || (existing ? existing.created_at : new Date().toISOString()),
+              last_login: u.last_login || (existing ? existing.last_login : null)
+            });
+          }
         });
         const finalUsers = Array.from(userMap.values());
         saveLocalUsers(finalUsers);
@@ -14139,18 +14261,18 @@ const server = http.createServer((req, res) => {
             const client = await pool.connect();
             try {
               await client.query('BEGIN');
-              for (const u of users) {
+              for (const u of finalUsers) {
                 if (u && u.email && u.name) {
                   await client.query(
                     `INSERT INTO usuarios (name, email, password, role, active, last_login)
                      VALUES ($1, $2, $3, $4, $5, $6)
                      ON CONFLICT (email) DO UPDATE
                      SET name = EXCLUDED.name,
-                         password = EXCLUDED.password,
+                         password = CASE WHEN EXCLUDED.password IS NOT NULL AND EXCLUDED.password != '' THEN EXCLUDED.password ELSE usuarios.password END,
                          role = EXCLUDED.role,
                          active = EXCLUDED.active,
                          last_login = COALESCE(EXCLUDED.last_login, usuarios.last_login);`,
-                    [u.name, u.email, u.password || '123456', u.role || 'Usuário', u.active !== false, u.last_login || null]
+                    [u.name, u.email, u.password, u.role || 'Usuário', u.active !== false, u.last_login || null]
                   );
                 }
               }
@@ -14168,7 +14290,7 @@ const server = http.createServer((req, res) => {
       } catch (e) {
         console.error('Erro ao salvar usuários:', e);
         res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false }));
+        res.end(JSON.stringify({ success: false, error: e.message }));
       }
     });
     return;
