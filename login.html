@@ -2477,7 +2477,7 @@
         };
 
         // 1. Submit Login
-        async function handleLoginSubmit(e) {
+        window.handleLoginSubmit = async function(e) {
             if (e) e.preventDefault();
             hideAlert();
 
@@ -2500,8 +2500,10 @@
                 localStorage.removeItem('nexus_remembered_email');
             }
 
-            btn.disabled = true;
-            btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Autenticando...';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Autenticando...';
+            }
 
             try {
                 const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/login' : targetOrigin + '/api/login';
@@ -2514,8 +2516,10 @@
 
                 if (!res.ok || !data.success) {
                     showAlert(data.error || 'E-mail ou senha incorretos!', 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>Entrar na Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<span>Entrar na Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                    }
                     return false;
                 }
 
@@ -2536,11 +2540,13 @@
             } catch (err) {
                 console.warn('Falha na requisição de login via API. Tentando autenticação local:', err);
                 showAlert('Erro ao conectar ao servidor backend (porta 3000). Verifique se o servidor está rodando.', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<span>Entrar na Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Entrar na Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                }
             }
             return false;
-        }
+        };
 
         // Gerenciamento de Usuários para Logon Rápido
         let listaUsuariosCadastrados = [];
@@ -2658,7 +2664,7 @@
         };
 
         // 2. Submit Register
-        async function handleRegisterSubmit(e) {
+        window.handleRegisterSubmit = async function(e) {
             if (e) e.preventDefault();
             hideAlert();
 
@@ -2683,8 +2689,10 @@
                 return false;
             }
 
-            btn.disabled = true;
-            btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Criando conta...';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Criando conta...';
+            }
 
             try {
                 const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/register' : targetOrigin + '/api/register';
@@ -2697,8 +2705,10 @@
 
                 if (!res.ok || !data.success) {
                     showAlert(data.error || 'Erro ao criar conta.', 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>Criar Minha Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<span>Criar Minha Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                    }
                     return false;
                 }
 
@@ -2731,14 +2741,16 @@
             } catch (err) {
                 showAlert('Erro ao conectar ao servidor backend (porta 3000). Verifique a conexão com o servidor.', 'error');
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<span>Criar Minha Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Criar Minha Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                }
             }
             return false;
-        }
+        };
 
         // 3. Submit Forgot Password
-        async function handleForgotSubmit(e) {
+        window.handleForgotSubmit = async function(e) {
             if (e) e.preventDefault();
             hideAlert();
 
@@ -2750,8 +2762,10 @@
                 return false;
             }
 
-            btn.disabled = true;
-            btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Enviando...';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Enviando...';
+            }
 
             try {
                 const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/send-password' : targetOrigin + '/api/send-password';
@@ -2763,31 +2777,25 @@
                 const data = await res.json();
 
                 if (!res.ok || !data.success) {
-                    showAlert(data.error || 'E-mail não encontrado no sistema.', 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>Recuperar Minha Senha</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                    showAlert(data.error || 'Erro ao recuperar senha.', 'error');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<span>Recuperar Minha Senha</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                    }
                     return false;
                 }
 
-                if (data.mode === 'direct' && data.tempPassword) {
-                    showAlert('<strong>Senha gerada com sucesso:</strong> <code class="bg-black/50 px-2 py-0.5 rounded text-amber-300 font-mono text-sm">' + data.tempPassword + '</code>. Preenchemos para você entrar.', 'success');
-                    document.getElementById('loginEmail').value = email;
-                    document.getElementById('loginPassword').value = data.tempPassword;
-                    setTimeout(function() {
-                        switchAuthTab('login');
-                    }, 2000);
-                } else {
-                    showAlert('Instruções e dados de acesso enviados para o seu e-mail com sucesso!', 'success');
-                }
-
-            } catch (err) {
-                showAlert('Erro ao conectar ao servidor backend. Verifique suas credenciais SMTP.', 'error');
+                showAlert('✅ ' + (data.message || 'Senha enviada com sucesso! Verifique seu e-mail.'), 'success');
+            } catch(e) {
+                showAlert('Erro ao processar solicitação de recuperação de senha.', 'error');
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<span>Recuperar Minha Senha</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Recuperar Minha Senha</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                }
             }
             return false;
-        }
+        };
 
         // ==================== Acessos & Logon Rápido ====================
         let listaUsuariosCadastradosCache = [];

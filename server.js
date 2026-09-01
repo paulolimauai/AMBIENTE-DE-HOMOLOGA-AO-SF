@@ -4431,7 +4431,7 @@ body.light .scale-dropdown {
 
       <!-- Box 1: Formulário de Login -->
       <div id="loginBox">
-        <form id="authLoginForm">
+        <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
             <label>E-mail Corporativo ou Pessoal</label>
             <div class="auth-input-wrapper">
@@ -5739,17 +5739,15 @@ if (loginPasswordEl) {
 }
 
 // Login direto contra o PostgreSQL / API com Validação Precisa em Tela e Fallback Offline
-const loginFormElement = document.getElementById('loginForm');
-if (loginFormElement) {
-  loginFormElement.onsubmit = async (e) => {
-  e.preventDefault();
+window.handleLoginSubmit = async function(e) {
+  if (e && e.preventDefault) e.preventDefault();
   if (window.clearAuthFeedback) window.clearAuthFeedback('login');
 
   const emailInput = document.getElementById('loginEmail');
   const passwordInput = document.getElementById('loginPassword');
   const email = emailInput ? emailInput.value.trim() : '';
   const password = passwordInput ? passwordInput.value.trim() : '';
-  const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+  const submitBtn = document.getElementById('loginSubmitBtn') || document.querySelector('#loginForm button[type="submit"]') || document.querySelector('#authLoginForm button[type="submit"]');
   const emailWrap = document.getElementById('wrapLoginEmail');
   const passWrap = document.getElementById('wrapLoginPass');
 
@@ -5923,8 +5921,12 @@ if (loginFormElement) {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Entrar na Conta →';
     }
-  }
 };
+
+const loginFormElement = document.getElementById('loginForm') || document.getElementById('authLoginForm');
+if (loginFormElement) {
+  loginFormElement.onsubmit = window.handleLoginSubmit;
+}
 
 function getGreetingTime() {
   const h = new Date().getHours();
