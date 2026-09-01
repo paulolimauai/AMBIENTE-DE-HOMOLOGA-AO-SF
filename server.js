@@ -699,10 +699,122 @@ body.light .auth-blob { opacity: 0.14; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* ==================== EFEITO TELA DE VIDRO PANORÂMICA (FULL GLASS SCREEN) ==================== */
+.glass-viewport-screen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Placas de Vidro Líquido Flutuantes em Profundidade */
+.glass-shard {
+  position: absolute;
+  border-radius: 36px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 60%, rgba(56, 189, 248, 0.08) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-top: 2px solid rgba(255, 255, 255, 0.65);
+  border-left: 2px solid rgba(255, 255, 255, 0.40);
+  backdrop-filter: blur(28px) saturate(220%);
+  -webkit-backdrop-filter: blur(28px) saturate(220%);
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.60),
+    inset 0 2px 4px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.glass-shard-1 {
+  top: 4%;
+  left: -3%;
+  width: 380px;
+  height: 380px;
+  transform: rotate(-14deg);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 50px rgba(56, 189, 248, 0.22), inset 0 2px 4px rgba(255,255,255,0.6);
+  animation: glassFloat1 18s ease-in-out infinite alternate;
+}
+
+.glass-shard-2 {
+  bottom: -5%;
+  right: -2%;
+  width: 440px;
+  height: 440px;
+  transform: rotate(18deg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(245, 158, 11, 0.08) 50%, rgba(16, 185, 129, 0.06) 100%);
+  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(245, 158, 11, 0.20), inset 0 2px 4px rgba(255,255,255,0.6);
+  animation: glassFloat2 22s ease-in-out infinite alternate;
+}
+
+.glass-shard-3 {
+  top: 25%;
+  right: 8%;
+  width: 220px;
+  height: 220px;
+  border-radius: 28px;
+  transform: rotate(25deg);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(99, 102, 241, 0.25), inset 0 2px 3px rgba(255,255,255,0.5);
+  animation: glassFloat3 15s ease-in-out infinite alternate;
+}
+
+.glass-shard-4 {
+  bottom: 20%;
+  left: 6%;
+  width: 200px;
+  height: 200px;
+  border-radius: 28px;
+  transform: rotate(-20deg);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(16, 185, 129, 0.22), inset 0 2px 3px rgba(255,255,255,0.5);
+  animation: glassFloat4 16s ease-in-out infinite alternate;
+}
+
+@keyframes glassFloat1 {
+  0% { transform: translateY(0) rotate(-14deg) scale(1); }
+  100% { transform: translateY(28px) rotate(-8deg) scale(1.05); }
+}
+
+@keyframes glassFloat2 {
+  0% { transform: translateY(0) rotate(18deg) scale(1); }
+  100% { transform: translateY(-32px) rotate(12deg) scale(1.04); }
+}
+
+@keyframes glassFloat3 {
+  0% { transform: translateY(0) rotate(25deg); }
+  100% { transform: translateY(-22px) rotate(32deg); }
+}
+
+@keyframes glassFloat4 {
+  0% { transform: translateY(0) rotate(-20deg); }
+  100% { transform: translateY(24px) rotate(-14deg); }
+}
+
+/* Feixe de Luz Prismática e Refrativo de Vidro que percorre a tela */
+.glass-screen-reflection {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.04) 42%, rgba(255, 255, 255, 0.10) 48%, rgba(255, 255, 255, 0.03) 54%, transparent 70%);
+  background-size: 200% 200%;
+  pointer-events: none;
+  z-index: 2;
+  animation: glassLightSweep 12s ease-in-out infinite;
+}
+
+@keyframes glassLightSweep {
+  0% { background-position: -120% -120%; }
+  50% { background-position: 120% 120%; }
+  100% { background-position: -120% -120%; }
+}
+
+body.light .glass-shard {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.50) 60%, rgba(219, 234, 254, 0.55) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 15px 45px rgba(15, 23, 42, 0.09), inset 0 2px 4px #FFFFFF !important;
+}
+
 /* Card de Autenticação Ultra 4K Liquid Glass (Eye-Catching & Profissional) */
 .auth-card-nexus {
   position: relative;
-  z-index: 2;
+  z-index: 10;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(18, 30, 58, 0.60) 25%, rgba(10, 18, 38, 0.78) 65%, rgba(4, 9, 24, 0.92) 100%) !important;
   border: 1.5px solid rgba(255, 255, 255, 0.24) !important;
   border-top: 2px solid rgba(255, 255, 255, 0.85) !important;
@@ -4089,6 +4201,16 @@ body.light .scale-dropdown {
   </div>
 
   <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
+
+  <!-- Camada de Tela de Vidro Panorâmica (Liquid Glass Screen Effect) -->
+  <div class="glass-viewport-screen pointer-events-none">
+    <div class="glass-shard glass-shard-1"></div>
+    <div class="glass-shard glass-shard-2"></div>
+    <div class="glass-shard glass-shard-3"></div>
+    <div class="glass-shard glass-shard-4"></div>
+  </div>
+  <div class="glass-screen-reflection pointer-events-none"></div>
+
   <div class="auth-grid" aria-hidden="true"></div>
   <div class="auth-blob b1"></div>
   <div class="auth-blob b2"></div>
