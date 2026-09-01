@@ -4031,11 +4031,6 @@ body.light .scale-dropdown {
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
         Criar Conta
       </button>
-      <button type="button" class="auth-tab-btn" id="tabBtnUsers">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Acessos & Logon
-        <span id="registeredUsersBadgeCountServer" style="margin-left:4px; padding:2px 6px; border-radius:999px; font-size:10px; font-weight:800; background:rgba(245,158,11,0.25); color:#FDE68A; border:1px solid rgba(245,158,11,0.4);">0</span>
-      </button>
     </div>
 
     <!-- Box 1: Formulário de Login -->
@@ -4175,32 +4170,6 @@ body.light .scale-dropdown {
 
       <div style="text-align:center; margin-top:18px;">
         <a class="auth-forgot-link" id="goLoginFromForgot">← Voltar para o Login</a>
-      </div>
-    </div>
-
-    <!-- Box 4: Aba de Usuários Cadastrados & Logon Rápido -->
-    <div id="usersBox" style="display:none;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <span style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--auth-text-dim);">Usuários para Logon Rápido</span>
-        <button type="button" onclick="carregarUsuariosLogonServer()" style="background:none; border:none; color:var(--auth-gold); font-size:12px; font-weight:700; cursor:pointer;">🔄 Atualizar</button>
-      </div>
-
-      <div class="auth-field" style="margin-bottom:12px;">
-        <div class="auth-input-wrapper" style="height:40px;">
-          <span class="auth-input-icon" style="width:36px;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          </span>
-          <input type="text" id="searchUsersLogonInputServer" oninput="filtrarUsuariosLogonServer(this.value)" placeholder="Buscar por nome ou e-mail..." style="font-size:12px;">
-        </div>
-      </div>
-
-      <div id="usersListLogonContainerServer" style="max-height:260px; overflow-y:auto; padding-right:4px; display:flex; flex-direction:column; gap:8px;">
-        <div style="text-align:center; padding:20px; color:var(--auth-text-dim); font-size:12px;">Carregando usuários cadastrados...</div>
-      </div>
-
-      <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--auth-border); display:flex; justify-content:space-between; align-items:center; font-size:12px;">
-        <a class="auth-forgot-link" onclick="window.switchAuthTab('register')" style="cursor:pointer;">+ Cadastrar Novo</a>
-        <a class="auth-forgot-link" onclick="window.switchAuthTab('login')" style="cursor:pointer;">Ir para Logon →</a>
       </div>
     </div>
 
@@ -5284,9 +5253,6 @@ if (tabLoginBtn) tabLoginBtn.onclick = () => window.switchAuthTab('login');
 
 const tabRegBtn = document.getElementById('tabBtnRegister');
 if (tabRegBtn) tabRegBtn.onclick = () => window.switchAuthTab('register');
-
-const tabUsersBtn = document.getElementById('tabBtnUsers');
-if (tabUsersBtn) tabUsersBtn.onclick = () => window.switchAuthTab('users');
 
 const authThemeBtn = document.getElementById('authThemeToggleBtn');
 if (authThemeBtn) authThemeBtn.onclick = () => window.toggleAuthTheme();
