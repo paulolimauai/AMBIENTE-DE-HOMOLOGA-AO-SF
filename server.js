@@ -4771,20 +4771,20 @@ body.light .scale-dropdown {
 
       <div class="auth-showcase-metrics">
         <div class="auth-metric-card">
-          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Economia do Mês</div>
-          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">R$ 3.850</div>
+          <div style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-bottom:4px;">Economia do Mês</div>
+          <div class="metric-val" style="font-size:18px; font-weight:900; color:var(--text);">R$ 3.850</div>
           <div style="font-size:11px; font-weight:700; color:#10B981; margin-top:2px;">+18% guardado 🎯</div>
         </div>
 
         <div class="auth-metric-card">
-          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Orçamento & Gastos</div>
-          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">Sob Controle</div>
+          <div style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-bottom:4px;">Orçamento & Gastos</div>
+          <div class="metric-val" style="font-size:18px; font-weight:900; color:var(--text);">Sob Controle</div>
           <div style="font-size:11px; font-weight:700; color:#F59E0B; margin-top:2px;">Sem sustos no fim do mês 💡</div>
         </div>
 
         <div class="auth-metric-card">
-          <div style="font-size:11px; font-weight:800; color:#94A3B8; text-transform:uppercase; margin-bottom:4px;">Metas & Sonhos</div>
-          <div class="metric-val" style="font-size:18px; font-weight:900; color:#FFFFFF;">84% Concluído</div>
+          <div style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-bottom:4px;">Metas & Sonhos</div>
+          <div class="metric-val" style="font-size:18px; font-weight:900; color:var(--text);">84% Concluído</div>
           <div style="font-size:11px; font-weight:700; color:#38BDF8; margin-top:2px;">Rumo à sua conquista 🚀</div>
         </div>
       </div>
@@ -4822,20 +4822,6 @@ body.light .scale-dropdown {
 
       <!-- Box 1: Formulário de Login -->
       <div id="loginBox">
-        <!-- Banner Dinâmico para Novo Usuário Cadastrado -->
-        <div id="newRegLogonBannerServer" style="display:none; margin-bottom:16px; padding:12px 14px; border-radius:14px; background:linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(6,78,59,0.25) 100%); border:1px solid rgba(52,211,153,0.5); box-shadow:0 4px 20px rgba(16,185,129,0.2);">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
-            <div style="display:inline-flex; align-items:center; gap:6px; color:#34d399; font-size:12px; font-weight:800;">
-              <span style="width:8px; height:8px; border-radius:50%; background:#34d399; display:inline-block;"></span>
-              <span id="newRegLogonTitleServer">🎉 Cadastro Realizado com Sucesso!</span>
-            </div>
-            <span style="padding:2px 6px; border-radius:6px; background:rgba(52,211,153,0.2); border:1px solid rgba(52,211,153,0.4); font-size:9.5px; font-weight:800; color:#6ee7b7; text-transform:uppercase;">Pronto para Logon</span>
-          </div>
-          <p id="newRegLogonDescServer" style="font-size:11.5px; color:#d1d5db; margin:0; line-height:1.4;">
-            Suas credenciais foram preenchidas no formulário abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar.
-          </p>
-        </div>
-
         <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
             <label>E-mail Corporativo ou Pessoal</label>
@@ -5615,7 +5601,7 @@ body.light .scale-dropdown {
     <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:14px; padding:14px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div>
         <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Solicitante</span>
-        <strong style="font-size:13.5px; color:#FFFFFF;" id="osAdminClientName">Nome</strong>
+        <strong style="font-size:13.5px; color:var(--text);" id="osAdminClientName">Nome</strong>
       </div>
       <div>
         <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">E-mail</span>
@@ -5912,15 +5898,6 @@ window.selecionarUsuarioParaLogonServer = function(email, pass, name) {
   if (passInput && pass) passInput.value = pass;
 
   window.switchAuthTab('login');
-
-  const banner = document.getElementById('newRegLogonBannerServer');
-  const titleEl = document.getElementById('newRegLogonTitleServer');
-  const descEl = document.getElementById('newRegLogonDescServer');
-  if (banner && titleEl && descEl) {
-    titleEl.textContent = '✨ Usuário: ' + name;
-    descEl.innerHTML = 'Credenciais de <strong>' + email + '</strong> preenchidas no Logon. Clique em Entrar.';
-    banner.style.display = 'block';
-  }
 
   const submitBtn = document.getElementById('loginSubmitBtn');
   if (submitBtn) submitBtn.focus();
@@ -6666,15 +6643,6 @@ window.handleRegisterSubmit = async function(e) {
     const loginPass = document.getElementById('loginPassword');
     if (loginEmail) loginEmail.value = cleanEmail;
     if (loginPass) loginPass.value = password;
-
-    const banner = document.getElementById('newRegLogonBannerServer');
-    const titleEl = document.getElementById('newRegLogonTitleServer');
-    const descEl = document.getElementById('newRegLogonDescServer');
-    if (banner && titleEl && descEl) {
-      titleEl.textContent = '🎉 ' + name + ', sua conta foi criada!';
-      descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Entrando na conta...';
-      banner.style.display = 'block';
-    }
 
     if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
 
@@ -9931,11 +9899,11 @@ function pageFuncoes(){
   return \`
   <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:20px;">
     <div>
-      <h1 style="display:flex; align-items:center; gap:10px; font-size:22px; font-weight:800; color:#FFFFFF;">
+      <h1 style="display:flex; align-items:center; gap:10px; font-size:22px; font-weight:800; color:var(--text);">
         <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, rgba(232,176,75,0.25), rgba(201,134,42,0.15)); border:1px solid rgba(232,176,75,0.4); color:#fbbf24; font-size:18px;">🛡️</span>
         Central de Funções & Permissões
       </h1>
-      <p style="font-size:13.5px; color:#94A3B8; margin:4px 0 0 0;">Gerencie papéis de usuários, atribuição rápida de funções, matriz de controle de acessos e permissões do sistema em tempo real.</p>
+      <p style="font-size:13.5px; color:var(--text-dim); margin:4px 0 0 0;">Gerencie papéis de usuários, atribuição rápida de funções, matriz de controle de acessos e permissões do sistema em tempo real.</p>
     </div>
     <div style="display:flex; gap:10px; align-items:center;">
       <span class="tag" style="background:rgba(232,176,75,0.15); color:#fbbf24; border:1px solid rgba(232,176,75,0.3); font-weight:700; padding:6px 14px; border-radius:20px; font-size:12px;">
@@ -9971,7 +9939,7 @@ function pageFuncoes(){
   <div class="panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25); background:var(--card);">
     <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
       <div>
-        <h3 style="font-size:16px; font-weight:700; color:#FFFFFF;">⚡ Atribuição Direta de Funções aos Usuários</h3>
+        <h3 style="font-size:16px; font-weight:700; color:var(--text);">⚡ Atribuição Direta de Funções aos Usuários</h3>
         <p class="cfg-hint" style="margin-top:4px;">Altere o perfil e nível de acesso de qualquer usuário cadastrado instantaneamente.</p>
       </div>
       <span class="tag" style="background:rgba(16,185,129,0.15); color:#34D399; border-color:rgba(16,185,129,0.3); font-weight:700;">\${totalUsers} Conta(s) no Sistema</span>
@@ -9992,7 +9960,7 @@ function pageFuncoes(){
             const isMe = currentUser && u.email.toLowerCase() === currentUser.email.toLowerCase();
             return \`
             <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td style="padding:14px 16px; font-weight:600; color:#FFFFFF;">
+              <td style="padding:14px 16px; font-weight:600; color:var(--text);">
                 <div style="display:flex; align-items:center; gap:10px;">
                   <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #3b82f6, #1d4ed8); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px;">
                     \${u.name.slice(0,2).toUpperCase()}
@@ -10003,12 +9971,12 @@ function pageFuncoes(){
                   </div>
                 </div>
               </td>
-              <td style="padding:14px 16px; color:#94A3B8; font-size:13px;">\${u.email}</td>
+              <td style="padding:14px 16px; color:var(--text-dim); font-size:13px;">\${u.email}</td>
               <td style="padding:14px 16px;">
                 <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:12px; padding:4px 10px;">\${u.role}</span>
               </td>
               <td style="padding:14px 16px;">
-                <select onchange="changeUserRoleFromFuncoes('\${u.email}', this.value)" style="height:36px; padding:0 12px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; font-weight:700; font-size:13px; cursor:pointer;">
+                <select onchange="changeUserRoleFromFuncoes('\${u.email}', this.value)" style="height:36px; padding:0 12px; border-radius:10px; background:var(--input-bg, rgba(0,0,0,0.4)); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; font-weight:700; font-size:13px; cursor:pointer;">
                   <option value="Administrador" \${u.role==='Administrador'?'selected':''}>👑 Administrador (Acesso Irrestrito)</option>
                   <option value="Gerente Financeiro" \${u.role==='Gerente Financeiro'?'selected':''}>💼 Gerente Financeiro</option>
                   <option value="Usuário" \${u.role==='Usuário'?'selected':''}>👤 Usuário / Operador Padrão</option>
@@ -10026,7 +9994,7 @@ function pageFuncoes(){
   <div class="panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25); background:var(--card);">
     <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
       <div>
-        <h3 style="font-size:16px; font-weight:700; color:#FFFFFF;">Matriz de Permissões e Capacidades do Sistema</h3>
+        <h3 style="font-size:16px; font-weight:700; color:var(--text);">Matriz de Permissões e Capacidades do Sistema</h3>
         <p class="cfg-hint" style="margin-top:4px;">Tabela detalhada de acessos, privilégios de edição e permissões ativas para cada nível de usuário.</p>
       </div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
@@ -10217,11 +10185,11 @@ function pageUsuarios(){
   return \`
   <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">
     <div>
-      <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:#FFFFFF;">
+      <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">
         <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">👥</span>
         Usuários & Contas de Acesso
       </h1>
-      <p style="font-size:13.5px; color:#94A3B8; margin:5px 0 0 0; font-weight:500;">
+      <p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">
         Gerenciamento de contas, permissões, modo espelhado e sincronização segura com o banco de dados.
       </p>
     </div>
@@ -10234,16 +10202,16 @@ function pageUsuarios(){
   <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:16px; margin-bottom:22px;">
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
       <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Total de Usuários</span>
+        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Total de Usuários</span>
         <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(59,130,246,0.3); font-size:16px;">👥</div>
       </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#FFFFFF; margin-bottom:2px; letter-spacing:-0.02em;">\${totalUsers}</div>
+      <div class="val" style="font-size:28px; font-weight:900; color:var(--text); margin-bottom:2px; letter-spacing:-0.02em;">\${totalUsers}</div>
       <div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Contas sincronizadas</div>
     </div>
 
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
       <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Administradores</span>
+        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Administradores</span>
         <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(245,158,11,0.3); font-size:16px;">👑</div>
       </div>
       <div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px; letter-spacing:-0.02em;">\${adminCount}</div>
@@ -10252,7 +10220,7 @@ function pageUsuarios(){
 
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
       <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Usuários Ativos</span>
+        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Usuários Ativos</span>
         <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.15)); border:1.5px solid rgba(52,211,153,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(16,185,129,0.3); font-size:16px;">✅</div>
       </div>
       <div class="val" style="font-size:28px; font-weight:900; color:#34D399; margin-bottom:2px; letter-spacing:-0.02em;">\${activeCount}</div>
@@ -10261,7 +10229,7 @@ function pageUsuarios(){
 
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
       <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Desativados</span>
+        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Desativados</span>
         <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(239,68,68,0.25), rgba(185,28,28,0.15)); border:1.5px solid rgba(248,113,113,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(239,68,68,0.3); font-size:16px;">🚫</div>
       </div>
       <div class="val" style="font-size:28px; font-weight:900; color:#F87171; margin-bottom:2px; letter-spacing:-0.02em;">\${inactiveCount}</div>
@@ -10272,7 +10240,7 @@ function pageUsuarios(){
   <div class="admin-toolbar-panel" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:18px; padding:12px 16px; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 8px 30px rgba(0,0,0,0.35); margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
     <div class="admin-search-wrap" style="position:relative; flex:1; min-width:240px;">
       <svg style="position:absolute; left:14px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#94A3B8; pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="adminUserSearchInput" class="admin-search-input" placeholder="Buscar por nome ou e-mail..." oninput="handleAdminUserSearch(this.value)" autocomplete="off" spellcheck="false" value="\${currentAdminUserSearch}" style="width:100%; height:42px; padding:0 14px 0 40px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14); color:#FFFFFF; font-size:13.5px; font-weight:600; outline:none; transition:all 0.2s ease;">
+      <input type="text" id="adminUserSearchInput" class="admin-search-input" placeholder="Buscar por nome ou e-mail..." oninput="handleAdminUserSearch(this.value)" autocomplete="off" spellcheck="false" value="\${currentAdminUserSearch}" style="width:100%; height:42px; padding:0 14px 0 40px; border-radius:12px; background:var(--input-bg, rgba(255,255,255,0.05)); border:1px solid rgba(255,255,255,0.14); color:var(--text); font-size:13.5px; font-weight:600; outline:none; transition:all 0.2s ease;">
     </div>
     <div class="admin-filter-bar" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
       <button class="admin-filter-btn \${currentAdminUserFilter==='all'?'active':''}" onclick="setAdminUserFilter('all', this)">Todos (\${totalUsers})</button>
@@ -10285,12 +10253,12 @@ function pageUsuarios(){
 
   <div class="panel" style="margin-bottom:0; padding:24px 26px;">
     <div class="panel-head" style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
-      <h3 style="font-size:16.5px; font-weight:800; color:#FFFFFF; display:flex; align-items:center; gap:8px;">
+      <h3 style="font-size:16.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px;">
         <span>📋</span> Lista Geral de Usuários
       </h3>
       <span class="tag" style="cursor:default; font-weight:800; font-size:12px; padding:5px 14px; border-radius:20px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#60A5FA;">\${totalUsers} cadastrado(s)</span>
     </div>
-    <p class="cfg-hint" style="margin-bottom:18px; font-size:13px; color:#94A3B8; line-height:1.5;">
+    <p class="cfg-hint" style="margin-bottom:18px; font-size:13px; color:var(--text-dim); line-height:1.5;">
       💡 Clique em <strong>👁 Espelho</strong> para inspecionar a conta do usuário em modo somente-leitura ou <strong>✏️ Editar</strong> para atualizar credenciais e papéis de acesso.
     </p>
     <div class="user-admin-list">
@@ -10753,7 +10721,7 @@ window.executarConsultaOrdens = async function(e) {
         resultsWrap.innerHTML = \`
           <div style="text-align:center; padding:30px 14px; color:#94A3B8; background:rgba(255,255,255,0.02); border-radius:14px; border:1px dashed rgba(255,255,255,0.12);">
             <div style="font-size:32px; margin-bottom:6px;">📭</div>
-            <h4 style="font-size:15px; color:#FFFFFF; margin:0 0 4px 0; font-weight:800;">Nenhum chamado encontrado</h4>
+            <h4 style="font-size:15px; color:var(--text); margin:0 0 4px 0; font-weight:800;">Nenhum chamado encontrado</h4>
             <p style="font-size:12px; margin:0; line-height:1.4;">Não encontramos nenhuma O.S. aberta para "<strong>\${escapeOsHtml(query)}</strong>". Verifique se digitou o mesmo nome ou e-mail cadastrado.</p>
           </div>
         \`;
@@ -10987,10 +10955,10 @@ function renderOrdensTable(list) {
           \${dateFormatted}
         </td>
         <td style="padding:13px 14px;">
-          <div style="font-weight:700; color:#FFFFFF; font-size:13px;">\${o.client_name || 'Anônimo'}</div>
-          <div style="font-size:11.5px; color:#94A3B8;">\${o.client_email || ''}</div>
+          <div style="font-weight:700; color:var(--text); font-size:13px;">\${o.client_name || 'Anônimo'}</div>
+          <div style="font-size:11.5px; color:var(--text-dim);">\${o.client_email || ''}</div>
         </td>
-        <td style="padding:13px 14px; font-size:12.5px; color:#E2E8F0; font-weight:600; white-space:nowrap;">
+        <td style="padding:13px 14px; font-size:12.5px; color:var(--text); font-weight:600; white-space:nowrap;">
           \${o.service_type || 'Melhoria'}
         </td>
         <td style="padding:13px 14px; white-space:nowrap;">
@@ -11055,11 +11023,11 @@ function pageOrdens(){
   return \`
   <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">
     <div>
-      <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:#FFFFFF;">
+      <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">
         <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">📋</span>
         Central de Ordens de Serviço & Suporte
       </h1>
-      <p style="font-size:13.5px; color:#94A3B8; margin:5px 0 0 0; font-weight:500;">
+      <p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">
         Gerenciamento de solicitações de melhorias, resets de senha e correções abertas pelos usuários.
       </p>
     </div>
@@ -11073,10 +11041,10 @@ function pageOrdens(){
   <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:22px;">
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
       <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Total de Chamados</span>
+        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Total de Chamados</span>
         <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">📋</div>
       </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#FFFFFF; margin-bottom:2px;">\${countTotal}</div>
+      <div class="val" style="font-size:28px; font-weight:900; color:var(--text); margin-bottom:2px;">\${countTotal}</div>
       <div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Todas as solicitações</div>
     </div>
 
@@ -11254,6 +11222,7 @@ window.excluirOrdemAdmin = async function(paramId) {
 function drawDashboardCharts(){
   if (typeof Chart === 'undefined') return;
   try {
+    const isLightMode = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
     const periodTx = Array.isArray(transactions) ? transactions.filter(inPeriod) : [];
     const {receitas,despesas} = computeTotals(periodTx);
     Object.values(charts).forEach(c=>c && c.destroy && c.destroy());
@@ -11267,7 +11236,7 @@ function drawDashboardCharts(){
           backgroundColor:['#10B981','#EF4444'],
           hoverBackgroundColor:['#34D399','#F87171'],
           borderWidth:2,
-          borderColor:'rgba(11,15,24,0.6)'
+          borderColor: isLightMode ? '#FFFFFF' : 'rgba(11,15,24,0.6)'
         }] 
       },
       options:{
@@ -11290,7 +11259,7 @@ function drawDashboardCharts(){
     const ctx2 = document.getElementById('chartCategorias');
     if(ctx2) charts.categorias = new Chart(ctx2, {
       type:'doughnut',
-      data:{ labels:cats.map(c=>c.name), datasets:[{data: cats.length?cats.map(c=>c.val):[1], backgroundColor: cats.length?cats.map(c=>c.color):['#2a2f3a'], borderWidth:0}] },
+      data:{ labels:cats.map(c=>c.name), datasets:[{data: cats.length?cats.map(c=>c.val):[1], backgroundColor: cats.length?cats.map(c=>c.color):[isLightMode ? '#E2E8F0' : '#2a2f3a'], borderWidth:0}] },
       options:{cutout:'62%', plugins:{legend:{display:false}}}
     });
   } catch(e) {
