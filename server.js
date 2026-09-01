@@ -381,12 +381,12 @@ body.light, html.light body{
 html, body{overflow-x:clip !important; width:100%;}
 body{
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-  background-color:#050507;
+  background-color:#060913;
   background-image:
-    radial-gradient(at 15% 15%, rgba(255, 255, 255, 0.05) 0px, transparent 55%),
-    radial-gradient(at 85% 20%, rgba(148, 163, 184, 0.06) 0px, transparent 55%),
-    radial-gradient(at 50% 85%, rgba(255, 255, 255, 0.03) 0px, transparent 50%),
-    linear-gradient(180deg, #050507 0%, #0c0c10 50%, #030304 100%);
+    radial-gradient(at 15% 15%, rgba(14, 116, 144, 0.15) 0px, transparent 55%),
+    radial-gradient(at 85% 20%, rgba(30, 58, 138, 0.18) 0px, transparent 55%),
+    radial-gradient(at 50% 85%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+    linear-gradient(180deg, #060913 0%, #080E21 50%, #050814 100%);
   background-attachment:fixed;
   color:var(--text); min-height:100vh; transition:background .25s,color .25s;
   zoom:var(--app-zoom, 1);
@@ -452,17 +452,17 @@ html, body {
   }
 }
 
-/* ==================== Tela de Auth Ultra Moderna (Paleta Stealth Preto, Cinza e Branco) ==================== */
+/* ==================== Tela de Auth Ultra Moderna (Visual Liquid Glass 4K) ==================== */
 .auth-container {
-  --auth-gold: #FFFFFF;
-  --auth-gold-dark: #E2E8F0;
-  --auth-blue: #94A3B8;
-  --auth-emerald: #CBD5E1;
-  --auth-teal: #E2E8F0;
-  --auth-card: linear-gradient(145deg, rgba(28, 28, 34, 0.70) 0%, rgba(16, 16, 20, 0.85) 42%, rgba(8, 8, 10, 0.95) 100%);
+  --auth-gold: #F59E0B;
+  --auth-gold-dark: #D97706;
+  --auth-blue: #3B82F6;
+  --auth-emerald: #10B981;
+  --auth-teal: #0D9488;
+  --auth-card: linear-gradient(145deg, rgba(30, 41, 65, 0.58) 0%, rgba(15, 23, 42, 0.76) 42%, rgba(8, 12, 26, 0.88) 100%);
   --auth-border: rgba(255, 255, 255, 0.16);
-  --auth-input-bg: rgba(14, 14, 18, 0.65);
-  --auth-text: #FFFFFF;
+  --auth-input-bg: rgba(4, 7, 16, 0.65);
+  --auth-text: #F8FAFC;
   --auth-text-dim: #94A3B8;
   position: relative;
   overflow: hidden;
@@ -472,14 +472,14 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   padding: 24px 16px;
-  background-color: #040406;
+  background-color: #020409;
   background-image: 
-    radial-gradient(at 15% 15%, rgba(255, 255, 255, 0.07) 0px, transparent 50%),
-    radial-gradient(at 85% 15%, rgba(148, 163, 184, 0.08) 0px, transparent 55%),
-    radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.04) 0px, transparent 55%),
-    radial-gradient(at 18% 85%, rgba(203, 213, 225, 0.05) 0px, transparent 50%),
-    radial-gradient(at 82% 85%, rgba(100, 116, 139, 0.07) 0px, transparent 55%),
-    linear-gradient(180deg, #040406 0%, #0c0c10 50%, #020203 100%);
+    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.28) 0px, transparent 50%),
+    radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.30) 0px, transparent 55%),
+    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.22) 0px, transparent 55%),
+    radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.20) 0px, transparent 50%),
+    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.28) 0px, transparent 55%),
+    linear-gradient(180deg, #020409 0%, #060B18 50%, #010206 100%);
   background-attachment: fixed;
 }
 .auth-container.show { display: flex; }
@@ -492,7 +492,7 @@ html, body {
   transform: translate(-50%, -50%);
   width: 580px;
   height: 580px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.10) 0%, rgba(148, 163, 184, 0.06) 40%, rgba(30, 41, 59, 0.04) 65%, transparent 75%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.20) 0%, rgba(59, 130, 246, 0.16) 40%, rgba(16, 185, 129, 0.10) 65%, transparent 75%);
   filter: blur(65px);
   pointer-events: none;
   z-index: 1;
@@ -500,8 +500,8 @@ html, body {
   animation: authAuraPulse 6s ease-in-out infinite alternate;
 }
 @keyframes authAuraPulse {
-  0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.65; }
-  100% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.95; }
+  0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.75; }
+  100% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
 }
 
 body.light .auth-container {
@@ -585,33 +585,31 @@ body.light .auth-theme-btn {
 .auth-blob.b1 {
   width: 460px;
   height: 460px;
-  background: #334155;
+  background: #10B981;
   top: -110px;
   left: -110px;
-  opacity: 0.20;
   animation: blobFloat 22s ease-in-out infinite;
 }
 .auth-blob.b2 {
   width: 440px;
   height: 440px;
-  background: #1E293B;
+  background: #3B82F6;
   bottom: -130px;
   right: -90px;
-  opacity: 0.25;
   animation: blobFloat 26s ease-in-out infinite;
   animation-delay: -9s;
 }
 .auth-blob.b3 {
   width: 420px;
   height: 420px;
-  background: #64748B;
+  background: #F59E0B;
   top: 28%;
   right: 12%;
-  opacity: 0.12;
+  opacity: 0.20;
   animation: blobFloat 28s ease-in-out infinite;
   animation-delay: -14s;
 }
-body.light .auth-blob { opacity: 0.10; }
+body.light .auth-blob { opacity: 0.14; }
 
 @keyframes blobFloat {
   0%, 100% { transform: translate(0, 0) scale(1); }
@@ -624,27 +622,28 @@ body.light .auth-blob { opacity: 0.10; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Card de Autenticação Ultra 4K Liquid Glass (Paleta Stealth Preto, Cinza e Branco) */
+/* Card de Autenticação Ultra 4K Liquid Glass (Eye-Catching & Profissional) */
 .auth-card-nexus {
   position: relative;
   z-index: 2;
-  background: linear-gradient(145deg, rgba(30, 30, 38, 0.70) 0%, rgba(18, 18, 22, 0.88) 42%, rgba(10, 10, 12, 0.96) 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
-  border-top: 2px solid rgba(255, 255, 255, 0.85) !important;
-  border-left: 1.5px solid rgba(255, 255, 255, 0.40) !important;
-  border-right: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(26, 40, 71, 0.46) 28%, rgba(12, 19, 39, 0.65) 68%, rgba(6, 11, 25, 0.82) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.70) !important;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.42) !important;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 32px;
   padding: 40px 38px;
   width: 100%;
   max-width: 460px;
   box-shadow: 
-    0 40px 100px -15px rgba(0, 0, 0, 0.98),
-    0 0 50px rgba(255, 255, 255, 0.06),
-    inset 0 2px 3px rgba(255, 255, 255, 0.50),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.80) !important;
-  backdrop-filter: blur(48px) saturate(190%);
-  -webkit-backdrop-filter: blur(48px) saturate(190%);
+    0 35px 90px -10px rgba(0, 0, 0, 0.85),
+    0 0 65px rgba(245, 158, 11, 0.25),
+    0 0 95px rgba(59, 130, 246, 0.22),
+    inset 0 2px 3px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(48px) saturate(220%);
+  -webkit-backdrop-filter: blur(48px) saturate(220%);
   animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
@@ -656,15 +655,15 @@ body.light .auth-blob { opacity: 0.10; }
   left: 6%;
   right: 6%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), #FFFFFF 50%, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #FFFFFF 50%, rgba(253, 230, 138, 0.95) 65%, transparent);
   pointer-events: none;
   z-index: 3;
 }
 body.light .auth-card-nexus {
-  background: rgba(255, 255, 255, 0.90) !important;
-  border: 1.5px solid rgba(203, 213, 225, 0.8) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
   border-top: 2px solid #FFFFFF !important;
-  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12), inset 0 2px 4px #FFFFFF !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12), 0 0 35px rgba(245, 158, 11, 0.12), inset 0 2px 4px #FFFFFF !important;
   backdrop-filter: blur(40px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
 }
@@ -681,30 +680,30 @@ body.light .auth-card-nexus {
   width: 68px;
   height: 68px;
   border-radius: 22px;
-  background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 25%, #94A3B8 60%, #475569 85%, #1E293B 100%) !important;
-  color: #0A0A0C !important;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 22%, #F59E0B 52%, #D97706 78%, #92400E 100%) !important;
+  color: #030712 !important;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   font-size: 30px;
   font-family: 'Outfit', sans-serif;
-  border: 2px solid #FFFFFF !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 35px rgba(255, 255, 255, 0.35), inset 0 2.5px 4px #FFFFFF !important;
+  border: 2px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 16px 42px rgba(245, 158, 11, 0.70), 0 0 32px rgba(245, 158, 11, 0.50), inset 0 2.5px 4px #FFFFFF !important;
   margin-bottom: 16px;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
 .auth-logo-badge:hover {
   transform: scale(1.08) rotate(-3deg);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.9), 0 0 45px rgba(255, 255, 255, 0.50), inset 0 3px 5px #FFFFFF !important;
+  box-shadow: 0 20px 48px rgba(245, 158, 11, 0.85), 0 0 42px rgba(245, 158, 11, 0.65), inset 0 3px 5px #FFFFFF !important;
 }
 .auth-logo-badge::after {
   content: '';
   position: absolute;
   inset: -8px;
   border-radius: 28px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.55) 0%, transparent 70%);
   z-index: -1;
   animation: logoPulse 3s ease-in-out infinite alternate;
 }
@@ -722,35 +721,35 @@ body.light .auth-card-nexus {
   display: flex;
   align-items: center;
   gap: 8px;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
 }
 .auth-title span {
-  color: #F1F5F9;
+  color: #FBBF24;
   font-size: 14px;
   font-weight: 900;
   letter-spacing: 0.14em;
-  text-shadow: 0 0 18px rgba(255, 255, 255, 0.75), 0 0 32px rgba(255, 255, 255, 0.35);
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.85), 0 0 35px rgba(245, 158, 11, 0.45);
 }
 
 .auth-subtitle {
   font-size: 13px;
-  color: #94A3B8;
+  color: #CBD5E1;
   margin-top: 6px;
   font-weight: 500;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Abas de Navegação Segmentada (Entrar / Criar Conta) */
 .auth-tabs-nav {
   display: flex;
-  background: rgba(14, 14, 18, 0.75) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+  background: rgba(6, 11, 25, 0.65) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.30) !important;
   border-radius: 18px !important;
   padding: 6px !important;
   margin-bottom: 24px;
   gap: 6px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55), 0 4px 16px rgba(0, 0, 0, 0.25) !important;
   backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
 }
@@ -781,10 +780,10 @@ body.light .auth-tabs-nav {
   background: rgba(255, 255, 255, 0.08);
 }
 .auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
-  color: #FFFFFF !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.40) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.35) 0%, rgba(180, 83, 9, 0.25) 100%) !important;
+  color: #FDE68A !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.75) !important;
+  box-shadow: 0 4px 22px rgba(245, 158, 11, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.50) !important;
   font-weight: 800;
 }
 body.light .auth-tab-btn {
@@ -795,7 +794,7 @@ body.light .auth-tab-btn:hover {
 }
 body.light .auth-tab-btn.active {
   background: #FFFFFF !important;
-  color: #0F172A !important;
+  color: #B45309 !important;
   border-color: #CBD5E1 !important;
   box-shadow: 0 2px 8px rgba(15,23,42,0.08) !important;
 }
@@ -812,20 +811,20 @@ body.light .auth-tab-btn.active {
   margin-bottom: 7px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .auth-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(14, 14, 18, 0.65) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.14) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+  background: rgba(8, 14, 30, 0.55) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.30) !important;
   border-radius: 16px !important;
   backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6), 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.06) !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.08) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 body.light .auth-input-wrapper {
@@ -835,20 +834,20 @@ body.light .auth-input-wrapper {
 }
 
 .auth-input-wrapper:focus-within {
-  border-color: #FFFFFF !important;
-  background: rgba(22, 22, 28, 0.85) !important;
-  box-shadow: 0 0 28px rgba(255, 255, 255, 0.25), inset 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(245, 158, 11, 0.95) !important;
+  background: rgba(14, 23, 48, 0.75) !important;
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.45), inset 0 2px 4px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255, 255, 255, 0.25) !important;
   transform: translateY(-1.5px);
 }
 body.light .auth-input-wrapper:focus-within {
   background: #FFFFFF !important;
-  border-color: #0F172A !important;
-  box-shadow: 0 0 20px rgba(15, 23, 42, 0.15) !important;
+  border-color: #D97706 !important;
+  box-shadow: 0 0 20px rgba(217, 119, 6, 0.20) !important;
 }
 
 .auth-input-wrapper.highlight-glow {
-  border-color: #FFFFFF !important;
-  box-shadow: 0 0 28px rgba(255, 255, 255, 0.40) !important;
+  border-color: var(--auth-gold) !important;
+  box-shadow: 0 0 28px rgba(245, 158, 11, 0.6) !important;
 }
 
 @keyframes authShake {
@@ -983,9 +982,9 @@ body.light .auth-pass-toggle-btn:hover {
   width: 100%;
   height: 52px;
   padding: 0 22px;
-  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 30%, #E2E8F0 70%, #CBD5E1 100%) !important;
-  color: #0A0A0C !important;
-  border: 1.5px solid #FFFFFF !important;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 18%, #F59E0B 48%, #D97706 78%, #B45309 100%) !important;
+  color: #030712 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
   border-top: 2px solid #FFFFFF !important;
   border-radius: 16px !important;
   font-weight: 900 !important;
@@ -993,7 +992,7 @@ body.light .auth-pass-toggle-btn:hover {
   letter-spacing: 0.02em;
   cursor: pointer;
   margin-top: 10px;
-  box-shadow: 0 16px 42px -4px rgba(255, 255, 255, 0.30), 0 0 30px rgba(255, 255, 255, 0.15), inset 0 2px 3px #FFFFFF !important;
+  box-shadow: 0 16px 42px -4px rgba(245, 158, 11, 0.75), 0 0 32px rgba(245, 158, 11, 0.50), inset 0 2px 3px #FFFFFF !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
@@ -1007,13 +1006,13 @@ body.light .auth-pass-toggle-btn:hover {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.70), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
   transition: left 0.6s ease;
 }
 .btn-auth-primary:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.10);
   transform: translateY(-2.5px);
-  box-shadow: 0 20px 48px -4px rgba(255, 255, 255, 0.50), 0 0 40px rgba(255, 255, 255, 0.30), inset 0 2px 3px #FFFFFF !important;
+  box-shadow: 0 20px 48px -4px rgba(245, 158, 11, 0.90), 0 0 42px rgba(245, 158, 11, 0.65), inset 0 2px 3px #FFFFFF !important;
 }
 .btn-auth-primary:hover::before {
   left: 100%;
@@ -1029,7 +1028,7 @@ body.light .auth-pass-toggle-btn:hover {
 
 .auth-forgot-link {
   font-size: 12.5px;
-  color: #CBD5E1;
+  color: var(--auth-gold);
   font-weight: 700;
   cursor: pointer;
   transition: color 0.15s;
@@ -1037,10 +1036,10 @@ body.light .auth-pass-toggle-btn:hover {
 }
 .auth-forgot-link:hover {
   text-decoration: underline;
-  color: #FFFFFF;
+  color: #FCD34D;
 }
 
-/* Botão 4K Glass para Abertura e Consulta de Ordem de Serviço (Obsidian Stealth Glass) */
+/* Botão 4K Glass para Abertura e Consulta de Ordem de Serviço */
 .btn-open-os {
   display: inline-flex;
   align-items: center;
@@ -1049,26 +1048,26 @@ body.light .auth-pass-toggle-btn:hover {
   width: 100%;
   height: 50px;
   padding: 0 20px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(30, 30, 38, 0.60) 50%, rgba(12, 12, 16, 0.90) 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
-  border-top: 1.8px solid rgba(255, 255, 255, 0.70) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.32) 0%, rgba(30, 64, 175, 0.52) 50%, rgba(15, 23, 42, 0.85) 100%) !important;
+  border: 1.5px solid rgba(147, 197, 253, 0.60) !important;
+  border-top: 1.8px solid rgba(219, 234, 254, 0.85) !important;
   border-radius: 16px !important;
-  color: #F8FAFC !important;
+  color: #DBEAFE !important;
   font-size: 13.5px !important;
   font-weight: 800 !important;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 24px rgba(255, 255, 255, 0.08), inset 0 1.5px 2px rgba(255, 255, 255, 0.30) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 26px rgba(59, 130, 246, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
 }
 .btn-open-os:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(45, 45, 55, 0.75) 50%, rgba(20, 20, 26, 0.98) 100%) !important;
-  border-color: rgba(255, 255, 255, 0.75) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.48) 0%, rgba(37, 99, 235, 0.65) 50%, rgba(30, 58, 138, 0.95) 100%) !important;
+  border-color: rgba(191, 219, 254, 0.95) !important;
   color: #FFFFFF !important;
   transform: translateY(-2px);
-  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.8), 0 0 35px rgba(255, 255, 255, 0.20), inset 0 1.5px 2px #FFFFFF !important;
+  box-shadow: 0 16px 42px rgba(59, 130, 246, 0.65), 0 0 38px rgba(96, 165, 250, 0.50), inset 0 1.5px 2px #FFFFFF !important;
 }
 .btn-open-os svg {
   transition: transform 0.2s ease;
@@ -1086,14 +1085,14 @@ body.light .auth-pass-toggle-btn:hover {
   width: 100%;
   padding: 10px 16px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1.5px solid rgba(255, 255, 255, 0.20);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
   color: #E2E8F0;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   transition: all 0.2s ease;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -12953,7 +12952,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
     const badgeTexts = ['▲ +18.4%', '+$2.5k', '+12.8%', 'R$ 1.8M', '▲ +24.5%', '+$840', '+9.2%', 'R$ 350k'];
     const currencyCoins = ['R$', '$', '€', '£', '₿'];
-    const colors = ['#FFFFFF', '#E2E8F0', '#CBD5E1', '#94A3B8', '#64748B'];
+    const colors = ['#38BDF8', '#F59E0B', '#34D399', '#818CF8', '#FBBF24', '#60A5FA', '#A78BFA'];
 
     const items = [];
     const itemCount = 34;
@@ -12998,7 +12997,7 @@ if (scaleMenuBtn && scaleDropdown) {
       }
       ctx.restore();
 
-      // B. Onda Financeira Secundária de Fundo (Grafite Translúcido)
+      // B. Onda Financeira Secundária de Fundo (Índigo Real / Safira)
       waveOffset += 0.01;
       const waveY = height * 0.74;
       ctx.save();
@@ -13011,11 +13010,11 @@ if (scaleMenuBtn && scaleDropdown) {
       }
       ctx.lineTo(width, height);
       ctx.closePath();
-      ctx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.025)' : 'rgba(255, 255, 255, 0.03)';
+      ctx.fillStyle = isLight ? 'rgba(99, 102, 241, 0.04)' : 'rgba(99, 102, 241, 0.09)';
       ctx.fill();
       ctx.restore();
 
-      // C. Onda Financeira Principal (Platina Luminous & Fumo Grafite)
+      // C. Onda Financeira Principal (Ciano Elétrico & Safira Lucro Mercado)
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(0, height);
@@ -13031,44 +13030,44 @@ if (scaleMenuBtn && scaleDropdown) {
 
       const waveGrad = ctx.createLinearGradient(0, waveY - 50, 0, height);
       if (isLight) {
-        waveGrad.addColorStop(0, 'rgba(15, 23, 42, 0.10)');
-        waveGrad.addColorStop(0.5, 'rgba(71, 85, 105, 0.04)');
+        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.16)');
+        waveGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.06)');
         waveGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
       } else {
-        waveGrad.addColorStop(0, 'rgba(255, 255, 255, 0.14)');
-        waveGrad.addColorStop(0.45, 'rgba(148, 163, 184, 0.05)');
-        waveGrad.addColorStop(0.8, 'rgba(30, 41, 59, 0.02)');
-        waveGrad.addColorStop(1, 'rgba(4, 4, 6, 0)');
+        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.25)');
+        waveGrad.addColorStop(0.45, 'rgba(59, 130, 246, 0.12)');
+        waveGrad.addColorStop(0.8, 'rgba(30, 58, 138, 0.05)');
+        waveGrad.addColorStop(1, 'rgba(2, 4, 10, 0)');
       }
       ctx.fillStyle = waveGrad;
       ctx.fill();
 
-      // Linha de Contorno Branco Platina com Sombra Luminous
+      // Linha de Contorno Ciano Elétrico com Sombra Neon
       ctx.beginPath();
       for (let x = 0; x <= width; x += 20) {
         const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.75)' : 'rgba(255, 255, 255, 0.90)';
+      ctx.strokeStyle = isLight ? 'rgba(14, 165, 233, 0.75)' : 'rgba(56, 189, 248, 0.90)';
       ctx.lineWidth = 2.6;
-      ctx.shadowColor = '#FFFFFF';
-      ctx.shadowBlur = isLight ? 6 : 18;
+      ctx.shadowColor = '#38BDF8';
+      ctx.shadowBlur = isLight ? 8 : 20;
       ctx.stroke();
       ctx.restore();
 
-      // Nódulos de Pico com Indicadores ▲ Diamond White
+      // Nódulos de Pico com Indicadores ▲ Luminous Ciano
       wavePoints.forEach(pt => {
         ctx.save();
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.shadowColor = '#FFFFFF';
-        ctx.shadowBlur = 14;
+        ctx.fillStyle = '#38BDF8';
+        ctx.shadowColor = '#38BDF8';
+        ctx.shadowBlur = 12;
         ctx.fill();
 
         ctx.font = '800 10px "Outfit", sans-serif';
-        ctx.fillStyle = '#E2E8F0';
+        ctx.fillStyle = '#7DD3FC';
         ctx.fillText('▲', pt.x - 3.5, pt.y - 8);
         ctx.restore();
       });
@@ -13085,10 +13084,10 @@ if (scaleMenuBtn && scaleDropdown) {
             ctx.beginPath();
             ctx.moveTo(items[i].x, items[i].y);
             ctx.lineTo(items[j].x, items[j].y);
-            const connAlpha = (1 - dist / 130) * 0.18;
+            const connAlpha = (1 - dist / 130) * 0.20;
             ctx.strokeStyle = isLight 
-              ? 'rgba(0, 0, 0, ' + connAlpha + ')' 
-              : 'rgba(255, 255, 255, ' + (connAlpha * 1.1) + ')';
+              ? 'rgba(14, 165, 233, ' + connAlpha + ')' 
+              : 'rgba(56, 189, 248, ' + (connAlpha * 1.3) + ')';
             ctx.lineWidth = 1;
             ctx.stroke();
             ctx.restore();
