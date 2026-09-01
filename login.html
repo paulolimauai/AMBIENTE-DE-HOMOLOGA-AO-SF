@@ -126,6 +126,7 @@
         }
     </script>
 
+    <style>
         :root {
             --auth-bg: #02040A;
             --auth-card: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(18, 30, 58, 0.60) 25%, rgba(10, 18, 38, 0.78) 65%, rgba(4, 9, 24, 0.92) 100%);
@@ -143,7 +144,7 @@
             --auth-tab-bg: rgba(4, 9, 22, 0.82);
         }
 
-        body.light, html.light body {
+        body.light, html.light body, html.light {
             --auth-bg: #F1F5F9;
             --auth-card: rgba(255, 255, 255, 0.98);
             --auth-border: #CBD5E1;
@@ -151,7 +152,7 @@
             --auth-input-bg: #FFFFFF;
             --auth-input-border: #CBD5E1;
             --auth-text: #0F172A;
-            --auth-text-dim: #475569;
+            --auth-text-dim: #334155;
             --auth-gold: #D97706;
             --auth-gold-light: #B45309;
             --auth-gold-glow: rgba(217, 119, 6, 0.20);
@@ -163,7 +164,7 @@
                 radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
                 linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%) !important;
             background-attachment: fixed !important;
-            color: var(--auth-text) !important;
+            color: #0F172A !important;
         }
 
         * {
@@ -359,15 +360,53 @@
             -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
         }
 
-        /* Headers & Textos em Modo Claro */
-        body.light .auth-brand-nexus {
+        /* Headers, Textos & Showcase em Modo Claro */
+        body.light .auth-brand-nexus,
+        html.light .auth-brand-nexus {
             color: #0F172A !important;
         }
-        body.light .auth-label {
+        body.light .auth-label,
+        html.light .auth-label {
             color: #334155 !important;
         }
-        body.light .auth-subtitle-text {
+        body.light .auth-subtitle-text,
+        html.light .auth-subtitle-text {
             color: #475569 !important;
+        }
+
+        /* Showcase da Coluna Esquerda em Modo Claro */
+        body.light h1,
+        html.light h1 {
+            color: #0F172A !important;
+        }
+        body.light p,
+        html.light p {
+            color: #334155 !important;
+        }
+        body.light .text-white:not(.btn-auth-gradient *):not(.btn-open-os *):not(.btn-consult-os *):not(.bg-gradient-to-r *):not(.bg-gradient-to-br *) {
+            color: #0F172A !important;
+        }
+        body.light .text-slate-100,
+        body.light .text-slate-200,
+        body.light .text-slate-300 {
+            color: #334155 !important;
+        }
+        body.light .text-slate-400 {
+            color: #475569 !important;
+        }
+        body.light .text-slate-500 {
+            color: #64748B !important;
+        }
+        body.light .bg-white\/\[0\.04\],
+        body.light .bg-white\/\[0\.02\],
+        body.light .bg-white\/5 {
+            background: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+        }
+        body.light .auth-showcase-metrics .text-white,
+        body.light .p-4 .text-white {
+            color: #0F172A !important;
         }
 
         /* Abas em Modo Claro */
@@ -990,6 +1029,83 @@
         body.light #boxNovaOrdemModal button.close-x:hover,
         html.light #boxNovaOrdemModal button.close-x:hover {
             color: #0F172A !important;
+        }
+
+        /* Modais de Sucesso e Logout em Modo Claro */
+        body.light #successModalBox,
+        html.light #successModalBox,
+        body.light #logoutModalBox,
+        html.light #logoutModalBox {
+            background: #FFFFFF !important;
+            border: 1.5px solid #CBD5E1 !important;
+            box-shadow: 0 25px 70px rgba(15, 23, 42, 0.18) !important;
+        }
+        body.light #loginSuccessTitle,
+        html.light #loginSuccessTitle,
+        body.light #logoutSuccessTitle,
+        html.light #logoutSuccessTitle {
+            color: #0F172A !important;
+        }
+        body.light #loginSuccessSub,
+        html.light #loginSuccessSub,
+        body.light #logoutSuccessMsg,
+        html.light #logoutSuccessMsg {
+            color: #475569 !important;
+        }
+
+        /* Banner de Novo Cadastro & Checklist de Senha em Modo Claro */
+        body.light #newRegLogonBanner {
+            background: #ECFDF5 !important;
+            border-color: #A7F3D0 !important;
+        }
+        body.light #newRegLogonTitle {
+            color: #065F46 !important;
+        }
+        body.light #newRegLogonDesc {
+            color: #047857 !important;
+        }
+        body.light #pwdStrengthContainer span {
+            color: #475569 !important;
+        }
+        body.light #pwdBar2,
+        body.light #pwdBar3,
+        body.light #pwdBar4 {
+            background: #E2E8F0 !important;
+        }
+
+        /* Resultados de Consulta de O.S. em Modo Claro */
+        body.light #osConsultarResultados,
+        html.light #osConsultarResultados {
+            color: #0F172A !important;
+        }
+        body.light #osConsultarResultados .text-white,
+        html.light #osConsultarResultados .text-white {
+            color: #0F172A !important;
+        }
+        body.light #osConsultarResultados .text-slate-300,
+        body.light #osConsultarResultados .text-slate-200,
+        body.light #osConsultarResultados .text-slate-100,
+        html.light #osConsultarResultados .text-slate-300,
+        html.light #osConsultarResultados .text-slate-200,
+        html.light #osConsultarResultados .text-slate-100 {
+            color: #334155 !important;
+        }
+        body.light #osConsultarResultados .text-slate-400,
+        html.light #osConsultarResultados .text-slate-400 {
+            color: #64748B !important;
+        }
+        body.light #osConsultarResultados .bg-black\/30,
+        html.light #osConsultarResultados .bg-black\/30 {
+            background: #F1F5F9 !important;
+            border-color: #E2E8F0 !important;
+            color: #1E293B !important;
+        }
+        body.light #boxNovaOrdemSuccess .bg-white\/5 {
+            background: #F8FAFC !important;
+            border-color: #93C5FD !important;
+        }
+        body.light #osSuccessProtocol {
+            color: #1D4ED8 !important;
         }
 
         /* ==================== Assinatura Executiva Ultra 4K Glass Estável (Paulo Lima) ==================== */
@@ -1756,7 +1872,7 @@
     </footer>
 
     <script>
-        const targetOrigin = (window.location.origin && window.location.origin.includes('http')) 
+        const targetOrigin = (window.location.origin && window.location.origin.includes('http') && !window.location.origin.includes(':5500') && !window.location.origin.includes(':5501')) 
             ? window.location.origin 
             : 'http://localhost:3000';
 

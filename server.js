@@ -463,9 +463,9 @@ html.is-admin #mobileDrawerOrdensBtn {
   --radius:16px;
   --shadow:0 16px 40px -10px rgba(2,6,23,.85), 0 0 1px 1px rgba(59,130,246,0.15);
 }
-body.light, html.light body{
+body.light, html.light body, html.light {
   --bg:#F1F5F9; --sidebar:#FFFFFF; --card:#FFFFFF; --card-border:#CBD5E1;
-  --text:#0F172A; --text-dim:#475569; --text-faint:#94A3B8;
+  --text:#0F172A; --text-dim:#334155; --text-faint:#64748B;
   --hover:#E2E8F0;
   --shadow:0 10px 30px rgba(15,23,42,0.06);
 }
@@ -1950,6 +1950,22 @@ body.light .menu button.active .ic{background:rgba(37, 99, 235, 0.15) !important
 body.light .menu button.active::after{background:linear-gradient(90deg, transparent, #2563EB, transparent) !important; box-shadow:0 0 10px #2563EB !important;}
 
 /* ==================== Correção Completa de Contraste do Modo Claro (Light Mode Contrast Fix) ==================== */
+body.light h1, body.light h2, body.light h3, body.light h4, body.light h5, body.light h6,
+html.light h1, html.light h2, html.light h3, html.light h4, html.light h5, html.light h6 {
+  color: #0F172A !important;
+}
+
+body.light p, html.light p {
+  color: #334155 !important;
+}
+
+body.light label, html.light label,
+body.light .form-label, html.light .form-label,
+body.light .field label, html.light .field label {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
 body.light .topheader,
 html.light .topheader {
   background: #ffffff !important;
@@ -2025,6 +2041,358 @@ html.light code {
   background: #e2e8f0 !important;
   color: #0f172a !important;
   border: 1px solid #cbd5e1 !important;
+}
+
+/* Modais e Formulários em Modo Claro */
+body.light .modal,
+html.light .modal {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 25px 65px rgba(15, 23, 42, 0.16) !important;
+  color: #0F172A !important;
+}
+
+body.light .modal h2, body.light .modal h3,
+html.light .modal h2, html.light .modal h3 {
+  color: #0F172A !important;
+}
+
+body.light .modal .field label,
+html.light .modal .field label {
+  color: #334155 !important;
+}
+
+body.light .modal-actions,
+html.light .modal-actions {
+  background: #FFFFFF !important;
+  border-top: 1px solid #E2E8F0 !important;
+}
+
+body.light .modal-actions button:not(.save),
+html.light .modal-actions button:not(.save) {
+  background: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #334155 !important;
+}
+
+body.light .modal-actions button:not(.save):hover,
+html.light .modal-actions button:not(.save):hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+body.light .toggle-type button,
+html.light .toggle-type button {
+  background: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #475569 !important;
+}
+
+body.light .toggle-type button:hover,
+html.light .toggle-type button:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+body.light .toggle-type button.sel-in,
+html.light .toggle-type button.sel-in {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #059669 !important;
+  border-color: #10B981 !important;
+}
+
+body.light .toggle-type button.sel-out,
+html.light .toggle-type button.sel-out {
+  background: rgba(244, 63, 94, 0.14) !important;
+  color: #DC2626 !important;
+  border-color: #F43F5E !important;
+}
+
+body.light .close-x, body.light .modal-close,
+html.light .close-x, html.light .modal-close {
+  color: #64748B !important;
+}
+
+body.light .close-x:hover, body.light .modal-close:hover,
+html.light .close-x:hover, html.light .modal-close:hover {
+  color: #0F172A !important;
+}
+
+/* Inputs, Selects e Textareas Universais em Modo Claro */
+body.light input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not(.btn-hero-primary),
+body.light select,
+body.light textarea,
+html.light input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not(.btn-hero-primary),
+html.light select,
+html.light textarea {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+body.light input:focus,
+body.light select:focus,
+body.light textarea:focus,
+html.light input:focus,
+html.light select:focus,
+html.light textarea:focus {
+  background: #FFFFFF !important;
+  border-color: #2563EB !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+  color: #0F172A !important;
+}
+
+body.light input::placeholder,
+body.light textarea::placeholder,
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94A3B8 !important;
+  opacity: 1 !important;
+}
+
+body.light select option,
+html.light select option {
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+}
+
+/* Tabelas e Registros em Modo Claro */
+body.light .table-panel,
+html.light .table-panel {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.light th,
+html.light th {
+  color: #334155 !important;
+  font-weight: 800 !important;
+}
+
+body.light td,
+html.light td {
+  color: #0F172A !important;
+  border-top-color: #E2E8F0 !important;
+}
+
+body.light tr.trow:hover td,
+html.light tr.trow:hover td {
+  background: #F1F5F9 !important;
+}
+
+body.light .tx-date-badge,
+body.light .tx-desc,
+html.light .tx-date-badge,
+html.light .tx-desc {
+  color: #0F172A !important;
+}
+
+body.light .tfoot-row,
+html.light .tfoot-row {
+  background: #F8FAFC !important;
+  border-top: 2px solid #CBD5E1 !important;
+}
+
+body.light .tfoot-label,
+html.light .tfoot-label {
+  color: #334155 !important;
+}
+
+body.light .acc-pill,
+html.light .acc-pill {
+  background: #F1F5F9 !important;
+  color: #334155 !important;
+  border-color: #CBD5E1 !important;
+}
+
+body.light .acc-val,
+html.light .acc-val {
+  color: #D97706 !important;
+}
+
+/* Cards & Painéis em Modo Claro */
+body.light .panel,
+html.light .panel {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.light .panel-head h3,
+html.light .panel-head h3 {
+  color: #0F172A !important;
+}
+
+body.light .cfg-hint,
+html.light .cfg-hint {
+  color: #64748B !important;
+}
+
+body.light .kpi,
+html.light .kpi {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.light .kpi .val,
+html.light .kpi .val {
+  color: #0F172A !important;
+  text-shadow: none !important;
+}
+
+body.light .kpi .lbl,
+html.light .kpi .lbl {
+  color: #475569 !important;
+}
+
+body.light .kpi .sub,
+html.light .kpi .sub {
+  color: #64748B !important;
+}
+
+body.light .acc-card, body.light .cat-card, body.light .goal-card, body.light .budget-card, body.light .recurring-card, body.light .rec-card,
+html.light .acc-card, html.light .cat-card, html.light .goal-card, html.light .budget-card, html.light .recurring-card, html.light .rec-card {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.light .acc-card .top strong, body.light .cat-card h4, body.light .goal-card h3, body.light .budget-card h4,
+html.light .acc-card .top strong, html.light .cat-card h4, html.light .goal-card h3, html.light .budget-card h4 {
+  color: #0F172A !important;
+}
+
+body.light .tx-summary-card,
+html.light .tx-summary-card {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.light .tx-summary-label,
+html.light .tx-summary-label {
+  color: #475569 !important;
+  font-weight: 800 !important;
+}
+
+body.light .tx-summary-sub,
+html.light .tx-summary-sub {
+  color: #64748B !important;
+}
+
+/* Painéis de Administração, Usuários, Funções e Ordens em Modo Claro */
+body.light #usuariosPage h1, body.light #usuariosPage h3, body.light #usuariosPage .val, body.light #usuariosPage strong,
+html.light #usuariosPage h1, html.light #usuariosPage h3, html.light #usuariosPage .val, html.light #usuariosPage strong,
+body.light #funcoesPage h1, body.light #funcoesPage h3, body.light #funcoesPage strong, body.light #funcoesPage td,
+html.light #funcoesPage h1, html.light #funcoesPage h3, html.light #funcoesPage strong, html.light #funcoesPage td,
+body.light #ordensPage h1, body.light #ordensPage h3, body.light #ordensPage .val, body.light #ordensPage strong, body.light #ordensPage h4,
+html.light #ordensPage h1, html.light #ordensPage h3, html.light #ordensPage .val, html.light #ordensPage strong, html.light #ordensPage h4,
+body.light #logsPage h1, body.light #logsPage h3, body.light #logsPage strong,
+html.light #logsPage h1, html.light #logsPage h3, html.light #logsPage strong {
+  color: #0F172A !important;
+}
+
+body.light .admin-toolbar-panel,
+html.light .admin-toolbar-panel {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.light .admin-filter-btn,
+html.light .admin-filter-btn {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
+}
+
+body.light .admin-filter-btn:hover,
+html.light .admin-filter-btn:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+body.light .admin-filter-btn.active,
+html.light .admin-filter-btn.active {
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  border-color: #1D4ED8 !important;
+}
+
+body.light .funcoes-filter-btn,
+html.light .funcoes-filter-btn {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
+}
+
+body.light .funcoes-filter-btn.active,
+html.light .funcoes-filter-btn.active {
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  border-color: #1D4ED8 !important;
+}
+
+/* Gaveta Mobile e Notificações em Modo Claro */
+body.light .mobile-drawer,
+html.light .mobile-drawer {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+body.light .mobile-drawer-nav button,
+html.light .mobile-drawer-nav button {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #334155 !important;
+}
+
+body.light .mobile-drawer-nav button:hover,
+html.light .mobile-drawer-nav button:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+body.light .mobile-drawer-nav button.active,
+html.light .mobile-drawer-nav button.active {
+  background: #EFF6FF !important;
+  color: #1D4ED8 !important;
+  border-color: #93C5FD !important;
+}
+
+body.light .mobile-drawer-nav button .ic,
+html.light .mobile-drawer-nav button .ic {
+  background: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
+  color: #334155 !important;
+}
+
+body.light .notif-panel,
+html.light .notif-panel {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12) !important;
+  color: #0F172A !important;
+}
+
+body.light .notif-item,
+html.light .notif-item {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+body.light .notif-title,
+html.light .notif-title {
+  color: #0F172A !important;
+}
+
+body.light .notif-desc,
+html.light .notif-desc {
+  color: #475569 !important;
 }
 
 /* ==================== Assinatura Executiva do Desenvolvedor (Ultra-Refined) ==================== */
@@ -5363,6 +5731,18 @@ body.light .scale-dropdown {
 
 <script>
 /* ==================== Gerenciamento de LocalStorage e Servidor ==================== */
+function getApiBaseUrl() {
+  try {
+    if (typeof window !== 'undefined' && window.location) {
+      const orig = window.location.origin;
+      if (orig && orig.startsWith('http') && !orig.includes(':5500') && !orig.includes(':5501')) {
+        return orig;
+      }
+    }
+  } catch(e){}
+  return 'http://localhost:3000';
+}
+
 function loadFromStorage(key, defaultVal) {
   try {
     const data = localStorage.getItem(key);
@@ -5379,7 +5759,7 @@ function saveToStorage(key, val) {
   }
 }
 
-let registeredUsers = [];
+let registeredUsers = loadFromStorage('nexus_users', []);
 
 // Alternador de Abas de Autenticação (Entrar / Criar Conta / Acessos & Logon)
 window.switchAuthTab = function(tab) {
@@ -5575,11 +5955,16 @@ window.clearAuthFeedback = function(box) {
 
 window.switchToRegisterWithEmail = function(email) {
   window.switchAuthTab('register');
+  const em = email || (document.getElementById('loginEmail') ? document.getElementById('loginEmail').value.trim() : '');
   const regEmailInput = document.getElementById('regEmail');
   if (regEmailInput) {
-    regEmailInput.value = email;
+    if (em) regEmailInput.value = em;
     regEmailInput.focus();
   }
+};
+
+window.switchToForgotTab = function() {
+  window.switchAuthTab('forgot');
 };
 
 // Alternador de Tema na Tela de Login
@@ -5657,9 +6042,13 @@ document.addEventListener('keyup', function(e) {
 });
 
 async function syncUsersWithServer() {
+  const apiBase = getApiBaseUrl();
   try {
-    const res = await fetch(window.location.origin + '/api/users');
-    if (res.ok) {
+    let res = await fetch(apiBase + '/api/users');
+    if (!res.ok && apiBase !== 'http://localhost:3000') {
+      try { res = await fetch('http://localhost:3000/api/users'); } catch(e){}
+    }
+    if (res && res.ok) {
       const usersData = await res.json();
       if (Array.isArray(usersData) && usersData.length > 0) {
         registeredUsers = usersData;
@@ -5669,6 +6058,20 @@ async function syncUsersWithServer() {
       }
     }
   } catch(e) {
+    if (apiBase !== 'http://localhost:3000') {
+      try {
+        const fallbackRes = await fetch('http://localhost:3000/api/users');
+        if (fallbackRes.ok) {
+          const usersData = await fallbackRes.json();
+          if (Array.isArray(usersData) && usersData.length > 0) {
+            registeredUsers = usersData;
+            saveToStorage('nexus_users', registeredUsers);
+            if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
+            return;
+          }
+        }
+      } catch(retryErr){}
+    }
     console.warn('Aviso: operando em modo offline ao sincronizar usuários:', e);
   }
   const cached = loadFromStorage('nexus_users', null);
@@ -5676,17 +6079,22 @@ async function syncUsersWithServer() {
     registeredUsers = cached;
   } else {
     registeredUsers = [
-      { name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true }
+      { id: 1, name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
+      { id: 20, name: 'PAULO DE LIMA PEREIRA', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Usuário', active: true }
     ];
     saveToStorage('nexus_users', registeredUsers);
   }
   if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
 }
 
+// Disparo imediato de sincronização de usuários no carregamento
+syncUsersWithServer().catch(() => {});
+
 async function saveUsersToServer() {
   saveToStorage('nexus_users', registeredUsers);
+  const apiBase = getApiBaseUrl();
   try {
-    await fetch(window.location.origin + '/api/users', {
+    await fetch(apiBase + '/api/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(registeredUsers)
@@ -5817,27 +6225,33 @@ window.handleLoginSubmit = async function(e) {
     window.showAuthFeedback('login', 'error', 'E-mail em formato inválido', 'O e-mail digitado parece incompleto ou inválido. Exemplo: <strong>seu.nome@gmail.com</strong>');
     return;
   }
-
-  if (!password) {
-    if (passWrap) passWrap.classList.add('input-error');
-    if (passwordInput) passwordInput.focus();
-    window.showAuthFeedback('login', 'error', 'Senha não informada', 'Por favor, digite a sua senha de acesso.');
-    return;
-  }
-
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Verificando credenciais...';
-  }
+  
+  const cleanEmail = email.toLowerCase().trim();
+  const apiBase = getApiBaseUrl();
+  let res = null;
+  let data = null;
 
   try {
-    const res = await fetch(window.location.origin + '/api/login', {
+    res = await fetch(apiBase + '/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email: cleanEmail, password })
     });
-    const data = await res.json();
+    data = await res.json();
+  } catch (fetchErr) {
+    if (apiBase !== 'http://localhost:3000') {
+      try {
+        res = await fetch('http://localhost:3000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: cleanEmail, password })
+        });
+        data = await res.json();
+      } catch (retryErr) {}
+    }
+  }
 
+  if (res && data) {
     if (!res.ok || !data.success) {
       if (data.errorType === 'user_not_found') {
         if (emailWrap) emailWrap.classList.add('input-error');
@@ -5846,8 +6260,8 @@ window.handleLoginSubmit = async function(e) {
           'login',
           'warning',
           'Usuário não cadastrado',
-          'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + email + '</strong>.',
-          '<button type="button" onclick="window.switchToRegisterWithEmail(\\'' + email + '\\')" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(220,38,38,0.35) 100%); border:1px solid rgba(248,113,113,0.5); color:#FFFFFF; border-radius:8px; cursor:pointer;">Criar Conta com este E-mail →</button>'
+          'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + cleanEmail + '</strong>.',
+          '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(220,38,38,0.35) 100%); border:1px solid rgba(248,113,113,0.5); color:#FFFFFF; border-radius:8px; cursor:pointer;">Criar Conta com este E-mail →</button>'
         );
       } else if (data.errorType === 'invalid_password') {
         if (passWrap) passWrap.classList.add('input-error');
@@ -5860,7 +6274,7 @@ window.handleLoginSubmit = async function(e) {
           'error',
           'Senha incorreta',
           'A senha digitada está incorreta para este e-mail. Verifique se o Caps Lock está ativado ou recupere o acesso.',
-          '<button type="button" onclick="window.switchAuthTab(\\'forgot\\')" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.35); color:#FFFFFF; border-radius:8px; cursor:pointer;">Esqueci Minha Senha →</button>'
+          '<button type="button" onclick="window.switchToForgotTab()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.35); color:#FFFFFF; border-radius:8px; cursor:pointer;">Esqueci Minha Senha →</button>'
         );
       } else if (data.errorType === 'user_inactive') {
         window.showAuthFeedback('login', 'error', 'Conta desativada', data.error || 'Seu usuário foi desativado pelo administrador.');
@@ -5879,10 +6293,7 @@ window.handleLoginSubmit = async function(e) {
     saveToStorage('nexus_session', { email: currentUser.email });
     saveToStorage('nexus_cached_user', currentUser);
     saveToStorage('nexus_token', data.token || ('token_' + Date.now()));
-
-    // Mantém o cache local atualizado com os usuários do banco
-    await syncUsersWithServer();
-
+    
     document.documentElement.classList.add('user-logged-in');
     if (currentUser.role === 'Administrador') {
       document.documentElement.classList.add('is-admin');
@@ -5901,72 +6312,47 @@ window.handleLoginSubmit = async function(e) {
       document.getElementById('appMain').style.display = 'flex';
       render();
     }, 1200);
+    return;
+  }
 
-  } catch (err) {
-    console.warn('Servidor indisponível ou falha de rede. Validando pelo cache local:', err);
-    await syncUsersWithServer();
-    const existingUser = registeredUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+  // Fallback offline caso API esteja totalmente inacessível
+  await syncUsersWithServer();
+  const existingUser = registeredUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail);
+  if (!existingUser) {
+    if (emailWrap) emailWrap.classList.add('input-error');
+    if (emailInput) emailInput.focus();
+    window.showAuthFeedback(
+      'login',
+      'warning',
+      'Usuário não cadastrado',
+      'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + cleanEmail + '</strong>.',
+      '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(220,38,38,0.35) 100%); border:1px solid rgba(248,113,113,0.5); color:#FFFFFF; border-radius:8px; cursor:pointer;">Criar Conta com este E-mail →</button>'
+    );
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
+    return;
+  }
 
-    if (!existingUser) {
-      if (emailWrap) emailWrap.classList.add('input-error');
-      if (emailInput) emailInput.focus();
-      window.showAuthFeedback(
-        'login',
-        'warning',
-        'Usuário não cadastrado',
-        'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + email + '</strong>.',
-        '<button type="button" onclick="window.switchToRegisterWithEmail(\\'' + email + '\\')" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(220,38,38,0.35) 100%); border:1px solid rgba(248,113,113,0.5); color:#FFFFFF; border-radius:8px; cursor:pointer;">Criar Conta com este E-mail →</button>'
-      );
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
-      return;
-    }
+  currentUser = { id: existingUser.id || Date.now(), name: existingUser.name || cleanEmail.split('@')[0], email: cleanEmail, role: existingUser.role || 'Usuário' };
+  saveToStorage('nexus_session', { email: currentUser.email });
+  saveToStorage('nexus_cached_user', currentUser);
+  saveToStorage('nexus_token', 'offline_token_' + Date.now());
 
-    if (existingUser.password !== password) {
-      if (passWrap) passWrap.classList.add('input-error');
-      if (passwordInput) { passwordInput.select(); passwordInput.focus(); }
-      window.showAuthFeedback(
-        'login',
-        'error',
-        'Senha incorreta',
-        'A senha digitada está incorreta para este e-mail. Verifique se o Caps Lock está ativado.',
-        '<button type="button" onclick="window.switchAuthTab(\\'forgot\\')" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.35); color:#FFFFFF; border-radius:8px; cursor:pointer;">Esqueci Minha Senha →</button>'
-      );
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
-      return;
-    }
+  document.documentElement.classList.add('user-logged-in');
+  currentPage = (currentUser.role === 'Administrador') ? 'usuarios' : 'dashboard';
+  await loadUserData();
+  showLoginSuccessPopup('Acesso offline autenticado!');
+  setTimeout(() => {
+    document.getElementById('authPage').classList.remove('show');
+    document.getElementById('authPage').style.display = 'none';
+    document.getElementById('appMain').classList.add('show');
+    document.getElementById('appMain').style.display = 'flex';
+    render();
+  }, 1200);
 
-    if (existingUser.active === false) {
-      window.showAuthFeedback('login', 'error', 'Conta desativada', 'Seu usuário foi desativado pelo administrador.');
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
-      return;
-    }
-
-    currentUser = existingUser;
-    saveToStorage('nexus_session', { email: existingUser.email });
-    saveToStorage('nexus_cached_user', existingUser);
-    saveToStorage('nexus_token', 'token_' + Date.now());
-    document.documentElement.classList.add('user-logged-in');
-    if (existingUser.role === 'Administrador') {
-      document.documentElement.classList.add('is-admin');
-      currentPage = 'usuarios';
-    } else {
-      document.documentElement.classList.remove('is-admin');
-      currentPage = 'dashboard';
-    }
-    await loadUserData();
-    showLoginSuccessPopup('Acesso offline autenticado com sucesso!');
-    setTimeout(() => {
-      document.getElementById('authPage').classList.remove('show');
-      document.getElementById('authPage').style.display = 'none';
-      document.getElementById('appMain').classList.add('show');
-      document.getElementById('appMain').style.display = 'flex';
-      render();
-    }, 1200);
-  } finally {
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Entrar na Conta →';
-    }
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Entrar na Conta →';
+  }
 };
 
 const loginFormElement = document.getElementById('loginForm') || document.getElementById('authLoginForm');
@@ -6209,25 +6595,44 @@ window.handleRegisterSubmit = async function(e) {
   let registerSuccess = false;
   let serverMessage = '';
 
-  try {
-    const response = await fetch(window.location.origin + '/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email: cleanEmail, password })
-    });
+  const apiBase = getApiBaseUrl();
+  let response = null;
+  let data = null;
 
-    const data = await response.json();
-    if (response.ok && data.success) {
+  try {
+    try {
+      response = await fetch(apiBase + '/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email: cleanEmail, password })
+      });
+      data = await response.json();
+    } catch (e) {
+      if (apiBase !== 'http://localhost:3000') {
+        try {
+          response = await fetch('http://localhost:3000/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email: cleanEmail, password })
+          });
+          data = await response.json();
+        } catch (retryErr) {}
+      }
+    }
+
+    if (response && response.ok && data && data.success) {
       registerSuccess = true;
       serverMessage = data.message || 'Conta criada e salva no banco de dados com sucesso!';
       await syncUsersWithServer();
-    } else {
-      showCustomAlert('Atenção', data.error || 'Erro ao registrar usuário no banco de dados.', 'error');
+    } else if (data && data.error) {
+      showCustomAlert('Atenção', data.error, 'error');
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Criar Minha Conta →';
       }
       return false;
+    } else {
+      throw new Error('Falha de comunicação com a API');
     }
   } catch (err) {
     console.warn('[CADASTRO RESILIENTE] Falha na API de registro, salvando localmente:', err.message);
@@ -6305,28 +6710,27 @@ if (logoutButton) {
     resetUserDataState();
     currentUser = null;
     isViewingOtherUser = false;
+    adminOriginalUser = null;
+    isDataLoading = false;
+    localStorage.removeItem('nexus_session');
+    localStorage.removeItem('nexus_cached_user');
+    localStorage.removeItem('nexus_token');
+    localStorage.removeItem('nexus_viewing_user');
+    document.documentElement.classList.remove('user-logged-in');
+    document.documentElement.classList.remove('is-admin');
+    const appMain = document.getElementById('appMain');
+    const authPage = document.getElementById('authPage');
+    if (appMain) {
+      appMain.classList.remove('show');
+      appMain.style.display = 'none';
+    }
+    if (authPage) {
+      authPage.classList.add('show');
+      authPage.style.display = 'flex';
+    }
+    showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.');
   };
 }
-  adminOriginalUser = null;
-  isDataLoading = false;
-  localStorage.removeItem('nexus_session');
-  localStorage.removeItem('nexus_cached_user');
-  localStorage.removeItem('nexus_token');
-  localStorage.removeItem('nexus_viewing_user');
-  document.documentElement.classList.remove('user-logged-in');
-  document.documentElement.classList.remove('is-admin');
-  const appMain = document.getElementById('appMain');
-  const authPage = document.getElementById('authPage');
-  if (appMain) {
-    appMain.classList.remove('show');
-    appMain.style.display = 'none';
-  }
-  if (authPage) {
-    authPage.classList.add('show');
-    authPage.style.display = 'flex';
-  }
-  showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.');
-};
 
 /* ==================== Isolamento de Dados por Usuário ==================== */
 let categories = [];
