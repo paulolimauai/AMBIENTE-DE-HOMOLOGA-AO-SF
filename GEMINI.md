@@ -14,3 +14,11 @@
   3. `git commit -m "<descrição objetiva da alteração realizada>"`
   4. `git push origin <branch_atual>`
 - **Garantia de Envio**: O push para o repositório remoto deve ser executado e confirmado antes de dar a resposta final ao usuário.
+
+## 3. Apresentação Visual de Alterações de Código (Padrão Antigravity CLI Diff)
+- **Apresentação no Formato Diff**: Ao programar ou alterar qualquer trecho de código, **SEMPRE** apresentar as alterações em bloco visual de `diff` com numeração de linhas, destacando claramente:
+  - Linhas originais removidas (`-`)
+  - Linhas novas adicionadas (`+`)
+  - Linhas de contexto imediatas para rastreabilidade
+  Exatamente como na visualização interativa do Antigravity CLI no terminal do VS Code.
+

@@ -2,5 +2,15 @@
   "git.autofetch": true,
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
-  "git.autoStash": true
+  "git.autoStash": true,
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell"
+    },
+    "Antigravity CLI": {
+      "path": "C:\\Users\\Nitro\\AppData\\Local\\agy\\bin\\agy.exe",
+      "icon": "sparkle"
+    }
+  }
 }
