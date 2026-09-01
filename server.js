@@ -7,6 +7,7 @@ const path = require('path');
 const http = require('http');
 const url = require('url');
 const tls = require('tls');
+const crypto = require('crypto');
 
 let Pool;
 try {
@@ -16,6 +17,66 @@ try {
 }
 
 const PORT = process.env.PORT || 3000;
+const SERVER_START_TIME = Date.now();
+const JWT_SECRET = process.env.JWT_SECRET || 'nexus_financeiro_secret_key_2026_4k_secure';
+
+// ==================== Camada de Segurança Criptográfica ====================
+function hashPassword(password) {
+  if (!password) return '';
+  const salt = crypto.randomBytes(16).toString('hex');
+  const derivedKey = crypto.scryptSync(password, salt, 64);
+  return `scrypt:${salt}:${derivedKey.toString('hex')}`;
+}
+
+function verifyPassword(password, storedPassword) {
+  if (!password || !storedPassword) return false;
+  if (!storedPassword.startsWith('scrypt:')) {
+    // Retrocompatibilidade transparente com senhas legadas em texto puro
+    return password === storedPassword;
+  }
+  try {
+    const [, salt, key] = storedPassword.split(':');
+    const keyBuffer = Buffer.from(key, 'hex');
+    const derivedKey = crypto.scryptSync(password, salt, 64);
+    return crypto.timingSafeEqual(keyBuffer, derivedKey);
+  } catch (e) {
+    return false;
+  }
+}
+
+function generateSecureToken(user) {
+  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
+  const payload = Buffer.from(JSON.stringify({
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role || 'Usuário',
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60)
+  })).toString('base64url');
+  const signature = crypto.createHmac('sha256', JWT_SECRET).update(`${header}.${payload}`).digest('base64url');
+  return `${header}.${payload}.${signature}`;
+}
+
+function sanitizeUser(user) {
+  if (!user) return null;
+  const { password, ...safeUser } = user;
+  return safeUser;
+}
+
+// ==================== Gerenciador de Eventos em Tempo Real (SSE) ====================
+const sseClients = new Set();
+
+function broadcastEvent(eventType, eventData) {
+  const message = `event: ${eventType}\ndata: ${JSON.stringify(eventData)}\n\n`;
+  for (const client of sseClients) {
+    try {
+      client.write(message);
+    } catch (e) {
+      sseClients.delete(client);
+    }
+  }
+}
 
 // ==================== Conexão com o PostgreSQL ====================
 let pool = null;
@@ -48,7 +109,7 @@ if (Pool) {
 const DEFAULT_ADMIN = {
   name: 'Administrador',
   email: 'admin@nexusfinanceiro.com',
-  password: '86266049',
+  password: hashPassword('86266049'),
   role: 'Administrador',
   active: true
 };
@@ -138,7 +199,7 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
   });
 }
 
-// Cria as tabelas (se não existirem) e garante o admin padrão
+// Cria as tabelas (se não existirem) e garante migrações automáticas e o admin padrão
 async function initDatabase() {
   if (!pool) return;
   await pool.query(`
@@ -154,8 +215,12 @@ async function initDatabase() {
     );
   `);
 
+  // Auto-migração de colunas na tabela usuarios
   try {
     await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;');
+    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS active BOOLEAN NOT NULL DEFAULT true;');
+    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS role VARCHAR(50) NOT NULL DEFAULT \'Usuário\';');
+    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT now();');
   } catch(e) {}
 
   await pool.query(`
@@ -166,6 +231,10 @@ async function initDatabase() {
       updated_at TIMESTAMP NOT NULL DEFAULT now()
     );
   `);
+
+  try {
+    await pool.query('ALTER TABLE dados_financeiros ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT now();');
+  } catch(e) {}
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS system_logs (
@@ -195,6 +264,14 @@ async function initDatabase() {
       updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
     );
   `);
+
+  // Auto-migração de colunas na tabela ordens_servico
+  try {
+    await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS admin_notes TEXT DEFAULT \'\';');
+    await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS service_type VARCHAR(100) DEFAULT \'Melhoria no Sistema\';');
+    await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS priority VARCHAR(50) DEFAULT \'Normal\';');
+    await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now();');
+  } catch(e) {}
 
   await pool.query(
     `INSERT INTO usuarios (name, email, password, role, active)
@@ -13301,7 +13378,85 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
 
-  // Rota POST para Login de Usuário
+  // Rota GET de Health Check & Diagnóstico do Sistema
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/health') {
+    const uptimeSeconds = Math.floor((Date.now() - SERVER_START_TIME) / 1000);
+    const hours = Math.floor(uptimeSeconds / 3600);
+    const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+    const seconds = uptimeSeconds % 60;
+    const uptimeStr = `${hours}h ${minutes}m ${seconds}s`;
+
+    const mem = process.memoryUsage();
+    const localUsers = getLocalUsers();
+
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({
+      status: 'healthy',
+      system: 'Nexus Financeiro Hub',
+      version: '1.0.0',
+      uptime: uptimeStr,
+      uptime_seconds: uptimeSeconds,
+      timestamp: new Date().toISOString(),
+      database: pool ? 'connected_postgresql' : 'resilient_local_json',
+      active_users_count: localUsers.length,
+      memory: {
+        rss_mb: (mem.rss / 1024 / 1024).toFixed(2),
+        heap_used_mb: (mem.heapUsed / 1024 / 1024).toFixed(2),
+        heap_total_mb: (mem.heapTotal / 1024 / 1024).toFixed(2)
+      }
+    }));
+  }
+
+  // Rota GET para Server-Sent Events (SSE) em Tempo Real
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/events') {
+    res.writeHead(200, {
+      ...corsHeaders,
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      'Connection': 'keep-alive'
+    });
+
+    res.write(`event: connected\ndata: ${JSON.stringify({ message: 'Canal de eventos em tempo real conectado com sucesso', time: new Date().toISOString() })}\n\n`);
+    sseClients.add(res);
+
+    req.on('close', () => {
+      sseClients.delete(res);
+    });
+    return;
+  }
+
+  // Rota GET de Backup Geral do Sistema (Admin)
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/backup') {
+    const localUsers = getLocalUsers().map(sanitizeUser);
+    const localLogs = getFileLogs();
+    const localOrdens = getLocalOrdens();
+    
+    let allFinancialData = {};
+    try {
+      if (fs.existsSync(LOCAL_DATA_PATH)) {
+        allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
+      }
+    } catch(e){}
+
+    const backupPayload = {
+      backup_version: '1.0',
+      generated_at: new Date().toISOString(),
+      environment: 'Homologação SF',
+      users: localUsers,
+      system_logs: localLogs,
+      ordens_servico: localOrdens,
+      financial_data: allFinancialData
+    };
+
+    res.writeHead(200, {
+      ...corsHeaders,
+      'Content-Type': 'application/json',
+      'Content-Disposition': `attachment; filename="backup_nexus_${Date.now()}.json"`
+    });
+    return res.end(JSON.stringify(backupPayload, null, 2));
+  }
+
+  // Rota POST para Login de Usuário (com Verificação Criptográfica e Upgrade Seguro de Hash)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/login') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -13340,13 +13495,22 @@ const server = http.createServer((req, res) => {
           }));
         }
 
-        if (user.password !== password) {
+        if (!verifyPassword(password, user.password)) {
           res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({
             success: false,
             errorType: 'invalid_password',
             error: 'Senha incorreta para este e-mail. Verifique a senha digitada ou clique em "Esqueceu a senha?".'
           }));
+        }
+
+        // Migração transparente de senha legada para scrypt hash seguro
+        if (!user.password || !user.password.startsWith('scrypt:')) {
+          const secureHash = hashPassword(password);
+          user.password = secureHash;
+          if (pool) {
+            pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [secureHash, cleanEmail]).catch(()=>{});
+          }
         }
 
         if (user.active === false) {
@@ -13369,13 +13533,21 @@ const server = http.createServer((req, res) => {
 
         recordSystemLog(user.name, user.email, 'Login', 'Autenticação', 'Usuário realizou login com sucesso no sistema');
 
+        // Notificação em tempo real via SSE
+        broadcastEvent('user_login', {
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          timestamp: nowTimestamp
+        });
+
         // Exibição em destaque no terminal do VS Code
         console.log('\n' + '='.repeat(70));
         console.log('🔐 [VS CODE - LOGON REALIZADO COM SUCESSO]');
         console.log(`👤 Usuário:      ${user.name} (${user.email})`);
         console.log(`👑 Perfil:       ${user.role || 'Usuário'}`);
         console.log(`🕒 Data/Hora:    ${new Date().toLocaleString('pt-BR')}`);
-        console.log('🚀 Sessão:       Ambiente de Homologação Ativo');
+        console.log('🚀 Sessão:       Ambiente de Homologação Ativo (Token Criptografado)');
         console.log('='.repeat(70) + '\n');
 
         try {
@@ -13389,12 +13561,12 @@ const server = http.createServer((req, res) => {
           saveLocalUsers(localUsers);
         } catch(e){}
 
-        const token = 'token_' + Date.now() + '_' + Math.random().toString(36).substring(2);
+        const token = generateSecureToken(user);
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
           token: token,
-          user: { id: user.id || Date.now(), name: user.name, email: user.email, role: user.role, active: user.active, last_login: nowTimestamp }
+          user: sanitizeUser(user)
         }));
       } catch (err) {
         console.error('Erro no endpoint de login:', err);
@@ -13405,7 +13577,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Rota POST para Cadastro de Usuário (UPSERT Seguro com Apresentação no VS Code e Logon)
+  // Rota POST para Cadastro de Usuário (com Hashing Seguro de Senha e Apresentação no VS Code)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/register') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -13418,6 +13590,7 @@ const server = http.createServer((req, res) => {
         }
 
         const cleanEmail = email.toLowerCase().trim();
+        const secureHashedPassword = hashPassword(password);
         let newUserId = Date.now();
         if (pool) {
           try {
@@ -13427,7 +13600,7 @@ const server = http.createServer((req, res) => {
                ON CONFLICT (email) DO UPDATE
                SET name = EXCLUDED.name, password = EXCLUDED.password, active = true
                RETURNING id;`,
-              [name.trim(), cleanEmail, password, 'Usuário', true]
+              [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', true]
             );
             if (upsertRes.rows && upsertRes.rows[0]) newUserId = upsertRes.rows[0].id;
 
@@ -13441,20 +13614,30 @@ const server = http.createServer((req, res) => {
         }
 
         const localUsers = getLocalUsers().filter(u => u.email.toLowerCase() !== cleanEmail);
-        localUsers.push({ id: newUserId, name: name.trim(), email: cleanEmail, password, role: 'Usuário', active: true });
+        const newUserObj = { id: newUserId, name: name.trim(), email: cleanEmail, password: secureHashedPassword, role: 'Usuário', active: true };
+        localUsers.push(newUserObj);
         saveLocalUsers(localUsers);
 
-        recordSystemLog(name.trim(), cleanEmail, 'Cadastro', 'Autenticação', 'Usuário cadastrado/atualizado com sucesso no banco de dados');
+        recordSystemLog(name.trim(), cleanEmail, 'Cadastro', 'Autenticação', 'Usuário cadastrado/atualizado com senha criptografada com sucesso');
+
+        // Notificação em tempo real via SSE
+        broadcastEvent('new_user_registered', {
+          id: newUserId,
+          name: name.trim(),
+          email: cleanEmail,
+          role: 'Usuário',
+          timestamp: new Date().toISOString()
+        });
 
         // Exibição em destaque no terminal do VS Code
         console.log('\n' + '='.repeat(70));
         console.log('👤 [VS CODE - NOVO CADASTRO REALIZADO COM SUCESSO]');
         console.log(`📌 Nome:         ${name.trim()}`);
         console.log(`📧 E-mail:       ${cleanEmail}`);
-        console.log(`🛡️ Perfil:       Usuário`);
+        console.log(`🛡️ Perfil:       Usuário (Hash scrypt Protegido)`);
         console.log(`🕒 Data/Hora:    ${new Date().toLocaleString('pt-BR')}`);
         console.log('💻 Apresentação: Credenciais sincronizadas e prontas para Logon no VS Code');
-        console.log('📂 Persistência: local_users.json e system_logs.json');
+        console.log('📂 Persistência: local_users.json e PostgreSQL');
         console.log('='.repeat(70) + '\n');
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -13535,29 +13718,28 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Rota GET de Usuários
+  // Rota GET de Usuários (Sanitizada sem Exposição de Senhas)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/users') {
     if (pool) {
-      pool.query('SELECT id, name, email, password, role, active, created_at, last_login FROM usuarios ORDER BY id ASC')
+      pool.query('SELECT id, name, email, role, active, created_at, last_login FROM usuarios ORDER BY id ASC')
         .then(result => {
           if (result.rows && result.rows.length > 0) {
-            saveLocalUsers(result.rows);
             res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
             res.end(JSON.stringify(result.rows));
           } else {
-            const localUsers = getLocalUsers();
+            const localUsers = getLocalUsers().map(sanitizeUser);
             res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
             res.end(JSON.stringify(localUsers));
           }
         })
         .catch(err => {
           console.warn('Usando lista de usuários do backup local:', err.message);
-          const localUsers = getLocalUsers();
+          const localUsers = getLocalUsers().map(sanitizeUser);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(localUsers));
         });
     } else {
-      const localUsers = getLocalUsers();
+      const localUsers = getLocalUsers().map(sanitizeUser);
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       res.end(JSON.stringify(localUsers));
     }
@@ -13927,6 +14109,17 @@ const server = http.createServer((req, res) => {
 
       recordSystemLog(clientName, clientEmail, 'Abertura de O.S.', 'Ordem de Serviço', 'Nova solicitação #' + protocol + ': ' + title);
 
+      // Notificação em tempo real via SSE
+      broadcastEvent('new_order', {
+        id: newOrder.id,
+        protocol: newOrder.protocol,
+        client_name: newOrder.client_name,
+        service_type: newOrder.service_type,
+        priority: newOrder.priority,
+        title: newOrder.title,
+        timestamp: newOrder.created_at
+      });
+
       if (pool) {
         pool.query(
           `INSERT INTO ordens_servico (protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at)
@@ -13975,6 +14168,14 @@ const server = http.createServer((req, res) => {
       }
 
       recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Atualização de O.S.', 'Ordem de Serviço', 'Atualizou O.S. #' + (target ? target.protocol : id) + ' para status: ' + status);
+
+      // Notificação em tempo real via SSE
+      broadcastEvent('order_updated', {
+        id: id,
+        protocol: target ? target.protocol : id,
+        status: status,
+        updated_at: nowIso
+      });
 
       if (pool) {
         try {
