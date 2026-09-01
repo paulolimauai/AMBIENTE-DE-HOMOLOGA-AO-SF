@@ -491,22 +491,80 @@
             box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
         }
 
-        /* Botão Primário 4K Liquid Gold */
+        /* Botão de Olho para Visualizar/Ocultar Senha (Sem caixas brancas, 100% integrado) */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear,
+        input[type="text"]::-ms-reveal,
+        input[type="text"]::-ms-clear {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+
+        .auth-pass-toggle,
+        .auth-pass-toggle-btn {
+            background: transparent !important;
+            background-color: transparent !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            color: #94A3B8 !important;
+            width: 38px !important;
+            height: 38px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            flex-shrink: 0 !important;
+            padding: 0 !important;
+            margin: 0 4px 0 0 !important;
+            border-radius: 10px !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+        }
+        .auth-pass-toggle:hover,
+        .auth-pass-toggle-btn:hover {
+            color: #F59E0B !important;
+            background: rgba(245, 158, 11, 0.15) !important;
+            transform: scale(1.08);
+        }
+        .auth-pass-toggle svg,
+        .auth-pass-toggle-btn svg {
+            width: 18px !important;
+            height: 18px !important;
+            stroke: currentColor !important;
+            stroke-width: 2.2px !important;
+            fill: none !important;
+            pointer-events: none !important;
+            display: block !important;
+        }
+        body.light .auth-pass-toggle,
+        body.light .auth-pass-toggle-btn {
+            color: #64748B !important;
+        }
+        body.light .auth-pass-toggle:hover,
+        body.light .auth-pass-toggle-btn:hover {
+            color: #D97706 !important;
+            background: rgba(217, 119, 6, 0.10) !important;
+        }
+
+        /* Botão Primário 4K Liquid Gold Compacto */
         .btn-auth-gradient {
             background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 18%, #F59E0B 48%, #D97706 78%, #B45309 100%) !important;
             color: #030712 !important;
-            border-radius: 16px !important;
+            border-radius: 13px !important;
             border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
             border-top: 2px solid #FFFFFF !important;
             font-weight: 900 !important;
-            font-size: 15.5px !important;
+            font-size: 14.5px !important;
             letter-spacing: 0.02em;
-            box-shadow: 0 16px 45px -4px rgba(245, 158, 11, 0.80), 0 0 35px rgba(245, 158, 11, 0.55), inset 0 2px 3px #FFFFFF !important;
+            box-shadow: 0 12px 35px -4px rgba(245, 158, 11, 0.75), 0 0 28px rgba(245, 158, 11, 0.50), inset 0 2px 3px #FFFFFF !important;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            height: 52px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -547,7 +605,7 @@
         /* Botão de Ordem de Serviço (O.S.) */
         .btn-open-os {
             width: 100%;
-            height: 44px;
+            height: 38px;
             border-radius: 14px;
             background: linear-gradient(135deg, rgba(56, 189, 248, 0.16) 0%, rgba(99, 102, 241, 0.14) 100%) !important;
             border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
@@ -1598,8 +1656,8 @@
                                     <input id="loginPassword" name="password" type="password" autocomplete="current-password" spellcheck="false" required 
                                         placeholder="••••••••">
                                     <button type="button" id="btnToggleLoginPass" onclick="togglePasswordVisibility('loginPassword', 'btnToggleLoginPass')" 
-                                        class="w-11 h-full flex items-center justify-center text-gray-400 hover:text-amber-400 transition-colors focus:outline-none shrink-0" title="Mostrar/Ocultar Senha">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        class="auth-pass-toggle-btn" title="Visualizar Senha" aria-label="Visualizar Senha">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                     </button>
                                 </div>
                                 <div id="capsLockWarningLogin" class="hidden mt-1.5 text-[11px] text-amber-400 font-semibold flex items-center gap-1.5">
@@ -1664,8 +1722,8 @@
                                     </span>
                                     <input id="regPassword" name="password" type="password" autocomplete="new-password" spellcheck="false" minlength="6" required placeholder="Mínimo 6 caracteres" oninput="checkPasswordStrength(this.value)">
                                     <button type="button" id="btnToggleRegPass" onclick="toggleRegistrationPasswords()" 
-                                        class="w-11 h-full flex items-center justify-center text-gray-400 hover:text-amber-400 transition-colors focus:outline-none shrink-0" title="Mostrar/Ocultar Senhas">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        class="auth-pass-toggle-btn" title="Visualizar Senhas" aria-label="Visualizar Senhas">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                     </button>
                                 </div>
                                 
@@ -1922,21 +1980,25 @@
             }
         };
 
-        // Alternador de Visibilidade da Senha
+        // Alternador de Visibilidade da Senha (Olho Nitido e Funcional)
         window.togglePasswordVisibility = function(inputId, btnId) {
             const input = document.getElementById(inputId);
             const btn = document.getElementById(btnId);
             if (!input || !btn) return;
 
-            const eyeOpen = '<svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>';
-            const eyeClosed = '<svg class="w-4 h-4 text-gray-500 hover:text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.05 10.05 0 013.682-.963c4.478 0 8.268 2.943 9.543 7a9.97 9.97 0 01-2.16 3.633m-1.503 1.503A9.956 9.956 0 0112 15c-1.42 0-2.755-.296-3.955-.831M3 3l18 18"/></svg>';
+            const iconEyeView = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+            const iconEyeHide = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
 
             if (input.type === 'password') {
                 input.type = 'text';
-                btn.innerHTML = eyeOpen;
+                btn.innerHTML = iconEyeHide;
+                btn.title = 'Ocultar Senha';
+                btn.setAttribute('aria-label', 'Ocultar Senha');
             } else {
                 input.type = 'password';
-                btn.innerHTML = eyeClosed;
+                btn.innerHTML = iconEyeView;
+                btn.title = 'Visualizar Senha';
+                btn.setAttribute('aria-label', 'Visualizar Senha');
             }
         };
 
@@ -1952,10 +2014,14 @@
             pwd1.type = nextType;
             if (pwd2) pwd2.type = nextType;
 
-            const eyeOpen = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>';
-            const eyeClosed = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a8.995 8.995 0 013.98-.938c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18"/></svg>';
+            const iconEyeView = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+            const iconEyeHide = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
 
-            if (btn) btn.innerHTML = isPassword ? eyeClosed : eyeOpen;
+            if (btn) {
+                btn.innerHTML = isPassword ? iconEyeHide : iconEyeView;
+                btn.title = isPassword ? 'Ocultar Senhas' : 'Visualizar Senhas';
+                btn.setAttribute('aria-label', isPassword ? 'Ocultar Senhas' : 'Visualizar Senhas');
+            }
         };
 
         // Alternância de Tema Claro / Escuro
