@@ -1,13 +1,14 @@
 # Diretrizes Globais do Projeto (Auto-Approve & Auto-Git Sync)
 
-## 1. Aprovação Automática Total e Execução Direta (Auto-Approve)
-- **Aprovação Automática Total**: Toda e qualquer alteração de código, ajuste de layout/CSS/JS, refatoração, criação de arquivos, execução de comandos e correções solicitadas pelo usuário estão **100% pré-aprovadas**.
-- **Sem Interrupções para Confirmação**: **NUNCA** pausar para pedir autorização, confirmação ou permissão manual (ex.: *"Posso aplicar?"*, *"Deseja continuar?"*, *"Quer que eu envie para o Git?"*).
+## 1. Aprovação Automática Total, Modificação Direta de Arquivos e Execução Sem Perguntas (Zero Interrupts)
+- **Modificação Direta Sem Perguntar**: Todo e qualquer arquivo deve ser modificado, criado ou excluído diretamente **SEM NUNCA PERGUNTAR** ao usuário.
+- **Sem Interrupções para Confirmação**: **NUNCA** pausar ou perguntar em momento algum (*"Posso aplicar?"*, *"Deseja continuar?"*, *"Quer que eu altere o arquivo?"*, *"Posso enviar para o Git?"*).
+- **Aprovação Automática Total (Auto-Approve Permanente)**: Toda solicitação do usuário, ajuste visual/CSS/JS, refatoração, criação/edição de arquivos e comandos estão **100% pré-aprovados e memorizados permanentemente**.
 - **Validação Autônoma**: O próprio agente valida a sintaxe (ex: `node --check server.js`), integridade e coerência das alterações antes de finalizar.
-- **Auto-Yes em Todas as Etapas**: Executar diretamente todas as etapas necessárias de ponta a ponta e entregar a solução pronta e funcional.
+- **Auto-Yes de Ponta a Ponta**: Executar todas as etapas necessárias de forma totalmente autônoma e entregar a solução pronta e funcional.
 
 ## 2. Sincronização Obrigatória e Automática com o Git (Auto-Push)
-- **Sempre Subir ao Finalizar**: Ao concluir qualquer alteração, correção ou nova funcionalidade, **SEMPRE** sincronizar com o repositório Git automaticamente.
+- **Sempre Subir ao Finalizar**: Ao concluir qualquer alteração, correção ou nova funcionalidade, **SEMPRE** sincronizar com o repositório Git automaticamente sem perguntar.
 - **Fluxo de Sincronização Git**:
   1. `git status` para verificar as alterações.
   2. `git add .` para incluir todas as alterações relevantes.
