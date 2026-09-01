@@ -2784,21 +2784,22 @@
                 const descEl = document.getElementById('newRegLogonDesc');
                 if (banner && titleEl && descEl) {
                     titleEl.textContent = '🎉 ' + name + ', sua conta foi criada!';
-                    descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar.';
+                    descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Entrando automaticamente no sistema...';
                     banner.classList.remove('hidden');
                 }
 
-                showAlert('🎉 Conta criada com sucesso! Redirecionando para a aba de Logon com suas credenciais preenchidas.', 'success');
+                showAlert('🎉 Conta criada com sucesso! Entrando na sua conta com suas novas credenciais...', 'success');
 
                 // Atualiza lista de usuários cadastrados
                 carregarUsuariosLogon();
 
-                // Muda para aba de Logon
+                // Muda para aba de Logon e autentica automaticamente
                 setTimeout(function() {
                     switchAuthTab('login');
-                    const loginBtn = document.getElementById('btnLoginSubmit');
-                    if (loginBtn) loginBtn.focus();
-                }, 800);
+                    if (typeof window.handleLoginSubmit === 'function') {
+                        window.handleLoginSubmit();
+                    }
+                }, 900);
 
             } catch (err) {
                 showAlert('Erro ao processar criação de conta. Verifique os dados digitados.', 'error');
