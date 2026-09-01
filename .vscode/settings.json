@@ -3,7 +3,7 @@
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
   "git.autoStash": true,
-  "terminal.integrated.defaultProfile.windows": "Antigravity CLI",
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
   "terminal.integrated.profiles.windows": {
     "Antigravity CLI": {
       "path": "C:\\Users\\Nitro\\AppData\\Local\\agy\\bin\\agy.exe",
