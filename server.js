@@ -14060,22 +14060,34 @@ const server = http.createServer((req, res) => {
         let newUserId = Date.now();
         if (pool) {
           try {
-            const upsertRes = await pool.query(
-              `INSERT INTO usuarios (name, email, password, role, active)
-               VALUES ($1, $2, $3, $4, $5)
-               ON CONFLICT (email) DO UPDATE
-               SET name = EXCLUDED.name, password = EXCLUDED.password, active = true
-               RETURNING id;`,
-              [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', true]
-            );
-            if (upsertRes.rows && upsertRes.rows[0]) newUserId = upsertRes.rows[0].id;
+            const existingUserRes = await pool.query('SELECT id, email FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+            if (existingUserRes.rows && existingUserRes.rows.length > 0) {
+              newUserId = existingUserRes.rows[0].id;
+              await pool.query(
+                'UPDATE usuarios SET name = $1, password = $2, active = true WHERE id = $3',
+                [name.trim(), secureHashedPassword, newUserId]
+              );
+            } else {
+              const insertRes = await pool.query(
+                `INSERT INTO usuarios (name, email, password, role, active)
+                 VALUES ($1, $2, $3, $4, $5)
+                 RETURNING id;`,
+                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', true]
+              );
+              if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
+            }
 
-            await pool.query(
-              'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING',
-              [cleanEmail, '{}']
-            );
+            try {
+              const existingDados = await pool.query('SELECT id FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+              if (!existingDados.rows || existingDados.rows.length === 0) {
+                await pool.query(
+                  'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2)',
+                  [cleanEmail, '{}']
+                );
+              }
+            } catch(dadosErr){}
           } catch (dbInsertErr) {
-            console.warn('[AVISO BD] Erro no UPSERT de cadastro no PostgreSQL:', dbInsertErr.message);
+            console.warn('[AVISO BD] Erro ao cadastrar/atualizar no PostgreSQL:', dbInsertErr.message);
           }
         }
 
@@ -14107,11 +14119,20 @@ const server = http.createServer((req, res) => {
         console.log('='.repeat(70) + '\n');
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: true, message: 'Conta criada e sincronizada com sucesso no banco de dados!' }));
+        return res.end(JSON.stringify({ 
+          success: true, 
+          message: 'Conta criada e sincronizada com sucesso no banco de dados!',
+          user: {
+            id: newUserId,
+            name: name.trim(),
+            email: cleanEmail,
+            role: 'Usuário'
+          }
+        }));
       } catch (err) {
         console.error('Erro no endpoint de cadastro:', err);
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: 'Falha no servidor durante o cadastro.' }));
+        res.end(JSON.stringify({ success: false, error: 'Falha no servidor durante o cadastro: ' + err.message }));
       }
     });
     return;
