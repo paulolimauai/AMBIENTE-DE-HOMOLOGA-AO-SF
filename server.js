@@ -551,9 +551,9 @@ html, body {
   --auth-blue: #3B82F6;
   --auth-emerald: #10B981;
   --auth-cyan: #38BDF8;
-  --auth-card: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(18, 30, 58, 0.60) 25%, rgba(10, 18, 38, 0.78) 65%, rgba(4, 9, 24, 0.92) 100%);
-  --auth-border: rgba(255, 255, 255, 0.22);
-  --auth-input-bg: rgba(6, 12, 28, 0.75);
+  --auth-card: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(15, 25, 48, 0.68) 25%, rgba(8, 15, 32, 0.84) 65%, rgba(3, 7, 20, 0.95) 100%);
+  --auth-border: rgba(255, 255, 255, 0.25);
+  --auth-input-bg: rgba(6, 12, 28, 0.80);
   --auth-text: #FFFFFF;
   --auth-text-dim: #94A3B8;
   position: relative;
@@ -564,22 +564,102 @@ html, body {
   justify-content: center;
   flex-direction: column;
   min-height: 100vh;
-  padding: clamp(8px, 1.5vh, 18px) 14px;
-  background-color: #02040A;
+  padding: 0 0 clamp(8px, 1.5vh, 18px) 0;
+  background-color: #030612;
   background-image: 
-    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.25) 0px, transparent 50%),
-    radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.28) 0px, transparent 55%),
-    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.20) 0px, transparent 55%),
+    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.22) 0px, transparent 50%),
+    radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.25) 0px, transparent 55%),
+    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.18) 0px, transparent 55%),
     radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.18) 0px, transparent 50%),
-    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.25) 0px, transparent 55%),
-    linear-gradient(180deg, rgba(2, 4, 10, 0.72) 0%, rgba(5, 10, 28, 0.85) 50%, rgba(1, 3, 8, 0.94) 100%),
-    url('/images/nexus_bg_4k.jpg');
+    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.22) 0px, transparent 55%),
+    linear-gradient(180deg, rgba(3, 6, 18, 0.76) 0%, rgba(6, 12, 28, 0.84) 50%, rgba(2, 4, 12, 0.92) 100%),
+    url('/images/nexus_financial_4k_real.jpg');
   background-size: auto, auto, auto, auto, auto, auto, cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
 .auth-container.show { display: flex; }
+
+.financial-ticker-bar {
+  width: 100%;
+  height: 36px;
+  background: rgba(3, 7, 18, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 35;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+body.light .financial-ticker-bar {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-bottom: 1px solid #CBD5E1 !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06) !important;
+}
+
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  white-space: nowrap;
+  animation: tickerSlide 42s linear infinite;
+  will-change: transform;
+}
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes tickerSlide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #94A3B8;
+}
+body.light .ticker-item {
+  color: #475569;
+}
+.ticker-symbol {
+  font-weight: 800;
+  color: #FFFFFF;
+}
+body.light .ticker-symbol {
+  color: #0F172A;
+}
+.ticker-val {
+  font-weight: 700;
+  color: #F8FAFC;
+}
+body.light .ticker-val {
+  color: #1E293B;
+}
+.ticker-up {
+  color: #10B981;
+  font-weight: 800;
+}
+.ticker-down {
+  color: #F43F5E;
+  font-weight: 800;
+}
+.ticker-gold {
+  color: #F59E0B;
+  font-weight: 800;
+}
+.ticker-cyan {
+  color: #38BDF8;
+  font-weight: 800;
+}
 
 .auth-container::before {
   content: '';
@@ -602,6 +682,8 @@ html, body {
 }
 
 body.light .auth-container {
+  --auth-gold: #B45309;
+  --auth-gold-dark: #92400E;
   --auth-card: #FFFFFF;
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
@@ -609,11 +691,11 @@ body.light .auth-container {
   --auth-text-dim: #475569;
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.12) 0px, transparent 50%),
-    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.10) 0px, transparent 50%),
-    radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
-    linear-gradient(135deg, rgba(248, 250, 252, 0.88) 0%, rgba(241, 245, 249, 0.92) 50%, rgba(226, 232, 240, 0.95) 100%),
-    url('/images/nexus_bg_4k.jpg') !important;
+    radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.10) 0px, transparent 50%),
+    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.06) 0px, transparent 50%),
+    linear-gradient(135deg, rgba(248, 250, 252, 0.92) 0%, rgba(241, 245, 249, 0.95) 50%, rgba(226, 232, 240, 0.96) 100%),
+    url('/images/nexus_financial_4k_real.jpg') !important;
   background-size: auto, auto, auto, auto, cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -1017,12 +1099,95 @@ body.light .auth-card-glare {
   box-shadow: 0 14px 38px rgba(0, 0, 0, 0.6);
 }
 
-body.light .auth-showcase-title { color: #0F172A; }
-body.light .auth-showcase-desc { color: #475569; }
+.metric-card-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-dim, #94A3B8);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.metric-val {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text, #FFFFFF);
+}
+.metric-sub-green {
+  font-size: 11px;
+  font-weight: 700;
+  color: #10B981;
+  margin-top: 2px;
+}
+.metric-sub-amber {
+  font-size: 11px;
+  font-weight: 700;
+  color: #F59E0B;
+  margin-top: 2px;
+}
+.metric-sub-blue {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38BDF8;
+  margin-top: 2px;
+}
+.auth-showcase-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94A3B8;
+  margin-top: 4px;
+}
+
+body.light .auth-showcase-badge {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border: 1.5px solid rgba(180, 83, 9, 0.35) !important;
+  color: #92400E !important;
+  font-weight: 800 !important;
+}
+body.light .auth-showcase-badge span:first-child {
+  background: #D97706 !important;
+}
+body.light .auth-showcase-title {
+  color: #0F172A !important;
+}
+body.light .auth-showcase-title span {
+  background: linear-gradient(90deg, #D97706 0%, #B45309 60%, #92400E 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 1px 1px rgba(180, 83, 9, 0.20)) !important;
+}
+body.light .auth-showcase-desc {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
 body.light .auth-metric-card {
-  background: #FFFFFF;
-  border-color: #CBD5E1;
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
+}
+body.light .auth-metric-card .metric-card-label {
+  color: #475569 !important;
+}
+body.light .auth-metric-card .metric-val {
+  color: #0F172A !important;
+}
+body.light .metric-sub-green {
+  color: #047857 !important;
+  font-weight: 800 !important;
+}
+body.light .metric-sub-amber {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+body.light .metric-sub-blue {
+  color: #0284C7 !important;
+  font-weight: 800 !important;
+}
+body.light .auth-showcase-footer,
+body.light .auth-showcase-footer span {
+  color: #334155 !important;
+  font-weight: 700 !important;
 }
 
 .auth-brand {
@@ -1094,6 +1259,21 @@ body.light .auth-metric-card {
   margin-top: 4px;
   font-weight: 500;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+body.light .auth-title {
+  color: #0F172A !important;
+  text-shadow: none !important;
+}
+body.light .auth-title span {
+  color: #B45309 !important;
+  text-shadow: none !important;
+  font-weight: 900 !important;
+}
+body.light .auth-subtitle {
+  color: #475569 !important;
+  text-shadow: none !important;
+  font-weight: 700 !important;
 }
 
 /* Abas de Navegação Segmentada (Entrar / Criar Conta) */
@@ -1428,6 +1608,36 @@ body.light .auth-pass-toggle-btn:hover {
 .auth-forgot-link:hover {
   text-decoration: underline;
   color: #FCD34D;
+}
+
+body.light .btn-auth-primary {
+  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 35%, #D97706 70%, #B45309 100%) !important;
+  color: #0F172A !important;
+  border: 1.5px solid rgba(180, 83, 9, 0.5) !important;
+  box-shadow: 0 10px 24px -4px rgba(217, 119, 6, 0.45), inset 0 1.5px 2px #FFFFFF !important;
+}
+body.light .btn-auth-primary:hover {
+  filter: brightness(1.06) !important;
+  box-shadow: 0 14px 32px -4px rgba(217, 119, 6, 0.60), inset 0 1.5px 2px #FFFFFF !important;
+}
+
+body.light .auth-forgot-link {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+body.light .auth-forgot-link:hover {
+  color: #92400E !important;
+}
+
+body.light .auth-bottom-text {
+  color: #475569 !important;
+}
+body.light .auth-bottom-text a {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+body.light .auth-bottom-text a:hover {
+  color: #92400E !important;
 }
 
 /* Botão 4K Glass para Abertura e Consulta de Ordem de Serviço */
@@ -4757,7 +4967,36 @@ body.light .scale-dropdown {
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
-  <div class="auth-top-bar" style="width:100%; max-width:1200px; padding:0 24px; display:flex; justify-content:space-between; align-items:center; position:absolute; top:20px; z-index:20;">
+  <!-- BARRA DE COTAÇÕES FINANCEIRAS EM TEMPO REAL (REALISTIC MARKET LIVE TICKER) -->
+  <div class="financial-ticker-bar w-full">
+    <div class="ticker-track">
+      <div class="ticker-item"><span class="ticker-symbol">USD/BRL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">EUR/BRL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">IBOVESPA</span> <span class="ticker-val">134.850 pts</span> <span class="ticker-up">▲ +1.12%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">S&P 500</span> <span class="ticker-val">5.648 pts</span> <span class="ticker-up">▲ +0.72%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">BTC/USD</span> <span class="ticker-val">$64.280</span> <span class="ticker-up">▲ +2.45%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">CDI</span> <span class="ticker-cyan">10,65% a.a.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">IPCA</span> <span class="ticker-val">+3,87%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">NASDAQ</span> <span class="ticker-val">17.820 pts</span> <span class="ticker-up">▲ +0.94%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">PETR4</span> <span class="ticker-val">R$ 38,40</span> <span class="ticker-up">▲ +1.60%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">VALE3</span> <span class="ticker-val">R$ 57,90</span> <span class="ticker-down">▼ -0.42%</span></div>
+      <!-- Duplicação para rotação contínua 60fps -->
+      <div class="ticker-item"><span class="ticker-symbol">USD/BRL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">EUR/BRL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">IBOVESPA</span> <span class="ticker-val">134.850 pts</span> <span class="ticker-up">▲ +1.12%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">S&P 500</span> <span class="ticker-val">5.648 pts</span> <span class="ticker-up">▲ +0.72%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">BTC/USD</span> <span class="ticker-val">$64.280</span> <span class="ticker-up">▲ +2.45%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">CDI</span> <span class="ticker-cyan">10,65% a.a.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">IPCA</span> <span class="ticker-val">+3,87%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">NASDAQ</span> <span class="ticker-val">17.820 pts</span> <span class="ticker-up">▲ +0.94%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">PETR4</span> <span class="ticker-val">R$ 38,40</span> <span class="ticker-up">▲ +1.60%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">VALE3</span> <span class="ticker-val">R$ 57,90</span> <span class="ticker-down">▼ -0.42%</span></div>
+    </div>
+  </div>
+
+  <div class="auth-top-bar" style="width:100%; max-width:1200px; padding:0 24px; display:flex; justify-content:space-between; align-items:center; position:absolute; top:46px; z-index:20;">
     <div style="display:flex; align-items:center; gap:8px;"></div>
     <div style="display:flex; align-items:center; gap:12px;">
       <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
@@ -4803,25 +5042,25 @@ body.light .scale-dropdown {
 
       <div class="auth-showcase-metrics">
         <div class="auth-metric-card">
-          <div style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-bottom:4px;">Economia do Mês</div>
-          <div class="metric-val" style="font-size:18px; font-weight:900; color:var(--text);">R$ 3.850</div>
-          <div style="font-size:11px; font-weight:700; color:#10B981; margin-top:2px;">+18% guardado 🎯</div>
+          <div class="metric-card-label">Economia do Mês</div>
+          <div class="metric-val">R$ 3.850</div>
+          <div class="metric-sub-green">+18% guardado 🎯</div>
         </div>
 
         <div class="auth-metric-card">
-          <div style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-bottom:4px;">Orçamento & Gastos</div>
-          <div class="metric-val" style="font-size:18px; font-weight:900; color:var(--text);">Sob Controle</div>
-          <div style="font-size:11px; font-weight:700; color:#F59E0B; margin-top:2px;">Sem sustos no fim do mês 💡</div>
+          <div class="metric-card-label">Orçamento & Gastos</div>
+          <div class="metric-val">Sob Controle</div>
+          <div class="metric-sub-amber">Sem sustos no fim do mês 💡</div>
         </div>
 
         <div class="auth-metric-card">
-          <div style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase; margin-bottom:4px;">Metas & Sonhos</div>
-          <div class="metric-val" style="font-size:18px; font-weight:900; color:var(--text);">84% Concluído</div>
-          <div style="font-size:11px; font-weight:700; color:#38BDF8; margin-top:2px;">Rumo à sua conquista 🚀</div>
+          <div class="metric-card-label">Metas & Sonhos</div>
+          <div class="metric-val">84% Concluído</div>
+          <div class="metric-sub-blue">Rumo à sua conquista 🚀</div>
         </div>
       </div>
 
-      <div style="display:flex; align-items:center; gap:16px; font-size:12px; font-weight:600; color:#94A3B8; margin-top:4px;">
+      <div class="auth-showcase-footer">
         <span style="display:flex; align-items:center; gap:6px;">
           <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block;"></span>
           Seus dados 100% seguros e confidenciais
@@ -4889,8 +5128,8 @@ body.light .scale-dropdown {
           </button>
         </form>
 
-        <p style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
-          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#f59e0b; font-weight:700; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
+        <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
+          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:var(--auth-gold); font-weight:700; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
         </p>
       </div>
 
