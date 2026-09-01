@@ -1756,9 +1756,14 @@
     </footer>
 
     <script>
-        const targetOrigin = (window.location.origin && window.location.origin.includes('http')) 
+        let targetOrigin = (window.location.origin && window.location.origin.includes('http')) 
             ? window.location.origin 
             : 'http://localhost:3000';
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            if (window.location.port && window.location.port !== '3000') {
+                targetOrigin = 'http://' + window.location.hostname + ':3000';
+            }
+        }
 
         // Áudio Sintetizado Web Audio API
         let audioCtx = null;
@@ -2755,6 +2760,21 @@
                     registerSuccess = true;
                 }
 
+                // Dados do usuário registrado
+                const authUser = (typeof data !== 'undefined' && data && data.user) 
+                    ? data.user 
+                    : { id: Date.now(), name: name, email: email, role: 'Usuário', active: true };
+                const authToken = (typeof data !== 'undefined' && data && data.token) 
+                    ? data.token 
+                    : ('token_' + Date.now());
+
+                // Salva sessão autenticada para entrada imediata
+                localStorage.setItem('nexus_session', JSON.stringify({ email: email }));
+                localStorage.setItem('nexus_token', authToken);
+                localStorage.setItem('nexus_cached_user', JSON.stringify(authUser));
+                localStorage.setItem('nexus_just_logged_in', 'true');
+                sessionStorage.setItem('nexus_just_logged_in', 'true');
+
                 // Salva no cache local de usuários (localStorage)
                 let localUsers = [];
                 try {
@@ -2762,43 +2782,27 @@
                 } catch(e) { localUsers = []; }
                 if (!Array.isArray(localUsers)) localUsers = [];
 
-                const userIdx = localUsers.findIndex(u => u.email && u.email.toLowerCase() === email);
+                const userIdx = localUsers.findIndex(u => u && u.email && u.email.toLowerCase() === email);
+                const userObj = { id: authUser.id || Date.now(), name: name, email: email, password: password, role: 'Usuário', active: true };
                 if (userIdx >= 0) {
-                    localUsers[userIdx].name = name;
-                    localUsers[userIdx].password = password;
-                    localUsers[userIdx].active = true;
+                    localUsers[userIdx] = userObj;
                 } else {
-                    localUsers.push({ id: Date.now(), name: name, email: email, password: password, role: 'Usuário', active: true });
+                    localUsers.push(userObj);
                 }
                 localStorage.setItem('nexus_users', JSON.stringify(localUsers));
 
-                // Preenche formulário de Logon
+                // Preenche formulário de Logon caso retorne
                 const loginEmailEl = document.getElementById('loginEmail');
                 const loginPassEl = document.getElementById('loginPassword');
                 if (loginEmailEl) loginEmailEl.value = email;
                 if (loginPassEl) loginPassEl.value = password;
 
-                // Configura Banner de Boas-Vindas no Logon
-                const banner = document.getElementById('newRegLogonBanner');
-                const titleEl = document.getElementById('newRegLogonTitle');
-                const descEl = document.getElementById('newRegLogonDesc');
-                if (banner && titleEl && descEl) {
-                    titleEl.textContent = '🎉 ' + name + ', sua conta foi criada!';
-                    descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar.';
-                    banner.classList.remove('hidden');
-                }
+                // Apresentação de Sucesso e Entrada Imediata
+                showLoginSuccessModal('🎉 Conta criada com sucesso!', 'Bem-vindo(a), ' + name + '! Sua conta está ativa. Conectando você ao Nexus Financeiro Hub...');
 
-                showAlert('🎉 Conta criada com sucesso! Redirecionando para a aba de Logon com suas credenciais preenchidas.', 'success');
-
-                // Atualiza lista de usuários cadastrados
-                carregarUsuariosLogon();
-
-                // Muda para aba de Logon
                 setTimeout(function() {
-                    switchAuthTab('login');
-                    const loginBtn = document.getElementById('btnLoginSubmit');
-                    if (loginBtn) loginBtn.focus();
-                }, 800);
+                    window.location.href = targetOrigin.endsWith('/') ? targetOrigin : targetOrigin + '/';
+                }, 1400);
 
             } catch (err) {
                 showAlert('Erro ao processar criação de conta. Verifique os dados digitados.', 'error');

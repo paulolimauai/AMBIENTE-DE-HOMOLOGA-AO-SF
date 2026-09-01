@@ -4427,11 +4427,11 @@ body.light .scale-dropdown {
 
       <!-- Navegação por Abas Segmentadas -->
       <div class="auth-tabs-nav" id="authTabsNav">
-        <button type="button" class="auth-tab-btn active" id="tabBtnLogin">
+        <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="window.switchAuthTab('login')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Entrar na Conta
         </button>
-        <button type="button" class="auth-tab-btn" id="tabBtnRegister">
+        <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="window.switchAuthTab('register')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
           Criar Conta
         </button>
@@ -4521,7 +4521,7 @@ body.light .scale-dropdown {
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </span>
-              <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false">
+              <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="window.checkServerRegPasswordMatch()">
               <button type="button" class="auth-pass-toggle-btn" id="toggleRegPassBtn" onclick="window.toggleRegisterBothPasswords('toggleRegPassBtn')" title="Visualizar Senhas" aria-label="Visualizar Senhas">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
@@ -4534,8 +4534,9 @@ body.light .scale-dropdown {
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
               </span>
-              <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false">
+              <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="window.checkServerRegPasswordMatch()">
             </div>
+            <div id="regPwdMatchMsg" style="display:none; font-size:11px; font-weight:600; margin-top:4px; align-items:center; gap:4px;"></div>
           </div>
 
           <div id="registerFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
@@ -6149,9 +6150,11 @@ window.checkServerRegPasswordMatch = function() {
   }
 };
 
-// Cadastro com inserção direta no PostgreSQL e fallback resiliente
+// Cadastro com inserção direta no PostgreSQL, persistência e logon automático imediato
 window.handleRegisterSubmit = async function(e) {
   if (e && e.preventDefault) e.preventDefault();
+  if (window.clearAuthFeedback) window.clearAuthFeedback('register');
+
   const nameInput = document.getElementById('regName');
   const emailInput = document.getElementById('regEmail');
   const passwordInput = document.getElementById('regPassword');
@@ -6166,35 +6169,56 @@ window.handleRegisterSubmit = async function(e) {
   const cleanEmail = email.toLowerCase().trim();
 
   if (!name || !cleanEmail || !password || !confirmPassword) {
-    showCustomAlert('Atenção', 'Por favor, preencha todos os campos do formulário, incluindo a confirmação de senha.', 'error');
+    if (window.showAuthFeedback) {
+      window.showAuthFeedback('register', 'error', 'Campos incompletos', 'Por favor, preencha todos os campos do formulário, incluindo a confirmação de senha.');
+    } else {
+      showCustomAlert('Atenção', 'Por favor, preencha todos os campos do formulário, incluindo a confirmação de senha.', 'error');
+    }
     return false;
   }
 
   if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
-    showCustomAlert('Atenção', 'Por favor, informe um endereço de e-mail válido (ex: seu.email@exemplo.com).', 'error');
+    if (window.showAuthFeedback) {
+      window.showAuthFeedback('register', 'error', 'E-mail inválido', 'Por favor, informe um endereço de e-mail válido (ex: seu.email@exemplo.com).');
+    } else {
+      showCustomAlert('Atenção', 'Por favor, informe um endereço de e-mail válido (ex: seu.email@exemplo.com).', 'error');
+    }
     return false;
   }
 
   if (password.length < 6) {
-    showCustomAlert('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'error');
+    if (window.showAuthFeedback) {
+      window.showAuthFeedback('register', 'error', 'Senha muito curta', 'A senha deve ter no mínimo 6 caracteres.');
+    } else {
+      showCustomAlert('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'error');
+    }
     return false;
   }
 
   if (password !== confirmPassword) {
-    showCustomAlert('Atenção', 'As senhas não conferem. Por favor, digite a mesma senha nos dois campos.', 'error');
+    if (window.showAuthFeedback) {
+      window.showAuthFeedback('register', 'error', 'Senhas divergentes', 'As senhas não conferem. Por favor, digite a mesma senha nos dois campos.');
+    } else {
+      showCustomAlert('Atenção', 'As senhas não conferem. Por favor, digite a mesma senha nos dois campos.', 'error');
+    }
     return false;
   }
 
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Salvando conta...';
+    submitBtn.textContent = 'Criando sua conta...';
   }
 
   let registerSuccess = false;
-  let serverMessage = '';
+  let userData = null;
+  let userToken = null;
 
   try {
-    const response = await fetch(window.location.origin + '/api/register', {
+    const apiOrigin = (window.location.origin && window.location.origin.startsWith('http')) 
+      ? window.location.origin 
+      : 'http://localhost:3000';
+
+    const response = await fetch(apiOrigin + '/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email: cleanEmail, password })
@@ -6203,10 +6227,15 @@ window.handleRegisterSubmit = async function(e) {
     const data = await response.json();
     if (response.ok && data.success) {
       registerSuccess = true;
-      serverMessage = data.message || 'Conta criada e salva no banco de dados com sucesso!';
+      userData = data.user || { id: Date.now(), name, email: cleanEmail, role: 'Usuário', active: true };
+      userToken = data.token || ('token_' + Date.now());
       await syncUsersWithServer();
     } else {
-      showCustomAlert('Atenção', data.error || 'Erro ao registrar usuário no banco de dados.', 'error');
+      if (window.showAuthFeedback) {
+        window.showAuthFeedback('register', 'error', 'Não foi possível cadastrar', data.error || 'Erro ao registrar usuário no banco de dados.');
+      } else {
+        showCustomAlert('Atenção', data.error || 'Erro ao registrar usuário no banco de dados.', 'error');
+      }
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Criar Minha Conta →';
@@ -6214,18 +6243,20 @@ window.handleRegisterSubmit = async function(e) {
       return false;
     }
   } catch (err) {
-    console.warn('[CADASTRO RESILIENTE] Falha na API de registro, salvando localmente:', err.message);
-    const existingIndex = registeredUsers.findIndex(u => u.email && u.email.toLowerCase() === cleanEmail);
+    console.warn('[CADASTRO RESILIENTE] Falha de rede na API de registro, salvando no cache local:', err.message);
+    const existingIndex = registeredUsers.findIndex(u => u && u.email && u.email.toLowerCase() === cleanEmail);
+    const fallbackUser = { id: Date.now(), name, email: cleanEmail, password, role: 'Usuário', active: true };
     if (existingIndex >= 0) {
       registeredUsers[existingIndex].name = name;
       registeredUsers[existingIndex].password = password;
       registeredUsers[existingIndex].active = true;
     } else {
-      registeredUsers.push({ id: Date.now(), name, email: cleanEmail, password, role: 'Usuário', active: true });
+      registeredUsers.push(fallbackUser);
     }
     saveUsersToServer();
     registerSuccess = true;
-    serverMessage = 'Conta salva com sucesso! Faça login para continuar.';
+    userData = fallbackUser;
+    userToken = 'token_local_' + Date.now();
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -6233,14 +6264,13 @@ window.handleRegisterSubmit = async function(e) {
     }
   }
 
-  if (registerSuccess) {
-    if (nameInput) nameInput.value = '';
-    if (emailInput) emailInput.value = '';
-    if (passwordInput) passwordInput.value = '';
-    if (confirmPasswordInput) confirmPasswordInput.value = '';
-    const regMsg = document.getElementById('regPwdMatchMsg');
-    if (regMsg) regMsg.style.display = 'none';
+  if (registerSuccess && userData) {
+    currentUser = userData;
+    saveToStorage('nexus_session', { email: cleanEmail });
+    saveToStorage('nexus_cached_user', userData);
+    saveToStorage('nexus_token', userToken);
 
+    // Preenche também o formulário de logon para quando deslogar
     const loginEmail = document.getElementById('loginEmail');
     const loginPass = document.getElementById('loginPassword');
     if (loginEmail) loginEmail.value = cleanEmail;
@@ -6250,18 +6280,37 @@ window.handleRegisterSubmit = async function(e) {
     const titleEl = document.getElementById('newRegLogonTitleServer');
     const descEl = document.getElementById('newRegLogonDescServer');
     if (banner && titleEl && descEl) {
-      titleEl.textContent = '🎉 ' + name + ', sua conta foi criada!';
-      descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar.';
+      titleEl.textContent = '🎉 ' + name + ', sua conta está ativa!';
+      descEl.innerHTML = 'Credenciais salvas com sucesso. Você está conectado no sistema.';
       banner.style.display = 'block';
     }
 
     if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
 
-    window.switchAuthTab('login');
-    const loginBtn = document.getElementById('loginSubmitBtn');
-    if (loginBtn) loginBtn.focus();
+    document.documentElement.classList.add('user-logged-in');
+    if (currentUser.role === 'Administrador') {
+      document.documentElement.classList.add('is-admin');
+      currentPage = 'usuarios';
+    } else {
+      document.documentElement.classList.remove('is-admin');
+      currentPage = 'dashboard';
+    }
 
-    showCustomAlert('Cadastro Realizado com Sucesso! 🎉', 'Conta criada com sucesso! Suas credenciais foram preenchidas no formulário de Logon para você entrar.', 'success');
+    await loadUserData();
+    showLoginSuccessPopup('🎉 Conta criada com sucesso! Bem-vindo(a), ' + (userData.name || 'Usuário') + '!');
+    setTimeout(() => {
+      const authP = document.getElementById('authPage');
+      const appM = document.getElementById('appMain');
+      if (authP) {
+        authP.classList.remove('show');
+        authP.style.display = 'none';
+      }
+      if (appM) {
+        appM.classList.add('show');
+        appM.style.display = 'flex';
+      }
+      if (typeof render === 'function') render();
+    }, 1100);
   }
   return false;
 };
@@ -13326,7 +13375,7 @@ if (scaleMenuBtn && scaleDropdown) {
     await syncUsersWithServer();
   } catch(e) {}
 
-  const serverUser = registeredUsers.find(u => u.email.toLowerCase() === (sessionEmail || '').toLowerCase());
+  const serverUser = registeredUsers.find(u => u && u.email && u.email.toLowerCase() === (sessionEmail || '').toLowerCase());
   const realUser = serverUser || cachedUser || { email: sessionEmail, name: sessionEmail.split('@')[0], role: 'Usuário' };
 
   if (realUser && realUser.active === false) {
@@ -13351,7 +13400,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
   // Se o Administrador estava inspecionando outro usuário antes do F5
   if (realUser.role === 'Administrador' && viewingEmail) {
-    const target = registeredUsers.find(u => u.email.toLowerCase() === viewingEmail.toLowerCase());
+    const target = registeredUsers.find(u => u && u.email && u.email.toLowerCase() === viewingEmail.toLowerCase());
     if (target && target.email.toLowerCase() !== realUser.email.toLowerCase()) {
       adminOriginalUser = realUser;
       currentUser = target;
@@ -14091,7 +14140,7 @@ const server = http.createServer((req, res) => {
           }
         }
 
-        const localUsers = getLocalUsers().filter(u => u.email.toLowerCase() !== cleanEmail);
+        const localUsers = getLocalUsers().filter(u => u && u.email && u.email.toLowerCase() !== cleanEmail);
         const newUserObj = { id: newUserId, name: name.trim(), email: cleanEmail, password: secureHashedPassword, role: 'Usuário', active: true };
         localUsers.push(newUserObj);
         saveLocalUsers(localUsers);
@@ -14118,16 +14167,13 @@ const server = http.createServer((req, res) => {
         console.log('📂 Persistência: local_users.json e PostgreSQL');
         console.log('='.repeat(70) + '\n');
 
+        const token = generateSecureToken(newUserObj);
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ 
           success: true, 
           message: 'Conta criada e sincronizada com sucesso no banco de dados!',
-          user: {
-            id: newUserId,
-            name: name.trim(),
-            email: cleanEmail,
-            role: 'Usuário'
-          }
+          token: token,
+          user: sanitizeUser(newUserObj)
         }));
       } catch (err) {
         console.error('Erro no endpoint de cadastro:', err);
