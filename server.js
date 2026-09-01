@@ -266,11 +266,13 @@ async function initDatabase() {
   `);
 
   // Auto-migração de colunas na tabela ordens_servico
+  // Auto-migração de colunas nas tabelas ordens_servico e usuarios
   try {
     await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS admin_notes TEXT DEFAULT \'\';');
     await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS service_type VARCHAR(100) DEFAULT \'Melhoria no Sistema\';');
     await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS priority VARCHAR(50) DEFAULT \'Normal\';');
     await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now();');
+    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;');
   } catch(e) {}
 
   await pool.query(
@@ -281,10 +283,23 @@ async function initDatabase() {
   );
 
   try {
-    const res = await pool.query('SELECT id, name, email, password, role, active FROM usuarios ORDER BY id ASC');
+    const localUsers = getLocalUsers();
+    for (const u of localUsers) {
+      if (!u || !u.email) continue;
+      const cleanEmail = u.email.toLowerCase().trim();
+      const existing = await pool.query('SELECT id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+      if (existing.rows.length === 0) {
+        await pool.query(
+          'INSERT INTO usuarios (name, email, password, role, active) VALUES ($1, $2, $3, $4, $5)',
+          [u.name || 'Usuário', cleanEmail, u.password || hashPassword('123456'), u.role || 'Usuário', u.active !== false]
+        );
+      }
+    }
+
+    const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login FROM usuarios ORDER BY id ASC');
     if (res.rows && res.rows.length > 0) {
       saveLocalUsers(res.rows);
-      console.log(`[BANCO] ${res.rows.length} usuário(s) sincronizado(s) diretamente do PostgreSQL para persistência local.`);
+      console.log(`[BANCO] ${res.rows.length} usuário(s) sincronizado(s) e consolidados entre PostgreSQL e persistência local.`);
     }
   } catch(syncErr) {
     console.warn('[BANCO AVISO] Erro ao sincronizar cache local de usuários:', syncErr.message);
@@ -4427,11 +4442,11 @@ body.light .scale-dropdown {
 
       <!-- Navegação por Abas Segmentadas -->
       <div class="auth-tabs-nav" id="authTabsNav">
-        <button type="button" class="auth-tab-btn active" id="tabBtnLogin">
+        <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="window.switchAuthTab('login')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Entrar na Conta
         </button>
-        <button type="button" class="auth-tab-btn" id="tabBtnRegister">
+        <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="window.switchAuthTab('register')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
           Criar Conta
         </button>
@@ -4521,7 +4536,7 @@ body.light .scale-dropdown {
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </span>
-              <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false">
+              <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="window.checkServerRegPasswordMatch()">
               <button type="button" class="auth-pass-toggle-btn" id="toggleRegPassBtn" onclick="window.toggleRegisterBothPasswords('toggleRegPassBtn')" title="Visualizar Senhas" aria-label="Visualizar Senhas">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
@@ -4534,8 +4549,9 @@ body.light .scale-dropdown {
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
               </span>
-              <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false">
+              <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="window.checkServerRegPasswordMatch()">
             </div>
+            <div id="regPwdMatchMsg" style="display:none; font-size:11px; font-weight:600; margin-top:4px; align-items:center; gap:4px;"></div>
           </div>
 
           <div id="registerFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
@@ -6251,7 +6267,7 @@ window.handleRegisterSubmit = async function(e) {
     const descEl = document.getElementById('newRegLogonDescServer');
     if (banner && titleEl && descEl) {
       titleEl.textContent = '🎉 ' + name + ', sua conta foi criada!';
-      descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar.';
+      descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Entrando na conta...';
       banner.style.display = 'block';
     }
 
@@ -6261,7 +6277,17 @@ window.handleRegisterSubmit = async function(e) {
     const loginBtn = document.getElementById('loginSubmitBtn');
     if (loginBtn) loginBtn.focus();
 
-    showCustomAlert('Cadastro Realizado com Sucesso! 🎉', 'Conta criada com sucesso! Suas credenciais foram preenchidas no formulário de Logon para você entrar.', 'success');
+    showCustomAlert('Cadastro Realizado com Sucesso! 🎉', 'Conta criada com sucesso! Suas credenciais foram sincronizadas. Clique em OK para entrar agora.', 'success', () => {
+      if (typeof window.handleLoginSubmit === 'function') window.handleLoginSubmit();
+    });
+
+    setTimeout(() => {
+      const modal = document.getElementById('executive4kModal');
+      if (modal && modal.style.display !== 'none') {
+        modal.style.display = 'none';
+        if (typeof window.handleLoginSubmit === 'function') window.handleLoginSubmit();
+      }
+    }, 1200);
   }
   return false;
 };
@@ -14091,7 +14117,7 @@ const server = http.createServer((req, res) => {
           }
         }
 
-        const localUsers = getLocalUsers().filter(u => u.email.toLowerCase() !== cleanEmail);
+        const localUsers = getLocalUsers().filter(u => u && u.email && u.email.toLowerCase() !== cleanEmail);
         const newUserObj = { id: newUserId, name: name.trim(), email: cleanEmail, password: secureHashedPassword, role: 'Usuário', active: true };
         localUsers.push(newUserObj);
         saveLocalUsers(localUsers);
@@ -14118,16 +14144,13 @@ const server = http.createServer((req, res) => {
         console.log('📂 Persistência: local_users.json e PostgreSQL');
         console.log('='.repeat(70) + '\n');
 
+        const token = generateSecureToken(newUserObj);
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ 
           success: true, 
           message: 'Conta criada e sincronizada com sucesso no banco de dados!',
-          user: {
-            id: newUserId,
-            name: name.trim(),
-            email: cleanEmail,
-            role: 'Usuário'
-          }
+          token: token,
+          user: sanitizeUser(newUserObj)
         }));
       } catch (err) {
         console.error('Erro no endpoint de cadastro:', err);
