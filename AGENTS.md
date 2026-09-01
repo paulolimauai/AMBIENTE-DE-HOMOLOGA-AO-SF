@@ -1,14 +1,14 @@
-# Diretrizes Globais do Projeto (Auto-Approve & Auto-Git Sync)
+# Diretrizes Globais do Projeto (Auto-Approve, Auto-Exec & Auto-Git Sync)
 
-## 1. Aprovação Automática Total, Modificação Direta de Arquivos e Execução Sem Perguntas (Zero Interrupts)
-- **Modificação Direta Sem Perguntar**: Todo e qualquer arquivo deve ser modificado, criado ou excluído diretamente **SEM NUNCA PERGUNTAR** ao usuário.
-- **Sem Interrupções para Confirmação**: **NUNCA** pausar ou perguntar em momento algum (*"Posso aplicar?"*, *"Deseja continuar?"*, *"Quer que eu altere o arquivo?"*, *"Posso enviar para o Git?"*).
-- **Aprovação Automática Total (Auto-Approve Permanente)**: Toda solicitação do usuário, ajuste visual/CSS/JS, refatoração, criação/edição de arquivos e comandos estão **100% pré-aprovados e memorizados permanentemente**.
-- **Validação Autônoma**: O próprio agente valida a sintaxe (ex: `node --check server.js`), integridade e coerência das alterações antes de finalizar.
-- **Auto-Yes de Ponta a Ponta**: Executar todas as etapas necessárias de forma totalmente autônoma e entregar a solução pronta e funcional.
+## 1. Execução Imediata no Terminal e Aprovação Automática Total (Zero Interrupts / Zero Confirmações)
+- **Execução Direta e Sem Perguntas**: Todo e qualquer comando de terminal (`run_command`, scripts, ferramentas, deploys, inicialização de servidores) deve ser executado **IMEDIATAMENTE e DIRETAMENTE SEM NUNCA PEDIR CONFIRMAÇÃO** ao usuário.
+- **Modificação Direta de Arquivos**: Todo e qualquer arquivo deve ser criado, editado ou excluído diretamente de ponta a ponta sem pedir permissão prévia.
+- **Sem Pausas ou Interrupções**: **NUNCA** pausar ou perguntar (*"Posso executar o comando?"*, *"Deseja que eu rode o teste?"*, *"Posso aplicar as alterações?"*, *"Quer que eu envie para o Git?"*).
+- **Validação e Auto-Correção Autônoma**: O próprio agente valida a sintaxe (ex: `node --check server.js`), integridade, testes e coerência das alterações, corrigindo autonomamente eventuais erros até entregar a solução 100% funcional.
+- **Configuração Permanente**: Esta diretriz de auto-execução e auto-aprovação permanente é contínua e memorizada permanentemente até solicitação explícita do usuário em contrário.
 
 ## 2. Sincronização Obrigatória e Automática com o Git (Auto-Push)
-- **Sempre Subir ao Finalizar**: Ao concluir qualquer alteração, correção ou nova funcionalidade, **SEMPRE** sincronizar com o repositório Git automaticamente sem perguntar.
+- **Sempre Subir ao Finalizar**: Ao concluir qualquer alteração, comando, correção ou nova funcionalidade, **SEMPRE** sincronizar com o repositório Git automaticamente sem perguntar.
 - **Fluxo de Sincronização Git**:
   1. `git status` para verificar as alterações.
   2. `git add .` para incluir todas as alterações relevantes.
