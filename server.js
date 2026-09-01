@@ -535,11 +535,11 @@ html, body {
   --auth-gold-dark: #D97706;
   --auth-blue: #3B82F6;
   --auth-emerald: #10B981;
-  --auth-teal: #0D9488;
-  --auth-card: linear-gradient(145deg, rgba(30, 41, 65, 0.58) 0%, rgba(15, 23, 42, 0.76) 42%, rgba(8, 12, 26, 0.88) 100%);
-  --auth-border: rgba(255, 255, 255, 0.16);
-  --auth-input-bg: rgba(4, 7, 16, 0.65);
-  --auth-text: #F8FAFC;
+  --auth-cyan: #38BDF8;
+  --auth-card: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(18, 30, 58, 0.60) 25%, rgba(10, 18, 38, 0.78) 65%, rgba(4, 9, 24, 0.92) 100%);
+  --auth-border: rgba(255, 255, 255, 0.22);
+  --auth-input-bg: rgba(6, 12, 28, 0.75);
+  --auth-text: #FFFFFF;
   --auth-text-dim: #94A3B8;
   position: relative;
   overflow: hidden;
@@ -549,14 +549,14 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   padding: 24px 16px;
-  background-color: #020409;
+  background-color: #02040A;
   background-image: 
-    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.28) 0px, transparent 50%),
-    radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.30) 0px, transparent 55%),
-    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.22) 0px, transparent 55%),
-    radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.20) 0px, transparent 50%),
-    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.28) 0px, transparent 55%),
-    linear-gradient(180deg, #020409 0%, #060B18 50%, #010206 100%);
+    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.32) 0px, transparent 50%),
+    radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.35) 0px, transparent 55%),
+    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.26) 0px, transparent 55%),
+    radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.24) 0px, transparent 50%),
+    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.32) 0px, transparent 55%),
+    linear-gradient(180deg, #02040A 0%, #060D20 50%, #010308 100%);
   background-attachment: fixed;
 }
 .auth-container.show { display: flex; }
@@ -567,10 +567,10 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 580px;
-  height: 580px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.20) 0%, rgba(59, 130, 246, 0.16) 40%, rgba(16, 185, 129, 0.10) 65%, transparent 75%);
-  filter: blur(65px);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.24) 0%, rgba(56, 189, 248, 0.20) 40%, rgba(16, 185, 129, 0.14) 65%, transparent 75%);
+  filter: blur(70px);
   pointer-events: none;
   z-index: 1;
   border-radius: 50%;
@@ -584,14 +584,14 @@ html, body {
 body.light .auth-container {
   --auth-card: #FFFFFF;
   --auth-border: #CBD5E1;
-  --auth-input-bg: #F8FAFC;
+  --auth-input-bg: #FFFFFF;
   --auth-text: #0F172A;
   --auth-text-dim: #475569;
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(at 12% 15%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
-    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.06) 0px, transparent 50%),
+    radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.12) 0px, transparent 50%),
+    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.10) 0px, transparent 50%),
+    radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
     linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%) !important;
   background-attachment: fixed !important;
 }
@@ -608,7 +608,7 @@ body.light .auth-container {
 
 .auth-theme-btn {
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  border: 1px solid rgba(245, 158, 11, 0.45);
   color: var(--auth-gold);
   width: 48px;
   height: 48px;
@@ -618,7 +618,7 @@ body.light .auth-container {
   justify-content: center;
   cursor: pointer;
   backdrop-filter: blur(14px);
-  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.20);
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.25);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .auth-theme-btn svg {
@@ -629,8 +629,8 @@ body.light .auth-container {
 .auth-theme-btn:hover {
   transform: scale(1.08);
   background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(245, 158, 11, 0.60);
-  box-shadow: 0 6px 22px rgba(245, 158, 11, 0.35);
+  border-color: rgba(245, 158, 11, 0.70);
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.40);
 }
 body.light .auth-theme-btn {
   background: #FFFFFF;
@@ -644,9 +644,9 @@ body.light .auth-theme-btn {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91, 148, 217, 0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
+    linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 158, 11, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
   -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
   mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
 }
@@ -682,7 +682,7 @@ body.light .auth-theme-btn {
   background: #F59E0B;
   top: 28%;
   right: 12%;
-  opacity: 0.20;
+  opacity: 0.24;
   animation: blobFloat 28s ease-in-out infinite;
   animation-delay: -14s;
 }
@@ -703,24 +703,24 @@ body.light .auth-blob { opacity: 0.14; }
 .auth-card-nexus {
   position: relative;
   z-index: 2;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(26, 40, 71, 0.46) 28%, rgba(12, 19, 39, 0.65) 68%, rgba(6, 11, 25, 0.82) 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
-  border-top: 2px solid rgba(255, 255, 255, 0.70) !important;
-  border-left: 1.5px solid rgba(255, 255, 255, 0.42) !important;
-  border-right: 1.5px solid rgba(255, 255, 255, 0.16) !important;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(18, 30, 58, 0.60) 25%, rgba(10, 18, 38, 0.78) 65%, rgba(4, 9, 24, 0.92) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.24) !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.85) !important;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 32px;
   padding: 40px 38px;
   width: 100%;
   max-width: 460px;
   box-shadow: 
-    0 35px 90px -10px rgba(0, 0, 0, 0.85),
-    0 0 65px rgba(245, 158, 11, 0.25),
-    0 0 95px rgba(59, 130, 246, 0.22),
-    inset 0 2px 3px rgba(255, 255, 255, 0.55),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.45) !important;
-  backdrop-filter: blur(48px) saturate(220%);
-  -webkit-backdrop-filter: blur(48px) saturate(220%);
+    0 35px 100px -10px rgba(0, 0, 0, 0.92),
+    0 0 65px rgba(245, 158, 11, 0.28),
+    0 0 95px rgba(56, 189, 248, 0.25),
+    inset 0 2px 3px rgba(255, 255, 255, 0.65),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.60) !important;
+  backdrop-filter: blur(50px) saturate(240%);
+  -webkit-backdrop-filter: blur(50px) saturate(240%);
   animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
@@ -732,15 +732,15 @@ body.light .auth-blob { opacity: 0.14; }
   left: 6%;
   right: 6%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #FFFFFF 50%, rgba(253, 230, 138, 0.95) 65%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), #FFFFFF 50%, rgba(253, 230, 138, 0.95) 65%, transparent);
   pointer-events: none;
   z-index: 3;
 }
 body.light .auth-card-nexus {
-  background: rgba(255, 255, 255, 0.82) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
   border-top: 2px solid #FFFFFF !important;
-  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12), 0 0 35px rgba(245, 158, 11, 0.12), inset 0 2px 4px #FFFFFF !important;
+  box-shadow: 0 25px 65px rgba(15, 23, 42, 0.14), 0 0 35px rgba(245, 158, 11, 0.14), inset 0 2px 4px #FFFFFF !important;
   backdrop-filter: blur(40px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
 }
@@ -882,22 +882,26 @@ body.light .auth-tab-btn.active {
 }
 .auth-field label {
   display: block;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 800;
   color: #CBD5E1;
   margin-bottom: 7px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+body.light .auth-field label {
+  color: #334155 !important;
+  text-shadow: none;
 }
 
 .auth-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(8, 14, 30, 0.55) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.30) !important;
+  background: rgba(6, 12, 28, 0.75) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
   border-radius: 16px !important;
   backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
@@ -905,21 +909,21 @@ body.light .auth-tab-btn.active {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 body.light .auth-input-wrapper {
-  background: #F8FAFC !important;
+  background: #FFFFFF !important;
   border-color: #CBD5E1 !important;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05) !important;
 }
 
 .auth-input-wrapper:focus-within {
-  border-color: rgba(245, 158, 11, 0.95) !important;
-  background: rgba(14, 23, 48, 0.75) !important;
-  box-shadow: 0 0 30px rgba(245, 158, 11, 0.45), inset 0 2px 4px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255, 255, 255, 0.25) !important;
+  border-color: #F59E0B !important;
+  background: rgba(10, 20, 44, 0.85) !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.30), 0 0 30px rgba(245, 158, 11, 0.45), inset 0 2px 4px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255, 255, 255, 0.25) !important;
   transform: translateY(-1.5px);
 }
 body.light .auth-input-wrapper:focus-within {
   background: #FFFFFF !important;
   border-color: #D97706 !important;
-  box-shadow: 0 0 20px rgba(217, 119, 6, 0.20) !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.20), 0 0 20px rgba(217, 119, 6, 0.20) !important;
 }
 
 .auth-input-wrapper.highlight-glow {
