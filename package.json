@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "test": "node --check server.js",
     "watch": "node watch-diff.js",
     "watch:diff": "node watch-diff.js",
     "deploy": "git add . && git commit -m \"auto: atualizacao homologacao\" && git push origin main"
