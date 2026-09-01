@@ -128,43 +128,42 @@
 
     <style>
         :root {
-            --auth-bg: #030612;
-            --auth-card: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(15, 25, 48, 0.68) 25%, rgba(8, 15, 32, 0.84) 65%, rgba(3, 7, 20, 0.95) 100%);
-            --auth-border: rgba(255, 255, 255, 0.25);
-            --auth-border-hover: #F59E0B;
-            --auth-input-bg: rgba(6, 12, 28, 0.80);
-            --auth-input-border: rgba(255, 255, 255, 0.20);
+            --auth-bg: #07100B;
+            --auth-card: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 30, 24, 0.78) 40%, rgba(8, 16, 12, 0.92) 100%);
+            --auth-border: rgba(255, 255, 255, 0.16);
+            --auth-border-hover: #1DB954;
+            --auth-input-bg: rgba(10, 18, 14, 0.65);
+            --auth-input-border: rgba(255, 255, 255, 0.14);
             --auth-text: #FFFFFF;
             --auth-text-dim: #94A3B8;
-            --auth-gold: #F59E0B;
-            --auth-gold-light: #FDE68A;
+            --auth-gold: #1DB954;
+            --auth-gold-light: #6EE7B7;
             --auth-emerald: #10B981;
-            --auth-cyan: #38BDF8;
-            --auth-gold-glow: rgba(245, 158, 11, 0.50);
-            --auth-tab-bg: rgba(4, 9, 22, 0.85);
+            --auth-cyan: #34D399;
+            --auth-gold-glow: rgba(29, 185, 84, 0.40);
+            --auth-tab-bg: rgba(10, 18, 14, 0.75);
         }
 
         body.light, html.light body, html.light {
-            --auth-bg: #F8FAFC;
-            --auth-card: rgba(255, 255, 255, 0.95);
-            --auth-border: #E2E8F0;
-            --auth-border-hover: #D97706;
+            --auth-bg: #F2F7F4;
+            --auth-card: rgba(255, 255, 255, 0.90);
+            --auth-border: #CBD5E1;
+            --auth-border-hover: #10B981;
             --auth-input-bg: #FFFFFF;
             --auth-input-border: #CBD5E1;
             --auth-text: #0F172A;
             --auth-text-dim: #334155;
-            --auth-gold: #D97706;
-            --auth-gold-light: #B45309;
-            --auth-gold-glow: rgba(217, 119, 6, 0.20);
+            --auth-gold: #059669;
+            --auth-gold-light: #047857;
+            --auth-gold-glow: rgba(16, 185, 129, 0.20);
             --auth-tab-bg: #EDF2F7;
-            background-color: #F8FAFC !important;
+            background-color: #F2F7F4 !important;
             background-image: 
-                radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
-                radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.07) 0px, transparent 50%),
-                radial-gradient(at 50% 82%, rgba(16, 185, 129, 0.06) 0px, transparent 50%),
-                linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%) !important;
+                radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
+                url('/images/nexus_vision_living_bg.jpg') !important;
             background-size: cover !important;
             background-position: center !important;
+            background-attachment: fixed !important;
             color: #0F172A !important;
         }
 
@@ -177,16 +176,14 @@
 
         body {
             font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-            background-color: #030612;
+            background-color: #07100B;
             background-image: 
-                radial-gradient(at 12% 15%, rgba(56, 189, 248, 0.16) 0px, transparent 50%),
-                radial-gradient(at 88% 15%, rgba(99, 102, 241, 0.18) 0px, transparent 55%),
-                radial-gradient(at 50% 48%, rgba(245, 158, 11, 0.12) 0px, transparent 52%),
-                radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.14) 0px, transparent 50%),
-                radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.16) 0px, transparent 55%),
-                linear-gradient(180deg, #030612 0%, #060C1C 50%, #02040C 100%);
-            background-size: cover;
-            background-position: center;
+                radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
+                url('/images/nexus_vision_living_bg.jpg') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
             color: var(--auth-text);
             min-height: 100vh;
             overflow-x: hidden;
@@ -632,17 +629,17 @@
             background: rgba(217, 119, 6, 0.10) !important;
         }
 
-        /* Botão Primário 4K Liquid Gold Compacto */
+        /* Botão Primário 4K Liquid Emerald / Spotify Green */
         .btn-auth-gradient {
-            background: linear-gradient(135deg, #FFFDF5 0%, #FDE68A 18%, #F59E0B 50%, #D97706 82%, #B45309 100%) !important;
-            color: #0F172A !important;
+            background: linear-gradient(135deg, #4ADE80 0%, #22C55E 25%, #1DB954 60%, #15803D 100%) !important;
+            color: #031409 !important;
             border-radius: 14px !important;
             border: 1px solid rgba(255, 255, 255, 0.85) !important;
             border-top: 1.5px solid #FFFFFF !important;
             font-weight: 900 !important;
             font-size: 14.5px !important;
             letter-spacing: 0.02em;
-            box-shadow: 0 10px 24px -4px rgba(217, 119, 6, 0.45), 0 2px 6px rgba(0, 0, 0, 0.30), inset 0 1.5px 2px #FFFFFF, inset 0 -1.5px 2px rgba(180, 83, 9, 0.35) !important;
+            box-shadow: 0 10px 24px -4px rgba(29, 185, 84, 0.50), 0 2px 6px rgba(0, 0, 0, 0.30), inset 0 1.5px 2px #FFFFFF, inset 0 -1.5px 2px rgba(21, 128, 61, 0.40) !important;
             transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
@@ -666,9 +663,9 @@
         }
 
         .btn-auth-gradient:hover:not(:disabled) {
-            filter: brightness(1.05);
+            filter: brightness(1.06);
             transform: translateY(-2px);
-            box-shadow: 0 14px 30px -4px rgba(217, 119, 6, 0.55), 0 4px 10px rgba(0, 0, 0, 0.35), inset 0 1.5px 2px #FFFFFF !important;
+            box-shadow: 0 14px 30px -4px rgba(29, 185, 84, 0.65), 0 4px 10px rgba(0, 0, 0, 0.35), inset 0 1.5px 2px #FFFFFF !important;
         }
 
         .btn-auth-gradient:hover:not(:disabled)::before {
@@ -739,15 +736,15 @@
         }
 
         .auth-tab-btn.active {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.08) 100%);
-            color: #FDE68A;
-            border-color: rgba(245, 158, 11, 0.55);
-            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.22);
+            background: linear-gradient(135deg, rgba(29, 185, 84, 0.25) 0%, rgba(16, 185, 129, 0.14) 100%);
+            color: #A7F3D0;
+            border-color: rgba(52, 211, 153, 0.55);
+            box-shadow: 0 4px 18px rgba(29, 185, 84, 0.22);
         }
 
         body.light .auth-tab-btn.active {
             background: #FFFFFF;
-            color: #B45309;
+            color: #047857;
             border-color: #CBD5E1;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
