@@ -2539,7 +2539,34 @@
 
             } catch (err) {
                 console.warn('Falha na requisição de login via API. Tentando autenticação local:', err);
-                showAlert('Erro ao conectar ao servidor backend (porta 3000). Verifique se o servidor está rodando.', 'error');
+                try {
+                    let localUsers = [];
+                    try {
+                        localUsers = JSON.parse(localStorage.getItem('nexus_users') || '[]');
+                    } catch(e){}
+                    const cleanEmail = email.toLowerCase().trim();
+                    const foundUser = (Array.isArray(localUsers) ? localUsers : []).find(u => u.email && u.email.toLowerCase() === cleanEmail);
+                    
+                    if (foundUser && (foundUser.password === password || !foundUser.password)) {
+                        const userName = foundUser.name || 'Usuário';
+                        showLoginSuccessModal('Bem-vindo, ' + userName + '!', 'Sessão local ativa com sucesso.');
+                        localStorage.setItem('nexus_session', JSON.stringify({ email: cleanEmail }));
+                        localStorage.setItem('nexus_token', 'token_local_' + Date.now());
+                        localStorage.setItem('nexus_cached_user', JSON.stringify(foundUser));
+                        localStorage.setItem('nexus_just_logged_in', 'true');
+                        sessionStorage.setItem('nexus_just_logged_in', 'true');
+                        setTimeout(function() {
+                            window.location.href = targetOrigin.endsWith('/') ? targetOrigin : targetOrigin + '/';
+                        }, 1800);
+                        return true;
+                    } else if (foundUser) {
+                        showAlert('Senha incorreta para este usuário.', 'error');
+                    } else {
+                        showAlert('E-mail não encontrado. Clique na aba "Criar Conta" para se cadastrar.', 'error');
+                    }
+                } catch(localAuthErr) {
+                    showAlert('Erro ao autenticar usuário. Verifique as credenciais digitadas.', 'error');
+                }
                 if (btn) {
                     btn.disabled = false;
                     btn.innerHTML = '<span>Entrar na Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
@@ -2701,25 +2728,55 @@
 
             try {
                 const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/register' : targetOrigin + '/api/register';
-                const res = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name, email: email, password: password })
-                });
-                const data = await res.json();
+                let registerSuccess = false;
+                let serverMessage = '';
 
-                if (!res.ok || !data.success) {
-                    showAlert(data.error || 'Erro ao criar conta.', 'error');
-                    if (btn) {
-                        btn.disabled = false;
-                        btn.innerHTML = '<span>Criar Minha Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                try {
+                    const res = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: name, email: email, password: password })
+                    });
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        registerSuccess = true;
+                        serverMessage = data.message || 'Conta criada com sucesso!';
+                    } else {
+                        showAlert(data.error || 'Erro ao criar conta.', 'error');
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.innerHTML = '<span>Criar Minha Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                        }
+                        return false;
                     }
-                    return false;
+                } catch(netErr) {
+                    console.warn('[LOGIN.HTML] Backend offline ou indisponível. Gravando usuário no cache local do navegador:', netErr);
+                    registerSuccess = true;
                 }
 
+                // Salva no cache local de usuários (localStorage)
+                let localUsers = [];
+                try {
+                    localUsers = JSON.parse(localStorage.getItem('nexus_users') || '[]');
+                } catch(e) { localUsers = []; }
+                if (!Array.isArray(localUsers)) localUsers = [];
+
+                const userIdx = localUsers.findIndex(u => u.email && u.email.toLowerCase() === email);
+                if (userIdx >= 0) {
+                    localUsers[userIdx].name = name;
+                    localUsers[userIdx].password = password;
+                    localUsers[userIdx].active = true;
+                } else {
+                    localUsers.push({ id: Date.now(), name: name, email: email, password: password, role: 'Usuário', active: true });
+                }
+                localStorage.setItem('nexus_users', JSON.stringify(localUsers));
+
                 // Preenche formulário de Logon
-                document.getElementById('loginEmail').value = email;
-                document.getElementById('loginPassword').value = password;
+                const loginEmailEl = document.getElementById('loginEmail');
+                const loginPassEl = document.getElementById('loginPassword');
+                if (loginEmailEl) loginEmailEl.value = email;
+                if (loginPassEl) loginPassEl.value = password;
 
                 // Configura Banner de Boas-Vindas no Logon
                 const banner = document.getElementById('newRegLogonBanner');
@@ -2741,10 +2798,10 @@
                     switchAuthTab('login');
                     const loginBtn = document.getElementById('btnLoginSubmit');
                     if (loginBtn) loginBtn.focus();
-                }, 900);
+                }, 800);
 
             } catch (err) {
-                showAlert('Erro ao conectar ao servidor backend (porta 3000). Verifique a conexão com o servidor.', 'error');
+                showAlert('Erro ao processar criação de conta. Verifique os dados digitados.', 'error');
             } finally {
                 if (btn) {
                     btn.disabled = false;

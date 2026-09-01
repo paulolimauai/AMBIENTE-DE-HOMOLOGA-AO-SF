@@ -6243,7 +6243,7 @@ window.handleRegisterSubmit = async function(e) {
 
     const loginEmail = document.getElementById('loginEmail');
     const loginPass = document.getElementById('loginPassword');
-    if (loginEmail) loginEmail.value = email;
+    if (loginEmail) loginEmail.value = cleanEmail;
     if (loginPass) loginPass.value = password;
 
     const banner = document.getElementById('newRegLogonBannerServer');
@@ -6257,11 +6257,11 @@ window.handleRegisterSubmit = async function(e) {
 
     if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
 
-    showCustomAlert('Cadastro Realizado com Sucesso! 🎉', 'Conta cadastrada! Suas credenciais foram preenchidas no Logon para você entrar.', 'success', () => {
-      window.switchAuthTab('login');
-      const loginBtn = document.getElementById('loginSubmitBtn');
-      if (loginBtn) loginBtn.focus();
-    });
+    window.switchAuthTab('login');
+    const loginBtn = document.getElementById('loginSubmitBtn');
+    if (loginBtn) loginBtn.focus();
+
+    showCustomAlert('Cadastro Realizado com Sucesso! 🎉', 'Conta criada com sucesso! Suas credenciais foram preenchidas no formulário de Logon para você entrar.', 'success');
   }
   return false;
 };
