@@ -12953,7 +12953,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
     const badgeTexts = ['▲ +18.4%', '+$2.5k', '+12.8%', 'R$ 1.8M', '▲ +24.5%', '+$840', '+9.2%', 'R$ 350k'];
     const currencyCoins = ['R$', '$', '€', '£', '₿'];
-    const colors = ['#38BDF8', '#EC4899', '#A855F7', '#34D399', '#F43F5E', '#22D3EE', '#E879F9'];
+    const colors = ['#FFFFFF', '#E2E8F0', '#CBD5E1', '#94A3B8', '#64748B'];
 
     const items = [];
     const itemCount = 34;
@@ -12998,7 +12998,7 @@ if (scaleMenuBtn && scaleDropdown) {
       }
       ctx.restore();
 
-      // B. Onda Financeira Secundária de Fundo (Cosmic Violet / Amethyst)
+      // B. Onda Financeira Secundária de Fundo (Grafite Translúcido)
       waveOffset += 0.01;
       const waveY = height * 0.74;
       ctx.save();
@@ -13011,11 +13011,11 @@ if (scaleMenuBtn && scaleDropdown) {
       }
       ctx.lineTo(width, height);
       ctx.closePath();
-      ctx.fillStyle = isLight ? 'rgba(217, 70, 239, 0.05)' : 'rgba(139, 92, 246, 0.10)';
+      ctx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.025)' : 'rgba(255, 255, 255, 0.03)';
       ctx.fill();
       ctx.restore();
 
-      // C. Onda Financeira Principal (Sunset Magenta & Cyber Cyan)
+      // C. Onda Financeira Principal (Platina Luminous & Fumo Grafite)
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(0, height);
@@ -13031,44 +13031,44 @@ if (scaleMenuBtn && scaleDropdown) {
 
       const waveGrad = ctx.createLinearGradient(0, waveY - 50, 0, height);
       if (isLight) {
-        waveGrad.addColorStop(0, 'rgba(236, 72, 153, 0.18)');
-        waveGrad.addColorStop(0.5, 'rgba(139, 92, 246, 0.08)');
+        waveGrad.addColorStop(0, 'rgba(15, 23, 42, 0.10)');
+        waveGrad.addColorStop(0.5, 'rgba(71, 85, 105, 0.04)');
         waveGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
       } else {
-        waveGrad.addColorStop(0, 'rgba(236, 72, 153, 0.28)');
-        waveGrad.addColorStop(0.45, 'rgba(139, 92, 246, 0.15)');
-        waveGrad.addColorStop(0.8, 'rgba(6, 182, 212, 0.06)');
-        waveGrad.addColorStop(1, 'rgba(7, 3, 17, 0)');
+        waveGrad.addColorStop(0, 'rgba(255, 255, 255, 0.14)');
+        waveGrad.addColorStop(0.45, 'rgba(148, 163, 184, 0.05)');
+        waveGrad.addColorStop(0.8, 'rgba(30, 41, 59, 0.02)');
+        waveGrad.addColorStop(1, 'rgba(4, 4, 6, 0)');
       }
       ctx.fillStyle = waveGrad;
       ctx.fill();
 
-      // Linha de Contorno Cyber Cyan Elétrico com Sombra Neon
+      // Linha de Contorno Branco Platina com Sombra Luminous
       ctx.beginPath();
       for (let x = 0; x <= width; x += 20) {
         const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = isLight ? 'rgba(236, 72, 153, 0.85)' : 'rgba(34, 211, 238, 0.95)';
+      ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.75)' : 'rgba(255, 255, 255, 0.90)';
       ctx.lineWidth = 2.6;
-      ctx.shadowColor = '#06B6D4';
-      ctx.shadowBlur = isLight ? 8 : 22;
+      ctx.shadowColor = '#FFFFFF';
+      ctx.shadowBlur = isLight ? 6 : 18;
       ctx.stroke();
       ctx.restore();
 
-      // Nódulos de Pico com Indicadores ▲ Luminous Cyan
+      // Nódulos de Pico com Indicadores ▲ Diamond White
       wavePoints.forEach(pt => {
         ctx.save();
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#22D3EE';
-        ctx.shadowColor = '#06B6D4';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.shadowColor = '#FFFFFF';
         ctx.shadowBlur = 14;
         ctx.fill();
 
         ctx.font = '800 10px "Outfit", sans-serif';
-        ctx.fillStyle = '#A5F3FC';
+        ctx.fillStyle = '#E2E8F0';
         ctx.fillText('▲', pt.x - 3.5, pt.y - 8);
         ctx.restore();
       });
@@ -13085,10 +13085,10 @@ if (scaleMenuBtn && scaleDropdown) {
             ctx.beginPath();
             ctx.moveTo(items[i].x, items[i].y);
             ctx.lineTo(items[j].x, items[j].y);
-            const connAlpha = (1 - dist / 130) * 0.22;
+            const connAlpha = (1 - dist / 130) * 0.18;
             ctx.strokeStyle = isLight 
-              ? 'rgba(217, 70, 239, ' + connAlpha + ')' 
-              : 'rgba(34, 211, 238, ' + (connAlpha * 1.3) + ')';
+              ? 'rgba(0, 0, 0, ' + connAlpha + ')' 
+              : 'rgba(255, 255, 255, ' + (connAlpha * 1.1) + ')';
             ctx.lineWidth = 1;
             ctx.stroke();
             ctx.restore();
