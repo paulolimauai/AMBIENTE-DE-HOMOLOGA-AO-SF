@@ -578,86 +578,6 @@ html, body {
 }
 .auth-container.show { display: flex; }
 
-.financial-ticker-bar {
-  width: 100%;
-  height: 36px;
-  background: rgba(3, 7, 18, 0.88);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  position: relative;
-  z-index: 35;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-body.light .financial-ticker-bar {
-  background: rgba(255, 255, 255, 0.92) !important;
-  border-bottom: 1px solid #CBD5E1 !important;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06) !important;
-}
-
-.ticker-track {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  white-space: nowrap;
-  animation: tickerSlide 42s linear infinite;
-  will-change: transform;
-}
-.ticker-track:hover {
-  animation-play-state: paused;
-}
-
-@keyframes tickerSlide {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.ticker-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: #94A3B8;
-}
-body.light .ticker-item {
-  color: #475569;
-}
-.ticker-symbol {
-  font-weight: 800;
-  color: #FFFFFF;
-}
-body.light .ticker-symbol {
-  color: #0F172A;
-}
-.ticker-val {
-  font-weight: 700;
-  color: #F8FAFC;
-}
-body.light .ticker-val {
-  color: #1E293B;
-}
-.ticker-up {
-  color: #10B981;
-  font-weight: 800;
-}
-.ticker-down {
-  color: #F43F5E;
-  font-weight: 800;
-}
-.ticker-gold {
-  color: #F59E0B;
-  font-weight: 800;
-}
-.ticker-cyan {
-  color: #38BDF8;
-  font-weight: 800;
-}
-
 .auth-container::before {
   content: '';
   position: absolute;
@@ -4961,35 +4881,7 @@ body.light .scale-dropdown {
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
-  <!-- BARRA DE COTAÇÕES FINANCEIRAS EM TEMPO REAL (REALISTIC MARKET LIVE TICKER) -->
-  <!-- BARRA DE INDICADORES DE GESTÃO FINANCEIRA PESSOAL EM TEMPO REAL -->
-  <div class="financial-ticker-bar w-full">
-    <div class="ticker-track">
-      <div class="ticker-item"><span class="ticker-symbol">TAXA SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">INFLAÇÃO (IPCA 12M)</span> <span class="ticker-val">+3,87%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">CDI MENSAL</span> <span class="ticker-cyan">+0,86% a.m.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">RENDIMENTO POUPANÇA</span> <span class="ticker-val">+0,58% a.m.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">DÓLAR COMERCIAL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">EURO COMERCIAL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">SALÁRIO MÍNIMO NACIONAL</span> <span class="ticker-val">R$ 1.412,00</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">REGRA ORÇAMENTÁRIA</span> <span class="ticker-gold">50% Essenciais • 30% Estilo • 20% Poupança</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">RESERVA DE EMERGÊNCIA IDEAL</span> <span class="ticker-cyan">6x Custos Fixos Mensais</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">META DE POUPANÇA SAUDÁVEL</span> <span class="ticker-up">≥ 15% da Renda Líquida</span></div>
-      <!-- Duplicação para rotação contínua 60fps -->
-      <div class="ticker-item"><span class="ticker-symbol">TAXA SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">INFLAÇÃO (IPCA 12M)</span> <span class="ticker-val">+3,87%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">CDI MENSAL</span> <span class="ticker-cyan">+0,86% a.m.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">RENDIMENTO POUPANÇA</span> <span class="ticker-val">+0,58% a.m.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">DÓLAR COMERCIAL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">EURO COMERCIAL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">SALÁRIO MÍNIMO NACIONAL</span> <span class="ticker-val">R$ 1.412,00</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">REGRA ORÇAMENTÁRIA</span> <span class="ticker-gold">50% Essenciais • 30% Estilo • 20% Poupança</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">RESERVA DE EMERGÊNCIA IDEAL</span> <span class="ticker-cyan">6x Custos Fixos Mensais</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">META DE POUPANÇA SAUDÁVEL</span> <span class="ticker-up">≥ 15% da Renda Líquida</span></div>
-    </div>
-  </div>
-
-  <div class="auth-top-bar" style="width:100%; max-width:1200px; padding:0 24px; display:flex; justify-content:space-between; align-items:center; position:absolute; top:46px; z-index:20;">
+  <div class="auth-top-bar" style="width:100%; max-width:1200px; padding:0 24px; display:flex; justify-content:space-between; align-items:center; position:absolute; top:20px; z-index:20;">
     <div style="display:flex; align-items:center; gap:8px;"></div>
     <div style="display:flex; align-items:center; gap:12px;">
       <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
