@@ -723,7 +723,7 @@ body.light .auth-blob { opacity: 0.14; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ==================== EFEITO TELA DE VIDRO PANORÂMICA (FULL GLASS SCREEN) ==================== */
+/* ==================== EFEITO TELA DE VIDRO PANORÂMICA (4K LIQUID GLASS SCREEN) ==================== */
 .glass-viewport-screen {
   position: absolute;
   inset: 0;
@@ -732,153 +732,184 @@ body.light .auth-blob { opacity: 0.14; }
   overflow: hidden;
 }
 
-/* Placas de Vidro Líquido Flutuantes em Profundidade */
+/* Placas de Vidro Líquido Flutuantes em Profundidade 4K */
 .glass-shard {
   position: absolute;
-  border-radius: 36px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 60%, rgba(56, 189, 248, 0.08) 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
-  border-top: 2px solid rgba(255, 255, 255, 0.65);
-  border-left: 2px solid rgba(255, 255, 255, 0.40);
-  backdrop-filter: blur(28px) saturate(220%);
-  -webkit-backdrop-filter: blur(28px) saturate(220%);
+  border-radius: 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(56, 189, 248, 0.10) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.26);
+  border-top: 2.5px solid rgba(255, 255, 255, 0.75);
+  border-left: 2px solid rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(35px) saturate(240%);
+  -webkit-backdrop-filter: blur(35px) saturate(240%);
   box-shadow: 
-    0 25px 60px rgba(0, 0, 0, 0.60),
-    inset 0 2px 4px rgba(255, 255, 255, 0.45),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.35);
+    0 30px 70px rgba(0, 0, 0, 0.65),
+    inset 0 2px 5px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.40);
   pointer-events: none;
+  will-change: transform;
 }
 
 .glass-shard-1 {
-  top: 4%;
-  left: -3%;
-  width: 380px;
-  height: 380px;
+  top: 2%;
+  left: -4%;
+  width: 420px;
+  height: 420px;
   transform: rotate(-14deg);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 50px rgba(56, 189, 248, 0.22), inset 0 2px 4px rgba(255,255,255,0.6);
+  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(56, 189, 248, 0.28), inset 0 2px 5px rgba(255,255,255,0.7);
   animation: glassFloat1 18s ease-in-out infinite alternate;
 }
 
 .glass-shard-2 {
-  bottom: -5%;
-  right: -2%;
-  width: 440px;
-  height: 440px;
+  bottom: -6%;
+  right: -3%;
+  width: 480px;
+  height: 480px;
   transform: rotate(18deg);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(245, 158, 11, 0.08) 50%, rgba(16, 185, 129, 0.06) 100%);
-  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(245, 158, 11, 0.20), inset 0 2px 4px rgba(255,255,255,0.6);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(16, 185, 129, 0.08) 100%);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
   animation: glassFloat2 22s ease-in-out infinite alternate;
 }
 
 .glass-shard-3 {
-  top: 25%;
-  right: 8%;
-  width: 220px;
-  height: 220px;
-  border-radius: 28px;
+  top: 22%;
+  right: 6%;
+  width: 250px;
+  height: 250px;
+  border-radius: 32px;
   transform: rotate(25deg);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(99, 102, 241, 0.25), inset 0 2px 3px rgba(255,255,255,0.5);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(99, 102, 241, 0.30), inset 0 2px 4px rgba(255,255,255,0.6);
   animation: glassFloat3 15s ease-in-out infinite alternate;
 }
 
 .glass-shard-4 {
-  bottom: 20%;
-  left: 6%;
-  width: 200px;
-  height: 200px;
-  border-radius: 28px;
+  bottom: 16%;
+  left: 5%;
+  width: 230px;
+  height: 230px;
+  border-radius: 32px;
   transform: rotate(-20deg);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(16, 185, 129, 0.22), inset 0 2px 3px rgba(255,255,255,0.5);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(16, 185, 129, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
   animation: glassFloat4 16s ease-in-out infinite alternate;
+}
+
+.glass-shard-5 {
+  top: 60%;
+  right: 28%;
+  width: 140px;
+  height: 140px;
+  border-radius: 26px;
+  transform: rotate(12deg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(236, 72, 153, 0.08) 100%);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.45), 0 0 35px rgba(236, 72, 153, 0.20), inset 0 2px 4px rgba(255,255,255,0.5);
+  animation: glassFloat3 19s ease-in-out infinite alternate;
 }
 
 @keyframes glassFloat1 {
   0% { transform: translateY(0) rotate(-14deg) scale(1); }
-  100% { transform: translateY(28px) rotate(-8deg) scale(1.05); }
+  100% { transform: translateY(32px) rotate(-6deg) scale(1.06); }
 }
 
 @keyframes glassFloat2 {
   0% { transform: translateY(0) rotate(18deg) scale(1); }
-  100% { transform: translateY(-32px) rotate(12deg) scale(1.04); }
+  100% { transform: translateY(-36px) rotate(10deg) scale(1.05); }
 }
 
 @keyframes glassFloat3 {
-  0% { transform: translateY(0) rotate(25deg); }
-  100% { transform: translateY(-22px) rotate(32deg); }
+  0% { transform: translateY(0) rotate(25deg) scale(1); }
+  100% { transform: translateY(-26px) rotate(34deg) scale(1.04); }
 }
 
 @keyframes glassFloat4 {
-  0% { transform: translateY(0) rotate(-20deg); }
-  100% { transform: translateY(24px) rotate(-14deg); }
+  0% { transform: translateY(0) rotate(-20deg) scale(1); }
+  100% { transform: translateY(28px) rotate(-12deg) scale(1.05); }
 }
 
-/* Feixe de Luz Prismática e Refrativo de Vidro que percorre a tela */
+/* Feixe de Luz Prismática e Refrativo de Vidro 4K */
 .glass-screen-reflection {
   position: absolute;
   inset: 0;
-  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.04) 42%, rgba(255, 255, 255, 0.10) 48%, rgba(255, 255, 255, 0.03) 54%, transparent 70%);
-  background-size: 200% 200%;
+  background: linear-gradient(115deg, transparent 15%, rgba(255, 255, 255, 0.03) 38%, rgba(255, 255, 255, 0.12) 46%, rgba(253, 230, 138, 0.08) 50%, rgba(255, 255, 255, 0.03) 54%, transparent 75%);
+  background-size: 250% 250%;
   pointer-events: none;
   z-index: 2;
-  animation: glassLightSweep 12s ease-in-out infinite;
+  animation: glassLightSweep 14s ease-in-out infinite;
 }
 
 @keyframes glassLightSweep {
-  0% { background-position: -120% -120%; }
-  50% { background-position: 120% 120%; }
-  100% { background-position: -120% -120%; }
+  0% { background-position: -140% -140%; }
+  50% { background-position: 140% 140%; }
+  100% { background-position: -140% -140%; }
 }
 
 body.light .glass-shard {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.50) 60%, rgba(219, 234, 254, 0.55) 100%) !important;
-  border-color: rgba(255, 255, 255, 0.95) !important;
-  box-shadow: 0 15px 45px rgba(15, 23, 42, 0.09), inset 0 2px 4px #FFFFFF !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.55) 60%, rgba(219, 234, 254, 0.60) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10), inset 0 2px 5px #FFFFFF !important;
 }
 
 /* Card de Autenticação Ultra 4K Liquid Glass (Eye-Catching & Profissional) */
 .auth-card-nexus {
   position: relative;
   z-index: 10;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(18, 30, 58, 0.60) 25%, rgba(10, 18, 38, 0.78) 65%, rgba(4, 9, 24, 0.92) 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.24) !important;
-  border-top: 2px solid rgba(255, 255, 255, 0.85) !important;
-  border-left: 1.5px solid rgba(255, 255, 255, 0.45) !important;
-  border-right: 1.5px solid rgba(255, 255, 255, 0.18) !important;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 24px;
-  padding: clamp(16px, 2.2vh, 22px) clamp(16px, 2vw, 22px);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(18, 30, 58, 0.65) 25%, rgba(10, 18, 38, 0.82) 65%, rgba(4, 9, 24, 0.95) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+  border-top: 2.5px solid rgba(255, 255, 255, 0.90) !important;
+  border-left: 2px solid rgba(255, 255, 255, 0.50) !important;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 28px;
+  padding: clamp(16px, 2.2vh, 24px) clamp(16px, 2vw, 24px);
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   box-shadow: 
-    0 35px 100px -10px rgba(0, 0, 0, 0.92),
-    0 0 65px rgba(245, 158, 11, 0.28),
-    0 0 95px rgba(56, 189, 248, 0.25),
-    inset 0 2px 3px rgba(255, 255, 255, 0.65),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.60) !important;
-  backdrop-filter: blur(50px) saturate(240%);
-  -webkit-backdrop-filter: blur(50px) saturate(240%);
+    0 40px 110px -10px rgba(0, 0, 0, 0.95),
+    0 0 75px rgba(245, 158, 11, 0.32),
+    0 0 100px rgba(56, 189, 248, 0.28),
+    inset 0 2px 4px rgba(255, 255, 255, 0.75),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(55px) saturate(260%);
+  -webkit-backdrop-filter: blur(55px) saturate(260%);
   animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
   overflow: hidden;
+  transform-style: preserve-3d;
 }
+
 .auth-card-nexus::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 6%;
-  right: 6%;
+  left: 5%;
+  right: 5%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), #FFFFFF 50%, rgba(253, 230, 138, 0.95) 65%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), #FFFFFF 50%, rgba(253, 230, 138, 0.98) 65%, transparent);
   pointer-events: none;
   z-index: 3;
 }
+
+.auth-card-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.16), transparent 70%);
+  opacity: var(--card-glare-opacity, 0);
+  transition: opacity 0.35s ease;
+  z-index: 4;
+}
+
 body.light .auth-card-nexus {
-  background: rgba(255, 255, 255, 0.92) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
-  border-top: 2px solid #FFFFFF !important;
-  box-shadow: 0 25px 65px rgba(15, 23, 42, 0.14), 0 0 35px rgba(245, 158, 11, 0.14), inset 0 2px 4px #FFFFFF !important;
-  backdrop-filter: blur(40px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  border-top: 2.5px solid #FFFFFF !important;
+  box-shadow: 0 30px 75px rgba(15, 23, 42, 0.16), 0 0 45px rgba(245, 158, 11, 0.18), inset 0 2px 5px #FFFFFF !important;
+  backdrop-filter: blur(45px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(45px) saturate(200%) !important;
+}
+
+body.light .auth-card-glare {
+  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(245, 158, 11, 0.15), transparent 70%) !important;
 }
 
 /* Layout Executivo 2 Colunas para o Login no server.js (Split Harmonizado) */
@@ -4739,12 +4770,13 @@ body.light .scale-dropdown {
 
   <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
 
-  <!-- Camada de Tela de Vidro Panorâmica (Liquid Glass Screen Effect) -->
+  <!-- Camada de Tela de Vidro Panorâmica (4K Liquid Glass Screen Effect) -->
   <div class="glass-viewport-screen pointer-events-none">
     <div class="glass-shard glass-shard-1"></div>
     <div class="glass-shard glass-shard-2"></div>
     <div class="glass-shard glass-shard-3"></div>
     <div class="glass-shard glass-shard-4"></div>
+    <div class="glass-shard glass-shard-5"></div>
   </div>
   <div class="glass-screen-reflection pointer-events-none"></div>
 
@@ -4800,7 +4832,8 @@ body.light .scale-dropdown {
     </div>
 
     <!-- Card Principal de Autenticação -->
-    <div class="auth-card-nexus">
+    <div class="auth-card-nexus" id="serverAuthNexusCard">
+      <div class="auth-card-glare" id="serverAuthCardGlare"></div>
       <!-- Brand Header -->
       <div class="auth-brand">
         <div class="auth-logo-badge">N</div>
@@ -13820,7 +13853,7 @@ if (scaleMenuBtn && scaleDropdown) {
   setInterval(updateClock, 1000);
 })();
 
-// Animação de Fundo Financeira Ultra-HD 8K HiDPI (Badges de Lucro, Moedas, Candlesticks & Terminal)
+// Animação de Fundo Financeira 4K Ultra-HD (Badges de Lucro, Moedas, Candlesticks, Constelação & Física de Cursor)
 (function initFinancialCanvasEngine() {
   function setupCanvas(canvasId) {
     const canvas = document.getElementById(canvasId);
@@ -13830,9 +13863,21 @@ if (scaleMenuBtn && scaleDropdown) {
     let dpr = 1;
     let width = 0;
     let height = 0;
+    let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false };
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+      mouse.active = true;
+    });
+    window.addEventListener('mouseleave', () => {
+      mouse.active = false;
+      mouse.targetX = -1000;
+      mouse.targetY = -1000;
+    });
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      dpr = Math.min(window.devicePixelRatio || 1, 3);
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = width * dpr;
@@ -13844,13 +13889,13 @@ if (scaleMenuBtn && scaleDropdown) {
     resize();
     window.addEventListener('resize', resize);
 
-    const badgeTexts = ['▲ +18.4%', '+$2.5k', '+12.8%', 'R$ 1.8M', '▲ +24.5%', '+$840', '+9.2%', 'R$ 350k'];
+    const badgeTexts = ['▲ +18.4%', '+$2.5k', '+12.8%', 'R$ 1.8M', '▲ +24.5%', '+$840', '+9.2%', 'R$ 350k', '▲ +31.2%', '+$4.1k'];
     const currencyCoins = ['R$', '$', '€', '£', '₿'];
-    const colors = ['#38BDF8', '#F59E0B', '#34D399', '#818CF8', '#FBBF24', '#60A5FA', '#A78BFA'];
+    const colors = ['#38BDF8', '#F59E0B', '#34D399', '#818CF8', '#FBBF24', '#60A5FA', '#A78BFA', '#F43F5E'];
 
+    // 1. Elementos Financeiros Flutuantes
     const items = [];
-    const itemCount = 34;
-
+    const itemCount = 38;
     for (let i = 0; i < itemCount; i++) {
       const kind = i % 3;
       items.push({
@@ -13860,13 +13905,30 @@ if (scaleMenuBtn && scaleDropdown) {
         text: kind === 0 ? badgeTexts[Math.floor(Math.random() * badgeTexts.length)] : currencyCoins[Math.floor(Math.random() * currencyCoins.length)],
         color: colors[Math.floor(Math.random() * colors.length)],
         size: Math.floor(Math.random() * 6) + 12,
-        vy: -(Math.random() * 0.4 + 0.15),
-        vx: (Math.random() - 0.5) * 0.3,
+        vy: -(Math.random() * 0.45 + 0.18),
+        vx: (Math.random() - 0.5) * 0.35,
         baseAlpha: Math.random() * 0.45 + 0.35,
         pulseSpeed: Math.random() * 0.02 + 0.008,
         pulse: Math.random() * Math.PI * 2,
-        candleHeight: Math.floor(Math.random() * 20) + 14,
+        candleHeight: Math.floor(Math.random() * 22) + 14,
         candleGreen: Math.random() > 0.3
+      });
+    }
+
+    // 2. Micro-Partículas de Poeira Estelar / Bokeh Luminoso 4K
+    const dustParticles = [];
+    const dustCount = 45;
+    for (let d = 0; d < dustCount; d++) {
+      dustParticles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 1.8 + 0.6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: Math.random() * 0.5 + 0.2,
+        vy: -(Math.random() * 0.25 + 0.05),
+        vx: (Math.random() - 0.5) * 0.2,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: Math.random() * 0.03 + 0.01
       });
     }
 
@@ -13876,30 +13938,57 @@ if (scaleMenuBtn && scaleDropdown) {
       ctx.clearRect(0, 0, width, height);
       const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
 
-      // A. Grid Terminal Financeiro (Cruzes de Coordenadas +)
-      const step = 70;
+      // Suavização do Mouse com Inércia
+      mouse.x += (mouse.targetX - mouse.x) * 0.08;
+      mouse.y += (mouse.targetY - mouse.y) * 0.08;
+
+      // A. Grid Terminal Financeiro com Pontos de Mira (+)
+      const step = 65;
       ctx.save();
-      ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.035)' : 'rgba(255, 255, 255, 0.04)';
+      ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.035)' : 'rgba(255, 255, 255, 0.04)';
       ctx.lineWidth = 1;
       for (let gx = step; gx < width; gx += step) {
         for (let gy = step; gy < height; gy += step) {
           ctx.beginPath();
-          ctx.moveTo(gx - 3, gy); ctx.lineTo(gx + 3, gy);
-          ctx.moveTo(gx, gy - 3); ctx.lineTo(gx, gy + 3);
+          ctx.moveTo(gx - 3.5, gy); ctx.lineTo(gx + 3.5, gy);
+          ctx.moveTo(gx, gy - 3.5); ctx.lineTo(gx, gy + 3.5);
           ctx.stroke();
         }
       }
       ctx.restore();
 
-      // B. Onda Financeira Secundária de Fundo (Índigo Real / Safira)
-      waveOffset += 0.01;
+      // B. Micro-Partículas de Poeira Estelar Luminosa
+      dustParticles.forEach(dp => {
+        dp.y += dp.vy;
+        dp.x += dp.vx + Math.sin(dp.y * 0.005) * 0.15;
+        dp.pulse += dp.pulseSpeed;
+        if (dp.y < -10) { dp.y = height + 10; dp.x = Math.random() * width; }
+        if (dp.x < -10) dp.x = width + 10;
+        if (dp.x > width + 10) dp.x = -10;
+
+        const curAlpha = dp.alpha * (0.6 + 0.4 * Math.sin(dp.pulse));
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(dp.x, dp.y, dp.radius, 0, Math.PI * 2);
+        ctx.fillStyle = dp.color;
+        ctx.globalAlpha = isLight ? curAlpha * 0.5 : curAlpha;
+        if (!isLight && dp.radius > 1.2) {
+          ctx.shadowColor = dp.color;
+          ctx.shadowBlur = 8;
+        }
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // C. Onda Financeira Secundária de Fundo (Índigo Real / Safira)
+      waveOffset += 0.009;
       const waveY = height * 0.74;
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(0, height);
-      ctx.lineTo(0, waveY + 20);
+      ctx.lineTo(0, waveY + 24);
       for (let x = 0; x <= width; x += 25) {
-        const y = waveY + 20 + Math.sin(x * 0.003 - waveOffset * 0.7) * 45;
+        const y = waveY + 24 + Math.sin(x * 0.003 - waveOffset * 0.7) * 45;
         ctx.lineTo(x, y);
       }
       ctx.lineTo(width, height);
@@ -13908,7 +13997,7 @@ if (scaleMenuBtn && scaleDropdown) {
       ctx.fill();
       ctx.restore();
 
-      // C. Onda Financeira Principal (Ciano Elétrico & Safira Lucro Mercado)
+      // D. Onda Financeira Principal (Ciano Elétrico & Safira Lucro Mercado)
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(0, height);
@@ -13924,12 +14013,12 @@ if (scaleMenuBtn && scaleDropdown) {
 
       const waveGrad = ctx.createLinearGradient(0, waveY - 50, 0, height);
       if (isLight) {
-        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.16)');
+        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.18)');
         waveGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.06)');
         waveGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
       } else {
-        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.25)');
-        waveGrad.addColorStop(0.45, 'rgba(59, 130, 246, 0.12)');
+        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.28)');
+        waveGrad.addColorStop(0.45, 'rgba(59, 130, 246, 0.14)');
         waveGrad.addColorStop(0.8, 'rgba(30, 58, 138, 0.05)');
         waveGrad.addColorStop(1, 'rgba(2, 4, 10, 0)');
       }
@@ -13943,10 +14032,10 @@ if (scaleMenuBtn && scaleDropdown) {
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = isLight ? 'rgba(14, 165, 233, 0.75)' : 'rgba(56, 189, 248, 0.90)';
+      ctx.strokeStyle = isLight ? 'rgba(14, 165, 233, 0.85)' : 'rgba(56, 189, 248, 0.95)';
       ctx.lineWidth = 2.6;
       ctx.shadowColor = '#38BDF8';
-      ctx.shadowBlur = isLight ? 8 : 20;
+      ctx.shadowBlur = isLight ? 8 : 22;
       ctx.stroke();
       ctx.restore();
 
@@ -13957,7 +14046,7 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
         ctx.fillStyle = '#38BDF8';
         ctx.shadowColor = '#38BDF8';
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 14;
         ctx.fill();
 
         ctx.font = '800 10px "Outfit", sans-serif';
@@ -13966,22 +14055,43 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.restore();
       });
 
-      // D. Conexões de Rede Interativa entre Nós Próximos
+      // E. Conexões de Rede Interativa entre Nós e Interação com Cursor
       for (let i = 0; i < items.length; i++) {
+        if (mouse.active && mouse.x > 0) {
+          const mdx = items[i].x - mouse.x;
+          const mdy = items[i].y - mouse.y;
+          const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+          if (mdist < 160) {
+            const force = (1 - mdist / 160) * 1.5;
+            items[i].x += (mdx / mdist) * force;
+            items[i].y += (mdy / mdist) * force;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(items[i].x, items[i].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            const mouseConnAlpha = (1 - mdist / 160) * (isLight ? 0.25 : 0.45);
+            ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, ' + mouseConnAlpha + ')' : 'rgba(245, 158, 11, ' + mouseConnAlpha + ')';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+
         for (let j = i + 1; j < items.length; j++) {
           const dx = items[i].x - items[j].x;
           const dy = items[i].y - items[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 130) {
+          if (dist < 135) {
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(items[i].x, items[i].y);
             ctx.lineTo(items[j].x, items[j].y);
-            const connAlpha = (1 - dist / 130) * 0.20;
+            const connAlpha = (1 - dist / 135) * 0.22;
             ctx.strokeStyle = isLight 
               ? 'rgba(14, 165, 233, ' + connAlpha + ')' 
-              : 'rgba(56, 189, 248, ' + (connAlpha * 1.3) + ')';
+              : 'rgba(56, 189, 248, ' + (connAlpha * 1.35) + ')';
             ctx.lineWidth = 1;
             ctx.stroke();
             ctx.restore();
@@ -13989,12 +14099,12 @@ if (scaleMenuBtn && scaleDropdown) {
         }
       }
 
-      // E. Renderização de Elementos Financeiros Profissionais (Badges, Moedas & Candlesticks)
+      // F. Renderização de Elementos Financeiros Profissionais (Badges, Moedas & Candlesticks)
       items.forEach(it => {
         it.y += it.vy;
         it.x += it.vx + Math.sin(it.y * 0.008) * 0.25;
         it.pulse += it.pulseSpeed;
-        const currentAlpha = Math.max(0.2, Math.min(0.9, it.baseAlpha + Math.sin(it.pulse) * 0.25));
+        const currentAlpha = Math.max(0.25, Math.min(0.95, it.baseAlpha + Math.sin(it.pulse) * 0.25));
 
         if (it.y < -40) {
           it.y = height + 40;
@@ -14010,19 +14120,23 @@ if (scaleMenuBtn && scaleDropdown) {
           // TYPE 0: BADGE DE LUCRO GLASSMORPHIC (Ex: "▲ +18.4%")
           ctx.font = '700 11px "Outfit", "Plus Jakarta Sans", sans-serif';
           const textWidth = ctx.measureText(it.text).width;
-          const padX = 8;
+          const padX = 9;
           const padY = 4;
           const rw = textWidth + padX * 2;
-          const rh = 20;
+          const rh = 21;
 
           ctx.beginPath();
           ctx.roundRect(-rw/2, -rh/2, rw, rh, 10);
-          ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(13, 18, 32, 0.75)';
+          ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.90)' : 'rgba(13, 18, 32, 0.80)';
           ctx.globalAlpha = currentAlpha;
           ctx.fill();
 
           ctx.strokeStyle = it.color;
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 1.2;
+          if (!isLight) {
+            ctx.shadowColor = it.color;
+            ctx.shadowBlur = 8;
+          }
           ctx.stroke();
 
           ctx.fillStyle = it.color;
@@ -14032,18 +14146,18 @@ if (scaleMenuBtn && scaleDropdown) {
 
         } else if (it.kind === 1) {
           // TYPE 1: MOEDA DE CRIPTO/CAMBIO GLASS (Ex: "R$", "$", "€")
-          const radius = 13;
+          const radius = 13.5;
           ctx.beginPath();
           ctx.arc(0, 0, radius, 0, Math.PI * 2);
-          ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(15, 23, 42, 0.75)';
+          ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.90)' : 'rgba(15, 23, 42, 0.80)';
           ctx.globalAlpha = currentAlpha;
           ctx.fill();
 
           ctx.strokeStyle = it.color;
-          ctx.lineWidth = 1.2;
+          ctx.lineWidth = 1.4;
           if (!isLight) {
             ctx.shadowColor = it.color;
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 10;
           }
           ctx.stroke();
 
@@ -14057,14 +14171,14 @@ if (scaleMenuBtn && scaleDropdown) {
           // TYPE 2: CANDLESTICK DE TRADING PROFISSIONAL
           const color = it.candleGreen ? '#10B981' : '#F43F5E';
           const h = it.candleHeight;
-          ctx.globalAlpha = isLight ? currentAlpha * 0.7 : currentAlpha * 0.85;
+          ctx.globalAlpha = isLight ? currentAlpha * 0.75 : currentAlpha * 0.90;
 
           // Pavio / Wick
           ctx.beginPath();
           ctx.moveTo(0, -h/2 - 4);
           ctx.lineTo(0, h/2 + 4);
           ctx.strokeStyle = color;
-          ctx.lineWidth = 1.2;
+          ctx.lineWidth = 1.3;
           ctx.stroke();
 
           // Corpo / Body
@@ -14083,6 +14197,42 @@ if (scaleMenuBtn && scaleDropdown) {
 
   setupCanvas('authBgCanvas');
   setupCanvas('appBgOrbitalCanvas');
+
+  // Engine de Efeito 3D Tilt & Brilho Especular Dinâmico no server.js
+  (function initServer3DCardTilt() {
+    const card = document.getElementById('serverAuthNexusCard');
+    const glare = document.getElementById('serverAuthCardGlare');
+    if (!card) return;
+
+    let bounds = null;
+    function updateBounds() { bounds = card.getBoundingClientRect(); }
+    window.addEventListener('resize', updateBounds);
+    window.addEventListener('scroll', updateBounds);
+
+    card.addEventListener('mouseenter', () => {
+      updateBounds();
+      if (glare) glare.style.setProperty('--card-glare-opacity', '1');
+    });
+
+    card.addEventListener('mousemove', (e) => {
+      if (!bounds) updateBounds();
+      const x = e.clientX - bounds.left;
+      const y = e.clientY - bounds.top;
+      const centerX = bounds.width / 2;
+      const centerY = bounds.height / 2;
+
+      card.style.transform = 'perspective(1200px) rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg) translateY(-2px)';
+      if (glare) {
+        glare.style.setProperty('--card-mouse-x', x + 'px');
+        glare.style.setProperty('--card-mouse-y', y + 'px');
+      }
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+      if (glare) glare.style.setProperty('--card-glare-opacity', '0');
+    });
+  })();
 })();
 </script>
 </body>
