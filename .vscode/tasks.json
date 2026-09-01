@@ -2,6 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "👀 Monitor de Código em Tempo Real (Live Diff)",
+      "type": "shell",
+      "command": "node watch-diff.js",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "🚀 Subir para GitHub & Render (Auto Deploy)",
       "type": "shell",
       "command": "npm run deploy",
