@@ -2273,6 +2273,121 @@
             return false;
         }
 
+        // Gerenciamento de Usuários para Logon Rápido
+        let listaUsuariosCadastrados = [];
+
+        window.carregarUsuariosLogon = async function() {
+            const container = document.getElementById('usersListLogonContainer');
+            const badgeCount = document.getElementById('registeredUsersBadgeCount');
+            if (container) {
+                container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs"><svg class="w-4 h-4 animate-spin inline-block mr-1 text-amber-500" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Carregando usuários cadastrados...</div>';
+            }
+
+            try {
+                const res = await fetch(targetOrigin + '/api/users');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data)) {
+                        listaUsuariosCadastrados = data;
+                    }
+                }
+            } catch(e) {
+                console.warn('Erro ao buscar lista de usuários para logon:', e);
+            }
+
+            if (!listaUsuariosCadastrados || listaUsuariosCadastrados.length === 0) {
+                listaUsuariosCadastrados = [
+                    { name: 'Administrador', email: 'admin@nexusfinanceiro.com', role: 'Administrador', active: true },
+                    { name: 'Paulo Lima', email: 'paulolp0101@gmail.com', role: 'Usuário', active: true }
+                ];
+            }
+
+            if (badgeCount) {
+                badgeCount.textContent = listaUsuariosCadastrados.length;
+            }
+
+            renderUsuariosLogon(listaUsuariosCadastrados);
+        };
+
+        window.renderUsuariosLogon = function(users) {
+            const container = document.getElementById('usersListLogonContainer');
+            if (!container) return;
+
+            if (!users || users.length === 0) {
+                container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs">Nenhum usuário encontrado.</div>';
+                return;
+            }
+
+            let html = '';
+            users.forEach((u) => {
+                const name = u.name || 'Usuário';
+                const email = u.email || '';
+                const role = u.role || 'Usuário';
+                const isAdmin = role === 'Administrador';
+                const initials = name.trim().split(/\s+/).map(p => p[0]).slice(0, 2).join('').toUpperCase();
+                const passSafe = u.password ? escapeOsHtml(u.password) : '';
+
+                html += `
+                <div class="p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-between gap-3 group">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-8 h-8 rounded-full ${isAdmin ? 'bg-gradient-to-br from-amber-500 to-amber-700 text-black border border-amber-300' : 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white border border-blue-400/40'} flex items-center justify-center font-black text-xs shrink-0 shadow-sm">
+                            ${initials}
+                        </div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs font-bold text-white truncate">${escapeOsHtml(name)}</span>
+                                <span class="text-[9px] font-black px-1.5 py-0.2 rounded ${isAdmin ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'} uppercase">${role}</span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 block truncate">${escapeOsHtml(email)}</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="selecionarUsuarioParaLogon('${escapeOsHtml(email)}', '${passSafe}', '${escapeOsHtml(name)}')" 
+                        class="px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold text-amber-300 bg-amber-500/15 hover:bg-amber-500/30 border border-amber-500/40 shrink-0 transition-all active:scale-95 flex items-center gap-1">
+                        <span>⚡ Logon</span>
+                    </button>
+                </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        };
+
+        window.filtrarUsuariosLogon = function(query) {
+            const q = (query || '').toLowerCase().trim();
+            if (!q) {
+                renderUsuariosLogon(listaUsuariosCadastrados);
+                return;
+            }
+            const filtrados = listaUsuariosCadastrados.filter(u => 
+                (u.name && u.name.toLowerCase().includes(q)) || 
+                (u.email && u.email.toLowerCase().includes(q)) ||
+                (u.role && u.role.toLowerCase().includes(q))
+            );
+            renderUsuariosLogon(filtrados);
+        };
+
+        window.selecionarUsuarioParaLogon = function(email, pass, name) {
+            const emailInput = document.getElementById('loginEmail');
+            const passInput = document.getElementById('loginPassword');
+            if (emailInput) emailInput.value = email;
+            if (passInput && pass) passInput.value = pass;
+
+            switchAuthTab('login');
+            
+            const banner = document.getElementById('newRegLogonBanner');
+            const titleEl = document.getElementById('newRegLogonTitle');
+            const descEl = document.getElementById('newRegLogonDesc');
+            if (banner && titleEl && descEl) {
+                titleEl.textContent = 'Usuário Carregado: ' + name;
+                descEl.innerHTML = 'Credenciais de <strong>' + email + '</strong> preenchidas no formulário de Logon. Clique em Entrar.';
+                banner.classList.remove('hidden');
+            }
+
+            showAlert('Usuário <strong>' + name + '</strong> carregado no formulário de logon.', 'info');
+            const submitBtn = document.getElementById('btnLoginSubmit');
+            if (submitBtn) submitBtn.focus();
+        };
+
         // 2. Submit Register
         async function handleRegisterSubmit(e) {
             if (e) e.preventDefault();
@@ -2318,12 +2433,31 @@
                     return false;
                 }
 
-                showAlert('🎉 Conta criada com sucesso! Preenchemos suas credenciais para você entrar.', 'success');
+                // Preenche formulário de Logon
                 document.getElementById('loginEmail').value = email;
                 document.getElementById('loginPassword').value = password;
+
+                // Configura Banner de Boas-Vindas no Logon
+                const banner = document.getElementById('newRegLogonBanner');
+                const titleEl = document.getElementById('newRegLogonTitle');
+                const descEl = document.getElementById('newRegLogonDesc');
+                if (banner && titleEl && descEl) {
+                    titleEl.textContent = '🎉 ' + name + ', sua conta foi criada!';
+                    descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar.';
+                    banner.classList.remove('hidden');
+                }
+
+                showAlert('🎉 Conta criada com sucesso! Redirecionando para a aba de Logon com suas credenciais preenchidas.', 'success');
+
+                // Atualiza lista de usuários cadastrados
+                carregarUsuariosLogon();
+
+                // Muda para aba de Logon
                 setTimeout(function() {
                     switchAuthTab('login');
-                }, 1200);
+                    const loginBtn = document.getElementById('btnLoginSubmit');
+                    if (loginBtn) loginBtn.focus();
+                }, 900);
 
             } catch (err) {
                 showAlert('Erro ao conectar ao servidor backend (porta 3000). Verifique a conexão com o servidor.', 'error');
@@ -2660,6 +2794,12 @@
 
             render();
         })();
+
+        // Inicialização de Usuários para Logon
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.carregarUsuariosLogon) window.carregarUsuariosLogon();
+        });
+        if (window.carregarUsuariosLogon) window.carregarUsuariosLogon();
     </script>
 </body>
 </html>

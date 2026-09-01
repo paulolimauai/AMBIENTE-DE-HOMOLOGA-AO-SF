@@ -381,12 +381,12 @@ body.light, html.light body{
 html, body{overflow-x:clip !important; width:100%;}
 body{
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-  background-color:#070311;
+  background-color:#050507;
   background-image:
-    radial-gradient(at 15% 15%, rgba(6, 182, 212, 0.22) 0px, transparent 55%),
-    radial-gradient(at 85% 20%, rgba(168, 85, 247, 0.24) 0px, transparent 55%),
-    radial-gradient(at 50% 85%, rgba(236, 72, 153, 0.14) 0px, transparent 50%),
-    linear-gradient(180deg, #070311 0%, #110624 50%, #05020D 100%);
+    radial-gradient(at 15% 15%, rgba(255, 255, 255, 0.05) 0px, transparent 55%),
+    radial-gradient(at 85% 20%, rgba(148, 163, 184, 0.06) 0px, transparent 55%),
+    radial-gradient(at 50% 85%, rgba(255, 255, 255, 0.03) 0px, transparent 50%),
+    linear-gradient(180deg, #050507 0%, #0c0c10 50%, #030304 100%);
   background-attachment:fixed;
   color:var(--text); min-height:100vh; transition:background .25s,color .25s;
   zoom:var(--app-zoom, 1);
@@ -452,19 +452,18 @@ html, body {
   }
 }
 
-/* ==================== Tela de Auth Ultra Moderna (Paleta Radical Cosmic Neon) ==================== */
+/* ==================== Tela de Auth Ultra Moderna (Paleta Stealth Preto, Cinza e Branco) ==================== */
 .auth-container {
-  --auth-magenta: #EC4899;
-  --auth-fuchsia: #D946EF;
-  --auth-cyan: #06B6D4;
-  --auth-purple: #A855F7;
-  --auth-violet: #8B5CF6;
-  --auth-gold: #38BDF8;
-  --auth-card: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(56, 18, 86, 0.48) 28%, rgba(26, 10, 48, 0.68) 68%, rgba(10, 4, 22, 0.84) 100%);
-  --auth-border: rgba(236, 72, 153, 0.32);
-  --auth-input-bg: rgba(16, 7, 34, 0.55);
+  --auth-gold: #FFFFFF;
+  --auth-gold-dark: #E2E8F0;
+  --auth-blue: #94A3B8;
+  --auth-emerald: #CBD5E1;
+  --auth-teal: #E2E8F0;
+  --auth-card: linear-gradient(145deg, rgba(28, 28, 34, 0.70) 0%, rgba(16, 16, 20, 0.85) 42%, rgba(8, 8, 10, 0.95) 100%);
+  --auth-border: rgba(255, 255, 255, 0.16);
+  --auth-input-bg: rgba(14, 14, 18, 0.65);
   --auth-text: #FFFFFF;
-  --auth-text-dim: #CBD5E1;
+  --auth-text-dim: #94A3B8;
   position: relative;
   overflow: hidden;
   display: none;
@@ -473,14 +472,14 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   padding: 24px 16px;
-  background-color: #070311;
+  background-color: #040406;
   background-image: 
-    radial-gradient(at 15% 15%, rgba(6, 182, 212, 0.28) 0px, transparent 50%),
-    radial-gradient(at 85% 15%, rgba(168, 85, 247, 0.32) 0px, transparent 55%),
-    radial-gradient(at 50% 50%, rgba(236, 72, 153, 0.25) 0px, transparent 55%),
-    radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.20) 0px, transparent 50%),
-    radial-gradient(at 82% 85%, rgba(139, 92, 246, 0.30) 0px, transparent 55%),
-    linear-gradient(180deg, #070311 0%, #110624 50%, #05020D 100%);
+    radial-gradient(at 15% 15%, rgba(255, 255, 255, 0.07) 0px, transparent 50%),
+    radial-gradient(at 85% 15%, rgba(148, 163, 184, 0.08) 0px, transparent 55%),
+    radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.04) 0px, transparent 55%),
+    radial-gradient(at 18% 85%, rgba(203, 213, 225, 0.05) 0px, transparent 50%),
+    radial-gradient(at 82% 85%, rgba(100, 116, 139, 0.07) 0px, transparent 55%),
+    linear-gradient(180deg, #040406 0%, #0c0c10 50%, #020203 100%);
   background-attachment: fixed;
 }
 .auth-container.show { display: flex; }
@@ -493,7 +492,7 @@ html, body {
   transform: translate(-50%, -50%);
   width: 580px;
   height: 580px;
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.28) 0%, rgba(139, 92, 246, 0.22) 40%, rgba(6, 182, 212, 0.16) 65%, transparent 75%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.10) 0%, rgba(148, 163, 184, 0.06) 40%, rgba(30, 41, 59, 0.04) 65%, transparent 75%);
   filter: blur(65px);
   pointer-events: none;
   z-index: 1;
@@ -501,8 +500,8 @@ html, body {
   animation: authAuraPulse 6s ease-in-out infinite alternate;
 }
 @keyframes authAuraPulse {
-  0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.75; }
-  100% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+  0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.65; }
+  100% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.95; }
 }
 
 body.light .auth-container {
@@ -586,31 +585,33 @@ body.light .auth-theme-btn {
 .auth-blob.b1 {
   width: 460px;
   height: 460px;
-  background: #06B6D4;
+  background: #334155;
   top: -110px;
   left: -110px;
+  opacity: 0.20;
   animation: blobFloat 22s ease-in-out infinite;
 }
 .auth-blob.b2 {
   width: 440px;
   height: 440px;
-  background: #EC4899;
+  background: #1E293B;
   bottom: -130px;
   right: -90px;
+  opacity: 0.25;
   animation: blobFloat 26s ease-in-out infinite;
   animation-delay: -9s;
 }
 .auth-blob.b3 {
   width: 420px;
   height: 420px;
-  background: #8B5CF6;
+  background: #64748B;
   top: 28%;
   right: 12%;
-  opacity: 0.28;
+  opacity: 0.12;
   animation: blobFloat 28s ease-in-out infinite;
   animation-delay: -14s;
 }
-body.light .auth-blob { opacity: 0.14; }
+body.light .auth-blob { opacity: 0.10; }
 
 @keyframes blobFloat {
   0%, 100% { transform: translate(0, 0) scale(1); }
@@ -623,28 +624,27 @@ body.light .auth-blob { opacity: 0.14; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Card de Autenticação Ultra 4K Liquid Glass (Paleta Radical Cosmic Amethyst) */
+/* Card de Autenticação Ultra 4K Liquid Glass (Paleta Stealth Preto, Cinza e Branco) */
 .auth-card-nexus {
   position: relative;
   z-index: 2;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(56, 18, 86, 0.48) 28%, rgba(26, 10, 48, 0.68) 68%, rgba(10, 4, 22, 0.84) 100%) !important;
-  border: 1.5px solid rgba(236, 72, 153, 0.35) !important;
+  background: linear-gradient(145deg, rgba(30, 30, 38, 0.70) 0%, rgba(18, 18, 22, 0.88) 42%, rgba(10, 10, 12, 0.96) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
   border-top: 2px solid rgba(255, 255, 255, 0.85) !important;
-  border-left: 1.5px solid rgba(244, 114, 182, 0.55) !important;
-  border-right: 1.5px solid rgba(139, 92, 246, 0.25) !important;
-  border-bottom: 1.5px solid rgba(6, 182, 212, 0.20) !important;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.40) !important;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 32px;
   padding: 40px 38px;
   width: 100%;
   max-width: 460px;
   box-shadow: 
-    0 35px 90px -10px rgba(0, 0, 0, 0.90),
-    0 0 65px rgba(236, 72, 153, 0.32),
-    0 0 95px rgba(6, 182, 212, 0.22),
-    inset 0 2px 3px rgba(255, 255, 255, 0.60),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.50) !important;
-  backdrop-filter: blur(48px) saturate(220%);
-  -webkit-backdrop-filter: blur(48px) saturate(220%);
+    0 40px 100px -15px rgba(0, 0, 0, 0.98),
+    0 0 50px rgba(255, 255, 255, 0.06),
+    inset 0 2px 3px rgba(255, 255, 255, 0.50),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.80) !important;
+  backdrop-filter: blur(48px) saturate(190%);
+  -webkit-backdrop-filter: blur(48px) saturate(190%);
   animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
@@ -656,15 +656,15 @@ body.light .auth-blob { opacity: 0.14; }
   left: 6%;
   right: 6%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #FFFFFF 50%, rgba(244, 114, 182, 0.95) 65%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), #FFFFFF 50%, rgba(255, 255, 255, 0.3), transparent);
   pointer-events: none;
   z-index: 3;
 }
 body.light .auth-card-nexus {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border: 1.5px solid rgba(236, 72, 153, 0.3) !important;
+  background: rgba(255, 255, 255, 0.90) !important;
+  border: 1.5px solid rgba(203, 213, 225, 0.8) !important;
   border-top: 2px solid #FFFFFF !important;
-  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12), 0 0 35px rgba(236, 72, 153, 0.15), inset 0 2px 4px #FFFFFF !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12), inset 0 2px 4px #FFFFFF !important;
   backdrop-filter: blur(40px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
 }
@@ -681,30 +681,30 @@ body.light .auth-card-nexus {
   width: 68px;
   height: 68px;
   border-radius: 22px;
-  background: linear-gradient(135deg, #FFF1F2 0%, #FB7185 22%, #E11D48 52%, #BE123C 78%, #701A75 100%) !important;
-  color: #FFFFFF !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 25%, #94A3B8 60%, #475569 85%, #1E293B 100%) !important;
+  color: #0A0A0C !important;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   font-size: 30px;
   font-family: 'Outfit', sans-serif;
-  border: 2px solid rgba(255, 255, 255, 0.90) !important;
-  box-shadow: 0 16px 42px rgba(225, 29, 72, 0.70), 0 0 35px rgba(236, 72, 153, 0.55), inset 0 2.5px 4px #FFFFFF !important;
+  border: 2px solid #FFFFFF !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 35px rgba(255, 255, 255, 0.35), inset 0 2.5px 4px #FFFFFF !important;
   margin-bottom: 16px;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
 .auth-logo-badge:hover {
   transform: scale(1.08) rotate(-3deg);
-  box-shadow: 0 20px 48px rgba(225, 29, 72, 0.85), 0 0 42px rgba(236, 72, 153, 0.65), inset 0 3px 5px #FFFFFF !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.9), 0 0 45px rgba(255, 255, 255, 0.50), inset 0 3px 5px #FFFFFF !important;
 }
 .auth-logo-badge::after {
   content: '';
   position: absolute;
   inset: -8px;
   border-radius: 28px;
-  background: radial-gradient(circle, rgba(225, 29, 72, 0.65) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
   z-index: -1;
   animation: logoPulse 3s ease-in-out infinite alternate;
 }
@@ -722,35 +722,35 @@ body.light .auth-card-nexus {
   display: flex;
   align-items: center;
   gap: 8px;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
 }
 .auth-title span {
-  color: #22D3EE;
+  color: #F1F5F9;
   font-size: 14px;
   font-weight: 900;
   letter-spacing: 0.14em;
-  text-shadow: 0 0 20px rgba(6, 182, 212, 0.90), 0 0 35px rgba(168, 85, 247, 0.50);
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.75), 0 0 32px rgba(255, 255, 255, 0.35);
 }
 
 .auth-subtitle {
   font-size: 13px;
-  color: #E2E8F0;
+  color: #94A3B8;
   margin-top: 6px;
   font-weight: 500;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 /* Abas de Navegação Segmentada (Entrar / Criar Conta) */
 .auth-tabs-nav {
   display: flex;
-  background: rgba(16, 7, 32, 0.65) !important;
-  border: 1.5px solid rgba(236, 72, 153, 0.25) !important;
-  border-top: 1.5px solid rgba(244, 114, 182, 0.40) !important;
+  background: rgba(14, 14, 18, 0.75) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
   border-radius: 18px !important;
   padding: 6px !important;
   margin-bottom: 24px;
   gap: 6px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55), 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7), 0 4px 16px rgba(0, 0, 0, 0.4) !important;
   backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
 }
@@ -766,7 +766,7 @@ body.light .auth-tabs-nav {
   border-radius: 12px;
   border: 1px solid transparent;
   background: transparent;
-  color: #CBD5E1;
+  color: #94A3B8;
   font-size: 13.5px;
   font-weight: 700;
   cursor: pointer;
@@ -781,10 +781,10 @@ body.light .auth-tabs-nav {
   background: rgba(255, 255, 255, 0.08);
 }
 .auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.38) 0%, rgba(139, 92, 246, 0.28) 100%) !important;
-  color: #FDF4FF !important;
-  border: 1.5px solid rgba(244, 114, 182, 0.85) !important;
-  box-shadow: 0 4px 22px rgba(236, 72, 153, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.50) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.40) !important;
   font-weight: 800;
 }
 body.light .auth-tab-btn {
@@ -795,7 +795,7 @@ body.light .auth-tab-btn:hover {
 }
 body.light .auth-tab-btn.active {
   background: #FFFFFF !important;
-  color: #BE123C !important;
+  color: #0F172A !important;
   border-color: #CBD5E1 !important;
   box-shadow: 0 2px 8px rgba(15,23,42,0.08) !important;
 }
@@ -808,24 +808,24 @@ body.light .auth-tab-btn.active {
   display: block;
   font-size: 12px;
   font-weight: 800;
-  color: #E2E8F0;
+  color: #CBD5E1;
   margin-bottom: 7px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .auth-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(16, 7, 34, 0.55) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
-  border-top: 1.5px solid rgba(244, 114, 182, 0.35) !important;
+  background: rgba(14, 14, 18, 0.65) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.28) !important;
   border-radius: 16px !important;
   backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.08) !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6), 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.06) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 body.light .auth-input-wrapper {
@@ -835,20 +835,20 @@ body.light .auth-input-wrapper {
 }
 
 .auth-input-wrapper:focus-within {
-  border-color: rgba(34, 211, 238, 0.95) !important;
-  background: rgba(26, 12, 48, 0.75) !important;
-  box-shadow: 0 0 30px rgba(6, 182, 212, 0.45), inset 0 2px 4px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255, 255, 255, 0.25) !important;
+  border-color: #FFFFFF !important;
+  background: rgba(22, 22, 28, 0.85) !important;
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.25), inset 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255, 255, 255, 0.25) !important;
   transform: translateY(-1.5px);
 }
 body.light .auth-input-wrapper:focus-within {
   background: #FFFFFF !important;
-  border-color: #06B6D4 !important;
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.25) !important;
+  border-color: #0F172A !important;
+  box-shadow: 0 0 20px rgba(15, 23, 42, 0.15) !important;
 }
 
 .auth-input-wrapper.highlight-glow {
-  border-color: var(--auth-cyan) !important;
-  box-shadow: 0 0 28px rgba(6, 182, 212, 0.6) !important;
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.40) !important;
 }
 
 @keyframes authShake {
@@ -983,9 +983,9 @@ body.light .auth-pass-toggle-btn:hover {
   width: 100%;
   height: 52px;
   padding: 0 22px;
-  background: linear-gradient(135deg, #FFF1F2 0%, #FB7185 18%, #E11D48 48%, #BE123C 78%, #7C3AED 100%) !important;
-  color: #FFFFFF !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.80) !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 30%, #E2E8F0 70%, #CBD5E1 100%) !important;
+  color: #0A0A0C !important;
+  border: 1.5px solid #FFFFFF !important;
   border-top: 2px solid #FFFFFF !important;
   border-radius: 16px !important;
   font-weight: 900 !important;
@@ -993,7 +993,7 @@ body.light .auth-pass-toggle-btn:hover {
   letter-spacing: 0.02em;
   cursor: pointer;
   margin-top: 10px;
-  box-shadow: 0 16px 42px -4px rgba(225, 29, 72, 0.80), 0 0 32px rgba(236, 72, 153, 0.55), inset 0 2px 3px #FFFFFF !important;
+  box-shadow: 0 16px 42px -4px rgba(255, 255, 255, 0.30), 0 0 30px rgba(255, 255, 255, 0.15), inset 0 2px 3px #FFFFFF !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
@@ -1007,13 +1007,13 @@ body.light .auth-pass-toggle-btn:hover {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.60), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.70), transparent);
   transition: left 0.6s ease;
 }
 .btn-auth-primary:hover {
-  filter: brightness(1.12);
+  filter: brightness(1.05);
   transform: translateY(-2.5px);
-  box-shadow: 0 20px 48px -4px rgba(225, 29, 72, 0.95), 0 0 42px rgba(236, 72, 153, 0.70), inset 0 2px 3px #FFFFFF !important;
+  box-shadow: 0 20px 48px -4px rgba(255, 255, 255, 0.50), 0 0 40px rgba(255, 255, 255, 0.30), inset 0 2px 3px #FFFFFF !important;
 }
 .btn-auth-primary:hover::before {
   left: 100%;
@@ -1029,7 +1029,7 @@ body.light .auth-pass-toggle-btn:hover {
 
 .auth-forgot-link {
   font-size: 12.5px;
-  color: #38BDF8;
+  color: #CBD5E1;
   font-weight: 700;
   cursor: pointer;
   transition: color 0.15s;
@@ -1037,10 +1037,10 @@ body.light .auth-pass-toggle-btn:hover {
 }
 .auth-forgot-link:hover {
   text-decoration: underline;
-  color: #7DD3FC;
+  color: #FFFFFF;
 }
 
-/* Botão 4K Glass para Abertura e Consulta de Ordem de Serviço (Cyber Cyan Glass) */
+/* Botão 4K Glass para Abertura e Consulta de Ordem de Serviço (Obsidian Stealth Glass) */
 .btn-open-os {
   display: inline-flex;
   align-items: center;
@@ -1049,26 +1049,26 @@ body.light .auth-pass-toggle-btn:hover {
   width: 100%;
   height: 50px;
   padding: 0 20px;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.35) 0%, rgba(14, 116, 144, 0.55) 50%, rgba(15, 23, 42, 0.85) 100%) !important;
-  border: 1.5px solid rgba(34, 211, 238, 0.65) !important;
-  border-top: 1.8px solid rgba(165, 243, 252, 0.85) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(30, 30, 38, 0.60) 50%, rgba(12, 12, 16, 0.90) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+  border-top: 1.8px solid rgba(255, 255, 255, 0.70) !important;
   border-radius: 16px !important;
-  color: #CFFAFE !important;
+  color: #F8FAFC !important;
   font-size: 13.5px !important;
   font-weight: 800 !important;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 28px rgba(6, 182, 212, 0.40), inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 24px rgba(255, 255, 255, 0.08), inset 0 1.5px 2px rgba(255, 255, 255, 0.30) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
 }
 .btn-open-os:hover {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.50) 0%, rgba(14, 165, 233, 0.70) 50%, rgba(3, 105, 161, 0.95) 100%) !important;
-  border-color: rgba(165, 243, 252, 0.95) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(45, 45, 55, 0.75) 50%, rgba(20, 20, 26, 0.98) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.75) !important;
   color: #FFFFFF !important;
   transform: translateY(-2px);
-  box-shadow: 0 16px 42px rgba(6, 182, 212, 0.65), 0 0 38px rgba(34, 211, 238, 0.55), inset 0 1.5px 2px #FFFFFF !important;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.8), 0 0 35px rgba(255, 255, 255, 0.20), inset 0 1.5px 2px #FFFFFF !important;
 }
 .btn-open-os svg {
   transition: transform 0.2s ease;
@@ -1086,14 +1086,14 @@ body.light .auth-pass-toggle-btn:hover {
   width: 100%;
   padding: 10px 16px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1.5px solid rgba(236, 72, 153, 0.25);
+  border: 1.5px solid rgba(255, 255, 255, 0.20);
   border-radius: 14px;
   color: #E2E8F0;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
   transition: all 0.2s ease;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -4032,10 +4032,24 @@ body.light .scale-dropdown {
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
         Criar Conta
       </button>
+      <button type="button" class="auth-tab-btn" id="tabBtnUsers">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Acessos & Logon
+        <span id="registeredUsersBadgeCountServer" style="margin-left:4px; padding:2px 6px; border-radius:999px; font-size:10px; font-weight:800; background:rgba(245,158,11,0.25); color:#FDE68A; border:1px solid rgba(245,158,11,0.4);">0</span>
+      </button>
     </div>
 
     <!-- Box 1: Formulário de Login -->
     <div id="loginBox">
+      <!-- Banner Dinâmico para Novo Cadastro Apresentado no Logon -->
+      <div id="newRegLogonBannerServer" style="display:none; margin-bottom:16px; padding:12px 14px; border-radius:16px; background:linear-gradient(135deg, rgba(16,185,129,0.22) 0%, rgba(59,130,246,0.18) 100%); border:1px solid rgba(16,185,129,0.55); box-shadow:0 4px 18px rgba(16,185,129,0.25);">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <strong style="color:#34D399; font-size:12.5px; font-weight:800;" id="newRegLogonTitleServer">✨ Novo Usuário Cadastrado!</strong>
+          <span style="font-size:10px; font-weight:800; text-transform:uppercase; padding:2px 6px; border-radius:6px; background:rgba(16,185,129,0.25); color:#A7F3D0; border:1px solid rgba(16,185,129,0.4);">Apresentado</span>
+        </div>
+        <p style="color:#E2E8F0; font-size:11.5px; margin:0; line-height:1.4;" id="newRegLogonDescServer">Suas credenciais foram preenchidas no formulário abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar o logon.</p>
+      </div>
+
       <form id="loginForm">
         <div class="auth-field">
           <label>E-mail Corporativo ou Pessoal</label>
@@ -4112,7 +4126,7 @@ body.light .scale-dropdown {
             </span>
             <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="checkServerRegPasswordMatch()">
             <button type="button" class="auth-pass-toggle-btn" id="regPasswordToggle" title="Mostrar/Ocultar Senha">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
@@ -4162,6 +4176,32 @@ body.light .scale-dropdown {
 
       <div style="text-align:center; margin-top:18px;">
         <a class="auth-forgot-link" id="goLoginFromForgot">← Voltar para o Login</a>
+      </div>
+    </div>
+
+    <!-- Box 4: Aba de Usuários Cadastrados & Logon Rápido -->
+    <div id="usersBox" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--auth-text-dim);">Usuários para Logon Rápido</span>
+        <button type="button" onclick="carregarUsuariosLogonServer()" style="background:none; border:none; color:var(--auth-gold); font-size:12px; font-weight:700; cursor:pointer;">🔄 Atualizar</button>
+      </div>
+
+      <div class="auth-field" style="margin-bottom:12px;">
+        <div class="auth-input-wrapper" style="height:40px;">
+          <span class="auth-input-icon" style="width:36px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </span>
+          <input type="text" id="searchUsersLogonInputServer" oninput="filtrarUsuariosLogonServer(this.value)" placeholder="Buscar por nome ou e-mail..." style="font-size:12px;">
+        </div>
+      </div>
+
+      <div id="usersListLogonContainerServer" style="max-height:260px; overflow-y:auto; padding-right:4px; display:flex; flex-direction:column; gap:8px;">
+        <div style="text-align:center; padding:20px; color:var(--auth-text-dim); font-size:12px;">Carregando usuários cadastrados...</div>
+      </div>
+
+      <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--auth-border); display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+        <a class="auth-forgot-link" onclick="window.switchAuthTab('register')" style="cursor:pointer;">+ Cadastrar Novo</a>
+        <a class="auth-forgot-link" onclick="window.switchAuthTab('login')" style="cursor:pointer;">Ir para Logon →</a>
       </div>
     </div>
 
@@ -4950,7 +4990,7 @@ function saveToStorage(key, val) {
 
 let registeredUsers = [];
 
-// Alternador de Abas de Autenticação (Entrar / Criar Conta)
+// Alternador de Abas de Autenticação (Entrar / Criar Conta / Acessos & Logon)
 window.switchAuthTab = function(tab) {
   if (window.clearAuthFeedback) {
     window.clearAuthFeedback('login');
@@ -4960,34 +5000,159 @@ window.switchAuthTab = function(tab) {
   const loginBox = document.getElementById('loginBox');
   const regBox = document.getElementById('registerBox');
   const forgotBox = document.getElementById('forgotBox');
+  const usersBox = document.getElementById('usersBox');
   const tabsNav = document.getElementById('authTabsNav');
   const tabLogin = document.getElementById('tabBtnLogin');
   const tabReg = document.getElementById('tabBtnRegister');
+  const tabUsers = document.getElementById('tabBtnUsers');
   const subTitle = document.getElementById('authBoxSubtitle');
+
+  if (tabLogin) tabLogin.classList.remove('active');
+  if (tabReg) tabReg.classList.remove('active');
+  if (tabUsers) tabUsers.classList.remove('active');
 
   if (tab === 'register') {
     if (loginBox) loginBox.style.display = 'none';
     if (forgotBox) forgotBox.style.display = 'none';
+    if (usersBox) usersBox.style.display = 'none';
     if (regBox) regBox.style.display = 'block';
     if (tabsNav) tabsNav.style.display = 'flex';
-    if (tabLogin) tabLogin.classList.remove('active');
     if (tabReg) tabReg.classList.add('active');
     if (subTitle) subTitle.textContent = 'Crie sua conta para começar a gerenciar suas finanças';
+  } else if (tab === 'users') {
+    if (loginBox) loginBox.style.display = 'none';
+    if (regBox) regBox.style.display = 'none';
+    if (forgotBox) forgotBox.style.display = 'none';
+    if (usersBox) usersBox.style.display = 'block';
+    if (tabsNav) tabsNav.style.display = 'flex';
+    if (tabUsers) tabUsers.classList.add('active');
+    if (subTitle) subTitle.textContent = 'Selecione um usuário cadastrado para logon imediato';
+    carregarUsuariosLogonServer();
   } else if (tab === 'forgot') {
     if (loginBox) loginBox.style.display = 'none';
     if (regBox) regBox.style.display = 'none';
+    if (usersBox) usersBox.style.display = 'none';
     if (forgotBox) forgotBox.style.display = 'block';
     if (tabsNav) tabsNav.style.display = 'none';
     if (subTitle) subTitle.textContent = 'Recuperação segura de acesso';
   } else {
     if (regBox) regBox.style.display = 'none';
     if (forgotBox) forgotBox.style.display = 'none';
+    if (usersBox) usersBox.style.display = 'none';
     if (loginBox) loginBox.style.display = 'block';
     if (tabsNav) tabsNav.style.display = 'flex';
     if (tabLogin) tabLogin.classList.add('active');
-    if (tabReg) tabReg.classList.remove('active');
     if (subTitle) subTitle.textContent = 'Plataforma Inteligente de Gestão Financeira';
   }
+};
+
+let listaUsuariosCadastradosServer = [];
+
+window.carregarUsuariosLogonServer = async function() {
+  const container = document.getElementById('usersListLogonContainerServer');
+  const badgeCount = document.getElementById('registeredUsersBadgeCountServer');
+  if (container) {
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--auth-text-dim); font-size:12px;">Carregando usuários cadastrados...</div>';
+  }
+
+  try {
+    const res = await fetch(window.location.origin + '/api/users');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        listaUsuariosCadastradosServer = data;
+      }
+    }
+  } catch(e) {}
+
+  if (!listaUsuariosCadastradosServer || listaUsuariosCadastradosServer.length === 0) {
+    listaUsuariosCadastradosServer = registeredUsers || [
+      { name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', role: 'Administrador', active: true }
+    ];
+  }
+
+  if (badgeCount) {
+    badgeCount.textContent = listaUsuariosCadastradosServer.length;
+  }
+
+  renderUsuariosLogonServer(listaUsuariosCadastradosServer);
+};
+
+window.renderUsuariosLogonServer = function(users) {
+  const container = document.getElementById('usersListLogonContainerServer');
+  if (!container) return;
+
+  if (!users || users.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--auth-text-dim); font-size:12px;">Nenhum usuário cadastrado encontrado.</div>';
+    return;
+  }
+
+  let html = '';
+  users.forEach((u) => {
+    const name = u.name || 'Usuário';
+    const email = u.email || '';
+    const role = u.role || 'Usuário';
+    const isAdmin = role === 'Administrador';
+    const initials = name.trim().split(/\\s+/).map(p => p[0]).slice(0, 2).join('').toUpperCase();
+    const passSafe = u.password ? u.password.replace(/'/g, "\\\\'") : '';
+
+    html += \`
+      <div style="padding:10px 12px; border-radius:12px; background:var(--card-bg, rgba(255,255,255,0.04)); border:1px solid var(--auth-border); display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+          <div style="width:34px; height:34px; border-radius:50%; background:\${isAdmin ? 'linear-gradient(135deg, #F59E0B, #B45309)' : 'linear-gradient(135deg, #3B82F6, #1D4ED8)'}; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            \${initials}
+          </div>
+          <div style="min-width:0;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <strong style="font-size:13px; color:var(--auth-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${name}</strong>
+              <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(59,130,246,0.2)'}; color:\${isAdmin ? '#FBBF24' : '#60A5FA'};">\${role}</span>
+            </div>
+            <div style="font-size:11.5px; color:var(--auth-text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${email}</div>
+          </div>
+        </div>
+        <button type="button" onclick="selecionarUsuarioParaLogonServer('\${email}', '\${passSafe}', '\${name.replace(/'/g, "\\\\'")}')" style="padding:6px 10px; border-radius:8px; font-size:11px; font-weight:800; background:rgba(245,158,11,0.15); color:var(--auth-gold); border:1px solid rgba(245,158,11,0.4); cursor:pointer; flex-shrink:0;">
+          ⚡ Logon
+        </button>
+      </div>
+    \`;
+  });
+
+  container.innerHTML = html;
+};
+
+window.filtrarUsuariosLogonServer = function(query) {
+  const q = (query || '').toLowerCase().trim();
+  if (!q) {
+    renderUsuariosLogonServer(listaUsuariosCadastradosServer);
+    return;
+  }
+  const filtrados = listaUsuariosCadastradosServer.filter(u => 
+    (u.name && u.name.toLowerCase().includes(q)) || 
+    (u.email && u.email.toLowerCase().includes(q)) ||
+    (u.role && u.role.toLowerCase().includes(q))
+  );
+  renderUsuariosLogonServer(filtrados);
+};
+
+window.selecionarUsuarioParaLogonServer = function(email, pass, name) {
+  const emailInput = document.getElementById('loginEmail');
+  const passInput = document.getElementById('loginPassword');
+  if (emailInput) emailInput.value = email;
+  if (passInput && pass) passInput.value = pass;
+
+  window.switchAuthTab('login');
+
+  const banner = document.getElementById('newRegLogonBannerServer');
+  const titleEl = document.getElementById('newRegLogonTitleServer');
+  const descEl = document.getElementById('newRegLogonDescServer');
+  if (banner && titleEl && descEl) {
+    titleEl.textContent = '✨ Usuário: ' + name;
+    descEl.innerHTML = 'Credenciais de <strong>' + email + '</strong> preenchidas no Logon. Clique em Entrar.';
+    banner.style.display = 'block';
+  }
+
+  const submitBtn = document.getElementById('loginSubmitBtn');
+  if (submitBtn) submitBtn.focus();
 };
 
 window.showAuthFeedback = function(box, type, title, message, actionHtml) {
@@ -5054,7 +5219,7 @@ window.togglePasswordVisibility = function(inputId, btnId) {
     btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17.94 17.94-2.83-2.83M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/><path d="M1 12s4-8 11-8c1.3 0 2.5.3 3.6.8M5.8 5.8C3.6 7.6 2 10.3 1 12c0 0 4 8 11 8 2.6 0 5-.8 7-2.2"/><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/></svg>';
   } else {
     input.type = 'password';
-    btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    btn.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   }
 };
 
@@ -5080,6 +5245,7 @@ async function syncUsersWithServer() {
       if (Array.isArray(usersData) && usersData.length > 0) {
         registeredUsers = usersData;
         saveToStorage('nexus_users', registeredUsers);
+        if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
         return;
       }
     }
@@ -5095,6 +5261,7 @@ async function syncUsersWithServer() {
     ];
     saveToStorage('nexus_users', registeredUsers);
   }
+  if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
 }
 
 async function saveUsersToServer() {
@@ -5118,6 +5285,9 @@ if (tabLoginBtn) tabLoginBtn.onclick = () => window.switchAuthTab('login');
 
 const tabRegBtn = document.getElementById('tabBtnRegister');
 if (tabRegBtn) tabRegBtn.onclick = () => window.switchAuthTab('register');
+
+const tabUsersBtn = document.getElementById('tabBtnUsers');
+if (tabUsersBtn) tabUsersBtn.onclick = () => window.switchAuthTab('users');
 
 const authThemeBtn = document.getElementById('authThemeToggleBtn');
 if (authThemeBtn) authThemeBtn.onclick = () => window.toggleAuthTheme();
@@ -5642,11 +5812,25 @@ document.getElementById('registerForm').onsubmit = async (e) => {
     if (document.getElementById('regConfirmPassword')) document.getElementById('regConfirmPassword').value = '';
     const regMsg = document.getElementById('regPwdMatchMsg');
     if (regMsg) regMsg.style.display = 'none';
+
     document.getElementById('loginEmail').value = email;
     document.getElementById('loginPassword').value = password;
 
-    showCustomAlert('Sucesso! 🎉', serverMessage, 'success', () => {
+    const banner = document.getElementById('newRegLogonBannerServer');
+    const titleEl = document.getElementById('newRegLogonTitleServer');
+    const descEl = document.getElementById('newRegLogonDescServer');
+    if (banner && titleEl && descEl) {
+      titleEl.textContent = '🎉 ' + name + ', sua conta foi criada!';
+      descEl.innerHTML = 'Suas credenciais foram preenchidas no formulário de Logon abaixo. Clique em <strong>Entrar na Conta</strong> para iniciar.';
+      banner.style.display = 'block';
+    }
+
+    if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
+
+    showCustomAlert('Cadastro Realizado com Sucesso! 🎉', 'Conta cadastrada! Suas credenciais foram preenchidas no Logon para você entrar.', 'success', () => {
       window.switchAuthTab('login');
+      const submitBtn = document.getElementById('loginSubmitBtn');
+      if (submitBtn) submitBtn.focus();
     });
   }
 };
@@ -13220,6 +13404,15 @@ const server = http.createServer((req, res) => {
 
         recordSystemLog(user.name, user.email, 'Login', 'Autenticação', 'Usuário realizou login com sucesso no sistema');
 
+        // Exibição em destaque no terminal do VS Code
+        console.log('\n' + '='.repeat(70));
+        console.log('🔐 [VS CODE - LOGON REALIZADO COM SUCESSO]');
+        console.log(`👤 Usuário:      ${user.name} (${user.email})`);
+        console.log(`👑 Perfil:       ${user.role || 'Usuário'}`);
+        console.log(`🕒 Data/Hora:    ${new Date().toLocaleString('pt-BR')}`);
+        console.log('🚀 Sessão:       Ambiente de Homologação Ativo');
+        console.log('='.repeat(70) + '\n');
+
         try {
           const localUsers = getLocalUsers();
           const idx = localUsers.findIndex(u => u.email.toLowerCase() === user.email.toLowerCase());
@@ -13247,7 +13440,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Rota POST para Cadastro de Usuário (UPSERT Seguro)
+  // Rota POST para Cadastro de Usuário (UPSERT Seguro com Apresentação no VS Code e Logon)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/register') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -13287,6 +13480,17 @@ const server = http.createServer((req, res) => {
         saveLocalUsers(localUsers);
 
         recordSystemLog(name.trim(), cleanEmail, 'Cadastro', 'Autenticação', 'Usuário cadastrado/atualizado com sucesso no banco de dados');
+
+        // Exibição em destaque no terminal do VS Code
+        console.log('\n' + '='.repeat(70));
+        console.log('👤 [VS CODE - NOVO CADASTRO REALIZADO COM SUCESSO]');
+        console.log(`📌 Nome:         ${name.trim()}`);
+        console.log(`📧 E-mail:       ${cleanEmail}`);
+        console.log(`🛡️ Perfil:       Usuário`);
+        console.log(`🕒 Data/Hora:    ${new Date().toLocaleString('pt-BR')}`);
+        console.log('💻 Apresentação: Credenciais sincronizadas e prontas para Logon no VS Code');
+        console.log('📂 Persistência: local_users.json e system_logs.json');
+        console.log('='.repeat(70) + '\n');
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: true, message: 'Conta salva e sincronizada com sucesso no banco de dados!' }));
