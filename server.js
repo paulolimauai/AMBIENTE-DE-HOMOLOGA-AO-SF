@@ -1382,6 +1382,98 @@ body.light .auth-pass-toggle-btn:hover {
   transform: scale(1.15);
 }
 
+/* Selo de Segurança do Site no Card de Autenticação */
+.auth-security-seal {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  border-top: 1px solid rgba(110, 231, 183, 0.55) !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.25s ease;
+}
+.auth-security-seal:hover {
+  border-color: rgba(16, 185, 129, 0.65) !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(6, 182, 212, 0.14) 100%) !important;
+  box-shadow: 0 6px 24px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+.security-seal-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(52, 211, 153, 0.60);
+  color: #34D399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
+}
+.security-seal-content {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+.security-seal-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #F1F5F9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.security-seal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: sealDotPulse 2s infinite ease-in-out;
+}
+@keyframes sealDotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+.security-seal-sub {
+  font-size: 10px;
+  font-weight: 600;
+  color: #94A3B8;
+  margin-top: 1px;
+  letter-spacing: 0.02em;
+}
+.security-seal-badge-tag {
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.22);
+  border: 1px solid rgba(16, 185, 129, 0.50);
+  color: #6EE7B7;
+  font-size: 9.5px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+body.light .auth-security-seal {
+  background: rgba(16, 185, 129, 0.08) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+body.light .security-seal-heading {
+  color: #0F172A;
+}
+body.light .security-seal-sub {
+  color: #475569;
+}
+
 /* Botão 4K Glass para Consultar / Acompanhar O.S. */
 .btn-consult-os {
   display: inline-flex;
@@ -4522,6 +4614,28 @@ body.light .scale-dropdown {
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
           <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
         </button>
+      </div>
+
+      <!-- Selo de Segurança do Site (Security Trust Seal) -->
+      <div class="auth-security-seal">
+        <div class="security-seal-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <div class="security-seal-content">
+          <div class="security-seal-heading">
+            <span class="security-seal-dot"></span>
+            <strong>SITE 100% SEGURO & BLINDADO</strong>
+          </div>
+          <div class="security-seal-sub">
+            Certificado SSL 256-Bit • Conexão Criptografada • LGPD
+          </div>
+        </div>
+        <div class="security-seal-badge-tag">
+          SSL ATIVO
+        </div>
       </div>
     </div>
   </div>
