@@ -1413,97 +1413,7 @@ body.light .auth-pass-toggle-btn:hover {
   transform: scale(1.15);
 }
 
-/* Selo de Segurança do Site no Card de Autenticação Compacto */
-.auth-security-seal {
-  margin-top: 8px;
-  padding: 7px 11px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.35) !important;
-  border-top: 1px solid rgba(110, 231, 183, 0.55) !important;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2);
-  transition: all 0.25s ease;
-}
-.auth-security-seal:hover {
-  border-color: rgba(16, 185, 129, 0.65) !important;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(6, 182, 212, 0.14) 100%) !important;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-.security-seal-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  background: rgba(16, 185, 129, 0.25);
-  border: 1px solid rgba(52, 211, 153, 0.60);
-  color: #34D399;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
-}
-.security-seal-content {
-  flex: 1;
-  min-width: 0;
-  text-align: left;
-}
-.security-seal-heading {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  font-weight: 800;
-  color: #F1F5F9;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.security-seal-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 6px #10B981;
-  animation: sealDotPulse 2s infinite ease-in-out;
-}
-@keyframes sealDotPulse {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.3); opacity: 1; }
-}
-.security-seal-sub {
-  font-size: 9.5px;
-  font-weight: 600;
-  color: #94A3B8;
-  margin-top: 1px;
-  letter-spacing: 0.02em;
-}
-.security-seal-badge-tag {
-  padding: 2px 5px;
-  border-radius: 5px;
-  background: rgba(16, 185, 129, 0.22);
-  border: 1px solid rgba(16, 185, 129, 0.50);
-  color: #6EE7B7;
-  font-size: 8.5px;
-  font-weight: 900;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-body.light .auth-security-seal {
-  background: rgba(16, 185, 129, 0.08) !important;
-  border-color: rgba(16, 185, 129, 0.35) !important;
-}
-body.light .security-seal-heading {
-  color: #0F172A;
-}
-body.light .security-seal-sub {
-  color: #475569;
-}
+
 
 /* Botão 4K Glass para Consultar / Acompanhar O.S. */
 .btn-consult-os {
@@ -4558,7 +4468,7 @@ body.light .scale-dropdown {
 
       <!-- Box 2: Formulário de Registro -->
       <div id="registerBox" style="display:none;">
-        <form id="authRegisterForm">
+        <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
           <div class="auth-field">
             <label>Nome Completo</label>
             <div class="auth-input-wrapper">
@@ -4645,28 +4555,6 @@ body.light .scale-dropdown {
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
           <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
         </button>
-      </div>
-
-      <!-- Selo de Segurança do Site (Security Trust Seal) -->
-      <div class="auth-security-seal">
-        <div class="security-seal-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <path d="m9 12 2 2 4-4"/>
-          </svg>
-        </div>
-        <div class="security-seal-content">
-          <div class="security-seal-heading">
-            <span class="security-seal-dot"></span>
-            <strong>SITE 100% SEGURO & BLINDADO</strong>
-          </div>
-          <div class="security-seal-sub">
-            Certificado SSL 256-Bit • Conexão Criptografada • LGPD
-          </div>
-        </div>
-        <div class="security-seal-badge-tag">
-          SSL ATIVO
-        </div>
       </div>
     </div>
   </div>
@@ -5783,43 +5671,52 @@ if (goForgot) goForgot.onclick = (e) => { e.preventDefault(); window.switchAuthT
 const goLoginFromForgot = document.getElementById('goLoginFromForgot');
 if (goLoginFromForgot) goLoginFromForgot.onclick = (e) => { e.preventDefault(); window.switchAuthTab('login'); };
 
-document.getElementById('forgotStep1').onsubmit = async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('forgotEmail').value.trim();
-  const btn = document.getElementById('btnSendPassword');
+const forgotFormElement = document.getElementById('forgotStep1') || document.getElementById('forgotForm');
+if (forgotFormElement) {
+  forgotFormElement.onsubmit = async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('forgotEmail') ? document.getElementById('forgotEmail').value.trim() : '';
+    const btn = document.getElementById('btnSendPassword');
 
-  btn.disabled = true;
-  btn.textContent = 'Enviando...';
-
-  try {
-    const res = await fetch(window.location.origin + '/api/send-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    const data = await res.json();
-
-    if (!data.success) {
-      alert(data.error || 'Não encontramos nenhuma conta com esse e-mail ou falha no envio.');
-      return;
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
     }
 
-    if (data.mode === 'direct' && data.tempPassword) {
-      alert('Sua senha temporária de acesso é: ' + data.tempPassword);
-      document.getElementById('loginPassword').value = data.tempPassword;
-    } else {
-      alert('Sua senha foi enviada para o seu e-mail com sucesso!');
-    }
+    try {
+      const res = await fetch(window.location.origin + '/api/send-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
 
-    document.getElementById('loginEmail').value = email;
-    window.switchAuthTab('login');
-  } catch(err) {
-    alert('Erro ao processar solicitação de e-mail. Verifique suas credenciais SMTP no servidor.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Recuperar Minha Senha →';
-  }
-};
+      if (!data.success) {
+        alert(data.error || 'Não encontramos nenhuma conta com esse e-mail ou falha no envio.');
+        return;
+      }
+
+      if (data.mode === 'direct' && data.tempPassword) {
+        alert('Sua senha temporária de acesso é: ' + data.tempPassword);
+        const passInp = document.getElementById('loginPassword');
+        if (passInp) passInp.value = data.tempPassword;
+      } else {
+        alert('Sua senha foi enviada para o seu e-mail com sucesso!');
+      }
+
+      const emailInp = document.getElementById('loginEmail');
+      if (emailInp) emailInp.value = email;
+      window.switchAuthTab('login');
+    } catch(err) {
+      alert('Erro ao processar solicitação de e-mail. Verifique suas credenciais SMTP no servidor.');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Recuperar Minha Senha →';
+      }
+    }
+  };
+}
 
 // Limpa erros em tempo real conforme o usuário digita
 const loginEmailEl = document.getElementById('loginEmail');
@@ -5842,7 +5739,9 @@ if (loginPasswordEl) {
 }
 
 // Login direto contra o PostgreSQL / API com Validação Precisa em Tela e Fallback Offline
-document.getElementById('loginForm').onsubmit = async (e) => {
+const loginFormElement = document.getElementById('loginForm');
+if (loginFormElement) {
+  loginFormElement.onsubmit = async (e) => {
   e.preventDefault();
   if (window.clearAuthFeedback) window.clearAuthFeedback('login');
 
@@ -6219,27 +6118,32 @@ window.checkServerRegPasswordMatch = function() {
 };
 
 // Cadastro com inserção direta no PostgreSQL e fallback resiliente
-document.getElementById('registerForm').onsubmit = async (e) => {
-  e.preventDefault();
-  const name = document.getElementById('regName').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const password = document.getElementById('regPassword').value.trim();
-  const confirmPassword = document.getElementById('regConfirmPassword') ? document.getElementById('regConfirmPassword').value.trim() : '';
-  const submitBtn = document.querySelector('#registerForm button[type="submit"]');
+window.handleRegisterSubmit = async function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const nameInput = document.getElementById('regName');
+  const emailInput = document.getElementById('regEmail');
+  const passwordInput = document.getElementById('regPassword');
+  const confirmPasswordInput = document.getElementById('regConfirmPassword');
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const email = emailInput ? emailInput.value.trim() : '';
+  const password = passwordInput ? passwordInput.value.trim() : '';
+  const confirmPassword = confirmPasswordInput ? confirmPasswordInput.value.trim() : '';
+  const submitBtn = document.getElementById('regSubmitBtn') || document.querySelector('#registerForm button[type="submit"]') || document.querySelector('#authRegisterForm button[type="submit"]');
 
   if (!name || !email || !password || !confirmPassword) {
     showCustomAlert('Atenção', 'Por favor, preencha todos os campos do formulário, incluindo a confirmação de senha.', 'error');
-    return;
+    return false;
   }
 
   if (password.length < 6) {
     showCustomAlert('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'error');
-    return;
+    return false;
   }
 
   if (password !== confirmPassword) {
     showCustomAlert('Atenção', 'As senhas não conferem. Por favor, digite a mesma senha nos dois campos.', 'error');
-    return;
+    return false;
   }
 
   if (submitBtn) {
@@ -6265,7 +6169,11 @@ document.getElementById('registerForm').onsubmit = async (e) => {
       await syncUsersWithServer();
     } else {
       showCustomAlert('Atenção', data.error || 'Erro ao registrar usuário no banco de dados.', 'error');
-      return;
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Criar Minha Conta →';
+      }
+      return false;
     }
   } catch (err) {
     console.warn('[CADASTRO RESILIENTE] Falha na API de registro, salvando localmente:', err.message);
@@ -6283,20 +6191,22 @@ document.getElementById('registerForm').onsubmit = async (e) => {
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Criar Conta';
+      submitBtn.textContent = 'Criar Minha Conta →';
     }
   }
 
   if (registerSuccess) {
-    document.getElementById('regName').value = '';
-    document.getElementById('regEmail').value = '';
-    document.getElementById('regPassword').value = '';
-    if (document.getElementById('regConfirmPassword')) document.getElementById('regConfirmPassword').value = '';
+    if (nameInput) nameInput.value = '';
+    if (emailInput) emailInput.value = '';
+    if (passwordInput) passwordInput.value = '';
+    if (confirmPasswordInput) confirmPasswordInput.value = '';
     const regMsg = document.getElementById('regPwdMatchMsg');
     if (regMsg) regMsg.style.display = 'none';
 
-    document.getElementById('loginEmail').value = email;
-    document.getElementById('loginPassword').value = password;
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPass = document.getElementById('loginPassword');
+    if (loginEmail) loginEmail.value = email;
+    if (loginPass) loginPass.value = password;
 
     const banner = document.getElementById('newRegLogonBannerServer');
     const titleEl = document.getElementById('newRegLogonTitleServer');
@@ -6311,18 +6221,28 @@ document.getElementById('registerForm').onsubmit = async (e) => {
 
     showCustomAlert('Cadastro Realizado com Sucesso! 🎉', 'Conta cadastrada! Suas credenciais foram preenchidas no Logon para você entrar.', 'success', () => {
       window.switchAuthTab('login');
-      const submitBtn = document.getElementById('loginSubmitBtn');
-      if (submitBtn) submitBtn.focus();
+      const loginBtn = document.getElementById('loginSubmitBtn');
+      if (loginBtn) loginBtn.focus();
     });
   }
+  return false;
 };
 
+const registerFormElem = document.getElementById('registerForm') || document.getElementById('authRegisterForm');
+if (registerFormElem) {
+  registerFormElem.onsubmit = window.handleRegisterSubmit;
+}
+
 // Logout seguro sem deletar as credenciais persistidas
-document.getElementById('logoutBtn').onclick = async () => {
-  try { await saveUserData(); } catch(e){}
-  resetUserDataState();
-  currentUser = null;
-  isViewingOtherUser = false;
+const logoutButton = document.getElementById('logoutBtn');
+if (logoutButton) {
+  logoutButton.onclick = async () => {
+    try { await saveUserData(); } catch(e){}
+    resetUserDataState();
+    currentUser = null;
+    isViewingOtherUser = false;
+  };
+}
   adminOriginalUser = null;
   isDataLoading = false;
   localStorage.removeItem('nexus_session');
