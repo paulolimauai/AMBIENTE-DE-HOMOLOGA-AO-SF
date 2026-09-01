@@ -1446,20 +1446,15 @@
                         </p>
                     </div>
 
-                    <!-- NAVEGAÇÃO SEGMENTADA POR ABAS (3 ABAS: LOGIN, CADASTRO, USUÁRIOS) -->
+                    <!-- NAVEGAÇÃO SEGMENTADA POR ABAS -->
                     <div class="flex rounded-xl p-1 mb-5 gap-1" id="authTabsNav" style="background-color: var(--auth-tab-bg); border: 1px solid var(--auth-border);">
                         <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="switchAuthTab('login')">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                            <span>Entrar</span>
+                            <span>Entrar na Conta</span>
                         </button>
                         <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="switchAuthTab('register')">
                             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
                             <span>Criar Conta</span>
-                        </button>
-                        <button type="button" class="auth-tab-btn" id="tabBtnUsers" onclick="switchAuthTab('users')">
-                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            <span>Acessos</span>
-                            <span id="usersCountBadge" class="ml-1 px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold">0</span>
                         </button>
                     </div>
 

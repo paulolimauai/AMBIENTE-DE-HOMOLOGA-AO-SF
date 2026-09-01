@@ -822,9 +822,9 @@ body.light .glass-shard {
   border-right: 1.5px solid rgba(255, 255, 255, 0.18) !important;
   border-bottom: 1.5px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 32px;
-  padding: 40px 38px;
+  padding: 32px 30px;
   width: 100%;
-  max-width: 460px;
+  max-width: 450px;
   box-shadow: 
     0 35px 100px -10px rgba(0, 0, 0, 0.92),
     0 0 65px rgba(245, 158, 11, 0.28),
@@ -857,7 +857,7 @@ body.light .auth-card-nexus {
   -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
 }
 
-/* Layout Executivo 2 Colunas para o Login no server.js */
+/* Layout Executivo 2 Colunas para o Login no server.js (Split Harmonizado) */
 .auth-exec-layout {
   position: relative;
   z-index: 10;
@@ -866,9 +866,21 @@ body.light .auth-card-nexus {
   margin: auto;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 48px;
+  gap: 52px;
   align-items: center;
-  padding: 40px 20px;
+  justify-content: center;
+  padding: 24px 20px;
+  flex: 1;
+}
+
+.auth-global-footer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 20px 20px;
 }
 
 @media (max-width: 1024px) {
@@ -886,8 +898,9 @@ body.light .auth-card-nexus {
 .auth-showcase-panel {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 28px;
   text-align: left;
+  justify-content: center;
 }
 
 .auth-showcase-badge {
@@ -924,21 +937,21 @@ body.light .auth-card-nexus {
   font-size: 15px;
   color: #CBD5E1;
   line-height: 1.6;
-  max-width: 520px;
+  max-width: 530px;
 }
 
 .auth-showcase-metrics {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-top: 8px;
+  gap: 16px;
+  margin-top: 4px;
 }
 
 .auth-metric-card {
-  padding: 16px;
+  padding: 18px 16px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(20px);
   transition: all 0.25s ease;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -962,24 +975,24 @@ body.light .auth-metric-card {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .auth-logo-badge {
-  width: 68px;
-  height: 68px;
-  border-radius: 22px;
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
   background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 22%, #F59E0B 52%, #D97706 78%, #92400E 100%) !important;
   color: #030712 !important;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 30px;
+  font-size: 26px;
   font-family: 'Outfit', sans-serif;
   border: 2px solid rgba(255, 255, 255, 0.85) !important;
-  box-shadow: 0 16px 42px rgba(245, 158, 11, 0.70), 0 0 32px rgba(245, 158, 11, 0.50), inset 0 2.5px 4px #FFFFFF !important;
-  margin-bottom: 16px;
+  box-shadow: 0 14px 38px rgba(245, 158, 11, 0.70), 0 0 28px rgba(245, 158, 11, 0.50), inset 0 2.5px 4px #FFFFFF !important;
+  margin-bottom: 12px;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
@@ -1003,7 +1016,7 @@ body.light .auth-metric-card {
 
 .auth-title {
   font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
-  font-size: 24px;
+  font-size: 23px;
   font-weight: 900;
   color: #FFFFFF;
   letter-spacing: -0.01em;
@@ -1014,16 +1027,16 @@ body.light .auth-metric-card {
 }
 .auth-title span {
   color: #FBBF24;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 900;
   letter-spacing: 0.14em;
   text-shadow: 0 0 20px rgba(245, 158, 11, 0.85), 0 0 35px rgba(245, 158, 11, 0.45);
 }
 
 .auth-subtitle {
-  font-size: 13px;
+  font-size: 12.5px;
   color: #CBD5E1;
-  margin-top: 6px;
+  margin-top: 4px;
   font-weight: 500;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
@@ -1035,8 +1048,8 @@ body.light .auth-metric-card {
   border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.30) !important;
   border-radius: 18px !important;
-  padding: 6px !important;
-  margin-bottom: 24px;
+  padding: 5px !important;
+  margin-bottom: 18px;
   gap: 6px;
   box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55), 0 4px 16px rgba(0, 0, 0, 0.25) !important;
   backdrop-filter: blur(25px) !important;
@@ -1337,20 +1350,20 @@ body.light .auth-pass-toggle-btn:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  height: 50px;
-  padding: 0 20px;
+  height: 44px;
+  padding: 0 16px;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.32) 0%, rgba(30, 64, 175, 0.52) 50%, rgba(15, 23, 42, 0.85) 100%) !important;
   border: 1.5px solid rgba(147, 197, 253, 0.60) !important;
   border-top: 1.8px solid rgba(219, 234, 254, 0.85) !important;
-  border-radius: 16px !important;
+  border-radius: 14px !important;
   color: #DBEAFE !important;
-  font-size: 13.5px !important;
+  font-size: 12.5px !important;
   font-weight: 800 !important;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 26px rgba(59, 130, 246, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55), 0 0 24px rgba(59, 130, 246, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   backdrop-filter: blur(25px) !important;
   -webkit-backdrop-filter: blur(25px) !important;
@@ -4504,30 +4517,30 @@ body.light .scale-dropdown {
       </div>
 
       <!-- Ação de Ordem de Serviço (O.S. / Consulta) -->
-      <div style="margin-top:18px; width:100%;">
+      <div style="margin-top:14px; width:100%;">
         <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
           <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
         </button>
       </div>
-
-      <!-- Assinatura do Desenvolvedor -->
-      <div class="auth-dev-credit" style="margin-top:24px; padding-top:16px; border-top:1px solid var(--auth-border); text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;">
-        <div class="dev-signature" style="justify-content:center;">
-          <div class="dev-signature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="16 18 22 12 16 6"></polyline>
-              <polyline points="8 6 2 12 8 18"></polyline>
-            </svg>
-          </div>
-          <div class="dev-signature-text">
-            <span class="dev-signature-label">Desenvolvido por</span>
-            <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
+
+  <!-- Assinatura do Desenvolvedor no Rodapé Global da Autenticação -->
+  <footer class="auth-global-footer">
+    <div class="dev-signature" style="justify-content:center;">
+      <div class="dev-signature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+      </div>
+      <div class="dev-signature-text">
+        <span class="dev-signature-label">Desenvolvido por</span>
+        <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
+      </div>
+    </div>
+  </footer>
 </div>
 
 <!-- APLICAÇÃO PRINCIPAL -->
