@@ -845,27 +845,25 @@ body.light .glass-shard {
 }
 
 /* Card de Autenticação Ultra 4K Liquid Glass (Eye-Catching & Profissional) */
+/* Card de Autenticação Ultra 4K Liquid Glass (Ultra-HD Glassmorphism) */
 .auth-card-nexus {
   position: relative;
   z-index: 10;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(18, 30, 58, 0.65) 25%, rgba(10, 18, 38, 0.82) 65%, rgba(4, 9, 24, 0.95) 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
-  border-top: 2.5px solid rgba(255, 255, 255, 0.90) !important;
-  border-left: 2px solid rgba(255, 255, 255, 0.50) !important;
-  border-right: 1.5px solid rgba(255, 255, 255, 0.22) !important;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(15, 23, 42, 0.75) 35%, rgba(6, 11, 25, 0.90) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.40) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
   border-radius: 28px;
-  padding: clamp(16px, 2.2vh, 24px) clamp(16px, 2vw, 24px);
+  padding: clamp(18px, 2.4vh, 26px) clamp(18px, 2.2vw, 28px);
   width: 100%;
   max-width: 440px;
   box-shadow: 
-    0 40px 110px -10px rgba(0, 0, 0, 0.95),
-    0 0 75px rgba(245, 158, 11, 0.32),
-    0 0 100px rgba(56, 189, 248, 0.28),
-    inset 0 2px 4px rgba(255, 255, 255, 0.75),
-    inset 0 -2px 5px rgba(0, 0, 0, 0.65) !important;
-  backdrop-filter: blur(55px) saturate(260%);
-  -webkit-backdrop-filter: blur(55px) saturate(260%);
+    0 30px 80px -15px rgba(0, 0, 0, 0.85),
+    0 0 50px -10px rgba(245, 158, 11, 0.12),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.30),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(40px) saturate(190%);
+  -webkit-backdrop-filter: blur(40px) saturate(190%);
   animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
   overflow: hidden;
@@ -876,10 +874,10 @@ body.light .glass-shard {
   content: '';
   position: absolute;
   top: 0;
-  left: 5%;
-  right: 5%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), #FFFFFF 50%, rgba(253, 230, 138, 0.98) 65%, transparent);
+  left: 8%;
+  right: 8%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #FFFFFF 50%, rgba(253, 230, 138, 0.8) 65%, transparent);
   pointer-events: none;
   z-index: 3;
 }
@@ -889,23 +887,23 @@ body.light .glass-shard {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.16), transparent 70%);
+  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.12), transparent 70%);
   opacity: var(--card-glare-opacity, 0);
   transition: opacity 0.35s ease;
   z-index: 4;
 }
 
 body.light .auth-card-nexus {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
-  border-top: 2.5px solid #FFFFFF !important;
-  box-shadow: 0 30px 75px rgba(15, 23, 42, 0.16), 0 0 45px rgba(245, 158, 11, 0.18), inset 0 2px 5px #FFFFFF !important;
-  backdrop-filter: blur(45px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(45px) saturate(200%) !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  border-top: 1.5px solid #FFFFFF !important;
+  box-shadow: 0 25px 60px -10px rgba(15, 23, 42, 0.10), 0 0 30px -5px rgba(245, 158, 11, 0.08), inset 0 1px 1.5px #FFFFFF !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
 }
 
 body.light .auth-card-glare {
-  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(245, 158, 11, 0.15), transparent 70%) !important;
+  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(245, 158, 11, 0.10), transparent 70%) !important;
 }
 
 /* Layout Executivo 2 Colunas para o Login no server.js (Split Harmonizado) */
@@ -1113,66 +1111,71 @@ body.light .auth-showcase-footer span {
 }
 
 .auth-logo-badge {
-  width: 60px;
-  height: 60px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 22%, #F59E0B 52%, #D97706 78%, #92400E 100%) !important;
-  color: #030712 !important;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #FFFDF5 0%, #FDE68A 25%, #F59E0B 60%, #B45309 100%) !important;
+  color: #0F172A !important;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 26px;
+  font-size: 25px;
   font-family: 'Outfit', sans-serif;
-  border: 2px solid rgba(255, 255, 255, 0.85) !important;
-  box-shadow: 0 14px 38px rgba(245, 158, 11, 0.70), 0 0 28px rgba(245, 158, 11, 0.50), inset 0 2.5px 4px #FFFFFF !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+  box-shadow: 
+    0 10px 24px -4px rgba(217, 119, 6, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.35),
+    inset 0 2px 3px #FFFFFF,
+    inset 0 -2px 3px rgba(146, 64, 14, 0.45) !important;
   margin-bottom: 12px;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
 .auth-logo-badge:hover {
-  transform: scale(1.08) rotate(-3deg);
-  box-shadow: 0 20px 48px rgba(245, 158, 11, 0.85), 0 0 42px rgba(245, 158, 11, 0.65), inset 0 3px 5px #FFFFFF !important;
+  transform: scale(1.06) translateY(-2px);
+  box-shadow: 
+    0 14px 30px -4px rgba(217, 119, 6, 0.60),
+    0 4px 10px rgba(0, 0, 0, 0.40),
+    inset 0 2px 3px #FFFFFF !important;
 }
 .auth-logo-badge::after {
   content: '';
   position: absolute;
-  inset: -8px;
-  border-radius: 28px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.55) 0%, transparent 70%);
+  inset: -4px;
+  border-radius: 22px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.20) 0%, transparent 70%);
   z-index: -1;
-  animation: logoPulse 3s ease-in-out infinite alternate;
-}
-@keyframes logoPulse {
-  0% { transform: scale(0.95); opacity: 0.65; }
-  100% { transform: scale(1.12); opacity: 0.95; }
+  pointer-events: none;
 }
 
 .auth-title {
   font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
-  font-size: 23px;
+  font-size: 22px;
   font-weight: 900;
   color: #FFFFFF;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
   display: flex;
   align-items: center;
   gap: 8px;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 .auth-title span {
-  color: #FBBF24;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 35%, #F59E0B 75%, #D97706 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
   font-size: 13.5px;
   font-weight: 900;
-  letter-spacing: 0.14em;
-  text-shadow: 0 0 20px rgba(245, 158, 11, 0.85), 0 0 35px rgba(245, 158, 11, 0.45);
+  letter-spacing: 0.12em;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
 }
 
 .auth-subtitle {
   font-size: 12.5px;
-  color: #CBD5E1;
-  margin-top: 4px;
-  font-weight: 500;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  color: #94A3B8;
+  margin-top: 5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 body.light .auth-title {
@@ -1193,16 +1196,16 @@ body.light .auth-subtitle {
 /* Abas de Navegação Segmentada (Entrar / Criar Conta) */
 .auth-tabs-nav {
   display: flex;
-  background: rgba(6, 11, 25, 0.65) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.30) !important;
-  border-radius: 18px !important;
-  padding: 5px !important;
+  background: rgba(10, 16, 32, 0.60) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
+  border-radius: 14px !important;
+  padding: 4px !important;
   margin-bottom: 18px;
-  gap: 6px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55), 0 4px 16px rgba(0, 0, 0, 0.25) !important;
-  backdrop-filter: blur(25px) !important;
-  -webkit-backdrop-filter: blur(25px) !important;
+  gap: 4px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.40) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
 }
 
 body.light .auth-tabs-nav {
@@ -1212,29 +1215,29 @@ body.light .auth-tabs-nav {
 
 .auth-tab-btn {
   flex: 1;
-  padding: 10px 14px;
-  border-radius: 12px;
+  padding: 9px 12px;
+  border-radius: 10px;
   border: 1px solid transparent;
   background: transparent;
   color: #94A3B8;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 7px;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .auth-tab-btn:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
 }
 .auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.35) 0%, rgba(180, 83, 9, 0.25) 100%) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.15) 100%) !important;
   color: #FDE68A !important;
-  border: 1.5px solid rgba(245, 158, 11, 0.75) !important;
-  box-shadow: 0 4px 22px rgba(245, 158, 11, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.50) !important;
+  border: 1px solid rgba(245, 158, 11, 0.50) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
   font-weight: 800;
 }
 body.light .auth-tab-btn {
@@ -1252,35 +1255,33 @@ body.light .auth-tab-btn.active {
 
 /* Campos de Formulário Modernos com Ícones */
 .auth-field {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 .auth-field label {
   display: block;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 800;
-  color: #CBD5E1;
-  margin-bottom: 7px;
+  color: #94A3B8;
+  margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 body.light .auth-field label {
   color: #334155 !important;
-  text-shadow: none;
 }
 
 .auth-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(6, 12, 28, 0.75) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
-  border-radius: 16px !important;
-  backdrop-filter: blur(25px) !important;
-  -webkit-backdrop-filter: blur(25px) !important;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.08) !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(15, 23, 42, 0.50) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.06) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 body.light .auth-input-wrapper {
   background: #FFFFFF !important;
@@ -1289,20 +1290,20 @@ body.light .auth-input-wrapper {
 }
 
 .auth-input-wrapper:focus-within {
-  border-color: #F59E0B !important;
-  background: rgba(10, 20, 44, 0.85) !important;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.30), 0 0 30px rgba(245, 158, 11, 0.45), inset 0 2px 4px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255, 255, 255, 0.25) !important;
-  transform: translateY(-1.5px);
+  border-color: rgba(245, 158, 11, 0.80) !important;
+  background: rgba(15, 23, 42, 0.75) !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.16), 0 8px 20px -4px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-1px);
 }
 body.light .auth-input-wrapper:focus-within {
   background: #FFFFFF !important;
   border-color: #D97706 !important;
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.20), 0 0 20px rgba(217, 119, 6, 0.20) !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15), 0 6px 16px -2px rgba(15, 23, 42, 0.08) !important;
 }
 
 .auth-input-wrapper.highlight-glow {
   border-color: var(--auth-gold) !important;
-  box-shadow: 0 0 28px rgba(245, 158, 11, 0.6) !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important;
 }
 
 @keyframes authShake {
@@ -1313,7 +1314,7 @@ body.light .auth-input-wrapper:focus-within {
 
 .auth-input-wrapper.input-error {
   border-color: #EF4444 !important;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25), 0 0 20px rgba(239, 68, 68, 0.4) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.20), 0 6px 16px rgba(0, 0, 0, 0.4) !important;
   animation: authShake 0.35s ease;
 }
 
@@ -1326,28 +1327,31 @@ body.light .auth-input-wrapper:focus-within {
   border-radius: 14px;
   font-size: 13px;
   line-height: 1.45;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   animation: authShake 0.35s ease;
   transition: all 0.25s ease;
 }
 .auth-feedback-banner.error {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(185, 28, 28, 0.10) 100%) !important;
-  border: 1px solid rgba(248, 113, 113, 0.45) !important;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(153, 27, 27, 0.06) 100%) !important;
+  border: 1px solid rgba(248, 113, 113, 0.35) !important;
+  border-left: 3.5px solid #EF4444 !important;
   color: #FEE2E2 !important;
-  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
 }
 .auth-feedback-banner.warning {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(180, 83, 9, 0.10) 100%) !important;
-  border: 1px solid rgba(251, 191, 36, 0.45) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(180, 83, 9, 0.06) 100%) !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+  border-left: 3.5px solid #F59E0B !important;
   color: #FEF3C7 !important;
-  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
 }
 .auth-feedback-banner.success {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.10) 100%) !important;
-  border: 1px solid rgba(52, 211, 153, 0.45) !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.06) 100%) !important;
+  border: 1px solid rgba(52, 211, 153, 0.35) !important;
+  border-left: 3.5px solid #10B981 !important;
   color: #D1FAE5 !important;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
 }
 
 .auth-input-icon {
@@ -1465,20 +1469,24 @@ body.light .auth-pass-toggle-btn:hover {
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 44px;
+  height: 46px;
   padding: 0 20px;
-  background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 18%, #F59E0B 48%, #D97706 78%, #B45309 100%) !important;
-  color: #030712 !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
-  border-top: 2px solid #FFFFFF !important;
-  border-radius: 13px !important;
+  background: linear-gradient(135deg, #FFFDF5 0%, #FDE68A 18%, #F59E0B 50%, #D97706 82%, #B45309 100%) !important;
+  color: #0F172A !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  border-top: 1.5px solid #FFFFFF !important;
+  border-radius: 14px !important;
   font-weight: 900 !important;
   font-size: 14.5px !important;
   letter-spacing: 0.02em;
   cursor: pointer;
-  margin-top: 6px;
-  box-shadow: 0 12px 32px -4px rgba(245, 158, 11, 0.70), 0 0 26px rgba(245, 158, 11, 0.45), inset 0 2px 3px #FFFFFF !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 8px;
+  box-shadow: 
+    0 10px 24px -4px rgba(217, 119, 6, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.30),
+    inset 0 1.5px 2px #FFFFFF,
+    inset 0 -1.5px 2px rgba(180, 83, 9, 0.35) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1491,13 +1499,16 @@ body.light .auth-pass-toggle-btn:hover {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-  transition: left 0.6s ease;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.40), transparent);
+  transition: left 0.5s ease;
 }
 .btn-auth-primary:hover {
-  filter: brightness(1.10);
-  transform: translateY(-2.5px);
-  box-shadow: 0 20px 48px -4px rgba(245, 158, 11, 0.90), 0 0 42px rgba(245, 158, 11, 0.65), inset 0 2px 3px #FFFFFF !important;
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 14px 30px -4px rgba(217, 119, 6, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.35),
+    inset 0 1.5px 2px #FFFFFF !important;
 }
 .btn-auth-primary:hover::before {
   left: 100%;
@@ -1561,34 +1572,35 @@ body.light .auth-bottom-text a:hover {
   justify-content: center;
   gap: 8px;
   width: 100%;
-  height: 38px;
+  height: 40px;
   padding: 0 14px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.32) 0%, rgba(30, 64, 175, 0.52) 50%, rgba(15, 23, 42, 0.85) 100%) !important;
-  border: 1.5px solid rgba(147, 197, 253, 0.60) !important;
-  border-top: 1.8px solid rgba(219, 234, 254, 0.85) !important;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.18) 0%, rgba(15, 23, 42, 0.65) 100%) !important;
+  border: 1px solid rgba(96, 165, 250, 0.30) !important;
+  border-top: 1px solid rgba(191, 219, 254, 0.45) !important;
   border-radius: 12px !important;
-  color: #DBEAFE !important;
+  color: #BFDBFE !important;
   font-size: 12px !important;
   font-weight: 800 !important;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.3), inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  backdrop-filter: blur(25px) !important;
-  -webkit-backdrop-filter: blur(25px) !important;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  margin-top: 10px;
 }
 .btn-open-os:hover {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.48) 0%, rgba(37, 99, 235, 0.65) 50%, rgba(30, 58, 138, 0.95) 100%) !important;
-  border-color: rgba(191, 219, 254, 0.95) !important;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.30) 0%, rgba(15, 23, 42, 0.80) 100%) !important;
+  border-color: rgba(147, 197, 253, 0.55) !important;
   color: #FFFFFF !important;
-  transform: translateY(-2px);
-  box-shadow: 0 16px 42px rgba(59, 130, 246, 0.65), 0 0 38px rgba(96, 165, 250, 0.50), inset 0 1.5px 2px #FFFFFF !important;
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 20px -2px rgba(37, 99, 235, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
 }
 .btn-open-os svg {
   transition: transform 0.2s ease;
 }
 .btn-open-os:hover svg {
-  transform: scale(1.15);
+  transform: scale(1.12);
 }
 
 
@@ -6395,7 +6407,7 @@ window.handleLoginSubmit = async function(e) {
           'warning',
           'Usuário não cadastrado',
           'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + cleanEmail + '</strong>.',
-          '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(220,38,38,0.35) 100%); border:1px solid rgba(248,113,113,0.5); color:#FFFFFF; border-radius:8px; cursor:pointer;">Criar Conta com este E-mail →</button>'
+          '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(217,119,6,0.32) 100%); border:1px solid rgba(245,158,11,0.55); color:#FEF3C7; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Criar Conta com este E-mail →</button>'
         );
       } else if (data.errorType === 'invalid_password') {
         if (passWrap) passWrap.classList.add('input-error');
@@ -6408,7 +6420,7 @@ window.handleLoginSubmit = async function(e) {
           'error',
           'Senha incorreta',
           'A senha digitada está incorreta para este e-mail. Verifique se o Caps Lock está ativado ou recupere o acesso.',
-          '<button type="button" onclick="window.switchToForgotTab()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.35); color:#FFFFFF; border-radius:8px; cursor:pointer;">Esqueci Minha Senha →</button>'
+          '<button type="button" onclick="window.switchToForgotTab()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.30); color:#FFFFFF; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Esqueci Minha Senha →</button>'
         );
       } else if (data.errorType === 'user_inactive') {
         window.showAuthFeedback('login', 'error', 'Conta desativada', data.error || 'Seu usuário foi desativado pelo administrador.');
@@ -6460,7 +6472,7 @@ window.handleLoginSubmit = async function(e) {
       'warning',
       'Usuário não cadastrado',
       'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + cleanEmail + '</strong>.',
-      '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:700; background:linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(220,38,38,0.35) 100%); border:1px solid rgba(248,113,113,0.5); color:#FFFFFF; border-radius:8px; cursor:pointer;">Criar Conta com este E-mail →</button>'
+      '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(217,119,6,0.32) 100%); border:1px solid rgba(245,158,11,0.55); color:#FEF3C7; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Criar Conta com este E-mail →</button>'
     );
     if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
     return;
