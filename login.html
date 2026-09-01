@@ -159,15 +159,12 @@
             --auth-tab-bg: #EDF2F7;
             background-color: #F8FAFC !important;
             background-image: 
-                radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.10) 0px, transparent 50%),
-                radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
-                radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.06) 0px, transparent 50%),
-                linear-gradient(135deg, rgba(248, 250, 252, 0.92) 0%, rgba(241, 245, 249, 0.95) 50%, rgba(226, 232, 240, 0.96) 100%),
-                url('/images/nexus_financial_4k_real.jpg') !important;
-            background-size: auto, auto, auto, auto, cover !important;
+                radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+                radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.07) 0px, transparent 50%),
+                radial-gradient(at 50% 82%, rgba(16, 185, 129, 0.06) 0px, transparent 50%),
+                linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%) !important;
+            background-size: cover !important;
             background-position: center !important;
-            background-repeat: no-repeat !important;
-            background-attachment: fixed !important;
             color: #0F172A !important;
         }
 
@@ -182,17 +179,14 @@
             font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
             background-color: #030612;
             background-image: 
-                radial-gradient(at 12% 15%, rgba(56, 189, 248, 0.22) 0px, transparent 50%),
-                radial-gradient(at 88% 15%, rgba(99, 102, 241, 0.25) 0px, transparent 55%),
-                radial-gradient(at 50% 48%, rgba(245, 158, 11, 0.18) 0px, transparent 52%),
-                radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.18) 0px, transparent 50%),
-                radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.22) 0px, transparent 55%),
-                linear-gradient(180deg, rgba(3, 6, 18, 0.76) 0%, rgba(6, 12, 28, 0.84) 50%, rgba(2, 4, 12, 0.92) 100%),
-                url('/images/nexus_financial_4k_real.jpg');
-            background-size: auto, auto, auto, auto, auto, auto, cover;
+                radial-gradient(at 12% 15%, rgba(56, 189, 248, 0.16) 0px, transparent 50%),
+                radial-gradient(at 88% 15%, rgba(99, 102, 241, 0.18) 0px, transparent 55%),
+                radial-gradient(at 50% 48%, rgba(245, 158, 11, 0.12) 0px, transparent 52%),
+                radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.14) 0px, transparent 50%),
+                radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.16) 0px, transparent 55%),
+                linear-gradient(180deg, #030612 0%, #060C1C 50%, #02040C 100%);
+            background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
             color: var(--auth-text);
             min-height: 100vh;
             overflow-x: hidden;
@@ -1383,31 +1377,30 @@
     <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
 
     <!-- BARRA DE COTAÇÕES FINANCEIRAS EM TEMPO REAL (REALISTIC MARKET LIVE TICKER) -->
+    <!-- BARRA DE INDICADORES DE GESTÃO FINANCEIRA PESSOAL EM TEMPO REAL -->
     <div class="financial-ticker-bar w-full">
         <div class="ticker-track">
-            <div class="ticker-item"><span class="ticker-symbol">USD/BRL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">EUR/BRL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">IBOVESPA</span> <span class="ticker-val">134.850 pts</span> <span class="ticker-up">▲ +1.12%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">S&P 500</span> <span class="ticker-val">5.648 pts</span> <span class="ticker-up">▲ +0.72%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">BTC/USD</span> <span class="ticker-val">$64.280</span> <span class="ticker-up">▲ +2.45%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">CDI</span> <span class="ticker-cyan">10,65% a.a.</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">IPCA</span> <span class="ticker-val">+3,87%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">NASDAQ</span> <span class="ticker-val">17.820 pts</span> <span class="ticker-up">▲ +0.94%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">PETR4</span> <span class="ticker-val">R$ 38,40</span> <span class="ticker-up">▲ +1.60%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">VALE3</span> <span class="ticker-val">R$ 57,90</span> <span class="ticker-down">▼ -0.42%</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">TAXA SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">INFLAÇÃO (IPCA 12M)</span> <span class="ticker-val">+3,87%</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">CDI MENSAL</span> <span class="ticker-cyan">+0,86% a.m.</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">RENDIMENTO POUPANÇA</span> <span class="ticker-val">+0,58% a.m.</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">DÓLAR COMERCIAL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">EURO COMERCIAL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">SALÁRIO MÍNIMO NACIONAL</span> <span class="ticker-val">R$ 1.412,00</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">REGRA ORÇAMENTÁRIA</span> <span class="ticker-gold">50% Essenciais • 30% Estilo • 20% Poupança</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">RESERVA DE EMERGÊNCIA IDEAL</span> <span class="ticker-cyan">6x Custos Fixos Mensais</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">META DE POUPANÇA SAUDÁVEL</span> <span class="ticker-up">≥ 15% da Renda Líquida</span></div>
             <!-- Duplicação para rotação contínua 60fps -->
-            <div class="ticker-item"><span class="ticker-symbol">USD/BRL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">EUR/BRL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">IBOVESPA</span> <span class="ticker-val">134.850 pts</span> <span class="ticker-up">▲ +1.12%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">S&P 500</span> <span class="ticker-val">5.648 pts</span> <span class="ticker-up">▲ +0.72%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">BTC/USD</span> <span class="ticker-val">$64.280</span> <span class="ticker-up">▲ +2.45%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">CDI</span> <span class="ticker-cyan">10,65% a.a.</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">IPCA</span> <span class="ticker-val">+3,87%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">NASDAQ</span> <span class="ticker-val">17.820 pts</span> <span class="ticker-up">▲ +0.94%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">PETR4</span> <span class="ticker-val">R$ 38,40</span> <span class="ticker-up">▲ +1.60%</span></div>
-            <div class="ticker-item"><span class="ticker-symbol">VALE3</span> <span class="ticker-val">R$ 57,90</span> <span class="ticker-down">▼ -0.42%</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">TAXA SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">INFLAÇÃO (IPCA 12M)</span> <span class="ticker-val">+3,87%</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">CDI MENSAL</span> <span class="ticker-cyan">+0,86% a.m.</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">RENDIMENTO POUPANÇA</span> <span class="ticker-val">+0,58% a.m.</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">DÓLAR COMERCIAL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">EURO COMERCIAL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">SALÁRIO MÍNIMO NACIONAL</span> <span class="ticker-val">R$ 1.412,00</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">REGRA ORÇAMENTÁRIA</span> <span class="ticker-gold">50% Essenciais • 30% Estilo • 20% Poupança</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">RESERVA DE EMERGÊNCIA IDEAL</span> <span class="ticker-cyan">6x Custos Fixos Mensais</span></div>
+            <div class="ticker-item"><span class="ticker-symbol">META DE POUPANÇA SAUDÁVEL</span> <span class="ticker-up">≥ 15% da Renda Líquida</span></div>
         </div>
     </div>
 
@@ -3239,22 +3232,35 @@
             resize();
             window.addEventListener('resize', resize);
 
-            // 1. Simulação Realista de Candlesticks de Mercado Financeiro
-            const candleCount = 36;
-            const candles = [];
-            let currentPrice = 100;
-            for (let c = 0; c < candleCount; c++) {
-                const change = (Math.random() - 0.47) * 8;
-                const open = currentPrice;
-                const close = open + change;
-                const high = Math.max(open, close) + Math.random() * 4;
-                const low = Math.min(open, close) - Math.random() * 4;
-                currentPrice = close;
-                candles.push({ open, close, high, low, targetClose: close, vol: Math.random() * 50 + 20 });
-            }
+            // 1. Simulação de Evolução Patrimonial Pessoal ao Longo do Ano
+            const monthMilestones = [
+                { month: 'Jan', val: 12500 },
+                { month: 'Fev', val: 14800 },
+                { month: 'Mar', val: 16900 },
+                { month: 'Abr', val: 19400 },
+                { month: 'Mai', val: 22100 },
+                { month: 'Jun', val: 24700 },
+                { month: 'Jul', val: 27900 },
+                { month: 'Ago', val: 30800 },
+                { month: 'Set', val: 33400 },
+                { month: 'Out', val: 36200 },
+                { month: 'Nov', val: 39500 },
+                { month: 'Dez', val: 43800 }
+            ];
 
-            const badgeTexts = ['▲ +18.4%', '+$2.5k', '+12.8%', 'R$ 1.8M', '▲ +24.5%', '+$840', '+9.2%', 'R$ 350k', '▲ +31.2%', '+$4.1k'];
-            const currencyCoins = ['R$', '$', '€', '£', '₿'];
+            const badgeTexts = [
+                'Economia: +18% 🎯',
+                'Reserva: 100% 🛡️',
+                'Contas em Dia ✓',
+                'Orçamento: 85% 📊',
+                'Meta Concluída: 84% 🚀',
+                'Poupança: +R$ 1.500',
+                'Renda Sob Controle',
+                'Planejamento 2026',
+                'Saldo Positivo ↗',
+                'Sonhos em Andamento ✨'
+            ];
+            const currencyCoins = ['R$', '$', '€', '£'];
             const colors = ['#38BDF8', '#F59E0B', '#10B981', '#818CF8', '#FBBF24', '#60A5FA', '#34D399'];
 
             // 2. Elementos Financeiros Flutuantes com Profundidade
@@ -3320,80 +3326,91 @@
                 }
                 ctx.restore();
 
-                // B. Simulação de Gráfico de Candlesticks Reais na Base Superior/Inferior
-                tickCounter++;
-                if (tickCounter % 90 === 0) {
-                    const last = candles[candles.length - 1];
-                    const change = (Math.random() - 0.48) * 6;
-                    const open = last.close;
-                    const close = open + change;
-                    const high = Math.max(open, close) + Math.random() * 3.5;
-                    const low = Math.min(open, close) - Math.random() * 3.5;
-                    candles.shift();
-                    candles.push({ open, close, high, low, targetClose: close, vol: Math.random() * 50 + 20 });
-                }
+                // B. Curva Suave de Evolução Patrimonial Pessoal & Poupança Acumulada
+                const chartBaseY = height * 0.78;
+                const pointSpacing = width / (monthMilestones.length + 1);
+                const minVal = 10000;
+                const maxVal = 48000;
+                const range = maxVal - minVal;
 
-                const chartBaseY = height * 0.76;
-                const candleSpacing = width / (candleCount + 2);
-                const minPrice = Math.min(...candles.map(c => c.low));
-                const maxPrice = Math.max(...candles.map(c => c.high));
-                const priceRange = Math.max(maxPrice - minPrice, 10);
-
-                // Linha de Média Móvel Exponencial (Fita Dourada EMA)
+                // Área preenchida sob a curva
                 ctx.save();
                 ctx.beginPath();
-                const emaPoints = [];
-                candles.forEach((c, idx) => {
-                    const cx = (idx + 1) * candleSpacing;
-                    const cy = chartBaseY - ((c.close - minPrice) / priceRange) * 110;
-                    emaPoints.push({ x: cx, y: cy });
-                    if (idx === 0) ctx.moveTo(cx, cy);
-                    else ctx.lineTo(cx, cy);
+                ctx.moveTo(pointSpacing, height);
+                monthMilestones.forEach((m, idx) => {
+                    const cx = (idx + 1) * pointSpacing;
+                    const cy = chartBaseY - ((m.val - minVal) / range) * 95;
+                    if (idx === 0) ctx.lineTo(cx, cy);
+                    else {
+                        const prevX = idx * pointSpacing;
+                        const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
+                        const cpx = (prevX + cx) / 2;
+                        ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
+                    }
                 });
-                ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.65)' : 'rgba(245, 158, 11, 0.75)';
-                ctx.lineWidth = 2.2;
+                ctx.lineTo(monthMilestones.length * pointSpacing, height);
+                ctx.closePath();
+
+                const areaGrad = ctx.createLinearGradient(0, chartBaseY - 100, 0, height);
+                if (isLight) {
+                    areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.12)');
+                    areaGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
+                    areaGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                } else {
+                    areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
+                    areaGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.06)');
+                    areaGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
+                }
+                ctx.fillStyle = areaGrad;
+                ctx.fill();
+
+                // Linha Principal de Crescimento Financeiro (Verde Esmeralda e Dourado)
+                ctx.beginPath();
+                monthMilestones.forEach((m, idx) => {
+                    const cx = (idx + 1) * pointSpacing;
+                    const cy = chartBaseY - ((m.val - minVal) / range) * 95;
+                    if (idx === 0) ctx.moveTo(cx, cy);
+                    else {
+                        const prevX = idx * pointSpacing;
+                        const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
+                        const cpx = (prevX + cx) / 2;
+                        ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
+                    }
+                });
+                ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.75)' : 'rgba(16, 185, 129, 0.85)';
+                ctx.lineWidth = 2.4;
                 if (!isLight) {
-                    ctx.shadowColor = '#F59E0B';
-                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = '#10B981';
+                    ctx.shadowBlur = 10;
                 }
                 ctx.stroke();
-                ctx.restore();
 
-                // Renderização de Candlesticks Reais com Sombras e Pavios
-                candles.forEach((c, idx) => {
-                    const cx = (idx + 1) * candleSpacing;
-                    const isGreen = c.close >= c.open;
-                    const candleColor = isGreen ? (isLight ? '#059669' : '#10B981') : (isLight ? '#DC2626' : '#F43F5E');
+                // Marcadores Mensais com Nomes dos Meses
+                monthMilestones.forEach((m, idx) => {
+                    const cx = (idx + 1) * pointSpacing;
+                    const cy = chartBaseY - ((m.val - minVal) / range) * 95;
 
-                    const yOpen = chartBaseY - ((c.open - minPrice) / priceRange) * 110;
-                    const yClose = chartBaseY - ((c.close - minPrice) / priceRange) * 110;
-                    const yHigh = chartBaseY - ((c.high - minPrice) / priceRange) * 110;
-                    const yLow = chartBaseY - ((c.low - minPrice) / priceRange) * 110;
-
-                    ctx.save();
-                    ctx.globalAlpha = isLight ? 0.35 : 0.45;
-
-                    // Pavio (Wick)
+                    // Ponto
                     ctx.beginPath();
-                    ctx.moveTo(cx, yHigh);
-                    ctx.lineTo(cx, yLow);
-                    ctx.strokeStyle = candleColor;
-                    ctx.lineWidth = 1.3;
+                    ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+                    ctx.fillStyle = isLight ? '#047857' : '#34D399';
+                    ctx.fill();
+
+                    // Linha guia vertical sutil
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy + 4);
+                    ctx.lineTo(cx, cy + 16);
+                    ctx.strokeStyle = isLight ? 'rgba(100, 116, 139, 0.25)' : 'rgba(255, 255, 255, 0.12)';
+                    ctx.lineWidth = 1;
                     ctx.stroke();
 
-                    // Corpo (Body)
-                    const bodyTop = Math.min(yOpen, yClose);
-                    const bodyHeight = Math.max(Math.abs(yClose - yOpen), 3);
-                    ctx.fillStyle = candleColor;
-                    ctx.fillRect(cx - 3.5, bodyTop, 7, bodyHeight);
-
-                    // Barras de Volume Financeiro na base
-                    const volH = (c.vol / 70) * 35;
-                    ctx.globalAlpha = isLight ? 0.12 : 0.18;
-                    ctx.fillRect(cx - 3, height - volH - 10, 6, volH);
-
-                    ctx.restore();
+                    // Rótulo do Mês
+                    ctx.font = '700 9.5px "Outfit", sans-serif';
+                    ctx.fillStyle = isLight ? '#475569' : '#94A3B8';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(m.month, cx, cy + 28);
                 });
+                ctx.restore();
 
                 // C. Micro-Partículas de Poeira Luminosa
                 dustParticles.forEach(dp => {

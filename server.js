@@ -567,17 +567,14 @@ html, body {
   padding: 0 0 clamp(8px, 1.5vh, 18px) 0;
   background-color: #030612;
   background-image: 
-    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.22) 0px, transparent 50%),
-    radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.25) 0px, transparent 55%),
-    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.18) 0px, transparent 55%),
-    radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.18) 0px, transparent 50%),
-    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.22) 0px, transparent 55%),
-    linear-gradient(180deg, rgba(3, 6, 18, 0.76) 0%, rgba(6, 12, 28, 0.84) 50%, rgba(2, 4, 12, 0.92) 100%),
-    url('/images/nexus_financial_4k_real.jpg');
-  background-size: auto, auto, auto, auto, auto, auto, cover;
+    radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.16) 0px, transparent 50%),
+    radial-gradient(at 85% 15%, rgba(99, 102, 241, 0.18) 0px, transparent 55%),
+    radial-gradient(at 50% 50%, rgba(245, 158, 11, 0.12) 0px, transparent 55%),
+    radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.14) 0px, transparent 50%),
+    radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.16) 0px, transparent 55%),
+    linear-gradient(180deg, #030612 0%, #060C1C 50%, #02040C 100%);
+  background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 .auth-container.show { display: flex; }
 
@@ -691,15 +688,12 @@ body.light .auth-container {
   --auth-text-dim: #475569;
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.10) 0px, transparent 50%),
-    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 82%, rgba(245, 158, 11, 0.06) 0px, transparent 50%),
-    linear-gradient(135deg, rgba(248, 250, 252, 0.92) 0%, rgba(241, 245, 249, 0.95) 50%, rgba(226, 232, 240, 0.96) 100%),
-    url('/images/nexus_financial_4k_real.jpg') !important;
-  background-size: auto, auto, auto, auto, cover !important;
+    radial-gradient(at 12% 15%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+    radial-gradient(at 88% 18%, rgba(37, 99, 235, 0.07) 0px, transparent 50%),
+    radial-gradient(at 50% 82%, rgba(16, 185, 129, 0.06) 0px, transparent 50%),
+    linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 50%, #E2E8F0 100%) !important;
+  background-size: cover !important;
   background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
 }
 
 .auth-top-bar {
@@ -4968,31 +4962,30 @@ body.light .scale-dropdown {
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
   <!-- BARRA DE COTAÇÕES FINANCEIRAS EM TEMPO REAL (REALISTIC MARKET LIVE TICKER) -->
+  <!-- BARRA DE INDICADORES DE GESTÃO FINANCEIRA PESSOAL EM TEMPO REAL -->
   <div class="financial-ticker-bar w-full">
     <div class="ticker-track">
-      <div class="ticker-item"><span class="ticker-symbol">USD/BRL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">EUR/BRL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">IBOVESPA</span> <span class="ticker-val">134.850 pts</span> <span class="ticker-up">▲ +1.12%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">S&P 500</span> <span class="ticker-val">5.648 pts</span> <span class="ticker-up">▲ +0.72%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">BTC/USD</span> <span class="ticker-val">$64.280</span> <span class="ticker-up">▲ +2.45%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">CDI</span> <span class="ticker-cyan">10,65% a.a.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">IPCA</span> <span class="ticker-val">+3,87%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">NASDAQ</span> <span class="ticker-val">17.820 pts</span> <span class="ticker-up">▲ +0.94%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">PETR4</span> <span class="ticker-val">R$ 38,40</span> <span class="ticker-up">▲ +1.60%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">VALE3</span> <span class="ticker-val">R$ 57,90</span> <span class="ticker-down">▼ -0.42%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">TAXA SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">INFLAÇÃO (IPCA 12M)</span> <span class="ticker-val">+3,87%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">CDI MENSAL</span> <span class="ticker-cyan">+0,86% a.m.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">RENDIMENTO POUPANÇA</span> <span class="ticker-val">+0,58% a.m.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">DÓLAR COMERCIAL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">EURO COMERCIAL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">SALÁRIO MÍNIMO NACIONAL</span> <span class="ticker-val">R$ 1.412,00</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">REGRA ORÇAMENTÁRIA</span> <span class="ticker-gold">50% Essenciais • 30% Estilo • 20% Poupança</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">RESERVA DE EMERGÊNCIA IDEAL</span> <span class="ticker-cyan">6x Custos Fixos Mensais</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">META DE POUPANÇA SAUDÁVEL</span> <span class="ticker-up">≥ 15% da Renda Líquida</span></div>
       <!-- Duplicação para rotação contínua 60fps -->
-      <div class="ticker-item"><span class="ticker-symbol">USD/BRL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">EUR/BRL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">IBOVESPA</span> <span class="ticker-val">134.850 pts</span> <span class="ticker-up">▲ +1.12%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">S&P 500</span> <span class="ticker-val">5.648 pts</span> <span class="ticker-up">▲ +0.72%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">BTC/USD</span> <span class="ticker-val">$64.280</span> <span class="ticker-up">▲ +2.45%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">CDI</span> <span class="ticker-cyan">10,65% a.a.</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">IPCA</span> <span class="ticker-val">+3,87%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">NASDAQ</span> <span class="ticker-val">17.820 pts</span> <span class="ticker-up">▲ +0.94%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">PETR4</span> <span class="ticker-val">R$ 38,40</span> <span class="ticker-up">▲ +1.60%</span></div>
-      <div class="ticker-item"><span class="ticker-symbol">VALE3</span> <span class="ticker-val">R$ 57,90</span> <span class="ticker-down">▼ -0.42%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">TAXA SELIC</span> <span class="ticker-gold">10,75% a.a.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">INFLAÇÃO (IPCA 12M)</span> <span class="ticker-val">+3,87%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">CDI MENSAL</span> <span class="ticker-cyan">+0,86% a.m.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">RENDIMENTO POUPANÇA</span> <span class="ticker-val">+0,58% a.m.</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">DÓLAR COMERCIAL</span> <span class="ticker-val">R$ 5,42</span> <span class="ticker-up">▲ +0.35%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">EURO COMERCIAL</span> <span class="ticker-val">R$ 5,88</span> <span class="ticker-up">▲ +0.18%</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">SALÁRIO MÍNIMO NACIONAL</span> <span class="ticker-val">R$ 1.412,00</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">REGRA ORÇAMENTÁRIA</span> <span class="ticker-gold">50% Essenciais • 30% Estilo • 20% Poupança</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">RESERVA DE EMERGÊNCIA IDEAL</span> <span class="ticker-cyan">6x Custos Fixos Mensais</span></div>
+      <div class="ticker-item"><span class="ticker-symbol">META DE POUPANÇA SAUDÁVEL</span> <span class="ticker-up">≥ 15% da Renda Líquida</span></div>
     </div>
   </div>
 
@@ -14092,7 +14085,7 @@ if (scaleMenuBtn && scaleDropdown) {
   setInterval(updateClock, 1000);
 })();
 
-// Animação de Fundo Financeira 4K Ultra-HD (Badges de Lucro, Moedas, Candlesticks, Constelação & Física de Cursor)
+// Engine de Simulação Financeira 4K Ultra-HD (Candlesticks Reais de Mercado, Fitas EMA, Moedas & Física de Cursor)
 (function initFinancialCanvasEngine() {
   function setupCanvas(canvasId) {
     const canvas = document.getElementById(canvasId);
@@ -14128,15 +14121,42 @@ if (scaleMenuBtn && scaleDropdown) {
     resize();
     window.addEventListener('resize', resize);
 
-    const badgeTexts = ['▲ +18.4%', '+$2.5k', '+12.8%', 'R$ 1.8M', '▲ +24.5%', '+$840', '+9.2%', 'R$ 350k', '▲ +31.2%', '+$4.1k'];
-    const currencyCoins = ['R$', '$', '€', '£', '₿'];
-    const colors = ['#38BDF8', '#F59E0B', '#34D399', '#818CF8', '#FBBF24', '#60A5FA', '#A78BFA', '#F43F5E'];
+    // 1. Simulação de Evolução Patrimonial Pessoal ao Longo do Ano
+    const monthMilestones = [
+      { month: 'Jan', val: 12500 },
+      { month: 'Fev', val: 14800 },
+      { month: 'Mar', val: 16900 },
+      { month: 'Abr', val: 19400 },
+      { month: 'Mai', val: 22100 },
+      { month: 'Jun', val: 24700 },
+      { month: 'Jul', val: 27900 },
+      { month: 'Ago', val: 30800 },
+      { month: 'Set', val: 33400 },
+      { month: 'Out', val: 36200 },
+      { month: 'Nov', val: 39500 },
+      { month: 'Dez', val: 43800 }
+    ];
 
-    // 1. Elementos Financeiros Flutuantes
+    const badgeTexts = [
+      'Economia: +18% 🎯',
+      'Reserva: 100% 🛡️',
+      'Contas em Dia ✓',
+      'Orçamento: 85% 📊',
+      'Meta Concluída: 84% 🚀',
+      'Poupança: +R$ 1.500',
+      'Renda Sob Controle',
+      'Planejamento 2026',
+      'Saldo Positivo ↗',
+      'Sonhos em Andamento ✨'
+    ];
+    const currencyCoins = ['R$', '$', '€', '£'];
+    const colors = ['#38BDF8', '#F59E0B', '#10B981', '#818CF8', '#FBBF24', '#60A5FA', '#34D399'];
+
+    // 2. Elementos Financeiros Flutuantes com Profundidade
     const items = [];
     const itemCount = 38;
     for (let i = 0; i < itemCount; i++) {
-      const kind = i % 3;
+      const kind = i % 2;
       items.push({
         kind: kind,
         x: Math.random() * width,
@@ -14148,13 +14168,11 @@ if (scaleMenuBtn && scaleDropdown) {
         vx: (Math.random() - 0.5) * 0.35,
         baseAlpha: Math.random() * 0.45 + 0.35,
         pulseSpeed: Math.random() * 0.02 + 0.008,
-        pulse: Math.random() * Math.PI * 2,
-        candleHeight: Math.floor(Math.random() * 22) + 14,
-        candleGreen: Math.random() > 0.3
+        pulse: Math.random() * Math.PI * 2
       });
     }
 
-    // 2. Micro-Partículas de Poeira Estelar / Bokeh Luminoso 4K
+    // 3. Partículas de Poeira Luminosa (Bokeh 4K)
     const dustParticles = [];
     const dustCount = 45;
     for (let d = 0; d < dustCount; d++) {
@@ -14172,32 +14190,119 @@ if (scaleMenuBtn && scaleDropdown) {
     }
 
     let waveOffset = 0;
+    let tickCounter = 0;
 
     function render() {
       ctx.clearRect(0, 0, width, height);
       const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
 
-      // Suavização do Mouse com Inércia
+      // Inércia suave do cursor
       mouse.x += (mouse.targetX - mouse.x) * 0.08;
       mouse.y += (mouse.targetY - mouse.y) * 0.08;
 
       // A. Grid Terminal Financeiro com Pontos de Mira (+)
       const step = 65;
       ctx.save();
-      ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.035)' : 'rgba(255, 255, 255, 0.04)';
+      ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.035)' : 'rgba(255, 255, 255, 0.035)';
       ctx.lineWidth = 1;
       for (let gx = step; gx < width; gx += step) {
         for (let gy = step; gy < height; gy += step) {
           ctx.beginPath();
           ctx.moveTo(gx - 3.5, gy); ctx.lineTo(gx + 3.5, gy);
-          ctx.moveTo(gx, gy - 3.5); ctx.lineTo(gx, gy + 3.5);
+          ctx.moveTo(gx, gy - 3.5); ctx.lineTo(gx + 3.5, gy);
           ctx.stroke();
         }
       }
       ctx.restore();
 
-      // B. Micro-Partículas de Poeira Estelar Luminosa
-      dustParticles.forEach(dp => {
+      // B. Curva Suave de Evolução Patrimonial Pessoal & Poupança Acumulada
+      const chartBaseY = height * 0.78;
+      const pointSpacing = width / (monthMilestones.length + 1);
+      const minVal = 10000;
+      const maxVal = 48000;
+      const range = maxVal - minVal;
+
+      // Área preenchida sob a curva
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(pointSpacing, height);
+      monthMilestones.forEach(function(m, idx) {
+        const cx = (idx + 1) * pointSpacing;
+        const cy = chartBaseY - ((m.val - minVal) / range) * 95;
+        if (idx === 0) ctx.lineTo(cx, cy);
+        else {
+          const prevX = idx * pointSpacing;
+          const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
+          const cpx = (prevX + cx) / 2;
+          ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
+        }
+      });
+      ctx.lineTo(monthMilestones.length * pointSpacing, height);
+      ctx.closePath();
+
+      const areaGrad = ctx.createLinearGradient(0, chartBaseY - 100, 0, height);
+      if (isLight) {
+        areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.12)');
+        areaGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
+        areaGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      } else {
+        areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
+        areaGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.06)');
+        areaGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
+      }
+      ctx.fillStyle = areaGrad;
+      ctx.fill();
+
+      // Linha Principal de Crescimento Financeiro (Verde Esmeralda e Dourado)
+      ctx.beginPath();
+      monthMilestones.forEach(function(m, idx) {
+        const cx = (idx + 1) * pointSpacing;
+        const cy = chartBaseY - ((m.val - minVal) / range) * 95;
+        if (idx === 0) ctx.moveTo(cx, cy);
+        else {
+          const prevX = idx * pointSpacing;
+          const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
+          const cpx = (prevX + cx) / 2;
+          ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
+        }
+      });
+      ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.75)' : 'rgba(16, 185, 129, 0.85)';
+      ctx.lineWidth = 2.4;
+      if (!isLight) {
+        ctx.shadowColor = '#10B981';
+        ctx.shadowBlur = 10;
+      }
+      ctx.stroke();
+
+      // Marcadores Mensais com Nomes dos Meses
+      monthMilestones.forEach(function(m, idx) {
+        const cx = (idx + 1) * pointSpacing;
+        const cy = chartBaseY - ((m.val - minVal) / range) * 95;
+
+        // Ponto
+        ctx.beginPath();
+        ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = isLight ? '#047857' : '#34D399';
+        ctx.fill();
+
+        // Linha guia vertical sutil
+        ctx.beginPath();
+        ctx.moveTo(cx, cy + 4);
+        ctx.lineTo(cx, cy + 16);
+        ctx.strokeStyle = isLight ? 'rgba(100, 116, 139, 0.25)' : 'rgba(255, 255, 255, 0.12)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Rótulo do Mês
+        ctx.font = '700 9.5px "Outfit", sans-serif';
+        ctx.fillStyle = isLight ? '#475569' : '#94A3B8';
+        ctx.textAlign = 'center';
+        ctx.fillText(m.month, cx, cy + 28);
+      });
+      ctx.restore();
+
+      // C. Micro-Partículas de Poeira Luminosa
+      dustParticles.forEach(function(dp) {
         dp.y += dp.vy;
         dp.x += dp.vx + Math.sin(dp.y * 0.005) * 0.15;
         dp.pulse += dp.pulseSpeed;
@@ -14219,78 +14324,60 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.restore();
       });
 
-      // C. Onda Financeira Secundária de Fundo (Índigo Real / Safira)
-      waveOffset += 0.009;
-      const waveY = height * 0.74;
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(0, height);
-      ctx.lineTo(0, waveY + 24);
-      for (let x = 0; x <= width; x += 25) {
-        const y = waveY + 24 + Math.sin(x * 0.003 - waveOffset * 0.7) * 45;
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(width, height);
-      ctx.closePath();
-      ctx.fillStyle = isLight ? 'rgba(99, 102, 241, 0.04)' : 'rgba(99, 102, 241, 0.09)';
-      ctx.fill();
-      ctx.restore();
-
       // D. Onda Financeira Principal (Ciano Elétrico & Safira Lucro Mercado)
+      waveOffset += 0.009;
+      const waveY = height * 0.78;
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(0, height);
       ctx.lineTo(0, waveY);
       const wavePoints = [];
       for (let x = 0; x <= width; x += 20) {
-        const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
+        const y = waveY + Math.sin(x * 0.004 + waveOffset) * 32 + Math.cos(x * 0.008 - waveOffset * 0.5) * 18;
         ctx.lineTo(x, y);
         if (x % 160 === 0) wavePoints.push({ x: x, y: y });
       }
       ctx.lineTo(width, height);
       ctx.closePath();
 
-      const waveGrad = ctx.createLinearGradient(0, waveY - 50, 0, height);
+      const waveGrad = ctx.createLinearGradient(0, waveY - 40, 0, height);
       if (isLight) {
-        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.18)');
-        waveGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.06)');
+        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.14)');
+        waveGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.05)');
         waveGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
       } else {
-        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.28)');
-        waveGrad.addColorStop(0.45, 'rgba(59, 130, 246, 0.14)');
-        waveGrad.addColorStop(0.8, 'rgba(30, 58, 138, 0.05)');
+        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.22)');
+        waveGrad.addColorStop(0.45, 'rgba(59, 130, 246, 0.10)');
         waveGrad.addColorStop(1, 'rgba(2, 4, 10, 0)');
       }
       ctx.fillStyle = waveGrad;
       ctx.fill();
 
-      // Linha de Contorno Ciano Elétrico com Sombra Neon
+      // Linha de Contorno Ciano
       ctx.beginPath();
       for (let x = 0; x <= width; x += 20) {
-        const y = waveY + Math.sin(x * 0.004 + waveOffset) * 38 + Math.cos(x * 0.008 - waveOffset * 0.5) * 22;
+        const y = waveY + Math.sin(x * 0.004 + waveOffset) * 32 + Math.cos(x * 0.008 - waveOffset * 0.5) * 18;
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = isLight ? 'rgba(14, 165, 233, 0.85)' : 'rgba(56, 189, 248, 0.95)';
-      ctx.lineWidth = 2.6;
-      ctx.shadowColor = '#38BDF8';
-      ctx.shadowBlur = isLight ? 8 : 22;
+      ctx.strokeStyle = isLight ? 'rgba(14, 165, 233, 0.75)' : 'rgba(56, 189, 248, 0.85)';
+      ctx.lineWidth = 2.4;
       ctx.stroke();
       ctx.restore();
 
-      // Nódulos de Pico com Indicadores ▲ Luminous Ciano
-      wavePoints.forEach(pt => {
+      // Nódulos de Pico com Indicadores ▲
+      wavePoints.forEach(function(pt) {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 4.5, 0, Math.PI * 2);
+        ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
         ctx.fillStyle = '#38BDF8';
         ctx.shadowColor = '#38BDF8';
-        ctx.shadowBlur = 14;
+        ctx.shadowBlur = 12;
         ctx.fill();
 
         ctx.font = '800 10px "Outfit", sans-serif';
         ctx.fillStyle = '#7DD3FC';
-        ctx.fillText('▲', pt.x - 3.5, pt.y - 8);
+        ctx.fillText('▲', pt.x - 3.5, pt.y - 7);
         ctx.restore();
       });
 
@@ -14304,7 +14391,6 @@ if (scaleMenuBtn && scaleDropdown) {
             const force = (1 - mdist / 160) * 1.5;
             items[i].x += (mdx / mdist) * force;
             items[i].y += (mdy / mdist) * force;
-
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(items[i].x, items[i].y);
@@ -14316,21 +14402,20 @@ if (scaleMenuBtn && scaleDropdown) {
             ctx.restore();
           }
         }
-
         for (let j = i + 1; j < items.length; j++) {
           const dx = items[i].x - items[j].x;
           const dy = items[i].y - items[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 135) {
+          if (dist < 130) {
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(items[i].x, items[i].y);
             ctx.lineTo(items[j].x, items[j].y);
-            const connAlpha = (1 - dist / 135) * 0.22;
+            const connAlpha = (1 - dist / 130) * 0.20;
             ctx.strokeStyle = isLight 
               ? 'rgba(14, 165, 233, ' + connAlpha + ')' 
-              : 'rgba(56, 189, 248, ' + (connAlpha * 1.35) + ')';
+              : 'rgba(56, 189, 248, ' + (connAlpha * 1.25) + ')';
             ctx.lineWidth = 1;
             ctx.stroke();
             ctx.restore();
@@ -14338,17 +14423,14 @@ if (scaleMenuBtn && scaleDropdown) {
         }
       }
 
-      // F. Renderização de Elementos Financeiros Profissionais (Badges, Moedas & Candlesticks)
-      items.forEach(it => {
+      // F. Renderização de Elementos Financeiros Flutuantes (Badges de Lucro & Moedas)
+      items.forEach(function(it) {
         it.y += it.vy;
         it.x += it.vx + Math.sin(it.y * 0.008) * 0.25;
         it.pulse += it.pulseSpeed;
         const currentAlpha = Math.max(0.25, Math.min(0.95, it.baseAlpha + Math.sin(it.pulse) * 0.25));
 
-        if (it.y < -40) {
-          it.y = height + 40;
-          it.x = Math.random() * width;
-        }
+        if (it.y < -40) { it.y = height + 40; it.x = Math.random() * width; }
         if (it.x < -40) it.x = width + 40;
         if (it.x > width + 40) it.x = -40;
 
@@ -14356,88 +14438,48 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.translate(it.x, it.y);
 
         if (it.kind === 0) {
-          // TYPE 0: BADGE DE LUCRO GLASSMORPHIC (Ex: "▲ +18.4%")
           ctx.font = '700 11px "Outfit", "Plus Jakarta Sans", sans-serif';
           const textWidth = ctx.measureText(it.text).width;
-          const padX = 9;
-          const padY = 4;
-          const rw = textWidth + padX * 2;
-          const rh = 21;
-
+          const padX = 9, padY = 4, rw = textWidth + padX * 2, rh = 21;
           ctx.beginPath();
           ctx.roundRect(-rw/2, -rh/2, rw, rh, 10);
           ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.90)' : 'rgba(13, 18, 32, 0.80)';
           ctx.globalAlpha = currentAlpha;
           ctx.fill();
-
           ctx.strokeStyle = it.color;
           ctx.lineWidth = 1.2;
-          if (!isLight) {
-            ctx.shadowColor = it.color;
-            ctx.shadowBlur = 8;
-          }
           ctx.stroke();
-
           ctx.fillStyle = it.color;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(it.text, 0, 1);
-
-        } else if (it.kind === 1) {
-          // TYPE 1: MOEDA DE CRIPTO/CAMBIO GLASS (Ex: "R$", "$", "€")
+        } else {
           const radius = 13.5;
           ctx.beginPath();
           ctx.arc(0, 0, radius, 0, Math.PI * 2);
           ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.90)' : 'rgba(15, 23, 42, 0.80)';
           ctx.globalAlpha = currentAlpha;
           ctx.fill();
-
           ctx.strokeStyle = it.color;
           ctx.lineWidth = 1.4;
-          if (!isLight) {
-            ctx.shadowColor = it.color;
-            ctx.shadowBlur = 10;
-          }
           ctx.stroke();
-
           ctx.font = '800 11px "Outfit", sans-serif';
           ctx.fillStyle = it.color;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(it.text, 0, 1);
-
-        } else {
-          // TYPE 2: CANDLESTICK DE TRADING PROFISSIONAL
-          const color = it.candleGreen ? '#10B981' : '#F43F5E';
-          const h = it.candleHeight;
-          ctx.globalAlpha = isLight ? currentAlpha * 0.75 : currentAlpha * 0.90;
-
-          // Pavio / Wick
-          ctx.beginPath();
-          ctx.moveTo(0, -h/2 - 4);
-          ctx.lineTo(0, h/2 + 4);
-          ctx.strokeStyle = color;
-          ctx.lineWidth = 1.3;
-          ctx.stroke();
-
-          // Corpo / Body
-          ctx.fillStyle = color;
-          ctx.fillRect(-3, -h/2, 6, h);
         }
-
         ctx.restore();
       });
-
       requestAnimationFrame(render);
     }
-
     render();
   }
 
   setupCanvas('authBgCanvas');
   setupCanvas('appBgOrbitalCanvas');
+})();
 
-  // Engine de Efeito 3D Tilt & Brilho Especular Dinâmico no server.js
   (function initServer3DCardTilt() {
     const card = document.getElementById('serverAuthNexusCard');
     const glare = document.getElementById('serverAuthCardGlare');
@@ -14448,17 +14490,20 @@ if (scaleMenuBtn && scaleDropdown) {
     window.addEventListener('resize', updateBounds);
     window.addEventListener('scroll', updateBounds);
 
-    card.addEventListener('mouseenter', () => {
+    card.addEventListener('mouseenter', function() {
       updateBounds();
       if (glare) glare.style.setProperty('--card-glare-opacity', '1');
     });
 
-    card.addEventListener('mousemove', (e) => {
+    card.addEventListener('mousemove', function(e) {
       if (!bounds) updateBounds();
       const x = e.clientX - bounds.left;
       const y = e.clientY - bounds.top;
       const centerX = bounds.width / 2;
       const centerY = bounds.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -5.5;
+      const rotateY = ((x - centerX) / centerX) * 5.5;
 
       card.style.transform = 'perspective(1200px) rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg) translateY(-2px)';
       if (glare) {
@@ -14467,12 +14512,11 @@ if (scaleMenuBtn && scaleDropdown) {
       }
     });
 
-    card.addEventListener('mouseleave', () => {
+    card.addEventListener('mouseleave', function() {
       card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0px)';
       if (glare) glare.style.setProperty('--card-glare-opacity', '0');
     });
   })();
-})();
 </script>
 </body>
 </html>`;
