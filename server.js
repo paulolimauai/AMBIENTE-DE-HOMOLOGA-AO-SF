@@ -6971,22 +6971,8 @@ const BASE_CATEGORIES = [
   {name:'Outras Receitas', color:'#8a93a3', type:'receita', icon:'💰'}
 ];
 
-const DEFAULT_ACCOUNTS = [
-  { id: 1, name: 'AMAZON', type: 'Cartão de Crédito', balance: '2000.00', limit: '2000.00', color: '#ff9900', isCard: true, isCreditCard: true },
-  { id: 2, name: 'DIGIO', type: 'Cartão de Crédito', balance: '4100.00', limit: '4100.00', color: '#1b2d4f', isCard: true, isCreditCard: true },
-  { id: 3, name: 'Nubank', type: 'Cartão de Crédito', balance: '2100.00', limit: '2100.00', color: '#820ad1', isCard: true, isCreditCard: true },
-  { id: 4, name: 'Dinheiro em Espécie', type: 'Conta Corrente', balance: '3335.00', limit: '0', color: '#10b981', isCard: false, isCreditCard: false }
-];
-
-const DEFAULT_TRANSACTIONS = [
-  { id: 1, desc: 'Salário', val: 3335.00, date: '2026-08-30', cat: 'Salário', status: 'Pendente', type: 'in', acc: 'Dinheiro em Espécie', accId: 4 },
-  { id: 2, desc: 'Nubank', val: 1149.14, date: '2026-08-30', cat: 'Cartão de Crédito', status: 'Pendente', type: 'out', acc: 'Nubank', accId: 3 },
-  { id: 3, desc: 'Digio', val: 1024.54, date: '2026-08-30', cat: 'Cartão de Crédito', status: 'Pendente', type: 'out', acc: 'DIGIO', accId: 2 },
-  { id: 4, desc: 'Cartão Mãe', val: 300.00, date: '2026-08-30', cat: 'Boleto', status: 'Pendente', type: 'out', acc: 'Boleto / Pix / Outros', accId: null },
-  { id: 5, desc: 'Internet', val: 65.00, date: '2026-08-30', cat: 'Boleto', status: 'Pendente', type: 'out', acc: 'Boleto / Pix / Outros', accId: null },
-  { id: 6, desc: 'Digio', val: 141.64, date: '2026-09-13', cat: 'Cartão de Crédito', status: 'Pendente', type: 'out', acc: 'DIGIO', accId: 2 },
-  { id: 7, desc: 'Digio', val: 141.64, date: '2026-10-30', cat: 'Cartão de Crédito', status: 'Pendente', type: 'out', acc: 'DIGIO', accId: 2 }
-];
+const DEFAULT_ACCOUNTS = [];
+const DEFAULT_TRANSACTIONS = [];
 
 function isCurrentAdmin() {
   if (!currentUser) return false;
@@ -6997,17 +6983,10 @@ function isCurrentAdmin() {
 
 function resetUserDataState() {
   categories = BASE_CATEGORIES.map(c => ({ ...c, count: 0 }));
-  if (isCurrentAdmin()) {
-    accounts = JSON.parse(JSON.stringify(DEFAULT_ACCOUNTS));
-    transactions = JSON.parse(JSON.stringify(DEFAULT_TRANSACTIONS));
-    nextAccId = 10;
-    nextTxId = 10;
-  } else {
-    accounts = [];
-    transactions = [];
-    nextAccId = 1;
-    nextTxId = 1;
-  }
+  accounts = [];
+  transactions = [];
+  nextAccId = 1;
+  nextTxId = 1;
   budgets = [];
   goals = [];
   recurringList = [];
@@ -7185,6 +7164,16 @@ async function loadUserData() {
   
   // 1. Reset state e carrega dados do cache local do próprio usuário se existir
   let localData = loadFromStorage(userKey, null);
+  if (localData && Array.isArray(localData.transactions)) {
+    const isMock = localData.transactions.some(t => t.desc === 'Salário' && t.val === 3335 && (t.acc === 'Dinheiro em Espécie' || t.accId === 4));
+    if (isMock) {
+      localData.transactions = [];
+      if (Array.isArray(localData.accounts) && localData.accounts.some(a => a.name === 'AMAZON' || a.name === 'DIGIO')) {
+        localData.accounts = [];
+      }
+      saveToStorage(userKey, localData);
+    }
+  }
   if (localData) {
     applyDataPayload(localData);
     isDataLoading = false;
@@ -8261,7 +8250,6 @@ function getPendingBillsSummary() {
     const d = dParts.length === 3 ? new Date(parseInt(dParts[0]), parseInt(dParts[1]) - 1, parseInt(dParts[2])) : new Date(t.date);
     d.setHours(0,0,0,0);
     const diffDays = Math.round((d - today) / (1000 * 60 * 60 * 24));
-    // Mostrar apenas contas VENCIDAS (diffDays < 0) ou a vencer nos próximos 3 DIAS (diffDays <= 3)
     return diffDays <= 3;
   });
 
@@ -8328,9 +8316,11 @@ function pageDashboard(){
   const periodTx = transactions.filter(inPeriod);
   const {receitas,despesas,saldo} = computeTotals(periodTx);
   const cats = despesasPorCategoria(periodTx);
-  const totalDesp = cats.reduce((s,c)=>s+c.val,0)||1;
-  const recPct = Math.round(receitas/(receitas+despesas||1)*100) || 0;
-  const despPct = 100-recPct;
+  const actualTotalDesp = cats.reduce((s,c)=>s+c.val,0);
+  const totalDesp = actualTotalDesp || 1;
+  const totalFluxo = receitas + despesas;
+  const recPct = totalFluxo > 0 ? Math.round((receitas / totalFluxo) * 100) : 0;
+  const despPct = totalFluxo > 0 ? (100 - recPct) : 0;
   const resultado = receitas - despesas;
   const savingsPct = receitas > 0 ? Math.max(0, Math.round((resultado / receitas) * 100)) : 0;
   const commitPct = receitas > 0 ? Math.min(100, Math.round((despesas / receitas) * 100)) : (despesas > 0 ? 100 : 0);
@@ -8395,7 +8385,7 @@ function pageDashboard(){
         <span>Receitas</span>
         <span class="ic" style="background:rgba(16,185,129,0.14); color:var(--green); border-color:rgba(16,185,129,0.25);">↑</span>
       </div>
-      <div class="val" data-anim-val="\${receitas}" data-prefix="+" style="color:var(--green); font-variant-numeric:tabular-nums;">+\${fmt(receitas)}</div>
+      <div class="val" data-anim-val="\${receitas}" data-prefix="\${receitas > 0 ? '+' : ''}" style="color:var(--green); font-variant-numeric:tabular-nums;">\${receitas > 0 ? '+' : ''}\${fmt(receitas)}</div>
       <div class="sub up">↑ Entradas em \${periodLabel()}</div>
     </div>
 
@@ -8405,7 +8395,7 @@ function pageDashboard(){
         <span>Despesas</span>
         <span class="ic" style="background:rgba(239,68,68,0.14); color:var(--red); border-color:rgba(239,68,68,0.25);">↓</span>
       </div>
-      <div class="val" data-anim-val="\${despesas}" data-prefix="-" style="color:var(--red); font-variant-numeric:tabular-nums;">-\${fmt(despesas)}</div>
+      <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:var(--red); font-variant-numeric:tabular-nums;">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
       <div class="sub" style="color:var(--red);">↓ Saídas em \${periodLabel()}</div>
     </div>
 
@@ -8417,7 +8407,7 @@ function pageDashboard(){
       </div>
       <div class="val" data-anim-val="\${receitas-despesas}" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(receitas-despesas)}</div>
       <div class="sub" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}">
-        \${(receitas-despesas) >= 0 ? '✓ Superávit Operacional' : '⚠ Déficit no Período'}
+        \${(receitas-despesas) > 0 ? '✓ Superávit Operacional' : (receitas-despesas) < 0 ? '⚠ Déficit no Período' : '✓ Balanço Equilibrado'}
       </div>
     </div>
 
@@ -8582,7 +8572,7 @@ function pageDashboard(){
               <span style="width:6px; height:6px; border-radius:50%; background:var(--red); display:inline-block;"></span>
             </span>
           </div>
-          <div class="bar-split" style="height:6.5px; border-radius:6px; overflow:hidden; background:rgba(239,68,68,0.3); box-shadow:inset 0 1px 2px rgba(0,0,0,0.3); display:flex;">
+          <div class="bar-split" style="height:6.5px; border-radius:6px; overflow:hidden; background:\${totalFluxo > 0 ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.06)'}; box-shadow:inset 0 1px 2px rgba(0,0,0,0.3); display:flex;">
             <div class="g" style="width:\${recPct}%; border-radius:6px; background:linear-gradient(90deg, #10B981, #34D399); transition:width 0.4s ease;"></div>
           </div>
         </div>
@@ -8621,7 +8611,7 @@ function pageDashboard(){
             </div>
           </div>
           <span class="tag" style="background:rgba(239,68,68,0.12); color:var(--red); font-weight:800; font-size:12px; padding:4px 10px; border-radius:8px; border:1px solid rgba(239,68,68,0.25); font-variant-numeric: tabular-nums; box-shadow:0 2px 6px rgba(239,68,68,0.15);">
-            \${fmt(totalDesp)}
+            \${fmt(actualTotalDesp)}
           </span>
         </div>
 
@@ -8740,6 +8730,7 @@ function pageDashboard(){
           </button>
         </div>
 
+        \${accounts.length > 0 ? \`
         <div class="accounts-list" style="display:flex; flex-direction:column; gap:8px; width:100%; box-sizing:border-box;">
           \${accounts.slice().sort((a,b)=>a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' })).map(a=>{
             const stats = getCardStats(a);
@@ -8802,6 +8793,16 @@ function pageDashboard(){
             </div>\`;
           }).join('')}
         </div>
+        \` : \`
+        <div style="text-align:center; padding:32px 14px; color:var(--text-dim);">
+          <div style="font-size:30px; margin-bottom:8px;">💳</div>
+          <p style="font-size:13px; font-weight:700; color:var(--text); margin:0 0 4px 0;">Nenhuma conta ou cartão cadastrado</p>
+          <p style="font-size:11px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.4;">Cadastre suas contas e cartões para acompanhar saldos e limites.</p>
+          <button class="btn-primary" data-nav="cartoes" style="font-size:11.5px; font-weight:700; padding:6px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+            <span>+ Cadastrar Conta / Cartão</span>
+          </button>
+        </div>
+        \`}
       </div>
 
       <!-- Rodapé Alinhado com Contador e Link Interativo -->
