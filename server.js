@@ -8808,8 +8808,9 @@ function pageDashboard(){
               </span>
             </div>
           </div>
-          <button class="tag" data-nav="cartoes" style="font-size:11.5px; padding:4px 12px; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); color:var(--text); border-radius:8px; transition:all 0.2s ease;">
-            Editar
+          <button class="tag" data-nav="cartoes" style="font-size:11.5px; padding:5px 12px; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); color:var(--text); border-radius:8px; transition:all 0.2s ease; display:flex; align-items:center; gap:5px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <span>Gerenciar</span>
           </button>
         </div>
 
@@ -8877,42 +8878,59 @@ function pageDashboard(){
           }).join('')}
         </div>
         \` : \`
-        <!-- Estado Vazio Executivo 4K (Contas e Cartões) -->
-        <div style="text-align:center; padding:24px 14px 10px; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; justify-content:center;">
-          <!-- 4K Holographic Bank & Card SVG -->
-          <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:18px; background:linear-gradient(135deg, rgba(139,92,246,0.18) 0%, rgba(109,40,217,0.04) 100%); border:1px solid rgba(139,92,246,0.30); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px -4px rgba(139,92,246,0.25), inset 0 1px 0 rgba(255,255,255,0.12);">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="5" width="20" height="14" rx="2.5"/>
-              <line x1="2" y1="10" x2="22" y2="10"/>
-              <line x1="6" y1="15" x2="10" y2="15"/>
-              <circle cx="17" cy="15" r="1" fill="#A78BFA"/>
-            </svg>
+        <!-- Estado Vazio Executivo 4K Titanium (Contas e Cartões) -->
+        <div style="text-align:center; padding:18px 12px 10px; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <!-- 4K Holographic Titanium Card Graphic -->
+          <div style="width:108px; height:68px; margin:0 auto 12px; border-radius:12px; background:linear-gradient(135deg, rgba(168,85,247,0.28) 0%, rgba(99,102,241,0.16) 50%, rgba(139,92,246,0.06) 100%); border:1px solid rgba(168,85,247,0.45); box-shadow:0 12px 28px -4px rgba(139,92,246,0.35), inset 0 1px 0 rgba(255,255,255,0.25); display:flex; flex-direction:column; justify-content:space-between; padding:8px 10px; box-sizing:border-box; position:relative; overflow:hidden;">
+            <!-- Glow Accent Corner -->
+            <div style="position:absolute; top:-15px; right:-15px; width:40px; height:40px; border-radius:50%; background:radial-gradient(circle, rgba(167,139,250,0.6) 0%, transparent 70%);"></div>
+            
+            <!-- Top Line: Chip & Contactless -->
+            <div style="display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1;">
+              <div style="width:15px; height:11px; border-radius:3px; background:linear-gradient(135deg, #FBBF24, #D97706); box-shadow:0 1px 3px rgba(0,0,0,0.3); border:0.5px solid rgba(255,255,255,0.3);"></div>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"><path d="M8.5 16.5a5 5 0 0 1 0-9"/><path d="M12 19a8.5 8.5 0 0 1 0-14"/></svg>
+            </div>
+            
+            <!-- Bottom Line: Digits & Brand Spheres -->
+            <div style="display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1;">
+              <span style="font-family:monospace; font-size:7.5px; letter-spacing:0.12em; color:rgba(255,255,255,0.7); font-weight:800;">•••• 4092</span>
+              <div style="display:flex; align-items:center;">
+                <span style="width:9px; height:9px; border-radius:50%; background:#EF4444; opacity:0.85; display:inline-block;"></span>
+                <span style="width:9px; height:9px; border-radius:50%; background:#F59E0B; opacity:0.85; display:inline-block; margin-left:-3.5px;"></span>
+              </div>
+            </div>
           </div>
 
           <h4 style="font-size:14.5px; font-weight:800; color:#FFFFFF; margin:0 0 4px 0; letter-spacing:-0.02em;">
-            Nenhuma conta ou cartão
+            Nenhum meio de pagamento ativo
           </h4>
-          <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.45; max-width:260px;">
-            Cadastre suas contas bancárias, carteiras ou cartões para acompanhar saldos e limites.
+          <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.45; max-width:270px;">
+            Cadastre cartões de crédito, contas digitais ou dinheiro para acompanhar limites e faturas.
           </p>
 
-          <!-- Executive CTA Button -->
-          <button data-nav="cartoes" style="font-size:11.5px; font-weight:800; padding:7px 16px; border-radius:10px; background:linear-gradient(135deg, #8B5CF6, #6D28D9); color:#FFFFFF; border:1px solid rgba(255,255,255,0.2); box-shadow:0 4px 16px rgba(139,92,246,0.35); cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:transform 0.2s ease, box-shadow 0.2s ease;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <!-- Executive CTA Button (Royal Violet Luxury) -->
+          <button data-nav="cartoes" style="font-size:12px; font-weight:800; padding:8px 18px; border-radius:10px; background:linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); color:#FFFFFF; border:1px solid rgba(255,255,255,0.22); box-shadow:0 6px 20px rgba(139,92,246,0.4), inset 0 1px 0 rgba(255,255,255,0.25); cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:transform 0.2s ease, box-shadow 0.2s ease;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             <span>+ Cadastrar Conta / Cartão</span>
           </button>
 
-          <!-- Accounts Preview Micro-Chips -->
-          <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:16px; opacity:0.8;">
-            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
-              <span style="width:5px; height:5px; border-radius:50%; background:#820ad1; box-shadow:0 0 6px #820ad1;"></span> Cartão Crédito
-            </span>
-            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
-              <span style="width:5px; height:5px; border-radius:50%; background:#3b82f6; box-shadow:0 0 6px #3b82f6;"></span> Conta Corrente
-            </span>
-            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
-              <span style="width:5px; height:5px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> Dinheiro / Pix
-            </span>
+          <!-- 3 Interactive Feature Preview Slots -->
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; width:100%; margin-top:15px;" data-nav="cartoes">
+            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:7px 4px; text-align:center; cursor:pointer; transition:border-color 0.2s ease;">
+              <div style="font-size:13px; margin-bottom:2px;">💳</div>
+              <div style="font-size:9.5px; font-weight:700; color:var(--text);">Cartão Crédito</div>
+              <div style="font-size:8px; color:var(--text-dim); opacity:0.8;">Limites & Fatura</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:7px 4px; text-align:center; cursor:pointer; transition:border-color 0.2s ease;">
+              <div style="font-size:13px; margin-bottom:2px;">🏦</div>
+              <div style="font-size:9.5px; font-weight:700; color:var(--text);">Conta Bancária</div>
+              <div style="font-size:8px; color:var(--text-dim); opacity:0.8;">Saldos & Pix</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:7px 4px; text-align:center; cursor:pointer; transition:border-color 0.2s ease;">
+              <div style="font-size:13px; margin-bottom:2px;">💵</div>
+              <div style="font-size:9.5px; font-weight:700; color:var(--text);">Dinheiro / Espécie</div>
+              <div style="font-size:8px; color:var(--text-dim); opacity:0.8;">Controle Físico</div>
+            </div>
           </div>
         </div>
         \`}
