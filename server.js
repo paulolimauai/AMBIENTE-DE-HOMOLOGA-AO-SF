@@ -495,28 +495,132 @@ html, body {
 }
 
 .topheader, nav.menu, .panel, .kpi, .table-panel, .auth-box, .cards-summary-panel, .tx-footer-summary {
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
   visibility: visible !important;
+  opacity: 1 !important;
 }
 
+/* ==================== Estabilidade Absoluta ao Printar / Imprimir / Screenshot ==================== */
 @media print {
-  body, html {
-    background: var(--bg) !important;
-    color: var(--text) !important;
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+    background-color: #060913 !important;
+    background-image: none !important;
+    color: #F8FAFC !important;
     zoom: 1 !important;
+    position: static !important;
   }
-  .app-bg-scene, .app-bg-grid, .app-bg-chart, .app-blob, .mobile-drawer-overlay, .mobile-drawer, .scale-dropdown, .notif-panel {
-    display: none !important;
+  body.light, html.light body, html.light {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
   }
-  #appMain, #pageContent, .main, .topheader, .topheader-row, nav.menu, .kpis, .kpi, .panel, .table-panel, .tx-footer-summary, .app-dev-credit {
+  #appMain {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
     overflow: visible !important;
     opacity: 1 !important;
     visibility: visible !important;
+    position: static !important;
   }
-  .panel, .table-panel {
-    break-inside: avoid;
-    page-break-inside: avoid;
+  #pageContent {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: static !important;
+  }
+  .topheader {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    background-color: #0D121E !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .topheader-row {
+    display: flex !important;
+    width: 100% !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  nav.menu {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    position: static !important;
+    width: 100% !important;
+    background-color: #0D121E !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .kpis {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+    gap: 12px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .kpi {
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: #0F172A !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .panel, .table-panel, .cards-summary-panel {
+    display: block !important;
+    background-color: #0F172A !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 16px !important;
+  }
+  .charts-row, .charts-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  canvas {
+    display: block !important;
+    max-width: 100% !important;
+    height: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .app-bg-scene, .app-bg-grid, .app-bg-chart, .app-blob, .mobile-drawer-overlay, .mobile-drawer, .scale-dropdown, .notif-panel {
+    display: none !important;
   }
 }
 
