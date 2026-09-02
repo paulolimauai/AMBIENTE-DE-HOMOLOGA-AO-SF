@@ -418,10 +418,9 @@ const htmlContent = `<!DOCTYPE html>
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-html:not(.app-ready) .icon-btn,
-html:not(.app-ready) .topheader,
-html:not(.app-ready) .user,
-html:not(.app-ready) .btn-ghost {
+html:not(.app-ready) *,
+html:not(.app-ready) *::before,
+html:not(.app-ready) *::after {
   transition: none !important;
   animation: none !important;
 }
@@ -8160,8 +8159,14 @@ function render(){
     else if(currentPage==='funcoes') newHTML = pageFuncoes();
     else newHTML = pageDashboard();
 
-    if (el.innerHTML !== newHTML) {
+    const pageChanged = el.getAttribute('data-current-rendered-page') !== currentPage;
+    const htmlChanged = el.dataset.renderedHtml !== newHTML;
+
+    if (pageChanged || htmlChanged) {
       el.innerHTML = newHTML;
+      el.dataset.renderedHtml = newHTML;
+      el.setAttribute('data-current-rendered-page', currentPage);
+      attachPageEvents();
     }
   } catch(err) {
     console.error("Erro ao renderizar tela " + currentPage + ":", err);
@@ -8171,7 +8176,6 @@ function render(){
   }
 
   try {
-    attachPageEvents();
     updateHeaderUser();
     renderNotifications();
     updateViewModeBanner();
@@ -11671,49 +11675,86 @@ function drawDashboardCharts(){
     const isLightMode = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
     const periodTx = Array.isArray(transactions) ? transactions.filter(inPeriod) : [];
     const {receitas,despesas} = computeTotals(periodTx);
-    Object.values(charts).forEach(c=>c && c.destroy && c.destroy());
+    
     const ctx1 = document.getElementById('chartResumo');
-    if(ctx1) charts.resumo = new Chart(ctx1, {
-      type:'doughnut',
-      data:{ 
-        labels: ['Receitas', 'Despesas'],
-        datasets:[{
-          data:[receitas||0.0001,despesas||0.0001], 
-          backgroundColor:['#10B981','#EF4444'],
-          hoverBackgroundColor:['#34D399','#F87171'],
-          borderWidth:2,
-          borderColor: isLightMode ? '#FFFFFF' : 'rgba(11,15,24,0.6)'
-        }] 
-      },
-      options:{
-        responsive:true,
-        maintainAspectRatio:false,
-        cutout:'75%',
-        plugins:{
-          legend:{display:false},
-          tooltip:{
-            callbacks:{
-              label: function(context) {
-                return ' ' + context.label + ': ' + fmt(context.raw);
+    if(ctx1) {
+      const dataValues = [receitas || 0.0001, despesas || 0.0001];
+      if (charts.resumo && charts.resumo.ctx && charts.resumo.ctx.canvas === ctx1) {
+        charts.resumo.data.datasets[0].data = dataValues;
+        charts.resumo.data.datasets[0].borderColor = isLightMode ? '#FFFFFF' : 'rgba(11,15,24,0.6)';
+        charts.resumo.update('none');
+      } else {
+        if (charts.resumo && charts.resumo.destroy) charts.resumo.destroy();
+        charts.resumo = new Chart(ctx1, {
+          type:'doughnut',
+          data:{ 
+            labels: ['Receitas', 'Despesas'],
+            datasets:[{
+              data: dataValues, 
+              backgroundColor:['#10B981','#EF4444'],
+              hoverBackgroundColor:['#34D399','#F87171'],
+              borderWidth:2,
+              borderColor: isLightMode ? '#FFFFFF' : 'rgba(11,15,24,0.6)'
+            }] 
+          },
+          options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            animation: { duration: 400 },
+            cutout:'75%',
+            plugins:{
+              legend:{display:false},
+              tooltip:{
+                callbacks:{
+                  label: function(context) {
+                    return ' ' + context.label + ': ' + fmt(context.raw);
+                  }
+                }
               }
             }
           }
-        }
+        });
       }
-    });
+    }
+
     const cats = despesasPorCategoria(periodTx);
     const ctx2 = document.getElementById('chartCategorias');
-    if(ctx2) charts.categorias = new Chart(ctx2, {
-      type:'doughnut',
-      data:{ labels:cats.map(c=>c.name), datasets:[{data: cats.length?cats.map(c=>c.val):[1], backgroundColor: cats.length?cats.map(c=>c.color):[isLightMode ? '#E2E8F0' : '#2a2f3a'], borderWidth:0}] },
-      options:{cutout:'62%', plugins:{legend:{display:false}}}
-    });
+    if(ctx2) {
+      const catLabels = cats.map(c=>c.name);
+      const catData = cats.length ? cats.map(c=>c.val) : [1];
+      const catColors = cats.length ? cats.map(c=>c.color) : [isLightMode ? '#E2E8F0' : '#2a2f3a'];
+
+      if (charts.categorias && charts.categorias.ctx && charts.categorias.ctx.canvas === ctx2) {
+        charts.categorias.data.labels = catLabels;
+        charts.categorias.data.datasets[0].data = catData;
+        charts.categorias.data.datasets[0].backgroundColor = catColors;
+        charts.categorias.update('none');
+      } else {
+        if (charts.categorias && charts.categorias.destroy) charts.categorias.destroy();
+        charts.categorias = new Chart(ctx2, {
+          type:'doughnut',
+          data:{ 
+            labels: catLabels, 
+            datasets:[{
+              data: catData, 
+              backgroundColor: catColors, 
+              borderWidth:0
+            }] 
+          },
+          options:{
+            cutout:'62%', 
+            animation: { duration: 400 },
+            plugins:{legend:{display:false}}
+          }
+        });
+      }
+    }
   } catch(e) {
     console.warn("Aviso ao gerar gráficos:", e);
   }
 }
 
-/* ==================== Animação Numérica Fluida dos KPIs (CountUp) ==================== */
+/* ==================== Animação Numérica Fluida dos KPIs (Zero-Flicker) ==================== */
 function animateKpiValues() {
   const elements = document.querySelectorAll('[data-anim-val]');
   elements.forEach(el => {
@@ -11721,14 +11762,35 @@ function animateKpiValues() {
     if (isNaN(target)) return;
     const isInt = el.getAttribute('data-is-int') === 'true';
     const prefix = el.getAttribute('data-prefix') || '';
+    const formattedTarget = (prefix ? prefix : '') + (isInt ? target.toString() : fmt(target));
+    
+    const prevValAttr = el.getAttribute('data-prev-val');
+    const prevVal = prevValAttr !== null ? parseFloat(prevValAttr) : null;
+    
+    // Se o valor já está idêntico ao exibido, não pisca nem recalcula nada
+    if (prevVal === target && el.textContent.trim() === formattedTarget) {
+      return;
+    }
+    
+    // Na primeira renderização (ex: reload/F5), fixa o valor exato imediatamente sem reiniciar do zero
+    if (prevVal === null) {
+      el.setAttribute('data-prev-val', target.toString());
+      el.textContent = formattedTarget;
+      return;
+    }
+    
+    // Se o valor mudou (ex: transação adicionada/editada), transiciona suavemente do valor antigo ao novo
+    el.setAttribute('data-prev-val', target.toString());
+    const startVal = prevVal;
+    const diff = target - startVal;
     const startTime = performance.now();
-    const duration = 850;
+    const duration = 400;
 
     function update(now) {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-      const current = target * ease;
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = startVal + (diff * ease);
       if (isInt) {
         el.textContent = Math.round(current).toString();
       } else {
@@ -11737,8 +11799,7 @@ function animateKpiValues() {
       if (progress < 1) {
         requestAnimationFrame(update);
       } else {
-        if (isInt) el.textContent = target.toString();
-        else el.textContent = (prefix ? prefix : '') + fmt(target);
+        el.textContent = formattedTarget;
       }
     }
     requestAnimationFrame(update);
