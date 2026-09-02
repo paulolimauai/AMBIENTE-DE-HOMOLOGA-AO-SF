@@ -464,12 +464,18 @@ body.user-logged-in {
   --shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.80), 0 0 35px -5px rgba(29, 185, 84, 0.14), inset 0 1px 1.5px rgba(255, 255, 255, 0.35);
 }
 
+html,
+html body,
 html.user-logged-in body,
-body.user-logged-in {
+body.user-logged-in,
+body {
   background-color: #07100B !important;
   background-image: 
     radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
+    url('/images/nexus_vision_living_bg.jpg'),
+    url('images/nexus_vision_living_bg.jpg'),
+    url('/nexus_vision_living_bg.jpg'),
+    url('nexus_vision_living_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
@@ -477,13 +483,19 @@ body.user-logged-in {
   color: #F8FAFC !important;
 }
 
+html.light,
+html.light body,
 html.user-logged-in.light body,
 html.user-logged-in body.light,
-body.user-logged-in.light {
+body.user-logged-in.light,
+body.light {
   background-color: #F2F7F4 !important;
   background-image: 
     radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
+    url('/images/nexus_vision_living_bg.jpg'),
+    url('images/nexus_vision_living_bg.jpg'),
+    url('/nexus_vision_living_bg.jpg'),
+    url('nexus_vision_living_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
@@ -495,8 +507,13 @@ html.user-logged-in .app-bg-scene {
   display: none !important;
 }
 
-html.user-logged-in #appMain {
+.app,
+#appMain,
+html.user-logged-in #appMain,
+.auth-container,
+#authPage {
   background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* Header Superior Pós-Login no padrão Liquid Glass 4K */
@@ -2195,18 +2212,11 @@ html.light #overlayNovaOrdem .close-x:hover {
 /* ==================== App principal Centralizado ==================== */
 .app{
   display:none; min-height:100vh; position:relative; flex-direction:column;
-  background:
-    radial-gradient(circle at 12% 0%, rgba(59,130,246,.14), transparent 40%),
-    radial-gradient(circle at 88% 18%, rgba(37,99,235,.10), transparent 45%),
-    radial-gradient(circle at 50% 100%, rgba(96,165,250,.06), transparent 55%),
-    var(--bg);
+  background: transparent !important;
 }
 .app.show{display:flex;}
 body.light .app{
-  background:
-    radial-gradient(circle at 12% 0%, rgba(59,130,246,.10), transparent 40%),
-    radial-gradient(circle at 88% 18%, rgba(37,99,235,.06), transparent 45%),
-    var(--bg);
+  background: transparent !important;
 }
 
 .app-bg-scene{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
@@ -15878,9 +15888,26 @@ const server = http.createServer((req, res) => {
   }
 
   if (pathname.startsWith('/images/') || pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js|json|html)$/i)) {
-    const safePath = path.normalize(path.join(__dirname, pathname)).replace(/^(\.\.[\/\\])+/, '');
-    if (fs.existsSync(safePath) && fs.statSync(safePath).isFile()) {
-      const ext = path.extname(safePath).toLowerCase();
+    const rawClean = pathname.replace(/^\/+/, '');
+    let cleanPath = rawClean;
+    try { cleanPath = decodeURIComponent(rawClean); } catch (e) {}
+    
+    const candidatePaths = [
+      path.normalize(path.join(__dirname, cleanPath)).replace(/^(\.\.[\/\\])+/, ''),
+      path.normalize(path.join(__dirname, 'images', path.basename(cleanPath))).replace(/^(\.\.[\/\\])+/, ''),
+      path.normalize(path.join(__dirname, path.basename(cleanPath))).replace(/^(\.\.[\/\\])+/, '')
+    ];
+    
+    let resolvedPath = null;
+    for (const cand of candidatePaths) {
+      if (fs.existsSync(cand) && fs.statSync(cand).isFile()) {
+        resolvedPath = cand;
+        break;
+      }
+    }
+
+    if (resolvedPath) {
+      const ext = path.extname(resolvedPath).toLowerCase();
       const mimeTypes = {
         '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
         '.gif': 'image/gif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
@@ -15890,9 +15917,9 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, {
         ...corsHeaders,
         'Content-Type': mimeTypes[ext] || 'application/octet-stream',
-        'Cache-Control': ext === '.html' ? 'no-cache, no-store, must-revalidate, max-age=0' : 'public, max-age=300, must-revalidate'
+        'Cache-Control': ext === '.html' ? 'no-cache, no-store, must-revalidate, max-age=0' : 'public, max-age=86400, stale-while-revalidate=604800'
       });
-      return fs.createReadStream(safePath).pipe(res);
+      return fs.createReadStream(resolvedPath).pipe(res);
     }
   }
 

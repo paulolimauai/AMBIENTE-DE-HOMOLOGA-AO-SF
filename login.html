@@ -144,7 +144,26 @@
             --auth-tab-bg: rgba(10, 18, 14, 0.75);
         }
 
-        body.light, html.light body, html.light {
+        html, html body, body {
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+            background-color: #07100B !important;
+            background-image: 
+                radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
+                url('/images/nexus_vision_living_bg.jpg'),
+                url('images/nexus_vision_living_bg.jpg'),
+                url('/nexus_vision_living_bg.jpg'),
+                url('nexus_vision_living_bg.jpg') !important;
+            background-size: cover !important;
+            background-position: center center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+            color: var(--auth-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        html.light, html.light body, body.light {
             --auth-bg: #F2F7F4;
             --auth-card: rgba(255, 255, 255, 0.90);
             --auth-border: #CBD5E1;
@@ -160,35 +179,15 @@
             background-color: #F2F7F4 !important;
             background-image: 
                 radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
-                url('/images/nexus_vision_living_bg.jpg') !important;
+                url('/images/nexus_vision_living_bg.jpg'),
+                url('images/nexus_vision_living_bg.jpg'),
+                url('/nexus_vision_living_bg.jpg'),
+                url('nexus_vision_living_bg.jpg') !important;
             background-size: cover !important;
             background-position: center center !important;
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
             color: #0F172A !important;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-            background-color: #07100B !important;
-            background-image: 
-                radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
-                url('/images/nexus_vision_living_bg.jpg') !important;
-            background-size: cover !important;
-            background-position: center center !important;
-            background-attachment: fixed !important;
-            background-repeat: no-repeat !important;
-            color: var(--auth-text);
-            min-height: 100vh;
-            overflow-x: hidden;
-            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Fundo Geométrico Sutil */
