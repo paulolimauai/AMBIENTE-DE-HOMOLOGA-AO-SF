@@ -9873,8 +9873,10 @@ function pageRecorrentes(){
   const totalContinuos = totalLctos - totalComPrazo;
   const totalConcluidos = recurringList.filter(r => {
     const tm = parseInt(r.totalMonths) || 0;
-    const am = parseInt(r.appliedMonths) || 0;
-    return tm > 0 && am >= tm;
+    if (tm <= 0) return false;
+    const lTxs = transactions.filter(t => t.recurringId === r.id || (t.desc && (t.desc === r.desc || t.desc.startsWith(r.desc + ' ('))));
+    const pCount = lTxs.filter(t => t.status === 'Pago' || t.status === 'Recebido').length;
+    return pCount >= tm;
   }).length;
 
   return \`
@@ -9939,13 +9941,17 @@ function pageRecorrentes(){
       <tbody>
         \${recurringList.map(r=>{
           const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
-          const appliedM = r.appliedMonths ? parseInt(r.appliedMonths) : 0;
           const isFixed = totalM > 0;
-          const isCompleted = isFixed && appliedM >= totalM;
-          const pct = isFixed ? Math.min(100, Math.round((appliedM / totalM) * 100)) : 0;
-          const remainingM = isFixed ? Math.max(0, totalM - appliedM) : 0;
-          const nextInstallmentNum = appliedM + 1;
+          const linkedTxs = transactions.filter(t => t.recurringId === r.id || (t.desc && (t.desc === r.desc || t.desc.startsWith(r.desc + ' ('))));
+          const paidCount = linkedTxs.filter(t => t.status === 'Pago' || t.status === 'Recebido').length;
+          const pendingCount = linkedTxs.filter(t => t.status === 'Pendente').length;
+          const remainingToPay = isFixed ? Math.max(0, totalM - paidCount) : pendingCount;
+          const paidPct = isFixed ? Math.min(100, Math.round((paidCount / totalM) * 100)) : (paidCount > 0 ? 100 : 0);
+          const isFullyPaid = isFixed && paidCount >= totalM;
           const method = r.paymentMethod || detectPaymentMethodFromName(r.desc) || ((r.cat && r.cat.toLowerCase().includes('cartão')) || (r.acc && r.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto');
+          const isIncome = r.type === 'in';
+          const paidWord = isIncome ? 'recebida' : 'paga';
+          const paidWordPlural = isIncome ? 'recebidas' : 'pagas';
 
           return \`
           <tr class="trow">
@@ -9956,14 +9962,14 @@ function pageRecorrentes(){
                   <span class="pill" style="padding:2px 7px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.4)' : 'rgba(245,158,11,0.4)'};">
                     \${method === 'Cartão de Crédito' ? '💳 Cartão de Crédito' : '📄 Boleto'}
                   </span>
-                  \${isFixed ? \`<span class="pill" style="padding:2px 7px; font-size:10px; background:rgba(59,130,246,0.14); color:var(--blue); border:1px solid rgba(59,130,246,0.25);">\${appliedM}/\${totalM}m</span>\` : ''}
+                  \${isFixed ? \`<span class="pill" style="padding:2px 7px; font-size:10px; font-weight:700; background:\${isFullyPaid ? 'rgba(16,185,129,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--green)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓' : paidWordPlural}</span>\` : ''}
                 </div>
                 \${isFixed ? \`
                   <details style="font-size:10.5px; margin-top:2px;">
                     <summary style="cursor:pointer; color:var(--blue); font-weight:600; user-select:none;">
                       🗓️ Cronograma mês a mês (1 a \${totalM})
                     </summary>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(135px, 1fr)); gap:4px; margin-top:6px; padding:6px; background:rgba(0,0,0,0.25); border-radius:8px; border:1px solid var(--card-border); max-height:160px; overflow-y:auto;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:4px; margin-top:6px; padding:6px; background:rgba(0,0,0,0.25); border-radius:8px; border:1px solid var(--card-border); max-height:160px; overflow-y:auto;">
                       \${(function(){
                         const items = [];
                         const sM = r.startMonth || 1;
@@ -9972,12 +9978,13 @@ function pageRecorrentes(){
                           const mZero = (sM - 1) + (k - 1);
                           const y = sY + Math.floor(mZero / 12);
                           const m = (mZero % 12) + 1;
-                          const isApplied = k <= appliedM;
+                          const targetTx = linkedTxs.find(t => t.installment === (k + '/' + totalM) || (t.desc && t.desc.includes('(' + k + '/' + totalM + ')')));
+                          const isPaid = targetTx && (targetTx.status === 'Pago' || targetTx.status === 'Recebido');
                           const mName = MONTHS[m-1] ? MONTHS[m-1].substring(0,3) : m;
                           items.push(
-                            \`<div style="padding:3px 6px; border-radius:5px; background:\${isApplied ? 'rgba(16,185,129,0.12)' : 'rgba(255,255,255,0.03)'}; border:1px solid \${isApplied ? 'rgba(16,185,129,0.25)' : 'rgba(255,255,255,0.06)'}; display:flex; justify-content:space-between; align-items:center;">\` +
+                            \`<div style="padding:3px 6px; border-radius:5px; background:\${isPaid ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.10)'}; border:1px solid \${isPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'}; display:flex; justify-content:space-between; align-items:center;">\` +
                               \`<span>Mês \${k}: <strong style="color:var(--text);">\${mName}/\${y}</strong></span>\` +
-                              \`<span style="font-weight:700; font-size:9.5px; color:\${isApplied ? 'var(--green)' : 'var(--text-dim)'}">\${isApplied ? '✓ Gerado' : 'Pendente'}</span>\` +
+                              \`<span style="font-weight:700; font-size:9.5px; color:\${isPaid ? 'var(--green)' : '#F59E0B'}">\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</span>\` +
                             \`</div>\`
                           );
                         }
@@ -10008,23 +10015,27 @@ function pageRecorrentes(){
             </td>
             <td>
               \${isFixed ? \`
-                <div style="min-width:130px; display:flex; flex-direction:column; gap:4px;">
-                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700;">
-                    <span style="color:\${isCompleted ? 'var(--green)' : 'var(--text)'};">\${isCompleted ? '✓ Concluído' : \`\${appliedM}/\${totalM} aplicados\`}</span>
-                    <span style="color:var(--text-dim);">\${pct}%</span>
+                <div style="min-width:145px; display:flex; flex-direction:column; gap:4px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:700;">
+                    <span style="display:inline-flex; align-items:center; gap:4px; color:\${isFullyPaid ? 'var(--green)' : '#F59E0B'};">
+                      \${isFullyPaid ? '✓ Concluído' : '⏳ Pendente'}
+                    </span>
+                    <span style="color:\${isFullyPaid ? 'var(--green)' : 'var(--text-dim)'}; font-weight:800;">\${paidPct}%</span>
                   </div>
-                  <div class="rec-progress-bar">
-                    <div class="rec-progress-fill" style="width:\${pct}%; background:\${isCompleted ? 'var(--green)' : (pct > 50 ? 'var(--blue)' : 'var(--orange)')};"></div>
+                  <div class="rec-progress-bar" style="height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;">
+                    <div class="rec-progress-fill" style="width:\${paidPct}%; height:100%; border-radius:3px; background:\${isFullyPaid ? 'var(--green)' : (paidPct > 0 ? 'linear-gradient(90deg, #F59E0B, #10B981)' : 'transparent')}; transition:width .4s ease;"></div>
                   </div>
-                  <div style="font-size:10px; color:var(--text-dim);">
-                    \${isCompleted ? \`Total de \${totalM} meses gerados\` : \`\${remainingM} \${remainingM === 1 ? 'mês restante' : 'meses restantes'}\`}
+                  <div style="font-size:10px; color:var(--text-dim); display:flex; justify-content:space-between; align-items:center; gap:4px;">
+                    <span>\${paidCount}/\${totalM} \${paidCount === 1 ? paidWord : paidWordPlural}</span>
+                    <span style="font-weight:600; color:\${remainingToPay > 0 ? '#F59E0B' : 'var(--green)'};">\${remainingToPay > 0 ? (\`\${remainingToPay} faltante\${remainingToPay === 1 ? '' : 's'}\`) : 'Quitado'}</span>
                   </div>
                 </div>
               \` : \`
-                <div style="display:flex; align-items:center; gap:5px;">
-                  <span class="pill" style="background:rgba(16,185,129,0.12); color:var(--green); font-size:11px;">
-                    ✓ \${appliedM} \${appliedM === 1 ? 'lançamento' : 'lançamentos'}
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                  <span class="pill" style="background:rgba(16,185,129,0.12); color:var(--green); font-size:11px; font-weight:700;">
+                    ✓ \${paidCount} \${paidCount === 1 ? paidWord : paidWordPlural}
                   </span>
+                  \${pendingCount > 0 ? \`<span style="font-size:10px; color:#F59E0B; font-weight:600;">\${pendingCount} pendente\${pendingCount === 1 ? '' : 's'}</span>\` : ''}
                 </div>
               \`}
             </td>
@@ -10032,11 +10043,6 @@ function pageRecorrentes(){
             <td class="\${r.type==='in'?'val-in':'val-out'}">\${r.type==='in'?'+':'-'}\${fmt(r.val)}</td>
             <td>
               <div class="row-actions" style="justify-content:center; gap:6px;">
-                \${isFixed && isCompleted ? '' : isFixed ? \`
-                  <button data-lancar="\${r.id}" title="Aplicar / Lançar parcela no sistema" class="btn-primary" style="padding:4px 10px; font-size:11px; border-radius:8px; height:32px; width:auto; font-weight:700; white-space:nowrap;">▶ Lançar (\${nextInstallmentNum}/\${totalM})</button>
-                \` : \`
-                  <button data-lancar="\${r.id}" title="Lançar agora na conta" class="btn-primary" style="padding:4px 10px; font-size:11.5px; border-radius:8px; height:32px; width:auto;">▶ Lançar</button>
-                \`}
                 <button data-editrec="\${r.id}" title="Editar Recorrente" class="btn-action-edit">✎</button>
                 <button data-delrec="\${r.id}" title="Excluir Recorrente" class="btn-action-del">🗑</button>
               </div>
