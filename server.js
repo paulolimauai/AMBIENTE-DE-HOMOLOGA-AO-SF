@@ -2885,8 +2885,8 @@ body.light .dev-signature-name {
 
 /* Centralização do conteúdo principal */
 .main{
-  flex:1; min-width:0; padding:22px 28px 30px;
-  margin-top:140px !important;
+  flex:1; min-width:0; padding:18px 28px 30px;
+  margin-top:175px !important;
   max-width:1440px; margin-left:auto; margin-right:auto; width:100%;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
@@ -3336,9 +3336,18 @@ body.light .executive-4k-message {
   box-sizing: border-box;
 }
 
-.page-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:14px;}
-.page-head h1{font-size:23px; font-weight:700;}
-.page-head p{color:var(--text-dim); font-size:13px; margin-top:3px;}
+.page-head{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:24px; margin-top:6px; padding-top:8px; padding-bottom:4px;
+  flex-wrap:wrap; gap:16px; min-height:52px;
+}
+.page-head h1{
+  font-size:24px; font-weight:800; line-height:1.35 !important;
+  letter-spacing:-0.02em; color:var(--text); padding-top:2px;
+}
+.page-head p{
+  color:var(--text-dim); font-size:13px; margin-top:4px; line-height:1.45;
+}
 .head-actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 .period-wrap{position:relative; z-index:100;}
 .period{
@@ -4592,7 +4601,7 @@ body.has-view-mode-banner .topheader {
   top: 50px !important;
 }
 body.has-view-mode-banner .main {
-  padding-top: 140px !important;
+  margin-top: 230px !important;
 }
 body.has-view-mode-banner .sidebar {
   top: 125px !important;
@@ -8216,9 +8225,22 @@ function refreshTxTable(){
 }
 
 /* ==================== Render Suave sem Flickering ==================== */
+function updateMainHeaderSpacing() {
+  const th = document.querySelector('.topheader');
+  const mainEl = document.querySelector('.main');
+  if (th && mainEl && window.innerWidth > 900) {
+    const banner = document.querySelector('.view-mode-banner');
+    const bannerH = (banner && document.body.classList.contains('has-view-mode-banner')) ? banner.offsetHeight : 0;
+    const thH = th.offsetHeight || 165;
+    mainEl.style.marginTop = (thH + bannerH + 16) + 'px';
+  }
+}
+window.addEventListener('resize', updateMainHeaderSpacing);
+
 function render(){
   const el = document.getElementById('pageContent');
   if (!el) return;
+  updateMainHeaderSpacing();
 
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
