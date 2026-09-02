@@ -4159,14 +4159,14 @@ body.light .rec-progress-bar {
   position: relative;
   overflow: visible !important;
   z-index: 50;
-  background: linear-gradient(135deg, rgba(17, 24, 39, 0.94) 0%, rgba(10, 15, 29, 0.98) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(18, 30, 24, 0.75) 45%, rgba(10, 18, 14, 0.88) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+  border-radius: 20px !important;
   padding: 24px 28px;
   margin-bottom: 22px;
-  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.75), 0 0 25px -5px rgba(29, 185, 84, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dashboard-welcome-hero::before {
@@ -4176,8 +4176,9 @@ body.light .rec-progress-bar {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #3B82F6 0%, #E5A93C 50%, #10B981 100%);
-  border-radius: 22px 22px 0 0;
+  background: linear-gradient(90deg, #1DB954, #34D399, #10B981);
+  opacity: 0.9;
+  border-radius: 20px 20px 0 0;
 }
 .hero-backdrop-glow {
   position: absolute;
@@ -4185,7 +4186,7 @@ body.light .rec-progress-bar {
   right: -40px;
   width: 280px;
   height: 280px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.20) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, transparent 70%);
   pointer-events: none;
   filter: blur(40px);
 }
@@ -4220,8 +4221,8 @@ body.light .rec-progress-bar {
   gap: 7px;
   padding: 5px 14px;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(59, 130, 246, 0.28);
+  background: rgba(18, 30, 24, 0.70);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   color: #CBD5E1;
   font-size: 11.5px;
   font-weight: 700;
@@ -4266,10 +4267,10 @@ body.light .rec-progress-bar {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 .hero-name-gradient {
-  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 45%, #F59E0B 100%);
+  background: linear-gradient(135deg, #34D399 0%, #10B981 45%, #F59E0B 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.35));
+  filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.35));
   font-weight: 900;
   letter-spacing: 0.01em;
 }
