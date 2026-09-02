@@ -3342,25 +3342,46 @@ body.light .executive-4k-message {
 .head-actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 .period-wrap{position:relative; z-index:100;}
 .period{
-  display:flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--card-border);
-  padding:6px 14px 6px 6px; border-radius:12px; font-size:13px; cursor:pointer; white-space:nowrap;
-  transition:border-color .18s ease, box-shadow .18s ease, transform .15s ease;
+  display:inline-flex; align-items:center; gap:11px;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 27, 43, 0.70) 50%, rgba(9, 13, 22, 0.90) 100%) !important;
+  backdrop-filter:blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter:blur(24px) saturate(200%) !important;
+  border:1px solid rgba(255, 255, 255, 0.16) !important;
+  padding:6px 16px 6px 7px; border-radius:16px; font-size:13.5px; cursor:pointer; white-space:nowrap;
+  box-shadow:0 8px 24px -4px rgba(0,0,0,0.6), inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 0 20px rgba(16, 185, 129, 0.12);
+  transition:all .22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select:none;
 }
-.period:hover{border-color:var(--green); box-shadow:0 4px 16px rgba(232,176,75,.16); transform:translateY(-1px);}
+.period:hover{
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(20, 27, 43, 0.80) 50%, rgba(9, 13, 22, 0.95) 100%) !important;
+  border-color:rgba(52, 211, 153, 0.5) !important;
+  box-shadow:0 12px 32px -4px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255, 255, 255, 0.45), 0 0 28px rgba(16, 185, 129, 0.28);
+  transform:translateY(-1.5px);
+}
 .period:active{transform:translateY(0);}
 .period-ic{
-  width:32px; height:32px; border-radius:9px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg,var(--green),#c9862a); color:#1f1400;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+  width:34px; height:34px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, rgba(16, 185, 129, 0.32) 0%, rgba(5, 150, 105, 0.18) 50%, rgba(59, 130, 246, 0.25) 100%) !important;
+  border:1.5px solid rgba(52, 211, 153, 0.55) !important;
+  color:#34D399 !important;
+  box-shadow:0 0 16px rgba(16, 185, 129, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  transition:transform 0.22s ease;
 }
-.period-ic svg{width:16px; height:16px;}
-.period-text{display:flex; align-items:baseline; gap:4px; font-weight:700; color:var(--text);}
-.period-text .period-year{font-weight:500; color:var(--text-dim);}
-.period-chevron{width:9px; height:9px; color:var(--text-faint); flex-shrink:0; transition:transform .25s ease;}
-.period.open .period-chevron{transform:rotate(180deg); color:var(--green);}
+.period:hover .period-ic{transform:scale(1.06);}
+.period-ic svg{width:17px; height:17px;}
+.period-text{display:flex; align-items:baseline; gap:5px; font-weight:800; font-size:13.5px; color:#FFFFFF; letter-spacing:0.02em; text-shadow:0 1px 3px rgba(0,0,0,0.6);}
+.period-text .period-year{font-weight:600; color:#94A3B8;}
+.period-chevron{width:11px; height:11px; color:#94A3B8; flex-shrink:0; transition:transform .25s ease;}
+.period.open .period-chevron{transform:rotate(180deg); color:#34D399;}
 .period-panel{
-  display:none; position:absolute; top:calc(100% + 10px); right:0; background:var(--card); border:1px solid var(--card-border);
-  border-radius:14px; padding:16px; z-index:99999 !important; width:236px; box-shadow:0 16px 40px rgba(0,0,0,0.75); transform-origin:top right;
+  display:none; position:absolute; top:calc(100% + 10px); right:0;
+  background:linear-gradient(145deg, rgba(20, 27, 43, 0.95) 0%, rgba(13, 18, 30, 0.98) 100%) !important;
+  backdrop-filter:blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter:blur(28px) saturate(200%) !important;
+  border:1px solid rgba(255, 255, 255, 0.16);
+  border-radius:18px; padding:18px; z-index:99999 !important; width:250px;
+  box-shadow:0 20px 50px -10px rgba(0,0,0,0.85), inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 0 30px rgba(16, 185, 129, 0.15);
+  transform-origin:top right;
 }
 .period-panel.show{display:block; animation:periodPanelIn .22s cubic-bezier(.16,1,.3,1);}
 @keyframes periodPanelIn{
@@ -3368,11 +3389,15 @@ body.light .executive-4k-message {
   to{opacity:1; transform:translateY(0) scale(1);}
 }
 .period-today-btn{
-  display:block; width:100%; text-align:center; background:var(--green-soft); color:var(--green); border:none;
-  padding:8px; border-radius:9px; font-size:12px; font-weight:700; cursor:pointer; margin-bottom:12px;
-  transition:filter .15s, transform .12s;
+  display:block; width:100%; text-align:center;
+  background:linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 100%);
+  border:1px solid rgba(52, 211, 153, 0.4);
+  color:#34D399;
+  padding:9px; border-radius:11px; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:10px;
+  box-shadow:0 4px 14px rgba(16, 185, 129, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  transition:all .18s ease;
 }
-.period-today-btn:hover{filter:brightness(1.1);}
+.period-today-btn:hover{filter:brightness(1.15); transform:translateY(-1px);}
 .period-today-btn:active{transform:scale(.97);}
 
 .notif-wrap{position:relative;}
@@ -3985,25 +4010,48 @@ body.light .rec-progress-bar {
 .btn-hero-primary {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-  color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 12px;
-  padding: 10px 20px;
-  font-weight: 800;
-  font-size: 13.5px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  white-space: nowrap;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.95) 0%, #10B981 45%, #059669 85%, #047857 100%) !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: 16px !important;
+  padding: 8px 22px 8px 12px !important;
+  font-weight: 900 !important;
+  font-size: 13.5px !important;
+  letter-spacing: 0.02em !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.50), 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.75), inset 0 -2px 4px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(16px) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  white-space: nowrap !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+  user-select: none !important;
 }
 .btn-hero-primary:hover {
-  filter: brightness(1.1);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.55);
+  transform: translateY(-2px) !important;
+  filter: brightness(1.12) !important;
+  box-shadow: 0 0 36px rgba(16, 185, 129, 0.75), 0 12px 30px rgba(0, 0, 0, 0.6), inset 0 1.5px 2px rgba(255, 255, 255, 0.95) !important;
+}
+.btn-hero-primary:active {
+  transform: translateY(0) !important;
+}
+.btn-hero-primary .btn-hero-icon-pill {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.7), 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: transform 0.22s ease;
+}
+.btn-hero-primary:hover .btn-hero-icon-pill {
+  transform: scale(1.08) rotate(90deg);
 }
 .btn-hero-ghost {
   background: rgba(255, 255, 255, 0.05);
@@ -8367,10 +8415,23 @@ function periodPickerHTML(){
 
   return \`
   <div class="period-wrap">
-    <button type="button" class="period" id="periodBtn">
-      <span class="period-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><line x1="3" y1="9.5" x2="21" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="6.5"/><line x1="16" y1="2.5" x2="16" y2="6.5"/><circle cx="8" cy="14" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r="1.1" fill="currentColor" stroke="none"/><circle cx="16" cy="14" r="1.1" fill="currentColor" stroke="none"/></svg></span>
+    <button type="button" class="period" id="periodBtn" title="Selecionar Período de Análise Financeira">
+      <span class="period-ic">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="17" rx="4"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="8" y1="2" x2="8" y2="5"/>
+          <line x1="16" y1="2" x2="16" y2="5"/>
+          <circle cx="8" cy="13" r="1.1" fill="currentColor"/>
+          <circle cx="12" cy="13" r="1.1" fill="currentColor"/>
+          <circle cx="16" cy="13" r="1.1" fill="currentColor"/>
+          <circle cx="8" cy="17" r="1.1" fill="currentColor"/>
+          <circle cx="12" cy="17" r="1.1" fill="currentColor"/>
+          <circle cx="16" cy="17" r="1.1" fill="currentColor"/>
+        </svg>
+      </span>
       <span class="period-text">\${labelText}</span>
-      <svg class="period-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg class="period-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
     <div class="period-panel" id="periodPanel">
       <button type="button" class="period-today-btn" id="periodTodayBtn" style="margin-bottom:6px;">📍 Ir para o mês atual</button>
@@ -8510,7 +8571,11 @@ function pageDashboard(){
       <div class="hero-actions">
         \${periodPickerHTML()}
         <button class="btn-hero-primary" id="btnNovaTransacao" title="Lançar Nova Receita ou Despesa">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span class="btn-hero-icon-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
           <span>Nova Transação</span>
         </button>
       </div>
