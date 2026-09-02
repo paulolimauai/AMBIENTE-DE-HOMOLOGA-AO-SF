@@ -5718,9 +5718,15 @@ body.light .scale-dropdown {
       <button type="button" id="recTypeInBtn">↓ Receita</button>
       <button type="button" id="recTypeOutBtn">↑ Despesa</button>
     </div>
-    <div class="field"><label>Descrição</label><input id="recDesc" placeholder="Ex: Internet Claro, Aluguel, Seguro Auto"></div>
+    <div class="field">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+        <label style="margin:0;">Descrição</label>
+        <span id="recTypeBadge" style="font-size:11px; font-weight:800; padding:2px 8px; border-radius:6px; display:none; letter-spacing:0.02em;"></span>
+      </div>
+      <input id="recDesc" placeholder="Ex: Nubank, Boleto Aluguel, Internet Fibra, Energia" oninput="handleRecDescInput()">
+    </div>
     <div class="field-row">
-      <div class="field"><label>Valor (R$)</label><input id="recVal" type="number" step="0.01" placeholder="0,00"></div>
+      <div class="field"><label>Valor (R$)</label><input id="recVal" type="number" step="0.01" min="0" placeholder="0,00"></div>
       <div class="field"><label>Dia do mês (Vencimento)</label><input id="recDay" type="number" min="1" max="31" value="5"></div>
     </div>
     <div class="field-row">
@@ -9285,21 +9291,29 @@ function transactionsTable(list, showActions){
       </tr>
     </thead>
     <tbody>
-      \${list.map(t=>\`
+      ${list.map(t=>{
+        const method = t.paymentMethod || detectPaymentMethodFromName(t.desc) || ((t.cat && t.cat.toLowerCase().includes('cartão')) || (t.acc && t.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : (t.type === 'out' ? 'Boleto' : null));
+        return `
         <tr class="trow">
-          <td><span class="tx-date-badge">\${formatDateBR(t.date)}</span></td>
-          <td class="tx-desc">\${t.desc}</td>
-          <td><span class="pill cat-pill" style="background:\${catColor(t.cat)}18; color:\${catColor(t.cat)}; border:1px solid \${catColor(t.cat)}35">\${catIcon(t.cat)} \${t.cat}</span></td>
-          <td><span class="pill acc-pill">\${getAccountIcon(t.acc)} \${t.acc || '—'}</span></td>
-          <td><span class="type-pill \${t.type}">\${t.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
-          <td class="\${t.type==='in'?'val-in':'val-out'}">\${t.type==='in'?'+':'-'}\${fmt(t.val)}</td>
+          <td><span class="tx-date-badge">${formatDateBR(t.date)}</span></td>
+          <td class="tx-desc">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span>${t.desc}</span>
+              ${t.type === 'out' && method ? `<span class="pill" style="padding:1.5px 6px; font-size:10px; font-weight:700; border-radius:5px; background:${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.16)' : 'rgba(245,158,11,0.16)'}; color:${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid ${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.35)' : 'rgba(245,158,11,0.35)'};">${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}</span>` : ''}
+            </div>
+          </td>
+          <td><span class="pill cat-pill" style="background:${catColor(t.cat)}18; color:${catColor(t.cat)}; border:1px solid ${catColor(t.cat)}35">${catIcon(t.cat)} ${t.cat}</span></td>
+          <td><span class="pill acc-pill">${getAccountIcon(t.acc)} ${t.acc || '—'}</span></td>
+          <td><span class="type-pill ${t.type}">${t.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
+          <td class="${t.type==='in'?'val-in':'val-out'}">${t.type==='in'?'+':'-'}${fmt(t.val)}</td>
           <td>
-            <span class="pill status-\${t.status.toLowerCase()} status-toggle-btn" data-togglestatus="\${t.id}" title="Clique para alternar o status (Pendente / Pago)">
-              \${t.status === 'Pendente' ? '⏳ Pendente' : (t.type === 'in' ? '✓ Recebido' : '✓ Pago')}
+            <span class="pill status-${t.status.toLowerCase()} status-toggle-btn" data-togglestatus="${t.id}" title="Clique para alternar o status (Pendente / Pago)">
+              ${t.status === 'Pendente' ? '⏳ Pendente' : (t.type === 'in' ? '✓ Recebido' : '✓ Pago')}
             </span>
           </td>
-          \${showActions?\`<td><div class="row-actions" style="justify-content:center;"><button data-edit="\${t.id}" title="Editar Transação" class="btn-action-edit">✎</button><button data-del="\${t.id}" title="Excluir Transação" class="btn-action-del">🗑</button></div></td>\`:''}
-        </tr>\`).join('')}
+          ${showActions?`<td><div class="row-actions" style="justify-content:center;"><button data-edit="${t.id}" title="Editar Transação" class="btn-action-edit">✎</button><button data-del="${t.id}" title="Excluir Transação" class="btn-action-del">🗑</button></div></td>`:''}
+        </tr>`;
+      }).join('')}
     </tbody>
     <tfoot>
       <tr class="tfoot-row">
@@ -9870,13 +9884,17 @@ function pageRecorrentes(){
           const pct = isFixed ? Math.min(100, Math.round((appliedM / totalM) * 100)) : 0;
           const remainingM = isFixed ? Math.max(0, totalM - appliedM) : 0;
           const nextInstallmentNum = appliedM + 1;
+          const method = r.paymentMethod || detectPaymentMethodFromName(r.desc) || ((r.cat && r.cat.toLowerCase().includes('cartão')) || (r.acc && r.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto');
 
           return \`
           <tr class="trow">
             <td class="tx-desc">
               <div style="display:flex; flex-direction:column; gap:4px;">
-                <div style="display:flex; align-items:center; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <span style="font-weight:700;">\${r.desc}</span>
+                  <span class="pill" style="padding:2px 7px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.4)' : 'rgba(245,158,11,0.4)'};">
+                    \${method === 'Cartão de Crédito' ? '💳 Cartão de Crédito' : '📄 Boleto'}
+                  </span>
                   \${isFixed ? \`<span class="pill" style="padding:2px 7px; font-size:10px; background:rgba(59,130,246,0.14); color:var(--blue); border:1px solid rgba(59,130,246,0.25);">\${appliedM}/\${totalM}m</span>\` : ''}
                 </div>
                 \${isFixed ? \`
@@ -12243,8 +12261,8 @@ async function saveTransaction(){
     if(descEl) descEl.focus();
     return;
   }
-  if(isNaN(val) || val <= 0) {
-    showToast('⚠️ Por favor, informe um valor válido maior que zero (Ex: 100,50).');
+  if(isNaN(val) || (currentType === 'out' ? val < 0 : val <= 0)) {
+    showToast('⚠️ Por favor, informe um valor válido (Ex: 0,00 ou 100,50).');
     if(valorEl) valorEl.focus();
     return;
   }
@@ -12773,13 +12791,113 @@ function updateRecMonthsPreview() {
   const preview = document.getElementById('recMonthsCountPreview');
   if(!totalInput) return;
   const num = parseInt(totalInput.value) || 0;
-  if(preview) {
-    preview.textContent = num > 0 ? (num + (num === 1 ? ' mês selecionado' : ' meses selecionados')) : 'Indeterminado';
-  }
   document.querySelectorAll('.rec-chip-btn').forEach(btn => {
     const m = parseInt(btn.getAttribute('data-months'));
     btn.classList.toggle('active', m === num);
   });
+}
+
+/* ==================== Detecção Inteligente de Método de Pagamento (Cartão vs Boleto) ==================== */
+function detectPaymentMethodFromName(desc) {
+  if (!desc) return null;
+  const d = String(desc).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  
+  // Palavras-chave de Cartão de Crédito
+  const creditKeywords = [
+    'cartao', 'cartao de credito', 'fatura', 'nubank', 'mastercard', 'visa', 'elo', 'amex', 'ourocard',
+    'credicard', 'digio', 'c6', 'c6bank', 'inter card', 'xp card', 'itaucard', 'bradescard',
+    'santander sx', 'hipercard', 'porto seguro', 'pan', 'will bank', 'btg card', 'credito',
+    'anuidade', 'limite cartao', 'fatura cartao'
+  ];
+  
+  // Palavras-chave de Boleto
+  const boletoKeywords = [
+    'boleto', 'aluguel', 'condominio', 'energia', 'luz', 'enel', 'cemig', 'cpfl', 'copel', 'equatorial',
+    'agua', 'sabesp', 'sanepar', 'copasa', 'dae', 'internet', 'fibra', 'wifi', 'iptu',
+    'ipva', 'mensalidade', 'escola', 'colegio', 'faculdade', 'universidade', 'curso',
+    'plano de saude', 'convenio', 'unimed', 'bradesco saude', 'amil', 'notredame', 'hapvida',
+    'seguro', 'financiamento', 'parcela', 'fies', 'consorcio', 'das', 'mei', 'darf', 'guia',
+    'taxa', 'claro', 'vivo', 'tim', 'oi', 'net virtua', 'gympass', 'totalpass', 'dpvat'
+  ];
+
+  if (creditKeywords.some(kw => d.includes(kw))) return 'Cartão de Crédito';
+  if (boletoKeywords.some(kw => d.includes(kw))) return 'Boleto';
+  return null;
+}
+
+function handleRecDescInput() {
+  const descEl = document.getElementById('recDesc');
+  const badgeEl = document.getElementById('recTypeBadge');
+  const catSel = document.getElementById('recCategoria');
+  const accSel = document.getElementById('recConta');
+  if (!descEl) return;
+
+  const desc = descEl.value;
+  const detected = detectPaymentMethodFromName(desc);
+
+  if (badgeEl) {
+    if (detected === 'Cartão de Crédito') {
+      badgeEl.style.display = 'inline-flex';
+      badgeEl.style.alignItems = 'center';
+      badgeEl.style.gap = '4px';
+      badgeEl.style.background = 'rgba(168, 85, 247, 0.18)';
+      badgeEl.style.color = '#C084FC';
+      badgeEl.style.border = '1px solid rgba(168, 85, 247, 0.4)';
+      badgeEl.innerHTML = '💳 Identificado: Cartão de Crédito';
+    } else if (detected === 'Boleto') {
+      badgeEl.style.display = 'inline-flex';
+      badgeEl.style.alignItems = 'center';
+      badgeEl.style.gap = '4px';
+      badgeEl.style.background = 'rgba(245, 158, 11, 0.18)';
+      badgeEl.style.color = '#FBBF24';
+      badgeEl.style.border = '1px solid rgba(245, 158, 11, 0.4)';
+      badgeEl.innerHTML = '📄 Identificado: Boleto';
+    } else {
+      badgeEl.style.display = 'none';
+    }
+  }
+
+  if (detected === 'Cartão de Crédito') {
+    if (catSel) {
+      for (let opt of catSel.options) {
+        const valLow = opt.value.toLowerCase();
+        if (valLow.includes('cartão') || valLow.includes('cartao')) {
+          catSel.value = opt.value;
+          break;
+        }
+      }
+    }
+    if (accSel) {
+      const dLower = desc.toLowerCase();
+      let matched = false;
+      for (let opt of accSel.options) {
+        const oLow = opt.value.toLowerCase();
+        if (oLow.includes(dLower) || (dLower.includes('nubank') && oLow.includes('nubank')) || (dLower.includes('inter') && oLow.includes('inter'))) {
+          accSel.value = opt.value;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        for (let opt of accSel.options) {
+          if (opt.value.toLowerCase().includes('cartão') || opt.value.toLowerCase().includes('cartao')) {
+            accSel.value = opt.value;
+            break;
+          }
+        }
+      }
+    }
+  } else if (detected === 'Boleto') {
+    if (catSel) {
+      const dLower = desc.toLowerCase();
+      for (let opt of catSel.options) {
+        const oLow = opt.value.toLowerCase();
+        if (dLower.includes('aluguel') && oLow.includes('moradia')) { catSel.value = opt.value; break; }
+        if ((dLower.includes('luz') || dLower.includes('energia') || dLower.includes('agua')) && (oLow.includes('moradia') || oLow.includes('contas'))) { catSel.value = opt.value; break; }
+        if (dLower.includes('internet') && (oLow.includes('moradia') || oLow.includes('serviços') || oLow.includes('contas'))) { catSel.value = opt.value; break; }
+      }
+    }
+  }
 }
 
 function openRecurringModal(id){
@@ -12827,6 +12945,7 @@ function openRecurringModal(id){
   toggleRecDurationMode();
   updateRecMonthsPreview();
   populateRecAccountOptions(selectedAcc);
+  handleRecDescInput();
 }
 
 function closeRecurringModal(){ document.getElementById('overlayRecurring').classList.remove('show'); }
@@ -12882,14 +13001,19 @@ async function saveRecurring(){
     }
   }
 
-  if(!desc || isNaN(val) || val<=0 || isNaN(day) || day<1 || day>31){ showToast('Preencha os campos corretamente'); return; }
+  if(!desc || isNaN(val) || (currentRecType === 'out' ? val < 0 : val <= 0) || isNaN(day) || day < 1 || day > 31){
+    showToast('Preencha os campos corretamente. Valores a partir de R$ 0,00 são permitidos em despesas.');
+    return;
+  }
+
+  const detectedMethod = detectPaymentMethodFromName(desc) || ((cat && cat.toLowerCase().includes('cartão')) || (accSel && accSel.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto');
   
   if(editingRecId){
-    Object.assign(recurringList.find(r=>r.id===editingRecId), {desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths});
+    Object.assign(recurringList.find(r=>r.id===editingRecId), {desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths,paymentMethod:detectedMethod});
     showToast('Recorrente atualizado!');
     logActivity('Edição', 'Recorrente', 'Editou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses' : '') + ')');
   } else {
-    const newRec = {id: nextRecId++, desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths:0,appliedPeriods:[]};
+    const newRec = {id: nextRecId++, desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths:0,appliedPeriods:[],paymentMethod:detectedMethod};
     
     // Gera mês a mês no extrato até finalizar a duração cadastrada
     const targetAcc = accounts.find(a => a.name === accSel);
@@ -12915,7 +13039,8 @@ async function saveRecurring(){
         status: 'Pendente',
         type: currentRecType,
         installment: totalMonths > 0 ? (k + '/' + totalMonths) : null,
-        recurringId: newRec.id
+        recurringId: newRec.id,
+        paymentMethod: detectedMethod
       });
 
       newRec.appliedPeriods.push(y + '-' + String(m).padStart(2, '0'));
