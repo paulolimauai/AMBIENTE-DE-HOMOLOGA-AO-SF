@@ -8341,10 +8341,6 @@ function pageDashboard(){
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             <span>\${formattedToday}</span>
           </span>
-          <span class="hero-badge live-dot">
-            <span class="pulse-dot"></span>
-            <span>Sistema 100% Operacional</span>
-          </span>
         </div>
         <h1 class="hero-greeting">
           <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); box-shadow:0 4px 14px rgba(245,158,11,0.25);">
@@ -8770,12 +8766,6 @@ function pageDashboard(){
             Suas despesas serão agrupadas automaticamente por grupos e faixas de impacto.
           </p>
 
-          <!-- Executive CTA Button -->
-          <button onclick="openModal(null)" style="font-size:11.5px; font-weight:800; padding:7px 16px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#FFFFFF; border:1px solid rgba(255,255,255,0.2); box-shadow:0 4px 16px rgba(245,158,11,0.35); cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:transform 0.2s ease, box-shadow 0.2s ease;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>+ Lançar Despesa</span>
-          </button>
-
           <!-- Category Preview Micro-Chips -->
           <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:16px; opacity:0.8;">
             <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
@@ -8929,12 +8919,6 @@ function pageDashboard(){
           <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.45; max-width:270px;">
             Cadastre cartões de crédito, contas digitais ou dinheiro para acompanhar limites e faturas.
           </p>
-
-          <!-- Executive CTA Button (Royal Violet Luxury) -->
-          <button data-nav="cartoes" style="font-size:12px; font-weight:800; padding:8px 18px; border-radius:10px; background:linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); color:#FFFFFF; border:1px solid rgba(255,255,255,0.22); box-shadow:0 6px 20px rgba(139,92,246,0.4), inset 0 1px 0 rgba(255,255,255,0.25); cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:transform 0.2s ease, box-shadow 0.2s ease;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>+ Cadastrar Conta / Cartão</span>
-          </button>
 
           <!-- 3 Interactive Feature Preview Slots -->
           <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; width:100%; margin-top:15px;" data-nav="cartoes">
