@@ -477,6 +477,20 @@ body.user-logged-in {
   color: #F8FAFC !important;
 }
 
+html.user-logged-in.light body,
+html.user-logged-in body.light,
+body.user-logged-in.light {
+  background-color: #F2F7F4 !important;
+  background-image: 
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
+    url('/images/nexus_vision_living_bg.jpg') !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  color: #0F172A !important;
+}
+
 html.user-logged-in .app-bg-scene {
   display: none !important;
 }
@@ -748,18 +762,26 @@ html.user-logged-in .modal {
     inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
   border-radius: 24px !important;
 }
+html.user-logged-in input,
+html.user-logged-in select,
+html.user-logged-in textarea,
 html.user-logged-in .modal input,
 html.user-logged-in .modal select,
 html.user-logged-in .modal textarea {
   background: rgba(10, 18, 14, 0.65) !important;
   border: 1px solid rgba(255, 255, 255, 0.14) !important;
   color: #FFFFFF !important;
+  border-radius: 12px !important;
 }
+html.user-logged-in input:focus,
+html.user-logged-in select:focus,
+html.user-logged-in textarea:focus,
 html.user-logged-in .modal input:focus,
 html.user-logged-in .modal select:focus,
 html.user-logged-in .modal textarea:focus {
   border-color: #1DB954 !important;
   box-shadow: 0 0 12px rgba(29, 185, 84, 0.35) !important;
+  outline: none !important;
 }
 
 /* Gaveta Mobile */
@@ -5082,26 +5104,7 @@ body.light .scale-dropdown {
         <svg id="authThemeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
         </svg>
-      </button>
-    </div>
   </div>
-
-  <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
-
-  <!-- Camada de Tela de Vidro Panorâmica (4K Liquid Glass Screen Effect) -->
-  <div class="glass-viewport-screen pointer-events-none">
-    <div class="glass-shard glass-shard-1"></div>
-    <div class="glass-shard glass-shard-2"></div>
-    <div class="glass-shard glass-shard-3"></div>
-    <div class="glass-shard glass-shard-4"></div>
-    <div class="glass-shard glass-shard-5"></div>
-  </div>
-  <div class="glass-screen-reflection pointer-events-none"></div>
-
-  <div class="auth-grid" aria-hidden="true"></div>
-  <div class="auth-blob b1"></div>
-  <div class="auth-blob b2"></div>
-  <div class="auth-blob b3"></div>
 
   <div class="auth-exec-layout">
     <!-- Showcase Institucional Executivo -->
@@ -11584,10 +11587,10 @@ function drawDashboardCharts(){
         labels: ['Receitas', 'Despesas'],
         datasets:[{
           data:[receitas||0.0001,despesas||0.0001], 
-          backgroundColor:['#00E5FF','#FF3B30'],
-          hoverBackgroundColor:['#38BDF8','#F43F5E'],
+          backgroundColor:['#10B981','#EF4444'],
+          hoverBackgroundColor:['#34D399','#F87171'],
           borderWidth:2,
-          borderColor: isLightMode ? '#FFFFFF' : '#171B26'
+          borderColor: isLightMode ? '#FFFFFF' : 'rgba(16, 28, 22, 0.85)'
         }] 
       },
       options:{
