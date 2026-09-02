@@ -2999,72 +2999,68 @@ body.light .dev-signature-name {
   position: relative !important;
 }
 
-/* Botão de Editar Profissional com Ícone SVG Nítido */
+/* Botão de Editar Profissional com Ícone SVG Nítido 4K */
 .btn-action-edit,
 .row-edit,
 [data-edit], [data-editacc], [data-editcat], [data-editorc], [data-editmeta], [data-editrec], [data-editalert], [data-mgedit] {
-  background: rgba(59, 130, 246, 0.18) !important;
-  color: transparent !important;
-  border: 1px solid rgba(59, 130, 246, 0.35) !important;
+  background: rgba(59, 130, 246, 0.16) !important;
+  color: #60A5FA !important;
+  border: 1px solid rgba(59, 130, 246, 0.38) !important;
 }
-.btn-action-edit::before,
-.row-edit::before,
-[data-edit]::before, [data-editacc]::before, [data-editcat]::before, [data-editorc]::before, [data-editmeta]::before, [data-editrec]::before, [data-editalert]::before, [data-mgedit]::before {
-  content: '';
-  width: 14px;
-  height: 14px;
-  background-color: #60A5FA;
-  display: block;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E") no-repeat center / contain;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E") no-repeat center / contain;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+.btn-action-edit svg,
+.row-edit svg,
+[data-edit] svg, [data-editacc] svg, [data-editcat] svg, [data-editorc] svg, [data-editmeta] svg, [data-editrec] svg, [data-editalert] svg, [data-mgedit] svg {
+  width: 14px !important;
+  height: 14px !important;
+  stroke: #60A5FA !important;
+  stroke-width: 2.3px !important;
+  display: block !important;
+  transition: transform 0.2s ease, stroke 0.2s ease !important;
 }
 .btn-action-edit:hover,
 .row-edit:hover,
 [data-edit]:hover, [data-editacc]:hover, [data-editcat]:hover, [data-editorc]:hover, [data-editmeta]:hover, [data-editrec]:hover, [data-editalert]:hover, [data-mgedit]:hover {
   background: rgba(59, 130, 246, 0.35) !important;
-  color: transparent !important;
+  color: #FFFFFF !important;
   border-color: rgba(96, 165, 250, 0.75) !important;
-  transform: translateY(-1px) scale(1.05) !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.40) !important;
+  transform: translateY(-1px) scale(1.06) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45) !important;
 }
-.btn-action-edit:hover::before,
-.row-edit:hover::before,
-[data-edit]:hover::before, [data-editacc]:hover::before, [data-editcat]:hover::before, [data-editorc]:hover::before, [data-editmeta]:hover::before, [data-editrec]:hover::before, [data-editalert]:hover::before, [data-mgedit]:hover::before {
-  background-color: #FFFFFF !important;
-  transform: scale(1.08);
+.btn-action-edit:hover svg,
+.row-edit:hover svg,
+[data-edit]:hover svg, [data-editacc]:hover svg, [data-editcat]:hover svg, [data-editorc]:hover svg, [data-editmeta]:hover svg, [data-editrec]:hover svg, [data-editalert]:hover svg, [data-mgedit]:hover svg {
+  stroke: #FFFFFF !important;
+  transform: scale(1.1) !important;
 }
 
-/* Botão de Excluir Profissional com Ícone SVG Nítido */
+/* Botão de Excluir Profissional com Ícone SVG Nítido 4K */
 .btn-action-del,
 [data-del], [data-delacc], [data-delcat], [data-delorc], [data-delmeta], [data-delrec], [data-delalert], [data-mgdel] {
-  background: rgba(244, 63, 94, 0.18) !important;
-  color: transparent !important;
-  border: 1px solid rgba(244, 63, 94, 0.35) !important;
+  background: rgba(244, 63, 94, 0.16) !important;
+  color: #F87171 !important;
+  border: 1px solid rgba(244, 63, 94, 0.38) !important;
 }
-.btn-action-del::before,
-[data-del]::before, [data-delacc]::before, [data-delcat]::before, [data-delorc]::before, [data-delmeta]::before, [data-delrec]::before, [data-delalert]::before, [data-mgdel]::before {
-  content: '';
-  width: 14px;
-  height: 14px;
-  background-color: #F87171;
-  display: block;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6'/%3E%3Cpath d='M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2'/%3E%3Cline x1='10' x2='10' y1='11' y2='17'/%3E%3Cline x1='14' x2='14' y1='11' y2='17'/%3E%3C/svg%3E") no-repeat center / contain;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6'/%3E%3Cpath d='M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2'/%3E%3Cline x1='10' x2='10' y1='11' y2='17'/%3E%3Cline x1='14' x2='14' y1='11' y2='17'/%3E%3C/svg%3E") no-repeat center / contain;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+.btn-action-del svg,
+[data-del] svg, [data-delacc] svg, [data-delcat] svg, [data-delorc] svg, [data-delmeta] svg, [data-delrec] svg, [data-delalert] svg, [data-mgdel] svg {
+  width: 14px !important;
+  height: 14px !important;
+  stroke: #F87171 !important;
+  stroke-width: 2.3px !important;
+  display: block !important;
+  transition: transform 0.2s ease, stroke 0.2s ease !important;
 }
 .btn-action-del:hover,
 [data-del]:hover, [data-delacc]:hover, [data-delcat]:hover, [data-delorc]:hover, [data-delmeta]:hover, [data-delrec]:hover, [data-delalert]:hover, [data-mgdel]:hover {
   background: rgba(244, 63, 94, 0.35) !important;
-  color: transparent !important;
+  color: #FFFFFF !important;
   border-color: rgba(248, 113, 113, 0.75) !important;
-  transform: translateY(-1px) scale(1.05) !important;
-  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.40) !important;
+  transform: translateY(-1px) scale(1.06) !important;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.45) !important;
 }
-.btn-action-del:hover::before,
-[data-del]:hover::before, [data-delacc]:hover::before, [data-delcat]:hover::before, [data-delorc]:hover::before, [data-delmeta]:hover::before, [data-delrec]:hover::before, [data-delalert]:hover::before, [data-mgdel]:hover::before {
-  background-color: #FFFFFF !important;
-  transform: scale(1.08);
+.btn-action-del:hover svg,
+[data-del]:hover svg, [data-delacc]:hover svg, [data-delcat]:hover svg, [data-delorc]:hover svg, [data-delmeta]:hover svg, [data-delrec]:hover svg, [data-delalert]:hover svg, [data-mgdel]:hover svg {
+  stroke: #FFFFFF !important;
+  transform: scale(1.1) !important;
 }
 
 /* Botão de Lançar / Concluído (Pílula com Texto Nítido) */
@@ -3683,9 +3679,6 @@ body.light tr.trow:hover td { background:#f1f5f9 !important; }
 .val-in{color:#10B981; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
 .val-out{color:#F43F5E; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
 .row-actions{display:flex; gap:6px;}
-.btn-action-edit, .btn-action-del{width:32px; height:32px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.10); background:rgba(255,255,255,0.04); color:var(--text-dim); cursor:pointer; transition:all 0.2s ease; font-size:13px;}
-.btn-action-edit:hover{background:rgba(59,130,246,0.22); border-color:rgba(59,130,246,0.5); color:#60A5FA; transform:translateY(-1px); box-shadow:0 4px 12px rgba(59,130,246,0.3);}
-.btn-action-del:hover{background:rgba(244,63,94,0.22); border-color:rgba(244,63,94,0.5); color:#F43F5E; transform:translateY(-1px); box-shadow:0 4px 12px rgba(244,63,94,0.3);}
 
 .tfoot-row{background:rgba(255,255,255,0.02); font-weight:700; border-top:2px solid var(--card-border);}
 .tfoot-label{text-align:right; font-size:12.5px; color:var(--text-dim); letter-spacing:0.03em; padding:14px 12px;}
@@ -9421,7 +9414,7 @@ function transactionsTable(list, showActions){
               \${t.status === 'Pendente' ? '⏳ Pendente' : (t.type === 'in' ? '✓ Recebido' : '✓ Pago')}
             </span>
           </td>
-          \${showActions?\`<td><div class="row-actions" style="justify-content:center;"><button data-edit="\${t.id}" title="Editar Transação" class="btn-action-edit">✎</button><button data-del="\${t.id}" title="Excluir Transação" class="btn-action-del">🗑</button></div></td>\`:''}
+          \${showActions?\`<td><div class="row-actions" style="justify-content:center;"><button data-edit="\${t.id}" title="Editar Transação" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button><button data-del="\${t.id}" title="Excluir Transação" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></td>\`:''}
         </tr>\`;
       }).join('')}
     </tbody>
@@ -9615,8 +9608,8 @@ function pageContas(){
               </div>
             </div>
             <div class="row-actions" style="display:flex; gap:6px;">
-              <button data-editacc="\${a.id}" title="Editar Conta" class="btn-action-edit">✎</button>
-              <button data-delacc="\${a.id}" title="Excluir Conta" class="btn-action-del">🗑</button>
+              <button data-editacc="\${a.id}" title="Editar Conta" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
+              <button data-delacc="\${a.id}" title="Excluir Conta" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
             </div>
           </div>
 
@@ -9705,8 +9698,8 @@ function pageOrcamentos(){
               </div>
             </div>
             <div class="row-actions" style="display:flex; gap:6px;">
-              <button data-editorc="\${b.id}" title="Editar Orçamento" class="btn-action-edit">✎</button>
-              <button data-delorc="\${b.id}" title="Excluir Orçamento" class="btn-action-del">🗑</button>
+              <button data-editorc="\${b.id}" title="Editar Orçamento" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
+              <button data-delorc="\${b.id}" title="Excluir Orçamento" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
             </div>
           </div>
           
@@ -9770,8 +9763,8 @@ function pageMetas(){
               </div>
             </div>
             <div class="row-actions" style="display:flex; gap:6px;">
-              <button data-editmeta="\${g.id}" title="Editar Meta" class="btn-action-edit">✎</button>
-              <button data-delmeta="\${g.id}" title="Excluir Meta" class="btn-action-del">🗑</button>
+              <button data-editmeta="\${g.id}" title="Editar Meta" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
+              <button data-delmeta="\${g.id}" title="Excluir Meta" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
             </div>
           </div>
 
@@ -10106,8 +10099,8 @@ function pageRecorrentes(){
             <td class="\${r.type==='in'?'val-in':'val-out'}">\${r.type==='in'?'+':'-'}\${fmt(r.val)}</td>
             <td>
               <div class="row-actions" style="justify-content:center; gap:6px;">
-                <button data-editrec="\${r.id}" title="Editar Recorrente" class="btn-action-edit">✎</button>
-                <button data-delrec="\${r.id}" title="Excluir Recorrente" class="btn-action-del">🗑</button>
+                <button data-editrec="\${r.id}" title="Editar Recorrente" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
+                <button data-delrec="\${r.id}" title="Excluir Recorrente" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
               </div>
             </td>
           </tr>\`;
@@ -10444,8 +10437,8 @@ function pageAlertas(){
               </div>
             </div>
             <div class="row-actions" style="display:flex; gap:6px;">
-              <button data-editalert="\${al.id}" title="Editar Alerta" class="btn-action-edit">✎</button>
-              <button data-delalert="\${al.id}" title="Excluir Alerta" class="btn-action-del">🗑</button>
+              <button data-editalert="\${al.id}" title="Editar Alerta" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
+              <button data-delalert="\${al.id}" title="Excluir Alerta" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
             </div>
           </div>
 
