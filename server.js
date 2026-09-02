@@ -1911,7 +1911,8 @@ body.light .app-blob.a3{opacity:.05;}
   padding-top:env(safe-area-inset-top);
 }
 .topheader-row{
-  display:flex; align-items:center; gap:16px; padding:12px 28px; max-width:1440px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 28px; max-width:1440px; margin:0 auto;
+  position:relative; min-height:68px;
 }
 .header-live-time {
   display:inline-flex; align-items:center; gap:7px; padding:5px 12px;
@@ -1990,17 +1991,66 @@ body.light .header-live-time {
   box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
 }
 .mobile-drawer-nav button .ic svg { width:18px; height:18px; display:block; stroke-width:2.2px; }
-.brand{display:flex; align-items:center; gap:12px; flex-shrink:0;}
-.brand .logo{
-  width:40px; height:40px; border-radius:12px;
-  background:linear-gradient(135deg, #10B981 0%, #059669 50%, #3B82F6 100%);
-  display:flex; align-items:center; justify-content:center;
-  font-weight:900; color:#FFFFFF; font-size:18px; flex-shrink:0;
-  box-shadow:0 4px 18px rgba(16,185,129,0.38), inset 0 1px 1px rgba(255,255,255,0.6);
-  border:1px solid rgba(255,255,255,0.22);
+.brand{
+  display:flex; align-items:center; gap:14px; flex-shrink:0;
+  padding:6px 18px 6px 8px; border-radius:18px;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 27, 43, 0.65) 50%, rgba(9, 13, 22, 0.85) 100%);
+  border:1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter:blur(24px) saturate(200%);
+  -webkit-backdrop-filter:blur(24px) saturate(200%);
+  box-shadow:0 10px 30px -5px rgba(0,0,0,0.7), inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 0 25px rgba(16, 185, 129, 0.18);
+  transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select:none; cursor:pointer;
 }
-.brand .name{font-weight:800; font-size:15px; line-height:1.2; white-space:nowrap; letter-spacing:-0.01em; color:#FFFFFF;}
-.brand .name span{display:block; color:#34D399; font-size:10px; letter-spacing:.08em; font-weight:800; text-transform:uppercase;}
+.topheader .brand{
+  position:absolute; left:50%; transform:translateX(-50%); z-index:10;
+}
+.brand:hover, .topheader .brand:hover{
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(20, 27, 43, 0.75) 50%, rgba(9, 13, 22, 0.92) 100%);
+  border-color:rgba(52, 211, 153, 0.45);
+  box-shadow:0 14px 40px -5px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 0 35px rgba(16, 185, 129, 0.35);
+}
+.topheader .brand:hover{
+  transform:translateX(-50%) translateY(-1px);
+}
+.brand .logo{
+  width:46px; height:46px; border-radius:14px;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(16, 185, 129, 0.85) 45%, rgba(5, 150, 105, 0.95) 80%, rgba(59, 130, 246, 0.85) 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900; color:#FFFFFF; flex-shrink:0;
+  box-shadow:0 0 28px rgba(16, 185, 129, 0.65), 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1.5px 2px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+  border:1.5px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter:blur(20px) saturate(220%);
+  transition:all 0.25s ease;
+}
+.brand:hover .logo{
+  transform:scale(1.04);
+  box-shadow:0 0 36px rgba(16, 185, 129, 0.85), 0 10px 28px rgba(0, 0, 0, 0.7), inset 0 1.5px 2px rgba(255, 255, 255, 0.95);
+}
+.brand .name{
+  font-weight:900; font-size:16px; line-height:1.15; white-space:nowrap; letter-spacing:0.04em; color:#FFFFFF;
+  text-shadow:0 0 20px rgba(255, 255, 255, 0.35), 0 2px 6px rgba(0, 0, 0, 0.7);
+  display:flex; flex-direction:column;
+}
+.brand .name span{
+  display:block; font-size:9.5px; letter-spacing:0.14em; font-weight:800; text-transform:uppercase;
+  background:linear-gradient(90deg, #34D399 0%, #60A5FA 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  text-shadow:0 0 12px rgba(52, 211, 153, 0.45);
+  margin-top:1px;
+}
+@media (max-width: 900px) {
+  .topheader .brand{
+    position:static; transform:none;
+    padding:4px 12px 4px 6px;
+  }
+  .topheader .brand:hover{
+    transform:translateY(-1px);
+  }
+  .brand .logo{width:38px; height:38px;}
+  .brand .name{font-size:14px;}
+  .brand .name span{font-size:8.5px;}
+}
 
 .icon-btn,
 .scale-selector-wrap #scaleMenuBtn,
@@ -5253,7 +5303,11 @@ body.light .scale-dropdown {
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
       <div class="brand">
-        <div class="logo">N</div>
+        <div class="logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 19.5V4.5L18 19.5V4.5" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(255,255,255,0.9)) drop-shadow(0 2px 4px rgba(0,0,0,0.5));"/>
+          </svg>
+        </div>
         <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
       </div>
       <div class="right" style="margin-left:auto;">
@@ -5358,7 +5412,11 @@ body.light .scale-dropdown {
   <div class="mobile-drawer" id="mobileDrawer">
     <div class="mobile-drawer-head">
       <div class="brand">
-        <div class="logo">N</div>
+        <div class="logo">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 19.5V4.5L18 19.5V4.5" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));"/>
+          </svg>
+        </div>
         <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
       </div>
       <button class="close-x" id="closeMobileDrawer" style="position:static; padding:4px;">✕</button>
