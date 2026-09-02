@@ -2989,47 +2989,82 @@ body.light .dev-signature-name {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
   cursor: pointer !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important;
   outline: none !important;
   flex-shrink: 0 !important;
+  position: relative !important;
 }
 
-/* Botão de Editar (Pencil ✎) */
+/* Botão de Editar Profissional com Ícone SVG Nítido */
 .btn-action-edit,
 .row-edit,
 [data-edit], [data-editacc], [data-editcat], [data-editorc], [data-editmeta], [data-editrec], [data-editalert], [data-mgedit] {
   background: rgba(59, 130, 246, 0.18) !important;
-  color: #60A5FA !important;
+  color: transparent !important;
   border: 1px solid rgba(59, 130, 246, 0.35) !important;
+}
+.btn-action-edit::before,
+.row-edit::before,
+[data-edit]::before, [data-editacc]::before, [data-editcat]::before, [data-editorc]::before, [data-editmeta]::before, [data-editrec]::before, [data-editalert]::before, [data-mgedit]::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  background-color: #60A5FA;
+  display: block;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E") no-repeat center / contain;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 .btn-action-edit:hover,
 .row-edit:hover,
 [data-edit]:hover, [data-editacc]:hover, [data-editcat]:hover, [data-editorc]:hover, [data-editmeta]:hover, [data-editrec]:hover, [data-editalert]:hover, [data-mgedit]:hover {
   background: rgba(59, 130, 246, 0.35) !important;
-  color: #FFFFFF !important;
+  color: transparent !important;
   border-color: rgba(96, 165, 250, 0.75) !important;
   transform: translateY(-1px) scale(1.05) !important;
   box-shadow: 0 4px 14px rgba(59, 130, 246, 0.40) !important;
 }
+.btn-action-edit:hover::before,
+.row-edit:hover::before,
+[data-edit]:hover::before, [data-editacc]:hover::before, [data-editcat]:hover::before, [data-editorc]:hover::before, [data-editmeta]:hover::before, [data-editrec]:hover::before, [data-editalert]:hover::before, [data-mgedit]:hover::before {
+  background-color: #FFFFFF !important;
+  transform: scale(1.08);
+}
 
-/* Botão de Excluir (Lixeira 🗑) */
+/* Botão de Excluir Profissional com Ícone SVG Nítido */
 .btn-action-del,
 [data-del], [data-delacc], [data-delcat], [data-delorc], [data-delmeta], [data-delrec], [data-delalert], [data-mgdel] {
   background: rgba(244, 63, 94, 0.18) !important;
-  color: #F87171 !important;
+  color: transparent !important;
   border: 1px solid rgba(244, 63, 94, 0.35) !important;
+}
+.btn-action-del::before,
+[data-del]::before, [data-delacc]::before, [data-delcat]::before, [data-delorc]::before, [data-delmeta]::before, [data-delrec]::before, [data-delalert]::before, [data-mgdel]::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  background-color: #F87171;
+  display: block;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6'/%3E%3Cpath d='M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2'/%3E%3Cline x1='10' x2='10' y1='11' y2='17'/%3E%3Cline x1='14' x2='14' y1='11' y2='17'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6'/%3E%3Cpath d='M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2'/%3E%3Cline x1='10' x2='10' y1='11' y2='17'/%3E%3Cline x1='14' x2='14' y1='11' y2='17'/%3E%3C/svg%3E") no-repeat center / contain;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 .btn-action-del:hover,
 [data-del]:hover, [data-delacc]:hover, [data-delcat]:hover, [data-delorc]:hover, [data-delmeta]:hover, [data-delrec]:hover, [data-delalert]:hover, [data-mgdel]:hover {
   background: rgba(244, 63, 94, 0.35) !important;
-  color: #FFFFFF !important;
+  color: transparent !important;
   border-color: rgba(248, 113, 113, 0.75) !important;
   transform: translateY(-1px) scale(1.05) !important;
   box-shadow: 0 4px 14px rgba(244, 63, 94, 0.40) !important;
+}
+.btn-action-del:hover::before,
+[data-del]:hover::before, [data-delacc]:hover::before, [data-delcat]:hover::before, [data-delorc]:hover::before, [data-delmeta]:hover::before, [data-delrec]:hover::before, [data-delalert]:hover::before, [data-mgdel]:hover::before {
+  background-color: #FFFFFF !important;
+  transform: scale(1.08);
 }
 
 /* Botão de Lançar / Concluído (Pílula com Texto Nítido) */
@@ -5036,10 +5071,29 @@ body.light .logout-timer-bar {
   background: rgba(0, 0, 0, 0.08);
 }
 
-/* ==================== Responsividade Master Fluida em Todos os Dispositivos ==================== */
-@media (min-width: 1700px) {
+/* ==================== Responsividade Master Fluida em Todos os Dispositivos (com Suporte 4K Ultra-HD) ==================== */
+@media (min-width: 2560px) {
+  /* Otimizações Específicas para Monitores 4K / UHD / Ultra-Wide */
+  .brand .name { font-size: 20px !important; }
+  .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }
+  .topheader-row { max-width: 2200px !important; padding: 12px 36px !important; }
+  nav.menu { max-width: 2200px !important; padding: 8px 14px !important; }
+  .main { max-width: 2200px !important; padding: 24px 36px 40px !important; }
+  .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
+  .kpi .val { font-size: 26px !important; }
+  .kpi .sub { font-size: 12.5px !important; }
+  .table-panel { padding: 26px !important; border-radius: 22px !important; }
+  th { font-size: 11.5px !important; letter-spacing: .07em !important; }
+  td { font-size: 13.5px !important; padding: 15px 14px !important; }
+  .pill { font-size: 12px !important; padding: 4px 12px !important; }
+  .btn-action-edit, .btn-action-del { width: 34px !important; height: 34px !important; }
+}
+
+@media (min-width: 1700px) and (max-width: 2559px) {
   .brand .name { font-size: 18px; }
-  .main { max-width: 1720px !important; }
+  .topheader-row { max-width: 1760px !important; }
+  nav.menu { max-width: 1760px !important; }
+  .main { max-width: 1760px !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; }
 }
 
@@ -9900,22 +9954,22 @@ function pageRecorrentes(){
 
   <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:18px;">
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Despesas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">↓</span></div>
+      <div class="row1" style="margin-bottom:6px;"><span>Despesas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></span></div>
       <div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">\${fmt(totalDespRec)}</div>
       <div class="sub" style="font-size:11px;">Total de saídas programadas</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Receitas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green);">↑</span></div>
+      <div class="row1" style="margin-bottom:6px;"><span>Receitas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></div>
       <div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">\${fmt(totalRecRec)}</div>
       <div class="sub" style="font-size:11px;">Total de entradas programadas</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Total Recorrentes</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple);">🔄</span></div>
+      <div class="row1" style="margin-bottom:6px;"><span>Total Recorrentes</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg></span></div>
       <div class="val" style="font-size:20px; margin-bottom:2px;">\${totalLctos}</div>
       <div class="sub" style="font-size:11px;">\${totalComPrazo} com prazo · \${totalContinuos} contínuos</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Status de Conclusão</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue);">📊</span></div>
+      <div class="row1" style="margin-bottom:6px;"><span>Status de Conclusão</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span></div>
       <div class="val" style="font-size:20px; color:var(--blue); margin-bottom:2px;">\${totalConcluidos} / \${totalComPrazo || totalLctos}</div>
       <div class="sub" style="font-size:11px;">\${totalConcluidos} contratos 100% aplicados</div>
     </div>
@@ -9960,16 +10014,16 @@ function pageRecorrentes(){
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <span style="font-weight:700;">\${r.desc}</span>
                   \${method ? \`
-                    <span class="pill" style="padding:2px 7px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.4)' : 'rgba(245,158,11,0.4)'};">
-                      \${method === 'Cartão de Crédito' ? '💳 Cartão de Crédito' : '📄 Boleto'}
+                    <span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.4)' : 'rgba(245,158,11,0.4)'};">
+                      \${method === 'Cartão de Crédito' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>Cartão de Crédito' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>Boleto'}
                     </span>
                   \` : ''}
-                  \${isFixed ? \`<span class="pill" style="padding:2px 7px; font-size:10px; font-weight:700; background:\${isFullyPaid ? 'rgba(16,185,129,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--green)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓' : paidWordPlural}</span>\` : ''}
+                  \${isFixed ? \`<span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${isFullyPaid ? 'rgba(16,185,129,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--green)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓ Concluído' : paidWordPlural}</span>\` : ''}
                 </div>
                 \${isFixed ? \`
                   <details style="font-size:10.5px; margin-top:2px;">
-                    <summary style="cursor:pointer; color:var(--blue); font-weight:600; user-select:none;">
-                      🗓️ Cronograma mês a mês (1 a \${totalM})
+                    <summary style="cursor:pointer; color:var(--blue); font-weight:600; user-select:none; display:inline-flex; align-items:center; gap:4px;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg> Cronograma mês a mês (1 a \${totalM})
                     </summary>
                     <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:4px; margin-top:6px; padding:6px; background:rgba(0,0,0,0.25); border-radius:8px; border:1px solid var(--card-border); max-height:160px; overflow-y:auto;">
                       \${(function(){
@@ -10005,13 +10059,13 @@ function pageRecorrentes(){
               \${isFixed ? \`
                 <div style="display:flex; flex-direction:column; gap:2px;">
                   <span class="pill" style="background:rgba(59,130,246,0.12); color:var(--blue); font-weight:700; font-size:11px;">
-                    📅 \${totalM} \${totalM === 1 ? 'mês' : 'meses'}
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>\${totalM} \${totalM === 1 ? 'mês' : 'meses'}
                   </span>
                   \${r.startMonth && r.startYear ? \`<span style="font-size:10px; color:var(--text-dim);">Início: \${MONTHS[r.startMonth-1] ? MONTHS[r.startMonth-1].substring(0,3) : r.startMonth}/\${r.startYear}</span>\` : ''}
                 </div>
               \` : \`
                 <span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text-dim); font-weight:600; font-size:11px;">
-                  ♾️ Contínuo
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z"/></svg>Contínuo
                 </span>
               \`}
             </td>
@@ -10033,8 +10087,8 @@ function pageRecorrentes(){
                   </div>
                   <!-- 2. DEPOIS: O que ainda falta pagar -->
                   <div style="font-size:10.5px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color:\${remainingToPay > 0 ? '#F59E0B' : 'var(--green)'}; font-weight:700;">
-                      \${remainingToPay > 0 ? (\`⏳ Falta \${isIncome ? 'receber' : 'pagar'}: \${remainingToPay} \${remainingToPay === 1 ? 'parcela' : 'parcelas'}\`) : '✓ Todas quitadas'}
+                    <span style="color:\${remainingToPay > 0 ? '#F59E0B' : 'var(--green)'}; font-weight:700; display:inline-flex; align-items:center; gap:3px;">
+                      \${remainingToPay > 0 ? (\`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Falta \${isIncome ? 'receber' : 'pagar'}: \${remainingToPay} \${remainingToPay === 1 ? 'parcela' : 'parcelas'}\`) : '✓ Todas quitadas'}
                     </span>
                     \${remainingToPay > 0 ? \`<span style="color:#F59E0B; font-size:10px; font-weight:700;">\${100 - paidPct}%</span>\` : ''}
                   </div>
