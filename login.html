@@ -204,6 +204,226 @@
                 linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
         }
 
+        /* ==================== TICKER DE COTAÇÕES FINANCEIRAS AO VIVO ==================== */
+        .fintech-live-ticker-bar {
+            display: flex;
+            align-items: center;
+            height: 38px;
+            background: linear-gradient(90deg, rgba(7, 16, 11, 0.85) 0%, rgba(13, 27, 20, 0.75) 50%, rgba(7, 16, 11, 0.85) 100%);
+            border: 1px solid rgba(52, 211, 153, 0.28);
+            border-radius: 999px;
+            padding: 2px 6px 2px 4px;
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6), 0 0 20px -2px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        body.light .fintech-live-ticker-bar {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 253, 244, 0.90) 50%, rgba(255, 255, 255, 0.92) 100%);
+            border-color: rgba(16, 185, 129, 0.35);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08), 0 0 15px rgba(16, 185, 129, 0.10), inset 0 1px 0 #FFFFFF;
+        }
+
+        .fintech-ticker-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.15));
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            border-radius: 999px;
+            font-size: 10.5px;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            color: #34D399;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            z-index: 2;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+        }
+
+        body.light .fintech-ticker-badge {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.10));
+            border-color: rgba(5, 150, 105, 0.35);
+            color: #047857;
+        }
+
+        .fintech-pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 10px #10B981;
+            animation: pulseFintechDot 1.8s infinite ease-in-out;
+        }
+
+        @keyframes pulseFintechDot {
+            0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #10B981; }
+            50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #34D399; }
+        }
+
+        .fintech-ticker-viewport {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            mask-image: linear-gradient(90deg, transparent 0%, #000 3%, #000 97%, transparent 100%);
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 3%, #000 97%, transparent 100%);
+        }
+
+        .fintech-ticker-track {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            white-space: nowrap;
+            will-change: transform;
+            animation: tickerScrollLoop 38s linear infinite;
+        }
+
+        .fintech-live-ticker-bar:hover .fintech-ticker-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes tickerScrollLoop {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #E2E8F0;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        body.light .ticker-item {
+            color: #1E293B;
+        }
+
+        .ticker-item .sym {
+            color: #94A3B8;
+            font-weight: 800;
+            font-size: 11px;
+            letter-spacing: 0.02em;
+        }
+
+        body.light .ticker-item .sym {
+            color: #64748B;
+        }
+
+        .ticker-item .val {
+            font-variant-numeric: tabular-nums;
+            font-weight: 800;
+            color: #F8FAFC;
+            transition: color 0.4s ease, text-shadow 0.4s ease;
+        }
+
+        body.light .ticker-item .val {
+            color: #0F172A;
+        }
+
+        .ticker-item .chg {
+            font-size: 10.5px;
+            font-weight: 800;
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .ticker-item .chg.up {
+            color: #34D399;
+            background: rgba(16, 185, 129, 0.16);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .ticker-item .chg.down {
+            color: #F87171;
+            background: rgba(239, 68, 68, 0.16);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .ticker-item .chg.neu {
+            color: #60A5FA;
+            background: rgba(59, 130, 246, 0.16);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        /* Micro-Flashes para Cotações Atualizadas */
+        .val-flash-up {
+            animation: flashValUp 1.2s ease-out;
+        }
+
+        .val-flash-down {
+            animation: flashValDown 1.2s ease-out;
+        }
+
+        @keyframes flashValUp {
+            0% { color: #34D399 !important; text-shadow: 0 0 12px #34D399; transform: scale(1.08); }
+            100% { color: inherit; text-shadow: none; transform: scale(1); }
+        }
+
+        @keyframes flashValDown {
+            0% { color: #F87171 !important; text-shadow: 0 0 12px #F87171; transform: scale(1.08); }
+            100% { color: inherit; text-shadow: none; transform: scale(1); }
+        }
+
+        /* Efeito de Card FinTech Glow */
+        .fintech-card-glow {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fintech-card-glow::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 80%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transform: skewX(-20deg);
+            pointer-events: none;
+            transition: left 0.75s ease;
+        }
+
+        .fintech-card-glow:hover::after {
+            left: 140%;
+        }
+
+        /* Borda animada sutil para o card de autenticação */
+        .auth-card-nexus {
+            position: relative;
+        }
+
+        .auth-card-nexus::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1.5px;
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.4), rgba(245, 158, 11, 0.25), rgba(59, 130, 246, 0.35), rgba(16, 185, 129, 0.4));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.75;
+            animation: borderGradientSpin 10s linear infinite;
+        }
+
+        @keyframes borderGradientSpin {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
         /* ==================== EFEITO TELA DE VIDRO PANORÂMICA (4K LIQUID GLASS SCREEN) ==================== */
         .glass-viewport-screen {
             position: fixed;
@@ -1524,11 +1744,11 @@
     </div>
 
     <!-- BARRA SUPERIOR FIXA: BADGE DE SEGURANÇA, HOMOLOGAÇÃO & TEMA -->
-    <header class="w-full max-w-[1200px] flex items-center justify-between z-30 mb-4 px-2">
+    <header class="w-full max-w-[1240px] flex items-center justify-between z-30 mb-3 px-2">
         <div class="flex items-center gap-2">
-            <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-blue-400 text-xs font-semibold backdrop-blur-md hidden sm:inline-flex items-center gap-1.5 shadow-sm">
+            <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-semibold backdrop-blur-md hidden sm:inline-flex items-center gap-1.5 shadow-sm">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Sistema Online</span>
+                <span>Sistema Online & Criptografia 256-bit</span>
             </span>
         </div>
 
@@ -1539,6 +1759,21 @@
             </button>
         </div>
     </header>
+
+    <!-- TICKER FINANCEIRO DE MERCADOS AO VIVO -->
+    <div class="w-full max-w-[1240px] z-30 mb-4 px-2">
+        <div class="fintech-live-ticker-bar">
+            <div class="fintech-ticker-badge">
+                <span class="fintech-pulse-dot"></span>
+                <span class="ticker-badge-text">MERCADOS AO VIVO</span>
+            </div>
+            <div class="fintech-ticker-viewport">
+                <div class="fintech-ticker-track" id="loginTickerTrack">
+                    <!-- Gerado e atualizado dinamicamente com animação infinita -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Canvas de Animação Financeira 4K (Símbolos, Métricas & Gráficos Vivos) -->
     <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-85"></canvas>
@@ -1587,36 +1822,36 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
                     
                     <!-- Card 1: Economia do Mês -->
-                    <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/12 hover:border-emerald-500/50 backdrop-blur-xl transition-all hover:translate-y-[-2px] shadow-lg shadow-black/40">
+                    <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/12 hover:border-emerald-500/50 backdrop-blur-xl transition-all hover:translate-y-[-2px] shadow-lg shadow-black/40 fintech-card-glow">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Economia do Mês</span>
                             <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-black">🎯</span>
                         </div>
-                        <div class="text-xl font-black text-white font-display">R$ 3.850</div>
+                        <div class="text-xl font-black text-white font-display" id="metricEconomia" data-target="3850" data-prefix="R$ ">R$ 3.850</div>
                         <div class="text-[11px] font-bold text-emerald-400 flex items-center gap-1 mt-0.5">
                             <span>+18% guardado</span>
                         </div>
                     </div>
 
                     <!-- Card 2: Orçamento & Gastos -->
-                    <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/12 hover:border-amber-500/50 backdrop-blur-xl transition-all hover:translate-y-[-2px] shadow-lg shadow-black/40">
+                    <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/12 hover:border-amber-500/50 backdrop-blur-xl transition-all hover:translate-y-[-2px] shadow-lg shadow-black/40 fintech-card-glow">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Orçamento</span>
                             <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-black">💡</span>
                         </div>
-                        <div class="text-xl font-black text-white font-display">Sob Controle</div>
+                        <div class="text-xl font-black text-white font-display" id="metricOrcamento">Sob Controle</div>
                         <div class="text-[11px] font-bold text-amber-300 flex items-center gap-1 mt-0.5">
                             <span>Sem surpresas no fim do mês</span>
                         </div>
                     </div>
 
                     <!-- Card 3: Metas & Sonhos -->
-                    <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/12 hover:border-blue-500/50 backdrop-blur-xl transition-all hover:translate-y-[-2px] shadow-lg shadow-black/40">
+                    <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/12 hover:border-blue-500/50 backdrop-blur-xl transition-all hover:translate-y-[-2px] shadow-lg shadow-black/40 fintech-card-glow">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Metas & Sonhos</span>
                             <span class="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-black">🚀</span>
                         </div>
-                        <div class="text-xl font-black text-white font-display">84% Concluído</div>
+                        <div class="text-xl font-black text-white font-display" id="metricMetas" data-target="84" data-suffix="% Concluído">84% Concluído</div>
                         <div class="text-[11px] font-bold text-blue-300 flex items-center gap-1 mt-0.5">
                             <span>Rumo à sua conquista</span>
                         </div>
@@ -3142,10 +3377,28 @@
                 'Saldo Positivo ↗',
                 'Sonhos em Andamento ✨'
             ];
-            const currencyCoins = ['R$', '$', '€', '£'];
+            const currencyCoins = ['R$', '$', '€', '₿', '£', '¥', '%', '▲'];
             const colors = ['#38BDF8', '#F59E0B', '#10B981', '#818CF8', '#FBBF24', '#60A5FA', '#34D399'];
 
-            // 2. Elementos Financeiros Flutuantes com Profundidade
+            // 2. Candlesticks Financeiros Reais de Mercado
+            const candlestickBars = [];
+            const candleCount = 28;
+            for (let c = 0; c < candleCount; c++) {
+                const isBullish = Math.random() > 0.44;
+                candlestickBars.push({
+                    x: Math.random() * (width || 1200),
+                    y: (height || 800) * 0.73 + (Math.random() * 80 - 40),
+                    height: Math.floor(Math.random() * 26) + 10,
+                    wickTop: Math.floor(Math.random() * 12) + 4,
+                    wickBottom: Math.floor(Math.random() * 12) + 4,
+                    width: 6.5,
+                    isBullish: isBullish,
+                    alpha: Math.random() * 0.35 + 0.25,
+                    vx: -(Math.random() * 0.28 + 0.14)
+                });
+            }
+
+            // 3. Elementos Financeiros Flutuantes com Profundidade
             const items = [];
             const itemCount = 38;
             for (let i = 0; i < itemCount; i++) {
@@ -3165,7 +3418,7 @@
                 });
             }
 
-            // 3. Partículas de Poeira Luminosa (Bokeh 4K)
+            // 4. Partículas de Poeira Luminosa (Bokeh 4K)
             const dustParticles = [];
             const dustCount = 45;
             for (let d = 0; d < dustCount; d++) {
@@ -3207,6 +3460,41 @@
                     }
                 }
                 ctx.restore();
+
+                // A2. Simulação de Candlesticks Reais de Mercado
+                candlestickBars.forEach(candle => {
+                    candle.x += candle.vx;
+                    if (candle.x < -30) {
+                        candle.x = width + 30;
+                        candle.y = height * 0.73 + (Math.random() * 80 - 40);
+                        candle.isBullish = Math.random() > 0.44;
+                    }
+                    const candleColor = candle.isBullish 
+                        ? (isLight ? '#059669' : '#10B981') 
+                        : (isLight ? '#DC2626' : '#EF4444');
+
+                    ctx.save();
+                    ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
+                    ctx.strokeStyle = candleColor;
+                    ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(239, 68, 68, 0.35)');
+                    ctx.lineWidth = 1.2;
+
+                    // Pavio
+                    ctx.beginPath();
+                    ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
+                    ctx.lineTo(candle.x, candle.y + candle.height / 2 + candle.wickBottom);
+                    ctx.stroke();
+
+                    // Corpo
+                    ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
+                    ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
+
+                    if (!isLight) {
+                        ctx.shadowColor = candleColor;
+                        ctx.shadowBlur = 6;
+                    }
+                    ctx.restore();
+                });
 
                 // B. Curva Suave de Evolução Patrimonial Pessoal & Poupança Acumulada
                 const chartBaseY = height * 0.78;
@@ -3533,6 +3821,113 @@
                 card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0px)';
                 if (glare) glare.style.setProperty('--card-glare-opacity', '0');
             });
+        })();
+
+        // Engine do Ticker Financeiro Dinâmico com Cotações de Mercado & Flutuação em Tempo Real
+        (function initFinancialTickerEngine() {
+            const track = document.getElementById('loginTickerTrack');
+            if (!track) return;
+
+            const initialQuotes = [
+                { id: 'usdBrl', sym: 'USD/BRL', val: 5.742, chg: '+0.38%', up: true, prefix: 'R$ ' },
+                { id: 'eurBrl', sym: 'EUR/BRL', val: 6.218, chg: '-0.12%', up: false, prefix: 'R$ ' },
+                { id: 'ibov', sym: 'IBOVESPA', val: 132850, chg: '+0.75%', up: true, suffix: ' pts' },
+                { id: 'btc', sym: 'BITCOIN', val: 528940, chg: '+2.85%', up: true, prefix: 'R$ ' },
+                { id: 'eth', sym: 'ETHEREUM', val: 18240, chg: '+1.95%', up: true, prefix: 'R$ ' },
+                { id: 'sp500', sym: 'S&P 500', val: 5864, chg: '+0.42%', up: true, suffix: ' pts' },
+                { id: 'cdi', sym: 'CDI', val: 10.75, chg: '10,75% a.a.', up: null, isStatic: true },
+                { id: 'selic', sym: 'SELIC', val: 10.75, chg: '10,75%', up: null, isStatic: true },
+                { id: 'ipca', sym: 'IPCA (12m)', val: 4.12, chg: '+4,12%', up: true, isStatic: true },
+                { id: 'ouro', sym: 'OURO (g)', val: 488.50, chg: '+0.64%', up: true, prefix: 'R$ ' }
+            ];
+
+            function formatQuoteValue(q) {
+                if (q.isStatic) return (q.prefix || '') + q.val.toFixed(2).replace('.', ',') + '%' + (q.suffix || '');
+                if (q.val >= 1000) {
+                    const formatted = Math.round(q.val).toLocaleString('pt-BR');
+                    return (q.prefix || '') + formatted + (q.suffix || '');
+                }
+                return (q.prefix || '') + q.val.toFixed(3).replace('.', ',') + (q.suffix || '');
+            }
+
+            function renderItems() {
+                let html = '';
+                for (let loop = 0; loop < 2; loop++) {
+                    initialQuotes.forEach((q) => {
+                        const chgClass = q.up === true ? 'up' : (q.up === false ? 'down' : 'neu');
+                        const chgIcon = q.up === true ? '▲ ' : (q.up === false ? '▼ ' : '• ');
+                        const domId = `quote_${loop}_${q.id}`;
+                        html += `
+                            <div class="ticker-item">
+                                <span class="sym">${q.sym}</span>
+                                <span class="val" id="${domId}">${formatQuoteValue(q)}</span>
+                                <span class="chg ${chgClass}">${chgIcon}${q.chg}</span>
+                            </div>
+                        `;
+                    });
+                }
+                track.innerHTML = html;
+            }
+
+            renderItems();
+
+            // Simulação de Micro-Flutuações em Tempo Real (Mercado Vivo)
+            setInterval(() => {
+                const dynamicQuotes = initialQuotes.filter(q => !q.isStatic);
+                const q = dynamicQuotes[Math.floor(Math.random() * dynamicQuotes.length)];
+                const deltaPct = (Math.random() * 0.4 - 0.18) / 100;
+                q.val = Math.max(0.01, q.val * (1 + deltaPct));
+                q.up = deltaPct >= 0;
+                const newChg = (deltaPct >= 0 ? '+' : '') + (deltaPct * 100).toFixed(2).replace('.', ',') + '%';
+                q.chg = newChg;
+
+                for (let loop = 0; loop < 2; loop++) {
+                    const el = document.getElementById(`quote_${loop}_${q.id}`);
+                    if (el) {
+                        el.textContent = formatQuoteValue(q);
+                        const flashClass = q.up ? 'val-flash-up' : 'val-flash-down';
+                        el.classList.remove('val-flash-up', 'val-flash-down');
+                        void el.offsetWidth;
+                        el.classList.add(flashClass);
+                    }
+                }
+            }, 2800);
+        })();
+
+        // Engine de Animação Numérica Suave (CountUp / Odometer)
+        (function initFintechCountUpEngine() {
+            function animateNumber(element, target, prefix = '', suffix = '', duration = 1200) {
+                const start = 0;
+                const startTime = performance.now();
+                function update(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                    const current = Math.round(start + (target - start) * ease);
+                    element.textContent = prefix + current.toLocaleString('pt-BR') + suffix;
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    }
+                }
+                requestAnimationFrame(update);
+            }
+
+            function triggerCountUp() {
+                const el1 = document.getElementById('metricEconomia');
+                if (el1 && el1.dataset.target) {
+                    animateNumber(el1, parseFloat(el1.dataset.target), el1.dataset.prefix || '', el1.dataset.suffix || '', 1400);
+                }
+                const el3 = document.getElementById('metricMetas');
+                if (el3 && el3.dataset.target) {
+                    animateNumber(el3, parseFloat(el3.dataset.target), el3.dataset.prefix || '', el3.dataset.suffix || '', 1600);
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => setTimeout(triggerCountUp, 200));
+            } else {
+                setTimeout(triggerCountUp, 200);
+            }
         })();
 
         // Inicialização de Usuários para Logon
