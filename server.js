@@ -9347,28 +9347,28 @@ function transactionsTable(list, showActions){
       </tr>
     </thead>
     <tbody>
-      ${list.map(t=>{
+      \${list.map(t=>{
         const method = t.paymentMethod || detectPaymentMethodFromName(t.desc) || ((t.cat && t.cat.toLowerCase().includes('cartão')) || (t.acc && t.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : (t.type === 'out' ? 'Boleto' : null));
-        return `
+        return \`
         <tr class="trow">
-          <td><span class="tx-date-badge">${formatDateBR(t.date)}</span></td>
+          <td><span class="tx-date-badge">\${formatDateBR(t.date)}</span></td>
           <td class="tx-desc">
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <span>${t.desc}</span>
-              ${t.type === 'out' && method ? `<span class="pill" style="padding:1.5px 6px; font-size:10px; font-weight:700; border-radius:5px; background:${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.16)' : 'rgba(245,158,11,0.16)'}; color:${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid ${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.35)' : 'rgba(245,158,11,0.35)'};">${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}</span>` : ''}
+              <span>\${t.desc}</span>
+              \${t.type === 'out' && method ? \`<span class="pill" style="padding:1.5px 6px; font-size:10px; font-weight:700; border-radius:5px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.16)' : 'rgba(245,158,11,0.16)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.35)' : 'rgba(245,158,11,0.35)'};">\${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}</span>\` : ''}
             </div>
           </td>
-          <td><span class="pill cat-pill" style="background:${catColor(t.cat)}18; color:${catColor(t.cat)}; border:1px solid ${catColor(t.cat)}35">${catIcon(t.cat)} ${t.cat}</span></td>
-          <td><span class="pill acc-pill">${getAccountIcon(t.acc)} ${t.acc || '—'}</span></td>
-          <td><span class="type-pill ${t.type}">${t.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
-          <td class="${t.type==='in'?'val-in':'val-out'}">${t.type==='in'?'+':'-'}${fmt(t.val)}</td>
+          <td><span class="pill cat-pill" style="background:\${catColor(t.cat)}18; color:\${catColor(t.cat)}; border:1px solid \${catColor(t.cat)}35">\${catIcon(t.cat)} \${t.cat}</span></td>
+          <td><span class="pill acc-pill">\${getAccountIcon(t.acc)} \${t.acc || '—'}</span></td>
+          <td><span class="type-pill \${t.type}">\${t.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
+          <td class="\${t.type==='in'?'val-in':'val-out'}">\${t.type==='in'?'+':'-'}\${fmt(t.val)}</td>
           <td>
-            <span class="pill status-${t.status.toLowerCase()} status-toggle-btn" data-togglestatus="${t.id}" title="Clique para alternar o status (Pendente / Pago)">
-              ${t.status === 'Pendente' ? '⏳ Pendente' : (t.type === 'in' ? '✓ Recebido' : '✓ Pago')}
+            <span class="pill status-\${t.status.toLowerCase()} status-toggle-btn" data-togglestatus="\${t.id}" title="Clique para alternar o status (Pendente / Pago)">
+              \${t.status === 'Pendente' ? '⏳ Pendente' : (t.type === 'in' ? '✓ Recebido' : '✓ Pago')}
             </span>
           </td>
-          ${showActions?`<td><div class="row-actions" style="justify-content:center;"><button data-edit="${t.id}" title="Editar Transação" class="btn-action-edit">✎</button><button data-del="${t.id}" title="Excluir Transação" class="btn-action-del">🗑</button></div></td>`:''}
-        </tr>`;
+          \${showActions?\`<td><div class="row-actions" style="justify-content:center;"><button data-edit="\${t.id}" title="Editar Transação" class="btn-action-edit">✎</button><button data-del="\${t.id}" title="Excluir Transação" class="btn-action-del">🗑</button></div></td>\`:''}
+        </tr>\`;
       }).join('')}
     </tbody>
     <tfoot>
