@@ -436,45 +436,45 @@ html:not(.user-logged-in) #authPage {
   display: flex !important;
 }
 
-/* ==================== TEMA PÓS-LOGIN (EXECUTIVE DARK FINANCIAL GRAPHITE - FIEL À IMAGEM DE REFERÊNCIA) ==================== */
+/* ==================== TEMA PÓS-LOGIN (IDÊNTICO À TELA DE LOGIN - 4K SMOKED EMERALD GLASS & LIVING WALL BG) ==================== */
 html.user-logged-in,
 body.user-logged-in {
-  --bg: #11141D;
-  --sidebar: #141823;
-  --card: #171B26;
-  --card-border: #232A3B;
-  --text: #FFFFFF;
-  --text-dim: #8A94A6;
+  --bg: #07100B;
+  --sidebar: rgba(14, 24, 20, 0.85);
+  --card: rgba(16, 28, 22, 0.72);
+  --card-border: rgba(255, 255, 255, 0.16);
+  --text: #F8FAFC;
+  --text-dim: #94A3B8;
   --text-faint: #64748B;
-  --green: #00E5FF;
-  --green-soft: rgba(0, 229, 255, 0.14);
+  --green: #1DB954;
+  --green-soft: rgba(29, 185, 84, 0.16);
   --emerald: #10B981;
-  --emerald-soft: rgba(16, 185, 129, 0.14);
-  --primary: #0284C7;
-  --primary-hover: #0369A1;
-  --red: #FF3B30;
-  --red-soft: rgba(255, 59, 48, 0.14);
-  --blue: #0284C7;
-  --blue-soft: rgba(2, 132, 199, 0.14);
-  --orange: #FF9500;
-  --cyan: #00E5FF;
-  --hover: #1E2536;
-  --radius: 18px;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.50), 0 1px 3px rgba(0, 0, 0, 0.40);
+  --emerald-soft: rgba(16, 185, 129, 0.16);
+  --primary: #1DB954;
+  --primary-hover: #1ED760;
+  --red: #F43F5E;
+  --red-soft: rgba(244, 63, 94, 0.14);
+  --blue: #38BDF8;
+  --purple: #A855F7;
+  --orange: #F59E0B;
+  --teal: #14B8A6;
+  --pink: #EC4899;
+  --hover: rgba(255, 255, 255, 0.08);
+  --radius: 20px;
+  --shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.80), 0 0 35px -5px rgba(29, 185, 84, 0.14), inset 0 1px 1.5px rgba(255, 255, 255, 0.35);
 }
 
 html.user-logged-in body,
 body.user-logged-in {
-  background-color: #11141D !important;
+  background-color: #07100B !important;
   background-image: 
-    radial-gradient(at 15% 10%, rgba(2, 132, 199, 0.08) 0px, transparent 40%),
-    radial-gradient(at 85% 15%, rgba(255, 59, 48, 0.06) 0px, transparent 40%),
-    radial-gradient(at 50% 90%, rgba(0, 229, 255, 0.05) 0px, transparent 50%),
-    linear-gradient(180deg, #11141D 0%, #0E1118 50%, #10131B 100%) !important;
+    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
+    url('/images/nexus_vision_living_bg.jpg') !important;
   background-size: cover !important;
+  background-position: center center !important;
   background-attachment: fixed !important;
   background-repeat: no-repeat !important;
-  color: #FFFFFF !important;
+  color: #F8FAFC !important;
 }
 
 html.user-logged-in .app-bg-scene {
@@ -485,102 +485,122 @@ html.user-logged-in #appMain {
   background: transparent !important;
 }
 
-/* Header Superior Pós-Login */
+/* Header Superior Pós-Login no padrão Liquid Glass 4K */
 html.user-logged-in .topheader {
-  background: #141823 !important;
-  border-bottom: 1px solid #232A3B !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.50) !important;
-  backdrop-filter: blur(20px) !important;
+  background: rgba(12, 22, 18, 0.82) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.70) !important;
+  backdrop-filter: blur(35px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(35px) saturate(190%) !important;
 }
 html.user-logged-in .brand .logo {
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.20) !important;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.40) !important;
+  background: linear-gradient(135deg, #ECFDF5 0%, #6EE7B7 25%, #10B981 60%, #064E3B 100%) !important;
+  color: #022C22 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+  box-shadow: 0 10px 24px -4px rgba(16, 185, 129, 0.50), inset 0 2px 3px #FFFFFF !important;
 }
 html.user-logged-in .brand .name {
   color: #FFFFFF !important;
 }
 html.user-logged-in .brand .name span {
-  color: #38BDF8 !important;
+  color: #1DB954 !important;
 }
 html.user-logged-in .header-live-time {
-  background: #181C28 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #94A3B8 !important;
+  backdrop-filter: blur(16px) !important;
 }
 html.user-logged-in .header-live-time .time-dot {
-  background: #00E5FF !important;
-  box-shadow: 0 0 8px #00E5FF !important;
+  background: #1DB954 !important;
+  box-shadow: 0 0 10px #1DB954 !important;
 }
 html.user-logged-in .icon-btn {
-  background: #181C28 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #94A3B8 !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
 }
 html.user-logged-in .icon-btn:hover {
-  background: #202637 !important;
-  color: #38BDF8 !important;
-  border-color: #38BDF8 !important;
+  background: rgba(29, 185, 84, 0.18) !important;
+  color: #A7F3D0 !important;
+  border-color: rgba(29, 185, 84, 0.40) !important;
 }
 
 /* Barra de Navegação Horizontal em Pílulas */
 html.user-logged-in nav.menu {
-  background: #181C26 !important;
-  border: 1px solid #232A3B !important;
-  border-radius: 16px !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
-  backdrop-filter: none !important;
+  background: rgba(14, 24, 20, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(35px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(35px) saturate(190%) !important;
 }
 html.user-logged-in .menu button {
-  color: #8A94A6 !important;
-  border-radius: 10px !important;
+  color: #94A3B8 !important;
+  border-radius: 12px !important;
   font-weight: 700 !important;
 }
 html.user-logged-in .menu button:hover {
-  background: #202637 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
   color: #FFFFFF !important;
-  border-color: #2D374D !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
 }
 html.user-logged-in .menu button.active {
-  background: linear-gradient(135deg, #E11D48 0%, #FF3B30 100%) !important;
-  color: #FFFFFF !important;
+  background: linear-gradient(135deg, rgba(29, 185, 84, 0.25) 0%, rgba(16, 185, 129, 0.18) 100%) !important;
+  color: #A7F3D0 !important;
+  border: 1px solid rgba(29, 185, 84, 0.55) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  border-radius: 12px !important;
   font-weight: 800 !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 18px rgba(255, 59, 48, 0.40) !important;
-  border-radius: 10px !important;
-  text-shadow: none !important;
 }
 html.user-logged-in .menu button.active .ic {
-  background: rgba(0, 0, 0, 0.22) !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: rgba(29, 185, 84, 0.28) !important;
+  color: #6EE7B7 !important;
+  border: 1px solid rgba(110, 231, 183, 0.5) !important;
 }
 html.user-logged-in .menu button.active::after {
-  display: none !important;
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 18%;
+  right: 18%;
+  height: 2.5px;
+  background: linear-gradient(90deg, transparent, #34D399, #1DB954, transparent);
+  border-radius: 999px;
+  box-shadow: 0 0 12px #34D399, 0 0 4px #1DB954;
 }
 
-/* Cards KPIs Super Fiel à Imagem de Referência */
+/* Cards KPIs no padrão Liquid Glass 4K */
 html.user-logged-in .kpi {
-  background: #171B26 !important;
-  background-image: linear-gradient(145deg, #1C2230 0%, #151924 100%) !important;
-  border: 1px solid #232A3B !important;
-  border-radius: 18px !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.50) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 30, 24, 0.78) 35%, rgba(8, 16, 12, 0.92) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 20px !important;
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.80),
+    0 0 35px -5px rgba(29, 185, 84, 0.14),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.35),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(40px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(190%) !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 html.user-logged-in .kpi:hover {
-  border-color: #323C52 !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 18px rgba(2, 132, 199, 0.14) !important;
-  transform: translateY(-2px) !important;
+  border-color: rgba(52, 211, 153, 0.40) !important;
+  box-shadow: 
+    0 30px 70px -10px rgba(0, 0, 0, 0.85),
+    0 0 45px -5px rgba(29, 185, 84, 0.22),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
+  transform: translateY(-3px) !important;
 }
 html.user-logged-in .kpi .row1 {
-  color: #8A94A6 !important;
+  color: #94A3B8 !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  font-size: 11px !important;
+  font-size: 11.5px !important;
   letter-spacing: 0.05em !important;
 }
 html.user-logged-in .kpi .val {
@@ -589,27 +609,28 @@ html.user-logged-in .kpi .val {
   letter-spacing: -0.02em !important;
 }
 html.user-logged-in .kpi .ic {
-  background: #141822 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
+  background: linear-gradient(135deg, rgba(29, 185, 84, 0.18), rgba(16, 185, 129, 0.08)) !important;
+  border: 1px solid rgba(52, 211, 153, 0.25) !important;
+  color: #A7F3D0 !important;
 }
 html.user-logged-in .kpi.kpi-balance::before {
-  background: linear-gradient(90deg, #0284C7, #38BDF8) !important;
+  background: linear-gradient(90deg, #1DB954, #34D399) !important;
 }
 html.user-logged-in .kpi.kpi-income::before {
-  background: linear-gradient(90deg, #00E5FF, #10B981) !important;
+  background: linear-gradient(90deg, #10B981, #6EE7B7) !important;
 }
 html.user-logged-in .kpi.kpi-expense::before {
-  background: linear-gradient(90deg, #FF3B30, #FF5722) !important;
+  background: linear-gradient(90deg, #EF4444, #F87171) !important;
 }
 html.user-logged-in .kpi.kpi-net::before {
-  background: linear-gradient(90deg, #0284C7, #00E5FF) !important;
+  background: linear-gradient(90deg, #1DB954, #10B981) !important;
 }
 html.user-logged-in .kpi.kpi-tx::before {
-  background: linear-gradient(90deg, #8B5CF6, #0284C7) !important;
+  background: linear-gradient(90deg, #8B5CF6, #C084FC) !important;
 }
 html.user-logged-in .kpi .sub.up {
-  color: #00E5FF !important;
+  color: #1DB954 !important;
+  font-weight: 700 !important;
 }
 
 /* Painéis de Gráficos e Tabelas */
@@ -617,17 +638,24 @@ html.user-logged-in .panel,
 html.user-logged-in .table-panel,
 html.user-logged-in .cards-summary-panel,
 html.user-logged-in .tx-footer-summary {
-  background: #171B26 !important;
-  background-image: linear-gradient(145deg, #1C2230 0%, #151924 100%) !important;
-  border: 1px solid #232A3B !important;
-  border-radius: 18px !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.50) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 30, 24, 0.78) 35%, rgba(8, 16, 12, 0.92) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.80),
+    0 0 35px -5px rgba(29, 185, 84, 0.14),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(40px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(190%) !important;
 }
 html.user-logged-in .panel:hover {
-  border-color: #323C52 !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65) !important;
+  border-color: rgba(52, 211, 153, 0.40) !important;
+  box-shadow: 
+    0 30px 70px -10px rgba(0, 0, 0, 0.85),
+    0 0 45px -5px rgba(29, 185, 84, 0.22),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
 }
 html.user-logged-in .panel-head h3,
 html.user-logged-in .table-panel-head h3 {
@@ -636,104 +664,125 @@ html.user-logged-in .table-panel-head h3 {
 }
 html.user-logged-in .panel-head .tag,
 html.user-logged-in .table-panel-head .tag {
-  background: #141822 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
-  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #94A3B8 !important;
+  border-radius: 10px !important;
 }
 html.user-logged-in .panel-head .tag:hover,
 html.user-logged-in .table-panel-head .tag:hover {
-  background: #202637 !important;
-  color: #38BDF8 !important;
-  border-color: #38BDF8 !important;
+  background: rgba(29, 185, 84, 0.18) !important;
+  color: #A7F3D0 !important;
+  border-color: rgba(52, 211, 153, 0.40) !important;
 }
 
 /* Tabelas */
 html.user-logged-in table thead th {
-  background: #131722 !important;
-  color: #8A94A6 !important;
+  background: rgba(12, 22, 18, 0.85) !important;
+  color: #94A3B8 !important;
   font-weight: 700 !important;
-  border-bottom: 1px solid #232A3B !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
   font-size: 11.5px !important;
   text-transform: uppercase !important;
   letter-spacing: 0.04em !important;
 }
 html.user-logged-in table tbody td {
-  border-bottom: 1px solid #1C2230 !important;
-  color: #E2E8F0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: #F8FAFC !important;
 }
 html.user-logged-in table tbody tr:hover td {
-  background: rgba(35, 43, 61, 0.35) !important;
+  background: rgba(29, 185, 84, 0.08) !important;
 }
 
-/* Botões de Ação */
+/* Botões de Ação no padrão Liquid Emerald */
 html.user-logged-in .btn-primary,
 html.user-logged-in button.btn-primary {
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.40) !important;
-  font-weight: 800 !important;
+  background: linear-gradient(135deg, #4ADE80 0%, #22C55E 25%, #1DB954 60%, #15803D 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  border-top: 1.5px solid #FFFFFF !important;
+  color: #031409 !important;
+  border-radius: 14px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.02em !important;
+  box-shadow: 
+    0 10px 24px -4px rgba(29, 185, 84, 0.50),
+    0 2px 6px rgba(0, 0, 0, 0.30),
+    inset 0 1.5px 2px #FFFFFF,
+    inset 0 -1.5px 2px rgba(21, 128, 61, 0.40) !important;
 }
-html.user-logged-in .btn-primary:hover {
-  filter: brightness(1.08) !important;
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.55) !important;
+html.user-logged-in .btn-primary:hover,
+html.user-logged-in button.btn-primary:hover {
+  filter: brightness(1.06) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 
+    0 14px 30px -4px rgba(29, 185, 84, 0.65),
+    0 4px 10px rgba(0, 0, 0, 0.35),
+    inset 0 1.5px 2px #FFFFFF !important;
 }
 
 /* Badges */
 html.user-logged-in .badge-income,
 html.user-logged-in .badge-receita {
-  background: rgba(0, 229, 255, 0.12) !important;
-  border: 1px solid rgba(0, 229, 255, 0.35) !important;
-  color: #00E5FF !important;
+  background: rgba(16, 185, 129, 0.16) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  color: #34D399 !important;
 }
 html.user-logged-in .badge-expense,
 html.user-logged-in .badge-despesa {
-  background: rgba(255, 59, 48, 0.14) !important;
-  border: 1px solid rgba(255, 59, 48, 0.40) !important;
-  color: #FF453A !important;
+  background: rgba(244, 63, 94, 0.16) !important;
+  border: 1px solid rgba(244, 63, 94, 0.35) !important;
+  color: #FB7185 !important;
 }
 
-/* Modais Pós-Login */
+/* Modais Pós-Login no padrão Liquid Glass 4K */
 html.user-logged-in .modal {
-  background: #171B26 !important;
-  border: 1px solid #283247 !important;
-  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.85) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 30, 24, 0.88) 35%, rgba(8, 16, 12, 0.96) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(40px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(190%) !important;
+  box-shadow: 
+    0 30px 80px -15px rgba(0, 0, 0, 0.85),
+    0 0 50px -10px rgba(29, 185, 84, 0.16),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+  border-radius: 24px !important;
 }
 html.user-logged-in .modal input,
 html.user-logged-in .modal select,
 html.user-logged-in .modal textarea {
-  background: #11141D !important;
-  border: 1px solid #283247 !important;
+  background: rgba(10, 18, 14, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   color: #FFFFFF !important;
 }
 html.user-logged-in .modal input:focus,
 html.user-logged-in .modal select:focus,
 html.user-logged-in .modal textarea:focus {
-  border-color: #0284C7 !important;
-  box-shadow: 0 0 10px rgba(2, 132, 199, 0.35) !important;
+  border-color: #1DB954 !important;
+  box-shadow: 0 0 12px rgba(29, 185, 84, 0.35) !important;
 }
 
 /* Gaveta Mobile */
 html.user-logged-in .mobile-drawer {
-  background: #141823 !important;
-  border-right: 1px solid #232A3B !important;
+  background: rgba(12, 22, 18, 0.94) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(35px) !important;
 }
 html.user-logged-in .mobile-drawer-nav button {
-  background: #181C26 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #94A3B8 !important;
 }
 html.user-logged-in .mobile-drawer-nav button:hover {
-  background: #202637 !important;
+  background: rgba(29, 185, 84, 0.14) !important;
   color: #FFFFFF !important;
-  border-color: #2D374D !important;
+  border-color: rgba(29, 185, 84, 0.30) !important;
 }
 html.user-logged-in .mobile-drawer-nav button.active {
-  background: linear-gradient(135deg, #E11D48 0%, #FF3B30 100%) !important;
+  background: linear-gradient(135deg, rgba(29, 185, 84, 0.25) 0%, rgba(16, 185, 129, 0.14) 100%) !important;
   color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 18px rgba(255, 59, 48, 0.40) !important;
+  border: 1px solid rgba(52, 211, 153, 0.48) !important;
+  box-shadow: 0 4px 18px rgba(29, 185, 84, 0.25) !important;
 }
 
 html.is-admin nav.menu button:not(#menuUsuariosBtn):not(#menuLogsBtn):not(#menuFuncoesBtn):not(#menuOrdensBtn),
@@ -792,9 +841,9 @@ body.light, html.light body, html.light {
 html, body{overflow-x:clip !important; width:100%;}
 body{
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-  background-color:#07100B;
+  background-color:#07100B !important;
   background-image:
-    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.52) 0%, rgba(5, 12, 9, 0.85) 100%),
+    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
     url('/images/nexus_vision_living_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -811,6 +860,7 @@ body.light {
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 button, input, select{font-family:inherit; color:inherit;}
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
@@ -894,35 +944,12 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   padding: 0 0 clamp(8px, 1.5vh, 18px) 0;
-  background-color: #07100B;
-  background-image: 
-    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
+  background: transparent !important;
 }
 .auth-container.show { display: flex; }
 
 .auth-container::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 750px;
-  height: 750px;
-  background: radial-gradient(circle, rgba(29, 185, 84, 0.18) 0%, rgba(16, 185, 129, 0.12) 40%, transparent 70%);
-  filter: blur(90px);
-  pointer-events: none;
-  z-index: 1;
-  border-radius: 50%;
-  animation: authAuraPulse 6s ease-in-out infinite alternate;
-}
-@keyframes authAuraPulse {
-  0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.75; }
-  100% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+  display: none !important;
 }
 
 body.light .auth-container {
@@ -933,13 +960,7 @@ body.light .auth-container {
   --auth-input-bg: #FFFFFF;
   --auth-text: #0F172A;
   --auth-text-dim: #475569;
-  background-color: #F2F7F4 !important;
-  background-image: 
-    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
+  background: transparent !important;
 }
 
 .auth-top-bar {
@@ -984,20 +1005,11 @@ body.light .auth-theme-btn {
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
-.auth-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245, 158, 11, 0.06) 1px, transparent 1px);
-  background-size: 44px 44px;
-  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
-  mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
+.auth-grid,
+.auth-blob,
+#authBgCanvas {
+  display: none !important;
 }
-
-.auth-blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(85px);
@@ -1046,12 +1058,9 @@ body.light .auth-blob { opacity: 0.14; }
 }
 
 /* ==================== EFEITO TELA DE VIDRO PANORÂMICA (4K LIQUID GLASS SCREEN) ==================== */
-.glass-viewport-screen {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
+.glass-viewport-screen,
+.glass-screen-reflection {
+  display: none !important;
 }
 
 /* Placas de Vidro Líquido Flutuantes em Profundidade 4K */
