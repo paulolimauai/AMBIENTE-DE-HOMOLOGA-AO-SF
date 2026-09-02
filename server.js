@@ -436,305 +436,7 @@ html:not(.user-logged-in) #authPage {
   display: flex !important;
 }
 
-/* ==================== TEMA PÓS-LOGIN (EXECUTIVE DARK FINANCIAL GRAPHITE - FIEL À IMAGEM DE REFERÊNCIA) ==================== */
-html.user-logged-in,
-body.user-logged-in {
-  --bg: #11141D;
-  --sidebar: #141823;
-  --card: #171B26;
-  --card-border: #232A3B;
-  --text: #FFFFFF;
-  --text-dim: #8A94A6;
-  --text-faint: #64748B;
-  --green: #00E5FF;
-  --green-soft: rgba(0, 229, 255, 0.14);
-  --emerald: #10B981;
-  --emerald-soft: rgba(16, 185, 129, 0.14);
-  --primary: #0284C7;
-  --primary-hover: #0369A1;
-  --red: #FF3B30;
-  --red-soft: rgba(255, 59, 48, 0.14);
-  --blue: #0284C7;
-  --blue-soft: rgba(2, 132, 199, 0.14);
-  --orange: #FF9500;
-  --cyan: #00E5FF;
-  --hover: #1E2536;
-  --radius: 18px;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.50), 0 1px 3px rgba(0, 0, 0, 0.40);
-}
 
-html.user-logged-in body,
-body.user-logged-in {
-  background-color: #11141D !important;
-  background-image: 
-    radial-gradient(at 15% 10%, rgba(2, 132, 199, 0.08) 0px, transparent 40%),
-    radial-gradient(at 85% 15%, rgba(255, 59, 48, 0.06) 0px, transparent 40%),
-    radial-gradient(at 50% 90%, rgba(0, 229, 255, 0.05) 0px, transparent 50%),
-    linear-gradient(180deg, #11141D 0%, #0E1118 50%, #10131B 100%) !important;
-  background-size: cover !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
-  color: #FFFFFF !important;
-}
-
-html.user-logged-in .app-bg-scene {
-  display: none !important;
-}
-
-html.user-logged-in #appMain {
-  background: transparent !important;
-}
-
-/* Header Superior Pós-Login */
-html.user-logged-in .topheader {
-  background: #141823 !important;
-  border-bottom: 1px solid #232A3B !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.50) !important;
-  backdrop-filter: blur(20px) !important;
-}
-html.user-logged-in .brand .logo {
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.20) !important;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.40) !important;
-}
-html.user-logged-in .brand .name {
-  color: #FFFFFF !important;
-}
-html.user-logged-in .brand .name span {
-  color: #38BDF8 !important;
-}
-html.user-logged-in .header-live-time {
-  background: #181C28 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
-}
-html.user-logged-in .header-live-time .time-dot {
-  background: #00E5FF !important;
-  box-shadow: 0 0 8px #00E5FF !important;
-}
-html.user-logged-in .icon-btn {
-  background: #181C28 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
-}
-html.user-logged-in .icon-btn:hover {
-  background: #202637 !important;
-  color: #38BDF8 !important;
-  border-color: #38BDF8 !important;
-}
-
-/* Barra de Navegação Horizontal em Pílulas */
-html.user-logged-in nav.menu {
-  background: #181C26 !important;
-  border: 1px solid #232A3B !important;
-  border-radius: 16px !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
-  backdrop-filter: none !important;
-}
-html.user-logged-in .menu button {
-  color: #8A94A6 !important;
-  border-radius: 10px !important;
-  font-weight: 700 !important;
-}
-html.user-logged-in .menu button:hover {
-  background: #202637 !important;
-  color: #FFFFFF !important;
-  border-color: #2D374D !important;
-}
-html.user-logged-in .menu button.active {
-  background: linear-gradient(135deg, #E11D48 0%, #FF3B30 100%) !important;
-  color: #FFFFFF !important;
-  font-weight: 800 !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 18px rgba(255, 59, 48, 0.40) !important;
-  border-radius: 10px !important;
-  text-shadow: none !important;
-}
-html.user-logged-in .menu button.active .ic {
-  background: rgba(0, 0, 0, 0.22) !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-html.user-logged-in .menu button.active::after {
-  display: none !important;
-}
-
-/* Cards KPIs Super Fiel à Imagem de Referência */
-html.user-logged-in .kpi {
-  background: #171B26 !important;
-  background-image: linear-gradient(145deg, #1C2230 0%, #151924 100%) !important;
-  border: 1px solid #232A3B !important;
-  border-radius: 18px !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.50) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-html.user-logged-in .kpi:hover {
-  border-color: #323C52 !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 18px rgba(2, 132, 199, 0.14) !important;
-  transform: translateY(-2px) !important;
-}
-html.user-logged-in .kpi .row1 {
-  color: #8A94A6 !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  font-size: 11px !important;
-  letter-spacing: 0.05em !important;
-}
-html.user-logged-in .kpi .val {
-  color: #FFFFFF !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.02em !important;
-}
-html.user-logged-in .kpi .ic {
-  background: #141822 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
-}
-html.user-logged-in .kpi.kpi-balance::before {
-  background: linear-gradient(90deg, #0284C7, #38BDF8) !important;
-}
-html.user-logged-in .kpi.kpi-income::before {
-  background: linear-gradient(90deg, #00E5FF, #10B981) !important;
-}
-html.user-logged-in .kpi.kpi-expense::before {
-  background: linear-gradient(90deg, #FF3B30, #FF5722) !important;
-}
-html.user-logged-in .kpi.kpi-net::before {
-  background: linear-gradient(90deg, #0284C7, #00E5FF) !important;
-}
-html.user-logged-in .kpi.kpi-tx::before {
-  background: linear-gradient(90deg, #8B5CF6, #0284C7) !important;
-}
-html.user-logged-in .kpi .sub.up {
-  color: #00E5FF !important;
-}
-
-/* Painéis de Gráficos e Tabelas */
-html.user-logged-in .panel,
-html.user-logged-in .table-panel,
-html.user-logged-in .cards-summary-panel,
-html.user-logged-in .tx-footer-summary {
-  background: #171B26 !important;
-  background-image: linear-gradient(145deg, #1C2230 0%, #151924 100%) !important;
-  border: 1px solid #232A3B !important;
-  border-radius: 18px !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.50) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-html.user-logged-in .panel:hover {
-  border-color: #323C52 !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65) !important;
-}
-html.user-logged-in .panel-head h3,
-html.user-logged-in .table-panel-head h3 {
-  color: #FFFFFF !important;
-  font-weight: 800 !important;
-}
-html.user-logged-in .panel-head .tag,
-html.user-logged-in .table-panel-head .tag {
-  background: #141822 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
-  border-radius: 8px !important;
-}
-html.user-logged-in .panel-head .tag:hover,
-html.user-logged-in .table-panel-head .tag:hover {
-  background: #202637 !important;
-  color: #38BDF8 !important;
-  border-color: #38BDF8 !important;
-}
-
-/* Tabelas */
-html.user-logged-in table thead th {
-  background: #131722 !important;
-  color: #8A94A6 !important;
-  font-weight: 700 !important;
-  border-bottom: 1px solid #232A3B !important;
-  font-size: 11.5px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.04em !important;
-}
-html.user-logged-in table tbody td {
-  border-bottom: 1px solid #1C2230 !important;
-  color: #E2E8F0 !important;
-}
-html.user-logged-in table tbody tr:hover td {
-  background: rgba(35, 43, 61, 0.35) !important;
-}
-
-/* Botões de Ação */
-html.user-logged-in .btn-primary,
-html.user-logged-in button.btn-primary {
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.40) !important;
-  font-weight: 800 !important;
-}
-html.user-logged-in .btn-primary:hover {
-  filter: brightness(1.08) !important;
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.55) !important;
-}
-
-/* Badges */
-html.user-logged-in .badge-income,
-html.user-logged-in .badge-receita {
-  background: rgba(0, 229, 255, 0.12) !important;
-  border: 1px solid rgba(0, 229, 255, 0.35) !important;
-  color: #00E5FF !important;
-}
-html.user-logged-in .badge-expense,
-html.user-logged-in .badge-despesa {
-  background: rgba(255, 59, 48, 0.14) !important;
-  border: 1px solid rgba(255, 59, 48, 0.40) !important;
-  color: #FF453A !important;
-}
-
-/* Modais Pós-Login */
-html.user-logged-in .modal {
-  background: #171B26 !important;
-  border: 1px solid #283247 !important;
-  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.85) !important;
-}
-html.user-logged-in .modal input,
-html.user-logged-in .modal select,
-html.user-logged-in .modal textarea {
-  background: #11141D !important;
-  border: 1px solid #283247 !important;
-  color: #FFFFFF !important;
-}
-html.user-logged-in .modal input:focus,
-html.user-logged-in .modal select:focus,
-html.user-logged-in .modal textarea:focus {
-  border-color: #0284C7 !important;
-  box-shadow: 0 0 10px rgba(2, 132, 199, 0.35) !important;
-}
-
-/* Gaveta Mobile */
-html.user-logged-in .mobile-drawer {
-  background: #141823 !important;
-  border-right: 1px solid #232A3B !important;
-}
-html.user-logged-in .mobile-drawer-nav button {
-  background: #181C26 !important;
-  border: 1px solid #232A3B !important;
-  color: #8A94A6 !important;
-}
-html.user-logged-in .mobile-drawer-nav button:hover {
-  background: #202637 !important;
-  color: #FFFFFF !important;
-  border-color: #2D374D !important;
-}
-html.user-logged-in .mobile-drawer-nav button.active {
-  background: linear-gradient(135deg, #E11D48 0%, #FF3B30 100%) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 18px rgba(255, 59, 48, 0.40) !important;
-}
 
 html.is-admin nav.menu button:not(#menuUsuariosBtn):not(#menuLogsBtn):not(#menuFuncoesBtn):not(#menuOrdensBtn),
 html.is-admin nav.mobile-drawer-nav button:not(#mobileDrawerUsuariosBtn):not(#mobileDrawerLogsBtn):not(#mobileDrawerFuncoesBtn):not(#mobileDrawerOrdensBtn) {
@@ -794,7 +496,7 @@ body{
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
   background-color:#07100B;
   background-image:
-    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.52) 0%, rgba(5, 12, 9, 0.85) 100%),
+    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
     url('/images/nexus_vision_living_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -2154,9 +1856,9 @@ body.light .app{
 .app-bg-grid{
   position:absolute; inset:0;
   background-image:
-    linear-gradient(rgba(59,130,246,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59,130,246,.05) 1px, transparent 1px);
-  background-size:54px 54px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size:40px 40px;
   -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 75%);
   mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 75%);
 }
@@ -3703,9 +3405,9 @@ body.light .executive-4k-message {
 .notif-empty{padding:32px 16px; text-align:center; color:var(--text-faint); font-size:12.5px;}
 .btn-primary{
   position:relative; overflow:hidden;
-  background:linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); color:#FFFFFF; border:none; padding:10px 18px; border-radius:11px;
+  background:linear-gradient(135deg, #1DB954 0%, #10B981 100%); color:#FFFFFF; border:1px solid rgba(255,255,255,0.25); padding:10px 18px; border-radius:11px;
   font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:7px;
-  box-shadow:0 6px 18px rgba(37,99,235,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+  box-shadow:0 6px 18px rgba(29,185,84,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
   transition:all .22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-primary::after{
@@ -3713,7 +3415,7 @@ body.light .executive-4k-message {
   background:linear-gradient(120deg, transparent, rgba(255,255,255,.4), transparent);
   transform:skewX(-20deg);
 }
-.btn-primary:hover{filter:brightness(1.08); transform:translateY(-1.5px); box-shadow:0 8px 24px rgba(37,99,235,0.5), inset 0 1px 0 rgba(255,255,255,.35);}
+.btn-primary:hover{filter:brightness(1.08); transform:translateY(-1.5px); box-shadow:0 8px 24px rgba(29,185,84,0.5), inset 0 1px 0 rgba(255,255,255,.35);}
 .btn-primary:hover::after{animation:shimmer .9s ease;}
 .btn-primary:active{transform:translateY(0) scale(.98);}
 .btn-ghost{
@@ -4159,14 +3861,14 @@ body.light .rec-progress-bar {
   position: relative;
   overflow: visible !important;
   z-index: 50;
-  background: linear-gradient(135deg, rgba(17, 24, 39, 0.94) 0%, rgba(10, 15, 29, 0.98) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(18, 30, 24, 0.78) 45%, rgba(8, 16, 12, 0.92) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 22px;
   padding: 24px 28px;
   margin-bottom: 22px;
-  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 30px -5px rgba(29, 185, 84, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dashboard-welcome-hero::before {
@@ -4176,7 +3878,7 @@ body.light .rec-progress-bar {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #3B82F6 0%, #E5A93C 50%, #10B981 100%);
+  background: linear-gradient(90deg, #1DB954 0%, #34D399 50%, #10B981 100%);
   border-radius: 22px 22px 0 0;
 }
 .hero-backdrop-glow {
@@ -4185,7 +3887,7 @@ body.light .rec-progress-bar {
   right: -40px;
   width: 280px;
   height: 280px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.20) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(29, 185, 84, 0.22) 0%, transparent 70%);
   pointer-events: none;
   filter: blur(40px);
 }
@@ -11900,10 +11602,10 @@ function drawDashboardCharts(){
         labels: ['Receitas', 'Despesas'],
         datasets:[{
           data:[receitas||0.0001,despesas||0.0001], 
-          backgroundColor:['#00E5FF','#FF3B30'],
-          hoverBackgroundColor:['#38BDF8','#F43F5E'],
+          backgroundColor:['#10B981','#EF4444'],
+          hoverBackgroundColor:['#34D399','#F87171'],
           borderWidth:2,
-          borderColor: isLightMode ? '#FFFFFF' : '#171B26'
+          borderColor: isLightMode ? '#FFFFFF' : 'rgba(11,15,24,0.6)'
         }] 
       },
       options:{
