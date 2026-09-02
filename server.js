@@ -1970,12 +1970,12 @@ body.light .header-live-time {
   transform:translateX(4px);
 }
 .mobile-drawer-nav button.active {
-  background: linear-gradient(135deg, rgba(29, 185, 84, 0.25) 0%, rgba(16, 185, 129, 0.14) 100%) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-  color: #FFFFFF !important; font-weight: 700;
-  border: 1px solid rgba(52, 211, 153, 0.48) !important;
-  box-shadow: 0 6px 24px rgba(29, 185, 84, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(59, 130, 246, 0.22) 50%, rgba(16, 185, 129, 0.14) 100%) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  color: #FFFFFF !important; font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.5), 0 0 18px rgba(59, 130, 246, 0.25) !important;
 }
 .mobile-drawer-nav button .ic {
   width:28px; height:28px; border-radius:9px; background:rgba(255,255,255,0.06);
@@ -1983,7 +1983,10 @@ body.light .header-live-time {
   display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s ease;
 }
 .mobile-drawer-nav button.active .ic {
-  background: rgba(29, 185, 84, 0.28) !important; color: #6EE7B7 !important; border: 1px solid rgba(110, 231, 183, 0.5) !important; box-shadow: 0 0 10px rgba(29, 185, 84, 0.3);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(59, 130, 246, 0.35) 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
 }
 .mobile-drawer-nav button .ic svg { width:18px; height:18px; display:block; stroke-width:2.2px; }
 .brand{display:flex; align-items:center; gap:12px; flex-shrink:0;}
@@ -2108,14 +2111,14 @@ body.light .header-live-time {
 
 nav.menu{
   display:flex; align-items:center; flex-wrap:nowrap; gap:6px; width:100%;
-  padding:6px 8px; max-width:1440px; margin:4px auto 14px;
+  padding:6px 10px; max-width:1440px; margin:6px auto 16px;
   overflow-x:auto; scrollbar-width:none;
-  background:rgba(14, 24, 20, 0.72) !important;
-  backdrop-filter:blur(28px) saturate(190%) !important;
-  -webkit-backdrop-filter:blur(28px) saturate(190%) !important;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(17, 24, 39, 0.78) 45%, rgba(9, 14, 24, 0.88) 100%) !important;
+  backdrop-filter:blur(32px) saturate(210%) !important;
+  -webkit-backdrop-filter:blur(32px) saturate(210%) !important;
   border:1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius:18px !important;
-  box-shadow:0 12px 32px -8px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+  border-radius:20px !important;
+  box-shadow:0 18px 45px -10px rgba(0,0,0,0.75), inset 0 1px 1px rgba(255,255,255,0.22), 0 0 0 1px rgba(255,255,255,0.04) !important;
 }
 /* Scrollbars Globais Slim & Elegantes */
 *::-webkit-scrollbar{width:5px; height:5px;}
@@ -2131,32 +2134,40 @@ nav.menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15); border-radi
   position:relative; display:flex; align-items:center; gap:8px; text-align:left;
   background:transparent; border:1px solid transparent;
   color:#94A3B8 !important; padding:8px 15px; border-radius:12px; font-size:13px; font-weight:600; letter-spacing:0.01em; cursor:pointer;
-  white-space:nowrap; flex-shrink:0; transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1); user-select:none;
+  white-space:nowrap; flex-shrink:0; transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1); user-select:none;
 }
 .menu button:hover{
-  background:rgba(255,255,255,0.06); color:#F8FAFC !important; border-color:rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.06); color:#FFFFFF !important; border-color:rgba(255,255,255,0.12);
   transform:translateY(-1px);
+  box-shadow:0 4px 14px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 .menu button.active{
-  background: linear-gradient(135deg, rgba(29, 185, 84, 0.25) 0%, rgba(16, 185, 129, 0.14) 100%) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-  color:#FFFFFF !important; font-weight:700 !important;
-  border:1px solid rgba(52, 211, 153, 0.48) !important;
-  box-shadow:0 6px 24px rgba(29,185,84,0.25), inset 0 1px 1px rgba(255,255,255,0.45) !important; transform:translateY(-1px);
-  text-shadow:0 0 10px rgba(52,211,153,0.4);
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(59, 130, 246, 0.22) 50%, rgba(16, 185, 129, 0.14) 100%) !important;
+  backdrop-filter:blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter:blur(20px) saturate(200%) !important;
+  color:#FFFFFF !important; font-weight:800 !important;
+  border:1px solid rgba(255, 255, 255, 0.28) !important;
+  border-radius:12px !important;
+  box-shadow:0 8px 24px rgba(0,0,0,0.45), inset 0 1px 1.5px rgba(255,255,255,0.5), 0 0 18px rgba(59,130,246,0.25) !important;
+  transform:translateY(-1px);
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);
 }
 .menu button.active::after{
-  content:''; position:absolute; bottom:-2px; left:18%; right:18%; height:2.5px;
-  background:linear-gradient(90deg, transparent, #34D399, #1DB954, transparent); border-radius:999px; box-shadow:0 0 12px #34D399, 0 0 4px #1DB954;
+  content:''; position:absolute; bottom:-2px; left:18%; right:18%; height:2px;
+  background:linear-gradient(90deg, transparent, #60A5FA, #34D399, transparent);
+  border-radius:999px;
+  box-shadow:0 0 12px rgba(96,165,250,0.8), 0 0 4px rgba(52,211,153,0.6);
 }
 .menu button .ic{
-  width:26px; height:26px; border-radius:8px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); color:#94A3B8;
+  width:26px; height:26px; border-radius:8px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); color:#94A3B8;
   display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s ease;
 }
-.menu button:hover .ic{background:rgba(255,255,255,0.14); color:#FFFFFF; border-color:rgba(255,255,255,0.2);}
+.menu button:hover .ic{background:rgba(255,255,255,0.12); color:#FFFFFF; border-color:rgba(255,255,255,0.18);}
 .menu button.active .ic{
-  background:rgba(29, 185, 84, 0.28) !important; color:#6EE7B7 !important; border:1px solid rgba(110, 231, 183, 0.5) !important; box-shadow:0 0 10px rgba(29,185,84,0.3), inset 0 1px 0 rgba(255,255,255,0.35);
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(59, 130, 246, 0.35) 100%) !important;
+  color:#FFFFFF !important;
+  border:1px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow:0 2px 10px rgba(59,130,246,0.35), inset 0 1px 0 rgba(255,255,255,0.55) !important;
 }
 .menu button .ic svg, .icon-btn svg{width:16px; height:16px; display:block; stroke-width:2.2px;}
 
