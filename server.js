@@ -971,7 +971,23 @@ html, body {
 .auth-container.show { display: flex; }
 
 .auth-container::before {
-  display: none !important;
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 750px;
+  height: 750px;
+  background: radial-gradient(circle, rgba(29, 185, 84, 0.18) 0%, rgba(16, 185, 129, 0.12) 40%, transparent 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 50%;
+  animation: authAuraPulse 6s ease-in-out infinite alternate;
+}
+@keyframes authAuraPulse {
+  0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.75; }
+  100% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
 }
 
 body.light .auth-container {
@@ -1027,13 +1043,61 @@ body.light .auth-theme-btn {
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
-.auth-grid,
-.auth-blob,
-.auth-blob.b1,
-.auth-blob.b2,
-.auth-blob.b3,
-#authBgCanvas {
-  display: none !important;
+.auth-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 158, 11, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
+}
+
+.auth-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(85px);
+  opacity: 0.32;
+  pointer-events: none;
+  will-change: transform;
+  z-index: 0;
+}
+.auth-blob.b1 {
+  width: 460px;
+  height: 460px;
+  background: #10B981;
+  top: -110px;
+  left: -110px;
+  animation: blobFloat 22s ease-in-out infinite;
+}
+.auth-blob.b2 {
+  width: 440px;
+  height: 440px;
+  background: #3B82F6;
+  bottom: -130px;
+  right: -90px;
+  animation: blobFloat 26s ease-in-out infinite;
+  animation-delay: -9s;
+}
+.auth-blob.b3 {
+  width: 420px;
+  height: 420px;
+  background: #F59E0B;
+  top: 28%;
+  right: 12%;
+  opacity: 0.24;
+  animation: blobFloat 28s ease-in-out infinite;
+  animation-delay: -14s;
+}
+body.light .auth-blob { opacity: 0.14; }
+
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -45px) scale(1.08); }
+  66% { transform: translate(-35px, 30px) scale(0.94); }
 }
 
 @keyframes authCardEntrance {
@@ -1042,10 +1106,128 @@ body.light .auth-theme-btn {
 }
 
 /* ==================== EFEITO TELA DE VIDRO PANORÂMICA (4K LIQUID GLASS SCREEN) ==================== */
-.glass-viewport-screen,
-.glass-screen-reflection,
+.glass-viewport-screen {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Placas de Vidro Líquido Flutuantes em Profundidade 4K */
 .glass-shard {
-  display: none !important;
+  position: absolute;
+  border-radius: 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(56, 189, 248, 0.10) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.26);
+  border-top: 2.5px solid rgba(255, 255, 255, 0.75);
+  border-left: 2px solid rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(35px) saturate(240%);
+  -webkit-backdrop-filter: blur(35px) saturate(240%);
+  box-shadow: 
+    0 30px 70px rgba(0, 0, 0, 0.65),
+    inset 0 2px 5px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.40);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.glass-shard-1 {
+  top: 2%;
+  left: -4%;
+  width: 420px;
+  height: 420px;
+  transform: rotate(-14deg);
+  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(56, 189, 248, 0.28), inset 0 2px 5px rgba(255,255,255,0.7);
+  animation: glassFloat1 18s ease-in-out infinite alternate;
+}
+
+.glass-shard-2 {
+  bottom: -6%;
+  right: -3%;
+  width: 480px;
+  height: 480px;
+  transform: rotate(18deg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(16, 185, 129, 0.08) 100%);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
+  animation: glassFloat2 22s ease-in-out infinite alternate;
+}
+
+.glass-shard-3 {
+  top: 22%;
+  right: 6%;
+  width: 250px;
+  height: 250px;
+  border-radius: 32px;
+  transform: rotate(25deg);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(99, 102, 241, 0.30), inset 0 2px 4px rgba(255,255,255,0.6);
+  animation: glassFloat3 15s ease-in-out infinite alternate;
+}
+
+.glass-shard-4 {
+  bottom: 16%;
+  left: 5%;
+  width: 230px;
+  height: 230px;
+  border-radius: 32px;
+  transform: rotate(-20deg);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(16, 185, 129, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
+  animation: glassFloat4 16s ease-in-out infinite alternate;
+}
+
+.glass-shard-5 {
+  top: 60%;
+  right: 28%;
+  width: 140px;
+  height: 140px;
+  border-radius: 26px;
+  transform: rotate(12deg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(236, 72, 153, 0.08) 100%);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.45), 0 0 35px rgba(236, 72, 153, 0.20), inset 0 2px 4px rgba(255,255,255,0.5);
+  animation: glassFloat3 19s ease-in-out infinite alternate;
+}
+
+@keyframes glassFloat1 {
+  0% { transform: translateY(0) rotate(-14deg) scale(1); }
+  100% { transform: translateY(32px) rotate(-6deg) scale(1.06); }
+}
+
+@keyframes glassFloat2 {
+  0% { transform: translateY(0) rotate(18deg) scale(1); }
+  100% { transform: translateY(-36px) rotate(10deg) scale(1.05); }
+}
+
+@keyframes glassFloat3 {
+  0% { transform: translateY(0) rotate(25deg) scale(1); }
+  100% { transform: translateY(-26px) rotate(34deg) scale(1.04); }
+}
+
+@keyframes glassFloat4 {
+  0% { transform: translateY(0) rotate(-20deg) scale(1); }
+  100% { transform: translateY(28px) rotate(-12deg) scale(1.05); }
+}
+
+/* Feixe de Luz Prismática e Refrativo de Vidro 4K */
+.glass-screen-reflection {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 15%, rgba(255, 255, 255, 0.03) 38%, rgba(255, 255, 255, 0.12) 46%, rgba(253, 230, 138, 0.08) 50%, rgba(255, 255, 255, 0.03) 54%, transparent 75%);
+  background-size: 250% 250%;
+  pointer-events: none;
+  z-index: 2;
+  animation: glassLightSweep 14s ease-in-out infinite;
+}
+
+@keyframes glassLightSweep {
+  0% { background-position: -140% -140%; }
+  50% { background-position: 140% 140%; }
+  100% { background-position: -140% -140%; }
+}
+
+body.light .glass-shard {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.55) 60%, rgba(219, 234, 254, 0.60) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10), inset 0 2px 5px #FFFFFF !important;
 }
 
 /* Card de Autenticação Ultra 4K Liquid Glass (Smoked Emerald Glassmorphism) */
@@ -5094,6 +5276,21 @@ body.light .scale-dropdown {
 </head>
 <body>
 <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
+
+<!-- ==================== CENÁRIO 4K GLOBAL (CANVAS DINÂMICO, PLACAS DE VIDRO LÍQUIDO, REFLEXO & GRID) ==================== -->
+<canvas id="authBgCanvas" style="position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
+<div class="glass-viewport-screen pointer-events-none">
+  <div class="glass-shard glass-shard-1"></div>
+  <div class="glass-shard glass-shard-2"></div>
+  <div class="glass-shard glass-shard-3"></div>
+  <div class="glass-shard glass-shard-4"></div>
+  <div class="glass-shard glass-shard-5"></div>
+</div>
+<div class="glass-screen-reflection pointer-events-none"></div>
+<div class="auth-grid" aria-hidden="true"></div>
+<div class="auth-blob b1"></div>
+<div class="auth-blob b2"></div>
+<div class="auth-blob b3"></div>
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
