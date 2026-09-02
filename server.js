@@ -455,19 +455,19 @@ html.is-admin #mobileDrawerOrdensBtn {
 }
 
 :root{
-  --bg:#07100B;
-  --sidebar:rgba(14, 24, 20, 0.85);
-  --card:rgba(16, 28, 22, 0.72);
-  --card-border:rgba(255, 255, 255, 0.14);
+  --bg:#060913;
+  --sidebar:rgba(13, 18, 30, 0.88);
+  --card:rgba(15, 23, 42, 0.75);
+  --card-border:rgba(255, 255, 255, 0.10);
   --text:#F8FAFC;
   --text-dim:#94A3B8;
   --text-faint:#64748B;
-  --green:#1DB954;
-  --green-soft:rgba(29, 185, 84, 0.16);
+  --green:#10B981;
+  --green-soft:rgba(16, 185, 129, 0.16);
   --emerald:#10B981;
   --emerald-soft:rgba(16, 185, 129, 0.16);
-  --primary:#1DB954;
-  --primary-hover:#1ED760;
+  --primary:#10B981;
+  --primary-hover:#34D399;
   --red:#F43F5E;
   --red-soft:rgba(244, 63, 94, 0.14);
   --blue:#38BDF8;
@@ -477,7 +477,7 @@ html.is-admin #mobileDrawerOrdensBtn {
   --pink:#EC4899;
   --hover:rgba(255, 255, 255, 0.08);
   --radius:20px;
-  --shadow:0 25px 60px -15px rgba(0, 0, 0, 0.80), 0 0 35px -5px rgba(29, 185, 84, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+  --shadow:0 25px 60px -15px rgba(0, 0, 0, 0.80), 0 0 35px -5px rgba(16, 185, 129, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.16);
 }
 body.light, html.light body, html.light {
   --bg:#F2F7F4;
@@ -1903,9 +1903,9 @@ body.light .app-blob.a3{opacity:.05;}
   right:0 !important;
   z-index:99999 !important;
   width:100% !important;
-  background:rgba(12, 22, 18, 0.82) !important;
-  border-bottom:1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow:0 10px 30px rgba(0,0,0,0.65) !important;
+  background:linear-gradient(180deg, rgba(13, 18, 30, 0.95) 0%, rgba(9, 13, 22, 0.92) 100%) !important;
+  border-bottom:1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow:0 10px 30px rgba(0,0,0,0.75) !important;
   backdrop-filter:blur(30px) saturate(190%) !important;
   -webkit-backdrop-filter:blur(30px) saturate(190%) !important;
   padding-top:env(safe-area-inset-top);
@@ -1921,8 +1921,8 @@ body.light .app-blob.a3{opacity:.05;}
   backdrop-filter:blur(12px); user-select:none;
 }
 .header-live-time .time-dot {
-  width:7px; height:7px; border-radius:50%; background:#1DB954;
-  box-shadow:0 0 8px #1DB954; animation:pulseDot 2s infinite ease-in-out;
+  width:7px; height:7px; border-radius:50%; background:#10B981;
+  box-shadow:0 0 8px #10B981; animation:pulseDot 2s infinite ease-in-out;
 }
 body.light .header-live-time {
   background:#F1F5F9 !important; border-color:#CBD5E1 !important; color:#475569 !important;
@@ -1947,11 +1947,12 @@ body.light .header-live-time {
 
 .mobile-drawer {
   position:fixed; top:0; left:0; bottom:0; width:290px; max-width:84vw;
-  background:rgba(12, 22, 18, 0.94) !important; border-right:1px solid var(--card-border);
+  background:linear-gradient(180deg, rgba(13, 18, 30, 0.98) 0%, rgba(9, 13, 22, 0.99) 100%) !important;
+  border-right:1px solid rgba(255, 255, 255, 0.10);
   z-index:995; display:flex; flex-direction:column; padding:20px 16px;
   transform:translateX(-100%); transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow:10px 0 30px rgba(0,0,0,0.5); overflow-y:auto;
-  backdrop-filter:blur(25px) !important;
+  box-shadow:10px 0 30px rgba(0,0,0,0.6); overflow-y:auto;
+  backdrop-filter:blur(28px) !important;
 }
 .mobile-drawer.open { transform:translateX(0); }
 .mobile-drawer-head {
@@ -1966,7 +1967,7 @@ body.light .header-live-time {
   transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1); white-space:nowrap;
 }
 .mobile-drawer-nav button:hover {
-  background:rgba(29,185,84,0.14); color:#F8FAFC; border-color:rgba(29,185,84,0.30);
+  background:rgba(255,255,255,0.06); color:#F8FAFC; border-color:rgba(255,255,255,0.12);
   transform:translateX(4px);
 }
 .mobile-drawer-nav button.active {
@@ -1992,13 +1993,14 @@ body.light .header-live-time {
 .brand{display:flex; align-items:center; gap:12px; flex-shrink:0;}
 .brand .logo{
   width:40px; height:40px; border-radius:12px;
-  background:linear-gradient(135deg, #34D399 0%, #1DB954 50%, #059669 100%);
+  background:linear-gradient(135deg, #10B981 0%, #059669 50%, #3B82F6 100%);
   display:flex; align-items:center; justify-content:center;
-  font-weight:900; color:#031308; font-size:18px; flex-shrink:0;
-  box-shadow:0 4px 18px rgba(29,185,84,0.45), inset 0 1px 1px rgba(255,255,255,0.6);
+  font-weight:900; color:#FFFFFF; font-size:18px; flex-shrink:0;
+  box-shadow:0 4px 18px rgba(16,185,129,0.38), inset 0 1px 1px rgba(255,255,255,0.6);
+  border:1px solid rgba(255,255,255,0.22);
 }
-.brand .name{font-weight:800; font-size:15px; line-height:1.2; white-space:nowrap; letter-spacing:-0.01em;}
-.brand .name span{display:block; color:#1DB954; font-size:10px; letter-spacing:.08em; font-weight:800; text-transform:uppercase;}
+.brand .name{font-weight:800; font-size:15px; line-height:1.2; white-space:nowrap; letter-spacing:-0.01em; color:#FFFFFF;}
+.brand .name span{display:block; color:#34D399; font-size:10px; letter-spacing:.08em; font-weight:800; text-transform:uppercase;}
 
 .icon-btn,
 .scale-selector-wrap #scaleMenuBtn,
@@ -2113,12 +2115,12 @@ nav.menu{
   display:flex; align-items:center; flex-wrap:nowrap; gap:6px; width:100%;
   padding:6px 10px; max-width:1440px; margin:6px auto 16px;
   overflow-x:auto; scrollbar-width:none;
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(17, 24, 39, 0.78) 45%, rgba(9, 14, 24, 0.88) 100%) !important;
-  backdrop-filter:blur(32px) saturate(210%) !important;
-  -webkit-backdrop-filter:blur(32px) saturate(210%) !important;
-  border:1px solid rgba(255, 255, 255, 0.12) !important;
+  background:linear-gradient(145deg, rgba(20, 27, 43, 0.88) 0%, rgba(13, 18, 30, 0.94) 52%, rgba(9, 13, 22, 0.98) 100%) !important;
+  backdrop-filter:blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter:blur(28px) saturate(190%) !important;
+  border:1px solid rgba(255, 255, 255, 0.10) !important;
   border-radius:20px !important;
-  box-shadow:0 18px 45px -10px rgba(0,0,0,0.75), inset 0 1px 1px rgba(255,255,255,0.22), 0 0 0 1px rgba(255,255,255,0.04) !important;
+  box-shadow:0 18px 45px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.12) !important;
 }
 /* Scrollbars Globais Slim & Elegantes */
 *::-webkit-scrollbar{width:5px; height:5px;}
@@ -2142,21 +2144,21 @@ nav.menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15); border-radi
   box-shadow:0 4px 14px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 .menu button.active{
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(59, 130, 246, 0.22) 50%, rgba(16, 185, 129, 0.14) 100%) !important;
-  backdrop-filter:blur(20px) saturate(200%) !important;
-  -webkit-backdrop-filter:blur(20px) saturate(200%) !important;
+  background:linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(59, 130, 246, 0.18) 100%) !important;
+  backdrop-filter:blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter:blur(20px) saturate(190%) !important;
   color:#FFFFFF !important; font-weight:800 !important;
-  border:1px solid rgba(255, 255, 255, 0.28) !important;
+  border:1px solid rgba(52, 211, 153, 0.45) !important;
   border-radius:12px !important;
-  box-shadow:0 8px 24px rgba(0,0,0,0.45), inset 0 1px 1.5px rgba(255,255,255,0.5), 0 0 18px rgba(59,130,246,0.25) !important;
+  box-shadow:0 8px 24px rgba(0,0,0,0.45), inset 0 1px 1.5px rgba(255,255,255,0.45), 0 0 16px rgba(16,185,129,0.25) !important;
   transform:translateY(-1px);
   text-shadow:0 1px 4px rgba(0,0,0,0.5);
 }
 .menu button.active::after{
   content:''; position:absolute; bottom:-2px; left:18%; right:18%; height:2px;
-  background:linear-gradient(90deg, transparent, #60A5FA, #34D399, transparent);
+  background:linear-gradient(90deg, transparent, #34D399, #10B981, transparent);
   border-radius:999px;
-  box-shadow:0 0 12px rgba(96,165,250,0.8), 0 0 4px rgba(52,211,153,0.6);
+  box-shadow:0 0 10px rgba(52,211,153,0.8), 0 0 4px rgba(16,185,129,0.6);
 }
 .menu button .ic{
   width:28px; height:28px; border-radius:9px;
@@ -2173,10 +2175,10 @@ nav.menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15); border-radi
   transform:scale(1.05);
 }
 .menu button.active .ic{
-  background:linear-gradient(135deg, rgba(59, 130, 246, 0.35) 0%, rgba(16, 185, 129, 0.25) 100%) !important;
-  color:#FFFFFF !important;
-  border:1px solid rgba(255, 255, 255, 0.45) !important;
-  box-shadow:0 4px 14px rgba(59,130,246,0.4), inset 0 1px 1px rgba(255,255,255,0.6) !important;
+  background:linear-gradient(135deg, rgba(16, 185, 129, 0.32) 0%, rgba(5, 150, 105, 0.18) 100%) !important;
+  color:#34D399 !important;
+  border:1px solid rgba(52, 211, 153, 0.5) !important;
+  box-shadow:0 2px 10px rgba(16,185,129,0.35), inset 0 1px 0 rgba(255,255,255,0.55) !important;
   transform:scale(1.05);
 }
 .menu button .ic svg, .icon-btn svg{width:16px; height:16px; display:block; stroke-width:2.2px;}
