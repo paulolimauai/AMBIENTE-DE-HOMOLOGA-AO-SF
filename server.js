@@ -1912,149 +1912,7 @@ body.light .header-live-time {
 }
 .mobile-menu-btn:hover { background:var(--hover); }
 
-/* ==================== TICKER DE COTAÇÕES FINANCEIRAS NO APP ==================== */
-.topheader-ticker {
-  display: flex;
-  align-items: center;
-  height: 32px;
-  background: rgba(8, 18, 13, 0.85) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-bottom: 1px solid rgba(52, 211, 153, 0.15) !important;
-  padding: 0 16px;
-  overflow: hidden;
-  user-select: none;
-  font-size: 11.5px;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-}
-body.light .topheader-ticker {
-  background: rgba(241, 245, 249, 0.92) !important;
-  border-top-color: rgba(203, 213, 225, 0.8) !important;
-  border-bottom-color: rgba(16, 185, 129, 0.25) !important;
-}
-.topheader-ticker-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: rgba(16, 185, 129, 0.16);
-  border: 1px solid rgba(52, 211, 153, 0.35);
-  color: #34D399;
-  font-weight: 800;
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  flex-shrink: 0;
-  margin-right: 14px;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-}
-body.light .topheader-ticker-badge {
-  background: rgba(16, 185, 129, 0.12);
-  border-color: rgba(5, 150, 105, 0.3);
-  color: #059669;
-}
-.ticker-live-dot {
-  width: 6.5px;
-  height: 6.5px;
-  border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 8px #10B981;
-  animation: pulseFintechDot 1.8s infinite ease-in-out;
-}
-@keyframes pulseFintechDot {
-  0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #10B981; }
-  50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #34D399; }
-}
-.topheader-ticker-track-wrap {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
-}
-.topheader-ticker-track {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  white-space: nowrap;
-  will-change: transform;
-  animation: appTickerScroll 36s linear infinite;
-}
-.topheader-ticker:hover .topheader-ticker-track {
-  animation-play-state: paused;
-}
-@keyframes appTickerScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.app-ticker-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-weight: 700;
-  color: #E2E8F0;
-  font-size: 11.5px;
-  padding: 1px 4px;
-  border-radius: 4px;
-}
-body.light .app-ticker-item {
-  color: #1E293B;
-}
-.app-ticker-item .sym {
-  color: #94A3B8;
-  font-size: 10.5px;
-  font-weight: 800;
-}
-body.light .app-ticker-item .sym {
-  color: #64748B;
-}
-.app-ticker-item .val {
-  font-variant-numeric: tabular-nums;
-  font-weight: 800;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-body.light .app-ticker-item .val {
-  color: #0F172A;
-}
-.app-ticker-item .chg {
-  font-size: 10px;
-  font-weight: 800;
-  padding: 1px 5px;
-  border-radius: 4px;
-}
-.app-ticker-item .chg.up {
-  color: #34D399;
-  background: rgba(16, 185, 129, 0.16);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-}
-.app-ticker-item .chg.down {
-  color: #F87171;
-  background: rgba(239, 68, 68, 0.16);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-.app-ticker-item .chg.neu {
-  color: #60A5FA;
-  background: rgba(59, 130, 246, 0.16);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-}
-.val-flash-up {
-  animation: flashValUp 1.2s ease-out;
-}
-.val-flash-down {
-  animation: flashValDown 1.2s ease-out;
-}
-@keyframes flashValUp {
-  0% { color: #34D399 !important; text-shadow: 0 0 12px #34D399; transform: scale(1.08); }
-  100% { color: inherit; text-shadow: none; transform: scale(1); }
-}
-@keyframes flashValDown {
-  0% { color: #F87171 !important; text-shadow: 0 0 12px #F87171; transform: scale(1.08); }
-  100% { color: inherit; text-shadow: none; transform: scale(1); }
-}
+
 
 /* Drawer Mobile Slide-out */
 .mobile-drawer-overlay {
@@ -2891,7 +2749,7 @@ body.light .dev-signature-name {
 /* Centralização do conteúdo principal */
 .main{
   flex:1; min-width:0; padding:22px 28px 30px;
-  margin-top:172px !important;
+  margin-top:140px !important;
   max-width:1440px; margin-left:auto; margin-right:auto; width:100%;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
@@ -5017,11 +4875,11 @@ body.light .logout-timer-bar {
   .donut-wrap { flex-direction: column; text-align: center; gap: 14px; }
   .donut-side.r { text-align: center; }
   .cat-cards { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-  .main { margin-top: 105px !important; padding: 16px 12px 60px !important; }
+  .main { margin-top: 75px !important; padding: 16px 12px 60px !important; }
 }
 
 @media (max-width: 480px) {
-  .main { margin-top: 100px !important; padding: 12px 10px 60px !important; }
+  .main { margin-top: 70px !important; padding: 12px 10px 60px !important; }
   .kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
   .kpi { padding: 14px 10px !important; }
   .kpi .val { font-size: 16px !important; }
@@ -5451,18 +5309,7 @@ body.light .scale-dropdown {
       <button data-page="logs" id="menuLogsBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
       <button data-page="ordens" id="menuOrdensBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço <span id="osBadgeCount" style="margin-left:4px; padding:2px 7px; border-radius:999px; font-size:10px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
     </nav>
-    <!-- Ticker Financeiro de Mercados e Cotações em Tempo Real -->
-    <div class="topheader-ticker" id="appMarketTicker">
-      <div class="topheader-ticker-badge">
-        <span class="ticker-live-dot"></span>
-        <span>MERCADOS AO VIVO</span>
-      </div>
-      <div class="topheader-ticker-track-wrap">
-        <div class="topheader-ticker-track" id="appTickerTrack">
-          <!-- Cotações geradas e animadas em tempo real -->
-        </div>
-      </div>
-    </div>
+
   </div>
 
   <!-- Drawer Mobile Slide-out -->
@@ -8485,10 +8332,7 @@ function pageDashboard(){
           <span class="hero-badge hide-mobile">
             📅 \${formattedToday}
           </span>
-          <span class="hero-badge" style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.15); border:1px solid rgba(52,211,153,0.35); color:#34D399; font-weight:800; font-size:11px;">
-            <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981; animation:pulseFintechDot 1.8s infinite ease-in-out;"></span>
-            <span>Fluxo em Tempo Real</span>
-          </span>
+
         </div>
         <h1 class="hero-greeting">
           \${greeting.icon} \${greeting.text}, <span class="hero-name-gradient">\${firstName}</span>
@@ -14669,73 +14513,7 @@ if (scaleMenuBtn && scaleDropdown) {
   setupCanvas('appBgOrbitalCanvas');
 })();
 
-  // Engine do Ticker de Mercados Financeiros no Topheader do App
-  (function initAppMarketTickerEngine() {
-    const track = document.getElementById('appTickerTrack');
-    if (!track) return;
 
-    const initialQuotes = [
-      { id: 'appUsdBrl', sym: 'USD/BRL', val: 5.742, chg: '+0.38%', up: true, prefix: 'R$ ' },
-      { id: 'appEurBrl', sym: 'EUR/BRL', val: 6.218, chg: '-0.12%', up: false, prefix: 'R$ ' },
-      { id: 'appIbov', sym: 'IBOVESPA', val: 132850, chg: '+0.75%', up: true, suffix: ' pts' },
-      { id: 'appBtc', sym: 'BITCOIN', val: 528940, chg: '+2.85%', up: true, prefix: 'R$ ' },
-      { id: 'appEth', sym: 'ETHEREUM', val: 18240, chg: '+1.95%', up: true, prefix: 'R$ ' },
-      { id: 'appSp500', sym: 'S&P 500', val: 5864, chg: '+0.42%', up: true, suffix: ' pts' },
-      { id: 'appCdi', sym: 'CDI', val: 10.75, chg: '10,75% a.a.', up: null, isStatic: true },
-      { id: 'appSelic', sym: 'SELIC', val: 10.75, chg: '10,75%', up: null, isStatic: true },
-      { id: 'appIpca', sym: 'IPCA (12m)', val: 4.12, chg: '+4,12%', up: true, isStatic: true },
-      { id: 'appOuro', sym: 'OURO (g)', val: 488.50, chg: '+0.64%', up: true, prefix: 'R$ ' }
-    ];
-
-    function formatQuoteValue(q) {
-      if (q.isStatic) return (q.prefix || '') + q.val.toFixed(2).replace('.', ',') + '%' + (q.suffix || '');
-      if (q.val >= 1000) {
-        const formatted = Math.round(q.val).toLocaleString('pt-BR');
-        return (q.prefix || '') + formatted + (q.suffix || '');
-      }
-      return (q.prefix || '') + q.val.toFixed(3).replace('.', ',') + (q.suffix || '');
-    }
-
-    function renderTrack() {
-      let html = '';
-      for (let loop = 0; loop < 2; loop++) {
-        initialQuotes.forEach(function(q) {
-          const chgClass = q.up === true ? 'up' : (q.up === false ? 'down' : 'neu');
-          const chgIcon = q.up === true ? '▲ ' : (q.up === false ? '▼ ' : '• ');
-          const domId = 'app_quote_' + loop + '_' + q.id;
-          html += '<div class="app-ticker-item">' +
-            '<span class="sym">' + q.sym + '</span>' +
-            '<span class="val" id="' + domId + '">' + formatQuoteValue(q) + '</span>' +
-            '<span class="chg ' + chgClass + '">' + chgIcon + q.chg + '</span>' +
-          '</div>';
-        });
-      }
-      track.innerHTML = html;
-    }
-
-    renderTrack();
-
-    setInterval(function() {
-      const dynamicQuotes = initialQuotes.filter(function(q) { return !q.isStatic; });
-      const q = dynamicQuotes[Math.floor(Math.random() * dynamicQuotes.length)];
-      const deltaPct = (Math.random() * 0.4 - 0.18) / 100;
-      q.val = Math.max(0.01, q.val * (1 + deltaPct));
-      q.up = deltaPct >= 0;
-      const newChg = (deltaPct >= 0 ? '+' : '') + (deltaPct * 100).toFixed(2).replace('.', ',') + '%';
-      q.chg = newChg;
-
-      for (let loop = 0; loop < 2; loop++) {
-        const el = document.getElementById('app_quote_' + loop + '_' + q.id);
-        if (el) {
-          el.textContent = formatQuoteValue(q);
-          const flashClass = q.up ? 'val-flash-up' : 'val-flash-down';
-          el.classList.remove('val-flash-up', 'val-flash-down');
-          void el.offsetWidth;
-          el.classList.add(flashClass);
-        }
-      }
-    }, 2600);
-  })();
 
   (function initServer3DCardTilt() {
     const card = document.getElementById('serverAuthNexusCard');
