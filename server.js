@@ -492,9 +492,13 @@ body.light, html.light body, html.light {
 }
 *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
 html, body{overflow-x:clip !important; width:100%;}
-body{
+html,
+body,
+html.user-logged-in,
+html.user-logged-in body,
+body.user-logged-in {
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-  background-color:#07100B;
+  background-color:#07100B !important;
   background-image:
     radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
     url('/images/nexus_vision_living_bg.jpg') !important;
@@ -505,7 +509,11 @@ body{
   color:var(--text); min-height:100vh; transition:background .25s,color .25s;
   zoom:var(--app-zoom, 1);
 }
-body.light {
+body.light,
+html.light,
+html.light body,
+html.user-logged-in body.light,
+body.user-logged-in.light {
   background-color:#F2F7F4 !important;
   background-image:
     radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
@@ -513,6 +521,7 @@ body.light {
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 button, input, select{font-family:inherit; color:inherit;}
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
@@ -1833,22 +1842,36 @@ html.light #overlayNovaOrdem .close-x:hover {
 }
 
 /* ==================== App principal Centralizado ==================== */
-
-/* ==================== App principal Centralizado ==================== */
-.app{
-  display:none; min-height:100vh; position:relative; flex-direction:column;
-  background:
-    radial-gradient(circle at 12% 0%, rgba(59,130,246,.14), transparent 40%),
-    radial-gradient(circle at 88% 18%, rgba(37,99,235,.10), transparent 45%),
-    radial-gradient(circle at 50% 100%, rgba(96,165,250,.06), transparent 55%),
-    var(--bg);
+.app,
+#appMain {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  flex-direction: column;
+  background-color: transparent !important;
+  background-image: 
+    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
+    url('/images/nexus_vision_living_bg.jpg') !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
-.app.show{display:flex;}
-body.light .app{
-  background:
-    radial-gradient(circle at 12% 0%, rgba(59,130,246,.10), transparent 40%),
-    radial-gradient(circle at 88% 18%, rgba(37,99,235,.06), transparent 45%),
-    var(--bg);
+.app.show,
+html.user-logged-in #appMain {
+  display: flex !important;
+}
+body.light .app,
+body.light #appMain,
+html.light #appMain {
+  background-color: transparent !important;
+  background-image: 
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
+    url('/images/nexus_vision_living_bg.jpg') !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 
 .app-bg-scene{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
