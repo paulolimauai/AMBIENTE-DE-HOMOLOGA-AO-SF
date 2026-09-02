@@ -21,9 +21,13 @@
   4. `git push origin <branch_atual>`
 - **Garantia de Envio**: O push para o repositório remoto deve ser executado e confirmado antes de dar a resposta final ao usuário.
 
-## 4. Apresentação Visual de Alterações de Código (Padrão Antigravity CLI Diff)
-- **Apresentação no Formato Diff**: Ao programar ou alterar qualquer trecho de código, **SEMPRE** apresentar as alterações em bloco visual de `diff` com numeração de linhas, destacando claramente:
-  - Linhas originais removidas (`-`)
-  - Linhas novas adicionadas (`+`)
-  - Linhas de contexto imediatas para rastreabilidade
-  Exatamente como na visualização interativa do Antigravity CLI no terminal do VS Code.
+## 4. Apresentação Visual Colorida e Localização Exata das Alterações (Diff Padrão Antigravity)
+- **Indicação Exata de Onde Está Sendo Alterado**: Ao alterar qualquer código, **SEMPRE** identificar:
+  - Arquivo modificado com link clicável.
+  - Intervalo de linhas afetado (`Linhas X a Y`).
+  - Função, classe ou bloco correspondente.
+- **Bloco de Código Colorido no Formato Diff**: Apresentar o trecho modificado com sintaxe `diff` colorida:
+  - `@@ -L_orig,Qtd +L_nova,Qtd @@` (demarcador de linha)
+  - `-` Linhas vermelhas para código antigo removido/substituído
+  - `+` Linhas verdes para código novo inserido
+  - Linhas de contexto para facilitar a leitura imediata

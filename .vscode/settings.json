@@ -3,6 +3,24 @@
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
   "git.autoStash": true,
+  "scm.diffDecorations": "all",
+  "scm.diffDecorationsGutterWidth": 4,
+  "editor.lineNumbers": "on",
+  "editor.renderLineHighlight": "all",
+  "editor.guides.bracketPairs": true,
+  "diffEditor.renderSideBySide": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.codeLens": true,
+  "diffEditor.renderIndicators": true,
+  "workbench.colorCustomizations": {
+    "diffEditor.insertedTextBackground": "#204e2e60",
+    "diffEditor.insertedLineBackground": "#1e462030",
+    "diffEditor.removedTextBackground": "#7a202060",
+    "diffEditor.removedLineBackground": "#5a1e1e30",
+    "editorGutter.addedBackground": "#2ea043",
+    "editorGutter.modifiedBackground": "#0078d4",
+    "editorGutter.deletedBackground": "#f85149"
+  },
   "terminal.integrated.defaultProfile.windows": "PowerShell",
   "terminal.integrated.fontFamily": "'Cascadia Code', Consolas, 'Courier New', monospace",
   "terminal.integrated.fontLigatures": true,
@@ -25,9 +43,5 @@
       "path": "C:\\Users\\Nitro\\AppData\\Local\\agy\\bin\\agy.exe",
       "icon": "sparkle"
     }
-  },
-  "diffEditor.renderSideBySide": true,
-  "diffEditor.ignoreTrimWhitespace": false,
-  "diffEditor.codeLens": true
+  }
 }
-
