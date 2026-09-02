@@ -1911,8 +1911,7 @@ body.light .app-blob.a3{opacity:.05;}
   padding-top:env(safe-area-inset-top);
 }
 .topheader-row{
-  display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 28px; max-width:1440px; margin:0 auto;
-  position:relative; min-height:68px;
+  display:flex; align-items:center; gap:16px; padding:10px 28px; max-width:1440px; margin:0 auto; min-height:68px;
 }
 .header-live-time {
   display:inline-flex; align-items:center; gap:7px; padding:5px 12px;
@@ -2002,16 +2001,11 @@ body.light .header-live-time {
   transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   user-select:none; cursor:pointer;
 }
-.topheader .brand{
-  position:absolute; left:50%; transform:translateX(-50%); z-index:10;
-}
-.brand:hover, .topheader .brand:hover{
+.brand:hover{
   background:linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(20, 27, 43, 0.75) 50%, rgba(9, 13, 22, 0.92) 100%);
   border-color:rgba(52, 211, 153, 0.45);
   box-shadow:0 14px 40px -5px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 0 35px rgba(16, 185, 129, 0.35);
-}
-.topheader .brand:hover{
-  transform:translateX(-50%) translateY(-1px);
+  transform:translateY(-1px);
 }
 .brand .logo{
   width:46px; height:46px; border-radius:14px;
@@ -2040,12 +2034,8 @@ body.light .header-live-time {
   margin-top:1px;
 }
 @media (max-width: 900px) {
-  .topheader .brand{
-    position:static; transform:none;
+  .brand{
     padding:4px 12px 4px 6px;
-  }
-  .topheader .brand:hover{
-    transform:translateY(-1px);
   }
   .brand .logo{width:38px; height:38px;}
   .brand .name{font-size:14px;}
