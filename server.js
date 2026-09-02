@@ -8564,7 +8564,7 @@ function pageDashboard(){
           <span>\${greeting.text}, <span class="hero-name-gradient">\${firstName}</span></span>
         </h1>
         <p class="hero-sub">
-          Visão Consolidada • Inteligência Financeira & Gestão Patrimonial
+          Visão Consolidada • Inteligência Financeira & Gestão Financeira Pessoal
         </p>
       </div>
 
