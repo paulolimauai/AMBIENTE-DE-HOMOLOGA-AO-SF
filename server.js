@@ -8653,7 +8653,7 @@ function pageDashboard(){
               </span>
             </div>
           </div>
-          <span class="tag" style="background:rgba(239,68,68,0.12); color:var(--red); font-weight:800; font-size:12px; padding:4px 10px; border-radius:8px; border:1px solid rgba(239,68,68,0.25); font-variant-numeric: tabular-nums; box-shadow:0 2px 6px rgba(239,68,68,0.15);">
+          <span class="tag" style="\${actualTotalDesp > 0 ? 'background:rgba(239,68,68,0.12); color:var(--red); border:1px solid rgba(239,68,68,0.25); box-shadow:0 2px 6px rgba(239,68,68,0.15);' : 'background:rgba(255,255,255,0.04); color:var(--text-dim); border:1px solid rgba(255,255,255,0.10);'}; font-weight:800; font-size:12px; padding:4px 10px; border-radius:8px; font-variant-numeric: tabular-nums;">
             \${fmt(actualTotalDesp)}
           </span>
         </div>
@@ -8730,21 +8730,58 @@ function pageDashboard(){
         </div>\` : ''}
 
         \` : \`
-        <div style="text-align:center; padding:35px 10px; color:var(--text-dim);">
-          <div style="font-size:28px; margin-bottom:8px;">📊</div>
-          <p style="font-size:12px; font-weight:500;">Nenhuma despesa registrada neste período.</p>
+        <!-- Estado Vazio Executivo 4K (Design de Alta Fidelidade) -->
+        <div style="text-align:center; padding:24px 14px 10px; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <!-- 4K Holographic Analytics Donut SVG -->
+          <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:18px; background:linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(217,119,6,0.04) 100%); border:1px solid rgba(245,158,11,0.30); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px -4px rgba(245,158,11,0.25), inset 0 1px 0 rgba(255,255,255,0.12);">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2a10 10 0 0 1 10 10h-5.5a4.5 4.5 0 0 0-4.5-4.5V2z" fill="#F59E0B" opacity="0.95"/>
+              <path d="M22 12a10 10 0 0 1-10 10v-5.5a4.5 4.5 0 0 0 4.5-4.5h5.5z" fill="#EF4444" opacity="0.75"/>
+              <path d="M12 22A10 10 0 0 1 2 12a10 10 0 0 1 10-10v5.5a4.5 4.5 0 0 0-4.5 4.5 4.5 4.5 0 0 0 4.5 4.5v5.5z" fill="#3B82F6" opacity="0.45"/>
+            </svg>
+          </div>
+
+          <h4 style="font-size:14.5px; font-weight:800; color:#FFFFFF; margin:0 0 4px 0; letter-spacing:-0.02em;">
+            Nenhum gasto categorizado
+          </h4>
+          <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.45; max-width:260px;">
+            Suas despesas serão agrupadas automaticamente por grupos e faixas de impacto.
+          </p>
+
+          <!-- Executive CTA Button -->
+          <button onclick="openModal(null)" style="font-size:11.5px; font-weight:800; padding:7px 16px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#FFFFFF; border:1px solid rgba(255,255,255,0.2); box-shadow:0 4px 16px rgba(245,158,11,0.35); cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:transform 0.2s ease, box-shadow 0.2s ease;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Lançar Despesa</span>
+          </button>
+
+          <!-- Category Preview Micro-Chips -->
+          <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:16px; opacity:0.8;">
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#EF4444; box-shadow:0 0 6px #EF4444;"></span> Alimentação
+            </span>
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#3B82F6; box-shadow:0 0 6px #3B82F6;"></span> Moradia
+            </span>
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981;"></span> Transporte
+            </span>
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#8B5CF6; box-shadow:0 0 6px #8B5CF6;"></span> Lazer
+            </span>
+          </div>
         </div>
         \`}
       </div>
 
-      <!-- Rodapé Alinhado com Contador e Link Interativo -->
-      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.06); width:100%;">
-        <span style="display:flex; align-items:center; gap:5px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--gold);"></span>
+      <!-- Rodapé Alinhado com Contador e Link Interativo 4K -->
+      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.07); width:100%;">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 6px var(--gold);"></span>
           Total: <strong style="color:var(--text); font-weight:700;">\${cats.length}</strong> categoria\${cats.length === 1 ? '' : 's'}
         </span>
-        <span style="cursor:pointer; color:var(--gold); font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:3px;" data-nav="transacoes" class="hover:underline">
-          Ver todas as despesas →
+        <span style="cursor:pointer; color:var(--gold); font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:4px;" data-nav="transacoes" class="hover:underline">
+          <span>Ver todas as despesas</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </span>
       </div>
     </div>
@@ -8840,25 +8877,56 @@ function pageDashboard(){
           }).join('')}
         </div>
         \` : \`
-        <div style="text-align:center; padding:32px 14px; color:var(--text-dim);">
-          <div style="font-size:30px; margin-bottom:8px;">💳</div>
-          <p style="font-size:13px; font-weight:700; color:var(--text); margin:0 0 4px 0;">Nenhuma conta ou cartão cadastrado</p>
-          <p style="font-size:11px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.4;">Cadastre suas contas e cartões para acompanhar saldos e limites.</p>
-          <button class="btn-primary" data-nav="cartoes" style="font-size:11.5px; font-weight:700; padding:6px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+        <!-- Estado Vazio Executivo 4K (Contas e Cartões) -->
+        <div style="text-align:center; padding:24px 14px 10px; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <!-- 4K Holographic Bank & Card SVG -->
+          <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:18px; background:linear-gradient(135deg, rgba(139,92,246,0.18) 0%, rgba(109,40,217,0.04) 100%); border:1px solid rgba(139,92,246,0.30); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px -4px rgba(139,92,246,0.25), inset 0 1px 0 rgba(255,255,255,0.12);">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2.5"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+              <line x1="6" y1="15" x2="10" y2="15"/>
+              <circle cx="17" cy="15" r="1" fill="#A78BFA"/>
+            </svg>
+          </div>
+
+          <h4 style="font-size:14.5px; font-weight:800; color:#FFFFFF; margin:0 0 4px 0; letter-spacing:-0.02em;">
+            Nenhuma conta ou cartão
+          </h4>
+          <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.45; max-width:260px;">
+            Cadastre suas contas bancárias, carteiras ou cartões para acompanhar saldos e limites.
+          </p>
+
+          <!-- Executive CTA Button -->
+          <button data-nav="cartoes" style="font-size:11.5px; font-weight:800; padding:7px 16px; border-radius:10px; background:linear-gradient(135deg, #8B5CF6, #6D28D9); color:#FFFFFF; border:1px solid rgba(255,255,255,0.2); box-shadow:0 4px 16px rgba(139,92,246,0.35); cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:transform 0.2s ease, box-shadow 0.2s ease;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             <span>+ Cadastrar Conta / Cartão</span>
           </button>
+
+          <!-- Accounts Preview Micro-Chips -->
+          <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:16px; opacity:0.8;">
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#820ad1; box-shadow:0 0 6px #820ad1;"></span> Cartão Crédito
+            </span>
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#3b82f6; box-shadow:0 0 6px #3b82f6;"></span> Conta Corrente
+            </span>
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#10b981; box-shadow:0 0 6px #10b981;"></span> Dinheiro / Pix
+            </span>
+          </div>
         </div>
         \`}
       </div>
 
-      <!-- Rodapé Alinhado com Contador e Link Interativo -->
-      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.06); width:100%;">
-        <span style="display:flex; align-items:center; gap:5px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--purple);"></span>
+      <!-- Rodapé Alinhado com Contador e Link Interativo 4K -->
+      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.07); width:100%;">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--purple); box-shadow:0 0 6px var(--purple);"></span>
           Total: <strong style="color:var(--text); font-weight:700;">\${accounts.length}</strong> conta\${accounts.length === 1 ? '' : 's'}/cartões
         </span>
-        <span style="cursor:pointer; color:var(--purple); font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:3px;" data-nav="cartoes" class="hover:underline">
-          Ver todas as contas →
+        <span style="cursor:pointer; color:var(--purple); font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:4px;" data-nav="cartoes" class="hover:underline">
+          <span>Ver todas as contas</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </span>
       </div>
     </div>
