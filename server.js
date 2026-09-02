@@ -2210,6 +2210,150 @@ body.light .header-live-time {
 }
 .mobile-menu-btn:hover { background:var(--hover); }
 
+/* ==================== TICKER DE COTAÇÕES FINANCEIRAS NO APP ==================== */
+.topheader-ticker {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  background: rgba(8, 18, 13, 0.85) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(52, 211, 153, 0.15) !important;
+  padding: 0 16px;
+  overflow: hidden;
+  user-select: none;
+  font-size: 11.5px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+body.light .topheader-ticker {
+  background: rgba(241, 245, 249, 0.92) !important;
+  border-top-color: rgba(203, 213, 225, 0.8) !important;
+  border-bottom-color: rgba(16, 185, 129, 0.25) !important;
+}
+.topheader-ticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: #34D399;
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  margin-right: 14px;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+body.light .topheader-ticker-badge {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(5, 150, 105, 0.3);
+  color: #059669;
+}
+.ticker-live-dot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: pulseFintechDot 1.8s infinite ease-in-out;
+}
+@keyframes pulseFintechDot {
+  0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #10B981; }
+  50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #34D399; }
+}
+.topheader-ticker-track-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
+}
+.topheader-ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  white-space: nowrap;
+  will-change: transform;
+  animation: appTickerScroll 36s linear infinite;
+}
+.topheader-ticker:hover .topheader-ticker-track {
+  animation-play-state: paused;
+}
+@keyframes appTickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.app-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  color: #E2E8F0;
+  font-size: 11.5px;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+body.light .app-ticker-item {
+  color: #1E293B;
+}
+.app-ticker-item .sym {
+  color: #94A3B8;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+body.light .app-ticker-item .sym {
+  color: #64748B;
+}
+.app-ticker-item .val {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+body.light .app-ticker-item .val {
+  color: #0F172A;
+}
+.app-ticker-item .chg {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.app-ticker-item .chg.up {
+  color: #34D399;
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.app-ticker-item .chg.down {
+  color: #F87171;
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.app-ticker-item .chg.neu {
+  color: #60A5FA;
+  background: rgba(59, 130, 246, 0.16);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.val-flash-up {
+  animation: flashValUp 1.2s ease-out;
+}
+.val-flash-down {
+  animation: flashValDown 1.2s ease-out;
+}
+@keyframes flashValUp {
+  0% { color: #34D399 !important; text-shadow: 0 0 12px #34D399; transform: scale(1.08); }
+  100% { color: inherit; text-shadow: none; transform: scale(1); }
+}
+@keyframes flashValDown {
+  0% { color: #F87171 !important; text-shadow: 0 0 12px #F87171; transform: scale(1.08); }
+  100% { color: inherit; text-shadow: none; transform: scale(1); }
+}
+
 /* Drawer Mobile Slide-out */
 .mobile-drawer-overlay {
   position:fixed; inset:0; background:rgba(0,0,0,0.65);
@@ -3045,7 +3189,7 @@ body.light .dev-signature-name {
 /* Centralização do conteúdo principal */
 .main{
   flex:1; min-width:0; padding:22px 28px 30px;
-  margin-top:140px !important;
+  margin-top:172px !important;
   max-width:1440px; margin-left:auto; margin-right:auto; width:100%;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
@@ -3600,6 +3744,15 @@ body.light #logoutBtn:hover {
   box-shadow:0 16px 36px -8px rgba(0,0,0,0.75), 0 0 25px -5px rgba(29, 185, 84, 0.10), inset 0 1px 0 rgba(255,255,255,0.18) !important;
   backdrop-filter:blur(24px) saturate(190%) !important; -webkit-backdrop-filter:blur(24px) saturate(190%) !important;
   transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.kpi::after{
+  content:''; position:absolute; top:0; left:-120%; width:80%; height:100%;
+  background:linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+  transform:skewX(-20deg); pointer-events:none;
+  transition:left 0.75s ease;
+}
+.kpi:hover::after{
+  left:140%;
 }
 .kpi::before{
   content:''; position:absolute; top:0; left:0; right:0; height:3px;
@@ -5162,11 +5315,11 @@ body.light .logout-timer-bar {
   .donut-wrap { flex-direction: column; text-align: center; gap: 14px; }
   .donut-side.r { text-align: center; }
   .cat-cards { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-  .main { margin-top: 75px !important; padding: 16px 12px 60px !important; }
+  .main { margin-top: 105px !important; padding: 16px 12px 60px !important; }
 }
 
 @media (max-width: 480px) {
-  .main { margin-top: 70px !important; padding: 12px 10px 60px !important; }
+  .main { margin-top: 100px !important; padding: 12px 10px 60px !important; }
   .kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
   .kpi { padding: 14px 10px !important; }
   .kpi .val { font-size: 16px !important; }
@@ -5596,6 +5749,18 @@ body.light .scale-dropdown {
       <button data-page="logs" id="menuLogsBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
       <button data-page="ordens" id="menuOrdensBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço <span id="osBadgeCount" style="margin-left:4px; padding:2px 7px; border-radius:999px; font-size:10px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
     </nav>
+    <!-- Ticker Financeiro de Mercados e Cotações em Tempo Real -->
+    <div class="topheader-ticker" id="appMarketTicker">
+      <div class="topheader-ticker-badge">
+        <span class="ticker-live-dot"></span>
+        <span>MERCADOS AO VIVO</span>
+      </div>
+      <div class="topheader-ticker-track-wrap">
+        <div class="topheader-ticker-track" id="appTickerTrack">
+          <!-- Cotações geradas e animadas em tempo real -->
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Drawer Mobile Slide-out -->
@@ -8385,7 +8550,10 @@ function render(){
     updateViewModeBanner();
     updateAdminMenuVisibility();
     updateActiveMenu();
-    if(currentPage==='dashboard') drawDashboardCharts();
+    if(currentPage==='dashboard') {
+      drawDashboardCharts();
+      animateKpiValues();
+    }
   } catch(err) {
     console.error("Erro no pós-render:", err);
     updateActiveMenu();
@@ -8615,6 +8783,10 @@ function pageDashboard(){
           <span class="hero-badge hide-mobile">
             📅 \${formattedToday}
           </span>
+          <span class="hero-badge" style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.15); border:1px solid rgba(52,211,153,0.35); color:#34D399; font-weight:800; font-size:11px;">
+            <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981; animation:pulseFintechDot 1.8s infinite ease-in-out;"></span>
+            <span>Fluxo em Tempo Real</span>
+          </span>
         </div>
         <h1 class="hero-greeting">
           \${greeting.icon} \${greeting.text}, <span class="hero-name-gradient">\${firstName}</span>
@@ -8641,7 +8813,7 @@ function pageDashboard(){
         <span>Saldo Total</span>
         <span class="ic" style="background:rgba(59,130,246,0.14); color:var(--blue); border-color:rgba(59,130,246,0.25);">💳</span>
       </div>
-      <div class="val" style="color:\${saldo < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
+      <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
       <div class="sub" style="display:flex; align-items:center; gap:5px;">
         <span style="display:inline-block; width:5px; height:5px; border-radius:50%; background:\${saldo < 0 ? 'var(--red)' : 'var(--green)'};"></span>
         <span>\${saldo < 0 ? 'Atenção ao Saldo' : 'Patrimônio Consolidado'}</span>
@@ -8654,7 +8826,7 @@ function pageDashboard(){
         <span>Receitas</span>
         <span class="ic" style="background:rgba(16,185,129,0.14); color:var(--green); border-color:rgba(16,185,129,0.25);">↑</span>
       </div>
-      <div class="val" style="color:var(--green); font-variant-numeric:tabular-nums;">+\${fmt(receitas)}</div>
+      <div class="val" data-anim-val="\${receitas}" data-prefix="+" style="color:var(--green); font-variant-numeric:tabular-nums;">+\${fmt(receitas)}</div>
       <div class="sub up">↑ Entradas em \${periodLabel()}</div>
     </div>
 
@@ -8664,7 +8836,7 @@ function pageDashboard(){
         <span>Despesas</span>
         <span class="ic" style="background:rgba(239,68,68,0.14); color:var(--red); border-color:rgba(239,68,68,0.25);">↓</span>
       </div>
-      <div class="val" style="color:var(--red); font-variant-numeric:tabular-nums;">-\${fmt(despesas)}</div>
+      <div class="val" data-anim-val="\${despesas}" data-prefix="-" style="color:var(--red); font-variant-numeric:tabular-nums;">-\${fmt(despesas)}</div>
       <div class="sub" style="color:var(--red);">↓ Saídas em \${periodLabel()}</div>
     </div>
 
@@ -8674,7 +8846,7 @@ function pageDashboard(){
         <span>Saldo do Mês</span>
         <span class="ic" style="background:\${(receitas-despesas) < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(59,130,246,0.14)'}; color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--blue)'}; border-color:\${(receitas-despesas) < 0 ? 'rgba(239,68,68,0.25)' : 'rgba(59,130,246,0.25)'};">⇄</span>
       </div>
-      <div class="val" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(receitas-despesas)}</div>
+      <div class="val" data-anim-val="\${receitas-despesas}" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(receitas-despesas)}</div>
       <div class="sub" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}">
         \${(receitas-despesas) >= 0 ? '✓ Superávit Operacional' : '⚠ Déficit no Período'}
       </div>
@@ -8686,7 +8858,7 @@ function pageDashboard(){
         <span>Lançamentos</span>
         <span class="ic" style="background:rgba(155,107,216,0.14); color:var(--purple); border-color:rgba(155,107,216,0.25);">☰</span>
       </div>
-      <div class="val" style="font-variant-numeric:tabular-nums;">\${periodTx.length}</div>
+      <div class="val" data-anim-val="\${periodTx.length}" data-is-int="true" style="font-variant-numeric:tabular-nums;">\${periodTx.length}</div>
       <div class="sub">Registros em \${periodLabel()}</div>
     </div>
   </div>
@@ -8704,22 +8876,22 @@ function pageDashboard(){
     <div class="kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px;">
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
         <div class="row1" style="color:var(--text-dim); font-size:12px;">Limite Disponível Total</div>
-        <div class="val" style="font-size:20px; font-weight:800; color:var(--green); margin-top:2px;">\${fmt(cardSummary.availableLimitGeral)}</div>
+        <div class="val" data-anim-val="\${cardSummary.availableLimitGeral}" style="font-size:20px; font-weight:800; color:var(--green); margin-top:2px;">\${fmt(cardSummary.availableLimitGeral)}</div>
         <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">Para novas compras</div>
       </div>
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
         <div class="row1" style="color:var(--text-dim); font-size:12px;">Fatura do Mês</div>
-        <div class="val" style="font-size:20px; font-weight:800; color:var(--orange); margin-top:2px;">\${fmt(cardSummary.spentPeriodGeral)}</div>
+        <div class="val" data-anim-val="\${cardSummary.spentPeriodGeral}" style="font-size:20px; font-weight:800; color:var(--orange); margin-top:2px;">\${fmt(cardSummary.spentPeriodGeral)}</div>
         <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">\${periodLabel()}</div>
       </div>
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
         <div class="row1" style="color:var(--text-dim); font-size:12px;">Fatura Acumulada em Aberto</div>
-        <div class="val" style="font-size:20px; font-weight:800; color:var(--red); margin-top:2px;">\${fmt(cardSummary.spentTotalGeral)}</div>
+        <div class="val" data-anim-val="\${cardSummary.spentTotalGeral}" style="font-size:20px; font-weight:800; color:var(--red); margin-top:2px;">\${fmt(cardSummary.spentTotalGeral)}</div>
         <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">Compras minus pagamentos</div>
       </div>
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
         <div class="row1" style="color:var(--text-dim); font-size:12px;">Limite Aprovado Total</div>
-        <div class="val" style="font-size:20px; font-weight:800; color:var(--blue); margin-top:2px;">\${fmt(cardSummary.totalLimitGeral)}</div>
+        <div class="val" data-anim-val="\${cardSummary.totalLimitGeral}" style="font-size:20px; font-weight:800; color:var(--blue); margin-top:2px;">\${fmt(cardSummary.totalLimitGeral)}</div>
         <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">Soma dos cartões</div>
       </div>
     </div>
@@ -11762,6 +11934,38 @@ function drawDashboardCharts(){
   }
 }
 
+/* ==================== Animação Numérica Fluida dos KPIs (CountUp) ==================== */
+function animateKpiValues() {
+  const elements = document.querySelectorAll('[data-anim-val]');
+  elements.forEach(el => {
+    const target = parseFloat(el.getAttribute('data-anim-val'));
+    if (isNaN(target)) return;
+    const isInt = el.getAttribute('data-is-int') === 'true';
+    const prefix = el.getAttribute('data-prefix') || '';
+    const startTime = performance.now();
+    const duration = 850;
+
+    function update(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const current = target * ease;
+      if (isInt) {
+        el.textContent = Math.round(current).toString();
+      } else {
+        el.textContent = (prefix ? prefix : '') + fmt(current);
+      }
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        if (isInt) el.textContent = target.toString();
+        else el.textContent = (prefix ? prefix : '') + fmt(target);
+      }
+    }
+    requestAnimationFrame(update);
+  });
+}
+
 function populateAccountOptions(selectedAcc) {
   const fConta = document.getElementById('fConta');
   if(!fConta) return;
@@ -14379,10 +14583,28 @@ if (scaleMenuBtn && scaleDropdown) {
       'Saldo Positivo ↗',
       'Sonhos em Andamento ✨'
     ];
-    const currencyCoins = ['R$', '$', '€', '£'];
+    const currencyCoins = ['R$', '$', '€', '₿', '£', '¥', '%', '▲'];
     const colors = ['#38BDF8', '#F59E0B', '#10B981', '#818CF8', '#FBBF24', '#60A5FA', '#34D399'];
 
-    // 2. Elementos Financeiros Flutuantes com Profundidade
+    // 2. Candlesticks Financeiros Reais de Mercado
+    const candlestickBars = [];
+    const candleCount = 28;
+    for (let c = 0; c < candleCount; c++) {
+      const isBullish = Math.random() > 0.44;
+      candlestickBars.push({
+        x: Math.random() * (width || 1200),
+        y: (height || 800) * 0.73 + (Math.random() * 80 - 40),
+        height: Math.floor(Math.random() * 26) + 10,
+        wickTop: Math.floor(Math.random() * 12) + 4,
+        wickBottom: Math.floor(Math.random() * 12) + 4,
+        width: 6.5,
+        isBullish: isBullish,
+        alpha: Math.random() * 0.35 + 0.25,
+        vx: -(Math.random() * 0.28 + 0.14)
+      });
+    }
+
+    // 3. Elementos Financeiros Flutuantes com Profundidade
     const items = [];
     const itemCount = 38;
     for (let i = 0; i < itemCount; i++) {
@@ -14402,7 +14624,7 @@ if (scaleMenuBtn && scaleDropdown) {
       });
     }
 
-    // 3. Partículas de Poeira Luminosa (Bokeh 4K)
+    // 4. Partículas de Poeira Luminosa (Bokeh 4K)
     const dustParticles = [];
     const dustCount = 45;
     for (let d = 0; d < dustCount; d++) {
@@ -14439,11 +14661,46 @@ if (scaleMenuBtn && scaleDropdown) {
         for (let gy = step; gy < height; gy += step) {
           ctx.beginPath();
           ctx.moveTo(gx - 3.5, gy); ctx.lineTo(gx + 3.5, gy);
-          ctx.moveTo(gx, gy - 3.5); ctx.lineTo(gx + 3.5, gy);
+          ctx.moveTo(gx, gy - 3.5); ctx.lineTo(gx, gy + 3.5);
           ctx.stroke();
         }
       }
       ctx.restore();
+
+      // A2. Simulação de Candlesticks Reais de Mercado
+      candlestickBars.forEach(candle => {
+        candle.x += candle.vx;
+        if (candle.x < -30) {
+          candle.x = width + 30;
+          candle.y = height * 0.73 + (Math.random() * 80 - 40);
+          candle.isBullish = Math.random() > 0.44;
+        }
+        const candleColor = candle.isBullish 
+          ? (isLight ? '#059669' : '#10B981') 
+          : (isLight ? '#DC2626' : '#EF4444');
+
+        ctx.save();
+        ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
+        ctx.strokeStyle = candleColor;
+        ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(239, 68, 68, 0.35)');
+        ctx.lineWidth = 1.2;
+
+        // Pavio
+        ctx.beginPath();
+        ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
+        ctx.lineTo(candle.x, candle.y + candle.height / 2 + candle.wickBottom);
+        ctx.stroke();
+
+        // Corpo
+        ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
+        ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
+
+        if (!isLight) {
+          ctx.shadowColor = candleColor;
+          ctx.shadowBlur = 6;
+        }
+        ctx.restore();
+      });
 
       // B. Curva Suave de Evolução Patrimonial Pessoal & Poupança Acumulada
       const chartBaseY = height * 0.78;
@@ -14709,6 +14966,74 @@ if (scaleMenuBtn && scaleDropdown) {
   setupCanvas('authBgCanvas');
   setupCanvas('appBgOrbitalCanvas');
 })();
+
+  // Engine do Ticker de Mercados Financeiros no Topheader do App
+  (function initAppMarketTickerEngine() {
+    const track = document.getElementById('appTickerTrack');
+    if (!track) return;
+
+    const initialQuotes = [
+      { id: 'appUsdBrl', sym: 'USD/BRL', val: 5.742, chg: '+0.38%', up: true, prefix: 'R$ ' },
+      { id: 'appEurBrl', sym: 'EUR/BRL', val: 6.218, chg: '-0.12%', up: false, prefix: 'R$ ' },
+      { id: 'appIbov', sym: 'IBOVESPA', val: 132850, chg: '+0.75%', up: true, suffix: ' pts' },
+      { id: 'appBtc', sym: 'BITCOIN', val: 528940, chg: '+2.85%', up: true, prefix: 'R$ ' },
+      { id: 'appEth', sym: 'ETHEREUM', val: 18240, chg: '+1.95%', up: true, prefix: 'R$ ' },
+      { id: 'appSp500', sym: 'S&P 500', val: 5864, chg: '+0.42%', up: true, suffix: ' pts' },
+      { id: 'appCdi', sym: 'CDI', val: 10.75, chg: '10,75% a.a.', up: null, isStatic: true },
+      { id: 'appSelic', sym: 'SELIC', val: 10.75, chg: '10,75%', up: null, isStatic: true },
+      { id: 'appIpca', sym: 'IPCA (12m)', val: 4.12, chg: '+4,12%', up: true, isStatic: true },
+      { id: 'appOuro', sym: 'OURO (g)', val: 488.50, chg: '+0.64%', up: true, prefix: 'R$ ' }
+    ];
+
+    function formatQuoteValue(q) {
+      if (q.isStatic) return (q.prefix || '') + q.val.toFixed(2).replace('.', ',') + '%' + (q.suffix || '');
+      if (q.val >= 1000) {
+        const formatted = Math.round(q.val).toLocaleString('pt-BR');
+        return (q.prefix || '') + formatted + (q.suffix || '');
+      }
+      return (q.prefix || '') + q.val.toFixed(3).replace('.', ',') + (q.suffix || '');
+    }
+
+    function renderTrack() {
+      let html = '';
+      for (let loop = 0; loop < 2; loop++) {
+        initialQuotes.forEach(function(q) {
+          const chgClass = q.up === true ? 'up' : (q.up === false ? 'down' : 'neu');
+          const chgIcon = q.up === true ? '▲ ' : (q.up === false ? '▼ ' : '• ');
+          const domId = 'app_quote_' + loop + '_' + q.id;
+          html += '<div class="app-ticker-item">' +
+            '<span class="sym">' + q.sym + '</span>' +
+            '<span class="val" id="' + domId + '">' + formatQuoteValue(q) + '</span>' +
+            '<span class="chg ' + chgClass + '">' + chgIcon + q.chg + '</span>' +
+          '</div>';
+        });
+      }
+      track.innerHTML = html;
+    }
+
+    renderTrack();
+
+    setInterval(function() {
+      const dynamicQuotes = initialQuotes.filter(function(q) { return !q.isStatic; });
+      const q = dynamicQuotes[Math.floor(Math.random() * dynamicQuotes.length)];
+      const deltaPct = (Math.random() * 0.4 - 0.18) / 100;
+      q.val = Math.max(0.01, q.val * (1 + deltaPct));
+      q.up = deltaPct >= 0;
+      const newChg = (deltaPct >= 0 ? '+' : '') + (deltaPct * 100).toFixed(2).replace('.', ',') + '%';
+      q.chg = newChg;
+
+      for (let loop = 0; loop < 2; loop++) {
+        const el = document.getElementById('app_quote_' + loop + '_' + q.id);
+        if (el) {
+          el.textContent = formatQuoteValue(q);
+          const flashClass = q.up ? 'val-flash-up' : 'val-flash-down';
+          el.classList.remove('val-flash-up', 'val-flash-down');
+          void el.offsetWidth;
+          el.classList.add(flashClass);
+        }
+      }
+    }, 2600);
+  })();
 
   (function initServer3DCardTilt() {
     const card = document.getElementById('serverAuthNexusCard');
