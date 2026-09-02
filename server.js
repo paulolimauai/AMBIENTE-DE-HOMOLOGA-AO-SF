@@ -3388,17 +3388,17 @@ body.light .kpi .val { color:#0f172a !important; text-shadow:none; }
 .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:20px; align-items:stretch;}
 .panel{
   position:relative; overflow:hidden;
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(18, 30, 24, 0.75) 45%, rgba(10, 18, 14, 0.88) 100%) !important;
-  border:1px solid rgba(255, 255, 255, 0.14) !important; border-radius:24px !important; padding:22px 26px;
-  box-shadow:0 20px 50px -10px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+  background:linear-gradient(145deg, rgba(20, 27, 43, 0.88) 0%, rgba(13, 18, 30, 0.94) 52%, rgba(9, 13, 22, 0.98) 100%) !important;
+  border:1px solid rgba(255, 255, 255, 0.10) !important; border-radius:24px !important; padding:22px 26px;
+  box-shadow:0 20px 50px -10px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
   backdrop-filter:blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter:blur(28px) saturate(190%) !important;
   transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;
 }
 .panel:hover{
-  border-color:rgba(52, 211, 153, 0.40) !important;
-  box-shadow:0 24px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  border-color:rgba(59, 130, 246, 0.35) !important;
+  box-shadow:0 24px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
 }
 .panel-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:10px; flex-wrap:wrap;}
 .panel-head h3{font-size:15px; font-weight:800; color:#ffffff; letter-spacing:-0.01em; display:flex; align-items:center; gap:8px;}
@@ -8467,126 +8467,166 @@ function pageDashboard(){
   \` : ''}
 
   <div class="grid3">
-    <!-- Painel 1: Resumo Financeiro (4K Executive Design) -->
+    <!-- Painel 1: Resumo Financeiro (4K Executive Luxury Design) -->
     <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;">
-      <div style="display:flex; flex-direction:column; gap:13px; width:100%;">
+      <div style="display:flex; flex-direction:column; gap:14px; width:100%;">
         
-        <!-- Cabeçalho Alinhado -->
+        <!-- Cabeçalho Executivo 4K Alinhado -->
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:9px;">
-            <div style="width:34px; height:34px; border-radius:10px; background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--blue); box-shadow:0 3px 10px rgba(59,130,246,0.15); flex-shrink:0;">
-              📊
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.22), rgba(37,99,235,0.08)); border:1px solid rgba(59,130,246,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(59,130,246,0.25); flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18"/>
+                <path d="M18 17V9"/>
+                <path d="M13 17V5"/>
+                <path d="M8 17v-3"/>
+              </svg>
             </div>
             <div>
-              <h3 style="font-size:14px; font-weight:800; color:var(--text); margin:0; letter-spacing:-0.01em;">
+              <h3 style="font-size:15px; font-weight:800; color:#FFFFFF; margin:0; letter-spacing:-0.02em;">
                 Resumo Financeiro
               </h3>
-              <span style="font-size:11px; color:var(--text-dim); margin-top:1px; display:block; opacity:0.85; font-weight:500;">
-                Balanço e fluxo do período
+              <span style="font-size:11px; color:var(--text-dim); margin-top:2px; display:block; opacity:0.85; font-weight:500;">
+                Balanço consolidado & fluxo operacional
               </span>
             </div>
           </div>
-          <span class="tag" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); font-weight:700; font-size:11.5px; padding:4px 10px; border-radius:8px;">
-            \${periodLabel()}
-          </span>
+          <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.11); padding:5px 12px; border-radius:20px; backdrop-filter:blur(10px); box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span style="font-weight:700; font-size:11px; color:var(--text); letter-spacing:0.02em;">\${periodLabel()}</span>
+          </div>
         </div>
 
-        <!-- 1. Grid de 3 Cards Principais (Receitas, Despesas, Resultado) -->
+        <!-- 1. Grid de 3 Cards Principais 4K (Receitas, Despesas, Resultado) -->
         <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
           <!-- Receitas -->
-          <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.22); border-radius:12px; padding:9px 6px; text-align:center;">
-            <div style="font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--green); display:flex; align-items:center; justify-content:center; gap:3px;">
-              <span style="display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--green);"></span> Receitas
+          <div style="background:linear-gradient(145deg, rgba(16,185,129,0.10) 0%, rgba(16,185,129,0.02) 100%); border:1px solid rgba(16,185,129,0.25); border-radius:14px; padding:10px 8px; text-align:center; box-shadow:0 4px 16px -2px rgba(16,185,129,0.12), inset 0 1px 0 rgba(255,255,255,0.08);">
+            <div style="font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; display:flex; align-items:center; justify-content:center; gap:5px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981;"></span>
+              Receitas
             </div>
-            <b style="color:var(--green); font-size:13px; font-weight:800; margin-top:4px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            <b style="color:#34D399; font-size:14px; font-weight:900; margin-top:5px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 10px rgba(16,185,129,0.35);">
               \${fmt(receitas)}
             </b>
           </div>
 
           <!-- Despesas -->
-          <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.22); border-radius:12px; padding:9px 6px; text-align:center;">
-            <div style="font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--red); display:flex; align-items:center; justify-content:center; gap:3px;">
-              <span style="display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--red);"></span> Despesas
+          <div style="background:linear-gradient(145deg, rgba(239,68,68,0.10) 0%, rgba(239,68,68,0.02) 100%); border:1px solid rgba(239,68,68,0.25); border-radius:14px; padding:10px 8px; text-align:center; box-shadow:0 4px 16px -2px rgba(239,68,68,0.12), inset 0 1px 0 rgba(255,255,255,0.08);">
+            <div style="font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#F87171; display:flex; align-items:center; justify-content:center; gap:5px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#EF4444; box-shadow:0 0 8px #EF4444;"></span>
+              Despesas
             </div>
-            <b style="color:var(--red); font-size:13px; font-weight:800; margin-top:4px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            <b style="color:#F87171; font-size:14px; font-weight:900; margin-top:5px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 10px rgba(239,68,68,0.35);">
               \${fmt(despesas)}
             </b>
           </div>
 
           <!-- Resultado -->
-          <div style="background:\${resultado >= 0 ? 'rgba(59,130,246,0.06)' : 'rgba(239,68,68,0.08)'}; border:1px solid \${resultado >= 0 ? 'rgba(59,130,246,0.22)' : 'rgba(239,68,68,0.25)'}; border-radius:12px; padding:9px 6px; text-align:center;">
-            <div style="font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:\${resultado >= 0 ? 'var(--blue)' : 'var(--red)'}; display:flex; align-items:center; justify-content:center; gap:3px;">
-              <span style="display:inline-block; width:5px; height:5px; border-radius:50%; background:\${resultado >= 0 ? 'var(--blue)' : 'var(--red)'};"></span> Resultado
+          <div style="background:linear-gradient(145deg, \${resultado >= 0 ? 'rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.02)' : 'rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.03)'} 100%); border:1px solid \${resultado >= 0 ? 'rgba(59,130,246,0.25)' : 'rgba(239,68,68,0.28)'}; border-radius:14px; padding:10px 8px; text-align:center; box-shadow:0 4px 16px -2px \${resultado >= 0 ? 'rgba(59,130,246,0.12)' : 'rgba(239,68,68,0.15)'}, inset 0 1px 0 rgba(255,255,255,0.08);">
+            <div style="font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:\${resultado >= 0 ? '#60A5FA' : '#F87171'}; display:flex; align-items:center; justify-content:center; gap:5px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:\${resultado >= 0 ? '#3B82F6' : '#EF4444'}; box-shadow:0 0 8px \${resultado >= 0 ? '#3B82F6' : '#EF4444'};"></span>
+              Resultado
             </div>
-            <b style="color:\${resultado >= 0 ? 'var(--green)' : 'var(--red)'}; font-size:13px; font-weight:800; margin-top:4px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            <b style="color:\${resultado >= 0 ? '#34D399' : '#F87171'}; font-size:14px; font-weight:900; margin-top:5px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 10px \${resultado >= 0 ? 'rgba(52,211,153,0.35)' : 'rgba(239,68,68,0.35)'};">
               \${fmt(resultado)}
             </b>
           </div>
         </div>
 
-        <!-- 2. Medidor Visual de Economia (High-Definition SVG Dual-Ring Meter) -->
-        <div style="display:flex; align-items:center; justify-content:center; position:relative; width:126px; height:126px; margin:2px auto;">
-          <svg viewBox="0 0 100 100" style="width:100%; height:100%; transform:rotate(-90deg);">
-            <!-- Background Track -->
-            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="8"/>
-            <!-- Despesas Track -->
-            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(239,68,68,0.35)" stroke-width="8" stroke-dasharray="\${2 * Math.PI * 40}" stroke-dashoffset="0"/>
-            <!-- Receitas / Economia Ring Progress -->
-            <circle cx="50" cy="50" r="40" fill="none" stroke="\${savingsPct > 0 ? '#10B981' : '#64748B'}" stroke-width="8.5" stroke-linecap="round" stroke-dasharray="\${2 * Math.PI * 40}" stroke-dashoffset="\${2 * Math.PI * 40 * (1 - Math.min(Math.max(savingsPct, 0), 100) / 100)}" style="transition: stroke-dashoffset 0.6s ease; filter:drop-shadow(0 0 4px \${savingsPct > 0 ? 'rgba(16,185,129,0.5)' : 'transparent'});"/>
+        <!-- 2. Medidor Visual de Economia (Executive 4K Precision Gauge) -->
+        <div style="display:flex; align-items:center; justify-content:center; position:relative; width:134px; height:134px; margin:4px auto;">
+          <svg viewBox="0 0 100 100" style="width:100%; height:100%; transform:rotate(-90deg); filter:drop-shadow(0 4px 14px rgba(0,0,0,0.4));">
+            <defs>
+              <linearGradient id="meterEmeraldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#059669"/>
+                <stop offset="50%" stop-color="#10B981"/>
+                <stop offset="100%" stop-color="#34D399"/>
+              </linearGradient>
+              <linearGradient id="meterTrackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+              </linearGradient>
+            </defs>
+            <!-- Background Outer Precision Guide -->
+            <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="2 3"/>
+            <!-- Background Sleek Glass Track (Nunca vermelho quando zerado!) -->
+            <circle cx="50" cy="50" r="38" fill="none" stroke="url(#meterTrackGrad)" stroke-width="7.5"/>
+            <!-- Inner Concentric Orbit -->
+            <circle cx="50" cy="50" r="30.5" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
+            
+            \${savingsPct > 0 ? \`
+            <!-- Active Neon Emerald Savings Arc -->
+            <circle cx="50" cy="50" r="38" fill="none" stroke="url(#meterEmeraldGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="238.76" stroke-dashoffset="\${238.76 * (1 - Math.min(savingsPct, 100) / 100)}" style="transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1); filter:drop-shadow(0 0 6px rgba(16,185,129,0.55));"/>
+            \` : \`
+            <!-- Idle Precision Ambient Ring (Zeroed State) -->
+            <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(59,130,246,0.18)" stroke-width="7.5" stroke-dasharray="3 5"/>
+            \`}
           </svg>
+          
           <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; pointer-events:none;">
-            <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:var(--text-dim);">Economia</span>
-            <b style="color:\${savingsPct > 0 ? 'var(--green)' : 'var(--text-dim)'}; font-size:16px; font-weight:800; margin-top:1px; line-height:1;">\${savingsPct}%</b>
-            <span style="font-size:9px; color:var(--text-faint); margin-top:2px;">da receita</span>
+            <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.14em; font-weight:800; color:var(--text-dim); opacity:0.85;">Economia</span>
+            <b style="font-size:23px; font-weight:900; letter-spacing:-0.03em; margin:2px 0; \${savingsPct > 0 ? 'color:#34D399; text-shadow:0 0 12px rgba(16,185,129,0.45);' : 'color:var(--text);'}; line-height:1; font-variant-numeric:tabular-nums;">
+              \${savingsPct}%
+            </b>
+            <span style="font-size:9.5px; color:var(--text-dim); font-weight:600; opacity:0.75;">
+              \${receitas > 0 ? 'da receita' : 'da renda'}
+            </span>
           </div>
         </div>
 
-        <!-- 3. Indicadores de Saúde Financeira -->
+        <!-- 3. Indicadores de Saúde Financeira 4K Glass -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:8px 10px; display:flex; align-items:center; gap:8px;">
-            <span style="font-size:13px; background:rgba(229,169,60,0.12); color:var(--gold); border:1px solid rgba(229,169,60,0.25); width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">📈</span>
+          <!-- Comprometimento -->
+          <div style="background:linear-gradient(135deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.01) 100%); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:9px 12px; display:flex; align-items:center; gap:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
+            <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(245,158,11,0.15);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
             <div style="min-width:0;">
-              <div style="font-size:10px; color:var(--text-dim); font-weight:600;">Comprometimento</div>
-              <div style="font-size:11.5px; font-weight:800; color:\${commitPct > 80 ? 'var(--red)' : commitPct > 60 ? 'var(--orange)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${commitPct}% da Renda</div>
+              <div style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700;">Comprometimento</div>
+              <div style="font-size:12px; font-weight:800; color:\${commitPct > 80 ? '#F87171' : commitPct > 60 ? '#FBBF24' : '#34D399'}; font-variant-numeric:tabular-nums; margin-top:1px;">\${commitPct}% da Renda</div>
             </div>
           </div>
 
-          <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:8px 10px; display:flex; align-items:center; gap:8px;">
-            <span style="font-size:13px; background:rgba(59,130,246,0.12); color:var(--blue); border:1px solid rgba(59,130,246,0.25); width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">📅</span>
+          <!-- Média Diária -->
+          <div style="background:linear-gradient(135deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.01) 100%); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:9px 12px; display:flex; align-items:center; gap:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
+            <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg, rgba(59,130,246,0.2), rgba(37,99,235,0.08)); border:1px solid rgba(59,130,246,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(59,130,246,0.15);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
             <div style="min-width:0;">
-              <div style="font-size:10px; color:var(--text-dim); font-weight:600;">Média Diária</div>
-              <div style="font-size:11.5px; font-weight:800; color:var(--text); font-variant-numeric:tabular-nums;">\${fmt(dailyAvg)}/dia</div>
+              <div style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700;">Média Diária</div>
+              <div style="font-size:12px; font-weight:800; color:var(--text); font-variant-numeric:tabular-nums; margin-top:1px;">\${fmt(dailyAvg)}/dia</div>
             </div>
           </div>
         </div>
 
-        <!-- 4. Barra de Distribuição de Renda -->
+        <!-- 4. Barra de Distribuição de Renda 4K -->
         <div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; font-size:10.5px; font-weight:700;">
-            <span style="color:var(--green); display:flex; align-items:center; gap:4px;">
-              <span style="width:6px; height:6px; border-radius:50%; background:var(--green); display:inline-block;"></span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:11px; font-weight:700;">
+            <span style="color:#34D399; display:flex; align-items:center; gap:5px; letter-spacing:0.02em;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981; display:inline-block;"></span>
               Receitas \${recPct}%
             </span>
-            <span style="color:var(--red); display:flex; align-items:center; gap:4px;">
+            <span style="color:#F87171; display:flex; align-items:center; gap:5px; letter-spacing:0.02em;">
               Despesas \${despPct}%
-              <span style="width:6px; height:6px; border-radius:50%; background:var(--red); display:inline-block;"></span>
+              <span style="width:6px; height:6px; border-radius:50%; background:#EF4444; box-shadow:0 0 6px #EF4444; display:inline-block;"></span>
             </span>
           </div>
-          <div class="bar-split" style="height:6.5px; border-radius:6px; overflow:hidden; background:\${totalFluxo > 0 ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.06)'}; box-shadow:inset 0 1px 2px rgba(0,0,0,0.3); display:flex;">
-            <div class="g" style="width:\${recPct}%; border-radius:6px; background:linear-gradient(90deg, #10B981, #34D399); transition:width 0.4s ease;"></div>
+          <div class="bar-split" style="height:7px; border-radius:8px; overflow:hidden; background:\${totalFluxo > 0 ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.06)'}; box-shadow:inset 0 1px 3px rgba(0,0,0,0.4); display:flex;">
+            <div class="g" style="width:\${recPct}%; border-radius:8px; background:linear-gradient(90deg, #10B981, #38BDF8); box-shadow:0 0 8px rgba(16,185,129,0.4); transition:width 0.5s ease;"></div>
           </div>
         </div>
 
       </div>
 
-      <!-- Rodapé Alinhado com Link Interativo -->
-      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.06); width:100%;">
-        <span style="display:flex; align-items:center; gap:5px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--green);"></span>
-          Poupança: <strong style="color:var(--green); font-weight:700;">\${savingsPct}%</strong>
+      <!-- Rodapé Alinhado com Link Interativo 4K -->
+      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.07); width:100%;">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981;"></span>
+          Poupança: <strong style="color:#34D399; font-weight:800;">\${savingsPct}%</strong>
         </span>
-        <span style="cursor:pointer; color:var(--blue); font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:3px;" data-nav="relatorios" class="hover:underline">
-          Ver relatórios completos →
+        <span style="cursor:pointer; color:#60A5FA; font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:4px;" data-nav="relatorios" class="hover:underline">
+          <span>Ver relatórios completos</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </span>
       </div>
     </div>
@@ -8595,18 +8635,21 @@ function pageDashboard(){
     <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;">
       <div style="display:flex; flex-direction:column; gap:13px; width:100%;">
         
-        <!-- Cabeçalho Executivo Alinhado -->
+        <!-- Cabeçalho Executivo 4K Alinhado -->
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:9px;">
-            <div style="width:34px; height:34px; border-radius:10px; background:rgba(229,169,60,0.12); border:1px solid rgba(229,169,60,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--gold); box-shadow:0 3px 10px rgba(229,169,60,0.15); flex-shrink:0;">
-              🏷️
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(245,158,11,0.25); flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+              </svg>
             </div>
             <div>
-              <h3 style="font-size:14px; font-weight:800; color:var(--text); margin:0; letter-spacing:-0.01em;">
+              <h3 style="font-size:15px; font-weight:800; color:#FFFFFF; margin:0; letter-spacing:-0.02em;">
                 Despesas por Categoria
               </h3>
-              <span style="font-size:11px; color:var(--text-dim); margin-top:1px; display:block; opacity:0.85; font-weight:500;">
-                Distribuição dos gastos no período
+              <span style="font-size:11px; color:var(--text-dim); margin-top:2px; display:block; opacity:0.85; font-weight:500;">
+                Distribuição analítica dos gastos
               </span>
             </div>
           </div>
@@ -8710,18 +8753,21 @@ function pageDashboard(){
     <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;">
       <div style="display:flex; flex-direction:column; gap:13px; width:100%;">
         
-        <!-- Cabeçalho Executivo Alinhado -->
+        <!-- Cabeçalho Executivo 4K Alinhado -->
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:9px;">
-            <div style="width:34px; height:34px; border-radius:10px; background:rgba(139,92,246,0.12); border:1px solid rgba(139,92,246,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--purple); box-shadow:0 3px 10px rgba(139,92,246,0.15); flex-shrink:0;">
-              💳
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(139,92,246,0.22), rgba(109,40,217,0.08)); border:1px solid rgba(139,92,246,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(139,92,246,0.25); flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
             </div>
             <div>
-              <h3 style="font-size:14px; font-weight:800; color:var(--text); margin:0; letter-spacing:-0.01em;">
+              <h3 style="font-size:15px; font-weight:800; color:#FFFFFF; margin:0; letter-spacing:-0.02em;">
                 Contas e Cartões
               </h3>
-              <span style="font-size:11px; color:var(--text-dim); margin-top:1px; display:block; opacity:0.85; font-weight:500;">
-                Limites, faturas e saldos
+              <span style="font-size:11px; color:var(--text-dim); margin-top:2px; display:block; opacity:0.85; font-weight:500;">
+                Limites, faturas e saldos consolidados
               </span>
             </div>
           </div>
