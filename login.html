@@ -144,28 +144,8 @@
             --auth-tab-bg: rgba(10, 18, 14, 0.75);
         }
 
-        html, html body, body {
-            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-            background-color: #030612 !important;
-            background-image: 
-                radial-gradient(at 12% 15%, rgba(56, 189, 248, 0.16) 0px, transparent 50%),
-                radial-gradient(at 88% 15%, rgba(99, 102, 241, 0.18) 0px, transparent 55%),
-                radial-gradient(at 50% 48%, rgba(245, 158, 11, 0.12) 0px, transparent 52%),
-                radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.14) 0px, transparent 50%),
-                radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.16) 0px, transparent 55%),
-                linear-gradient(180deg, #030612 0%, #060C1C 50%, #02040C 100%) !important;
-            background-size: cover !important;
-            background-position: center center !important;
-            background-attachment: fixed !important;
-            background-repeat: no-repeat !important;
-            color: var(--auth-text);
-            min-height: 100vh;
-            overflow-x: hidden;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        html.light, html.light body, body.light {
-            --auth-bg: #F8FAFC;
+        body.light, html.light body, html.light {
+            --auth-bg: #F2F7F4;
             --auth-card: rgba(255, 255, 255, 0.90);
             --auth-border: #CBD5E1;
             --auth-border-hover: #10B981;
@@ -177,19 +157,37 @@
             --auth-gold-light: #047857;
             --auth-gold-glow: rgba(16, 185, 129, 0.20);
             --auth-tab-bg: #EDF2F7;
-            background-color: #F8FAFC !important;
+            background-color: #F2F7F4 !important;
             background-image: 
-                radial-gradient(at 12% 15%, rgba(56, 189, 248, 0.10) 0px, transparent 50%),
-                radial-gradient(at 88% 15%, rgba(99, 102, 241, 0.08) 0px, transparent 55%),
-                radial-gradient(at 50% 48%, rgba(245, 158, 11, 0.06) 0px, transparent 52%),
-                radial-gradient(at 18% 85%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
-                radial-gradient(at 82% 85%, rgba(59, 130, 246, 0.08) 0px, transparent 55%),
-                linear-gradient(180deg, #F8FAFC 0%, #EDF2F7 50%, #F1F5F9 100%) !important;
+                radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
+                url('/images/nexus_vision_living_bg.jpg') !important;
             background-size: cover !important;
-            background-position: center center !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            color: #0F172A !important;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+            background-color: #07100B;
+            background-image: 
+                radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
+                url('/images/nexus_vision_living_bg.jpg') !important;
+            background-size: cover !important;
+            background-position: center !important;
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
-            color: #0F172A !important;
+            color: var(--auth-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Fundo Geométrico Sutil */
@@ -204,6 +202,15 @@
             background-image: 
                 linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+        }
+
+        /* ==================== EFEITO TELA DE VIDRO PANORÂMICA (4K LIQUID GLASS SCREEN) ==================== */
+        .glass-viewport-screen {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
         }
 
         /* Placas de Vidro Líquido Flutuantes em Profundidade 4K */
