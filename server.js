@@ -3995,7 +3995,27 @@ body.light .rec-progress-bar {
   color: #94A3B8;
   margin: 0;
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.hero-sub-sep {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 11px;
+}
+.hero-sub-accent {
+  color: #34D399;
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+}
+body.light .hero-sub-accent {
+  color: #059669;
+  text-shadow: none;
+}
+body.light .hero-sub-sep {
+  color: rgba(0, 0, 0, 0.25);
 }
 .hero-period-highlight {
   color: #E5A93C;
@@ -8564,7 +8584,11 @@ function pageDashboard(){
           <span>\${greeting.text}, <span class="hero-name-gradient">\${firstName}</span></span>
         </h1>
         <p class="hero-sub">
-          Visão Consolidada • Inteligência Financeira & Gestão Financeira Pessoal
+          <span>Visão Consolidada</span>
+          <span class="hero-sub-sep">•</span>
+          <span>Inteligência Estratégica</span>
+          <span class="hero-sub-sep">&</span>
+          <span class="hero-sub-accent">Gestão Financeira Pessoal</span>
         </p>
       </div>
 
