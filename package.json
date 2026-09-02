@@ -1,6 +1,6 @@
 {
   "name": "nexus-financeiro-hub",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sistema de gestão financeira pessoal - Nexus Financeiro Hub",
   "main": "server.js",
   "scripts": {
