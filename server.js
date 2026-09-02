@@ -9948,8 +9948,8 @@ function pageRecorrentes(){
           const remainingToPay = isFixed ? Math.max(0, totalM - paidCount) : pendingCount;
           const paidPct = isFixed ? Math.min(100, Math.round((paidCount / totalM) * 100)) : (paidCount > 0 ? 100 : 0);
           const isFullyPaid = isFixed && paidCount >= totalM;
-          const method = r.paymentMethod || detectPaymentMethodFromName(r.desc) || ((r.cat && r.cat.toLowerCase().includes('cartão')) || (r.acc && r.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto');
           const isIncome = r.type === 'in';
+          const method = !isIncome ? (r.paymentMethod || detectPaymentMethodFromName(r.desc) || ((r.cat && r.cat.toLowerCase().includes('cartão')) || (r.acc && r.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto')) : null;
           const paidWord = isIncome ? 'recebida' : 'paga';
           const paidWordPlural = isIncome ? 'recebidas' : 'pagas';
 
@@ -9959,9 +9959,11 @@ function pageRecorrentes(){
               <div style="display:flex; flex-direction:column; gap:4px;">
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <span style="font-weight:700;">\${r.desc}</span>
-                  <span class="pill" style="padding:2px 7px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.4)' : 'rgba(245,158,11,0.4)'};">
-                    \${method === 'Cartão de Crédito' ? '💳 Cartão de Crédito' : '📄 Boleto'}
-                  </span>
+                  \${method ? \`
+                    <span class="pill" style="padding:2px 7px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.4)' : 'rgba(245,158,11,0.4)'};">
+                      \${method === 'Cartão de Crédito' ? '💳 Cartão de Crédito' : '📄 Boleto'}
+                    </span>
+                  \` : ''}
                   \${isFixed ? \`<span class="pill" style="padding:2px 7px; font-size:10px; font-weight:700; background:\${isFullyPaid ? 'rgba(16,185,129,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--green)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓' : paidWordPlural}</span>\` : ''}
                 </div>
                 \${isFixed ? \`
@@ -10015,19 +10017,26 @@ function pageRecorrentes(){
             </td>
             <td>
               \${isFixed ? \`
-                <div style="min-width:145px; display:flex; flex-direction:column; gap:4px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:700;">
-                    <span style="display:inline-flex; align-items:center; gap:4px; color:\${isFullyPaid ? 'var(--green)' : '#F59E0B'};">
-                      \${isFullyPaid ? '✓ Concluído' : '⏳ Pendente'}
+                <div style="min-width:160px; display:flex; flex-direction:column; gap:5px;">
+                  <!-- 1. PRIMEIRO: O que ja foi pago -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:800;">
+                    <span style="display:inline-flex; align-items:center; gap:4px; color:\${isFullyPaid ? 'var(--green)' : (paidCount > 0 ? 'var(--green)' : 'var(--text-dim)')};">
+                      \${isFullyPaid ? '✓ 100% Concluído' : (paidCount > 0 ? (\`✓ \${paidCount}/\${totalM} \${paidCount === 1 ? paidWord : paidWordPlural}\`) : (\`0/\${totalM} \${paidWordPlural}\`))}
                     </span>
-                    <span style="color:\${isFullyPaid ? 'var(--green)' : 'var(--text-dim)'}; font-weight:800;">\${paidPct}%</span>
+                    <span style="color:\${isFullyPaid ? 'var(--green)' : (paidCount > 0 ? 'var(--green)' : 'var(--text-dim)')}; font-weight:800;">
+                      \${paidPct}% \${isIncome ? 'recebido' : 'pago'}
+                    </span>
                   </div>
+                  <!-- Barra verde de progresso pago -->
                   <div class="rec-progress-bar" style="height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;">
-                    <div class="rec-progress-fill" style="width:\${paidPct}%; height:100%; border-radius:3px; background:\${isFullyPaid ? 'var(--green)' : (paidPct > 0 ? 'linear-gradient(90deg, #F59E0B, #10B981)' : 'transparent')}; transition:width .4s ease;"></div>
+                    <div class="rec-progress-fill" style="width:\${paidPct}%; height:100%; border-radius:3px; background:\${isFullyPaid ? 'var(--green)' : (paidPct > 0 ? 'var(--green)' : 'transparent')}; transition:width .4s ease;"></div>
                   </div>
-                  <div style="font-size:10px; color:var(--text-dim); display:flex; justify-content:space-between; align-items:center; gap:4px;">
-                    <span>\${paidCount}/\${totalM} \${paidCount === 1 ? paidWord : paidWordPlural}</span>
-                    <span style="font-weight:600; color:\${remainingToPay > 0 ? '#F59E0B' : 'var(--green)'};">\${remainingToPay > 0 ? (\`\${remainingToPay} faltante\${remainingToPay === 1 ? '' : 's'}\`) : 'Quitado'}</span>
+                  <!-- 2. DEPOIS: O que ainda falta pagar -->
+                  <div style="font-size:10.5px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:\${remainingToPay > 0 ? '#F59E0B' : 'var(--green)'}; font-weight:700;">
+                      \${remainingToPay > 0 ? (\`⏳ Falta \${isIncome ? 'receber' : 'pagar'}: \${remainingToPay} \${remainingToPay === 1 ? 'parcela' : 'parcelas'}\`) : '✓ Todas quitadas'}
+                    </span>
+                    \${remainingToPay > 0 ? \`<span style="color:#F59E0B; font-size:10px; font-weight:700;">\${100 - paidPct}%</span>\` : ''}
                   </div>
                 </div>
               \` : \`
