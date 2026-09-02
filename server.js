@@ -2204,14 +2204,14 @@ body.light .header-live-time {
 
 nav.menu{
   display:flex; align-items:center; flex-wrap:nowrap; gap:6px; width:100%;
-  padding:6px 10px; max-width:1440px; margin:6px auto 16px;
+  padding:5px 8px; max-width:1440px; margin:4px auto 8px;
   overflow-x:auto; scrollbar-width:none;
   background:linear-gradient(145deg, rgba(20, 27, 43, 0.88) 0%, rgba(13, 18, 30, 0.94) 52%, rgba(9, 13, 22, 0.98) 100%) !important;
   backdrop-filter:blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter:blur(28px) saturate(190%) !important;
   border:1px solid rgba(255, 255, 255, 0.10) !important;
-  border-radius:20px !important;
-  box-shadow:0 18px 45px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.12) !important;
+  border-radius:18px !important;
+  box-shadow:0 14px 35px -8px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.12) !important;
 }
 /* Scrollbars Globais Slim & Elegantes */
 *::-webkit-scrollbar{width:5px; height:5px;}
@@ -2885,8 +2885,8 @@ body.light .dev-signature-name {
 
 /* Centralização do conteúdo principal */
 .main{
-  flex:1; min-width:0; padding:18px 28px 30px;
-  margin-top:175px !important;
+  flex:1; min-width:0; padding:10px 28px 30px;
+  margin-top:135px !important;
   max-width:1440px; margin-left:auto; margin-right:auto; width:100%;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
@@ -5069,9 +5069,9 @@ body.light .logout-timer-bar {
   /* Otimizações Específicas para Monitores 4K / UHD / Ultra-Wide */
   .brand .name { font-size: 20px !important; }
   .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }
-  .topheader-row { max-width: 2200px !important; padding: 12px 36px !important; }
-  nav.menu { max-width: 2200px !important; padding: 8px 14px !important; }
-  .main { max-width: 2200px !important; padding: 24px 36px 40px !important; }
+  .topheader-row { max-width: 2200px !important; padding: 8px 36px !important; min-height: 60px !important; }
+  nav.menu { max-width: 2200px !important; padding: 5px 12px !important; margin: 4px auto 8px !important; }
+  .main { max-width: 2200px !important; padding: 12px 36px 36px !important; margin-top: 140px !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
   .kpi .val { font-size: 26px !important; }
   .kpi .sub { font-size: 12.5px !important; }
@@ -5084,9 +5084,9 @@ body.light .logout-timer-bar {
 
 @media (min-width: 1700px) and (max-width: 2559px) {
   .brand .name { font-size: 18px; }
-  .topheader-row { max-width: 1760px !important; }
-  nav.menu { max-width: 1760px !important; }
-  .main { max-width: 1760px !important; }
+  .topheader-row { max-width: 1760px !important; padding: 8px 28px !important; min-height: 60px !important; }
+  nav.menu { max-width: 1760px !important; margin: 4px auto 8px !important; }
+  .main { max-width: 1760px !important; padding: 12px 28px 30px !important; margin-top: 135px !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; }
 }
 
@@ -8340,8 +8340,8 @@ function updateMainHeaderSpacing() {
   if (th && mainEl && window.innerWidth > 900) {
     const banner = document.querySelector('.view-mode-banner');
     const bannerH = (banner && document.body.classList.contains('has-view-mode-banner')) ? banner.offsetHeight : 0;
-    const thH = th.offsetHeight || 165;
-    mainEl.style.marginTop = (thH + bannerH + 16) + 'px';
+    const thH = th.offsetHeight || 125;
+    mainEl.style.marginTop = (thH + bannerH + 4) + 'px';
   }
 }
 window.addEventListener('resize', updateMainHeaderSpacing);
