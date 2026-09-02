@@ -2045,100 +2045,111 @@ body.light .header-live-time {
 .scale-selector-wrap #scaleMenuBtn,
 #miniThemeBtn,
 #notifBtn {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 12px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 27, 43, 0.65) 50%, rgba(9, 13, 22, 0.85) 100%) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 13px !important;
   color: #CBD5E1 !important;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.35) !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 6px 18px rgba(0, 0, 0, 0.45) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .icon-btn:hover,
 .scale-selector-wrap #scaleMenuBtn:hover,
 #miniThemeBtn:hover,
 #notifBtn:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%) !important;
-  border-color: rgba(96, 165, 250, 0.45) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(20, 27, 43, 0.75) 50%, rgba(9, 13, 22, 0.92) 100%) !important;
+  border-color: rgba(96, 165, 250, 0.5) !important;
   color: #FFFFFF !important;
-  transform: translateY(-1px) !important;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 6px 20px rgba(59, 130, 246, 0.3) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(59, 130, 246, 0.35) !important;
 }
 
 .user {
   display: flex !important;
   align-items: center !important;
-  gap: 10px !important;
-  padding: 5px 14px 5px 6px !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 16px !important;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.28), 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+  gap: 12px !important;
+  padding: 5px 16px 5px 6px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 27, 43, 0.65) 50%, rgba(9, 13, 22, 0.85) 100%) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 18px !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.3), 0 8px 24px rgba(0, 0, 0, 0.5) !important;
   cursor: pointer !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  user-select: none !important;
 }
 
 .user:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
-  border-color: rgba(96, 165, 250, 0.45) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(20, 27, 43, 0.75) 50%, rgba(9, 13, 22, 0.92) 100%) !important;
+  border-color: rgba(96, 165, 250, 0.5) !important;
   transform: translateY(-1.5px) !important;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 10px 28px rgba(59, 130, 246, 0.35) !important;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), 0 12px 30px rgba(59, 130, 246, 0.35) !important;
 }
 
 .user .avatar {
-  width: 34px !important;
-  height: 34px !important;
+  width: 36px !important;
+  height: 36px !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 70%, #B45309 100%) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-weight: 800 !important;
-  font-size: 13px !important;
+  font-weight: 900 !important;
+  font-size: 13.5px !important;
   color: #FFFFFF !important;
   flex-shrink: 0 !important;
-  border: 2px solid rgba(253, 230, 138, 0.6) !important;
-  box-shadow: 0 0 16px rgba(245, 158, 11, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  border: 2px solid rgba(253, 230, 138, 0.75) !important;
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
 }
 
 .user .uname {
-  font-size: 13px !important;
+  font-size: 13.5px !important;
   font-weight: 800 !important;
   color: #F8FAFC !important;
   white-space: nowrap !important;
   letter-spacing: -0.01em !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .user .urole {
-  display: inline-block !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
   padding: 2px 8px !important;
   border-radius: 999px !important;
-  background: rgba(59, 130, 246, 0.18) !important;
-  border: 1px solid rgba(147, 197, 253, 0.35) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.22) 0%, rgba(37, 99, 235, 0.12) 100%) !important;
+  border: 1px solid rgba(147, 197, 253, 0.4) !important;
   color: #93C5FD !important;
   font-weight: 800 !important;
   font-size: 9.5px !important;
   text-transform: uppercase !important;
   letter-spacing: 0.06em !important;
-  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25) !important;
 }
 
 #logoutBtn,
 .topheader-row #logoutBtn {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.16) 0%, rgba(185, 28, 28, 0.08) 100%) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(185, 28, 28, 0.08) 100%) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
   border: 1px solid rgba(248, 113, 113, 0.38) !important;
   color: #FCA5A5 !important;
   font-weight: 800 !important;
-  font-size: 12.5px !important;
-  border-radius: 12px !important;
-  padding: 7px 16px !important;
+  font-size: 13px !important;
+  border-radius: 13px !important;
+  padding: 7px 15px !important;
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 4px 16px rgba(239, 68, 68, 0.22) !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
 }
 
 #logoutBtn:hover,
@@ -2147,7 +2158,7 @@ body.light .header-live-time {
   border-color: rgba(248, 113, 113, 0.65) !important;
   color: #FFFFFF !important;
   transform: translateY(-1.5px) !important;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
 nav.menu{
@@ -5301,7 +5312,10 @@ body.light .scale-dropdown {
       </div>
       <div class="right" style="margin-left:auto;">
         <div class="notif-wrap">
-          <div class="icon-btn" id="notifBtn" title="Notificações"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot" id="notifDot" style="display:none;"></span></div>
+          <div class="icon-btn" id="notifBtn" title="Notificações & Alertas em Tempo Real">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            <span class="dot" id="notifDot" style="display:none;"></span>
+          </div>
           <div class="notif-panel" id="notifPanel">
             <div class="notif-panel-head">
               <h4>Notificações</h4>
@@ -5311,8 +5325,8 @@ body.light .scale-dropdown {
           </div>
         </div>
         <div class="scale-selector-wrap" style="position:relative; display:inline-flex; align-items:center;">
-          <button class="icon-btn" id="scaleMenuBtn" title="Tamanho de Visualização / Escala" style="gap:4px; width:auto; padding:0 8px; font-size:12px; font-weight:600;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          <button class="icon-btn" id="scaleMenuBtn" title="Tamanho de Visualização / Resolução 4K" style="gap:6px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
             <span id="currentScaleLabel">Auto</span>
           </button>
           <div class="scale-dropdown" id="scaleDropdown" style="display:none; position:absolute; top:calc(100% + 8px); right:0; background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:6px; box-shadow:0 10px 30px rgba(0,0,0,0.5); z-index:100; min-width:170px;">
@@ -5326,10 +5340,18 @@ body.light .scale-dropdown {
             <button class="scale-opt-btn" data-scale="150%" style="width:100%; text-align:left; padding:6px 10px; border:none; background:transparent; color:var(--text); border-radius:6px; font-size:12.5px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">🔍 150% (Extra Grande)</button>
           </div>
         </div>
-        <div class="icon-btn" id="miniThemeBtn" title="Alternar Tema"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg></div>
-        <div class="user" id="userMenu" data-nav="config">
+        <div class="icon-btn" id="miniThemeBtn" title="Alternar Modo Noturno / Diurno">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>
+        </div>
+        <div class="user" id="userMenu" data-nav="config" title="Perfil & Configurações da Conta">
           <div class="avatar" id="headerAvatar"></div>
-          <div><div class="uname" id="headerName"></div><div class="urole" id="headerRole"></div></div>
+          <div>
+            <div class="uname" id="headerName"></div>
+            <div class="urole" id="headerRole">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Usuário</span>
+            </div>
+          </div>
         </div>
         <script>
         (function(){
@@ -5340,8 +5362,8 @@ body.light .scale-dropdown {
             var miniBtn = document.getElementById('miniThemeBtn');
             if (miniBtn) {
               miniBtn.innerHTML = isLight ?
-                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>' :
-                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
+                '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>' :
+                '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
             }
             var savedScale = localStorage.getItem('nexus_display_scale') || 'auto';
             var scaleLabel = document.getElementById('currentScaleLabel');
@@ -5357,7 +5379,7 @@ body.light .scale-dropdown {
                 var r = document.getElementById('headerRole');
                 var a = document.getElementById('headerAvatar');
                 if (n) n.textContent = u.name;
-                if (r) r.textContent = u.role || 'Usuário';
+                if (r) r.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>' + (u.role || 'Usuário') + '</span>';
                 if (a) {
                   var p = u.name.trim().split(/\s+/);
                   a.textContent = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
@@ -5374,7 +5396,10 @@ body.light .scale-dropdown {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
           <span>Voltar ao Admin</span>
         </button>
-        <button class="btn-ghost" id="logoutBtn">Sair</button>
+        <button class="btn-ghost" id="logoutBtn" title="Encerrar Sessão com Segurança">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sair</span>
+        </button>
       </div>
     </div>
     <nav class="menu" id="menu">
@@ -8273,7 +8298,8 @@ function updateHeaderUser(){
     if (isViewingOtherUser) {
       roleEl.innerHTML = '<span style="color:#FBBF24; font-weight:800;">👁️ Modo Espelho</span>';
     } else {
-      roleEl.textContent = currentUser.role || 'Usuário';
+      const roleText = currentUser.role || 'Usuário';
+      roleEl.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>' + roleText + '</span>';
     }
   }
   if(avatarEl) {
@@ -14024,8 +14050,8 @@ function toggleTheme(){
   localStorage.setItem('nexus_theme', nextIsLight ? 'light' : 'dark');
 
   const btn = document.getElementById('miniThemeBtn');
-  const moonSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
-  const sunSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+  const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
+  const sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
   if(btn) btn.innerHTML = nextIsLight ? sunSvg : moonSvg;
   if(currentPage==='dashboard') drawDashboardCharts();
 }
@@ -14038,8 +14064,8 @@ document.getElementById('miniThemeBtn').onclick = toggleTheme;
     document.body.classList.toggle('light', isLight);
     document.documentElement.classList.toggle('light', isLight);
     const btn = document.getElementById('miniThemeBtn');
-    const moonSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
-    const sunSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+    const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
+    const sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
     if (btn) btn.innerHTML = isLight ? sunSvg : moonSvg;
   } catch(e){}
 })();
