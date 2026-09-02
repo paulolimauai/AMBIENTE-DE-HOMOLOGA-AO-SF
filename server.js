@@ -3322,15 +3322,15 @@ body.light #logoutBtn:hover {
 .kpis{display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:20px;}
 .kpi{
   position:relative; overflow:hidden;
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(18, 30, 24, 0.75) 45%, rgba(10, 18, 14, 0.88) 100%) !important;
-  border:1px solid rgba(255,255,255,0.13) !important; border-radius:20px !important; padding:20px 18px;
-  box-shadow:0 16px 36px -8px rgba(0,0,0,0.75), 0 0 25px -5px rgba(29, 185, 84, 0.10), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+  background:linear-gradient(145deg, rgba(20, 27, 43, 0.88) 0%, rgba(13, 18, 30, 0.94) 52%, rgba(9, 13, 22, 0.98) 100%) !important;
+  border:1px solid rgba(255,255,255,0.09) !important; border-radius:20px !important; padding:20px 18px;
+  box-shadow:0 16px 36px -8px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.12) !important;
   backdrop-filter:blur(24px) saturate(190%) !important; -webkit-backdrop-filter:blur(24px) saturate(190%) !important;
   transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .kpi::after{
   content:''; position:absolute; top:0; left:-120%; width:80%; height:100%;
-  background:linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+  background:linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
   transform:skewX(-20deg); pointer-events:none;
   transition:left 0.75s ease;
 }
@@ -3338,35 +3338,30 @@ body.light #logoutBtn:hover {
   left:140%;
 }
 .kpi::before{
-  content:''; position:absolute; top:0; left:0; right:0; height:3px;
-  background:linear-gradient(90deg, #1DB954, #34D399, #10B981);
-  opacity:0.9; transition:opacity 0.3s ease;
+  content:''; position:absolute; top:0; left:0; right:0; height:2.5px;
+  opacity:0.95; transition:opacity 0.3s ease;
 }
 .kpi:hover{
   transform:translateY(-3px);
-  border-color:rgba(52, 211, 153, 0.5) !important;
-  box-shadow:0 20px 42px -5px rgba(0,0,0,0.9), 0 0 25px rgba(29, 185, 84, 0.22), inset 0 1px 0 rgba(255,255,255,0.25) !important;
+  border-color:rgba(255, 255, 255, 0.2) !important;
+  box-shadow:0 22px 45px -5px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.2) !important;
 }
-.kpi .row1{display:flex; align-items:center; justify-content:space-between; color:var(--text-dim); font-size:12.5px; font-weight:600; margin-bottom:12px; letter-spacing:0.01em;}
+.kpi .row1{display:flex; align-items:center; justify-content:space-between; color:var(--text-dim); font-size:11.5px; font-weight:700; margin-bottom:12px; letter-spacing:0.04em; text-transform:uppercase;}
 .kpi .ic{
-  width:40px; height:40px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
-  background:linear-gradient(135deg, rgba(29,185,84,0.18), rgba(16,185,129,0.08));
-  border:1px solid rgba(52,211,153,0.25);
-  box-shadow:0 4px 14px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+  width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
   transition:transform 0.25s ease, box-shadow 0.25s ease;
 }
 .kpi:hover .ic{
-  transform:scale(1.06);
-  box-shadow:0 6px 18px rgba(29,185,84,0.35);
+  transform:scale(1.08);
 }
-.kpi .val{font-size:24px; font-weight:800; margin-bottom:6px; color:#FFFFFF; letter-spacing:-0.02em; font-variant-numeric:tabular-nums;}
-.kpi .sub{font-size:11.5px; color:var(--text-faint); font-weight:500;}
-.kpi .sub.up{color:#1DB954; font-weight:700;}
+.kpi .val{font-size:24px; font-weight:900; margin-bottom:6px; letter-spacing:-0.02em; font-variant-numeric:tabular-nums;}
+.kpi .sub{font-size:11.5px; color:var(--text-dim); font-weight:600;}
 
-.kpi.kpi-balance::before { background: linear-gradient(90deg, #1DB954, #34D399); }
-.kpi.kpi-income::before { background: linear-gradient(90deg, #10B981, #6EE7B7); }
+.kpi.kpi-balance::before { background: linear-gradient(90deg, #10B981, #3B82F6); }
+.kpi.kpi-income::before { background: linear-gradient(90deg, #10B981, #34D399); }
 .kpi.kpi-expense::before { background: linear-gradient(90deg, #EF4444, #F87171); }
-.kpi.kpi-net::before { background: linear-gradient(90deg, #1DB954, #10B981); }
+.kpi.kpi-net::before { background: linear-gradient(90deg, #3B82F6, #60A5FA); }
 .kpi.kpi-tx::before { background: linear-gradient(90deg, #8B5CF6, #C084FC); }
 
 body.light .kpi {
@@ -3742,12 +3737,12 @@ body.light .rec-progress-bar {
   position: relative;
   overflow: visible !important;
   z-index: 50;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(18, 30, 24, 0.78) 45%, rgba(8, 16, 12, 0.92) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(20, 27, 43, 0.88) 0%, rgba(13, 18, 30, 0.94) 52%, rgba(9, 13, 22, 0.98) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 24px;
   padding: 24px 28px;
   margin-bottom: 22px;
-  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 30px -5px rgba(29, 185, 84, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.18);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -3758,9 +3753,9 @@ body.light .rec-progress-bar {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #1DB954 0%, #34D399 50%, #10B981 100%);
-  border-radius: 22px 22px 0 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #3B82F6 0%, #10B981 35%, #F59E0B 70%, #8B5CF6 100%);
+  border-radius: 24px 24px 0 0;
 }
 .hero-backdrop-glow {
   position: absolute;
@@ -3768,7 +3763,7 @@ body.light .rec-progress-bar {
   right: -40px;
   width: 280px;
   height: 280px;
-  background: radial-gradient(circle, rgba(29, 185, 84, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, transparent 70%);
   pointer-events: none;
   filter: blur(40px);
 }
@@ -3876,25 +3871,25 @@ body.light .rec-progress-bar {
 .btn-hero-primary {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #B45309 100%);
-  color: #0A0F1A;
-  border: none;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 12px;
-  padding: 10px 18px;
+  padding: 10px 20px;
   font-weight: 800;
   font-size: 13.5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35), inset 0 1px 1px rgba(255,255,255,0.4);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 .btn-hero-primary:hover {
-  filter: brightness(1.08);
+  filter: brightness(1.1);
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(245, 158, 11, 0.5);
+  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.55);
 }
 .btn-hero-ghost {
   background: rgba(255, 255, 255, 0.05);
@@ -8343,15 +8338,28 @@ function pageDashboard(){
       <div class="hero-left">
         <div class="hero-badge-strip">
           <span class="hero-badge hide-mobile">
-            📅 \${formattedToday}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span>\${formattedToday}</span>
           </span>
-
+          <span class="hero-badge live-dot">
+            <span class="pulse-dot"></span>
+            <span>Sistema 100% Operacional</span>
+          </span>
         </div>
         <h1 class="hero-greeting">
-          \${greeting.icon} \${greeting.text}, <span class="hero-name-gradient">\${firstName}</span>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); box-shadow:0 4px 14px rgba(245,158,11,0.25);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+          </span>
+          <span>\${greeting.text}, <span class="hero-name-gradient">\${firstName}</span></span>
         </h1>
         <p class="hero-sub">
-          Visão Consolidada & Gestão Financeira Pessoal
+          Visão Consolidada • Inteligência Financeira & Gestão Patrimonial
         </p>
       </div>
 
@@ -8370,11 +8378,13 @@ function pageDashboard(){
     <div class="kpi kpi-balance">
       <div class="row1">
         <span>Saldo Total</span>
-        <span class="ic" style="background:rgba(59,130,246,0.14); color:var(--blue); border-color:rgba(59,130,246,0.25);">💳</span>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); box-shadow:0 4px 14px rgba(16,185,129,0.25);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+        </span>
       </div>
-      <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
-      <div class="sub" style="display:flex; align-items:center; gap:5px;">
-        <span style="display:inline-block; width:5px; height:5px; border-radius:50%; background:\${saldo < 0 ? 'var(--red)' : 'var(--green)'};"></span>
+      <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#34D399'}; font-variant-numeric:tabular-nums; text-shadow:0 0 14px \${saldo < 0 ? 'rgba(239,68,68,0.35)' : 'rgba(16,185,129,0.35)'};">\${fmt(saldo)}</div>
+      <div class="sub" style="display:flex; align-items:center; gap:6px;">
+        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:\${saldo < 0 ? '#EF4444' : '#10B981'}; box-shadow:0 0 6px \${saldo < 0 ? '#EF4444' : '#10B981'};"></span>
         <span>\${saldo < 0 ? 'Atenção ao Saldo' : 'Patrimônio Consolidado'}</span>
       </div>
     </div>
@@ -8383,30 +8393,40 @@ function pageDashboard(){
     <div class="kpi kpi-income">
       <div class="row1">
         <span>Receitas</span>
-        <span class="ic" style="background:rgba(16,185,129,0.14); color:var(--green); border-color:rgba(16,185,129,0.25);">↑</span>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); box-shadow:0 4px 14px rgba(16,185,129,0.25);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </span>
       </div>
-      <div class="val" data-anim-val="\${receitas}" data-prefix="\${receitas > 0 ? '+' : ''}" style="color:var(--green); font-variant-numeric:tabular-nums;">\${receitas > 0 ? '+' : ''}\${fmt(receitas)}</div>
-      <div class="sub up">↑ Entradas em \${periodLabel()}</div>
+      <div class="val" data-anim-val="\${receitas}" data-prefix="\${receitas > 0 ? '+' : ''}" style="color:#34D399; font-variant-numeric:tabular-nums; text-shadow:0 0 14px rgba(16,185,129,0.35);">\${receitas > 0 ? '+' : ''}\${fmt(receitas)}</div>
+      <div class="sub" style="display:flex; align-items:center; gap:5px; color:#34D399;">
+        <span>↑ Entradas em \${periodLabel()}</span>
+      </div>
     </div>
 
     <!-- 3. Despesas -->
     <div class="kpi kpi-expense">
       <div class="row1">
         <span>Despesas</span>
-        <span class="ic" style="background:rgba(239,68,68,0.14); color:var(--red); border-color:rgba(239,68,68,0.25);">↓</span>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(239,68,68,0.22), rgba(185,28,28,0.08)); border:1px solid rgba(239,68,68,0.35); box-shadow:0 4px 14px rgba(239,68,68,0.25);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+        </span>
       </div>
-      <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:var(--red); font-variant-numeric:tabular-nums;">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
-      <div class="sub" style="color:var(--red);">↓ Saídas em \${periodLabel()}</div>
+      <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums; text-shadow:\${despesas > 0 ? '0 0 14px rgba(239,68,68,0.35)' : 'none'};">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
+      <div class="sub" style="display:flex; align-items:center; gap:5px; color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'};">
+        <span>↓ Saídas em \${periodLabel()}</span>
+      </div>
     </div>
 
     <!-- 4. Saldo do Mês -->
     <div class="kpi kpi-net">
       <div class="row1">
         <span>Saldo do Mês</span>
-        <span class="ic" style="background:\${(receitas-despesas) < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(59,130,246,0.14)'}; color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--blue)'}; border-color:\${(receitas-despesas) < 0 ? 'rgba(239,68,68,0.25)' : 'rgba(59,130,246,0.25)'};">⇄</span>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(59,130,246,0.22), rgba(37,99,235,0.08)); border:1px solid rgba(59,130,246,0.35); box-shadow:0 4px 14px rgba(59,130,246,0.25);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </span>
       </div>
-      <div class="val" data-anim-val="\${receitas-despesas}" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums;">\${fmt(receitas-despesas)}</div>
-      <div class="sub" style="color:\${(receitas-despesas) < 0 ? 'var(--red)' : 'var(--green)'}">
+      <div class="val" data-anim-val="\${receitas-despesas}" style="color:\${(receitas-despesas) > 0 ? '#34D399' : (receitas-despesas) < 0 ? '#F87171' : 'var(--text)'}; font-variant-numeric:tabular-nums; text-shadow:\${(receitas-despesas) !== 0 ? '0 0 14px rgba(59,130,246,0.3)' : 'none'};">\${fmt(receitas-despesas)}</div>
+      <div class="sub" style="color:\${(receitas-despesas) > 0 ? '#34D399' : (receitas-despesas) < 0 ? '#F87171' : 'var(--text-dim)'}; font-weight:700;">
         \${(receitas-despesas) > 0 ? '✓ Superávit Operacional' : (receitas-despesas) < 0 ? '⚠ Déficit no Período' : '✓ Balanço Equilibrado'}
       </div>
     </div>
@@ -8415,9 +8435,11 @@ function pageDashboard(){
     <div class="kpi kpi-tx">
       <div class="row1">
         <span>Lançamentos</span>
-        <span class="ic" style="background:rgba(155,107,216,0.14); color:var(--purple); border-color:rgba(155,107,216,0.25);">☰</span>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(139,92,246,0.22), rgba(109,40,217,0.08)); border:1px solid rgba(139,92,246,0.35); box-shadow:0 4px 14px rgba(139,92,246,0.25);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </span>
       </div>
-      <div class="val" data-anim-val="\${periodTx.length}" data-is-int="true" style="font-variant-numeric:tabular-nums;">\${periodTx.length}</div>
+      <div class="val" data-anim-val="\${periodTx.length}" data-is-int="true" style="color:#A78BFA; font-variant-numeric:tabular-nums; text-shadow:0 0 14px rgba(167,139,250,0.35);">\${periodTx.length}</div>
       <div class="sub">Registros em \${periodLabel()}</div>
     </div>
   </div>
