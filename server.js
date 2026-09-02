@@ -7311,6 +7311,61 @@ function autoMigrateTransactionsAndAccounts() {
   }
 }
 
+function autoCompleteAllRecurringMonths() {
+  if (!Array.isArray(recurringList) || recurringList.length === 0) return false;
+  let changed = false;
+  recurringList.forEach(r => {
+    const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
+    const appliedM = r.appliedMonths ? parseInt(r.appliedMonths) : 0;
+    if (totalM > 0 && appliedM < totalM) {
+      const targetAcc = accounts.find(a => a.name === r.acc);
+      const accId = targetAcc ? targetAcc.id : null;
+      const finalAccName = targetAcc ? targetAcc.name : r.acc;
+      const startM = r.startMonth || 1;
+      const startY = r.startYear || new Date().getFullYear();
+      const detectedMethod = r.paymentMethod || (typeof detectPaymentMethodFromName === 'function' ? detectPaymentMethodFromName(r.desc) : null) || ((r.cat && r.cat.toLowerCase().includes('cartão')) || (r.acc && r.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto');
+
+      if (!Array.isArray(r.appliedPeriods)) r.appliedPeriods = [];
+
+      for (let k = appliedM + 1; k <= totalM; k++) {
+        const monthZero = (startM - 1) + (k - 1);
+        const y = startY + Math.floor(monthZero / 12);
+        const m = (monthZero % 12) + 1;
+        const date = pdCustom(y, m, r.day);
+        const itemDesc = r.desc + ' (' + k + '/' + totalM + ')';
+
+        // Evita duplicar se ja foi gerado
+        const alreadyExists = transactions.some(t => t.recurringId === r.id && t.installment === (k + '/' + totalM));
+        if (!alreadyExists) {
+          transactions.unshift({
+            id: nextTxId++,
+            desc: itemDesc,
+            val: r.val,
+            date: date,
+            cat: r.cat,
+            acc: finalAccName,
+            accId: accId,
+            status: 'Pendente',
+            type: r.type || 'out',
+            installment: k + '/' + totalM,
+            recurringId: r.id,
+            paymentMethod: detectedMethod
+          });
+        }
+        const periodKey = y + '-' + String(m).padStart(2, '0');
+        if (!r.appliedPeriods.includes(periodKey)) {
+          r.appliedPeriods.push(periodKey);
+        }
+      }
+
+      r.appliedMonths = totalM;
+      r.paymentMethod = detectedMethod;
+      changed = true;
+    }
+  });
+  return changed;
+}
+
 function applyDataPayload(data) {
   resetUserDataState();
   if (!data || typeof data !== 'object') return;
@@ -7342,6 +7397,7 @@ function applyDataPayload(data) {
 
   migrateCategories();
   autoMigrateTransactionsAndAccounts();
+  autoCompleteAllRecurringMonths();
 }
 
 let isDataLoading = false;
@@ -9805,6 +9861,11 @@ function pageRelatorios(){
 }
 
 function pageRecorrentes(){
+  if (typeof autoCompleteAllRecurringMonths === 'function') {
+    if (autoCompleteAllRecurringMonths()) {
+      saveUserData();
+    }
+  }
   const totalDespRec = recurringList.filter(r=>r.type==='out').reduce((s,r)=>s+parseInputValue(r.val),0);
   const totalRecRec = recurringList.filter(r=>r.type==='in').reduce((s,r)=>s+parseInputValue(r.val),0);
   const totalLctos = recurringList.length;
@@ -13009,8 +13070,12 @@ async function saveRecurring(){
   const detectedMethod = detectPaymentMethodFromName(desc) || ((cat && cat.toLowerCase().includes('cartão')) || (accSel && accSel.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto');
   
   if(editingRecId){
-    Object.assign(recurringList.find(r=>r.id===editingRecId), {desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths,paymentMethod:detectedMethod});
-    showToast('Recorrente atualizado!');
+    const existing = recurringList.find(r=>r.id===editingRecId);
+    if (existing) {
+      Object.assign(existing, {desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths,paymentMethod:detectedMethod});
+      autoCompleteAllRecurringMonths();
+    }
+    showToast('Recorrente atualizado até concluir tudo!');
     logActivity('Edição', 'Recorrente', 'Editou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses' : '') + ')');
   } else {
     const newRec = {id: nextRecId++, desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths:0,appliedPeriods:[],paymentMethod:detectedMethod};
