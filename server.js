@@ -310,17 +310,6 @@ async function initDatabase() {
 const htmlContent = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<script>
-(function() {
-  try {
-    var t = localStorage.getItem('nexus_theme');
-    if (t) t = t.replace(/"/g, '').trim();
-    if (t === 'light') {
-      document.documentElement.classList.add('light');
-    }
-  } catch(e){}
-})();
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
@@ -335,88 +324,40 @@ const htmlContent = `<!DOCTYPE html>
     var isLight = (t === 'light');
     if (isLight) {
       document.documentElement.classList.add('light');
-    } else {
-      document.documentElement.classList.remove('light');
     }
-
-    function detectDevice() {
-      var w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      var ua = navigator.userAgent || '';
-      var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) || w <= 640;
-      var isTablet = !isMobile && (/iPad|Tablet/i.test(ua) || (w > 640 && w <= 1024));
-      var isUltrawide = w >= 1700;
-      if (isMobile) return 'mobile';
-      if (isTablet) return 'tablet';
-      if (isUltrawide) return 'ultrawide';
-      return 'desktop';
-    }
-
-    var dev = detectDevice();
-    document.documentElement.setAttribute('data-device-type', dev);
-
-    function computeOptimalScale() {
-      var w = window.innerWidth || screen.width || 1366;
-      var h = window.innerHeight || screen.height || 768;
-      if (w <= 640) return 1.0;
-      if (w <= 1024) return 0.88;
-      if (w < 1280 || h < 720) return 0.80;
-      if (w < 1440 || h < 820) return 0.85;
-      if (w < 1680 || h < 950) return 0.92;
-      if (w <= 1920 && h <= 1080) return 1.0;
-      if (w < 2560) return 1.10;
-      return 1.20;
-    }
-
-    var scale = localStorage.getItem('nexus_display_scale') || 'auto';
-    var scaleNum = (scale === 'auto') ? computeOptimalScale() : (parseFloat(scale) / 100 || 1);
-    document.documentElement.style.setProperty('--app-zoom', scaleNum);
-
-    document.addEventListener('DOMContentLoaded', function() {
-      if (document.body) document.body.style.zoom = scaleNum;
-      var saved = localStorage.getItem('nexus_theme');
-      if (saved) saved = saved.replace(/"/g, '').trim();
-      var lightMode = (saved === 'light');
-      if (lightMode) {
-        document.body.classList.add('light');
-        document.documentElement.classList.add('light');
-      } else {
-        document.body.classList.remove('light');
-        document.documentElement.classList.remove('light');
-      }
-      var authThemeIcon = document.getElementById('authThemeIcon');
-      if (authThemeIcon) {
-        authThemeIcon.innerHTML = lightMode ?
-          '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>' :
-          '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
-      }
-      try {
-        var cu = localStorage.getItem('nexus_cached_user');
-        if (cu) {
-          var uObj = JSON.parse(cu);
-          if (uObj && uObj.name) {
-            var hName = document.getElementById('headerName');
-            var hRole = document.getElementById('headerRole');
-            var hAv = document.getElementById('headerAvatar');
-            if (hName) hName.textContent = uObj.name;
-            if (hRole) hRole.textContent = uObj.role || 'Usuário';
-            if (hAv) hAv.textContent = uObj.name.trim().split(/\s+/).map(function(n){return n[0];}).slice(0,2).join('').toUpperCase();
-          }
-        }
-      } catch(e){}
-    });
     var cu = localStorage.getItem('nexus_cached_user');
     var s = localStorage.getItem('nexus_session');
-    if (s || cu) {
+    var loggedIn = !!(s || cu);
+    if (loggedIn) {
       document.documentElement.classList.add('user-logged-in');
       var uObj = cu ? JSON.parse(cu) : null;
       if (uObj && uObj.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
       }
     }
+    var sc = localStorage.getItem('nexus_display_scale') || 'auto';
+    var w = window.innerWidth || screen.width || 1366;
+    var h = window.innerHeight || screen.height || 768;
+    var sn = 1.0;
+    if (sc === 'auto') {
+      if (w <= 640) sn = 1.0;
+      else if (w <= 1024) sn = 0.88;
+      else if (w < 1280 || h < 720) sn = 0.80;
+      else if (w < 1440 || h < 820) sn = 0.85;
+      else if (w < 1680 || h < 950) sn = 0.92;
+      else if (w <= 1920 && h <= 1080) sn = 1.0;
+      else if (w < 2560) sn = 1.10;
+      else sn = 1.20;
+    } else {
+      sn = parseFloat(sc) / 100 || 1.0;
+    }
+    document.documentElement.style.setProperty('--app-zoom', sn);
+    var bgCol = isLight ? '#F2F7F4' : '#060913';
+    document.write('<style id="critical-fouc-shield">html,body{zoom:' + sn + ' !important; background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;}' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + '</style>');
   } catch(e){}
 })();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 <style>
 html:not(.app-ready) *,
 html:not(.app-ready) *::before,
@@ -497,15 +438,13 @@ html.user-logged-in,
 html.user-logged-in body,
 body.user-logged-in {
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-  background-color:#07100B !important;
+  background-color:var(--bg) !important;
   background-image:
-    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
+    radial-gradient(ellipse at 50% 20%, rgba(20, 27, 43, 0.55) 0%, rgba(9, 13, 22, 0.98) 100%) !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
-  color:var(--text); min-height:100vh; transition:background .25s,color .25s;
+  color:var(--text); min-height:100vh;
   zoom:var(--app-zoom, 1);
 }
 body.light,
@@ -515,12 +454,10 @@ html.user-logged-in body.light,
 body.user-logged-in.light {
   background-color:#F2F7F4 !important;
   background-image:
-    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.85) 0%, rgba(240, 246, 242, 0.98) 100%) !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
 }
 button, input, select{font-family:inherit; color:inherit;}
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
@@ -7275,13 +7212,19 @@ async function loadUserData() {
   }
 
   // 2. Sincroniza em segundo plano com o servidor PostgreSQL / API especificamente para este e-mail
+  let hasServerChanges = false;
   try {
     const res = await fetch(window.location.origin + '/api/data?email=' + encodeURIComponent(cleanEmail));
     if (res.ok) {
       const serverData = await res.json();
       if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
-        applyDataPayload(serverData);
-        saveToStorage(userKey, serverData);
+        const localDataStr = JSON.stringify(localData || {});
+        const serverDataStr = JSON.stringify(serverData);
+        if (localDataStr !== serverDataStr) {
+          applyDataPayload(serverData);
+          saveToStorage(userKey, serverData);
+          hasServerChanges = true;
+        }
       }
     }
   } catch(e) {
@@ -7289,7 +7232,7 @@ async function loadUserData() {
   } finally {
     isDataLoading = false;
   }
-  if (typeof render === 'function' && document.getElementById('appMain') && document.getElementById('appMain').classList.contains('show')) {
+  if (hasServerChanges && typeof render === 'function' && document.getElementById('appMain') && document.getElementById('appMain').classList.contains('show')) {
     render();
   }
 }
@@ -14268,6 +14211,7 @@ if (scaleMenuBtn && scaleDropdown) {
         applyDataPayload(localData);
       }
       if (typeof render === 'function') render();
+      window.__initialRenderDone = true;
     }
   } catch(e){}
 })();
@@ -14322,7 +14266,7 @@ if (scaleMenuBtn && scaleDropdown) {
       isViewingOtherUser = true;
       currentPage = 'dashboard';
       await loadUserData();
-      if (typeof render === 'function') render();
+      if (!window.__initialRenderDone && typeof render === 'function') render();
       return;
     }
   }
@@ -14352,7 +14296,7 @@ if (scaleMenuBtn && scaleDropdown) {
   }
 
   await loadUserData();
-  if (typeof render === 'function') render();
+  if (!window.__initialRenderDone && typeof render === 'function') render();
 
   function checkAndShowJustLoggedInPopup() {
     try {
