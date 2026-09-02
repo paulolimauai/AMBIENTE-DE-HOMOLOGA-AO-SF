@@ -560,49 +560,332 @@ html.user-logged-in .icon-btn:hover {
   border-color: rgba(29, 185, 84, 0.40) !important;
 }
 
-/* Barra de Navegação Horizontal em Pílulas */
-html.user-logged-in nav.menu {
-  background: rgba(14, 24, 20, 0.72) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
-  border-radius: 18px !important;
-  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
-  backdrop-filter: blur(35px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(35px) saturate(190%) !important;
+/* ==================== SIDEBAR LATERAL EXECUTIVA 4K (FUNCIONALIDADES DO LADO) ==================== */
+.sidebar-executive {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 270px;
+  background: linear-gradient(180deg, rgba(12, 22, 18, 0.94) 0%, rgba(6, 14, 10, 0.98) 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(40px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(190%) !important;
+  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.70) !important;
+  display: flex;
+  flex-direction: column;
+  z-index: 60;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-html.user-logged-in .menu button {
+
+body.light .sidebar-executive {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 246, 242, 0.98) 100%) !important;
+  border-right: 1px solid rgba(203, 213, 225, 0.85) !important;
+  box-shadow: 5px 0 25px rgba(15, 23, 42, 0.08) !important;
+}
+
+.sidebar-header {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+body.light .sidebar-header {
+  border-bottom-color: rgba(203, 213, 225, 0.6);
+}
+
+.sidebar-nav-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.sidebar-nav-caption {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748B;
+  padding: 8px 12px 6px;
+}
+body.light .sidebar-nav-caption {
+  color: #94A3B8;
+}
+
+/* Itens de Menu Vertical da Sidebar */
+.sidebar-executive nav.menu {
+  display: flex !important;
+  flex-direction: column !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  gap: 4px !important;
+  width: 100% !important;
+}
+
+.sidebar-executive nav.menu button {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 14px !important;
+  border-radius: 14px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
   color: #94A3B8 !important;
-  border-radius: 12px !important;
-  font-weight: 700 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  text-align: left !important;
+  justify-content: flex-start !important;
+  cursor: pointer !important;
+  position: relative !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-html.user-logged-in .menu button:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
+
+.sidebar-executive nav.menu button:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
   color: #FFFFFF !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  transform: translateX(3px) !important;
 }
-html.user-logged-in .menu button.active {
-  background: linear-gradient(135deg, rgba(29, 185, 84, 0.25) 0%, rgba(16, 185, 129, 0.18) 100%) !important;
+body.light .sidebar-executive nav.menu button:hover {
+  background: rgba(15, 23, 42, 0.05) !important;
+  color: #0F172A !important;
+  border-color: rgba(203, 213, 225, 0.8) !important;
+}
+
+.sidebar-executive nav.menu button.active {
+  background: linear-gradient(135deg, rgba(29, 185, 84, 0.25) 0%, rgba(16, 185, 129, 0.16) 100%) !important;
   color: #A7F3D0 !important;
-  border: 1px solid rgba(29, 185, 84, 0.55) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
-  border-radius: 12px !important;
+  border: 1px solid rgba(29, 185, 84, 0.50) !important;
   font-weight: 800 !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.40), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
 }
-html.user-logged-in .menu button.active .ic {
-  background: rgba(29, 185, 84, 0.28) !important;
-  color: #6EE7B7 !important;
-  border: 1px solid rgba(110, 231, 183, 0.5) !important;
+body.light .sidebar-executive nav.menu button.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.12) 100%) !important;
+  color: #047857 !important;
+  border-color: rgba(16, 185, 129, 0.50) !important;
 }
-html.user-logged-in .menu button.active::after {
+
+.sidebar-executive nav.menu button.active::after {
   content: '';
   position: absolute;
-  bottom: -2px;
-  left: 18%;
-  right: 18%;
-  height: 2.5px;
-  background: linear-gradient(90deg, transparent, #34D399, #1DB954, transparent);
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 3.5px;
+  background: linear-gradient(180deg, #34D399, #1DB954);
   border-radius: 999px;
   box-shadow: 0 0 12px #34D399, 0 0 4px #1DB954;
+}
+
+.sidebar-executive nav.menu button .ic {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94A3B8;
+  transition: all 0.22s ease;
+}
+
+.sidebar-executive nav.menu button.active .ic {
+  background: rgba(29, 185, 84, 0.28) !important;
+  color: #6EE7B7 !important;
+  border-color: rgba(110, 231, 183, 0.5) !important;
+}
+
+/* ==================== RODAPÉ DA SIDEBAR: MINHA CONTA E CONFIGURAÇÕES ==================== */
+.sidebar-footer {
+  padding: 14px 14px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+body.light .sidebar-footer {
+  border-top-color: rgba(203, 213, 225, 0.6);
+  background: rgba(241, 245, 249, 0.6);
+}
+
+.sidebar-account-card {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 12px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.40) !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  color: #FFFFFF !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.sidebar-account-card:hover,
+.sidebar-account-card.active {
+  background: linear-gradient(135deg, rgba(29, 185, 84, 0.22) 0%, rgba(16, 185, 129, 0.12) 100%) !important;
+  border-color: rgba(29, 185, 84, 0.50) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(29, 185, 84, 0.25) !important;
+}
+body.light .sidebar-account-card {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+.sidebar-account-card .avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10B981, #047857);
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+}
+
+.sidebar-account-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.sidebar-account-info .uname {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body.light .sidebar-account-info .uname {
+  color: #0F172A;
+}
+
+.sidebar-account-info .urole {
+  font-size: 11px;
+  font-weight: 600;
+  color: #10B981;
+}
+
+.sidebar-account-arrow {
+  color: #94A3B8;
+  transition: transform 0.2s ease;
+}
+.sidebar-account-card:hover .sidebar-account-arrow {
+  transform: translateX(3px);
+  color: #10B981;
+}
+
+.sidebar-footer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.sidebar-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #94A3B8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sidebar-action-btn:hover {
+  background: rgba(255, 255, 255, 0.10);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.20);
+}
+.sidebar-action-btn.logout-btn:hover {
+  background: rgba(244, 63, 94, 0.18);
+  color: #FDA4AF;
+  border-color: rgba(244, 63, 94, 0.40);
+}
+body.light .sidebar-action-btn {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: #CBD5E1;
+  color: #475569;
+}
+
+/* ==================== ÁREA DE CONTEÚDO PRINCIPAL (COM SIDEBAR) ==================== */
+.app-content-wrapper {
+  margin-left: 270px;
+  width: calc(100% - 270px);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.app-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  background: rgba(12, 22, 18, 0.70) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+  backdrop-filter: blur(35px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(35px) saturate(190%) !important;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+body.light .app-topbar {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-bottom-color: rgba(203, 213, 225, 0.8) !important;
+}
+
+.app-content-wrapper .main {
+  margin-top: 0 !important;
+  padding: 24px 28px 40px !important;
+  max-width: 1600px !important;
+}
+
+/* Responsividade Mobile / Tablet */
+@media (max-width: 1024px) {
+  .sidebar-executive {
+    transform: translateX(-100%);
+  }
+  .sidebar-executive.mobile-open {
+    transform: translateX(0);
+  }
+  .app-content-wrapper {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  .mobile-menu-btn {
+    display: flex !important;
+  }
 }
 
 /* Cards KPIs no padrão Liquid Glass 4K */
@@ -5569,16 +5852,78 @@ body.light .scale-dropdown {
     <div class="app-blob a2"></div>
     <div class="app-blob a3"></div>
   </div>
-  <div class="topheader">
-    <div class="topheader-row">
-      <button class="mobile-menu-btn" id="mobileMenuToggle" title="Abrir Menu">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
+  <!-- SIDEBAR LATERAL EXECUTIVA 4K (FUNCIONALIDADES DO LADO & MINHA CONTA NO RODAPÉ) -->
+  <aside class="sidebar-executive" id="sidebarExecutive">
+    <div class="sidebar-header">
       <div class="brand">
         <div class="logo">N</div>
         <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
       </div>
-      <div class="right" style="margin-left:auto;">
+    </div>
+
+    <!-- NAVEGAÇÃO VERTICAL DAS FUNCIONALIDADES -->
+    <div class="sidebar-nav-container">
+      <div class="sidebar-nav-caption">FUNCIONALIDADES</div>
+      <nav class="menu" id="menu">
+        <button data-page="dashboard"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span> <span>Dashboard</span></button>
+        <button data-page="transacoes"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg></span> <span>Transações</span></button>
+        <button data-page="cartoes"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></span> <span>Cartões</span></button>
+        <button data-page="orcamentos"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span> <span>Orçamentos</span></button>
+        <button data-page="metas"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> <span>Metas</span></button>
+        <button data-page="relatorios"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8" rx="1"/><rect x="12" y="5" width="3" height="13" rx="1"/><rect x="17" y="13" width="3" height="5" rx="1"/></svg></span> <span>Relatórios</span></button>
+        <button data-page="recorrentes"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></span> <span>Recorrentes</span></button>
+        <button data-page="importar"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg></span> <span>Importar</span></button>
+        <button data-page="anexos"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span> <span>Anexos</span></button>
+        <button data-page="config" id="menuConfigBtn"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span> <span>Configurações</span></button>
+
+        <!-- Admin Links -->
+        <button data-page="funcoes" id="menuFuncoesBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> <span>Funções & Permissões</span></button>
+        <button data-page="usuarios" id="menuUsuariosBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> <span>Usuários</span></button>
+        <button data-page="logs" id="menuLogsBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> <span>Logs do Sistema</span></button>
+        <button data-page="ordens" id="menuOrdensBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> <span>Ordens de Serviço</span> <span id="osBadgeCount" style="margin-left:auto; padding:2px 7px; border-radius:999px; font-size:10px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
+      </nav>
+    </div>
+
+    <!-- RODAPÉ DA SIDEBAR: NO FINAL MINHA CONTA E APRESENTAR CONFIGURAÇÕES -->
+    <div class="sidebar-footer">
+      <div class="sidebar-nav-caption">MINHA CONTA</div>
+      <!-- Card Clicável Minha Conta -> Leva Direto a Configurações -->
+      <button data-page="config" class="sidebar-account-card" id="sidebarAccountCard" title="Acessar Minha Conta e Configurações">
+        <div class="avatar" id="sidebarAvatar">PL</div>
+        <div class="sidebar-account-info">
+          <div class="uname" id="sidebarName">Paulo Lima</div>
+          <div class="urole" id="sidebarRole">Configurações ⚙️</div>
+        </div>
+        <svg class="sidebar-account-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+
+      <div class="sidebar-footer-actions">
+        <button type="button" class="sidebar-action-btn" id="sidebarThemeBtn" title="Alternar Tema">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
+          <span>Tema</span>
+        </button>
+        <button type="button" class="sidebar-action-btn logout-btn" id="sidebarLogoutBtn" title="Encerrar Sessão">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sair</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ÁREA DE CONTEÚDO PRINCIPAL (COM TOPBAR COMPACTA À DIREITA DA SIDEBAR) -->
+  <div class="app-content-wrapper">
+    <header class="app-topbar">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="mobile-menu-btn" id="mobileMenuToggle" title="Abrir Menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="header-live-time" id="headerClock" style="display:flex; align-items:center; gap:8px; padding:6px 12px; border-radius:12px; font-size:12px; font-weight:700;">
+          <span class="time-dot" style="width:7px; height:7px; border-radius:50%; background:#10B981; display:inline-block;"></span>
+          <span id="liveClockText">Nexus Executive</span>
+        </div>
+      </div>
+
+      <div class="right" style="margin-left:auto; display:flex; align-items:center; gap:10px;">
         <div class="notif-wrap">
           <div class="icon-btn" id="notifBtn" title="Notificações"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot" id="notifDot" style="display:none;"></span></div>
           <div class="notif-panel" id="notifPanel">
@@ -5606,7 +5951,7 @@ body.light .scale-dropdown {
           </div>
         </div>
         <div class="icon-btn" id="miniThemeBtn" title="Alternar Tema"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg></div>
-        <div class="user" id="userMenu" data-nav="config">
+        <div class="user" id="userMenu" data-nav="config" style="display:none;">
           <div class="avatar" id="headerAvatar"></div>
           <div><div class="uname" id="headerName"></div><div class="urole" id="headerRole"></div></div>
         </div>
@@ -5635,12 +5980,17 @@ body.light .scale-dropdown {
                 var n = document.getElementById('headerName');
                 var r = document.getElementById('headerRole');
                 var a = document.getElementById('headerAvatar');
+                var sn = document.getElementById('sidebarName');
+                var sr = document.getElementById('sidebarRole');
+                var sa = document.getElementById('sidebarAvatar');
                 if (n) n.textContent = u.name;
+                if (sn) sn.textContent = u.name;
                 if (r) r.textContent = u.role || 'Usuário';
-                if (a) {
-                  var p = u.name.trim().split(/\s+/);
-                  a.textContent = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
-                }
+                if (sr) sr.textContent = (u.role || 'Usuário') + ' • Configurações ⚙️';
+                var p = u.name.trim().split(/\s+/);
+                var inits = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
+                if (a) a.textContent = inits;
+                if (sa) sa.textContent = inits;
               }
             }
             setTimeout(function(){
@@ -5653,58 +6003,14 @@ body.light .scale-dropdown {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
           <span>Voltar ao Admin</span>
         </button>
-        <button class="btn-ghost" id="logoutBtn">Sair</button>
+        <button class="btn-ghost" id="logoutBtn" style="display:none;">Sair</button>
       </div>
-    </div>
-    <nav class="menu" id="menu">
-      <button data-page="dashboard"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span> Dashboard</button>
-      <button data-page="transacoes"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg></span> Transações</button>
-      <button data-page="cartoes"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></span> Cartões</button>
-      <button data-page="orcamentos"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span> Orçamentos</button>
-      <button data-page="metas"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Metas</button>
-      <button data-page="relatorios"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8" rx="1"/><rect x="12" y="5" width="3" height="13" rx="1"/><rect x="17" y="13" width="3" height="5" rx="1"/></svg></span> Relatórios</button>
-      <button data-page="recorrentes"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></span> Recorrentes</button>
-      <button data-page="importar"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg></span> Importar</button>
-      <button data-page="anexos"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span> Anexos</button>
-      <button data-page="config"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span> Configurações</button>
-      <button data-page="funcoes" id="menuFuncoesBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> Funções & Permissões</button>
-      <button data-page="usuarios" id="menuUsuariosBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
-      <button data-page="logs" id="menuLogsBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
-      <button data-page="ordens" id="menuOrdensBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço <span id="osBadgeCount" style="margin-left:4px; padding:2px 7px; border-radius:999px; font-size:10px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
-    </nav>
-  </div>
+    </header>
 
-  <!-- Drawer Mobile Slide-out -->
-  <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
-  <div class="mobile-drawer" id="mobileDrawer">
-    <div class="mobile-drawer-head">
-      <div class="brand">
-        <div class="logo">N</div>
-        <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
-      </div>
-      <button class="close-x" id="closeMobileDrawer" style="position:static; padding:4px;">✕</button>
-    </div>
-    <nav class="mobile-drawer-nav" id="mobileDrawerMenu">
-      <button data-page="dashboard"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span> Dashboard</button>
-      <button data-page="transacoes"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg></span> Transações</button>
-      <button data-page="cartoes"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></span> Cartões</button>
-      <button data-page="orcamentos"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span> Orçamentos</button>
-      <button data-page="metas"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span> Metas</button>
-      <button data-page="relatorios"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8" rx="1"/><rect x="12" y="5" width="3" height="13" rx="1"/><rect x="17" y="13" width="3" height="5" rx="1"/></svg></span> Relatórios</button>
-      <button data-page="recorrentes"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></span> Recorrentes</button>
-      <button data-page="importar"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg></span> Importar</button>
-      <button data-page="anexos"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span> Anexos</button>
-      <button data-page="config"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span> Configurações</button>
-      <button data-page="funcoes" id="mobileDrawerFuncoesBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> Funções & Permissões</button>
-      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
-      <button data-page="logs" id="mobileDrawerLogsBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
-      <button data-page="ordens" id="mobileDrawerOrdensBtn" style="display:none;"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço</button>
-    </nav>
+    <main class="main">
+      <div id="pageContent"></div>
+    </main>
   </div>
-
-  <main class="main">
-    <div id="pageContent"></div>
-  </main>
 
   <!-- Floating Action Button: Voltar do Modo Espelho -->
   <button type="button" id="floatingExitMirrorBtn" class="floating-mirror-exit-fab" onclick="exitViewMode()" title="Sair do Modo Espelho e voltar para Administrador" style="display:none;">
@@ -8544,8 +8850,12 @@ function updateHeaderUser(){
   const unameEl = document.getElementById('headerName');
   const avatarEl = document.getElementById('headerAvatar');
   const roleEl = document.getElementById('headerRole');
+  const sNameEl = document.getElementById('sidebarName');
+  const sAvatarEl = document.getElementById('sidebarAvatar');
+  const sRoleEl = document.getElementById('sidebarRole');
 
   if(unameEl) unameEl.textContent = currentUser.name;
+  if(sNameEl) sNameEl.textContent = currentUser.name;
   if(roleEl) {
     if (isViewingOtherUser) {
       roleEl.innerHTML = '<span style="color:#FBBF24; font-weight:800;">👁️ Modo Espelho</span>';
@@ -8553,7 +8863,14 @@ function updateHeaderUser(){
       roleEl.textContent = currentUser.role || 'Usuário';
     }
   }
-  if(avatarEl) {
+  if(sRoleEl) {
+    if (isViewingOtherUser) {
+      sRoleEl.innerHTML = '<span style="color:#FBBF24; font-weight:800;">👁️ Modo Espelho</span>';
+    } else {
+      sRoleEl.textContent = (currentUser.role || 'Usuário') + ' • Configurações ⚙️';
+    }
+  }
+  if(avatarEl || sAvatarEl) {
     const rawParts = currentUser.name.trim().split(/\s+/);
     let inits = 'PL';
     if (rawParts.length >= 2) {
@@ -8561,7 +8878,8 @@ function updateHeaderUser(){
     } else if (rawParts.length === 1) {
       inits = rawParts[0].slice(0, 2).toUpperCase();
     }
-    avatarEl.textContent = inits;
+    if(avatarEl) avatarEl.textContent = inits;
+    if(sAvatarEl) sAvatarEl.textContent = inits;
   }
 }
 
@@ -13902,6 +14220,29 @@ document.getElementById('menu').addEventListener('click', e=>{
   const btn = targetEl ? targetEl.closest('button[data-page]') : null;
   if(btn && btn.dataset.page) navigate(btn.dataset.page);
 });
+
+const sidebarAccountCard = document.getElementById('sidebarAccountCard');
+if(sidebarAccountCard){
+  sidebarAccountCard.addEventListener('click', ()=>{
+    navigate('config');
+  });
+}
+
+const sidebarThemeBtn = document.getElementById('sidebarThemeBtn');
+if(sidebarThemeBtn){
+  sidebarThemeBtn.addEventListener('click', ()=>{
+    const miniBtn = document.getElementById('miniThemeBtn');
+    if(miniBtn) miniBtn.click();
+  });
+}
+
+const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+if(sidebarLogoutBtn){
+  sidebarLogoutBtn.addEventListener('click', ()=>{
+    const lBtn = document.getElementById('logoutBtn');
+    if(lBtn) lBtn.click();
+  });
+}
 document.addEventListener('click', e=>{
   const targetEl = e.target.nodeType === 3 ? e.target.parentElement : e.target;
   const panel = document.getElementById('periodPanel');
