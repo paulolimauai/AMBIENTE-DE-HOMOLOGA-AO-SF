@@ -12307,6 +12307,23 @@ async function deleteTransaction(id){
   render();
 }
 
+async function toggleTransactionStatus(id) {
+  const t = transactions.find(x => x.id === id);
+  if (!t) return;
+  const oldStatus = t.status || 'Pendente';
+  let newStatus = 'Pago';
+  if (t.type === 'in') {
+    newStatus = oldStatus === 'Recebido' ? 'Pendente' : 'Recebido';
+  } else {
+    newStatus = oldStatus === 'Pago' ? 'Pendente' : 'Pago';
+  }
+  t.status = newStatus;
+  await saveUserData();
+  showToast('Status alterado para ' + newStatus);
+  logActivity('Status', 'Transação', 'Alterou status de "' + t.desc + '" para ' + newStatus);
+  render();
+}
+
 /* ==================== Mapeamento Inteligente de Cores de Bancos e Cartões ==================== */
 const BANK_COLOR_MAP = [
   { keywords: ['nubank', 'nu ', 'nu', 'roxinho'], color: '#820ad1', type: 'Cartão de Crédito' },
@@ -12873,7 +12890,7 @@ async function saveRecurring(){
         cat: cat,
         acc: finalAccName,
         accId: accId,
-        status: currentRecType === 'in' ? 'Recebido' : 'Pago',
+        status: 'Pendente',
         type: currentRecType,
         installment: totalMonths > 0 ? (k + '/' + totalMonths) : null,
         recurringId: newRec.id
@@ -13045,7 +13062,7 @@ async function executeLaunchRecurring(id, mode){
       cat: r.cat,
       acc: finalAccName,
       accId,
-      status: r.type==='in'?'Recebido':'Pago',
+      status: 'Pendente',
       type: r.type,
       installment: totalM > 0 ? (k + '/' + totalM) : null,
       recurringId: r.id
@@ -13055,7 +13072,7 @@ async function executeLaunchRecurring(id, mode){
     r.appliedPeriods.push(y + '-' + String(m).padStart(2,'0'));
     await saveUserData();
     closeLaunchRecurringModal();
-    showToast(totalM > 0 ? ('Lançado mês ' + k + ' de ' + totalM + ' ("' + r.desc + '") com sucesso em ' + (MONTHS[m-1] || m) + '/' + y + '!') : ('Lançamento gerado em ' + (MONTHS[m-1] || m) + '/' + y + '!'));
+    showToast(totalM > 0 ? ('Lançado mês ' + k + ' de ' + totalM + ' ("' + r.desc + '") como Pendente em ' + (MONTHS[m-1] || m) + '/' + y + '!') : ('Lançamento gerado como Pendente em ' + (MONTHS[m-1] || m) + '/' + y + '!'));
     logActivity('Lançamento', 'Recorrente', 'Aplicou mês ' + k + '/' + (totalM || '∞') + ' do recorrente "' + r.desc + '" (' + fmt(r.val) + ')');
     render();
   }
@@ -13083,7 +13100,7 @@ async function executeLaunchRecurring(id, mode){
         cat: r.cat,
         acc: finalAccName,
         accId,
-        status: r.type==='in'?'Recebido':'Pago',
+        status: 'Pendente',
         type: r.type,
         installment: k + '/' + totalM,
         recurringId: r.id
@@ -13095,7 +13112,7 @@ async function executeLaunchRecurring(id, mode){
     r.appliedMonths = endK;
     await saveUserData();
     closeLaunchRecurringModal();
-    showToast('Todos os ' + addedCount + ' meses restantes de "' + r.desc + '" foram gerados com sucesso!');
+    showToast('Todos os ' + addedCount + ' meses restantes de "' + r.desc + '" foram gerados como Pendente com sucesso!');
     logActivity('Lançamento', 'Recorrente', 'Gerou em lote ' + addedCount + ' meses do recorrente "' + r.desc + '" (total de ' + totalM + ' meses)');
     render();
   }
@@ -13114,7 +13131,7 @@ async function executeLaunchRecurring(id, mode){
       cat: r.cat,
       acc: finalAccName,
       accId,
-      status: r.type==='in'?'Recebido':'Pago',
+      status: 'Pendente',
       type: r.type,
       installment: totalM > 0 ? (k + '/' + totalM) : null,
       recurringId: r.id
@@ -13124,7 +13141,7 @@ async function executeLaunchRecurring(id, mode){
     r.appliedPeriods.push(y + '-' + String(m).padStart(2,'0'));
     await saveUserData();
     closeLaunchRecurringModal();
-    showToast('Lançamento gerado em ' + periodLabel() + '!');
+    showToast('Lançamento gerado como Pendente em ' + periodLabel() + '!');
     logActivity('Lançamento', 'Recorrente', 'Lançou recorrente "' + r.desc + '" em ' + periodLabel());
     render();
   }
@@ -13154,7 +13171,7 @@ async function lancarRecorrente(id){
       cat: r.cat,
       acc: finalAccName,
       accId,
-      status: r.type==='in'?'Recebido':'Pago',
+      status: 'Pendente',
       type: r.type,
       recurringId: r.id
     });
