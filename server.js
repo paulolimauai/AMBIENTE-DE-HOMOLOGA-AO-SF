@@ -5130,25 +5130,141 @@ body.has-view-mode-banner .sidebar {
 .modal-actions .save{background:var(--green); border:none; color:#08130c; font-weight:700;}
 .close-x{position:absolute; top:16px; right:18px; background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer;}
 
-.toast{
-  position:fixed; top:28px; left:50%; transform:translate(-50%, -20px) scale(0.92);
-  background:#082012; border:1.5px solid #22c55e; color:#ffffff;
-  padding:14px 26px; border-radius:14px; font-size:15px; font-weight:800;
-  box-shadow:0 14px 40px rgba(0,0,0,0.6), 0 0 24px rgba(34, 197, 94, 0.3);
-  z-index:99999; display:flex; align-items:center; gap:12px; max-width:90vw;
-  opacity:0; pointer-events:none; transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* ==================== Toast Executivo 4K Glass (Modern Dynamic Island) ==================== */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translate(-50%, -24px) scale(0.94);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999999;
+  
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(92vw, 560px);
+  padding: 10px 16px 10px 12px;
+  border-radius: 9999px;
+
+  /* Modo Noturno Padrão: Glassmorphism Executivo */
+  background: rgba(15, 23, 42, 0.88) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top-color: rgba(255, 255, 255, 0.28) !important;
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.08) !important;
+  
+  color: #F8FAFC !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: -0.01em !important;
+  transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-.toast.show{
-  opacity:1; pointer-events:auto; transform:translate(-50%, 0) scale(1);
+
+.toast.show {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translate(-50%, 0) scale(1) !important;
 }
-.toast.toast-danger{
-  background:#2a080c; border-color:#ef4444; box-shadow:0 14px 40px rgba(0,0,0,0.6), 0 0 24px rgba(239, 68, 68, 0.35);
+
+.toast-indicator {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #34D399;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+  transition: all 0.25s ease;
 }
-.toast.toast-danger .d{
-  background:#ef4444; box-shadow:0 0 10px #ef4444;
+
+.toast-indicator svg {
+  display: block;
 }
-.toast .d{
-  width:12px; height:12px; border-radius:50%; background:#22c55e; flex-shrink:0; box-shadow:0 0 10px #22c55e;
+
+.toast-text {
+  flex: 1;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.toast-close:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Estado de Erro / Alerta no Toast */
+.toast.toast-danger {
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  border-top-color: rgba(239, 68, 68, 0.55) !important;
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.65), 0 0 24px rgba(239, 68, 68, 0.22) !important;
+}
+
+.toast.toast-danger .toast-indicator {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #F87171;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+}
+
+/* Modo Claro do Toast Executivo */
+body.light .toast,
+html.light .toast {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid rgba(203, 213, 225, 0.9) !important;
+  border-top-color: #FFFFFF !important;
+  box-shadow: 0 18px 45px -10px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF !important;
+  color: #0F172A !important;
+}
+
+body.light .toast .toast-indicator {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #059669;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.18);
+}
+
+body.light .toast.toast-danger .toast-indicator {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #DC2626;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.18);
+}
+
+body.light .toast-close {
+  color: rgba(15, 23, 42, 0.4);
+}
+
+body.light .toast-close:hover {
+  color: #0F172A;
+  background: rgba(15, 23, 42, 0.07);
 }
 
 /* ==================== Popups de Autenticação 4K Glass (Entrada & Saída) ==================== */
@@ -6723,7 +6839,14 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   </div>
 </div>
 
-<div class="toast" id="toast"><span class="d"></span><span id="toastMsg">Salvo com sucesso!</span></div>
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <div class="toast-indicator" id="toastIndicator">
+    <svg id="toastIconCheck" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <svg id="toastIconAlert" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  </div>
+  <span class="toast-text" id="toastMsg">Salvo com sucesso!</span>
+  <button type="button" class="toast-close" onclick="document.getElementById('toast').classList.remove('show')" title="Dispensar">✕</button>
+</div>
 
 <div class="login-success-overlay" id="loginSuccessOverlay" role="dialog" aria-modal="true">
   <div class="login-success-box" style="max-width:480px; padding:32px 28px; border-radius:28px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(15,23,42,0.96), rgba(8,14,28,0.99)); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 45px rgba(16,185,129,0.22);">
@@ -9022,18 +9145,25 @@ function showToast(msg){
   const msgEl = document.getElementById('toastMsg');
   if(msgEl) msgEl.textContent = msg;
 
-  const isDanger = /remov|exclu|erro|inválid|atençã|⚠️|🗑/i.test(msg);
+  const isDanger = /remov|exclu|erro|inválid|atençã|falha|⚠️|🗑/i.test(msg);
+  const iconCheck = document.getElementById('toastIconCheck');
+  const iconAlert = document.getElementById('toastIconAlert');
+
   if(isDanger) {
     t.classList.add('toast-danger');
+    if(iconCheck) iconCheck.style.display = 'none';
+    if(iconAlert) iconAlert.style.display = 'block';
   } else {
     t.classList.remove('toast-danger');
+    if(iconCheck) iconCheck.style.display = 'block';
+    if(iconAlert) iconAlert.style.display = 'none';
   }
 
   t.classList.add('show');
   if(toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     t.classList.remove('show');
-  }, 3200);
+  }, 3400);
 }
 
 function timeAgo(ts){
