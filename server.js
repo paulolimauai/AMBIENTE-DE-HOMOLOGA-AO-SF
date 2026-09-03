@@ -469,10 +469,12 @@ html.is-admin #mobileDrawerOrdensBtn {
 }
 
 :root{
+  color-scheme: dark;
   --bg:#060913;
   --sidebar:rgba(13, 18, 30, 0.88);
   --card:rgba(15, 23, 42, 0.75);
   --card-border:rgba(255, 255, 255, 0.10);
+  --input-bg:rgba(255, 255, 255, 0.05);
   --text:#F8FAFC;
   --text-dim:#94A3B8;
   --text-faint:#64748B;
@@ -494,10 +496,12 @@ html.is-admin #mobileDrawerOrdensBtn {
   --shadow:0 25px 60px -15px rgba(0, 0, 0, 0.80), 0 0 35px -5px rgba(16, 185, 129, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.16);
 }
 body.light, html.light body, html.light {
+  color-scheme: light !important;
   --bg:#F2F7F4;
   --sidebar:rgba(255, 255, 255, 0.90);
   --card:rgba(255, 255, 255, 0.88);
   --card-border:rgba(203, 213, 225, 0.85);
+  --input-bg:#FFFFFF;
   --text:#0F172A;
   --text-dim:#334155;
   --text-faint:#64748B;
@@ -2526,7 +2530,22 @@ html.light .close-x:hover, html.light .modal-close:hover {
   color: #0F172A !important;
 }
 
-/* Inputs, Selects e Textareas Universais em Modo Claro */
+/* Inputs, Selects, Options e Textareas Universais em Modo Claro */
+body.light,
+html.light,
+body.light select,
+html.light select,
+body.light option,
+html.light option,
+body.light optgroup,
+html.light optgroup,
+body.light input,
+html.light input,
+body.light textarea,
+html.light textarea {
+  color-scheme: light !important;
+}
+
 body.light input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not(.btn-hero-primary),
 body.light select,
 body.light textarea,
@@ -2534,6 +2553,7 @@ html.light input:not([type="checkbox"]):not([type="radio"]):not([type="submit"])
 html.light select,
 html.light textarea {
   background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
   color: #0F172A !important;
 }
@@ -2545,6 +2565,7 @@ html.light input:focus,
 html.light select:focus,
 html.light textarea:focus {
   background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
   border-color: #2563EB !important;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
   color: #0F172A !important;
@@ -2558,10 +2579,90 @@ html.light textarea::placeholder {
   opacity: 1 !important;
 }
 
+/* Opções de Listas Suspensas (Dropdowns & Selects) em Modo Claro */
 body.light select option,
-html.light select option {
+html.light select option,
+body.light option,
+html.light option,
+body.light optgroup,
+html.light optgroup {
   background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
   color: #0F172A !important;
+}
+
+body.light select option:checked,
+html.light select option:checked,
+body.light option:checked,
+html.light option:checked {
+  background: #E2E8F0 !important;
+  background-color: #E2E8F0 !important;
+  color: #0F172A !important;
+  font-weight: 700;
+}
+
+body.light select option:hover,
+html.light select option:hover,
+body.light option:hover,
+html.light option:hover {
+  background: #F1F5F9 !important;
+  background-color: #F1F5F9 !important;
+  color: #0284C7 !important;
+}
+
+/* Campos e Filtros de Tabelas e Modais em Modo Claro */
+body.light .filters input,
+body.light .filters select,
+html.light .filters input,
+html.light .filters select,
+body.light #impConta,
+html.light #impConta,
+body.light #impCategoria,
+html.light #impCategoria,
+body.light #attTx,
+html.light #attTx,
+body.light select[data-relinkatt],
+html.light select[data-relinkatt],
+body.light select[onchange*="changeUserRoleFromFuncoes"],
+html.light select[onchange*="changeUserRoleFromFuncoes"],
+body.light #osFilterStatus,
+html.light #osFilterStatus,
+body.light #osFilterType,
+html.light #osFilterType,
+body.light #osSearchInput,
+html.light #osSearchInput,
+body.light #osConsultarQuery,
+html.light #osConsultarQuery,
+body.light #osDescription,
+html.light #osDescription,
+body.light #osAdminNotes,
+html.light #osAdminNotes,
+body.light #cfgTheme,
+html.light #cfgTheme,
+body.light #cfgScale,
+html.light #cfgScale {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+body.light .cat-manage-tabs .cat-tab,
+html.light .cat-manage-tabs .cat-tab {
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #475569 !important;
+}
+body.light .cat-manage-tabs .cat-tab:hover,
+html.light .cat-manage-tabs .cat-tab:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+body.light .cat-manage-tabs .cat-tab.active,
+html.light .cat-manage-tabs .cat-tab.active {
+  background: rgba(217, 119, 6, 0.15) !important;
+  border-color: #D97706 !important;
+  color: #B45309 !important;
 }
 
 /* Tabelas e Registros em Modo Claro */
@@ -3513,6 +3614,70 @@ body.light .executive-4k-message {
 }
 .period-today-btn:hover{filter:brightness(1.15); transform:translateY(-1px);}
 .period-today-btn:active{transform:scale(.97);}
+
+/* Opções de Período e Seletor em Modo Claro */
+body.light .period,
+html.light .period {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #0F172A !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
+}
+body.light .period:hover,
+html.light .period:hover {
+  background: #F8FAFC !important;
+  border-color: #10B981 !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.15) !important;
+}
+body.light .period-text,
+html.light .period-text {
+  color: #0F172A !important;
+  text-shadow: none !important;
+}
+body.light .period-text .period-year,
+html.light .period-text .period-year {
+  color: #64748B !important;
+}
+body.light .period-panel,
+html.light .period-panel {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15) !important;
+  color: #0F172A !important;
+}
+body.light .period-panel .field label,
+html.light .period-panel .field label {
+  color: #334155 !important;
+}
+body.light .period-panel select,
+html.light .period-panel select {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #0F172A !important;
+}
+body.light .period-today-btn,
+html.light .period-today-btn {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  color: #059669 !important;
+}
+body.light .period-today-btn:hover,
+html.light .period-today-btn:hover {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #047857 !important;
+}
+body.light #periodAllDatesBtn,
+html.light #periodAllDatesBtn {
+  background: rgba(37, 99, 235, 0.1) !important;
+  border: 1px solid rgba(37, 99, 235, 0.25) !important;
+  color: #2563EB !important;
+}
+body.light #periodAllDatesBtn:hover,
+html.light #periodAllDatesBtn:hover {
+  background: rgba(37, 99, 235, 0.18) !important;
+  color: #1D4ED8 !important;
+}
 
 .notif-wrap{position:relative;}
 .notif-panel{
@@ -5347,14 +5512,26 @@ body.light .logout-timer-bar {
   background: rgba(59, 130, 246, 0.18) !important;
   color: #FFFFFF !important;
 }
-body.light .scale-dropdown .scale-opt-btn:hover {
-  background: rgba(59, 130, 246, 0.12) !important;
-  color: #0284C7 !important;
-}
-body.light .scale-dropdown {
+body.light .scale-dropdown,
+html.light .scale-dropdown {
   background: #ffffff !important;
   border-color: #cbd5e1 !important;
   box-shadow: 0 12px 36px rgba(15,23,42,0.15) !important;
+}
+body.light .scale-dropdown div,
+html.light .scale-dropdown div {
+  color: #64748b !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+body.light .scale-dropdown .scale-opt-btn,
+html.light .scale-dropdown .scale-opt-btn {
+  color: #0f172a !important;
+  background: transparent;
+}
+body.light .scale-dropdown .scale-opt-btn:hover,
+html.light .scale-dropdown .scale-opt-btn:hover {
+  background: #f1f5f9 !important;
+  color: #0284c7 !important;
 }
 @media (max-width: 640px) {
   .topheader-row {
@@ -15215,6 +15392,7 @@ function toggleTheme(){
   const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
   const sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
   if(btn) btn.innerHTML = nextIsLight ? sunSvg : moonSvg;
+  if(typeof applyDisplayScale === 'function') applyDisplayScale(localStorage.getItem('nexus_display_scale') || 'auto');
   if(currentPage==='dashboard') drawDashboardCharts();
 }
 document.getElementById('miniThemeBtn').onclick = toggleTheme;
@@ -15354,9 +15532,10 @@ function applyDisplayScale(scaleVal) {
   document.querySelectorAll('.scale-opt-btn').forEach(btn => {
     var bScale = btn.getAttribute('data-scale');
     var isSel = (bScale === scaleVal);
+    var isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
     btn.style.fontWeight = isSel ? '700' : '400';
-    btn.style.color = isSel ? 'var(--green, #06D6A0)' : 'var(--text)';
-    btn.style.background = isSel ? 'rgba(6, 214, 160, 0.12)' : 'transparent';
+    btn.style.color = isSel ? (isLight ? '#059669' : 'var(--green, #06D6A0)') : (isLight ? '#0F172A' : 'var(--text)');
+    btn.style.background = isSel ? (isLight ? 'rgba(16, 185, 129, 0.14)' : 'rgba(6, 214, 160, 0.12)') : 'transparent';
     var iconSpan = btn.querySelector('.scale-check-ic');
     if (!iconSpan) {
       iconSpan = document.createElement('span');
