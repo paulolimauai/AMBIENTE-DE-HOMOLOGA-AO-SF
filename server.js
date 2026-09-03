@@ -7881,12 +7881,20 @@ async function loadUserData() {
     if (res.ok) {
       const serverData = await res.json();
       if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
-        const localDataStr = JSON.stringify(localData || {});
-        const serverDataStr = JSON.stringify(serverData);
-        if (localDataStr !== serverDataStr) {
-          applyDataPayload(serverData);
-          saveToStorage(userKey, serverData);
-          hasServerChanges = true;
+        const localTxCount = (localData && Array.isArray(localData.transactions)) ? localData.transactions.length : (Array.isArray(transactions) ? transactions.length : 0);
+        const serverTxCount = Array.isArray(serverData.transactions) ? serverData.transactions.length : 0;
+
+        // Proteção essencial: se o cache local possui transações e o servidor retornou vazio, jamais apagar dados locais!
+        if (localTxCount > 0 && serverTxCount === 0) {
+          await saveUserData();
+        } else {
+          const localDataStr = JSON.stringify(localData || {});
+          const serverDataStr = JSON.stringify(serverData);
+          if (localDataStr !== serverDataStr) {
+            applyDataPayload(serverData);
+            saveToStorage(userKey, serverData);
+            hasServerChanges = true;
+          }
         }
       }
     }
@@ -7900,16 +7908,25 @@ async function loadUserData() {
   }
 }
 
-// Sincronização Automática entre Dispositivos ao alternar ou focar no app
+// Sincronização Automática entre Dispositivos ao alternar ou focar no app (com debounce inteligente)
 if (typeof document !== 'undefined') {
+  let _lastFocusSync = 0;
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && currentUser && !isViewingOtherUser) {
-      loadUserData();
+      const now = Date.now();
+      if (now - _lastFocusSync > 20000) {
+        _lastFocusSync = now;
+        loadUserData();
+      }
     }
   });
   window.addEventListener('focus', () => {
     if (currentUser && !isViewingOtherUser) {
-      loadUserData();
+      const now = Date.now();
+      if (now - _lastFocusSync > 20000) {
+        _lastFocusSync = now;
+        loadUserData();
+      }
     }
   });
 }
@@ -8514,12 +8531,11 @@ function txStatsCardsHTML(list){
   const receitas = list.filter(t=>t.type==='in').reduce((s,t)=>s+parseInputValue(t.val),0);
   const despesas = list.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val),0);
   const saldo = receitas - despesas;
-  const saldoColor = saldo < 0 ? 'var(--red)' : 'var(--green)';
   let html = '';
-  html += '<div class="kpi"><div class="row1">Receitas <span class="ic" style="background:var(--green-soft);color:var(--green)">↑</span></div><div class="val">' + fmt(receitas) + '</div><div class="sub">no filtro atual</div></div>';
-  html += '<div class="kpi"><div class="row1">Despesas <span class="ic" style="background:var(--red-soft);color:var(--red)">↓</span></div><div class="val">' + fmt(despesas) + '</div><div class="sub">no filtro atual</div></div>';
-  html += '<div class="kpi"><div class="row1">Saldo <span class="ic" style="background:rgba(74,144,226,.14);color:var(--blue)">⇄</span></div><div class="val" style="color:' + saldoColor + '">' + fmt(saldo) + '</div><div class="sub" style="color:' + saldoColor + '">receitas − despesas</div></div>';
-  html += '<div class="kpi"><div class="row1">Transações <span class="ic" style="background:rgba(155,107,216,.14);color:var(--purple)">☰</span></div><div class="val">' + list.length + '</div><div class="sub">registros no filtro</div></div>';
+  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Receitas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green);">↑</span></div><div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">' + fmt(receitas) + '</div><div class="sub" style="font-size:11px;">Entradas no filtro</div></div>';
+  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Despesas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">↓</span></div><div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">' + fmt(despesas) + '</div><div class="sub" style="font-size:11px;">Saídas no filtro</div></div>';
+  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Balanço Líquido</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:' + (saldo < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(59,130,246,0.14)') + '; color:' + (saldo < 0 ? 'var(--red)' : 'var(--blue)') + ';">⇄</span></div><div class="val" style="font-size:20px; color:' + (saldo < 0 ? 'var(--red)' : 'var(--green)') + '; margin-bottom:2px;">' + fmt(saldo) + '</div><div class="sub" style="font-size:11px;">Receitas − Despesas</div></div>';
+  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Registros</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple);">📋</span></div><div class="val" style="font-size:20px; margin-bottom:2px;">' + list.length + '</div><div class="sub" style="font-size:11px;">Lançamentos no filtro</div></div>';
   return html;
 }
 function despesasPorCategoria(list=transactions){
@@ -8673,19 +8689,61 @@ function renderNotifications(){
 }
 
 /* ==================== Atualização parcial da tabela de Transações (evita flicker) ==================== */
+window.clearAllTxFilters = function(allDates = false) {
+  const s = document.getElementById('txSearch'); if(s) s.value = '';
+  const ft = document.getElementById('txFiltroTipo'); if(ft) ft.value = '';
+  const fc = document.getElementById('txFiltroCat'); if(fc) fc.value = '';
+  const fs = document.getElementById('txFiltroStatus'); if(fs) fs.value = '';
+  const fa = document.getElementById('txFiltroConta'); if(fa) fa.value = '';
+  if (allDates) {
+    currentPeriod = { year: new Date().getFullYear(), month: 0 };
+    try { localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod)); } catch(e){}
+    const el = document.getElementById('pageContent');
+    if (el) el.removeAttribute('data-current-rendered-page');
+    render();
+    return;
+  }
+  refreshTxTable();
+};
+
 function refreshTxTable(){
   const search = document.getElementById('txSearch');
   const fTipo = document.getElementById('txFiltroTipo');
   const fCat = document.getElementById('txFiltroCat');
   const fStatus = document.getElementById('txFiltroStatus');
   const fConta = document.getElementById('txFiltroConta');
+  const btnReset = document.getElementById('btnResetTxFilters');
   const tableWrap = document.getElementById('txTableWrap');
   if(!tableWrap) return false;
+
+  const hasFilterActive = Boolean(
+    (search && search.value.trim()) ||
+    (fTipo && fTipo.value) ||
+    (fCat && fCat.value) ||
+    (fStatus && fStatus.value) ||
+    (fConta && fConta.value)
+  );
+  if (btnReset) {
+    btnReset.style.display = hasFilterActive ? 'inline-flex' : 'none';
+  }
 
   let list = transactions.filter(inPeriod);
   if (search && search.value) {
     const q = search.value.trim().toLowerCase();
-    if(q) list = list.filter(t=>t.desc && t.desc.toLowerCase().includes(q));
+    if(q) {
+      list = list.filter(t => {
+        const desc = (t.desc || '').toLowerCase();
+        const cat = (t.cat || '').toLowerCase();
+        const acc = (t.acc || '').toLowerCase();
+        const method = (t.paymentMethod || '').toLowerCase();
+        const valStr = String(t.val || '').toLowerCase();
+        const valFmt = fmt(t.val).toLowerCase();
+        const dt = formatDateBR(t.date).toLowerCase();
+        const rawDt = String(t.date || '').toLowerCase();
+        const status = (t.status || '').toLowerCase();
+        return desc.includes(q) || cat.includes(q) || acc.includes(q) || method.includes(q) || valStr.includes(q) || valFmt.includes(q) || dt.includes(q) || rawDt.includes(q) || status.includes(q);
+      });
+    }
   }
   if(fTipo && fTipo.value) list = list.filter(t=>t.type===fTipo.value);
   if(fCat && fCat.value) list = list.filter(t=>t.cat===fCat.value);
@@ -9780,7 +9838,42 @@ function transactionsTable(list, showActions){
   if (typeof isDataLoading !== 'undefined' && isDataLoading && list.length === 0) {
     return \`<div class="placeholder" style="padding:40px 20px;"><div class="big" style="font-size:30px;margin-bottom:12px;">⏳</div><h3>Carregando suas transações...</h3><p>Sincronizando seus dados financeiros com o servidor.</p></div>\`;
   }
-  if(list.length===0) return \`<div class="placeholder"><div class="big">🗂️</div><h3>Nenhuma transação encontrada</h3><p>Nenhuma transação registrada no período selecionado.</p></div>\`;
+  if(list.length===0) {
+    const totalAllTxs = Array.isArray(transactions) ? transactions.length : 0;
+    const isFiltered = Boolean(
+      (typeof document !== 'undefined') && (
+        (document.getElementById('txSearch') && document.getElementById('txSearch').value.trim()) ||
+        (document.getElementById('txFiltroTipo') && document.getElementById('txFiltroTipo').value) ||
+        (document.getElementById('txFiltroCat') && document.getElementById('txFiltroCat').value) ||
+        (document.getElementById('txFiltroStatus') && document.getElementById('txFiltroStatus').value) ||
+        (document.getElementById('txFiltroConta') && document.getElementById('txFiltroConta').value)
+      )
+    );
+
+    if (totalAllTxs > 0) {
+      return \`
+      <div class="placeholder" style="padding:36px 20px; text-align:center;">
+        <div class="big" style="font-size:34px; margin-bottom:10px;">🔍</div>
+        <h3 style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:6px;">
+          \${isFiltered ? 'Nenhum lançamento encontrado para os filtros selecionados' : 'Nenhuma transação encontrada no período de ' + periodLabel()}
+        </h3>
+        <p style="font-size:12.5px; color:var(--text-dim); margin-bottom:16px; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.5;">
+          Você possui <strong style="color:var(--text);">\${totalAllTxs} lançamento(s)</strong> no seu extrato geral.
+        </p>
+        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+          <button type="button" class="btn-primary" onclick="window.clearAllTxFilters(true)" style="padding:8px 16px; font-size:12.5px; font-weight:700; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            🌐 Ver Todas as Transações (Todas as Datas)
+          </button>
+          \${isFiltered ? \`
+          <button type="button" class="btn-ghost" onclick="window.clearAllTxFilters(false)" style="padding:8px 16px; font-size:12.5px; font-weight:700; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.15); color:var(--text);">
+            ✕ Limpar Filtros do Mês
+          </button>\` : ''}
+        </div>
+      </div>\`;
+    }
+
+    return \`<div class="placeholder"><div class="big">🗂️</div><h3>Nenhuma transação encontrada</h3><p>Nenhuma transação registrada no período selecionado.</p></div>\`;
+  }
 
   const totalDespesas = list.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val), 0);
   const totalReceitas = list.filter(t=>t.type==='in').reduce((s,t)=>s+parseInputValue(t.val), 0);
@@ -9920,12 +10013,15 @@ function pageTransacoes(){
   <div class="table-panel">
     <div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
       <div style="position:relative; flex:1.5; min-width:200px;">
-        <input id="txSearch" type="text" placeholder="🔍 Buscar por descrição ou valor..." style="width:100%; font-size:13px;">
+        <input id="txSearch" type="text" autocomplete="off" placeholder="🔍 Buscar por descrição, valor, categoria..." style="width:100%; font-size:13px;">
       </div>
       <select id="txFiltroConta" style="flex:1; min-width:160px;"><option value="">Todas as Contas / Cartões</option>\${accOptsHTML}</select>
       <select id="txFiltroTipo" style="flex:0.8; min-width:120px;"><option value="">Todos os tipos</option><option value="in">Receitas</option><option value="out">Despesas</option></select>
       <select id="txFiltroCat" style="flex:1; min-width:140px;"><option value="">Todas categorias</option>\${catOptionsHTML(null)}</select>
       <select id="txFiltroStatus" style="flex:0.8; min-width:120px;"><option value="">Todos status</option><option>Pago</option><option>Recebido</option><option>Pendente</option></select>
+      <button type="button" id="btnResetTxFilters" class="btn-ghost" title="Limpar filtros ativos" style="display:none; align-items:center; gap:5px; padding:7px 12px; font-size:12px; font-weight:700; border-radius:9px; border:1px solid rgba(255,255,255,0.15); color:var(--text); cursor:pointer; white-space:nowrap;">
+        ✕ Limpar Filtros
+      </button>
     </div>
     <div id="txTableWrap">\${transactionsTable(periodTx.slice().sort((a,b)=>b.date.localeCompare(a.date)), true)}</div>
   </div>\`;
@@ -14757,6 +14853,14 @@ function attachPageEvents(){
   const fCat = document.getElementById('txFiltroCat');
   const fStatus = document.getElementById('txFiltroStatus');
   const fConta = document.getElementById('txFiltroConta');
+  const btnReset = document.getElementById('btnResetTxFilters');
+  if(btnReset) {
+    btnReset.onclick = () => {
+      if (typeof window.clearAllTxFilters === 'function') {
+        window.clearAllTxFilters(false);
+      }
+    };
+  }
   if(fTipo || fCat || fStatus || fConta || search){
     [search,fTipo,fCat,fStatus,fConta].forEach(el=>{
       if(el) {
@@ -14771,6 +14875,11 @@ function attachPageEvents(){
     btn.onclick = () => {
       const cardName = btn.getAttribute('data-viewcardtx');
       currentPage = 'transacoes';
+      // Abrir todas as datas para garantir que todos os lançamentos do cartão sejam exibidos sem sumir pelo filtro de mês
+      currentPeriod = { year: new Date().getFullYear(), month: 0 };
+      try { localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod)); } catch(e){}
+      const el = document.getElementById('pageContent');
+      if (el) el.removeAttribute('data-current-rendered-page');
       render();
       setTimeout(() => {
         const fc = document.getElementById('txFiltroConta');
@@ -14785,6 +14894,7 @@ function attachPageEvents(){
 
 function navigate(page){
   if(!page) page = 'dashboard';
+  const isSamePage = (currentPage === page);
   currentPage = page;
   try {
     localStorage.setItem('nexus_current_page', page);
@@ -14796,6 +14906,18 @@ function navigate(page){
   } catch(e){}
 
   document.querySelectorAll('.menu button').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
+
+  // Se o usuário clicou na mesma página de Transações, resetar filtros e garantir visibilidade completa
+  if (isSamePage && page === 'transacoes') {
+    const el = document.getElementById('pageContent');
+    if (el) el.removeAttribute('data-current-rendered-page');
+    const s = document.getElementById('txSearch'); if(s) s.value = '';
+    const ft = document.getElementById('txFiltroTipo'); if(ft) ft.value = '';
+    const fc = document.getElementById('txFiltroCat'); if(fc) fc.value = '';
+    const fs = document.getElementById('txFiltroStatus'); if(fs) fs.value = '';
+    const fa = document.getElementById('txFiltroConta'); if(fa) fa.value = '';
+  }
+
   render();
 }
 
