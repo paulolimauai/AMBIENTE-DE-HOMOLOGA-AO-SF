@@ -3674,6 +3674,26 @@ body.light .btn-hero-privacy {
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
 }
 
+/* Layout Proporcional Inteligente de Configurações (Zero Espaços Vazios) */
+.cfg-proportional-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+.cfg-proportional-container .panel {
+  height: auto !important;
+  justify-content: flex-start !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+}
+@media (max-width: 992px) {
+  .cfg-proportional-container {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* Modo de Privacidade Bancária - Ocultação Fluida com Desfoque */
 body.hide-sensitive-balances .kpi .val,
 body.hide-sensitive-balances [data-anim-val],
@@ -10891,124 +10911,139 @@ function pageConfig(){
       👁️ Você está em modo de visualização dos dados de <strong style="color:var(--green);">\${currentUser ? currentUser.name : ''}</strong>. As configurações da conta só podem ser editadas pelo próprio titular.
     </p>
   </div>\` : \`
-  <div class="cfg-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:20px;">
-    <!-- 1. Dados Cadastrais & Titularidade da Conta (Padrão Financeiro KYC / BACEN / LGPD) -->
-    <div class="panel" style="padding:22px;">
-      <div class="panel-head" style="margin-bottom:16px; flex-wrap:wrap; gap:8px;">
-        <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800;">
-          <span>👤</span> Dados Cadastrais & Titularidade
+  <div class="cfg-proportional-container" style="display:grid; grid-template-columns:minmax(0, 1.35fr) minmax(0, 1fr); gap:20px; align-items:start;">
+    <!-- 1. DADOS CADASTRAIS & TITULARIDADE (Coluna Principal - Ampla e Proporcional ao Volume de Dados) -->
+    <div class="panel" style="padding:22px; display:flex; flex-direction:column; gap:16px;">
+      <div class="panel-head" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800; margin:0;">
+          <span style="font-size:18px;">👤</span> Dados Cadastrais & Titularidade
         </h3>
-        <span class="tag" style="background:rgba(16,185,129,0.15); color:#34d399; font-weight:800; font-size:11px; padding:4px 10px; border-radius:999px; border:1px solid rgba(16,185,129,0.3);">
+        <span class="tag" style="background:rgba(16,185,129,0.15); color:#34d399; font-weight:800; font-size:11px; padding:4px 12px; border-radius:999px; border:1px solid rgba(16,185,129,0.35);">
           ✓ Conta Verificada (KYC)
         </span>
       </div>
 
-      <!-- Nome Completo -->
-      <div class="field" style="margin-bottom:14px;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Nome Completo do Titular</label>
-        <input id="cfgName" value="\${currentName}" placeholder="Seu nome completo" autocomplete="name" style="width:100%; height:44px; font-size:13.5px;">
+      <!-- Nome Completo (Largura Total) -->
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">Nome Completo do Titular</label>
+        <input id="cfgName" value="\${currentName}" placeholder="Seu nome completo" autocomplete="name" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
       </div>
 
-      <!-- CPF (Receita Federal) -->
-      <div class="field" style="margin-bottom:14px;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-          <span>CPF (Receita Federal)</span>
-          <span style="font-size:11px; color:#34d399; font-weight:700;">✓ Autenticado</span>
-        </label>
-        <input id="cfgCpf" value="\${formattedCpf}" placeholder="000.000.000-00" maxlength="14" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
-      </div>
+      <!-- Grid de 2 Colunas para Dados do Titular -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px;">
+        <!-- CPF -->
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
+            <span>CPF (Receita Federal)</span>
+            <span style="font-size:10.5px; color:#34d399; font-weight:800; text-transform:none;">✓ Autenticado</span>
+          </label>
+          <input id="cfgCpf" value="\${formattedCpf}" placeholder="000.000.000-00" maxlength="14" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
+        </div>
 
-      <!-- Data de Nascimento -->
-      <div class="field" style="margin-bottom:14px;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-          <span>Data de Nascimento</span>
-          <span style="font-size:11px; color:var(--text-dim);">Maioridade Legal (+18)</span>
-        </label>
-        <input id="cfgBirthDate" type="date" value="\${currentBirthDate}" style="width:100%; height:44px; font-size:13.5px;">
-      </div>
+        <!-- Data de Nascimento -->
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
+            <span>Data de Nascimento</span>
+            <span style="font-size:10.5px; color:var(--text-dim); text-transform:none;">Maioridade Legal</span>
+          </label>
+          <input id="cfgBirthDate" type="date" value="\${currentBirthDate}" style="width:100%; height:44px; font-size:13.5px; font-weight:600;">
+        </div>
 
-      <!-- Celular / WhatsApp 2FA -->
-      <div class="field" style="margin-bottom:14px;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-          <span>Celular com DDD (2FA)</span>
-          <span style="font-size:11px; color:var(--text-dim);">Segurança de Acesso</span>
-        </label>
-        <input id="cfgPhone" value="\${formattedPhone}" placeholder="(00) 00000-0000" maxlength="15" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
-      </div>
+        <!-- Celular / WhatsApp 2FA -->
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
+            <span>Celular com DDD (2FA)</span>
+            <span style="font-size:10.5px; color:var(--text-dim); text-transform:none;">Segurança</span>
+          </label>
+          <input id="cfgPhone" value="\${formattedPhone}" placeholder="(00) 00000-0000" maxlength="15" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
+        </div>
 
-      <!-- E-mail de Acesso -->
-      <div class="field" style="margin-bottom:16px;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">E-mail Cadastrado</label>
-        <input id="cfgEmail" type="text" value="\${currentEmail}" placeholder="seu.email@exemplo.com" autocomplete="email" style="width:100%; height:44px; font-size:13.5px;">
+        <!-- E-mail Cadastrado -->
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">E-mail Cadastrado</label>
+          <input id="cfgEmail" type="text" value="\${currentEmail}" placeholder="seu.email@exemplo.com" autocomplete="email" style="width:100%; height:44px; font-size:13.5px; font-weight:600;">
+        </div>
       </div>
 
       <!-- Registro de Conformidade LGPD & Abertura da Conta -->
-      <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 14px; font-size:11.5px; display:flex; flex-direction:column; gap:6px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-dim);">
-          <span>Termos de Uso & Proteção LGPD:</span>
-          <span style="color:#34d399; font-weight:800;">✓ Aceito & Registrado</span>
+      <div style="background:rgba(0,0,0,0.32); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px 16px; font-size:12px; display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px;">
+        <div style="display:flex; flex-direction:column; gap:2px;">
+          <span style="color:var(--text-dim); font-size:11px;">Termos & Proteção LGPD</span>
+          <span style="color:#34d399; font-weight:800; display:inline-flex; align-items:center; gap:5px;">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10b981;"></span>
+            Aceito & Registrado
+          </span>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-dim);">
-          <span>Perfil de Acesso:</span>
-          <span style="color:#60a5fa; font-weight:700;">\${roleName}</span>
+        <div style="display:flex; flex-direction:column; gap:2px;">
+          <span style="color:var(--text-dim); font-size:11px;">Perfil de Acesso</span>
+          <span style="color:#60a5fa; font-weight:800;">\${roleName}</span>
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-dim);">
-          <span>Data de Abertura da Conta:</span>
-          <span style="color:var(--text); font-weight:600;">\${formattedCreated}</span>
+        <div style="display:flex; flex-direction:column; gap:2px;">
+          <span style="color:var(--text-dim); font-size:11px;">Data de Abertura</span>
+          <span style="color:var(--text); font-weight:700;">\${formattedCreated}</span>
         </div>
       </div>
     </div>
 
-    <!-- 2. Aparência & Escala -->
-    <div class="panel" style="padding:22px;">
-      <div class="panel-head" style="margin-bottom:16px;">
-        <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800;">
-          <span>🎨</span> Aparência & Escala da Tela
-        </h3>
+    <!-- COLUNA SECUNDÁRIA: SEGURANÇA & APARÊNCIA (Compactos, Proporcionais e Sem Espaço Vazio) -->
+    <div style="display:flex; flex-direction:column; gap:18px;">
+      <!-- 2. Alterar Senha -->
+      <div class="panel" style="padding:22px;">
+        <div class="panel-head" style="margin-bottom:10px;">
+          <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800; margin:0;">
+            <span>🔒</span> Segurança & Senha
+          </h3>
+        </div>
+        <p class="cfg-hint" style="font-size:12px; margin-bottom:14px; color:var(--text-dim);">
+          Preencha apenas se desejar trocar sua senha de acesso
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Nova Senha</label>
+            <div class="pass-field">
+              <input id="cfgPassword" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
+              <button type="button" class="pass-toggle" id="cfgPasswordToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Confirmar Senha</label>
+            <div class="pass-field">
+              <input id="cfgPasswordConfirm" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
+              <button type="button" class="pass-toggle" id="cfgPasswordConfirmToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="field" style="margin-bottom:14px;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Tema Visual</label>
-        <select id="cfgTheme" style="width:100%; height:44px; font-size:13.5px;">
-          <option value="dark">🌙 Escuro (Alta Performance)</option>
-          <option value="light">☀️ Claro (Executivo Clean)</option>
-        </select>
-      </div>
-      <div class="field" style="margin-bottom:10px;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Tamanho de Visualização</label>
-        <select id="cfgScale" style="width:100%; height:44px; font-size:13.5px;">
-          <option value="auto">⚡ Auto (Adequar ao Dispositivo Logado)</option>
-          <option value="80%">🔍 80% (Compacto)</option>
-          <option value="90%">🔍 90% (Reduzido)</option>
-          <option value="100%">🔍 100% (Padrão 1:1)</option>
-          <option value="110%">🔍 110% (Ampliado)</option>
-          <option value="125%">🔍 125% (Grande)</option>
-          <option value="150%">🔍 150% (Extra Grande)</option>
-        </select>
-      </div>
-      <div id="cfgDeviceInfo" style="margin-top:12px;"></div>
-    </div>
 
-    <!-- 3. Alterar Senha -->
-    <div class="panel" style="padding:22px;">
-      <div class="panel-head" style="margin-bottom:16px;">
-        <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800;">
-          <span>🔒</span> Segurança & Senha
-        </h3>
-      </div>
-      <p class="cfg-hint" style="font-size:12px; margin-bottom:14px;">Preencha apenas se desejar trocar sua senha de acesso</p>
-      <div class="field" style="margin-bottom:14px;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Nova Senha <span style="color:var(--text-faint); font-weight:400;">(mínimo 6 dígitos)</span></label>
-        <div class="pass-field">
-          <input id="cfgPassword" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
-          <button type="button" class="pass-toggle" id="cfgPasswordToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
+      <!-- 3. Aparência & Escala da Tela -->
+      <div class="panel" style="padding:22px;">
+        <div class="panel-head" style="margin-bottom:12px;">
+          <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800; margin:0;">
+            <span>🎨</span> Aparência & Escala da Tela
+          </h3>
         </div>
-      </div>
-      <div class="field" style="margin-bottom:0;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Confirmar Nova Senha</label>
-        <div class="pass-field">
-          <input id="cfgPasswordConfirm" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
-          <button type="button" class="pass-toggle" id="cfgPasswordConfirmToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:12px;">
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Tema Visual</label>
+            <select id="cfgTheme" style="width:100%; height:44px; font-size:13px; font-weight:600;">
+              <option value="dark">🌙 Escuro (Alta Performance)</option>
+              <option value="light">☀️ Claro (Executivo Clean)</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Tamanho de Visualização</label>
+            <select id="cfgScale" style="width:100%; height:44px; font-size:13px; font-weight:600;">
+              <option value="auto">⚡ Auto (Adequar ao Dispositivo)</option>
+              <option value="80%">🔍 80% (Compacto)</option>
+              <option value="90%">🔍 90% (Reduzido)</option>
+              <option value="100%">🔍 100% (Padrão 1:1)</option>
+              <option value="110%">🔍 110% (Ampliado)</option>
+              <option value="125%">🔍 125% (Grande)</option>
+              <option value="150%">🔍 150% (Extra Grande)</option>
+            </select>
+          </div>
         </div>
+        <div id="cfgDeviceInfo"></div>
       </div>
     </div>
   </div>
@@ -14506,6 +14541,10 @@ function attachPageEvents(){
     // Máscaras automáticas nos campos financeiros de configurações
     const cfgCpfInput = document.getElementById('cfgCpf');
     if (cfgCpfInput) {
+      if (cfgCpfInput.value) {
+        let v = cfgCpfInput.value.replace(/\D/g, '');
+        if (v.length === 11) cfgCpfInput.value = v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      }
       cfgCpfInput.addEventListener('input', function(e) {
         let v = e.target.value.replace(/\D/g, '');
         if (v.length > 11) v = v.slice(0, 11);
@@ -14518,6 +14557,11 @@ function attachPageEvents(){
 
     const cfgPhoneInput = document.getElementById('cfgPhone');
     if (cfgPhoneInput) {
+      if (cfgPhoneInput.value) {
+        let v = cfgPhoneInput.value.replace(/\D/g, '');
+        if (v.length === 11) cfgPhoneInput.value = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        else if (v.length === 10) cfgPhoneInput.value = v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+      }
       cfgPhoneInput.addEventListener('input', function(e) {
         let v = e.target.value.replace(/\D/g, '');
         if (v.length > 11) v = v.slice(0, 11);
