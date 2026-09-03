@@ -400,24 +400,34 @@ const htmlContent = `<!DOCTYPE html>
       }
     }
     var sc = localStorage.getItem('nexus_display_scale') || 'auto';
-    var w = window.innerWidth || screen.width || 1366;
-    var h = window.innerHeight || screen.height || 768;
+    var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || screen.width || 1366;
+    var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || screen.height || 768;
+    var dev = 'desktop';
+    var ua = navigator.userAgent || '';
+    var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    var isIpad = /iPad/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (isIpad || (/Tablet|Android/i.test(ua) && !/Mobile/i.test(ua)) || (isTouch && w > 640 && w <= 1024)) dev = 'tablet';
+    else if (/Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) || (w <= 768 && isTouch) || w <= 640) dev = 'mobile';
+    else if (w >= 2560) dev = '4k';
+    else if (w >= 1921) dev = 'ultrawide';
+    else if (w <= 1440) dev = 'laptop';
+
+    document.documentElement.setAttribute('data-device-type', dev);
+
     var sn = 1.0;
     if (sc === 'auto') {
-      if (w <= 640) sn = 1.0;
-      else if (w <= 1024) sn = 0.88;
-      else if (w < 1280 || h < 720) sn = 0.80;
-      else if (w < 1440 || h < 820) sn = 0.85;
-      else if (w < 1680 || h < 950) sn = 0.92;
-      else if (w <= 1920 && h <= 1080) sn = 1.0;
-      else if (w < 2560) sn = 1.10;
-      else sn = 1.20;
+      if (dev === 'mobile' || dev === 'tablet') sn = 1.0;
+      else if (dev === 'laptop') sn = (h < 640 || w < 1180) ? 0.95 : 1.0;
+      else if (dev === '4k') sn = (w >= 3400) ? 1.20 : 1.10;
+      else if (dev === 'ultrawide') sn = 1.05;
+      else sn = 1.0;
     } else {
       sn = parseFloat(sc) / 100 || 1.0;
     }
     document.documentElement.style.setProperty('--app-zoom', sn);
     var bgCol = isLight ? '#F2F7F4' : '#060913';
-    document.write('<style id="critical-fouc-shield">html,body{zoom:' + sn + ' !important; background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;}' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + '</style>');
+    document.write('<style id="critical-fouc-shield">background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + '</style>');
+    document.write('<style id="nexus-scale-override">html, body { zoom: ' + sn + ' !important; } :root { --app-zoom: ' + sn + '; }</style>');
   } catch(e){}
 })();
 </script>
@@ -5297,17 +5307,95 @@ body.light .logout-timer-bar {
   .cat-cards{grid-template-columns:1fr;}
 }
 
-/* Estilos de Escala de Tela e Dispositivo Logado */
+/* Estilos de Escala de Tela, Resolução e Dispositivo */
+.scale-selector-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.scale-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--card, #0f172a) !important;
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.15)) !important;
+  border-radius: 14px !important;
+  padding: 8px !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 20px rgba(59,130,246,0.15) !important;
+  z-index: 999999 !important;
+  min-width: 200px;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+}
+.scale-dropdown .scale-opt-btn {
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text, #F8FAFC);
+  border-radius: 8px;
+  font-size: 12.5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.15s ease;
+  user-select: none;
+}
 .scale-dropdown .scale-opt-btn:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(59, 130, 246, 0.18) !important;
+  color: #FFFFFF !important;
 }
 body.light .scale-dropdown .scale-opt-btn:hover {
-  background: rgba(0, 0, 0, 0.06) !important;
+  background: rgba(59, 130, 246, 0.12) !important;
+  color: #0284C7 !important;
 }
 body.light .scale-dropdown {
   background: #ffffff !important;
   border-color: #cbd5e1 !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+  box-shadow: 0 12px 36px rgba(15,23,42,0.15) !important;
+}
+@media (max-width: 640px) {
+  .topheader-row {
+    padding: 8px 10px !important;
+    gap: 6px !important;
+    min-height: 56px !important;
+  }
+  .topheader-row .right {
+    gap: 5px !important;
+  }
+  .scale-selector-wrap #scaleMenuBtn {
+    padding: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    justify-content: center !important;
+  }
+  .scale-selector-wrap #scaleMenuBtn span#currentScaleLabel {
+    display: none !important;
+  }
+  .scale-dropdown {
+    right: -45px !important;
+    max-width: calc(100vw - 24px) !important;
+    min-width: 210px !important;
+  }
+  .icon-btn, #miniThemeBtn, #notifBtn {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .user {
+    padding: 3px !important;
+    border-radius: 12px !important;
+    gap: 0 !important;
+  }
+  .user .avatar {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 11px !important;
+  }
+  .user .uname, .user .urole {
+    display: none !important;
+  }
 }
 </style>
 </head>
@@ -5689,20 +5777,23 @@ body.light .scale-dropdown {
             <div class="notif-list" id="notifList"></div>
           </div>
         </div>
-        <div class="scale-selector-wrap" style="position:relative; display:inline-flex; align-items:center;">
-          <button class="icon-btn" id="scaleMenuBtn" title="Tamanho de Visualização / Resolução 4K" style="gap:6px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
+        <div class="scale-selector-wrap">
+          <button class="icon-btn" id="scaleMenuBtn" title="Tamanho de Visualização & Resolução de Tela" style="gap:6px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
             <span id="currentScaleLabel">Auto</span>
           </button>
-          <div class="scale-dropdown" id="scaleDropdown" style="display:none; position:absolute; top:calc(100% + 8px); right:0; background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:6px; box-shadow:0 10px 30px rgba(0,0,0,0.5); z-index:100; min-width:170px;">
-            <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); padding:6px 8px 4px;">Escala da Tela</div>
-            <button class="scale-opt-btn" data-scale="auto" style="width:100%; text-align:left; padding:6px 10px; border:none; background:transparent; color:var(--text); border-radius:6px; font-size:12.5px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">⚡ Auto (Dispositivo)</button>
-            <button class="scale-opt-btn" data-scale="80%" style="width:100%; text-align:left; padding:6px 10px; border:none; background:transparent; color:var(--text); border-radius:6px; font-size:12.5px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">🔍 80% (Compacto)</button>
-            <button class="scale-opt-btn" data-scale="90%" style="width:100%; text-align:left; padding:6px 10px; border:none; background:transparent; color:var(--text); border-radius:6px; font-size:12.5px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">🔍 90% (Reduzido)</button>
-            <button class="scale-opt-btn" data-scale="100%" style="width:100%; text-align:left; padding:6px 10px; border:none; background:transparent; color:var(--text); border-radius:6px; font-size:12.5px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">🔍 100% (Padrão 1:1)</button>
-            <button class="scale-opt-btn" data-scale="110%" style="width:100%; text-align:left; padding:6px 10px; border:none; background:transparent; color:var(--text); border-radius:6px; font-size:12.5px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">🔍 110% (Ampliado)</button>
-            <button class="scale-opt-btn" data-scale="125%" style="width:100%; text-align:left; padding:6px 10px; border:none; background:transparent; color:var(--text); border-radius:6px; font-size:12.5px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">🔍 125% (Grande)</button>
-            <button class="scale-opt-btn" data-scale="150%" style="width:100%; text-align:left; padding:6px 10px; border:none; background:transparent; color:var(--text); border-radius:6px; font-size:12.5px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">🔍 150% (Extra Grande)</button>
+          <div class="scale-dropdown" id="scaleDropdown" style="display:none;">
+            <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); padding:6px 10px 4px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:4px;">
+              <span>Tamanho / Resolução</span>
+              <span id="scaleDropdownDevBadge" title="Dispositivo Ativo">🖥️</span>
+            </div>
+            <button class="scale-opt-btn" data-scale="auto">⚡ Auto (Adequar à Tela)</button>
+            <button class="scale-opt-btn" data-scale="80%">🔍 80% (Compacto)</button>
+            <button class="scale-opt-btn" data-scale="90%">🔍 90% (Reduzido)</button>
+            <button class="scale-opt-btn" data-scale="100%">🔍 100% (Padrão 1:1)</button>
+            <button class="scale-opt-btn" data-scale="110%">🔍 110% (Ampliado)</button>
+            <button class="scale-opt-btn" data-scale="125%">🔍 125% (Grande)</button>
+            <button class="scale-opt-btn" data-scale="150%">🔍 150% (Extra Grande)</button>
           </div>
         </div>
         <div class="icon-btn" id="miniThemeBtn" title="Alternar Modo Noturno / Diurno">
@@ -15157,24 +15248,61 @@ bindDualPasswordToggle('regPassword', 'regConfirmPassword', 'regPasswordToggle')
 
 /* ==================== Controle de Escala & Dispositivo Logado ==================== */
 function detectDeviceType() {
-  var w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || screen.width || 1366;
+  var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || screen.height || 768;
   var ua = navigator.userAgent || '';
-  var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) || w <= 640;
-  var isTablet = !isMobile && (/iPad|Tablet/i.test(ua) || (w > 640 && w <= 1024));
-  var isUltrawide = w >= 1700;
-  if (isMobile) return 'mobile';
-  if (isTablet) return 'tablet';
-  if (isUltrawide) return 'ultrawide';
+  var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  var isIpad = /iPad/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isMobileUA = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+
+  if (isIpad || (/Tablet|Android/i.test(ua) && !/Mobile/i.test(ua)) || (isTouch && w > 640 && w <= 1024)) {
+    return 'tablet';
+  }
+  if (isMobileUA || (w <= 768 && isTouch) || w <= 640) {
+    return 'mobile';
+  }
+  if (w >= 2560) {
+    return '4k';
+  }
+  if (w >= 1921) {
+    return 'ultrawide';
+  }
+  if (w <= 1440) {
+    return 'laptop';
+  }
   return 'desktop';
 }
 
 function getDeviceName(devType) {
   switch (devType) {
-    case 'mobile': return 'Smartphone 📱';
+    case 'mobile': return 'Smartphone (Celular) 📱';
     case 'tablet': return 'Tablet 📱↔️';
-    case 'ultrawide': return 'Ultra-Wide / 4K 🖥️✨';
+    case 'laptop': return 'Notebook / Laptop 💻';
+    case 'ultrawide': return 'Monitor Ultra-Wide 🖥️✨';
+    case '4k': return 'Monitor 4K Ultra-HD 🖥️💎';
     case 'desktop': default: return 'Desktop / Computador 🖥️';
   }
+}
+
+function getAutoDisplayScale(w, h, devType) {
+  if (devType === 'mobile') {
+    return { scaleNum: 1.0, effectiveScale: '100%' };
+  }
+  if (devType === 'tablet') {
+    return { scaleNum: 1.0, effectiveScale: '100%' };
+  }
+  if (devType === 'laptop') {
+    if (h < 640 || w < 1180) return { scaleNum: 0.95, effectiveScale: '95%' };
+    return { scaleNum: 1.0, effectiveScale: '100%' };
+  }
+  if (devType === '4k') {
+    if (w >= 3400) return { scaleNum: 1.20, effectiveScale: '120%' };
+    return { scaleNum: 1.10, effectiveScale: '110%' };
+  }
+  if (devType === 'ultrawide') {
+    return { scaleNum: 1.05, effectiveScale: '105%' };
+  }
+  return { scaleNum: 1.0, effectiveScale: '100%' };
 }
 
 function applyDisplayScale(scaleVal) {
@@ -15184,46 +15312,33 @@ function applyDisplayScale(scaleVal) {
   var devType = detectDeviceType();
   document.documentElement.setAttribute('data-device-type', devType);
 
+  var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || screen.width || 1366;
+  var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || screen.height || 768;
+
   var effectiveScale = scaleVal;
-  var scaleNum = 1;
+  var scaleNum = 1.0;
 
   if (scaleVal === 'auto') {
-    var w = window.innerWidth || screen.width || 1366;
-    var h = window.innerHeight || screen.height || 768;
-
-    if (w <= 640) {
-      scaleNum = 1.0;
-      effectiveScale = '100%';
-    } else if (w <= 1024) {
-      scaleNum = 0.88;
-      effectiveScale = '88%';
-    } else if (w < 1280 || h < 720) {
-      scaleNum = 0.80;
-      effectiveScale = '80%';
-    } else if (w < 1440 || h < 820) {
-      scaleNum = 0.85;
-      effectiveScale = '85%';
-    } else if (w < 1680 || h < 950) {
-      scaleNum = 0.92;
-      effectiveScale = '92%';
-    } else if (w <= 1920 && h <= 1080) {
-      scaleNum = 1.0;
-      effectiveScale = '100%';
-    } else if (w < 2560) {
-      scaleNum = 1.10;
-      effectiveScale = '110%';
-    } else {
-      scaleNum = 1.20;
-      effectiveScale = '120%';
-    }
+    var autoRes = getAutoDisplayScale(w, h, devType);
+    scaleNum = autoRes.scaleNum;
+    effectiveScale = autoRes.effectiveScale;
   } else {
-    scaleNum = parseFloat(scaleVal) / 100 || 1;
+    scaleNum = parseFloat(scaleVal) / 100 || 1.0;
     effectiveScale = scaleVal;
   }
 
+  // Atualiza ou injeta regra dinâmica com !important na folha de estilo para que a escala realmente funcione
+  var scaleStyle = document.getElementById('nexus-scale-override');
+  if (!scaleStyle) {
+    scaleStyle = document.createElement('style');
+    scaleStyle.id = 'nexus-scale-override';
+    document.head.appendChild(scaleStyle);
+  }
+  scaleStyle.textContent = 'html, body { zoom: ' + scaleNum + ' !important; } :root { --app-zoom: ' + scaleNum + '; }';
+
   document.documentElement.style.setProperty('--app-zoom', scaleNum);
   if (document.body) {
-    document.body.style.zoom = scaleNum;
+    document.body.style.setProperty('zoom', scaleNum);
   }
 
   var lbl = document.getElementById('currentScaleLabel');
@@ -15231,10 +15346,26 @@ function applyDisplayScale(scaleVal) {
     lbl.textContent = scaleVal === 'auto' ? 'Auto (' + effectiveScale + ')' : scaleVal;
   }
 
+  var badge = document.getElementById('scaleDropdownDevBadge');
+  if (badge) {
+    badge.textContent = devType === 'mobile' ? '📱' : devType === 'tablet' ? '📱↔️' : devType === 'laptop' ? '💻' : (devType === '4k' || devType === 'ultrawide') ? '🖥️✨' : '🖥️';
+  }
+
   document.querySelectorAll('.scale-opt-btn').forEach(btn => {
-    var isSel = btn.getAttribute('data-scale') === scaleVal;
+    var bScale = btn.getAttribute('data-scale');
+    var isSel = (bScale === scaleVal);
     btn.style.fontWeight = isSel ? '700' : '400';
     btn.style.color = isSel ? 'var(--green, #06D6A0)' : 'var(--text)';
+    btn.style.background = isSel ? 'rgba(6, 214, 160, 0.12)' : 'transparent';
+    var iconSpan = btn.querySelector('.scale-check-ic');
+    if (!iconSpan) {
+      iconSpan = document.createElement('span');
+      iconSpan.className = 'scale-check-ic';
+      iconSpan.style.marginLeft = 'auto';
+      iconSpan.style.fontSize = '12px';
+      btn.appendChild(iconSpan);
+    }
+    iconSpan.textContent = isSel ? '✓' : '';
   });
 
   var cfgScaleEl = document.getElementById('cfgScale');
@@ -15242,17 +15373,23 @@ function applyDisplayScale(scaleVal) {
 
   var devInfoEl = document.getElementById('cfgDeviceInfo');
   if (devInfoEl) {
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    devInfoEl.innerHTML = \`
-      <div style="display:flex; align-items:center; gap:10px; padding:12px; border-radius:12px; background:rgba(91,148,217,0.1); border:1px solid rgba(91,148,217,0.25); font-size:13px;">
-        <span style="font-size:22px;">\${devType === 'mobile' ? '📱' : devType === 'tablet' ? '📱↔️' : devType === 'ultrawide' ? '🖥️✨' : '🖥️'}</span>
-        <div>
-          <strong>Dispositivo Detectado:</strong> \${getDeviceName(devType)}<br>
-          <span style="color:var(--text-muted); font-size:12px;">Resolução Atual: \${w}px x \${h}px | Escala Ativa: <strong>\${effectiveScale}</strong> \${scaleVal === 'auto' ? '(Ajuste Automático)' : '(Manual)'}</span>
-        </div>
-      </div>
-    \`;
+    var dpr = window.devicePixelRatio ? window.devicePixelRatio.toFixed(1) + 'x' : '1.0x';
+    var orientation = (w >= h) ? 'Paisagem ↔️' : 'Retrato ↕️';
+    var devIcon = devType === 'mobile' ? '📱' : devType === 'tablet' ? '📱↔️' : devType === 'laptop' ? '💻' : (devType === '4k' || devType === 'ultrawide') ? '🖥️✨' : '🖥️';
+    var autoText = scaleVal === 'auto' ? '<span style="color:var(--green,#06D6A0); font-weight:700;">(Ajuste Inteligente ao Dispositivo)</span>' : '<span style="color:var(--amber,#F59E0B); font-weight:700;">(Definição Manual)</span>';
+    devInfoEl.innerHTML = '<div style="display:flex; align-items:center; gap:12px; padding:14px; border-radius:14px; background:linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(16,185,129,0.08) 100%); border:1px solid rgba(59,130,246,0.25); font-size:13px; margin-top:8px;">' +
+      '<span style="font-size:26px; line-height:1; flex-shrink:0;">' + devIcon + '</span>' +
+      '<div style="flex:1; min-width:0;">' +
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">' +
+          '<strong>Dispositivo Detectado:</strong>' +
+          '<span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:6px; font-weight:700; font-size:11px; color:var(--accent,#3B82F6);">' + getDeviceName(devType) + '</span>' +
+        '</div>' +
+        '<div style="color:var(--text-muted); font-size:12px; margin-top:4px; line-height:1.4;">' +
+          'Resolução da Tela: <strong>' + w + 'px × ' + h + 'px</strong> (' + orientation + ') | DPR: <strong>' + dpr + '</strong><br>' +
+          'Escala Ativa: <strong>' + effectiveScale + '</strong> ' + autoText +
+        '</div>' +
+      '</div>' +
+    '</div>';
   }
 }
 
@@ -15260,10 +15397,21 @@ function applyDisplayScale(scaleVal) {
   try {
     var savedScale = localStorage.getItem('nexus_display_scale') || 'auto';
     applyDisplayScale(savedScale);
+    var resizeTimer = null;
     window.addEventListener('resize', function() {
-      if ((localStorage.getItem('nexus_display_scale') || 'auto') === 'auto') {
-        applyDisplayScale('auto');
-      }
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        if ((localStorage.getItem('nexus_display_scale') || 'auto') === 'auto') {
+          applyDisplayScale('auto');
+        }
+      }, 100);
+    });
+    window.addEventListener('orientationchange', function() {
+      setTimeout(function() {
+        if ((localStorage.getItem('nexus_display_scale') || 'auto') === 'auto') {
+          applyDisplayScale('auto');
+        }
+      }, 250);
     });
   } catch(e){}
 })();
