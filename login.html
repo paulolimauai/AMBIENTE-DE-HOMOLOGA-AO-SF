@@ -162,6 +162,7 @@
         }
 
         body.light, html.light body, html.light {
+            color-scheme: light !important;
             --auth-bg: #F2F7F4;
             --auth-card: rgba(255, 255, 255, 0.90);
             --auth-border: #CBD5E1;
@@ -1307,6 +1308,39 @@
         }
         body.light #boxNovaOrdemModal button.close-x:hover,
         html.light #boxNovaOrdemModal button.close-x:hover {
+            color: #0F172A !important;
+        }
+
+        /* Selects e Opções Universais em Modo Claro */
+        body.light select,
+        html.light select,
+        body.light #osServiceType,
+        html.light #osServiceType,
+        body.light #osPriority,
+        html.light #osPriority {
+            background: #FFFFFF !important;
+            background-color: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            color: #0F172A !important;
+            color-scheme: light !important;
+        }
+        body.light select option,
+        html.light select option,
+        body.light option,
+        html.light option,
+        body.light optgroup,
+        html.light optgroup {
+            background: #FFFFFF !important;
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
+            color-scheme: light !important;
+        }
+        body.light select option:checked,
+        html.light select option:checked,
+        body.light option:checked,
+        html.light option:checked {
+            background: #E2E8F0 !important;
+            background-color: #E2E8F0 !important;
             color: #0F172A !important;
         }
 
