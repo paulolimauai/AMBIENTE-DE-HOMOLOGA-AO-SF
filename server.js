@@ -3623,27 +3623,55 @@ body.light .kpi:hover {
 }
 body.light .kpi .val { color:#0f172a !important; text-shadow:none; }
 
-/* Estilos de Alta Precisão - Barra de Status Executiva Pós-Login */
-.executive-status-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.45), rgba(15, 23, 42, 0.75));
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
-  border-top: 1.5px solid rgba(255, 255, 255, 0.28);
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+/* Botão Executivo de Privacidade - Ocultar / Exibir Saldos Ajustado */
+.btn-hero-privacy {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 16px 8px 10px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.92) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+  color: #F1F5F9 !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.015em !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  white-space: nowrap !important;
+  user-select: none !important;
 }
-body.light .executive-status-bar {
-  background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06) !important;
+.btn-hero-privacy:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(52, 211, 153, 0.5) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(52, 211, 153, 0.25) !important;
+}
+.btn-hero-privacy:active {
+  transform: translateY(0) !important;
+}
+.btn-hero-privacy .btn-hero-icon-pill {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+}
+body.light .btn-hero-privacy {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
 }
 
 /* Modo de Privacidade Bancária - Ocultação Fluida com Desfoque */
@@ -6419,6 +6447,9 @@ window.toggleSensitiveBalances = function() {
   const btnEyeText = document.getElementById('btnEyeText');
   if (btnEyeIcon) btnEyeIcon.textContent = isHidden ? '🙈' : '👁️';
   if (btnEyeText) btnEyeText.textContent = isHidden ? 'Exibir Saldos' : 'Ocultar Saldos';
+  document.querySelectorAll('.btnEyeIconCard').forEach(function(el) {
+    el.textContent = isHidden ? '🙈' : '👁️';
+  });
   try {
     localStorage.setItem('nexus_hide_balances', isHidden ? 'true' : 'false');
   } catch(e) {}
@@ -6432,6 +6463,9 @@ try {
       const btnEyeText = document.getElementById('btnEyeText');
       if (btnEyeIcon) btnEyeIcon.textContent = '🙈';
       if (btnEyeText) btnEyeText.textContent = 'Exibir Saldos';
+      document.querySelectorAll('.btnEyeIconCard').forEach(function(el) {
+        el.textContent = '🙈';
+      });
     }, 100);
   }
 } catch(e) {}
@@ -9040,6 +9074,12 @@ function pageDashboard(){
 
       <div class="hero-actions">
         \${periodPickerHTML()}
+        <button type="button" class="btn-hero-privacy" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou Exibir Saldos">
+          <span class="btn-hero-icon-pill">
+            <span id="btnEyeIcon">👁️</span>
+          </span>
+          <span id="btnEyeText">Ocultar Saldos</span>
+        </button>
         <button class="btn-hero-primary" id="btnNovaTransacao" title="Lançar Nova Receita ou Despesa">
           <span class="btn-hero-icon-pill">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -9052,40 +9092,16 @@ function pageDashboard(){
     </div>
   </div>
 
-  <!-- BARRA EXECUTIVA DE CONEXÃO BANCÁRIA & SAÚDE FINANCEIRA 4K LUXURY -->
-  <div class="executive-status-bar">
-    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-      <span style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); font-size:11px; font-weight:800; color:#34d399; letter-spacing:0.04em;">
-        <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#10b981; box-shadow:0 0 10px #10b981;"></span>
-        <span>CONEXÃO BANCÁRIA ATIVA</span>
-      </span>
-      <span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:#94a3b8; font-weight:600;">
-        <span>🔒 Criptografia SSL 256-bit</span>
-        <span>•</span>
-        <span>BACEN & Open Finance Compliant</span>
-      </span>
-    </div>
-
-    <!-- Indicador de Score de Saúde Financeira & Toggle de Saldos -->
-    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-      <div style="display:flex; align-items:center; gap:6px; background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(217,119,6,0.06)); border:1px solid rgba(245,158,11,0.35); padding:4px 12px; border-radius:999px; font-size:11px; font-weight:800; color:#fbbf24; box-shadow:0 2px 10px rgba(245,158,11,0.15);">
-        <span>⭐ Saúde Financeira:</span>
-        <span style="color:#ffffff; font-weight:900;">940/1000</span>
-        <span style="color:#34d399; font-weight:800;">• Excelente</span>
-      </div>
-
-      <button type="button" onclick="window.toggleSensitiveBalances()" title="Ocultar ou Exibir Saldos" style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.16); color:#f1f5f9; border-radius:10px; padding:5px 12px; font-size:11px; font-weight:800; cursor:pointer; transition:all 0.2s; box-shadow:0 2px 8px rgba(0,0,0,0.3);">
-        <span id="btnEyeIcon">👁️</span>
-        <span id="btnEyeText">Ocultar Saldos</span>
-      </button>
-    </div>
-  </div>
-
   <div class="kpis">
     <!-- 1. Saldo Total -->
     <div class="kpi kpi-balance">
       <div class="row1">
-        <span>Saldo Total</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span>Saldo Total</span>
+          <button type="button" onclick="window.toggleSensitiveBalances()" title="Ocultar ou Exibir Saldos" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:13px; padding:0; display:inline-flex; align-items:center; opacity:0.8; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
+            <span class="btnEyeIconCard">👁️</span>
+          </button>
+        </div>
         <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); box-shadow:0 4px 14px rgba(16,185,129,0.25);">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
         </span>
