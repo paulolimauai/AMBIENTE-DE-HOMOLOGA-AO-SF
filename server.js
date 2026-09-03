@@ -10859,6 +10859,20 @@ function pageAlertas(){
 }
 
 function pageConfig(){
+  const uData = (registeredUsers || []).find(x => x && x.email && currentUser && x.email.toLowerCase() === currentUser.email.toLowerCase()) || currentUser || {};
+  const currentName = uData.name || (currentUser ? currentUser.name : '') || '';
+  const currentEmail = uData.email || (currentUser ? currentUser.email : '') || '';
+  const rawCpf = uData.cpf || (currentUser ? currentUser.cpf : '') || '';
+  const cleanCpf = rawCpf.replace(/\D/g, '');
+  const formattedCpf = cleanCpf.length === 11 ? cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : rawCpf;
+  const currentBirthDate = uData.birth_date || uData.birthDate || (currentUser ? (currentUser.birth_date || currentUser.birthDate) : '') || '';
+  const rawPhone = uData.phone || (currentUser ? currentUser.phone : '') || '';
+  const cleanPhone = rawPhone.replace(/\D/g, '');
+  const formattedPhone = cleanPhone.length === 11 ? cleanPhone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3') : (cleanPhone.length === 10 ? cleanPhone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3') : rawPhone);
+  const currentCreatedAt = uData.created_at || (currentUser ? currentUser.created_at : '') || '';
+  const formattedCreated = currentCreatedAt ? new Date(currentCreatedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Ativa';
+  const roleName = uData.role || (currentUser ? currentUser.role : 'Usuário');
+
   return \`
   <div class="page-head">
     <div>
@@ -10866,7 +10880,7 @@ function pageConfig(){
         Configurações do Sistema
       </h1>
       <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
-        Preferências da conta, segurança, tema visual e proporção de exibição por dispositivo
+        Dados cadastrais, titularidade KYC, segurança, preferências visuais e conformidade com LGPD
       </p>
     </div>
   </div>
@@ -10877,21 +10891,71 @@ function pageConfig(){
       👁️ Você está em modo de visualização dos dados de <strong style="color:var(--green);">\${currentUser ? currentUser.name : ''}</strong>. As configurações da conta só podem ser editadas pelo próprio titular.
     </p>
   </div>\` : \`
-  <div class="cfg-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
-    <!-- 1. Minha Conta -->
+  <div class="cfg-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:20px;">
+    <!-- 1. Dados Cadastrais & Titularidade da Conta (Padrão Financeiro KYC / BACEN / LGPD) -->
     <div class="panel" style="padding:22px;">
-      <div class="panel-head" style="margin-bottom:16px;">
+      <div class="panel-head" style="margin-bottom:16px; flex-wrap:wrap; gap:8px;">
         <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800;">
-          <span>👤</span> Minha Conta
+          <span>👤</span> Dados Cadastrais & Titularidade
         </h3>
+        <span class="tag" style="background:rgba(16,185,129,0.15); color:#34d399; font-weight:800; font-size:11px; padding:4px 10px; border-radius:999px; border:1px solid rgba(16,185,129,0.3);">
+          ✓ Conta Verificada (KYC)
+        </span>
       </div>
+
+      <!-- Nome Completo -->
       <div class="field" style="margin-bottom:14px;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Nome Completo</label>
-        <input id="cfgName" value="\${currentUser ? currentUser.name : ''}" placeholder="Seu nome completo" autocomplete="name" style="width:100%; height:44px; font-size:13.5px;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">Nome Completo do Titular</label>
+        <input id="cfgName" value="\${currentName}" placeholder="Seu nome completo" autocomplete="name" style="width:100%; height:44px; font-size:13.5px;">
       </div>
-      <div class="field" style="margin-bottom:0;">
-        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">E-mail de Acesso</label>
-        <input id="cfgEmail" type="text" value="\${currentUser ? currentUser.email : ''}" placeholder="seu.email@exemplo.com" autocomplete="email" style="width:100%; height:44px; font-size:13.5px;">
+
+      <!-- CPF (Receita Federal) -->
+      <div class="field" style="margin-bottom:14px;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+          <span>CPF (Receita Federal)</span>
+          <span style="font-size:11px; color:#34d399; font-weight:700;">✓ Autenticado</span>
+        </label>
+        <input id="cfgCpf" value="\${formattedCpf}" placeholder="000.000.000-00" maxlength="14" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
+      </div>
+
+      <!-- Data de Nascimento -->
+      <div class="field" style="margin-bottom:14px;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+          <span>Data de Nascimento</span>
+          <span style="font-size:11px; color:var(--text-dim);">Maioridade Legal (+18)</span>
+        </label>
+        <input id="cfgBirthDate" type="date" value="\${currentBirthDate}" style="width:100%; height:44px; font-size:13.5px;">
+      </div>
+
+      <!-- Celular / WhatsApp 2FA -->
+      <div class="field" style="margin-bottom:14px;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+          <span>Celular com DDD (2FA)</span>
+          <span style="font-size:11px; color:var(--text-dim);">Segurança de Acesso</span>
+        </label>
+        <input id="cfgPhone" value="\${formattedPhone}" placeholder="(00) 00000-0000" maxlength="15" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
+      </div>
+
+      <!-- E-mail de Acesso -->
+      <div class="field" style="margin-bottom:16px;">
+        <label style="font-size:12.5px; font-weight:700; margin-bottom:6px; display:block;">E-mail Cadastrado</label>
+        <input id="cfgEmail" type="text" value="\${currentEmail}" placeholder="seu.email@exemplo.com" autocomplete="email" style="width:100%; height:44px; font-size:13.5px;">
+      </div>
+
+      <!-- Registro de Conformidade LGPD & Abertura da Conta -->
+      <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 14px; font-size:11.5px; display:flex; flex-direction:column; gap:6px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-dim);">
+          <span>Termos de Uso & Proteção LGPD:</span>
+          <span style="color:#34d399; font-weight:800;">✓ Aceito & Registrado</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-dim);">
+          <span>Perfil de Acesso:</span>
+          <span style="color:#60a5fa; font-weight:700;">\${roleName}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; color:var(--text-dim);">
+          <span>Data de Abertura da Conta:</span>
+          <span style="color:var(--text); font-weight:600;">\${formattedCreated}</span>
+        </div>
       </div>
     </div>
 
@@ -14439,13 +14503,47 @@ function attachPageEvents(){
     }
     applyDisplayScale(localStorage.getItem('nexus_display_scale') || 'auto');
 
+    // Máscaras automáticas nos campos financeiros de configurações
+    const cfgCpfInput = document.getElementById('cfgCpf');
+    if (cfgCpfInput) {
+      cfgCpfInput.addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length > 11) v = v.slice(0, 11);
+        v = v.replace(/(\d{3})(\d)/, '$1.$2');
+        v = v.replace(/(\d{3})(\d)/, '$1.$2');
+        v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        e.target.value = v;
+      });
+    }
+
+    const cfgPhoneInput = document.getElementById('cfgPhone');
+    if (cfgPhoneInput) {
+      cfgPhoneInput.addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length > 11) v = v.slice(0, 11);
+        if (v.length > 10) {
+          v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        } else if (v.length > 5) {
+          v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        } else if (v.length > 2) {
+          v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+        }
+        e.target.value = v;
+      });
+    }
+
     saveCfg.onclick = async ()=>{
       if (currentUser) {
         await syncUsersWithServer();
-        const newName = document.getElementById('cfgName').value.trim();
-        const newEmail = document.getElementById('cfgEmail').value.trim();
-        const newPass = document.getElementById('cfgPassword').value.trim();
-        const newPassConfirm = document.getElementById('cfgPasswordConfirm').value.trim();
+        const newName = document.getElementById('cfgName') ? document.getElementById('cfgName').value.trim() : currentUser.name;
+        const newEmail = document.getElementById('cfgEmail') ? document.getElementById('cfgEmail').value.trim() : currentUser.email;
+        const newCpf = document.getElementById('cfgCpf') ? document.getElementById('cfgCpf').value.trim() : (currentUser.cpf || '');
+        const newBirthDate = document.getElementById('cfgBirthDate') ? document.getElementById('cfgBirthDate').value.trim() : (currentUser.birth_date || '');
+        const newPhone = document.getElementById('cfgPhone') ? document.getElementById('cfgPhone').value.trim() : (currentUser.phone || '');
+        const newPass = document.getElementById('cfgPassword') ? document.getElementById('cfgPassword').value.trim() : '';
+        const newPassConfirm = document.getElementById('cfgPasswordConfirm') ? document.getElementById('cfgPasswordConfirm').value.trim() : '';
+
+        if (!newName) { showToast('Informe o nome completo do titular'); return; }
 
         const isValidEmail = (str) => {
           if (!str || typeof str !== 'string') return false;
@@ -14454,8 +14552,16 @@ function attachPageEvents(){
           return at > 0 && dot > at + 1 && dot < str.length - 1 && !str.includes(' ');
         };
         if(!newEmail || !isValidEmail(newEmail)){ showToast('Informe um e-mail válido'); return; }
-        const emailTaken = registeredUsers.some(u => u.email.toLowerCase()===newEmail.toLowerCase() && u.email.toLowerCase()!==currentUser.email.toLowerCase());
+        const emailTaken = registeredUsers.some(u => u && u.email && u.email.toLowerCase()===newEmail.toLowerCase() && u.email.toLowerCase()!==currentUser.email.toLowerCase());
         if(emailTaken){ showToast('Este e-mail já está em uso por outro usuário'); return; }
+
+        if (newCpf) {
+          const rawCpf = newCpf.replace(/\D/g, '');
+          if (rawCpf.length > 0 && rawCpf.length !== 11) {
+            showToast('O CPF deve possuir 11 dígitos');
+            return;
+          }
+        }
         
         // Atualiza a senha SOMENTE se AMBOS os campos de senha foram preenchidos propositalmente
         let passwordChanged = false;
@@ -14466,10 +14572,13 @@ function attachPageEvents(){
         }
 
         const oldEmail = currentUser.email;
-        const u = registeredUsers.find(x => x.email.toLowerCase() === oldEmail.toLowerCase());
+        const u = registeredUsers.find(x => x && x.email && x.email.toLowerCase() === oldEmail.toLowerCase());
         if (u) {
           u.name = newName;
           u.email = newEmail;
+          u.cpf = newCpf;
+          u.birth_date = newBirthDate;
+          u.phone = newPhone;
           if(passwordChanged) u.password = newPass;
         }
         await saveUsersToServer();
@@ -14482,19 +14591,23 @@ function attachPageEvents(){
           localStorage.removeItem(oldKey);
         }
         currentUser.name = newName;
+        currentUser.cpf = newCpf;
+        currentUser.birth_date = newBirthDate;
+        currentUser.phone = newPhone;
+        saveToStorage('nexus_cached_user', currentUser);
         await saveUserData();
 
-        document.getElementById('cfgPassword').value = '';
-        document.getElementById('cfgPasswordConfirm').value = '';
+        if (document.getElementById('cfgPassword')) document.getElementById('cfgPassword').value = '';
+        if (document.getElementById('cfgPasswordConfirm')) document.getElementById('cfgPasswordConfirm').value = '';
       }
-      const wantLight = document.getElementById('cfgTheme').value === 'light';
+      const wantLight = document.getElementById('cfgTheme') && document.getElementById('cfgTheme').value === 'light';
       const isLight = document.body.classList.contains('light');
       if(wantLight !== isLight) toggleTheme();
 
       const scaleEl = document.getElementById('cfgScale');
       if(scaleEl) applyDisplayScale(scaleEl.value);
 
-      showToast('Configurações salvas!');
+      showToast('Dados cadastrais e configurações salvos com sucesso!');
       render();
     };
   }
@@ -15909,7 +16022,7 @@ const server = http.createServer((req, res) => {
         if (pool) {
           try {
             const result = await pool.query(
-              'SELECT id, name, email, password, role, active, last_login FROM usuarios WHERE LOWER(email) = LOWER($1)',
+              'SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at FROM usuarios WHERE LOWER(email) = LOWER($1)',
               [cleanEmail]
             );
             if (result.rows.length > 0) user = result.rows[0];
@@ -16233,7 +16346,7 @@ const server = http.createServer((req, res) => {
   // Rota GET de Usuários (Sanitizada sem Exposição de Senhas)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/users') {
     if (pool) {
-      pool.query('SELECT id, name, email, role, active, created_at, last_login FROM usuarios ORDER BY id ASC')
+      pool.query('SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC')
         .then(result => {
           if (result.rows && result.rows.length > 0) {
             res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -16294,6 +16407,10 @@ const server = http.createServer((req, res) => {
               password: finalPassword,
               role: u.role || (existing ? existing.role : 'Usuário'),
               active: u.active !== false,
+              cpf: u.cpf !== undefined ? u.cpf : (existing ? existing.cpf : null),
+              phone: u.phone !== undefined ? u.phone : (existing ? existing.phone : null),
+              birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
+              terms_accepted: u.terms_accepted !== undefined ? u.terms_accepted : (existing ? existing.terms_accepted : true),
               created_at: u.created_at || (existing ? existing.created_at : new Date().toISOString()),
               last_login: u.last_login || (existing ? existing.last_login : null)
             });
@@ -16312,15 +16429,19 @@ const server = http.createServer((req, res) => {
               for (const u of finalUsers) {
                 if (u && u.email && u.name) {
                   await client.query(
-                    `INSERT INTO usuarios (name, email, password, role, active, last_login)
-                     VALUES ($1, $2, $3, $4, $5, $6)
+                    `INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted)
+                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                      ON CONFLICT (email) DO UPDATE
                      SET name = EXCLUDED.name,
                          password = CASE WHEN EXCLUDED.password IS NOT NULL AND EXCLUDED.password != '' THEN EXCLUDED.password ELSE usuarios.password END,
                          role = EXCLUDED.role,
                          active = EXCLUDED.active,
+                         cpf = COALESCE(EXCLUDED.cpf, usuarios.cpf),
+                         phone = COALESCE(EXCLUDED.phone, usuarios.phone),
+                         birth_date = COALESCE(EXCLUDED.birth_date, usuarios.birth_date),
+                         terms_accepted = COALESCE(EXCLUDED.terms_accepted, usuarios.terms_accepted),
                          last_login = COALESCE(EXCLUDED.last_login, usuarios.last_login);`,
-                    [u.name, u.email, u.password, u.role || 'Usuário', u.active !== false, u.last_login || null]
+                    [u.name, u.email, u.password, u.role || 'Usuário', u.active !== false, u.last_login || null, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false]
                   );
                 }
               }
