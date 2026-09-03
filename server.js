@@ -5100,7 +5100,266 @@ body.has-view-mode-banner .sidebar {
   50% { box-shadow: 0 14px 45px 2px rgba(245, 158, 11, 1), 0 0 35px rgba(245, 158, 11, 0.75); }
 }
 
-.acc-card{background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:18px; display:flex; flex-direction:column;}
+/* ==================== 4K Titanium Executive Bank & Card Cards ==================== */
+.acc-card {
+  position: relative !important;
+  border-radius: 20px !important;
+  padding: 22px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  min-height: 290px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+
+  /* Modo Escuro Padrão */
+  background: linear-gradient(145deg, rgba(18, 26, 44, 0.96) 0%, rgba(10, 15, 28, 0.98) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+.acc-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 22px 50px -10px rgba(0, 0, 0, 0.85), 0 0 28px rgba(59, 130, 246, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(96, 165, 250, 0.4) !important;
+}
+
+/* Modo Claro do Acc-Card */
+body.light .acc-card,
+html.light .acc-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid #E2E8F0 !important;
+  border-top: 1.5px solid #E2E8F0 !important;
+  box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.07), 0 4px 6px -2px rgba(15, 23, 42, 0.03) !important;
+}
+
+body.light .acc-card:hover,
+html.light .acc-card:hover {
+  background: #FFFFFF !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 18px 40px -8px rgba(59, 130, 246, 0.18), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+  transform: translateY(-4px) !important;
+}
+
+.acc-card-accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 20px 20px 0 0;
+  opacity: 0.95;
+}
+
+/* Emblema / Avatar 4K com Efeito Titânio */
+.acc-card-emblem {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 900 !important;
+  color: #FFFFFF !important;
+  font-size: 15px !important;
+  flex-shrink: 0 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.6) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Badge de Tipo de Conta / Cartão */
+.acc-card-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 3px 9px !important;
+  border-radius: 7px !important;
+  text-transform: capitalize !important;
+}
+
+.acc-card-chip.credit {
+  background: rgba(168, 85, 247, 0.14) !important;
+  color: #A855F7 !important;
+  border: 1px solid rgba(168, 85, 247, 0.35) !important;
+}
+
+body.light .acc-card-chip.credit,
+html.light .acc-card-chip.credit {
+  background: #F3E8FF !important;
+  color: #7E22CE !important;
+  border-color: #D8B4FE !important;
+}
+
+.acc-card-chip.bank {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #10B981 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+body.light .acc-card-chip.bank,
+html.light .acc-card-chip.bank {
+  background: #ECFDF5 !important;
+  color: #047857 !important;
+  border-color: #A7F3D0 !important;
+}
+
+/* Painel Interno de Métricas Financeiras */
+.acc-card-metrics {
+  margin-top: 14px !important;
+  padding: 16px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+body.light .acc-card-metrics,
+html.light .acc-card-metrics {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+.acc-metric-hero-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: var(--text-dim) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 4px !important;
+}
+
+body.light .acc-metric-hero-label,
+html.light .acc-metric-hero-label {
+  color: #64748B !important;
+}
+
+.acc-metric-hero-val {
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em !important;
+  font-variant-numeric: tabular-nums !important;
+  line-height: 1.15 !important;
+}
+
+.acc-subgrid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+  margin-top: 14px !important;
+  padding-top: 12px !important;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1) !important;
+}
+
+body.light .acc-subgrid,
+html.light .acc-subgrid {
+  border-top-color: #E2E8F0 !important;
+}
+
+.acc-subgrid-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.acc-subgrid-label {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--text-faint) !important;
+}
+
+body.light .acc-subgrid-label,
+html.light .acc-subgrid-label {
+  color: #64748B !important;
+}
+
+.acc-subgrid-val {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Botão Executivo de Extrato 4K */
+.acc-view-tx-btn {
+  margin-top: 16px !important;
+  width: 100% !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  cursor: pointer !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #F1F5F9 !important;
+}
+
+.acc-view-tx-btn .btn-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.acc-view-tx-btn .btn-count-pill {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  padding: 2px 7px !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: inherit !important;
+}
+
+.acc-view-tx-btn .btn-arrow {
+  transition: transform 0.22s ease !important;
+  opacity: 0.7 !important;
+}
+
+.acc-view-tx-btn:hover {
+  background: rgba(59, 130, 246, 0.14) !important;
+  border-color: rgba(96, 165, 250, 0.5) !important;
+  color: #60A5FA !important;
+  transform: translateY(-1px) !important;
+}
+
+.acc-view-tx-btn:hover .btn-arrow {
+  transform: translateX(3px) !important;
+  opacity: 1 !important;
+}
+
+body.light .acc-view-tx-btn,
+html.light .acc-view-tx-btn {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #1E293B !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+}
+
+body.light .acc-view-tx-btn .btn-count-pill,
+html.light .acc-view-tx-btn .btn-count-pill {
+  background: #F1F5F9 !important;
+  color: #475569 !important;
+}
+
+body.light .acc-view-tx-btn:hover,
+html.light .acc-view-tx-btn:hover {
+  background: #EFF6FF !important;
+  border-color: #3B82F6 !important;
+  color: #1D4ED8 !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+}
+
 .acc-card .top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; gap:10px;}
 .acc-card .row-actions{flex-shrink:0;}
 
@@ -10609,21 +10868,28 @@ function pageContas(){
   </div>
   \` : ''}
 
-  <div class="grid3" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:18px; align-items:stretch;">
+  <div class="grid3" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:20px; align-items:stretch;">
     \${list.length ? list.map(a => {
       const stats = getCardStats(a);
+      const isCard = stats.isCreditCard;
+      const initialName = (a.name || '').slice(0,2).toUpperCase();
+      const statusColor = isCard ? (stats.availableLimit < 200 ? 'var(--red)' : 'var(--green)') : (stats.currentBalance < 0 ? 'var(--red)' : 'var(--green)');
+      const heroVal = isCard ? stats.availableLimit : stats.currentBalance;
+      const cardColor = a.color || (isCard ? '#8B5CF6' : '#10B981');
+
       return \`
-      <div class="acc-card" style="position:relative; background:linear-gradient(145deg, rgba(18,24,36,0.92) 0%, rgba(12,16,26,0.96) 100%); border:1px solid rgba(255,255,255,0.10); border-left:4px solid \${a.color}; border-radius:18px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; min-height:270px; box-sizing:border-box; box-shadow:0 12px 30px -6px rgba(0,0,0,0.6);">
+      <div class="acc-card">
+        <div class="acc-card-accent-bar" style="background:linear-gradient(90deg, \${cardColor} 0%, rgba(59,130,246,0.6) 100%);"></div>
         <div>
           <div class="top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
             <div class="id-group" style="display:flex; align-items:center; gap:12px; min-width:0;">
-              <span class="acc-ic" style="background:\${a.color}; width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; font-size:15px; flex-shrink:0; box-shadow:0 4px 14px rgba(0,0,0,0.4); text-shadow:0 1px 2px rgba(0,0,0,0.5);">
-                \${a.name.slice(0,2).toUpperCase()}
+              <span class="acc-card-emblem" style="background:linear-gradient(135deg, \${cardColor} 0%, rgba(15,23,42,0.9) 140%);">
+                \${initialName}
               </span>
               <div style="min-width:0;">
-                <h3 style="font-size:16px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; color:var(--text); letter-spacing:-0.01em;">\${a.name}</h3>
-                <span class="pill" style="font-size:11px; padding:3px 9px; border-radius:8px; background:\${stats.isCreditCard ? 'rgba(168,85,247,0.16)' : 'var(--green-soft)'}; color:\${stats.isCreditCard ? 'var(--purple)' : 'var(--green)'}; font-weight:700; border:1px solid \${stats.isCreditCard ? 'rgba(168,85,247,0.3)' : 'rgba(16,185,129,0.3)'};">
-                  \${stats.isCreditCard ? '💳 ' : '🏦 '}\${a.type}
+                <h3 style="font-size:16.5px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0 0 4px 0; color:var(--text); letter-spacing:-0.02em;">\${a.name}</h3>
+                <span class="acc-card-chip \${isCard ? 'credit' : 'bank'}">
+                  \${isCard ? '💳 Cartão de Crédito' : '🏦 ' + (a.type || 'Conta Bancária')}
                 </span>
               </div>
             </div>
@@ -10633,44 +10899,66 @@ function pageContas(){
             </div>
           </div>
 
-          \${stats.isCreditCard ? \`
-            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px; margin-top:4px;">
-              <div style="font-size:11.5px; color:var(--text-faint); margin-bottom:2px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Limite Disponível</div>
-              <div class="val" style="font-size:24px; font-weight:800; color:\${stats.availableLimit < 200 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums; letter-spacing:-0.02em;">
-                \${fmt(stats.availableLimit)}
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim); margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.08);">
-                <span>Fatura do Mês: <strong style="color:var(--orange); font-variant-numeric:tabular-nums;">\${fmt(stats.spentTotal)}</strong></span>
-                <span>Limite Total: <strong style="color:var(--text); font-variant-numeric:tabular-nums;">\${fmt(stats.totalLimit)}</strong></span>
-              </div>
-              <div style="margin-top:10px;">
-                <div class="bar-split" style="height:6px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;">
-                  <div class="g" style="width:\${stats.usagePct}%; height:100%; background:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'}; border-radius:4px; transition:width .4s ease;"></div>
-                </div>
-                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-faint); margin-top:4px;">
-                  <span>Uso do Cartão</span>
-                  <span style="font-weight:700; color:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'};">\${stats.usagePct}% utilizado</span>
-                </div>
-              </div>
+          <div class="acc-card-metrics">
+            <div class="acc-metric-hero-label">
+              <span>\${isCard ? 'Limite Disponível' : 'Saldo Disponível em Conta'}</span>
+              <span style="display:inline-flex; align-items:center; gap:5px; font-size:10.5px; color:inherit; text-transform:none;">
+                <span style="width:6px; height:6px; border-radius:50%; background:\${statusColor}; display:inline-block;"></span>
+                \${isCard ? (stats.availableLimit < 200 ? 'Limite Baixo' : 'Disponível') : (stats.currentBalance < 0 ? 'Negativo' : 'Positivo')}
+              </span>
             </div>
-          \` : \`
-            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px; margin-top:4px;">
-              <div style="font-size:11.5px; color:var(--text-faint); margin-bottom:2px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em;">Saldo Atual em Conta</div>
-              <div class="val" style="font-size:24px; font-weight:800; color:\${stats.currentBalance < 0 ? 'var(--red)' : 'var(--green)'}; font-variant-numeric:tabular-nums; letter-spacing:-0.02em;">
-                \${fmt(stats.currentBalance)}
-              </div>
-              <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim); margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.08);">
-                <span>Entradas: <strong style="color:var(--green); font-variant-numeric:tabular-nums;">+\${fmt(stats.periodIn)}</strong></span>
-                <span>Saídas: <strong style="color:var(--red); font-variant-numeric:tabular-nums;">-\${fmt(stats.spentTotal)}</strong></span>
-              </div>
-              <div style="margin-top:8px; display:flex; align-items:center; justify-content:flex-end;">
-                <span style="font-size:11px; color:var(--text-faint);">Saldo inicial cadastrado: <strong>\${fmt(stats.initialBalance)}</strong></span>
-              </div>
+            <div class="acc-metric-hero-val" style="color:\${statusColor};">
+              \${fmt(heroVal)}
             </div>
-          \`}
+
+            \${isCard ? \`
+              <div class="acc-subgrid">
+                <div class="acc-subgrid-col">
+                  <span class="acc-subgrid-label">Fatura do Mês</span>
+                  <span class="acc-subgrid-val" style="color:var(--orange);">\${fmt(stats.spentTotal)}</span>
+                </div>
+                <div class="acc-subgrid-col" style="text-align:right;">
+                  <span class="acc-subgrid-label">Limite Total</span>
+                  <span class="acc-subgrid-val" style="color:var(--text);">\${fmt(stats.totalLimit)}</span>
+                </div>
+              </div>
+              <div style="margin-top:12px;">
+                <div class="bar-split" style="height:7px; background:rgba(0,0,0,0.08); border-radius:5px; overflow:hidden; border:1px solid rgba(255,255,255,0.06);">
+                  <div class="g" style="width:\${stats.usagePct}%; height:100%; background:\${stats.usagePct >= 90 ? 'linear-gradient(90deg, #EF4444, #DC2626)' : stats.usagePct >= 70 ? 'linear-gradient(90deg, #F59E0B, #D97706)' : 'linear-gradient(90deg, #10B981, #059669)'}; border-radius:5px; transition:width .4s ease;"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; margin-top:5px;">
+                  <span style="color:var(--text-faint); font-weight:600;">Uso do Cartão</span>
+                  <span style="font-weight:800; color:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'};">\${stats.usagePct}% utilizado</span>
+                </div>
+              </div>
+            \` : \`
+              <div class="acc-subgrid">
+                <div class="acc-subgrid-col">
+                  <span class="acc-subgrid-label">Entradas no Mês</span>
+                  <span class="acc-subgrid-val" style="color:var(--green);">+\${fmt(stats.periodIn)}</span>
+                </div>
+                <div class="acc-subgrid-col" style="text-align:right;">
+                  <span class="acc-subgrid-label">Saídas no Mês</span>
+                  <span class="acc-subgrid-val" style="color:var(--red);">-\${fmt(stats.spentTotal)}</span>
+                </div>
+              </div>
+              <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-faint);">
+                <span>Saldo Inicial:</span>
+                <strong style="color:var(--text); font-variant-numeric:tabular-nums;">\${fmt(stats.initialBalance)}</strong>
+              </div>
+            \`}
+          </div>
         </div>
-        <button class="btn-ghost" data-viewcardtx="\${a.name}" style="padding:8px 14px; font-size:12px; font-weight:700; margin-top:14px; width:100%; border-radius:10px; border:1px solid var(--card-border); background:rgba(255,255,255,0.03); color:var(--text); display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
-          🔍 Ver lançamentos desta conta (\${stats.txCount})
+
+        <button class="acc-view-tx-btn" data-viewcardtx="\${a.name}" title="Ver todos os lançamentos desta conta">
+          <div class="btn-left">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="13" y2="16"/></svg>
+            <span>Ver Lançamentos</span>
+            <span class="btn-count-pill">\${stats.txCount}</span>
+          </div>
+          <div class="btn-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
         </button>
       </div>\`;
     }).join('') : \`<div class="placeholder"><div class="big">🏦</div><h3>Nenhuma conta cadastrada</h3><p>Cadastre suas contas bancárias e cartões de crédito para gerenciar seus saldos.</p></div>\`}
