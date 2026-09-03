@@ -2647,6 +2647,31 @@ html.light #cfgScale {
   color: #0F172A !important;
 }
 
+/* Estado Vazio / Placeholder Executivo em Modo Claro */
+body.light .placeholder,
+html.light .placeholder {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+}
+body.light .placeholder h3,
+html.light .placeholder h3 {
+  color: #0F172A !important;
+}
+body.light .placeholder p,
+html.light .placeholder p {
+  color: #64748B !important;
+}
+body.light .placeholder strong,
+html.light .placeholder strong {
+  color: #0F172A !important;
+}
+body.light .placeholder .btn-ghost,
+html.light .placeholder .btn-ghost {
+  border-color: #CBD5E1 !important;
+  color: #334155 !important;
+}
+
 body.light .cat-manage-tabs .cat-tab,
 html.light .cat-manage-tabs .cat-tab {
   background: #F1F5F9 !important;
@@ -8984,6 +9009,12 @@ function refreshTxTable(){
   const tableWrap = document.getElementById('txTableWrap');
   if(!tableWrap) return false;
 
+  // Purga imediata: impede que gerenciadores de senha do navegador preencham o e-mail do usuário no campo de busca de transações
+  const userEmail = (currentUser && currentUser.email ? currentUser.email.toLowerCase().trim() : '');
+  if (search && search.value && userEmail && search.value.trim().toLowerCase() === userEmail) {
+    search.value = '';
+  }
+
   const hasFilterActive = Boolean(
     (search && search.value.trim()) ||
     (fTipo && fTipo.value) ||
@@ -10281,7 +10312,7 @@ function pageTransacoes(){
   <div class="table-panel">
     <div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
       <div style="position:relative; flex:1.5; min-width:200px;">
-        <input id="txSearch" type="text" autocomplete="off" placeholder="🔍 Buscar por descrição, valor, categoria..." style="width:100%; font-size:13px;">
+        <input id="txSearch" type="search" name="tx_filter_query_safe" autocomplete="one-time-code" data-lpignore="true" data-form-type="other" data-1p-ignore="true" spellcheck="false" placeholder="🔍 Buscar por descrição, valor, categoria..." style="width:100%; font-size:13px;">
       </div>
       <select id="txFiltroConta" style="flex:1; min-width:160px;"><option value="">Todas as Contas / Cartões</option>\${accOptsHTML}</select>
       <select id="txFiltroTipo" style="flex:0.8; min-width:120px;"><option value="">Todos os tipos</option><option value="in">Receitas</option><option value="out">Despesas</option></select>
@@ -15122,6 +15153,14 @@ function attachPageEvents(){
   const fStatus = document.getElementById('txFiltroStatus');
   const fConta = document.getElementById('txFiltroConta');
   const btnReset = document.getElementById('btnResetTxFilters');
+
+  if(search) {
+    const userEmail = (currentUser && currentUser.email ? currentUser.email.toLowerCase().trim() : '');
+    if (userEmail && search.value && search.value.trim().toLowerCase() === userEmail) {
+      search.value = '';
+    }
+  }
+
   if(btnReset) {
     btnReset.onclick = () => {
       if (typeof window.clearAllTxFilters === 'function') {
@@ -15394,6 +15433,19 @@ function toggleTheme(){
   if(btn) btn.innerHTML = nextIsLight ? sunSvg : moonSvg;
   if(typeof applyDisplayScale === 'function') applyDisplayScale(localStorage.getItem('nexus_display_scale') || 'auto');
   if(currentPage==='dashboard') drawDashboardCharts();
+
+  // Purga imediata e tardia de autofill de e-mail injetado pelo navegador ao alternar tema
+  const clearSpuriousSearch = () => {
+    const s = document.getElementById('txSearch');
+    const uEmail = (currentUser && currentUser.email ? currentUser.email.toLowerCase().trim() : '');
+    if (s && uEmail && s.value && s.value.trim().toLowerCase() === uEmail) {
+      s.value = '';
+      if (typeof refreshTxTable === 'function') refreshTxTable();
+    }
+  };
+  clearSpuriousSearch();
+  setTimeout(clearSpuriousSearch, 60);
+  setTimeout(clearSpuriousSearch, 250);
 }
 document.getElementById('miniThemeBtn').onclick = toggleTheme;
 
