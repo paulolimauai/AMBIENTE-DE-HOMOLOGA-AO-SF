@@ -2385,33 +2385,119 @@ html.light .topheader {
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08) !important;
 }
 
+/* Brand Logo no Modo Claro */
+body.light .brand,
+html.light .brand,
+body.light .topheader .brand,
+html.light .topheader .brand {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+body.light .brand:hover,
+html.light .brand:hover,
+body.light .topheader .brand:hover,
+html.light .topheader .brand:hover {
+  background: #F8FAFC !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15) !important;
+}
+
+body.light .brand .name,
+html.light .brand .name,
 body.light .topheader .brand .name,
 html.light .topheader .brand .name {
-  color: #0f172a !important;
+  color: #0F172A !important;
+  text-shadow: none !important;
 }
 
+body.light .brand .name span,
+html.light .brand .name span,
 body.light .topheader .brand .name span,
 html.light .topheader .brand .name span {
-  color: #2563eb !important;
+  background: linear-gradient(90deg, #059669 0%, #2563EB 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
 }
 
+/* Botões da Barra Superior no Modo Claro (Notificações, Resolução, Tema, Menu Mobile) */
+body.light .icon-btn,
+html.light .icon-btn,
 body.light .topheader .icon-btn,
-html.light .topheader .icon-btn {
-  background: #f1f5f9 !important;
-  border: 1px solid #cbd5e1 !important;
-  color: #0f172a !important;
+html.light .topheader .icon-btn,
+body.light #notifBtn,
+html.light #notifBtn,
+body.light #scaleMenuBtn,
+html.light #scaleMenuBtn,
+body.light .scale-selector-wrap #scaleMenuBtn,
+html.light .scale-selector-wrap #scaleMenuBtn,
+body.light #miniThemeBtn,
+html.light #miniThemeBtn,
+body.light .mobile-menu-btn,
+html.light .mobile-menu-btn {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #1E293B !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
+body.light .icon-btn:hover,
+html.light .icon-btn:hover,
 body.light .topheader .icon-btn:hover,
-html.light .topheader .icon-btn:hover {
-  background: #e2e8f0 !important;
-  color: #2563eb !important;
+html.light .topheader .icon-btn:hover,
+body.light #notifBtn:hover,
+html.light #notifBtn:hover,
+body.light #scaleMenuBtn:hover,
+html.light #scaleMenuBtn:hover,
+body.light .scale-selector-wrap #scaleMenuBtn:hover,
+html.light .scale-selector-wrap #scaleMenuBtn:hover,
+body.light #miniThemeBtn:hover,
+html.light #miniThemeBtn:hover,
+body.light .mobile-menu-btn:hover,
+html.light .mobile-menu-btn:hover {
+  background: #F8FAFC !important;
+  background-color: #F8FAFC !important;
+  border-color: #3B82F6 !important;
+  color: #2563EB !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.18) !important;
+}
+
+body.light .icon-btn svg,
+html.light .icon-btn svg,
+body.light #notifBtn svg,
+html.light #notifBtn svg,
+body.light #scaleMenuBtn svg,
+html.light #scaleMenuBtn svg,
+body.light #miniThemeBtn svg,
+html.light #miniThemeBtn svg,
+body.light .mobile-menu-btn svg,
+html.light .mobile-menu-btn svg {
+  stroke: #1E293B !important;
+}
+
+body.light .icon-btn:hover svg,
+html.light .icon-btn:hover svg,
+body.light #notifBtn:hover svg,
+html.light #notifBtn:hover svg,
+body.light #scaleMenuBtn:hover svg,
+html.light #scaleMenuBtn:hover svg,
+body.light #miniThemeBtn:hover svg,
+html.light #miniThemeBtn:hover svg,
+body.light .mobile-menu-btn:hover svg,
+html.light .mobile-menu-btn:hover svg {
+  stroke: #2563EB !important;
 }
 
 body.light .topheader .user,
-html.light .topheader .user {
+html.light .topheader .user,
+body.light .user,
+html.light .user {
   background: #f8fafc !important;
-  border: 1px solid #cbd5e1 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
 }
 
 body.light .topheader .uname,
