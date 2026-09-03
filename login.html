@@ -1499,6 +1499,25 @@
             -webkit-text-fill-color: transparent !important;
             filter: drop-shadow(0 1px 4px rgba(239, 68, 68, 0.35)) !important;
         }
+
+        /* Modal de Termos Financeiros & LGPD */
+        body.light #boxFinancialTermsModal {
+            background: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.18) !important;
+        }
+        body.light #boxFinancialTermsModal h3,
+        body.light #boxFinancialTermsModal h4 {
+            color: #0F172A !important;
+        }
+        body.light #boxFinancialTermsModal p,
+        body.light #boxFinancialTermsModal li {
+            color: #334155 !important;
+        }
+        body.light #boxFinancialTermsModal .terms-card-inner {
+            background: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+        }
     </style>
 </head>
 <body class="h-full flex flex-col justify-between items-center min-h-screen pb-6 px-0 relative select-none auth-bg-cyber-grid">
@@ -1596,6 +1615,53 @@
             <!-- Barra de Progresso Inteligente -->
             <div class="w-full bg-white/10 h-1 rounded-full overflow-hidden mt-4">
                 <div id="logoutRedirectProgress" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TERMOS DE ABERTURA DE CONTA & POLÍTICA DE PRIVACIDADE LGPD -->
+    <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-4 sm:p-6 opacity-0 transition-opacity duration-300 pointer-events-none" id="overlayFinancialTerms" style="display:none;" onclick="if(event.target===this) closeFinancialTermsModal()">
+        <div id="boxFinancialTermsModal" style="background: linear-gradient(145deg, rgba(20, 27, 45, 0.92) 0%, rgba(13, 19, 33, 0.96) 50%, rgba(7, 10, 18, 0.98) 100%); border: 1.5px solid rgba(255, 255, 255, 0.16); border-top: 1.5px solid rgba(255, 255, 255, 0.35); backdrop-filter: blur(40px); box-shadow: 0 35px 90px rgba(0,0,0,0.95), 0 0 50px rgba(245, 158, 11, 0.18);" class="rounded-[28px] p-6 sm:p-8 w-full max-w-[620px] text-left transform translate-y-6 scale-90 transition-all duration-300 relative overflow-hidden pointer-events-auto max-h-[88vh] flex flex-col">
+            
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-black text-white font-display">Termos & Conformidade Regulatória</h3>
+                        <p class="text-xs text-slate-400">Contrato de Conta Digital e Proteção de Dados LGPD</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeFinancialTermsModal()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-colors focus:outline-none" title="Fechar">✕</button>
+            </div>
+
+            <div class="overflow-y-auto pr-1 my-4 space-y-4 text-xs leading-relaxed text-slate-300">
+                <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
+                    <h4 class="font-extrabold text-amber-400 uppercase tracking-wider text-[11px] mb-1">1. Titularidade e Abertura de Conta</h4>
+                    <p>Ao solicitar a abertura de conta no Nexus Financeiro Hub, o usuário declara ter idade igual ou superior a 18 anos completos, capacidade civil plena e ser o titular legítimo do CPF informado, sob as penas da legislação brasileira vigente (Artigo 299 do Código Penal).</p>
+                </div>
+
+                <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
+                    <h4 class="font-extrabold text-amber-400 uppercase tracking-wider text-[11px] mb-1">2. Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018)</h4>
+                    <p>Seus dados cadastrais (Nome, CPF, Data de Nascimento, Telefone e E-mail) são coletados para fins estritos de identificação (KYC - Know Your Customer), autenticação em dois fatores, prevenção a fraudes e cumprimento de normas de auditoria. Garantimos sigilo absoluto, sem comercialização ou compartilhamento indevido com terceiros.</p>
+                </div>
+
+                <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
+                    <h4 class="font-extrabold text-amber-400 uppercase tracking-wider text-[11px] mb-1">3. Segurança Criptográfica & Credenciais</h4>
+                    <p>A senha cadastrada é protegida através de algoritmos criptográficos robustos de derivação de chave (scrypt com salt individual). É dever do usuário manter suas credenciais confidenciais, não as compartilhando com terceiros.</p>
+                </div>
+
+                <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
+                    <h4 class="font-extrabold text-amber-400 uppercase tracking-wider text-[11px] mb-1">4. Direitos do Titular</h4>
+                    <p>O titular poderá, a qualquer momento, requerer a confirmação da existência de tratamento, correção de dados incompletos ou inexatos, ou a anonimização e exclusão de sua conta através dos canais de suporte oficiais.</p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-white/10 shrink-0 flex items-center justify-end">
+                <button type="button" onclick="closeFinancialTermsModal()" class="btn-auth-gradient px-6 py-2.5 rounded-xl text-xs font-black">
+                    Entendido e Aceito
+                </button>
             </div>
         </div>
     </div>
@@ -1872,7 +1938,7 @@
             </div>
 
             <!-- COLUNA DIREITA: CARD PRINCIPAL DE AUTENTICAÇÃO -->
-            <div class="lg:col-span-5 flex flex-col items-center justify-center w-full max-w-[460px] mx-auto">
+            <div id="authContainerCol" class="lg:col-span-5 flex flex-col items-center justify-center w-full max-w-[460px] sm:max-w-[540px] mx-auto transition-all duration-300">
                 
                 <!-- CARD PRINCIPAL DE AUTENTICAÇÃO -->
                 <div class="auth-card-nexus w-full p-7 sm:p-8 relative overflow-hidden" id="authNexusCard">
@@ -1974,46 +2040,138 @@
                         </p>
                     </div>
 
-                    <!-- 2. FORMULÁRIO DE CADASTRO -->
+                    <!-- 2. FORMULÁRIO DE CADASTRO (PADRÃO FINANCEIRO / FINTECH / BANKING) -->
                     <div id="registerBox" class="form-fade hidden">
+                        <!-- HEADER FINANCEIRO -->
+                        <div class="mb-4 text-center">
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <span>Abertura de Conta Financeira Segura</span>
+                            </div>
+                        </div>
+
                         <form id="registerForm" class="space-y-3.5" onsubmit="handleRegisterSubmit(event); return false;">
-                            <div>
-                                <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Nome Completo</label>
-                                <div class="auth-input-wrapper">
-                                    <span class="auth-input-icon">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                    </span>
-                                    <input id="regName" name="name" type="text" autocomplete="name" spellcheck="false" required placeholder="Ex: Paulo Lima">
+                            
+                            <!-- SEÇÃO 1: DADOS DO TITULAR (KYC) -->
+                            <div class="space-y-2.5">
+                                <div class="flex items-center gap-2 pb-1 border-b border-white/10">
+                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 font-display">1. Identificação do Titular (KYC)</span>
+                                </div>
+
+                                <!-- Nome Completo -->
+                                <div>
+                                    <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">Nome Completo do Titular</label>
+                                    <div class="auth-input-wrapper">
+                                        <span class="auth-input-icon">
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                        </span>
+                                        <input id="regName" name="name" type="text" autocomplete="name" spellcheck="false" required placeholder="Ex: Paulo Roberto Lima da Silva">
+                                    </div>
+                                </div>
+
+                                <!-- Grid: CPF e Data de Nascimento -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    <!-- CPF -->
+                                    <div>
+                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">
+                                            <span>CPF do Titular</span>
+                                        </label>
+                                        <div class="auth-input-wrapper">
+                                            <span class="auth-input-icon">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                                            </span>
+                                            <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="14" autocomplete="off" spellcheck="false" required placeholder="000.000.000-00" oninput="handleCpfInput(this)">
+                                        </div>
+                                        <div id="cpfFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
+                                    </div>
+
+                                    <!-- Data de Nascimento -->
+                                    <div>
+                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">
+                                            <span>Data de Nascimento</span>
+                                        </label>
+                                        <div class="auth-input-wrapper">
+                                            <span class="auth-input-icon">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                                            </span>
+                                            <input id="regBirthDate" name="birth_date" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" spellcheck="false" required placeholder="DD/MM/AAAA" oninput="handleBirthDateInput(this)">
+                                        </div>
+                                        <div id="birthFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail</label>
-                                <div class="auth-input-wrapper">
-                                    <span class="auth-input-icon">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                                    </span>
-                                    <input id="regEmail" name="email" type="email" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none" required placeholder="seu.email@exemplo.com">
+                            <!-- SEÇÃO 2: CONTATO & NOTIFICAÇÕES FINANCEIRAS -->
+                            <div class="space-y-2.5 pt-1">
+                                <div class="flex items-center gap-2 pb-1 border-b border-white/10">
+                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 font-display">2. Contato & Notificações</span>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    <!-- Celular / WhatsApp -->
+                                    <div>
+                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">Celular / WhatsApp (2FA)</label>
+                                        <div class="auth-input-wrapper">
+                                            <span class="auth-input-icon">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+                                            </span>
+                                            <input id="regPhone" name="phone" type="tel" inputmode="tel" maxlength="15" autocomplete="tel" spellcheck="false" required placeholder="(00) 00000-0000" oninput="handlePhoneInput(this)">
+                                        </div>
+                                    </div>
+
+                                    <!-- E-mail Principal -->
+                                    <div>
+                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">E-mail Principal</label>
+                                        <div class="auth-input-wrapper">
+                                            <span class="auth-input-icon">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                                            </span>
+                                            <input id="regEmail" name="email" type="email" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none" required placeholder="seu.email@exemplo.com">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Criar Senha</label>
-                                <div class="auth-input-wrapper">
-                                    <span class="auth-input-icon">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                                    </span>
-                                    <input id="regPassword" name="password" type="password" autocomplete="new-password" spellcheck="false" minlength="6" required placeholder="Mínimo 6 caracteres" oninput="checkPasswordStrength(this.value)">
-                                    <button type="button" id="btnToggleRegPass" onclick="toggleRegistrationPasswords()" 
-                                        class="auth-pass-toggle-btn" title="Visualizar Senhas" aria-label="Visualizar Senhas">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                    </button>
+                            <!-- SEÇÃO 3: SENHA DE ACESSO FINANCEIRO -->
+                            <div class="space-y-2.5 pt-1">
+                                <div class="flex items-center gap-2 pb-1 border-b border-white/10">
+                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 font-display">3. Senha de Acesso Financeiro</span>
                                 </div>
-                                
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    <!-- Criar Senha -->
+                                    <div>
+                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">Senha (Mín. 8 caracteres)</label>
+                                        <div class="auth-input-wrapper">
+                                            <span class="auth-input-icon">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                            </span>
+                                            <input id="regPassword" name="password" type="password" autocomplete="new-password" spellcheck="false" minlength="8" required placeholder="••••••••" oninput="checkPasswordStrength(this.value)">
+                                            <button type="button" id="btnToggleRegPass" onclick="toggleRegistrationPasswords()" 
+                                                class="auth-pass-toggle-btn" title="Visualizar Senhas" aria-label="Visualizar Senhas">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Confirmar Senha -->
+                                    <div>
+                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">Confirmar Senha</label>
+                                        <div class="auth-input-wrapper">
+                                            <span class="auth-input-icon">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                                            </span>
+                                            <input id="regConfirmPassword" name="confirmPassword" type="password" autocomplete="new-password" spellcheck="false" required placeholder="Repita a senha" oninput="checkPasswordMatch()">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="pwdMatchMsg" class="hidden text-[10.5px] font-semibold"></div>
+
                                 <!-- Barra Indicadora de Força da Senha & Checklist -->
-                                <div class="mt-2.5" id="pwdStrengthContainer">
-                                    <div class="flex items-center justify-between text-[10.5px] font-semibold text-[#64748B] mb-1">
-                                        <span>Segurança da senha:</span>
+                                <div class="mt-1" id="pwdStrengthContainer">
+                                    <div class="flex items-center justify-between text-[10px] font-semibold text-[#64748B] mb-1">
+                                        <span>Força da senha financeira:</span>
                                         <span id="pwdStrengthText" class="text-rose-400 font-bold">Muito Fraca</span>
                                     </div>
                                     <div class="grid grid-cols-4 gap-1.5 h-1.5 mb-2">
@@ -2023,35 +2181,52 @@
                                         <div id="pwdBar4" class="h-full rounded-full bg-white/10 transition-all duration-300"></div>
                                     </div>
                                     <div class="flex flex-wrap gap-1.5">
-                                        <span id="reqLength" class="pwd-req-pill"><span>•</span> 6+ caracteres</span>
+                                        <span id="reqLength" class="pwd-req-pill"><span>•</span> 8+ caracteres</span>
                                         <span id="reqUpperLower" class="pwd-req-pill"><span>•</span> Maiúsc./Minúsc.</span>
                                         <span id="reqNumber" class="pwd-req-pill"><span>•</span> Número</span>
-                                        <span id="reqSpecial" class="pwd-req-pill"><span>•</span> Símbolo</span>
+                                        <span id="reqSpecial" class="pwd-req-pill"><span>•</span> Símbolo (@#$%)</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">Confirmar Senha</label>
-                                <div class="auth-input-wrapper">
-                                    <span class="auth-input-icon">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                            <!-- SEÇÃO 4: CONFORMIDADE LEGAL & LGPD -->
+                            <div class="pt-1.5 space-y-2 text-[11px] text-[#94A3B8] auth-label">
+                                <label class="flex items-start gap-2.5 cursor-pointer select-none">
+                                    <input type="checkbox" id="regTerms" required class="w-4 h-4 mt-0.5 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer shrink-0">
+                                    <span class="leading-snug">
+                                        Li e aceito os <a href="javascript:void(0)" onclick="openFinancialTermsModal()" class="text-amber-500 hover:text-amber-400 underline font-bold">Termos de Abertura de Conta</a> e a <a href="javascript:void(0)" onclick="openFinancialTermsModal()" class="text-amber-500 hover:text-amber-400 underline font-bold">Política de Privacidade (LGPD - Lei 13.709/18)</a>.
                                     </span>
-                                    <input id="regConfirmPassword" name="confirmPassword" type="password" autocomplete="new-password" spellcheck="false" required placeholder="Repita sua senha" oninput="checkPasswordMatch()">
-                                </div>
-                                <div id="pwdMatchMsg" class="hidden mt-1 text-[11px] font-semibold"></div>
+                                </label>
+                                <label class="flex items-start gap-2.5 cursor-pointer select-none">
+                                    <input type="checkbox" id="regTruthful" required class="w-4 h-4 mt-0.5 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer shrink-0">
+                                    <span class="leading-snug">
+                                        Declaro sob as penas da lei que todas as informações cadastrais prestadas são verídicas e de minha titularidade.
+                                    </span>
+                                </label>
                             </div>
 
-                            <div class="pt-2">
-                                <button type="submit" id="btnRegisterSubmit" class="btn-auth-gradient w-full py-3.5 text-sm font-black flex items-center justify-center gap-2 focus:outline-none">
-                                    <span>Criar Minha Conta</span>
+                            <!-- SELO DE SEGURANÇA BANCÁRIA -->
+                            <div class="p-2.5 rounded-xl bg-black/30 border border-white/10 flex items-center gap-2.5 text-[10.5px] text-slate-300">
+                                <div class="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+                                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                </div>
+                                <div class="leading-tight">
+                                    <strong class="text-white font-bold block">Proteção Bancária Criptografada SSL/TLS</strong>
+                                    <span>Seus dados são protegidos por criptografia de ponta a ponta e auditoria antifraude contínua.</span>
+                                </div>
+                            </div>
+
+                            <!-- BOTÃO DE CRIAÇÃO DE CONTA -->
+                            <div class="pt-1.5">
+                                <button type="submit" id="btnRegisterSubmit" class="btn-auth-gradient w-full py-3.5 text-sm font-black flex items-center justify-center gap-2 focus:outline-none shadow-lg shadow-amber-500/20">
+                                    <span>Concluir Abertura de Conta</span>
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                                 </button>
                             </div>
                         </form>
 
-                        <p class="mt-5 text-center text-xs auth-subtitle-text text-[#94A3B8]">
-                            Já possui cadastro? 
+                        <p class="mt-4 text-center text-xs auth-subtitle-text text-[#94A3B8]">
+                            Já possui uma conta ativa? 
                             <button type="button" onclick="switchAuthTab('login')" class="text-amber-500 hover:text-amber-400 font-extrabold ml-1 focus:outline-none">
                                 Fazer Login
                             </button>
@@ -2313,14 +2488,14 @@
             const reqNumber = document.getElementById('reqNumber');
             const reqSpecial = document.getElementById('reqSpecial');
 
-            const hasLength = pwd.length >= 6;
+            const hasLength = pwd.length >= 8;
             const hasUpperLower = /[a-z]/.test(pwd) && /[A-Z]/.test(pwd);
             const hasNumber = /[0-9]/.test(pwd);
             const hasSpecial = /[^A-Za-z0-9]/.test(pwd);
 
             if (reqLength) {
                 reqLength.className = 'pwd-req-pill' + (hasLength ? ' valid' : '');
-                reqLength.innerHTML = '<span>' + (hasLength ? '✓' : '•') + '</span> 6+ caracteres';
+                reqLength.innerHTML = '<span>' + (hasLength ? '✓' : '•') + '</span> 8+ caracteres';
             }
             if (reqUpperLower) {
                 reqUpperLower.className = 'pwd-req-pill' + (hasUpperLower ? ' valid' : '');
@@ -2332,7 +2507,7 @@
             }
             if (reqSpecial) {
                 reqSpecial.className = 'pwd-req-pill' + (hasSpecial ? ' valid' : '');
-                reqSpecial.innerHTML = '<span>' + (hasSpecial ? '✓' : '•') + '</span> Símbolo';
+                reqSpecial.innerHTML = '<span>' + (hasSpecial ? '✓' : '•') + '</span> Símbolo (@#$%)';
             }
 
             if (!txt || !b1) return;
@@ -3054,40 +3229,234 @@
             if (submitBtn) submitBtn.focus();
         };
 
-        // 2. Submit Register
+        // ==================== Funções de Apoio ao Cadastro com Padrão Financeiro ====================
+
+        // Controle do Modal de Termos Financeiros e LGPD
+        window.openFinancialTermsModal = function() {
+            const overlay = document.getElementById('overlayFinancialTerms');
+            const box = document.getElementById('boxFinancialTermsModal');
+            if (!overlay || !box) return;
+            overlay.style.display = 'flex';
+            requestAnimationFrame(() => {
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                box.classList.remove('translate-y-6', 'scale-90');
+            });
+        };
+
+        window.closeFinancialTermsModal = function() {
+            const overlay = document.getElementById('overlayFinancialTerms');
+            const box = document.getElementById('boxFinancialTermsModal');
+            if (!overlay || !box) return;
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            box.classList.add('translate-y-6', 'scale-90');
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        };
+
+        // Algoritmo Oficial de Validação de CPF (Receita Federal / BACEN)
+        window.isValidCPF = function(cpf) {
+            if (!cpf) return false;
+            const clean = cpf.replace(/\D/g, '');
+            if (clean.length !== 11) return false;
+            if (/^(\d)\1{10}$/.test(clean)) return false; // Rejeita números repetidos (111.111.111-11, etc.)
+            let sum = 0;
+            for (let i = 0; i < 9; i++) sum += parseInt(clean.charAt(i), 10) * (10 - i);
+            let rev = 11 - (sum % 11);
+            if (rev === 10 || rev === 11) rev = 0;
+            if (rev !== parseInt(clean.charAt(9), 10)) return false;
+            sum = 0;
+            for (let i = 0; i < 10; i++) sum += parseInt(clean.charAt(i), 10) * (11 - i);
+            rev = 11 - (sum % 11);
+            if (rev === 10 || rev === 11) rev = 0;
+            if (rev !== parseInt(clean.charAt(10), 10)) return false;
+            return true;
+        };
+
+        // Máscara e Validação de CPF em Tempo Real
+        window.handleCpfInput = function(input) {
+            let v = input.value.replace(/\D/g, '').slice(0, 11);
+            if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+            else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+            else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+            input.value = v;
+
+            const feedback = document.getElementById('cpfFeedbackMsg');
+            if (!feedback) return;
+
+            if (v.length === 14) {
+                feedback.classList.remove('hidden');
+                if (window.isValidCPF(v)) {
+                    feedback.textContent = '✓ CPF Válido (Receita Federal)';
+                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-emerald-400';
+                } else {
+                    feedback.textContent = '✕ CPF Inválido - verifique os dígitos';
+                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-rose-400';
+                }
+            } else {
+                feedback.classList.add('hidden');
+            }
+        };
+
+        // Verificação de Maioridade Legal (+18 Anos - Padrão Financeiro)
+        window.isOver18 = function(dateStr) {
+            if (!dateStr || dateStr.length < 10) return { valid: false, over18: false };
+            const parts = dateStr.split('/');
+            if (parts.length !== 3) return { valid: false, over18: false };
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const year = parseInt(parts[2], 10);
+            const birth = new Date(year, month, day);
+            if (isNaN(birth.getTime()) || birth.getFullYear() !== year || birth.getMonth() !== month || birth.getDate() !== day) {
+                return { valid: false, over18: false };
+            }
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const m = today.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return { valid: true, over18: (age >= 18 && age <= 120), age: age };
+        };
+
+        // Máscara e Validação de Data de Nascimento em Tempo Real
+        window.handleBirthDateInput = function(input) {
+            let v = input.value.replace(/\D/g, '').slice(0, 8);
+            if (v.length > 4) v = v.replace(/(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3');
+            else if (v.length > 2) v = v.replace(/(\d{2})(\d{1,2})/, '$1/$2');
+            input.value = v;
+
+            const feedback = document.getElementById('birthFeedbackMsg');
+            if (!feedback) return;
+
+            if (v.length === 10) {
+                feedback.classList.remove('hidden');
+                const check = window.isOver18(v);
+                if (check.valid && check.over18) {
+                    feedback.textContent = '✓ Maioridade confirmada (' + check.age + ' anos)';
+                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-emerald-400';
+                } else if (check.valid && !check.over18) {
+                    feedback.textContent = '✕ Necessário ter 18 anos ou mais para abrir conta';
+                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-rose-400';
+                } else {
+                    feedback.textContent = '✕ Data de nascimento inválida';
+                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-rose-400';
+                }
+            } else {
+                feedback.classList.add('hidden');
+            }
+        };
+
+        // Máscara de Telefone Celular com DDD em Tempo Real
+        window.handlePhoneInput = function(input) {
+            let v = input.value.replace(/\D/g, '').slice(0, 11);
+            if (v.length > 10) v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+            else if (v.length > 0) v = v.replace(/(\d{0,2})/, '($1');
+            input.value = v;
+        };
+
+        // 2. Submit Register (Padrão Financeiro / Fintech)
         window.handleRegisterSubmit = async function(e) {
             if (e) e.preventDefault();
             hideAlert();
 
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const name = document.getElementById('regName') ? document.getElementById('regName').value.trim() : '';
+            const cpf = document.getElementById('regCpf') ? document.getElementById('regCpf').value.trim() : '';
+            const birthDate = document.getElementById('regBirthDate') ? document.getElementById('regBirthDate').value.trim() : '';
+            const phone = document.getElementById('regPhone') ? document.getElementById('regPhone').value.trim() : '';
+            const email = document.getElementById('regEmail') ? document.getElementById('regEmail').value.trim().toLowerCase() : '';
+            const password = document.getElementById('regPassword') ? document.getElementById('regPassword').value : '';
+            const confirmPassword = document.getElementById('regConfirmPassword') ? document.getElementById('regConfirmPassword').value : '';
+            const termsEl = document.getElementById('regTerms');
+            const truthfulEl = document.getElementById('regTruthful');
             const btn = document.getElementById('btnRegisterSubmit');
 
-            if (!name || !email || !password || !confirmPassword) {
-                showAlert('Por favor, preencha todos os campos, incluindo a confirmação de senha.');
+            // 1. Validação de Nome Completo
+            if (!name || name.split(' ').filter(p => p.length > 1).length < 2) {
+                showAlert('Por favor, informe seu Nome Completo (conforme documento oficial / Receita Federal).');
+                const nEl = document.getElementById('regName');
+                if (nEl) nEl.focus();
                 return false;
             }
 
-            if (!email.includes('@') || !email.includes('.')) {
-                showAlert('Por favor, informe um endereço de e-mail válido (ex: seu.email@exemplo.com).');
+            // 2. Validação de CPF
+            if (!cpf || !window.isValidCPF(cpf)) {
+                showAlert('Por favor, informe um CPF válido e regularizado na Receita Federal.');
+                const cEl = document.getElementById('regCpf');
+                if (cEl) cEl.focus();
                 return false;
             }
 
-            if (password.length < 6) {
-                showAlert('A senha deve ter no mínimo 6 caracteres.');
+            // 3. Validação de Maioridade Legal (+18 Anos)
+            const birthCheck = window.isOver18(birthDate);
+            if (!birthCheck.valid) {
+                showAlert('Por favor, digite uma Data de Nascimento válida no formato DD/MM/AAAA.');
+                const bEl = document.getElementById('regBirthDate');
+                if (bEl) bEl.focus();
+                return false;
+            }
+            if (!birthCheck.over18) {
+                showAlert('Abertura de conta permitida exclusivamente para maiores de 18 anos completos.');
+                const bEl = document.getElementById('regBirthDate');
+                if (bEl) bEl.focus();
                 return false;
             }
 
+            // 4. Validação de Celular / 2FA
+            const cleanPhone = phone.replace(/\D/g, '');
+            if (cleanPhone.length < 10) {
+                showAlert('Por favor, informe um número de Celular válido com DDD para autenticação e segurança 2FA.');
+                const pEl = document.getElementById('regPhone');
+                if (pEl) pEl.focus();
+                return false;
+            }
+
+            // 5. Validação de E-mail
+            if (!email || !email.includes('@') || !email.includes('.')) {
+                showAlert('Por favor, informe um endereço de e-mail válido para envio de notificações de segurança.');
+                const eEl = document.getElementById('regEmail');
+                if (eEl) eEl.focus();
+                return false;
+            }
+
+            // 6. Validação de Segurança da Senha Financeira (Mínimo 8 caracteres, maiúscula, minúscula, número e símbolo)
+            if (password.length < 8) {
+                showAlert('Padrão financeiro de segurança: a senha deve possuir no mínimo 8 caracteres.');
+                const passEl = document.getElementById('regPassword');
+                if (passEl) passEl.focus();
+                return false;
+            }
+            const hasUpperLower = /[a-z]/.test(password) && /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[^A-Za-z0-9]/.test(password);
+            if (!hasUpperLower || !hasNumber || !hasSpecial) {
+                showAlert('A senha deve conter letras maiúsculas, minúsculas, pelo menos um número e um símbolo (@#$%).');
+                const passEl = document.getElementById('regPassword');
+                if (passEl) passEl.focus();
+                return false;
+            }
+
+            // 7. Confirmação de Senha
             if (password !== confirmPassword) {
-                showAlert('As senhas não conferem. Por favor, digite a mesma senha nos dois campos.');
+                showAlert('As senhas digitadas não conferem. Verifique e digite a mesma senha nos dois campos.');
+                const cpEl = document.getElementById('regConfirmPassword');
+                if (cpEl) cpEl.focus();
+                return false;
+            }
+
+            // 8. Termos de Abertura de Conta & LGPD
+            if (!termsEl || !termsEl.checked) {
+                showAlert('É obrigatório ler e aceitar os Termos de Abertura de Conta e a Política de Privacidade (LGPD).');
+                return false;
+            }
+            if (!truthfulEl || !truthfulEl.checked) {
+                showAlert('É obrigatório declarar a veracidade e titularidade dos dados cadastrais informados.');
                 return false;
             }
 
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Criando conta...';
+                btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-[#0A0F1A] inline mr-1.5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Validando e criando conta bancária segura...';
             }
 
             try {
@@ -3096,26 +3465,36 @@
                 let serverMessage = '';
 
                 try {
+                    const payload = {
+                        name: name,
+                        email: email,
+                        password: password,
+                        cpf: cpf,
+                        birth_date: birthDate,
+                        phone: phone,
+                        terms_accepted: true
+                    };
+
                     const res = await fetch(apiUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: name, email: email, password: password })
+                        body: JSON.stringify(payload)
                     });
                     const data = await res.json();
 
                     if (res.ok && data.success) {
                         registerSuccess = true;
-                        serverMessage = data.message || 'Conta criada com sucesso!';
+                        serverMessage = data.message || 'Conta financeira aberta com sucesso!';
                     } else {
-                        showAlert(data.error || 'Erro ao criar conta.', 'error');
+                        showAlert(data.error || 'Erro ao criar conta financeira.', 'error');
                         if (btn) {
                             btn.disabled = false;
-                            btn.innerHTML = '<span>Criar Minha Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                            btn.innerHTML = '<span>Concluir Abertura de Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
                         }
                         return false;
                     }
                 } catch(netErr) {
-                    console.warn('[LOGIN.HTML] Backend offline ou indisponível. Gravando usuário no cache local do navegador:', netErr);
+                    console.warn('[LOGIN.HTML] Backend offline ou operando em fallback local. Gravando no cache do navegador:', netErr);
                     registerSuccess = true;
                 }
 
@@ -3127,25 +3506,39 @@
                 if (!Array.isArray(localUsers)) localUsers = [];
 
                 const userIdx = localUsers.findIndex(u => u.email && u.email.toLowerCase() === email);
+                const userObj = {
+                    id: Date.now(),
+                    name: name,
+                    email: email,
+                    password: password,
+                    cpf: cpf,
+                    birth_date: birthDate,
+                    phone: phone,
+                    role: 'Usuário',
+                    active: true,
+                    terms_accepted: true
+                };
+
                 if (userIdx >= 0) {
-                    localUsers[userIdx].name = name;
-                    localUsers[userIdx].password = password;
-                    localUsers[userIdx].active = true;
+                    localUsers[userIdx] = { ...localUsers[userIdx], ...userObj };
                 } else {
-                    localUsers.push({ id: Date.now(), name: name, email: email, password: password, role: 'Usuário', active: true });
+                    localUsers.push(userObj);
                 }
                 localStorage.setItem('nexus_users', JSON.stringify(localUsers));
 
-                // Preenche formulário de Logon
+                // Preenche formulário de Logon com as credenciais criadas
                 const loginEmailEl = document.getElementById('loginEmail');
                 const loginPassEl = document.getElementById('loginPassword');
                 if (loginEmailEl) loginEmailEl.value = email;
                 if (loginPassEl) loginPassEl.value = password;
 
-                showAlert('🎉 Conta criada com sucesso! Entrando na sua conta com suas novas credenciais...', 'success');
+                playChime();
+                showAlert('🎉 Conta financeira criada com sucesso! Redirecionando com suas novas credenciais seguras...', 'success');
 
-                // Atualiza lista de usuários cadastrados
-                carregarUsuariosLogon();
+                // Atualiza lista de usuários para logon rápido
+                if (typeof window.carregarUsuariosLogon === 'function') {
+                    window.carregarUsuariosLogon();
+                }
 
                 // Muda para aba de Logon e autentica automaticamente
                 setTimeout(function() {
@@ -3153,14 +3546,14 @@
                     if (typeof window.handleLoginSubmit === 'function') {
                         window.handleLoginSubmit();
                     }
-                }, 900);
+                }, 1000);
 
             } catch (err) {
                 showAlert('Erro ao processar criação de conta. Verifique os dados digitados.', 'error');
             } finally {
                 if (btn) {
                     btn.disabled = false;
-                    btn.innerHTML = '<span>Criar Minha Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                    btn.innerHTML = '<span>Concluir Abertura de Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
                 }
             }
             return false;

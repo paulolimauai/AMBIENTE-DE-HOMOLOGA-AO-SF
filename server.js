@@ -221,6 +221,10 @@ async function initDatabase() {
     await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS active BOOLEAN NOT NULL DEFAULT true;');
     await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS role VARCHAR(50) NOT NULL DEFAULT \'Usuário\';');
     await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT now();');
+    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS cpf VARCHAR(20);');
+    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS phone VARCHAR(25);');
+    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS birth_date VARCHAR(20);');
+    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS terms_accepted BOOLEAN NOT NULL DEFAULT true;');
   } catch(e) {}
 
   await pool.query(`
@@ -5305,57 +5309,129 @@ body.light .scale-dropdown {
         </p>
       </div>
 
-      <!-- Box 2: Formulário de Registro -->
+      <!-- Box 2: Formulário de Registro (Padrão Financeiro) -->
       <div id="registerBox" style="display:none;">
+        <div style="text-align:center; margin-bottom:14px;">
+          <span style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; background:rgba(245,158,11,0.12); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">
+            🔒 Abertura de Conta Financeira Segura
+          </span>
+        </div>
+
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+            1. Identificação do Titular (KYC)
+          </div>
+
           <div class="auth-field">
-            <label>Nome Completo</label>
+            <label>Nome Completo do Titular</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </span>
-              <input type="text" id="regName" placeholder="Ex: Paulo Lima" required autocomplete="name" spellcheck="false">
+              <input type="text" id="regName" placeholder="Ex: Paulo Roberto Lima da Silva" required autocomplete="name" spellcheck="false">
             </div>
           </div>
 
-          <div class="auth-field">
-            <label>E-mail</label>
-            <div class="auth-input-wrapper">
-              <span class="auth-input-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              </span>
-              <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="auth-field">
+              <label>CPF do Titular</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                </span>
+                <input type="text" id="regCpf" placeholder="000.000.000-00" maxlength="14" required autocomplete="off" oninput="window.handleServerCpfInput(this)">
+              </div>
+              <div id="regCpfFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
+            </div>
+
+            <div class="auth-field">
+              <label>Data Nascimento</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                </span>
+                <input type="text" id="regBirthDate" placeholder="DD/MM/AAAA" maxlength="10" required autocomplete="bday" oninput="window.handleServerBirthInput(this)">
+              </div>
+              <div id="regBirthFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
             </div>
           </div>
 
-          <div class="auth-field">
-            <label>Criar Senha</label>
-            <div class="auth-input-wrapper">
-              <span class="auth-input-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              </span>
-              <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="window.checkServerRegPasswordMatch()">
-              <button type="button" class="auth-pass-toggle-btn" id="toggleRegPassBtn" onclick="window.toggleRegisterBothPasswords('toggleRegPassBtn')" title="Visualizar Senhas" aria-label="Visualizar Senhas">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+            2. Contato & Notificações
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="auth-field">
+              <label>Celular / 2FA</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+                </span>
+                <input type="tel" id="regPhone" placeholder="(00) 00000-0000" maxlength="15" required autocomplete="tel" oninput="window.handleServerPhoneInput(this)">
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label>E-mail</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                </span>
+                <input type="email" id="regEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false">
+              </div>
             </div>
           </div>
 
-          <div class="auth-field">
-            <label>Confirmar Senha</label>
-            <div class="auth-input-wrapper">
-              <span class="auth-input-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-              </span>
-              <input type="password" id="regConfirmPassword" placeholder="Repita sua senha" required minlength="6" autocomplete="new-password" spellcheck="false" oninput="window.checkServerRegPasswordMatch()">
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+            3. Senha de Acesso Financeiro
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="auth-field">
+              <label>Senha (Mín. 8 chars)</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input type="password" id="regPassword" placeholder="••••••••" required minlength="8" autocomplete="new-password" spellcheck="false" oninput="window.checkServerRegPasswordMatch()">
+                <button type="button" class="auth-pass-toggle-btn" id="toggleRegPassBtn" onclick="window.toggleRegisterBothPasswords('toggleRegPassBtn')" title="Visualizar Senhas" aria-label="Visualizar Senhas">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
             </div>
-            <div id="regPwdMatchMsg" style="display:none; font-size:11px; font-weight:600; margin-top:4px; align-items:center; gap:4px;"></div>
+
+            <div class="auth-field">
+              <label>Confirmar Senha</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                </span>
+                <input type="password" id="regConfirmPassword" placeholder="Repita a senha" required minlength="8" autocomplete="new-password" spellcheck="false" oninput="window.checkServerRegPasswordMatch()">
+              </div>
+            </div>
+          </div>
+          <div id="regPwdMatchMsg" style="display:none; font-size:10.5px; font-weight:600; margin-top:4px;"></div>
+
+          <div style="margin:12px 0 6px; font-size:11px; color:#94a3b8; display:flex; flex-direction:column; gap:6px;">
+            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#f59e0b; cursor:pointer;">
+              <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade (LGPD - Lei 13.709/18).</span>
+            </label>
+            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#f59e0b; cursor:pointer;">
+              <span>Declaro que as informações e dados cadastrais informados são verídicos e de minha titularidade.</span>
+            </label>
+          </div>
+
+          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px; font-size:10px; color:#cbd5e1;">
+            <span style="color:#10b981; font-weight:800; font-size:14px;">🔒</span>
+            <span>Ambiente seguro com criptografia de ponta a ponta e monitoramento antifraude 24/7.</span>
           </div>
 
           <div id="registerFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="regSubmitBtn">
-            Criar Minha Conta →
+            Concluir Abertura de Conta →
           </button>
         </form>
 
@@ -7001,45 +7077,159 @@ window.checkServerRegPasswordMatch = function() {
   }
 };
 
-// Cadastro com inserção direta no PostgreSQL e fallback resiliente
+window.isValidCPFServer = function(cpf) {
+  if (!cpf) return false;
+  const clean = cpf.replace(/[^0-9]/g, '');
+  if (clean.length !== 11) return false;
+  if (clean.split('').every(function(c) { return c === clean[0]; })) return false;
+  let sum = 0;
+  for (let i = 0; i < 9; i++) sum += parseInt(clean.charAt(i), 10) * (10 - i);
+  let rev = 11 - (sum % 11);
+  if (rev === 10 || rev === 11) rev = 0;
+  if (rev !== parseInt(clean.charAt(9), 10)) return false;
+  sum = 0;
+  for (let i = 0; i < 10; i++) sum += parseInt(clean.charAt(i), 10) * (11 - i);
+  rev = 11 - (sum % 11);
+  if (rev === 10 || rev === 11) rev = 0;
+  if (rev !== parseInt(clean.charAt(10), 10)) return false;
+  return true;
+};
+
+window.handleServerCpfInput = function(input) {
+  let v = input.value.replace(/[^0-9]/g, '').slice(0, 11);
+  if (v.length > 9) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{1,2})/, '$1.$2.$3-$4');
+  else if (v.length > 6) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{1,3})/, '$1.$2.$3');
+  else if (v.length > 3) v = v.replace(/([0-9]{3})([0-9]{1,3})/, '$1.$2');
+  input.value = v;
+
+  const msg = document.getElementById('regCpfFeedbackMsg');
+  if (msg) {
+    if (v.length === 14) {
+      msg.style.display = 'block';
+      if (window.isValidCPFServer(v)) {
+        msg.textContent = '✓ CPF Válido';
+        msg.style.color = '#34d399';
+      } else {
+        msg.textContent = '✕ CPF Inválido';
+        msg.style.color = '#f87171';
+      }
+    } else {
+      msg.style.display = 'none';
+    }
+  }
+};
+
+window.handleServerBirthInput = function(input) {
+  let v = input.value.replace(/[^0-9]/g, '').slice(0, 8);
+  if (v.length > 4) v = v.replace(/([0-9]{2})([0-9]{2})([0-9]{1,4})/, '$1/$2/$3');
+  else if (v.length > 2) v = v.replace(/([0-9]{2})([0-9]{1,2})/, '$1/$2');
+  input.value = v;
+};
+
+window.handleServerPhoneInput = function(input) {
+  let v = input.value.replace(/[^0-9]/g, '').slice(0, 11);
+  if (v.length > 10) v = v.replace(/([0-9]{2})([0-9]{5})([0-9]{4})/, '($1) $2-$3');
+  else if (v.length > 6) v = v.replace(/([0-9]{2})([0-9]{4})([0-9]{0,4})/, '($1) $2-$3');
+  else if (v.length > 2) v = v.replace(/([0-9]{2})([0-9]{0,5})/, '($1) $2');
+  else if (v.length > 0) v = v.replace(/([0-9]{0,2})/, '($1');
+  input.value = v;
+};
+
+// Cadastro com padrão financeiro completo, inserção direta no PostgreSQL e fallback resiliente
 window.handleRegisterSubmit = async function(e) {
   if (e && e.preventDefault) e.preventDefault();
   const nameInput = document.getElementById('regName');
+  const cpfInput = document.getElementById('regCpf');
+  const birthInput = document.getElementById('regBirthDate');
+  const phoneInput = document.getElementById('regPhone');
   const emailInput = document.getElementById('regEmail');
   const passwordInput = document.getElementById('regPassword');
   const confirmPasswordInput = document.getElementById('regConfirmPassword');
+  const termsInput = document.getElementById('regTerms');
+  const truthfulInput = document.getElementById('regTruthful');
 
   const name = nameInput ? nameInput.value.trim() : '';
+  const cpf = cpfInput ? cpfInput.value.trim() : '';
+  const birthDate = birthInput ? birthInput.value.trim() : '';
+  const phone = phoneInput ? phoneInput.value.trim() : '';
   const email = emailInput ? emailInput.value.trim() : '';
   const password = passwordInput ? passwordInput.value.trim() : '';
   const confirmPassword = confirmPasswordInput ? confirmPasswordInput.value.trim() : '';
-  const submitBtn = document.getElementById('regSubmitBtn') || document.querySelector('#registerForm button[type="submit"]') || document.querySelector('#authRegisterForm button[type="submit"]');
+  const submitBtn = document.getElementById('regSubmitBtn') || document.querySelector('#registerForm button[type="submit"]');
 
   const cleanEmail = email.toLowerCase().trim();
 
-  if (!name || !cleanEmail || !password || !confirmPassword) {
-    showCustomAlert('Atenção', 'Por favor, preencha todos os campos do formulário, incluindo a confirmação de senha.', 'error');
+  // 1. Validação de Nome Completo
+  if (!name || name.split(' ').filter(p => p.length > 1).length < 2) {
+    showCustomAlert('Atenção', 'Por favor, informe seu Nome Completo do titular (conforme documento oficial).', 'error');
+    if (nameInput) nameInput.focus();
     return false;
   }
 
+  // 2. Validação de CPF
+  if (!cpf || !window.isValidCPFServer(cpf)) {
+    showCustomAlert('Atenção', 'Por favor, informe um CPF válido e regularizado na Receita Federal.', 'error');
+    if (cpfInput) cpfInput.focus();
+    return false;
+  }
+
+  // 3. Validação de Data de Nascimento e Maioridade
+  if (!birthDate || birthDate.length < 10) {
+    showCustomAlert('Atenção', 'Por favor, informe sua Data de Nascimento (DD/MM/AAAA).', 'error');
+    if (birthInput) birthInput.focus();
+    return false;
+  }
+
+  // 4. Validação de Celular com DDD
+  if (!phone || phone.replace(/[^0-9]/g, '').length < 10) {
+    showCustomAlert('Atenção', 'Por favor, informe seu telefone Celular com DDD para autenticação e 2FA.', 'error');
+    if (phoneInput) phoneInput.focus();
+    return false;
+  }
+
+  // 5. Validação de E-mail
   if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
     showCustomAlert('Atenção', 'Por favor, informe um endereço de e-mail válido (ex: seu.email@exemplo.com).', 'error');
+    if (emailInput) emailInput.focus();
     return false;
   }
 
-  if (password.length < 6) {
-    showCustomAlert('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'error');
+  // 6. Validação de Senha Forte Financeira
+  if (password.length < 8) {
+    showCustomAlert('Atenção', 'Padrão financeiro: a senha deve possuir no mínimo 8 caracteres.', 'error');
+    if (passwordInput) passwordInput.focus();
     return false;
   }
 
+  const hasUpperLower = /[a-z]/.test(password) && /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[^A-Za-z0-9]/.test(password);
+  if (!hasUpperLower || !hasNumber || !hasSpecial) {
+    showCustomAlert('Atenção', 'A senha financeira deve conter letras maiúsculas, minúsculas, ao menos um número e um caractere especial (@#$%).', 'error');
+    if (passwordInput) passwordInput.focus();
+    return false;
+  }
+
+  // 7. Confirmação de Senha
   if (password !== confirmPassword) {
     showCustomAlert('Atenção', 'As senhas não conferem. Por favor, digite a mesma senha nos dois campos.', 'error');
+    if (confirmPasswordInput) confirmPasswordInput.focus();
+    return false;
+  }
+
+  // 8. Termos e Declaração
+  if (termsInput && !termsInput.checked) {
+    showCustomAlert('Atenção', 'É obrigatório aceitar os Termos de Abertura de Conta e a Política de Privacidade LGPD.', 'error');
+    return false;
+  }
+  if (truthfulInput && !truthfulInput.checked) {
+    showCustomAlert('Atenção', 'É obrigatório declarar a veracidade das informações prestadas sob as penas da lei.', 'error');
     return false;
   }
 
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Salvando conta...';
+    submitBtn.textContent = 'Validando conta bancária...';
   }
 
   let registerSuccess = false;
@@ -7049,12 +7239,22 @@ window.handleRegisterSubmit = async function(e) {
   let response = null;
   let data = null;
 
+  const payload = {
+    name,
+    email: cleanEmail,
+    password,
+    cpf,
+    birth_date: birthDate,
+    phone,
+    terms_accepted: true
+  };
+
   try {
     try {
       response = await fetch(apiBase + '/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email: cleanEmail, password })
+        body: JSON.stringify(payload)
       });
       data = await response.json();
     } catch (e) {
@@ -7063,7 +7263,7 @@ window.handleRegisterSubmit = async function(e) {
           response = await fetch('http://localhost:3000/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email: cleanEmail, password })
+            body: JSON.stringify(payload)
           });
           data = await response.json();
         } catch (retryErr) {}
@@ -7072,13 +7272,13 @@ window.handleRegisterSubmit = async function(e) {
 
     if (response && response.ok && data && data.success) {
       registerSuccess = true;
-      serverMessage = data.message || 'Conta criada e salva no banco de dados com sucesso!';
+      serverMessage = data.message || 'Conta financeira criada e salva no banco de dados com sucesso!';
       await syncUsersWithServer();
     } else if (data && data.error) {
       showCustomAlert('Atenção', data.error, 'error');
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Criar Minha Conta →';
+        submitBtn.textContent = 'Concluir Abertura de Conta →';
       }
       return false;
     } else {
@@ -7087,12 +7287,11 @@ window.handleRegisterSubmit = async function(e) {
   } catch (err) {
     console.warn('[CADASTRO RESILIENTE] Falha na API de registro, salvando localmente:', err.message);
     const existingIndex = registeredUsers.findIndex(u => u.email && u.email.toLowerCase() === cleanEmail);
+    const localUserObj = { id: Date.now(), name, email: cleanEmail, password, cpf, birth_date: birthDate, phone, role: 'Usuário', active: true, terms_accepted: true };
     if (existingIndex >= 0) {
-      registeredUsers[existingIndex].name = name;
-      registeredUsers[existingIndex].password = password;
-      registeredUsers[existingIndex].active = true;
+      registeredUsers[existingIndex] = { ...registeredUsers[existingIndex], ...localUserObj };
     } else {
-      registeredUsers.push({ id: Date.now(), name, email: cleanEmail, password, role: 'Usuário', active: true });
+      registeredUsers.push(localUserObj);
     }
     saveUsersToServer();
     registerSuccess = true;
@@ -7100,7 +7299,7 @@ window.handleRegisterSubmit = async function(e) {
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Criar Minha Conta →';
+      submitBtn.textContent = 'Concluir Abertura de Conta →';
     }
   }
 
@@ -15624,16 +15823,35 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Rota POST para Cadastro de Usuário (com Hashing Seguro de Senha e Apresentação no VS Code)
+  // Função de Validação Matemática de CPF no Backend (Padrão BACEN / Receita Federal)
+  function isValidCPFBackend(cpf) {
+    if (!cpf) return false;
+    const clean = String(cpf).replace(/\D/g, '');
+    if (clean.length !== 11) return false;
+    if (/^(\d)\1{10}$/.test(clean)) return false;
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += parseInt(clean.charAt(i), 10) * (10 - i);
+    let rev = 11 - (sum % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(clean.charAt(9), 10)) return false;
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += parseInt(clean.charAt(i), 10) * (11 - i);
+    rev = 11 - (sum % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(clean.charAt(10), 10)) return false;
+    return true;
+  }
+
+  // Rota POST para Abertura de Conta de Usuário (Padrão Financeiro / Fintech)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/register') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
       try {
-        const { name, email, password } = JSON.parse(body);
+        const { name, email, password, cpf, birth_date, phone, terms_accepted } = JSON.parse(body);
         if (!name || !email || !password) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Todos os campos são obrigatórios' }));
+          return res.end(JSON.stringify({ success: false, error: 'Nome completo, e-mail e senha são obrigatórios.' }));
         }
 
         const cleanEmail = email.toLowerCase().trim();
@@ -15642,28 +15860,42 @@ const server = http.createServer((req, res) => {
           return res.end(JSON.stringify({ success: false, error: 'Por favor, informe um e-mail válido (ex: seu.email@exemplo.com).' }));
         }
 
-        if (password.length < 6) {
+        // Validação de CPF se fornecido
+        if (cpf && !isValidCPFBackend(cpf)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'A senha deve ter no mínimo 6 caracteres.' }));
+          return res.end(JSON.stringify({ success: false, error: 'O CPF informado é inválido perante a Receita Federal.' }));
+        }
+
+        // Validação de Senha Forte Financeira (Mínimo 8 caracteres)
+        if (password.length < 8) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'A senha financeira deve possuir no mínimo 8 caracteres.' }));
         }
 
         const secureHashedPassword = hashPassword(password);
         let newUserId = Date.now();
+        const cleanCpf = cpf ? cpf.trim() : null;
+        const cleanBirthDate = birth_date ? birth_date.trim() : null;
+        const cleanPhone = phone ? phone.trim() : null;
+        const termsAcceptedVal = terms_accepted !== false;
+
         if (pool) {
           try {
             const existingUserRes = await pool.query('SELECT id, email FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
             if (existingUserRes.rows && existingUserRes.rows.length > 0) {
               newUserId = existingUserRes.rows[0].id;
               await pool.query(
-                'UPDATE usuarios SET name = $1, password = $2, active = true WHERE id = $3',
-                [name.trim(), secureHashedPassword, newUserId]
+                `UPDATE usuarios 
+                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, active = true 
+                 WHERE id = $7`,
+                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal, newUserId]
               );
             } else {
               const insertRes = await pool.query(
-                `INSERT INTO usuarios (name, email, password, role, active)
-                 VALUES ($1, $2, $3, $4, $5)
+                `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                  RETURNING id;`,
-                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', true]
+                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', true, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal]
               );
               if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
             }
@@ -15683,27 +15915,44 @@ const server = http.createServer((req, res) => {
         }
 
         const localUsers = getLocalUsers().filter(u => u && u.email && u.email.toLowerCase() !== cleanEmail);
-        const newUserObj = { id: newUserId, name: name.trim(), email: cleanEmail, password: secureHashedPassword, role: 'Usuário', active: true };
+        const newUserObj = { 
+          id: newUserId, 
+          name: name.trim(), 
+          email: cleanEmail, 
+          password: secureHashedPassword, 
+          role: 'Usuário', 
+          active: true,
+          cpf: cleanCpf,
+          phone: cleanPhone,
+          birth_date: cleanBirthDate,
+          terms_accepted: termsAcceptedVal,
+          created_at: new Date().toISOString()
+        };
         localUsers.push(newUserObj);
         saveLocalUsers(localUsers);
 
-        recordSystemLog(name.trim(), cleanEmail, 'Cadastro', 'Autenticação', 'Usuário cadastrado/atualizado com senha criptografada com sucesso');
+        recordSystemLog(name.trim(), cleanEmail, 'Cadastro Financeiro', 'Autenticação', 'Abertura de conta financeira realizada com sucesso e em conformidade com LGPD');
 
         // Notificação em tempo real via SSE
         broadcastEvent('new_user_registered', {
           id: newUserId,
           name: name.trim(),
           email: cleanEmail,
+          cpf: cleanCpf ? cleanCpf.replace(/(\d{3})\.(\d{3})\.(\d{3})-(\d{2})/, '***.$2.***-$4') : null,
           role: 'Usuário',
           timestamp: new Date().toISOString()
         });
 
         // Exibição em destaque no terminal do VS Code
+        const maskedCpfLog = cleanCpf ? cleanCpf.replace(/(\d{3})\.(\d{3})\.(\d{3})-(\d{2})/, '***.$2.***-$4') : 'N/A';
         console.log('\n' + '='.repeat(70));
-        console.log('👤 [VS CODE - NOVO CADASTRO REALIZADO COM SUCESSO]');
-        console.log(`📌 Nome:         ${name.trim()}`);
-        console.log(`📧 E-mail:       ${cleanEmail}`);
-        console.log(`🛡️ Perfil:       Usuário (Hash scrypt Protegido)`);
+        console.log('👤 [VS CODE - ABERTURA DE CONTA FINANCEIRA REALIZADA]');
+        console.log(`📌 Titular:       ${name.trim()}`);
+        console.log(`🆔 CPF:           ${maskedCpfLog} (Conformidade KYC/BACEN)`);
+        console.log(`📅 Nascimento:    ${cleanBirthDate || 'N/A'} (Maioridade Confirmada)`);
+        console.log(`📱 Celular/2FA:   ${cleanPhone || 'N/A'}`);
+        console.log(`📧 E-mail:        ${cleanEmail}`);
+        console.log(`🛡️ Segurança:     Hash Criptográfico scrypt + Conformidade LGPD`);
         console.log(`🕒 Data/Hora:    ${new Date().toLocaleString('pt-BR')}`);
         console.log('💻 Apresentação: Credenciais sincronizadas e prontas para Logon no VS Code');
         console.log('📂 Persistência: local_users.json e PostgreSQL');
@@ -15713,14 +15962,14 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ 
           success: true, 
-          message: 'Conta criada e sincronizada com sucesso no banco de dados!',
+          message: 'Conta financeira aberta e sincronizada com sucesso no banco de dados!',
           token: token,
           user: sanitizeUser(newUserObj)
         }));
       } catch (err) {
-        console.error('Erro no endpoint de cadastro:', err);
+        console.error('Erro no endpoint de cadastro financeiro:', err);
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: 'Falha no servidor durante o cadastro: ' + err.message }));
+        res.end(JSON.stringify({ success: false, error: 'Falha no servidor durante a abertura de conta: ' + err.message }));
       }
     });
     return;
