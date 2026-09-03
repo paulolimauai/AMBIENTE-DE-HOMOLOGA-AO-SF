@@ -1,9 +1,10 @@
 # Diretrizes Globais do Projeto (Auto-Approve, Auto-Exec & Auto-Git Sync)
 
-## 1. Execução Imediata no Terminal e Aprovação Automática Total (Zero Interrupts / Zero Confirmações)
+## 1. Execução Imediata no Terminal e Aprovação Automática Total (Zero Interrupts / Zero Confirmações / Sem "Yes" ou "OK")
+- **Aceitação Prévia e Irrestrita**: Qualquer pedido de alteração, melhoria, correção ou comando feito pelo usuário é automaticamente e previamente aprovado. O usuário **NÃO PRECISA digitar "yes", "ok", dar enter ou clicar em botões de confirmação no teclado**.
 - **Execução Direta e Sem Perguntas**: Todo e qualquer comando de terminal (`run_command`, scripts, ferramentas, deploys, inicialização de servidores) deve ser executado **IMEDIATAMENTE e DIRETAMENTE SEM NUNCA PEDIR CONFIRMAÇÃO** ao usuário.
 - **Modificação Direta de Arquivos**: Todo e qualquer arquivo deve ser criado, editado ou excluído diretamente de ponta a ponta sem pedir permissão prévia.
-- **Sem Pausas ou Interrupções**: **NUNCA** pausar ou perguntar (*"Posso executar o comando?"*, *"Deseja que eu rode o teste?"*, *"Posso aplicar as alterações?"*, *"Quer que eu envie para o Git?"*).
+- **Sem Pausas, Dúvidas ou Interrupções**: **NUNCA** pausar, perguntar ou aguardar validação (*"Posso executar o comando?"*, *"Deseja que eu rode o teste?"*, *"Posso aplicar as alterações?"*, *"Quer que eu envie para o Git?"*, *"Como deseja proceder?"*).
 - **Validação e Auto-Correção Autônoma**: O próprio agente valida a sintaxe (ex: `node --check server.js`), integridade, testes e coerência das alterações, corrigindo autonomamente eventuais erros até entregar a solução 100% funcional.
 - **Configuração Permanente**: Esta diretriz de auto-execução, auto-validação e auto-aprovação permanente é contínua e memorizada permanentemente até solicitação explícita do usuário em contrário.
 
