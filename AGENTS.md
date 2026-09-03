@@ -5,6 +5,7 @@
 - **Execução Direta e Sem Perguntas**: Todo e qualquer comando de terminal (`run_command`, scripts, ferramentas, deploys, inicialização de servidores) deve ser executado **IMEDIATAMENTE e DIRETAMENTE SEM NUNCA PEDIR CONFIRMAÇÃO** ao usuário.
 - **Modificação Direta de Arquivos**: Todo e qualquer arquivo deve ser criado, editado ou excluído diretamente de ponta a ponta sem pedir permissão prévia.
 - **Sem Pausas, Dúvidas ou Interrupções**: **NUNCA** pausar, perguntar ou aguardar validação (*"Posso executar o comando?"*, *"Deseja que eu rode o teste?"*, *"Posso aplicar as alterações?"*, *"Quer que eu envie para o Git?"*, *"Como deseja proceder?"*).
+- **Sem Modais de Confirmação ou Botões 'Proceed'**: NUNCA solicitar aprovação de plano de implementação ou bloquear esperando o usuário clicar em 'Proceed', 'Accept' ou 'Validar'. A execução deve ser imediata e direta do início ao fim.
 - **Validação e Auto-Correção Autônoma**: O próprio agente valida a sintaxe (ex: `node --check server.js`), integridade, testes e coerência das alterações, corrigindo autonomamente eventuais erros até entregar a solução 100% funcional.
 - **Configuração Permanente**: Esta diretriz de auto-execução, auto-validação e auto-aprovação permanente é contínua e memorizada permanentemente até solicitação explícita do usuário em contrário.
 
