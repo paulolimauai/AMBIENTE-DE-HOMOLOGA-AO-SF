@@ -12095,9 +12095,6 @@ function pageConfig(){
         <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800; margin:0;">
           <span style="font-size:18px;">👤</span> Dados Cadastrais & Titularidade
         </h3>
-        <span class="tag" style="background:rgba(16,185,129,0.15); color:#34d399; font-weight:800; font-size:11px; padding:4px 12px; border-radius:999px; border:1px solid rgba(16,185,129,0.35);">
-          ✓ Conta Verificada (KYC)
-        </span>
       </div>
 
       <!-- Nome Completo (Largura Total) -->
