@@ -12024,10 +12024,10 @@ function pageRecorrentes(){
                           const isPaid = targetTx && (targetTx.status === 'Pago' || targetTx.status === 'Recebido');
                           const mName = MONTHS[m-1] ? MONTHS[m-1].substring(0,3) : m;
                           items.push(
-                            \\\`<div style="padding:4px 7px; border-radius:6px; background:\\\${isPaid ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.10)'}; border:1px solid \\\${isPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'}; display:flex; justify-content:space-between; align-items:center;">\\\` +
-                              \\\`<span style="font-size:10.5px;">Mês \\\${k}: <strong style="color:var(--text);">\\\${mName}/\\\${y}</strong></span>\\\` +
-                              \\\`<span style="font-weight:800; font-size:9px; color:\\\${isPaid ? '#34D399' : '#FBBF24'}">\\\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</span>\\\` +
-                            \\\`</div>\\\`
+                            '<div style="padding:4px 7px; border-radius:6px; background:' + (isPaid ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.10)') + '; border:1px solid ' + (isPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)') + '; display:flex; justify-content:space-between; align-items:center;">' +
+                              '<span style="font-size:10.5px;">Mês ' + k + ': <strong style="color:var(--text);">' + mName + '/' + y + '</strong></span>' +
+                              '<span style="font-weight:800; font-size:9px; color:' + (isPaid ? '#34D399' : '#FBBF24') + '">' + (isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente') + '</span>' +
+                            '</div>'
                           );
                         }
                         return items.join('');
