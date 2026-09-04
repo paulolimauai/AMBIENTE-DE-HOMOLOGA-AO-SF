@@ -535,10 +535,12 @@ body.user-logged-in {
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
   background-color:var(--bg) !important;
   background-image:
-    radial-gradient(ellipse at 50% 20%, rgba(20, 27, 43, 0.55) 0%, rgba(9, 13, 22, 0.98) 100%) !important;
+    radial-gradient(ellipse at 50% 20%, rgba(13, 18, 30, 0.62) 0%, rgba(6, 9, 18, 0.88) 100%),
+    url('/images/nexus_cyber_office_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
   color:var(--text); min-height:100vh;
   zoom:var(--app-zoom, 1);
 }
@@ -549,10 +551,12 @@ html.user-logged-in body.light,
 body.user-logged-in.light {
   background-color:#F2F7F4 !important;
   background-image:
-    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.85) 0%, rgba(240, 246, 242, 0.98) 100%) !important;
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.78) 0%, rgba(240, 246, 242, 0.90) 100%),
+    url('/images/nexus_cyber_office_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 button, input, select{font-family:inherit; color:inherit;}
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
@@ -742,8 +746,8 @@ html, body {
   padding: 0 0 clamp(8px, 1.5vh, 18px) 0;
   background-color: #07100B;
   background-image: 
-    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
+    radial-gradient(ellipse at 50% 20%, rgba(13, 18, 30, 0.60) 0%, rgba(6, 9, 18, 0.88) 100%),
+    url('/images/nexus_cyber_office_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
@@ -781,8 +785,8 @@ body.light .auth-container {
   --auth-text-dim: #475569;
   background-color: #F2F7F4 !important;
   background-image: 
-    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.75) 0%, rgba(240, 246, 242, 0.90) 100%),
+    url('/images/nexus_cyber_office_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
@@ -1985,8 +1989,8 @@ html.light #overlayNovaOrdem .close-x:hover {
   flex-direction: column;
   background-color: transparent !important;
   background-image: 
-    radial-gradient(ellipse at 50% 20%, rgba(10, 22, 16, 0.45) 0%, rgba(5, 12, 9, 0.82) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
+    radial-gradient(ellipse at 50% 20%, rgba(13, 18, 30, 0.60) 0%, rgba(6, 9, 18, 0.88) 100%),
+    url('/images/nexus_cyber_office_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
@@ -2001,8 +2005,8 @@ body.light #appMain,
 html.light #appMain {
   background-color: transparent !important;
   background-image: 
-    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.55) 0%, rgba(240, 246, 242, 0.88) 100%),
-    url('/images/nexus_vision_living_bg.jpg') !important;
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.75) 0%, rgba(240, 246, 242, 0.90) 100%),
+    url('/images/nexus_cyber_office_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
