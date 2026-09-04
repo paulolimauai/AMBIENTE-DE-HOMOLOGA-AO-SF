@@ -4605,23 +4605,23 @@ body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
   color:#0f172a !important;
 }
 
-/* ==================== 4K Executive Recorrentes Dashboard & Table ==================== */
+/* ==================== 4K Executive Recorrentes Dashboard & Table (Ajustado / Compact) ==================== */
 .rec-kpi-grid-4k {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 16px;
-  margin-bottom: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
 }
 .rec-kpi-card-4k {
   position: relative;
   background: linear-gradient(145deg, rgba(15, 23, 42, 0.75) 0%, rgba(10, 16, 30, 0.88) 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  padding: 18px 20px;
-  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  border-radius: 12px;
+  padding: 10px 14px;
+  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   overflow: hidden;
 }
 .rec-kpi-card-4k::before {
@@ -4630,69 +4630,68 @@ body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2.5px;
   background: var(--kpi-accent, var(--cyan));
-  box-shadow: 0 0 16px var(--kpi-accent, var(--cyan));
+  box-shadow: 0 0 10px var(--kpi-accent, var(--cyan));
 }
 .rec-kpi-card-4k:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 36px -10px rgba(0, 0, 0, 0.65), 0 0 20px rgba(6, 182, 212, 0.15);
-  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.55), 0 0 16px rgba(6, 182, 212, 0.12);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 .rec-kpi-card-4k .kpi-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
 .rec-kpi-card-4k .kpi-title {
-  font-size: 11.5px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
 .rec-kpi-card-4k .kpi-icon-box {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 12px;
   background: var(--kpi-bg, rgba(6, 182, 212, 0.12));
   color: var(--kpi-accent, var(--cyan));
   border: 1px solid var(--kpi-border, rgba(6, 182, 212, 0.25));
-  box-shadow: 0 4px 14px var(--kpi-glow, rgba(6, 182, 212, 0.15));
 }
 .rec-kpi-card-4k .kpi-number {
-  font-size: 23px;
+  font-size: 18px;
   font-weight: 900;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: #fff;
   line-height: 1.1;
-  margin-bottom: 6px;
+  margin-bottom: 3px;
   font-feature-settings: "tnum" 1;
 }
 .rec-kpi-card-4k .kpi-footnote {
-  font-size: 11.5px;
+  font-size: 10px;
   color: var(--text-dim);
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
-/* 4K Table Modernization */
+/* 4K Table Modernization (Ajustado / Compact) */
 .rec-table-wrapper-4k {
   background: linear-gradient(160deg, rgba(13, 20, 36, 0.85) 0%, rgba(8, 12, 22, 0.94) 100%);
   border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 20px;
+  border-radius: 14px;
   padding: 0;
   overflow: hidden;
-  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 14px 36px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 .rec-table-4k {
   width: 100%;
@@ -4702,16 +4701,16 @@ body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
 .rec-table-4k th {
   background: rgba(15, 23, 42, 0.85);
   color: #94A3B8;
-  font-size: 10.5px;
+  font-size: 9.5px;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 14px 16px;
+  padding: 8px 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   white-space: nowrap;
 }
 .rec-table-4k td {
-  padding: 13px 16px;
+  padding: 6px 10px;
   vertical-align: middle;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   transition: background 0.15s ease;
@@ -4724,15 +4723,15 @@ body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
 .rec-desc-block {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 2px;
 }
 .rec-title-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 .rec-name-4k {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   color: #F8FAFC;
   letter-spacing: -0.01em;
@@ -4740,107 +4739,102 @@ body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
 .rec-badge-contract {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 7px;
-  font-size: 10px;
+  gap: 3px;
+  padding: 1px 5px;
+  font-size: 9px;
   font-weight: 700;
-  border-radius: 6px;
+  border-radius: 4px;
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-dim);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* 4K Progress & Installments Cell (Quantos ja pagou & Quantas faltam) */
+/* 4K Progress & Installments Cell (Quantos ja pagou & Quantas faltam - Compact) */
 .rec-progress-box-4k {
-  min-width: 250px;
-  background: rgba(2, 6, 23, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 10px 12px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  min-width: 210px;
+  background: rgba(2, 6, 23, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 5px 8px;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 .rec-dual-pills {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 6px;
+  margin-bottom: 4px;
 }
 .rec-pill-paid {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background: rgba(16, 185, 129, 0.16);
+  gap: 3px;
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: rgba(16, 185, 129, 0.14);
   color: #34D399;
-  border: 1px solid rgba(16, 185, 129, 0.32);
-  font-size: 11px;
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: -0.01em;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.12);
 }
 .rec-pill-remain {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background: rgba(245, 158, 11, 0.16);
+  gap: 3px;
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: rgba(245, 158, 11, 0.14);
   color: #FBBF24;
-  border: 1px solid rgba(245, 158, 11, 0.32);
-  font-size: 11px;
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: -0.01em;
-  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.12);
 }
 .rec-pill-complete {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 9px;
-  border-radius: 8px;
-  background: rgba(59, 130, 246, 0.16);
+  gap: 3px;
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: rgba(59, 130, 246, 0.14);
   color: #60A5FA;
-  border: 1px solid rgba(59, 130, 246, 0.32);
-  font-size: 11px;
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: -0.01em;
 }
 
-/* 4K Progress Bar with Neon Glow */
+/* 4K Progress Bar with Neon Glow (Slim 4px) */
 .rec-bar-wrap-4k {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 6px;
 }
 .rec-bar-track-4k {
   flex: 1;
-  height: 8px;
+  height: 4px;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 999px;
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 .rec-bar-fill-4k {
   height: 100%;
   border-radius: 999px;
   background: linear-gradient(90deg, #10B981 0%, #06B6D4 100%);
-  box-shadow: 0 0 12px rgba(6, 182, 212, 0.55);
-  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.45);
+  transition: width 0.3s ease;
 }
 .rec-bar-fill-4k.complete {
   background: linear-gradient(90deg, #10B981 0%, #34D399 100%);
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
 }
 .rec-pct-badge-4k {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
   color: #E2E8F0;
   font-feature-settings: "tnum" 1;
-  min-width: 35px;
+  min-width: 28px;
   text-align: right;
 }
 
@@ -4849,12 +4843,12 @@ body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10.5px;
+  font-size: 9.5px;
   font-weight: 600;
   color: var(--text-dim);
-  border-top: 1px dashed rgba(255, 255, 255, 0.07);
-  padding-top: 5px;
-  margin-top: 4px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.06);
+  padding-top: 2px;
+  margin-top: 2px;
 }
 .rec-substats-4k strong {
   color: #F1F5F9;
@@ -11862,61 +11856,61 @@ function pageRecorrentes(){
   }).length;
 
   return \`
-  <div class="page-head">
+  <div class="page-head" style="margin-bottom:12px;">
     <div>
-      <h1 style="font-size:24px; font-weight:900; letter-spacing:-0.03em; margin:0; display:flex; align-items:center; gap:10px;">
-        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:rgba(6,182,212,0.15); color:var(--cyan); border:1px solid rgba(6,182,212,0.3); box-shadow:0 0 16px rgba(6,182,212,0.2);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+      <h1 style="font-size:20px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:9px; background:rgba(6,182,212,0.15); color:var(--cyan); border:1px solid rgba(6,182,212,0.3); box-shadow:0 0 10px rgba(6,182,212,0.2);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
         </span>
         Lançamentos Recorrentes & Contratos
       </h1>
-      <p style="font-size:13px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">
-        Painel executivo de despesas fixas, assinaturas, salários e contratos com rastreamento 4K de parcelas quitadas e faltantes
+      <p style="font-size:11.5px; color:var(--text-dim); margin:3px 0 0 0; font-weight:500;">
+        Painel ajustado de despesas fixas, receitas e contratos com controle de parcelas quitadas e pendentes
       </p>
     </div>
-    <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
+    <div class="head-actions" style="display:flex; align-items:center; gap:8px;">
       \${periodPickerHTML()}
-      <button class="btn-primary" id="btnNovoRecorrente" style="display:flex; align-items:center; gap:7px; font-weight:800; padding:10px 18px; border-radius:12px; box-shadow:0 6px 20px rgba(6,182,212,0.35);">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <button class="btn-primary" id="btnNovoRecorrente" style="display:flex; align-items:center; gap:6px; font-weight:800; font-size:12px; padding:7px 14px; border-radius:9px; box-shadow:0 4px 14px rgba(6,182,212,0.3);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Novo Recorrente
       </button>
     </div>
   </div>
 
   <div class="rec-kpi-grid-4k">
-    <div class="rec-kpi-card-4k" style="--kpi-accent:#EF4444; --kpi-bg:rgba(239,68,68,0.12); --kpi-border:rgba(239,68,68,0.25); --kpi-glow:rgba(239,68,68,0.2);">
+    <div class="rec-kpi-card-4k" style="--kpi-accent:#EF4444; --kpi-bg:rgba(239,68,68,0.12); --kpi-border:rgba(239,68,68,0.25);">
       <div class="kpi-head">
         <span class="kpi-title">Saídas Fixas / Mês</span>
         <span class="kpi-icon-box">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
         </span>
       </div>
       <div class="kpi-number" style="color:#F87171;">\${fmt(totalDespRec)}</div>
       <div class="kpi-footnote">
         <span style="color:#F87171; font-weight:700;">\${recurringList.filter(r=>r.type==='out').length} contratos</span>
-        <span>· saídas programadas/mês</span>
+        <span>· saídas programadas</span>
       </div>
     </div>
 
-    <div class="rec-kpi-card-4k" style="--kpi-accent:#10B981; --kpi-bg:rgba(16,185,129,0.12); --kpi-border:rgba(16,185,129,0.25); --kpi-glow:rgba(16,185,129,0.2);">
+    <div class="rec-kpi-card-4k" style="--kpi-accent:#10B981; --kpi-bg:rgba(16,185,129,0.12); --kpi-border:rgba(16,185,129,0.25);">
       <div class="kpi-head">
         <span class="kpi-title">Entradas Fixas / Mês</span>
         <span class="kpi-icon-box">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
         </span>
       </div>
       <div class="kpi-number" style="color:#34D399;">\${fmt(totalRecRec)}</div>
       <div class="kpi-footnote">
         <span style="color:#34D399; font-weight:700;">\${recurringList.filter(r=>r.type==='in').length} fontes</span>
-        <span>· salários e receitas fixas</span>
+        <span>· receitas fixas</span>
       </div>
     </div>
 
-    <div class="rec-kpi-card-4k" style="--kpi-accent:var(--cyan); --kpi-bg:rgba(6,182,212,0.12); --kpi-border:rgba(6,182,212,0.25); --kpi-glow:rgba(6,182,212,0.2);">
+    <div class="rec-kpi-card-4k" style="--kpi-accent:var(--cyan); --kpi-bg:rgba(6,182,212,0.12); --kpi-border:rgba(6,182,212,0.25);">
       <div class="kpi-head">
         <span class="kpi-title">Balanço Recorrente Líquido</span>
         <span class="kpi-icon-box">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
         </span>
       </div>
       <div class="kpi-number" style="color:\${saldoLiquidoRec >= 0 ? '#34D399' : '#F87171'};">\${saldoLiquidoRec >= 0 ? '+' : ''}\${fmt(saldoLiquidoRec)}</div>
@@ -11925,11 +11919,11 @@ function pageRecorrentes(){
       </div>
     </div>
 
-    <div class="rec-kpi-card-4k" style="--kpi-accent:#8B5CF6; --kpi-bg:rgba(139,92,246,0.12); --kpi-border:rgba(139,92,246,0.25); --kpi-glow:rgba(139,92,246,0.2);">
+    <div class="rec-kpi-card-4k" style="--kpi-accent:#8B5CF6; --kpi-bg:rgba(139,92,246,0.12); --kpi-border:rgba(139,92,246,0.25);">
       <div class="kpi-head">
         <span class="kpi-title">Quitação & Andamento</span>
         <span class="kpi-icon-box">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
         </span>
       </div>
       <div class="kpi-number" style="color:#A78BFA;">\${totalConcluidos} / \${totalComPrazo || totalLctos}</div>
@@ -11945,13 +11939,13 @@ function pageRecorrentes(){
     <table class="rec-table-4k">
       <thead>
         <tr>
-          <th>Descrição do Contrato</th>
+          <th>Contrato / Descrição</th>
           <th>Categoria</th>
           <th>Conta / Método</th>
           <th>Frequência</th>
-          <th>Vencimento</th>
+          <th>Venc.</th>
           <th>Duração Prevista</th>
-          <th style="min-width:260px;">Progresso de Quitação (Pagas vs Faltam)</th>
+          <th style="min-width:215px;">Progresso (Pagas vs Faltam)</th>
           <th>Tipo</th>
           <th style="text-align:right;">Valor / Mês</th>
           <th style="text-align:center;">Ações</th>
@@ -11976,7 +11970,7 @@ function pageRecorrentes(){
           const totalRemainVal = isFixed ? (mVal * remainingToPay) : 0;
           const totalContractVal = isFixed ? (mVal * totalM) : (mVal * (paidCount || 1));
 
-          // Limpa badges repetidas do título (ex: Boleto ou 22/24 pagas)
+          // Nome limpo sem poluicao
           const cleanDesc = (r.desc || '').replace(/\\[.*?\\]/g, '').replace(/\\b\\d+\\/\\d+\\s*(pagas?|recebidas?)/gi, '').trim() || r.desc;
 
           const sM = parseInt(r.startMonth) || 1;
@@ -11989,13 +11983,13 @@ function pageRecorrentes(){
 
           return \`
           <tr class="trow">
-            <td class="tx-desc" style="max-width:240px;">
+            <td class="tx-desc" style="max-width:210px;">
               <div class="rec-desc-block">
                 <div class="rec-title-row">
                   <span class="rec-name-4k">\${cleanDesc}</span>
                   \${isFixed ? (isFullyPaid ? \`
                     <span class="rec-badge-contract" style="color:#34D399; border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.08);">
-                      <span class="rec-status-dot" style="background:#34D399;"></span> Concluído
+                      <span class="rec-status-dot" style="background:#34D399;"></span> Quitado
                     </span>
                   \` : \`
                     <span class="rec-badge-contract" style="color:#38BDF8; border-color:rgba(56,189,248,0.3); background:rgba(56,189,248,0.08);">
@@ -12008,12 +12002,12 @@ function pageRecorrentes(){
                   \`}
                 </div>
                 \${isFixed ? \`
-                  <details style="font-size:11px; margin-top:2px;">
-                    <summary style="cursor:pointer; color:#38BDF8; font-weight:700; user-select:none; display:inline-flex; align-items:center; gap:5px; transition:color .15s ease;">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                      Cronograma mês a mês (1 a \${totalM})
+                  <details style="font-size:10px; margin-top:1px;">
+                    <summary style="cursor:pointer; color:#38BDF8; font-weight:700; user-select:none; display:inline-flex; align-items:center; gap:4px;">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                      Cronograma (1 a \${totalM})
                     </summary>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:5px; margin-top:6px; padding:8px; background:rgba(2,6,23,0.7); border-radius:10px; border:1px solid rgba(255,255,255,0.08); max-height:180px; overflow-y:auto;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(115px, 1fr)); gap:4px; margin-top:4px; padding:6px; background:rgba(2,6,23,0.8); border-radius:8px; border:1px solid rgba(255,255,255,0.08); max-height:150px; overflow-y:auto;">
                       \${(function(){
                         const items = [];
                         for(let k=1; k<=totalM; k++){
@@ -12024,9 +12018,9 @@ function pageRecorrentes(){
                           const isPaid = targetTx && (targetTx.status === 'Pago' || targetTx.status === 'Recebido');
                           const mName = MONTHS[m-1] ? MONTHS[m-1].substring(0,3) : m;
                           items.push(
-                            '<div style="padding:4px 7px; border-radius:6px; background:' + (isPaid ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.10)') + '; border:1px solid ' + (isPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)') + '; display:flex; justify-content:space-between; align-items:center;">' +
-                              '<span style="font-size:10.5px;">Mês ' + k + ': <strong style="color:var(--text);">' + mName + '/' + y + '</strong></span>' +
-                              '<span style="font-weight:800; font-size:9px; color:' + (isPaid ? '#34D399' : '#FBBF24') + '">' + (isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente') + '</span>' +
+                            '<div style="padding:2px 5px; border-radius:4px; background:' + (isPaid ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.10)') + '; border:1px solid ' + (isPaid ? 'rgba(16,185,129,0.22)' : 'rgba(245,158,11,0.22)') + '; display:flex; justify-content:space-between; align-items:center;">' +
+                              '<span style="font-size:9.5px;">Mês ' + k + ': <strong style="color:var(--text);">' + mName + '/' + y + '</strong></span>' +
+                              '<span style="font-weight:800; font-size:8.5px; color:' + (isPaid ? '#34D399' : '#FBBF24') + '">' + (isPaid ? (isIncome ? '✓' : '✓') : '⏳') + '</span>' +
                             '</div>'
                           );
                         }
@@ -12037,33 +12031,31 @@ function pageRecorrentes(){
                 \` : ''}
               </div>
             </td>
-            <td><span class="pill cat-pill" style="background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
+            <td><span class="pill cat-pill" style="padding:2px 6px; font-size:10px; background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
             <td>
-              <div style="display:flex; flex-direction:column; gap:3px;">
-                <span class="pill acc-pill">\${getAccountIcon(r.acc)} \${r.acc}</span>
+              <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
+                <span class="pill acc-pill" style="padding:2px 6px; font-size:10px;">\${getAccountIcon(r.acc)} \${r.acc}</span>
                 \${method ? \`
-                  <span style="font-size:9.5px; font-weight:700; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; display:inline-flex; align-items:center; gap:3px; padding-left:4px;">
-                    \${method === 'Cartão de Crédito' ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>Cartão' : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg>Boleto'}
+                  <span style="font-size:9px; font-weight:700; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'};">
+                    \${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}
                   </span>
                 \` : ''}
               </div>
             </td>
-            <td><span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text); font-weight:700;">\${r.freq || 'Mensal'}</span></td>
-            <td><span class="pill" style="background:rgba(245,158,11,0.14); color:#FBBF24; border:1px solid rgba(245,158,11,0.28); font-weight:800;">Dia \${r.day}</span></td>
+            <td><span class="pill" style="padding:2px 6px; font-size:10px; background:rgba(255,255,255,0.06); color:var(--text); font-weight:700;">\${r.freq || 'Mensal'}</span></td>
+            <td><span class="pill" style="padding:2px 6px; font-size:10px; background:rgba(245,158,11,0.12); color:#FBBF24; border:1px solid rgba(245,158,11,0.25); font-weight:800;">Dia \${r.day}</span></td>
             <td>
               \${isFixed ? \`
-                <div style="display:flex; flex-direction:column; gap:3px;">
-                  <span class="pill" style="background:rgba(59,130,246,0.14); color:#60A5FA; border:1px solid rgba(59,130,246,0.28); font-weight:800; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                <div style="display:flex; flex-direction:column; gap:1px;">
+                  <span class="pill" style="padding:2px 6px; font-size:10px; font-weight:800; background:rgba(59,130,246,0.12); color:#60A5FA; border:1px solid rgba(59,130,246,0.25); display:inline-flex; align-items:center; gap:3px;">
                     \${totalM} \${totalM === 1 ? 'mês' : 'meses'}
                   </span>
-                  <span style="font-size:10px; color:var(--text-dim); font-weight:600;">
+                  <span style="font-size:9px; color:var(--text-dim); font-weight:600;">
                     \${startMonthLabel}/\${sY} → \${endMonthLabel}/\${endYear}
                   </span>
                 </div>
               \` : \`
-                <span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text-dim); font-weight:700; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z"/></svg>
+                <span class="pill" style="padding:2px 6px; font-size:10px; background:rgba(255,255,255,0.06); color:var(--text-dim); font-weight:700;">
                   Contínuo
                 </span>
               \`}
@@ -12071,82 +12063,64 @@ function pageRecorrentes(){
             <td>
               \${isFixed ? \`
                 <div class="rec-progress-box-4k">
-                  <!-- Destaque claro de: Quantos já pagou vs Quantas falta pagar -->
-                  <div class="rec-dual-pills">
-                    <div class="rec-pill-paid" title="Total já liquidado até o momento">
-                      <span>✓ \${paidCount}/\${totalM} \${paidWordPlural}</span>
-                      <span style="font-size:10px; opacity:0.9; font-weight:800;">(\${fmt(totalPaidVal)})</span>
-                    </div>
+                  <!-- Quantos já pagou vs Quantas faltam pagar -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:4px; margin-bottom:2px; font-size:10px;">
+                    <span style="font-weight:800; color:#34D399;">✓ \${paidCount}/\${totalM} <span style="font-weight:600; opacity:0.85; font-size:9px;">(\${fmt(totalPaidVal)})</span></span>
                     \${isFullyPaid ? \`
-                      <div class="rec-pill-complete" title="Contrato 100% quitado!">
-                        <span>★ Concluído</span>
-                      </div>
+                      <span style="font-weight:800; color:#34D399; font-size:9px;">★ Quitado</span>
                     \` : \`
-                      <div class="rec-pill-remain" title="Parcelas restantes a quitar">
-                        <span>⏳ \${remainingToPay} a \${toPayWord}</span>
-                        <span style="font-size:10px; opacity:0.9; font-weight:800;">(\${fmt(totalRemainVal)})</span>
-                      </div>
+                      <span style="font-weight:700; color:#FBBF24; font-size:9.5px;">⏳ \${remainingToPay} restam <span style="font-weight:600; opacity:0.85; font-size:9px;">(\${fmt(totalRemainVal)})</span></span>
                     \`}
                   </div>
 
-                  <!-- Barra 4K com Neon Glow -->
-                  <div class="rec-bar-wrap-4k">
+                  <!-- Barra de progresso fina de 4px -->
+                  <div class="rec-bar-wrap-4k" style="margin-bottom:2px;">
                     <div class="rec-bar-track-4k">
                       <div class="rec-bar-fill-4k \${isFullyPaid ? 'complete' : ''}" style="width:\${paidPct}%;"></div>
                     </div>
                     <span class="rec-pct-badge-4k" style="color:\${isFullyPaid ? '#34D399' : (paidPct >= 50 ? '#38BDF8' : '#FBBF24')};">\${paidPct}%</span>
                   </div>
 
-                  <!-- Rodapé com Compromisso Financeiro Total -->
+                  <!-- Total compromisso -->
                   <div class="rec-substats-4k">
-                    <span>Compromisso Total: <strong>\${fmt(totalContractVal)}</strong></span>
-                    <span style="color:\${isFullyPaid ? '#34D399' : '#94A3B8'}; font-weight:700;">
-                      \${isFullyPaid ? '✓ 100% Quitado' : (\`\${100 - paidPct}% restante\`)}
+                    <span>Total: <strong style="color:#F1F5F9;">\${fmt(totalContractVal)}</strong></span>
+                    <span style="color:\${isFullyPaid ? '#34D399' : '#94A3B8'};">
+                      \${isFullyPaid ? 'Concluído' : (\`\${100 - paidPct}% restam\`)}
                     </span>
                   </div>
                 </div>
               \` : \`
-                <div class="rec-progress-box-4k" style="min-width:210px;">
-                  <div class="rec-dual-pills" style="margin-bottom:4px;">
-                    <div class="rec-pill-paid">
-                      <span>✓ \${paidCount} \${paidWordPlural}</span>
-                      <span style="font-size:10px; opacity:0.9; font-weight:800;">(\${fmt(totalPaidVal)})</span>
-                    </div>
-                    \${pendingCount > 0 ? \`
-                      <div class="rec-pill-remain">
-                        <span>⏳ \${pendingCount} pendente\${pendingCount === 1 ? '' : 's'}</span>
-                      </div>
-                    \` : ''}
+                <div class="rec-progress-box-4k" style="min-width:180px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; margin-bottom:2px;">
+                    <span style="color:#34D399; font-weight:800;">✓ \${paidCount} \${paidWordPlural}</span>
+                    <span style="font-size:9px; color:var(--text-dim);">(\${fmt(totalPaidVal)})</span>
                   </div>
-                  <div class="rec-substats-4k" style="border-top:none; padding-top:0;">
-                    <span style="display:inline-flex; align-items:center; gap:4px; color:#38BDF8; font-weight:700;">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z"/></svg>
-                      Assinatura contínua
-                    </span>
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:9px; color:#38BDF8; font-weight:600;">
+                    <span>∞ Sem prazo fixo</span>
                     <span style="color:#94A3B8;">\${fmt(mVal)}/mês</span>
                   </div>
                 </div>
               \`}
             </td>
             <td>
-              <span class="type-pill \${r.type}" style="font-weight:800; font-size:11px; padding:4px 10px; border-radius:8px;">
+              <span class="type-pill \${r.type}" style="font-weight:800; font-size:10px; padding:2px 7px; border-radius:6px;">
                 \${r.type==='in'?'↑ Receita':'↓ Despesa'}
               </span>
             </td>
             <td style="text-align:right;">
-              <div style="display:flex; flex-direction:column; gap:2px; align-items:flex-end;">
-                <span style="font-size:15px; font-weight:900; letter-spacing:-0.02em; font-feature-settings:'tnum' 1; color:\${r.type==='in'?'#34D399':'#F87171'};">
+              <div style="display:flex; flex-direction:column; gap:1px; align-items:flex-end;">
+                <span style="font-size:13px; font-weight:900; letter-spacing:-0.01em; font-feature-settings:'tnum' 1; color:\${r.type==='in'?'#34D399':'#F87171'};">
                   \${r.type==='in'?'+':'-'}\${fmt(r.val)}
                 </span>
-                <span style="font-size:10px; color:var(--text-dim); font-weight:600;">
+                <span style="font-size:9px; color:var(--text-dim); font-weight:600;">
                   \${isFixed ? ('Total: ' + fmt(totalContractVal)) : 'por mês'}
                 </span>
               </div>
             </td>
             <td>
-              <div class="row-actions" style="justify-content:center; gap:6px;">
-                <button data-editrec="\${r.id}" title="Editar Recorrente" class="btn-action-edit" style="width:32px; height:32px; border-radius:10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
-                <button data-delrec="\${r.id}" title="Excluir Recorrente" class="btn-action-del" style="width:32px; height:32px; border-radius:10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
+              <div class="row-actions" style="justify-content:center; gap:5px;">
+                <button data-editrec="\${r.id}" title="Editar Recorrente" class="btn-action-edit" style="width:26px; height:26px; border-radius:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
+                <button data-delrec="\${r.id}" title="Excluir Recorrente" class="btn-action-del" style="width:26px; height:26px; border-radius:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
               </div>
             </td>
           </tr>\`;
