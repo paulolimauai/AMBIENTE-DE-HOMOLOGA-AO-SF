@@ -2,6 +2,7 @@
 
 ## 1. Execução Imediata no Terminal e Aprovação Automática Total (Zero Interrupts / Zero Confirmações / Sem "Yes" ou "OK")
 - **Aceitação Prévia e Irrestrita**: Qualquer pedido de alteração, melhoria, correção ou comando feito pelo usuário é automaticamente e previamente aprovado. O usuário **NÃO PRECISA digitar "yes", "ok", dar enter ou clicar em botões de confirmação no teclado**.
+- **Geração de Código Contínua do Início ao Fim (Sem Validação em Tela)**: O agente deve gerar e implementar todo o código completo do início ao fim sem solicitar qualquer validação na tela, sem modais, sem popups e sem interrupções. O usuário forneceu autorização prévia e irrevogável até solicitação expressa em contrário.
 - **Execução Direta e Sem Perguntas**: Todo e qualquer comando de terminal (`run_command`, scripts, ferramentas, deploys, inicialização de servidores) deve ser executado **IMEDIATAMENTE e DIRETAMENTE SEM NUNCA PEDIR CONFIRMAÇÃO** ao usuário.
 - **Modificação Direta de Arquivos**: Todo e qualquer arquivo deve ser criado, editado ou excluído diretamente de ponta a ponta sem pedir permissão prévia.
 - **Sem Pausas, Dúvidas ou Interrupções**: **NUNCA** pausar, perguntar ou aguardar validação (*"Posso executar o comando?"*, *"Deseja que eu rode o teste?"*, *"Posso aplicar as alterações?"*, *"Quer que eu envie para o Git?"*, *"Como deseja proceder?"*).
