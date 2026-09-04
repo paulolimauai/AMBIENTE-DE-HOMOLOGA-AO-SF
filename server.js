@@ -2384,12 +2384,12 @@ nav.menu{
   width:82px !important;
   max-width:82px !important;
   margin:0 !important;
-  padding:10px 0 !important;
+  padding:14px 0 20px !important;
   display:flex !important;
   flex-direction:column !important;
   align-items:center !important;
-  justify-content:space-between !important;
-  gap:4px !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
   background:linear-gradient(180deg, rgba(9, 14, 26, 0.94) 0%, rgba(6, 10, 20, 0.97) 100%) !important;
   border-right:1px solid rgba(0, 229, 255, 0.16) !important;
   border-top:none !important;
@@ -2414,12 +2414,11 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   justify-content:center !important;
   text-align:center !important;
   gap:4px !important;
-  width:calc(100% - 12px) !important;
-  max-width:70px !important;
-  flex:1 1 0px !important;
-  min-height:48px !important;
-  padding:4px 2px !important;
-  border-radius:13px !important;
+  width:66px !important;
+  min-height:58px !important;
+  height:58px !important;
+  padding:8px 2px 6px !important;
+  border-radius:14px !important;
   background:transparent !important;
   border:1px solid transparent !important;
   color:#94A3B8 !important;
@@ -2431,6 +2430,7 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select:none !important;
   box-sizing:border-box !important;
+  flex-shrink:0 !important;
 }
 .menu button:hover{
   background:rgba(0, 229, 255, 0.08) !important;
@@ -2480,14 +2480,16 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   filter:drop-shadow(0 0 8px rgba(0, 229, 255, 0.85)) !important;
 }
 .menu button span:not(.ic){
-  font-size:10px !important;
+  font-size:9.5px !important;
   font-weight:600 !important;
-  line-height:1.1 !important;
+  line-height:1.15 !important;
   letter-spacing:0.01em !important;
   display:block !important;
-  white-space:normal !important;
+  white-space:nowrap !important;
   text-align:center !important;
   max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
 }
 
 /* ==================== Estilo Executivo Premium do Menu Administrativo ==================== */
