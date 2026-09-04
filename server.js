@@ -3917,37 +3917,50 @@ body.light .executive-4k-message {
 .head-actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 .period-wrap{position:relative; z-index:100;}
 .period{
-  display:inline-flex; align-items:center; gap:11px;
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 27, 43, 0.70) 50%, rgba(9, 13, 22, 0.90) 100%) !important;
-  backdrop-filter:blur(24px) saturate(200%) !important;
-  -webkit-backdrop-filter:blur(24px) saturate(200%) !important;
-  border:1.5px solid rgba(0, 229, 255, 0.22) !important;
-  padding:6px 16px 6px 7px; border-radius:16px; font-size:13.5px; cursor:pointer; white-space:nowrap;
-  box-shadow:0 8px 24px -4px rgba(0,0,0,0.6), inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 0 20px rgba(0, 229, 255, 0.15);
-  transition:all .22s cubic-bezier(0.16, 1, 0.3, 1);
-  user-select:none;
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  height:42px !important;
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+  backdrop-filter:blur(20px) !important;
+  -webkit-backdrop-filter:blur(20px) !important;
+  border:1px solid rgba(255, 255, 255, 0.12) !important;
+  padding:0 14px 0 6px !important;
+  border-radius:12px !important;
+  font-size:13px !important;
+  cursor:pointer !important;
+  white-space:nowrap !important;
+  box-shadow:0 4px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  transition:all .2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  user-select:none !important;
 }
 .period:hover{
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(14, 22, 38, 0.85) 50%, rgba(7, 11, 22, 0.98) 100%) !important;
-  border-color:rgba(0, 229, 255, 0.55) !important;
-  box-shadow:0 12px 32px -4px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255, 255, 255, 0.45), 0 0 28px rgba(0, 229, 255, 0.35);
-  transform:translateY(-1.5px);
+  background:linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+  border-color:rgba(6, 182, 212, 0.45) !important;
+  box-shadow:0 6px 20px rgba(0,0,0,0.45), 0 0 14px rgba(6, 182, 212, 0.2) !important;
+  transform:translateY(-1.5px) !important;
 }
-.period:active{transform:translateY(0);}
+.period:active{transform:translateY(0) !important;}
 .period-ic{
-  width:34px; height:34px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, rgba(0, 229, 255, 0.35) 0%, rgba(2, 132, 199, 0.25) 100%) !important;
-  border:1.5px solid rgba(0, 229, 255, 0.6) !important;
-  color:#00E5FF !important;
-  box-shadow:0 0 16px rgba(0, 229, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5);
-  transition:transform 0.22s ease;
+  width:30px !important;
+  height:30px !important;
+  border-radius:8px !important;
+  flex-shrink:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  background:rgba(6, 182, 212, 0.15) !important;
+  border:1px solid rgba(6, 182, 212, 0.35) !important;
+  color:#22D3EE !important;
+  box-shadow:inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+  transition:transform 0.2s ease !important;
 }
-.period:hover .period-ic{transform:scale(1.06);}
-.period-ic svg{width:17px; height:17px;}
-.period-text{display:flex; align-items:baseline; gap:5px; font-weight:800; font-size:13.5px; color:#FFFFFF; letter-spacing:0.02em; text-shadow:0 1px 3px rgba(0,0,0,0.6);}
+.period:hover .period-ic{transform:scale(1.06) !important;}
+.period-ic svg{width:16px !important; height:16px !important;}
+.period-text{display:flex; align-items:baseline; gap:5px; font-weight:700; font-size:13px; color:#F1F5F9; letter-spacing:0.01em;}
 .period-text .period-year{font-weight:600; color:#94A3B8;}
 .period-chevron{width:11px; height:11px; color:#94A3B8; flex-shrink:0; transition:transform .25s ease;}
-.period.open .period-chevron{transform:rotate(180deg); color:#00E5FF;}
+.period.open .period-chevron{transform:rotate(180deg); color:#22D3EE;}
 .period-panel{
   display:none; position:absolute; top:calc(100% + 10px); right:0;
   background:linear-gradient(145deg, rgba(14, 22, 38, 0.95) 0%, rgba(8, 12, 24, 0.98) 100%) !important;
@@ -4203,43 +4216,44 @@ body.light .kpi .val { color:#0f172a !important; text-shadow:none; }
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
-  padding: 8px 16px 8px 10px !important;
-  border-radius: 16px !important;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.92) 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+  height: 42px !important;
+  padding: 0 14px 0 6px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #F1F5F9 !important;
   font-size: 13px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.015em !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
   cursor: pointer !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   white-space: nowrap !important;
   user-select: none !important;
 }
 .btn-hero-privacy:hover {
-  transform: translateY(-2px) !important;
-  border-color: rgba(0, 229, 255, 0.6) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 229, 255, 0.35) !important;
+  transform: translateY(-1.5px) !important;
+  border-color: rgba(6, 182, 212, 0.45) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(6, 182, 212, 0.2) !important;
 }
 .btn-hero-privacy:active {
   transform: translateY(0) !important;
 }
 .btn-hero-privacy .btn-hero-icon-pill {
-  width: 26px !important;
-  height: 26px !important;
+  width: 30px !important;
+  height: 30px !important;
   border-radius: 8px !important;
-  background: rgba(255, 255, 255, 0.12) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  color: #94A3B8 !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
 }
 body.light .btn-hero-privacy {
   background: #FFFFFF !important;
@@ -4631,19 +4645,19 @@ body.light .rec-progress-bar {
 }
 
 /* ==================== Dashboard Welcome Hero Banner (4K Executive) ==================== */
+/* ==================== Dashboard Welcome Hero Banner (4K Executive) ==================== */
 .dashboard-welcome-hero {
   position: relative;
-  overflow: visible !important;
-  z-index: 50;
-  background: linear-gradient(145deg, rgba(12, 19, 36, 0.84) 0%, rgba(8, 13, 25, 0.90) 52%, rgba(6, 10, 20, 0.94) 100%) !important;
-  border: 1px solid rgba(0, 229, 255, 0.18) !important;
-  border-radius: 24px;
-  padding: 24px 28px;
-  margin-bottom: 22px;
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 0 24px rgba(0, 229, 255, 0.05);
-  backdrop-filter: blur(28px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden !important;
+  z-index: 20;
+  background: linear-gradient(145deg, rgba(13, 20, 36, 0.92) 0%, rgba(7, 11, 20, 0.98) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 22px !important;
+  padding: 22px 28px !important;
+  margin-bottom: 22px !important;
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.75), 0 0 35px rgba(6, 182, 212, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
 }
 .dashboard-welcome-hero::before {
   content: '';
@@ -4651,22 +4665,9 @@ body.light .rec-progress-bar {
   top: 0;
   left: 0;
   right: 0;
-  height: 2.5px;
-  background: linear-gradient(90deg, #00E5FF 0%, #0284C7 50%, #38BDF8 100%);
-  border-radius: 24px 24px 0 0;
-}
-.hero-backdrop-glow {
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, rgba(0, 229, 255, 0.18) 0%, transparent 70%);
-  pointer-events: none;
-  filter: blur(40px);
-}
-.hero-backdrop-glow.admin-glow {
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, transparent 70%);
+  height: 2px;
+  background: linear-gradient(90deg, #06B6D4 0%, #3B82F6 50%, #8B5CF6 100%);
+  border-radius: 22px 22px 0 0;
 }
 .hero-content {
   position: relative;
@@ -4680,9 +4681,8 @@ body.light .rec-progress-bar {
 .hero-left {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   min-width: 280px;
-  flex: 1;
 }
 .hero-badge-strip {
   display: flex;
@@ -4694,71 +4694,53 @@ body.light .rec-progress-bar {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 5px 14px;
+  padding: 4px 13px;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(59, 130, 246, 0.28);
+  background: rgba(14, 165, 233, 0.07);
+  border: 1px solid rgba(14, 165, 233, 0.24);
   color: #CBD5E1;
   font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 .hero-badge.live-dot {
-  background: rgba(16, 185, 129, 0.14);
-  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.10);
+  border-color: rgba(16, 185, 129, 0.28);
   color: #34D399;
 }
-.hero-badge.admin-badge {
-  background: rgba(245, 158, 11, 0.16);
-  border-color: rgba(245, 158, 11, 0.4);
-  color: #FBBF24;
-}
 .pulse-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #10B981;
-  box-shadow: 0 0 10px #10B981;
-  animation: pulseDot 2s infinite ease-in-out;
-}
-@keyframes pulseDot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.35); opacity: 0.65; }
+  box-shadow: 0 0 8px #10B981;
 }
 .hero-greeting {
-  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
-  font-size: 28px;
-  font-weight: 800;
-  color: #F8FAFC;
-  margin: 0;
-  letter-spacing: -0.025em;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  line-height: 1.2;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  margin: 0 !important;
+  letter-spacing: -0.025em !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  line-height: 1.2 !important;
 }
 .hero-name-gradient {
-  background: linear-gradient(135deg, #FFFFFF 0%, #00E5FF 50%, #38BDF8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px rgba(0, 229, 255, 0.45));
-  font-weight: 900;
-  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, #FFFFFF 15%, #38BDF8 60%, #818CF8 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-weight: 800 !important;
+  filter: drop-shadow(0 2px 10px rgba(56, 189, 248, 0.4)) !important;
 }
 .hero-sub {
-  font-size: 13.5px;
-  color: #94A3B8;
-  margin: 0;
-  font-weight: 500;
-  letter-spacing: 0.015em;
-}
-.hero-period-highlight {
-  color: #00E5FF;
-  font-weight: 800;
+  font-size: 13px !important;
+  color: #94A3B8 !important;
+  margin: 0 !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  opacity: 0.92 !important;
 }
 .hero-actions {
   display: flex;
@@ -4767,48 +4749,45 @@ body.light .rec-progress-bar {
   flex-wrap: wrap;
 }
 .btn-hero-primary {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #00E5FF 0%, #0EA5E9 45%, #0284C7 85%, #0369A1 100%) !important;
-  color: #060B18 !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
-  border-radius: 16px !important;
-  padding: 8px 22px 8px 12px !important;
-  font-weight: 900 !important;
-  font-size: 13.5px !important;
-  letter-spacing: 0.02em !important;
-  cursor: pointer !important;
+  position: relative !important;
+  overflow: hidden !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 10px !important;
-  box-shadow: 0 0 28px rgba(0, 229, 255, 0.65), 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1.5px 2px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.3) !important;
-  backdrop-filter: blur(16px) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  gap: 9px !important;
+  height: 42px !important;
+  padding: 0 18px 0 6px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #00E5FF 0%, #0EA5E9 55%, #0284C7 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  color: #060B18 !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.01em !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 18px rgba(0, 229, 255, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   white-space: nowrap !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) !important;
   user-select: none !important;
 }
 .btn-hero-primary:hover {
-  transform: translateY(-2px) !important;
-  filter: brightness(1.12) !important;
-  box-shadow: 0 0 40px rgba(0, 229, 255, 0.90), 0 12px 30px rgba(0, 0, 0, 0.6), inset 0 1.5px 2px rgba(255, 255, 255, 0.95) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 8px 28px rgba(0, 229, 255, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  filter: brightness(1.05) !important;
 }
 .btn-hero-primary:active {
   transform: translateY(0) !important;
 }
 .btn-hero-primary .btn-hero-icon-pill {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  background: rgba(6, 11, 24, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #060B18;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.5), 0 2px 6px rgba(0, 0, 0, 0.25);
-  transition: transform 0.22s ease;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 8px !important;
+  background: rgba(6, 11, 24, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  color: #060B18 !important;
 }
 .btn-hero-primary .btn-hero-icon-pill svg {
   stroke: #060B18 !important;
@@ -10218,29 +10197,49 @@ function pageDashboard(){
 
   const greeting = getGreetingTime();
   const formattedToday = getFormattedToday();
-  const firstName = currentUser ? currentUser.name.split(' ')[0] : 'Usuário';
+  const rawFirstName = currentUser ? (currentUser.name || '').split(' ')[0] : 'Usuário';
+  const firstName = rawFirstName ? (rawFirstName.charAt(0).toUpperCase() + rawFirstName.slice(1).toLowerCase()) : 'Usuário';
+
+  const h = new Date().getHours();
+  let greetingIconSvg = '';
+  let greetingBadgeBg = '';
+  let greetingBadgeBorder = '';
+  let greetingBadgeColor = '';
+  if (h >= 5 && h < 12) {
+    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+    greetingBadgeBg = 'linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.1))';
+    greetingBadgeBorder = 'rgba(245,158,11,0.38)';
+    greetingBadgeColor = '#FBBF24';
+  } else if (h >= 12 && h < 18) {
+    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+    greetingBadgeBg = 'linear-gradient(135deg, rgba(14,165,233,0.25), rgba(2,132,199,0.1))';
+    greetingBadgeBorder = 'rgba(14,165,233,0.38)';
+    greetingBadgeColor = '#38BDF8';
+  } else {
+    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4"/><path d="M21 5h-4"/></svg>';
+    greetingBadgeBg = 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(79,70,229,0.1))';
+    greetingBadgeBorder = 'rgba(129,140,248,0.38)';
+    greetingBadgeColor = '#A5B4FC';
+  }
 
   return \`
   <!-- 4K EXECUTIVE DASHBOARD WELCOME HERO -->
   <div class="dashboard-welcome-hero">
-    <div class="hero-backdrop-glow"></div>
     <div class="hero-content">
       <div class="hero-left">
         <div class="hero-badge-strip">
           <span class="hero-badge hide-mobile">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             <span>\${formattedToday}</span>
+          </span>
+          <span class="hero-badge live-dot hide-mobile">
+            <span class="pulse-dot"></span>
+            <span>Painel Executivo 4K</span>
           </span>
         </div>
         <h1 class="hero-greeting">
-          <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); box-shadow:0 4px 14px rgba(245,158,11,0.25);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px; background:\${greetingBadgeBg}; border:1px solid \${greetingBadgeBorder}; color:\${greetingBadgeColor}; box-shadow:0 4px 16px rgba(0,0,0,0.4); flex-shrink:0;">
+            \${greetingIconSvg}
           </span>
           <span>\${greeting.text}, <span class="hero-name-gradient">\${firstName}</span></span>
         </h1>
@@ -10253,13 +10252,13 @@ function pageDashboard(){
         \${periodPickerHTML()}
         <button type="button" class="btn-hero-privacy" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou Exibir Saldos">
           <span class="btn-hero-icon-pill">
-            <span id="btnEyeIcon">👁️</span>
+            <span id="btnEyeIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
           </span>
           <span id="btnEyeText">Ocultar Saldos</span>
         </button>
         <button class="btn-hero-primary" id="btnNovaTransacao" title="Lançar Nova Receita ou Despesa">
           <span class="btn-hero-icon-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
           </span>
