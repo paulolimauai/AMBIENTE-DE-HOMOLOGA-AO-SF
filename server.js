@@ -4097,50 +4097,89 @@ body.light #logoutBtn:hover {
   transform: translateY(-1px);
 }
 
-.kpis{display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:20px;}
+.kpis{display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:20px;}
 .kpi{
   position:relative; overflow:hidden;
-  background:linear-gradient(145deg, rgba(12, 19, 36, 0.84) 0%, rgba(8, 13, 25, 0.90) 52%, rgba(6, 10, 20, 0.94) 100%) !important;
-  border:1px solid rgba(0, 229, 255, 0.16) !important; border-radius:20px !important; padding:20px 18px;
-  box-shadow:0 16px 36px -8px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.14), 0 0 20px rgba(0, 229, 255, 0.05) !important;
-  backdrop-filter:blur(28px) saturate(200%) !important; -webkit-backdrop-filter:blur(28px) saturate(200%) !important;
-  transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.kpi::after{
-  content:''; position:absolute; top:0; left:-120%; width:80%; height:100%;
-  background:linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-  transform:skewX(-20deg); pointer-events:none;
-  transition:left 0.75s ease;
-}
-.kpi:hover::after{
-  left:140%;
+  background:linear-gradient(145deg, rgba(14, 22, 38, 0.90) 0%, rgba(9, 15, 28, 0.96) 100%) !important;
+  border:1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius:18px !important;
+  padding:18px 18px 15px !important;
+  box-shadow:0 12px 32px -6px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  backdrop-filter:blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter:blur(24px) saturate(180%) !important;
+  transition:transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease !important;
 }
 .kpi::before{
   content:''; position:absolute; top:0; left:0; right:0; height:2.5px;
-  opacity:0.95; transition:opacity 0.3s ease;
+  opacity:0.95;
 }
-.kpi:hover{
-  transform:translateY(-3px);
-  border-color:rgba(0, 229, 255, 0.45) !important;
-  box-shadow:0 22px 45px -5px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.25), 0 0 25px rgba(0, 229, 255, 0.20) !important;
-}
-.kpi .row1{display:flex; align-items:center; justify-content:space-between; color:var(--text-dim); font-size:11.5px; font-weight:700; margin-bottom:12px; letter-spacing:0.04em; text-transform:uppercase;}
-.kpi .ic{
-  width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  box-shadow:0 4px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
-  transition:transform 0.25s ease, box-shadow 0.25s ease;
-}
-.kpi:hover .ic{
-  transform:scale(1.08);
-}
-.kpi .val{font-size:24px; font-weight:900; margin-bottom:6px; letter-spacing:-0.02em; font-variant-numeric:tabular-nums;}
-.kpi .sub{font-size:11.5px; color:var(--text-dim); font-weight:600;}
-
-.kpi.kpi-balance::before { background: linear-gradient(90deg, #00E5FF, #0284C7); }
+.kpi.kpi-balance::before { background: linear-gradient(90deg, #06B6D4, #0284C7); }
 .kpi.kpi-income::before { background: linear-gradient(90deg, #10B981, #34D399); }
 .kpi.kpi-expense::before { background: linear-gradient(90deg, #F43F5E, #FB7185); }
 .kpi.kpi-net::before { background: linear-gradient(90deg, #0EA5E9, #38BDF8); }
-.kpi.kpi-tx::before { background: linear-gradient(90deg, #00E5FF, #818CF8); }
+.kpi.kpi-tx::before { background: linear-gradient(90deg, #8B5CF6, #C084FC); }
+
+.kpi:hover{
+  transform:translateY(-2.5px) !important;
+  border-color:rgba(255, 255, 255, 0.18) !important;
+  box-shadow:0 18px 40px -4px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.16) !important;
+}
+
+.kpi .row1{
+  display:flex; align-items:center; justify-content:space-between;
+  color:#94A3B8; font-size:11px; font-weight:700; margin-bottom:12px;
+  letter-spacing:0.05em; text-transform:uppercase;
+}
+.kpi .ic{
+  width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  box-shadow:0 2px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.14);
+  transition:transform 0.2s ease;
+}
+.kpi:hover .ic{ transform:scale(1.06); }
+
+.kpi .val{
+  font-size:23px; font-weight:800; margin-bottom:12px;
+  letter-spacing:-0.02em; font-variant-numeric:tabular-nums; line-height:1.2;
+}
+
+.kpi .sub{
+  display:flex; align-items:center; justify-content:space-between; gap:6px;
+  padding-top:10px; border-top:1px solid rgba(255, 255, 255, 0.06);
+  font-size:11px; color:#94A3B8; font-weight:600;
+}
+
+.kpi-tag {
+  font-size:9.5px !important;
+  font-weight:700 !important;
+  letter-spacing:0.04em !important;
+  padding:2.5px 8px !important;
+  border-radius:999px !important;
+  white-space:nowrap !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  line-height:1 !important;
+  text-transform:uppercase !important;
+}
+.kpi-tag-success {
+  background:rgba(16, 185, 129, 0.14) !important;
+  color:#34D399 !important;
+  border:1px solid rgba(16, 185, 129, 0.3) !important;
+}
+.kpi-tag-danger {
+  background:rgba(239, 68, 68, 0.14) !important;
+  color:#F87171 !important;
+  border:1px solid rgba(239, 68, 68, 0.3) !important;
+}
+.kpi-tag-purple {
+  background:rgba(168, 85, 247, 0.14) !important;
+  color:#C084FC !important;
+  border:1px solid rgba(168, 85, 247, 0.3) !important;
+}
+.kpi-tag-cyan {
+  background:rgba(6, 182, 212, 0.14) !important;
+  color:#22D3EE !important;
+  border:1px solid rgba(6, 182, 212, 0.3) !important;
+}
 
 body.light .kpi {
   background:#ffffff !important;
@@ -7508,10 +7547,12 @@ window.toggleSensitiveBalances = function() {
   const isHidden = document.body.classList.toggle('hide-sensitive-balances');
   const btnEyeIcon = document.getElementById('btnEyeIcon');
   const btnEyeText = document.getElementById('btnEyeText');
-  if (btnEyeIcon) btnEyeIcon.textContent = isHidden ? '🙈' : '👁️';
+  const openEyeSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const closedEyeSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>';
+  if (btnEyeIcon) btnEyeIcon.innerHTML = isHidden ? closedEyeSvg : openEyeSvg;
   if (btnEyeText) btnEyeText.textContent = isHidden ? 'Exibir Saldos' : 'Ocultar Saldos';
   document.querySelectorAll('.btnEyeIconCard').forEach(function(el) {
-    el.textContent = isHidden ? '🙈' : '👁️';
+    el.innerHTML = isHidden ? closedEyeSvg : openEyeSvg;
   });
   try {
     localStorage.setItem('nexus_hide_balances', isHidden ? 'true' : 'false');
@@ -7524,10 +7565,11 @@ try {
       document.body.classList.add('hide-sensitive-balances');
       const btnEyeIcon = document.getElementById('btnEyeIcon');
       const btnEyeText = document.getElementById('btnEyeText');
-      if (btnEyeIcon) btnEyeIcon.textContent = '🙈';
+      const closedEyeSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>';
+      if (btnEyeIcon) btnEyeIcon.innerHTML = closedEyeSvg;
       if (btnEyeText) btnEyeText.textContent = 'Exibir Saldos';
       document.querySelectorAll('.btnEyeIconCard').forEach(function(el) {
-        el.textContent = '🙈';
+        el.innerHTML = closedEyeSvg;
       });
     }, 100);
   }
@@ -10234,20 +10276,20 @@ function pageDashboard(){
         <div style="display:flex; align-items:center; gap:8px;">
           <span>Saldo Total</span>
           <button type="button" onclick="window.toggleSensitiveBalances()" title="Ocultar ou Exibir Saldos" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:13px; padding:0; display:inline-flex; align-items:center; opacity:0.8; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
-            <span class="btnEyeIconCard">👁️</span>
+            <span class="btnEyeIconCard"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
           </button>
         </div>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); box-shadow:0 4px 14px rgba(16,185,129,0.25);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(6,182,212,0.18), rgba(6,182,212,0.06)); border:1px solid rgba(6,182,212,0.3); color:#22D3EE;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
         </span>
       </div>
-      <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#34D399'}; font-variant-numeric:tabular-nums; text-shadow:0 0 14px \${saldo < 0 ? 'rgba(239,68,68,0.35)' : 'rgba(16,185,129,0.35)'};">\${fmt(saldo)}</div>
-      <div class="sub" style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-        <span style="display:inline-flex; align-items:center; gap:5px;">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:\${saldo < 0 ? '#EF4444' : '#10B981'}; box-shadow:0 0 6px \${saldo < 0 ? '#EF4444' : '#10B981'};"></span>
-          <span>\${saldo < 0 ? 'Atenção ao Saldo' : 'Patrimônio Ativo'}</span>
+      <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#34D399'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${saldo < 0 ? '#F87171' : '#34D399'};">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
+          <span>\${saldo < 0 ? 'Saldo Negativo' : 'Saldo Positivo'}</span>
         </span>
-        \${savingsPct > 0 ? \`<span style="font-size:10px; background:rgba(16,185,129,0.15); color:#34d399; padding:2px 6px; border-radius:6px; font-weight:800;">\${savingsPct}% POUPADO</span>\` : ''}
+        <span class="kpi-tag \${saldo < 0 ? 'kpi-tag-danger' : 'kpi-tag-success'}">\${saldo < 0 ? 'Atenção' : 'Disponível'}</span>
       </div>
     </div>
 
@@ -10255,14 +10297,17 @@ function pageDashboard(){
     <div class="kpi kpi-income">
       <div class="row1">
         <span>Receitas</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); box-shadow:0 4px 14px rgba(16,185,129,0.25);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.06)); border:1px solid rgba(16,185,129,0.3); color:#34D399;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
         </span>
       </div>
-      <div class="val" data-anim-val="\${receitas}" data-prefix="\${receitas > 0 ? '+' : ''}" style="color:#34D399; font-variant-numeric:tabular-nums; text-shadow:0 0 14px rgba(16,185,129,0.35);">\${receitas > 0 ? '+' : ''}\${fmt(receitas)}</div>
-      <div class="sub" style="display:flex; align-items:center; justify-content:space-between; gap:5px; color:#34D399;">
-        <span>↑ Entradas em \${periodLabel()}</span>
-        <span style="font-size:10px; background:rgba(16,185,129,0.15); color:#34d399; padding:2px 6px; border-radius:6px; font-weight:800;">LÍQUIDO</span>
+      <div class="val" data-anim-val="\${receitas}" data-prefix="\${receitas > 0 ? '+' : ''}" style="color:#34D399; font-variant-numeric:tabular-nums;">\${receitas > 0 ? '+' : ''}\${fmt(receitas)}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
+          <span>Entradas no mês</span>
+        </span>
+        <span class="kpi-tag kpi-tag-success">Líquido</span>
       </div>
     </div>
 
@@ -10270,41 +10315,54 @@ function pageDashboard(){
     <div class="kpi kpi-expense">
       <div class="row1">
         <span>Despesas</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(239,68,68,0.22), rgba(185,28,28,0.08)); border:1px solid rgba(239,68,68,0.35); box-shadow:0 4px 14px rgba(239,68,68,0.25);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.06)); border:1px solid rgba(239,68,68,0.3); color:#F87171;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
         </span>
       </div>
-      <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums; text-shadow:\${despesas > 0 ? '0 0 14px rgba(239,68,68,0.35)' : 'none'};">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
-      <div class="sub" style="display:flex; align-items:center; justify-content:space-between; gap:5px; color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'};">
-        <span>↓ Saídas no período</span>
-        <span style="font-size:10px; background:rgba(239,68,68,0.15); color:#f87171; padding:2px 6px; border-radius:6px; font-weight:800;">\${commitPct}% DA RENDA</span>
+      <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#EF4444;"></span>
+          <span>Saídas no mês</span>
+        </span>
+        <span class="kpi-tag kpi-tag-danger">\${commitPct}% da Renda</span>
       </div>
     </div>
 
-    <!-- 4. Saldo do Mês -->
+    <!-- 4. Resultado Líquido -->
     <div class="kpi kpi-net">
       <div class="row1">
         <span>Resultado Líquido</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(59,130,246,0.22), rgba(37,99,235,0.08)); border:1px solid rgba(59,130,246,0.35); box-shadow:0 4px 14px rgba(59,130,246,0.25);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(59,130,246,0.06)); border:1px solid rgba(59,130,246,0.3); color:#60A5FA;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </span>
       </div>
-      <div class="val" data-anim-val="\${receitas-despesas}" style="color:\${(receitas-despesas) > 0 ? '#34D399' : (receitas-despesas) < 0 ? '#F87171' : 'var(--text)'}; font-variant-numeric:tabular-nums; text-shadow:\${(receitas-despesas) !== 0 ? '0 0 14px rgba(59,130,246,0.3)' : 'none'};">\${fmt(receitas-despesas)}</div>
-      <div class="sub" style="color:\${(receitas-despesas) > 0 ? '#34D399' : (receitas-despesas) < 0 ? '#F87171' : 'var(--text-dim)'}; font-weight:700;">
-        \${(receitas-despesas) > 0 ? '✓ Superávit Operacional' : (receitas-despesas) < 0 ? '⚠ Déficit no Período' : '✓ Balanço Equilibrado'}
+      <div class="val" data-anim-val="\${resultado}" style="color:\${resultado >= 0 ? '#34D399' : '#F87171'}; font-variant-numeric:tabular-nums;">\${resultado >= 0 ? '+' : ''}\${fmt(resultado)}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${resultado >= 0 ? '#34D399' : '#F87171'};">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
+          <span>\${resultado >= 0 ? 'Superávit no mês' : 'Déficit no mês'}</span>
+        </span>
+        <span class="kpi-tag \${resultado >= 0 ? 'kpi-tag-success' : 'kpi-tag-danger'}">\${savingsPct > 0 ? savingsPct + '% Poupado' : (resultado >= 0 ? 'Equilibrado' : 'Alerta')}</span>
       </div>
     </div>
 
-    <!-- 5. Transações -->
+    <!-- 5. Lançamentos -->
     <div class="kpi kpi-tx">
       <div class="row1">
         <span>Lançamentos</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(139,92,246,0.22), rgba(109,40,217,0.08)); border:1px solid rgba(139,92,246,0.35); box-shadow:0 4px 14px rgba(139,92,246,0.25);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(168,85,247,0.18), rgba(168,85,247,0.06)); border:1px solid rgba(168,85,247,0.3); color:#C084FC;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         </span>
       </div>
-      <div class="val" data-anim-val="\${periodTx.length}" data-is-int="true" style="color:#A78BFA; font-variant-numeric:tabular-nums; text-shadow:0 0 14px rgba(167,139,250,0.35);">\${periodTx.length}</div>
-      <div class="sub">Registros em \${periodLabel()}</div>
+      <div class="val" data-anim-val="\${periodTx.length}" data-is-int="true" style="color:#C084FC; font-variant-numeric:tabular-nums;">\${periodTx.length}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#A855F7;"></span>
+          <span>Registros ativos</span>
+        </span>
+        <span class="kpi-tag kpi-tag-purple">Total</span>
+      </div>
     </div>
   </div>
 
