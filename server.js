@@ -2021,16 +2021,89 @@ body.light .app-blob.a3{opacity:.05;}
   right:0 !important;
   z-index:99999 !important;
   width:100% !important;
-  background:linear-gradient(180deg, rgba(13, 18, 30, 0.95) 0%, rgba(9, 13, 22, 0.92) 100%) !important;
-  border-bottom:1px solid rgba(255, 255, 255, 0.10) !important;
-  box-shadow:0 10px 30px rgba(0,0,0,0.75) !important;
+  height:68px !important;
+  background:linear-gradient(180deg, rgba(12, 16, 28, 0.96) 0%, rgba(8, 11, 20, 0.94) 100%) !important;
+  border-bottom:1px solid rgba(139, 92, 246, 0.22) !important;
+  box-shadow:0 4px 24px rgba(0,0,0,0.7), inset 0 -1px 0 rgba(139, 92, 246, 0.2) !important;
   backdrop-filter:blur(30px) saturate(190%) !important;
   -webkit-backdrop-filter:blur(30px) saturate(190%) !important;
   padding-top:env(safe-area-inset-top);
 }
 .topheader-row{
-  display:flex; align-items:center; gap:16px; padding:10px 28px; max-width:1440px; margin:0 auto; min-height:68px;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:14px !important;
+  padding:0 24px !important;
+  max-width:100% !important;
+  margin:0 auto !important;
+  height:68px !important;
 }
+
+/* Design Aether: Perfil de Usuário & Marca no Topo */
+.aether-brand-user{
+  display:inline-flex !important; align-items:center !important; gap:12px !important;
+  cursor:pointer !important; padding:4px 8px !important; border-radius:12px !important;
+  transition:all 0.2s ease !important; user-select:none !important;
+}
+.aether-brand-user:hover{ background:rgba(255,255,255,0.05) !important; }
+.aether-avatar-container{
+  position:relative !important; width:38px !important; height:38px !important; flex-shrink:0 !important;
+}
+.aether-avatar-container .avatar{
+  width:38px !important; height:38px !important; border-radius:50% !important;
+  background:linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%) !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  color:#FFFFFF !important; font-size:13px !important; font-weight:800 !important;
+  border:2px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow:0 0 14px rgba(139, 92, 246, 0.4) !important;
+}
+.aether-avatar-dot{
+  position:absolute !important; bottom:0 !important; right:0 !important;
+  width:10px !important; height:10px !important; border-radius:50% !important;
+  background:#10B981 !important; border:2px solid #0C101C !important;
+  box-shadow:0 0 8px #10B981 !important;
+}
+.aether-user-meta{
+  display:flex !important; flex-direction:column !important; justify-content:center !important; text-align:left !important; line-height:1.2 !important;
+}
+.aether-user-title{
+  font-size:15px !important; font-weight:800 !important; color:#FFFFFF !important; letter-spacing:-0.01em !important; white-space:nowrap !important;
+}
+.aether-user-sub{
+  font-size:11px !important; font-weight:500 !important; color:#94A3B8 !important; letter-spacing:0.01em !important; white-space:nowrap !important; display:flex !important; align-items:center !important; gap:4px !important;
+}
+.aether-user-sub svg{ width:10px; height:10px; color:#10B981; }
+
+.aether-header-right{
+  display:flex !important; align-items:center !important; gap:10px !important; margin-left:auto !important;
+}
+.aether-credit-pill{
+  display:inline-flex !important; align-items:center !important; gap:7px !important;
+  padding:5px 13px !important; border-radius:999px !important;
+  background:rgba(255,255,255,0.04) !important; border:1px solid rgba(255,255,255,0.09) !important;
+  font-size:12px !important; color:#94A3B8 !important; backdrop-filter:blur(12px) !important; user-select:none !important;
+}
+.aether-credit-pill .credit-lbl{ color:#94A3B8 !important; font-weight:500 !important; }
+.aether-credit-pill .credit-val{ color:#FFFFFF !important; font-weight:700 !important; letter-spacing:0.02em !important; }
+.aether-credit-pill .credit-badge{
+  padding:2px 7px !important; border-radius:999px !important;
+  background:linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%) !important;
+  color:#FFFFFF !important; font-size:10px !important; font-weight:800 !important;
+  letter-spacing:0.04em !important; box-shadow:0 0 10px rgba(139, 92, 246, 0.6) !important;
+}
+.aether-settings-btn{
+  display:inline-flex !important; align-items:center !important; gap:6px !important;
+  padding:6px 13px !important; border-radius:10px !important;
+  background:rgba(255, 255, 255, 0.05) !important; border:1px solid rgba(255, 255, 255, 0.1) !important;
+  color:#E2E8F0 !important; font-size:12px !important; font-weight:600 !important;
+  cursor:pointer !important; transition:all 0.2s ease !important; user-select:none !important;
+}
+.aether-settings-btn:hover{
+  background:rgba(255, 255, 255, 0.1) !important; border-color:rgba(139, 92, 246, 0.4) !important;
+  color:#FFFFFF !important; box-shadow:0 0 12px rgba(139, 92, 246, 0.25) !important; transform:translateY(-1px) !important;
+}
+
 .header-live-time {
   display:inline-flex; align-items:center; gap:7px; padding:5px 12px;
   border-radius:999px; background:rgba(255,255,255,0.04);
@@ -2280,86 +2353,138 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
+/* ==================== Dock Lateral de Navegação Vertical (Estilo Aether 4K) ==================== */
 nav.menu{
-  display:flex; align-items:center; flex-wrap:nowrap; gap:6px; width:100%;
-  padding:5px 8px; max-width:1440px; margin:4px auto 8px;
-  overflow-x:auto; scrollbar-width:none;
-  background:linear-gradient(145deg, rgba(20, 27, 43, 0.88) 0%, rgba(13, 18, 30, 0.94) 52%, rgba(9, 13, 22, 0.98) 100%) !important;
+  position:fixed !important;
+  top:68px !important;
+  left:0 !important;
+  bottom:0 !important;
+  width:82px !important;
+  max-width:82px !important;
+  margin:0 !important;
+  padding:14px 0 20px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
+  background:linear-gradient(180deg, rgba(12, 16, 28, 0.96) 0%, rgba(8, 11, 20, 0.98) 100%) !important;
+  border-right:1px solid rgba(139, 92, 246, 0.18) !important;
+  border-top:none !important;
+  border-left:none !important;
+  border-bottom:none !important;
+  border-radius:0 !important;
+  box-shadow:6px 0 28px rgba(0, 0, 0, 0.65), inset -1px 0 0 rgba(255, 255, 255, 0.04) !important;
   backdrop-filter:blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter:blur(28px) saturate(190%) !important;
-  border:1px solid rgba(255, 255, 255, 0.10) !important;
-  border-radius:18px !important;
-  box-shadow:0 14px 35px -8px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.12) !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  scrollbar-width:none !important;
+  z-index:9999 !important;
 }
-/* Scrollbars Globais Slim & Elegantes */
-*::-webkit-scrollbar{width:5px; height:5px;}
-*::-webkit-scrollbar-track{background:transparent;}
-*::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12); border-radius:10px;}
-*::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.25);}
-*{scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.12) transparent;}
-nav.menu::-webkit-scrollbar{height:3px;}
-nav.menu::-webkit-scrollbar-track{background:transparent;}
-nav.menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15); border-radius:10px;}
+nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height:0 !important; }
 
 .menu button{
-  position:relative; display:flex; align-items:center; gap:8px; text-align:left;
-  background:transparent; border:1px solid transparent;
-  color:#94A3B8 !important; padding:8px 15px; border-radius:12px; font-size:13px; font-weight:600; letter-spacing:0.01em; cursor:pointer;
-  white-space:nowrap; flex-shrink:0; transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1); user-select:none;
+  position:relative !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  gap:4px !important;
+  width:66px !important;
+  min-height:58px !important;
+  padding:8px 3px 6px !important;
+  border-radius:14px !important;
+  background:transparent !important;
+  border:1px solid transparent !important;
+  color:#94A3B8 !important;
+  font-size:10px !important;
+  font-weight:500 !important;
+  letter-spacing:0.01em !important;
+  white-space:nowrap !important;
+  cursor:pointer !important;
+  transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  user-select:none !important;
+  box-sizing:border-box !important;
 }
 .menu button:hover{
-  background:rgba(255,255,255,0.06); color:#FFFFFF !important; border-color:rgba(255,255,255,0.12);
-  transform:translateY(-1px);
-  box-shadow:0 4px 14px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.06) !important;
+  color:#FFFFFF !important;
+  border-color:rgba(255,255,255,0.12) !important;
+  transform:translateY(-1.5px) !important;
+  box-shadow:0 4px 14px rgba(0,0,0,0.3) !important;
 }
 .menu button.active{
-  background:linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(59, 130, 246, 0.18) 100%) !important;
-  backdrop-filter:blur(20px) saturate(190%) !important;
-  -webkit-backdrop-filter:blur(20px) saturate(190%) !important;
-  color:#FFFFFF !important; font-weight:800 !important;
-  border:1px solid rgba(52, 211, 153, 0.45) !important;
-  border-radius:12px !important;
-  box-shadow:0 8px 24px rgba(0,0,0,0.45), inset 0 1px 1.5px rgba(255,255,255,0.45), 0 0 16px rgba(16,185,129,0.25) !important;
-  transform:translateY(-1px);
-  text-shadow:0 1px 4px rgba(0,0,0,0.5);
+  background:linear-gradient(135deg, rgba(99, 102, 241, 0.28) 0%, rgba(139, 92, 246, 0.20) 100%) !important;
+  border:1.5px solid rgba(168, 85, 247, 0.55) !important;
+  border-radius:14px !important;
+  color:#FFFFFF !important;
+  font-weight:700 !important;
+  box-shadow:0 0 18px rgba(139, 92, 246, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 4px 12px rgba(0,0,0,0.5) !important;
+  transform:translateY(-1px) !important;
+  text-shadow:0 1px 4px rgba(0,0,0,0.6) !important;
 }
 .menu button.active::after{
-  content:''; position:absolute; bottom:-2px; left:18%; right:18%; height:2px;
-  background:linear-gradient(90deg, transparent, #34D399, #10B981, transparent);
-  border-radius:999px;
-  box-shadow:0 0 10px rgba(52,211,153,0.8), 0 0 4px rgba(16,185,129,0.6);
+  display:none !important;
 }
 .menu button .ic{
-  width:28px; height:28px; border-radius:9px;
-  background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
-  border:1px solid rgba(255,255,255,0.09); color:#94A3B8;
-  display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 6px rgba(0,0,0,0.25);
-  transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  width:26px !important;
+  height:26px !important;
+  border-radius:8px !important;
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  color:inherit !important;
+  transition:all 0.2s ease !important;
+}
+.menu button .ic svg{
+  width:20px !important;
+  height:20px !important;
+  stroke-width:2.1px !important;
 }
 .menu button:hover .ic{
-  background:linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.05) 100%);
-  color:#FFFFFF; border-color:rgba(255,255,255,0.22);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 12px rgba(0,0,0,0.35);
-  transform:scale(1.05);
+  transform:scale(1.08) !important;
+  color:#FFFFFF !important;
 }
 .menu button.active .ic{
-  background:linear-gradient(135deg, rgba(16, 185, 129, 0.32) 0%, rgba(5, 150, 105, 0.18) 100%) !important;
-  color:#34D399 !important;
-  border:1px solid rgba(52, 211, 153, 0.5) !important;
-  box-shadow:0 2px 10px rgba(16,185,129,0.35), inset 0 1px 0 rgba(255,255,255,0.55) !important;
-  transform:scale(1.05);
+  color:#A78BFA !important;
+  transform:scale(1.08) !important;
+  filter:drop-shadow(0 0 6px rgba(167, 139, 250, 0.7)) !important;
 }
-.menu button .ic svg, .icon-btn svg{width:16px; height:16px; display:block; stroke-width:2.2px;}
+.menu button span:not(.ic){
+  font-size:10px !important;
+  font-weight:600 !important;
+  line-height:1.1 !important;
+  letter-spacing:0.01em !important;
+  display:block !important;
+}
 
-body.light nav.menu{background:rgba(255, 255, 255, 0.88) !important; border-color:#cbd5e1 !important; box-shadow:0 10px 30px rgba(15,23,42,0.08) !important;}
-body.light .menu button{color:#475569 !important; background:transparent; border-color:transparent;}
-body.light .menu button .ic{background:rgba(15,23,42,0.04); border-color:rgba(15,23,42,0.08); color:#64748B;}
-body.light .menu button:hover{background:rgba(15,23,42,0.06); color:#0F172A !important;}
-body.light .menu button:hover .ic{background:rgba(15,23,42,0.1); color:#0F172A;}
-body.light .menu button.active{background:linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.08) 100%) !important; color:#047857 !important; border-color:rgba(16, 185, 129, 0.35) !important; box-shadow:0 6px 20px rgba(16,185,129,0.15), inset 0 1px 1px rgba(255,255,255,0.8) !important;}
-body.light .menu button.active .ic{background:rgba(16, 185, 129, 0.15) !important; color:#047857 !important; border-color:rgba(16, 185, 129, 0.3) !important;}
-body.light .menu button.active::after{background:linear-gradient(90deg, transparent, #10B981, transparent) !important; box-shadow:0 0 10px #10B981 !important;}
+body.light nav.menu{
+  background:rgba(255, 255, 255, 0.94) !important;
+  border-right:1px solid #E2E8F0 !important;
+  box-shadow:4px 0 20px rgba(15, 23, 42, 0.08) !important;
+}
+body.light .menu button{
+  color:#64748B !important;
+}
+body.light .menu button:hover{
+  background:rgba(15, 23, 42, 0.05) !important;
+  color:#0F172A !important;
+}
+body.light .menu button.active{
+  background:linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%) !important;
+  border-color:rgba(139, 92, 246, 0.4) !important;
+  color:#6D28D9 !important;
+  box-shadow:0 4px 14px rgba(139, 92, 246, 0.15) !important;
+}
+body.light .menu button.active .ic{
+  color:#6D28D9 !important;
+  filter:none !important;
+}
 
 /* ==================== Correção Completa de Contraste do Modo Claro (Light Mode Contrast Fix) ==================== */
 body.light h1, body.light h2, body.light h3, body.light h4, body.light h5, body.light h6,
@@ -3171,9 +3296,9 @@ body.light .dev-signature-name {
 
 /* Centralização do conteúdo principal */
 .main{
-  flex:1; min-width:0; padding:10px 28px 30px;
-  margin-top:135px !important;
-  max-width:1440px; margin-left:auto; margin-right:auto; width:100%;
+  flex:1 !important; min-width:0 !important; padding:16px 28px 40px !important;
+  margin-top:76px !important; margin-left:88px !important;
+  width:calc(100% - 88px) !important; max-width:1760px !important; margin-right:auto !important;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
 .icon-btn{
@@ -5878,9 +6003,8 @@ body.light .logout-timer-bar {
   /* Otimizações Específicas para Monitores 4K / UHD / Ultra-Wide */
   .brand .name { font-size: 20px !important; }
   .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }
-  .topheader-row { max-width: 2200px !important; padding: 8px 36px !important; min-height: 60px !important; }
-  nav.menu { max-width: 2200px !important; padding: 5px 12px !important; margin: 4px auto 8px !important; }
-  .main { max-width: 2200px !important; padding: 12px 36px 36px !important; margin-top: 140px !important; }
+  .topheader-row { max-width: 100% !important; padding: 0 36px !important; height: 68px !important; }
+  .main { max-width: 2400px !important; padding: 16px 36px 40px !important; margin-top: 76px !important; margin-left: 88px !important; width: calc(100% - 88px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
   .kpi .val { font-size: 26px !important; }
   .kpi .sub { font-size: 12.5px !important; }
@@ -5893,9 +6017,8 @@ body.light .logout-timer-bar {
 
 @media (min-width: 1700px) and (max-width: 2559px) {
   .brand .name { font-size: 18px; }
-  .topheader-row { max-width: 1760px !important; padding: 8px 28px !important; min-height: 60px !important; }
-  nav.menu { max-width: 1760px !important; margin: 4px auto 8px !important; }
-  .main { max-width: 1760px !important; padding: 12px 28px 30px !important; margin-top: 135px !important; }
+  .topheader-row { max-width: 100% !important; padding: 0 28px !important; height: 68px !important; }
+  .main { max-width: 1920px !important; padding: 16px 28px 36px !important; margin-top: 76px !important; margin-left: 88px !important; width: calc(100% - 88px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; }
 }
 
@@ -5909,18 +6032,23 @@ body.light .logout-timer-bar {
   .grid-2-1 { grid-template-columns: 1fr !important; }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .mobile-menu-btn { display: flex !important; }
   nav.menu { display: none !important; }
+  .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 14px 60px !important; }
+  .aether-credit-pill { display: none !important; }
+}
+
+@media (max-width: 768px) {
   .kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
   .grid3, .grid2 { grid-template-columns: 1fr !important; }
-  .topheader-row { padding: 12px 16px; gap: 10px; }
+  .topheader-row { padding: 0 16px; gap: 10px; }
   .brand .name { font-size: 14px; }
   .user .uname, .user .urole { max-width: 110px; }
   .donut-wrap { flex-direction: column; text-align: center; gap: 14px; }
   .donut-side.r { text-align: center; }
   .cat-cards { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-  .main { margin-top: 75px !important; padding: 16px 12px 60px !important; }
+  .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 12px 60px !important; }
 }
 
 @media (max-width: 480px) {
@@ -6413,20 +6541,45 @@ html.light .scale-dropdown .scale-opt-btn:hover {
     <div class="app-blob a2"></div>
     <div class="app-blob a3"></div>
   </div>
+  
+  <!-- CABEÇALHO SUPERIOR ESTILO AETHER 4K -->
   <div class="topheader">
     <div class="topheader-row">
-      <button class="mobile-menu-btn" id="mobileMenuToggle" title="Abrir Menu">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-      <div class="brand">
-        <div class="logo">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 19.5V4.5L18 19.5V4.5" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(255,255,255,0.9)) drop-shadow(0 2px 4px rgba(0,0,0,0.5));"/>
-          </svg>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <button class="mobile-menu-btn" id="mobileMenuToggle" title="Abrir Menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        
+        <div class="aether-brand-user" id="userMenu" data-nav="config" title="Perfil & Configurações da Conta">
+          <div class="aether-avatar-container">
+            <div class="avatar" id="headerAvatar"></div>
+            <span class="aether-avatar-dot"></span>
+          </div>
+          <div class="aether-user-meta">
+            <div class="aether-user-title" id="headerName">Aether</div>
+            <div class="aether-user-sub" id="headerRole">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Prompt Engine</span>
+            </div>
+          </div>
         </div>
-        <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
       </div>
-      <div class="right" style="margin-left:auto;">
+
+      <div class="aether-header-right">
+        <div class="aether-credit-pill" title="Status Operacional da Sessão">
+          <span class="credit-lbl">Credits:</span>
+          <strong class="credit-val" id="headerCreditsVal">4,390</strong>
+          <span class="credit-badge">PRO</span>
+        </div>
+
+        <button type="button" class="aether-settings-btn" data-nav="config" title="Configurações do Sistema">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Settings</span>
+        </button>
+
         <div class="notif-wrap">
           <div class="icon-btn" id="notifBtn" title="Notificações & Alertas em Tempo Real">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
@@ -6440,6 +6593,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
             <div class="notif-list" id="notifList"></div>
           </div>
         </div>
+
         <div class="scale-selector-wrap">
           <button class="icon-btn" id="scaleMenuBtn" title="Tamanho de Visualização & Resolução de Tela" style="gap:6px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
@@ -6459,86 +6613,81 @@ html.light .scale-dropdown .scale-opt-btn:hover {
             <button class="scale-opt-btn" data-scale="150%">🔍 150% (Extra Grande)</button>
           </div>
         </div>
+
         <div class="icon-btn" id="miniThemeBtn" title="Alternar Modo Noturno / Diurno">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>
         </div>
-        <div class="user" id="userMenu" data-nav="config" title="Perfil & Configurações da Conta">
-          <div class="avatar" id="headerAvatar"></div>
-          <div>
-            <div class="uname" id="headerName"></div>
-            <div class="urole" id="headerRole">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>Usuário</span>
-            </div>
-          </div>
-        </div>
-        <script>
-        (function(){
-          try {
-            var savedTheme = localStorage.getItem('nexus_theme');
-            if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim();
-            var isLight = (savedTheme === 'light');
-            var miniBtn = document.getElementById('miniThemeBtn');
-            if (miniBtn) {
-              miniBtn.innerHTML = isLight ?
-                '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>' :
-                '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
-            }
-            var savedScale = localStorage.getItem('nexus_display_scale') || 'auto';
-            var scaleLabel = document.getElementById('currentScaleLabel');
-            if (scaleLabel) {
-              scaleLabel.textContent = (savedScale === 'auto') ? 'Auto' : savedScale;
-            }
 
-            var cu = localStorage.getItem('nexus_cached_user');
-            if (cu) {
-              var u = JSON.parse(cu);
-              if (u && u.name) {
-                var n = document.getElementById('headerName');
-                var r = document.getElementById('headerRole');
-                var a = document.getElementById('headerAvatar');
-                if (n) n.textContent = u.name;
-                if (r) r.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>' + (u.role || 'Usuário') + '</span>';
-                if (a) {
-                  var p = u.name.trim().split(/\s+/);
-                  a.textContent = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
-                }
-              }
-            }
-            setTimeout(function(){
-              document.documentElement.classList.add('app-ready');
-            }, 50);
-          } catch(e){}
-        })();
-        </script>
         <button type="button" class="btn-primary" id="headerMirrorExitBtn" onclick="exitViewMode()" style="display:none; background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important; color:#060B18 !important; font-weight:800 !important; font-size:12px !important; padding:6px 14px !important; border-radius:10px !important; border:1.5px solid #FDE68A !important; box-shadow:0 0 16px rgba(245,158,11,0.5) !important; cursor:pointer !important; align-items:center; gap:6px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
           <span>Voltar ao Admin</span>
         </button>
+
         <button class="btn-ghost" id="logoutBtn" title="Encerrar Sessão com Segurança">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           <span>Sair</span>
         </button>
       </div>
     </div>
-    <nav class="menu" id="menu">
-      <button data-page="dashboard"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span> Dashboard</button>
-      <button data-page="transacoes"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span> Transações</button>
-      <button data-page="cartoes"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span> Cartões</button>
-      <button data-page="orcamentos"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span> Orçamentos</button>
-      <button data-page="metas"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span> Metas</button>
-      <button data-page="relatorios"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span> Relatórios</button>
-      <button data-page="recorrentes"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span> Recorrentes</button>
-      <button data-page="importar"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Importar</button>
-      <button data-page="anexos"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span> Anexos</button>
-      <button data-page="config"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Configurações</button>
-      <button data-page="funcoes" id="menuFuncoesBtn" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> Funções & Permissões</button>
-      <button data-page="usuarios" id="menuUsuariosBtn" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
-      <button data-page="logs" id="menuLogsBtn" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
-      <button data-page="ordens" id="menuOrdensBtn" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço <span id="osBadgeCount" style="margin-left:4px; padding:2px 7px; border-radius:999px; font-size:10px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
-    </nav>
-
   </div>
+
+  <!-- MENU DOCK LATERAL VERTICAL ESTILO AETHER -->
+  <nav class="menu" id="menu">
+    <button data-page="dashboard"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><span>Dashboard</span></button>
+    <button data-page="transacoes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span><span>Transações</span></button>
+    <button data-page="cartoes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span><span>Cartões</span></button>
+    <button data-page="orcamentos"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span><span>Orçamentos</span></button>
+    <button data-page="metas"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span><span>Metas</span></button>
+    <button data-page="relatorios"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span><span>Relatórios</span></button>
+    <button data-page="recorrentes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span><span>Recorrentes</span></button>
+    <button data-page="importar"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Importar</span></button>
+    <button data-page="anexos"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span>Anexos</span></button>
+    <button data-page="config"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span>Config</span></button>
+    <button data-page="funcoes" id="menuFuncoesBtn" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span><span>Funções</span></button>
+    <button data-page="usuarios" id="menuUsuariosBtn" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
+    <button data-page="logs" id="menuLogsBtn" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
+    <button data-page="ordens" id="menuOrdensBtn" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Ordens</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
+  </nav>
+
+  <script>
+  (function(){
+    try {
+      var savedTheme = localStorage.getItem('nexus_theme');
+      if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim();
+      var isLight = (savedTheme === 'light');
+      var miniBtn = document.getElementById('miniThemeBtn');
+      if (miniBtn) {
+        miniBtn.innerHTML = isLight ?
+          '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>' :
+          '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
+      }
+      var savedScale = localStorage.getItem('nexus_display_scale') || 'auto';
+      var scaleLabel = document.getElementById('currentScaleLabel');
+      if (scaleLabel) {
+        scaleLabel.textContent = (savedScale === 'auto') ? 'Auto' : savedScale;
+      }
+
+      var cu = localStorage.getItem('nexus_cached_user');
+      if (cu) {
+        var u = JSON.parse(cu);
+        if (u && u.name) {
+          var n = document.getElementById('headerName');
+          var r = document.getElementById('headerRole');
+          var a = document.getElementById('headerAvatar');
+          if (n) n.textContent = u.name;
+          if (r) r.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>' + (u.role || 'Usuário') + '</span>';
+          if (a) {
+            var p = u.name.trim().split(/\s+/);
+            a.textContent = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
+          }
+        }
+      }
+      setTimeout(function(){
+        document.documentElement.classList.add('app-ready');
+      }, 50);
+    } catch(e){}
+  })();
+  </script>
 
   <!-- Drawer Mobile Slide-out -->
   <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
