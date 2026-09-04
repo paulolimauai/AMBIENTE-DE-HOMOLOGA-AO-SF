@@ -380,6 +380,7 @@ const htmlContent = `<!DOCTYPE html>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#060913" id="metaThemeColor">
+<link rel="preload" as="image" href="/images/nexus_cyber_office_bg.jpg" fetchpriority="high">
 <script>
 (function() {
   try {
@@ -527,37 +528,60 @@ body.light, html.light body, html.light {
 }
 *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
 html, body{overflow-x:clip !important; width:100%;}
+
+/* ==================== Camada de Fundo Permanente Zero-Flicker (Hardware Accelerated) ==================== */
+#persistentSystemBg,
+.persistent-system-bg {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -99999 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  background-color: var(--bg) !important;
+  background-image: 
+    linear-gradient(180deg, rgba(7, 11, 20, 0.40) 0%, rgba(8, 14, 26, 0.68) 50%, rgba(5, 9, 18, 0.85) 100%),
+    url('/images/nexus_cyber_office_bg.jpg') !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  transform: translateZ(0) !important;
+  -webkit-transform: translateZ(0) !important;
+  will-change: transform !important;
+}
+
+body.light #persistentSystemBg,
+body.light .persistent-system-bg {
+  background-color: #F0F4F8 !important;
+  background-image: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(240, 246, 250, 0.88) 100%),
+    url('/images/nexus_cyber_office_bg.jpg') !important;
+}
+
 html,
 body,
 html.user-logged-in,
 html.user-logged-in body,
 body.user-logged-in {
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-  background-color:var(--bg) !important;
-  background-image:
-    linear-gradient(180deg, rgba(7, 11, 20, 0.40) 0%, rgba(8, 14, 26, 0.68) 50%, rgba(5, 9, 18, 0.85) 100%),
-    url('/images/nexus_cyber_office_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
+  background-color: transparent !important;
+  background-image: none !important;
   color:var(--text); min-height:100vh;
   zoom:var(--app-zoom, 1);
 }
-body.light,
-html.light,
-html.light body,
-html.user-logged-in body.light,
-body.user-logged-in.light {
-  background-color:#F0F4F8 !important;
-  background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(240, 246, 250, 0.88) 100%),
-    url('/images/nexus_cyber_office_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
+
+html.user-logged-in #authPage {
+  display: none !important;
 }
+html.user-logged-in #appMain {
+  display: flex !important;
+}
+
 button, input, select{font-family:inherit; color:inherit;}
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
 
@@ -744,14 +768,8 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
   padding: 0 0 clamp(8px, 1.5vh, 18px) 0;
-  background-color: #070B14;
-  background-image: 
-    linear-gradient(180deg, rgba(7, 11, 20, 0.40) 0%, rgba(8, 14, 26, 0.68) 50%, rgba(5, 9, 18, 0.85) 100%),
-    url('/images/nexus_cyber_office_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 .auth-container.show { display: flex; }
 
@@ -783,13 +801,8 @@ body.light .auth-container {
   --auth-input-bg: #FFFFFF;
   --auth-text: #0F172A;
   --auth-text-dim: #475569;
-  background-color: #F2F7F4 !important;
-  background-image: 
-    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.75) 0%, rgba(240, 246, 242, 0.90) 100%),
-    url('/images/nexus_cyber_office_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
 .auth-top-bar {
@@ -1988,13 +2001,7 @@ html.light #overlayNovaOrdem .close-x:hover {
   position: relative;
   flex-direction: column;
   background-color: transparent !important;
-  background-image: 
-    linear-gradient(180deg, rgba(7, 11, 20, 0.40) 0%, rgba(8, 14, 26, 0.68) 50%, rgba(5, 9, 18, 0.85) 100%),
-    url('/images/nexus_cyber_office_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
+  background-image: none !important;
 }
 .app.show,
 html.user-logged-in #appMain {
@@ -2004,13 +2011,7 @@ body.light .app,
 body.light #appMain,
 html.light #appMain {
   background-color: transparent !important;
-  background-image: 
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(240, 246, 250, 0.88) 100%),
-    url('/images/nexus_cyber_office_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
+  background-image: none !important;
 }
 
 .app-bg-scene{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
@@ -6306,6 +6307,8 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 </style>
 </head>
 <body>
+<!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
+<div id="persistentSystemBg" class="persistent-system-bg" aria-hidden="true"></div>
 <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
@@ -18245,7 +18248,12 @@ const server = http.createServer((req, res) => {
         '.css': 'text/css', '.js': 'application/javascript', '.json': 'application/json',
         '.html': 'text/html; charset=utf-8'
       };
-      res.writeHead(200, { ...corsHeaders, 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
+      const isImg = ext.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/i);
+      res.writeHead(200, {
+        ...corsHeaders,
+        'Content-Type': mimeTypes[ext] || 'application/octet-stream',
+        'Cache-Control': isImg ? 'public, max-age=31536000, immutable' : 'public, max-age=86400'
+      });
       return fs.createReadStream(safePath).pipe(res);
     }
   }
