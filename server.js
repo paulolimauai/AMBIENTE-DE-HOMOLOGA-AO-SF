@@ -6688,12 +6688,6 @@ html.light .scale-dropdown .scale-opt-btn:hover {
       </div>
 
       <div class="aether-header-right">
-        <div class="aether-credit-pill" title="Status Operacional da Sessão">
-          <span class="credit-lbl">Credits:</span>
-          <strong class="credit-val" id="headerCreditsVal">4,390</strong>
-          <span class="credit-badge">PRO</span>
-        </div>
-
         <button type="button" class="aether-settings-btn" data-nav="config" title="Configurações do Sistema">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
