@@ -2384,12 +2384,12 @@ nav.menu{
   width:82px !important;
   max-width:82px !important;
   margin:0 !important;
-  padding:14px 0 20px !important;
+  padding:10px 0 !important;
   display:flex !important;
   flex-direction:column !important;
   align-items:center !important;
-  justify-content:flex-start !important;
-  gap:8px !important;
+  justify-content:space-between !important;
+  gap:4px !important;
   background:linear-gradient(180deg, rgba(9, 14, 26, 0.94) 0%, rgba(6, 10, 20, 0.97) 100%) !important;
   border-right:1px solid rgba(0, 229, 255, 0.16) !important;
   border-top:none !important;
@@ -2414,10 +2414,12 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   justify-content:center !important;
   text-align:center !important;
   gap:4px !important;
-  width:66px !important;
-  min-height:58px !important;
-  padding:8px 3px 6px !important;
-  border-radius:14px !important;
+  width:calc(100% - 12px) !important;
+  max-width:70px !important;
+  flex:1 1 0px !important;
+  min-height:48px !important;
+  padding:4px 2px !important;
+  border-radius:13px !important;
   background:transparent !important;
   border:1px solid transparent !important;
   color:#94A3B8 !important;
@@ -2492,7 +2494,7 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
 .menu-admin-divider {
   width: 46px;
   height: 1.5px;
-  margin: 12px auto 8px;
+  margin: 6px auto 4px;
   background: linear-gradient(90deg, rgba(245, 158, 11, 0) 0%, rgba(245, 158, 11, 0.75) 50%, rgba(245, 158, 11, 0) 100%);
   border-radius: 999px;
   flex-shrink: 0;
@@ -2504,7 +2506,7 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 3px 8px;
+  padding: 2px 7px;
   border-radius: 999px;
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.10) 100%);
   border: 1px solid rgba(245, 158, 11, 0.40);
@@ -2513,6 +2515,7 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  flex-shrink: 0;
   margin: 0 auto 6px;
   box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
   user-select: none;
