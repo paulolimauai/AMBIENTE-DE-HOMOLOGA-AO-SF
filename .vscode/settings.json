@@ -6,6 +6,7 @@
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 500,
   "chat.editing.alwaysSaveWithGeneratedChanges": true,
+  "chat.editing.autoAcceptDelay": 1,
   "chat.editing.confirmEditRequestRemoval": false,
   "terminal.integrated.confirmOnExit": "never",
   "antigravity.skipPermissions": true,
