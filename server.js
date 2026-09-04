@@ -452,21 +452,38 @@ html:not(.user-logged-in) #authPage {
 
 
 
-html.is-admin nav.menu button:not(#menuUsuariosBtn):not(#menuLogsBtn):not(#menuFuncoesBtn):not(#menuOrdensBtn),
-html.is-admin nav.mobile-drawer-nav button:not(#mobileDrawerUsuariosBtn):not(#mobileDrawerLogsBtn):not(#mobileDrawerFuncoesBtn):not(#mobileDrawerOrdensBtn) {
+/* ==================== Controle de Itens do Menu Administrativo ==================== */
+/* Por padrão (inclusive para usuários comuns), itens administrativos são totalmente ocultos */
+.menu-admin-divider,
+.menu-admin-badge,
+.menu-btn-admin,
+#menuFuncoesBtn, #menuUsuariosBtn, #menuLogsBtn, #menuOrdensBtn,
+#mobileDrawerAdminDivider, #mobileDrawerAdminBadge,
+#mobileDrawerFuncoesBtn, #mobileDrawerUsuariosBtn, #mobileDrawerLogsBtn, #mobileDrawerOrdensBtn {
   display: none !important;
 }
 
+/* Exclusivo para Perfil de Administrador: exibir divisor executivo, badge e botões */
+html.is-admin .menu-admin-divider,
+html.is-admin #mobileDrawerAdminDivider {
+  display: block !important;
+}
+html.is-admin .menu-admin-badge,
+html.is-admin #mobileDrawerAdminBadge {
+  display: inline-flex !important;
+}
+html.is-admin .menu-btn-admin,
+html.is-admin #menuFuncoesBtn,
 html.is-admin #menuUsuariosBtn,
 html.is-admin #menuLogsBtn,
-html.is-admin #menuFuncoesBtn,
 html.is-admin #menuOrdensBtn,
+html.is-admin #mobileDrawerFuncoesBtn,
 html.is-admin #mobileDrawerUsuariosBtn,
 html.is-admin #mobileDrawerLogsBtn,
-html.is-admin #mobileDrawerFuncoesBtn,
 html.is-admin #mobileDrawerOrdensBtn {
   display: flex !important;
 }
+
 
 :root{
   color-scheme: dark;
@@ -2463,10 +2480,86 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   display:block !important;
 }
 
+/* ==================== Estilo Executivo Premium do Menu Administrativo ==================== */
+.menu-admin-divider {
+  width: 46px;
+  height: 1.5px;
+  margin: 12px auto 8px;
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0) 0%, rgba(245, 158, 11, 0.75) 50%, rgba(245, 158, 11, 0) 100%);
+  border-radius: 999px;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+}
+
+.menu-admin-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.10) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.40);
+  color: #FBBF24;
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 auto 6px;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+  user-select: none;
+  cursor: default;
+}
+.menu-admin-badge svg {
+  width: 9px;
+  height: 9px;
+  stroke-width: 2.8px;
+}
+
+.menu button.menu-btn-admin {
+  position: relative !important;
+  color: #CBD5E1 !important;
+}
+.menu button.menu-btn-admin:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
+  color: #FDE68A !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.22) !important;
+  transform: translateY(-1.5px) !important;
+}
+.menu button.menu-btn-admin:hover .ic {
+  color: #FBBF24 !important;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6)) !important;
+}
+.menu button.menu-btn-admin.active {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.20) 100%) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.65) !important;
+  border-radius: 14px !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 4px 12px rgba(0,0,0,0.5) !important;
+  transform: translateY(-1px) !important;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6) !important;
+}
+.menu button.menu-btn-admin.active .ic {
+  color: #FBBF24 !important;
+  transform: scale(1.08) !important;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.75)) !important;
+}
+
 body.light nav.menu{
   background:rgba(255, 255, 255, 0.94) !important;
   border-right:1px solid #E2E8F0 !important;
   box-shadow:4px 0 20px rgba(15, 23, 42, 0.08) !important;
+}
+body.light .menu-admin-divider {
+  background: linear-gradient(90deg, rgba(217, 119, 6, 0) 0%, rgba(217, 119, 6, 0.6) 50%, rgba(217, 119, 6, 0) 100%) !important;
+  box-shadow: 0 0 8px rgba(217, 119, 6, 0.2) !important;
+}
+body.light .menu-admin-badge {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(217, 119, 6, 0.35) !important;
+  color: #B45309 !important;
 }
 body.light .menu button{
   color:#64748B !important;
@@ -2484,6 +2577,24 @@ body.light .menu button.active{
 body.light .menu button.active .ic{
   color:#6D28D9 !important;
   filter:none !important;
+}
+body.light .menu button.menu-btn-admin {
+  color: #475569 !important;
+}
+body.light .menu button.menu-btn-admin:hover {
+  background: rgba(245, 158, 11, 0.10) !important;
+  color: #92400E !important;
+  border-color: rgba(217, 119, 6, 0.35) !important;
+}
+body.light .menu button.menu-btn-admin.active {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.10) 100%) !important;
+  border-color: rgba(217, 119, 6, 0.6) !important;
+  color: #92400E !important;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.20) !important;
+}
+body.light .menu button.menu-btn-admin.active .ic {
+  color: #B45309 !important;
+  filter: none !important;
 }
 
 /* ==================== Correção Completa de Contraste do Modo Claro (Light Mode Contrast Fix) ==================== */
@@ -6643,10 +6754,15 @@ html.light .scale-dropdown .scale-opt-btn:hover {
     <button data-page="importar"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Importar</span></button>
     <button data-page="anexos"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span>Anexos</span></button>
     <button data-page="config"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span>Config</span></button>
-    <button data-page="funcoes" id="menuFuncoesBtn" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span><span>Funções</span></button>
-    <button data-page="usuarios" id="menuUsuariosBtn" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
-    <button data-page="logs" id="menuLogsBtn" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
-    <button data-page="ordens" id="menuOrdensBtn" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Ordens</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
+    
+    <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
+    <div class="menu-admin-divider" title="Área de Gestão"></div>
+    <div class="menu-admin-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMIN</span></div>
+
+    <button data-page="funcoes" id="menuFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span><span>Funções</span></button>
+    <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
+    <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
+    <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Ordens</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
   </nav>
 
   <script>
@@ -6713,11 +6829,16 @@ html.light .scale-dropdown .scale-opt-btn:hover {
       <button data-page="recorrentes"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span> Recorrentes</button>
       <button data-page="importar"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Importar</button>
       <button data-page="anexos"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span> Anexos</button>
-      <button data-page="config"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Configurações</button>
-      <button data-page="funcoes" id="mobileDrawerFuncoesBtn" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> Funções & Permissões</button>
-      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
-      <button data-page="logs" id="mobileDrawerLogsBtn" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
-      <button data-page="ordens" id="mobileDrawerOrdensBtn" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço</button>
+      <button data-page="config"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Configurações</button>
+      
+      <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
+      <div id="mobileDrawerAdminDivider" class="menu-admin-divider" style="display:none; width:88%; margin:14px auto 10px;"></div>
+      <div id="mobileDrawerAdminBadge" class="menu-admin-badge" style="display:none; margin:0 16px 8px; width:fit-content;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMINISTRAÇÃO</span></div>
+
+      <button data-page="funcoes" id="mobileDrawerFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> Funções & Permissões</button>
+      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
+      <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
+      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço</button>
     </nav>
   </div>
 
@@ -9728,15 +9849,11 @@ function render(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
 
-  if (isAdminView) {
-    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
-      currentPage = 'usuarios';
-    }
-  } else {
-    if (!['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(currentPage)) {
-      currentPage = 'dashboard';
-    }
+  // Usuários comuns nunca podem acessar páginas administrativas
+  if (!isAdminView && ['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+    currentPage = 'dashboard';
   }
+
 
   let newHTML = '';
   try {
@@ -9820,14 +9937,9 @@ function updateActiveMenu(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
 
-  if (isAdminView) {
-    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
-      currentPage = 'usuarios';
-    }
-  } else {
-    if (['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
-      currentPage = 'dashboard';
-    }
+  // Usuários comuns nunca podem permanecer em telas de administração
+  if (!isAdminView && ['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+    currentPage = 'dashboard';
   }
 
   const buttons = document.querySelectorAll('button[data-page]');
@@ -9847,18 +9959,28 @@ function updateAdminMenuVisibility(){
     document.documentElement.classList.remove('is-admin');
   }
 
+  // Módulos financeiros ficam sempre visíveis para todos os usuários
   const financialPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
   financialPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
-      btn.style.display = isAdminView ? 'none' : 'flex';
+      btn.style.display = 'flex';
     });
   });
 
-  const adminPages = ['usuarios', 'logs', 'funcoes', 'ordens'];
+  // Módulos de gestão administrativa aparecem EXCLUSIVAMENTE para o Administrador
+  const adminPages = ['funcoes', 'usuarios', 'logs', 'ordens'];
   adminPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdminView ? 'flex' : 'none';
     });
+  });
+
+  // Divisores e badges executivas do menu de gestão
+  document.querySelectorAll('.menu-admin-divider, #mobileDrawerAdminDivider').forEach(function(el) {
+    el.style.display = isAdminView ? 'block' : 'none';
+  });
+  document.querySelectorAll('.menu-admin-badge, #mobileDrawerAdminBadge').forEach(function(el) {
+    el.style.display = isAdminView ? 'inline-flex' : 'none';
   });
 }
 
@@ -15853,6 +15975,11 @@ function attachPageEvents(){
 }
 
 function navigate(page){
+  const isAdmin = currentUser && currentUser.role === 'Administrador';
+  const isAdminView = isAdmin && !isViewingOtherUser;
+  if (!isAdminView && ['usuarios', 'logs', 'funcoes', 'ordens'].includes(page)) {
+    page = 'dashboard';
+  }
   if(!page) page = 'dashboard';
   const isSamePage = (currentPage === page);
   currentPage = page;
@@ -16348,10 +16475,11 @@ if (scaleMenuBtn && scaleDropdown) {
 
       if (currentUser.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
-        if (['logs', 'funcoes', 'usuarios', 'ordens'].includes(pageTarget)) {
+        const validAdminTargets = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config', 'logs', 'funcoes', 'usuarios', 'ordens'];
+        if (validAdminTargets.includes(pageTarget)) {
           currentPage = pageTarget;
         } else {
-          currentPage = 'usuarios';
+          currentPage = 'dashboard';
         }
       } else {
         document.documentElement.classList.remove('is-admin');
@@ -16442,10 +16570,11 @@ if (scaleMenuBtn && scaleDropdown) {
   const pageTarget = hashPage || savedPage || currentPage;
 
   if (currentUser.role === 'Administrador') {
-    if (['logs', 'funcoes', 'usuarios', 'ordens'].includes(pageTarget)) {
+    const validAdminTargets = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config', 'logs', 'funcoes', 'usuarios', 'ordens'];
+    if (validAdminTargets.includes(pageTarget)) {
       currentPage = pageTarget;
     } else {
-      currentPage = 'usuarios';
+      currentPage = 'dashboard';
     }
   } else {
     if (['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(pageTarget)) {
