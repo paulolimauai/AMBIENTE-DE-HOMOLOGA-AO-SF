@@ -17466,6 +17466,8 @@ const server = http.createServer((req, res) => {
     parsedUrl = { pathname: req.url.split('?')[0] || '/', query: {} };
   }
 
+  console.log(`[HTTP ${req.method}] ${parsedUrl.pathname}`);
+
   // Cabeçalhos globais de CORS e Segurança HTTP
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
