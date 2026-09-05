@@ -16,6 +16,15 @@ try {
   // pg não instalado no ambiente
 }
 
+let mssql;
+try {
+  mssql = require('mssql/msnodesqlv8');
+} catch (e) {
+  try {
+    mssql = require('mssql');
+  } catch (e2) {}
+}
+
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
 const JWT_SECRET = process.env.JWT_SECRET || 'nexus_financeiro_secret_key_2026_4k_secure';
@@ -138,32 +147,126 @@ function broadcastEvent(eventType, eventData) {
   }
 }
 
-// ==================== Conexão com o PostgreSQL ====================
-let pool = null;
-if (Pool) {
-  try {
-    pool = process.env.DATABASE_URL
-      ? new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false }
-      })
-      : new Pool({
-        host: process.env.DB_HOST || 'localhost',
-        port: process.env.DB_PORT || 5432,
-        user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || '86266049',
-        database: process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇAO SF',
-        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
-      });
+// ==================== Camada de Conexão com o Banco de Dados (MSSQL Interno / PostgreSQL) ====================
+class MssqlAdapter {
+  constructor(pool) {
+    this.pool = pool;
+    this.isMssql = true;
+  }
 
-    pool.on('error', (err) => {
-      console.warn('[AVISO BD] Erro no pool do PostgreSQL:', err.message);
+  async query(text, params = []) {
+    let queryText = text;
+
+    // Emulação de ON CONFLICT para inserção do administrador padrão
+    if (/ON\s+CONFLICT\s*\(\s*email\s*\)\s*DO\s+NOTHING/i.test(queryText)) {
+      queryText = `
+        IF NOT EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER(@arg2))
+        BEGIN
+          INSERT INTO usuarios (name, email, password, role, active)
+          VALUES (@arg1, @arg2, @arg3, @arg4, @arg5);
+        END
+      `;
+    } else if (/INSERT\s+INTO\s+usuarios.+ON\s+CONFLICT\s*\(\s*email\s*\)\s*DO\s+UPDATE/is.test(queryText)) {
+      queryText = `
+        IF EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER(@arg2))
+        BEGIN
+          UPDATE usuarios SET
+            name = @arg1,
+            password = CASE WHEN @arg3 IS NOT NULL AND @arg3 != '' THEN @arg3 ELSE usuarios.password END,
+            role = @arg4,
+            active = @arg5,
+            last_login = COALESCE(@arg6, usuarios.last_login),
+            cpf = COALESCE(@arg7, usuarios.cpf),
+            phone = COALESCE(@arg8, usuarios.phone),
+            birth_date = COALESCE(@arg9, usuarios.birth_date),
+            terms_accepted = COALESCE(@arg10, usuarios.terms_accepted)
+          WHERE LOWER(email) = LOWER(@arg2);
+        END
+        ELSE
+        BEGIN
+          INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted)
+          VALUES (@arg1, @arg2, @arg3, @arg4, @arg5, @arg6, @arg7, @arg8, @arg9, @arg10);
+        END
+      `;
+    } else if (/INSERT\s+INTO\s+dados_financeiros.+ON\s+CONFLICT/is.test(queryText)) {
+      queryText = `
+        IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER(@arg1))
+        BEGIN
+          UPDATE dados_financeiros SET dados = @arg2, updated_at = GETDATE() WHERE LOWER(email) = LOWER(@arg1);
+        END
+        ELSE
+        BEGIN
+          INSERT INTO dados_financeiros (email, dados, updated_at) VALUES (@arg1, @arg2, GETDATE());
+        END
+      `;
+    } else {
+      // Transform RETURNING id -> OUTPUT INSERTED.id
+      if (/RETURNING\s+id/i.test(queryText)) {
+        queryText = queryText.replace(/\bVALUES\b/i, 'OUTPUT INSERTED.id VALUES');
+        queryText = queryText.replace(/RETURNING\s+id/i, '');
+      }
+
+      // Transform now() -> GETDATE()
+      queryText = queryText.replace(/\bNOW\(\)/gi, 'GETDATE()');
+
+      // Transform ORDER BY ... LIMIT (\d+) -> ORDER BY ... OFFSET 0 ROWS FETCH NEXT $1 ROWS ONLY
+      queryText = queryText.replace(/ORDER BY\s+(.+?)\s+LIMIT\s+(\d+)/gi, 'ORDER BY $1 OFFSET 0 ROWS FETCH NEXT $2 ROWS ONLY');
+    }
+
+    const request = this.pool.request();
+    if (Array.isArray(params) && params.length > 0) {
+      params.forEach((val, idx) => {
+        const paramName = `arg${idx + 1}`;
+        let sanitizedVal = val;
+        if (sanitizedVal !== null && typeof sanitizedVal === 'object' && !(sanitizedVal instanceof Date)) {
+          sanitizedVal = JSON.stringify(sanitizedVal);
+        }
+        if (typeof sanitizedVal === 'boolean') {
+          sanitizedVal = sanitizedVal ? 1 : 0;
+        }
+        request.input(paramName, sanitizedVal);
+      });
+      queryText = queryText.replace(/\$([0-9]+)/g, '@arg$1');
+    }
+
+    if (queryText.trim() === 'BEGIN') queryText = 'BEGIN TRANSACTION;';
+    if (queryText.trim() === 'COMMIT') queryText = 'COMMIT TRANSACTION;';
+    if (queryText.trim() === 'ROLLBACK') queryText = 'ROLLBACK TRANSACTION;';
+
+    const res = await request.query(queryText);
+    const rows = res.recordset || [];
+    rows.forEach(r => {
+      if (r && typeof r.dados === 'string') {
+        try { r.dados = JSON.parse(r.dados); } catch(e){}
+      }
     });
-  } catch (err) {
-    console.warn('[AVISO BD] Falha ao configurar pool:', err.message);
-    pool = null;
+
+    return {
+      rows: rows,
+      recordset: rows,
+      rowCount: res.rowsAffected ? res.rowsAffected[0] : rows.length
+    };
+  }
+
+  async connect() {
+    return {
+      query: (t, p) => this.query(t, p),
+      release: () => {}
+    };
+  }
+
+  end(cb) {
+    this.pool.close().then(() => { if (cb) cb(); }).catch(() => { if (cb) cb(); });
+  }
+
+  on(evt, handler) {
+    if (this.pool && typeof this.pool.on === 'function') {
+      this.pool.on(evt, handler);
+    }
   }
 }
+
+let pool = null;
 
 // Usuário admin padrão, inserido no banco na primeira execução
 const DEFAULT_ADMIN = {
@@ -261,84 +364,206 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
 
 // Cria as tabelas (se não existirem) e garante migrações automáticas e o admin padrão
 async function initDatabase() {
-  if (!pool) return;
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS usuarios (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(150) NOT NULL,
-      email VARCHAR(150) UNIQUE NOT NULL,
-      password VARCHAR(255) NOT NULL,
-      role VARCHAR(50) NOT NULL DEFAULT 'Usuário',
-      active BOOLEAN NOT NULL DEFAULT true,
-      created_at TIMESTAMP NOT NULL DEFAULT now(),
-      last_login TIMESTAMP WITH TIME ZONE
-    );
-  `);
+  const dbType = (process.env.DB_TYPE || 'mssql').toLowerCase();
+  const mssqlDbName = process.env.MSSQL_DATABASE || process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇAO SF';
 
-  // Auto-migração de colunas na tabela usuarios
-  try {
-    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;');
-    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS active BOOLEAN NOT NULL DEFAULT true;');
-    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS role VARCHAR(50) NOT NULL DEFAULT \'Usuário\';');
-    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT now();');
-    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS cpf VARCHAR(20);');
-    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS phone VARCHAR(25);');
-    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS birth_date VARCHAR(20);');
-    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS terms_accepted BOOLEAN NOT NULL DEFAULT true;');
-  } catch(e) {}
+  // 1. Tentar conectar ao Microsoft SQL Server Interno (localhost - AMBIENTE DE HOMOLOGAÇÃO SF)
+  if (dbType === 'mssql' && mssql) {
+    const driversToTry = [
+      process.env.MSSQL_DRIVER,
+      'ODBC Driver 17 for SQL Server',
+      'ODBC Driver 18 for SQL Server',
+      'SQL Server'
+    ].filter(Boolean);
 
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS dados_financeiros (
-      id SERIAL PRIMARY KEY,
-      email VARCHAR(150) UNIQUE NOT NULL REFERENCES usuarios(email) ON DELETE CASCADE ON UPDATE CASCADE,
-      dados JSONB NOT NULL DEFAULT '{}'::jsonb,
-      updated_at TIMESTAMP NOT NULL DEFAULT now()
-    );
-  `);
+    for (const driver of driversToTry) {
+      try {
+        console.log(`[BANCO] Tentando conectar ao SQL Server interno via ${driver}...`);
+        const connStr = `Driver={${driver}};Server=localhost;Database=${mssqlDbName};Trusted_Connection=yes;TrustServerCertificate=yes;`;
+        const mssqlPool = await new mssql.ConnectionPool({ connectionString: connStr }).connect();
+        pool = new MssqlAdapter(mssqlPool);
+        console.log(`[BANCO] Conectado com sucesso ao Microsoft SQL Server interno (${mssqlDbName}) via ${driver}!`);
+        break;
+      } catch (errMssql) {
+        console.warn(`[BANCO AVISO] Tentativa com driver "${driver}" falhou:`, errMssql.message);
+      }
+    }
+  }
 
-  try {
-    await pool.query('ALTER TABLE dados_financeiros ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT now();');
-  } catch(e) {}
+  // 2. Fallback para PostgreSQL / Supabase caso MSSQL não tenha conectado ou especificado
+  if (!pool && Pool) {
+    try {
+      if (process.env.DATABASE_URL) {
+        pool = new Pool({
+          connectionString: process.env.DATABASE_URL,
+          ssl: { rejectUnauthorized: false }
+        });
+      } else if (process.env.DB_HOST && dbType === 'postgres') {
+        pool = new Pool({
+          host: process.env.DB_HOST || 'localhost',
+          port: process.env.DB_PORT || 5432,
+          user: process.env.DB_USER || 'postgres',
+          password: process.env.DB_PASSWORD || '86266049',
+          database: process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇAO SF',
+          ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
+        });
+      }
+      if (pool) {
+        pool.on('error', (err) => {
+          console.warn('[AVISO BD] Erro no pool do PostgreSQL:', err.message);
+        });
+      }
+    } catch (errPg) {
+      console.warn('[AVISO BD] Falha ao configurar pool PostgreSQL:', errPg.message);
+      pool = null;
+    }
+  }
 
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS system_logs (
-      id SERIAL PRIMARY KEY,
-      timestamp TIMESTAMP NOT NULL DEFAULT now(),
-      user_name VARCHAR(150),
-      user_email VARCHAR(150),
-      action VARCHAR(50) NOT NULL,
-      entity VARCHAR(50) NOT NULL,
-      details TEXT NOT NULL
-    );
-  `);
+  if (!pool) {
+    console.warn('[BANCO LOCAL] Nenhum servidor SQL ativo detectado. Operando no modo de alta resiliência com arquivos JSON locais.');
+    return;
+  }
 
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS ordens_servico (
-      id SERIAL PRIMARY KEY,
-      protocol VARCHAR(50) UNIQUE NOT NULL,
-      client_name VARCHAR(150) NOT NULL,
-      client_email VARCHAR(150) NOT NULL,
-      service_type VARCHAR(100) NOT NULL,
-      priority VARCHAR(50) NOT NULL DEFAULT 'Normal',
-      title VARCHAR(200) NOT NULL,
-      description TEXT NOT NULL,
-      status VARCHAR(50) NOT NULL DEFAULT 'Pendente',
-      admin_notes TEXT DEFAULT '',
-      created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-      updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
-    );
-  `);
+  // 3. Inicialização e Migração de Esquema (MSSQL vs PostgreSQL)
+  if (pool.isMssql) {
+    await pool.query(`
+      IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'usuarios')
+      BEGIN
+        CREATE TABLE usuarios (
+          id INT IDENTITY(1,1) PRIMARY KEY,
+          name NVARCHAR(150) NOT NULL,
+          email NVARCHAR(150) NOT NULL UNIQUE,
+          password NVARCHAR(255) NOT NULL,
+          role NVARCHAR(50) NOT NULL DEFAULT 'Usuário',
+          active BIT NOT NULL DEFAULT 1,
+          created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
+          last_login DATETIME2 NULL,
+          cpf NVARCHAR(20) NULL,
+          phone NVARCHAR(25) NULL,
+          birth_date NVARCHAR(20) NULL,
+          terms_accepted BIT NOT NULL DEFAULT 1
+        );
+      END;
 
-  // Auto-migração de colunas na tabela ordens_servico
-  // Auto-migração de colunas nas tabelas ordens_servico e usuarios
-  try {
-    await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS admin_notes TEXT DEFAULT \'\';');
-    await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS service_type VARCHAR(100) DEFAULT \'Melhoria no Sistema\';');
-    await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS priority VARCHAR(50) DEFAULT \'Normal\';');
-    await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now();');
-    await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;');
-  } catch(e) {}
+      IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'dados_financeiros')
+      BEGIN
+        CREATE TABLE dados_financeiros (
+          id INT IDENTITY(1,1) PRIMARY KEY,
+          email NVARCHAR(150) NOT NULL UNIQUE,
+          dados NVARCHAR(MAX) NOT NULL DEFAULT '{}',
+          updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
+        );
+      END;
 
+      IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'system_logs')
+      BEGIN
+        CREATE TABLE system_logs (
+          id INT IDENTITY(1,1) PRIMARY KEY,
+          timestamp DATETIME2 NOT NULL DEFAULT GETDATE(),
+          user_name NVARCHAR(150) NULL,
+          user_email NVARCHAR(150) NULL,
+          action NVARCHAR(50) NOT NULL,
+          entity NVARCHAR(50) NOT NULL,
+          details NVARCHAR(MAX) NOT NULL
+        );
+      END;
+
+      IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'ordens_servico')
+      BEGIN
+        CREATE TABLE ordens_servico (
+          id INT IDENTITY(1,1) PRIMARY KEY,
+          protocol NVARCHAR(50) NOT NULL UNIQUE,
+          client_name NVARCHAR(150) NOT NULL,
+          client_email NVARCHAR(150) NOT NULL,
+          service_type NVARCHAR(100) NOT NULL DEFAULT 'Melhoria no Sistema',
+          priority NVARCHAR(50) NOT NULL DEFAULT 'Normal',
+          title NVARCHAR(200) NOT NULL,
+          description NVARCHAR(MAX) NOT NULL,
+          status NVARCHAR(50) NOT NULL DEFAULT 'Pendente',
+          admin_notes NVARCHAR(MAX) NULL DEFAULT '',
+          created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
+          updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
+        );
+      END;
+    `);
+  } else {
+    // PostgreSQL DDL
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(150) NOT NULL,
+        email VARCHAR(150) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        role VARCHAR(50) NOT NULL DEFAULT 'Usuário',
+        active BOOLEAN NOT NULL DEFAULT true,
+        created_at TIMESTAMP NOT NULL DEFAULT now(),
+        last_login TIMESTAMP WITH TIME ZONE
+      );
+    `);
+
+    try {
+      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;');
+      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS active BOOLEAN NOT NULL DEFAULT true;');
+      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS role VARCHAR(50) NOT NULL DEFAULT \'Usuário\';');
+      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT now();');
+      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS cpf VARCHAR(20);');
+      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS phone VARCHAR(25);');
+      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS birth_date VARCHAR(20);');
+      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS terms_accepted BOOLEAN NOT NULL DEFAULT true;');
+    } catch(e) {}
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS dados_financeiros (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(150) UNIQUE NOT NULL REFERENCES usuarios(email) ON DELETE CASCADE ON UPDATE CASCADE,
+        dados JSONB NOT NULL DEFAULT '{}'::jsonb,
+        updated_at TIMESTAMP NOT NULL DEFAULT now()
+      );
+    `);
+
+    try {
+      await pool.query('ALTER TABLE dados_financeiros ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT now();');
+    } catch(e) {}
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS system_logs (
+        id SERIAL PRIMARY KEY,
+        timestamp TIMESTAMP NOT NULL DEFAULT now(),
+        user_name VARCHAR(150),
+        user_email VARCHAR(150),
+        action VARCHAR(50) NOT NULL,
+        entity VARCHAR(50) NOT NULL,
+        details TEXT NOT NULL
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS ordens_servico (
+        id SERIAL PRIMARY KEY,
+        protocol VARCHAR(50) UNIQUE NOT NULL,
+        client_name VARCHAR(150) NOT NULL,
+        client_email VARCHAR(150) NOT NULL,
+        service_type VARCHAR(100) NOT NULL,
+        priority VARCHAR(50) NOT NULL DEFAULT 'Normal',
+        title VARCHAR(200) NOT NULL,
+        description TEXT NOT NULL,
+        status VARCHAR(50) NOT NULL DEFAULT 'Pendente',
+        admin_notes TEXT DEFAULT '',
+        created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+        updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+      );
+    `);
+
+    try {
+      await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS admin_notes TEXT DEFAULT \'\';');
+      await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS service_type VARCHAR(100) DEFAULT \'Melhoria no Sistema\';');
+      await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS priority VARCHAR(50) DEFAULT \'Normal\';');
+      await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now();');
+      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;');
+    } catch(e) {}
+  }
+
+  // 4. Garantir Administrador Padrão
   await pool.query(
     `INSERT INTO usuarios (name, email, password, role, active)
      VALUES ($1, $2, $3, $4, $5)
@@ -346,6 +571,7 @@ async function initDatabase() {
     [DEFAULT_ADMIN.name, DEFAULT_ADMIN.email, DEFAULT_ADMIN.password, DEFAULT_ADMIN.role, DEFAULT_ADMIN.active]
   );
 
+  // 5. Sincronização e Consolidação de Usuários entre Banco e Cache Local
   try {
     const localUsers = getLocalUsers();
     for (const u of localUsers) {
@@ -354,19 +580,63 @@ async function initDatabase() {
       const existing = await pool.query('SELECT id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
       if (existing.rows.length === 0) {
         await pool.query(
-          'INSERT INTO usuarios (name, email, password, role, active) VALUES ($1, $2, $3, $4, $5)',
-          [u.name || 'Usuário', cleanEmail, u.password || hashPassword('123456'), u.role || 'Usuário', u.active !== false]
+          'INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+          [u.name || 'Usuário', cleanEmail, u.password || hashPassword('123456'), u.role || 'Usuário', u.active !== false, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false]
         );
       }
     }
 
-    const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login FROM usuarios ORDER BY id ASC');
+    const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
     if (res.rows && res.rows.length > 0) {
       saveLocalUsers(res.rows);
-      console.log(`[BANCO] ${res.rows.length} usuário(s) sincronizado(s) e consolidados entre PostgreSQL e persistência local.`);
+      console.log(`[BANCO] ${res.rows.length} usuário(s) sincronizado(s) e consolidados no banco interno e no cache local.`);
     }
   } catch(syncErr) {
     console.warn('[BANCO AVISO] Erro ao sincronizar cache local de usuários:', syncErr.message);
+  }
+
+  // 6. Sincronização dos dados financeiros locais para o banco SQL
+  try {
+    const localDataFile = path.join(__dirname, 'local_database_data.json');
+    if (fs.existsSync(localDataFile)) {
+      const allData = JSON.parse(fs.readFileSync(localDataFile, 'utf8')) || {};
+      for (const [emailKey, dataVal] of Object.entries(allData)) {
+        if (!emailKey || !dataVal) continue;
+        const cleanEmail = emailKey.toLowerCase().trim();
+        const existingData = await pool.query('SELECT id FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+        if (existingData.rows.length === 0) {
+          await pool.query(
+            'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2)',
+            [cleanEmail, dataVal]
+          );
+        }
+      }
+      console.log(`[BANCO] Dados financeiros locais consolidados com o banco SQL interno.`);
+    }
+  } catch(syncDataErr) {
+    console.warn('[BANCO AVISO] Erro ao sincronizar dados financeiros locais:', syncDataErr.message);
+  }
+
+  // 7. Sincronização das Ordens de Serviço locais para o banco SQL
+  try {
+    const localOrdensFile = path.join(__dirname, 'local_ordens_servico.json');
+    if (fs.existsSync(localOrdensFile)) {
+      const localOrdens = JSON.parse(fs.readFileSync(localOrdensFile, 'utf8')) || [];
+      for (const ord of localOrdens) {
+        if (!ord || !ord.protocol) continue;
+        const existOrd = await pool.query('SELECT id FROM ordens_servico WHERE protocol = $1', [ord.protocol]);
+        if (existOrd.rows.length === 0) {
+          await pool.query(
+            `INSERT INTO ordens_servico (protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+            [ord.protocol, ord.client_name, ord.client_email, ord.service_type || 'Melhoria no Sistema', ord.priority || 'Normal', ord.title || 'OS', ord.description || '', ord.status || 'Pendente', ord.admin_notes || '', ord.created_at || new Date().toISOString(), ord.updated_at || new Date().toISOString()]
+          );
+        }
+      }
+      console.log(`[BANCO] Ordens de serviço consolidadas com o banco SQL interno.`);
+    }
+  } catch(syncOrdErr) {
+    console.warn('[BANCO AVISO] Erro ao sincronizar ordens de serviço locais:', syncOrdErr.message);
   }
 }
 
@@ -17335,7 +17605,9 @@ const server = http.createServer((req, res) => {
       uptime: uptimeStr,
       uptime_seconds: uptimeSeconds,
       timestamp: new Date().toISOString(),
-      database: pool ? 'connected_postgresql' : 'resilient_local_json',
+      database: pool ? (pool.isMssql ? 'connected_mssql_internal' : 'connected_postgresql') : 'resilient_local_json',
+      database_type: pool ? (pool.isMssql ? 'Microsoft SQL Server (Interno)' : 'PostgreSQL') : 'Local JSON Cache',
+      database_name: pool ? (pool.isMssql ? (process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF') : (process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇÃO SF')) : 'local_json',
       active_users_count: localUsers.length,
       memory: {
         rss_mb: (mem.rss / 1024 / 1024).toFixed(2),
@@ -18359,13 +18631,15 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 initDatabase()
   .then(() => {
     if (pool) {
-      console.log(`[BANCO] Conectado com sucesso ao PostgreSQL (banco: ${process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇÃO SF'})`);
+      const dbTypeStr = pool.isMssql ? 'Microsoft SQL Server (Interno)' : 'PostgreSQL';
+      const dbNameStr = pool.isMssql ? (process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF') : (process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇÃO SF');
+      console.log(`[BANCO] Conexão ativa e sincronizada com ${dbTypeStr} (banco: ${dbNameStr})`);
     } else {
       console.log(`[BANCO LOCAL] Operando com alta resiliência e persistência em arquivos JSON locais.`);
     }
   })
   .catch(err => {
-    console.warn(`[BANCO AVISO] PostgreSQL indisponível. O sistema funcionará com alta resiliência e fallback JSON local: ${err.message}`);
+    console.warn(`[BANCO AVISO] Banco SQL indisponível. O sistema funcionará com alta resiliência e fallback JSON local: ${err.message}`);
   })
   .finally(() => {
     server.listen(PORT, '0.0.0.0', () => {
