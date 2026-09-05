@@ -304,38 +304,6 @@ const DEFAULT_AUTHORIZED_USERS = [
     password: hashPassword('86266049'),
     role: 'Administrador',
     active: true
-  },
-  {
-    id: 5,
-    name: 'Paulo Lima',
-    email: 'paulolp0101@gmail.com',
-    password: hashPassword('86266049'),
-    role: 'Usuário',
-    active: true
-  },
-  {
-    id: 27,
-    name: 'CICERA DE LIMA PEREIRA',
-    email: 'ciceragyn12@hotmail.com',
-    password: hashPassword('86266049'),
-    role: 'Usuário',
-    active: true,
-    cpf: '999.251.091-91',
-    phone: '(62) 99367-6783',
-    birth_date: '27/06/1966',
-    terms_accepted: true
-  },
-  {
-    id: 32,
-    name: 'Lucas Augusto Lima Almeida',
-    email: 'lucas@gmail.com',
-    password: hashPassword('Pa@86266049'),
-    role: 'Usuário',
-    active: true,
-    cpf: '634.810.906-25',
-    phone: '(62) 99256-6666',
-    birth_date: '19/07/1998',
-    terms_accepted: true
   }
 ];
 
@@ -8162,8 +8130,7 @@ async function syncUsersWithServer() {
   } else {
     registeredUsers = [
       { id: 3, name: 'Administrador', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
-      { id: 4, name: 'Administrador', email: 'admin@nexusfinanceirohub.com.br', password: '86266049', role: 'Administrador', active: true },
-      { id: 5, name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Usuário', active: true }
+      { id: 4, name: 'Administrador', email: 'admin@nexusfinanceirohub.com.br', password: '86266049', role: 'Administrador', active: true }
     ];
     saveToStorage('nexus_users', registeredUsers);
   }
@@ -17718,14 +17685,76 @@ function saveLocalUsers(users) {
   }
 }
 
+const DELETED_ACCOUNTS_FILE = path.join(__dirname, 'deleted_accounts.json');
+const HARD_DELETED_EMAILS = [
+  'paulolp0101@gmail.com',
+  'ciceragyn12@hotmail.com',
+  'lucas@gmail.com'
+];
+
+function getDeletedAccounts() {
+  try {
+    if (fs.existsSync(DELETED_ACCOUNTS_FILE)) {
+      const raw = fs.readFileSync(DELETED_ACCOUNTS_FILE, 'utf8');
+      const data = JSON.parse(raw);
+      if (Array.isArray(data)) {
+        return Array.from(new Set([...HARD_DELETED_EMAILS, ...data.map(e => String(e).toLowerCase().trim())]));
+      }
+    }
+  } catch (e) {}
+  return [...HARD_DELETED_EMAILS];
+}
+
+function markAccountAsDeleted(email) {
+  if (!email) return;
+  const list = getDeletedAccounts();
+  const clean = email.toLowerCase().trim();
+  if (!list.includes(clean)) list.push(clean);
+  try {
+    fs.writeFileSync(DELETED_ACCOUNTS_FILE, JSON.stringify(list, null, 2), 'utf8');
+  } catch (e) {}
+}
+
+function isAccountPermanentlyDeleted(email) {
+  if (!email) return false;
+  const clean = String(email).toLowerCase().trim();
+  return getDeletedAccounts().includes(clean);
+}
+
 function removeLocalUser(email) {
   try {
     const clean = (email || '').toLowerCase().trim();
+    markAccountAsDeleted(clean);
     const current = getLocalUsers();
     const filtered = current.filter(u => (u.email || '').toLowerCase().trim() !== clean);
     const jsonStr = JSON.stringify(filtered, null, 2);
     fs.writeFileSync(LOCAL_USERS_PATH, jsonStr, 'utf8');
     try { fs.writeFileSync(LOCAL_USERS_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
+
+    // Limpar de local_database_data.json
+    try {
+      if (fs.existsSync(LOCAL_DATA_PATH)) {
+        const allData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
+        if (allData[clean]) {
+          delete allData[clean];
+          fs.writeFileSync(LOCAL_DATA_PATH, JSON.stringify(allData, null, 2), 'utf8');
+          try { fs.writeFileSync(LOCAL_DATA_BACKUP_PATH, JSON.stringify(allData, null, 2), 'utf8'); } catch(e){}
+        }
+      }
+    } catch (e) {}
+
+    // Limpar de cpf_registry.json
+    try {
+      const cpfPath = path.join(__dirname, 'cpf_registry.json');
+      const cpfBackupPath = path.join(__dirname, 'cpf_registry.backup.json');
+      if (fs.existsSync(cpfPath)) {
+        const reg = JSON.parse(fs.readFileSync(cpfPath, 'utf8')) || [];
+        const filteredCpf = reg.filter(r => (r.email || '').toLowerCase().trim() !== clean);
+        fs.writeFileSync(cpfPath, JSON.stringify(filteredCpf, null, 2), 'utf8');
+        try { fs.writeFileSync(cpfBackupPath, JSON.stringify(filteredCpf, null, 2), 'utf8'); } catch(e){}
+      }
+    } catch (e) {}
+
     return filtered;
   } catch(e) {
     return [];
@@ -18625,9 +18654,7 @@ const server = http.createServer((req, res) => {
     }
     const protectedEmails = [
       'admin@nexusfinanceiro.com',
-      'admin@nexusfinanceirohub.com.br',
-      'paulolp0101@gmail.com',
-      'lucas@gmail.com'
+      'admin@nexusfinanceirohub.com.br'
     ];
     if (protectedEmails.includes(emailToDelete)) {
       res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -18635,8 +18662,12 @@ const server = http.createServer((req, res) => {
     }
     removeLocalUser(emailToDelete);
     if (pool) {
-      pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [emailToDelete])
+      Promise.all([
+        pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [emailToDelete]),
+        pool.query('DELETE FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [emailToDelete])
+      ])
         .then(() => {
+          recordSystemLog('Sistema', emailToDelete, 'Exclusão', 'Usuários', `Conta e dados financeiros excluídos permanentemente`);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ success: true }));
         })
@@ -19185,6 +19216,13 @@ async function syncWithRenderCloud() {
         for (const cu of cloudUsers) {
           if (!cu || !cu.email) continue;
           const cleanEmail = cu.email.toLowerCase().trim();
+          if (isAccountPermanentlyDeleted(cleanEmail)) {
+            await pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(() => {});
+            await pool.query('DELETE FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(() => {});
+            removeLocalUser(cleanEmail);
+            await fetchCloud('/api/users?email=' + encodeURIComponent(cleanEmail), { method: 'DELETE' }).catch(() => {});
+            continue;
+          }
           const localCheck = await pool.query('SELECT id, name FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
           if (!localCheck.rows || localCheck.rows.length === 0) {
             const defaultPass = cu.password || hashPassword('86266049');
@@ -19211,10 +19249,11 @@ async function syncWithRenderCloud() {
     // 2. Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server
     const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios');
     if (localUsersRes.rows && localUsersRes.rows.length > 0) {
-      saveLocalUsers(localUsersRes.rows);
+      const activeLocalUsers = localUsersRes.rows.filter(u => !isAccountPermanentlyDeleted(u.email));
+      saveLocalUsers(activeLocalUsers);
       await fetchCloud('/api/users', {
         method: 'POST',
-        body: JSON.stringify(localUsersRes.rows.map(sanitizeUser))
+        body: JSON.stringify(activeLocalUsers.map(sanitizeUser))
       }).catch(() => {});
     }
 
@@ -19226,6 +19265,10 @@ async function syncWithRenderCloud() {
         for (const [emailKey, financialPayload] of Object.entries(backupData.financial_data)) {
           if (!emailKey || !financialPayload) continue;
           const cleanEmail = emailKey.toLowerCase().trim();
+          if (isAccountPermanentlyDeleted(cleanEmail)) {
+            await pool.query('DELETE FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(() => {});
+            continue;
+          }
           const strPayload = typeof financialPayload === 'object' ? JSON.stringify(financialPayload) : String(financialPayload);
           await pool.query(
             `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
