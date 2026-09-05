@@ -29,16 +29,16 @@
   },
   {
     "id": "5",
-    "name": "Paulo Lima",
+    "name": "Paulo Henrique de Lima",
     "email": "paulolp0101@gmail.com",
     "password": "scrypt:618c847a88f2926998bc8875bd7fd55c:ce8395f84cc8a047b47f70abfc73aac123db7c3855c65ac4b2303cb129178654269db01ef94dc831a8bbb56f9ef86efe55e0d2d1e7107225b2aecff3f2bc234d",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-05T04:44:28.420Z",
     "last_login": "2026-09-05T10:31:28.046Z",
-    "cpf": null,
-    "phone": null,
-    "birth_date": null,
+    "cpf": "040.233.261-00",
+    "phone": "(62) 98626-6049",
+    "birth_date": "10/01/1988",
     "terms_accepted": true
   },
   {

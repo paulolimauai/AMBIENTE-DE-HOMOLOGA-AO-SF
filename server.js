@@ -8703,46 +8703,73 @@ window.handleServerCpfInput = async function(input) {
         const itensCarregados = [];
 
         if (data.nome) {
-          if (nameInput) {
-            nameInput.value = data.nome;
-            nameInput.classList.add('input-auto-filled');
-            nameInput.style.borderColor = '#10B981';
-            setTimeout(() => { nameInput.style.borderColor = ''; }, 3500);
+          const nameEl = document.getElementById('regName');
+          if (nameEl) {
+            nameEl.value = data.nome;
+            nameEl.setAttribute('value', data.nome);
+            nameEl.dispatchEvent(new Event('input', { bubbles: true }));
+            nameEl.dispatchEvent(new Event('change', { bubbles: true }));
+            const w = nameEl.closest('.auth-input-wrapper');
+            if (w) {
+              w.style.borderColor = '#10B981';
+              w.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.25)';
+              setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
+            }
           }
           itensCarregados.push('Nome');
           itensCarregados.push('CPF');
 
-          if (birthInput && data.data_nascimento) {
-            birthInput.value = data.data_nascimento;
-            birthInput.classList.add('input-auto-filled');
-            birthInput.style.borderColor = '#10B981';
-            setTimeout(() => { birthInput.style.borderColor = ''; }, 3500);
+          const birthEl = document.getElementById('regBirthDate');
+          if (birthEl && data.data_nascimento) {
+            birthEl.value = data.data_nascimento;
+            birthEl.setAttribute('value', data.data_nascimento);
+            birthEl.dispatchEvent(new Event('input', { bubbles: true }));
+            birthEl.dispatchEvent(new Event('change', { bubbles: true }));
+            const w = birthEl.closest('.auth-input-wrapper');
+            if (w) {
+              w.style.borderColor = '#10B981';
+              w.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.25)';
+              setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
+            }
             itensCarregados.push('Nascimento');
           }
 
-          const phoneInput = document.getElementById('regPhone');
+          const phoneEl = document.getElementById('regPhone');
           const rawPhone = data.phone || data.telefone;
-          if (phoneInput && rawPhone) {
-            const pDigits = String(rawPhone).replace(/\D/g, '').slice(0, 11);
+          if (phoneEl && rawPhone) {
+            const pDigits = String(rawPhone).replace(/[^0-9]/g, '').slice(0, 11);
+            let formattedPhone = rawPhone;
             if (pDigits.length === 11) {
-              phoneInput.value = pDigits.replace(/([0-9]{2})([0-9]{5})([0-9]{4})/, '($1) $2-$3');
+              formattedPhone = pDigits.replace(/([0-9]{2})([0-9]{5})([0-9]{4})/, '($1) $2-$3');
             } else if (pDigits.length === 10) {
-              phoneInput.value = pDigits.replace(/([0-9]{2})([0-9]{4})([0-9]{4})/, '($1) $2-$3');
-            } else {
-              phoneInput.value = rawPhone;
+              formattedPhone = pDigits.replace(/([0-9]{2})([0-9]{4})([0-9]{4})/, '($1) $2-$3');
             }
-            phoneInput.classList.add('input-auto-filled');
-            phoneInput.style.borderColor = '#10B981';
-            setTimeout(() => { phoneInput.style.borderColor = ''; }, 3500);
+            phoneEl.value = formattedPhone;
+            phoneEl.setAttribute('value', formattedPhone);
+            phoneEl.dispatchEvent(new Event('input', { bubbles: true }));
+            phoneEl.dispatchEvent(new Event('change', { bubbles: true }));
+            const w = phoneEl.closest('.auth-input-wrapper');
+            if (w) {
+              w.style.borderColor = '#10B981';
+              w.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.25)';
+              setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
+            }
             itensCarregados.push('Telefone');
           }
 
-          const emailInput = document.getElementById('regEmail');
-          if (emailInput && (data.email_associado || data.email) && !emailInput.value) {
-            emailInput.value = data.email_associado || data.email;
-            emailInput.classList.add('input-auto-filled');
-            emailInput.style.borderColor = '#10B981';
-            setTimeout(() => { emailInput.style.borderColor = ''; }, 3500);
+          const emailEl = document.getElementById('regEmail');
+          if (emailEl && (data.email_associado || data.email) && !emailEl.value) {
+            const emailVal = data.email_associado || data.email;
+            emailEl.value = emailVal;
+            emailEl.setAttribute('value', emailVal);
+            emailEl.dispatchEvent(new Event('input', { bubbles: true }));
+            emailEl.dispatchEvent(new Event('change', { bubbles: true }));
+            const w = emailEl.closest('.auth-input-wrapper');
+            if (w) {
+              w.style.borderColor = '#10B981';
+              w.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.25)';
+              setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
+            }
           }
 
           if (msg) {
