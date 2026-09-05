@@ -3429,42 +3429,57 @@
                         const itensCarregados = [];
 
                         if (data.nome) {
-                            if (nameInput) {
-                                nameInput.value = data.nome;
-                                nameInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => nameInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
+                            const nameEl = document.getElementById('regName');
+                            if (nameEl) {
+                                nameEl.value = data.nome;
+                                nameEl.setAttribute('value', data.nome);
+                                nameEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                nameEl.dispatchEvent(new Event('change', { bubbles: true }));
+                                nameEl.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                                setTimeout(() => nameEl.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
                             }
                             itensCarregados.push('Nome');
                             itensCarregados.push('CPF');
 
-                            if (birthInput && data.data_nascimento) {
-                                birthInput.value = data.data_nascimento;
-                                birthInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => birthInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
+                            const birthEl = document.getElementById('regBirthDate');
+                            if (birthEl && data.data_nascimento) {
+                                birthEl.value = data.data_nascimento;
+                                birthEl.setAttribute('value', data.data_nascimento);
+                                birthEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                birthEl.dispatchEvent(new Event('change', { bubbles: true }));
+                                birthEl.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                                setTimeout(() => birthEl.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
                                 itensCarregados.push('Nascimento');
                             }
 
-                            const phoneInput = document.getElementById('regPhone');
+                            const phoneEl = document.getElementById('regPhone');
                             const rawPhone = data.phone || data.telefone;
-                            if (phoneInput && rawPhone) {
-                                const pDigits = String(rawPhone).replace(/\D/g, '').slice(0, 11);
+                            if (phoneEl && rawPhone) {
+                                const pDigits = String(rawPhone).replace(/[^0-9]/g, '').slice(0, 11);
+                                let formattedPhone = rawPhone;
                                 if (pDigits.length === 11) {
-                                    phoneInput.value = pDigits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                                    formattedPhone = pDigits.replace(/([0-9]{2})([0-9]{5})([0-9]{4})/, '($1) $2-$3');
                                 } else if (pDigits.length === 10) {
-                                    phoneInput.value = pDigits.replace(/(\d{2})(\d{4})/, '($1) $2-$3');
-                                } else {
-                                    phoneInput.value = rawPhone;
+                                    formattedPhone = pDigits.replace(/([0-9]{2})([0-9]{4})([0-9]{4})/, '($1) $2-$3');
                                 }
-                                phoneInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => phoneInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
+                                phoneEl.value = formattedPhone;
+                                phoneEl.setAttribute('value', formattedPhone);
+                                phoneEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                phoneEl.dispatchEvent(new Event('change', { bubbles: true }));
+                                phoneEl.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                                setTimeout(() => phoneEl.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
                                 itensCarregados.push('Telefone');
                             }
 
-                            const emailInput = document.getElementById('regEmail');
-                            if (emailInput && (data.email_associado || data.email) && !emailInput.value) {
-                                emailInput.value = data.email_associado || data.email;
-                                emailInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => emailInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
+                            const emailEl = document.getElementById('regEmail');
+                            if (emailEl && (data.email_associado || data.email) && !emailEl.value) {
+                                const emailVal = data.email_associado || data.email;
+                                emailEl.value = emailVal;
+                                emailEl.setAttribute('value', emailVal);
+                                emailEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                emailEl.dispatchEvent(new Event('change', { bubbles: true }));
+                                emailEl.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                                setTimeout(() => emailEl.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
                             }
 
                             if (feedback) {
