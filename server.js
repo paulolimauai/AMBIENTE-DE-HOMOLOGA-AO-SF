@@ -8263,13 +8263,22 @@ window.handleLoginSubmit = async function(e) {
   if (!existingUser) {
     if (emailWrap) emailWrap.classList.add('input-error');
     if (emailInput) emailInput.focus();
-    window.showAuthFeedback(
-      'login',
-      'warning',
-      'Usuário não cadastrado',
-      'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + cleanEmail + '</strong>.',
-      '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(217,119,6,0.32) 100%); border:1px solid rgba(245,158,11,0.55); color:#FEF3C7; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Criar Conta com este E-mail →</button>'
-    );
+    if (!res) {
+      window.showAuthFeedback(
+        'login',
+        'error',
+        'Servidor Backend Offline',
+        'Não foi possível estabelecer conexão com o servidor local (<strong>localhost:3000</strong>). Certifique-se de que o comando <code>node server.js</code> está em execução no terminal.'
+      );
+    } else {
+      window.showAuthFeedback(
+        'login',
+        'warning',
+        'Usuário não cadastrado',
+        'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + cleanEmail + '</strong>.',
+        '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(217,119,6,0.32) 100%); border:1px solid rgba(245,158,11,0.55); color:#FEF3C7; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Criar Conta com este E-mail →</button>'
+      );
+    }
     if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
     return;
   }
