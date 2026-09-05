@@ -17685,46 +17685,9 @@ function saveLocalUsers(users) {
   }
 }
 
-const DELETED_ACCOUNTS_FILE = path.join(__dirname, 'deleted_accounts.json');
-const HARD_DELETED_EMAILS = [
-  'paulolp0101@gmail.com',
-  'ciceragyn12@hotmail.com',
-  'lucas@gmail.com'
-];
-
-function getDeletedAccounts() {
-  try {
-    if (fs.existsSync(DELETED_ACCOUNTS_FILE)) {
-      const raw = fs.readFileSync(DELETED_ACCOUNTS_FILE, 'utf8');
-      const data = JSON.parse(raw);
-      if (Array.isArray(data)) {
-        return Array.from(new Set([...HARD_DELETED_EMAILS, ...data.map(e => String(e).toLowerCase().trim())]));
-      }
-    }
-  } catch (e) {}
-  return [...HARD_DELETED_EMAILS];
-}
-
-function markAccountAsDeleted(email) {
-  if (!email) return;
-  const list = getDeletedAccounts();
-  const clean = email.toLowerCase().trim();
-  if (!list.includes(clean)) list.push(clean);
-  try {
-    fs.writeFileSync(DELETED_ACCOUNTS_FILE, JSON.stringify(list, null, 2), 'utf8');
-  } catch (e) {}
-}
-
-function isAccountPermanentlyDeleted(email) {
-  if (!email) return false;
-  const clean = String(email).toLowerCase().trim();
-  return getDeletedAccounts().includes(clean);
-}
-
 function removeLocalUser(email) {
   try {
     const clean = (email || '').toLowerCase().trim();
-    markAccountAsDeleted(clean);
     const current = getLocalUsers();
     const filtered = current.filter(u => (u.email || '').toLowerCase().trim() !== clean);
     const jsonStr = JSON.stringify(filtered, null, 2);
@@ -17738,7 +17701,7 @@ function removeLocalUser(email) {
         if (allData[clean]) {
           delete allData[clean];
           fs.writeFileSync(LOCAL_DATA_PATH, JSON.stringify(allData, null, 2), 'utf8');
-          try { fs.writeFileSync(LOCAL_DATA_BACKUP_PATH, JSON.stringify(allData, null, 2), 'utf8'); } catch(e){}
+          try { fs.writeFileSync(LOCAL_DATA_BACKUP_PATH, JSON.stringify(allData, null, 2), 'utf8'); } catch(be){}
         }
       }
     } catch (e) {}
@@ -17929,6 +17892,26 @@ const server = http.createServer((req, res) => {
       'Content-Disposition': `attachment; filename="backup_nexus_${Date.now()}.json"`
     });
     return res.end(JSON.stringify(backupPayload, null, 2));
+  }
+
+  // Rota GET de Sincronização Integral Nuvem <-> Local (Sync Engine)
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/sync/all') {
+    const rawUsers = getLocalUsers();
+    let allFinancialData = {};
+    try {
+      if (fs.existsSync(LOCAL_DATA_PATH)) {
+        allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
+      }
+    } catch(e){}
+    const localOrdens = getLocalOrdens();
+    const payload = {
+      users: rawUsers,
+      financial_data: allFinancialData,
+      ordens_servico: localOrdens,
+      synced_at: new Date().toISOString()
+    };
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify(payload));
   }
 
   // Rota POST para Login de Usuário (com Verificação Criptográfica e Upgrade Seguro de Hash)
@@ -19208,82 +19191,132 @@ async function syncWithRenderCloud() {
       });
     };
 
-    // 1. Puxar usuários cadastrados no Render
-    const resUsers = await fetchCloud('/api/users');
-    if (resUsers.ok) {
-      const cloudUsers = await resUsers.json();
-      if (Array.isArray(cloudUsers) && cloudUsers.length > 0) {
-        for (const cu of cloudUsers) {
-          if (!cu || !cu.email) continue;
-          const cleanEmail = cu.email.toLowerCase().trim();
-          if (isAccountPermanentlyDeleted(cleanEmail)) {
-            await pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(() => {});
-            await pool.query('DELETE FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(() => {});
-            removeLocalUser(cleanEmail);
-            await fetchCloud('/api/users?email=' + encodeURIComponent(cleanEmail), { method: 'DELETE' }).catch(() => {});
-            continue;
-          }
-          const localCheck = await pool.query('SELECT id, name FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-          if (!localCheck.rows || localCheck.rows.length === 0) {
-            const defaultPass = cu.password || hashPassword('86266049');
+    // 1. Puxar usuários e dados completos da nuvem (Render)
+    let cloudUsers = null;
+    let cloudFinancial = null;
+    let cloudOrdens = null;
+
+    const resSyncAll = await fetchCloud('/api/sync/all');
+    if (resSyncAll.ok) {
+      const syncAllData = await resSyncAll.json();
+      if (syncAllData) {
+        cloudUsers = syncAllData.users || null;
+        cloudFinancial = syncAllData.financial_data || null;
+        cloudOrdens = syncAllData.ordens_servico || null;
+      }
+    }
+
+    // Fallback caso /api/sync/all ainda esteja em deploy no Render
+    if (!cloudUsers) {
+      const resUsers = await fetchCloud('/api/users');
+      if (resUsers.ok) {
+        cloudUsers = await resUsers.json();
+      }
+    }
+    if (!cloudFinancial) {
+      const resBackup = await fetchCloud('/api/backup');
+      if (resBackup.ok) {
+        const backupData = await resBackup.json();
+        if (backupData) {
+          cloudFinancial = backupData.financial_data || null;
+          cloudOrdens = backupData.ordens_servico || null;
+          if (!cloudUsers && backupData.users) cloudUsers = backupData.users;
+        }
+      }
+    }
+
+    // A) Processar e gravar usuários do Render no SQL Server local
+    if (Array.isArray(cloudUsers) && cloudUsers.length > 0) {
+      for (const cu of cloudUsers) {
+        if (!cu || !cu.email) continue;
+        const cleanEmail = cu.email.toLowerCase().trim();
+        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+        if (!localCheck.rows || localCheck.rows.length === 0) {
+          const defaultPass = cu.password || hashPassword('86266049');
+          await pool.query(
+            `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
+             OUTPUT INSERTED.id
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+            [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.active !== false, cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false]
+          );
+          await pool.query(
+            `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+             BEGIN
+               INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, '{}', GETDATE());
+             END`,
+            [cleanEmail]
+          );
+          console.log(`\n⚡ [SYNC RENDER -> SQL SERVER] Nova conta criada no Render gravada no SQL Server local: ${cleanEmail}`);
+          recordSystemLog(cu.name, cleanEmail, 'Sincronização Nuvem', 'Usuários', `Conta criada no Render sincronizada para o SQL Server local`);
+        } else {
+          // Atualizar dados de perfil se fornecidos no Render
+          const currentU = localCheck.rows[0];
+          const updatedName = (cu.name && cu.name !== 'Usuário') ? cu.name : currentU.name;
+          const updatedCpf = cu.cpf || currentU.cpf;
+          const updatedPhone = cu.phone || currentU.phone;
+          const updatedBirth = cu.birth_date || cu.birthDate || currentU.birth_date;
+          if (updatedName !== currentU.name || updatedCpf !== currentU.cpf || updatedPhone !== currentU.phone || updatedBirth !== currentU.birth_date) {
             await pool.query(
-              `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
-               OUTPUT INSERTED.id
-               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.active !== false, cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false]
-            );
-            await pool.query(
-              `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
-               BEGIN
-                 INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, '{}', GETDATE());
-               END`,
-              [cleanEmail]
-            );
-            console.log(`\n⚡ [SYNC RENDER -> SQL SERVER] Nova conta criada no Render gravada no SQL Server local: ${cleanEmail}`);
-            recordSystemLog(cu.name, cleanEmail, 'Sincronização Nuvem', 'Usuários', `Conta criada no Render sincronizada para o SQL Server local`);
+              `UPDATE usuarios 
+               SET name = $1, cpf = $2, phone = $3, birth_date = $4 
+               WHERE LOWER(email) = LOWER($5)`,
+              [updatedName, updatedCpf, updatedPhone, updatedBirth, cleanEmail]
+            ).catch(() => {});
           }
         }
       }
     }
 
-    // 2. Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server
+    // B) Sincronizar dados financeiros atualizados do Render para o SQL Server local
+    if (cloudFinancial && typeof cloudFinancial === 'object') {
+      for (const [emailKey, financialPayload] of Object.entries(cloudFinancial)) {
+        if (!emailKey || !financialPayload) continue;
+        const cleanEmail = emailKey.toLowerCase().trim();
+        const strPayload = typeof financialPayload === 'object' ? JSON.stringify(financialPayload) : String(financialPayload);
+        await pool.query(
+          `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+           BEGIN
+             UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
+           END
+           ELSE
+           BEGIN
+             INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+           END`,
+          [cleanEmail, strPayload]
+        ).catch(() => {});
+        saveLocalData(cleanEmail, financialPayload);
+      }
+    }
+
+    // C) Sincronizar ordens de serviço do Render para o SQL Server local
+    if (Array.isArray(cloudOrdens) && cloudOrdens.length > 0) {
+      for (const os of cloudOrdens) {
+        if (!os || !os.protocolo) continue;
+        await pool.query(
+          `IF EXISTS (SELECT 1 FROM ordens_servico WHERE protocolo = $1)
+           BEGIN
+             UPDATE ordens_servico 
+             SET cliente_nome = $2, cliente_email = $3, cliente_telefone = $4, cliente_cpf = $5, servico = $6, status = $7, valor = $8, updated_at = GETDATE()
+             WHERE protocolo = $1;
+           END
+           ELSE
+           BEGIN
+             INSERT INTO ordens_servico (protocolo, cliente_nome, cliente_email, cliente_telefone, cliente_cpf, servico, status, valor, created_at, updated_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, GETDATE(), GETDATE());
+           END`,
+          [os.protocolo, os.cliente_nome || os.client_name, os.cliente_email || os.client_email, os.cliente_telefone || os.client_phone, os.cliente_cpf || os.client_cpf, os.servico || os.service, os.status || 'Pendente', os.valor || os.value || 0]
+        ).catch(() => {});
+      }
+    }
+
+    // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server
     const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios');
     if (localUsersRes.rows && localUsersRes.rows.length > 0) {
-      const activeLocalUsers = localUsersRes.rows.filter(u => !isAccountPermanentlyDeleted(u.email));
-      saveLocalUsers(activeLocalUsers);
+      saveLocalUsers(localUsersRes.rows);
       await fetchCloud('/api/users', {
         method: 'POST',
-        body: JSON.stringify(activeLocalUsers.map(sanitizeUser))
+        body: JSON.stringify(localUsersRes.rows.map(sanitizeUser))
       }).catch(() => {});
-    }
-
-    // 3. Sincronizar dados financeiros atualizados do Render para o SQL Server
-    const resBackup = await fetchCloud('/api/backup');
-    if (resBackup.ok) {
-      const backupData = await resBackup.json();
-      if (backupData && backupData.financial_data) {
-        for (const [emailKey, financialPayload] of Object.entries(backupData.financial_data)) {
-          if (!emailKey || !financialPayload) continue;
-          const cleanEmail = emailKey.toLowerCase().trim();
-          if (isAccountPermanentlyDeleted(cleanEmail)) {
-            await pool.query('DELETE FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(() => {});
-            continue;
-          }
-          const strPayload = typeof financialPayload === 'object' ? JSON.stringify(financialPayload) : String(financialPayload);
-          await pool.query(
-            `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
-             BEGIN
-               UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
-             END
-             ELSE
-             BEGIN
-               INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
-             END`,
-            [cleanEmail, strPayload]
-          ).catch(() => {});
-          saveLocalData(cleanEmail, financialPayload);
-        }
-      }
     }
   } catch(syncErr) {
     // Falha silenciosa caso o Render esteja temporariamente reiniciando ou sem internet
@@ -19295,9 +19328,9 @@ async function syncWithRenderCloud() {
 function startRenderCloudSyncWorker() {
   setTimeout(() => {
     syncWithRenderCloud();
-    setInterval(syncWithRenderCloud, 7000).unref();
-    console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real: Render <-> Microsoft SQL Server`);
-  }, 3000).unref();
+    setInterval(syncWithRenderCloud, 4000).unref();
+    console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real (4s): Render <-> Microsoft SQL Server`);
+  }, 1500).unref();
 }
 
 server.listen(PORT, '0.0.0.0', () => {
