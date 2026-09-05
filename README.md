@@ -1,16 +1,17 @@
 # Nexus Financeiro Hub — Sistema de Gestão Financeira Pessoal #
 
 ## Visão Geral
-O **Nexus Financeiro Hub** é um sistema completo de gestão financeira pessoal, orçamentos, cartões, metas e relatórios, construído com Node.js nativo e **PostgreSQL**.
+O **Nexus Financeiro Hub** é um sistema completo de gestão financeira pessoal, orçamentos, cartões, metas e relatórios, construído com Node.js nativo e **Microsoft SQL Server**.
 
 ## Arquitetura & Segurança Implementada
 - **Autenticação Segura por Token (Bearer Token):** Todas as rotas da API (`/api/data`, `/api/users`, `/api/admin/all-data`) são protegidas e exigem sessão ativa.
-- **Hashing de Senha com Salt (crypto PBKDF2):** Nenhuma senha é gravada em texto puro. Migração transparente automática para senhas legadas no login.
-- **Proteção contra Injeção de Scripts (XSS):** Todo o conteúdo de entrada do usuário é escapado via `escapeHTML()`.
-- **Persistência no PostgreSQL & Aba de Integração VS Code:**
+- **Hashing de Senha com Salt (scrypt / PBKDF2):** Nenhuma senha é gravada em texto puro. Migração transparente automática para senhas legadas no login.
+- **Proteção contra Injeção de Scripts (XSS):** Todo o conteúdo de entrada do usuário é sanitizado.
+- **Persistência no Microsoft SQL Server & Resiliência:**
   - `usuarios`: Armazena cadastro (id, name, email, password hash, role, active).
-  - `dados_financeiros`: Armazena transações, contas, orçamentos, metas, alertas e anexos por usuário em coluna `JSONB`.
-  - **Aba PostgreSQL & VS Code:** Permite visualizar em tempo real os dados de cadastro no banco, copiar o arquivo `.env`, copiar/baixar scripts SQL (`cadastro.sql`) e exportar cadastros em JSON.
+  - `dados_financeiros`: Armazena transações, contas, orçamentos, metas, alertas e anexos por usuário em coluna `NVARCHAR(MAX)`.
+  - `system_logs`: Auditoria e logs de sistema.
+  - `ordens_servico`: Protocolos e chamados de serviço.
 
 ## Como Rodar Localmente
 
@@ -22,7 +23,7 @@ O **Nexus Financeiro Hub** é um sistema completo de gestão financeira pessoal,
    ```bash
    copy .env.example .env
    ```
-   Preencha `DB_USER` e `DB_PASSWORD` com o seu usuário/senha do PostgreSQL local (`DB_NAME=FINANCEIRO`). O banco será verificado e criado automaticamente se necessário.
+   O sistema conecta automaticamente ao banco local `AMBIENTE DE HOMOLOGAÇAO SF` via autenticação do Windows (Trusted_Connection).
 3. Inicie o servidor:
    ```bash
    npm start
@@ -31,7 +32,3 @@ O **Nexus Financeiro Hub** é um sistema completo de gestão financeira pessoal,
    ```
    http://localhost:3000
    ```
-5. Acesse a aba **🐘 PostgreSQL & VS Code** no menu principal para visualizar os dados cadastrados no banco e copiar as configurações de deploy.
-
-## Deploy no Render / Servidores Cloud
-Configure as variáveis de ambiente no painel do Render (`DATABASE_URL` ou `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `SMTP_USER`, `SMTP_PASS`).

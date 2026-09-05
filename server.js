@@ -9,13 +9,6 @@ const url = require('url');
 const tls = require('tls');
 const crypto = require('crypto');
 
-let Pool;
-try {
-  Pool = require('pg').Pool;
-} catch (e) {
-  // pg não instalado no ambiente
-}
-
 let mssql;
 try {
   mssql = require('mssql/msnodesqlv8');
@@ -147,7 +140,7 @@ function broadcastEvent(eventType, eventData) {
   }
 }
 
-// ==================== Camada de Conexão com o Banco de Dados (MSSQL Interno / PostgreSQL) ====================
+// ==================== Camada de Conexão com o Banco de Dados (Microsoft SQL Server Interno) ====================
 class MssqlAdapter {
   constructor(pool) {
     this.pool = pool;
@@ -364,11 +357,10 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
 
 // Cria as tabelas (se não existirem) e garante migrações automáticas e o admin padrão
 async function initDatabase() {
-  const dbType = (process.env.DB_TYPE || 'mssql').toLowerCase();
-  const mssqlDbName = process.env.MSSQL_DATABASE || process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇAO SF';
+  const mssqlDbName = process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF';
 
   // 1. Tentar conectar ao Microsoft SQL Server Interno (localhost - AMBIENTE DE HOMOLOGAÇÃO SF)
-  if (dbType === 'mssql' && mssql) {
+  if (mssql) {
     const driversToTry = [
       process.env.MSSQL_DRIVER,
       'ODBC Driver 17 for SQL Server',
@@ -390,178 +382,72 @@ async function initDatabase() {
     }
   }
 
-  // 2. Fallback para PostgreSQL / Supabase caso MSSQL não tenha conectado ou especificado
-  if (!pool && Pool) {
-    try {
-      if (process.env.DATABASE_URL) {
-        pool = new Pool({
-          connectionString: process.env.DATABASE_URL,
-          ssl: { rejectUnauthorized: false }
-        });
-      } else if (process.env.DB_HOST && dbType === 'postgres') {
-        pool = new Pool({
-          host: process.env.DB_HOST || 'localhost',
-          port: process.env.DB_PORT || 5432,
-          user: process.env.DB_USER || 'postgres',
-          password: process.env.DB_PASSWORD || '86266049',
-          database: process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇAO SF',
-          ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
-        });
-      }
-      if (pool) {
-        pool.on('error', (err) => {
-          console.warn('[AVISO BD] Erro no pool do PostgreSQL:', err.message);
-        });
-      }
-    } catch (errPg) {
-      console.warn('[AVISO BD] Falha ao configurar pool PostgreSQL:', errPg.message);
-      pool = null;
-    }
-  }
-
   if (!pool) {
-    console.warn('[BANCO LOCAL] Nenhum servidor SQL ativo detectado. Operando no modo de alta resiliência com arquivos JSON locais.');
+    console.warn('[BANCO LOCAL] Servidor Microsoft SQL Server não detectado. Operando no modo de alta resiliência com arquivos JSON locais.');
     return;
   }
 
-  // 3. Inicialização e Migração de Esquema (MSSQL vs PostgreSQL)
-  if (pool.isMssql) {
-    await pool.query(`
-      IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'usuarios')
-      BEGIN
-        CREATE TABLE usuarios (
-          id INT IDENTITY(1,1) PRIMARY KEY,
-          name NVARCHAR(150) NOT NULL,
-          email NVARCHAR(150) NOT NULL UNIQUE,
-          password NVARCHAR(255) NOT NULL,
-          role NVARCHAR(50) NOT NULL DEFAULT 'Usuário',
-          active BIT NOT NULL DEFAULT 1,
-          created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
-          last_login DATETIME2 NULL,
-          cpf NVARCHAR(20) NULL,
-          phone NVARCHAR(25) NULL,
-          birth_date NVARCHAR(20) NULL,
-          terms_accepted BIT NOT NULL DEFAULT 1
-        );
-      END;
-
-      IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'dados_financeiros')
-      BEGIN
-        CREATE TABLE dados_financeiros (
-          id INT IDENTITY(1,1) PRIMARY KEY,
-          email NVARCHAR(150) NOT NULL UNIQUE,
-          dados NVARCHAR(MAX) NOT NULL DEFAULT '{}',
-          updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
-        );
-      END;
-
-      IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'system_logs')
-      BEGIN
-        CREATE TABLE system_logs (
-          id INT IDENTITY(1,1) PRIMARY KEY,
-          timestamp DATETIME2 NOT NULL DEFAULT GETDATE(),
-          user_name NVARCHAR(150) NULL,
-          user_email NVARCHAR(150) NULL,
-          action NVARCHAR(50) NOT NULL,
-          entity NVARCHAR(50) NOT NULL,
-          details NVARCHAR(MAX) NOT NULL
-        );
-      END;
-
-      IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'ordens_servico')
-      BEGIN
-        CREATE TABLE ordens_servico (
-          id INT IDENTITY(1,1) PRIMARY KEY,
-          protocol NVARCHAR(50) NOT NULL UNIQUE,
-          client_name NVARCHAR(150) NOT NULL,
-          client_email NVARCHAR(150) NOT NULL,
-          service_type NVARCHAR(100) NOT NULL DEFAULT 'Melhoria no Sistema',
-          priority NVARCHAR(50) NOT NULL DEFAULT 'Normal',
-          title NVARCHAR(200) NOT NULL,
-          description NVARCHAR(MAX) NOT NULL,
-          status NVARCHAR(50) NOT NULL DEFAULT 'Pendente',
-          admin_notes NVARCHAR(MAX) NULL DEFAULT '',
-          created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
-          updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
-        );
-      END;
-    `);
-  } else {
-    // PostgreSQL DDL
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS usuarios (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(150) NOT NULL,
-        email VARCHAR(150) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        role VARCHAR(50) NOT NULL DEFAULT 'Usuário',
-        active BOOLEAN NOT NULL DEFAULT true,
-        created_at TIMESTAMP NOT NULL DEFAULT now(),
-        last_login TIMESTAMP WITH TIME ZONE
+  // 2. Inicialização e Migração de Esquema no Microsoft SQL Server
+  await pool.query(`
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'usuarios')
+    BEGIN
+      CREATE TABLE usuarios (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(150) NOT NULL,
+        email NVARCHAR(150) NOT NULL UNIQUE,
+        password NVARCHAR(255) NOT NULL,
+        role NVARCHAR(50) NOT NULL DEFAULT 'Usuário',
+        active BIT NOT NULL DEFAULT 1,
+        created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
+        last_login DATETIME2 NULL,
+        cpf NVARCHAR(20) NULL,
+        phone NVARCHAR(25) NULL,
+        birth_date NVARCHAR(20) NULL,
+        terms_accepted BIT NOT NULL DEFAULT 1
       );
-    `);
+    END;
 
-    try {
-      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;');
-      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS active BOOLEAN NOT NULL DEFAULT true;');
-      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS role VARCHAR(50) NOT NULL DEFAULT \'Usuário\';');
-      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT now();');
-      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS cpf VARCHAR(20);');
-      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS phone VARCHAR(25);');
-      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS birth_date VARCHAR(20);');
-      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS terms_accepted BOOLEAN NOT NULL DEFAULT true;');
-    } catch(e) {}
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS dados_financeiros (
-        id SERIAL PRIMARY KEY,
-        email VARCHAR(150) UNIQUE NOT NULL REFERENCES usuarios(email) ON DELETE CASCADE ON UPDATE CASCADE,
-        dados JSONB NOT NULL DEFAULT '{}'::jsonb,
-        updated_at TIMESTAMP NOT NULL DEFAULT now()
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'dados_financeiros')
+    BEGIN
+      CREATE TABLE dados_financeiros (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        email NVARCHAR(150) NOT NULL UNIQUE,
+        dados NVARCHAR(MAX) NOT NULL DEFAULT '{}',
+        updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
       );
-    `);
+    END;
 
-    try {
-      await pool.query('ALTER TABLE dados_financeiros ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT now();');
-    } catch(e) {}
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS system_logs (
-        id SERIAL PRIMARY KEY,
-        timestamp TIMESTAMP NOT NULL DEFAULT now(),
-        user_name VARCHAR(150),
-        user_email VARCHAR(150),
-        action VARCHAR(50) NOT NULL,
-        entity VARCHAR(50) NOT NULL,
-        details TEXT NOT NULL
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'system_logs')
+    BEGIN
+      CREATE TABLE system_logs (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        timestamp DATETIME2 NOT NULL DEFAULT GETDATE(),
+        user_name NVARCHAR(150) NULL,
+        user_email NVARCHAR(150) NULL,
+        action NVARCHAR(50) NOT NULL,
+        entity NVARCHAR(50) NOT NULL,
+        details NVARCHAR(MAX) NOT NULL
       );
-    `);
+    END;
 
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS ordens_servico (
-        id SERIAL PRIMARY KEY,
-        protocol VARCHAR(50) UNIQUE NOT NULL,
-        client_name VARCHAR(150) NOT NULL,
-        client_email VARCHAR(150) NOT NULL,
-        service_type VARCHAR(100) NOT NULL,
-        priority VARCHAR(50) NOT NULL DEFAULT 'Normal',
-        title VARCHAR(200) NOT NULL,
-        description TEXT NOT NULL,
-        status VARCHAR(50) NOT NULL DEFAULT 'Pendente',
-        admin_notes TEXT DEFAULT '',
-        created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-        updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'ordens_servico')
+    BEGIN
+      CREATE TABLE ordens_servico (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        protocol NVARCHAR(50) NOT NULL UNIQUE,
+        client_name NVARCHAR(150) NOT NULL,
+        client_email NVARCHAR(150) NOT NULL,
+        service_type NVARCHAR(100) NOT NULL DEFAULT 'Melhoria no Sistema',
+        priority NVARCHAR(50) NOT NULL DEFAULT 'Normal',
+        title NVARCHAR(200) NOT NULL,
+        description NVARCHAR(MAX) NOT NULL,
+        status NVARCHAR(50) NOT NULL DEFAULT 'Pendente',
+        admin_notes NVARCHAR(MAX) NULL DEFAULT '',
+        created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
+        updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
       );
-    `);
-
-    try {
-      await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS admin_notes TEXT DEFAULT \'\';');
-      await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS service_type VARCHAR(100) DEFAULT \'Melhoria no Sistema\';');
-      await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS priority VARCHAR(50) DEFAULT \'Normal\';');
-      await pool.query('ALTER TABLE ordens_servico ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now();');
-      await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS last_login TIMESTAMP WITH TIME ZONE;');
-    } catch(e) {}
-  }
+    END;
+  `);
 
   // 4. Garantir Administrador Padrão
   await pool.query(
@@ -7704,7 +7590,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         <span style="color:#34d399; font-weight:700;">Ativo</span>
       </div>
       <div style="display:flex; justify-content:space-between; align-items:center; color:#94a3b8;">
-        <span>✓ Sincronização PostgreSQL / Local</span>
+        <span>✓ Sincronização SQL Server / Local</span>
         <span style="color:#60a5fa; font-weight:700;">Conectado</span>
       </div>
     </div>
@@ -7785,7 +7671,7 @@ function saveToStorage(key, val) {
   try {
     localStorage.setItem(key, JSON.stringify(val));
   } catch(e) {
-    console.warn('Aviso: Armazenamento local (localStorage) excedeu a cota máxima. Os dados são mantidos e salvos no PostgreSQL.', e);
+    console.warn('Aviso: Armazenamento local (localStorage) excedeu a cota máxima. Os dados são mantidos e salvos no SQL Server.', e);
   }
 }
 
@@ -8246,7 +8132,7 @@ if (loginPasswordEl) {
   });
 }
 
-// Login direto contra o PostgreSQL / API com Validação Precisa em Tela e Fallback Offline
+// Login direto contra o SQL Server / API com Validação Precisa em Tela e Fallback Offline
 window.handleLoginSubmit = async function(e) {
   if (e && e.preventDefault) e.preventDefault();
   if (window.clearAuthFeedback) window.clearAuthFeedback('login');
@@ -8663,7 +8549,7 @@ window.handleServerPhoneInput = function(input) {
   input.value = v;
 };
 
-// Cadastro com padrão financeiro completo, inserção direta no PostgreSQL e fallback resiliente
+// Cadastro com padrão financeiro completo, inserção direta no SQL Server e fallback resiliente
 window.handleRegisterSubmit = async function(e) {
   if (e && e.preventDefault) e.preventDefault();
   const nameInput = document.getElementById('regName');
@@ -9208,7 +9094,7 @@ async function loadUserData() {
     isDataLoading = false;
   }
 
-  // 2. Sincroniza em segundo plano com o servidor PostgreSQL / API especificamente para este e-mail
+  // 2. Sincroniza em segundo plano com o servidor SQL Server / API especificamente para este e-mail
   let hasServerChanges = false;
   try {
     const res = await fetch(window.location.origin + '/api/data?email=' + encodeURIComponent(cleanEmail));
@@ -12814,7 +12700,7 @@ function pageFuncoes(){
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow:0 0 10px #10b981;"></span>
-            <div><strong style="font-size:13.5px; color:var(--text);">Persistência PostgreSQL / JSON</strong><div style="font-size:11px; color:var(--text-faint);">Sincronização em tempo real</div></div>
+            <div><strong style="font-size:13.5px; color:var(--text);">Persistência SQL Server / JSON</strong><div style="font-size:11px; color:var(--text-faint);">Sincronização em tempo real</div></div>
           </div>
           <span style="font-size:11px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.15); padding:3px 8px; border-radius:6px;">Online</span>
         </div>
@@ -12911,7 +12797,7 @@ function pageUsuarios(){
     return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
   }
 
-  // Deduplica e garante lista limpa com dados do PostgreSQL
+  // Deduplica e garante lista limpa com dados do SQL Server
   const userMap = new Map();
   (registeredUsers || []).forEach(u => {
     if (u && u.email) userMap.set(u.email.toLowerCase(), u);
@@ -17605,9 +17491,9 @@ const server = http.createServer((req, res) => {
       uptime: uptimeStr,
       uptime_seconds: uptimeSeconds,
       timestamp: new Date().toISOString(),
-      database: pool ? (pool.isMssql ? 'connected_mssql_internal' : 'connected_postgresql') : 'resilient_local_json',
-      database_type: pool ? (pool.isMssql ? 'Microsoft SQL Server (Interno)' : 'PostgreSQL') : 'Local JSON Cache',
-      database_name: pool ? (pool.isMssql ? (process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF') : (process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇÃO SF')) : 'local_json',
+      database: pool ? 'connected_mssql_internal' : 'resilient_local_json',
+      database_type: pool ? 'Microsoft SQL Server (Interno)' : 'Local JSON Cache',
+      database_name: pool ? (process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF') : 'local_json',
       active_users_count: localUsers.length,
       memory: {
         rss_mb: (mem.rss / 1024 / 1024).toFixed(2),
@@ -17688,7 +17574,7 @@ const server = http.createServer((req, res) => {
             );
             if (result.rows.length > 0) user = result.rows[0];
           } catch (dbErr) {
-            console.warn('[AVISO BD] Falha ao consultar PostgreSQL no login. Usando cache local:', dbErr.message);
+            console.warn('[AVISO BD] Falha ao consultar SQL Server no login. Usando cache local:', dbErr.message);
           }
         }
         if (!user) {
@@ -17874,7 +17760,7 @@ const server = http.createServer((req, res) => {
               }
             } catch(dadosErr){}
           } catch (dbInsertErr) {
-            console.warn('[AVISO BD] Erro ao cadastrar/atualizar no PostgreSQL:', dbInsertErr.message);
+            console.warn('[AVISO BD] Erro ao cadastrar/atualizar no SQL Server:', dbInsertErr.message);
           }
         }
 
@@ -17919,7 +17805,7 @@ const server = http.createServer((req, res) => {
         console.log(`🛡️ Segurança:     Hash Criptográfico scrypt + Conformidade LGPD`);
         console.log(`🕒 Data/Hora:    ${new Date().toLocaleString('pt-BR')}`);
         console.log('💻 Apresentação: Credenciais sincronizadas e prontas para Logon no VS Code');
-        console.log('📂 Persistência: local_users.json e PostgreSQL');
+        console.log('📂 Persistência: local_users.json e SQL Server');
         console.log('='.repeat(70) + '\n');
 
         const token = generateSecureToken(newUserObj);
@@ -18141,7 +18027,7 @@ const server = http.createServer((req, res) => {
           res.end(JSON.stringify({ success: true }));
         })
         .catch(err => {
-          console.warn('Erro ao deletar usuário no PostgreSQL:', err.message);
+          console.warn('Erro ao deletar usuário no SQL Server:', err.message);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ success: true, warning: err.message }));
         });
@@ -18269,7 +18155,7 @@ const server = http.createServer((req, res) => {
            SET dados = EXCLUDED.dados, updated_at = now();`,
           [cleanEmail, payload.data]
         ).catch(err => {
-          console.warn('[AVISO BD] Falha ao salvar no PostgreSQL. Dados salvos com resiliência local.', err.message);
+          console.warn('[AVISO BD] Falha ao salvar no SQL Server. Dados salvos com resiliência local.', err.message);
         });
       }
 
@@ -18448,7 +18334,7 @@ const server = http.createServer((req, res) => {
             newOrder.id = resDb.rows[0].id;
           }
         }).catch(err => {
-          console.warn('[AVISO BD O.S.] Erro ao gravar no PostgreSQL, mantido localmente:', err.message);
+          console.warn('[AVISO BD O.S.] Erro ao gravar no SQL Server, mantido localmente:', err.message);
         });
       }
 
@@ -18502,7 +18388,7 @@ const server = http.createServer((req, res) => {
             [status, adminNotes, nowIso, isNaN(id) ? -1 : parseInt(id), String(id)]
           );
         } catch(err) {
-          console.warn('[AVISO BD O.S.] Erro ao atualizar no PostgreSQL:', err.message);
+          console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server:', err.message);
         }
       }
 
@@ -18611,7 +18497,7 @@ function gracefulShutdown(signal) {
     console.log('[PROCESSO] Servidor HTTP finalizado.');
     if (pool) {
       pool.end(() => {
-        console.log('[BANCO] Pool de conexões PostgreSQL encerrado.');
+        console.log('[BANCO] Conexão com Microsoft SQL Server encerrada.');
         process.exit(0);
       });
     } else {
@@ -18631,9 +18517,8 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 initDatabase()
   .then(() => {
     if (pool) {
-      const dbTypeStr = pool.isMssql ? 'Microsoft SQL Server (Interno)' : 'PostgreSQL';
-      const dbNameStr = pool.isMssql ? (process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF') : (process.env.DB_NAME || 'AMBIENTE DE HOMOLOGAÇÃO SF');
-      console.log(`[BANCO] Conexão ativa e sincronizada com ${dbTypeStr} (banco: ${dbNameStr})`);
+      const dbNameStr = process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF';
+      console.log(`[BANCO] Conexão ativa e sincronizada com Microsoft SQL Server (Interno) (banco: ${dbNameStr})`);
     } else {
       console.log(`[BANCO LOCAL] Operando com alta resiliência e persistência em arquivos JSON locais.`);
     }
