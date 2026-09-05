@@ -451,9 +451,11 @@ async function initDatabase() {
 
   // 4. Garantir Administrador Padrão
   await pool.query(
-    `INSERT INTO usuarios (name, email, password, role, active)
-     VALUES ($1, $2, $3, $4, $5)
-     ON CONFLICT (email) DO NOTHING;`,
+    `IF NOT EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($2))
+     BEGIN
+       INSERT INTO usuarios (name, email, password, role, active)
+       VALUES ($1, $2, $3, $4, $5);
+     END`,
     [DEFAULT_ADMIN.name, DEFAULT_ADMIN.email, DEFAULT_ADMIN.password, DEFAULT_ADMIN.role, DEFAULT_ADMIN.active]
   );
 
@@ -17371,7 +17373,7 @@ function recordSystemLog(userName, userEmail, action, entity, details) {
   if (pool) {
     pool.query(
       `INSERT INTO system_logs (timestamp, user_name, user_email, action, entity, details)
-       VALUES (now(), $1, $2, $3, $4, $5)`,
+       VALUES (GETDATE(), $1, $2, $3, $4, $5)`,
       [logObj.user_name, logObj.user_email, logObj.action, logObj.entity, logObj.details]
     ).catch(err => {
       // Gravado no arquivo system_logs.json caso o banco falhe
@@ -17623,7 +17625,7 @@ const server = http.createServer((req, res) => {
 
         if (pool) {
           try {
-            await pool.query('UPDATE usuarios SET last_login = NOW() WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+            await pool.query('UPDATE usuarios SET last_login = GETDATE() WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
           } catch(e) {}
         }
 
@@ -17743,8 +17745,8 @@ const server = http.createServer((req, res) => {
             } else {
               const insertRes = await pool.query(
                 `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
-                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                 RETURNING id;`,
+                 OUTPUT INSERTED.id
+                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
                 [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', true, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal]
               );
               if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
@@ -18041,7 +18043,7 @@ const server = http.createServer((req, res) => {
   // Rota GET de Logs de Auditoria
   if (req.method === 'GET' && parsedUrl.pathname === '/api/logs') {
     if (pool) {
-      pool.query('SELECT id, timestamp, user_name, user_email, action, entity, details FROM system_logs ORDER BY id DESC LIMIT 500')
+      pool.query('SELECT TOP 500 id, timestamp, user_name, user_email, action, entity, details FROM system_logs ORDER BY id DESC')
         .then(result => {
           const dbLogs = result.rows || [];
           const fileLogs = getFileLogs();
@@ -18149,10 +18151,14 @@ const server = http.createServer((req, res) => {
 
       if (pool) {
         pool.query(
-          `INSERT INTO dados_financeiros (email, dados, updated_at)
-           VALUES ($1, $2, now())
-           ON CONFLICT (email) DO UPDATE
-           SET dados = EXCLUDED.dados, updated_at = now();`,
+          `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+           BEGIN
+             UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
+           END
+           ELSE
+           BEGIN
+             INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+           END`,
           [cleanEmail, payload.data]
         ).catch(err => {
           console.warn('[AVISO BD] Falha ao salvar no SQL Server. Dados salvos com resiliência local.', err.message);
@@ -18178,13 +18184,13 @@ const server = http.createServer((req, res) => {
 
       if (pool) {
         pool.query(
-          `SELECT id, protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at
+          `SELECT TOP 50 id, protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at
            FROM ordens_servico
            WHERE LOWER(client_email) = $1
               OR LOWER(client_name) LIKE $2
               OR LOWER(protocol) = $1
               OR LOWER(title) LIKE $2
-           ORDER BY id DESC LIMIT 50`,
+           ORDER BY id DESC`,
           [q, '%' + q + '%']
         ).then(result => {
           let rows = result.rows || [];
@@ -18242,7 +18248,7 @@ const server = http.createServer((req, res) => {
   // Rota GET para Listar Ordens de Serviço
   if (req.method === 'GET' && parsedUrl.pathname === '/api/ordens') {
     if (pool) {
-      pool.query('SELECT id, protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at FROM ordens_servico ORDER BY id DESC LIMIT 500')
+      pool.query('SELECT TOP 500 id, protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at FROM ordens_servico ORDER BY id DESC')
         .then(result => {
           if (result.rows && result.rows.length > 0) {
             saveLocalOrdens(result.rows);
@@ -18327,7 +18333,8 @@ const server = http.createServer((req, res) => {
       if (pool) {
         pool.query(
           `INSERT INTO ordens_servico (protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
+           OUTPUT INSERTED.id
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
           [newOrder.protocol, newOrder.client_name, newOrder.client_email, newOrder.service_type, newOrder.priority, newOrder.title, newOrder.description, newOrder.status, newOrder.admin_notes, newOrder.created_at, newOrder.updated_at]
         ).then(resDb => {
           if (resDb.rows && resDb.rows[0]) {
