@@ -6699,10 +6699,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
           </div>
 
           <div class="auth-field">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <label style="margin-bottom:0;">CPF do Titular</label>
-              <span style="font-size:10.5px; color:#94a3b8;">Digite o CPF para puxar Nome e Nascimento</span>
-            </div>
+            <label>CPF do Titular</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
@@ -17862,31 +17859,8 @@ const server = http.createServer((req, res) => {
       }
     }
 
-    // 2. Verificar se o CPF já pertence a algum usuário cadastrado no SQL Server ou no cache local
-    let existingUser = null;
-    if (pool) {
-      try {
-        const checkRes = await pool.query("SELECT name, birth_date, email, cpf FROM usuarios WHERE REPLACE(REPLACE(cpf, '.', ''), '-', '') = $1", [cleanCpf]);
-        if (checkRes.rows && checkRes.rows.length > 0) existingUser = checkRes.rows[0];
-      } catch (e) {}
-    }
-    if (!existingUser) {
-      const localUsers = getLocalUsers();
-      existingUser = localUsers.find(u => u.cpf && String(u.cpf).replace(/\D/g, '') === cleanCpf) || null;
-    }
-
-    if (existingUser && existingUser.name) {
-      return {
-        nome: existingUser.name,
-        data_nascimento: existingUser.birth_date || null,
-        situacao: 'REGULAR',
-        regiao_fiscal: regiaoFiscalDesc,
-        origem: 'Receita Federal do Brasil (Cadastro Sincronizado)',
-        email_associado: existingUser.email || null
-      };
-    }
-
-    // 3. CPF autêntico perante a Receita Federal (Módulo 11) - Dados legítimos sem nomes fictícios
+    // 2. Não puxar dados de usuários antigos ou cadastros locais para evitar dados incorretos
+    // O usuário titular deve sempre ter a liberdade de preencher seus dados autênticos
     return {
       nome: null,
       data_nascimento: null,
