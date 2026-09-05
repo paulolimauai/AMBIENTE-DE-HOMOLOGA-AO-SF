@@ -1,0 +1,44 @@
+[
+  {
+    "id": "3",
+    "name": "Administrador",
+    "email": "admin@nexusfinanceiro.com",
+    "password": "scrypt:a39223e1d3ba839ffdc78561b27efc13:f446527daf61034b57bccd91f9c8fb8ec07a3c69b5f4dd0bc0e1dc2e8af2e8876536c0711eeee51aa89ecc9739e21f869ab2e552265b49832583d9c333b91189",
+    "role": "Administrador",
+    "active": true,
+    "created_at": "2026-09-05T04:44:28.406Z",
+    "last_login": "2026-09-05T04:44:57.846Z",
+    "cpf": null,
+    "phone": null,
+    "birth_date": null,
+    "terms_accepted": true
+  },
+  {
+    "id": "4",
+    "name": "Administrador",
+    "email": "admin@nexusfinanceirohub.com.br",
+    "password": "86266049",
+    "role": "Administrador",
+    "active": true,
+    "created_at": "2026-09-05T04:44:28.413Z",
+    "last_login": null,
+    "cpf": null,
+    "phone": null,
+    "birth_date": null,
+    "terms_accepted": true
+  },
+  {
+    "id": "5",
+    "name": "Paulo Lima",
+    "email": "paulolp0101@gmail.com",
+    "password": "scrypt:618c847a88f2926998bc8875bd7fd55c:ce8395f84cc8a047b47f70abfc73aac123db7c3855c65ac4b2303cb129178654269db01ef94dc831a8bbb56f9ef86efe55e0d2d1e7107225b2aecff3f2bc234d",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-05T04:44:28.420Z",
+    "last_login": "2026-09-05T05:30:54.130Z",
+    "cpf": null,
+    "phone": null,
+    "birth_date": null,
+    "terms_accepted": true
+  }
+]

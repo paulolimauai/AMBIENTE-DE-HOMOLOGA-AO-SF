@@ -1,0 +1,353 @@
+{
+  "admin@nexusfinanceiro.com": {
+    "goals": [],
+    "alerts": [],
+    "budgets": [],
+    "accounts": [],
+    "nextTxId": 1,
+    "nextAccId": 1,
+    "nextAttId": 1,
+    "nextRecId": 1,
+    "categories": [
+      {
+        "icon": "🍔",
+        "name": "Alimentação",
+        "type": "despesa",
+        "color": "#e8974b",
+        "count": 0
+      },
+      {
+        "icon": "🛒",
+        "name": "Supermercado",
+        "type": "despesa",
+        "color": "#d8a34b",
+        "count": 0
+      },
+      {
+        "icon": "🏠",
+        "name": "Moradia",
+        "type": "despesa",
+        "color": "#c98a3f",
+        "count": 0
+      },
+      {
+        "icon": "💡",
+        "name": "Contas da Casa",
+        "type": "despesa",
+        "color": "#f0a63a",
+        "count": 0
+      },
+      {
+        "icon": "🚗",
+        "name": "Transporte",
+        "type": "despesa",
+        "color": "#ef5a5a",
+        "count": 0
+      },
+      {
+        "icon": "⚕️",
+        "name": "Saúde",
+        "type": "despesa",
+        "color": "#5ac57e",
+        "count": 0
+      },
+      {
+        "icon": "📚",
+        "name": "Educação",
+        "type": "despesa",
+        "color": "#4a90e2",
+        "count": 0
+      },
+      {
+        "icon": "🎮",
+        "name": "Lazer",
+        "type": "despesa",
+        "color": "#9b6bd8",
+        "count": 0
+      },
+      {
+        "icon": "👕",
+        "name": "Vestuário",
+        "type": "despesa",
+        "color": "#d85bb0",
+        "count": 0
+      },
+      {
+        "icon": "📺",
+        "name": "Assinaturas",
+        "type": "despesa",
+        "color": "#6b7fd7",
+        "count": 0
+      },
+      {
+        "icon": "💳",
+        "name": "Cartão de Crédito",
+        "type": "despesa",
+        "color": "#e8b04b",
+        "count": 0
+      },
+      {
+        "icon": "📤",
+        "name": "Pix Enviado",
+        "type": "despesa",
+        "color": "#f0a63a",
+        "count": 0
+      },
+      {
+        "icon": "💆",
+        "name": "Cuidados Pessoais",
+        "type": "despesa",
+        "color": "#e07bb0",
+        "count": 0
+      },
+      {
+        "icon": "📦",
+        "name": "Outros",
+        "type": "despesa",
+        "color": "#8a93a3",
+        "count": 0
+      },
+      {
+        "icon": "💼",
+        "name": "Salário",
+        "type": "receita",
+        "color": "#e8b04b",
+        "count": 0
+      },
+      {
+        "icon": "💻",
+        "name": "Freelance",
+        "type": "receita",
+        "color": "#4a90e2",
+        "count": 0
+      },
+      {
+        "icon": "📈",
+        "name": "Investimentos",
+        "type": "receita",
+        "color": "#5ac57e",
+        "count": 0
+      },
+      {
+        "icon": "📥",
+        "name": "Pix Recebido",
+        "type": "receita",
+        "color": "#3ec7c7",
+        "count": 0
+      },
+      {
+        "icon": "💵",
+        "name": "Reembolso",
+        "type": "receita",
+        "color": "#6bcf9e",
+        "count": 0
+      },
+      {
+        "icon": "🎉",
+        "name": "Bônus / 13º",
+        "type": "receita",
+        "color": "#d8a34b",
+        "count": 0
+      },
+      {
+        "icon": "💰",
+        "name": "Outras Receitas",
+        "type": "receita",
+        "color": "#8a93a3",
+        "count": 0
+      }
+    ],
+    "nextGoalId": 1,
+    "attachments": [],
+    "nextAlertId": 1,
+    "nextNotifId": 1,
+    "nextBudgetId": 1,
+    "transactions": [],
+    "notifications": [],
+    "recurringList": []
+  },
+  "paulolp0101@gmail.com": {
+    "categories": [
+      {
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "balance": 50000
+      }
+    ],
+    "transactions": [
+      {
+        "id": 1,
+        "desc": "Salário",
+        "amount": 12000,
+        "type": "receita",
+        "val": 0
+      }
+    ],
+    "budgets": [],
+    "goals": [],
+    "recurringList": [],
+    "alerts": [],
+    "attachments": [],
+    "notifications": [],
+    "nextAccId": 1,
+    "nextTxId": 1,
+    "nextBudgetId": 1,
+    "nextGoalId": 1,
+    "nextRecId": 1,
+    "nextAlertId": 1,
+    "nextAttId": 1,
+    "nextNotifId": 1
+  },
+  "admin@nexusfinanceirohub.com.br": {
+    "test": 123
+  }
+}
