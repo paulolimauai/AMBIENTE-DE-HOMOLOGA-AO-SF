@@ -1358,9 +1358,9 @@ body.light .glass-shard {
   backdrop-filter: blur(40px) saturate(190%);
   -webkit-backdrop-filter: blur(40px) saturate(190%);
   animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease;
   overflow: hidden;
-  transform-style: preserve-3d;
+  transform: none !important;
 }
 
 .auth-card-nexus::before {
@@ -17536,42 +17536,12 @@ if (scaleMenuBtn && scaleDropdown) {
 
 
 
-  (function initServer3DCardTilt() {
+  // Tela de login estável e fixa (sem oscilação ou inclinação ao passar o mouse)
+  (function initServerCardStability() {
     const card = document.getElementById('serverAuthNexusCard');
-    const glare = document.getElementById('serverAuthCardGlare');
-    if (!card) return;
-
-    let bounds = null;
-    function updateBounds() { bounds = card.getBoundingClientRect(); }
-    window.addEventListener('resize', updateBounds);
-    window.addEventListener('scroll', updateBounds);
-
-    card.addEventListener('mouseenter', function() {
-      updateBounds();
-      if (glare) glare.style.setProperty('--card-glare-opacity', '1');
-    });
-
-    card.addEventListener('mousemove', function(e) {
-      if (!bounds) updateBounds();
-      const x = e.clientX - bounds.left;
-      const y = e.clientY - bounds.top;
-      const centerX = bounds.width / 2;
-      const centerY = bounds.height / 2;
-
-      const rotateX = ((y - centerY) / centerY) * -5.5;
-      const rotateY = ((x - centerX) / centerX) * 5.5;
-
-      card.style.transform = 'perspective(1200px) rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg) translateY(-2px)';
-      if (glare) {
-        glare.style.setProperty('--card-mouse-x', x + 'px');
-        glare.style.setProperty('--card-mouse-y', y + 'px');
-      }
-    });
-
-    card.addEventListener('mouseleave', function() {
-      card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-      if (glare) glare.style.setProperty('--card-glare-opacity', '0');
-    });
+    if (card) {
+      card.style.transform = 'none';
+    }
   })();
 </script>
 </body>
