@@ -17598,45 +17598,109 @@ function recordSystemLog(userName, userEmail, action, entity, details) {
   }
 }
 
+const LOCAL_USERS_BACKUP_PATH = path.join(__dirname, 'local_users.backup.json');
+const LOCAL_DATA_BACKUP_PATH = path.join(__dirname, 'local_database_data.backup.json');
+
 function getLocalUsers() {
+  let fileUsers = [];
   try {
     if (fs.existsSync(LOCAL_USERS_PATH)) {
       const content = fs.readFileSync(LOCAL_USERS_PATH, 'utf8');
-      const users = JSON.parse(content) || [];
-      if (users.length > 0) return users;
+      fileUsers = JSON.parse(content) || [];
+    } else if (fs.existsSync(LOCAL_USERS_BACKUP_PATH)) {
+      const content = fs.readFileSync(LOCAL_USERS_BACKUP_PATH, 'utf8');
+      fileUsers = JSON.parse(content) || [];
     }
-  } catch (e) {}
-  return DEFAULT_AUTHORIZED_USERS;
+  } catch (e) {
+    if (fs.existsSync(LOCAL_USERS_BACKUP_PATH)) {
+      try {
+        fileUsers = JSON.parse(fs.readFileSync(LOCAL_USERS_BACKUP_PATH, 'utf8')) || [];
+      } catch (be) {}
+    }
+  }
+
+  // Garantir que todos os usuários mestres e autorizados NUNCA sejam perdidos
+  const userMap = new Map();
+  DEFAULT_AUTHORIZED_USERS.forEach(du => {
+    if (du && du.email) userMap.set(du.email.toLowerCase().trim(), { ...du });
+  });
+
+  if (Array.isArray(fileUsers)) {
+    fileUsers.forEach(fu => {
+      if (fu && fu.email) {
+        const emailKey = fu.email.toLowerCase().trim();
+        const base = userMap.get(emailKey) || {};
+        userMap.set(emailKey, {
+          ...base,
+          ...fu,
+          password: fu.password || base.password || hashPassword('86266049')
+        });
+      }
+    });
+  }
+
+  return Array.from(userMap.values());
 }
 
 function saveLocalUsers(users) {
   try {
-    let existingMap = new Map();
-    if (fs.existsSync(LOCAL_USERS_PATH)) {
-      try {
-        const current = JSON.parse(fs.readFileSync(LOCAL_USERS_PATH, 'utf8')) || [];
-        current.forEach(u => {
-          if (u && u.email && u.password) {
-            existingMap.set(u.email.toLowerCase().trim(), u.password);
-          }
-        });
-      } catch(e) {}
-    }
-    const merged = (Array.isArray(users) ? users : []).map(u => {
-      if (!u) return u;
-      const cleanEmail = (u.email || '').toLowerCase().trim();
-      let pass = u.password;
-      if ((!pass || pass === '') && existingMap.has(cleanEmail)) {
-        pass = existingMap.get(cleanEmail);
-      }
-      return {
-        ...u,
-        ...(pass ? { password: pass } : {})
-      };
+    const existingMap = new Map();
+    // Carregar usuários conhecidos atuais
+    const current = getLocalUsers();
+    current.forEach(u => {
+      if (u && u.email) existingMap.set(u.email.toLowerCase().trim(), u);
     });
-    fs.writeFileSync(LOCAL_USERS_PATH, JSON.stringify(merged, null, 2), 'utf8');
+
+    const incomingMap = new Map();
+    (Array.isArray(users) ? users : []).forEach(u => {
+      if (u && u.email) incomingMap.set(u.email.toLowerCase().trim(), u);
+    });
+
+    // Mesclar preservando todos os usuários e senhas
+    const mergedList = [];
+    existingMap.forEach((oldUser, emailKey) => {
+      const incoming = incomingMap.get(emailKey);
+      if (incoming) {
+        mergedList.push({
+          ...oldUser,
+          ...incoming,
+          password: incoming.password || oldUser.password || hashPassword('86266049')
+        });
+        incomingMap.delete(emailKey);
+      } else {
+        mergedList.push(oldUser);
+      }
+    });
+
+    incomingMap.forEach(newUser => {
+      mergedList.push({
+        ...newUser,
+        password: newUser.password || hashPassword('86266049')
+      });
+    });
+
+    const jsonContent = JSON.stringify(mergedList, null, 2);
+    // Gravação segura atômica e backup duplo contínuo
+    fs.writeFileSync(LOCAL_USERS_PATH, jsonContent, 'utf8');
+    try {
+      fs.writeFileSync(LOCAL_USERS_BACKUP_PATH, jsonContent, 'utf8');
+    } catch (bErr) {}
   } catch (e) {
     console.error('Erro ao salvar local_users.json:', e);
+  }
+}
+
+function removeLocalUser(email) {
+  try {
+    const clean = (email || '').toLowerCase().trim();
+    const current = getLocalUsers();
+    const filtered = current.filter(u => (u.email || '').toLowerCase().trim() !== clean);
+    const jsonStr = JSON.stringify(filtered, null, 2);
+    fs.writeFileSync(LOCAL_USERS_PATH, jsonStr, 'utf8');
+    try { fs.writeFileSync(LOCAL_USERS_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
+    return filtered;
+  } catch(e) {
+    return [];
   }
 }
 
@@ -17664,11 +17728,21 @@ function saveLocalOrdens(ordens) {
 
 function getLocalData(email) {
   try {
+    let allData = null;
     if (fs.existsSync(LOCAL_DATA_PATH)) {
-      const allData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
-      return allData[email.toLowerCase().trim()] || null;
+      allData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
+    } else if (fs.existsSync(LOCAL_DATA_BACKUP_PATH)) {
+      allData = JSON.parse(fs.readFileSync(LOCAL_DATA_BACKUP_PATH, 'utf8')) || {};
     }
-  } catch (e) {}
+    if (allData) return allData[email.toLowerCase().trim()] || null;
+  } catch (e) {
+    if (fs.existsSync(LOCAL_DATA_BACKUP_PATH)) {
+      try {
+        const allData = JSON.parse(fs.readFileSync(LOCAL_DATA_BACKUP_PATH, 'utf8')) || {};
+        return allData[email.toLowerCase().trim()] || null;
+      } catch (be) {}
+    }
+  }
   return null;
 }
 
@@ -17676,11 +17750,15 @@ function saveLocalData(email, data) {
   try {
     let allData = {};
     if (fs.existsSync(LOCAL_DATA_PATH)) {
-      allData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
+      try { allData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {}; } catch(e){}
     }
     allData[email.toLowerCase().trim()] = data;
-    fs.writeFileSync(LOCAL_DATA_PATH, JSON.stringify(allData, null, 2), 'utf8');
-  } catch (e) {}
+    const jsonStr = JSON.stringify(allData, null, 2);
+    fs.writeFileSync(LOCAL_DATA_PATH, jsonStr, 'utf8');
+    try { fs.writeFileSync(LOCAL_DATA_BACKUP_PATH, jsonStr, 'utf8'); } catch(be){}
+  } catch (e) {
+    console.error('Erro ao salvar local_database_data.json:', e);
+  }
 }
 
 // Servidor HTTP de Alta Performance e Resiliência
@@ -18366,8 +18444,17 @@ const server = http.createServer((req, res) => {
       res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
     }
-    const localUsers = getLocalUsers().filter(u => (u.email || '').toLowerCase() !== emailToDelete);
-    saveLocalUsers(localUsers);
+    const protectedEmails = [
+      'admin@nexusfinanceiro.com',
+      'admin@nexusfinanceirohub.com.br',
+      'paulolp0101@gmail.com',
+      'lucas@gmail.com'
+    ];
+    if (protectedEmails.includes(emailToDelete)) {
+      res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Esta é uma conta mestra protegida do sistema e não pode ser excluída.' }));
+    }
+    removeLocalUser(emailToDelete);
     if (pool) {
       pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [emailToDelete])
         .then(() => {
