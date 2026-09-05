@@ -2147,50 +2147,47 @@
                             
                             <!-- SEÇÃO 1: DADOS DO TITULAR (KYC) -->
                             <div class="space-y-2.5">
-                                <div class="flex items-center gap-2 pb-1 border-b border-white/10">
+                                <div class="flex items-center justify-between pb-1 border-b border-white/10">
                                     <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 font-display">1. Identificação do Titular (KYC)</span>
+                                    <span class="text-[9.5px] font-bold text-sky-400 bg-sky-500/10 border border-sky-500/25 px-2 py-0.5 rounded">⚡ Consulta Receita Federal</span>
+                                </div>
+
+                                <!-- CPF -->
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <label class="text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8]">CPF do Titular</label>
+                                        <span class="text-[10px] text-slate-400">Digite o CPF para puxar Nome e Nascimento</span>
+                                    </div>
+                                    <div class="auth-input-wrapper">
+                                        <span class="auth-input-icon">
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                                        </span>
+                                        <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="14" autocomplete="off" spellcheck="false" required placeholder="000.000.000-00" oninput="handleCpfInput(this)">
+                                    </div>
+                                    <div id="cpfFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
                                 </div>
 
                                 <!-- Nome Completo -->
                                 <div>
-                                    <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">Nome Completo do Titular</label>
+                                    <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">Nome Completo (Validado pela Receita Federal)</label>
                                     <div class="auth-input-wrapper">
                                         <span class="auth-input-icon">
                                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                         </span>
-                                        <input id="regName" name="name" type="text" autocomplete="name" spellcheck="false" required placeholder="Ex: Paulo Roberto Lima da Silva">
+                                        <input id="regName" name="name" type="text" autocomplete="name" spellcheck="false" required placeholder="Preenchido automaticamente pelo CPF">
                                     </div>
                                 </div>
 
-                                <!-- Grid: CPF e Data de Nascimento -->
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                                    <!-- CPF -->
-                                    <div>
-                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">
-                                            <span>CPF do Titular</span>
-                                        </label>
-                                        <div class="auth-input-wrapper">
-                                            <span class="auth-input-icon">
-                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                                            </span>
-                                            <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="14" autocomplete="off" spellcheck="false" required placeholder="000.000.000-00" oninput="handleCpfInput(this)">
-                                        </div>
-                                        <div id="cpfFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
+                                <!-- Data de Nascimento -->
+                                <div>
+                                    <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">Data de Nascimento</label>
+                                    <div class="auth-input-wrapper">
+                                        <span class="auth-input-icon">
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                                        </span>
+                                        <input id="regBirthDate" name="birth_date" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" spellcheck="false" required placeholder="DD/MM/AAAA" oninput="handleBirthDateInput(this)">
                                     </div>
-
-                                    <!-- Data de Nascimento -->
-                                    <div>
-                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">
-                                            <span>Data de Nascimento</span>
-                                        </label>
-                                        <div class="auth-input-wrapper">
-                                            <span class="auth-input-icon">
-                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                                            </span>
-                                            <input id="regBirthDate" name="birth_date" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" spellcheck="false" required placeholder="DD/MM/AAAA" oninput="handleBirthDateInput(this)">
-                                        </div>
-                                        <div id="birthFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
-                                    </div>
+                                    <div id="birthFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
                                 </div>
                             </div>
 
@@ -3397,8 +3394,9 @@
             return true;
         };
 
-        // Máscara e Validação de CPF em Tempo Real
-        window.handleCpfInput = function(input) {
+        // Máscara e Validação de CPF em Tempo Real com Consulta Automática da Receita Federal
+        let lastLoginHtmlCpf = '';
+        window.handleCpfInput = async function(input) {
             let v = input.value.replace(/\D/g, '').slice(0, 11);
             if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
             else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
@@ -3406,19 +3404,67 @@
             input.value = v;
 
             const feedback = document.getElementById('cpfFeedbackMsg');
-            if (!feedback) return;
+            const nameInput = document.getElementById('regName');
+            const birthInput = document.getElementById('regBirthDate');
 
             if (v.length === 14) {
-                feedback.classList.remove('hidden');
-                if (window.isValidCPF(v)) {
-                    feedback.textContent = '✓ CPF Válido (Receita Federal)';
-                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-emerald-400';
-                } else {
-                    feedback.textContent = '✕ CPF Inválido - verifique os dígitos';
-                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-rose-400';
+                if (!window.isValidCPF(v)) {
+                    if (feedback) {
+                        feedback.classList.remove('hidden');
+                        feedback.textContent = '✕ CPF Inválido perante a Receita Federal';
+                        feedback.className = 'mt-1 text-[10.5px] font-semibold text-rose-400';
+                    }
+                    return;
+                }
+
+                if (lastLoginHtmlCpf === v) return;
+                lastLoginHtmlCpf = v;
+
+                if (feedback) {
+                    feedback.classList.remove('hidden');
+                    feedback.innerHTML = '<span class="inline-flex items-center gap-1.5 text-sky-400"><svg class="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> Consultando base oficial da Receita Federal...</span>';
+                }
+
+                try {
+                    const targetOrigin = (typeof getTargetOrigin === 'function') ? getTargetOrigin() : window.location.origin;
+                    const res = await fetch(targetOrigin + '/api/cpf/consultar?cpf=' + encodeURIComponent(v));
+                    const data = await res.json();
+
+                    if (data && data.success && data.nome) {
+                        if (nameInput) {
+                            nameInput.value = data.nome;
+                            nameInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                            setTimeout(() => nameInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 2500);
+                        }
+                        if (birthInput && data.data_nascimento) {
+                            birthInput.value = data.data_nascimento;
+                            birthInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                            setTimeout(() => birthInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 2500);
+                        }
+                        if (feedback) {
+                            feedback.classList.remove('hidden');
+                            feedback.innerHTML = '<span class="text-emerald-400 font-bold">✓ Receita Federal (' + (data.situacao || 'REGULAR') + '): Nome e Nascimento preenchidos!</span>';
+                        }
+                        const phoneInput = document.getElementById('regPhone');
+                        if (phoneInput && !phoneInput.value) {
+                            phoneInput.focus();
+                        }
+                    } else {
+                        if (feedback) {
+                            feedback.classList.remove('hidden');
+                            feedback.textContent = (data && data.error) ? data.error : '✕ CPF não localizado na Receita Federal';
+                            feedback.className = 'mt-1 text-[10.5px] font-semibold text-rose-400';
+                        }
+                    }
+                } catch(err) {
+                    if (feedback) {
+                        feedback.classList.remove('hidden');
+                        feedback.textContent = '✓ CPF Válido perante a Receita Federal';
+                        feedback.className = 'mt-1 text-[10.5px] font-semibold text-emerald-400';
+                    }
                 }
             } else {
-                feedback.classList.add('hidden');
+                if (feedback) feedback.classList.add('hidden');
             }
         };
 

@@ -37,5 +37,18 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true
+  },
+  {
+    "id": "27",
+    "name": "CICERA DE LIMA PEREIRA",
+    "email": "ciceragyn12@hotmail.com",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-05T06:39:05.733Z",
+    "last_login": null,
+    "cpf": "999.251.091-91",
+    "phone": "(62) 99367-6783",
+    "birth_date": "27/06/1966",
+    "terms_accepted": true
   }
 ]
