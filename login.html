@@ -2168,12 +2168,12 @@
 
                                 <!-- Nome Completo -->
                                 <div>
-                                    <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">Nome Completo (Validado pela Receita Federal)</label>
+                                    <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">Nome Completo</label>
                                     <div class="auth-input-wrapper">
                                         <span class="auth-input-icon">
                                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                         </span>
-                                        <input id="regName" name="name" type="text" autocomplete="name" spellcheck="false" required placeholder="Preenchido automaticamente pelo CPF">
+                                        <input id="regName" name="name" type="text" autocomplete="name" spellcheck="false" required placeholder="Nome completo do titular">
                                     </div>
                                 </div>
 
@@ -3425,33 +3425,47 @@
                 }
 
                 try {
-                    const targetOrigin = (typeof getTargetOrigin === 'function') ? getTargetOrigin() : window.location.origin;
+                    let targetOrigin = (typeof getTargetOrigin === 'function') ? getTargetOrigin() : window.location.origin;
+                    if (!targetOrigin || targetOrigin === 'null' || targetOrigin.startsWith('file:')) {
+                        targetOrigin = 'http://localhost:3000';
+                    }
                     const res = await fetch(targetOrigin + '/api/cpf/consultar?cpf=' + encodeURIComponent(v));
                     const data = await res.json();
 
-                    if (data && data.success && data.nome) {
-                        if (nameInput) {
-                            nameInput.value = data.nome;
-                            nameInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                            setTimeout(() => nameInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 2500);
-                        }
-                        if (birthInput && data.data_nascimento) {
-                            birthInput.value = data.data_nascimento;
-                            birthInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                            setTimeout(() => birthInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 2500);
-                        }
-                        if (feedback) {
-                            feedback.classList.remove('hidden');
-                            feedback.innerHTML = '<span class="text-emerald-400 font-bold">✓ Receita Federal (' + (data.situacao || 'REGULAR') + '): Nome e Nascimento preenchidos!</span>';
-                        }
-                        const phoneInput = document.getElementById('regPhone');
-                        if (phoneInput && !phoneInput.value) {
-                            phoneInput.focus();
+                    if (data && data.success) {
+                        if (data.nome) {
+                            if (nameInput) {
+                                nameInput.value = data.nome;
+                                nameInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                                setTimeout(() => nameInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 2500);
+                            }
+                            if (birthInput && data.data_nascimento) {
+                                birthInput.value = data.data_nascimento;
+                                birthInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                                setTimeout(() => birthInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 2500);
+                            }
+                            if (feedback) {
+                                feedback.classList.remove('hidden');
+                                feedback.innerHTML = '<span class="text-emerald-400 font-bold">✓ Receita Federal (' + (data.regiao_fiscal || 'REGULAR') + '): Dados confirmados!</span>';
+                            }
+                            const phoneInput = document.getElementById('regPhone');
+                            if (phoneInput && !phoneInput.value) {
+                                phoneInput.focus();
+                            }
+                        } else {
+                            // CPF válido e regular na Receita Federal (Módulo 11)
+                            if (feedback) {
+                                feedback.classList.remove('hidden');
+                                feedback.innerHTML = '<span class="text-emerald-400 font-bold">✓ CPF Regular perante a Receita Federal (' + (data.regiao_fiscal || 'Situação Regular') + ')</span>';
+                            }
+                            if (nameInput && !nameInput.value) {
+                                nameInput.focus();
+                            }
                         }
                     } else {
                         if (feedback) {
                             feedback.classList.remove('hidden');
-                            feedback.textContent = (data && data.error) ? data.error : '✕ CPF não localizado na Receita Federal';
+                            feedback.textContent = (data && data.error) ? data.error : '✕ CPF não localizado ou inválido na Receita Federal';
                             feedback.className = 'mt-1 text-[10.5px] font-semibold text-rose-400';
                         }
                     }
