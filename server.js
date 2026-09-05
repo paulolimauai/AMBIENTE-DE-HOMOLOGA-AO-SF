@@ -6799,7 +6799,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
               </span>
-              <input type="text" id="regCpf" placeholder="000.000.000-00" maxlength="14" required autocomplete="off" oninput="window.handleServerCpfInput(this)">
+              <input type="text" id="regCpf" placeholder="000.000.000-00" maxlength="14" required autocomplete="off" oninput="window.handleServerCpfInput(this)" onchange="window.handleServerCpfInput(this)" onblur="window.handleServerCpfInput(this)" onpaste="setTimeout(() => window.handleServerCpfInput(this), 60)">
             </div>
             <div id="regCpfFeedbackMsg" style="display:none; font-size:11px; font-weight:600; margin-top:4px;"></div>
           </div>
@@ -8663,7 +8663,8 @@ window.isValidCPFServer = function(cpf) {
 
 let lastConsultedServerCpf = '';
 window.handleServerCpfInput = async function(input) {
-  let v = input.value.replace(/[^0-9]/g, '').slice(0, 11);
+  const rawDigits = input.value.replace(/[^0-9]/g, '').slice(0, 11);
+  let v = rawDigits;
   if (v.length > 9) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{1,2})/, '$1.$2.$3-$4');
   else if (v.length > 6) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{1,3})/, '$1.$2.$3');
   else if (v.length > 3) v = v.replace(/([0-9]{3})([0-9]{1,3})/, '$1.$2');
@@ -8673,8 +8674,8 @@ window.handleServerCpfInput = async function(input) {
   const nameInput = document.getElementById('regName');
   const birthInput = document.getElementById('regBirthDate');
 
-  if (v.length === 14) {
-    if (!window.isValidCPFServer(v)) {
+  if (rawDigits.length === 11) {
+    if (!window.isValidCPFServer(rawDigits)) {
       if (msg) {
         msg.style.display = 'block';
         msg.textContent = '✕ CPF Inválido perante a Receita Federal';
@@ -8683,8 +8684,8 @@ window.handleServerCpfInput = async function(input) {
       return;
     }
 
-    if (lastConsultedServerCpf === v) return;
-    lastConsultedServerCpf = v;
+    if (lastConsultedServerCpf === rawDigits) return;
+    lastConsultedServerCpf = rawDigits;
 
     if (msg) {
       msg.style.display = 'block';
@@ -8693,41 +8694,62 @@ window.handleServerCpfInput = async function(input) {
 
     try {
       const apiBase = (typeof getApiBaseUrl === 'function') ? getApiBaseUrl() : '';
-      const res = await fetch(apiBase + '/api/cpf/consultar?cpf=' + encodeURIComponent(v));
+      const res = await fetch(apiBase + '/api/cpf/consultar?cpf=' + encodeURIComponent(rawDigits));
       const data = await res.json();
 
       if (data && data.success) {
+        if (data.cpf) input.value = data.cpf;
+
+        const itensCarregados = [];
+
         if (data.nome) {
           if (nameInput) {
             nameInput.value = data.nome;
             nameInput.classList.add('input-auto-filled');
             nameInput.style.borderColor = '#10B981';
-            setTimeout(() => { nameInput.style.borderColor = ''; }, 3000);
+            setTimeout(() => { nameInput.style.borderColor = ''; }, 3500);
           }
+          itensCarregados.push('Nome');
+          itensCarregados.push('CPF');
+
           if (birthInput && data.data_nascimento) {
             birthInput.value = data.data_nascimento;
             birthInput.classList.add('input-auto-filled');
             birthInput.style.borderColor = '#10B981';
-            setTimeout(() => { birthInput.style.borderColor = ''; }, 3000);
+            setTimeout(() => { birthInput.style.borderColor = ''; }, 3500);
+            itensCarregados.push('Nascimento');
           }
+
           const phoneInput = document.getElementById('regPhone');
-          if (phoneInput && (data.phone || data.telefone) && !phoneInput.value) {
-            phoneInput.value = data.phone || data.telefone;
+          const rawPhone = data.phone || data.telefone;
+          if (phoneInput && rawPhone) {
+            const pDigits = String(rawPhone).replace(/\D/g, '').slice(0, 11);
+            if (pDigits.length === 11) {
+              phoneInput.value = pDigits.replace(/([0-9]{2})([0-9]{5})([0-9]{4})/, '($1) $2-$3');
+            } else if (pDigits.length === 10) {
+              phoneInput.value = pDigits.replace(/([0-9]{2})([0-9]{4})([0-9]{4})/, '($1) $2-$3');
+            } else {
+              phoneInput.value = rawPhone;
+            }
             phoneInput.classList.add('input-auto-filled');
             phoneInput.style.borderColor = '#10B981';
-            setTimeout(() => { phoneInput.style.borderColor = ''; }, 3000);
+            setTimeout(() => { phoneInput.style.borderColor = ''; }, 3500);
+            itensCarregados.push('Telefone');
           }
+
           const emailInput = document.getElementById('regEmail');
           if (emailInput && (data.email_associado || data.email) && !emailInput.value) {
             emailInput.value = data.email_associado || data.email;
             emailInput.classList.add('input-auto-filled');
             emailInput.style.borderColor = '#10B981';
-            setTimeout(() => { emailInput.style.borderColor = ''; }, 3000);
+            setTimeout(() => { emailInput.style.borderColor = ''; }, 3500);
           }
+
           if (msg) {
             msg.style.display = 'block';
-            msg.innerHTML = '<span style="color:#34d399; font-weight:700;">✓ ' + (data.origem || 'Receita Federal') + ' (' + (data.regiao_fiscal || 'REGULAR') + '): Dados oficiais localizados e preenchidos!</span>';
+            msg.innerHTML = '<span style="color:#34d399; font-weight:700;">✓ ' + (data.origem || 'Receita Federal') + ': ' + itensCarregados.join(', ') + ' oficial(is) localizados e preenchidos!</span>';
           }
+
           const passInput = document.getElementById('regPassword');
           if (passInput && !passInput.value) {
             passInput.focus();
