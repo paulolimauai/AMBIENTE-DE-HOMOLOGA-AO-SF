@@ -6694,9 +6694,8 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         </div>
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
-          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
             <span>1. Identificação do Titular (KYC)</span>
-            <span style="font-size:9.5px; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); padding:1px 6px; border-radius:4px; border:1px solid rgba(56,189,248,0.25);">⚡ Consulta Receita Federal</span>
           </div>
 
           <div class="auth-field">
