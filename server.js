@@ -261,14 +261,35 @@ class MssqlAdapter {
 
 let pool = null;
 
-// Usuário admin padrão, inserido no banco na primeira execução
-const DEFAULT_ADMIN = {
-  name: 'Administrador',
-  email: 'admin@nexusfinanceiro.com',
-  password: hashPassword('86266049'),
-  role: 'Administrador',
-  active: true
-};
+// Usuários autorizados padrão do sistema (sincronizados no Render e no SQL Server)
+const DEFAULT_AUTHORIZED_USERS = [
+  {
+    id: 3,
+    name: 'Administrador',
+    email: 'admin@nexusfinanceiro.com',
+    password: hashPassword('86266049'),
+    role: 'Administrador',
+    active: true
+  },
+  {
+    id: 4,
+    name: 'Administrador',
+    email: 'admin@nexusfinanceirohub.com.br',
+    password: hashPassword('86266049'),
+    role: 'Administrador',
+    active: true
+  },
+  {
+    id: 5,
+    name: 'Paulo Lima',
+    email: 'paulolp0101@gmail.com',
+    password: hashPassword('86266049'),
+    role: 'Usuário',
+    active: true
+  }
+];
+
+const DEFAULT_ADMIN = DEFAULT_AUTHORIZED_USERS[0];
 
 // Disparo real de e-mail via Socket SMTP Nativo (compatível com Gmail sem pacotes externos)
 function sendPasswordEmail(toEmail, userName, userPassword) {
@@ -8021,8 +8042,9 @@ async function syncUsersWithServer() {
     registeredUsers = cached;
   } else {
     registeredUsers = [
-      { id: 1, name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
-      { id: 20, name: 'PAULO DE LIMA PEREIRA', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Usuário', active: true }
+      { id: 3, name: 'Administrador', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
+      { id: 4, name: 'Administrador', email: 'admin@nexusfinanceirohub.com.br', password: '86266049', role: 'Administrador', active: true },
+      { id: 5, name: 'Paulo Lima', email: 'paulolp0101@gmail.com', password: '86266049', role: 'Usuário', active: true }
     ];
     saveToStorage('nexus_users', registeredUsers);
   }
@@ -17398,9 +17420,7 @@ function getLocalUsers() {
       if (users.length > 0) return users;
     }
   } catch (e) {}
-  return [
-    DEFAULT_ADMIN
-  ];
+  return DEFAULT_AUTHORIZED_USERS;
 }
 
 function saveLocalUsers(users) {
