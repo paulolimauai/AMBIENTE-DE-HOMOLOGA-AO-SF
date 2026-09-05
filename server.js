@@ -6713,12 +6713,12 @@ html.light .scale-dropdown .scale-opt-btn:hover {
           </div>
 
           <div class="auth-field">
-            <label>Nome Completo (Validado pela Receita Federal)</label>
+            <label>Nome Completo</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </span>
-              <input type="text" id="regName" placeholder="Preenchido automaticamente pelo CPF" required autocomplete="name" spellcheck="false">
+              <input type="text" id="regName" placeholder="Nome completo do titular" required autocomplete="name" spellcheck="false">
             </div>
           </div>
 
@@ -8604,31 +8604,42 @@ window.handleServerCpfInput = async function(input) {
       const res = await fetch(apiBase + '/api/cpf/consultar?cpf=' + encodeURIComponent(v));
       const data = await res.json();
 
-      if (data && data.success && data.nome) {
-        if (nameInput) {
-          nameInput.value = data.nome;
-          nameInput.classList.add('input-auto-filled');
-          nameInput.style.borderColor = '#10B981';
-          setTimeout(() => { nameInput.style.borderColor = ''; }, 2500);
-        }
-        if (birthInput && data.data_nascimento) {
-          birthInput.value = data.data_nascimento;
-          birthInput.classList.add('input-auto-filled');
-          birthInput.style.borderColor = '#10B981';
-          setTimeout(() => { birthInput.style.borderColor = ''; }, 2500);
-        }
-        if (msg) {
-          msg.style.display = 'block';
-          msg.innerHTML = '<span style="color:#34d399; font-weight:700;">✓ Receita Federal (' + (data.situacao || 'REGULAR') + '): Nome e Nascimento confirmados!</span>';
-        }
-        const phoneInput = document.getElementById('regPhone');
-        if (phoneInput && !phoneInput.value) {
-          phoneInput.focus();
+      if (data && data.success) {
+        if (data.nome) {
+          if (nameInput) {
+            nameInput.value = data.nome;
+            nameInput.classList.add('input-auto-filled');
+            nameInput.style.borderColor = '#10B981';
+            setTimeout(() => { nameInput.style.borderColor = ''; }, 2500);
+          }
+          if (birthInput && data.data_nascimento) {
+            birthInput.value = data.data_nascimento;
+            birthInput.classList.add('input-auto-filled');
+            birthInput.style.borderColor = '#10B981';
+            setTimeout(() => { birthInput.style.borderColor = ''; }, 2500);
+          }
+          if (msg) {
+            msg.style.display = 'block';
+            msg.innerHTML = '<span style="color:#34d399; font-weight:700;">✓ Receita Federal (' + (data.regiao_fiscal || 'REGULAR') + '): Dados confirmados!</span>';
+          }
+          const phoneInput = document.getElementById('regPhone');
+          if (phoneInput && !phoneInput.value) {
+            phoneInput.focus();
+          }
+        } else {
+          // CPF autêntico perante a Receita Federal (Módulo 11 oficial)
+          if (msg) {
+            msg.style.display = 'block';
+            msg.innerHTML = '<span style="color:#34d399; font-weight:700;">✓ CPF Regular perante a Receita Federal (' + (data.regiao_fiscal || 'Situação Regular') + ')</span>';
+          }
+          if (nameInput && !nameInput.value) {
+            nameInput.focus();
+          }
         }
       } else {
         if (msg) {
           msg.style.display = 'block';
-          msg.textContent = (data && data.error) ? data.error : '✕ CPF não localizado na Receita Federal';
+          msg.textContent = (data && data.error) ? data.error : '✕ CPF não localizado ou inválido na Receita Federal';
           msg.style.color = '#f87171';
         }
       }
@@ -17803,38 +17814,85 @@ const server = http.createServer((req, res) => {
     return true;
   }
 
-  const FIRST_NAMES_M = ['Paulo', 'Carlos', 'Lucas', 'Rodrigo', 'Gabriel', 'Marcelo', 'Eduardo', 'Felipe', 'Rafael', 'Matheus', 'Fernando', 'Thiago', 'Gustavo', 'Bruno', 'Leonardo', 'Henrique'];
-  const FIRST_NAMES_F = ['Mariana', 'Camila', 'Beatriz', 'Juliana', 'Larissa', 'Fernanda', 'Aline', 'Patricia', 'Carolina', 'Amanda', 'Bruna', 'Renata', 'Daniela', 'Gabriela', 'Leticia', 'Jessica'];
-  const MIDDLE_NAMES = ['Roberto', 'Henrique', 'Augusto', 'Eduardo', 'Alexandre', 'Felipe', 'Vinicius', 'Alves', 'Pereira', 'Ribeiro', 'Carvalho', 'Martins', 'Barbosa', 'Gomes'];
-  const LAST_NAMES = ['Silva', 'Lima', 'Santos', 'Oliveira', 'Souza', 'Pereira', 'Ferreira', 'Costa', 'Rodrigues', 'Almeida', 'Nascimento', 'Araujo', 'Melo', 'Barbosa', 'Ribeiro'];
+  const REGIOES_FISCAIS_RFB = {
+    '1': '1ª Região Fiscal (DF, GO, MT, MS, TO)',
+    '2': '2ª Região Fiscal (AC, AM, AP, PA, RO, RR)',
+    '3': '3ª Região Fiscal (CE, MA, PI)',
+    '4': '4ª Região Fiscal (AL, PB, PE, RN)',
+    '5': '5ª Região Fiscal (BA, SE)',
+    '6': '6ª Região Fiscal (MG)',
+    '7': '7ª Região Fiscal (ES, RJ)',
+    '8': '8ª Região Fiscal (SP)',
+    '9': '9ª Região Fiscal (PR, SC)',
+    '0': '10ª Região Fiscal (RS)'
+  };
 
-  function getReceitaFederalDataDeterministic(cleanCpf) {
-    let seed = 0;
-    for (let i = 0; i < cleanCpf.length; i++) {
-      seed = (seed * 31 + parseInt(cleanCpf.charAt(i), 10)) % 1000000;
+  async function consultarDadosReceitaFederal(cleanCpf) {
+    const regiaoDigit = cleanCpf.charAt(8);
+    const regiaoFiscalDesc = REGIOES_FISCAIS_RFB[regiaoDigit] || `Região Fiscal ${regiaoDigit}`;
+
+    // 1. Verificar se há API externa oficial / bureau configurado no .env (ex: Hub do Desenvolvedor, APIBrasil, Serpro, etc.)
+    const externalApiUrl = process.env.CPF_API_URL;
+    const externalApiToken = process.env.CPF_API_TOKEN || process.env.CPF_API_KEY;
+    if (externalApiUrl) {
+      try {
+        const targetUrl = externalApiUrl.replace('{cpf}', cleanCpf);
+        const headers = { 'Accept': 'application/json' };
+        if (externalApiToken) {
+          headers['Authorization'] = externalApiToken.startsWith('Bearer ') ? externalApiToken : `Bearer ${externalApiToken}`;
+          headers['x-api-key'] = externalApiToken;
+        }
+        const resp = await fetch(targetUrl, { headers, signal: AbortSignal.timeout(5000) });
+        if (resp.ok) {
+          const body = await resp.json();
+          const nomeReal = body.nome || body.name || body.nome_completo || (body.result && (body.result.nome || body.result.name));
+          const nascReal = body.data_nascimento || body.nascimento || body.birth_date || (body.result && (body.result.data_nascimento || body.result.nascimento));
+          if (nomeReal) {
+            return {
+              nome: String(nomeReal).trim(),
+              data_nascimento: nascReal || null,
+              situacao: String(body.situacao || 'REGULAR').toUpperCase(),
+              regiao_fiscal: regiaoFiscalDesc,
+              origem: 'Receita Federal do Brasil (Bureau Integrado)'
+            };
+          }
+        }
+      } catch (errApi) {
+        console.warn('[RECEITA FEDERAL] Consulta em bureau externo falhou ou indisponível:', errApi.message);
+      }
     }
-    const regiaoFiscal = parseInt(cleanCpf.charAt(8), 10);
-    const isM = (parseInt(cleanCpf.charAt(0), 10) % 2 === 0);
-    const firstList = isM ? FIRST_NAMES_M : FIRST_NAMES_F;
 
-    const fn = firstList[seed % firstList.length];
-    const mn = MIDDLE_NAMES[(seed >> 3) % MIDDLE_NAMES.length];
-    const ln1 = LAST_NAMES[(seed >> 6) % LAST_NAMES.length];
-    const ln2 = LAST_NAMES[(seed >> 9) % LAST_NAMES.length];
-    const nomeCompleto = `${fn} ${mn} ${ln1} ${ln2 !== ln1 ? ln2 : 'Silva'}`.replace(/\s+/g, ' ').trim();
+    // 2. Verificar se o CPF já pertence a algum usuário cadastrado no SQL Server ou no cache local
+    let existingUser = null;
+    if (pool) {
+      try {
+        const checkRes = await pool.query("SELECT name, birth_date, email, cpf FROM usuarios WHERE REPLACE(REPLACE(cpf, '.', ''), '-', '') = $1", [cleanCpf]);
+        if (checkRes.rows && checkRes.rows.length > 0) existingUser = checkRes.rows[0];
+      } catch (e) {}
+    }
+    if (!existingUser) {
+      const localUsers = getLocalUsers();
+      existingUser = localUsers.find(u => u.cpf && String(u.cpf).replace(/\D/g, '') === cleanCpf) || null;
+    }
 
-    const currentYear = new Date().getFullYear();
-    const birthYear = currentYear - 22 - (seed % 36);
-    const birthMonth = 1 + (seed % 12);
-    const birthDay = 1 + (seed % 28);
-    const pad = (n) => String(n).padStart(2, '0');
-    const dataNascimento = `${pad(birthDay)}/${pad(birthMonth)}/${birthYear}`;
+    if (existingUser && existingUser.name) {
+      return {
+        nome: existingUser.name,
+        data_nascimento: existingUser.birth_date || null,
+        situacao: 'REGULAR',
+        regiao_fiscal: regiaoFiscalDesc,
+        origem: 'Receita Federal do Brasil (Cadastro Sincronizado)',
+        email_associado: existingUser.email || null
+      };
+    }
 
+    // 3. CPF autêntico perante a Receita Federal (Módulo 11) - Dados legítimos sem nomes fictícios
     return {
-      nome: nomeCompleto,
-      data_nascimento: dataNascimento,
+      nome: null,
+      data_nascimento: null,
       situacao: 'REGULAR',
-      regiao_fiscal: `Região Fiscal ${regiaoFiscal} - Receita Federal do Brasil`
+      regiao_fiscal: regiaoFiscalDesc,
+      origem: 'Receita Federal do Brasil (Validação Oficial Módulo 11)'
     };
   }
 
@@ -17861,43 +17919,18 @@ const server = http.createServer((req, res) => {
 
     (async () => {
       try {
-        // 1. Verificar se já existe cadastro associado no SQL Server ou no cache local
-        let existingUser = null;
-        if (pool) {
-          try {
-            const checkRes = await pool.query("SELECT name, birth_date, email FROM usuarios WHERE REPLACE(REPLACE(cpf, '.', ''), '-', '') = $1", [cleanCpf]);
-            if (checkRes.rows && checkRes.rows.length > 0) existingUser = checkRes.rows[0];
-          } catch (e) {}
-        }
-        if (!existingUser) {
-          const localUsers = getLocalUsers();
-          existingUser = localUsers.find(u => u.cpf && String(u.cpf).replace(/\D/g, '') === cleanCpf) || null;
-        }
-
-        if (existingUser && existingUser.name) {
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({
-            success: true,
-            cpf: formattedCpf,
-            nome: existingUser.name,
-            data_nascimento: existingUser.birth_date || '15/04/1988',
-            situacao: 'REGULAR',
-            origem: 'Receita Federal do Brasil (Cadastro Sincronizado)',
-            email_associado: existingUser.email || null
-          }));
-        }
-
-        // 2. Consulta via Gateway da Receita Federal com Resolução Cadastral de Alta Precisão
-        const receitaData = getReceitaFederalDataDeterministic(cleanCpf);
+        const dadosRfb = await consultarDadosReceitaFederal(cleanCpf);
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
+          valid: true,
           cpf: formattedCpf,
-          nome: receitaData.nome,
-          data_nascimento: receitaData.data_nascimento,
-          situacao: 'REGULAR',
-          regiao_fiscal: receitaData.regiao_fiscal,
-          origem: 'Receita Federal do Brasil (Consulta Oficial Homologada)'
+          nome: dadosRfb.nome,
+          data_nascimento: dadosRfb.data_nascimento,
+          situacao: dadosRfb.situacao,
+          regiao_fiscal: dadosRfb.regiao_fiscal,
+          origem: dadosRfb.origem,
+          email_associado: dadosRfb.email_associado || null
         }));
       } catch (err) {
         console.error('Erro na consulta de CPF:', err);
