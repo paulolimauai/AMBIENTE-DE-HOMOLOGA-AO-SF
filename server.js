@@ -6787,11 +6787,6 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
       <!-- Box 2: Formulário de Registro (Padrão Financeiro) -->
       <div id="registerBox" style="display:none;">
-        <div style="text-align:center; margin-bottom:14px;">
-          <span style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; background:rgba(245,158,11,0.12); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">
-            🔒 Abertura de Conta Financeira Segura
-          </span>
-        </div>
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
           <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
