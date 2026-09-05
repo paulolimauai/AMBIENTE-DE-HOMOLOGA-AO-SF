@@ -2375,14 +2375,14 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Dock Lateral de Navegação Vertical (Estilo Aether 4K) ==================== */
+/* ==================== Dock Lateral de Navegação Vertical (Estilo Aether 4K - Tamanho Mais Visual) ==================== */
 nav.menu{
   position:fixed !important;
   top:68px !important;
   left:0 !important;
   bottom:0 !important;
-  width:82px !important;
-  max-width:82px !important;
+  width:96px !important;
+  max-width:96px !important;
   margin:0 !important;
   padding:14px 0 20px !important;
   display:flex !important;
@@ -2413,17 +2413,17 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   align-items:center !important;
   justify-content:center !important;
   text-align:center !important;
-  gap:4px !important;
-  width:66px !important;
-  min-height:58px !important;
-  height:58px !important;
-  padding:8px 2px 6px !important;
-  border-radius:14px !important;
+  gap:5px !important;
+  width:80px !important;
+  min-height:68px !important;
+  height:68px !important;
+  padding:8px 4px 6px !important;
+  border-radius:16px !important;
   background:transparent !important;
   border:1px solid transparent !important;
   color:#94A3B8 !important;
-  font-size:10px !important;
-  font-weight:500 !important;
+  font-size:11px !important;
+  font-weight:600 !important;
   letter-spacing:0.01em !important;
   white-space:nowrap !important;
   cursor:pointer !important;
@@ -2433,29 +2433,29 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   flex-shrink:0 !important;
 }
 .menu button:hover{
-  background:rgba(0, 229, 255, 0.08) !important;
+  background:rgba(0, 229, 255, 0.09) !important;
   color:#FFFFFF !important;
-  border-color:rgba(0, 229, 255, 0.25) !important;
-  transform:translateY(-1.5px) !important;
-  box-shadow:0 4px 14px rgba(0, 229, 255, 0.15) !important;
+  border-color:rgba(0, 229, 255, 0.3) !important;
+  transform:translateY(-2px) scale(1.03) !important;
+  box-shadow:0 6px 18px rgba(0, 229, 255, 0.2) !important;
 }
 .menu button.active{
-  background:linear-gradient(135deg, rgba(0, 229, 255, 0.22) 0%, rgba(14, 165, 233, 0.16) 100%) !important;
-  border:1.5px solid rgba(0, 229, 255, 0.65) !important;
-  border-radius:14px !important;
+  background:linear-gradient(135deg, rgba(0, 229, 255, 0.25) 0%, rgba(14, 165, 233, 0.18) 100%) !important;
+  border:1.8px solid rgba(0, 229, 255, 0.72) !important;
+  border-radius:16px !important;
   color:#FFFFFF !important;
-  font-weight:700 !important;
-  box-shadow:0 0 20px rgba(0, 229, 255, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.6), 0 4px 12px rgba(0,0,0,0.5) !important;
-  transform:translateY(-1px) !important;
+  font-weight:800 !important;
+  box-shadow:0 0 24px rgba(0, 229, 255, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.65), 0 6px 16px rgba(0,0,0,0.5) !important;
+  transform:translateY(-1.5px) scale(1.02) !important;
   text-shadow:0 1px 4px rgba(0,0,0,0.6) !important;
 }
 .menu button.active::after{
   display:none !important;
 }
 .menu button .ic{
-  width:26px !important;
-  height:26px !important;
-  border-radius:8px !important;
+  width:32px !important;
+  height:32px !important;
+  border-radius:10px !important;
   background:transparent !important;
   border:none !important;
   box-shadow:none !important;
@@ -2466,24 +2466,24 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   transition:all 0.2s ease !important;
 }
 .menu button .ic svg{
-  width:20px !important;
-  height:20px !important;
-  stroke-width:2.1px !important;
+  width:23px !important;
+  height:23px !important;
+  stroke-width:2.2px !important;
 }
 .menu button:hover .ic{
-  transform:scale(1.08) !important;
+  transform:scale(1.1) !important;
   color:#00E5FF !important;
 }
 .menu button.active .ic{
   color:#00E5FF !important;
-  transform:scale(1.08) !important;
-  filter:drop-shadow(0 0 8px rgba(0, 229, 255, 0.85)) !important;
+  transform:scale(1.1) !important;
+  filter:drop-shadow(0 0 10px rgba(0, 229, 255, 0.95)) !important;
 }
 .menu button span:not(.ic){
-  font-size:9.5px !important;
-  font-weight:600 !important;
-  line-height:1.15 !important;
-  letter-spacing:0.01em !important;
+  font-size:11px !important;
+  font-weight:700 !important;
+  line-height:1.2 !important;
+  letter-spacing:-0.01em !important;
   display:block !important;
   white-space:nowrap !important;
   text-align:center !important;
@@ -3421,8 +3421,8 @@ body.light .dev-signature-name {
 /* Centralização do conteúdo principal */
 .main{
   flex:1 !important; min-width:0 !important; padding:16px 28px 40px !important;
-  margin-top:76px !important; margin-left:88px !important;
-  width:calc(100% - 88px) !important; max-width:1760px !important; margin-right:auto !important;
+  margin-top:76px !important; margin-left:104px !important;
+  width:calc(100% - 104px) !important; max-width:1760px !important; margin-right:auto !important;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
 .icon-btn{
@@ -6150,7 +6150,7 @@ body.light .logout-timer-bar {
   .brand .name { font-size: 20px !important; }
   .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }
   .topheader-row { max-width: 100% !important; padding: 0 36px !important; height: 68px !important; }
-  .main { max-width: 2400px !important; padding: 16px 36px 40px !important; margin-top: 76px !important; margin-left: 88px !important; width: calc(100% - 88px) !important; }
+  .main { max-width: 2400px !important; padding: 16px 36px 40px !important; margin-top: 76px !important; margin-left: 104px !important; width: calc(100% - 104px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
   .kpi .val { font-size: 26px !important; }
   .kpi .sub { font-size: 12.5px !important; }
@@ -6164,7 +6164,7 @@ body.light .logout-timer-bar {
 @media (min-width: 1700px) and (max-width: 2559px) {
   .brand .name { font-size: 18px; }
   .topheader-row { max-width: 100% !important; padding: 0 28px !important; height: 68px !important; }
-  .main { max-width: 1920px !important; padding: 16px 28px 36px !important; margin-top: 76px !important; margin-left: 88px !important; width: calc(100% - 88px) !important; }
+  .main { max-width: 1920px !important; padding: 16px 28px 36px !important; margin-top: 76px !important; margin-left: 104px !important; width: calc(100% - 104px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; }
 }
 
