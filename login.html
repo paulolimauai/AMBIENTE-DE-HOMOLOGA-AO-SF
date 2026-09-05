@@ -3434,20 +3434,32 @@
                             if (nameInput) {
                                 nameInput.value = data.nome;
                                 nameInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => nameInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 2500);
+                                setTimeout(() => nameInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3000);
                             }
                             if (birthInput && data.data_nascimento) {
                                 birthInput.value = data.data_nascimento;
                                 birthInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => birthInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 2500);
+                                setTimeout(() => birthInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3000);
+                            }
+                            const phoneInput = document.getElementById('regPhone');
+                            if (phoneInput && (data.phone || data.telefone) && !phoneInput.value) {
+                                phoneInput.value = data.phone || data.telefone;
+                                phoneInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                                setTimeout(() => phoneInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3000);
+                            }
+                            const emailInput = document.getElementById('regEmail');
+                            if (emailInput && (data.email_associado || data.email) && !emailInput.value) {
+                                emailInput.value = data.email_associado || data.email;
+                                emailInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
+                                setTimeout(() => emailInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3000);
                             }
                             if (feedback) {
                                 feedback.classList.remove('hidden');
-                                feedback.innerHTML = '<span class="text-emerald-400 font-bold">✓ Receita Federal (' + (data.regiao_fiscal || 'REGULAR') + '): Dados confirmados!</span>';
+                                feedback.innerHTML = '<span class="text-emerald-400 font-bold">✓ ' + (data.origem || 'Receita Federal') + ' (' + (data.regiao_fiscal || 'REGULAR') + '): Dados oficiais confirmados e preenchidos!</span>';
                             }
-                            const phoneInput = document.getElementById('regPhone');
-                            if (phoneInput && !phoneInput.value) {
-                                phoneInput.focus();
+                            const passInput = document.getElementById('regPassword');
+                            if (passInput && !passInput.value) {
+                                passInput.focus();
                             }
                         } else {
                             // CPF válido e regular na Receita Federal (Módulo 11)
