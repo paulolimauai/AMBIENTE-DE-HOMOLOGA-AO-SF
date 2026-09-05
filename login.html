@@ -2151,7 +2151,7 @@
                                         <span class="auth-input-icon">
                                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                                         </span>
-                                        <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="14" autocomplete="off" spellcheck="false" required placeholder="000.000.000-00" oninput="handleCpfInput(this)">
+                                        <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="14" autocomplete="off" spellcheck="false" required placeholder="000.000.000-00" oninput="handleCpfInput(this)" onchange="handleCpfInput(this)" onblur="handleCpfInput(this)" onpaste="setTimeout(() => handleCpfInput(this), 60)">
                                     </div>
                                     <div id="cpfFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
                                 </div>
@@ -3386,7 +3386,8 @@
         // Máscara e Validação de CPF em Tempo Real com Consulta Automática da Receita Federal
         let lastLoginHtmlCpf = '';
         window.handleCpfInput = async function(input) {
-            let v = input.value.replace(/\D/g, '').slice(0, 11);
+            const rawDigits = input.value.replace(/\D/g, '').slice(0, 11);
+            let v = rawDigits;
             if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
             else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
             else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
@@ -3396,8 +3397,8 @@
             const nameInput = document.getElementById('regName');
             const birthInput = document.getElementById('regBirthDate');
 
-            if (v.length === 14) {
-                if (!window.isValidCPF(v)) {
+            if (rawDigits.length === 11) {
+                if (!window.isValidCPF(rawDigits)) {
                     if (feedback) {
                         feedback.classList.remove('hidden');
                         feedback.textContent = '✕ CPF Inválido perante a Receita Federal';
@@ -3406,8 +3407,8 @@
                     return;
                 }
 
-                if (lastLoginHtmlCpf === v) return;
-                lastLoginHtmlCpf = v;
+                if (lastLoginHtmlCpf === rawDigits) return;
+                lastLoginHtmlCpf = rawDigits;
 
                 if (feedback) {
                     feedback.classList.remove('hidden');
@@ -3419,37 +3420,58 @@
                     if (!targetOrigin || targetOrigin === 'null' || targetOrigin.startsWith('file:')) {
                         targetOrigin = 'http://localhost:3000';
                     }
-                    const res = await fetch(targetOrigin + '/api/cpf/consultar?cpf=' + encodeURIComponent(v));
+                    const res = await fetch(targetOrigin + '/api/cpf/consultar?cpf=' + encodeURIComponent(rawDigits));
                     const data = await res.json();
 
                     if (data && data.success) {
+                        if (data.cpf) input.value = data.cpf;
+
+                        const itensCarregados = [];
+
                         if (data.nome) {
                             if (nameInput) {
                                 nameInput.value = data.nome;
                                 nameInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => nameInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3000);
+                                setTimeout(() => nameInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
                             }
+                            itensCarregados.push('Nome');
+                            itensCarregados.push('CPF');
+
                             if (birthInput && data.data_nascimento) {
                                 birthInput.value = data.data_nascimento;
                                 birthInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => birthInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3000);
+                                setTimeout(() => birthInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
+                                itensCarregados.push('Nascimento');
                             }
+
                             const phoneInput = document.getElementById('regPhone');
-                            if (phoneInput && (data.phone || data.telefone) && !phoneInput.value) {
-                                phoneInput.value = data.phone || data.telefone;
+                            const rawPhone = data.phone || data.telefone;
+                            if (phoneInput && rawPhone) {
+                                const pDigits = String(rawPhone).replace(/\D/g, '').slice(0, 11);
+                                if (pDigits.length === 11) {
+                                    phoneInput.value = pDigits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                                } else if (pDigits.length === 10) {
+                                    phoneInput.value = pDigits.replace(/(\d{2})(\d{4})/, '($1) $2-$3');
+                                } else {
+                                    phoneInput.value = rawPhone;
+                                }
                                 phoneInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => phoneInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3000);
+                                setTimeout(() => phoneInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
+                                itensCarregados.push('Telefone');
                             }
+
                             const emailInput = document.getElementById('regEmail');
                             if (emailInput && (data.email_associado || data.email) && !emailInput.value) {
                                 emailInput.value = data.email_associado || data.email;
                                 emailInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-500/10');
-                                setTimeout(() => emailInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3000);
+                                setTimeout(() => emailInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-500/10'), 3500);
                             }
+
                             if (feedback) {
                                 feedback.classList.remove('hidden');
-                                feedback.innerHTML = '<span class="text-emerald-400 font-bold">✓ ' + (data.origem || 'Receita Federal') + ' (' + (data.regiao_fiscal || 'REGULAR') + '): Dados oficiais confirmados e preenchidos!</span>';
+                                feedback.innerHTML = '<span class="text-emerald-400 font-bold">✓ ' + (data.origem || 'Receita Federal') + ': ' + itensCarregados.join(', ') + ' oficial(is) localizados e preenchidos!</span>';
                             }
+
                             const passInput = document.getElementById('regPassword');
                             if (passInput && !passInput.value) {
                                 passInput.focus();
