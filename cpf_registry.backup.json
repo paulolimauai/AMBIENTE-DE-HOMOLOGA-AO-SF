@@ -1,35 +1,4 @@
 {
-  "63481090625": {
-    "cpf": "634.810.906-25",
-    "nome": "Lucas Augusto Lima Almeida",
-    "data_nascimento": "19/07/1998",
-    "phone": "(62) 99256-6666",
-    "email": "lucas@gmail.com",
-    "situacao": "REGULAR",
-    "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
-    "origem": "Receita Federal do Brasil (Base Cadastral Verificada)"
-  },
-  "99925109191": {
-    "cpf": "999.251.091-91",
-    "nome": "CICERA DE LIMA PEREIRA",
-    "data_nascimento": "27/06/1966",
-    "phone": "(62) 99367-6783",
-    "email": "ciceragyn12@hotmail.com",
-    "situacao": "REGULAR",
-    "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
-    "origem": "Receita Federal do Brasil (Base Cadastral Verificada)"
-  },
-  "04023326100": {
-    "cpf": "040.233.261-00",
-    "nome": "Paulo Henrique de Lima",
-    "data_nascimento": "10/01/1988",
-    "phone": "(62) 98626-6049",
-    "telefone": "(62) 98626-6049",
-    "email": "paulolp0101@gmail.com",
-    "situacao": "REGULAR",
-    "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
-    "origem": "Receita Federal do Brasil (Base Cadastral Verificada)"
-  },
   "12345678909": {
     "nome": "Helena Alves Melo",
     "data_nascimento": "03/07/1984",

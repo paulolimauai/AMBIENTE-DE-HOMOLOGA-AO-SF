@@ -1,16 +1,1 @@
-[
-  {
-    "id": "4",
-    "protocol": "OS-63437370",
-    "client_name": "Paulo Lima",
-    "client_email": "paulolp0101@gmail.com",
-    "service_type": "Melhoria no Sistema",
-    "priority": "Alta",
-    "title": "Exportação de Relatórios em Excel e PDF 4K",
-    "description": "Solicito a funcionalidade de exportação customizada nos relatórios mensais e trimestrais para análise executiva.",
-    "status": "Pendente",
-    "admin_notes": "",
-    "created_at": "2026-08-31T11:43:54.373Z",
-    "updated_at": "2026-08-31T11:43:54.373Z"
-  }
-]
+[]
