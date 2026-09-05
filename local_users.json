@@ -52,12 +52,12 @@
     "terms_accepted": true
   },
   {
-    "id": "28",
+    "id": "31",
     "name": "Lucas Augusto Lima Almeida",
     "email": "lucas@gmail.com",
     "role": "Usuário",
     "active": true,
-    "created_at": "2026-09-05T06:55:38.336Z",
+    "created_at": "2026-09-05T07:06:21.073Z",
     "last_login": null,
     "cpf": "634.810.906-25",
     "phone": "(62) 99256-6666",
