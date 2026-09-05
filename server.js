@@ -380,8 +380,34 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
 async function initDatabase() {
   const mssqlDbName = process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF';
 
-  // 1. Tentar conectar ao Microsoft SQL Server Interno (localhost - AMBIENTE DE HOMOLOGAÇÃO SF)
-  if (mssql) {
+  // 1. Tentar conectar ao Microsoft SQL Server Remoto / Túnel (quando configurado no Render ou Cloud)
+  const remoteServer = process.env.MSSQL_SERVER || process.env.MSSQL_HOST;
+  if (remoteServer && remoteServer !== 'localhost' && remoteServer !== '127.0.0.1' && !pool) {
+    try {
+      const portNum = parseInt(process.env.MSSQL_PORT || '1433');
+      console.log(`[BANCO] Conectando ao Microsoft SQL Server Remoto/Túnel em ${remoteServer}:${portNum}...`);
+      const tediousMssql = require('mssql');
+      const config = {
+        server: remoteServer,
+        port: portNum,
+        user: process.env.MSSQL_USER || 'sa',
+        password: process.env.MSSQL_PASSWORD || '',
+        database: process.env.MSSQL_DATABASE || mssqlDbName,
+        options: {
+          encrypt: process.env.MSSQL_ENCRYPT === 'true',
+          trustServerCertificate: true
+        }
+      };
+      const mssqlPool = await new tediousMssql.ConnectionPool(config).connect();
+      pool = new MssqlAdapter(mssqlPool);
+      console.log(`[BANCO] Conectado com sucesso ao Microsoft SQL Server Remoto (${remoteServer}:${portNum}/${config.database}) via TDS nativo!`);
+    } catch (errRemote) {
+      console.warn(`[BANCO AVISO] Conexão com SQL Server Remoto (${remoteServer}) não estabelecida:`, errRemote.message);
+    }
+  }
+
+  // 2. Tentar conectar ao Microsoft SQL Server Local (Windows ODBC)
+  if (!pool && mssql) {
     const driversToTry = [
       process.env.MSSQL_DRIVER,
       'ODBC Driver 17 for SQL Server',
@@ -18552,11 +18578,138 @@ function gracefulShutdown(signal) {
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
+// ==================== Motor de Sincronização Bidirecional Render Cloud <-> SQL Server Local ====================
+const RENDER_CLOUD_URL = process.env.RENDER_CLOUD_URL || 'https://ambiente-de-homologa-ao-sf.onrender.com';
+let isCloudSyncRunning = false;
+
+async function syncWithRenderCloud() {
+  if (isCloudSyncRunning) return;
+  // Apenas sincroniza se o servidor local estiver conectado ao SQL Server local (não roda dentro do próprio Render)
+  if (!pool || process.env.RENDER || process.env.IS_RENDER === 'true') return;
+
+  isCloudSyncRunning = true;
+  try {
+    const https = require('https');
+    const fetchCloud = (pathname, options = {}) => {
+      return new Promise((resolve, reject) => {
+        const u = new URL(pathname, RENDER_CLOUD_URL);
+        const req = https.request({
+          hostname: u.hostname,
+          port: 443,
+          path: u.pathname + u.search,
+          method: options.method || 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Nexus-Local-Sync-Engine/1.0',
+            ...(options.headers || {})
+          },
+          timeout: 10000
+        }, res => {
+          let data = '';
+          res.on('data', chunk => data += chunk);
+          res.on('end', () => {
+            try {
+              resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, status: res.statusCode, json: () => Promise.resolve(JSON.parse(data)) });
+            } catch(e) {
+              resolve({ ok: false, status: res.statusCode, json: () => Promise.resolve(null) });
+            }
+          });
+        });
+        req.on('error', reject);
+        req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
+        if (options.body) req.write(options.body);
+        req.end();
+      });
+    };
+
+    // 1. Puxar usuários cadastrados no Render
+    const resUsers = await fetchCloud('/api/users');
+    if (resUsers.ok) {
+      const cloudUsers = await resUsers.json();
+      if (Array.isArray(cloudUsers) && cloudUsers.length > 0) {
+        for (const cu of cloudUsers) {
+          if (!cu || !cu.email) continue;
+          const cleanEmail = cu.email.toLowerCase().trim();
+          const localCheck = await pool.query('SELECT id, name FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+          if (!localCheck.rows || localCheck.rows.length === 0) {
+            const defaultPass = cu.password || hashPassword('86266049');
+            await pool.query(
+              `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
+               OUTPUT INSERTED.id
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.active !== false, cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false]
+            );
+            await pool.query(
+              `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+               BEGIN
+                 INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, '{}', GETDATE());
+               END`,
+              [cleanEmail]
+            );
+            console.log(`\n⚡ [SYNC RENDER -> SQL SERVER] Nova conta criada no Render gravada no SQL Server local: ${cleanEmail}`);
+            recordSystemLog(cu.name, cleanEmail, 'Sincronização Nuvem', 'Usuários', `Conta criada no Render sincronizada para o SQL Server local`);
+          }
+        }
+      }
+    }
+
+    // 2. Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server
+    const localUsersRes = await pool.query('SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios');
+    if (localUsersRes.rows && localUsersRes.rows.length > 0) {
+      saveLocalUsers(localUsersRes.rows);
+      await fetchCloud('/api/users', {
+        method: 'POST',
+        body: JSON.stringify(localUsersRes.rows)
+      }).catch(() => {});
+    }
+
+    // 3. Sincronizar dados financeiros atualizados do Render para o SQL Server
+    const resBackup = await fetchCloud('/api/backup');
+    if (resBackup.ok) {
+      const backupData = await resBackup.json();
+      if (backupData && backupData.financial_data) {
+        for (const [emailKey, financialPayload] of Object.entries(backupData.financial_data)) {
+          if (!emailKey || !financialPayload) continue;
+          const cleanEmail = emailKey.toLowerCase().trim();
+          const strPayload = typeof financialPayload === 'object' ? JSON.stringify(financialPayload) : String(financialPayload);
+          await pool.query(
+            `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+             BEGIN
+               UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
+             END
+             ELSE
+             BEGIN
+               INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+             END`,
+            [cleanEmail, strPayload]
+          ).catch(() => {});
+          saveLocalData(cleanEmail, financialPayload);
+        }
+      }
+    }
+  } catch(syncErr) {
+    // Falha silenciosa caso o Render esteja temporariamente reiniciando ou sem internet
+  } finally {
+    isCloudSyncRunning = false;
+  }
+}
+
+function startRenderCloudSyncWorker() {
+  setTimeout(() => {
+    syncWithRenderCloud();
+    setInterval(syncWithRenderCloud, 7000).unref();
+    console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real: Render <-> Microsoft SQL Server`);
+  }, 3000).unref();
+}
+
 initDatabase()
   .then(() => {
     if (pool) {
       const dbNameStr = process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF';
       console.log(`[BANCO] Conexão ativa e sincronizada com Microsoft SQL Server (Interno) (banco: ${dbNameStr})`);
+      if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
+        startRenderCloudSyncWorker();
+      }
     } else {
       console.log(`[BANCO LOCAL] Operando com alta resiliência e persistência em arquivos JSON locais.`);
     }
