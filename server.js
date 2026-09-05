@@ -1054,14 +1054,14 @@ html, body {
 
 /* ==================== Tela de Auth Ultra Moderna (Visual Liquid Glass 4K) ==================== */
 .auth-container {
-  --auth-gold: #1DB954;
-  --auth-gold-dark: #15803D;
+  --auth-gold: #F59E0B;
+  --auth-gold-dark: #D97706;
   --auth-blue: #38BDF8;
-  --auth-emerald: #10B981;
-  --auth-cyan: #34D399;
-  --auth-card: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 30, 24, 0.78) 40%, rgba(8, 16, 12, 0.92) 100%);
+  --auth-emerald: #F59E0B;
+  --auth-cyan: #FBBF24;
+  --auth-card: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 26, 40, 0.88) 40%, rgba(10, 14, 24, 0.95) 100%);
   --auth-border: rgba(255, 255, 255, 0.16);
-  --auth-input-bg: rgba(10, 18, 14, 0.65);
+  --auth-input-bg: rgba(15, 23, 42, 0.65);
   --auth-text: #FFFFFF;
   --auth-text-dim: #94A3B8;
   position: relative;
@@ -1086,7 +1086,7 @@ html, body {
   transform: translate(-50%, -50%);
   width: 750px;
   height: 750px;
-  background: radial-gradient(circle, rgba(0, 229, 255, 0.18) 0%, rgba(14, 165, 233, 0.12) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, rgba(14, 165, 233, 0.12) 40%, transparent 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 1;
@@ -1099,8 +1099,8 @@ html, body {
 }
 
 body.light .auth-container {
-  --auth-gold: #059669;
-  --auth-gold-dark: #047857;
+  --auth-gold: #D97706;
+  --auth-gold-dark: #B45309;
   --auth-card: #FFFFFF;
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
@@ -1176,7 +1176,7 @@ body.light .auth-theme-btn {
 .auth-blob.b1 {
   width: 460px;
   height: 460px;
-  background: #10B981;
+  background: #F59E0B;
   top: -110px;
   left: -110px;
   animation: blobFloat 22s ease-in-out infinite;
@@ -1256,7 +1256,7 @@ body.light .auth-blob { opacity: 0.14; }
   width: 480px;
   height: 480px;
   transform: rotate(18deg);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(16, 185, 129, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(59, 130, 246, 0.08) 100%);
   box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
   animation: glassFloat2 22s ease-in-out infinite alternate;
 }
@@ -1279,7 +1279,7 @@ body.light .auth-blob { opacity: 0.14; }
   height: 230px;
   border-radius: 32px;
   transform: rotate(-20deg);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(16, 185, 129, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(59, 130, 246, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
   animation: glassFloat4 16s ease-in-out infinite alternate;
 }
 
@@ -1338,11 +1338,11 @@ body.light .glass-shard {
   box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10), inset 0 2px 5px #FFFFFF !important;
 }
 
-/* Card de Autenticação Ultra 4K Liquid Glass (Smoked Emerald Glassmorphism) */
+/* Card de Autenticação Ultra 4K Liquid Glass (Smoked Amber & Obsidian Glassmorphism) */
 .auth-card-nexus {
   position: relative;
   z-index: 10;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 30, 24, 0.78) 35%, rgba(8, 16, 12, 0.92) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 26, 40, 0.88) 35%, rgba(10, 14, 24, 0.95) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
   border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
@@ -1352,7 +1352,7 @@ body.light .glass-shard {
   max-width: 440px;
   box-shadow: 
     0 30px 80px -15px rgba(0, 0, 0, 0.85),
-    0 0 50px -10px rgba(29, 185, 84, 0.16),
+    0 0 50px -10px rgba(245, 158, 11, 0.20),
     inset 0 1px 1.5px rgba(255, 255, 255, 0.35),
     inset 0 -1px 2px rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(40px) saturate(190%);
@@ -1370,7 +1370,7 @@ body.light .glass-shard {
   left: 8%;
   right: 8%;
   height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #FFFFFF 50%, rgba(110, 231, 183, 0.85) 65%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #FFFFFF 50%, rgba(251, 191, 36, 0.85) 65%, transparent);
   pointer-events: none;
   z-index: 3;
 }
@@ -1390,13 +1390,13 @@ body.light .auth-card-nexus {
   background: rgba(255, 255, 255, 0.90) !important;
   border: 1px solid rgba(255, 255, 255, 0.95) !important;
   border-top: 1.5px solid #FFFFFF !important;
-  box-shadow: 0 25px 60px -10px rgba(15, 23, 42, 0.10), 0 0 30px -5px rgba(16, 185, 129, 0.08), inset 0 1px 1.5px #FFFFFF !important;
+  box-shadow: 0 25px 60px -10px rgba(15, 23, 42, 0.10), 0 0 30px -5px rgba(245, 158, 11, 0.10), inset 0 1px 1.5px #FFFFFF !important;
   backdrop-filter: blur(40px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
 }
 
 body.light .auth-card-glare {
-  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(16, 185, 129, 0.10), transparent 70%) !important;
+  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(245, 158, 11, 0.10), transparent 70%) !important;
 }
 
 /* Layout Executivo 2 Colunas para o Login no server.js (Split Harmonizado) */
@@ -1519,7 +1519,7 @@ body.light .auth-card-glare {
 .metric-sub-green {
   font-size: 11px;
   font-weight: 700;
-  color: #10B981;
+  color: #F59E0B;
   margin-top: 2px;
 }
 .metric-sub-amber {
@@ -1578,7 +1578,7 @@ body.light .auth-metric-card .metric-val {
   color: #0F172A !important;
 }
 body.light .metric-sub-green {
-  color: #047857 !important;
+  color: #D97706 !important;
   font-weight: 800 !important;
 }
 body.light .metric-sub-amber {
@@ -1607,8 +1607,8 @@ body.light .auth-showcase-footer span {
   width: 58px;
   height: 58px;
   border-radius: 18px;
-  background: linear-gradient(135deg, #ECFDF5 0%, #6EE7B7 25%, #10B981 60%, #064E3B 100%) !important;
-  color: #022C22 !important;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 25%, #F59E0B 60%, #B45309 100%) !important;
+  color: #451A03 !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1617,10 +1617,10 @@ body.light .auth-showcase-footer span {
   font-family: 'Outfit', sans-serif;
   border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
   box-shadow: 
-    0 10px 24px -4px rgba(16, 185, 129, 0.50),
+    0 10px 24px -4px rgba(245, 158, 11, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.35),
     inset 0 2px 3px #FFFFFF,
-    inset 0 -2px 3px rgba(6, 78, 59, 0.45) !important;
+    inset 0 -2px 3px rgba(180, 83, 9, 0.45) !important;
   margin-bottom: 12px;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
@@ -1628,7 +1628,7 @@ body.light .auth-showcase-footer span {
 .auth-logo-badge:hover {
   transform: scale(1.06) translateY(-2px);
   box-shadow: 
-    0 14px 30px -4px rgba(16, 185, 129, 0.65),
+    0 14px 30px -4px rgba(245, 158, 11, 0.70),
     0 4px 10px rgba(0, 0, 0, 0.40),
     inset 0 2px 3px #FFFFFF !important;
 }
@@ -1637,7 +1637,7 @@ body.light .auth-showcase-footer span {
   position: absolute;
   inset: -4px;
   border-radius: 22px;
-  background: radial-gradient(circle, rgba(29, 185, 84, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.30) 0%, transparent 70%);
   z-index: -1;
   pointer-events: none;
 }
@@ -1654,7 +1654,7 @@ body.light .auth-showcase-footer span {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 .auth-title span {
-  background: linear-gradient(135deg, #ECFDF5 0%, #6EE7B7 35%, #10B981 75%, #059669 100%) !important;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FCD34D 35%, #F59E0B 75%, #D97706 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   font-size: 13.5px;
@@ -1676,7 +1676,7 @@ body.light .auth-title {
   text-shadow: none !important;
 }
 body.light .auth-title span {
-  color: #059669 !important;
+  color: #D97706 !important;
   text-shadow: none !important;
   font-weight: 900 !important;
 }
@@ -1689,7 +1689,7 @@ body.light .auth-subtitle {
 /* Abas de Navegação Segmentada (Entrar / Criar Conta) */
 .auth-tabs-nav {
   display: flex;
-  background: rgba(10, 18, 14, 0.60) !important;
+  background: rgba(15, 23, 42, 0.65) !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
   border-radius: 14px !important;
@@ -1727,10 +1727,10 @@ body.light .auth-tabs-nav {
   background: rgba(255, 255, 255, 0.06);
 }
 .auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(29, 185, 84, 0.25) 0%, rgba(16, 185, 129, 0.18) 100%) !important;
-  color: #A7F3D0 !important;
-  border: 1px solid rgba(29, 185, 84, 0.55) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(217, 119, 6, 0.18) 100%) !important;
+  color: #FCD34D !important;
+  border: 1px solid rgba(245, 158, 11, 0.55) !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
   font-weight: 800;
 }
 body.light .auth-tab-btn {
@@ -1741,7 +1741,7 @@ body.light .auth-tab-btn:hover {
 }
 body.light .auth-tab-btn.active {
   background: #FFFFFF !important;
-  color: #047857 !important;
+  color: #D97706 !important;
   border-color: #CBD5E1 !important;
   box-shadow: 0 2px 8px rgba(15,23,42,0.08) !important;
 }
@@ -1840,10 +1840,10 @@ body.light .auth-input-wrapper:focus-within {
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
 }
 .auth-feedback-banner.success {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.06) 100%) !important;
-  border: 1px solid rgba(52, 211, 153, 0.35) !important;
-  border-left: 3.5px solid #10B981 !important;
-  color: #D1FAE5 !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+  border-left: 3.5px solid #F59E0B !important;
+  color: #FEF3C7 !important;
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
 }
 
@@ -1957,15 +1957,15 @@ body.light .auth-pass-toggle-btn:hover {
   background: rgba(217, 119, 6, 0.10) !important;
 }
 
-/* Botão Primário 4K Liquid Emerald / Spotify Green */
+/* Botão Primário 4K Liquid Amber / Royal Gold */
 .btn-auth-primary {
   position: relative;
   overflow: hidden;
   width: 100%;
   height: 46px;
   padding: 0 20px;
-  background: linear-gradient(135deg, #4ADE80 0%, #22C55E 25%, #1DB954 60%, #15803D 100%) !important;
-  color: #031409 !important;
+  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 28%, #D97706 65%, #B45309 100%) !important;
+  color: #1A0D00 !important;
   border: 1px solid rgba(255, 255, 255, 0.85) !important;
   border-top: 1.5px solid #FFFFFF !important;
   border-radius: 14px !important;
@@ -1975,10 +1975,10 @@ body.light .auth-pass-toggle-btn:hover {
   cursor: pointer;
   margin-top: 8px;
   box-shadow: 
-    0 10px 24px -4px rgba(29, 185, 84, 0.50),
+    0 10px 24px -4px rgba(245, 158, 11, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.30),
     inset 0 1.5px 2px #FFFFFF,
-    inset 0 -1.5px 2px rgba(21, 128, 61, 0.40) !important;
+    inset 0 -1.5px 2px rgba(180, 83, 9, 0.40) !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
@@ -1999,7 +1999,7 @@ body.light .auth-pass-toggle-btn:hover {
   filter: brightness(1.06);
   transform: translateY(-2px);
   box-shadow: 
-    0 14px 30px -4px rgba(29, 185, 84, 0.65),
+    0 14px 30px -4px rgba(245, 158, 11, 0.70),
     0 4px 10px rgba(0, 0, 0, 0.35),
     inset 0 1.5px 2px #FFFFFF !important;
 }
@@ -2025,18 +2025,18 @@ body.light .auth-pass-toggle-btn:hover {
 }
 .auth-forgot-link:hover {
   text-decoration: underline;
-  color: #6EE7B7;
+  color: #FCD34D;
 }
 
 body.light .btn-auth-primary {
-  background: linear-gradient(135deg, #6EE7B7 0%, #10B981 35%, #059669 70%, #047857 100%) !important;
-  color: #FFFFFF !important;
-  border: 1.5px solid rgba(4, 120, 87, 0.5) !important;
-  box-shadow: 0 10px 24px -4px rgba(16, 185, 129, 0.45), inset 0 1.5px 2px #FFFFFF !important;
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 35%, #D97706 70%, #B45309 100%) !important;
+  color: #1A0D00 !important;
+  border: 1.5px solid rgba(180, 83, 9, 0.5) !important;
+  box-shadow: 0 10px 24px -4px rgba(245, 158, 11, 0.45), inset 0 1.5px 2px #FFFFFF !important;
 }
 body.light .btn-auth-primary:hover {
   filter: brightness(1.06) !important;
-  box-shadow: 0 14px 32px -4px rgba(16, 185, 129, 0.60), inset 0 1.5px 2px #FFFFFF !important;
+  box-shadow: 0 14px 32px -4px rgba(245, 158, 11, 0.60), inset 0 1.5px 2px #FFFFFF !important;
 }
 
 body.light .auth-forgot-link {
@@ -6714,7 +6714,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
       <div class="auth-showcase-footer">
         <span style="display:flex; align-items:center; gap:6px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block;"></span>
+          <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block; box-shadow:0 0 8px rgba(245,158,11,0.6);"></span>
           Seus dados 100% seguros e confidenciais
         </span>
         <span>•</span>
@@ -6893,7 +6893,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
           </div>
 
           <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px; font-size:10px; color:#cbd5e1;">
-            <span style="color:#10b981; font-weight:800; font-size:14px;">🔒</span>
+            <span style="color:#f59e0b; font-weight:800; font-size:14px;">🔒</span>
             <span>Ambiente seguro com criptografia de ponta a ponta e monitoramento antifraude 24/7.</span>
           </div>
 
@@ -7706,16 +7706,16 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 </div>
 
 <div class="login-success-overlay" id="loginSuccessOverlay" role="dialog" aria-modal="true">
-  <div class="login-success-box" style="max-width:480px; padding:32px 28px; border-radius:28px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(15,23,42,0.96), rgba(8,14,28,0.99)); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 45px rgba(16,185,129,0.22);">
-    <div class="auth-ambient-glow glow-emerald"></div>
+  <div class="login-success-box" style="max-width:480px; padding:32px 28px; border-radius:28px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(15,23,42,0.96), rgba(8,14,28,0.99)); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 45px rgba(245,158,11,0.25);">
+    <div class="auth-ambient-glow glow-gold"></div>
     
     <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#fbbf24; margin-bottom:16px;">
-      <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#34d399; box-shadow:0 0 8px #34d399;"></span>
+      <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#f59e0b; box-shadow:0 0 8px #f59e0b;"></span>
       <span>Autenticação Bancária • Sessão Criptografada</span>
     </div>
 
-    <div class="login-success-check" style="width:68px; height:68px; margin:0 auto 14px; border-radius:50%; border:2px solid rgba(52,211,153,0.4); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(16,185,129,0.25) 0%, rgba(15,23,42,0.6) 80%); box-shadow:0 0 25px rgba(16,185,129,0.35);">
-      <svg viewBox="0 0 52 52" style="width:38px; height:38px; stroke:#34d399;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
+    <div class="login-success-check" style="width:68px; height:68px; margin:0 auto 14px; border-radius:50%; border:2px solid rgba(245,158,11,0.45); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(245,158,11,0.25) 0%, rgba(15,23,42,0.6) 80%); box-shadow:0 0 25px rgba(245,158,11,0.35);">
+      <svg viewBox="0 0 52 52" style="width:38px; height:38px; stroke:#fbbf24;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
     </div>
 
     <h3 id="loginSuccessTitle" style="font-size:22px; font-weight:900; color:#ffffff; margin:0 0 6px; letter-spacing:-0.02em;">Acesso Autorizado!</h3>
@@ -7725,11 +7725,11 @@ html.light .scale-dropdown .scale-opt-btn:hover {
     <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px 16px; margin-bottom:18px; text-align:left; font-size:11px; display:flex; flex-direction:column; gap:6px;">
       <div style="display:flex; justify-content:space-between; align-items:center; color:#94a3b8;">
         <span>✓ Identidade & Assinatura Digital</span>
-        <span style="color:#34d399; font-weight:700;">Verificado</span>
+        <span style="color:#fbbf24; font-weight:700;">Verificado</span>
       </div>
       <div style="display:flex; justify-content:space-between; align-items:center; color:#94a3b8;">
         <span>✓ Token Criptográfico scrypt / JWT</span>
-        <span style="color:#34d399; font-weight:700;">Ativo</span>
+        <span style="color:#fbbf24; font-weight:700;">Ativo</span>
       </div>
       <div style="display:flex; justify-content:space-between; align-items:center; color:#94a3b8;">
         <span>✓ Sincronização SQL Server / Local</span>
@@ -7738,7 +7738,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
     </div>
 
     <div class="login-success-progress-bar" style="height:6px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden;">
-      <div class="login-success-progress-fill" style="background:linear-gradient(90deg, #f59e0b, #10b981, #06b6d4); box-shadow:0 0 12px rgba(16,185,129,0.6);"></div>
+      <div class="login-success-progress-fill" style="background:linear-gradient(90deg, #f59e0b, #fbbf24, #38bdf8); box-shadow:0 0 12px rgba(245,158,11,0.6);"></div>
     </div>
   </div>
 </div>
@@ -8711,8 +8711,8 @@ window.handleServerCpfInput = async function(input) {
             nameEl.dispatchEvent(new Event('change', { bubbles: true }));
             const w = nameEl.closest('.auth-input-wrapper');
             if (w) {
-              w.style.borderColor = '#10B981';
-              w.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.25)';
+              w.style.borderColor = '#F59E0B';
+              w.style.boxShadow = '0 0 14px rgba(245, 158, 11, 0.35)';
               setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
             }
           }
@@ -8727,8 +8727,8 @@ window.handleServerCpfInput = async function(input) {
             birthEl.dispatchEvent(new Event('change', { bubbles: true }));
             const w = birthEl.closest('.auth-input-wrapper');
             if (w) {
-              w.style.borderColor = '#10B981';
-              w.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.25)';
+              w.style.borderColor = '#F59E0B';
+              w.style.boxShadow = '0 0 14px rgba(245, 158, 11, 0.35)';
               setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
             }
             itensCarregados.push('Nascimento');
@@ -8750,8 +8750,8 @@ window.handleServerCpfInput = async function(input) {
             phoneEl.dispatchEvent(new Event('change', { bubbles: true }));
             const w = phoneEl.closest('.auth-input-wrapper');
             if (w) {
-              w.style.borderColor = '#10B981';
-              w.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.25)';
+              w.style.borderColor = '#F59E0B';
+              w.style.boxShadow = '0 0 14px rgba(245, 158, 11, 0.35)';
               setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
             }
             itensCarregados.push('Telefone');
@@ -8766,15 +8766,15 @@ window.handleServerCpfInput = async function(input) {
             emailEl.dispatchEvent(new Event('change', { bubbles: true }));
             const w = emailEl.closest('.auth-input-wrapper');
             if (w) {
-              w.style.borderColor = '#10B981';
-              w.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.25)';
+              w.style.borderColor = '#F59E0B';
+              w.style.boxShadow = '0 0 14px rgba(245, 158, 11, 0.35)';
               setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
             }
           }
 
           if (msg) {
             msg.style.display = 'block';
-            msg.innerHTML = '<span style="color:#34d399; font-weight:700;">✓ ' + (data.origem || 'Receita Federal') + ': ' + itensCarregados.join(', ') + ' oficial(is) localizados e preenchidos!</span>';
+            msg.innerHTML = '<span style="color:#FBBF24; font-weight:700;">✓ ' + (data.origem || 'Receita Federal') + ': ' + itensCarregados.join(', ') + ' oficial(is) localizados e preenchidos!</span>';
           }
 
           const passInput = document.getElementById('regPassword');
@@ -8785,7 +8785,7 @@ window.handleServerCpfInput = async function(input) {
           // CPF autêntico perante a Receita Federal (Módulo 11 oficial)
           if (msg) {
             msg.style.display = 'block';
-            msg.innerHTML = '<span style="color:#34d399; font-weight:700;">✓ CPF Regular perante a Receita Federal (' + (data.regiao_fiscal || 'Situação Regular') + ')</span>';
+            msg.innerHTML = '<span style="color:#FBBF24; font-weight:700;">✓ CPF Regular perante a Receita Federal (' + (data.regiao_fiscal || 'Situação Regular') + ')</span>';
           }
           if (nameInput && !nameInput.value) {
             nameInput.focus();
@@ -8802,7 +8802,7 @@ window.handleServerCpfInput = async function(input) {
       if (msg) {
         msg.style.display = 'block';
         msg.textContent = '✓ CPF Válido perante a Receita Federal';
-        msg.style.color = '#34d399';
+        msg.style.color = '#FBBF24';
       }
     }
   } else {

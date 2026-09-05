@@ -28,45 +28,45 @@
     "terms_accepted": true
   },
   {
-    "id": "5",
+    "id": "40",
     "name": "Paulo Henrique de Lima",
     "email": "paulolp0101@gmail.com",
-    "password": "scrypt:618c847a88f2926998bc8875bd7fd55c:ce8395f84cc8a047b47f70abfc73aac123db7c3855c65ac4b2303cb129178654269db01ef94dc831a8bbb56f9ef86efe55e0d2d1e7107225b2aecff3f2bc234d",
+    "password": "scrypt:dac533ab8095b1ef2840505ecf6d4bcc:0b3c468457277f14ab2e61920884e46beab24c3d788d064c31c649d518a2bf5065d7de20ba34d6c69302b9d5e06e4e6fbaf980be5afc0bc7cd8bfba8b5390bd3",
     "role": "Usuário",
     "active": true,
-    "created_at": "2026-09-05T04:44:28.420Z",
-    "last_login": "2026-09-05T10:31:28.046Z",
+    "created_at": "2026-09-05T12:31:07.003Z",
+    "last_login": null,
     "cpf": "040.233.261-00",
     "phone": "(62) 98626-6049",
     "birth_date": "10/01/1988",
     "terms_accepted": true
   },
   {
-    "id": "27",
+    "id": "41",
     "name": "CICERA DE LIMA PEREIRA",
     "email": "ciceragyn12@hotmail.com",
-    "password": "scrypt:10cfdf6e38ac2ea54a1c9e6103258b55:8e8213fc79e4951933c7ef0bde85e78a66a32b989aadf32adb5cca33696bdaec5e89ced3745b1336715e6455d67eccc7ab0185430c6c6736f0d5ef88d8d7ff53",
+    "password": "scrypt:6cf4e8af348d357646ed01891217b576:73687b69ee53d648d7a14eaa5b63f9e9d390e41918f358584ea6f479e6f021c2fe2131ec1a2e3ac39e3adc853bf8b618ed663c3183e25e640c27466004316ce6",
     "role": "Usuário",
     "active": true,
     "cpf": "999.251.091-91",
     "phone": "(62) 99367-6783",
     "birth_date": "27/06/1966",
     "terms_accepted": true,
-    "created_at": "2026-09-05T06:39:05.733Z",
-    "last_login": "2026-09-05T10:31:28.220Z"
+    "created_at": "2026-09-05T12:31:07.063Z",
+    "last_login": null
   },
   {
-    "id": "32",
+    "id": "42",
     "name": "Lucas Augusto Lima Almeida",
     "email": "lucas@gmail.com",
-    "password": "scrypt:50018d962f617cfefa34b1655eee26e8:080709946b51d2d5e2609b3d8ccbb4a6277fabbbc40b4c7857fbbf7cf45081a5e8f4f5381743732bd23816d94bb864107d6937e96c262783fcb3c8b0272d8b4b",
+    "password": "scrypt:00969c8b73ebabbc3429714ea480c6d6:e531ec517ec8c1dae1f60a63f0e61fcd3a756e3b143299ca59623c569dca76d9576699f95b57a3f25b5f4f141e593bd7afd26f95e435ce06ebb915ba6070c9aa",
     "role": "Usuário",
     "active": true,
     "cpf": "634.810.906-25",
     "phone": "(62) 99256-6666",
     "birth_date": "19/07/1998",
     "terms_accepted": true,
-    "created_at": "2026-09-05T07:10:29.143Z",
-    "last_login": "2026-09-05T10:31:28.406Z"
+    "created_at": "2026-09-05T12:31:07.113Z",
+    "last_login": null
   }
 ]
