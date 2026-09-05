@@ -2,7 +2,7 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "ckpack.postgresql",
+    "ms-mssql.mssql",
     "ritwickdey.liveserver",
     "formulahendry.auto-rename-tag",
     "ecmel.vscode-html-css"
