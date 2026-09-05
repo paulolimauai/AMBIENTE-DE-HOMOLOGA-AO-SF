@@ -4605,291 +4605,7 @@ body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
   color:#0f172a !important;
 }
 
-/* ==================== 4K Executive Recorrentes Dashboard & Table (Ajustado / Compact) ==================== */
-.rec-kpi-grid-4k {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.rec-kpi-card-4k {
-  position: relative;
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.75) 0%, rgba(10, 16, 30, 0.88) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 10px 14px;
-  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-  overflow: hidden;
-}
-.rec-kpi-card-4k::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2.5px;
-  background: var(--kpi-accent, var(--cyan));
-  box-shadow: 0 0 10px var(--kpi-accent, var(--cyan));
-}
-.rec-kpi-card-4k:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.55), 0 0 16px rgba(6, 182, 212, 0.12);
-  border-color: rgba(255, 255, 255, 0.16);
-}
-.rec-kpi-card-4k .kpi-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-}
-.rec-kpi-card-4k .kpi-title {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-.rec-kpi-card-4k .kpi-icon-box {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  background: var(--kpi-bg, rgba(6, 182, 212, 0.12));
-  color: var(--kpi-accent, var(--cyan));
-  border: 1px solid var(--kpi-border, rgba(6, 182, 212, 0.25));
-}
-.rec-kpi-card-4k .kpi-number {
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: #fff;
-  line-height: 1.1;
-  margin-bottom: 3px;
-  font-feature-settings: "tnum" 1;
-}
-.rec-kpi-card-4k .kpi-footnote {
-  font-size: 10px;
-  color: var(--text-dim);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-/* 4K Table Modernization (Ajustado / Compact) */
-.rec-table-wrapper-4k {
-  background: linear-gradient(160deg, rgba(13, 20, 36, 0.85) 0%, rgba(8, 12, 22, 0.94) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 14px;
-  padding: 0;
-  overflow: hidden;
-  box-shadow: 0 14px 36px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-.rec-table-4k {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-.rec-table-4k th {
-  background: rgba(15, 23, 42, 0.85);
-  color: #94A3B8;
-  font-size: 9.5px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  white-space: nowrap;
-}
-.rec-table-4k td {
-  padding: 6px 10px;
-  vertical-align: middle;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  transition: background 0.15s ease;
-}
-.rec-table-4k tr.trow:hover td {
-  background: rgba(255, 255, 255, 0.035);
-}
-
-/* Description Column */
-.rec-desc-block {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.rec-title-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.rec-name-4k {
-  font-size: 13px;
-  font-weight: 800;
-  color: #F8FAFC;
-  letter-spacing: -0.01em;
-}
-.rec-badge-contract {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 1px 5px;
-  font-size: 9px;
-  font-weight: 700;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-dim);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* 4K Progress & Installments Cell (Quantos ja pagou & Quantas faltam - Compact) */
-.rec-progress-box-4k {
-  min-width: 210px;
-  background: rgba(2, 6, 23, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 8px;
-  padding: 5px 8px;
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
-}
-.rec-dual-pills {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-.rec-pill-paid {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 1px 5px;
-  border-radius: 5px;
-  background: rgba(16, 185, 129, 0.14);
-  color: #34D399;
-  border: 1px solid rgba(16, 185, 129, 0.28);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-.rec-pill-remain {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 1px 5px;
-  border-radius: 5px;
-  background: rgba(245, 158, 11, 0.14);
-  color: #FBBF24;
-  border: 1px solid rgba(245, 158, 11, 0.28);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-.rec-pill-complete {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 1px 5px;
-  border-radius: 5px;
-  background: rgba(59, 130, 246, 0.14);
-  color: #60A5FA;
-  border: 1px solid rgba(59, 130, 246, 0.28);
-  font-size: 10px;
-  font-weight: 800;
-}
-
-/* 4K Progress Bar with Neon Glow (Slim 4px) */
-.rec-bar-wrap-4k {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.rec-bar-track-4k {
-  flex: 1;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  position: relative;
-  overflow: hidden;
-}
-.rec-bar-fill-4k {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #10B981 0%, #06B6D4 100%);
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.45);
-  transition: width 0.3s ease;
-}
-.rec-bar-fill-4k.complete {
-  background: linear-gradient(90deg, #10B981 0%, #34D399 100%);
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-}
-.rec-pct-badge-4k {
-  font-size: 10px;
-  font-weight: 900;
-  color: #E2E8F0;
-  font-feature-settings: "tnum" 1;
-  min-width: 28px;
-  text-align: right;
-}
-
-/* Micro-stats footer under progress bar */
-.rec-substats-4k {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 9.5px;
-  font-weight: 600;
-  color: var(--text-dim);
-  border-top: 1px dashed rgba(255, 255, 255, 0.06);
-  padding-top: 2px;
-  margin-top: 2px;
-}
-.rec-substats-4k strong {
-  color: #F1F5F9;
-  font-weight: 700;
-}
-
-/* Light mode overrides */
-body.light .rec-kpi-card-4k {
-  background: #FFFFFF !important;
-  border-color: #E2E8F0 !important;
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08) !important;
-}
-body.light .rec-kpi-card-4k .kpi-number {
-  color: #0F172A !important;
-}
-body.light .rec-table-wrapper-4k {
-  background: #FFFFFF !important;
-  border-color: #E2E8F0 !important;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05) !important;
-}
-body.light .rec-table-4k th {
-  background: #F8FAFC !important;
-  color: #64748B !important;
-  border-bottom-color: #E2E8F0 !important;
-}
-body.light .rec-name-4k {
-  color: #0F172A !important;
-}
-body.light .rec-progress-box-4k {
-  background: #F8FAFC !important;
-  border-color: #E2E8F0 !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04) !important;
-}
-body.light .rec-substats-4k strong {
-  color: #0F172A !important;
-}
-body.light .rec-bar-track-4k {
-  background: #E2E8F0 !important;
-}
-
-/* Recorrentes & Duração Styles Legacy Fallback */
+/* Recorrentes & Duração Styles */
 .rec-progress-bar {
   width: 100%;
   height: 6px;
@@ -11843,7 +11559,6 @@ function pageRecorrentes(){
   }
   const totalDespRec = recurringList.filter(r=>r.type==='out').reduce((s,r)=>s+parseInputValue(r.val),0);
   const totalRecRec = recurringList.filter(r=>r.type==='in').reduce((s,r)=>s+parseInputValue(r.val),0);
-  const saldoLiquidoRec = totalRecRec - totalDespRec;
   const totalLctos = recurringList.length;
   const totalComPrazo = recurringList.filter(r => (r.totalMonths && parseInt(r.totalMonths) > 0)).length;
   const totalContinuos = totalLctos - totalComPrazo;
@@ -11856,99 +11571,62 @@ function pageRecorrentes(){
   }).length;
 
   return \`
-  <div class="page-head" style="margin-bottom:12px;">
+  <div class="page-head">
     <div>
-      <h1 style="font-size:20px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
-        <span style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:9px; background:rgba(6,182,212,0.15); color:var(--cyan); border:1px solid rgba(6,182,212,0.3); box-shadow:0 0 10px rgba(6,182,212,0.2);">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
-        </span>
-        Lançamentos Recorrentes & Contratos
+      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
+        Lançamentos Recorrentes & Assinaturas
       </h1>
-      <p style="font-size:11.5px; color:var(--text-dim); margin:3px 0 0 0; font-weight:500;">
-        Painel ajustado de despesas fixas, receitas e contratos com controle de parcelas quitadas e pendentes
+      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
+        Automatize contas fixas, parcelamentos e rendimentos com controle exato de meses e aplicação em 1 clique
       </p>
     </div>
-    <div class="head-actions" style="display:flex; align-items:center; gap:8px;">
+    <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
       \${periodPickerHTML()}
-      <button class="btn-primary" id="btnNovoRecorrente" style="display:flex; align-items:center; gap:6px; font-weight:800; font-size:12px; padding:7px 14px; border-radius:9px; box-shadow:0 4px 14px rgba(6,182,212,0.3);">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <button class="btn-primary" id="btnNovoRecorrente" style="display:flex; align-items:center; gap:6px; font-weight:700;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Novo Recorrente
       </button>
     </div>
   </div>
 
-  <div class="rec-kpi-grid-4k">
-    <div class="rec-kpi-card-4k" style="--kpi-accent:#EF4444; --kpi-bg:rgba(239,68,68,0.12); --kpi-border:rgba(239,68,68,0.25);">
-      <div class="kpi-head">
-        <span class="kpi-title">Saídas Fixas / Mês</span>
-        <span class="kpi-icon-box">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-        </span>
-      </div>
-      <div class="kpi-number" style="color:#F87171;">\${fmt(totalDespRec)}</div>
-      <div class="kpi-footnote">
-        <span style="color:#F87171; font-weight:700;">\${recurringList.filter(r=>r.type==='out').length} contratos</span>
-        <span>· saídas programadas</span>
-      </div>
+  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:18px;">
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Despesas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></span></div>
+      <div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">\${fmt(totalDespRec)}</div>
+      <div class="sub" style="font-size:11px;">Total de saídas programadas</div>
     </div>
-
-    <div class="rec-kpi-card-4k" style="--kpi-accent:#10B981; --kpi-bg:rgba(16,185,129,0.12); --kpi-border:rgba(16,185,129,0.25);">
-      <div class="kpi-head">
-        <span class="kpi-title">Entradas Fixas / Mês</span>
-        <span class="kpi-icon-box">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-        </span>
-      </div>
-      <div class="kpi-number" style="color:#34D399;">\${fmt(totalRecRec)}</div>
-      <div class="kpi-footnote">
-        <span style="color:#34D399; font-weight:700;">\${recurringList.filter(r=>r.type==='in').length} fontes</span>
-        <span>· receitas fixas</span>
-      </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Receitas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></div>
+      <div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">\${fmt(totalRecRec)}</div>
+      <div class="sub" style="font-size:11px;">Total de entradas programadas</div>
     </div>
-
-    <div class="rec-kpi-card-4k" style="--kpi-accent:var(--cyan); --kpi-bg:rgba(6,182,212,0.12); --kpi-border:rgba(6,182,212,0.25);">
-      <div class="kpi-head">
-        <span class="kpi-title">Balanço Recorrente Líquido</span>
-        <span class="kpi-icon-box">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
-        </span>
-      </div>
-      <div class="kpi-number" style="color:\${saldoLiquidoRec >= 0 ? '#34D399' : '#F87171'};">\${saldoLiquidoRec >= 0 ? '+' : ''}\${fmt(saldoLiquidoRec)}</div>
-      <div class="kpi-footnote">
-        <span>Resultado mensal livre</span>
-      </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Total Recorrentes</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg></span></div>
+      <div class="val" style="font-size:20px; margin-bottom:2px;">\${totalLctos}</div>
+      <div class="sub" style="font-size:11px;">\${totalComPrazo} com prazo · \${totalContinuos} contínuos</div>
     </div>
-
-    <div class="rec-kpi-card-4k" style="--kpi-accent:#8B5CF6; --kpi-bg:rgba(139,92,246,0.12); --kpi-border:rgba(139,92,246,0.25);">
-      <div class="kpi-head">
-        <span class="kpi-title">Quitação & Andamento</span>
-        <span class="kpi-icon-box">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-        </span>
-      </div>
-      <div class="kpi-number" style="color:#A78BFA;">\${totalConcluidos} / \${totalComPrazo || totalLctos}</div>
-      <div class="kpi-footnote">
-        <span style="font-weight:700; color:#C4B5FD;">\${totalComPrazo} com prazo</span>
-        <span>· \${totalContinuos} contínuos</span>
-      </div>
+    <div class="kpi" style="padding:14px 16px;">
+      <div class="row1" style="margin-bottom:6px;"><span>Status de Conclusão</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span></div>
+      <div class="val" style="font-size:20px; color:var(--blue); margin-bottom:2px;">\${totalConcluidos} / \${totalComPrazo || totalLctos}</div>
+      <div class="sub" style="font-size:11px;">\${totalConcluidos} contratos 100% aplicados</div>
     </div>
   </div>
 
-  <div class="rec-table-wrapper-4k">
+  <div class="table-panel">
     \${recurringList.length ? \`
-    <table class="rec-table-4k">
+    <table>
       <thead>
         <tr>
-          <th>Contrato / Descrição</th>
+          <th>Descrição</th>
           <th>Categoria</th>
-          <th>Conta / Método</th>
+          <th>Conta de Cobrança</th>
           <th>Frequência</th>
-          <th>Venc.</th>
-          <th>Duração Prevista</th>
-          <th style="min-width:215px;">Progresso (Pagas vs Faltam)</th>
+          <th>Vencimento</th>
+          <th>Duração Cadastrada</th>
+          <th>Progresso / Meses</th>
           <th>Tipo</th>
-          <th style="text-align:right;">Valor / Mês</th>
-          <th style="text-align:center;">Ações</th>
+          <th>Valor</th>
+          <th style="text-align:center;">Ações Rápidas</th>
         </tr>
       </thead>
       <tbody>
@@ -11963,53 +11641,32 @@ function pageRecorrentes(){
           const isFullyPaid = isFixed && paidCount >= totalM;
           const isIncome = r.type === 'in';
           const method = !isIncome ? (r.paymentMethod || detectPaymentMethodFromName(r.desc) || ((r.cat && r.cat.toLowerCase().includes('cartão')) || (r.acc && r.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto')) : null;
+          const paidWord = isIncome ? 'recebida' : 'paga';
           const paidWordPlural = isIncome ? 'recebidas' : 'pagas';
-          const toPayWord = isIncome ? 'receber' : 'pagar';
-          const mVal = parseInputValue(r.val);
-          const totalPaidVal = mVal * paidCount;
-          const totalRemainVal = isFixed ? (mVal * remainingToPay) : 0;
-          const totalContractVal = isFixed ? (mVal * totalM) : (mVal * (paidCount || 1));
-
-          // Nome limpo sem poluicao
-          const cleanDesc = (r.desc || '').replace(/\\[.*?\\]/g, '').replace(/\\b\\d+\\/\\d+\\s*(pagas?|recebidas?)/gi, '').trim() || r.desc;
-
-          const sM = parseInt(r.startMonth) || 1;
-          const sY = parseInt(r.startYear) || new Date().getFullYear();
-          const endMZero = (sM - 1) + (totalM - 1);
-          const endYear = sY + Math.floor(endMZero / 12);
-          const endMonthNum = (endMZero % 12) + 1;
-          const startMonthLabel = MONTHS[sM-1] ? MONTHS[sM-1].substring(0,3) : sM;
-          const endMonthLabel = MONTHS[endMonthNum-1] ? MONTHS[endMonthNum-1].substring(0,3) : endMonthNum;
 
           return \`
           <tr class="trow">
-            <td class="tx-desc" style="max-width:210px;">
-              <div class="rec-desc-block">
-                <div class="rec-title-row">
-                  <span class="rec-name-4k">\${cleanDesc}</span>
-                  \${isFixed ? (isFullyPaid ? \`
-                    <span class="rec-badge-contract" style="color:#34D399; border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.08);">
-                      <span class="rec-status-dot" style="background:#34D399;"></span> Quitado
+            <td class="tx-desc">
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <span style="font-weight:700;">\${r.desc}</span>
+                  \${method ? \`
+                    <span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.4)' : 'rgba(245,158,11,0.4)'};">
+                      \${method === 'Cartão de Crédito' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>Cartão de Crédito' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>Boleto'}
                     </span>
-                  \` : \`
-                    <span class="rec-badge-contract" style="color:#38BDF8; border-color:rgba(56,189,248,0.3); background:rgba(56,189,248,0.08);">
-                      <span class="rec-status-dot" style="background:#38BDF8;"></span> Ativo
-                    </span>
-                  \`) : \`
-                    <span class="rec-badge-contract" style="color:#A78BFA; border-color:rgba(167,139,250,0.3); background:rgba(167,139,250,0.08);">
-                      <span class="rec-status-dot" style="background:#A78BFA;"></span> Assinatura
-                    </span>
-                  \`}
+                  \` : ''}
+                  \${isFixed ? \`<span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${isFullyPaid ? 'rgba(16,185,129,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--green)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓ Concluído' : paidWordPlural}</span>\` : ''}
                 </div>
                 \${isFixed ? \`
-                  <details style="font-size:10px; margin-top:1px;">
-                    <summary style="cursor:pointer; color:#38BDF8; font-weight:700; user-select:none; display:inline-flex; align-items:center; gap:4px;">
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                      Cronograma (1 a \${totalM})
+                  <details style="font-size:10.5px; margin-top:2px;">
+                    <summary style="cursor:pointer; color:var(--blue); font-weight:600; user-select:none; display:inline-flex; align-items:center; gap:4px;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg> Cronograma mês a mês (1 a \${totalM})
                     </summary>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(115px, 1fr)); gap:4px; margin-top:4px; padding:6px; background:rgba(2,6,23,0.8); border-radius:8px; border:1px solid rgba(255,255,255,0.08); max-height:150px; overflow-y:auto;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:4px; margin-top:6px; padding:6px; background:rgba(0,0,0,0.25); border-radius:8px; border:1px solid var(--card-border); max-height:160px; overflow-y:auto;">
                       \${(function(){
                         const items = [];
+                        const sM = r.startMonth || 1;
+                        const sY = r.startYear || new Date().getFullYear();
                         for(let k=1; k<=totalM; k++){
                           const mZero = (sM - 1) + (k - 1);
                           const y = sY + Math.floor(mZero / 12);
@@ -12018,10 +11675,10 @@ function pageRecorrentes(){
                           const isPaid = targetTx && (targetTx.status === 'Pago' || targetTx.status === 'Recebido');
                           const mName = MONTHS[m-1] ? MONTHS[m-1].substring(0,3) : m;
                           items.push(
-                            '<div style="padding:2px 5px; border-radius:4px; background:' + (isPaid ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.10)') + '; border:1px solid ' + (isPaid ? 'rgba(16,185,129,0.22)' : 'rgba(245,158,11,0.22)') + '; display:flex; justify-content:space-between; align-items:center;">' +
-                              '<span style="font-size:9.5px;">Mês ' + k + ': <strong style="color:var(--text);">' + mName + '/' + y + '</strong></span>' +
-                              '<span style="font-weight:800; font-size:8.5px; color:' + (isPaid ? '#34D399' : '#FBBF24') + '">' + (isPaid ? (isIncome ? '✓' : '✓') : '⏳') + '</span>' +
-                            '</div>'
+                            \`<div style="padding:3px 6px; border-radius:5px; background:\${isPaid ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.10)'}; border:1px solid \${isPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'}; display:flex; justify-content:space-between; align-items:center;">\` +
+                              \`<span>Mês \${k}: <strong style="color:var(--text);">\${mName}/\${y}</strong></span>\` +
+                              \`<span style="font-weight:700; font-size:9.5px; color:\${isPaid ? 'var(--green)' : '#F59E0B'}">\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</span>\` +
+                            \`</div>\`
                           );
                         }
                         return items.join('');
@@ -12031,96 +11688,63 @@ function pageRecorrentes(){
                 \` : ''}
               </div>
             </td>
-            <td><span class="pill cat-pill" style="padding:2px 6px; font-size:10px; background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
-            <td>
-              <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
-                <span class="pill acc-pill" style="padding:2px 6px; font-size:10px;">\${getAccountIcon(r.acc)} \${r.acc}</span>
-                \${method ? \`
-                  <span style="font-size:9px; font-weight:700; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'};">
-                    \${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}
-                  </span>
-                \` : ''}
-              </div>
-            </td>
-            <td><span class="pill" style="padding:2px 6px; font-size:10px; background:rgba(255,255,255,0.06); color:var(--text); font-weight:700;">\${r.freq || 'Mensal'}</span></td>
-            <td><span class="pill" style="padding:2px 6px; font-size:10px; background:rgba(245,158,11,0.12); color:#FBBF24; border:1px solid rgba(245,158,11,0.25); font-weight:800;">Dia \${r.day}</span></td>
+            <td><span class="pill cat-pill" style="background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
+            <td><span class="pill acc-pill">\${getAccountIcon(r.acc)} \${r.acc}</span></td>
+            <td><span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text); font-weight:600;">\${r.freq || 'Mensal'}</span></td>
+            <td><span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-weight:700;">Dia \${r.day}</span></td>
             <td>
               \${isFixed ? \`
-                <div style="display:flex; flex-direction:column; gap:1px;">
-                  <span class="pill" style="padding:2px 6px; font-size:10px; font-weight:800; background:rgba(59,130,246,0.12); color:#60A5FA; border:1px solid rgba(59,130,246,0.25); display:inline-flex; align-items:center; gap:3px;">
-                    \${totalM} \${totalM === 1 ? 'mês' : 'meses'}
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                  <span class="pill" style="background:rgba(59,130,246,0.12); color:var(--blue); font-weight:700; font-size:11px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>\${totalM} \${totalM === 1 ? 'mês' : 'meses'}
                   </span>
-                  <span style="font-size:9px; color:var(--text-dim); font-weight:600;">
-                    \${startMonthLabel}/\${sY} → \${endMonthLabel}/\${endYear}
-                  </span>
+                  \${r.startMonth && r.startYear ? \`<span style="font-size:10px; color:var(--text-dim);">Início: \${MONTHS[r.startMonth-1] ? MONTHS[r.startMonth-1].substring(0,3) : r.startMonth}/\${r.startYear}</span>\` : ''}
                 </div>
               \` : \`
-                <span class="pill" style="padding:2px 6px; font-size:10px; background:rgba(255,255,255,0.06); color:var(--text-dim); font-weight:700;">
-                  Contínuo
+                <span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text-dim); font-weight:600; font-size:11px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z"/></svg>Contínuo
                 </span>
               \`}
             </td>
             <td>
               \${isFixed ? \`
-                <div class="rec-progress-box-4k">
-                  <!-- Quantos já pagou vs Quantas faltam pagar -->
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:4px; margin-bottom:2px; font-size:10px;">
-                    <span style="font-weight:800; color:#34D399;">✓ \${paidCount}/\${totalM} <span style="font-weight:600; opacity:0.85; font-size:9px;">(\${fmt(totalPaidVal)})</span></span>
-                    \${isFullyPaid ? \`
-                      <span style="font-weight:800; color:#34D399; font-size:9px;">★ Quitado</span>
-                    \` : \`
-                      <span style="font-weight:700; color:#FBBF24; font-size:9.5px;">⏳ \${remainingToPay} restam <span style="font-weight:600; opacity:0.85; font-size:9px;">(\${fmt(totalRemainVal)})</span></span>
-                    \`}
-                  </div>
-
-                  <!-- Barra de progresso fina de 4px -->
-                  <div class="rec-bar-wrap-4k" style="margin-bottom:2px;">
-                    <div class="rec-bar-track-4k">
-                      <div class="rec-bar-fill-4k \${isFullyPaid ? 'complete' : ''}" style="width:\${paidPct}%;"></div>
-                    </div>
-                    <span class="rec-pct-badge-4k" style="color:\${isFullyPaid ? '#34D399' : (paidPct >= 50 ? '#38BDF8' : '#FBBF24')};">\${paidPct}%</span>
-                  </div>
-
-                  <!-- Total compromisso -->
-                  <div class="rec-substats-4k">
-                    <span>Total: <strong style="color:#F1F5F9;">\${fmt(totalContractVal)}</strong></span>
-                    <span style="color:\${isFullyPaid ? '#34D399' : '#94A3B8'};">
-                      \${isFullyPaid ? 'Concluído' : (\`\${100 - paidPct}% restam\`)}
+                <div style="min-width:160px; display:flex; flex-direction:column; gap:5px;">
+                  <!-- 1. PRIMEIRO: O que ja foi pago -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:800;">
+                    <span style="display:inline-flex; align-items:center; gap:4px; color:\${isFullyPaid ? 'var(--green)' : (paidCount > 0 ? 'var(--green)' : 'var(--text-dim)')};">
+                      \${isFullyPaid ? '✓ 100% Concluído' : (paidCount > 0 ? (\`✓ \${paidCount}/\${totalM} \${paidCount === 1 ? paidWord : paidWordPlural}\`) : (\`0/\${totalM} \${paidWordPlural}\`))}
+                    </span>
+                    <span style="color:\${isFullyPaid ? 'var(--green)' : (paidCount > 0 ? 'var(--green)' : 'var(--text-dim)')}; font-weight:800;">
+                      \${paidPct}% \${isIncome ? 'recebido' : 'pago'}
                     </span>
                   </div>
+                  <!-- Barra verde de progresso pago -->
+                  <div class="rec-progress-bar" style="height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;">
+                    <div class="rec-progress-fill" style="width:\${paidPct}%; height:100%; border-radius:3px; background:\${isFullyPaid ? 'var(--green)' : (paidPct > 0 ? 'var(--green)' : 'transparent')}; transition:width .4s ease;"></div>
+                  </div>
+                  <!-- 2. DEPOIS: O que ainda falta pagar -->
+                  <div style="font-size:10.5px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:\${remainingToPay > 0 ? '#F59E0B' : 'var(--green)'}; font-weight:700; display:inline-flex; align-items:center; gap:3px;">
+                      \${remainingToPay > 0 ? (\`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Falta \${isIncome ? 'receber' : 'pagar'}: \${remainingToPay} \${remainingToPay === 1 ? 'parcela' : 'parcelas'}\`) : '✓ Todas quitadas'}
+                    </span>
+                    \${remainingToPay > 0 ? \`<span style="color:#F59E0B; font-size:10px; font-weight:700;">\${100 - paidPct}%</span>\` : ''}
+                  </div>
                 </div>
               \` : \`
-                <div class="rec-progress-box-4k" style="min-width:180px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; margin-bottom:2px;">
-                    <span style="color:#34D399; font-weight:800;">✓ \${paidCount} \${paidWordPlural}</span>
-                    <span style="font-size:9px; color:var(--text-dim);">(\${fmt(totalPaidVal)})</span>
-                  </div>
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:9px; color:#38BDF8; font-weight:600;">
-                    <span>∞ Sem prazo fixo</span>
-                    <span style="color:#94A3B8;">\${fmt(mVal)}/mês</span>
-                  </div>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                  <span class="pill" style="background:rgba(16,185,129,0.12); color:var(--green); font-size:11px; font-weight:700;">
+                    ✓ \${paidCount} \${paidCount === 1 ? paidWord : paidWordPlural}
+                  </span>
+                  \${pendingCount > 0 ? \`<span style="font-size:10px; color:#F59E0B; font-weight:600;">\${pendingCount} pendente\${pendingCount === 1 ? '' : 's'}</span>\` : ''}
                 </div>
               \`}
             </td>
+            <td><span class="type-pill \${r.type}">\${r.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
+            <td class="\${r.type==='in'?'val-in':'val-out'}">\${r.type==='in'?'+':'-'}\${fmt(r.val)}</td>
             <td>
-              <span class="type-pill \${r.type}" style="font-weight:800; font-size:10px; padding:2px 7px; border-radius:6px;">
-                \${r.type==='in'?'↑ Receita':'↓ Despesa'}
-              </span>
-            </td>
-            <td style="text-align:right;">
-              <div style="display:flex; flex-direction:column; gap:1px; align-items:flex-end;">
-                <span style="font-size:13px; font-weight:900; letter-spacing:-0.01em; font-feature-settings:'tnum' 1; color:\${r.type==='in'?'#34D399':'#F87171'};">
-                  \${r.type==='in'?'+':'-'}\${fmt(r.val)}
-                </span>
-                <span style="font-size:9px; color:var(--text-dim); font-weight:600;">
-                  \${isFixed ? ('Total: ' + fmt(totalContractVal)) : 'por mês'}
-                </span>
-              </div>
-            </td>
-            <td>
-              <div class="row-actions" style="justify-content:center; gap:5px;">
-                <button data-editrec="\${r.id}" title="Editar Recorrente" class="btn-action-edit" style="width:26px; height:26px; border-radius:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
-                <button data-delrec="\${r.id}" title="Excluir Recorrente" class="btn-action-del" style="width:26px; height:26px; border-radius:7px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
+              <div class="row-actions" style="justify-content:center; gap:6px;">
+                <button data-editrec="\${r.id}" title="Editar Recorrente" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button>
+                <button data-delrec="\${r.id}" title="Excluir Recorrente" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button>
               </div>
             </td>
           </tr>\`;
