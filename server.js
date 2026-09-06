@@ -820,10 +820,12 @@ html.is-admin #mobileDrawerOrdensBtn {
 :root{
   color-scheme: dark;
   --bg:#070B14;
-  --sidebar:rgba(9, 14, 26, 0.85);
-  --card:rgba(12, 19, 34, 0.78);
-  --card-border:rgba(0, 229, 255, 0.16);
-  --input-bg:rgba(255, 255, 255, 0.05);
+  --sidebar:rgba(10, 16, 30, 0.92);
+  --card:rgba(13, 20, 36, 0.85);
+  --card-border:rgba(56, 189, 248, 0.20);
+  --card-hover:rgba(18, 28, 50, 0.88);
+  --input-bg:rgba(15, 23, 42, 0.65);
+  --input-border:rgba(255, 255, 255, 0.14);
   --text:#F8FAFC;
   --text-dim:#94A3B8;
   --text-faint:#64748B;
@@ -834,28 +836,46 @@ html.is-admin #mobileDrawerOrdensBtn {
   --primary:#00E5FF;
   --primary-hover:#38BDF8;
   --red:#F43F5E;
-  --red-soft:rgba(244, 63, 94, 0.14);
-  --blue:#00E5FF;
+  --red-soft:rgba(244, 63, 94, 0.16);
+  --blue:#38BDF8;
   --purple:#818CF8;
   --orange:#F59E0B;
   --teal:#06B6D4;
   --pink:#EC4899;
-  --hover:rgba(0, 229, 255, 0.08);
+  --hover:rgba(56, 189, 248, 0.09);
+  --border-subtle:rgba(255, 255, 255, 0.08);
   --radius:20px;
   --shadow:0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px -5px rgba(0, 229, 255, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.16);
 }
 body.light, html.light body, html.light {
   color-scheme: light !important;
-  --bg:#F0F4F8;
-  --sidebar:rgba(255, 255, 255, 0.92);
-  --card:rgba(255, 255, 255, 0.90);
-  --card-border:rgba(186, 230, 253, 0.85);
+  --bg:#F1F5F9;
+  --sidebar:rgba(255, 255, 255, 0.96);
+  --card:rgba(255, 255, 255, 0.98);
+  --card-border:rgba(203, 213, 225, 0.85);
+  --card-hover:#F8FAFC;
   --input-bg:#FFFFFF;
+  --input-border:#CBD5E1;
   --text:#0F172A;
   --text-dim:#334155;
   --text-faint:#64748B;
-  --hover:#E0F2FE;
-  --shadow:0 15px 35px rgba(15, 23, 42, 0.08);
+  --primary:#0284C7;
+  --primary-hover:#0369A1;
+  --green:#059669;
+  --green-soft:rgba(5, 150, 105, 0.12);
+  --emerald:#059669;
+  --emerald-soft:rgba(5, 150, 105, 0.12);
+  --red:#DC2626;
+  --red-soft:rgba(220, 38, 38, 0.12);
+  --blue:#2563EB;
+  --purple:#6366F1;
+  --orange:#D97706;
+  --teal:#0D9488;
+  --pink:#DB2777;
+  --hover:rgba(2, 132, 199, 0.08);
+  --border-subtle:rgba(226, 232, 240, 0.90);
+  --radius:20px;
+  --shadow:0 12px 32px -4px rgba(15, 23, 42, 0.06), 0 4px 8px -2px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
 html, body{overflow-x:clip !important; width:100%;}
@@ -875,7 +895,8 @@ html, body{overflow-x:clip !important; width:100%;}
   user-select: none !important;
   background-color: var(--bg) !important;
   background-image: 
-    linear-gradient(180deg, rgba(7, 11, 20, 0.40) 0%, rgba(8, 14, 26, 0.68) 50%, rgba(5, 9, 18, 0.85) 100%),
+    radial-gradient(ellipse at 50% 0%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(7, 11, 20, 0.55) 0%, rgba(8, 14, 26, 0.78) 50%, rgba(5, 9, 18, 0.92) 100%),
     url('/images/nexus_cyber_office_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -888,9 +909,10 @@ html, body{overflow-x:clip !important; width:100%;}
 
 body.light #persistentSystemBg,
 body.light .persistent-system-bg {
-  background-color: #F0F4F8 !important;
+  background-color: #F1F5F9 !important;
   background-image: 
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(240, 246, 250, 0.88) 100%),
+    radial-gradient(ellipse at 50% 0%, rgba(186, 230, 253, 0.38) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(248, 250, 252, 0.88) 0%, rgba(241, 245, 249, 0.94) 50%, rgba(226, 232, 240, 0.90) 100%),
     url('/images/nexus_cyber_office_bg.jpg') !important;
 }
 
@@ -2892,9 +2914,9 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
 }
 
 body.light nav.menu{
-  background:rgba(255, 255, 255, 0.94) !important;
-  border-right:1px solid #E2E8F0 !important;
-  box-shadow:4px 0 20px rgba(15, 23, 42, 0.08) !important;
+  background:rgba(255, 255, 255, 0.96) !important;
+  border-right:1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow:4px 0 24px rgba(15, 23, 42, 0.05) !important;
 }
 body.light .menu-admin-divider {
   background: linear-gradient(90deg, rgba(217, 119, 6, 0) 0%, rgba(217, 119, 6, 0.6) 50%, rgba(217, 119, 6, 0) 100%) !important;
@@ -2909,18 +2931,20 @@ body.light .menu button{
   color:#64748B !important;
 }
 body.light .menu button:hover{
-  background:rgba(15, 23, 42, 0.05) !important;
-  color:#0F172A !important;
+  background:rgba(2, 132, 199, 0.06) !important;
+  color:#0284C7 !important;
 }
 body.light .menu button.active{
-  background:linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%) !important;
-  border-color:rgba(139, 92, 246, 0.4) !important;
-  color:#6D28D9 !important;
-  box-shadow:0 4px 14px rgba(139, 92, 246, 0.15) !important;
+  background:linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(56, 189, 248, 0.08) 100%) !important;
+  border:1.5px solid rgba(2, 132, 199, 0.55) !important;
+  border-radius:16px !important;
+  color:#0284C7 !important;
+  font-weight:800 !important;
+  box-shadow:0 4px 16px rgba(2, 132, 199, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 body.light .menu button.active .ic{
-  color:#6D28D9 !important;
-  filter:none !important;
+  color:#0284C7 !important;
+  filter:drop-shadow(0 2px 6px rgba(2, 132, 199, 0.25)) !important;
 }
 body.light .menu button.menu-btn-admin {
   color: #475569 !important;
@@ -4427,6 +4451,19 @@ html.light #periodAllDatesBtn:hover {
 }
 .btn-ghost:hover{background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.22); color:#FFFFFF; transform:translateY(-1px);}
 
+body.light .btn-primary,
+html.light .btn-primary {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(2, 132, 199, 0.5) !important;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+body.light .btn-primary:hover,
+html.light .btn-primary:hover {
+  background: linear-gradient(135deg, #0369A1 0%, #075985 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.40) !important;
+}
 body.light .btn-ghost,
 body.light #logoutBtn {
   background: rgba(15, 23, 42, 0.05) !important;
@@ -4725,9 +4762,51 @@ th{text-align:left; font-size:11px; color:#38BDF8; font-weight:800; padding:0 12
 td{padding:13px 12px; font-size:13px; border-top:1px solid rgba(255,255,255,0.06); font-variant-numeric:tabular-nums;}
 tr.trow:hover td{background:rgba(0, 229, 255, 0.04);}
 
-body.light .table-panel { background:#ffffff !important; border-color:#cbd5e1 !important; }
-body.light td { border-top-color:#e2e8f0 !important; }
-body.light tr.trow:hover td { background:#f1f5f9 !important; }
+body.light .table-panel {
+  background:#ffffff !important;
+  border-color:rgba(203, 213, 225, 0.85) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+body.light th {
+  color: #0284C7 !important;
+  font-weight: 800 !important;
+  border-bottom: 1.5px solid #E2E8F0 !important;
+}
+body.light td {
+  border-top-color:#e2e8f0 !important;
+  color: #0F172A !important;
+}
+body.light tr.trow:hover td {
+  background:#F8FAFC !important;
+}
+body.light .tx-desc {
+  color: #0F172A !important;
+}
+body.light .tx-date-badge {
+  color: #334155 !important;
+}
+body.light .acc-pill {
+  background: #F1F5F9 !important;
+  color: #334155 !important;
+  border-color: #CBD5E1 !important;
+}
+body.light .val-in {
+  color: #059669 !important;
+}
+body.light .val-out {
+  color: #DC2626 !important;
+}
+body.light .status-pago,
+body.light .status-recebido {
+  background: rgba(5, 150, 105, 0.12) !important;
+  color: #059669 !important;
+  border-color: rgba(5, 150, 105, 0.35) !important;
+}
+body.light .status-pendente {
+  background: rgba(217, 119, 6, 0.12) !important;
+  color: #B45309 !important;
+  border-color: rgba(217, 119, 6, 0.35) !important;
+}
 
 .tx-date-badge{font-weight:700; color:var(--text); font-size:12.5px; letter-spacing:0.02em;}
 .tx-desc{color:var(--text); font-weight:700; font-size:13.5px;}
