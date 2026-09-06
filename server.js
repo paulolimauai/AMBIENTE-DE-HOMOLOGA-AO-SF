@@ -795,10 +795,10 @@ html:not(.user-logged-in) #authPage {
   display: none !important;
 }
 
-/* Exclusivo para Perfil de Administrador: exibir divisor executivo, badge e botões */
+/* Exclusivo para Perfil de Administrador: exibir badge e botões administrativos */
 html.is-admin .menu-admin-divider,
 html.is-admin #mobileDrawerAdminDivider {
-  display: block !important;
+  display: none !important;
 }
 html.is-admin .menu-admin-badge,
 html.is-admin #mobileDrawerAdminBadge {
@@ -814,6 +814,31 @@ html.is-admin #mobileDrawerUsuariosBtn,
 html.is-admin #mobileDrawerLogsBtn,
 html.is-admin #mobileDrawerOrdensBtn {
   display: flex !important;
+}
+
+/* Perfil de Administrador: Ocultar estritamente módulos financeiros e manter apenas funções administrativas */
+html.is-admin #menu button[data-page="dashboard"],
+html.is-admin #menu button[data-page="transacoes"],
+html.is-admin #menu button[data-page="cartoes"],
+html.is-admin #menu button[data-page="orcamentos"],
+html.is-admin #menu button[data-page="metas"],
+html.is-admin #menu button[data-page="relatorios"],
+html.is-admin #menu button[data-page="recorrentes"],
+html.is-admin #menu button[data-page="importar"],
+html.is-admin #menu button[data-page="anexos"],
+html.is-admin #menu button[data-page="config"],
+html.is-admin #mobileDrawerMenu button[data-page="dashboard"],
+html.is-admin #mobileDrawerMenu button[data-page="transacoes"],
+html.is-admin #mobileDrawerMenu button[data-page="cartoes"],
+html.is-admin #mobileDrawerMenu button[data-page="orcamentos"],
+html.is-admin #mobileDrawerMenu button[data-page="metas"],
+html.is-admin #mobileDrawerMenu button[data-page="relatorios"],
+html.is-admin #mobileDrawerMenu button[data-page="recorrentes"],
+html.is-admin #mobileDrawerMenu button[data-page="importar"],
+html.is-admin #mobileDrawerMenu button[data-page="anexos"],
+html.is-admin #mobileDrawerMenu button[data-page="config"],
+html.is-admin .aether-settings-btn {
+  display: none !important;
 }
 
 
@@ -8832,6 +8857,7 @@ window.handleLoginSubmit = async function(e) {
   saveToStorage('nexus_token', 'offline_token_' + Date.now());
 
   document.documentElement.classList.add('user-logged-in');
+  document.documentElement.classList.toggle('is-admin', currentUser.role === 'Administrador');
   currentPage = (currentUser.role === 'Administrador') ? 'usuarios' : 'dashboard';
   await loadUserData();
   showLoginSuccessPopup('Acesso offline autenticado!');
@@ -9961,11 +9987,15 @@ let catManageType = 'despesa';
 let currentType='out', currentRecType='out';
 let currentPage = (function getInitialPage() {
   try {
-    const validPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'funcoes', 'usuarios', 'logs', 'ordens', 'config'];
+    const cu = localStorage.getItem('nexus_cached_user');
+    const u = cu ? JSON.parse(cu) : null;
+    const isAdmin = u && u.role === 'Administrador';
+    const validPages = isAdmin ? ['usuarios', 'logs', 'funcoes', 'ordens'] : ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'];
     const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
     const savedPage = localStorage.getItem('nexus_current_page');
     if (hashPage && validPages.includes(hashPage)) return hashPage;
     if (savedPage && validPages.includes(savedPage)) return savedPage;
+    return isAdmin ? 'usuarios' : 'dashboard';
   } catch(e){}
   return 'dashboard';
 })();
@@ -10614,9 +10644,16 @@ function render(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
 
-  // Usuários comuns nunca podem acessar páginas administrativas
-  if (!isAdminView && ['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
-    currentPage = 'dashboard';
+  if (isAdminView) {
+    // Perfil de Administrador acessa EXCLUSIVAMENTE funções administrativas
+    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+      currentPage = 'usuarios';
+    }
+  } else {
+    // Usuários comuns nunca podem acessar páginas administrativas
+    if (['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+      currentPage = 'dashboard';
+    }
   }
 
 
@@ -10702,9 +10739,15 @@ function updateActiveMenu(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
 
-  // Usuários comuns nunca podem permanecer em telas de administração
-  if (!isAdminView && ['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
-    currentPage = 'dashboard';
+  if (isAdminView) {
+    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+      currentPage = 'usuarios';
+    }
+  } else {
+    // Usuários comuns nunca podem permanecer em telas de administração
+    if (['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+      currentPage = 'dashboard';
+    }
   }
 
   const buttons = document.querySelectorAll('button[data-page]');
@@ -10724,11 +10767,12 @@ function updateAdminMenuVisibility(){
     document.documentElement.classList.remove('is-admin');
   }
 
-  // Módulos financeiros ficam sempre visíveis para todos os usuários
+  // Módulos financeiros: visíveis apenas para perfis comuns (ou em Modo Espelho)
+  // Administrador tem acesso estritamente a módulos administrativos
   const financialPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
   financialPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
-      btn.style.display = 'flex';
+      btn.style.display = isAdminView ? 'none' : 'flex';
     });
   });
 
@@ -10742,10 +10786,15 @@ function updateAdminMenuVisibility(){
 
   // Divisores e badges executivas do menu de gestão
   document.querySelectorAll('.menu-admin-divider, #mobileDrawerAdminDivider').forEach(function(el) {
-    el.style.display = isAdminView ? 'block' : 'none';
+    el.style.display = 'none';
   });
   document.querySelectorAll('.menu-admin-badge, #mobileDrawerAdminBadge').forEach(function(el) {
     el.style.display = isAdminView ? 'inline-flex' : 'none';
+  });
+
+  // Ocultar atalho Minha Conta no header para Perfil Administrador
+  document.querySelectorAll('.aether-settings-btn').forEach(function(el) {
+    el.style.display = isAdminView ? 'none' : 'inline-flex';
   });
 }
 
@@ -16771,10 +16820,16 @@ function attachPageEvents(){
 function navigate(page){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
-  if (!isAdminView && ['usuarios', 'logs', 'funcoes', 'ordens'].includes(page)) {
-    page = 'dashboard';
+  if (isAdminView) {
+    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(page)) {
+      page = 'usuarios';
+    }
+  } else {
+    if (['usuarios', 'logs', 'funcoes', 'ordens'].includes(page)) {
+      page = 'dashboard';
+    }
   }
-  if(!page) page = 'dashboard';
+  if(!page) page = isAdminView ? 'usuarios' : 'dashboard';
   const isSamePage = (currentPage === page);
   currentPage = page;
   try {
@@ -17269,11 +17324,11 @@ if (scaleMenuBtn && scaleDropdown) {
 
       if (currentUser.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
-        const validAdminTargets = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config', 'logs', 'funcoes', 'usuarios', 'ordens'];
+        const validAdminTargets = ['usuarios', 'logs', 'funcoes', 'ordens'];
         if (validAdminTargets.includes(pageTarget)) {
           currentPage = pageTarget;
         } else {
-          currentPage = 'dashboard';
+          currentPage = 'usuarios';
         }
       } else {
         document.documentElement.classList.remove('is-admin');
@@ -17364,11 +17419,11 @@ if (scaleMenuBtn && scaleDropdown) {
   const pageTarget = hashPage || savedPage || currentPage;
 
   if (currentUser.role === 'Administrador') {
-    const validAdminTargets = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config', 'logs', 'funcoes', 'usuarios', 'ordens'];
+    const validAdminTargets = ['usuarios', 'logs', 'funcoes', 'ordens'];
     if (validAdminTargets.includes(pageTarget)) {
       currentPage = pageTarget;
     } else {
-      currentPage = 'dashboard';
+      currentPage = 'usuarios';
     }
   } else {
     if (['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(pageTarget)) {
