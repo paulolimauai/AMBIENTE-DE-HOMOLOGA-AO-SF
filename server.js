@@ -6988,12 +6988,12 @@ html.light .scale-dropdown .scale-opt-btn:hover {
       <div id="loginBox">
         <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
-            <label>E-mail Corporativo ou CPF</label>
+            <label>E-mail Corporativo ou Pessoal</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </span>
-              <input type="text" id="loginEmail" placeholder="seu.email@exemplo.com ou CPF (sem ponto)" required autocomplete="username" spellcheck="false" autocorrect="off" autocapitalize="none">
+              <input type="email" id="loginEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
             </div>
           </div>
 
@@ -7039,7 +7039,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
               </span>
-              <input type="text" id="regCpf" placeholder="00000000000 (sem ponto)" maxlength="11" required autocomplete="off" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11); window.handleServerCpfInput(this)" onchange="window.handleServerCpfInput(this)" onblur="window.handleServerCpfInput(this)" onpaste="event.preventDefault(); const p = (event.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '').slice(0, 11); this.value = p; window.handleServerCpfInput(this);">
+              <input type="text" id="regCpf" placeholder="000.000.000-00" maxlength="14" required autocomplete="off" inputmode="numeric" oninput="window.handleServerCpfInput(this)" onchange="window.handleServerCpfInput(this)" onblur="window.handleServerCpfInput(this)" onpaste="setTimeout(() => window.handleServerCpfInput(this), 50)">
             </div>
             <div id="regCpfFeedbackMsg" style="display:none; font-size:11px; font-weight:600; margin-top:4px;"></div>
           </div>
@@ -8912,30 +8912,32 @@ window.isValidCPFServer = function(cpf) {
   return true;
 };
 
-// CPF sem ponto e Validação no Cadastro (Preenchimento manual dos dados cadastrais)
+// Máscara e Validação de CPF no Cadastro (Preenchimento manual dos dados cadastrais)
 window.handleServerCpfInput = function(input) {
+  if (!input) return;
   const rawDigits = input.value.replace(/[^0-9]/g, '').slice(0, 11);
-  input.value = rawDigits; // Mantém estritamente sem ponto (apenas números)
+  let v = rawDigits;
+  if (v.length > 9) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{1,2})/, '$1.$2.$3-$4');
+  else if (v.length > 6) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{1,3})/, '$1.$2.$3');
+  else if (v.length > 3) v = v.replace(/([0-9]{3})([0-9]{1,3})/, '$1.$2');
+  input.value = v;
 
   const msg = document.getElementById('regCpfFeedbackMsg');
+  if (!msg) return;
 
   if (rawDigits.length === 11) {
     if (!window.isValidCPFServer(rawDigits)) {
-      if (msg) {
-        msg.style.display = 'block';
-        msg.textContent = '✕ CPF Inválido perante a Receita Federal';
-        msg.style.color = '#f87171';
-      }
+      msg.style.display = 'block';
+      msg.textContent = '✕ CPF Inválido perante a Receita Federal';
+      msg.style.color = '#f87171';
       return;
     }
 
-    if (msg) {
-      msg.style.display = 'block';
-      msg.textContent = '✓ CPF Válido';
-      msg.style.color = '#34d399';
-    }
+    msg.style.display = 'block';
+    msg.textContent = '✓ CPF Válido';
+    msg.style.color = '#34d399';
   } else {
-    if (msg) msg.style.display = 'none';
+    msg.style.display = 'none';
   }
 };
 
@@ -8988,7 +8990,7 @@ window.handleRegisterSubmit = async function(e) {
 
   // 2. Validação de CPF
   if (!cpf || !window.isValidCPFServer(cpf)) {
-    showCustomAlert('Atenção', 'Por favor, informe um CPF válido e regularizado na Receita Federal (11 dígitos, sem ponto).', 'error');
+    showCustomAlert('Atenção', 'Por favor, informe um CPF válido e regularizado na Receita Federal.', 'error');
     if (cpfInput) cpfInput.focus();
     return false;
   }
