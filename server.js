@@ -4562,11 +4562,11 @@ html.light .btn-primary:hover {
   color: #FFFFFF !important;
   box-shadow: 0 8px 24px rgba(2, 132, 199, 0.40) !important;
 }
-body.light .btn-ghost,
-body.light #logoutBtn {
-  background: rgba(15, 23, 42, 0.05) !important;
-  color: #0F172A !important;
-  border: 1px solid rgba(15, 23, 42, 0.15) !important;
+body.light .btn-ghost {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  border: 1px solid #CBD5E1 !important;
 }
 body.light .btn-ghost:hover,
 body.light #logoutBtn:hover {
@@ -6049,7 +6049,8 @@ html.light .acc-card-metrics {
 
 body.light .acc-metric-hero-label,
 html.light .acc-metric-hero-label {
-  color: #64748B !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
 }
 
 .acc-metric-hero-val {
@@ -6088,7 +6089,8 @@ html.light .acc-subgrid {
 
 body.light .acc-subgrid-label,
 html.light .acc-subgrid-label {
-  color: #64748B !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
 }
 
 .acc-subgrid-val {
@@ -6151,14 +6153,16 @@ body.light .acc-view-tx-btn,
 html.light .acc-view-tx-btn {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  color: #1E293B !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
 }
 
 body.light .acc-view-tx-btn .btn-count-pill,
 html.light .acc-view-tx-btn .btn-count-pill {
   background: #F1F5F9 !important;
-  color: #475569 !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
 }
 
 body.light .acc-view-tx-btn:hover,
@@ -6327,12 +6331,13 @@ body.light .toast.toast-danger .toast-indicator {
 }
 
 body.light .toast-close {
-  color: rgba(15, 23, 42, 0.4);
+  color: #000000 !important;
+  font-weight: 700 !important;
 }
 
 body.light .toast-close:hover {
-  color: #0F172A;
-  background: rgba(15, 23, 42, 0.07);
+  color: #000000 !important;
+  background: rgba(15, 23, 42, 0.08);
 }
 
 /* ==================== Popups de Autenticação 4K Glass (Entrada & Saída) ==================== */
@@ -6669,11 +6674,11 @@ body.light .login-success-box {
   box-shadow: 0 30px 80px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.9), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
 }
 body.light .login-success-box h3 {
-  color: #0F172A !important;
+  color: #000000 !important;
   text-shadow: none !important;
 }
 body.light .login-success-box p {
-  color: #475569 !important;
+  color: #000000 !important;
 }
 body.light .auth-ambient-glow {
   opacity: 0.35;
@@ -6818,12 +6823,14 @@ html.light .scale-dropdown {
 }
 body.light .scale-dropdown div,
 html.light .scale-dropdown div {
-  color: #64748b !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
   border-bottom-color: #e2e8f0 !important;
 }
 body.light .scale-dropdown .scale-opt-btn,
 html.light .scale-dropdown .scale-opt-btn {
-  color: #0f172a !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
   background: transparent;
 }
 body.light .scale-dropdown .scale-opt-btn:hover,
