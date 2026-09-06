@@ -856,10 +856,9 @@ body.light, html.light body, html.light {
   --card-hover:#F8FAFC;
   --input-bg:#FFFFFF;
   --input-border:#CBD5E1;
-  --text:#000000 !important;
-  --text-dim:#000000 !important;
-  --text-faint:#111827 !important;
-  --text-muted:#000000 !important;
+  --text:#0F172A;
+  --text-dim:#334155;
+  --text-faint:#64748B;
   --primary:#0284C7;
   --primary-hover:#0369A1;
   --green:#059669;
@@ -1153,8 +1152,8 @@ body.light .auth-container {
   --auth-card: #FFFFFF;
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
-  --auth-text: #000000 !important;
-  --auth-text-dim: #000000 !important;
+  --auth-text: #0F172A;
+  --auth-text-dim: #475569;
   background-color: transparent !important;
   background-image: none !important;
 }
@@ -1596,14 +1595,14 @@ body.light .auth-card-glare {
 body.light .auth-showcase-badge {
   background: rgba(245, 158, 11, 0.12) !important;
   border: 1.5px solid rgba(180, 83, 9, 0.35) !important;
-  color: #000000 !important;
+  color: #92400E !important;
   font-weight: 800 !important;
 }
 body.light .auth-showcase-badge span:first-child {
   background: #D97706 !important;
 }
 body.light .auth-showcase-title {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .auth-showcase-title span {
   background: linear-gradient(90deg, #D97706 0%, #B45309 60%, #92400E 100%) !important;
@@ -1612,8 +1611,8 @@ body.light .auth-showcase-title span {
   filter: drop-shadow(0 1px 1px rgba(180, 83, 9, 0.20)) !important;
 }
 body.light .auth-showcase-desc {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
 }
 body.light .auth-metric-card {
   background: #FFFFFF !important;
@@ -1621,14 +1620,13 @@ body.light .auth-metric-card {
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
 }
 body.light .auth-metric-card .metric-card-label {
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #475569 !important;
 }
 body.light .auth-metric-card .metric-val {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .metric-sub-green {
-  color: #059669 !important;
+  color: #D97706 !important;
   font-weight: 800 !important;
 }
 body.light .metric-sub-amber {
@@ -1641,7 +1639,7 @@ body.light .metric-sub-blue {
 }
 body.light .auth-showcase-footer,
 body.light .auth-showcase-footer span {
-  color: #000000 !important;
+  color: #334155 !important;
   font-weight: 700 !important;
 }
 
@@ -1722,7 +1720,7 @@ body.light .auth-showcase-footer span {
 }
 
 body.light .auth-title {
-  color: #000000 !important;
+  color: #0F172A !important;
   text-shadow: none !important;
 }
 body.light .auth-title span {
@@ -1731,7 +1729,7 @@ body.light .auth-title span {
   font-weight: 900 !important;
 }
 body.light .auth-subtitle {
-  color: #000000 !important;
+  color: #475569 !important;
   text-shadow: none !important;
   font-weight: 700 !important;
 }
@@ -1784,18 +1782,16 @@ body.light .auth-tabs-nav {
   font-weight: 800;
 }
 body.light .auth-tab-btn {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #64748B !important;
 }
 body.light .auth-tab-btn:hover {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .auth-tab-btn.active {
   background: #FFFFFF !important;
-  color: #000000 !important;
+  color: #D97706 !important;
   border-color: #CBD5E1 !important;
   box-shadow: 0 2px 8px rgba(15,23,42,0.08) !important;
-  font-weight: 900 !important;
 }
 
 /* Campos de Formulário Modernos com Ícones */
@@ -1812,8 +1808,7 @@ body.light .auth-tab-btn.active {
   letter-spacing: 0.06em;
 }
 body.light .auth-field label {
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #334155 !important;
 }
 
 .auth-input-wrapper {
@@ -1909,7 +1904,7 @@ body.light .auth-input-wrapper:focus-within {
   flex-shrink: 0;
 }
 body.light .auth-input-icon {
-  color: #000000 !important;
+  color: #64748B !important;
 }
 body.light .auth-input-wrapper:focus-within .auth-input-icon {
   color: #D97706 !important;
@@ -1931,15 +1926,6 @@ body.light .auth-input-wrapper:focus-within .auth-input-icon {
   color: #64748B;
 }
 
-body.light .auth-input-wrapper input {
-  color: #000000 !important;
-  font-weight: 600 !important;
-}
-body.light .auth-input-wrapper input::placeholder {
-  color: #475569 !important;
-  font-weight: 600 !important;
-}
-
 /* Override Nativo de Autofill do Navegador (Elimina Caixas Brancas/Azuis) */
 .auth-input-wrapper input:-webkit-autofill,
 .auth-input-wrapper input:-webkit-autofill:hover,
@@ -1956,7 +1942,7 @@ body.light .auth-input-wrapper input:-webkit-autofill,
 body.light .auth-input-wrapper input:-webkit-autofill:hover,
 body.light .auth-input-wrapper input:-webkit-autofill:focus,
 body.light .auth-input-wrapper input:-webkit-autofill:active {
-  -webkit-text-fill-color: #000000 !important;
+  -webkit-text-fill-color: #0F172A !important;
   -webkit-box-shadow: 0 0 0px 1000px #F8FAFC inset !important;
   box-shadow: 0 0 0px 1000px #F8FAFC inset !important;
 }
@@ -2011,7 +1997,7 @@ input[type="text"]::-ms-clear {
 }
 body.light .auth-pass-toggle,
 body.light .auth-pass-toggle-btn {
-  color: #000000 !important;
+  color: #64748B !important;
 }
 body.light .auth-pass-toggle:hover,
 body.light .auth-pass-toggle-btn:hover {
@@ -2110,8 +2096,7 @@ body.light .auth-forgot-link:hover {
 }
 
 body.light .auth-bottom-text {
-  color: #000000 !important;
-  font-weight: 600 !important;
+  color: #475569 !important;
 }
 body.light .auth-bottom-text a {
   color: #B45309 !important;
@@ -2267,15 +2252,14 @@ body.light .btn-consult-os,
 html.light .btn-consult-os {
   background: #F1F5F9 !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
 }
 body.light .btn-consult-os:hover,
 html.light .btn-consult-os:hover {
   background: #E2E8F0 !important;
   border-color: #94A3B8 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .os-tabs-nav,
@@ -2286,13 +2270,12 @@ body.light .os-tab-btn,
 html.light .os-tab-btn {
   background: #F1F5F9 !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #64748B !important;
 }
 body.light .os-tab-btn:hover,
 html.light .os-tab-btn:hover {
   background: #E2E8F0 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .os-tab-btn.active,
 html.light .os-tab-btn.active {
@@ -2307,7 +2290,7 @@ html.light .os-consult-card {
   background: #FFFFFF !important;
   border-color: #E2E8F0 !important;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .os-consult-card:hover,
 html.light .os-consult-card:hover {
@@ -2320,20 +2303,19 @@ html.light #overlayNovaOrdem .modal {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
   box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15), 0 0 35px rgba(59, 130, 246, 0.08) !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light #overlayNovaOrdem h2,
 html.light #overlayNovaOrdem h2 {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light #overlayNovaOrdem p,
 html.light #overlayNovaOrdem p {
-  color: #000000 !important;
+  color: #475569 !important;
 }
 body.light #overlayNovaOrdem label,
 html.light #overlayNovaOrdem label {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
 }
 body.light #overlayNovaOrdem input,
 body.light #overlayNovaOrdem textarea,
@@ -2343,7 +2325,7 @@ html.light #overlayNovaOrdem textarea,
 html.light #overlayNovaOrdem select {
   background: #F8FAFC !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light #overlayNovaOrdem input:focus,
 body.light #overlayNovaOrdem textarea:focus,
@@ -2354,15 +2336,14 @@ html.light #overlayNovaOrdem select:focus {
   background: #FFFFFF !important;
   border-color: #3B82F6 !important;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
-  color: #000000 !important;
 }
 body.light #overlayNovaOrdem .close-x,
 html.light #overlayNovaOrdem .close-x {
-  color: #000000 !important;
+  color: #64748B !important;
 }
 body.light #overlayNovaOrdem .close-x:hover,
 html.light #overlayNovaOrdem .close-x:hover {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 /* ==================== App principal Centralizado ==================== */
@@ -2944,26 +2925,21 @@ body.light .menu-admin-divider {
 body.light .menu-admin-badge {
   background: rgba(245, 158, 11, 0.12) !important;
   border-color: rgba(217, 119, 6, 0.35) !important;
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #B45309 !important;
 }
 body.light .menu button{
-  color: #000000 !important;
-  font-weight: 700 !important;
-}
-body.light .menu button .ic{
-  color: #000000 !important;
+  color:#64748B !important;
 }
 body.light .menu button:hover{
-  background:rgba(2, 132, 199, 0.08) !important;
-  color: #000000 !important;
+  background:rgba(2, 132, 199, 0.06) !important;
+  color:#0284C7 !important;
 }
 body.light .menu button.active{
-  background:linear-gradient(135deg, rgba(2, 132, 199, 0.15) 0%, rgba(56, 189, 248, 0.10) 100%) !important;
-  border:1.5px solid rgba(2, 132, 199, 0.65) !important;
+  background:linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(56, 189, 248, 0.08) 100%) !important;
+  border:1.5px solid rgba(2, 132, 199, 0.55) !important;
   border-radius:16px !important;
-  color: #000000 !important;
-  font-weight:900 !important;
+  color:#0284C7 !important;
+  font-weight:800 !important;
   box-shadow:0 4px 16px rgba(2, 132, 199, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 body.light .menu button.active .ic{
@@ -2971,19 +2947,17 @@ body.light .menu button.active .ic{
   filter:drop-shadow(0 2px 6px rgba(2, 132, 199, 0.25)) !important;
 }
 body.light .menu button.menu-btn-admin {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #475569 !important;
 }
 body.light .menu button.menu-btn-admin:hover {
-  background: rgba(245, 158, 11, 0.12) !important;
-  color: #000000 !important;
-  border-color: rgba(217, 119, 6, 0.45) !important;
+  background: rgba(245, 158, 11, 0.10) !important;
+  color: #92400E !important;
+  border-color: rgba(217, 119, 6, 0.35) !important;
 }
 body.light .menu button.menu-btn-admin.active {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(217, 119, 6, 0.12) 100%) !important;
-  border-color: rgba(217, 119, 6, 0.7) !important;
-  color: #000000 !important;
-  font-weight: 900 !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.10) 100%) !important;
+  border-color: rgba(217, 119, 6, 0.6) !important;
+  color: #92400E !important;
   box-shadow: 0 4px 14px rgba(217, 119, 6, 0.20) !important;
 }
 body.light .menu button.menu-btn-admin.active .ic {
@@ -2991,38 +2965,20 @@ body.light .menu button.menu-btn-admin.active .ic {
   filter: none !important;
 }
 
-/* ==================== Correção Completa de Contraste do Modo Claro (Texto 100% Preto / Solid Black) ==================== */
-body.light,
-html.light body,
-html.light,
-body.light #appMain,
-body.light #pageContent {
-  color: #000000 !important;
-}
-
+/* ==================== Correção Completa de Contraste do Modo Claro (Light Mode Contrast Fix) ==================== */
 body.light h1, body.light h2, body.light h3, body.light h4, body.light h5, body.light h6,
 html.light h1, html.light h2, html.light h3, html.light h4, html.light h5, html.light h6 {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light p, html.light p {
-  color: #000000 !important;
-}
-
-body.light span:not(.badge):not(.status-badge):not(.acc-color-dot):not(.user-badge-cargo):not(.tag):not(.period-today-btn):not(#periodAllDatesBtn):not(.hero-name-gradient):not(.credit-badge):not(.avatar),
-html.light span:not(.badge):not(.status-badge):not(.acc-color-dot):not(.user-badge-cargo):not(.tag):not(.period-today-btn):not(#periodAllDatesBtn):not(.hero-name-gradient):not(.credit-badge):not(.avatar) {
-  color: #000000 !important;
-}
-
-body.light strong, html.light strong,
-body.light b, html.light b {
-  color: #000000 !important;
+  color: #334155 !important;
 }
 
 body.light label, html.light label,
 body.light .form-label, html.light .form-label,
 body.light .field label, html.light .field label {
-  color: #000000 !important;
+  color: #334155 !important;
   font-weight: 700 !important;
 }
 
@@ -3056,7 +3012,7 @@ body.light .brand .name,
 html.light .brand .name,
 body.light .topheader .brand .name,
 html.light .topheader .brand .name {
-  color: #000000 !important;
+  color: #0F172A !important;
   text-shadow: none !important;
 }
 
@@ -3088,7 +3044,7 @@ html.light .mobile-menu-btn {
   background: #FFFFFF !important;
   background-color: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  color: #000000 !important;
+  color: #1E293B !important;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
@@ -3109,7 +3065,7 @@ html.light .mobile-menu-btn:hover {
   background: #F8FAFC !important;
   background-color: #F8FAFC !important;
   border-color: #3B82F6 !important;
-  color: #000000 !important;
+  color: #2563EB !important;
   box-shadow: 0 4px 14px rgba(59, 130, 246, 0.18) !important;
 }
 
@@ -3123,7 +3079,7 @@ body.light #miniThemeBtn svg,
 html.light #miniThemeBtn svg,
 body.light .mobile-menu-btn svg,
 html.light .mobile-menu-btn svg {
-  stroke: #000000 !important;
+  stroke: #1E293B !important;
 }
 
 body.light .icon-btn:hover svg,
@@ -3149,43 +3105,14 @@ html.light .user {
 }
 
 body.light .topheader .uname,
-html.light .topheader .uname,
-body.light .user .uname {
-  color: #000000 !important;
-  font-weight: 800 !important;
+html.light .topheader .uname {
+  color: #0f172a !important;
+  font-weight: 700 !important;
 }
 
 body.light .topheader .urole,
 html.light .topheader .urole {
-  color: #000000 !important;
-  font-weight: 600 !important;
-}
-
-body.light .aether-user-title {
-  color: #000000 !important;
-  font-weight: 800 !important;
-}
-body.light .aether-user-sub {
-  color: #000000 !important;
-  font-weight: 600 !important;
-}
-body.light .aether-credit-pill,
-body.light .aether-credit-pill .credit-lbl,
-body.light .aether-credit-pill .credit-val {
-  color: #000000 !important;
-  font-weight: 700 !important;
-}
-body.light .aether-settings-btn {
-  background: #FFFFFF !important;
-  border: 1.5px solid #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
-}
-body.light .header-live-time {
-  background: #FFFFFF !important;
-  border: 1.5px solid #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #64748b !important;
 }
 
 body.light .topheader #logoutBtn,
@@ -3203,20 +3130,19 @@ html.light .topheader #logoutBtn:hover {
 
 body.light .page-head h1,
 html.light .page-head h1 {
-  color: #000000 !important;
+  color: #0f172a !important;
 }
 
 body.light .page-head p,
 html.light .page-head p {
-  color: #000000 !important;
+  color: #475569 !important;
 }
 
 body.light code,
 html.light code {
   background: #e2e8f0 !important;
-  color: #000000 !important;
+  color: #0f172a !important;
   border: 1px solid #cbd5e1 !important;
-  font-weight: 700 !important;
 }
 
 /* Modais e Formulários em Modo Claro */
@@ -3225,18 +3151,17 @@ html.light .modal {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
   box-shadow: 0 25px 65px rgba(15, 23, 42, 0.16) !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .modal h2, body.light .modal h3,
 html.light .modal h2, html.light .modal h3 {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .modal .field label,
 html.light .modal .field label {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
 }
 
 body.light .modal-actions,
@@ -3249,28 +3174,26 @@ body.light .modal-actions button:not(.save),
 html.light .modal-actions button:not(.save) {
   background: #F8FAFC !important;
   border: 1px solid #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
 }
 
 body.light .modal-actions button:not(.save):hover,
 html.light .modal-actions button:not(.save):hover {
   background: #E2E8F0 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .toggle-type button,
 html.light .toggle-type button {
   background: #F8FAFC !important;
   border: 1px solid #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #475569 !important;
 }
 
 body.light .toggle-type button:hover,
 html.light .toggle-type button:hover {
   background: #E2E8F0 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .toggle-type button.sel-in,
@@ -3289,13 +3212,12 @@ html.light .toggle-type button.sel-out {
 
 body.light .close-x, body.light .modal-close,
 html.light .close-x, html.light .modal-close {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #64748B !important;
 }
 
 body.light .close-x:hover, body.light .modal-close:hover,
 html.light .close-x:hover, html.light .modal-close:hover {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 /* Inputs, Selects, Options e Textareas Universais em Modo Claro */
@@ -3323,8 +3245,7 @@ html.light textarea {
   background: #FFFFFF !important;
   background-color: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 600 !important;
+  color: #0F172A !important;
 }
 
 body.light input:focus,
@@ -3337,15 +3258,14 @@ html.light textarea:focus {
   background-color: #FFFFFF !important;
   border-color: #2563EB !important;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light input::placeholder,
 body.light textarea::placeholder,
 html.light input::placeholder,
 html.light textarea::placeholder {
-  color: #475569 !important;
-  font-weight: 500 !important;
+  color: #94A3B8 !important;
   opacity: 1 !important;
 }
 
@@ -3358,8 +3278,7 @@ body.light optgroup,
 html.light optgroup {
   background: #FFFFFF !important;
   background-color: #FFFFFF !important;
-  color: #000000 !important;
-  font-weight: 600 !important;
+  color: #0F172A !important;
 }
 
 body.light select option:checked,
@@ -3368,8 +3287,8 @@ body.light option:checked,
 html.light option:checked {
   background: #E2E8F0 !important;
   background-color: #E2E8F0 !important;
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #0F172A !important;
+  font-weight: 700;
 }
 
 body.light select option:hover,
@@ -3415,7 +3334,7 @@ html.light #cfgScale {
   background: #FFFFFF !important;
   background-color: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 /* Estado Vazio / Placeholder Executivo em Modo Claro */
@@ -3427,41 +3346,38 @@ html.light .placeholder {
 }
 body.light .placeholder h3,
 html.light .placeholder h3 {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .placeholder p,
 html.light .placeholder p {
-  color: #000000 !important;
+  color: #64748B !important;
 }
 body.light .placeholder strong,
 html.light .placeholder strong {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .placeholder .btn-ghost,
 html.light .placeholder .btn-ghost {
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
 }
 
 body.light .cat-manage-tabs .cat-tab,
 html.light .cat-manage-tabs .cat-tab {
   background: #F1F5F9 !important;
   border: 1px solid #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #475569 !important;
 }
 body.light .cat-manage-tabs .cat-tab:hover,
 html.light .cat-manage-tabs .cat-tab:hover {
   background: #E2E8F0 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .cat-manage-tabs .cat-tab.active,
 html.light .cat-manage-tabs .cat-tab.active {
   background: rgba(217, 119, 6, 0.15) !important;
   border-color: #D97706 !important;
   color: #B45309 !important;
-  font-weight: 900 !important;
 }
 
 /* Tabelas e Registros em Modo Claro */
@@ -3474,14 +3390,13 @@ html.light .table-panel {
 
 body.light th,
 html.light th {
-  color: #000000 !important;
+  color: #334155 !important;
   font-weight: 800 !important;
 }
 
 body.light td,
 html.light td {
-  color: #000000 !important;
-  font-weight: 600 !important;
+  color: #0F172A !important;
   border-top-color: #E2E8F0 !important;
 }
 
@@ -3494,8 +3409,7 @@ body.light .tx-date-badge,
 body.light .tx-desc,
 html.light .tx-date-badge,
 html.light .tx-desc {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #0F172A !important;
 }
 
 body.light .tfoot-row,
@@ -3506,22 +3420,19 @@ html.light .tfoot-row {
 
 body.light .tfoot-label,
 html.light .tfoot-label {
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #334155 !important;
 }
 
 body.light .acc-pill,
 html.light .acc-pill {
   background: #F1F5F9 !important;
-  color: #000000 !important;
+  color: #334155 !important;
   border-color: #CBD5E1 !important;
-  font-weight: 700 !important;
 }
 
 body.light .acc-val,
 html.light .acc-val {
   color: #D97706 !important;
-  font-weight: 800 !important;
 }
 
 /* Cards & Painéis em Modo Claro */
@@ -3534,12 +3445,12 @@ html.light .panel {
 
 body.light .panel-head h3,
 html.light .panel-head h3 {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .cfg-hint,
 html.light .cfg-hint {
-  color: #000000 !important;
+  color: #64748B !important;
 }
 
 body.light .kpi,
@@ -3551,21 +3462,18 @@ html.light .kpi {
 
 body.light .kpi .val,
 html.light .kpi .val {
-  color: #000000 !important;
+  color: #0F172A !important;
   text-shadow: none !important;
-  font-weight: 900 !important;
 }
 
 body.light .kpi .lbl,
 html.light .kpi .lbl {
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #475569 !important;
 }
 
 body.light .kpi .sub,
 html.light .kpi .sub {
-  color: #000000 !important;
-  font-weight: 600 !important;
+  color: #64748B !important;
 }
 
 body.light .acc-card, body.light .cat-card, body.light .goal-card, body.light .budget-card, body.light .recurring-card, body.light .rec-card,
@@ -3577,7 +3485,7 @@ html.light .acc-card, html.light .cat-card, html.light .goal-card, html.light .b
 
 body.light .acc-card .top strong, body.light .cat-card h4, body.light .goal-card h3, body.light .budget-card h4,
 html.light .acc-card .top strong, html.light .cat-card h4, html.light .goal-card h3, html.light .budget-card h4 {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .tx-summary-card,
@@ -3589,14 +3497,13 @@ html.light .tx-summary-card {
 
 body.light .tx-summary-label,
 html.light .tx-summary-label {
-  color: #000000 !important;
+  color: #475569 !important;
   font-weight: 800 !important;
 }
 
 body.light .tx-summary-sub,
 html.light .tx-summary-sub {
-  color: #000000 !important;
-  font-weight: 600 !important;
+  color: #64748B !important;
 }
 
 /* Painéis de Administração, Usuários, Funções e Ordens em Modo Claro */
@@ -3608,7 +3515,7 @@ body.light #ordensPage h1, body.light #ordensPage h3, body.light #ordensPage .va
 html.light #ordensPage h1, html.light #ordensPage h3, html.light #ordensPage .val, html.light #ordensPage strong, html.light #ordensPage h4,
 body.light #logsPage h1, body.light #logsPage h3, body.light #logsPage strong,
 html.light #logsPage h1, html.light #logsPage h3, html.light #logsPage strong {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .admin-toolbar-panel,
@@ -3622,14 +3529,13 @@ body.light .admin-filter-btn,
 html.light .admin-filter-btn {
   background: #F1F5F9 !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #475569 !important;
 }
 
 body.light .admin-filter-btn:hover,
 html.light .admin-filter-btn:hover {
   background: #E2E8F0 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .admin-filter-btn.active,
@@ -3643,8 +3549,7 @@ body.light .funcoes-filter-btn,
 html.light .funcoes-filter-btn {
   background: #F1F5F9 !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #475569 !important;
 }
 
 body.light .funcoes-filter-btn.active,
@@ -3659,21 +3564,20 @@ body.light .mobile-drawer,
 html.light .mobile-drawer {
   background: #FFFFFF !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .mobile-drawer-nav button,
 html.light .mobile-drawer-nav button {
   background: #F8FAFC !important;
   border-color: #E2E8F0 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
 }
 
 body.light .mobile-drawer-nav button:hover,
 html.light .mobile-drawer-nav button:hover {
   background: #E2E8F0 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .mobile-drawer-nav button.active,
@@ -3681,14 +3585,13 @@ html.light .mobile-drawer-nav button.active {
   background: #EFF6FF !important;
   color: #1D4ED8 !important;
   border-color: #93C5FD !important;
-  font-weight: 800 !important;
 }
 
 body.light .mobile-drawer-nav button .ic,
 html.light .mobile-drawer-nav button .ic {
   background: #E2E8F0 !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
+  color: #334155 !important;
 }
 
 body.light .notif-panel,
@@ -3696,25 +3599,24 @@ html.light .notif-panel {
   background: #FFFFFF !important;
   border-color: #CBD5E1 !important;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12) !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .notif-item,
 html.light .notif-item {
   background: #F8FAFC !important;
   border-color: #E2E8F0 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .notif-title,
 html.light .notif-title {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .notif-desc,
 html.light .notif-desc {
-  color: #000000 !important;
-  font-weight: 600 !important;
+  color: #475569 !important;
 }
 
 /* ==================== Assinatura Executiva do Desenvolvedor (Ultra-Refined) ==================== */
@@ -3848,8 +3750,14 @@ body.light .dev-signature:hover {
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12) !important;
 }
 body.light .dev-signature-label {
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #64748B !important;
+}
+body.light .dev-signature-name {
+  color: #0F172A !important;
+  text-shadow: none !important;
+}
+body.light .dev-signature-label {
+  color: #475569 !important;
   text-shadow: none !important;
 }
 body.light .dev-signature-name {
@@ -4197,24 +4105,21 @@ body.light .cards-summary-panel, body.light .tx-footer-summary {
   background: #ffffff !important;
   border-color: #cbd5e1 !important;
   box-shadow: 0 4px 15px rgba(20,30,60,0.06) !important;
-  color: #000000 !important;
+  color: #1e293b !important;
 }
 body.light .cards-summary-panel h3, body.light .cards-summary-panel div, body.light .tx-footer-summary div {
-  color: #000000 !important;
+  color: #1e293b !important;
 }
 body.light .cards-summary-panel .kpi, body.light .tx-footer-summary .kpi {
   background: #f8fafc !important;
   border-color: #e2e8f0 !important;
-  color: #000000 !important;
 }
 body.light .cards-summary-panel .kpi .row1, body.light .cards-summary-panel .kpi .sub {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #64748b !important;
 }
 body.light .due-bills-panel {
   background: #ffffff !important;
   box-shadow: 0 4px 15px rgba(20,30,60,0.06) !important;
-  color: #000000 !important;
 }
 body.light .due-bill-row {
   background: #f8fafc !important;
@@ -4334,11 +4239,11 @@ body.light .executive-4k-card {
 }
 
 body.light .executive-4k-title {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light .executive-4k-message {
-  color: #000000 !important;
+  color: #475569 !important;
 }
 
 /* Alinhamento Multidispositivo de Painéis e Cards */
@@ -4443,7 +4348,7 @@ body.light .period,
 html.light .period {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
 }
 body.light .period:hover,
@@ -4454,33 +4359,30 @@ html.light .period:hover {
 }
 body.light .period-text,
 html.light .period-text {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #0F172A !important;
   text-shadow: none !important;
 }
 body.light .period-text .period-year,
 html.light .period-text .period-year {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #64748B !important;
 }
 body.light .period-panel,
 html.light .period-panel {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15) !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .period-panel .field label,
 html.light .period-panel .field label {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
 }
 body.light .period-panel select,
 html.light .period-panel select {
   background: #FFFFFF !important;
   background-color: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 body.light .period-today-btn,
 html.light .period-today-btn {
@@ -4562,11 +4464,11 @@ html.light .btn-primary:hover {
   color: #FFFFFF !important;
   box-shadow: 0 8px 24px rgba(2, 132, 199, 0.40) !important;
 }
-body.light .btn-ghost {
-  background: #FFFFFF !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
-  border: 1px solid #CBD5E1 !important;
+body.light .btn-ghost,
+body.light #logoutBtn {
+  background: rgba(15, 23, 42, 0.05) !important;
+  color: #0F172A !important;
+  border: 1px solid rgba(15, 23, 42, 0.15) !important;
 }
 body.light .btn-ghost:hover,
 body.light #logoutBtn:hover {
@@ -4674,7 +4576,7 @@ body.light .kpi:hover {
   border-color:#10B981 !important;
   box-shadow:0 14px 32px rgba(15,23,42,0.12) !important;
 }
-body.light .kpi .val { color:#000000 !important; font-weight:900 !important; text-shadow:none; }
+body.light .kpi .val { color:#0f172a !important; text-shadow:none; }
 
 /* Botão Executivo de Privacidade - Ocultar / Exibir Saldos Ajustado */
 .btn-hero-privacy {
@@ -4724,14 +4626,8 @@ body.light .kpi .val { color:#000000 !important; font-weight:900 !important; tex
 body.light .btn-hero-privacy {
   background: #FFFFFF !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #0F172A !important;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
-}
-body.light .btn-hero-privacy .btn-hero-icon-pill {
-  color: #000000 !important;
-  background: #F1F5F9 !important;
-  border-color: #CBD5E1 !important;
 }
 
 /* Layout Proporcional Inteligente de Configurações (Zero Espaços Vazios) */
@@ -4792,21 +4688,7 @@ body.light .panel {
   border-color:#cbd5e1 !important;
   box-shadow:0 8px 24px rgba(15,23,42,0.06) !important;
 }
-body.light .panel-head h3 { color:#000000 !important; }
-
-body.light .donut-side,
-body.light .donut-side b,
-body.light .donut-center span,
-body.light .donut-center b,
-body.light .split-labels,
-body.light .split-labels span,
-body.light .cat-row,
-body.light .cat-row .lbl,
-body.light .cat-row .amt,
-body.light .cat-row .pct {
-  color: #000000 !important;
-  font-weight: 700 !important;
-}
+body.light .panel-head h3 { color:#0f172a !important; }
 
 .cfg-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; margin-bottom:20px;}
 .cfg-grid .panel{height:100%;}
@@ -4866,8 +4748,7 @@ body.light .cat-row .pct {
 .acc-edit{opacity:0; transition:opacity .15s; background:none; border:none; color:var(--text-faint); cursor:pointer; font-size:12px; padding:4px;}
 
 body.light .acc-row { background:#f8fafc !important; border-color:#e2e8f0 !important; }
-body.light .acc-info .n { color:#000000 !important; font-weight: 700 !important; }
-body.light .acc-info .t { color:#000000 !important; font-weight: 600 !important; }
+body.light .acc-info .n { color:#0f172a !important; }
 
 .table-panel{
   position:relative;
@@ -4887,31 +4768,27 @@ body.light .table-panel {
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 body.light th {
-  color: #000000 !important;
+  color: #0284C7 !important;
   font-weight: 800 !important;
   border-bottom: 1.5px solid #E2E8F0 !important;
 }
 body.light td {
   border-top-color:#e2e8f0 !important;
-  color: #000000 !important;
-  font-weight: 600 !important;
+  color: #0F172A !important;
 }
 body.light tr.trow:hover td {
   background:#F8FAFC !important;
 }
 body.light .tx-desc {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #0F172A !important;
 }
 body.light .tx-date-badge {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
 }
 body.light .acc-pill {
   background: #F1F5F9 !important;
-  color: #000000 !important;
+  color: #334155 !important;
   border-color: #CBD5E1 !important;
-  font-weight: 700 !important;
 }
 body.light .val-in {
   color: #059669 !important;
@@ -5130,14 +5007,12 @@ body.light .status-pendente {
   border-color:rgba(96,165,250,0.45) !important;
   box-shadow:0 22px 50px -6px rgba(0,0,0,0.85), 0 0 25px rgba(59,130,246,0.25), inset 0 1px 0 rgba(255,255,255,0.35) !important;
 }
-body.light .budget-card, body.light .goal-card, body.light .recurring-card, body.light .cat-card, body.light .rec-card {
+body.light .budget-card, body.light .goal-card, body.light .recurring-card, body.light .cat-card {
   background:#ffffff !important; border-color:#cbd5e1 !important;
   box-shadow:0 6px 20px rgba(15,23,42,0.06) !important;
-  color: #000000 !important;
 }
-body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3, body.light .recurring-card h4, body.light .rec-card h4,
-body.light .cat-card *, body.light .budget-card *, body.light .goal-card *, body.light .recurring-card *, body.light .rec-card * {
-  color:#000000 !important;
+body.light .cat-card h4, body.light .budget-card h4, body.light .goal-card h3 {
+  color:#0f172a !important;
 }
 
 /* Recorrentes & Duração Styles */
@@ -5358,26 +5233,24 @@ body.light .dashboard-welcome-hero {
   border-color: #CBD5E1 !important;
   box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08) !important;
 }
-body.light .hero-greeting { color: #000000 !important; text-shadow: none !important; }
+body.light .hero-greeting { color: #0F172A !important; text-shadow: none !important; }
 body.light .hero-name-gradient {
   background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #D97706 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.25)) !important;
 }
-body.light .hero-sub { color: #000000 !important; font-weight: 600 !important; }
+body.light .hero-sub { color: #475569 !important; }
 body.light .hero-badge {
   background: #FFFFFF !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #334155 !important;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
 }
 body.light .btn-hero-ghost {
   background: #FFFFFF !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #0F172A !important;
 }
 body.light .btn-hero-ghost:hover {
   background: #F1F5F9 !important;
@@ -5509,9 +5382,9 @@ body.light .executive-welcome-toast {
   border-color: #CBD5E1 !important;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15) !important;
 }
-body.light .toast-title { color: #000000 !important; }
-body.light .toast-desc { color: #000000 !important; }
-body.light .toast-desc strong { color: #000000 !important; font-weight: 800 !important; }
+body.light .toast-title { color: #0F172A !important; }
+body.light .toast-desc { color: #475569 !important; }
+body.light .toast-desc strong { color: #0F172A !important; }
 
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
 .env-badge-homolog {
@@ -5792,15 +5665,14 @@ body.light .user-card-4k {
   border-color: #CBD5E1 !important;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
 }
-body.light .user-card-name { color: #000000 !important; font-weight: 800 !important; }
-body.light .user-card-email { color: #000000 !important; font-weight: 600 !important; }
+body.light .user-card-name { color: #0F172A !important; }
+body.light .user-card-email { color: #475569 !important; }
 body.light .user-stat-chip {
   background: #F1F5F9 !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 600 !important;
+  color: #475569 !important;
 }
-body.light .user-stat-chip strong { color: #000000 !important; font-weight: 800 !important; }
+body.light .user-stat-chip strong { color: #0F172A !important; }
 
 /* ==================== Banner: Modo Visualização (Admin) ==================== */
 .view-mode-banner {
@@ -6049,8 +5921,7 @@ html.light .acc-card-metrics {
 
 body.light .acc-metric-hero-label,
 html.light .acc-metric-hero-label {
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #64748B !important;
 }
 
 .acc-metric-hero-val {
@@ -6089,8 +5960,7 @@ html.light .acc-subgrid {
 
 body.light .acc-subgrid-label,
 html.light .acc-subgrid-label {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #64748B !important;
 }
 
 .acc-subgrid-val {
@@ -6153,16 +6023,14 @@ body.light .acc-view-tx-btn,
 html.light .acc-view-tx-btn {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #1E293B !important;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
 }
 
 body.light .acc-view-tx-btn .btn-count-pill,
 html.light .acc-view-tx-btn .btn-count-pill {
   background: #F1F5F9 !important;
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #475569 !important;
 }
 
 body.light .acc-view-tx-btn:hover,
@@ -6331,13 +6199,12 @@ body.light .toast.toast-danger .toast-indicator {
 }
 
 body.light .toast-close {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: rgba(15, 23, 42, 0.4);
 }
 
 body.light .toast-close:hover {
-  color: #000000 !important;
-  background: rgba(15, 23, 42, 0.08);
+  color: #0F172A;
+  background: rgba(15, 23, 42, 0.07);
 }
 
 /* ==================== Popups de Autenticação 4K Glass (Entrada & Saída) ==================== */
@@ -6674,11 +6541,11 @@ body.light .login-success-box {
   box-shadow: 0 30px 80px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.9), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
 }
 body.light .login-success-box h3 {
-  color: #000000 !important;
+  color: #0F172A !important;
   text-shadow: none !important;
 }
 body.light .login-success-box p {
-  color: #000000 !important;
+  color: #475569 !important;
 }
 body.light .auth-ambient-glow {
   opacity: 0.35;
@@ -6823,14 +6690,12 @@ html.light .scale-dropdown {
 }
 body.light .scale-dropdown div,
 html.light .scale-dropdown div {
-  color: #000000 !important;
-  font-weight: 800 !important;
+  color: #64748b !important;
   border-bottom-color: #e2e8f0 !important;
 }
 body.light .scale-dropdown .scale-opt-btn,
 html.light .scale-dropdown .scale-opt-btn {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #0f172a !important;
   background: transparent;
 }
 body.light .scale-dropdown .scale-opt-btn:hover,
@@ -7039,7 +6904,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
               </span>
-              <input type="text" id="regCpf" placeholder="000.000.000-00" maxlength="14" required autocomplete="off" inputmode="numeric" oninput="window.handleServerCpfInput(this)" onchange="window.handleServerCpfInput(this)" onblur="window.handleServerCpfInput(this)" onpaste="setTimeout(() => window.handleServerCpfInput(this), 50)">
+              <input type="text" id="regCpf" placeholder="000.000.000-00" maxlength="14" required autocomplete="off" oninput="window.handleServerCpfInput(this)" onchange="window.handleServerCpfInput(this)" onblur="window.handleServerCpfInput(this)" onpaste="setTimeout(() => window.handleServerCpfInput(this), 60)">
             </div>
             <div id="regCpfFeedbackMsg" style="display:none; font-size:11px; font-weight:600; margin-top:4px;"></div>
           </div>
@@ -8530,27 +8395,25 @@ window.handleLoginSubmit = async function(e) {
   if (!email) {
     if (emailWrap) emailWrap.classList.add('input-error');
     if (emailInput) emailInput.focus();
-    window.showAuthFeedback('login', 'error', 'Identificação não informada', 'Por favor, digite o seu e-mail ou CPF (sem ponto) para acessar sua conta.');
+    window.showAuthFeedback('login', 'error', 'E-mail não informado', 'Por favor, digite o seu endereço de e-mail para acessar sua conta.');
     return;
   }
 
-  // Validação do formato do e-mail ou CPF
-  const cleanDigits = email.replace(/[^0-9]/g, '');
-  const isCpfInput = cleanDigits.length === 11;
+  // Validação do formato do e-mail
   const isValidEmail = (str) => {
     if (!str || typeof str !== 'string') return false;
     const at = str.indexOf('@');
     const dot = str.lastIndexOf('.');
     return at > 0 && dot > at + 1 && dot < str.length - 1 && !str.includes(' ');
   };
-  if (!isValidEmail(email) && !isCpfInput) {
+  if (!isValidEmail(email)) {
     if (emailWrap) emailWrap.classList.add('input-error');
     if (emailInput) emailInput.focus();
-    window.showAuthFeedback('login', 'error', 'Identificação em formato inválido', 'Digite um e-mail válido (ex: <strong>seu.nome@exemplo.com</strong>) ou um CPF de 11 dígitos (sem ponto).');
+    window.showAuthFeedback('login', 'error', 'E-mail em formato inválido', 'O e-mail digitado parece incompleto ou inválido. Exemplo: <strong>seu.nome@gmail.com</strong>');
     return;
   }
   
-  const cleanEmail = isCpfInput ? cleanDigits : email.toLowerCase().trim();
+  const cleanEmail = email.toLowerCase().trim();
   const apiBase = getApiBaseUrl();
   let res = null;
   let data = null;
@@ -8584,8 +8447,8 @@ window.handleLoginSubmit = async function(e) {
           'login',
           'warning',
           'Usuário não cadastrado',
-          'Não encontramos nenhuma conta cadastrada para ' + (isCpfInput ? 'o CPF <strong>' + cleanDigits + '</strong>.' : 'o e-mail <strong>' + cleanEmail + '</strong>.'),
-          '<button type="button" onclick="window.switchAuthTab(\'register\')" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(217,119,6,0.32) 100%); border:1px solid rgba(245,158,11,0.55); color:#FEF3C7; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Criar Conta →</button>'
+          'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + cleanEmail + '</strong>.',
+          '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(217,119,6,0.32) 100%); border:1px solid rgba(245,158,11,0.55); color:#FEF3C7; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Criar Conta com este E-mail →</button>'
         );
       } else if (data.errorType === 'invalid_password') {
         if (passWrap) passWrap.classList.add('input-error');
@@ -8914,7 +8777,6 @@ window.isValidCPFServer = function(cpf) {
 
 // Máscara e Validação de CPF no Cadastro (Preenchimento manual dos dados cadastrais)
 window.handleServerCpfInput = function(input) {
-  if (!input) return;
   const rawDigits = input.value.replace(/[^0-9]/g, '').slice(0, 11);
   let v = rawDigits;
   if (v.length > 9) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{1,2})/, '$1.$2.$3-$4');
@@ -8923,21 +8785,24 @@ window.handleServerCpfInput = function(input) {
   input.value = v;
 
   const msg = document.getElementById('regCpfFeedbackMsg');
-  if (!msg) return;
 
   if (rawDigits.length === 11) {
     if (!window.isValidCPFServer(rawDigits)) {
-      msg.style.display = 'block';
-      msg.textContent = '✕ CPF Inválido perante a Receita Federal';
-      msg.style.color = '#f87171';
+      if (msg) {
+        msg.style.display = 'block';
+        msg.textContent = '✕ CPF Inválido perante a Receita Federal';
+        msg.style.color = '#f87171';
+      }
       return;
     }
 
-    msg.style.display = 'block';
-    msg.textContent = '✓ CPF Válido';
-    msg.style.color = '#34d399';
+    if (msg) {
+      msg.style.display = 'block';
+      msg.textContent = '✓ CPF Válido';
+      msg.style.color = '#34d399';
+    }
   } else {
-    msg.style.display = 'none';
+    if (msg) msg.style.display = 'none';
   }
 };
 
@@ -8971,7 +8836,7 @@ window.handleRegisterSubmit = async function(e) {
   const truthfulInput = document.getElementById('regTruthful');
 
   const name = nameInput ? nameInput.value.trim() : '';
-  const cpf = cpfInput ? cpfInput.value.replace(/[^0-9]/g, '').trim() : '';
+  const cpf = cpfInput ? cpfInput.value.trim() : '';
   const birthDate = birthInput ? birthInput.value.trim() : '';
   const phone = phoneInput ? phoneInput.value.trim() : '';
   const email = emailInput ? emailInput.value.trim() : '';
@@ -18137,31 +18002,17 @@ const server = http.createServer((req, res) => {
         const { email, password } = JSON.parse(body);
         if (!email || !password) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'E-mail ou CPF e senha são obrigatórios' }));
+          return res.end(JSON.stringify({ success: false, error: 'E-mail e senha são obrigatórios' }));
         }
 
         const cleanEmail = email.toLowerCase().trim();
-        const rawDigits = email.replace(/\D/g, '');
-        const isCpfInput = rawDigits.length === 11;
-
         let user = null;
         if (pool) {
           try {
-            let result;
-            if (isCpfInput) {
-              result = await pool.query(
-                `SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at 
-                 FROM usuarios 
-                 WHERE LOWER(email) = LOWER($1) 
-                    OR REPLACE(REPLACE(REPLACE(COALESCE(cpf, ''), '.', ''), '-', ''), ' ', '') = $2`,
-                [cleanEmail, rawDigits]
-              );
-            } else {
-              result = await pool.query(
-                'SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at FROM usuarios WHERE LOWER(email) = LOWER($1)',
-                [cleanEmail]
-              );
-            }
+            const result = await pool.query(
+              'SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at FROM usuarios WHERE LOWER(email) = LOWER($1)',
+              [cleanEmail]
+            );
             if (result.rows.length > 0) user = result.rows[0];
           } catch (dbErr) {
             console.warn('[AVISO BD] Falha ao consultar SQL Server no login. Usando cache local:', dbErr.message);
@@ -18169,10 +18020,7 @@ const server = http.createServer((req, res) => {
         }
         if (!user) {
           const localUsers = getLocalUsers();
-          user = localUsers.find(u => 
-            (u.email && u.email.toLowerCase() === cleanEmail) ||
-            (isCpfInput && u.cpf && String(u.cpf).replace(/\D/g, '') === rawDigits)
-          ) || null;
+          user = localUsers.find(u => u.email.toLowerCase() === cleanEmail) || null;
         }
 
         if (!user) {
@@ -18180,7 +18028,7 @@ const server = http.createServer((req, res) => {
           return res.end(JSON.stringify({
             success: false,
             errorType: 'user_not_found',
-            error: isCpfInput ? 'Este CPF não possui cadastro no sistema. Clique em "Criar Conta" para se cadastrar.' : 'Este e-mail não possui cadastro no sistema. Clique em "Criar Conta" para se cadastrar.'
+            error: 'Este e-mail não possui cadastro no sistema. Clique em "Criar Conta" para se cadastrar.'
           }));
         }
 
@@ -18189,18 +18037,16 @@ const server = http.createServer((req, res) => {
           return res.end(JSON.stringify({
             success: false,
             errorType: 'invalid_password',
-            error: 'Senha incorreta. Verifique a senha digitada ou clique em "Esqueceu a senha?".'
+            error: 'Senha incorreta para este e-mail. Verifique a senha digitada ou clique em "Esqueceu a senha?".'
           }));
         }
-
-        const userEmail = (user.email || cleanEmail).toLowerCase().trim();
 
         // Migração transparente de senha legada para scrypt hash seguro
         if (!user.password || !user.password.startsWith('scrypt:')) {
           const secureHash = hashPassword(password);
           user.password = secureHash;
           if (pool) {
-            pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [secureHash, userEmail]).catch(()=>{});
+            pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [secureHash, cleanEmail]).catch(()=>{});
           }
         }
 
@@ -18219,7 +18065,7 @@ const server = http.createServer((req, res) => {
 
         if (pool) {
           try {
-            await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, userEmail]);
+            await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]);
           } catch(e) {}
         }
 
@@ -18562,7 +18408,7 @@ const server = http.createServer((req, res) => {
 
         const secureHashedPassword = hashPassword(password);
         let newUserId = Date.now();
-        const cleanCpf = cpf ? String(cpf).replace(/\D/g, '').trim() : null;
+        const cleanCpf = cpf ? cpf.trim() : null;
         const cleanBirthDate = birth_date ? birth_date.trim() : null;
         const cleanPhone = phone ? phone.trim() : null;
         const termsAcceptedVal = terms_accepted !== false;
