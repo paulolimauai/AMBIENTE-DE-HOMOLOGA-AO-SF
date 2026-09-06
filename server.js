@@ -804,15 +804,16 @@ html.is-admin .menu-admin-badge,
 html.is-admin #mobileDrawerAdminBadge {
   display: inline-flex !important;
 }
-html.is-admin .menu-btn-admin,
 html.is-admin #menuFuncoesBtn,
+html.is-admin #mobileDrawerFuncoesBtn {
+  display: none !important;
+}
 html.is-admin #menuUsuariosBtn,
-html.is-admin #menuLogsBtn,
 html.is-admin #menuOrdensBtn,
-html.is-admin #mobileDrawerFuncoesBtn,
+html.is-admin #menuLogsBtn,
 html.is-admin #mobileDrawerUsuariosBtn,
-html.is-admin #mobileDrawerLogsBtn,
-html.is-admin #mobileDrawerOrdensBtn {
+html.is-admin #mobileDrawerOrdensBtn,
+html.is-admin #mobileDrawerLogsBtn {
   display: flex !important;
 }
 
@@ -7505,10 +7506,9 @@ html.light .scale-dropdown .scale-opt-btn:hover {
     <div class="menu-admin-divider" title="Área de Gestão"></div>
     <div class="menu-admin-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMIN</span></div>
 
-    <button data-page="funcoes" id="menuFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span><span>Funções</span></button>
     <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
+    <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
     <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
-    <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Ordens</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
   </nav>
 
   <script>
@@ -7581,10 +7581,9 @@ html.light .scale-dropdown .scale-opt-btn:hover {
       <div id="mobileDrawerAdminDivider" class="menu-admin-divider" style="display:none; width:88%; margin:14px auto 10px;"></div>
       <div id="mobileDrawerAdminBadge" class="menu-admin-badge" style="display:none; margin:0 16px 8px; width:fit-content;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMINISTRAÇÃO</span></div>
 
-      <button data-page="funcoes" id="mobileDrawerFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span> Funções & Permissões</button>
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
+      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Central de Suporte & O.S.</button>
       <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
-      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço</button>
     </nav>
   </div>
 
@@ -7877,27 +7876,73 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   </div>
 </div>
 
-<!-- Modal Usuário (Admin) -->
-<div class="overlay" id="overlayUserAdmin">
-  <div class="modal">
-    <button class="close-x" id="closeUserAdminModal">✕</button>
-    <h2>Editar Usuário</h2>
-    <div class="field"><label>Nome Completo</label><input id="userAdminName" placeholder="Ex: Paulo Lima"></div>
-    <div class="field"><label>E-mail de Acesso</label><input id="userAdminEmail" disabled style="opacity:0.6;" placeholder="email@exemplo.com"></div>
-    <div class="field"><label>Perfil de Acesso</label>
-      <select id="userAdminRole"><option value="Usuário">Usuário</option><option value="Administrador">Administrador</option></select>
+<!-- Modal Usuário (Admin) - Central de Correção Cadastral -->
+<div class="overlay" id="overlayUserAdmin" onclick="if(event.target===this) closeUserAdminModal()">
+  <div class="modal" style="max-width:560px; border-radius:26px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.95) 0%, rgba(10,15,30,0.98) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(59,130,246,0.18); padding:26px;">
+    <button class="close-x" id="closeUserAdminModal" type="button" onclick="closeUserAdminModal()">✕</button>
+    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+      <span>🛠️ Auditoria & Correção Cadastral</span>
     </div>
-    <div class="field">
-      <label>Senha de Acesso</label>
-      <p class="cfg-hint" id="userAdminPasswordHint" style="margin:-2px 0 8px;">Deixe em branco para manter a senha atual</p>
+    <h2 style="font-size:20px; font-weight:900; margin:0 0 4px 0; color:var(--text);">Corrigir Cadastro do Usuário</h2>
+    <p style="font-size:12.5px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.4;">
+      Os usuários realizam o próprio autocadastro. Como administrador, corrija dados informados com erro, restaure o acesso ou ajuste privilégios.
+    </p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+      <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
+        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Nome Completo *</label>
+        <input id="userAdminName" placeholder="Ex: Paulo Lima" style="height:42px; border-radius:12px; font-size:13.5px;">
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">CPF (Titular)</label>
+        <input id="userAdminCpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px; font-family:monospace;">
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Telefone / WhatsApp</label>
+        <input id="userAdminPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
+      </div>
+
+      <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
+        <label style="font-size:12px; font-weight:700; color:var(--text-dim); display:flex; justify-content:space-between; align-items:center;">
+          <span>E-mail de Acesso *</span>
+          <span style="font-size:11px; color:#60A5FA; font-weight:600;">(Corrigir caso haja erro de digitação no autocadastro)</span>
+        </label>
+        <input id="userAdminEmail" placeholder="email@exemplo.com" style="height:42px; border-radius:12px; font-size:13.5px;">
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Perfil / Nível de Acesso</label>
+        <select id="userAdminRole" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+          <option value="Usuário">Usuário (Padrão)</option>
+          <option value="Administrador">Administrador (Total)</option>
+        </select>
+      </div>
+
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Status da Conta</label>
+        <select id="userAdminActive" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+          <option value="true">✅ Ativa (Acesso Liberado)</option>
+          <option value="false">🚫 Desativada (Bloqueada)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:18px; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+      <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Redefinir Senha de Acesso</label>
+      <p class="cfg-hint" id="userAdminPasswordHint" style="margin:2px 0 8px; font-size:11.5px;">Deixe em branco para manter a senha atual ou digite a nova senha</p>
       <div class="pass-field">
-        <input id="userAdminPassword" type="password" placeholder="••••••••">
+        <input id="userAdminPassword" type="password" placeholder="Nova senha (mínimo 6 dígitos)" style="height:42px; border-radius:12px; font-size:13.5px;">
         <button type="button" class="pass-toggle" id="userAdminPasswordToggle" tabindex="-1" aria-label="Mostrar senha"></button>
       </div>
     </div>
-    <div class="modal-actions">
-      <button id="userAdminCancelBtn">Cancelar</button>
-      <button class="save" id="userAdminSaveBtn">Salvar Usuário</button>
+
+    <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px;">
+      <button id="userAdminCancelBtn" type="button" onclick="closeUserAdminModal()" style="height:40px; padding:0 18px; border-radius:12px;">Cancelar</button>
+      <button class="save" id="userAdminSaveBtn" type="button" onclick="saveUserAdmin()" style="height:40px; padding:0 22px; border-radius:12px; background:linear-gradient(135deg, #10B981, #059669); font-weight:800;">
+        Salvar Correções ✓
+      </button>
     </div>
   </div>
 </div>
@@ -8044,14 +8089,14 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   </div>
 </div>
 
-<!-- Modal Visualizar e Atender Ordem de Serviço (Administrador) -->
+<!-- Modal Visualizar e Atender Ordem de Serviço (Administrador / Suporte) -->
 <div class="overlay" id="overlayOrdemAdmin" onclick="if(event.target===this) closeOrdemAdminModal()">
-  <div class="modal" style="max-width:600px; border-radius:24px; border:1px solid rgba(59, 130, 246, 0.35); box-shadow:0 24px 60px rgba(0,0,0,0.85);">
+  <div class="modal" style="max-width:620px; border-radius:26px; border:1px solid rgba(59, 130, 246, 0.35); box-shadow:0 30px 80px rgba(0,0,0,0.9); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%);">
     <button class="close-x" type="button" onclick="closeOrdemAdminModal()">✕</button>
     
     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap;">
       <div>
-        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11px; font-weight:800; margin-bottom:6px;">
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11.5px; font-weight:800; font-family:monospace; margin-bottom:6px;">
           <span id="osAdminProtocolBadge">#OS-000000</span>
         </div>
         <h2 style="font-size:19px; font-weight:900; margin:0;" id="osAdminTitle">Título da Solicitação</h2>
@@ -8060,45 +8105,64 @@ html.light .scale-dropdown .scale-opt-btn:hover {
       <div id="osAdminPriorityBadge" style="padding:5px 12px; border-radius:999px; font-size:11.5px; font-weight:800;">Normal</div>
     </div>
 
-    <!-- Informações do Solicitante -->
-    <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:14px; padding:14px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div>
-        <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Solicitante</span>
-        <strong style="font-size:13.5px; color:var(--text);" id="osAdminClientName">Nome</strong>
+    <!-- Informações do Solicitante & Ações Rápidas de Contato -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:16px; padding:14px; margin-bottom:14px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+        <div>
+          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Solicitante</span>
+          <strong style="font-size:14px; color:var(--text);" id="osAdminClientName">Nome</strong>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">E-mail</span>
+          <a href="#" id="osAdminClientEmail" style="font-size:13px; color:#60A5FA; text-decoration:none; font-weight:600;">email@exemplo.com</a>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Tipo de Demanda</span>
+          <span style="font-size:13px; color:#E2E8F0; font-weight:600;" id="osAdminServiceType">Melhoria</span>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Telefone / Contato</span>
+          <span style="font-size:13px; color:#E2E8F0; font-weight:600;" id="osAdminClientPhone">Não informado</span>
+        </div>
       </div>
-      <div>
-        <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">E-mail</span>
-        <a href="#" id="osAdminClientEmail" style="font-size:13px; color:#60A5FA; text-decoration:none;">email@exemplo.com</a>
-      </div>
-      <div style="grid-column:1 / -1;">
-        <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Tipo de Serviço</span>
-        <span style="font-size:13px; color:#E2E8F0; font-weight:600;" id="osAdminServiceType">Melhoria</span>
+
+      <!-- Atalhos Rápidos de Contato Direto do Suporte -->
+      <div style="display:flex; gap:8px; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px; flex-wrap:wrap;">
+        <a id="osAdminWhatsappBtn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:10px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-size:12px; font-weight:700; text-decoration:none;">
+          <span>💬 Falar no WhatsApp</span>
+        </a>
+        <a id="osAdminEmailBtn" href="#" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:10px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#60A5FA; font-size:12px; font-weight:700; text-decoration:none;">
+          <span>✉️ Responder por E-mail</span>
+        </a>
       </div>
     </div>
 
-    <!-- Descrição Completa -->
+    <!-- Descrição Completa Enviada pelo Usuário -->
     <div class="field" style="margin-bottom:16px;">
-      <label style="font-weight:700; color:var(--text-dim);">Descrição do Chamado:</label>
-      <div id="osAdminDescription" style="background:rgba(0,0,0,0.25); border:1px solid var(--card-border); border-radius:12px; padding:12px; font-size:13px; line-height:1.5; color:#F8FAFC; white-space:pre-wrap; max-height:160px; overflow-y:auto;"></div>
+      <label style="font-weight:700; color:var(--text-dim); font-size:12px;">Descrição da Solicitação:</label>
+      <div id="osAdminDescription" style="background:rgba(0,0,0,0.28); border:1px solid var(--card-border); border-radius:12px; padding:12px; font-size:13px; line-height:1.5; color:#F8FAFC; white-space:pre-wrap; max-height:140px; overflow-y:auto;"></div>
     </div>
 
-    <!-- Área de Resolução e Status (Admin) -->
+    <!-- Área de Resolução e Status (Suporte) -->
     <div style="border-top:1px solid var(--card-border); padding-top:14px; margin-top:14px;">
-      <h3 style="font-size:14px; font-weight:800; margin-bottom:12px; color:#93C5FD;">⚙️ Atendimento do Administrador</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h3 style="font-size:14px; font-weight:800; margin:0; color:#93C5FD;">🎧 Atendimento do Suporte</h3>
+        <span style="font-size:11px; color:var(--text-dim);">Fila oficial de suporte</span>
+      </div>
       
       <div class="field">
-        <label>Status do Chamado:</label>
-        <select id="osAdminStatusSelect" style="font-weight:700;">
-          <option value="Pendente">⏳ Pendente (Aguardando Análise)</option>
-          <option value="Em Andamento">⚙️ Em Andamento (Em Atendimento)</option>
-          <option value="Concluído">✅ Concluído (Finalizado)</option>
+        <label style="font-size:12px; font-weight:700;">Status do Atendimento:</label>
+        <select id="osAdminStatusSelect" style="font-weight:700; height:42px; border-radius:12px;">
+          <option value="Pendente">⏳ Pendente (Aguardando Atendimento)</option>
+          <option value="Em Andamento">⚙️ Em Andamento (Em Atendimento pelo Suporte)</option>
+          <option value="Concluído">✅ Concluído (Resolvido com Sucesso)</option>
           <option value="Cancelado">❌ Cancelado / Recusado</option>
         </select>
       </div>
 
       <div class="field">
-        <label>Parecer / Observações do Administrador:</label>
-        <textarea id="osAdminNotes" rows="3" placeholder="Ex: Senha resetada para o padrão inicial e enviada ao e-mail, ou melhoria implantada..." style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;"></textarea>
+        <label style="font-size:12px; font-weight:700;">Parecer Técnico do Suporte / Resolução Aplicada:</label>
+        <textarea id="osAdminNotes" rows="3" placeholder="Ex: Dados cadastrais corrigidos no sistema, senha resetada ou dúvida esclarecida..." style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;"></textarea>
       </div>
     </div>
 
@@ -8108,9 +8172,80 @@ html.light .scale-dropdown .scale-opt-btn:hover {
       <button type="button" class="btn-ghost" onclick="excluirOrdemAdmin()" style="color:#F87171; border-color:rgba(239,68,68,0.3);">🗑️ Excluir O.S.</button>
       <div style="display:flex; gap:10px;">
         <button type="button" onclick="closeOrdemAdminModal()">Fechar</button>
-        <button type="button" class="save" onclick="salvarOrdemAdmin()" style="background:linear-gradient(135deg, #10B981, #059669); font-weight:800;">Salvar Atualização ✓</button>
+        <button type="button" class="save" onclick="salvarOrdemAdmin()" style="background:linear-gradient(135deg, #10B981, #059669); font-weight:800;">Salvar Atendimento ✓</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal Registrar Nova Ordem de Serviço via Suporte (Administrador) -->
+<div class="overlay" id="overlaySuporteNovaOrdem" onclick="if(event.target===this) closeSuporteNovaOrdemModal()">
+  <div class="modal" style="max-width:580px; border-radius:26px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.95) 0%, rgba(10,15,30,0.98) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(16,185,129,0.18); padding:26px;">
+    <button class="close-x" type="button" onclick="closeSuporteNovaOrdemModal()">✕</button>
+
+    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+      <span>🎧 Atendimento de Suporte</span>
+    </div>
+    <h2 style="font-size:20px; font-weight:900; margin:0 0 4px 0; color:var(--text);">Registrar Ordem de Serviço (O.S.)</h2>
+    <p style="font-size:12.5px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.4;">
+      Cadastre uma solicitação recebida por telefone, WhatsApp ou canal direto de suporte para triagem na fila.
+    </p>
+
+    <form id="formSuporteNovaOrdem" onsubmit="enviarSuporteNovaOrdem(event)">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+        <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Nome do Solicitante / Cliente *</label>
+          <input id="suporteOsClientName" required placeholder="Ex: Paulo Lima" style="height:42px; border-radius:12px; font-size:13.5px;">
+        </div>
+
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">E-mail do Solicitante *</label>
+          <input id="suporteOsClientEmail" type="email" required placeholder="email@exemplo.com" style="height:42px; border-radius:12px; font-size:13.5px;">
+        </div>
+
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Telefone / WhatsApp</label>
+          <input id="suporteOsClientPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
+        </div>
+
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Tipo de Demanda *</label>
+          <select id="suporteOsServiceType" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+            <option value="Correção de Dados">Correção de Dados Cadastrais</option>
+            <option value="Reset de Senha">Reset de Senha / Recuperação</option>
+            <option value="Atendimento Geral">Atendimento / Dúvida Operacional</option>
+            <option value="Relato de Bug">Relato de Bug / Erro no Sistema</option>
+            <option value="Melhoria no Sistema">Melhoria / Sugestão de Recurso</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Prioridade</label>
+          <select id="suporteOsPriority" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+            <option value="Normal">Normal</option>
+            <option value="Alta">Alta</option>
+            <option value="Urgente">Urgente / Crítica</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Assunto / Título Resumido *</label>
+          <input id="suporteOsTitle" required placeholder="Ex: Correção de CPF na conta de João" style="height:42px; border-radius:12px; font-size:13.5px;">
+        </div>
+
+        <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Descrição do Chamado / Mensagem do Solicitante *</label>
+          <textarea id="suporteOsDescription" required rows="3" placeholder="Descreva os detalhes da demanda relatada pelo solicitante..." style="border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px;">
+        <button type="button" onclick="closeSuporteNovaOrdemModal()" style="height:40px; padding:0 18px; border-radius:12px;">Cancelar</button>
+        <button class="save" type="submit" id="btnSalvarSuporteOrdem" style="height:40px; padding:0 22px; border-radius:12px; background:linear-gradient(135deg, #10B981, #059669); font-weight:800;">
+          Criar Chamado de Suporte 🚀
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -9990,7 +10125,7 @@ let currentPage = (function getInitialPage() {
     const cu = localStorage.getItem('nexus_cached_user');
     const u = cu ? JSON.parse(cu) : null;
     const isAdmin = u && u.role === 'Administrador';
-    const validPages = isAdmin ? ['usuarios', 'logs', 'funcoes', 'ordens'] : ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'];
+    const validPages = isAdmin ? ['usuarios', 'ordens', 'logs'] : ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'];
     const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
     const savedPage = localStorage.getItem('nexus_current_page');
     if (hashPage && validPages.includes(hashPage)) return hashPage;
@@ -10646,12 +10781,12 @@ function render(){
 
   if (isAdminView) {
     // Perfil de Administrador acessa EXCLUSIVAMENTE funções administrativas
-    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+    if (!['usuarios', 'ordens', 'logs'].includes(currentPage)) {
       currentPage = 'usuarios';
     }
   } else {
     // Usuários comuns nunca podem acessar páginas administrativas
-    if (['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+    if (['usuarios', 'ordens', 'logs'].includes(currentPage)) {
       currentPage = 'dashboard';
     }
   }
@@ -10740,12 +10875,12 @@ function updateActiveMenu(){
   const isAdminView = isAdmin && !isViewingOtherUser;
 
   if (isAdminView) {
-    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+    if (!['usuarios', 'ordens', 'logs'].includes(currentPage)) {
       currentPage = 'usuarios';
     }
   } else {
     // Usuários comuns nunca podem permanecer em telas de administração
-    if (['usuarios', 'logs', 'funcoes', 'ordens'].includes(currentPage)) {
+    if (['usuarios', 'ordens', 'logs'].includes(currentPage)) {
       currentPage = 'dashboard';
     }
   }
@@ -10777,7 +10912,7 @@ function updateAdminMenuVisibility(){
   });
 
   // Módulos de gestão administrativa aparecem EXCLUSIVAMENTE para o Administrador
-  const adminPages = ['funcoes', 'usuarios', 'logs', 'ordens'];
+  const adminPages = ['usuarios', 'ordens', 'logs'];
   adminPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdminView ? 'flex' : 'none';
@@ -13398,6 +13533,8 @@ function applyAdminUserFiltering() {
   cards.forEach(card => {
     const email = (card.getAttribute('data-user-email') || '').toLowerCase();
     const name = (card.querySelector('.user-card-name') ? card.querySelector('.user-card-name').textContent : '').toLowerCase();
+    const cpf = (card.getAttribute('data-user-cpf') || '').toLowerCase();
+    const phone = (card.getAttribute('data-user-phone') || '').toLowerCase();
     const role = card.getAttribute('data-user-role') || '';
     const status = card.getAttribute('data-user-status') || '';
 
@@ -13409,7 +13546,9 @@ function applyAdminUserFiltering() {
 
     let matchesSearch = true;
     if (currentAdminUserSearch) {
-      matchesSearch = email.includes(currentAdminUserSearch) || name.includes(currentAdminUserSearch);
+      const q = currentAdminUserSearch.toLowerCase();
+      const qDigits = q.replace(/\D/g, '');
+      matchesSearch = email.includes(q) || name.includes(q) || (qDigits && (cpf.includes(qDigits) || phone.includes(qDigits))) || cpf.includes(q) || phone.includes(q);
     }
 
     card.style.display = (matchesFilter && matchesSearch) ? 'flex' : 'none';
@@ -13439,16 +13578,21 @@ function pageUsuarios(){
     <div>
       <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">
         <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">👥</span>
-        Usuários & Contas de Acesso
+        Central de Usuários & Correção Cadastral
       </h1>
       <p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">
-        Gerenciamento de contas, permissões, modo espelhado e sincronização segura com o banco de dados.
+        Autocadastro ativo. O próprio usuário cria a conta; utilize este painel para auditar ou corrigir eventuais dados necessários.
       </p>
     </div>
-    <button id="btnNovoUsuarioAdmin" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:9px; height:42px; padding:0 22px; border-radius:14px; background:linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%); color:#ffffff; font-size:13.5px; font-weight:800; border:1px solid rgba(255,255,255,0.25); cursor:pointer; box-shadow:0 8px 24px -4px rgba(59,130,246,0.5), inset 0 1px 1px rgba(255,255,255,0.4); transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      <span>Cadastrar Novo Usuário</span>
-    </button>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <button id="btnNovoUsuarioAdmin" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:9px; height:42px; padding:0 20px; border-radius:14px; background:linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%); color:#ffffff; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.25); cursor:pointer; box-shadow:0 8px 24px -4px rgba(59,130,246,0.5); transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Cadastrar Manualmente</span>
+      </button>
+      <button class="btn-ghost" onclick="syncUsersWithServer().then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">
+        🔄 Atualizar Lista
+      </button>
+    </div>
   </div>
 
   <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:16px; margin-bottom:22px;">
@@ -13467,7 +13611,7 @@ function pageUsuarios(){
         <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(245,158,11,0.3); font-size:16px;">👑</div>
       </div>
       <div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px; letter-spacing:-0.02em;">\${adminCount}</div>
-      <div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Controle irrestrito</div>
+      <div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Gestão do sistema</div>
     </div>
 
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
@@ -13490,9 +13634,9 @@ function pageUsuarios(){
   </div>
 
   <div class="admin-toolbar-panel" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:18px; padding:12px 16px; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 8px 30px rgba(0,0,0,0.35); margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-    <div class="admin-search-wrap" style="position:relative; flex:1; min-width:240px;">
+    <div class="admin-search-wrap" style="position:relative; flex:1; min-width:260px;">
       <svg style="position:absolute; left:14px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#94A3B8; pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="adminUserSearchInput" class="admin-search-input" placeholder="Buscar por nome ou e-mail..." oninput="handleAdminUserSearch(this.value)" autocomplete="off" spellcheck="false" value="\${currentAdminUserSearch}" style="width:100%; height:42px; padding:0 14px 0 40px; border-radius:12px; background:var(--input-bg, rgba(255,255,255,0.05)); border:1px solid rgba(255,255,255,0.14); color:var(--text); font-size:13.5px; font-weight:600; outline:none; transition:all 0.2s ease;">
+      <input type="text" id="adminUserSearchInput" class="admin-search-input" placeholder="Buscar por nome, e-mail, CPF ou WhatsApp..." oninput="handleAdminUserSearch(this.value)" autocomplete="off" spellcheck="false" value="\${currentAdminUserSearch}" style="width:100%; height:42px; padding:0 14px 0 40px; border-radius:12px; background:var(--input-bg, rgba(255,255,255,0.05)); border:1px solid rgba(255,255,255,0.14); color:var(--text); font-size:13.5px; font-weight:600; outline:none; transition:all 0.2s ease;">
     </div>
     <div class="admin-filter-bar" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
       <button class="admin-filter-btn \${currentAdminUserFilter==='all'?'active':''}" onclick="setAdminUserFilter('all', this)">Todos (\${totalUsers})</button>
@@ -13506,12 +13650,12 @@ function pageUsuarios(){
   <div class="panel" style="margin-bottom:0; padding:24px 26px;">
     <div class="panel-head" style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
       <h3 style="font-size:16.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px;">
-        <span>📋</span> Lista Geral de Usuários
+        <span>📋</span> Lista Geral de Contas & Correção Cadastral
       </h3>
       <span class="tag" style="cursor:default; font-weight:800; font-size:12px; padding:5px 14px; border-radius:20px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#60A5FA;">\${totalUsers} cadastrado(s)</span>
     </div>
     <p class="cfg-hint" style="margin-bottom:18px; font-size:13px; color:var(--text-dim); line-height:1.5;">
-      💡 Clique em <strong>👁 Espelho</strong> para inspecionar a conta do usuário em modo somente-leitura ou <strong>✏️ Editar</strong> para atualizar credenciais e papéis de acesso.
+      💡 O autocadastro é feito pelo próprio usuário. Caso precise corrigir nome, CPF, e-mail, telefone/WhatsApp ou redefinir senha, clique em <strong>✏️ Corrigir Dados</strong>.
     </p>
     <div class="user-admin-list">
       \${users.map(u=>{
@@ -13519,10 +13663,15 @@ function pageUsuarios(){
         const isAdminUser = u.role === 'Administrador';
         const isInactive = u.active === false;
         const isSelf = currentUser && currentUser.email && u.email && (currentUser.email.toLowerCase() === u.email.toLowerCase());
-        const initials = (u.name || 'U').trim().split(/\\s+/).map(w => w[0]).filter(Boolean).slice(0,2).join('').toUpperCase() || 'US';
+        const initials = (u.name || 'U').trim().split(/\\\\s+/).map(w => w[0]).filter(Boolean).slice(0,2).join('').toUpperCase() || 'US';
+
+        const rawCpf = String(u.cpf || '').replace(/\\\\D/g, '');
+        const rawPhone = String(u.phone || '').replace(/\\\\D/g, '');
+        const formattedCpf = rawCpf.length === 11 ? rawCpf.replace(/(\\\\d{3})(\\\\d{3})(\\\\d{3})(\\\\d{2})/, '$1.$2.$3-$4') : (u.cpf || '');
+        const formattedPhone = rawPhone.length === 11 ? rawPhone.replace(/(\\\\d{2})(\\\\d{5})(\\\\d{4})/, '($1) $2-$3') : (rawPhone.length === 10 ? rawPhone.replace(/(\\\\d{2})(\\\\d{4})(\\\\d{4})/, '($1) $2-$3') : (u.phone || ''));
 
         return \`
-        <div class="user-card-4k \${isInactive ? 'inactive' : ''}" data-user-email="\${(u.email||'').toLowerCase()}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isInactive ? 'inactive' : 'active'}">
+        <div class="user-card-4k \${isInactive ? 'inactive' : ''}" data-user-email="\${(u.email||'').toLowerCase()}" data-user-cpf="\${rawCpf}" data-user-phone="\${rawPhone}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isInactive ? 'inactive' : 'active'}">
           <div class="user-card-left">
             <div class="user-card-avatar \${isAdminUser ? 'admin-av' : 'user-av'}">
               \${initials}
@@ -13534,8 +13683,12 @@ function pageUsuarios(){
                 <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
                 \${isInactive ? '<span class="role-badge inactive">Desativado</span>' : ''}
               </div>
-              <div class="user-card-email">\${u.email}</div>
-              <div class="user-card-stats-strip">
+              <div class="user-card-email" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:3px;">
+                <span>✉️ \${u.email}</span>
+                \${formattedCpf ? \`<span style="font-size:12px; color:var(--text-dim); background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">🪪 CPF: <strong style="color:var(--text);">\${formattedCpf}</strong></span>\` : '<span style="font-size:11.5px; color:#94A3B8; font-style:italic;">(Sem CPF)</span>'}
+                \${formattedPhone ? \`<span style="font-size:12px; color:#34D399; background:rgba(16,185,129,0.12); padding:2px 8px; border-radius:6px; border:1px solid rgba(16,185,129,0.3);">📱 <strong style="color:#6EE7B7;">\${formattedPhone}</strong></span>\` : ''}
+              </div>
+              <div class="user-card-stats-strip" style="margin-top:6px;">
                 \${stats.hasData ? \`
                   <span class="user-stat-chip">Transações: <strong>\${stats.txCount}</strong></span>
                   <span class="user-stat-chip">Contas: <strong>\${stats.accCount}</strong></span>
@@ -13551,6 +13704,11 @@ function pageUsuarios(){
             </div>
           </div>
           <div class="user-card-right">
+            \${rawPhone ? \`
+              <a href="https://wa.me/55\${rawPhone}" target="_blank" class="user-card-btn" style="background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.35); color:#34D399; text-decoration:none; display:inline-flex; align-items:center; gap:5px; padding:0 12px; height:38px; border-radius:10px;" title="Conversar no WhatsApp">
+                <span>💬 WhatsApp</span>
+              </a>
+            \` : ''}
             \${!isSelf ? \`
               <button type="button" class="user-card-btn btn-espelho" data-viewuser="\${u.email}" onclick="viewUserData('\${u.email}')" title="Visualizar conta em Modo Espelho">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -13572,9 +13730,9 @@ function pageUsuarios(){
             \` : \`
               <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:800; font-size:12px; padding:6px 14px; border-radius:12px; height:38px;">⭐ Sua Conta (Atual)</span>
             \`}
-            <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Editar informações do usuário">
+            <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Corrigir dados do cadastro" style="background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(59,130,246,0.35);">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              <span>Editar</span>
+              <span>Corrigir Dados</span>
             </button>
           </div>
         </div>\`;
@@ -14155,12 +14313,12 @@ window.copyOsProtocol = function() {
 // Admin: Tabela e Gestão de O.S.
 function renderOrdensTable(list) {
   if (!list || list.length === 0) {
-    return \`<div class="placeholder" style="padding:40px 20px;"><div class="big">📋</div><h3>Nenhuma Ordem de Serviço encontrada</h3><p>Quando usuários abrirem chamados na tela de login ou suporte, eles aparecerão aqui em tempo real.</p></div>\`;
+    return \`<div class="placeholder"><div class="big">📋</div><h3>Nenhuma Ordem de Serviço encontrada</h3><p>Quando os usuários abrirem solicitações de suporte ou melhorias, elas aparecerão listadas aqui.</p></div>\`;
   }
 
   let html = \`
   <div style="overflow-x:auto;">
-    <table class="table" style="width:100%; border-collapse:collapse; min-width:850px;">
+    <table style="width:100%; border-collapse:collapse; text-align:left;">
       <thead>
         <tr style="border-bottom:1px solid var(--card-border); text-align:left;">
           <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Protocolo</th>
@@ -14208,7 +14366,8 @@ function renderOrdensTable(list) {
         </td>
         <td style="padding:13px 14px;">
           <div style="font-weight:700; color:var(--text); font-size:13px;">\${o.client_name || 'Anônimo'}</div>
-          <div style="font-size:11.5px; color:var(--text-dim);">\${o.client_email || ''}</div>
+          <div style="font-size:11.5px; color:var(--text-dim); margin-top:1px;">\${o.client_email || ''}</div>
+          \${o.client_phone ? \`<div style="font-size:11px; color:#34D399; font-weight:700; margin-top:2px;">📱 \${o.client_phone}</div>\` : ''}
         </td>
         <td style="padding:13px 14px; font-size:12.5px; color:var(--text); font-weight:600; white-space:nowrap;">
           \${o.service_type || 'Melhoria'}
@@ -14225,7 +14384,7 @@ function renderOrdensTable(list) {
         </td>
         <td style="padding:13px 14px; text-align:right; white-space:nowrap;">
           <button type="button" onclick="openOrdemAdminModal(\${o.id})" style="padding:6px 12px; border-radius:8px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-size:12px; font-weight:800; border:none; cursor:pointer; margin-right:6px; box-shadow:0 2px 8px rgba(59,130,246,0.3);">
-            👁️ Visualizar & Atender
+            👁️ Atender O.S.
           </button>
           <button type="button" onclick="excluirOrdemAdmin(\${o.id})" style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:12px; cursor:pointer;" title="Excluir O.S.">
             🗑️
@@ -14249,7 +14408,7 @@ function filterOrdensTable() {
   const typeFilter = (document.getElementById('osFilterType')?.value || '').toLowerCase().trim();
 
   const filtered = (systemOrdens || []).filter(o => {
-    const text = ((o.protocol||'') + ' ' + (o.client_name||'') + ' ' + (o.client_email||'') + ' ' + (o.title||'') + ' ' + (o.description||'')).toLowerCase();
+    const text = ((o.protocol||'') + ' ' + (o.client_name||'') + ' ' + (o.client_email||'') + ' ' + (o.client_phone||'') + ' ' + (o.title||'') + ' ' + (o.description||'')).toLowerCase();
     const matchQuery = !query || text.includes(query);
     const matchStatus = !statusFilter || (o.status || '').toLowerCase().includes(statusFilter);
     const matchType = !typeFilter || (o.service_type || '').toLowerCase().includes(typeFilter);
@@ -14280,11 +14439,14 @@ function pageOrdens(){
         Central de Ordens de Serviço & Suporte
       </h1>
       <p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">
-        Gerenciamento de solicitações de melhorias, resets de senha e correções abertas pelos usuários.
+        Fila oficial de recepção, atendimento técnico e resolução de chamados de usuários.
       </p>
     </div>
-    <div class="head-actions" style="display:flex; gap:10px;">
-      <button class="btn-ghost" onclick="syncOrdensWithServer().then(render)" style="display:flex; align-items:center; gap:6px; font-weight:700;">
+    <div class="head-actions" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <button onclick="openSuporteNovaOrdemModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 20px; border-radius:14px; background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(16,185,129,0.5); transition:all 0.25s ease;">
+        <span>➕ Registrar O.S. via Suporte</span>
+      </button>
+      <button class="btn-ghost" onclick="syncOrdensWithServer().then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">
         🔄 Atualizar Chamados
       </button>
     </div>
@@ -14361,6 +14523,7 @@ function pageOrdens(){
   \`;
 }
 
+
 window.openOrdemAdminModal = function(id) {
   const ordem = (systemOrdens || []).find(o => String(o.id) === String(id));
   if (!ordem) return;
@@ -14376,8 +14539,36 @@ window.openOrdemAdminModal = function(id) {
   
   const emailEl = document.getElementById('osAdminClientEmail');
   if (emailEl) {
-    emailEl.textContent = ordem.client_email || '';
-    emailEl.href = 'mailto:' + (ordem.client_email || '');
+    emailEl.textContent = ordem.client_email || 'Não informado';
+    emailEl.href = ordem.client_email ? ('mailto:' + ordem.client_email) : '#';
+  }
+
+  const phoneEl = document.getElementById('osAdminClientPhone');
+  const cleanPhone = String(ordem.client_phone || '').replace(/\D/g, '');
+  if (phoneEl) {
+    phoneEl.textContent = ordem.client_phone || 'Não informado';
+  }
+
+  const waBtn = document.getElementById('osAdminWhatsappBtn');
+  if (waBtn) {
+    if (cleanPhone) {
+      const msg = encodeURIComponent(\`Olá \${ordem.client_name || ''}, tudo bem? Aqui é do Suporte ref. à sua Ordem de Serviço #\${ordem.protocol || ordem.id} (\${ordem.title || ''}).\`);
+      waBtn.href = \`https://wa.me/55\${cleanPhone}?text=\${msg}\`;
+      waBtn.style.display = 'inline-flex';
+    } else {
+      waBtn.style.display = 'none';
+    }
+  }
+
+  const emailBtn = document.getElementById('osAdminEmailBtn');
+  if (emailBtn) {
+    if (ordem.client_email) {
+      const subj = encodeURIComponent(\`[Suporte] O.S. #\${ordem.protocol || ordem.id} - \${ordem.title || ''}\`);
+      emailBtn.href = \`mailto:\${ordem.client_email}?subject=\${subj}\`;
+      emailBtn.style.display = 'inline-flex';
+    } else {
+      emailBtn.style.display = 'none';
+    }
   }
 
   document.getElementById('osAdminServiceType').textContent = ordem.service_type || 'Melhoria no Sistema';
@@ -16025,28 +16216,79 @@ async function openAdminCreateUserModal(){
   document.getElementById('overlayUserAdmin').classList.add('show');
 }
 
+// Máscaras globais para campos de auditoria e suporte
+window.maskCpfInput = function(el) {
+  if (!el) return;
+  let v = el.value.replace(/\D/g, '');
+  if (v.length > 11) v = v.slice(0, 11);
+  v = v.replace(/(\d{3})(\d)/, '$1.$2');
+  v = v.replace(/(\d{3})(\d)/, '$1.$2');
+  v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  el.value = v;
+};
+
+window.maskPhoneInput = function(el) {
+  if (!el) return;
+  let v = el.value.replace(/\D/g, '');
+  if (v.length > 11) v = v.slice(0, 11);
+  if (v.length > 10) {
+    v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+  } else if (v.length > 5) {
+    v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+  } else if (v.length > 2) {
+    v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+  }
+  el.value = v;
+};
+
 async function openUserAdminModal(email){
   await syncUsersWithServer();
   if(!currentUser || currentUser.role !== 'Administrador') return;
-  const u = registeredUsers.find(x=>x.email.toLowerCase()===email.toLowerCase());
+  const u = registeredUsers.find(x => x.email && x.email.toLowerCase() === email.toLowerCase());
   if(!u) return;
   isCreatingNewUserAdmin = false;
   editingUserEmail = email;
+
   const modalTitle = document.querySelector('#overlayUserAdmin h2');
-  if(modalTitle) modalTitle.textContent = 'Editar Usuário';
+  if(modalTitle) modalTitle.textContent = 'Corrigir Cadastro do Usuário';
   const passHint = document.getElementById('userAdminPasswordHint');
   if(passHint) passHint.textContent = 'Deixe em branco para manter a senha atual';
+
+  const nameInput = document.getElementById('userAdminName');
+  if(nameInput) nameInput.value = u.name || '';
+
   const emailInput = document.getElementById('userAdminEmail');
   if(emailInput) {
-    emailInput.disabled = true;
-    emailInput.style.opacity = '0.6';
-    emailInput.value = u.email;
+    emailInput.disabled = false;
+    emailInput.style.opacity = '1';
+    emailInput.value = u.email || '';
   }
-  document.getElementById('userAdminName').value = u.name;
-  document.getElementById('userAdminRole').value = u.role;
-  document.getElementById('userAdminPassword').value = '';
-  document.getElementById('userAdminPassword').type = 'password';
+
+  const cpfInput = document.getElementById('userAdminCpf');
+  if(cpfInput) {
+    const rawCpf = String(u.cpf || '').replace(/\D/g, '');
+    cpfInput.value = rawCpf.length === 11 ? rawCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : (u.cpf || '');
+  }
+
+  const phoneInput = document.getElementById('userAdminPhone');
+  if(phoneInput) {
+    const rawPhone = String(u.phone || '').replace(/\D/g, '');
+    phoneInput.value = rawPhone.length === 11 ? rawPhone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3') : (rawPhone.length === 10 ? rawPhone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3') : (u.phone || ''));
+  }
+
+  const roleSelect = document.getElementById('userAdminRole');
+  if(roleSelect) roleSelect.value = u.role || 'Usuário';
+
+  const activeSelect = document.getElementById('userAdminActive');
+  if(activeSelect) activeSelect.value = (u.active !== false) ? 'true' : 'false';
+
+  const passInput = document.getElementById('userAdminPassword');
+  if(passInput) {
+    passInput.value = '';
+    passInput.type = 'password';
+  }
   bindPasswordToggle('userAdminPassword', 'userAdminPasswordToggle');
+
   document.getElementById('overlayUserAdmin').classList.add('show');
 }
 
@@ -16058,16 +16300,19 @@ function closeUserAdminModal(){
 
 async function saveUserAdmin(){
   await syncUsersWithServer();
-  const name = document.getElementById('userAdminName').value.trim();
-  const role = document.getElementById('userAdminRole').value;
-  const newPass = document.getElementById('userAdminPassword').value.trim();
+  const name = (document.getElementById('userAdminName')?.value || '').trim();
+  const rawEmail = (document.getElementById('userAdminEmail')?.value || '').trim().toLowerCase();
+  const rawCpf = (document.getElementById('userAdminCpf')?.value || '').replace(/\D/g, '').trim();
+  const rawPhone = (document.getElementById('userAdminPhone')?.value || '').trim();
+  const role = document.getElementById('userAdminRole')?.value || 'Usuário';
+  const active = document.getElementById('userAdminActive')?.value !== 'false';
+  const newPass = (document.getElementById('userAdminPassword')?.value || '').trim();
 
-  if(!name){ showToast('Informe um nome para o usuário'); return; }
+  if(!name){ showToast('Informe o nome completo do usuário'); return; }
+  if(!rawEmail || !rawEmail.includes('@')){ showToast('Informe um e-mail válido para o usuário'); return; }
 
   if (isCreatingNewUserAdmin) {
-    const email = document.getElementById('userAdminEmail').value.trim().toLowerCase();
-    if(!email || !email.includes('@')){ showToast('Informe um e-mail válido'); return; }
-    if(registeredUsers.some(x => x.email.toLowerCase() === email)){
+    if(registeredUsers.some(x => x.email.toLowerCase() === rawEmail)){
       showToast('Este e-mail já está cadastrado no sistema');
       return;
     }
@@ -16075,43 +16320,151 @@ async function saveUserAdmin(){
       showToast('A senha inicial deve ter no mínimo 6 caracteres');
       return;
     }
+    const formattedCpf = rawCpf.length === 11 ? rawCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : (rawCpf || null);
     const newUser = {
       name,
-      email,
+      email: rawEmail,
+      cpf: formattedCpf,
+      phone: rawPhone || null,
       password: newPass,
       role,
-      active: true,
+      active: active,
       created_at: new Date().toISOString()
     };
     registeredUsers.push(newUser);
     await saveUsersToServer();
     showToast('Usuário cadastrado com sucesso!');
-    logActivity('Criação', 'Usuário', 'Administrador cadastrou novo usuário: ' + email + ' (' + name + ', ' + role + ')');
+    logActivity('Criação', 'Usuário', 'Administrador cadastrou usuário: ' + rawEmail + ' (' + name + ', ' + role + ')');
     closeUserAdminModal();
     render();
     return;
   }
 
   if(!editingUserEmail) return;
-  const u = registeredUsers.find(x=>x.email.toLowerCase()===editingUserEmail.toLowerCase());
+  const u = registeredUsers.find(x => x.email.toLowerCase() === editingUserEmail.toLowerCase());
   if(!u) return;
-  if(u.role === 'Administrador' && role !== 'Administrador' && registeredUsers.filter(x=>x.role==='Administrador').length <= 1){
-    showToast('É necessário manter ao menos um administrador');
+
+  // Se o e-mail foi corrigido, verificar se não colide com outro usuário
+  if(rawEmail !== u.email.toLowerCase()){
+    if(registeredUsers.some(x => x.email.toLowerCase() === rawEmail)){
+      showToast('O e-mail "' + rawEmail + '" já pertence a outra conta cadastrada');
+      return;
+    }
+  }
+
+  if(u.role === 'Administrador' && role !== 'Administrador' && registeredUsers.filter(x => x.role === 'Administrador').length <= 1){
+    showToast('É necessário manter ao menos um administrador ativo no sistema');
     return;
   }
+
+  const oldEmail = u.email;
+  const formattedCpf = rawCpf.length === 11 ? rawCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : (rawCpf || null);
+
   u.name = name;
+  u.email = rawEmail;
+  u.cpf = formattedCpf;
+  u.phone = rawPhone || null;
   u.role = role;
-  if(newPass) u.password = newPass;
-  await saveUsersToServer();
-  if(currentUser && currentUser.email.toLowerCase() === u.email.toLowerCase()){
-    currentUser.name = u.name;
-    currentUser.role = u.role;
+  u.active = active;
+  if(newPass && newPass.length >= 6) {
+    u.password = newPass;
   }
-  showToast('Usuário atualizado!');
-  logActivity('Edição', 'Usuário', 'Administrador alterou dados do usuário ' + u.email + ' (Nome: ' + name + ', Função: ' + role + (newPass ? ', Senha alterada' : '') + ')');
+
+  // Se o e-mail foi alterado pelo administrador (ex: correção de erro de digitação), migrar dados locais
+  if(oldEmail.toLowerCase() !== rawEmail.toLowerCase()){
+    const oldKey = 'nexus_data_' + oldEmail.toLowerCase();
+    const newKey = 'nexus_data_' + rawEmail.toLowerCase();
+    const existingData = loadFromStorage(oldKey, null);
+    if(existingData){
+      saveToStorage(newKey, existingData);
+      localStorage.removeItem(oldKey);
+    }
+  }
+
+  await saveUsersToServer();
+
+  if(currentUser && currentUser.email.toLowerCase() === oldEmail.toLowerCase()){
+    currentUser.name = u.name;
+    currentUser.email = u.email;
+    currentUser.role = u.role;
+    currentUser.cpf = u.cpf;
+    currentUser.phone = u.phone;
+    saveToStorage('nexus_cached_user', currentUser);
+    saveToStorage('nexus_session', { email: currentUser.email });
+  }
+
+  showToast('Cadastro de ' + u.name + ' corrigido e salvo com sucesso!');
+  logActivity('Correção', 'Usuário', 'Administrador corrigiu cadastro de ' + u.email + ' (Nome: ' + name + ', CPF: ' + (formattedCpf || 'N/A') + ', Status: ' + (active ? 'Ativo' : 'Inativo') + ')');
   closeUserAdminModal();
   render();
 }
+
+// Suporte: Abertura Direta de Nova Ordem de Serviço pelo Administrador
+window.openSuporteNovaOrdemModal = function() {
+  const overlay = document.getElementById('overlaySuporteNovaOrdem');
+  if(!overlay) return;
+  const form = document.getElementById('formSuporteNovaOrdem');
+  if(form) form.reset();
+  overlay.classList.add('show');
+  overlay.style.display = 'flex';
+  const nameInp = document.getElementById('suporteOsClientName');
+  if(nameInp) setTimeout(() => nameInp.focus(), 60);
+};
+
+window.closeSuporteNovaOrdemModal = function() {
+  const overlay = document.getElementById('overlaySuporteNovaOrdem');
+  if(!overlay) return;
+  overlay.classList.remove('show');
+  setTimeout(() => overlay.style.display = 'none', 200);
+};
+
+window.enviarSuporteNovaOrdem = async function(e) {
+  if(e && e.preventDefault) e.preventDefault();
+  const name = (document.getElementById('suporteOsClientName')?.value || '').trim();
+  const email = (document.getElementById('suporteOsClientEmail')?.value || '').trim().toLowerCase();
+  const phone = (document.getElementById('suporteOsClientPhone')?.value || '').trim();
+  const type = document.getElementById('suporteOsServiceType')?.value || 'Correção de Dados';
+  const priority = document.getElementById('suporteOsPriority')?.value || 'Normal';
+  const title = (document.getElementById('suporteOsTitle')?.value || '').trim();
+  const description = (document.getElementById('suporteOsDescription')?.value || '').trim();
+
+  if(!name || !email || !title || !description){
+    showToast('Preencha os campos obrigatórios (*)');
+    return;
+  }
+
+  const btn = document.getElementById('btnSalvarSuporteOrdem');
+  if(btn){ btn.disabled = true; btn.textContent = 'Gravando chamado...'; }
+
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_name: name,
+        client_email: email,
+        client_phone: phone,
+        service_type: type,
+        priority: priority,
+        title: title,
+        description: description
+      })
+    });
+    const result = await res.json();
+    if(res.ok && result.success){
+      showToast('Ordem de Serviço #' + (result.protocol || '') + ' registrada no suporte com sucesso!');
+      closeSuporteNovaOrdemModal();
+      await syncOrdensWithServer();
+      render();
+    } else {
+      showToast(result.message || 'Erro ao registrar chamado no suporte');
+    }
+  } catch(err){
+    showToast('Falha na comunicação com o servidor');
+  } finally {
+    if(btn){ btn.disabled = false; btn.textContent = 'Criar Chamado de Suporte 🚀'; }
+  }
+};
 
 function handleImportFile(e){
   const file = e.target.files[0];
@@ -16821,11 +17174,11 @@ function navigate(page){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
   if (isAdminView) {
-    if (!['usuarios', 'logs', 'funcoes', 'ordens'].includes(page)) {
+    if (!['usuarios', 'ordens', 'logs'].includes(page)) {
       page = 'usuarios';
     }
   } else {
-    if (['usuarios', 'logs', 'funcoes', 'ordens'].includes(page)) {
+    if (['usuarios', 'ordens', 'logs'].includes(page)) {
       page = 'dashboard';
     }
   }
@@ -17324,7 +17677,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
       if (currentUser.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
-        const validAdminTargets = ['usuarios', 'logs', 'funcoes', 'ordens'];
+        const validAdminTargets = ['usuarios', 'ordens', 'logs'];
         if (validAdminTargets.includes(pageTarget)) {
           currentPage = pageTarget;
         } else {
@@ -17419,7 +17772,7 @@ if (scaleMenuBtn && scaleDropdown) {
   const pageTarget = hashPage || savedPage || currentPage;
 
   if (currentUser.role === 'Administrador') {
-    const validAdminTargets = ['usuarios', 'logs', 'funcoes', 'ordens'];
+    const validAdminTargets = ['usuarios', 'ordens', 'logs'];
     if (validAdminTargets.includes(pageTarget)) {
       currentPage = pageTarget;
     } else {
