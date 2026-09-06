@@ -856,9 +856,9 @@ body.light, html.light body, html.light {
   --card-hover:#F8FAFC;
   --input-bg:#FFFFFF;
   --input-border:#CBD5E1;
-  --text:#0F172A;
-  --text-dim:#334155;
-  --text-faint:#64748B;
+  --text:#000000;
+  --text-dim:#1E293B;
+  --text-faint:#334155;
   --primary:#0284C7;
   --primary-hover:#0369A1;
   --green:#059669;
@@ -2479,6 +2479,65 @@ body.light .app-blob.a3{opacity:.04;}
   color:#FFFFFF !important; box-shadow:0 0 14px rgba(0, 229, 255, 0.3) !important; transform:translateY(-1px) !important;
 }
 
+/* Modo Claro: Perfil de Usuário & Botão Minha Conta (Aether Top Header) */
+body.light .aether-brand-user:hover,
+html.light .aether-brand-user:hover {
+  background: #F1F5F9 !important;
+}
+body.light .aether-user-title,
+html.light .aether-user-title {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+body.light .aether-user-sub,
+html.light .aether-user-sub {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+body.light .aether-user-sub svg,
+html.light .aether-user-sub svg {
+  color: #059669 !important;
+}
+body.light .aether-credit-pill,
+html.light .aether-credit-pill {
+  background: #F1F5F9 !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #000000 !important;
+}
+body.light .aether-credit-pill .credit-lbl,
+html.light .aether-credit-pill .credit-lbl {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+body.light .aether-credit-pill .credit-val,
+html.light .aether-credit-pill .credit-val {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+body.light .aether-settings-btn,
+html.light .aether-settings-btn {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+body.light .aether-settings-btn:hover,
+html.light .aether-settings-btn:hover {
+  background: #F1F5F9 !important;
+  border-color: #2563EB !important;
+  color: #2563EB !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.18) !important;
+}
+body.light .aether-settings-btn svg,
+html.light .aether-settings-btn svg {
+  stroke: #000000 !important;
+}
+body.light .aether-settings-btn:hover svg,
+html.light .aether-settings-btn:hover svg {
+  stroke: #2563EB !important;
+}
+
 .header-live-time {
   display:inline-flex; align-items:center; gap:7px; padding:5px 12px;
   border-radius:999px; background:rgba(255,255,255,0.04);
@@ -2928,23 +2987,48 @@ body.light .menu-admin-badge {
   color: #B45309 !important;
 }
 body.light .menu button{
-  color:#64748B !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+}
+body.light .menu button span:not(.ic){
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+body.light .menu button .ic{
+  color: #000000 !important;
+}
+body.light .menu button .ic svg{
+  stroke: #000000 !important;
 }
 body.light .menu button:hover{
-  background:rgba(2, 132, 199, 0.06) !important;
-  color:#0284C7 !important;
+  background: #F1F5F9 !important;
+  color: #2563EB !important;
+}
+body.light .menu button:hover span:not(.ic){
+  color: #2563EB !important;
+}
+body.light .menu button:hover .ic svg{
+  stroke: #2563EB !important;
 }
 body.light .menu button.active{
-  background:linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(56, 189, 248, 0.08) 100%) !important;
-  border:1.5px solid rgba(2, 132, 199, 0.55) !important;
-  border-radius:16px !important;
-  color:#0284C7 !important;
-  font-weight:800 !important;
-  box-shadow:0 4px 16px rgba(2, 132, 199, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.14) 0%, rgba(56, 189, 248, 0.10) 100%) !important;
+  border: 1.5px solid rgba(2, 132, 199, 0.70) !important;
+  border-radius: 16px !important;
+  color: #0284C7 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+body.light .menu button.active span:not(.ic){
+  color: #0284C7 !important;
+  font-weight: 800 !important;
 }
 body.light .menu button.active .ic{
-  color:#0284C7 !important;
-  filter:drop-shadow(0 2px 6px rgba(2, 132, 199, 0.25)) !important;
+  color: #0284C7 !important;
+  filter: drop-shadow(0 2px 6px rgba(2, 132, 199, 0.25)) !important;
+}
+body.light .menu button.active .ic svg{
+  stroke: #0284C7 !important;
 }
 body.light .menu button.menu-btn-admin {
   color: #475569 !important;
@@ -3098,21 +3182,28 @@ html.light .mobile-menu-btn:hover svg {
 body.light .topheader .user,
 html.light .topheader .user,
 body.light .user,
-html.light .user {
-  background: #f8fafc !important;
-  border: 1.5px solid #cbd5e1 !important;
+html.light .user,
+body.light #userMenu,
+html.light #userMenu {
+  background: #F8FAFC !important;
+  border: 1.5px solid #CBD5E1 !important;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
 }
 
 body.light .topheader .uname,
-html.light .topheader .uname {
-  color: #0f172a !important;
-  font-weight: 700 !important;
+html.light .topheader .uname,
+body.light #headerName,
+html.light #headerName {
+  color: #000000 !important;
+  font-weight: 800 !important;
 }
 
 body.light .topheader .urole,
-html.light .topheader .urole {
-  color: #64748b !important;
+html.light .topheader .urole,
+body.light #headerRole,
+html.light #headerRole {
+  color: #000000 !important;
+  font-weight: 700 !important;
 }
 
 body.light .topheader #logoutBtn,
@@ -3456,24 +3547,199 @@ html.light .cfg-hint {
 body.light .kpi,
 html.light .kpi {
   background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
+  border: 1.5px solid #CBD5E1 !important;
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
 }
 
 body.light .kpi .val,
 html.light .kpi .val {
-  color: #0F172A !important;
+  color: #000000 !important;
   text-shadow: none !important;
 }
 
+body.light .kpi .row1,
+body.light .kpi .row1 span,
 body.light .kpi .lbl,
+html.light .kpi .row1,
+html.light .kpi .row1 span,
 html.light .kpi .lbl {
-  color: #475569 !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
 }
 
 body.light .kpi .sub,
-html.light .kpi .sub {
-  color: #64748B !important;
+body.light .kpi .sub span,
+html.light .kpi .sub,
+html.light .kpi .sub span {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+body.light .kpi-tag-success,
+html.light .kpi-tag-success {
+  background: #DCFCE7 !important;
+  color: #166534 !important;
+  border: 1px solid #86EFAC !important;
+  font-weight: 800 !important;
+}
+
+body.light .kpi-tag-danger,
+html.light .kpi-tag-danger {
+  background: #FEE2E2 !important;
+  color: #991B1B !important;
+  border: 1px solid #FCA5A5 !important;
+  font-weight: 800 !important;
+}
+
+body.light .kpi-tag-purple,
+html.light .kpi-tag-purple {
+  background: #F3E8FF !important;
+  color: #6B21A8 !important;
+  border: 1px solid #D8B4FE !important;
+  font-weight: 800 !important;
+}
+
+/* Painéis Centrais, Textos e Estados Vazios */
+body.light .hero-sub,
+body.light .dash-welcome p,
+html.light .hero-sub,
+html.light .dash-welcome p {
+  color: #1E293B !important;
+  font-weight: 600 !important;
+}
+
+body.light .panel,
+html.light .panel {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.light .panel-head h3,
+html.light .panel-head h3 {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+body.light .panel-head p,
+html.light .panel-head p {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+body.light .panel h4,
+html.light .panel h4 {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+body.light .panel p,
+html.light .panel p {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+body.light .panel strong,
+html.light .panel strong {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+body.light .panel span[style*="border-radius:12px"],
+html.light .panel span[style*="border-radius:12px"] {
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+body.light .panel div[data-nav="cartoes"] > div,
+html.light .panel div[data-nav="cartoes"] > div {
+  background: #F8FAFC !important;
+  border: 1.5px solid #CBD5E1 !important;
+}
+
+body.light .panel div[data-nav="cartoes"] > div > div:nth-child(2),
+html.light .panel div[data-nav="cartoes"] > div > div:nth-child(2) {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+body.light .panel div[data-nav="cartoes"] > div > div:nth-child(3),
+html.light .panel div[data-nav="cartoes"] > div > div:nth-child(3) {
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+
+body.light .panel [style*="border-top"],
+html.light .panel [style*="border-top"] {
+  border-top-color: #E2E8F0 !important;
+}
+
+body.light .panel [style*="border-top"] span,
+html.light .panel [style*="border-top"] span {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+body.light .panel [style*="border-top"] [data-nav],
+body.light .panel [style*="border-top"] [data-nav] span,
+html.light .panel [style*="border-top"] [data-nav],
+html.light .panel [style*="border-top"] [data-nav] span {
+  color: #0284C7 !important;
+  font-weight: 800 !important;
+}
+
+body.light .donut-side,
+html.light .donut-side {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+body.light .donut-inner-val,
+body.light .donut-center strong,
+html.light .donut-inner-val,
+html.light .donut-center strong {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+body.light .donut-inner-lbl,
+body.light .donut-center span,
+html.light .donut-inner-lbl,
+html.light .donut-center span {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+body.light .split-labels,
+html.light .split-labels {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+body.light .cat-row .lbl,
+html.light .cat-row .lbl {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+body.light .recent-tx-head h3,
+body.light .recent-tx-head strong,
+html.light .recent-tx-head h3,
+html.light .recent-tx-head strong {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+body.light .recent-tx-head a,
+body.light .recent-tx-head span[data-nav],
+html.light .recent-tx-head a,
+html.light .recent-tx-head span[data-nav] {
+  color: #0284C7 !important;
+  font-weight: 800 !important;
 }
 
 body.light .acc-card, body.light .cat-card, body.light .goal-card, body.light .budget-card, body.light .recurring-card, body.light .rec-card,
@@ -3485,7 +3751,8 @@ html.light .acc-card, html.light .cat-card, html.light .goal-card, html.light .b
 
 body.light .acc-card .top strong, body.light .cat-card h4, body.light .goal-card h3, body.light .budget-card h4,
 html.light .acc-card .top strong, html.light .cat-card h4, html.light .goal-card h3, html.light .budget-card h4 {
-  color: #0F172A !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
 }
 
 body.light .tx-summary-card,
@@ -3497,13 +3764,14 @@ html.light .tx-summary-card {
 
 body.light .tx-summary-label,
 html.light .tx-summary-label {
-  color: #475569 !important;
+  color: #000000 !important;
   font-weight: 800 !important;
 }
 
 body.light .tx-summary-sub,
 html.light .tx-summary-sub {
-  color: #64748B !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
 }
 
 /* Painéis de Administração, Usuários, Funções e Ordens em Modo Claro */
@@ -4359,12 +4627,19 @@ html.light .period:hover {
 }
 body.light .period-text,
 html.light .period-text {
-  color: #0F172A !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
   text-shadow: none !important;
 }
 body.light .period-text .period-year,
 html.light .period-text .period-year {
-  color: #64748B !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+body.light .period-chevron,
+html.light .period-chevron {
+  color: #000000 !important;
+  stroke: #000000 !important;
 }
 body.light .period-panel,
 html.light .period-panel {
@@ -4625,9 +4900,22 @@ body.light .kpi .val { color:#0f172a !important; text-shadow:none; }
 }
 body.light .btn-hero-privacy {
   background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  color: #0F172A !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+}
+body.light .btn-hero-privacy .btn-hero-icon-pill {
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #000000 !important;
+}
+body.light #btnEyeText {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+body.light #btnEyeIcon svg {
+  stroke: #000000 !important;
 }
 
 /* Layout Proporcional Inteligente de Configurações (Zero Espaços Vazios) */
