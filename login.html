@@ -1903,15 +1903,8 @@
         </div>
     </div>
 
-    <!-- BARRA SUPERIOR FIXA: BADGE DE SEGURANÇA, HOMOLOGAÇÃO & TEMA -->
-    <header class="w-full max-w-[1240px] flex items-center justify-between z-30 mb-3 px-2">
-        <div class="flex items-center gap-2">
-            <span class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-semibold backdrop-blur-md hidden sm:inline-flex items-center gap-1.5 shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                <span>Sistema Online & Criptografia 256-bit</span>
-            </span>
-        </div>
-
+    <!-- BARRA SUPERIOR FIXA: TEMA -->
+    <header class="w-full max-w-[1240px] flex items-center justify-end z-30 mb-3 px-2">
         <div class="flex items-center gap-3">
             <button type="button" id="loginThemeBtn" onclick="toggleLoginTheme()" title="Alternar Tema Claro / Escuro"
                 class="w-12 h-12 rounded-2xl bg-black/50 border border-amber-500/35 flex items-center justify-center shadow-[0_4px_16px_rgba(245,158,11,0.25)] hover:scale-105 transition-all focus:outline-none backdrop-blur-md" style="background-color: var(--auth-tab-bg);">
@@ -1919,21 +1912,6 @@
             </button>
         </div>
     </header>
-
-    <!-- TICKER FINANCEIRO DE MERCADOS AO VIVO -->
-    <div class="w-full max-w-[1240px] z-30 mb-4 px-2">
-        <div class="fintech-live-ticker-bar">
-            <div class="fintech-ticker-badge">
-                <span class="fintech-pulse-dot"></span>
-                <span class="ticker-badge-text">MERCADOS AO VIVO</span>
-            </div>
-            <div class="fintech-ticker-viewport">
-                <div class="fintech-ticker-track" id="loginTickerTrack">
-                    <!-- Gerado e atualizado dinamicamente com animação infinita -->
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Canvas de Animação Financeira 4K (Símbolos, Métricas & Gráficos Vivos) -->
     <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-85"></canvas>
