@@ -616,8 +616,35 @@ async function setupDatabaseTablesAndSync() {
         description NVARCHAR(MAX) NOT NULL,
         status NVARCHAR(50) NOT NULL DEFAULT 'Pendente',
         admin_notes NVARCHAR(MAX) NULL DEFAULT '',
+        tecnico_responsavel NVARCHAR(150) NULL,
+        assumido_em NVARCHAR(50) NULL,
         created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
+      );
+    END;
+
+    IF EXISTS (SELECT * FROM sys.tables WHERE name = 'ordens_servico')
+    BEGIN
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'tecnico_responsavel')
+      BEGIN
+        ALTER TABLE ordens_servico ADD tecnico_responsavel NVARCHAR(150) NULL;
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'assumido_em')
+      BEGIN
+        ALTER TABLE ordens_servico ADD assumido_em NVARCHAR(50) NULL;
+      END;
+    END;
+
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'tecnicos_suporte')
+    BEGIN
+      CREATE TABLE tecnicos_suporte (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(150) NOT NULL,
+        email NVARCHAR(150) NOT NULL UNIQUE,
+        phone NVARCHAR(50) NULL,
+        specialty NVARCHAR(100) NOT NULL DEFAULT 'Suporte Geral',
+        active BIT NOT NULL DEFAULT 1,
+        created_at DATETIME2 NOT NULL DEFAULT GETDATE()
       );
     END;
   `);
@@ -840,6 +867,82 @@ html.is-admin #mobileDrawerMenu button[data-page="anexos"],
 html.is-admin #mobileDrawerMenu button[data-page="config"],
 html.is-admin .aether-settings-btn {
   display: none !important;
+}
+
+/* ==================== Layout Executivo e Posicionamento Perfeito do Menu Administrador (Zero Cortes) ==================== */
+html.is-admin nav.menu {
+  padding: 24px 0 30px !important;
+  gap: 16px !important;
+  justify-content: flex-start !important;
+}
+
+html.is-admin .menu-admin-badge {
+  margin: 0 auto 12px !important;
+  padding: 4px 12px !important;
+  font-size: 9.5px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.12em !important;
+  border-radius: 999px !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35) !important;
+}
+
+html.is-admin .menu button.menu-btn-admin {
+  position: relative !important;
+  width: 82px !important;
+  height: 74px !important;
+  min-height: 74px !important;
+  max-height: 74px !important;
+  padding: 8px 4px 6px !important;
+  gap: 4px !important;
+  overflow: visible !important;
+}
+
+html.is-admin .menu button.menu-btn-admin .ic {
+  width: 28px !important;
+  height: 28px !important;
+  margin-bottom: 2px !important;
+}
+
+html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  display: block !important;
+}
+
+/* Badge Flutuante de Notificação no Canto Superior Direito (Zero sobreposição no texto) */
+html.is-admin #menuOrdensBtn #osBadgeCount {
+  position: absolute !important;
+  top: 4px !important;
+  right: 6px !important;
+  margin: 0 !important;
+  padding: 0 6px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+  border-radius: 999px !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  background: #EF4444 !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #060B18 !important;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.9) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+}
+
+body.light html.is-admin #menuOrdensBtn #osBadgeCount,
+html.light.is-admin #menuOrdensBtn #osBadgeCount {
+  border-color: #FFFFFF !important;
+  background: #DC2626 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.45) !important;
 }
 
 
@@ -8149,6 +8252,33 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         <h3 style="font-size:14px; font-weight:800; margin:0; color:#93C5FD;">🎧 Atendimento do Suporte</h3>
         <span style="font-size:11px; color:var(--text-dim);">Fila oficial de suporte</span>
       </div>
+
+      <!-- Atribuição de Técnico Responsável -->
+      <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:16px; padding:14px; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+          <label style="font-size:12px; font-weight:800; color:#93C5FD; display:flex; align-items:center; gap:6px; margin:0;">
+            <span>👷 Técnico Responsável:</span>
+          </label>
+          <button type="button" onclick="assumirOrdemDiretoNoModal()" style="display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:8px; background:linear-gradient(135deg, #0284C7, #00E5FF); color:#060B18; font-size:11px; font-weight:900; border:none; cursor:pointer; box-shadow:0 0 10px rgba(0,229,255,0.4);" title="Assumir este chamado com meu usuário atual">
+            <span>⚡ Assumir Chamado Agora</span>
+          </button>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center;">
+          <select id="osAdminTecnicoSelect" style="height:42px; border-radius:12px; font-size:13px; font-weight:700; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); width:100%;">
+            <option value="">(Nenhum técnico atribuído)</option>
+          </select>
+          <button type="button" onclick="openGerenciarTecnicosModal()" style="height:42px; padding:0 12px; border-radius:12px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;" title="Cadastrar ou editar técnicos">
+            <span>⚙️ Técnicos</span>
+          </button>
+        </div>
+
+        <div id="osAdminAssumidoBanner" style="display:none; margin-top:8px; padding:6px 10px; border-radius:8px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); font-size:11.5px; color:#34D399; font-weight:700; align-items:center; gap:6px;">
+          <span>✓ Responsável atual:</span>
+          <strong id="osAdminAssumidoNome" style="color:#6EE7B7;"></strong>
+          <span id="osAdminAssumidoData" style="font-size:10.5px; color:#A7F3D0; margin-left:auto;"></span>
+        </div>
+      </div>
       
       <div class="field">
         <label style="font-size:12px; font-weight:700;">Status do Atendimento:</label>
@@ -8246,6 +8376,86 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         </button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Modal Gerenciar Técnicos de Suporte (Administrador) -->
+<div class="overlay" id="overlayGerenciarTecnicos" onclick="if(event.target===this) closeGerenciarTecnicosModal()">
+  <div class="modal" style="max-width:700px; border-radius:26px; border:1px solid rgba(245,158,11,0.35); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 35px rgba(245,158,11,0.2); background:linear-gradient(145deg, rgba(20,28,48,0.97) 0%, rgba(10,15,30,0.99) 100%);">
+    <button class="close-x" type="button" onclick="closeGerenciarTecnicosModal()">✕</button>
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap;">
+      <div>
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
+          <span>👷 Equipe Técnica & Especialistas</span>
+        </div>
+        <h2 style="font-size:20px; font-weight:900; margin:0; color:var(--text);">Credenciamento de Técnicos</h2>
+        <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0;">
+          Cadastre os técnicos habilitados a assumir e solucionar Ordens de Serviço.
+        </p>
+      </div>
+
+      <button type="button" onclick="toggleFormTecnico()" style="display:inline-flex; align-items:center; gap:6px; height:38px; padding:0 16px; border-radius:12px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:12.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(245,158,11,0.35);">
+        <span>➕ Cadastrar Técnico</span>
+      </button>
+    </div>
+
+    <!-- Formulário Cadastro / Edição de Técnico (Alternável) -->
+    <div id="boxFormTecnico" style="display:none; background:rgba(255,255,255,0.035); border:1.5px solid rgba(245,158,11,0.3); border-radius:18px; padding:18px; margin-bottom:18px;">
+      <h3 id="formTecnicoTitle" style="font-size:15px; font-weight:800; color:#FBBF24; margin:0 0 12px 0;">➕ Novo Cadastro de Técnico</h3>
+      <form id="formTecnico" onsubmit="salvarTecnico(event)">
+        <input type="hidden" id="tecnicoEditId">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Nome Completo do Técnico *</label>
+            <input id="tecnicoNome" required placeholder="Ex: Carlos Eduardo Silveira" style="height:42px; border-radius:12px; font-size:13px;">
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">E-mail Corporativo / Suporte *</label>
+            <input id="tecnicoEmail" type="email" required placeholder="carlos.suporte@nexus.com" style="height:42px; border-radius:12px; font-size:13px;">
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Telefone / WhatsApp</label>
+            <input id="tecnicoPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="maskPhoneInput(this)" style="height:42px; border-radius:12px; font-size:13px;">
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Especialidade / Nível *</label>
+            <select id="tecnicoEspecialidade" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+              <option value="Suporte Técnico N1">Suporte Técnico N1 (Triagem & Cadastro)</option>
+              <option value="Suporte Técnico N2" selected>Suporte Técnico N2 (Avançado)</option>
+              <option value="Infraestrutura & Redes">Infraestrutura & Redes</option>
+              <option value="Especialista em Banco & Dados">Especialista em Banco & Dados</option>
+              <option value="Desenvolvedor / Correção de Bugs">Desenvolvedor / Correção de Bugs</option>
+              <option value="Segurança & Compliance">Segurança & Compliance</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Status Operacional</label>
+            <select id="tecnicoAtivo" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+              <option value="true">🟢 Ativo (Habilitado para Assumir Chamados)</option>
+              <option value="false">⚪ Inativo (Suspenso)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:14px;">
+          <button type="button" onclick="cancelarEdicaoTecnico()" style="height:38px; padding:0 16px; border-radius:12px; font-size:12.5px;">Cancelar</button>
+          <button type="submit" id="btnSalvarTecnico" class="save" style="height:38px; padding:0 20px; border-radius:12px; background:linear-gradient(135deg, #10B981, #059669); font-weight:800; font-size:12.5px;">Salvar Técnico ✓</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Lista dos Técnicos Credenciados -->
+    <div style="margin-top:8px;">
+      <h4 style="font-size:13px; font-weight:800; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin:0 0 10px 0;">Técnicos Habilitados</h4>
+      <div id="listaTecnicosContent" style="max-height:360px; overflow-y:auto; padding-right:4px;">
+        <!-- Preenchido via renderListaTecnicosModal() -->
+      </div>
+    </div>
+
+    <div class="modal-actions" style="margin-top:18px; display:flex; justify-content:flex-end;">
+      <button type="button" onclick="closeGerenciarTecnicosModal()" style="height:38px; padding:0 22px; border-radius:12px; font-weight:700;">Fechar</button>
+    </div>
   </div>
 </div>
 
@@ -13970,9 +14180,44 @@ function pageLogs(){
 
 /* ==================== Módulo de Ordens de Serviço (O.S.) & Suporte ==================== */
 let systemOrdens = [];
+let systemTecnicos = [];
 
 async function syncOrdensWithServer() {
   return loadSystemOrdens();
+}
+
+async function syncTecnicosWithServer() {
+  return loadSystemTecnicos();
+}
+
+async function loadSystemTecnicos() {
+  try {
+    const res = await fetch(window.location.origin + '/api/tecnicos');
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.tecnicos)) {
+        systemTecnicos = data.tecnicos;
+        saveToStorage('nexus_tecnicos', systemTecnicos);
+        updateTecnicosBadge();
+        return systemTecnicos;
+      }
+    }
+  } catch(e) {}
+
+  const cached = loadFromStorage('nexus_tecnicos', null);
+  if (Array.isArray(cached) && cached.length > 0) {
+    systemTecnicos = cached;
+    updateTecnicosBadge();
+  }
+  return systemTecnicos;
+}
+
+function updateTecnicosBadge() {
+  const badge = document.getElementById('tecnicosBadgeCount');
+  if (badge) {
+    const activeCount = (systemTecnicos || []).filter(t => t.active !== false).length;
+    badge.textContent = activeCount;
+  }
 }
 
 async function loadSystemOrdens() {
@@ -14174,10 +14419,11 @@ window.executarConsultaOrdens = async function(e) {
                 \${escapeOsHtml(o.title || 'Solicitação sem assunto')}
               </h4>
 
-              <div style="display:flex; gap:12px; font-size:12px; color:#CBD5E1; margin-bottom:10px; flex-wrap:wrap;">
+              <div style="display:flex; gap:12px; font-size:12px; color:#CBD5E1; margin-bottom:10px; flex-wrap:wrap; align-items:center;">
                 <span><strong>Solicitante:</strong> \${escapeOsHtml(o.client_name || 'Anônimo')}</span>
                 <span><strong>Tipo:</strong> \${escapeOsHtml(o.service_type || 'Geral')}</span>
                 <span><strong>Prioridade:</strong> \${escapeOsHtml(o.priority || 'Normal')}</span>
+                \${o.tecnico_responsavel ? \`<span style="color:#38BDF8; font-weight:700;"><strong>👷 Técnico Responsável:</strong> \${escapeOsHtml(o.tecnico_responsavel)}</span>\` : '<span style="color:#94A3B8; font-style:italic;">(Aguardando atribuição de técnico)</span>'}
               </div>
 
               <div style="background:rgba(0,0,0,0.25); border-radius:10px; padding:10px 12px; font-size:12px; color:#E2E8F0; margin-bottom:10px; line-height:1.45; border:1px solid rgba(255,255,255,0.06);">
@@ -14325,6 +14571,7 @@ function renderOrdensTable(list) {
           <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Data/Hora</th>
           <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Solicitante</th>
           <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Tipo de Serviço</th>
+          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Técnico Responsável</th>
           <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Prioridade</th>
           <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Status</th>
           <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800; text-align:right;">Ações</th>
@@ -14365,16 +14612,30 @@ function renderOrdensTable(list) {
           \${dateFormatted}
         </td>
         <td style="padding:13px 14px;">
-          <div style="font-weight:700; color:var(--text); font-size:13px;">\${o.client_name || 'Anônimo'}</div>
-          <div style="font-size:11.5px; color:var(--text-dim); margin-top:1px;">\${o.client_email || ''}</div>
-          \${o.client_phone ? \`<div style="font-size:11px; color:#34D399; font-weight:700; margin-top:2px;">📱 \${o.client_phone}</div>\` : ''}
+          <div style="font-weight:700; color:var(--text); font-size:13px;">\${escapeOsHtml(o.client_name || 'Anônimo')}</div>
+          <div style="font-size:11.5px; color:var(--text-dim); margin-top:1px;">\${escapeOsHtml(o.client_email || '')}</div>
+          \${o.client_phone ? \`<div style="font-size:11px; color:#34D399; font-weight:700; margin-top:2px;">📱 \${escapeOsHtml(o.client_phone)}</div>\` : ''}
         </td>
         <td style="padding:13px 14px; font-size:12.5px; color:var(--text); font-weight:600; white-space:nowrap;">
-          \${o.service_type || 'Melhoria'}
+          \${escapeOsHtml(o.service_type || 'Melhoria')}
+        </td>
+        <td style="padding:13px 14px; white-space:nowrap;">
+          \${o.tecnico_responsavel ? \`
+            <div style="font-weight:800; color:#38BDF8; font-size:12.5px; display:inline-flex; align-items:center; gap:5px;">
+              <span style="font-size:13px;">👷</span> \${escapeOsHtml(o.tecnico_responsavel)}
+            </div>
+            <div style="font-size:10.5px; color:var(--text-dim); margin-top:2px;">
+              \${o.assumido_em ? ('Assumido em ' + new Date(o.assumido_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })) : 'Em atendimento'}
+            </div>
+          \` : \`
+            <button type="button" onclick="quickAssumirOrdemPrompt('\${o.id}')" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:rgba(245,158,11,0.14); color:#FBBF24; border:1px solid rgba(245,158,11,0.35); font-size:11px; font-weight:800; cursor:pointer;" title="Assumir esta Ordem de Serviço">
+              <span>⚡ Assumir Chamado</span>
+            </button>
+          \`}
         </td>
         <td style="padding:13px 14px; white-space:nowrap;">
           <span style="display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:800; background:\${prioBg}; color:\${prioColor}; border:1px solid \${prioBorder};">
-            \${o.priority || 'Normal'}
+            \${escapeOsHtml(o.priority || 'Normal')}
           </span>
         </td>
         <td style="padding:13px 14px; white-space:nowrap;">
@@ -14443,11 +14704,15 @@ function pageOrdens(){
       </p>
     </div>
     <div class="head-actions" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-      <button onclick="openSuporteNovaOrdemModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 20px; border-radius:14px; background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(16,185,129,0.5); transition:all 0.25s ease;">
-        <span>➕ Registrar O.S. via Suporte</span>
+      <button onclick="openSuporteNovaOrdemModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(16,185,129,0.5); transition:all 0.25s ease;">
+        <span>➕ Registrar O.S.</span>
       </button>
-      <button class="btn-ghost" onclick="syncOrdensWithServer().then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">
-        🔄 Atualizar Chamados
+      <button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.12)); border:1.5px solid rgba(245,158,11,0.5); color:#FDE68A; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 8px 24px -4px rgba(245,158,11,0.25); transition:all 0.25s ease;">
+        <span>👷 Cadastrar / Gerenciar Técnicos</span>
+        <span id="tecnicosBadgeCount" style="padding:2px 7px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:11px; font-weight:900;">\${(systemTecnicos || []).filter(t => t.active !== false).length}</span>
+      </button>
+      <button class="btn-ghost" onclick="syncOrdensWithServer().then(() => syncTecnicosWithServer()).then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">
+        🔄 Atualizar
       </button>
     </div>
   </div>
@@ -14573,6 +14838,34 @@ window.openOrdemAdminModal = function(id) {
 
   document.getElementById('osAdminServiceType').textContent = ordem.service_type || 'Melhoria no Sistema';
   document.getElementById('osAdminDescription').textContent = ordem.description || 'Sem descrição detalhada.';
+
+  // Popula e configura o Seletor de Técnico Responsável
+  const tecnicoSel = document.getElementById('osAdminTecnicoSelect');
+  if (tecnicoSel) {
+    let opts = '<option value="">(Nenhum técnico atribuído)</option>';
+    (systemTecnicos || []).forEach(t => {
+      const isSel = (ordem.tecnico_responsavel && (ordem.tecnico_responsavel === t.name || ordem.tecnico_responsavel.toLowerCase() === t.name.toLowerCase()));
+      opts += \`<option value="\${escapeOsHtml(t.name)}" \${isSel ? 'selected' : ''}>\${escapeOsHtml(t.name)} (\${escapeOsHtml(t.specialty || 'Suporte')})\${t.active === false ? ' [Inativo]' : ''}</option>\`;
+    });
+    if (ordem.tecnico_responsavel && !systemTecnicos.some(t => t.name === ordem.tecnico_responsavel)) {
+      opts += \`<option value="\${escapeOsHtml(ordem.tecnico_responsavel)}" selected>\${escapeOsHtml(ordem.tecnico_responsavel)} (Técnico)</option>\`;
+    }
+    tecnicoSel.innerHTML = opts;
+  }
+
+  // Banner do Técnico que assumiu a O.S.
+  const banner = document.getElementById('osAdminAssumidoBanner');
+  const nomeEl = document.getElementById('osAdminAssumidoNome');
+  const dataEl = document.getElementById('osAdminAssumidoData');
+  if (banner && nomeEl) {
+    if (ordem.tecnico_responsavel) {
+      nomeEl.textContent = ordem.tecnico_responsavel;
+      if (dataEl) dataEl.textContent = ordem.assumido_em ? ('Assumido em: ' + new Date(ordem.assumido_em).toLocaleString('pt-BR')) : '';
+      banner.style.display = 'flex';
+    } else {
+      banner.style.display = 'none';
+    }
+  }
   
   const statusSel = document.getElementById('osAdminStatusSelect');
   if (statusSel) statusSel.value = ordem.status || 'Pendente';
@@ -14610,10 +14903,96 @@ window.closeOrdemAdminModal = function() {
   setTimeout(() => overlay.style.display = 'none', 200);
 };
 
+window.assumirOrdemDiretoNoModal = function() {
+  const tecnicoSel = document.getElementById('osAdminTecnicoSelect');
+  const statusSel = document.getElementById('osAdminStatusSelect');
+  const banner = document.getElementById('osAdminAssumidoBanner');
+  const nomeEl = document.getElementById('osAdminAssumidoNome');
+  const dataEl = document.getElementById('osAdminAssumidoData');
+
+  let defaultName = (currentUser && currentUser.name) ? currentUser.name : 'Administrador Suporte';
+  if (tecnicoSel) {
+    let found = false;
+    for (let opt of tecnicoSel.options) {
+      if (opt.value && opt.value.toLowerCase() === defaultName.toLowerCase()) {
+        opt.selected = true;
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      if (tecnicoSel.options.length > 1) {
+        tecnicoSel.options[1].selected = true;
+        defaultName = tecnicoSel.options[1].value;
+      } else {
+        const newOpt = document.createElement('option');
+        newOpt.value = defaultName;
+        newOpt.textContent = defaultName + ' (Técnico)';
+        newOpt.selected = true;
+        tecnicoSel.appendChild(newOpt);
+      }
+    }
+  }
+
+  if (statusSel && statusSel.value === 'Pendente') {
+    statusSel.value = 'Em Andamento';
+  }
+
+  if (banner && nomeEl) {
+    nomeEl.textContent = defaultName;
+    if (dataEl) dataEl.textContent = 'Assumido agora';
+    banner.style.display = 'flex';
+  }
+
+  showToast('Chamado atribuído a ' + defaultName + '! Clique em "Salvar Atendimento" para confirmar.');
+};
+
+window.quickAssumirOrdemPrompt = async function(id) {
+  const ordem = (systemOrdens || []).find(o => String(o.id) === String(id));
+  if (!ordem) return;
+
+  let tecnicoNome = (currentUser && currentUser.name) ? currentUser.name : 'Administrador Suporte';
+  if (Array.isArray(systemTecnicos) && systemTecnicos.length > 0) {
+    const match = systemTecnicos.find(t => t.active !== false && currentUser && t.email.toLowerCase() === currentUser.email.toLowerCase());
+    if (match) {
+      tecnicoNome = match.name;
+    } else {
+      const activeOne = systemTecnicos.find(t => t.active !== false);
+      if (activeOne) tecnicoNome = activeOne.name;
+    }
+  }
+
+  const confirmAssumir = confirm('Deseja assumir a Ordem de Serviço #' + (ordem.protocol || ordem.id) + ' sob a responsabilidade do técnico "' + tecnicoNome + '" e alterar o status para "Em Andamento"?');
+  if (!confirmAssumir) return;
+
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: id,
+        status: 'Em Andamento',
+        tecnico_responsavel: tecnicoNome
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      showToast('Ordem #' + (ordem.protocol || ordem.id) + ' assumida por ' + tecnicoNome + '!');
+      await syncOrdensWithServer();
+      render();
+    } else {
+      showToast(data.message || 'Erro ao assumir chamado.');
+    }
+  } catch(e) {
+    showToast('Falha na comunicação com o servidor.');
+  }
+};
+
 window.salvarOrdemAdmin = async function() {
   const id = document.getElementById('osAdminCurrentId')?.value;
   const status = document.getElementById('osAdminStatusSelect')?.value || 'Pendente';
   const notes = (document.getElementById('osAdminNotes')?.value || '').trim();
+  const tecnico = (document.getElementById('osAdminTecnicoSelect')?.value || '').trim();
 
   if (!id) return;
 
@@ -14621,7 +15000,12 @@ window.salvarOrdemAdmin = async function() {
     const res = await fetch(window.location.origin + '/api/ordens/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: id, status: status, admin_notes: notes })
+      body: JSON.stringify({
+        id: id,
+        status: status,
+        admin_notes: notes,
+        tecnico_responsavel: tecnico || null
+      })
     });
 
     if (res.ok) {
@@ -14636,6 +15020,190 @@ window.salvarOrdemAdmin = async function() {
     showToast('Falha na comunicação com o servidor.');
   }
 };
+
+/* ==================== Gerenciamento de Técnicos de Suporte (Modal & CRUD) ==================== */
+window.openGerenciarTecnicosModal = function() {
+  const overlay = document.getElementById('overlayGerenciarTecnicos');
+  if (!overlay) return;
+  renderListaTecnicosModal();
+  cancelarEdicaoTecnico();
+  overlay.classList.add('show');
+  overlay.style.display = 'flex';
+};
+
+window.closeGerenciarTecnicosModal = function() {
+  const overlay = document.getElementById('overlayGerenciarTecnicos');
+  if (!overlay) return;
+  overlay.classList.remove('show');
+  setTimeout(() => overlay.style.display = 'none', 200);
+};
+
+window.toggleFormTecnico = function(forceOpen) {
+  const formBox = document.getElementById('boxFormTecnico');
+  if (!formBox) return;
+  const isHidden = formBox.style.display === 'none';
+  const shouldOpen = (forceOpen !== undefined) ? forceOpen : isHidden;
+  formBox.style.display = shouldOpen ? 'block' : 'none';
+  if (shouldOpen) {
+    const nameInp = document.getElementById('tecnicoNome');
+    if (nameInp) setTimeout(() => nameInp.focus(), 60);
+  }
+};
+
+window.cancelarEdicaoTecnico = function() {
+  const form = document.getElementById('formTecnico');
+  if (form) form.reset();
+  const idInp = document.getElementById('tecnicoEditId');
+  if (idInp) idInp.value = '';
+  const formTitle = document.getElementById('formTecnicoTitle');
+  if (formTitle) formTitle.textContent = '➕ Novo Cadastro de Técnico';
+  const formBox = document.getElementById('boxFormTecnico');
+  if (formBox) formBox.style.display = 'none';
+};
+
+window.editarTecnico = function(id) {
+  const t = (systemTecnicos || []).find(x => String(x.id) === String(id));
+  if (!t) return;
+  document.getElementById('tecnicoEditId').value = t.id;
+  document.getElementById('tecnicoNome').value = t.name || '';
+  document.getElementById('tecnicoEmail').value = t.email || '';
+  document.getElementById('tecnicoPhone').value = t.phone || '';
+  document.getElementById('tecnicoEspecialidade').value = t.specialty || 'Suporte Técnico N2';
+  document.getElementById('tecnicoAtivo').value = (t.active !== false) ? 'true' : 'false';
+
+  const formTitle = document.getElementById('formTecnicoTitle');
+  if (formTitle) formTitle.textContent = '✏️ Editar Técnico: ' + t.name;
+  toggleFormTecnico(true);
+};
+
+window.salvarTecnico = async function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const id = document.getElementById('tecnicoEditId')?.value || '';
+  const name = (document.getElementById('tecnicoNome')?.value || '').trim();
+  const email = (document.getElementById('tecnicoEmail')?.value || '').toLowerCase().trim();
+  const phone = (document.getElementById('tecnicoPhone')?.value || '').trim();
+  const specialty = document.getElementById('tecnicoEspecialidade')?.value || 'Suporte Geral';
+  const active = document.getElementById('tecnicoAtivo')?.value !== 'false';
+
+  if (!name || !email) {
+    showToast('Informe o nome e o e-mail do técnico');
+    return;
+  }
+
+  const btn = document.getElementById('btnSalvarTecnico');
+  if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
+
+  try {
+    const res = await fetch(window.location.origin + '/api/tecnicos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: id || undefined,
+        name: name,
+        email: email,
+        phone: phone,
+        specialty: specialty,
+        active: active
+      })
+    });
+    const result = await res.json();
+    if (res.ok && result.success) {
+      showToast(id ? 'Técnico atualizado com sucesso!' : 'Novo técnico credenciado com sucesso!');
+      cancelarEdicaoTecnico();
+      await syncTecnicosWithServer();
+      renderListaTecnicosModal();
+      if (currentPage === 'ordens') render();
+    } else {
+      showToast(result.message || 'Erro ao salvar técnico');
+    }
+  } catch(err) {
+    showToast('Falha na comunicação com o servidor');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Salvar Técnico ✓'; }
+  }
+};
+
+window.excluirTecnico = async function(id) {
+  const t = (systemTecnicos || []).find(x => String(x.id) === String(id));
+  if (!t) return;
+  if (!confirm('Deseja realmente descredenciar/excluir o técnico "' + t.name + '"?')) return;
+
+  try {
+    const res = await fetch(window.location.origin + '/api/tecnicos?id=' + id, {
+      method: 'DELETE'
+    });
+    const result = await res.json();
+    if (res.ok && result.success) {
+      showToast('Técnico excluído com sucesso!');
+      await syncTecnicosWithServer();
+      renderListaTecnicosModal();
+      if (currentPage === 'ordens') render();
+    } else {
+      showToast(result.message || 'Erro ao excluir técnico');
+    }
+  } catch(err) {
+    showToast('Falha na comunicação com o servidor');
+  }
+};
+
+function renderListaTecnicosModal() {
+  const wrap = document.getElementById('listaTecnicosContent');
+  if (!wrap) return;
+
+  const list = systemTecnicos || [];
+  if (list.length === 0) {
+    wrap.innerHTML = \`
+      <div style="text-align:center; padding:30px 14px; color:var(--text-dim); background:rgba(255,255,255,0.02); border-radius:16px; border:1px dashed var(--card-border);">
+        <div style="font-size:32px; margin-bottom:6px;">👷</div>
+        <h4 style="font-size:15px; color:var(--text); margin:0 0 4px 0; font-weight:800;">Nenhum técnico cadastrado</h4>
+        <p style="font-size:12px; margin:0 0 12px 0;">Cadastre os membros da equipe de suporte técnico para distribuir e atender as Ordens de Serviço.</p>
+        <button type="button" onclick="toggleFormTecnico(true)" style="padding:7px 16px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-weight:900; font-size:12px; border:none; cursor:pointer;">
+          ➕ Cadastrar Primeiro Técnico
+        </button>
+      </div>
+    \`;
+    return;
+  }
+
+  let html = '<div style="display:flex; flex-direction:column; gap:8px;">';
+  list.forEach(t => {
+    const inits = (t.name || 'TC').trim().split(/\\s+/).map(p => p[0]).slice(0,2).join('').toUpperCase();
+    const cleanPhone = (t.phone || '').replace(/\\D/g, '');
+    html += \`
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); gap:12px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.12)); border:1.5px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; color:#FBBF24; font-weight:900; font-size:13px; flex-shrink:0;">
+            \${inits}
+          </div>
+          <div>
+            <div style="font-size:14px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px;">
+              <span>\${escapeOsHtml(t.name)}</span>
+              <span style="font-size:10px; font-weight:800; padding:2px 7px; border-radius:999px; \${t.active !== false ? 'background:rgba(16,185,129,0.15); color:#34D399; border:1px solid rgba(16,185,129,0.3);' : 'background:rgba(239,68,68,0.15); color:#F87171; border:1px solid rgba(239,68,68,0.3);'}">
+                \${t.active !== false ? '🟢 Ativo' : '⚪ Inativo'}
+              </span>
+            </div>
+            <div style="font-size:11.5px; color:var(--text-dim); margin-top:2px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+              <span style="color:#60A5FA; font-weight:700;">🔧 \${escapeOsHtml(t.specialty || 'Suporte')}</span>
+              <span>✉️ \${escapeOsHtml(t.email)}</span>
+              \${t.phone ? \`<a href="https://wa.me/55\${cleanPhone}" target="_blank" style="color:#34D399; text-decoration:none; font-weight:700;">📱 \${escapeOsHtml(t.phone)}</a>\` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:6px; margin-left:auto;">
+          <button type="button" onclick="editarTecnico('\${t.id}')" style="padding:6px 12px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700; cursor:pointer;" title="Editar dados do técnico">
+            ✏️ Editar
+          </button>
+          <button type="button" onclick="excluirTecnico('\${t.id}')" style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); color:#F87171; font-size:11.5px; cursor:pointer;" title="Excluir técnico">
+            🗑️
+          </button>
+        </div>
+      </div>
+    \`;
+  });
+  html += '</div>';
+  wrap.innerHTML = html;
+}
 
 window.excluirOrdemAdmin = async function(paramId) {
   const id = paramId || document.getElementById('osAdminCurrentId')?.value;
@@ -18488,6 +19056,50 @@ function saveLocalOrdens(ordens) {
   }
 }
 
+const LOCAL_TECNICOS_PATH = path.join(__dirname, 'local_tecnicos.json');
+
+function getLocalTecnicos() {
+  try {
+    if (fs.existsSync(LOCAL_TECNICOS_PATH)) {
+      const content = fs.readFileSync(LOCAL_TECNICOS_PATH, 'utf8');
+      const list = JSON.parse(content);
+      if (Array.isArray(list)) return list;
+    }
+  } catch (e) {
+    console.error('Erro ao ler local_tecnicos.json:', e);
+  }
+  const defaultTecnicos = [
+    {
+      id: "1",
+      name: "Carlos Eduardo",
+      email: "carlos.tecnico@nexus.com",
+      phone: "(62) 99888-1234",
+      specialty: "Suporte Técnico N2",
+      active: true,
+      created_at: new Date().toISOString()
+    },
+    {
+      id: "2",
+      name: "Juliana Silveira",
+      email: "juliana.suporte@nexus.com",
+      phone: "(62) 99777-5678",
+      specialty: "Especialista em Banco & Dados",
+      active: true,
+      created_at: new Date().toISOString()
+    }
+  ];
+  saveLocalTecnicos(defaultTecnicos);
+  return defaultTecnicos;
+}
+
+function saveLocalTecnicos(tecnicos) {
+  try {
+    fs.writeFileSync(LOCAL_TECNICOS_PATH, JSON.stringify(tecnicos, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Erro ao salvar local_tecnicos.json:', e);
+  }
+}
+
 function getLocalData(email) {
   try {
     let allData = null;
@@ -18524,7 +19136,7 @@ function saveLocalData(email, data) {
 }
 
 // Servidor HTTP de Alta Performance e Resiliência
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   let parsedUrl;
   try {
     const fullUrl = new URL(req.url, 'http://' + (req.headers.host || 'localhost:3000'));
@@ -19769,6 +20381,7 @@ const server = http.createServer((req, res) => {
       const id = payload.id;
       const status = payload.status || 'Pendente';
       const adminNotes = payload.admin_notes || '';
+      const tecnicoResponsavel = payload.tecnico_responsavel !== undefined ? payload.tecnico_responsavel : undefined;
       const nowIso = new Date().toISOString();
 
       const localList = getLocalOrdens();
@@ -19776,35 +20389,167 @@ const server = http.createServer((req, res) => {
       if (target) {
         target.status = status;
         target.admin_notes = adminNotes;
+        if (tecnicoResponsavel !== undefined) {
+          target.tecnico_responsavel = tecnicoResponsavel || null;
+          if (tecnicoResponsavel && !target.assumido_em) {
+            target.assumido_em = nowIso;
+          } else if (!tecnicoResponsavel) {
+            target.assumido_em = null;
+          }
+        }
         target.updated_at = nowIso;
         saveLocalOrdens(localList);
       }
 
-      recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Atualização de O.S.', 'Ordem de Serviço', 'Atualizou O.S. #' + (target ? target.protocol : id) + ' para status: ' + status);
+      recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Atualização de O.S.', 'Ordem de Serviço', 'Atualizou O.S. #' + (target ? target.protocol : id) + ' para status: ' + status + (target && target.tecnico_responsavel ? (' (Técnico: ' + target.tecnico_responsavel + ')') : ''));
 
       // Notificação em tempo real via SSE
       broadcastEvent('order_updated', {
         id: id,
         protocol: target ? target.protocol : id,
         status: status,
+        tecnico_responsavel: target ? target.tecnico_responsavel : null,
+        assumido_em: target ? target.assumido_em : null,
         updated_at: nowIso
       });
 
       if (pool) {
         try {
           await pool.query(
-            `UPDATE ordens_servico SET status = $1, admin_notes = $2, updated_at = $3 WHERE id = $4 OR protocol = $5`,
-            [status, adminNotes, nowIso, isNaN(id) ? -1 : parseInt(id), String(id)]
+            `UPDATE ordens_servico SET status = $1, admin_notes = $2, tecnico_responsavel = $3, assumido_em = $4, updated_at = $5 WHERE id = $6 OR protocol = $7`,
+            [status, adminNotes, target ? target.tecnico_responsavel : null, target ? target.assumido_em : null, nowIso, isNaN(id) ? -1 : parseInt(id), String(id)]
           );
         } catch(err) {
-          console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server:', err.message);
+          try {
+            await pool.query(
+              `UPDATE ordens_servico SET status = $1, admin_notes = $2, updated_at = $3 WHERE id = $4 OR protocol = $5`,
+              [status, adminNotes, nowIso, isNaN(id) ? -1 : parseInt(id), String(id)]
+            );
+          } catch(err2) {
+            console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server:', err2.message);
+          }
         }
       }
 
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true }));
+      res.end(JSON.stringify({ success: true, ordem: target }));
     });
     return;
+  }
+
+  // Rota GET para Listar Técnicos Credenciados (Admin & Suporte)
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/tecnicos') {
+    const tecnicos = getLocalTecnicos();
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ success: true, tecnicos: tecnicos }));
+  }
+
+  // Rota POST para Cadastrar / Atualizar Técnico
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/tecnicos') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      let payload;
+      try {
+        payload = JSON.parse(body);
+      } catch(e) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'JSON inválido' }));
+      }
+
+      const name = (payload.name || '').trim();
+      const email = (payload.email || '').toLowerCase().trim();
+      const phone = (payload.phone || '').trim();
+      const specialty = (payload.specialty || 'Suporte Geral').trim();
+      const active = payload.active !== false;
+
+      if (!name || !email) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'Nome e e-mail são obrigatórios.' }));
+      }
+
+      const list = getLocalTecnicos();
+      let targetTec = null;
+
+      if (payload.id) {
+        targetTec = list.find(t => String(t.id) === String(payload.id));
+        if (targetTec) {
+          targetTec.name = name;
+          targetTec.email = email;
+          targetTec.phone = phone;
+          targetTec.specialty = specialty;
+          targetTec.active = active;
+          targetTec.updated_at = new Date().toISOString();
+        }
+      }
+
+      if (!targetTec) {
+        targetTec = {
+          id: String(Date.now()),
+          name: name,
+          email: email,
+          phone: phone,
+          specialty: specialty,
+          active: active,
+          created_at: new Date().toISOString()
+        };
+        list.push(targetTec);
+      }
+
+      saveLocalTecnicos(list);
+      recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', payload.id ? 'Edição de Técnico' : 'Cadastro de Técnico', 'Técnicos', 'Técnico: ' + name + ' (' + specialty + ')');
+
+      if (pool) {
+        try {
+          await pool.query(
+            `IF EXISTS (SELECT 1 FROM tecnicos_suporte WHERE LOWER(email) = LOWER($1))
+             BEGIN
+               UPDATE tecnicos_suporte SET name = $2, phone = $3, specialty = $4, active = $5 WHERE LOWER(email) = LOWER($1)
+             END
+             ELSE
+             BEGIN
+               INSERT INTO tecnicos_suporte (name, email, phone, specialty, active) VALUES ($2, $1, $3, $4, $5)
+             END`,
+            [email, name, phone, specialty, active ? 1 : 0]
+          );
+        } catch(err) {
+          console.warn('[AVISO BD TECNICO] Fallback local ativo para técnicos:', err.message);
+        }
+      }
+
+      broadcastEvent('tecnicos_updated', { tecnico: targetTec });
+
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, tecnico: targetTec }));
+    });
+    return;
+  }
+
+  // Rota DELETE para Excluir Técnico
+  if (req.method === 'DELETE' && parsedUrl.pathname === '/api/tecnicos') {
+    const idToDelete = parsedUrl.query.id || '';
+    if (!idToDelete) {
+      res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, message: 'ID ausente' }));
+    }
+
+    const list = getLocalTecnicos();
+    const target = list.find(t => String(t.id) === String(idToDelete));
+    const updated = list.filter(t => String(t.id) !== String(idToDelete));
+    saveLocalTecnicos(updated);
+
+    recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Exclusão de Técnico', 'Técnicos', 'Excluiu técnico: ' + (target ? target.name : idToDelete));
+
+    if (pool && target) {
+      try {
+        await pool.query('DELETE FROM tecnicos_suporte WHERE LOWER(email) = LOWER($1) OR id = $2', [target.email, isNaN(idToDelete) ? -1 : parseInt(idToDelete)]);
+      } catch(err){}
+    }
+
+    broadcastEvent('tecnicos_updated', { deleted_id: idToDelete });
+
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ success: true }));
   }
 
   // Rota DELETE para Excluir Ordem de Serviço (Admin)

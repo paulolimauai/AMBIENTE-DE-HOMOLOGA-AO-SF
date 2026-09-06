@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "name": "Carlos Eduardo",
+    "email": "carlos.tecnico@nexus.com",
+    "phone": "(62) 99888-1234",
+    "specialty": "Suporte Técnico N2",
+    "active": true,
+    "created_at": "2026-09-01T10:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "name": "Juliana Silveira",
+    "email": "juliana.suporte@nexus.com",
+    "phone": "(62) 99777-5678",
+    "specialty": "Especialista em Banco & Dados",
+    "active": true,
+    "created_at": "2026-09-02T11:00:00.000Z"
+  }
+]
