@@ -8360,6 +8360,16 @@ window.handleLoginSubmit = async function(e) {
     saveToStorage('nexus_cached_user', currentUser);
     saveToStorage('nexus_token', data.token || ('token_' + Date.now()));
     
+    // Notificação e sincronização imediata de last_login no SQL Server e Nuvem
+    const nowLoginIso = new Date().toISOString();
+    try {
+      const pingBody = JSON.stringify({ email: cleanEmail, last_login: nowLoginIso });
+      fetch(apiBase + '/api/user/login-ping', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: pingBody }).catch(() => {});
+      if (apiBase !== 'http://localhost:3000') {
+        fetch('http://localhost:3000/api/user/login-ping', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: pingBody }).catch(() => {});
+      }
+    } catch(pingErr){}
+
     document.documentElement.classList.add('user-logged-in');
     if (currentUser.role === 'Administrador') {
       document.documentElement.classList.add('is-admin');
@@ -17554,9 +17564,11 @@ function saveLocalUsers(users) {
     existingMap.forEach((oldUser, emailKey) => {
       const incoming = incomingMap.get(emailKey);
       if (incoming) {
+        const resolvedLastLogin = (incoming.last_login && incoming.last_login !== 'null') ? incoming.last_login : (oldUser.last_login || null);
         mergedList.push({
           ...oldUser,
           ...incoming,
+          last_login: resolvedLastLogin,
           password: incoming.password || oldUser.password || hashPassword('86266049')
         });
         incomingMap.delete(emailKey);
@@ -17810,6 +17822,38 @@ const server = http.createServer((req, res) => {
     };
     res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
     return res.end(JSON.stringify(payload));
+  }
+
+  // Rota POST para Notificação Imediata de Último Login (Garante atualização instantânea no SQL Server)
+  if (req.method === 'POST' && (parsedUrl.pathname === '/api/user/login-ping' || parsedUrl.pathname === '/api/users/login-ping')) {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        const { email, last_login } = JSON.parse(body || '{}');
+        const cleanEmail = (email || '').toLowerCase().trim();
+        if (!cleanEmail) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
+        }
+        const nowIso = last_login || new Date().toISOString();
+        if (pool) {
+          await pool.query('UPDATE usuarios SET last_login = GETDATE() WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(() => {});
+        }
+        const localUsers = getLocalUsers();
+        const idx = localUsers.findIndex(u => u && u.email && u.email.toLowerCase() === cleanEmail);
+        if (idx >= 0) {
+          localUsers[idx].last_login = nowIso;
+        }
+        saveLocalUsers(localUsers);
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, email: cleanEmail, last_login: nowIso }));
+      } catch (err) {
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
   }
 
   // Rota POST para Login de Usuário (com Verificação Criptográfica e Upgrade Seguro de Hash)
@@ -18474,7 +18518,7 @@ const server = http.createServer((req, res) => {
               birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
               terms_accepted: u.terms_accepted !== undefined ? u.terms_accepted : (existing ? existing.terms_accepted : true),
               created_at: u.created_at || (existing ? existing.created_at : new Date().toISOString()),
-              last_login: u.last_login || (existing ? existing.last_login : null)
+              last_login: (u.last_login && u.last_login !== 'null') ? u.last_login : (existing ? existing.last_login : null)
             });
           }
         });
@@ -19128,14 +19172,15 @@ async function syncWithRenderCloud() {
       for (const cu of cloudUsers) {
         if (!cu || !cu.email) continue;
         const cleanEmail = cu.email.toLowerCase().trim();
-        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
         if (!localCheck.rows || localCheck.rows.length === 0) {
           const defaultPass = cu.password || hashPassword('86266049');
+          const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? new Date(cu.last_login) : null;
           await pool.query(
-            `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
+            `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login)
              OUTPUT INSERTED.id
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-            [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.active !== false, cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false]
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+            [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.active !== false, cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin]
           );
           await pool.query(
             `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
@@ -19160,6 +19205,19 @@ async function syncWithRenderCloud() {
                WHERE LOWER(email) = LOWER($5)`,
               [updatedName, updatedCpf, updatedPhone, updatedBirth, cleanEmail]
             ).catch(() => {});
+          }
+
+          // Sincronização automática e contínua do last_login do Render para o SQL Server local
+          if (cu.last_login && cu.last_login !== 'null') {
+            const cloudLoginDate = new Date(cu.last_login);
+            const localLoginDate = currentU.last_login ? new Date(currentU.last_login) : null;
+            if (!localLoginDate || (cloudLoginDate.getTime() > localLoginDate.getTime())) {
+              await pool.query(
+                `UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)`,
+                [cloudLoginDate, cleanEmail]
+              ).catch(() => {});
+              console.log(`⚡ [SYNC RENDER -> SQL SERVER] last_login sincronizado para ${cleanEmail}: ${cu.last_login}`);
+            }
           }
         }
       }
