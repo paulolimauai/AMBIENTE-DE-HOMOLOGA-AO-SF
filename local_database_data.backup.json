@@ -1,13 +1,5 @@
 {
   "admin@nexusfinanceiro.com": {
-    "goals": [],
-    "alerts": [],
-    "budgets": [],
-    "accounts": [],
-    "nextTxId": 1,
-    "nextAccId": 1,
-    "nextAttId": 1,
-    "nextRecId": 1,
     "categories": [
       {
         "icon": "🍔",
@@ -157,14 +149,22 @@
         "count": 0
       }
     ],
-    "nextGoalId": 1,
-    "attachments": [],
-    "nextAlertId": 1,
-    "nextNotifId": 1,
-    "nextBudgetId": 1,
+    "accounts": [],
     "transactions": [],
+    "budgets": [],
+    "goals": [],
+    "recurringList": [],
+    "alerts": [],
+    "attachments": [],
     "notifications": [],
-    "recurringList": []
+    "nextAccId": 1,
+    "nextTxId": 1,
+    "nextBudgetId": 1,
+    "nextGoalId": 1,
+    "nextRecId": 1,
+    "nextAlertId": 1,
+    "nextAttId": 1,
+    "nextNotifId": 1
   },
   "admin@nexusfinanceirohub.com.br": {
     "test": 123
