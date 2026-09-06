@@ -39,7 +39,7 @@
     "birth_date": null,
     "terms_accepted": true,
     "created_at": "2026-09-06T09:55:48.900Z",
-    "last_login": "2026-09-06T10:06:29.700Z"
+    "last_login": "2026-09-06T10:06:29.000Z"
   },
   {
     "id": "54",
@@ -63,7 +63,7 @@
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-06T10:03:00.563Z",
-    "last_login": "2026-09-06T10:08:14.723Z",
+    "last_login": "2026-09-06T10:09:45.000Z",
     "cpf": "999.251.091-91",
     "phone": "(62) 99367-6783",
     "birth_date": "27/06/1966",
