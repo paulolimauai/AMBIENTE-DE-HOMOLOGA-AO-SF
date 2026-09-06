@@ -68,5 +68,19 @@
     "phone": "(62) 99367-6783",
     "birth_date": "1966-06-27",
     "terms_accepted": true
+  },
+  {
+    "id": "56",
+    "name": "Usuario Teste Manual",
+    "email": "testemanual@nexus.com",
+    "password": "scrypt:ddff40f9b43118de1b871c3c3083f4b7:a9c45a7eedba5b4b786cf43a517fbbb586132d89711c84133fa59d8221aabd347758e1899a4e61d5fe378d3b89d8dc6f7641a8d40859f4493651d40005b366a0",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-06T10:41:08.266Z",
+    "last_login": null,
+    "cpf": "04023326100",
+    "phone": "(62) 99999-8888",
+    "birth_date": "10/10/1990",
+    "terms_accepted": true
   }
 ]
