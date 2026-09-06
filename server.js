@@ -304,6 +304,18 @@ const DEFAULT_AUTHORIZED_USERS = [
     password: hashPassword('86266049'),
     role: 'Administrador',
     active: true
+  },
+  {
+    id: 53,
+    name: 'PAULO DE LIMA PEREIRA',
+    email: 'paulolp0101@gmail.com',
+    password: hashPassword('86266049'),
+    role: 'Usuário',
+    active: true,
+    cpf: '040.233.261-00',
+    phone: '(62) 99234-5372',
+    birth_date: null,
+    terms_accepted: true
   }
 ];
 
@@ -487,6 +499,10 @@ async function attemptConnectDatabase() {
     });
 
     await setupDatabaseTablesAndSync();
+    if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
+      startRenderCloudSyncWorker();
+      syncWithRenderCloud().catch(() => {});
+    }
   } catch (err) {
     console.warn('[BANCO AVISO] Falha ao tentar conectar ao banco:', err.message);
     scheduleDatabaseReconnect(5000);
@@ -19207,12 +19223,15 @@ async function syncWithRenderCloud() {
   }
 }
 
+let cloudSyncWorkerStarted = false;
 function startRenderCloudSyncWorker() {
+  if (cloudSyncWorkerStarted) return;
+  cloudSyncWorkerStarted = true;
   setTimeout(() => {
     syncWithRenderCloud();
-    setInterval(syncWithRenderCloud, 4000).unref();
-    console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real (4s): Render <-> Microsoft SQL Server`);
-  }, 1500).unref();
+    setInterval(syncWithRenderCloud, 3000).unref();
+    console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real (3s): Render <-> Microsoft SQL Server`);
+  }, 1000).unref();
 }
 
 server.listen(PORT, '0.0.0.0', () => {
@@ -19222,17 +19241,21 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`⚡ Endpoint de Diagnóstico / Healthcheck: GET /api/health`);
   console.log(`==================================================`);
 
+  if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
+    startRenderCloudSyncWorker();
+  }
+
   // Conexão e Auto-Reconexão Contínua com o Microsoft SQL Server (Sem Bloquear o Servidor)
   initDatabase()
     .then(() => {
       if (pool) {
         const dbNameStr = process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF';
         console.log(`[BANCO] Conexão ativa e sincronizada com Microsoft SQL Server (Interno) (banco: ${dbNameStr})`);
-        if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
-          startRenderCloudSyncWorker();
-        }
       } else {
         console.log(`[BANCO LOCAL] Operando com alta resiliência e persistência em arquivos JSON locais.`);
+      }
+      if (!process.env.RENDER && process.env.IS_RENDER !== 'true') {
+        syncWithRenderCloud().catch(() => {});
       }
     })
     .catch(err => {
