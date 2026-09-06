@@ -5792,14 +5792,15 @@ body.light .user-card-4k {
   border-color: #CBD5E1 !important;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
 }
-body.light .user-card-name { color: #0F172A !important; }
-body.light .user-card-email { color: #475569 !important; }
+body.light .user-card-name { color: #000000 !important; font-weight: 800 !important; }
+body.light .user-card-email { color: #000000 !important; font-weight: 600 !important; }
 body.light .user-stat-chip {
   background: #F1F5F9 !important;
   border-color: #CBD5E1 !important;
-  color: #475569 !important;
+  color: #000000 !important;
+  font-weight: 600 !important;
 }
-body.light .user-stat-chip strong { color: #0F172A !important; }
+body.light .user-stat-chip strong { color: #000000 !important; font-weight: 800 !important; }
 
 /* ==================== Banner: Modo Visualização (Admin) ==================== */
 .view-mode-banner {
