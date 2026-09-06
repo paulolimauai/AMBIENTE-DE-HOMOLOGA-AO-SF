@@ -164,25 +164,25 @@
         body.light, html.light body, html.light {
             color-scheme: light !important;
             --auth-bg: #F8FAFC;
-            --auth-card: rgba(255, 255, 255, 0.90);
+            --auth-card: rgba(255, 255, 255, 0.96);
             --auth-border: #CBD5E1;
             --auth-border-hover: #D97706;
             --auth-input-bg: #FFFFFF;
             --auth-input-border: #CBD5E1;
-            --auth-text: #0F172A;
-            --auth-text-dim: #334155;
-            --auth-gold: #D97706;
-            --auth-gold-light: #B45309;
+            --auth-text: #000000 !important;
+            --auth-text-dim: #000000 !important;
+            --auth-gold: #B45309;
+            --auth-gold-light: #92400E;
             --auth-gold-glow: rgba(245, 158, 11, 0.20);
-            --auth-tab-bg: #EDF2F7;
-            background-color: #F2F7F4 !important;
+            --auth-tab-bg: #E2E8F0;
+            background-color: #F1F5F9 !important;
             background-image: 
-                radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.75) 0%, rgba(240, 246, 242, 0.90) 100%),
+                radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.85) 0%, rgba(241, 245, 249, 0.95) 100%),
                 url('/images/nexus_cyber_office_bg.jpg') !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
-            color: #0F172A !important;
+            color: #000000 !important;
         }
 
         * {
@@ -625,31 +625,49 @@
             background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(245, 158, 11, 0.10), transparent 70%) !important;
         }
 
-        /* Headers, Textos & Showcase em Modo Claro */
+        /* Headers, Textos & Showcase em Modo Claro (100% Preto Sólido / Solid Black) */
+        body.light,
+        html.light body,
+        html.light {
+            color: #000000 !important;
+        }
+
         body.light .auth-brand-nexus,
         html.light .auth-brand-nexus {
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light .auth-label,
-        html.light .auth-label {
-            color: #334155 !important;
+        html.light .auth-label,
+        body.light label {
+            color: #000000 !important;
+            font-weight: 700 !important;
         }
         body.light .auth-subtitle-text,
-        html.light .auth-subtitle-text {
-            color: #475569 !important;
+        html.light .auth-subtitle-text,
+        body.light #authSubtitle {
+            color: #000000 !important;
+            font-weight: 600 !important;
         }
 
         body.light .text-amber-500,
         html.light .text-amber-500,
         body.light .text-amber-400,
-        html.light .text-amber-400 {
+        html.light .text-amber-400,
+        body.light .text-amber-300 {
             color: #B45309 !important;
+            font-weight: 700 !important;
         }
 
         /* Showcase da Coluna Esquerda em Modo Claro */
         body.light h1,
-        html.light h1 {
-            color: #0F172A !important;
+        html.light h1,
+        body.light h2,
+        html.light h2,
+        body.light h3,
+        html.light h3,
+        body.light h4,
+        html.light h4 {
+            color: #000000 !important;
         }
         body.light h1 span,
         body.light .auth-showcase-title span {
@@ -660,21 +678,21 @@
         }
         body.light p,
         html.light p {
-            color: #334155 !important;
+            color: #000000 !important;
+            font-weight: 500 !important;
         }
         body.light .text-white:not(.btn-auth-gradient *):not(.btn-open-os *):not(.btn-consult-os *):not(.bg-gradient-to-r *):not(.bg-gradient-to-br *) {
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light .text-slate-100,
         body.light .text-slate-200,
-        body.light .text-slate-300 {
-            color: #334155 !important;
-        }
-        body.light .text-slate-400 {
-            color: #475569 !important;
-        }
-        body.light .text-slate-500 {
-            color: #64748B !important;
+        body.light .text-slate-300,
+        body.light .text-slate-400,
+        body.light .text-slate-500,
+        body.light .text-\[\#94A3B8\],
+        body.light .text-\[\#64748B\] {
+            color: #000000 !important;
+            font-weight: 600 !important;
         }
         body.light .bg-white\/\[0\.04\],
         body.light .bg-white\/\[0\.02\],
@@ -684,8 +702,10 @@
             box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
         }
         body.light .auth-showcase-metrics .text-white,
-        body.light .p-4 .text-white {
-            color: #0F172A !important;
+        body.light .p-4 .text-white,
+        body.light div[id^="metric"] {
+            color: #000000 !important;
+            font-weight: 900 !important;
         }
 
         /* Abas em Modo Claro */
@@ -695,16 +715,37 @@
             border-color: #CBD5E1 !important;
         }
         body.light .auth-tab-btn {
-            color: #475569 !important;
+            color: #000000 !important;
+            font-weight: 700 !important;
         }
         body.light .auth-tab-btn:hover {
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light .auth-tab-btn.active {
             background: #FFFFFF !important;
-            color: #B45309 !important;
+            color: #047857 !important;
             border: 1px solid #CBD5E1 !important;
+            font-weight: 800 !important;
             box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        /* Selo de Segurança Bancária e Conformidade em Modo Claro */
+        body.light .bg-black\/30 {
+            background: #F1F5F9 !important;
+            border-color: #CBD5E1 !important;
+            color: #000000 !important;
+        }
+        body.light .bg-black\/30 strong,
+        body.light .bg-black\/30 span {
+            color: #000000 !important;
+        }
+        body.light .border-b.border-white\/10 span {
+            color: #000000 !important;
+            font-weight: 800 !important;
+        }
+        body.light input[type="checkbox"] + span {
+            color: #000000 !important;
+            font-weight: 600 !important;
         }
 
         /* Wrappers de Input com Ícones Perfeitamente Alinhados */
@@ -752,7 +793,7 @@
         }
 
         body.light .auth-input-icon {
-            color: #64748B !important;
+            color: #000000 !important;
         }
         body.light .auth-input-wrapper:focus-within .auth-input-icon {
             color: var(--auth-gold) !important;
@@ -783,10 +824,12 @@
         }
 
         body.light .auth-input-wrapper input {
-            color: #0F172A !important;
+            color: #000000 !important;
+            font-weight: 600 !important;
         }
         body.light .auth-input-wrapper input::placeholder {
-            color: #94A3B8 !important;
+            color: #475569 !important;
+            font-weight: 500 !important;
         }
 
         /* Autofill Overrides */
@@ -804,7 +847,7 @@
         body.light .auth-input-wrapper input:-webkit-autofill:hover,
         body.light .auth-input-wrapper input:-webkit-autofill:focus,
         body.light .auth-input-wrapper input:-webkit-autofill:active {
-            -webkit-text-fill-color: #0F172A !important;
+            -webkit-text-fill-color: #000000 !important;
             -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
             box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
         }
@@ -1217,14 +1260,15 @@
         html.light .btn-consult-os {
             background: #F1F5F9 !important;
             border-color: #CBD5E1 !important;
-            color: #334155 !important;
+            color: #000000 !important;
+            font-weight: 700 !important;
             box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
         }
         body.light .btn-consult-os:hover,
         html.light .btn-consult-os:hover {
             background: #E2E8F0 !important;
             border-color: #94A3B8 !important;
-            color: #0F172A !important;
+            color: #000000 !important;
         }
 
         body.light .os-tabs-nav,
@@ -1235,12 +1279,13 @@
         html.light .os-tab-btn {
             background: #F1F5F9 !important;
             border-color: #CBD5E1 !important;
-            color: #64748B !important;
+            color: #000000 !important;
+            font-weight: 700 !important;
         }
         body.light .os-tab-btn:hover,
         html.light .os-tab-btn:hover {
             background: #E2E8F0 !important;
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light .os-tab-btn.active,
         html.light .os-tab-btn.active {
@@ -1255,7 +1300,7 @@
             background: #FFFFFF !important;
             border-color: #E2E8F0 !important;
             box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light .os-consult-card:hover,
         html.light .os-consult-card:hover {
@@ -1268,19 +1313,20 @@
             background: #FFFFFF !important;
             border: 1.5px solid #CBD5E1 !important;
             box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15), 0 0 35px rgba(59, 130, 246, 0.08) !important;
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light #boxNovaOrdemModal h2,
         html.light #boxNovaOrdemModal h2 {
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light #boxNovaOrdemModal p,
         html.light #boxNovaOrdemModal p {
-            color: #475569 !important;
+            color: #000000 !important;
         }
         body.light #boxNovaOrdemModal label,
         html.light #boxNovaOrdemModal label {
-            color: #334155 !important;
+            color: #000000 !important;
+            font-weight: 700 !important;
         }
         body.light #boxNovaOrdemModal input,
         body.light #boxNovaOrdemModal textarea,
@@ -1290,7 +1336,7 @@
         html.light #boxNovaOrdemModal select {
             background: #F8FAFC !important;
             border-color: #CBD5E1 !important;
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light #boxNovaOrdemModal input:focus,
         body.light #boxNovaOrdemModal textarea:focus,
@@ -1301,14 +1347,15 @@
             background: #FFFFFF !important;
             border-color: #3B82F6 !important;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+            color: #000000 !important;
         }
         body.light #boxNovaOrdemModal button.close-x,
         html.light #boxNovaOrdemModal button.close-x {
-            color: #64748B !important;
+            color: #000000 !important;
         }
         body.light #boxNovaOrdemModal button.close-x:hover,
         html.light #boxNovaOrdemModal button.close-x:hover {
-            color: #0F172A !important;
+            color: #000000 !important;
         }
 
         /* Selects e Opções Universais em Modo Claro */
@@ -1321,7 +1368,7 @@
             background: #FFFFFF !important;
             background-color: #FFFFFF !important;
             border-color: #CBD5E1 !important;
-            color: #0F172A !important;
+            color: #000000 !important;
             color-scheme: light !important;
         }
         body.light select option,
@@ -1332,7 +1379,7 @@
         html.light optgroup {
             background: #FFFFFF !important;
             background-color: #FFFFFF !important;
-            color: #0F172A !important;
+            color: #000000 !important;
             color-scheme: light !important;
         }
         body.light select option:checked,
@@ -1341,7 +1388,8 @@
         html.light option:checked {
             background: #E2E8F0 !important;
             background-color: #E2E8F0 !important;
-            color: #0F172A !important;
+            color: #000000 !important;
+            font-weight: 800 !important;
         }
 
         /* Modais de Sucesso e Logout em Modo Claro */
@@ -1357,18 +1405,19 @@
         html.light #loginSuccessTitle,
         body.light #logoutSuccessTitle,
         html.light #logoutSuccessTitle {
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light #loginSuccessSub,
         html.light #loginSuccessSub,
         body.light #logoutSuccessMsg,
         html.light #logoutSuccessMsg {
-            color: #475569 !important;
+            color: #000000 !important;
         }
 
         /* Checklist de Senha em Modo Claro */
         body.light #pwdStrengthContainer span {
-            color: #475569 !important;
+            color: #000000 !important;
+            font-weight: 600 !important;
         }
         body.light #pwdBar2,
         body.light #pwdBar3,
@@ -1379,11 +1428,11 @@
         /* Resultados de Consulta de O.S. em Modo Claro */
         body.light #osConsultarResultados,
         html.light #osConsultarResultados {
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light #osConsultarResultados .text-white,
         html.light #osConsultarResultados .text-white {
-            color: #0F172A !important;
+            color: #000000 !important;
         }
         body.light #osConsultarResultados .text-slate-300,
         body.light #osConsultarResultados .text-slate-200,
@@ -1391,11 +1440,12 @@
         html.light #osConsultarResultados .text-slate-300,
         html.light #osConsultarResultados .text-slate-200,
         html.light #osConsultarResultados .text-slate-100 {
-            color: #334155 !important;
+            color: #000000 !important;
+            font-weight: 600 !important;
         }
         body.light #osConsultarResultados .text-slate-400,
         html.light #osConsultarResultados .text-slate-400 {
-            color: #64748B !important;
+            color: #000000 !important;
         }
         body.light #osConsultarResultados .bg-black\/30,
         html.light #osConsultarResultados .bg-black\/30 {
@@ -1532,14 +1582,8 @@
             box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12) !important;
         }
         body.light .dev-signature-label {
-            color: #64748B !important;
-        }
-        body.light .dev-signature-name {
-            color: #0F172A !important;
-            text-shadow: none !important;
-        }
-        body.light .dev-signature-label {
-            color: #475569 !important;
+            color: #000000 !important;
+            font-weight: 800 !important;
             text-shadow: none !important;
         }
         body.light .dev-signature-name {
