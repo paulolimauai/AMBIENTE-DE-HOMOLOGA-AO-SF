@@ -140,6 +140,48 @@ function sanitizeUser(user) {
   return safeUser;
 }
 
+// ==================== Padronização de Fuso Horário Oficial de Brasília (America/Sao_Paulo / UTC-3) ====================
+function getBrasiliaSqlString(dateInput) {
+  if (!dateInput) return null;
+  if (typeof dateInput === 'string' && !dateInput.includes('Z') && !dateInput.includes('+') && !dateInput.includes('-03:00') && dateInput.includes(' ')) {
+    return dateInput.split('.')[0];
+  }
+  const d = new Date(dateInput);
+  if (isNaN(d.getTime())) return null;
+  const brasiliaParts = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).formatToParts(d);
+  const map = {};
+  brasiliaParts.forEach(p => map[p.type] = p.value);
+  return map.year + '-' + map.month + '-' + map.day + ' ' + map.hour + ':' + map.minute + ':' + map.second;
+}
+
+function getBrasiliaIsoString(dateInput) {
+  if (!dateInput) return null;
+  const d = new Date(dateInput);
+  if (isNaN(d.getTime())) return null;
+  const brasiliaParts = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).formatToParts(d);
+  const map = {};
+  brasiliaParts.forEach(p => map[p.type] = p.value);
+  return map.year + '-' + map.month + '-' + map.day + 'T' + map.hour + ':' + map.minute + ':' + map.second + '-03:00';
+}
+
 // ==================== Gerenciador de Eventos em Tempo Real (SSE) ====================
 const sseClients = new Set();
 
@@ -8360,8 +8402,8 @@ window.handleLoginSubmit = async function(e) {
     saveToStorage('nexus_cached_user', currentUser);
     saveToStorage('nexus_token', data.token || ('token_' + Date.now()));
     
-    // Notificação e sincronização imediata de last_login no SQL Server e Nuvem
-    const nowLoginIso = new Date().toISOString();
+    // Notificação e sincronização imediata de last_login no SQL Server e Nuvem (Fuso Horário de Brasília)
+    const nowLoginIso = new Date().toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }).replace(' ', 'T') + '-03:00';
     try {
       const pingBody = JSON.stringify({ email: cleanEmail, last_login: nowLoginIso });
       fetch(apiBase + '/api/user/login-ping', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: pingBody }).catch(() => {});
@@ -9624,15 +9666,30 @@ function formatDateBR(dateVal) {
 function formatDateTimeWithSeconds(dateVal) {
   if (!dateVal) return 'Primeiro acesso pendente';
   try {
+    if (typeof dateVal === 'string' && dateVal.includes(' ') && !dateVal.includes('T') && !dateVal.includes('Z')) {
+      const parts = dateVal.split(' ');
+      const dateParts = parts[0].split('-');
+      const timeParts = parts[1].split(':');
+      const day = dateParts[2].padStart(2, '0');
+      const month = dateParts[1].padStart(2, '0');
+      const year = dateParts[0];
+      const hours = timeParts[0].padStart(2, '0');
+      const minutes = timeParts[1].padStart(2, '0');
+      const seconds = (timeParts[2] || '00').split('.')[0].padStart(2, '0');
+      return day + '/' + month + '/' + year + ' às ' + hours + ':' + minutes + ':' + seconds;
+    }
     const d = new Date(dateVal);
     if (isNaN(d.getTime())) return 'Primeiro acesso pendente';
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const year = d.getFullYear();
-    const hours = String(d.getHours()).padStart(2, '0');
-    const minutes = String(d.getMinutes()).padStart(2, '0');
-    const seconds = String(d.getSeconds()).padStart(2, '0');
-    return day + '/' + month + '/' + year + ' às ' + hours + ':' + minutes + ':' + seconds;
+    return d.toLocaleString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).replace(', ', ' às ');
   } catch(e){
     return 'Primeiro acesso pendente';
   }
@@ -17836,9 +17893,10 @@ const server = http.createServer((req, res) => {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
         }
-        const nowIso = last_login || new Date().toISOString();
+        const brasiliaSqlTime = getBrasiliaSqlString(last_login) || getBrasiliaSqlString(new Date());
+        const nowIso = getBrasiliaIsoString(last_login) || getBrasiliaIsoString(new Date());
         if (pool) {
-          await pool.query('UPDATE usuarios SET last_login = GETDATE() WHERE LOWER(email) = LOWER($1)', [cleanEmail]).catch(() => {});
+          await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]).catch(() => {});
         }
         const localUsers = getLocalUsers();
         const idx = localUsers.findIndex(u => u && u.email && u.email.toLowerCase() === cleanEmail);
@@ -17922,12 +17980,13 @@ const server = http.createServer((req, res) => {
           }));
         }
 
-        const nowTimestamp = new Date().toISOString();
+        const nowTimestamp = getBrasiliaIsoString(new Date());
+        const brasiliaSqlTime = getBrasiliaSqlString(new Date());
         user.last_login = nowTimestamp;
 
         if (pool) {
           try {
-            await pool.query('UPDATE usuarios SET last_login = GETDATE() WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+            await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]);
           } catch(e) {}
         }
 
@@ -19175,7 +19234,7 @@ async function syncWithRenderCloud() {
         const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
         if (!localCheck.rows || localCheck.rows.length === 0) {
           const defaultPass = cu.password || hashPassword('86266049');
-          const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? new Date(cu.last_login) : null;
+          const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
           await pool.query(
             `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login)
              OUTPUT INSERTED.id
@@ -19207,16 +19266,18 @@ async function syncWithRenderCloud() {
             ).catch(() => {});
           }
 
-          // Sincronização automática e contínua do last_login do Render para o SQL Server local
+          // Sincronização automática e contínua do last_login do Render para o SQL Server local (Fuso de Brasília)
           if (cu.last_login && cu.last_login !== 'null') {
-            const cloudLoginDate = new Date(cu.last_login);
-            const localLoginDate = currentU.last_login ? new Date(currentU.last_login) : null;
-            if (!localLoginDate || (cloudLoginDate.getTime() > localLoginDate.getTime())) {
-              await pool.query(
-                `UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)`,
-                [cloudLoginDate, cleanEmail]
-              ).catch(() => {});
-              console.log(`⚡ [SYNC RENDER -> SQL SERVER] last_login sincronizado para ${cleanEmail}: ${cu.last_login}`);
+            const brasiliaSqlTime = getBrasiliaSqlString(cu.last_login);
+            if (brasiliaSqlTime) {
+              const currentSqlTime = currentU.last_login ? getBrasiliaSqlString(currentU.last_login) : null;
+              if (!currentSqlTime || brasiliaSqlTime > currentSqlTime) {
+                await pool.query(
+                  `UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)`,
+                  [brasiliaSqlTime, cleanEmail]
+                ).catch(() => {});
+                console.log(`⚡ [SYNC RENDER -> SQL SERVER] last_login sincronizado em Horário de Brasília para ${cleanEmail}: ${brasiliaSqlTime}`);
+              }
             }
           }
         }
@@ -19268,10 +19329,17 @@ async function syncWithRenderCloud() {
     // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server
     const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios');
     if (localUsersRes.rows && localUsersRes.rows.length > 0) {
+      const sanitizedWithBrasilia = localUsersRes.rows.map(u => {
+        const safe = sanitizeUser(u);
+        if (safe.last_login) {
+          safe.last_login = getBrasiliaIsoString(safe.last_login);
+        }
+        return safe;
+      });
       saveLocalUsers(localUsersRes.rows);
       await fetchCloud('/api/users', {
         method: 'POST',
-        body: JSON.stringify(localUsersRes.rows.map(sanitizeUser))
+        body: JSON.stringify(sanitizedWithBrasilia)
       }).catch(() => {});
     }
   } catch(syncErr) {
