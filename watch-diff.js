@@ -47,35 +47,55 @@ function hasDelta() {
 
 const isDeltaAvailable = hasDelta();
 
+function formatColoredDiff(rawDiff) {
+  const lines = rawDiff.split('\n');
+  return lines.map(line => {
+    if (line.startsWith('diff --git') || line.startsWith('index ')) {
+      return '\x1b[1m\x1b[38;2;86;156;214m' + line + '\x1b[0m';
+    } else if (line.startsWith('--- a/')) {
+      return '\x1b[38;2;244;71;71m' + line + '\x1b[0m';
+    } else if (line.startsWith('+++ b/')) {
+      return '\x1b[38;2;78;201;176m' + line + '\x1b[0m';
+    } else if (line.startsWith('@@')) {
+      return '\x1b[1m\x1b[38;2;197;134;192m' + line + '\x1b[0m';
+    } else if (line.startsWith('+')) {
+      return '\x1b[38;2;78;201;176m' + line + '\x1b[0m';
+    } else if (line.startsWith('-')) {
+      return '\x1b[38;2;244;71;71m' + line + '\x1b[0m';
+    } else {
+      return '\x1b[38;2;212;212;212m' + line + '\x1b[0m';
+    }
+  }).join('\n');
+}
+
 function showLiveDiff(changedFile) {
   try {
     const timestamp = new Date().toLocaleTimeString('pt-BR');
     
-    // Obter git diff atual
-    const gitDiffCmd = isDeltaAvailable
-      ? 'git diff --color=always'
-      : 'git diff --color=always';
-
-    const diffOutput = execSync(gitDiffCmd, {
-      cwd: WORKSPACE_DIR,
-      encoding: 'utf-8',
-      env: {
-        ...process.env,
-        BAT_THEME: 'Visual Studio Dark+',
-        DELTA_NAVIGATE: '1'
-      }
-    });
-
-    if (!diffOutput.trim()) {
-      // Se não há diff do git, verificar se é um arquivo novo não rastreado
-      const untracked = execSync('git ls-files --others --exclude-standard', {
+    // Obter git diff atual (incluindo staged e unstaged)
+    let diffOutput = '';
+    try {
+      diffOutput = execSync('git diff HEAD --color=always', {
         cwd: WORKSPACE_DIR,
         encoding: 'utf-8'
-      }).trim();
+      });
+    } catch (e) {
+      diffOutput = '';
+    }
 
-      if (untracked) {
-        console.log(`\n\x1b[38;2;206;145;120m[${timestamp}] 📄 Novo Arquivo Detectado:\x1b[0m \x1b[1m${untracked}\x1b[0m`);
-      } else {
+    if (!diffOutput.trim()) {
+      // Se não há alterações não salvas, mostrar o último commit como exemplo ao vivo
+      try {
+        const lastCommitInfo = execSync('git log -1 --stat -p --color=always', {
+          cwd: WORKSPACE_DIR,
+          encoding: 'utf-8'
+        });
+        console.log(`\n\x1b[38;2;78;201;176m[${timestamp}] ⚡ CÓDIGO ONLINE SINCRONIZADO - ÚLTIMA MODIFICAÇÃO:\x1b[0m`);
+        console.log('\x1b[38;2;86;156;214m' + '─'.repeat(78) + '\x1b[0m');
+        process.stdout.write(formatColoredDiff(lastCommitInfo));
+        console.log('\x1b[38;2;86;156;214m' + '─'.repeat(78) + '\x1b[0m');
+        console.log(`\x1b[38;2;106;153;85m👀 Monitor ativo. Qualquer alteração em arquivos aparecerá aqui em tempo real com cores.\x1b[0m\n`);
+      } catch (e) {
         console.log(`\n\x1b[38;2;106;153;85m[${timestamp}] ✅ Diretório sincronizado e sem modificações pendentes.\x1b[0m`);
       }
       return;
@@ -86,20 +106,10 @@ function showLiveDiff(changedFile) {
     }
     lastDiffOutput = diffOutput;
 
-    console.log(`\n\x1b[38;2;212;212;212m[${timestamp}] \x1b[1m\x1b[38;2;86;156;214m🔍 Alteração Detectada:\x1b[0m ${changedFile ? `\x1b[38;2;181;206;168m${changedFile}\x1b[0m` : ''}`);
-    console.log('\x1b[38;2;106;153;85m' + '-'.repeat(78) + '\x1b[0m');
-
-    if (isDeltaAvailable) {
-      const deltaProcess = spawn('delta', ['--syntax-theme=Visual Studio Dark+', '--line-numbers'], {
-        cwd: WORKSPACE_DIR,
-        stdio: ['pipe', 'inherit', 'inherit'],
-        shell: true
-      });
-      deltaProcess.stdin.write(diffOutput);
-      deltaProcess.stdin.end();
-    } else {
-      process.stdout.write(diffOutput);
-    }
+    console.log(`\n\x1b[38;2;212;212;212m[${timestamp}] \x1b[1m\x1b[38;2;86;156;214m🔍 Modificação de Código Online Detectada:\x1b[0m ${changedFile ? `\x1b[38;2;181;206;168m${changedFile}\x1b[0m` : ''}`);
+    console.log('\x1b[38;2;86;156;214m' + '═'.repeat(78) + '\x1b[0m');
+    process.stdout.write(formatColoredDiff(diffOutput));
+    console.log('\x1b[38;2;86;156;214m' + '═'.repeat(78) + '\x1b[0m\n');
   } catch (err) {
     console.error('Erro ao renderizar diff:', err.message);
   }
