@@ -2072,15 +2072,15 @@
                     <div id="loginBox" class="form-fade block">
                         <form id="loginForm" class="space-y-4" onsubmit="handleLoginSubmit(event); return false;">
                             
-                            <!-- Campo E-mail -->
+                            <!-- Campo E-mail ou CPF -->
                             <div>
-                                <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail Corporativo ou Pessoal</label>
+                                <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-[#94A3B8] mb-1.5">E-mail Corporativo ou CPF</label>
                                 <div class="auth-input-wrapper">
                                     <span class="auth-input-icon">
                                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                                     </span>
-                                    <input id="loginEmail" name="email" type="email" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none" required 
-                                        placeholder="seu.email@exemplo.com">
+                                    <input id="loginEmail" name="email" type="text" autocomplete="username" spellcheck="false" autocorrect="off" autocapitalize="none" required 
+                                        placeholder="seu.email@exemplo.com ou CPF (sem ponto)">
                                 </div>
                             </div>
 
@@ -2152,7 +2152,7 @@
                                         <span class="auth-input-icon">
                                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                                         </span>
-                                        <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="14" autocomplete="off" spellcheck="false" required placeholder="000.000.000-00" oninput="handleCpfInput(this)" onchange="handleCpfInput(this)" onblur="handleCpfInput(this)" onpaste="setTimeout(() => handleCpfInput(this), 60)">
+                                        <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="11" autocomplete="off" spellcheck="false" required placeholder="00000000000 (sem ponto)" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 11); handleCpfInput(this)" onchange="handleCpfInput(this)" onblur="handleCpfInput(this)" onpaste="event.preventDefault(); const p = (event.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 11); this.value = p; handleCpfInput(this);">
                                     </div>
                                     <div id="cpfFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
                                 </div>
@@ -3151,7 +3151,7 @@
             const password = passInput ? passInput.value.trim() : '';
 
             if (!email || !password) {
-                showAlert('Por favor, preencha o e-mail e a senha.');
+                showAlert('Por favor, preencha o e-mail ou CPF e a senha.');
                 return false;
             }
 
@@ -3176,7 +3176,7 @@
                 const data = await res.json();
 
                 if (!res.ok || !data.success) {
-                    showAlert(data.error || 'E-mail ou senha incorretos!', 'error');
+                    showAlert(data.error || 'E-mail, CPF ou senha incorretos!', 'error');
                     if (btn) {
                         btn.disabled = false;
                         btn.innerHTML = '<span>Entrar na Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
@@ -3188,7 +3188,7 @@
                 const userName = (data.user && data.user.name) ? data.user.name : 'Usuário';
                 showLoginSuccessModal('Bem-vindo, ' + userName + '!', 'Sua sessão criptografada de alta segurança está ativa.');
                 
-                localStorage.setItem('nexus_session', JSON.stringify({ email: email }));
+                localStorage.setItem('nexus_session', JSON.stringify({ email: (data.user && data.user.email) ? data.user.email : email }));
                 localStorage.setItem('nexus_token', data.token || ('token_' + Date.now()));
                 localStorage.setItem('nexus_cached_user', JSON.stringify(data.user));
                 localStorage.setItem('nexus_just_logged_in', 'true');
@@ -3206,12 +3206,17 @@
                         localUsers = JSON.parse(localStorage.getItem('nexus_users') || '[]');
                     } catch(e){}
                     const cleanEmail = email.toLowerCase().trim();
-                    const foundUser = (Array.isArray(localUsers) ? localUsers : []).find(u => u.email && u.email.toLowerCase() === cleanEmail);
+                    const cleanDigits = email.replace(/\D/g, '');
+                    const isCpf = cleanDigits.length === 11;
+                    const foundUser = (Array.isArray(localUsers) ? localUsers : []).find(u => 
+                        (u.email && u.email.toLowerCase() === cleanEmail) ||
+                        (isCpf && u.cpf && String(u.cpf).replace(/\D/g, '') === cleanDigits)
+                    );
                     
                     if (foundUser && (foundUser.password === password || !foundUser.password)) {
                         const userName = foundUser.name || 'Usuário';
                         showLoginSuccessModal('Bem-vindo, ' + userName + '!', 'Sessão local ativa com sucesso.');
-                        localStorage.setItem('nexus_session', JSON.stringify({ email: cleanEmail }));
+                        localStorage.setItem('nexus_session', JSON.stringify({ email: foundUser.email || cleanEmail }));
                         localStorage.setItem('nexus_token', 'token_local_' + Date.now());
                         localStorage.setItem('nexus_cached_user', JSON.stringify(foundUser));
                         localStorage.setItem('nexus_just_logged_in', 'true');
@@ -3223,7 +3228,7 @@
                     } else if (foundUser) {
                         showAlert('Senha incorreta para este usuário.', 'error');
                     } else {
-                        showAlert('E-mail não encontrado. Clique na aba "Criar Conta" para se cadastrar.', 'error');
+                        showAlert('Usuário não localizado. Verifique o e-mail ou CPF informado.', 'error');
                     }
                 } catch(localAuthErr) {
                     showAlert('Erro ao autenticar usuário. Verifique as credenciais digitadas.', 'error');
@@ -3384,14 +3389,10 @@
             return true;
         };
 
-        // Máscara e Validação de CPF em Tempo Real (Preenchimento manual dos dados cadastrais)
+        // CPF sem ponto e Validação em Tempo Real (Preenchimento manual dos dados cadastrais)
         window.handleCpfInput = function(input) {
             const rawDigits = input.value.replace(/\D/g, '').slice(0, 11);
-            let v = rawDigits;
-            if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-            else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-            else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-            input.value = v;
+            input.value = rawDigits; // Mantém estritamente sem ponto (apenas números)
 
             const feedback = document.getElementById('cpfFeedbackMsg');
 
@@ -3480,7 +3481,7 @@
             hideAlert();
 
             const name = document.getElementById('regName') ? document.getElementById('regName').value.trim() : '';
-            const cpf = document.getElementById('regCpf') ? document.getElementById('regCpf').value.trim() : '';
+            const cpf = document.getElementById('regCpf') ? document.getElementById('regCpf').value.replace(/\D/g, '').trim() : '';
             const birthDate = document.getElementById('regBirthDate') ? document.getElementById('regBirthDate').value.trim() : '';
             const phone = document.getElementById('regPhone') ? document.getElementById('regPhone').value.trim() : '';
             const email = document.getElementById('regEmail') ? document.getElementById('regEmail').value.trim().toLowerCase() : '';
@@ -3500,7 +3501,7 @@
 
             // 2. Validação de CPF
             if (!cpf || !window.isValidCPF(cpf)) {
-                showAlert('Por favor, informe um CPF válido e regularizado na Receita Federal.');
+                showAlert('Por favor, informe um CPF válido e regularizado na Receita Federal (11 dígitos, sem ponto).');
                 const cEl = document.getElementById('regCpf');
                 if (cEl) cEl.focus();
                 return false;
