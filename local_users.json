@@ -26,5 +26,19 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true
+  },
+  {
+    "id": "52",
+    "name": "Paulo de Lima Teste Real",
+    "email": "pauloteste.real@nexusfinanceiro.com",
+    "password": "scrypt:a0fa5dc174162b97fd4cb073f6e496fe:bd334a941ce481a2e7c3de266db82182a03094538bb2ee09db3eca562ab6ca8dc14cee633d6d83f3c624336b12ea15cd0fb5e73e20c24d57cb2bcb38db33350e",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-05T13:05:32.223Z",
+    "last_login": null,
+    "cpf": "000.000.001-91",
+    "phone": "(61) 99999-8888",
+    "birth_date": "03/07/1984",
+    "terms_accepted": true
   }
 ]

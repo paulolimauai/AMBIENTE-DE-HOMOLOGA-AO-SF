@@ -8628,8 +8628,8 @@ window.isValidCPFServer = function(cpf) {
   return true;
 };
 
-let lastConsultedServerCpf = '';
-window.handleServerCpfInput = async function(input) {
+// Máscara e Validação de CPF no Cadastro (Preenchimento manual dos dados cadastrais)
+window.handleServerCpfInput = function(input) {
   const rawDigits = input.value.replace(/[^0-9]/g, '').slice(0, 11);
   let v = rawDigits;
   if (v.length > 9) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{1,2})/, '$1.$2.$3-$4');
@@ -8638,8 +8638,6 @@ window.handleServerCpfInput = async function(input) {
   input.value = v;
 
   const msg = document.getElementById('regCpfFeedbackMsg');
-  const nameInput = document.getElementById('regName');
-  const birthInput = document.getElementById('regBirthDate');
 
   if (rawDigits.length === 11) {
     if (!window.isValidCPFServer(rawDigits)) {
@@ -8651,126 +8649,10 @@ window.handleServerCpfInput = async function(input) {
       return;
     }
 
-    if (lastConsultedServerCpf === rawDigits) return;
-    lastConsultedServerCpf = rawDigits;
-
     if (msg) {
       msg.style.display = 'block';
-      msg.innerHTML = '<span style="display:inline-flex; align-items:center; gap:5px; color:#38bdf8;"><svg class="spin-icon" style="width:11px; height:11px; animation:spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> Consultando base oficial da Receita Federal...</span>';
-    }
-
-    try {
-      const apiBase = (typeof getApiBaseUrl === 'function') ? getApiBaseUrl() : '';
-      const res = await fetch(apiBase + '/api/cpf/consultar?cpf=' + encodeURIComponent(rawDigits));
-      const data = await res.json();
-
-      if (data && data.success) {
-        if (data.cpf) input.value = data.cpf;
-
-        const itensCarregados = [];
-
-        if (data.nome) {
-          const nameEl = document.getElementById('regName');
-          if (nameEl) {
-            nameEl.value = data.nome;
-            nameEl.setAttribute('value', data.nome);
-            nameEl.dispatchEvent(new Event('input', { bubbles: true }));
-            nameEl.dispatchEvent(new Event('change', { bubbles: true }));
-            const w = nameEl.closest('.auth-input-wrapper');
-            if (w) {
-              w.style.borderColor = '#F59E0B';
-              w.style.boxShadow = '0 0 14px rgba(245, 158, 11, 0.35)';
-              setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
-            }
-          }
-          itensCarregados.push('Nome');
-          itensCarregados.push('CPF');
-
-          const birthEl = document.getElementById('regBirthDate');
-          if (birthEl && data.data_nascimento) {
-            birthEl.value = data.data_nascimento;
-            birthEl.setAttribute('value', data.data_nascimento);
-            birthEl.dispatchEvent(new Event('input', { bubbles: true }));
-            birthEl.dispatchEvent(new Event('change', { bubbles: true }));
-            const w = birthEl.closest('.auth-input-wrapper');
-            if (w) {
-              w.style.borderColor = '#F59E0B';
-              w.style.boxShadow = '0 0 14px rgba(245, 158, 11, 0.35)';
-              setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
-            }
-            itensCarregados.push('Nascimento');
-          }
-
-          const phoneEl = document.getElementById('regPhone');
-          const rawPhone = data.phone || data.telefone;
-          if (phoneEl && rawPhone) {
-            const pDigits = String(rawPhone).replace(/[^0-9]/g, '').slice(0, 11);
-            let formattedPhone = rawPhone;
-            if (pDigits.length === 11) {
-              formattedPhone = pDigits.replace(/([0-9]{2})([0-9]{5})([0-9]{4})/, '($1) $2-$3');
-            } else if (pDigits.length === 10) {
-              formattedPhone = pDigits.replace(/([0-9]{2})([0-9]{4})([0-9]{4})/, '($1) $2-$3');
-            }
-            phoneEl.value = formattedPhone;
-            phoneEl.setAttribute('value', formattedPhone);
-            phoneEl.dispatchEvent(new Event('input', { bubbles: true }));
-            phoneEl.dispatchEvent(new Event('change', { bubbles: true }));
-            const w = phoneEl.closest('.auth-input-wrapper');
-            if (w) {
-              w.style.borderColor = '#F59E0B';
-              w.style.boxShadow = '0 0 14px rgba(245, 158, 11, 0.35)';
-              setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
-            }
-            itensCarregados.push('Telefone');
-          }
-
-          const emailEl = document.getElementById('regEmail');
-          if (emailEl && (data.email_associado || data.email) && !emailEl.value) {
-            const emailVal = data.email_associado || data.email;
-            emailEl.value = emailVal;
-            emailEl.setAttribute('value', emailVal);
-            emailEl.dispatchEvent(new Event('input', { bubbles: true }));
-            emailEl.dispatchEvent(new Event('change', { bubbles: true }));
-            const w = emailEl.closest('.auth-input-wrapper');
-            if (w) {
-              w.style.borderColor = '#F59E0B';
-              w.style.boxShadow = '0 0 14px rgba(245, 158, 11, 0.35)';
-              setTimeout(() => { w.style.borderColor = ''; w.style.boxShadow = ''; }, 3500);
-            }
-          }
-
-          if (msg) {
-            msg.style.display = 'block';
-            msg.innerHTML = '<span style="color:#FBBF24; font-weight:700;">✓ ' + (data.origem || 'Receita Federal') + ': ' + itensCarregados.join(', ') + ' oficial(is) localizados e preenchidos!</span>';
-          }
-
-          const passInput = document.getElementById('regPassword');
-          if (passInput && !passInput.value) {
-            passInput.focus();
-          }
-        } else {
-          // CPF autêntico perante a Receita Federal (Módulo 11 oficial)
-          if (msg) {
-            msg.style.display = 'block';
-            msg.innerHTML = '<span style="color:#FBBF24; font-weight:700;">✓ CPF Regular perante a Receita Federal (' + (data.regiao_fiscal || 'Situação Regular') + ')</span>';
-          }
-          if (nameInput && !nameInput.value) {
-            nameInput.focus();
-          }
-        }
-      } else {
-        if (msg) {
-          msg.style.display = 'block';
-          msg.textContent = (data && data.error) ? data.error : '✕ CPF não localizado ou inválido na Receita Federal';
-          msg.style.color = '#f87171';
-        }
-      }
-    } catch(err) {
-      if (msg) {
-        msg.style.display = 'block';
-        msg.textContent = '✓ CPF Válido perante a Receita Federal';
-        msg.style.color = '#FBBF24';
-      }
+      msg.textContent = '✓ CPF Válido';
+      msg.style.color = '#34d399';
     }
   } else {
     if (msg) msg.style.display = 'none';
