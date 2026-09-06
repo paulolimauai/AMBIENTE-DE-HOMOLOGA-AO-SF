@@ -168,5 +168,42 @@
   },
   "admin@nexusfinanceirohub.com.br": {
     "test": 123
+  },
+  "pauloteste.real@nexusfinanceiro.com": {
+    "transactions": [
+      {
+        "id": 1,
+        "description": "Salário Mensal",
+        "amount": 8500,
+        "type": "receita",
+        "date": "2026-09-05",
+        "category": "Salário"
+      },
+      {
+        "id": 2,
+        "description": "Supermercado",
+        "amount": 450.5,
+        "type": "despesa",
+        "date": "2026-09-05",
+        "category": "Supermercado"
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Corrente Santander",
+        "balance": 8049.5
+      }
+    ],
+    "categories": [
+      {
+        "name": "Salário",
+        "type": "receita"
+      },
+      {
+        "name": "Supermercado",
+        "type": "despesa"
+      }
+    ]
   }
 }
