@@ -5509,9 +5509,9 @@ body.light .executive-welcome-toast {
   border-color: #CBD5E1 !important;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15) !important;
 }
-body.light .toast-title { color: #0F172A !important; }
-body.light .toast-desc { color: #475569 !important; }
-body.light .toast-desc strong { color: #0F172A !important; }
+body.light .toast-title { color: #000000 !important; }
+body.light .toast-desc { color: #000000 !important; }
+body.light .toast-desc strong { color: #000000 !important; font-weight: 800 !important; }
 
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
 .env-badge-homolog {
