@@ -610,6 +610,8 @@ async function setupDatabaseTablesAndSync() {
         protocol NVARCHAR(50) NOT NULL UNIQUE,
         client_name NVARCHAR(150) NOT NULL,
         client_email NVARCHAR(150) NOT NULL,
+        client_phone NVARCHAR(50) NULL,
+        client_cpf NVARCHAR(20) NULL,
         service_type NVARCHAR(100) NOT NULL DEFAULT 'Melhoria no Sistema',
         priority NVARCHAR(50) NOT NULL DEFAULT 'Normal',
         title NVARCHAR(200) NOT NULL,
@@ -618,6 +620,8 @@ async function setupDatabaseTablesAndSync() {
         admin_notes NVARCHAR(MAX) NULL DEFAULT '',
         tecnico_responsavel NVARCHAR(150) NULL,
         assumido_em NVARCHAR(50) NULL,
+        canal_atendimento NVARCHAR(50) NULL DEFAULT 'Portal Web',
+        concluido_em NVARCHAR(50) NULL,
         created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
       );
@@ -625,6 +629,22 @@ async function setupDatabaseTablesAndSync() {
 
     IF EXISTS (SELECT * FROM sys.tables WHERE name = 'ordens_servico')
     BEGIN
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'priority')
+      BEGIN
+        ALTER TABLE ordens_servico ADD priority NVARCHAR(50) NOT NULL DEFAULT 'Normal';
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'service_type')
+      BEGIN
+        ALTER TABLE ordens_servico ADD service_type NVARCHAR(100) NOT NULL DEFAULT 'Melhoria no Sistema';
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'client_phone')
+      BEGIN
+        ALTER TABLE ordens_servico ADD client_phone NVARCHAR(50) NULL;
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'client_cpf')
+      BEGIN
+        ALTER TABLE ordens_servico ADD client_cpf NVARCHAR(20) NULL;
+      END;
       IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'tecnico_responsavel')
       BEGIN
         ALTER TABLE ordens_servico ADD tecnico_responsavel NVARCHAR(150) NULL;
@@ -632,6 +652,14 @@ async function setupDatabaseTablesAndSync() {
       IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'assumido_em')
       BEGIN
         ALTER TABLE ordens_servico ADD assumido_em NVARCHAR(50) NULL;
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'canal_atendimento')
+      BEGIN
+        ALTER TABLE ordens_servico ADD canal_atendimento NVARCHAR(50) NULL DEFAULT 'Portal Web';
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'concluido_em')
+      BEGIN
+        ALTER TABLE ordens_servico ADD concluido_em NVARCHAR(50) NULL;
       END;
     END;
 
@@ -705,7 +733,7 @@ async function setupDatabaseTablesAndSync() {
     console.warn('[BANCO AVISO] Erro ao sincronizar dados financeiros locais:', syncDataErr.message);
   }
 
-  // 7. Sincronização das Ordens de Serviço locais para o banco SQL
+  // 7. Sincronização bidirecional das Ordens de Serviço locais para o banco SQL
   try {
     const localOrdensFile = path.join(__dirname, 'local_ordens_servico.json');
     if (fs.existsSync(localOrdensFile)) {
@@ -715,13 +743,70 @@ async function setupDatabaseTablesAndSync() {
         const existOrd = await pool.query('SELECT id FROM ordens_servico WHERE protocol = $1', [ord.protocol]);
         if (existOrd.rows.length === 0) {
           await pool.query(
-            `INSERT INTO ordens_servico (protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-            [ord.protocol, ord.client_name, ord.client_email, ord.service_type || 'Melhoria no Sistema', ord.priority || 'Normal', ord.title || 'OS', ord.description || '', ord.status || 'Pendente', ord.admin_notes || '', ord.created_at || new Date().toISOString(), ord.updated_at || new Date().toISOString()]
+            `INSERT INTO ordens_servico (
+               protocol, client_name, client_email, client_phone, client_cpf,
+               service_type, priority, title, description, status,
+               admin_notes, tecnico_responsavel, assumido_em, canal_atendimento,
+               concluido_em, created_at, updated_at
+             )
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+            [
+              ord.protocol,
+              ord.client_name,
+              ord.client_email,
+              ord.client_phone || null,
+              ord.client_cpf || null,
+              ord.service_type || 'Melhoria no Sistema',
+              ord.priority || 'Normal',
+              ord.title || 'OS',
+              ord.description || '',
+              ord.status || 'Pendente',
+              ord.admin_notes || '',
+              ord.tecnico_responsavel || null,
+              ord.assumido_em || null,
+              ord.canal_atendimento || 'Portal Web',
+              ord.concluido_em || null,
+              ord.created_at || new Date().toISOString(),
+              ord.updated_at || new Date().toISOString()
+            ]
           );
         }
       }
-      console.log(`[BANCO] Ordens de serviço consolidadas com o banco SQL interno.`);
+    }
+
+    // Consolida do banco SQL para o cache local
+    const dbOrdens = await pool.query(`
+      SELECT TOP 500
+        id, protocol, client_name, client_email, client_phone, client_cpf,
+        service_type, priority, title, description, status, admin_notes,
+        tecnico_responsavel, assumido_em, canal_atendimento, concluido_em,
+        created_at, updated_at
+      FROM ordens_servico
+      ORDER BY id DESC
+    `);
+    if (dbOrdens.rows && Array.isArray(dbOrdens.rows)) {
+      const formattedOrdens = dbOrdens.rows.map(r => ({
+        id: String(r.id),
+        protocol: r.protocol,
+        client_name: r.client_name,
+        client_email: r.client_email,
+        client_phone: r.client_phone || '',
+        client_cpf: r.client_cpf || '',
+        service_type: r.service_type || 'Melhoria no Sistema',
+        priority: r.priority || 'Normal',
+        title: r.title,
+        description: r.description,
+        status: r.status || 'Pendente',
+        admin_notes: r.admin_notes || '',
+        tecnico_responsavel: r.tecnico_responsavel || null,
+        assumido_em: r.assumido_em || null,
+        canal_atendimento: r.canal_atendimento || 'Portal Web',
+        concluido_em: r.concluido_em || null,
+        created_at: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
+        updated_at: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString()
+      }));
+      saveLocalOrdens(formattedOrdens);
+      console.log(`[BANCO] ${formattedOrdens.length} ordens de serviço consolidadas entre o banco SQL interno e o cache local.`);
     }
   } catch(syncOrdErr) {
     console.warn('[BANCO AVISO] Erro ao sincronizar ordens de serviço locais:', syncOrdErr.message);
@@ -8356,7 +8441,14 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         <h2 style="font-size:19px; font-weight:900; margin:0;" id="osAdminTitle">Título da Solicitação</h2>
         <span style="font-size:12px; color:var(--text-dim);" id="osAdminDate">Aberta em: --/--/----</span>
       </div>
-      <div id="osAdminPriorityBadge" style="padding:5px 12px; border-radius:999px; font-size:11.5px; font-weight:800;">Normal</div>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+        <label style="font-size:10.5px; font-weight:800; text-transform:uppercase; color:#93C5FD; letter-spacing:0.04em;">Prioridade do Chamado:</label>
+        <select id="osAdminPrioritySelect" onchange="atualizarEstiloPrioridadeAdmin(this.value)" style="height:34px; padding:0 12px; border-radius:10px; font-size:12px; font-weight:800; background:rgba(15,23,42,0.85); border:1.5px solid rgba(245,158,11,0.5); color:#FBBF24; cursor:pointer; outline:none; box-shadow:0 4px 14px rgba(0,0,0,0.4); transition:all 0.2s ease;">
+          <option value="Normal">🟢 Prioridade Normal</option>
+          <option value="Alta">🟡 Prioridade Alta</option>
+          <option value="Urgente">🔴 Prioridade Urgente / Crítica</option>
+        </select>
+      </div>
     </div>
 
     <!-- Informações do Solicitante & Ações Rápidas de Contato -->
@@ -8371,8 +8463,14 @@ html.light .scale-dropdown .scale-opt-btn:hover {
           <a href="#" id="osAdminClientEmail" style="font-size:13px; color:#60A5FA; text-decoration:none; font-weight:600;">email@exemplo.com</a>
         </div>
         <div>
-          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Tipo de Demanda</span>
-          <span style="font-size:13px; color:#E2E8F0; font-weight:600;" id="osAdminServiceType">Melhoria</span>
+          <label style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700; margin-bottom:2px;">Tipo de Demanda</label>
+          <select id="osAdminServiceTypeSelect" style="height:32px; padding:0 8px; border-radius:8px; font-size:12px; font-weight:700; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#E2E8F0; width:100%;">
+            <option value="Correção de Dados">Correção de Dados Cadastrais</option>
+            <option value="Reset de Senha">Reset de Senha / Recuperação</option>
+            <option value="Atendimento Geral">Atendimento / Dúvida Operacional</option>
+            <option value="Relato de Bug">Relato de Bug / Erro no Sistema</option>
+            <option value="Melhoria no Sistema">Melhoria / Sugestão de Recurso</option>
+          </select>
         </div>
         <div>
           <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Telefone / Contato</span>
@@ -14968,8 +15066,8 @@ window.openOrdemAdminModal = function(id) {
   const waBtn = document.getElementById('osAdminWhatsappBtn');
   if (waBtn) {
     if (cleanPhone) {
-      const msg = encodeURIComponent(\`Olá \${ordem.client_name || ''}, tudo bem? Aqui é do Suporte ref. à sua Ordem de Serviço #\${ordem.protocol || ordem.id} (\${ordem.title || ''}).\`);
-      waBtn.href = \`https://wa.me/55\${cleanPhone}?text=\${msg}\`;
+      const msg = encodeURIComponent('Olá ' + (ordem.client_name || '') + ', tudo bem? Aqui é do Suporte do Nexus sobre a sua Ordem de Serviço #' + (ordem.protocol || ordem.id) + ' (' + (ordem.title || '') + ').');
+      waBtn.href = 'https://wa.me/55' + cleanPhone + '?text=' + msg;
       waBtn.style.display = 'inline-flex';
     } else {
       waBtn.style.display = 'none';
@@ -14979,15 +15077,16 @@ window.openOrdemAdminModal = function(id) {
   const emailBtn = document.getElementById('osAdminEmailBtn');
   if (emailBtn) {
     if (ordem.client_email) {
-      const subj = encodeURIComponent(\`[Suporte] O.S. #\${ordem.protocol || ordem.id} - \${ordem.title || ''}\`);
-      emailBtn.href = \`mailto:\${ordem.client_email}?subject=\${subj}\`;
+      const subj = encodeURIComponent('[Suporte] O.S. #' + (ordem.protocol || ordem.id) + ' - ' + (ordem.title || ''));
+      emailBtn.href = 'mailto:' + ordem.client_email + '?subject=' + subj;
       emailBtn.style.display = 'inline-flex';
     } else {
       emailBtn.style.display = 'none';
     }
   }
 
-  document.getElementById('osAdminServiceType').textContent = ordem.service_type || 'Melhoria no Sistema';
+  const serviceTypeSel = document.getElementById('osAdminServiceTypeSelect');
+  if (serviceTypeSel) serviceTypeSel.value = ordem.service_type || 'Melhoria no Sistema';
   document.getElementById('osAdminDescription').textContent = ordem.description || 'Sem descrição detalhada.';
 
   // Popula e configura o Seletor de Técnico Responsável
@@ -15024,27 +15123,33 @@ window.openOrdemAdminModal = function(id) {
   const notesEl = document.getElementById('osAdminNotes');
   if (notesEl) notesEl.value = ordem.admin_notes || '';
 
-  const prioBadge = document.getElementById('osAdminPriorityBadge');
-  if (prioBadge) {
-    prioBadge.textContent = ordem.priority || 'Normal';
-    const prio = (ordem.priority || '').toLowerCase();
-    if (prio.includes('urg')) {
-      prioBadge.style.background = 'rgba(239,68,68,0.2)';
-      prioBadge.style.color = '#F87171';
-      prioBadge.style.border = '1px solid rgba(239,68,68,0.4)';
-    } else if (prio.includes('alt')) {
-      prioBadge.style.background = 'rgba(245,158,11,0.2)';
-      prioBadge.style.color = '#FBBF24';
-      prioBadge.style.border = '1px solid rgba(245,158,11,0.4)';
-    } else {
-      prioBadge.style.background = 'rgba(16,185,129,0.2)';
-      prioBadge.style.color = '#34D399';
-      prioBadge.style.border = '1px solid rgba(16,185,129,0.4)';
-    }
+  const prioSelect = document.getElementById('osAdminPrioritySelect');
+  if (prioSelect) {
+    prioSelect.value = ordem.priority || 'Normal';
+    atualizarEstiloPrioridadeAdmin(prioSelect.value);
   }
 
   overlay.classList.add('show');
   overlay.style.display = 'flex';
+};
+
+window.atualizarEstiloPrioridadeAdmin = function(val) {
+  const prioSelect = document.getElementById('osAdminPrioritySelect');
+  if (!prioSelect) return;
+  const p = (val || '').toLowerCase();
+  if (p.includes('urg')) {
+    prioSelect.style.borderColor = 'rgba(239,68,68,0.7)';
+    prioSelect.style.color = '#F87171';
+    prioSelect.style.background = 'rgba(239,68,68,0.14)';
+  } else if (p.includes('alt')) {
+    prioSelect.style.borderColor = 'rgba(245,158,11,0.7)';
+    prioSelect.style.color = '#FBBF24';
+    prioSelect.style.background = 'rgba(245,158,11,0.14)';
+  } else {
+    prioSelect.style.borderColor = 'rgba(16,185,129,0.7)';
+    prioSelect.style.color = '#34D399';
+    prioSelect.style.background = 'rgba(16,185,129,0.14)';
+  }
 };
 
 window.closeOrdemAdminModal = function() {
@@ -15144,6 +15249,8 @@ window.salvarOrdemAdmin = async function() {
   const status = document.getElementById('osAdminStatusSelect')?.value || 'Pendente';
   const notes = (document.getElementById('osAdminNotes')?.value || '').trim();
   const tecnico = (document.getElementById('osAdminTecnicoSelect')?.value || '').trim();
+  const priority = document.getElementById('osAdminPrioritySelect')?.value || 'Normal';
+  const serviceType = document.getElementById('osAdminServiceTypeSelect')?.value || 'Melhoria no Sistema';
 
   if (!id) return;
 
@@ -15155,6 +15262,8 @@ window.salvarOrdemAdmin = async function() {
         id: id,
         status: status,
         admin_notes: notes,
+        priority: priority,
+        service_type: serviceType,
         tecnico_responsavel: tecnico || null
       })
     });
@@ -20372,16 +20481,18 @@ const server = http.createServer(async (req, res) => {
       const q = (qStr || '').toLowerCase().trim();
       if (!q) {
         res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, message: 'Informe o Nome, E-mail ou Protocolo para consulta.', ordens: [] }));
+        return res.end(JSON.stringify({ success: false, message: 'Informe o Nome, E-mail, Telefone ou Protocolo para consulta.', ordens: [] }));
       }
 
       if (pool) {
         pool.query(
-          `SELECT TOP 50 id, protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at
+          `SELECT TOP 50 id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, concluido_em, created_at, updated_at
            FROM ordens_servico
            WHERE LOWER(client_email) = $1
               OR LOWER(client_name) LIKE $2
               OR LOWER(protocol) = $1
+              OR client_phone LIKE $2
+              OR client_cpf LIKE $2
               OR LOWER(title) LIKE $2
            ORDER BY id DESC`,
           [q, '%' + q + '%']
@@ -20393,6 +20504,8 @@ const server = http.createServer(async (req, res) => {
             rows = localList.filter(o =>
               (o.client_email && o.client_email.toLowerCase().includes(q)) ||
               (o.client_name && o.client_name.toLowerCase().includes(q)) ||
+              (o.client_phone && o.client_phone.toLowerCase().includes(q)) ||
+              (o.client_cpf && o.client_cpf.toLowerCase().includes(q)) ||
               (o.protocol && o.protocol.toLowerCase().includes(q))
             );
           }
@@ -20403,6 +20516,8 @@ const server = http.createServer(async (req, res) => {
           const rows = localList.filter(o =>
             (o.client_email && o.client_email.toLowerCase().includes(q)) ||
             (o.client_name && o.client_name.toLowerCase().includes(q)) ||
+            (o.client_phone && o.client_phone.toLowerCase().includes(q)) ||
+            (o.client_cpf && o.client_cpf.toLowerCase().includes(q)) ||
             (o.protocol && o.protocol.toLowerCase().includes(q))
           );
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -20413,6 +20528,8 @@ const server = http.createServer(async (req, res) => {
         const rows = localList.filter(o =>
           (o.client_email && o.client_email.toLowerCase().includes(q)) ||
           (o.client_name && o.client_name.toLowerCase().includes(q)) ||
+          (o.client_phone && o.client_phone.toLowerCase().includes(q)) ||
+          (o.client_cpf && o.client_cpf.toLowerCase().includes(q)) ||
           (o.protocol && o.protocol.toLowerCase().includes(q))
         );
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -20441,7 +20558,15 @@ const server = http.createServer(async (req, res) => {
   // Rota GET para Listar Ordens de Serviço
   if (req.method === 'GET' && parsedUrl.pathname === '/api/ordens') {
     if (pool) {
-      pool.query('SELECT TOP 500 id, protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at FROM ordens_servico ORDER BY id DESC')
+      pool.query(`
+        SELECT TOP 500
+          id, protocol, client_name, client_email, client_phone, client_cpf,
+          service_type, priority, title, description, status, admin_notes,
+          tecnico_responsavel, assumido_em, canal_atendimento, concluido_em,
+          created_at, updated_at
+        FROM ordens_servico
+        ORDER BY id DESC
+      `)
         .then(result => {
           if (result.rows && result.rows.length > 0) {
             saveLocalOrdens(result.rows);
@@ -20463,11 +20588,11 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota POST para Abertura de Nova Ordem de Serviço (Público na Tela de Login)
+  // Rota POST para Abertura de Nova Ordem de Serviço (Recepção de O.S.)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/ordens') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
-    req.on('end', () => {
+    req.on('end', async () => {
       let payload;
       try {
         payload = JSON.parse(body);
@@ -20478,14 +20603,19 @@ const server = http.createServer(async (req, res) => {
 
       const clientName = (payload.client_name || '').trim();
       const clientEmail = (payload.client_email || '').toLowerCase().trim();
+      const clientPhone = (payload.client_phone || '').trim();
+      const clientCpf = (payload.client_cpf || '').trim();
       const serviceType = payload.service_type || 'Melhoria no Sistema';
       const priority = payload.priority || 'Normal';
       const title = (payload.title || '').trim();
       const description = (payload.description || '').trim();
+      const canalAtendimento = (payload.canal_atendimento || 'Portal Web').trim();
+      const initialTecnico = (payload.tecnico_responsavel || '').trim() || null;
+      const initialStatus = payload.status || (initialTecnico ? 'Em Andamento' : 'Pendente');
 
       if (!clientName || !clientEmail || !title || !description) {
         res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, message: 'Preencha todos os campos obrigatórios.' }));
+        return res.end(JSON.stringify({ success: false, message: 'Preencha todos os campos obrigatórios (*).' }));
       }
 
       const nowIso = new Date().toISOString();
@@ -20496,12 +20626,18 @@ const server = http.createServer(async (req, res) => {
         protocol: protocol,
         client_name: clientName,
         client_email: clientEmail,
+        client_phone: clientPhone,
+        client_cpf: clientCpf,
         service_type: serviceType,
         priority: priority,
         title: title,
         description: description,
-        status: 'Pendente',
-        admin_notes: '',
+        status: initialStatus,
+        admin_notes: (payload.admin_notes || '').trim(),
+        tecnico_responsavel: initialTecnico,
+        assumido_em: initialTecnico ? nowIso : null,
+        canal_atendimento: canalAtendimento,
+        concluido_em: null,
         created_at: nowIso,
         updated_at: nowIso
       };
@@ -20510,32 +20646,67 @@ const server = http.createServer(async (req, res) => {
       localList.unshift(newOrder);
       saveLocalOrdens(localList);
 
-      recordSystemLog(clientName, clientEmail, 'Abertura de O.S.', 'Ordem de Serviço', 'Nova solicitação #' + protocol + ': ' + title);
+      recordSystemLog(clientName, clientEmail, 'Abertura de O.S.', 'Ordem de Serviço', 'Nova solicitação #' + protocol + ': ' + title + ' (' + canalAtendimento + ')');
 
       // Notificação em tempo real via SSE
       broadcastEvent('new_order', {
         id: newOrder.id,
         protocol: newOrder.protocol,
         client_name: newOrder.client_name,
+        client_email: newOrder.client_email,
+        client_phone: newOrder.client_phone,
         service_type: newOrder.service_type,
         priority: newOrder.priority,
         title: newOrder.title,
+        canal_atendimento: newOrder.canal_atendimento,
+        status: newOrder.status,
         timestamp: newOrder.created_at
       });
 
+      // Gravação direta e garantida no Microsoft SQL Server interno
       if (pool) {
-        pool.query(
-          `INSERT INTO ordens_servico (protocol, client_name, client_email, service_type, priority, title, description, status, admin_notes, created_at, updated_at)
-           OUTPUT INSERTED.id
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-          [newOrder.protocol, newOrder.client_name, newOrder.client_email, newOrder.service_type, newOrder.priority, newOrder.title, newOrder.description, newOrder.status, newOrder.admin_notes, newOrder.created_at, newOrder.updated_at]
-        ).then(resDb => {
-          if (resDb.rows && resDb.rows[0]) {
+        try {
+          const resDb = await pool.query(
+            `INSERT INTO ordens_servico (
+               protocol, client_name, client_email, client_phone, client_cpf,
+               service_type, priority, title, description, status,
+               admin_notes, tecnico_responsavel, assumido_em, canal_atendimento,
+               concluido_em, created_at, updated_at
+             )
+             OUTPUT INSERTED.id
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+            [
+              newOrder.protocol,
+              newOrder.client_name,
+              newOrder.client_email,
+              newOrder.client_phone || null,
+              newOrder.client_cpf || null,
+              newOrder.service_type,
+              newOrder.priority,
+              newOrder.title,
+              newOrder.description,
+              newOrder.status,
+              newOrder.admin_notes || '',
+              newOrder.tecnico_responsavel || null,
+              newOrder.assumido_em || null,
+              newOrder.canal_atendimento || 'Portal Web',
+              newOrder.concluido_em || null,
+              newOrder.created_at,
+              newOrder.updated_at
+            ]
+          );
+          if (resDb && resDb.rows && resDb.rows[0] && resDb.rows[0].id) {
             newOrder.id = resDb.rows[0].id;
+            const idx = localList.findIndex(o => o.protocol === newOrder.protocol);
+            if (idx !== -1) {
+              localList[idx].id = resDb.rows[0].id;
+              saveLocalOrdens(localList);
+            }
           }
-        }).catch(err => {
+          console.log(`[BANCO] Nova O.S. #${newOrder.protocol} gravada com sucesso no Microsoft SQL Server (ID: ${newOrder.id})!`);
+        } catch(err) {
           console.warn('[AVISO BD O.S.] Erro ao gravar no SQL Server, mantido localmente:', err.message);
-        });
+        }
       }
 
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -20544,7 +20715,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota POST/PUT para Atualizar Status / Parecer de Ordem de Serviço (Admin)
+  // Rota POST/PUT para Atualizar Status / Parecer de Ordem de Serviço (Admin & Suporte)
   if ((req.method === 'POST' && parsedUrl.pathname === '/api/ordens/update') || (req.method === 'PUT' && parsedUrl.pathname === '/api/ordens')) {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -20559,15 +20730,22 @@ const server = http.createServer(async (req, res) => {
 
       const id = payload.id;
       const status = payload.status || 'Pendente';
-      const adminNotes = payload.admin_notes || '';
+      const adminNotes = payload.admin_notes !== undefined ? payload.admin_notes : '';
+      const priority = payload.priority !== undefined ? payload.priority : undefined;
+      const serviceType = payload.service_type !== undefined ? payload.service_type : undefined;
       const tecnicoResponsavel = payload.tecnico_responsavel !== undefined ? payload.tecnico_responsavel : undefined;
+      const canalAtendimento = payload.canal_atendimento !== undefined ? payload.canal_atendimento : undefined;
       const nowIso = new Date().toISOString();
 
       const localList = getLocalOrdens();
       const target = localList.find(o => String(o.id) === String(id) || String(o.protocol) === String(id));
       if (target) {
         target.status = status;
-        target.admin_notes = adminNotes;
+        if (adminNotes !== undefined) target.admin_notes = adminNotes;
+        if (priority !== undefined && priority) target.priority = priority;
+        if (serviceType !== undefined && serviceType) target.service_type = serviceType;
+        if (canalAtendimento !== undefined && canalAtendimento) target.canal_atendimento = canalAtendimento;
+        
         if (tecnicoResponsavel !== undefined) {
           target.tecnico_responsavel = tecnicoResponsavel || null;
           if (tecnicoResponsavel && !target.assumido_em) {
@@ -20576,37 +20754,58 @@ const server = http.createServer(async (req, res) => {
             target.assumido_em = null;
           }
         }
+
+        if (status === 'Concluído') {
+          target.concluido_em = target.concluido_em || nowIso;
+        } else {
+          target.concluido_em = null;
+        }
+
         target.updated_at = nowIso;
         saveLocalOrdens(localList);
       }
 
-      recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Atualização de O.S.', 'Ordem de Serviço', 'Atualizou O.S. #' + (target ? target.protocol : id) + ' para status: ' + status + (target && target.tecnico_responsavel ? (' (Técnico: ' + target.tecnico_responsavel + ')') : ''));
+      recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Atualização de O.S.', 'Ordem de Serviço', 'Atualizou O.S. #' + (target ? target.protocol : id) + ' para status: ' + status + ' (Prioridade: ' + (target ? target.priority : (priority || 'Normal')) + ')' + (target && target.tecnico_responsavel ? (' (Técnico: ' + target.tecnico_responsavel + ')') : ''));
 
       // Notificação em tempo real via SSE
       broadcastEvent('order_updated', {
         id: id,
         protocol: target ? target.protocol : id,
         status: status,
+        priority: target ? target.priority : priority,
+        service_type: target ? target.service_type : serviceType,
         tecnico_responsavel: target ? target.tecnico_responsavel : null,
         assumido_em: target ? target.assumido_em : null,
+        concluido_em: target ? target.concluido_em : null,
         updated_at: nowIso
       });
 
+      // Atualização direta no Microsoft SQL Server
       if (pool) {
         try {
           await pool.query(
-            `UPDATE ordens_servico SET status = $1, admin_notes = $2, tecnico_responsavel = $3, assumido_em = $4, updated_at = $5 WHERE id = $6 OR protocol = $7`,
-            [status, adminNotes, target ? target.tecnico_responsavel : null, target ? target.assumido_em : null, nowIso, isNaN(id) ? -1 : parseInt(id), String(id)]
+            `UPDATE ordens_servico
+             SET status = $1, admin_notes = $2, priority = $3, service_type = $4,
+                 tecnico_responsavel = $5, assumido_em = $6, canal_atendimento = $7,
+                 concluido_em = $8, updated_at = $9
+             WHERE id = $10 OR protocol = $11`,
+            [
+              status,
+              adminNotes,
+              target ? target.priority : (priority || 'Normal'),
+              target ? target.service_type : (serviceType || 'Melhoria no Sistema'),
+              target ? target.tecnico_responsavel : null,
+              target ? target.assumido_em : null,
+              target ? target.canal_atendimento : (canalAtendimento || 'Portal Web'),
+              target ? target.concluido_em : null,
+              nowIso,
+              isNaN(id) ? -1 : parseInt(id),
+              String(id)
+            ]
           );
+          console.log(`[BANCO] O.S. #${target ? target.protocol : id} atualizada com sucesso no SQL Server.`);
         } catch(err) {
-          try {
-            await pool.query(
-              `UPDATE ordens_servico SET status = $1, admin_notes = $2, updated_at = $3 WHERE id = $4 OR protocol = $5`,
-              [status, adminNotes, nowIso, isNaN(id) ? -1 : parseInt(id), String(id)]
-            );
-          } catch(err2) {
-            console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server:', err2.message);
-          }
+          console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server, mantido localmente:', err.message);
         }
       }
 
