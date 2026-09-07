@@ -786,7 +786,9 @@ const htmlContent = `<!DOCTYPE html>
     document.documentElement.style.setProperty('--app-zoom', sn);
     var bgCol = isLight ? '#F2F7F4' : '#060913';
     document.write('<style id="critical-fouc-shield">background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + '</style>');
-    document.write('<style id="nexus-scale-override">html, body { zoom: ' + sn + ' !important; } :root { --app-zoom: ' + sn + '; }</style>');
+    var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || sn === 1.0);
+    var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('html, body { zoom: ' + sn + ' !important; }');
+    document.write('<style id="nexus-scale-override">' + zoomRule + ' :root { --app-zoom: ' + sn + '; }</style>');
   } catch(e){}
 })();
 </script>
@@ -1030,10 +1032,9 @@ html, body{overflow-x:clip !important; width:100%;}
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
+  background-attachment: scroll !important;
   transform: translateZ(0) !important;
   -webkit-transform: translateZ(0) !important;
-  will-change: transform !important;
 }
 
 body.light #persistentSystemBg,
@@ -1054,7 +1055,9 @@ body.user-logged-in {
   background-color: transparent !important;
   background-image: none !important;
   color:var(--text); min-height:100vh;
-  zoom:var(--app-zoom, 1);
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth;
+  touch-action: pan-y pinch-zoom;
 }
 
 html.user-logged-in #authPage {
@@ -1077,6 +1080,8 @@ html, body {
   width: 100% !important;
   min-height: 100vh !important;
   overflow-x: clip !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y pinch-zoom;
 }
 
 #appMain {
@@ -7013,6 +7018,26 @@ body.light .logout-timer-bar {
 }
 
 @media (max-width: 768px) {
+  html, body {
+    zoom: normal !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+    touch-action: pan-y pinch-zoom !important;
+  }
+  .app-blob, .auth-blob {
+    display: none !important;
+  }
+  .topheader, nav.menu, .panel, .kpi, .table-panel, .auth-box, .cards-summary-panel, .tx-footer-summary, .modal, .scale-dropdown, .notif-panel, .fintech-live-ticker-bar {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  .main, .table-panel, .table-responsive, table, .modal {
+    -webkit-overflow-scrolling: touch !important;
+  }
+  tbody tr {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 48px;
+  }
   .kpis { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
   .grid3, .grid2 { grid-template-columns: 1fr !important; }
   .topheader-row { padding: 0 16px; gap: 10px; }
@@ -18114,11 +18139,17 @@ function applyDisplayScale(scaleVal) {
     scaleStyle.id = 'nexus-scale-override';
     document.head.appendChild(scaleStyle);
   }
-  scaleStyle.textContent = 'html, body { zoom: ' + scaleNum + ' !important; } :root { --app-zoom: ' + scaleNum + '; }';
+  var isTouchScreen = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (w <= 1024);
+  var isMobileScale = (devType === 'mobile' || devType === 'tablet' || isTouchScreen || scaleNum === 1.0);
+  scaleStyle.textContent = (isMobileScale ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('html, body { zoom: ' + scaleNum + ' !important; }')) + ' :root { --app-zoom: ' + scaleNum + '; }';
 
   document.documentElement.style.setProperty('--app-zoom', scaleNum);
   if (document.body) {
-    document.body.style.setProperty('zoom', scaleNum);
+    if (isMobileScale) {
+      document.body.style.removeProperty('zoom');
+    } else {
+      document.body.style.setProperty('zoom', scaleNum);
+    }
   }
 
   var lbl = document.getElementById('currentScaleLabel');
@@ -18395,34 +18426,65 @@ if (scaleMenuBtn && scaleDropdown) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+
+    function isCanvasVisible() {
+      if (document.hidden) return false;
+      if (!canvas.parentElement) return false;
+      if (canvasId === 'authBgCanvas') {
+        const authPage = document.getElementById('authPage');
+        if (authPage && (authPage.style.display === 'none' || document.documentElement.classList.contains('user-logged-in'))) return false;
+      }
+      if (canvasId === 'appBgOrbitalCanvas') {
+        const appMain = document.getElementById('appMain');
+        if (appMain && (appMain.style.display === 'none' || !document.documentElement.classList.contains('user-logged-in'))) return false;
+      }
+      return true;
+    }
+
+    let isScrolling = false;
+    let scrollTimeout = null;
+    function onScrollActive() {
+      isScrolling = true;
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() {
+        isScrolling = false;
+      }, 120);
+    }
+    window.addEventListener('scroll', onScrollActive, { passive: true });
+    window.addEventListener('touchmove', onScrollActive, { passive: true });
+
     let dpr = 1;
     let width = 0;
     let height = 0;
     let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false };
 
-    window.addEventListener('mousemove', (e) => {
-      mouse.targetX = e.clientX;
-      mouse.targetY = e.clientY;
-      mouse.active = true;
-    });
-    window.addEventListener('mouseleave', () => {
-      mouse.active = false;
-      mouse.targetX = -1000;
-      mouse.targetY = -1000;
-    });
+    if (!isTouch) {
+      window.addEventListener('mousemove', (e) => {
+        mouse.targetX = e.clientX;
+        mouse.targetY = e.clientY;
+        mouse.active = true;
+      }, { passive: true });
+      window.addEventListener('mouseleave', () => {
+        mouse.active = false;
+        mouse.targetX = -1000;
+        mouse.targetY = -1000;
+      }, { passive: true });
+    }
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 3);
+      dpr = isTouch ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       width = window.innerWidth;
       height = window.innerHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
       canvas.style.width = width + 'px';
       canvas.style.height = height + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
     }
     resize();
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', resize, { passive: true });
 
     // 1. Simulação de Evolução Patrimonial Pessoal ao Longo do Ano
     const monthMilestones = [
@@ -18457,7 +18519,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
     // 2. Candlesticks Financeiros Reais de Mercado
     const candlestickBars = [];
-    const candleCount = 28;
+    const candleCount = isTouch ? 10 : 28;
     for (let c = 0; c < candleCount; c++) {
       const isBullish = Math.random() > 0.44;
       candlestickBars.push({
@@ -18475,7 +18537,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
     // 3. Elementos Financeiros Flutuantes com Profundidade
     const items = [];
-    const itemCount = 38;
+    const itemCount = isTouch ? 12 : 38;
     for (let i = 0; i < itemCount; i++) {
       const kind = i % 2;
       items.push({
@@ -18495,7 +18557,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
     // 4. Partículas de Poeira Luminosa (Bokeh 4K)
     const dustParticles = [];
-    const dustCount = 45;
+    const dustCount = isTouch ? 14 : 45;
     for (let d = 0; d < dustCount; d++) {
       dustParticles.push({
         x: Math.random() * width,
@@ -18514,12 +18576,18 @@ if (scaleMenuBtn && scaleDropdown) {
     let tickCounter = 0;
 
     function render() {
+      requestAnimationFrame(render);
+      if (!isCanvasVisible()) return;
+      if (isTouch && isScrolling) return;
+
       ctx.clearRect(0, 0, width, height);
       const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
 
-      // Inércia suave do cursor
-      mouse.x += (mouse.targetX - mouse.x) * 0.08;
-      mouse.y += (mouse.targetY - mouse.y) * 0.08;
+      // Inércia suave do cursor (desktop)
+      if (!isTouch && mouse.active) {
+        mouse.x += (mouse.targetX - mouse.x) * 0.08;
+        mouse.y += (mouse.targetY - mouse.y) * 0.08;
+      }
 
       // A. Grid Terminal Financeiro com Pontos de Mira (+)
       const step = 65;
@@ -18564,7 +18632,7 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
         ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
 
-        if (!isLight) {
+        if (!isLight && !isTouch) {
           ctx.shadowColor = candleColor;
           ctx.shadowBlur = 6;
         }
@@ -18624,7 +18692,7 @@ if (scaleMenuBtn && scaleDropdown) {
       });
       ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.75)' : 'rgba(16, 185, 129, 0.85)';
       ctx.lineWidth = 2.4;
-      if (!isLight) {
+      if (!isLight && !isTouch) {
         ctx.shadowColor = '#10B981';
         ctx.shadowBlur = 10;
       }
@@ -18672,7 +18740,7 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.arc(dp.x, dp.y, dp.radius, 0, Math.PI * 2);
         ctx.fillStyle = dp.color;
         ctx.globalAlpha = isLight ? curAlpha * 0.5 : curAlpha;
-        if (!isLight && dp.radius > 1.2) {
+        if (!isLight && !isTouch && dp.radius > 1.2) {
           ctx.shadowColor = dp.color;
           ctx.shadowBlur = 8;
         }
@@ -18688,7 +18756,8 @@ if (scaleMenuBtn && scaleDropdown) {
       ctx.moveTo(0, height);
       ctx.lineTo(0, waveY);
       const wavePoints = [];
-      for (let x = 0; x <= width; x += 20) {
+      const waveStep = isTouch ? 30 : 20;
+      for (let x = 0; x <= width; x += waveStep) {
         const y = waveY + Math.sin(x * 0.004 + waveOffset) * 32 + Math.cos(x * 0.008 - waveOffset * 0.5) * 18;
         ctx.lineTo(x, y);
         if (x % 160 === 0) wavePoints.push({ x: x, y: y });
@@ -18711,7 +18780,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
       // Linha de Contorno Ciano
       ctx.beginPath();
-      for (let x = 0; x <= width; x += 20) {
+      for (let x = 0; x <= width; x += waveStep) {
         const y = waveY + Math.sin(x * 0.004 + waveOffset) * 32 + Math.cos(x * 0.008 - waveOffset * 0.5) * 18;
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
@@ -18727,8 +18796,10 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
         ctx.fillStyle = '#38BDF8';
-        ctx.shadowColor = '#38BDF8';
-        ctx.shadowBlur = 12;
+        if (!isTouch) {
+          ctx.shadowColor = '#38BDF8';
+          ctx.shadowBlur = 12;
+        }
         ctx.fill();
 
         ctx.font = '800 10px "Outfit", sans-serif';
@@ -18737,44 +18808,46 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.restore();
       });
 
-      // E. Conexões de Rede Interativa entre Nós e Interação com Cursor
-      for (let i = 0; i < items.length; i++) {
-        if (mouse.active && mouse.x > 0) {
-          const mdx = items[i].x - mouse.x;
-          const mdy = items[i].y - mouse.y;
-          const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-          if (mdist < 160) {
-            const force = (1 - mdist / 160) * 1.5;
-            items[i].x += (mdx / mdist) * force;
-            items[i].y += (mdy / mdist) * force;
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(items[i].x, items[i].y);
-            ctx.lineTo(mouse.x, mouse.y);
-            const mouseConnAlpha = (1 - mdist / 160) * (isLight ? 0.25 : 0.45);
-            ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, ' + mouseConnAlpha + ')' : 'rgba(245, 158, 11, ' + mouseConnAlpha + ')';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            ctx.restore();
+      // E. Conexões de Rede Interativa (somente Desktop para máxima performance em dispositivos móveis)
+      if (!isTouch) {
+        for (let i = 0; i < items.length; i++) {
+          if (mouse.active && mouse.x > 0) {
+            const mdx = items[i].x - mouse.x;
+            const mdy = items[i].y - mouse.y;
+            const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+            if (mdist < 160) {
+              const force = (1 - mdist / 160) * 1.5;
+              items[i].x += (mdx / mdist) * force;
+              items[i].y += (mdy / mdist) * force;
+              ctx.save();
+              ctx.beginPath();
+              ctx.moveTo(items[i].x, items[i].y);
+              ctx.lineTo(mouse.x, mouse.y);
+              const mouseConnAlpha = (1 - mdist / 160) * (isLight ? 0.25 : 0.45);
+              ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, ' + mouseConnAlpha + ')' : 'rgba(245, 158, 11, ' + mouseConnAlpha + ')';
+              ctx.lineWidth = 1;
+              ctx.stroke();
+              ctx.restore();
+            }
           }
-        }
-        for (let j = i + 1; j < items.length; j++) {
-          const dx = items[i].x - items[j].x;
-          const dy = items[i].y - items[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          for (let j = i + 1; j < items.length; j++) {
+            const dx = items[i].x - items[j].x;
+            const dy = items[i].y - items[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 130) {
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(items[i].x, items[i].y);
-            ctx.lineTo(items[j].x, items[j].y);
-            const connAlpha = (1 - dist / 130) * 0.20;
-            ctx.strokeStyle = isLight 
-              ? 'rgba(14, 165, 233, ' + connAlpha + ')' 
-              : 'rgba(56, 189, 248, ' + (connAlpha * 1.25) + ')';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            ctx.restore();
+            if (dist < 130) {
+              ctx.save();
+              ctx.beginPath();
+              ctx.moveTo(items[i].x, items[i].y);
+              ctx.lineTo(items[j].x, items[j].y);
+              const connAlpha = (1 - dist / 130) * 0.20;
+              ctx.strokeStyle = isLight 
+                ? 'rgba(14, 165, 233, ' + connAlpha + ')' 
+                : 'rgba(56, 189, 248, ' + (connAlpha * 1.25) + ')';
+              ctx.lineWidth = 1;
+              ctx.stroke();
+              ctx.restore();
+            }
           }
         }
       }
@@ -18827,7 +18900,6 @@ if (scaleMenuBtn && scaleDropdown) {
         }
         ctx.restore();
       });
-      requestAnimationFrame(render);
     }
     render();
   }
