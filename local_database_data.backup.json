@@ -107,7 +107,7 @@
         "count": 0
       },
       {
-        "icon": "💻",
+        "icon": "����",
         "name": "Freelance",
         "type": "receita",
         "color": "#4a90e2",
@@ -167,7 +167,12 @@
     "nextNotifId": 1
   },
   "admin@nexusfinanceirohub.com.br": {
-    "test": 123
+    "test": 123,
+    "transactions": [],
+    "categories": [],
+    "accounts": [],
+    "goals": [],
+    "budgets": []
   },
   "pauloteste.real@nexusfinanceiro.com": {
     "transactions": [
@@ -568,5 +573,36 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1
+  },
+  "homologacao.paulo@nexusfinanceiro.com": {
+    "transactions": [
+      {
+        "id": 101,
+        "desc": "Consultoria Contábil",
+        "val": 4500,
+        "date": "2026-09-07",
+        "cat": "Consultoria",
+        "type": "in",
+        "acc": "Conta Corrente",
+        "status": "Efetivado"
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Corrente",
+        "type": "checking",
+        "balance": 4500
+      }
+    ],
+    "categories": [
+      {
+        "id": 1,
+        "name": "Consultoria",
+        "type": "income"
+      }
+    ],
+    "goals": [],
+    "budgets": []
   }
 }

@@ -82,5 +82,19 @@
     "phone": "(62) 99999-8888",
     "birth_date": "10/10/1990",
     "terms_accepted": true
+  },
+  {
+    "id": "59",
+    "name": "Paulo Lima Homologacao",
+    "email": "homologacao.paulo@nexusfinanceiro.com",
+    "password": "scrypt:3a6b8c888ee48d3aff7331b0287b7353:6967eb14479b3460b4e01f370208c1034322e8e7c9c3b7f7e3a28cc665fd834c6e1d822c058ccd09a9a01baf657f27f95f3b8eaa87d3984500914de549f987b9",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-07T16:35:37.463Z",
+    "last_login": null,
+    "cpf": "040.233.261-00",
+    "phone": "(62) 99234-5372",
+    "birth_date": "1990-05-15",
+    "terms_accepted": true
   }
 ]
