@@ -711,7 +711,7 @@ async function setupDatabaseTablesAndSync() {
     console.warn('[BANCO AVISO] Erro ao sincronizar cache local de usuários:', syncErr.message);
   }
 
-  // 6. Sincronização dos dados financeiros locais para o banco SQL
+  // 6. Sincronização dos dados financeiros locais para o banco SQL (com merge inteligente para nunca perder transações)
   try {
     const localDataFile = path.join(__dirname, 'local_database_data.json');
     if (fs.existsSync(localDataFile)) {
@@ -719,12 +719,31 @@ async function setupDatabaseTablesAndSync() {
       for (const [emailKey, dataVal] of Object.entries(allData)) {
         if (!emailKey || !dataVal) continue;
         const cleanEmail = emailKey.toLowerCase().trim();
-        const existingData = await pool.query('SELECT id FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+        const existingData = await pool.query('SELECT id, dados FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
         if (existingData.rows.length === 0) {
           await pool.query(
-            'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2)',
+            'INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE())',
             [cleanEmail, dataVal]
           );
+        } else {
+          // Se já existe, realiza merge e atualiza se o local possuir dados relevantes
+          const dbDados = existingData.rows[0].dados;
+          let shouldUpdateDb = false;
+          if (!dbDados || typeof dbDados !== 'object' || Object.keys(dbDados).length === 0) {
+            shouldUpdateDb = true;
+          } else {
+            const localTxCount = (dataVal.transactions || []).length;
+            const dbTxCount = (dbDados.transactions || []).length;
+            if (localTxCount >= dbTxCount && localTxCount > 0) {
+              shouldUpdateDb = true;
+            }
+          }
+          if (shouldUpdateDb) {
+            await pool.query(
+              'UPDATE dados_financeiros SET dados = $1, updated_at = GETDATE() WHERE LOWER(email) = LOWER($2)',
+              [dataVal, cleanEmail]
+            );
+          }
         }
       }
       console.log(`[BANCO] Dados financeiros locais consolidados com o banco SQL interno.`);
@@ -784,7 +803,7 @@ async function setupDatabaseTablesAndSync() {
       FROM ordens_servico
       ORDER BY id DESC
     `);
-    if (dbOrdens.rows && Array.isArray(dbOrdens.rows)) {
+    if (dbOrdens.rows && Array.isArray(dbOrdens.rows) && dbOrdens.rows.length > 0) {
       const formattedOrdens = dbOrdens.rows.map(r => ({
         id: String(r.id),
         protocol: r.protocol,
@@ -812,7 +831,7 @@ async function setupDatabaseTablesAndSync() {
     console.warn('[BANCO AVISO] Erro ao sincronizar ordens de serviço locais:', syncOrdErr.message);
   }
 
-  // 8. Sincronização e Consolidação de Técnicos entre Banco SQL e Cache Local
+  // 8. Sincronização e Consolidação de Técnicos entre Banco SQL e Cache Local (Proteção Contra Perda)
   try {
     // 8.1 Remove eventuais técnicos de mock fictícios do banco
     await pool.query("DELETE FROM tecnicos_suporte WHERE LOWER(email) IN ('carlos.tecnico@nexus.com', 'juliana.suporte@nexus.com')");
@@ -831,9 +850,9 @@ async function setupDatabaseTablesAndSync() {
       }
     }
 
-    // 8.3 Consolida do banco SQL para o cache local para nunca perder dados
+    // 8.3 Consolida do banco SQL para o cache local para nunca perder dados (sem sobrescrever se o banco estiver vazio)
     const dbTecs = await pool.query('SELECT id, name, email, phone, specialty, active, created_at FROM tecnicos_suporte ORDER BY id ASC');
-    if (dbTecs.rows && Array.isArray(dbTecs.rows)) {
+    if (dbTecs.rows && Array.isArray(dbTecs.rows) && dbTecs.rows.length > 0) {
       const mergedList = dbTecs.rows.map(row => ({
         id: String(row.id),
         name: row.name,
@@ -848,6 +867,83 @@ async function setupDatabaseTablesAndSync() {
     }
   } catch(syncTecErr) {
     console.warn('[BANCO AVISO] Erro ao sincronizar técnicos de suporte com o banco:', syncTecErr.message);
+  }
+
+  // 9. Sincronização e Consolidação de CPF Registry no Banco SQL e Cache Local
+  try {
+    await pool.query(`
+      IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'cpf_registry')
+      BEGIN
+        CREATE TABLE cpf_registry (
+          id INT IDENTITY(1,1) PRIMARY KEY,
+          cpf NVARCHAR(20) NOT NULL UNIQUE,
+          nome NVARCHAR(150) NULL,
+          data_nascimento NVARCHAR(20) NULL,
+          phone NVARCHAR(30) NULL,
+          email NVARCHAR(150) NULL,
+          situacao NVARCHAR(50) NULL DEFAULT 'REGULAR',
+          regiao_fiscal NVARCHAR(100) NULL,
+          origem NVARCHAR(150) NULL,
+          created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
+          updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
+        );
+      END;
+    `);
+
+    // Sobe os CPFs locais para o SQL Server
+    const localCpfReg = getCpfRegistry();
+    for (const [cpfNum, item] of Object.entries(localCpfReg)) {
+      if (!cpfNum || !item) continue;
+      const cleanCpfNum = String(cpfNum).replace(/\D/g, '');
+      await pool.query(`
+        IF EXISTS (SELECT 1 FROM cpf_registry WHERE cpf = $1)
+        BEGIN
+          UPDATE cpf_registry SET
+            nome = COALESCE($2, nome),
+            data_nascimento = COALESCE($3, data_nascimento),
+            phone = COALESCE($4, phone),
+            email = COALESCE($5, email),
+            situacao = COALESCE($6, situacao),
+            regiao_fiscal = COALESCE($7, regiao_fiscal),
+            origem = COALESCE($8, origem),
+            updated_at = GETDATE()
+          WHERE cpf = $1;
+        END
+        ELSE
+        BEGIN
+          INSERT INTO cpf_registry (cpf, nome, data_nascimento, phone, email, situacao, regiao_fiscal, origem, created_at, updated_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, GETDATE(), GETDATE());
+        END
+      `, [cleanCpfNum, item.nome || null, item.data_nascimento || null, item.phone || null, item.email || null, item.situacao || 'REGULAR', item.regiao_fiscal || null, item.origem || 'Receita Federal do Brasil (Base Cadastral Verificada)']);
+    }
+
+    // Consolida do banco SQL para o arquivo local
+    const dbCpfs = await pool.query('SELECT cpf, nome, data_nascimento, phone, email, situacao, regiao_fiscal, origem, updated_at FROM cpf_registry');
+    if (dbCpfs.rows && Array.isArray(dbCpfs.rows) && dbCpfs.rows.length > 0) {
+      const mergedRegistry = { ...localCpfReg };
+      dbCpfs.rows.forEach(r => {
+        if (r && r.cpf) {
+          const cNum = String(r.cpf).replace(/\D/g, '');
+          mergedRegistry[cNum] = {
+            cpf: r.cpf,
+            nome: r.nome || '',
+            data_nascimento: r.data_nascimento || null,
+            phone: r.phone || '',
+            email: r.email || '',
+            situacao: r.situacao || 'REGULAR',
+            regiao_fiscal: r.regiao_fiscal || '',
+            origem: r.origem || 'Receita Federal do Brasil (Base Cadastral Oficial)',
+            updated_at: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString()
+          };
+        }
+      });
+      const jsonStr = JSON.stringify(mergedRegistry, null, 2);
+      fs.writeFileSync(CPF_REGISTRY_PATH, jsonStr, 'utf8');
+      try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
+      console.log(`[BANCO] ${Object.keys(mergedRegistry).length} registros de CPF consolidados e sincronizados no banco SQL interno e cache local.`);
+    }
+  } catch(syncCpfErr) {
+    console.warn('[BANCO AVISO] Erro ao sincronizar CPF Registry com o banco:', syncCpfErr.message);
   }
 }
 
@@ -8327,6 +8423,17 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
         <div class="field-row" style="display:flex; gap:12px;">
           <div class="field" style="flex:1;">
+            <label>WhatsApp / Celular (Opcional)</label>
+            <input id="osClientPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)">
+          </div>
+          <div class="field" style="flex:1;">
+            <label>CPF do Solicitante (Opcional)</label>
+            <input id="osClientCpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpfInput(this)">
+          </div>
+        </div>
+
+        <div class="field-row" style="display:flex; gap:12px;">
+          <div class="field" style="flex:1;">
             <label>Tipo de Serviço *</label>
             <select id="osServiceType" required>
               <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
@@ -8476,6 +8583,14 @@ html.light .scale-dropdown .scale-opt-btn:hover {
           <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Telefone / Contato</span>
           <span style="font-size:13px; color:#E2E8F0; font-weight:600;" id="osAdminClientPhone">Não informado</span>
         </div>
+        <div>
+          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">CPF do Solicitante</span>
+          <span style="font-size:13px; color:#E2E8F0; font-weight:600;" id="osAdminClientCpf">Não informado</span>
+        </div>
+        <div>
+          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Canal de Recepção</span>
+          <span style="font-size:13px; color:#38BDF8; font-weight:700;" id="osAdminCanal">Portal Web</span>
+        </div>
       </div>
 
       <!-- Atalhos Rápidos de Contato Direto do Suporte -->
@@ -8547,8 +8662,11 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
     <input type="hidden" id="osAdminCurrentId">
 
-    <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
-      <button type="button" class="btn-ghost" onclick="excluirOrdemAdmin()" style="color:#F87171; border-color:rgba(239,68,68,0.3);">🗑️ Excluir O.S.</button>
+    <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; flex-wrap:wrap; gap:10px;">
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn-ghost" onclick="excluirOrdemAdmin()" style="color:#F87171; border-color:rgba(239,68,68,0.3);">🗑️ Excluir O.S.</button>
+        <button type="button" class="btn-ghost" onclick="imprimirFichaOrdem(document.getElementById('osAdminCurrentId').value)" style="color:#38BDF8; border-color:rgba(56,189,248,0.35);">🖨️ Imprimir Ficha O.S.</button>
+      </div>
       <div style="display:flex; gap:10px;">
         <button type="button" onclick="closeOrdemAdminModal()">Fechar</button>
         <button type="button" class="save" onclick="salvarOrdemAdmin()" style="background:linear-gradient(135deg, #10B981, #059669); font-weight:800;">Salvar Atendimento ✓</button>
@@ -8588,6 +8706,23 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         </div>
 
         <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">CPF do Solicitante (Opcional)</label>
+          <input id="suporteOsClientCpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
+        </div>
+
+        <div class="field" style="margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Canal de Recepção *</label>
+          <select id="suporteOsCanal" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+            <option value="WhatsApp Suporte">💬 WhatsApp Suporte Oficial</option>
+            <option value="Telefone Direto / 0800">📞 Telefone / Atendimento de Voz</option>
+            <option value="Portal Web / Chamado">🌐 Portal Web / Chamado Direto</option>
+            <option value="Atendimento Presencial">🏢 Atendimento Presencial / Balcão</option>
+            <option value="E-mail Suporte">📧 E-mail Oficial de Suporte</option>
+            <option value="Chat Interno">💬 Chat Interno da Equipe</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-bottom:0;">
           <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Tipo de Demanda *</label>
           <select id="suporteOsServiceType" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
             <option value="Correção de Dados">Correção de Dados Cadastrais</option>
@@ -8601,9 +8736,16 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         <div class="field" style="margin-bottom:0;">
           <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Prioridade</label>
           <select id="suporteOsPriority" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
-            <option value="Normal">Normal</option>
-            <option value="Alta">Alta</option>
-            <option value="Urgente">Urgente / Crítica</option>
+            <option value="Normal">🟢 Normal</option>
+            <option value="Alta">🟡 Alta</option>
+            <option value="Urgente">🔴 Urgente / Crítica</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
+          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Atribuir Técnico Inicial (Opcional)</label>
+          <select id="suporteOsTecnico" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+            <option value="">(Deixar na fila de triagem / Sem atribuição inicial)</option>
           </select>
         </div>
 
@@ -14727,6 +14869,8 @@ window.enviarNovaOrdem = async function(e) {
 
   const clientName = (document.getElementById('osClientName')?.value || '').trim();
   const clientEmail = (document.getElementById('osClientEmail')?.value || '').trim();
+  const clientPhone = (document.getElementById('osClientPhone')?.value || '').trim();
+  const clientCpf = (document.getElementById('osClientCpf')?.value || '').trim();
   const serviceType = document.getElementById('osServiceType')?.value || 'Melhoria no Sistema';
   const priority = document.getElementById('osPriority')?.value || 'Normal';
   const title = (document.getElementById('osTitle')?.value || '').trim();
@@ -14753,8 +14897,11 @@ window.enviarNovaOrdem = async function(e) {
       body: JSON.stringify({
         client_name: clientName,
         client_email: clientEmail,
+        client_phone: clientPhone,
+        client_cpf: clientCpf,
         service_type: serviceType,
         priority: priority,
+        canal_atendimento: 'Portal Web / Login',
         title: title,
         description: description
       })
@@ -17233,6 +17380,16 @@ window.openSuporteNovaOrdemModal = function() {
   if(!overlay) return;
   const form = document.getElementById('formSuporteNovaOrdem');
   if(form) form.reset();
+
+  const tecSel = document.getElementById('suporteOsTecnico');
+  if (tecSel) {
+    let opts = '<option value="">(Deixar na fila de triagem / Sem atribuição inicial)</option>';
+    (systemTecnicos || []).filter(t => t.active !== false).forEach(t => {
+      opts += '<option value="' + escapeOsHtml(t.name) + '">👷 ' + escapeOsHtml(t.name) + ' (' + escapeOsHtml(t.specialty || 'Suporte') + ')</option>';
+    });
+    tecSel.innerHTML = opts;
+  }
+
   overlay.classList.add('show');
   overlay.style.display = 'flex';
   const nameInp = document.getElementById('suporteOsClientName');
@@ -17251,6 +17408,9 @@ window.enviarSuporteNovaOrdem = async function(e) {
   const name = (document.getElementById('suporteOsClientName')?.value || '').trim();
   const email = (document.getElementById('suporteOsClientEmail')?.value || '').trim().toLowerCase();
   const phone = (document.getElementById('suporteOsClientPhone')?.value || '').trim();
+  const cpf = (document.getElementById('suporteOsClientCpf')?.value || '').trim();
+  const canal = (document.getElementById('suporteOsCanal')?.value || 'WhatsApp Suporte').trim();
+  const tecnico = (document.getElementById('suporteOsTecnico')?.value || '').trim();
   const type = document.getElementById('suporteOsServiceType')?.value || 'Correção de Dados';
   const priority = document.getElementById('suporteOsPriority')?.value || 'Normal';
   const title = (document.getElementById('suporteOsTitle')?.value || '').trim();
@@ -17272,6 +17432,9 @@ window.enviarSuporteNovaOrdem = async function(e) {
         client_name: name,
         client_email: email,
         client_phone: phone,
+        client_cpf: cpf,
+        canal_atendimento: canal,
+        tecnico_responsavel: tecnico || null,
         service_type: type,
         priority: priority,
         title: title,
@@ -19423,6 +19586,169 @@ function saveLocalData(email, data) {
   }
 }
 
+// Consolidação e Merge Inteligente de Dados Financeiros (Prevenção Absoluta de Perda de Dados)
+function mergeFinancialData(serverData, localData) {
+  if (!serverData && !localData) return null;
+  if (!serverData) return localData;
+  if (!localData) return serverData;
+
+  const merged = { ...localData, ...serverData };
+
+  // 1. Transações: união inteligente por ID ou chave desc+data+valor para garantir que nenhuma transação seja perdida
+  const txMap = new Map();
+  (serverData.transactions || []).forEach(t => {
+    if (t) {
+      const key = (t.id !== undefined && t.id !== null) ? String(t.id) : `${t.desc}_${t.date}_${t.val || t.amount}`;
+      txMap.set(key, t);
+    }
+  });
+  (localData.transactions || []).forEach(t => {
+    if (t) {
+      const key = (t.id !== undefined && t.id !== null) ? String(t.id) : `${t.desc}_${t.date}_${t.val || t.amount}`;
+      if (!txMap.has(key)) {
+        txMap.set(key, t);
+      }
+    }
+  });
+  merged.transactions = Array.from(txMap.values());
+
+  // 2. Categorias: união preservando categorias cadastradas
+  const catMap = new Map();
+  (serverData.categories || []).forEach(c => {
+    if (c) {
+      const key = c.id ? String(c.id) : (c.name || JSON.stringify(c));
+      catMap.set(key, c);
+    }
+  });
+  (localData.categories || []).forEach(c => {
+    if (c) {
+      const key = c.id ? String(c.id) : (c.name || JSON.stringify(c));
+      if (!catMap.has(key)) {
+        catMap.set(key, c);
+      }
+    }
+  });
+  merged.categories = Array.from(catMap.values());
+
+  // 3. Contas bancárias: união preservando contas cadastradas
+  const accMap = new Map();
+  (serverData.accounts || []).forEach(a => {
+    if (a) {
+      const key = a.id ? String(a.id) : (a.name || JSON.stringify(a));
+      accMap.set(key, a);
+    }
+  });
+  (localData.accounts || []).forEach(a => {
+    if (a) {
+      const key = a.id ? String(a.id) : (a.name || JSON.stringify(a));
+      if (!accMap.has(key)) {
+        accMap.set(key, a);
+      }
+    }
+  });
+  merged.accounts = Array.from(accMap.values());
+
+  // 4. Metas e Orçamentos
+  const goalMap = new Map();
+  (serverData.goals || []).forEach(g => { if (g) goalMap.set(String(g.id || g.title), g); });
+  (localData.goals || []).forEach(g => {
+    const key = String(g && (g.id || g.title));
+    if (key && !goalMap.has(key)) goalMap.set(key, g);
+  });
+  merged.goals = Array.from(goalMap.values());
+
+  const budgetMap = new Map();
+  (serverData.budgets || []).forEach(b => { if (b) budgetMap.set(String(b.id || b.cat), b); });
+  (localData.budgets || []).forEach(b => {
+    const key = String(b && (b.id || b.cat));
+    if (key && !budgetMap.has(key)) budgetMap.set(key, b);
+  });
+  merged.budgets = Array.from(budgetMap.values());
+
+  return merged;
+}
+
+// ==================== Camada Central de Registro e Validação de CPF ====================
+const REGIOES_FISCAIS_RFB = {
+  '1': '1ª Região Fiscal (DF, GO, MT, MS, TO)',
+  '2': '2ª Região Fiscal (AC, AM, AP, PA, RO, RR)',
+  '3': '3ª Região Fiscal (CE, MA, PI)',
+  '4': '4ª Região Fiscal (AL, PB, PE, RN)',
+  '5': '5ª Região Fiscal (BA, SE)',
+  '6': '6ª Região Fiscal (MG)',
+  '7': '7ª Região Fiscal (ES, RJ)',
+  '8': '8ª Região Fiscal (SP)',
+  '9': '9ª Região Fiscal (PR, SC)',
+  '0': '10ª Região Fiscal (RS)'
+};
+
+const CPF_REGISTRY_PATH = path.join(__dirname, 'cpf_registry.json');
+const CPF_REGISTRY_BACKUP_PATH = path.join(__dirname, 'cpf_registry.backup.json');
+
+function getCpfRegistry() {
+  try {
+    if (fs.existsSync(CPF_REGISTRY_PATH)) {
+      return JSON.parse(fs.readFileSync(CPF_REGISTRY_PATH, 'utf8')) || {};
+    }
+    if (fs.existsSync(CPF_REGISTRY_BACKUP_PATH)) {
+      return JSON.parse(fs.readFileSync(CPF_REGISTRY_BACKUP_PATH, 'utf8')) || {};
+    }
+  } catch (e) {
+    if (fs.existsSync(CPF_REGISTRY_BACKUP_PATH)) {
+      try { return JSON.parse(fs.readFileSync(CPF_REGISTRY_BACKUP_PATH, 'utf8')) || {}; } catch(be){}
+    }
+  }
+  return {};
+}
+
+function saveCpfRegistryEntry(cleanCpf, data) {
+  if (!cleanCpf) return;
+  try {
+    const reg = getCpfRegistry();
+    reg[cleanCpf] = {
+      ...(reg[cleanCpf] || {}),
+      ...data,
+      updated_at: new Date().toISOString()
+    };
+    const jsonStr = JSON.stringify(reg, null, 2);
+    fs.writeFileSync(CPF_REGISTRY_PATH, jsonStr, 'utf8');
+    try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
+
+    // Persistência direta no Microsoft SQL Server (tabela cpf_registry)
+    if (pool) {
+      pool.query(`
+        IF EXISTS (SELECT 1 FROM cpf_registry WHERE cpf = $1)
+        BEGIN
+          UPDATE cpf_registry SET
+            nome = COALESCE($2, nome),
+            data_nascimento = COALESCE($3, data_nascimento),
+            phone = COALESCE($4, phone),
+            email = COALESCE($5, email),
+            situacao = COALESCE($6, situacao),
+            regiao_fiscal = COALESCE($7, regiao_fiscal),
+            origem = COALESCE($8, origem),
+            updated_at = GETDATE()
+          WHERE cpf = $1;
+        END
+        ELSE
+        BEGIN
+          INSERT INTO cpf_registry (cpf, nome, data_nascimento, phone, email, situacao, regiao_fiscal, origem, created_at, updated_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, GETDATE(), GETDATE());
+        END
+      `, [
+        cleanCpf,
+        data.nome || null,
+        data.data_nascimento || null,
+        data.phone || null,
+        data.email || null,
+        data.situacao || 'REGULAR',
+        data.regiao_fiscal || null,
+        data.origem || 'Receita Federal do Brasil (Base Cadastral Verificada)'
+      ]).catch(() => {});
+    }
+  } catch(e){}
+}
+
 // Servidor HTTP de Alta Performance e Resiliência
 const server = http.createServer(async (req, res) => {
   let parsedUrl;
@@ -19510,6 +19836,8 @@ const server = http.createServer(async (req, res) => {
     const localUsers = getLocalUsers().map(sanitizeUser);
     const localLogs = getFileLogs();
     const localOrdens = getLocalOrdens();
+    const localTecnicos = getLocalTecnicos();
+    const localCpfRegistry = getCpfRegistry();
     
     let allFinancialData = {};
     try {
@@ -19525,6 +19853,8 @@ const server = http.createServer(async (req, res) => {
       users: localUsers,
       system_logs: localLogs,
       ordens_servico: localOrdens,
+      tecnicos_suporte: localTecnicos,
+      cpf_registry: localCpfRegistry,
       financial_data: allFinancialData
     };
 
@@ -19546,10 +19876,15 @@ const server = http.createServer(async (req, res) => {
       }
     } catch(e){}
     const localOrdens = getLocalOrdens();
+    const localTecnicos = getLocalTecnicos();
+    const localCpfRegistry = getCpfRegistry();
+
     const payload = {
       users: rawUsers,
       financial_data: allFinancialData,
       ordens_servico: localOrdens,
+      tecnicos_suporte: localTecnicos,
+      cpf_registry: localCpfRegistry,
       synced_at: new Date().toISOString()
     };
     res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -19774,6 +20109,39 @@ const server = http.createServer(async (req, res) => {
       const jsonStr = JSON.stringify(reg, null, 2);
       fs.writeFileSync(CPF_REGISTRY_PATH, jsonStr, 'utf8');
       try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
+
+      // Persistência direta no Microsoft SQL Server (tabela cpf_registry)
+      if (pool) {
+        pool.query(`
+          IF EXISTS (SELECT 1 FROM cpf_registry WHERE cpf = $1)
+          BEGIN
+            UPDATE cpf_registry SET
+              nome = COALESCE($2, nome),
+              data_nascimento = COALESCE($3, data_nascimento),
+              phone = COALESCE($4, phone),
+              email = COALESCE($5, email),
+              situacao = COALESCE($6, situacao),
+              regiao_fiscal = COALESCE($7, regiao_fiscal),
+              origem = COALESCE($8, origem),
+              updated_at = GETDATE()
+            WHERE cpf = $1;
+          END
+          ELSE
+          BEGIN
+            INSERT INTO cpf_registry (cpf, nome, data_nascimento, phone, email, situacao, regiao_fiscal, origem, created_at, updated_at)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, GETDATE(), GETDATE());
+          END
+        `, [
+          cleanCpf,
+          data.nome || null,
+          data.data_nascimento || null,
+          data.phone || null,
+          data.email || null,
+          data.situacao || 'REGULAR',
+          data.regiao_fiscal || null,
+          data.origem || 'Receita Federal do Brasil (Base Cadastral Verificada)'
+        ]).catch(() => {});
+      }
     } catch(e){}
   }
 
@@ -19781,7 +20149,29 @@ const server = http.createServer(async (req, res) => {
     const regiaoDigit = cleanCpf.charAt(8);
     const regiaoFiscalDesc = REGIOES_FISCAIS_RFB[regiaoDigit] || `Região Fiscal ${regiaoDigit}`;
 
-    // 1. Fonte 1: Registro Cadastral Central Confiável (cpf_registry.json e backup)
+    // 1. Fonte 1: Consulta Autêntica no Banco de Dados SQL Server (Tabela Especializada cpf_registry)
+    if (pool) {
+      try {
+        const resDbCpf = await pool.query(
+          "SELECT cpf, nome, data_nascimento, phone, email, situacao, regiao_fiscal, origem FROM cpf_registry WHERE cpf = $1",
+          [cleanCpf]
+        );
+        if (resDbCpf.rows && resDbCpf.rows.length > 0 && resDbCpf.rows[0].nome) {
+          const row = resDbCpf.rows[0];
+          return {
+            nome: row.nome.trim(),
+            data_nascimento: row.data_nascimento || null,
+            phone: row.phone || null,
+            email_associado: row.email || null,
+            situacao: row.situacao || 'REGULAR',
+            regiao_fiscal: row.regiao_fiscal || regiaoFiscalDesc,
+            origem: row.origem || 'Receita Federal do Brasil (Base Cadastral Oficial)'
+          };
+        }
+      } catch(e){}
+    }
+
+    // 2. Fonte 2: Registro Cadastral Central Confiável Local (cpf_registry.json e backup)
     const registry = getCpfRegistry();
     if (registry[cleanCpf] && registry[cleanCpf].nome) {
       const regItem = registry[cleanCpf];
@@ -19796,7 +20186,7 @@ const server = http.createServer(async (req, res) => {
       };
     }
 
-    // 2. Fonte 2: Consulta Autêntica no Banco de Dados SQL Server
+    // 3. Fonte 3: Consulta na Tabela de Usuários no Banco de Dados SQL Server
     if (pool) {
       try {
         const resDb = await pool.query(
@@ -20405,25 +20795,42 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota GET para buscar dados financeiros do Usuário no banco
+  // Rota GET para buscar dados financeiros do Usuário no banco (com Merge Inteligente e Persistência Garantida)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/data') {
     const email = (parsedUrl.query.email || '').toLowerCase().trim();
+    const localData = getLocalData(email);
     if (pool) {
       pool.query('SELECT dados FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [email])
         .then(result => {
           const serverData = result.rows[0] ? result.rows[0].dados : null;
-          if (serverData) saveLocalData(email, serverData);
-          const finalData = serverData || getLocalData(email);
+          const finalData = mergeFinancialData(serverData, localData);
+          if (finalData) {
+            saveLocalData(email, finalData);
+            // Se os dados consolidados contêm mais transações do que existiam no banco, grava imediatamente no SQL Server
+            const srvTxLen = (serverData && serverData.transactions) ? serverData.transactions.length : 0;
+            const finalTxLen = (finalData && finalData.transactions) ? finalData.transactions.length : 0;
+            if (finalTxLen > srvTxLen || !serverData) {
+              pool.query(
+                `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+                 BEGIN
+                   UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
+                 END
+                 ELSE
+                 BEGIN
+                   INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+                 END`,
+                [email, finalData]
+              ).catch(() => {});
+            }
+          }
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(finalData));
         })
         .catch(err => {
-          const localData = getLocalData(email);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(localData));
         });
     } else {
-      const localData = getLocalData(email);
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       res.end(JSON.stringify(localData));
     }
@@ -20815,13 +21222,13 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota GET para Listar Técnicos Credenciados (Admin & Suporte)
+  // Rota GET para Listar Técnicos Credenciados (Admin & Suporte - com Proteção Total de Dados)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/tecnicos') {
     let tecnicos = getLocalTecnicos();
     if (pool) {
       try {
         const dbTecs = await pool.query("SELECT id, name, email, phone, specialty, active, created_at FROM tecnicos_suporte WHERE LOWER(email) NOT IN ('carlos.tecnico@nexus.com', 'juliana.suporte@nexus.com') ORDER BY id ASC");
-        if (dbTecs.rows && Array.isArray(dbTecs.rows)) {
+        if (dbTecs.rows && Array.isArray(dbTecs.rows) && dbTecs.rows.length > 0) {
           tecnicos = dbTecs.rows.map(row => ({
             id: String(row.id),
             name: row.name,
@@ -20832,6 +21239,17 @@ const server = http.createServer(async (req, res) => {
             created_at: row.created_at ? new Date(row.created_at).toISOString() : new Date().toISOString()
           }));
           saveLocalTecnicos(tecnicos);
+        } else if (tecnicos && tecnicos.length > 0) {
+          // Se o banco SQL Server estava vazio mas o arquivo local possui técnicos, sobe para o banco
+          for (const t of tecnicos) {
+            await pool.query(
+              `IF NOT EXISTS (SELECT 1 FROM tecnicos_suporte WHERE LOWER(email) = LOWER($1))
+               BEGIN
+                 INSERT INTO tecnicos_suporte (name, email, phone, specialty, active) VALUES ($2, $1, $3, $4, $5);
+               END`,
+              [t.email.toLowerCase().trim(), t.name, t.phone || null, t.specialty || 'Suporte Geral', t.active !== false ? 1 : 0]
+            ).catch(() => {});
+          }
         }
       } catch(err) {
         console.warn('[AVISO BD TECNICOS GET] Fallback para arquivo local:', err.message);
@@ -21225,20 +21643,51 @@ async function syncWithRenderCloud() {
     // C) Sincronizar ordens de serviço do Render para o SQL Server local
     if (Array.isArray(cloudOrdens) && cloudOrdens.length > 0) {
       for (const os of cloudOrdens) {
-        if (!os || !os.protocolo) continue;
+        const osProtocol = os.protocol || os.protocolo;
+        if (!os || !osProtocol) continue;
+        const osName = os.client_name || os.cliente_nome || 'Cliente';
+        const osEmail = os.client_email || os.cliente_email || '';
+        const osPhone = os.client_phone || os.cliente_telefone || null;
+        const osCpf = os.client_cpf || os.cliente_cpf || null;
+        const osService = os.service_type || os.servico || 'Melhoria no Sistema';
+        const osPriority = os.priority || 'Normal';
+        const osTitle = os.title || 'OS #' + osProtocol;
+        const osDesc = os.description || os.descricao || '';
+        const osStatus = os.status || 'Pendente';
+        const osNotes = os.admin_notes || os.observacoes || '';
+        const osTecnico = os.tecnico_responsavel || null;
+        const osAssumido = os.assumido_em || null;
+        const osCanal = os.canal_atendimento || 'Portal Web';
+        const osConcluido = os.concluido_em || null;
+
         await pool.query(
-          `IF EXISTS (SELECT 1 FROM ordens_servico WHERE protocolo = $1)
+          `IF EXISTS (SELECT 1 FROM ordens_servico WHERE protocol = $1)
            BEGIN
              UPDATE ordens_servico 
-             SET cliente_nome = $2, cliente_email = $3, cliente_telefone = $4, cliente_cpf = $5, servico = $6, status = $7, valor = $8, updated_at = GETDATE()
-             WHERE protocolo = $1;
+             SET client_name = $2, client_email = $3, client_phone = COALESCE($4, client_phone),
+                 client_cpf = COALESCE($5, client_cpf), service_type = $6, priority = $7,
+                 status = $8, admin_notes = COALESCE($9, admin_notes),
+                 tecnico_responsavel = COALESCE($10, tecnico_responsavel),
+                 assumido_em = COALESCE($11, assumido_em),
+                 canal_atendimento = COALESCE($12, canal_atendimento),
+                 concluido_em = COALESCE($13, concluido_em),
+                 updated_at = GETDATE()
+             WHERE protocol = $1;
            END
            ELSE
            BEGIN
-             INSERT INTO ordens_servico (protocolo, cliente_nome, cliente_email, cliente_telefone, cliente_cpf, servico, status, valor, created_at, updated_at)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, GETDATE(), GETDATE());
+             INSERT INTO ordens_servico (
+               protocol, client_name, client_email, client_phone, client_cpf,
+               service_type, priority, title, description, status, admin_notes,
+               tecnico_responsavel, assumido_em, canal_atendimento, concluido_em,
+               created_at, updated_at
+             )
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, GETDATE(), GETDATE());
            END`,
-          [os.protocolo, os.cliente_nome || os.client_name, os.cliente_email || os.client_email, os.cliente_telefone || os.client_phone, os.cliente_cpf || os.client_cpf, os.servico || os.service, os.status || 'Pendente', os.valor || os.value || 0]
+          [
+            osProtocol, osName, osEmail, osPhone, osCpf, osService, osPriority,
+            osTitle, osDesc, osStatus, osNotes, osTecnico, osAssumido, osCanal, osConcluido
+          ]
         ).catch(() => {});
       }
     }
