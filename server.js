@@ -1602,63 +1602,79 @@ body.light .auth-card-glare {
   z-index: 10;
   width: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px 12px;
+  padding: 6px 14px 10px;
 }
 
-.auth-support-pill {
-  display: inline-flex;
+/* Barra de Suporte Abaixo da Abertura de O.S. (Alinhado Perfeito, Zero Cortes) */
+.auth-support-bar {
+  display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 6px;
-  padding: 5px 14px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.70);
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.55);
   border: 1px solid rgba(56, 189, 248, 0.22);
   color: #94A3B8;
   font-size: 11.5px;
   font-weight: 600;
+  text-align: center;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   transition: all 0.2s ease;
 }
-.auth-support-pill:hover {
-  background: rgba(20, 30, 52, 0.90);
+.auth-support-bar:hover {
+  background: rgba(20, 30, 52, 0.85);
   border-color: rgba(56, 189, 248, 0.45);
-  box-shadow: 0 6px 20px rgba(0, 229, 255, 0.15);
+  box-shadow: 0 6px 18px rgba(0, 229, 255, 0.12);
 }
-.auth-support-pill svg {
+.auth-support-bar svg {
   color: #38BDF8;
   flex-shrink: 0;
+}
+.auth-support-label {
+  font-weight: 600;
+  color: #94A3B8;
+  white-space: nowrap;
 }
 .auth-support-link {
   color: #38BDF8;
   text-decoration: none;
   font-weight: 700;
+  word-break: break-all;
   transition: color 0.15s ease, text-decoration 0.15s ease;
 }
 .auth-support-link:hover {
   color: #7DD3FC;
   text-decoration: underline;
 }
-body.light .auth-support-pill,
-html.light .auth-support-pill {
-  background: #FFFFFF !important;
+
+body.light .auth-support-bar,
+html.light .auth-support-bar {
+  background: #F8FAFC !important;
   border-color: #CBD5E1 !important;
   color: #475569 !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
 }
-body.light .auth-support-pill:hover,
-html.light .auth-support-pill:hover {
-  background: #F8FAFC !important;
+body.light .auth-support-bar:hover,
+html.light .auth-support-bar:hover {
+  background: #FFFFFF !important;
   border-color: #0284C7 !important;
 }
-body.light .auth-support-pill svg,
-html.light .auth-support-pill svg {
+body.light .auth-support-bar svg,
+html.light .auth-support-bar svg {
   color: #0284C7 !important;
+}
+body.light .auth-support-label,
+html.light .auth-support-label {
+  color: #475569 !important;
 }
 body.light .auth-support-link,
 html.light .auth-support-link {
@@ -7547,17 +7563,27 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         </div>
       </div>
 
-      <!-- Ação de Ordem de Serviço (O.S. / Consulta) -->
-      <div style="margin-top:14px; width:100%;">
+      <!-- Ação de Ordem de Serviço (O.S. / Consulta) e Suporte Técnico -->
+      <div style="margin-top:14px; width:100%; display:flex; flex-direction:column; align-items:center;">
         <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
           <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
         </button>
+
+        <!-- E-mail de Suporte Diretamente Abaixo da Abertura de O.S. -->
+        <div class="auth-support-bar">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          <span class="auth-support-label">Suporte:</span>
+          <a href="mailto:suporte.paulolima@outlook.com" class="auth-support-link" title="E-mail do Suporte Técnico">suporte.paulolima@outlook.com</a>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Assinatura do Desenvolvedor e Suporte no Rodapé Global da Autenticação -->
+  <!-- Assinatura do Desenvolvedor no Rodapé Global da Autenticação -->
   <footer class="auth-global-footer">
     <div class="dev-signature" style="justify-content:center;">
       <div class="dev-signature-icon">
@@ -7570,14 +7596,6 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         <span class="dev-signature-label">Desenvolvido por</span>
         <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
       </div>
-    </div>
-    <div class="auth-support-pill">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <rect width="20" height="16" x="2" y="4" rx="2"/>
-        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-      </svg>
-      <span>Suporte:</span>
-      <a href="mailto:suporte.paulolima@outlook.com" class="auth-support-link">suporte.paulolima@outlook.com</a>
     </div>
   </footer>
 </div>
