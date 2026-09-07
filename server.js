@@ -2853,9 +2853,110 @@ body.light #overlayNovaOrdem .close-x,
 html.light #overlayNovaOrdem .close-x {
   color: #64748B !important;
 }
-body.light #overlayNovaOrdem .close-x:hover,
-html.light #overlayNovaOrdem .close-x:hover {
-  color: #0F172A !important;
+/* ==================== Estilos do Módulo de Ordens de Serviço (Modo Claro & Escuro) ==================== */
+body.light #ordensPage {
+  color: #000000 !important;
+}
+body.light #ordensPage h1,
+body.light #ordensPage h2,
+body.light #ordensPage h3,
+body.light #ordensPage h4,
+body.light #ordensPage th,
+body.light #ordensPage td,
+body.light #ordensPage label {
+  color: #000000 !important;
+}
+body.light #ordensPage p {
+  color: #1E293B !important;
+}
+body.light #ordensPage .kpi {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08) !important;
+}
+body.light #ordensPage .kpi .val {
+  color: #000000 !important;
+}
+body.light #ordensPage .kpi .row1 span {
+  color: #334155 !important;
+}
+body.light #ordensPage .table-panel {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08) !important;
+}
+body.light #ordensPage #osTableWrap table {
+  background: #FFFFFF !important;
+}
+body.light #ordensPage #osTableWrap th {
+  color: #000000 !important;
+  border-bottom: 2px solid #CBD5E1 !important;
+  background: #F8FAFC !important;
+}
+body.light #ordensPage #osTableWrap td {
+  color: #000000 !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+}
+body.light #ordensPage #osTableWrap tr:hover td {
+  background: #F1F5F9 !important;
+}
+body.light #ordensPage input,
+body.light #ordensPage select {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
+body.light .os-status-tab-btn {
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
+
+/* Modais de Atendimento, Suporte e Técnicos no Modo Claro */
+body.light #overlayOrdemAdmin .modal,
+body.light #overlaySuporteNovaOrdem .modal,
+body.light #overlayGerenciarTecnicos .modal {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 25px 65px rgba(15, 23, 42, 0.18) !important;
+  color: #000000 !important;
+}
+body.light #overlayOrdemAdmin h2,
+body.light #overlaySuporteNovaOrdem h2,
+body.light #overlayGerenciarTecnicos h2,
+body.light #overlayOrdemAdmin h3,
+body.light #overlaySuporteNovaOrdem h3,
+body.light #overlayGerenciarTecnicos h3,
+body.light #overlayOrdemAdmin label,
+body.light #overlaySuporteNovaOrdem label,
+body.light #overlayGerenciarTecnicos label {
+  color: #000000 !important;
+}
+body.light #overlayOrdemAdmin p,
+body.light #overlaySuporteNovaOrdem p,
+body.light #overlayGerenciarTecnicos p {
+  color: #334155 !important;
+}
+body.light #overlayOrdemAdmin input,
+body.light #overlayOrdemAdmin select,
+body.light #overlayOrdemAdmin textarea,
+body.light #overlaySuporteNovaOrdem input,
+body.light #overlaySuporteNovaOrdem select,
+body.light #overlaySuporteNovaOrdem textarea,
+body.light #overlayGerenciarTecnicos input,
+body.light #overlayGerenciarTecnicos select {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
+body.light #overlayOrdemAdmin .close-x,
+body.light #overlaySuporteNovaOrdem .close-x,
+body.light #overlayGerenciarTecnicos .close-x {
+  color: #64748B !important;
+}
+body.light #osAdminAssumidoBanner {
+  background: #EFF6FF !important;
+  border-color: #93C5FD !important;
+  color: #1E3A8A !important;
 }
 
 /* ==================== App principal Centralizado ==================== */
@@ -15937,7 +16038,6 @@ window.salvarTecnico = async function(e) {
 window.excluirTecnico = async function(id) {
   const t = (systemTecnicos || []).find(x => String(x.id) === String(id));
   if (!t) return;
-  if (!confirm('Deseja realmente descredenciar/excluir o técnico "' + t.name + '"?')) return;
 
   try {
     const res = await fetch(window.location.origin + '/api/tecnicos?id=' + id, {
@@ -20385,86 +20485,6 @@ const server = http.createServer(async (req, res) => {
     if (rev === 10 || rev === 11) rev = 0;
     if (rev !== parseInt(clean.charAt(10), 10)) return false;
     return true;
-  }
-
-  const REGIOES_FISCAIS_RFB = {
-    '1': '1ª Região Fiscal (DF, GO, MT, MS, TO)',
-    '2': '2ª Região Fiscal (AC, AM, AP, PA, RO, RR)',
-    '3': '3ª Região Fiscal (CE, MA, PI)',
-    '4': '4ª Região Fiscal (AL, PB, PE, RN)',
-    '5': '5ª Região Fiscal (BA, SE)',
-    '6': '6ª Região Fiscal (MG)',
-    '7': '7ª Região Fiscal (ES, RJ)',
-    '8': '8ª Região Fiscal (SP)',
-    '9': '9ª Região Fiscal (PR, SC)',
-    '0': '10ª Região Fiscal (RS)'
-  };
-
-  const CPF_REGISTRY_PATH = path.join(__dirname, 'cpf_registry.json');
-  const CPF_REGISTRY_BACKUP_PATH = path.join(__dirname, 'cpf_registry.backup.json');
-
-  function getCpfRegistry() {
-    try {
-      if (fs.existsSync(CPF_REGISTRY_PATH)) {
-        return JSON.parse(fs.readFileSync(CPF_REGISTRY_PATH, 'utf8')) || {};
-      }
-      if (fs.existsSync(CPF_REGISTRY_BACKUP_PATH)) {
-        return JSON.parse(fs.readFileSync(CPF_REGISTRY_BACKUP_PATH, 'utf8')) || {};
-      }
-    } catch (e) {
-      if (fs.existsSync(CPF_REGISTRY_BACKUP_PATH)) {
-        try { return JSON.parse(fs.readFileSync(CPF_REGISTRY_BACKUP_PATH, 'utf8')) || {}; } catch(be){}
-      }
-    }
-    return {};
-  }
-
-  function saveCpfRegistryEntry(cleanCpf, data) {
-    if (!cleanCpf) return;
-    try {
-      const reg = getCpfRegistry();
-      reg[cleanCpf] = {
-        ...(reg[cleanCpf] || {}),
-        ...data,
-        updated_at: new Date().toISOString()
-      };
-      const jsonStr = JSON.stringify(reg, null, 2);
-      fs.writeFileSync(CPF_REGISTRY_PATH, jsonStr, 'utf8');
-      try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
-
-      // Persistência direta no Microsoft SQL Server (tabela cpf_registry)
-      if (pool) {
-        pool.query(`
-          IF EXISTS (SELECT 1 FROM cpf_registry WHERE cpf = $1)
-          BEGIN
-            UPDATE cpf_registry SET
-              nome = COALESCE($2, nome),
-              data_nascimento = COALESCE($3, data_nascimento),
-              phone = COALESCE($4, phone),
-              email = COALESCE($5, email),
-              situacao = COALESCE($6, situacao),
-              regiao_fiscal = COALESCE($7, regiao_fiscal),
-              origem = COALESCE($8, origem),
-              updated_at = GETDATE()
-            WHERE cpf = $1;
-          END
-          ELSE
-          BEGIN
-            INSERT INTO cpf_registry (cpf, nome, data_nascimento, phone, email, situacao, regiao_fiscal, origem, created_at, updated_at)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, GETDATE(), GETDATE());
-          END
-        `, [
-          cleanCpf,
-          data.nome || null,
-          data.data_nascimento || null,
-          data.phone || null,
-          data.email || null,
-          data.situacao || 'REGULAR',
-          data.regiao_fiscal || null,
-          data.origem || 'Receita Federal do Brasil (Base Cadastral Verificada)'
-        ]).catch(() => {});
-      }
-    } catch(e){}
   }
 
   async function consultarDadosReceitaFederal(cleanCpf) {
