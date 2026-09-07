@@ -15033,29 +15033,38 @@ window.copyOsProtocol = function() {
   });
 };
 
-// Admin: Tabela e Gestão de O.S.
+window.currentOsTabFilter = 'todas';
+
+window.setOsStatusTab = function(tab) {
+  window.currentOsTabFilter = tab || 'todas';
+  const btns = document.querySelectorAll('.os-status-tab-btn');
+  btns.forEach(b => {
+    if (b.getAttribute('data-tab') === tab) {
+      b.classList.add('active');
+    } else {
+      b.classList.remove('active');
+    }
+  });
+  filterOrdensTable();
+};
+
 function renderOrdensTable(list) {
   if (!list || list.length === 0) {
-    return \`<div class="placeholder"><div class="big">📋</div><h3>Nenhuma Ordem de Serviço encontrada</h3><p>Quando os usuários abrirem solicitações de suporte ou melhorias, elas aparecerão listadas aqui.</p></div>\`;
+    return '<div class="placeholder"><div class="big">📋</div><h3>Nenhuma Ordem de Serviço encontrada</h3><p>Quando os usuários abrirem solicitações de suporte ou melhorias, elas aparecerão listadas aqui em tempo real.</p></div>';
   }
 
-  let html = \`
-  <div style="overflow-x:auto;">
-    <table style="width:100%; border-collapse:collapse; text-align:left;">
-      <thead>
-        <tr style="border-bottom:1px solid var(--card-border); text-align:left;">
-          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Protocolo</th>
-          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Data/Hora</th>
-          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Solicitante</th>
-          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Tipo de Serviço</th>
-          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Técnico Responsável</th>
-          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Prioridade</th>
-          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Status</th>
-          <th style="padding:12px 14px; font-size:11.5px; text-transform:uppercase; color:var(--text-dim); font-weight:800; text-align:right;">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-  \`;
+  let html = '<div style="overflow-x:auto;">';
+  html += '<table style="width:100%; border-collapse:collapse; text-align:left;">';
+  html += '<thead><tr style="border-bottom:1px solid var(--card-border); text-align:left;">';
+  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Protocolo</th>';
+  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Data & Canal</th>';
+  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Solicitante</th>';
+  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Demanda / Assunto</th>';
+  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Técnico Responsável</th>';
+  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Prioridade</th>';
+  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Status</th>';
+  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800; text-align:right;">Ações</th>';
+  html += '</tr></thead><tbody>';
 
   list.forEach(o => {
     let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
@@ -15076,83 +15085,114 @@ function renderOrdensTable(list) {
       prioBg = 'rgba(245,158,11,0.18)'; prioColor = '#FBBF24'; prioBorder = 'rgba(245,158,11,0.4)';
     }
 
-    let dateFormatted = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Hoje';
+    const dateFormatted = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Hoje';
+    const cleanPhone = String(o.client_phone || '').replace(/\D/g, '');
+    const protoClean = escapeOsHtml(o.protocol || o.id);
 
-    html += \`
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s ease;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
-        <td style="padding:13px 14px; white-space:nowrap;">
-          <span style="display:inline-block; font-weight:800; font-family:monospace; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.12); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">
-            #\${o.protocol || o.id}
-          </span>
-        </td>
-        <td style="padding:13px 14px; font-size:12px; color:var(--text-dim); white-space:nowrap;">
-          \${dateFormatted}
-        </td>
-        <td style="padding:13px 14px;">
-          <div style="font-weight:700; color:var(--text); font-size:13px;">\${escapeOsHtml(o.client_name || 'Anônimo')}</div>
-          <div style="font-size:11.5px; color:var(--text-dim); margin-top:1px;">\${escapeOsHtml(o.client_email || '')}</div>
-          \${o.client_phone ? \`<div style="font-size:11px; color:#34D399; font-weight:700; margin-top:2px;">📱 \${escapeOsHtml(o.client_phone)}</div>\` : ''}
-        </td>
-        <td style="padding:13px 14px; font-size:12.5px; color:var(--text); font-weight:600; white-space:nowrap;">
-          \${escapeOsHtml(o.service_type || 'Melhoria')}
-        </td>
-        <td style="padding:13px 14px; white-space:nowrap;">
-          \${o.tecnico_responsavel ? \`
-            <div style="font-weight:800; color:#38BDF8; font-size:12.5px; display:inline-flex; align-items:center; gap:5px;">
-              <span style="font-size:13px;">👷</span> \${escapeOsHtml(o.tecnico_responsavel)}
-            </div>
-            <div style="font-size:10.5px; color:var(--text-dim); margin-top:2px;">
-              \${o.assumido_em ? ('Assumido em ' + new Date(o.assumido_em).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })) : 'Em atendimento'}
-            </div>
-          \` : \`
-            <button type="button" onclick="quickAssumirOrdemPrompt('\${o.id}')" style="display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; background:rgba(245,158,11,0.14); color:#FBBF24; border:1px solid rgba(245,158,11,0.35); font-size:11px; font-weight:800; cursor:pointer;" title="Assumir esta Ordem de Serviço">
-              <span>⚡ Assumir Chamado</span>
-            </button>
-          \`}
-        </td>
-        <td style="padding:13px 14px; white-space:nowrap;">
-          <span style="display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:800; background:\${prioBg}; color:\${prioColor}; border:1px solid \${prioBorder};">
-            \${escapeOsHtml(o.priority || 'Normal')}
-          </span>
-        </td>
-        <td style="padding:13px 14px; white-space:nowrap;">
-          <span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:\${statusBg}; color:\${statusColor}; border:1px solid \${statusBorder};">
-            \${statusLabel}
-          </span>
-        </td>
-        <td style="padding:13px 14px; text-align:right; white-space:nowrap;">
-          <button type="button" onclick="openOrdemAdminModal(\${o.id})" style="padding:6px 12px; border-radius:8px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-size:12px; font-weight:800; border:none; cursor:pointer; margin-right:6px; box-shadow:0 2px 8px rgba(59,130,246,0.3);">
-            👁️ Atender O.S.
-          </button>
-          <button type="button" onclick="excluirOrdemAdmin(\${o.id})" style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:12px; cursor:pointer;" title="Excluir O.S.">
-            🗑️
-          </button>
-        </td>
-      </tr>
-    \`;
+    html += '<tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s ease;" onmouseover="this.style.background=\'rgba(255,255,255,0.03)\'" onmouseout="this.style.background=\'transparent\'">';
+    
+    html += '<td style="padding:13px 14px; white-space:nowrap;">';
+    html += '<div style="display:inline-flex; align-items:center; gap:5px;">';
+    html += '<span style="font-weight:800; font-family:monospace; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.12); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">#' + protoClean + '</span>';
+    html += '<button type="button" onclick="copyProtocolText(\'' + protoClean + '\')" style="background:none; border:none; cursor:pointer; font-size:13px; padding:2px; color:var(--text-dim);" title="Copiar Protocolo">📋</button>';
+    html += '</div></td>';
+
+    html += '<td style="padding:13px 14px; font-size:12px; color:var(--text-dim); white-space:nowrap;">';
+    html += '<div>' + dateFormatted + '</div>';
+    html += '<span style="display:inline-block; margin-top:3px; font-size:10.5px; font-weight:700; color:#38BDF8; padding:1px 6px; border-radius:4px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25);">' + escapeOsHtml(o.canal_atendimento || 'Portal Web') + '</span>';
+    html += '</td>';
+
+    html += '<td style="padding:13px 14px;">';
+    html += '<div style="font-weight:700; color:var(--text); font-size:13px;">' + escapeOsHtml(o.client_name || 'Anônimo') + '</div>';
+    html += '<div style="font-size:11.5px; color:var(--text-dim); margin-top:1px;"><a href="mailto:' + escapeOsHtml(o.client_email || '') + '" style="color:var(--text-dim); text-decoration:none;">' + escapeOsHtml(o.client_email || '') + '</a></div>';
+    if (cleanPhone) {
+      html += '<div style="font-size:11px; margin-top:2px;"><a href="https://wa.me/55' + cleanPhone + '" target="_blank" style="color:#34D399; font-weight:700; text-decoration:none;">📱 ' + escapeOsHtml(o.client_phone) + '</a></div>';
+    }
+    if (o.client_cpf) {
+      html += '<div style="font-size:10.5px; color:#A78BFA; font-weight:700; margin-top:2px;">🪪 CPF: ' + escapeOsHtml(o.client_cpf) + '</div>';
+    }
+    html += '</td>';
+
+    html += '<td style="padding:13px 14px; max-width:280px;">';
+    html += '<div style="display:inline-block; padding:2px 7px; border-radius:4px; font-size:10.5px; font-weight:800; background:rgba(59,130,246,0.12); color:#93C5FD; margin-bottom:3px;">' + escapeOsHtml(o.service_type || 'Melhoria') + '</div>';
+    html += '<div style="font-weight:700; color:var(--text); font-size:12.5px;">' + escapeOsHtml(o.title || 'Sem título') + '</div>';
+    if (o.description) {
+      html += '<div style="font-size:11px; color:var(--text-dim); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + escapeOsHtml(o.description) + '">' + escapeOsHtml(o.description) + '</div>';
+    }
+    html += '</td>';
+
+    html += '<td style="padding:13px 14px; white-space:nowrap;">';
+    if (o.tecnico_responsavel) {
+      html += '<div style="font-weight:800; color:#38BDF8; font-size:12.5px; display:inline-flex; align-items:center; gap:4px;">👷 ' + escapeOsHtml(o.tecnico_responsavel) + '</div>';
+      html += '<div style="font-size:10.5px; color:var(--text-dim); margin-top:2px;">' + (o.assumido_em ? ('Assumido ' + new Date(o.assumido_em).toLocaleDateString('pt-BR')) : 'Em atendimento') + '</div>';
+    } else {
+      html += '<button type="button" onclick="quickAssumirOrdemPrompt(\'' + o.id + '\')" style="display:inline-flex; align-items:center; gap:4px; padding:5px 12px; border-radius:8px; background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.4); font-size:11.5px; font-weight:800; cursor:pointer;" title="Assumir esta Ordem de Serviço">';
+      html += '<span>⚡ Assumir Chamado</span></button>';
+    }
+    html += '</td>';
+
+    html += '<td style="padding:13px 14px; white-space:nowrap;">';
+    html += '<span style="display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:800; background:' + prioBg + '; color:' + prioColor + '; border:1px solid ' + prioBorder + ';">' + escapeOsHtml(o.priority || 'Normal') + '</span>';
+    html += '</td>';
+
+    html += '<td style="padding:13px 14px; white-space:nowrap;">';
+    html += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
+    if (o.concluido_em) {
+      html += '<div style="font-size:10px; color:#34D399; margin-top:2px;">Finalizado ' + new Date(o.concluido_em).toLocaleDateString('pt-BR') + '</div>';
+    }
+    html += '</td>';
+
+    html += '<td style="padding:13px 14px; text-align:right; white-space:nowrap;">';
+    html += '<div style="display:flex; gap:5px; justify-content:flex-end; align-items:center;">';
+    html += '<button type="button" onclick="openOrdemAdminModal(\'' + o.id + '\')" style="padding:6px 11px; border-radius:8px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-size:11.5px; font-weight:800; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(59,130,246,0.3);" title="Atender Chamado">👁️ Atender</button>';
+    if (!st.includes('concl') && !st.includes('canc')) {
+      html += '<button type="button" onclick="quickConcluirOrdem(\'' + o.id + '\')" style="padding:6px 9px; border-radius:8px; background:rgba(16,185,129,0.18); color:#34D399; border:1px solid rgba(16,185,129,0.35); font-size:11.5px; font-weight:800; cursor:pointer;" title="Concluir O.S. Agora">✓ Concluir</button>';
+    }
+    html += '<button type="button" onclick="imprimirFichaOrdem(\'' + o.id + '\')" style="padding:6px 8px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); font-size:11.5px; cursor:pointer;" title="Imprimir Ficha O.S.">🖨️</button>';
+    html += '<button type="button" onclick="excluirOrdemAdmin(\'' + o.id + '\')" style="padding:6px 8px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:11.5px; cursor:pointer;" title="Excluir O.S.">🗑️</button>';
+    html += '</div></td>';
+
+    html += '</tr>';
   });
 
-  html += \`
-      </tbody>
-    </table>
-  </div>
-  \`;
+  html += '</tbody></table></div>';
   return html;
 }
 
 function filterOrdensTable() {
   const query = (document.getElementById('osSearchInput')?.value || '').toLowerCase().trim();
   const statusFilter = (document.getElementById('osFilterStatus')?.value || '').toLowerCase().trim();
+  const tecnicoFilter = (document.getElementById('osFilterTecnico')?.value || '').toLowerCase().trim();
   const typeFilter = (document.getElementById('osFilterType')?.value || '').toLowerCase().trim();
+  const priorityFilter = (document.getElementById('osFilterPriority')?.value || '').toLowerCase().trim();
+  const tabFilter = window.currentOsTabFilter || 'todas';
 
   const filtered = (systemOrdens || []).filter(o => {
-    const text = ((o.protocol||'') + ' ' + (o.client_name||'') + ' ' + (o.client_email||'') + ' ' + (o.client_phone||'') + ' ' + (o.title||'') + ' ' + (o.description||'')).toLowerCase();
+    const text = ((o.protocol||'') + ' ' + (o.client_name||'') + ' ' + (o.client_email||'') + ' ' + (o.client_phone||'') + ' ' + (o.client_cpf||'') + ' ' + (o.title||'') + ' ' + (o.description||'') + ' ' + (o.tecnico_responsavel||'')).toLowerCase();
     const matchQuery = !query || text.includes(query);
-    const matchStatus = !statusFilter || (o.status || '').toLowerCase().includes(statusFilter);
+
+    const st = (o.status || '').toLowerCase();
+    let matchTab = true;
+    if (tabFilter === 'pendente') matchTab = st === 'pendente';
+    else if (tabFilter === 'andamento') matchTab = st.includes('anda');
+    else if (tabFilter === 'concluido') matchTab = st.includes('concl') || st.includes('final');
+    else if (tabFilter === 'cancelado') matchTab = st.includes('canc') || st.includes('recus');
+
+    const matchStatus = !statusFilter || st.includes(statusFilter);
     const matchType = !typeFilter || (o.service_type || '').toLowerCase().includes(typeFilter);
-    return matchQuery && matchStatus && matchType;
+    const matchPriority = !priorityFilter || (o.priority || '').toLowerCase().includes(priorityFilter);
+    
+    let matchTecnico = true;
+    if (tecnicoFilter === '__none__') {
+      matchTecnico = !o.tecnico_responsavel;
+    } else if (tecnicoFilter) {
+      matchTecnico = (o.tecnico_responsavel || '').toLowerCase().includes(tecnicoFilter);
+    }
+
+    return matchQuery && matchTab && matchStatus && matchType && matchPriority && matchTecnico;
   });
 
+  window.currentFilteredOrdens = filtered;
   const wrap = document.getElementById('osTableWrap');
   if (wrap) wrap.innerHTML = renderOrdensTable(filtered);
 }
@@ -15160,7 +15200,68 @@ function filterOrdensTable() {
 function pageOrdens(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   if(!isAdmin || isViewingOtherUser){
-    return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área de Ordens de Serviço é exclusiva para administradores.</p></div>\`;
+    const myEmail = (currentUser && currentUser.email) ? currentUser.email.toLowerCase() : '';
+    const myOrdens = (systemOrdens || []).filter(o => o.client_email && o.client_email.toLowerCase() === myEmail);
+    
+    let userHtml = '<div id="ordensPage">';
+    userHtml += '<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">';
+    userHtml += '<div><h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">';
+    userHtml += '<span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">🎧</span>';
+    userHtml += 'Central de Atendimento & Meus Chamados</h1>';
+    userHtml += '<p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">Acompanhe o status e as respostas técnicas das suas solicitações em tempo real.</p></div>';
+    userHtml += '<div class="head-actions" style="display:flex; gap:10px; align-items:center;">';
+    userHtml += '<button onclick="openNovaOrdemModal(\'abrir\')" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(16,185,129,0.5);">';
+    userHtml += '<span>➕ Abrir Nova Solicitação</span></button>';
+    userHtml += '<button class="btn-ghost" onclick="syncOrdensWithServer().then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">🔄 Atualizar</button>';
+    userHtml += '</div></div>';
+
+    userHtml += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:20px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,0.5);">';
+    userHtml += '<div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">';
+    userHtml += '<h3 style="font-size:16px; font-weight:800; margin:0;">Meus Chamados Registrados</h3>';
+    userHtml += '<span class="tag" style="font-weight:700;">' + myOrdens.length + ' chamado(s)</span></div>';
+
+    if (myOrdens.length === 0) {
+      userHtml += '<div class="placeholder"><div class="big">📭</div><h3>Nenhum chamado aberto</h3><p>Você ainda não abriu nenhuma solicitação de suporte. Precisa de ajuda ou encontrou algo que deseja melhorar no sistema? Clique no botão acima para abrir um chamado.</p></div>';
+    } else {
+      userHtml += '<div style="display:flex; flex-direction:column; gap:14px;">';
+      myOrdens.forEach(o => {
+        let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente em Triagem';
+        const st = (o.status || '').toLowerCase();
+        if (st.includes('anda')) {
+          statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Sendo Atendido';
+        } else if (st.includes('concl') || st.includes('final')) {
+          statusBg = 'rgba(16,185,129,0.18)'; statusColor = '#34D399'; statusBorder = 'rgba(16,185,129,0.4)'; statusLabel = '✅ Concluído';
+        } else if (st.includes('canc')) {
+          statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
+        }
+
+        userHtml += '<div style="border:1px solid var(--card-border); border-radius:14px; padding:16px 18px; background:rgba(255,255,255,0.02);">';
+        userHtml += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">';
+        userHtml += '<div style="display:flex; align-items:center; gap:8px;">';
+        userHtml += '<span style="font-weight:900; font-family:monospace; font-size:13px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.14); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">#' + escapeOsHtml(o.protocol || o.id) + '</span>';
+        userHtml += '<span style="font-size:12px; color:var(--text-dim);">' + (o.created_at ? new Date(o.created_at).toLocaleString('pt-BR') : '') + '</span>';
+        userHtml += '</div>';
+        userHtml += '<div style="display:flex; gap:8px; align-items:center;">';
+        userHtml += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
+        userHtml += '<button type="button" onclick="imprimirFichaOrdem(\'' + o.id + '\')" style="padding:4px 9px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); font-size:11px; cursor:pointer;" title="Imprimir Comprovante">🖨️ Imprimir</button>';
+        userHtml += '</div></div>';
+
+        userHtml += '<h4 style="font-size:15px; font-weight:800; color:var(--text); margin:0 0 6px 0;">' + escapeOsHtml(o.title || '') + '</h4>';
+        userHtml += '<div style="font-size:12px; color:var(--text-dim); margin-bottom:8px;"><strong>Tipo:</strong> ' + escapeOsHtml(o.service_type || 'Melhoria') + (o.tecnico_responsavel ? (' | <strong>Técnico:</strong> 👷 ' + escapeOsHtml(o.tecnico_responsavel)) : '') + '</div>';
+        userHtml += '<div style="background:rgba(0,0,0,0.22); border-radius:10px; padding:10px 12px; font-size:12.5px; color:var(--text); line-height:1.45; border:1px solid var(--card-border); margin-bottom:10px;">' + escapeOsHtml(o.description || '') + '</div>';
+
+        if (o.admin_notes) {
+          userHtml += '<div style="background:linear-gradient(135deg, rgba(16,185,129,0.12), rgba(5,150,105,0.08)); border:1.5px solid rgba(52,211,153,0.35); border-radius:12px; padding:12px;">';
+          userHtml += '<div style="font-size:11.5px; font-weight:800; color:#34D399; margin-bottom:4px; text-transform:uppercase;">💬 Resposta da Equipe Técnica:</div>';
+          userHtml += '<div style="font-size:12.5px; color:var(--text); font-weight:600; line-height:1.45;">' + escapeOsHtml(o.admin_notes) + '</div>';
+          userHtml += '</div>';
+        }
+        userHtml += '</div>';
+      });
+      userHtml += '</div>';
+    }
+    userHtml += '</div></div>';
+    return userHtml;
   }
 
   const ordens = systemOrdens || [];
@@ -15168,101 +15269,124 @@ function pageOrdens(){
   const countPendentes = ordens.filter(o => (o.status||'').toLowerCase() === 'pendente').length;
   const countAndamento = ordens.filter(o => (o.status||'').toLowerCase().includes('anda')).length;
   const countConcluidas = ordens.filter(o => (o.status||'').toLowerCase().includes('concl') || (o.status||'').toLowerCase().includes('final')).length;
+  const countCanceladas = ordens.filter(o => (o.status||'').toLowerCase().includes('canc') || (o.status||'').toLowerCase().includes('recus')).length;
+  const currentTab = window.currentOsTabFilter || 'todas';
 
-  return \`
-  <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">
-    <div>
-      <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">
-        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">📋</span>
-        Central de Ordens de Serviço & Suporte
-      </h1>
-      <p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">
-        Fila oficial de recepção, atendimento técnico e resolução de chamados de usuários.
-      </p>
-    </div>
-    <div class="head-actions" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-      <button onclick="openSuporteNovaOrdemModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(16,185,129,0.5); transition:all 0.25s ease;">
-        <span>➕ Registrar O.S.</span>
-      </button>
-      <button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.12)); border:1.5px solid rgba(245,158,11,0.5); color:#FDE68A; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 8px 24px -4px rgba(245,158,11,0.25); transition:all 0.25s ease;">
-        <span>👷 Cadastrar / Gerenciar Técnicos</span>
-        <span id="tecnicosBadgeCount" style="padding:2px 7px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:11px; font-weight:900;">\${(systemTecnicos || []).filter(t => t.active !== false).length}</span>
-      </button>
-      <button class="btn-ghost" onclick="syncOrdensWithServer().then(() => syncTecnicosWithServer()).then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">
-        🔄 Atualizar
-      </button>
-    </div>
-  </div>
+  let tecOpts = '<option value="">Todos os Técnicos</option><option value="__none__">(Sem técnico atribuído)</option>';
+  (systemTecnicos || []).filter(t => t.active !== false).forEach(t => {
+    tecOpts += '<option value="' + escapeOsHtml(t.name.toLowerCase()) + '">👷 ' + escapeOsHtml(t.name) + '</option>';
+  });
 
-  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:22px;">
-    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
-      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Total de Chamados</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">📋</div>
-      </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:var(--text); margin-bottom:2px;">\${countTotal}</div>
-      <div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Todas as solicitações</div>
-    </div>
+  let h = '<div id="ordensPage">';
+  
+  h += '<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">';
+  h += '<div>';
+  h += '<h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">';
+  h += '<span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">📋</span>';
+  h += 'Central de Ordens de Serviço & Suporte Técnico</h1>';
+  h += '<p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">Recepção, triagem, despacho técnico e sincronização direta no Microsoft SQL Server.</p>';
+  h += '</div>';
 
-    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
-      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Pendentes</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⏳</div>
-      </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px;">\${countPendentes}</div>
-      <div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Aguardando atendimento</div>
-    </div>
+  h += '<div class="head-actions" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">';
+  h += '<button onclick="openSuporteNovaOrdemModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(16,185,129,0.5); transition:all 0.25s ease;">';
+  h += '<span>➕ Registrar O.S.</span></button>';
+  
+  h += '<button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.12)); border:1.5px solid rgba(245,158,11,0.5); color:#FDE68A; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 8px 24px -4px rgba(245,158,11,0.25);">';
+  h += '<span>👷 Técnicos & Especialistas</span>';
+  h += '<span id="tecnicosBadgeCount" style="padding:2px 7px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:11px; font-weight:900;">' + ((systemTecnicos || []).filter(t => t.active !== false).length) + '</span>';
+  h += '</button>';
 
-    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
-      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Em Andamento</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⚙️</div>
-      </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#60A5FA; margin-bottom:2px;">\${countAndamento}</div>
-      <div class="sub" style="font-size:12px; color:#BFDBFE; font-weight:600; margin-top:4px;">Sendo atendidos</div>
-    </div>
+  h += '<button onclick="imprimirFilaOrdens()" style="display:inline-flex; align-items:center; gap:6px; height:42px; padding:0 16px; border-radius:14px; background:rgba(56,189,248,0.12); border:1.5px solid rgba(56,189,248,0.35); color:#38BDF8; font-size:13px; font-weight:800; cursor:pointer;" title="Imprimir Relatório da Fila de O.S.">';
+  h += '<span>🖨️ Imprimir Fila O.S.</span></button>';
 
-    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
-      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Concluídos</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.15)); border:1.5px solid rgba(52,211,153,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">✅</div>
-      </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#10B981; margin-bottom:2px;">\${countConcluidas}</div>
-      <div class="sub" style="font-size:12px; color:#A7F3D0; font-weight:600; margin-top:4px;">Finalizados com sucesso</div>
-    </div>
-  </div>
+  h += '<button class="btn-ghost" onclick="syncOrdensWithServer().then(() => syncTecnicosWithServer()).then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">🔄 Sincronizar Banco SQL</button>';
+  h += '</div></div>';
 
-  <div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:20px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,0.5);">
-    <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h3 style="font-size:16px; font-weight:800; margin:0;">Fila de Solicitações</h3>
-      <span class="tag" style="font-weight:700;">\${ordens.length} O.S. registradas</span>
-    </div>
+  h += '<div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:22px;">';
+  
+  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(\'todas\')">';
+  h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
+  h += '<span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Total de Chamados</span>';
+  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">📋</div>';
+  h += '</div>';
+  h += '<div class="val" style="font-size:28px; font-weight:900; color:var(--text); margin-bottom:2px;">' + countTotal + '</div>';
+  h += '<div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Todas as solicitações</div>';
+  h += '</div>';
 
-    <div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; align-items:center;">
-      <div style="position:relative; flex:1.5; min-width:220px;">
-        <input id="osSearchInput" placeholder="🔍 Buscar por protocolo, solicitante, e-mail ou assunto..." onkeyup="filterOrdensTable()" style="width:100%; font-size:13px; padding:9px 12px; border-radius:10px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
-      </div>
-      <select id="osFilterStatus" onchange="filterOrdensTable()" style="flex:1; min-width:140px; padding:9px 12px; border-radius:10px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
-        <option value="">Todos os Status</option>
-        <option value="pendente">⏳ Pendentes</option>
-        <option value="andamento">⚙️ Em Andamento</option>
-        <option value="concl">✅ Concluídos</option>
-        <option value="canc">❌ Cancelados</option>
-      </select>
-      <select id="osFilterType" onchange="filterOrdensTable()" style="flex:1; min-width:160px; padding:9px 12px; border-radius:10px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
-        <option value="">Todos os Tipos</option>
-        <option value="melhoria">Melhoria no Sistema</option>
-        <option value="senha">Reset de Senha</option>
-        <option value="correção">Correção de Dados</option>
-        <option value="bug">Relato de Bug</option>
-      </select>
-    </div>
+  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid ' + (countPendentes > 0 ? 'rgba(245,158,11,0.5)' : 'rgba(255,255,255,0.13)') + '; box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(\'pendente\')">';
+  h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
+  h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Pendentes</span>';
+  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⏳</div>';
+  h += '</div>';
+  h += '<div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px;">' + countPendentes + '</div>';
+  h += '<div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Aguardando atendimento</div>';
+  h += '</div>';
 
-    <div id="osTableWrap">
-      \${renderOrdensTable(ordens)}
-    </div>
-  </div>
-  \`;
+  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(\'andamento\')">';
+  h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
+  h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Em Andamento</span>';
+  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⚙️</div>';
+  h += '</div>';
+  h += '<div class="val" style="font-size:28px; font-weight:900; color:#60A5FA; margin-bottom:2px;">' + countAndamento + '</div>';
+  h += '<div class="sub" style="font-size:12px; color:#BFDBFE; font-weight:600; margin-top:4px;">Sendo atendidos</div>';
+  h += '</div>';
+
+  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(\'concluido\')">';
+  h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
+  h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Concluídos</span>';
+  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.15)); border:1.5px solid rgba(52,211,153,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">✅</div>';
+  h += '</div>';
+  h += '<div class="val" style="font-size:28px; font-weight:900; color:#10B981; margin-bottom:2px;">' + countConcluidas + '</div>';
+  h += '<div class="sub" style="font-size:12px; color:#A7F3D0; font-weight:600; margin-top:4px;">Finalizados com sucesso</div>';
+  h += '</div>';
+
+  h += '</div>';
+
+  h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:20px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,0.5);">';
+  
+  h += '<div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">';
+  h += '<h3 style="font-size:16px; font-weight:800; margin:0;">Fila de Solicitações</h3>';
+  h += '<span class="tag" style="font-weight:700;">' + countTotal + ' O.S. registradas no banco</span>';
+  h += '</div>';
+
+  h += '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(\'todas\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid var(--card-border); background:' + (currentTab==='todas'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(255,255,255,0.05)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">Todas (' + countTotal + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(\'pendente\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.4); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.12)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">⏳ Pendentes (' + countPendentes + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(\'andamento\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(59,130,246,0.4); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(59,130,246,0.12)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#60A5FA') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(\'concluido\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(16,185,129,0.4); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #10B981, #059669)':'rgba(16,185,129,0.12)') + '; color:' + (currentTab==='concluido'?'#FFFFFF':'#34D399') + ';">✅ Concluídas (' + countConcluidas + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='cancelado'?'active':'') + '" data-tab="cancelado" onclick="setOsStatusTab(\'cancelado\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.4); background:' + (currentTab==='cancelado'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.12)') + '; color:' + (currentTab==='cancelado'?'#FFFFFF':'#F87171') + ';">❌ Canceladas (' + countCanceladas + ')</button>';
+  h += '</div>';
+
+  h += '<div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; align-items:center;">';
+  h += '<div style="position:relative; flex:1.6; min-width:220px;">';
+  h += '<input id="osSearchInput" placeholder="🔍 Buscar por protocolo, solicitante, e-mail, telefone, CPF ou assunto..." onkeyup="filterOrdensTable()" style="width:100%; font-size:13px; padding:10px 14px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
+  h += '</div>';
+  
+  h += '<select id="osFilterStatus" onchange="filterOrdensTable()" style="flex:1; min-width:130px; padding:10px 12px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:12.5px; font-weight:700;">';
+  h += '<option value="">Status: Todos</option><option value="pendente">⏳ Pendentes</option><option value="andamento">⚙️ Em Andamento</option><option value="concl">✅ Concluídos</option><option value="canc">❌ Cancelados</option>';
+  h += '</select>';
+
+  h += '<select id="osFilterTecnico" onchange="filterOrdensTable()" style="flex:1.2; min-width:150px; padding:10px 12px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:12.5px; font-weight:700;">';
+  h += tecOpts;
+  h += '</select>';
+
+  h += '<select id="osFilterType" onchange="filterOrdensTable()" style="flex:1.1; min-width:140px; padding:10px 12px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:12.5px; font-weight:700;">';
+  h += '<option value="">Tipo: Todos</option><option value="melhoria">Melhoria</option><option value="senha">Reset de Senha</option><option value="correção">Correção</option><option value="bug">Relato de Bug</option><option value="geral">Atendimento</option>';
+  h += '</select>';
+
+  h += '<select id="osFilterPriority" onchange="filterOrdensTable()" style="flex:1; min-width:120px; padding:10px 12px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:12.5px; font-weight:700;">';
+  h += '<option value="">Prioridade: Todas</option><option value="normal">🟢 Normal</option><option value="alta">🟡 Alta</option><option value="urgente">🔴 Urgente</option>';
+  h += '</select>';
+  h += '</div>';
+
+  window.currentFilteredOrdens = ordens;
+  h += '<div id="osTableWrap">';
+  h += renderOrdensTable(ordens);
+  h += '</div>';
+
+  h += '</div>';
+  h += '</div>';
+  return h;
 }
 
 
