@@ -557,6 +557,87 @@ async function initDatabase() {
   await attemptConnectDatabase();
 }
 
+// ==================== Camada Central de Registro e Validação de CPF ====================
+const REGIOES_FISCAIS_RFB = {
+  '1': '1ª Região Fiscal (DF, GO, MT, MS, TO)',
+  '2': '2ª Região Fiscal (AC, AM, AP, PA, RO, RR)',
+  '3': '3ª Região Fiscal (CE, MA, PI)',
+  '4': '4ª Região Fiscal (AL, PB, PE, RN)',
+  '5': '5ª Região Fiscal (BA, SE)',
+  '6': '6ª Região Fiscal (MG)',
+  '7': '7ª Região Fiscal (ES, RJ)',
+  '8': '8ª Região Fiscal (SP)',
+  '9': '9ª Região Fiscal (PR, SC)',
+  '0': '10ª Região Fiscal (RS)'
+};
+
+const CPF_REGISTRY_PATH = path.join(__dirname, 'cpf_registry.json');
+const CPF_REGISTRY_BACKUP_PATH = path.join(__dirname, 'cpf_registry.backup.json');
+
+function getCpfRegistry() {
+  try {
+    if (fs.existsSync(CPF_REGISTRY_PATH)) {
+      return JSON.parse(fs.readFileSync(CPF_REGISTRY_PATH, 'utf8')) || {};
+    }
+    if (fs.existsSync(CPF_REGISTRY_BACKUP_PATH)) {
+      return JSON.parse(fs.readFileSync(CPF_REGISTRY_BACKUP_PATH, 'utf8')) || {};
+    }
+  } catch (e) {
+    if (fs.existsSync(CPF_REGISTRY_BACKUP_PATH)) {
+      try { return JSON.parse(fs.readFileSync(CPF_REGISTRY_BACKUP_PATH, 'utf8')) || {}; } catch(be){}
+    }
+  }
+  return {};
+}
+
+function saveCpfRegistryEntry(cleanCpf, data) {
+  if (!cleanCpf) return;
+  try {
+    const reg = getCpfRegistry();
+    reg[cleanCpf] = {
+      ...(reg[cleanCpf] || {}),
+      ...data,
+      updated_at: new Date().toISOString()
+    };
+    const jsonStr = JSON.stringify(reg, null, 2);
+    fs.writeFileSync(CPF_REGISTRY_PATH, jsonStr, 'utf8');
+    try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
+
+    // Persistência direta no Microsoft SQL Server (tabela cpf_registry)
+    if (pool) {
+      pool.query(`
+        IF EXISTS (SELECT 1 FROM cpf_registry WHERE cpf = $1)
+        BEGIN
+          UPDATE cpf_registry SET
+            nome = COALESCE($2, nome),
+            data_nascimento = COALESCE($3, data_nascimento),
+            phone = COALESCE($4, phone),
+            email = COALESCE($5, email),
+            situacao = COALESCE($6, situacao),
+            regiao_fiscal = COALESCE($7, regiao_fiscal),
+            origem = COALESCE($8, origem),
+            updated_at = GETDATE()
+          WHERE cpf = $1;
+        END
+        ELSE
+        BEGIN
+          INSERT INTO cpf_registry (cpf, nome, data_nascimento, phone, email, situacao, regiao_fiscal, origem, created_at, updated_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, GETDATE(), GETDATE());
+        END
+      `, [
+        cleanCpf,
+        data.nome || null,
+        data.data_nascimento || null,
+        data.phone || null,
+        data.email || null,
+        data.situacao || 'REGULAR',
+        data.regiao_fiscal || null,
+        data.origem || 'Receita Federal do Brasil (Base Cadastral Verificada)'
+      ]).catch(() => {});
+    }
+  } catch(e){}
+}
+
 async function setupDatabaseTablesAndSync() {
   if (!pool) return;
 
@@ -15210,6 +15291,16 @@ window.openOrdemAdminModal = function(id) {
     phoneEl.textContent = ordem.client_phone || 'Não informado';
   }
 
+  const cpfEl = document.getElementById('osAdminClientCpf');
+  if (cpfEl) {
+    cpfEl.textContent = ordem.client_cpf || 'Não informado';
+  }
+
+  const canalEl = document.getElementById('osAdminCanal');
+  if (canalEl) {
+    canalEl.textContent = ordem.canal_atendimento || 'Portal Web';
+  }
+
   const waBtn = document.getElementById('osAdminWhatsappBtn');
   if (waBtn) {
     if (cleanPhone) {
@@ -19594,17 +19685,17 @@ function mergeFinancialData(serverData, localData) {
 
   const merged = { ...localData, ...serverData };
 
-  // 1. Transações: união inteligente por ID ou chave desc+data+valor para garantir que nenhuma transação seja perdida
+  // 1. Transações: união inteligente por ID + detalhes para garantir que nenhuma transação seja perdida
   const txMap = new Map();
   (serverData.transactions || []).forEach(t => {
     if (t) {
-      const key = (t.id !== undefined && t.id !== null) ? String(t.id) : `${t.desc}_${t.date}_${t.val || t.amount}`;
+      const key = `${t.id || ''}_${t.desc || t.description || ''}_${t.date || ''}_${t.val || t.amount || 0}`;
       txMap.set(key, t);
     }
   });
   (localData.transactions || []).forEach(t => {
     if (t) {
-      const key = (t.id !== undefined && t.id !== null) ? String(t.id) : `${t.desc}_${t.date}_${t.val || t.amount}`;
+      const key = `${t.id || ''}_${t.desc || t.description || ''}_${t.date || ''}_${t.val || t.amount || 0}`;
       if (!txMap.has(key)) {
         txMap.set(key, t);
       }
@@ -19668,86 +19759,6 @@ function mergeFinancialData(serverData, localData) {
   return merged;
 }
 
-// ==================== Camada Central de Registro e Validação de CPF ====================
-const REGIOES_FISCAIS_RFB = {
-  '1': '1ª Região Fiscal (DF, GO, MT, MS, TO)',
-  '2': '2ª Região Fiscal (AC, AM, AP, PA, RO, RR)',
-  '3': '3ª Região Fiscal (CE, MA, PI)',
-  '4': '4ª Região Fiscal (AL, PB, PE, RN)',
-  '5': '5ª Região Fiscal (BA, SE)',
-  '6': '6ª Região Fiscal (MG)',
-  '7': '7ª Região Fiscal (ES, RJ)',
-  '8': '8ª Região Fiscal (SP)',
-  '9': '9ª Região Fiscal (PR, SC)',
-  '0': '10ª Região Fiscal (RS)'
-};
-
-const CPF_REGISTRY_PATH = path.join(__dirname, 'cpf_registry.json');
-const CPF_REGISTRY_BACKUP_PATH = path.join(__dirname, 'cpf_registry.backup.json');
-
-function getCpfRegistry() {
-  try {
-    if (fs.existsSync(CPF_REGISTRY_PATH)) {
-      return JSON.parse(fs.readFileSync(CPF_REGISTRY_PATH, 'utf8')) || {};
-    }
-    if (fs.existsSync(CPF_REGISTRY_BACKUP_PATH)) {
-      return JSON.parse(fs.readFileSync(CPF_REGISTRY_BACKUP_PATH, 'utf8')) || {};
-    }
-  } catch (e) {
-    if (fs.existsSync(CPF_REGISTRY_BACKUP_PATH)) {
-      try { return JSON.parse(fs.readFileSync(CPF_REGISTRY_BACKUP_PATH, 'utf8')) || {}; } catch(be){}
-    }
-  }
-  return {};
-}
-
-function saveCpfRegistryEntry(cleanCpf, data) {
-  if (!cleanCpf) return;
-  try {
-    const reg = getCpfRegistry();
-    reg[cleanCpf] = {
-      ...(reg[cleanCpf] || {}),
-      ...data,
-      updated_at: new Date().toISOString()
-    };
-    const jsonStr = JSON.stringify(reg, null, 2);
-    fs.writeFileSync(CPF_REGISTRY_PATH, jsonStr, 'utf8');
-    try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
-
-    // Persistência direta no Microsoft SQL Server (tabela cpf_registry)
-    if (pool) {
-      pool.query(`
-        IF EXISTS (SELECT 1 FROM cpf_registry WHERE cpf = $1)
-        BEGIN
-          UPDATE cpf_registry SET
-            nome = COALESCE($2, nome),
-            data_nascimento = COALESCE($3, data_nascimento),
-            phone = COALESCE($4, phone),
-            email = COALESCE($5, email),
-            situacao = COALESCE($6, situacao),
-            regiao_fiscal = COALESCE($7, regiao_fiscal),
-            origem = COALESCE($8, origem),
-            updated_at = GETDATE()
-          WHERE cpf = $1;
-        END
-        ELSE
-        BEGIN
-          INSERT INTO cpf_registry (cpf, nome, data_nascimento, phone, email, situacao, regiao_fiscal, origem, created_at, updated_at)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, GETDATE(), GETDATE());
-        END
-      `, [
-        cleanCpf,
-        data.nome || null,
-        data.data_nascimento || null,
-        data.phone || null,
-        data.email || null,
-        data.situacao || 'REGULAR',
-        data.regiao_fiscal || null,
-        data.origem || 'Receita Federal do Brasil (Base Cadastral Verificada)'
-      ]).catch(() => {});
-    }
-  } catch(e){}
-}
 
 // Servidor HTTP de Alta Performance e Resiliência
 const server = http.createServer(async (req, res) => {
