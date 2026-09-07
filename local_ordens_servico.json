@@ -10,13 +10,13 @@
     "priority": "Alta",
     "title": "Exportação de Relatórios em Excel e PDF 4K",
     "description": "Solicito a funcionalidade de exportação customizada nos relatórios mensais e trimestrais para análise executiva.",
-    "status": "Pendente",
-    "admin_notes": "",
-    "tecnico_responsavel": null,
+    "status": "Exportação de Relatórios em Excel e PDF 4K",
+    "admin_notes": "Solicito a funcionalidade de exportação customizada nos relatórios mensais e trimestrais para análise executiva.",
+    "tecnico_responsavel": "Pendente",
     "assumido_em": null,
     "canal_atendimento": "Portal Web",
     "concluido_em": null,
     "created_at": "2026-08-31T11:43:54.373Z",
-    "updated_at": "2026-08-31T11:43:54.373Z"
+    "updated_at": "2026-09-07T09:23:19.290Z"
   }
 ]
