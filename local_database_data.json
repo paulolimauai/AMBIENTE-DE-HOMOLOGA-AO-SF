@@ -204,7 +204,9 @@
         "name": "Supermercado",
         "type": "despesa"
       }
-    ]
+    ],
+    "goals": [],
+    "budgets": []
   },
   "paulolp0101@gmail.com": {
     "categories": [
