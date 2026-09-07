@@ -15580,9 +15580,6 @@ window.quickAssumirOrdemPrompt = async function(id) {
     }
   }
 
-  const confirmAssumir = confirm('Deseja assumir a Ordem de Serviço #' + (ordem.protocol || ordem.id) + ' sob a responsabilidade do técnico "' + tecnicoNome + '" e alterar o status para "Em Andamento"?');
-  if (!confirmAssumir) return;
-
   try {
     const res = await fetch(window.location.origin + '/api/ordens/update', {
       method: 'POST',
@@ -15595,7 +15592,7 @@ window.quickAssumirOrdemPrompt = async function(id) {
     });
     const data = await res.json();
     if (res.ok && data.success) {
-      showToast('Ordem #' + (ordem.protocol || ordem.id) + ' assumida por ' + tecnicoNome + '!');
+      showToast('O.S. #' + (ordem.protocol || ordem.id) + ' assumida por ' + tecnicoNome + '!');
       await syncOrdensWithServer();
       render();
     } else {
@@ -15604,6 +15601,198 @@ window.quickAssumirOrdemPrompt = async function(id) {
   } catch(e) {
     showToast('Falha na comunicação com o servidor.');
   }
+};
+
+window.quickConcluirOrdem = async function(id) {
+  const ordem = (systemOrdens || []).find(o => String(o.id) === String(id));
+  if (!ordem) return;
+
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: id,
+        status: 'Concluído'
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      showToast('O.S. #' + (ordem.protocol || ordem.id) + ' concluída com sucesso no SQL Server!');
+      await syncOrdensWithServer();
+      render();
+    } else {
+      showToast(data.message || 'Erro ao concluir chamado.');
+    }
+  } catch(e) {
+    showToast('Falha na comunicação com o servidor.');
+  }
+};
+
+window.imprimirFichaOrdem = function(id) {
+  const o = (systemOrdens || []).find(x => String(x.id) === String(id));
+  if (!o) {
+    showToast('Ordem de Serviço não encontrada.');
+    return;
+  }
+
+  const printWin = window.open('', '_blank', 'width=850,height=900');
+  if (!printWin) {
+    showToast('Permita popups para imprimir o comprovante da O.S.');
+    return;
+  }
+
+  const dtCriacao = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR') : 'Hoje';
+  const dtAssumido = o.assumido_em ? new Date(o.assumido_em).toLocaleString('pt-BR') : 'Aguardando atendimento';
+  const dtConcluido = o.concluido_em ? new Date(o.concluido_em).toLocaleString('pt-BR') : (o.status === 'Concluído' ? 'Finalizado' : 'Em andamento');
+
+  let doc = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Comprovante O.S. #' + (o.protocol || o.id) + '</title>';
+  doc += '<style>';
+  doc += 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 13px; margin: 0; }';
+  doc += '.header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0F172A; padding-bottom: 14px; margin-bottom: 20px; }';
+  doc += '.logo { font-size: 20px; font-weight: 900; letter-spacing: -0.02em; }';
+  doc += '.proto-badge { font-size: 16px; font-weight: 900; font-family: monospace; background: #F1F5F9; border: 1.5px solid #0F172A; padding: 6px 14px; border-radius: 8px; }';
+  doc += '.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }';
+  doc += '.card { border: 1px solid #CBD5E1; border-radius: 10px; padding: 12px 14px; background: #F8FAFC; }';
+  doc += '.card-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 8px; border-bottom: 1px solid #E2E8F0; padding-bottom: 4px; }';
+  doc += '.card-row { font-size: 12.5px; margin-bottom: 5px; }';
+  doc += '.desc-box { border: 1px solid #CBD5E1; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; background: #FFFFFF; }';
+  doc += '.desc-box h4 { margin: 0 0 6px 0; font-size: 12.5px; text-transform: uppercase; color: #0F172A; }';
+  doc += '.desc-box p { margin: 0; font-size: 12.5px; line-height: 1.5; white-space: pre-wrap; color: #1E293B; }';
+  doc += '.parecer-box { border: 1.5px solid #0284C7; border-radius: 10px; padding: 12px 14px; margin-bottom: 20px; background: #F0F9FF; }';
+  doc += '.parecer-box h4 { margin: 0 0 5px 0; font-size: 12px; text-transform: uppercase; color: #0369A1; }';
+  doc += '.parecer-box p { margin: 0; font-size: 12.5px; line-height: 1.45; color: #0C4A6E; }';
+  doc += '.signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; text-align: center; }';
+  doc += '.sign-line { border-top: 1px solid #0F172A; padding-top: 6px; font-size: 11.5px; font-weight: 700; color: #0F172A; }';
+  doc += '.footer { margin-top: 24px; border-top: 1px dashed #CBD5E1; padding-top: 10px; font-size: 10.5px; color: #64748B; display: flex; justify-content: space-between; }';
+  doc += '@media print { .no-print { display: none !important; } }';
+  doc += '</style></head><body>';
+  
+  doc += '<div class="no-print" style="margin-bottom: 16px; text-align: right;">';
+  doc += '<button onclick="window.print()" style="padding: 8px 18px; font-size: 12.5px; font-weight: 800; background: #0284C7; color: #FFFFFF; border: none; border-radius: 8px; cursor: pointer;">🖨️ Imprimir Documento</button>';
+  doc += '</div>';
+
+  doc += '<div class="header"><div><div class="logo">NEXUS <span style="color:#0284C7;">FINANCEIRO</span> HUB</div>';
+  doc += '<div style="font-size: 12px; color: #475569; margin-top: 3px;">Comprovante Oficial de Ordem de Serviço (O.S.) & Suporte Técnico</div></div>';
+  doc += '<div class="proto-badge">#' + escapeOsHtml(o.protocol || o.id) + '</div></div>';
+
+  doc += '<div class="grid">';
+  doc += '<div class="card"><div class="card-title">Dados do Solicitante / Cliente</div>';
+  doc += '<div class="card-row"><strong>Nome:</strong> ' + escapeOsHtml(o.client_name || 'Não informado') + '</div>';
+  doc += '<div class="card-row"><strong>E-mail:</strong> ' + escapeOsHtml(o.client_email || 'Não informado') + '</div>';
+  doc += '<div class="card-row"><strong>Telefone / Celular:</strong> ' + escapeOsHtml(o.client_phone || 'Não informado') + '</div>';
+  doc += '<div class="card-row"><strong>CPF:</strong> ' + escapeOsHtml(o.client_cpf || 'Não informado') + '</div>';
+  doc += '</div>';
+
+  doc += '<div class="card"><div class="card-title">Classificação do Chamado</div>';
+  doc += '<div class="card-row"><strong>Status Atual:</strong> ' + escapeOsHtml(o.status || 'Pendente') + '</div>';
+  doc += '<div class="card-row"><strong>Tipo de Demanda:</strong> ' + escapeOsHtml(o.service_type || 'Melhoria no Sistema') + '</div>';
+  doc += '<div class="card-row"><strong>Prioridade:</strong> ' + escapeOsHtml(o.priority || 'Normal') + '</div>';
+  doc += '<div class="card-row"><strong>Canal de Entrada:</strong> ' + escapeOsHtml(o.canal_atendimento || 'Portal Web') + '</div>';
+  doc += '</div></div>';
+
+  doc += '<div class="grid">';
+  doc += '<div class="card"><div class="card-title">Atendimento Técnico</div>';
+  doc += '<div class="card-row"><strong>Técnico Responsável:</strong> ' + escapeOsHtml(o.tecnico_responsavel || 'Aguardando atribuição') + '</div>';
+  doc += '<div class="card-row"><strong>Assumido em:</strong> ' + dtAssumido + '</div>';
+  doc += '</div>';
+
+  doc += '<div class="card"><div class="card-title">Prazos & Registro</div>';
+  doc += '<div class="card-row"><strong>Data de Abertura:</strong> ' + dtCriacao + '</div>';
+  doc += '<div class="card-row"><strong>Data de Conclusão:</strong> ' + dtConcluido + '</div>';
+  doc += '</div></div>';
+
+  doc += '<div class="desc-box"><h4>Assunto: ' + escapeOsHtml(o.title || 'Solicitação de Atendimento') + '</h4>';
+  doc += '<p>' + escapeOsHtml(o.description || 'Sem descrição informada.') + '</p></div>';
+
+  if (o.admin_notes) {
+    doc += '<div class="parecer-box"><h4>Parecer Técnico & Resolução</h4>';
+    doc += '<p>' + escapeOsHtml(o.admin_notes) + '</p></div>';
+  }
+
+  doc += '<div class="signatures">';
+  doc += '<div><div class="sign-line">Assinatura do Solicitante / Cliente</div></div>';
+  doc += '<div><div class="sign-line">Assinatura do Técnico Responsável (Nexus)</div></div>';
+  doc += '</div>';
+
+  doc += '<div class="footer">';
+  doc += '<span>Gravado e sincronizado no Microsoft SQL Server interno (Homologação SF)</span>';
+  doc += '<span>Impresso em: ' + new Date().toLocaleString('pt-BR') + '</span>';
+  doc += '</div>';
+
+  doc += '<script>window.onload = function() { setTimeout(function() { window.print(); }, 350); };</script>';
+  doc += '</body></html>';
+
+  printWin.document.write(doc);
+  printWin.document.close();
+};
+
+window.imprimirFilaOrdens = function() {
+  const printWin = window.open('', '_blank', 'width=950,height=900');
+  if (!printWin) {
+    showToast('Permita popups para imprimir o relatório da fila de O.S.');
+    return;
+  }
+
+  const list = window.currentFilteredOrdens || systemOrdens || [];
+  const total = list.length;
+  const pend = list.filter(o => (o.status||'').toLowerCase() === 'pendente').length;
+  const andam = list.filter(o => (o.status||'').toLowerCase().includes('anda')).length;
+  const conc = list.filter(o => (o.status||'').toLowerCase().includes('concl')).length;
+
+  let rowsHtml = '';
+  list.forEach(o => {
+    rowsHtml += '<tr>';
+    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-family:monospace; font-weight:700;">#' + escapeOsHtml(o.protocol || o.id) + '</td>';
+    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-size:11.5px;">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('pt-BR') : '-') + '</td>';
+    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0;"><div style="font-weight:700;">' + escapeOsHtml(o.client_name || 'Anônimo') + '</div><div style="font-size:10.5px; color:#64748B;">' + escapeOsHtml(o.client_phone || o.client_email || '') + '</div></td>';
+    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0;"><div style="font-weight:600;">' + escapeOsHtml(o.title || '') + '</div><div style="font-size:10.5px; color:#64748B;">' + escapeOsHtml(o.service_type || '') + '</div></td>';
+    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-size:11.5px;">' + escapeOsHtml(o.tecnico_responsavel || 'Não atribuído') + '</td>';
+    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-size:11.5px; font-weight:700;">' + escapeOsHtml(o.priority || 'Normal') + '</td>';
+    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-size:11.5px; font-weight:800;">' + escapeOsHtml(o.status || 'Pendente') + '</td>';
+    rowsHtml += '</tr>';
+  });
+
+  let doc = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório da Fila de O.S. - Nexus Hub</title>';
+  doc += '<style>';
+  doc += 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 12px; margin: 0; }';
+  doc += '.header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0F172A; padding-bottom: 14px; margin-bottom: 16px; }';
+  doc += '.logo { font-size: 18px; font-weight: 900; }';
+  doc += '.stats { display: flex; gap: 14px; margin-bottom: 18px; }';
+  doc += '.stat-card { border: 1px solid #CBD5E1; border-radius: 8px; padding: 10px 14px; flex: 1; background: #F8FAFC; }';
+  doc += '.stat-card strong { display: block; font-size: 18px; color: #0284C7; }';
+  doc += 'table { width: 100%; border-collapse: collapse; text-align: left; }';
+  doc += 'th { background: #0F172A; color: #FFFFFF; padding: 9px 10px; font-size: 11px; text-transform: uppercase; }';
+  doc += '@media print { .no-print { display: none !important; } }';
+  doc += '</style></head><body>';
+
+  doc += '<div class="no-print" style="margin-bottom: 14px; text-align: right;">';
+  doc += '<button onclick="window.print()" style="padding: 8px 18px; font-size: 12px; font-weight: 800; background: #0284C7; color: #FFFFFF; border: none; border-radius: 6px; cursor: pointer;">🖨️ Imprimir Relatório</button>';
+  doc += '</div>';
+
+  doc += '<div class="header"><div><div class="logo">NEXUS FINANCEIRO HUB</div>';
+  doc += '<div style="color: #475569; margin-top: 3px;">Relatório Oficial da Fila de Ordens de Serviço & Chamados de Suporte</div></div>';
+  doc += '<div style="text-align: right; color: #64748B; font-size: 11px;">Emissão: ' + new Date().toLocaleString('pt-BR') + '</div></div>';
+
+  doc += '<div class="stats">';
+  doc += '<div class="stat-card"><span>Total de O.S.:</span><strong>' + total + '</strong></div>';
+  doc += '<div class="stat-card"><span>Pendentes:</span><strong style="color:#D97706;">' + pend + '</strong></div>';
+  doc += '<div class="stat-card"><span>Em Atendimento:</span><strong style="color:#2563EB;">' + andam + '</strong></div>';
+  doc += '<div class="stat-card"><span>Concluídas:</span><strong style="color:#059669;">' + conc + '</strong></div>';
+  doc += '</div>';
+
+  doc += '<table><thead><tr><th>Protocolo</th><th>Data</th><th>Solicitante</th><th>Demanda</th><th>Técnico</th><th>Prioridade</th><th>Status</th></tr></thead>';
+  doc += '<tbody>' + rowsHtml + '</tbody></table>';
+
+  doc += '<div style="margin-top: 20px; font-size: 10.5px; color: #64748B; text-align: center; border-top: 1px solid #E2E8F0; padding-top: 8px;">';
+  doc += 'Sincronizado diretamente no Microsoft SQL Server interno. Nexus Hub Homologação SF.';
+  doc += '</div>';
+
+  doc += '<script>window.onload = function() { setTimeout(function() { window.print(); }, 350); };</script>';
+  doc += '</body></html>';
+
+  printWin.document.write(doc);
+  printWin.document.close();
 };
 
 window.salvarOrdemAdmin = async function() {
@@ -15830,8 +16019,6 @@ function renderListaTecnicosModal() {
 window.excluirOrdemAdmin = async function(paramId) {
   const id = paramId || document.getElementById('osAdminCurrentId')?.value;
   if (!id) return;
-
-  if (!confirm('Deseja realmente excluir esta Ordem de Serviço?')) return;
 
   try {
     const res = await fetch(window.location.origin + '/api/ordens?id=' + id, {
