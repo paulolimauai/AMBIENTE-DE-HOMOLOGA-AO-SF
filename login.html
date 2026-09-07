@@ -181,7 +181,7 @@
                 url('/images/nexus_cyber_office_bg.jpg') !important;
             background-size: cover !important;
             background-position: center !important;
-            background-attachment: fixed !important;
+            background-attachment: scroll !important;
             color: #000000 !important;
         }
 
@@ -192,6 +192,12 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html, body {
+            -webkit-overflow-scrolling: touch !important;
+            scroll-behavior: smooth;
+            touch-action: pan-y pinch-zoom;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
             background-color: #070B14;
@@ -200,7 +206,7 @@
                 url('/images/nexus_cyber_office_bg.jpg') !important;
             background-size: cover !important;
             background-position: center !important;
-            background-attachment: fixed !important;
+            background-attachment: scroll !important;
             background-repeat: no-repeat !important;
             color: var(--auth-text);
             min-height: 100vh;
@@ -3854,34 +3860,57 @@
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
+            const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+
+            function isCanvasVisible() {
+                if (document.hidden) return false;
+                if (!canvas.parentElement) return false;
+                return true;
+            }
+
+            let isScrolling = false;
+            let scrollTimeout = null;
+            function onScrollActive() {
+                isScrolling = true;
+                if (scrollTimeout) clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(function() {
+                    isScrolling = false;
+                }, 120);
+            }
+            window.addEventListener('scroll', onScrollActive, { passive: true });
+            window.addEventListener('touchmove', onScrollActive, { passive: true });
+
             let dpr = 1;
             let width = 0;
             let height = 0;
             let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false };
 
-            window.addEventListener('mousemove', (e) => {
-                mouse.targetX = e.clientX;
-                mouse.targetY = e.clientY;
-                mouse.active = true;
-            });
-            window.addEventListener('mouseleave', () => {
-                mouse.active = false;
-                mouse.targetX = -1000;
-                mouse.targetY = -1000;
-            });
+            if (!isTouch) {
+                window.addEventListener('mousemove', (e) => {
+                    mouse.targetX = e.clientX;
+                    mouse.targetY = e.clientY;
+                    mouse.active = true;
+                }, { passive: true });
+                window.addEventListener('mouseleave', () => {
+                    mouse.active = false;
+                    mouse.targetX = -1000;
+                    mouse.targetY = -1000;
+                }, { passive: true });
+            }
 
             function resize() {
-                dpr = Math.min(window.devicePixelRatio || 1, 3);
+                dpr = isTouch ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
                 width = window.innerWidth;
                 height = window.innerHeight;
-                canvas.width = width * dpr;
-                canvas.height = height * dpr;
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
                 canvas.style.width = width + 'px';
                 canvas.style.height = height + 'px';
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
                 ctx.scale(dpr, dpr);
             }
             resize();
-            window.addEventListener('resize', resize);
+            window.addEventListener('resize', resize, { passive: true });
 
             // 1. Simulação de Evolução Patrimonial Pessoal ao Longo do Ano
             const monthMilestones = [
@@ -3916,7 +3945,7 @@
 
             // 2. Candlesticks Financeiros Reais de Mercado
             const candlestickBars = [];
-            const candleCount = 28;
+            const candleCount = isTouch ? 10 : 28;
             for (let c = 0; c < candleCount; c++) {
                 const isBullish = Math.random() > 0.44;
                 candlestickBars.push({
@@ -3934,7 +3963,7 @@
 
             // 3. Elementos Financeiros Flutuantes com Profundidade
             const items = [];
-            const itemCount = 38;
+            const itemCount = isTouch ? 12 : 38;
             for (let i = 0; i < itemCount; i++) {
                 const kind = i % 2;
                 items.push({
@@ -3954,7 +3983,7 @@
 
             // 4. Partículas de Poeira Luminosa (Bokeh 4K)
             const dustParticles = [];
-            const dustCount = 45;
+            const dustCount = isTouch ? 14 : 45;
             for (let d = 0; d < dustCount; d++) {
                 dustParticles.push({
                     x: Math.random() * width,
@@ -3973,12 +4002,18 @@
             let tickCounter = 0;
 
             function render() {
+                requestAnimationFrame(render);
+                if (!isCanvasVisible()) return;
+                if (isTouch && isScrolling) return;
+
                 ctx.clearRect(0, 0, width, height);
                 const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
 
-                // Inércia suave do cursor
-                mouse.x += (mouse.targetX - mouse.x) * 0.08;
-                mouse.y += (mouse.targetY - mouse.y) * 0.08;
+                // Inércia suave do cursor (desktop)
+                if (!isTouch && mouse.active) {
+                    mouse.x += (mouse.targetX - mouse.x) * 0.08;
+                    mouse.y += (mouse.targetY - mouse.y) * 0.08;
+                }
 
                 // A. Grid Terminal Financeiro com Pontos de Mira (+)
                 const step = 65;
@@ -4023,7 +4058,7 @@
                     ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
                     ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
 
-                    if (!isLight) {
+                    if (!isLight && !isTouch) {
                         ctx.shadowColor = candleColor;
                         ctx.shadowBlur = 6;
                     }
@@ -4068,7 +4103,7 @@
                 ctx.fillStyle = areaGrad;
                 ctx.fill();
 
-                // Linha Principal de Crescimento Financeiro (Dourado e Âmbar)
+                // Linha Principal de Crescimento Financeiro
                 ctx.beginPath();
                 monthMilestones.forEach((m, idx) => {
                     const cx = (idx + 1) * pointSpacing;
@@ -4083,7 +4118,7 @@
                 });
                 ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.75)' : 'rgba(245, 158, 11, 0.85)';
                 ctx.lineWidth = 2.4;
-                if (!isLight) {
+                if (!isLight && !isTouch) {
                     ctx.shadowColor = '#F59E0B';
                     ctx.shadowBlur = 10;
                 }
@@ -4131,7 +4166,7 @@
                     ctx.arc(dp.x, dp.y, dp.radius, 0, Math.PI * 2);
                     ctx.fillStyle = dp.color;
                     ctx.globalAlpha = isLight ? curAlpha * 0.5 : curAlpha;
-                    if (!isLight && dp.radius > 1.2) {
+                    if (!isLight && !isTouch && dp.radius > 1.2) {
                         ctx.shadowColor = dp.color;
                         ctx.shadowBlur = 8;
                     }
@@ -4147,7 +4182,8 @@
                 ctx.moveTo(0, height);
                 ctx.lineTo(0, waveY);
                 const wavePoints = [];
-                for (let x = 0; x <= width; x += 20) {
+                const waveStep = isTouch ? 30 : 20;
+                for (let x = 0; x <= width; x += waveStep) {
                     const y = waveY + Math.sin(x * 0.004 + waveOffset) * 32 + Math.cos(x * 0.008 - waveOffset * 0.5) * 18;
                     ctx.lineTo(x, y);
                     if (x % 160 === 0) wavePoints.push({ x: x, y: y });
@@ -4170,7 +4206,7 @@
 
                 // Linha de Contorno Ciano
                 ctx.beginPath();
-                for (let x = 0; x <= width; x += 20) {
+                for (let x = 0; x <= width; x += waveStep) {
                     const y = waveY + Math.sin(x * 0.004 + waveOffset) * 32 + Math.cos(x * 0.008 - waveOffset * 0.5) * 18;
                     if (x === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
@@ -4186,8 +4222,10 @@
                     ctx.beginPath();
                     ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
                     ctx.fillStyle = '#38BDF8';
-                    ctx.shadowColor = '#38BDF8';
-                    ctx.shadowBlur = 12;
+                    if (!isTouch) {
+                        ctx.shadowColor = '#38BDF8';
+                        ctx.shadowBlur = 12;
+                    }
                     ctx.fill();
 
                     ctx.font = '800 10px "Outfit", sans-serif';
@@ -4196,46 +4234,47 @@
                     ctx.restore();
                 });
 
-                // E. Conexões de Rede Interativa entre Nós e Interação com Cursor
-                for (let i = 0; i < items.length; i++) {
-                    if (mouse.active && mouse.x > 0) {
-                        const mdx = items[i].x - mouse.x;
-                        const mdy = items[i].y - mouse.y;
-                        const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-                        if (mdist < 160) {
-                            const force = (1 - mdist / 160) * 1.5;
-                            items[i].x += (mdx / mdist) * force;
-                            items[i].y += (mdy / mdist) * force;
-
-                            ctx.save();
-                            ctx.beginPath();
-                            ctx.moveTo(items[i].x, items[i].y);
-                            ctx.lineTo(mouse.x, mouse.y);
-                            const mouseConnAlpha = (1 - mdist / 160) * (isLight ? 0.25 : 0.45);
-                            ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, ' + mouseConnAlpha + ')' : 'rgba(245, 158, 11, ' + mouseConnAlpha + ')';
-                            ctx.lineWidth = 1;
-                            ctx.stroke();
-                            ctx.restore();
+                // E. Conexões de Rede Interativa (somente Desktop)
+                if (!isTouch) {
+                    for (let i = 0; i < items.length; i++) {
+                        if (mouse.active && mouse.x > 0) {
+                            const mdx = items[i].x - mouse.x;
+                            const mdy = items[i].y - mouse.y;
+                            const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+                            if (mdist < 160) {
+                                const force = (1 - mdist / 160) * 1.5;
+                                items[i].x += (mdx / mdist) * force;
+                                items[i].y += (mdy / mdist) * force;
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(items[i].x, items[i].y);
+                                ctx.lineTo(mouse.x, mouse.y);
+                                const mouseConnAlpha = (1 - mdist / 160) * (isLight ? 0.25 : 0.45);
+                                ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, ' + mouseConnAlpha + ')' : 'rgba(245, 158, 11, ' + mouseConnAlpha + ')';
+                                ctx.lineWidth = 1;
+                                ctx.stroke();
+                                ctx.restore();
+                            }
                         }
-                    }
 
-                    for (let j = i + 1; j < items.length; j++) {
-                        const dx = items[i].x - items[j].x;
-                        const dy = items[i].y - items[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        for (let j = i + 1; j < items.length; j++) {
+                            const dx = items[i].x - items[j].x;
+                            const dy = items[i].y - items[j].y;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
 
-                        if (dist < 130) {
-                            ctx.save();
-                            ctx.beginPath();
-                            ctx.moveTo(items[i].x, items[i].y);
-                            ctx.lineTo(items[j].x, items[j].y);
-                            const connAlpha = (1 - dist / 130) * 0.20;
-                            ctx.strokeStyle = isLight 
-                                ? 'rgba(14, 165, 233, ' + connAlpha + ')' 
-                                : 'rgba(56, 189, 248, ' + (connAlpha * 1.25) + ')';
-                            ctx.lineWidth = 1;
-                            ctx.stroke();
-                            ctx.restore();
+                            if (dist < 130) {
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(items[i].x, items[i].y);
+                                ctx.lineTo(items[j].x, items[j].y);
+                                const connAlpha = (1 - dist / 130) * 0.20;
+                                ctx.strokeStyle = isLight 
+                                    ? 'rgba(14, 165, 233, ' + connAlpha + ')' 
+                                    : 'rgba(56, 189, 248, ' + (connAlpha * 1.25) + ')';
+                                ctx.lineWidth = 1;
+                                ctx.stroke();
+                                ctx.restore();
+                            }
                         }
                     }
                 }
@@ -4274,10 +4313,6 @@
 
                         ctx.strokeStyle = it.color;
                         ctx.lineWidth = 1.2;
-                        if (!isLight) {
-                            ctx.shadowColor = it.color;
-                            ctx.shadowBlur = 8;
-                        }
                         ctx.stroke();
 
                         ctx.fillStyle = it.color;
@@ -4296,10 +4331,6 @@
 
                         ctx.strokeStyle = it.color;
                         ctx.lineWidth = 1.4;
-                        if (!isLight) {
-                            ctx.shadowColor = it.color;
-                            ctx.shadowBlur = 10;
-                        }
                         ctx.stroke();
 
                         ctx.font = '800 11px "Outfit", sans-serif';
@@ -4311,8 +4342,6 @@
 
                     ctx.restore();
                 });
-
-                requestAnimationFrame(render);
             }
 
             render();
