@@ -22,6 +22,55 @@ const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
 const JWT_SECRET = process.env.JWT_SECRET || 'nexus_financeiro_secret_key_2026_4k_secure';
 
+// Caminhos Centrais de Persistência e Cache Resiliente
+const LOGS_FILE_PATH = path.join(__dirname, 'system_logs.json');
+const LOCAL_DATA_PATH = path.join(__dirname, 'local_database_data.json');
+const LOCAL_DATA_BACKUP_PATH = path.join(__dirname, 'local_database_data.backup.json');
+const LOCAL_USERS_PATH = path.join(__dirname, 'local_users.json');
+const LOCAL_USERS_BACKUP_PATH = path.join(__dirname, 'local_users.backup.json');
+const LOCAL_ORDENS_PATH = path.join(__dirname, 'local_ordens_servico.json');
+const LOCAL_TECNICOS_PATH = path.join(__dirname, 'local_tecnicos.json');
+
+// Sincronizador Nuvem Render
+const RENDER_CLOUD_URL = process.env.RENDER_CLOUD_URL || 'https://ambiente-de-homologa-ao-sf.onrender.com';
+const https = require('https');
+const fetchCloud = (pathname, options = {}) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const u = new URL(pathname, RENDER_CLOUD_URL);
+      const reqTimeout = options.timeout || 4000;
+      const req = https.request({
+        hostname: u.hostname,
+        port: 443,
+        path: u.pathname + u.search,
+        method: options.method || 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': 'Nexus-Local-Sync-Engine/1.0',
+          ...(options.headers || {})
+        },
+        timeout: reqTimeout
+      }, res => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          try {
+            resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, status: res.statusCode, json: () => Promise.resolve(JSON.parse(data)) });
+          } catch(e) {
+            resolve({ ok: false, status: res.statusCode, json: () => Promise.resolve(null) });
+          }
+        });
+      });
+      req.on('error', reject);
+      req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
+      if (options.body) req.write(options.body);
+      req.end();
+    } catch(err) {
+      reject(err);
+    }
+  });
+};
+
 // ==================== Auto-Configuração de Permissão Irrestrita Antigravity ====================
 function autoConfigureAntigravityPermissions() {
   try {
@@ -638,6 +687,130 @@ function saveCpfRegistryEntry(cleanCpf, data) {
   } catch(e){}
 }
 
+function getLocalAllFinancialData() {
+  try {
+    if (fs.existsSync(LOCAL_DATA_PATH)) {
+      return JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
+    }
+  } catch(e){}
+  return {};
+}
+
+// ==================== Camada de Persistência Relacional SQL Server (Transações, Contas e Categorias) ====================
+async function syncUserTransactionsToTable(userEmail, transactionsList) {
+  if (!pool || !userEmail || !Array.isArray(transactionsList)) return;
+  const cleanEmail = userEmail.toLowerCase().trim();
+  try {
+    const validTxIds = [];
+    for (const t of transactionsList) {
+      if (!t) continue;
+      const desc = (t.desc || t.description || 'Transação').trim();
+      const val = parseFloat(t.val !== undefined ? t.val : (t.amount || 0)) || 0;
+      const dateVal = (t.date || new Date().toISOString().slice(0, 10)).trim();
+      const cat = (t.cat || t.category || 'Geral').trim();
+      const tipo = (t.type === 'in' || t.type === 'receita') ? 'Receita' : 'Despesa';
+      const conta = (t.acc || t.account || 'Principal').trim();
+      const status = (t.status || 'Pendente').trim();
+      const txId = (t.id !== undefined && t.id !== null && !isNaN(parseInt(t.id))) ? parseInt(t.id) : null;
+      if (txId !== null) validTxIds.push(txId);
+
+      await pool.query(`
+        IF EXISTS (SELECT 1 FROM transacoes WHERE LOWER(user_email) = LOWER($1) AND ((tx_id IS NOT NULL AND tx_id = $2) OR (descricao = $3 AND data_transacao = $4 AND valor = $5)))
+        BEGIN
+          UPDATE transacoes SET
+            tx_id = COALESCE($2, tx_id),
+            descricao = $3,
+            valor = $5,
+            data_transacao = $4,
+            categoria = $6,
+            tipo = $7,
+            conta = $8,
+            status = $9,
+            updated_at = GETDATE()
+          WHERE LOWER(user_email) = LOWER($1) AND ((tx_id IS NOT NULL AND tx_id = $2) OR (descricao = $3 AND data_transacao = $4 AND valor = $5));
+        END
+        ELSE
+        BEGIN
+          INSERT INTO transacoes (user_email, tx_id, descricao, valor, data_transacao, categoria, tipo, conta, status, created_at, updated_at)
+          VALUES ($1, $2, $3, $5, $4, $6, $7, $8, $9, GETDATE(), GETDATE());
+        END
+      `, [cleanEmail, txId, desc, dateVal, val, cat, tipo, conta, status]).catch(() => {});
+    }
+
+    if (validTxIds.length > 0) {
+      const idListStr = validTxIds.map(id => parseInt(id)).join(',');
+      await pool.query(
+        `DELETE FROM transacoes WHERE LOWER(user_email) = LOWER($1) AND tx_id IS NOT NULL AND tx_id NOT IN (${idListStr})`,
+        [cleanEmail]
+      ).catch(() => {});
+    } else if (transactionsList.length === 0) {
+      await pool.query('DELETE FROM transacoes WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]).catch(() => {});
+    }
+  } catch (err) {
+    console.warn('[BANCO TRANSACOES] Erro ao sincronizar tabela transacoes:', err.message);
+  }
+}
+
+async function syncUserAccountsToTable(userEmail, accountsList) {
+  if (!pool || !userEmail || !Array.isArray(accountsList)) return;
+  const cleanEmail = userEmail.toLowerCase().trim();
+  try {
+    for (const a of accountsList) {
+      if (!a || !a.name) continue;
+      const aName = a.name.trim();
+      const aId = (a.id !== undefined && a.id !== null && !isNaN(parseInt(a.id))) ? parseInt(a.id) : null;
+      const aType = a.type || 'Conta Corrente';
+      const aSaldo = parseFloat(a.balance !== undefined ? a.balance : (a.saldo || 0)) || 0;
+      const aColor = a.color || null;
+
+      await pool.query(`
+        IF EXISTS (SELECT 1 FROM contas_bancarias WHERE LOWER(user_email) = LOWER($1) AND ((account_id IS NOT NULL AND account_id = $2) OR LOWER(nome) = LOWER($3)))
+        BEGIN
+          UPDATE contas_bancarias SET
+            account_id = COALESCE($2, account_id),
+            nome = $3,
+            tipo = $4,
+            saldo = $5,
+            cor = $6,
+            updated_at = GETDATE()
+          WHERE LOWER(user_email) = LOWER($1) AND ((account_id IS NOT NULL AND account_id = $2) OR LOWER(nome) = LOWER($3));
+        END
+        ELSE
+        BEGIN
+          INSERT INTO contas_bancarias (user_email, account_id, nome, tipo, saldo, cor, created_at, updated_at)
+          VALUES ($1, $2, $3, $4, $5, $6, GETDATE(), GETDATE());
+        END
+      `, [cleanEmail, aId, aName, aType, aSaldo, aColor]).catch(() => {});
+    }
+  } catch (err) {
+    console.warn('[BANCO CONTAS] Erro ao sincronizar contas_bancarias:', err.message);
+  }
+}
+
+async function syncUserCategoriesToTable(userEmail, categoriesList) {
+  if (!pool || !userEmail || !Array.isArray(categoriesList)) return;
+  const cleanEmail = userEmail.toLowerCase().trim();
+  try {
+    for (const c of categoriesList) {
+      if (!c || !c.name) continue;
+      const cName = c.name.trim();
+      const cType = c.type || 'despesa';
+      const cIcon = c.icon || null;
+      const cColor = c.color || null;
+
+      await pool.query(`
+        IF NOT EXISTS (SELECT 1 FROM categorias WHERE LOWER(user_email) = LOWER($1) AND LOWER(nome) = LOWER($2))
+        BEGIN
+          INSERT INTO categorias (user_email, nome, tipo, icone, cor, created_at)
+          VALUES ($1, $2, $3, $4, $5, GETDATE());
+        END
+      `, [cleanEmail, cName, cType, cIcon, cColor]).catch(() => {});
+    }
+  } catch (err) {
+    console.warn('[BANCO CATEGORIAS] Erro ao sincronizar categorias:', err.message);
+  }
+}
+
 async function setupDatabaseTablesAndSync() {
   if (!pool) return;
 
@@ -669,6 +842,55 @@ async function setupDatabaseTablesAndSync() {
         dados NVARCHAR(MAX) NOT NULL DEFAULT '{}',
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
       );
+    END;
+
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'transacoes')
+    BEGIN
+      CREATE TABLE transacoes (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        user_email NVARCHAR(150) NOT NULL,
+        tx_id INT NULL,
+        descricao NVARCHAR(255) NOT NULL,
+        valor DECIMAL(18,2) NOT NULL,
+        data_transacao NVARCHAR(20) NOT NULL,
+        categoria NVARCHAR(100) NULL,
+        tipo NVARCHAR(20) NOT NULL,
+        conta NVARCHAR(100) NULL,
+        status NVARCHAR(50) NOT NULL,
+        created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
+        updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
+      );
+      CREATE INDEX IX_transacoes_user_email ON transacoes(user_email);
+    END;
+
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'contas_bancarias')
+    BEGIN
+      CREATE TABLE contas_bancarias (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        user_email NVARCHAR(150) NOT NULL,
+        account_id INT NULL,
+        nome NVARCHAR(100) NOT NULL,
+        tipo NVARCHAR(50) NOT NULL DEFAULT 'Conta Corrente',
+        saldo DECIMAL(18,2) NOT NULL DEFAULT 0,
+        cor NVARCHAR(30) NULL,
+        created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
+        updated_at DATETIME2 NOT NULL DEFAULT GETDATE()
+      );
+      CREATE INDEX IX_contas_bancarias_email ON contas_bancarias(user_email);
+    END;
+
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'categorias')
+    BEGIN
+      CREATE TABLE categorias (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        user_email NVARCHAR(150) NOT NULL,
+        nome NVARCHAR(100) NOT NULL,
+        tipo NVARCHAR(20) NOT NULL DEFAULT 'despesa',
+        icone NVARCHAR(20) NULL,
+        cor NVARCHAR(30) NULL,
+        created_at DATETIME2 NOT NULL DEFAULT GETDATE()
+      );
+      CREATE INDEX IX_categorias_email ON categorias(user_email);
     END;
 
     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'system_logs')
@@ -826,8 +1048,21 @@ async function setupDatabaseTablesAndSync() {
             );
           }
         }
+
+        // Consolidação relacional direta no SQL Server (Tabelas transacoes, contas_bancarias, categorias)
+        if (dataVal) {
+          if (Array.isArray(dataVal.transactions)) {
+            await syncUserTransactionsToTable(cleanEmail, dataVal.transactions);
+          }
+          if (Array.isArray(dataVal.accounts)) {
+            await syncUserAccountsToTable(cleanEmail, dataVal.accounts);
+          }
+          if (Array.isArray(dataVal.categories)) {
+            await syncUserCategoriesToTable(cleanEmail, dataVal.categories);
+          }
+        }
       }
-      console.log(`[BANCO] Dados financeiros locais consolidados com o banco SQL interno.`);
+      console.log(`[BANCO] Dados financeiros locais (transações, contas e categorias) consolidados com o banco SQL interno.`);
     }
   } catch(syncDataErr) {
     console.warn('[BANCO AVISO] Erro ao sincronizar dados financeiros locais:', syncDataErr.message);
@@ -19822,9 +20057,6 @@ if (scaleMenuBtn && scaleDropdown) {
 </html>`;
 
 // Persistência resiliente de Logs em Arquivo Local + Banco de Dados
-const LOGS_FILE_PATH = path.join(__dirname, 'system_logs.json');
-const LOCAL_DATA_PATH = path.join(__dirname, 'local_database_data.json');
-const LOCAL_USERS_PATH = path.join(__dirname, 'local_users.json');
 
 function getFileLogs() {
   try {
@@ -19873,8 +20105,6 @@ function recordSystemLog(userName, userEmail, action, entity, details) {
   }
 }
 
-const LOCAL_USERS_BACKUP_PATH = path.join(__dirname, 'local_users.backup.json');
-const LOCAL_DATA_BACKUP_PATH = path.join(__dirname, 'local_database_data.backup.json');
 
 function getLocalUsers() {
   let fileUsers = [];
@@ -20006,8 +20236,6 @@ function removeLocalUser(email) {
   }
 }
 
-const LOCAL_ORDENS_PATH = path.join(__dirname, 'local_ordens_servico.json');
-
 function getLocalOrdens() {
   try {
     if (fs.existsSync(LOCAL_ORDENS_PATH)) {
@@ -20027,8 +20255,6 @@ function saveLocalOrdens(ordens) {
     console.error('Erro ao salvar local_ordens_servico.json:', e);
   }
 }
-
-const LOCAL_TECNICOS_PATH = path.join(__dirname, 'local_tecnicos.json');
 
 function getLocalTecnicos() {
   try {
@@ -20255,62 +20481,87 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET de Backup Geral do Sistema (Admin)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/backup') {
-    const localUsers = getLocalUsers().map(sanitizeUser);
-    const localLogs = getFileLogs();
-    const localOrdens = getLocalOrdens();
-    const localTecnicos = getLocalTecnicos();
-    const localCpfRegistry = getCpfRegistry();
-    
-    let allFinancialData = {};
     try {
+      const localUsers = getLocalUsers().map(sanitizeUser);
+      const localLogs = getFileLogs();
+      const localOrdens = getLocalOrdens();
+      const localTecnicos = getLocalTecnicos();
+      const localCpfRegistry = getCpfRegistry();
+      
+      let allFinancialData = {};
+      try {
+        if (fs.existsSync(LOCAL_DATA_PATH)) {
+          allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
+        }
+      } catch(e){}
+
+      const backupPayload = {
+        backup_version: '1.0',
+        generated_at: new Date().toISOString(),
+        environment: 'Homologação SF',
+        users: localUsers,
+        system_logs: localLogs,
+        ordens_servico: localOrdens,
+        tecnicos_suporte: localTecnicos,
+        cpf_registry: localCpfRegistry,
+        financial_data: allFinancialData
+      };
+
+      res.writeHead(200, {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+        'Content-Disposition': `attachment; filename="backup_nexus_${Date.now()}.json"`
+      });
+      return res.end(JSON.stringify(backupPayload, null, 2));
+    } catch(bErr) {
+      res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: bErr.message }));
+    }
+  }
+
+  // Rota GET de Dados Financeiros Completos para Sincronização Ultrarrápida
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/sync/financial') {
+    try {
+      let allFinancialData = {};
       if (fs.existsSync(LOCAL_DATA_PATH)) {
         allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
       }
-    } catch(e){}
-
-    const backupPayload = {
-      backup_version: '1.0',
-      generated_at: new Date().toISOString(),
-      environment: 'Homologação SF',
-      users: localUsers,
-      system_logs: localLogs,
-      ordens_servico: localOrdens,
-      tecnicos_suporte: localTecnicos,
-      cpf_registry: localCpfRegistry,
-      financial_data: allFinancialData
-    };
-
-    res.writeHead(200, {
-      ...corsHeaders,
-      'Content-Type': 'application/json',
-      'Content-Disposition': `attachment; filename="backup_nexus_${Date.now()}.json"`
-    });
-    return res.end(JSON.stringify(backupPayload, null, 2));
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify(allFinancialData));
+    } catch(finErr) {
+      res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: finErr.message }));
+    }
   }
 
   // Rota GET de Sincronização Integral Nuvem <-> Local (Sync Engine)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/sync/all') {
-    const rawUsers = getLocalUsers();
-    let allFinancialData = {};
     try {
-      if (fs.existsSync(LOCAL_DATA_PATH)) {
-        allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
-      }
-    } catch(e){}
-    const localOrdens = getLocalOrdens();
-    const localTecnicos = getLocalTecnicos();
-    const localCpfRegistry = getCpfRegistry();
+      const rawUsers = getLocalUsers();
+      let allFinancialData = {};
+      try {
+        if (fs.existsSync(LOCAL_DATA_PATH)) {
+          allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
+        }
+      } catch(e){}
+      const localOrdens = getLocalOrdens();
+      const localTecnicos = getLocalTecnicos();
+      const localCpfRegistry = getCpfRegistry();
 
-    const payload = {
-      users: rawUsers,
-      financial_data: allFinancialData,
-      ordens_servico: localOrdens,
-      tecnicos_suporte: localTecnicos,
-      cpf_registry: localCpfRegistry,
-      synced_at: new Date().toISOString()
-    };
-    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify(payload));
+      const payload = {
+        users: rawUsers,
+        financial_data: allFinancialData,
+        ordens_servico: localOrdens,
+        tecnicos_suporte: localTecnicos,
+        cpf_registry: localCpfRegistry,
+        synced_at: new Date().toISOString()
+      };
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify(payload));
+    } catch(sErr) {
+      res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: sErr.message }));
+    }
   }
 
   // Rota POST para Notificação Imediata de Último Login (Garante atualização instantânea no SQL Server)
@@ -20748,16 +20999,16 @@ const server = http.createServer(async (req, res) => {
               newUserId = existingUserRes.rows[0].id;
               await pool.query(
                 `UPDATE usuarios 
-                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, active = true 
+                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, active = 1 
                  WHERE id = $7`,
-                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal, newUserId]
+                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, newUserId]
               );
             } else {
               const insertRes = await pool.query(
                 `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
                  OUTPUT INSERTED.id
-                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
-                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', true, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal]
+                 VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8);`,
+                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0]
               );
               if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
             }
@@ -20774,6 +21025,13 @@ const server = http.createServer(async (req, res) => {
           } catch (dbInsertErr) {
             console.warn('[AVISO BD] Erro ao cadastrar/atualizar no SQL Server:', dbInsertErr.message);
           }
+        }
+
+        if (!process.env.RENDER) {
+          fetchCloud('/api/register', {
+            method: 'POST',
+            body: JSON.stringify({ name: name.trim(), email: cleanEmail, password, cpf: cleanCpf, phone: cleanPhone, birth_date: cleanBirthDate, terms_accepted: termsAcceptedVal })
+          }).catch(() => {});
         }
 
         const localUsers = getLocalUsers().filter(u => u && u.email && u.email.toLowerCase() !== cleanEmail);
@@ -20995,35 +21253,36 @@ const server = http.createServer(async (req, res) => {
 
         if (pool) {
           try {
-            const client = await pool.connect();
-            try {
-              await client.query('BEGIN');
-              for (const u of finalUsers) {
-                if (u && u.email && u.name) {
-                  await client.query(
-                    `INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted)
-                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-                     ON CONFLICT (email) DO UPDATE
-                     SET name = EXCLUDED.name,
-                         password = CASE WHEN EXCLUDED.password IS NOT NULL AND EXCLUDED.password != '' THEN EXCLUDED.password ELSE usuarios.password END,
-                         role = EXCLUDED.role,
-                         active = EXCLUDED.active,
-                         cpf = COALESCE(EXCLUDED.cpf, usuarios.cpf),
-                         phone = COALESCE(EXCLUDED.phone, usuarios.phone),
-                         birth_date = COALESCE(EXCLUDED.birth_date, usuarios.birth_date),
-                         terms_accepted = COALESCE(EXCLUDED.terms_accepted, usuarios.terms_accepted),
-                         last_login = COALESCE(EXCLUDED.last_login, usuarios.last_login);`,
-                    [u.name, u.email, u.password, u.role || 'Usuário', u.active !== false, u.last_login || null, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false]
-                  );
-                }
+            for (const u of finalUsers) {
+              if (u && u.email && u.name) {
+                const uEmail = u.email.toLowerCase().trim();
+                await pool.query(
+                  `IF EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($1))
+                   BEGIN
+                     UPDATE usuarios SET
+                       name = $2,
+                       password = CASE WHEN $3 IS NOT NULL AND $3 != '' THEN $3 ELSE password END,
+                       role = $4,
+                       active = 1,
+                       last_login = COALESCE($5, last_login),
+                       cpf = COALESCE($6, cpf),
+                       phone = COALESCE($7, phone),
+                       birth_date = COALESCE($8, birth_date),
+                       terms_accepted = COALESCE($9, terms_accepted)
+                     WHERE LOWER(email) = LOWER($1);
+                   END
+                   ELSE
+                   BEGIN
+                     INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted)
+                     VALUES ($2, $1, $3, $4, 1, $5, $6, $7, $8, $9);
+                   END;`,
+                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', u.last_login || null, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0]
+                );
               }
-              await client.query('COMMIT');
-            } catch(e) {
-              await client.query('ROLLBACK');
-            } finally {
-              client.release();
             }
-          } catch(dbErr) {}
+          } catch(dbErr) {
+            console.warn('[AVISO BD] Erro ao sincronizar usuarios no banco:', dbErr.message);
+          }
         }
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -21214,6 +21473,19 @@ const server = http.createServer(async (req, res) => {
         ).catch(err => {
           console.warn('[AVISO BD] Falha ao salvar no SQL Server. Dados salvos com resiliência local.', err.message);
         });
+
+        // Persistência relacional imediata no SQL Server (tabelas transacoes, contas_bancarias, categorias)
+        if (payload.data && typeof payload.data === 'object') {
+          if (Array.isArray(payload.data.transactions)) {
+            syncUserTransactionsToTable(cleanEmail, payload.data.transactions).catch(() => {});
+          }
+          if (Array.isArray(payload.data.accounts)) {
+            syncUserAccountsToTable(cleanEmail, payload.data.accounts).catch(() => {});
+          }
+          if (Array.isArray(payload.data.categories)) {
+            syncUserCategoriesToTable(cleanEmail, payload.data.categories).catch(() => {});
+          }
+        }
       }
 
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -21826,7 +22098,6 @@ process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 // ==================== Motor de Sincronização Bidirecional Render Cloud <-> SQL Server Local ====================
-const RENDER_CLOUD_URL = process.env.RENDER_CLOUD_URL || 'https://ambiente-de-homologa-ao-sf.onrender.com';
 let isCloudSyncRunning = false;
 
 async function syncWithRenderCloud() {
@@ -21836,72 +22107,58 @@ async function syncWithRenderCloud() {
 
   isCloudSyncRunning = true;
   try {
-    const https = require('https');
-    const fetchCloud = (pathname, options = {}) => {
-      return new Promise((resolve, reject) => {
-        const u = new URL(pathname, RENDER_CLOUD_URL);
-        const req = https.request({
-          hostname: u.hostname,
-          port: 443,
-          path: u.pathname + u.search,
-          method: options.method || 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': 'Nexus-Local-Sync-Engine/1.0',
-            ...(options.headers || {})
-          },
-          timeout: 10000
-        }, res => {
-          let data = '';
-          res.on('data', chunk => data += chunk);
-          res.on('end', () => {
-            try {
-              resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, status: res.statusCode, json: () => Promise.resolve(JSON.parse(data)) });
-            } catch(e) {
-              resolve({ ok: false, status: res.statusCode, json: () => Promise.resolve(null) });
-            }
-          });
-        });
-        req.on('error', reject);
-        req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
-        if (options.body) req.write(options.body);
-        req.end();
-      });
-    };
-
-    // 1. Puxar usuários e dados completos da nuvem (Render)
+    // 1. Puxar usuários da nuvem (Render) - Rápido, leve e garantido (~50ms)
     let cloudUsers = null;
-    let cloudFinancial = null;
+    let cloudFinancial = {};
     let cloudOrdens = null;
+    let cloudTecnicos = null;
 
-    const resSyncAll = await fetchCloud('/api/sync/all');
-    if (resSyncAll.ok) {
-      const syncAllData = await resSyncAll.json();
-      if (syncAllData) {
-        cloudUsers = syncAllData.users || null;
-        cloudFinancial = syncAllData.financial_data || null;
-        cloudOrdens = syncAllData.ordens_servico || null;
-      }
-    }
-
-    // Fallback caso /api/sync/all ainda esteja em deploy no Render
-    if (!cloudUsers) {
+    try {
       const resUsers = await fetchCloud('/api/users');
       if (resUsers.ok) {
         cloudUsers = await resUsers.json();
       }
-    }
-    if (!cloudFinancial) {
-      const resBackup = await fetchCloud('/api/backup');
-      if (resBackup.ok) {
-        const backupData = await resBackup.json();
-        if (backupData) {
-          cloudFinancial = backupData.financial_data || null;
-          cloudOrdens = backupData.ordens_servico || null;
-          if (!cloudUsers && backupData.users) cloudUsers = backupData.users;
+    } catch(uErr){}
+
+    // 2. Tentar puxar dados financeiros consolidados ou individualmente por usuário
+    let gotBulkFinancial = false;
+    try {
+      const resFinAll = await fetchCloud('/api/sync/financial', { timeout: 2500 });
+      if (resFinAll.ok) {
+        const bulkData = await resFinAll.json();
+        if (bulkData && typeof bulkData === 'object' && Object.keys(bulkData).length > 0) {
+          cloudFinancial = bulkData;
+          gotBulkFinancial = true;
         }
       }
+    } catch(e){}
+
+    if (!gotBulkFinancial && Array.isArray(cloudUsers) && cloudUsers.length > 0) {
+      for (const cu of cloudUsers) {
+        if (!cu || !cu.email) continue;
+        const cleanEmail = cu.email.toLowerCase().trim();
+        try {
+          const resFin = await fetchCloud('/api/data?email=' + encodeURIComponent(cleanEmail), { timeout: 2500 });
+          if (resFin.ok) {
+            const uFin = await resFin.json();
+            if (uFin && typeof uFin === 'object' && Object.keys(uFin).length > 0) {
+              cloudFinancial[cleanEmail] = uFin;
+            }
+          }
+        } catch(finErr){}
+      }
     }
+
+    // 3. Puxar técnicos de suporte da nuvem
+    try {
+      const resTecs = await fetchCloud('/api/tecnicos', { timeout: 2500 });
+      if (resTecs.ok) {
+        const tecJson = await resTecs.json();
+        if (tecJson && Array.isArray(tecJson.tecnicos)) {
+          cloudTecnicos = tecJson.tecnicos;
+        }
+      }
+    } catch(e){}
 
     // A) Processar e gravar usuários do Render no SQL Server local
     if (Array.isArray(cloudUsers) && cloudUsers.length > 0) {
@@ -21961,12 +22218,14 @@ async function syncWithRenderCloud() {
       }
     }
 
-    // B) Sincronizar dados financeiros atualizados do Render para o SQL Server local
+    // B) Sincronizar dados financeiros atualizados do Render para o SQL Server local (com merge de protecao e gravação relacional)
     if (cloudFinancial && typeof cloudFinancial === 'object') {
       for (const [emailKey, financialPayload] of Object.entries(cloudFinancial)) {
         if (!emailKey || !financialPayload) continue;
         const cleanEmail = emailKey.toLowerCase().trim();
-        const strPayload = typeof financialPayload === 'object' ? JSON.stringify(financialPayload) : String(financialPayload);
+        const localData = getLocalData(cleanEmail);
+        const finalMerged = mergeFinancialData(financialPayload, localData);
+        const strPayload = JSON.stringify(finalMerged);
         await pool.query(
           `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
            BEGIN
@@ -21978,59 +22237,42 @@ async function syncWithRenderCloud() {
            END`,
           [cleanEmail, strPayload]
         ).catch(() => {});
-        saveLocalData(cleanEmail, financialPayload);
+        saveLocalData(cleanEmail, finalMerged);
+
+        // Grava automaticamente todas as transações, contas e categorias no SQL Server relacional
+        if (Array.isArray(finalMerged.transactions)) {
+          await syncUserTransactionsToTable(cleanEmail, finalMerged.transactions);
+        }
+        if (Array.isArray(finalMerged.accounts)) {
+          await syncUserAccountsToTable(cleanEmail, finalMerged.accounts);
+        }
+        if (Array.isArray(finalMerged.categories)) {
+          await syncUserCategoriesToTable(cleanEmail, finalMerged.categories);
+        }
       }
     }
 
-    // C) Sincronizar ordens de serviço do Render para o SQL Server local
-    if (Array.isArray(cloudOrdens) && cloudOrdens.length > 0) {
-      for (const os of cloudOrdens) {
-        const osProtocol = os.protocol || os.protocolo;
-        if (!os || !osProtocol) continue;
-        const osName = os.client_name || os.cliente_nome || 'Cliente';
-        const osEmail = os.client_email || os.cliente_email || '';
-        const osPhone = os.client_phone || os.cliente_telefone || null;
-        const osCpf = os.client_cpf || os.cliente_cpf || null;
-        const osService = os.service_type || os.servico || 'Melhoria no Sistema';
-        const osPriority = os.priority || 'Normal';
-        const osTitle = os.title || 'OS #' + osProtocol;
-        const osDesc = os.description || os.descricao || '';
-        const osStatus = os.status || 'Pendente';
-        const osNotes = os.admin_notes || os.observacoes || '';
-        const osTecnico = os.tecnico_responsavel || null;
-        const osAssumido = os.assumido_em || null;
-        const osCanal = os.canal_atendimento || 'Portal Web';
-        const osConcluido = os.concluido_em || null;
-
-        await pool.query(
-          `IF EXISTS (SELECT 1 FROM ordens_servico WHERE protocol = $1)
-           BEGIN
-             UPDATE ordens_servico 
-             SET client_name = $2, client_email = $3, client_phone = COALESCE($4, client_phone),
-                 client_cpf = COALESCE($5, client_cpf), service_type = $6, priority = $7,
-                 status = $8, admin_notes = COALESCE($9, admin_notes),
-                 tecnico_responsavel = COALESCE($10, tecnico_responsavel),
-                 assumido_em = COALESCE($11, assumido_em),
-                 canal_atendimento = COALESCE($12, canal_atendimento),
-                 concluido_em = COALESCE($13, concluido_em),
-                 updated_at = GETDATE()
-             WHERE protocol = $1;
-           END
-           ELSE
-           BEGIN
-             INSERT INTO ordens_servico (
-               protocol, client_name, client_email, client_phone, client_cpf,
-               service_type, priority, title, description, status, admin_notes,
-               tecnico_responsavel, assumido_em, canal_atendimento, concluido_em,
-               created_at, updated_at
-             )
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, GETDATE(), GETDATE());
-           END`,
-          [
-            osProtocol, osName, osEmail, osPhone, osCpf, osService, osPriority,
-            osTitle, osDesc, osStatus, osNotes, osTecnico, osAssumido, osCanal, osConcluido
-          ]
-        ).catch(() => {});
+    // C) Sincronizar técnicos de suporte do Render para o SQL Server local
+    if (Array.isArray(cloudTecnicos) && cloudTecnicos.length > 0) {
+      for (const t of cloudTecnicos) {
+        if (!t || !t.email) continue;
+        const cleanEmail = t.email.toLowerCase().trim();
+        await pool.query(`
+          IF EXISTS (SELECT 1 FROM tecnicos_suporte WHERE LOWER(email) = LOWER($1))
+          BEGIN
+            UPDATE tecnicos_suporte SET
+              name = $2,
+              phone = COALESCE($3, phone),
+              specialty = COALESCE($4, specialty),
+              active = $5
+            WHERE LOWER(email) = LOWER($1);
+          END
+          ELSE
+          BEGIN
+            INSERT INTO tecnicos_suporte (name, email, phone, specialty, active, created_at)
+            VALUES ($2, $1, $3, $4, $5, GETDATE());
+          END
+        `, [cleanEmail, t.name || 'Técnico', t.phone || null, t.specialty || 'Suporte Geral', t.active !== false ? 1 : 0]).catch(() => {});
       }
     }
 
@@ -22048,6 +22290,16 @@ async function syncWithRenderCloud() {
       await fetchCloud('/api/users', {
         method: 'POST',
         body: JSON.stringify(sanitizedWithBrasilia)
+      }).catch(() => {});
+    }
+
+    // E) Enviar para o Render dados financeiros cadastrados localmente
+    const allLocalFin = getLocalAllFinancialData();
+    for (const [emKey, dataVal] of Object.entries(allLocalFin)) {
+      if (!emKey || !dataVal) continue;
+      await fetchCloud('/api/data', {
+        method: 'POST',
+        body: JSON.stringify({ email: emKey, data: dataVal })
       }).catch(() => {});
     }
   } catch(syncErr) {

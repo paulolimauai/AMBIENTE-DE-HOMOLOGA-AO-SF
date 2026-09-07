@@ -4,8 +4,8 @@
     "protocol": "OS-63437370",
     "client_name": "Paulo Lima",
     "client_email": "paulolp0101@gmail.com",
-    "client_phone": null,
-    "client_cpf": null,
+    "client_phone": "",
+    "client_cpf": "",
     "service_type": "Melhoria no Sistema",
     "priority": "Alta",
     "title": "Exportação de Relatórios em Excel e PDF 4K",
@@ -13,10 +13,10 @@
     "status": "Pendente",
     "admin_notes": "",
     "tecnico_responsavel": "Pendente",
-    "assumido_em": "",
+    "assumido_em": null,
     "canal_atendimento": "Portal Web",
     "concluido_em": null,
     "created_at": "2026-08-31T11:43:54.373Z",
-    "updated_at": "2026-09-07T12:31:51.723Z"
+    "updated_at": "2026-09-07T09:53:17.373Z"
   }
 ]
