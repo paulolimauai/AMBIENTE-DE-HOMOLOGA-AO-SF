@@ -1601,6 +1601,62 @@
             filter: drop-shadow(0 1px 4px rgba(239, 68, 68, 0.35)) !important;
         }
 
+        /* Pill de Suporte Executivo */
+        .auth-support-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.70);
+            border: 1px solid rgba(56, 189, 248, 0.22);
+            color: #94A3B8;
+            font-size: 11.5px;
+            font-weight: 600;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+        }
+        .auth-support-pill:hover {
+            background: rgba(20, 30, 52, 0.90);
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 6px 20px rgba(0, 229, 255, 0.15);
+        }
+        .auth-support-pill svg {
+            color: #38BDF8;
+            flex-shrink: 0;
+        }
+        .auth-support-link {
+            color: #38BDF8;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.15s ease, text-decoration 0.15s ease;
+        }
+        .auth-support-link:hover {
+            color: #7DD3FC;
+            text-decoration: underline;
+        }
+        body.light .auth-support-pill {
+            background: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            color: #475569 !important;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+        }
+        body.light .auth-support-pill:hover {
+            background: #F8FAFC !important;
+            border-color: #0284C7 !important;
+        }
+        body.light .auth-support-pill svg {
+            color: #0284C7 !important;
+        }
+        body.light .auth-support-link {
+            color: #0284C7 !important;
+        }
+        body.light .auth-support-link:hover {
+            color: #0369A1 !important;
+        }
+
         /* Modal de Termos Financeiros & LGPD */
         body.light #boxFinancialTermsModal {
             background: #FFFFFF !important;
@@ -2152,6 +2208,16 @@
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                                 </button>
                             </div>
+
+                            <!-- Atalho de Acesso Rápido Administrador Master -->
+                            <div class="pt-3 border-t border-white/10 mt-3">
+                                <button type="button" id="btnQuickAdminLogin" onclick="preencherCredenciaisAdmin()" 
+                                    class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-amber-500/25 to-amber-600/15 hover:from-amber-500/30 hover:to-amber-600/35 border border-amber-500/40 text-amber-300 font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(245,158,11,0.15)] group focus:outline-none cursor-pointer">
+                                    <span class="text-sm transition-transform group-hover:scale-125">👑</span>
+                                    <span>Acesso Rápido Administrador Master</span>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-200 uppercase font-black tracking-wider">1-Clique</span>
+                                </button>
+                            </div>
                         </form>
 
                         <p class="mt-5 text-center text-xs auth-subtitle-text text-[#94A3B8]">
@@ -2386,8 +2452,8 @@
 
 
 
-                <!-- ASSINATURA EXECUTIVA DO DESENVOLVEDOR PAULO LIMA -->
-                <div class="mt-5 flex flex-col items-center gap-1.5">
+                <!-- ASSINATURA EXECUTIVA DO DESENVOLVEDOR PAULO LIMA & SUPORTE -->
+                <div class="mt-5 flex flex-col items-center gap-2">
                     <div class="dev-signature">
                         <div class="dev-signature-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
@@ -2399,6 +2465,14 @@
                             <span class="dev-signature-label">Desenvolvido por</span>
                             <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
                         </div>
+                    </div>
+                    <div class="auth-support-pill">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2"/>
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                        </svg>
+                        <span>Suporte:</span>
+                        <a href="mailto:suporte.paulolima@outlook.com" class="auth-support-link">suporte.paulolima@outlook.com</a>
                     </div>
                 </div>
 

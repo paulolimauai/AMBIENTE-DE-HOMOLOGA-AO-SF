@@ -1602,9 +1602,71 @@ body.light .auth-card-glare {
   z-index: 10;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 6px 14px 10px;
+  gap: 8px;
+  padding: 6px 14px 12px;
+}
+
+.auth-support-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.70);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  color: #94A3B8;
+  font-size: 11.5px;
+  font-weight: 600;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
+.auth-support-pill:hover {
+  background: rgba(20, 30, 52, 0.90);
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 6px 20px rgba(0, 229, 255, 0.15);
+}
+.auth-support-pill svg {
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+.auth-support-link {
+  color: #38BDF8;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+.auth-support-link:hover {
+  color: #7DD3FC;
+  text-decoration: underline;
+}
+body.light .auth-support-pill,
+html.light .auth-support-pill {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+}
+body.light .auth-support-pill:hover,
+html.light .auth-support-pill:hover {
+  background: #F8FAFC !important;
+  border-color: #0284C7 !important;
+}
+body.light .auth-support-pill svg,
+html.light .auth-support-pill svg {
+  color: #0284C7 !important;
+}
+body.light .auth-support-link,
+html.light .auth-support-link {
+  color: #0284C7 !important;
+}
+body.light .auth-support-link:hover,
+html.light .auth-support-link:hover {
+  color: #0369A1 !important;
 }
 
 @media (max-width: 1024px) {
@@ -7495,7 +7557,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
     </div>
   </div>
 
-  <!-- Assinatura do Desenvolvedor no Rodapé Global da Autenticação -->
+  <!-- Assinatura do Desenvolvedor e Suporte no Rodapé Global da Autenticação -->
   <footer class="auth-global-footer">
     <div class="dev-signature" style="justify-content:center;">
       <div class="dev-signature-icon">
@@ -7508,6 +7570,14 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         <span class="dev-signature-label">Desenvolvido por</span>
         <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
       </div>
+    </div>
+    <div class="auth-support-pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="20" height="16" x="2" y="4" rx="2"/>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+      </svg>
+      <span>Suporte:</span>
+      <a href="mailto:suporte.paulolima@outlook.com" class="auth-support-link">suporte.paulolima@outlook.com</a>
     </div>
   </footer>
 </div>
