@@ -726,6 +726,44 @@ async function setupDatabaseTablesAndSync() {
   } catch(syncOrdErr) {
     console.warn('[BANCO AVISO] Erro ao sincronizar ordens de serviço locais:', syncOrdErr.message);
   }
+
+  // 8. Sincronização e Consolidação de Técnicos entre Banco SQL e Cache Local
+  try {
+    // 8.1 Remove eventuais técnicos de mock fictícios do banco
+    await pool.query("DELETE FROM tecnicos_suporte WHERE LOWER(email) IN ('carlos.tecnico@nexus.com', 'juliana.suporte@nexus.com')");
+
+    // 8.2 Sobe os técnicos reais do arquivo local para o banco se ainda não estiverem lá
+    const currentLocalTecs = getLocalTecnicos();
+    for (const t of currentLocalTecs) {
+      if (!t || !t.email) continue;
+      const cleanEmail = t.email.toLowerCase().trim();
+      const existing = await pool.query('SELECT id FROM tecnicos_suporte WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+      if (existing.rows.length === 0) {
+        await pool.query(
+          'INSERT INTO tecnicos_suporte (name, email, phone, specialty, active) VALUES ($1, $2, $3, $4, $5)',
+          [t.name || 'Técnico', cleanEmail, t.phone || null, t.specialty || 'Suporte Geral', t.active !== false ? 1 : 0]
+        );
+      }
+    }
+
+    // 8.3 Consolida do banco SQL para o cache local para nunca perder dados
+    const dbTecs = await pool.query('SELECT id, name, email, phone, specialty, active, created_at FROM tecnicos_suporte ORDER BY id ASC');
+    if (dbTecs.rows && Array.isArray(dbTecs.rows)) {
+      const mergedList = dbTecs.rows.map(row => ({
+        id: String(row.id),
+        name: row.name,
+        email: row.email,
+        phone: row.phone || '',
+        specialty: row.specialty || 'Suporte Geral',
+        active: row.active === 1 || row.active === true,
+        created_at: row.created_at ? new Date(row.created_at).toISOString() : new Date().toISOString()
+      }));
+      saveLocalTecnicos(mergedList);
+      console.log(`[BANCO] ${mergedList.length} técnico(s) consolidado(s) e sincronizado(s) no banco SQL interno.`);
+    }
+  } catch(syncTecErr) {
+    console.warn('[BANCO AVISO] Erro ao sincronizar técnicos de suporte com o banco:', syncTecErr.message);
+  }
 }
 
 // Conteúdo HTML/JS/CSS da aplicação centralizada com isolamento por usuário
@@ -8521,11 +8559,11 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
           <div class="field" style="margin-bottom:0;">
             <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Nome Completo do Técnico *</label>
-            <input id="tecnicoNome" required placeholder="Ex: Carlos Eduardo Silveira" style="height:42px; border-radius:12px; font-size:13px;">
+            <input id="tecnicoNome" required placeholder="Digite o nome completo do técnico" style="height:42px; border-radius:12px; font-size:13px;">
           </div>
           <div class="field" style="margin-bottom:0;">
             <label style="font-size:12px; font-weight:700; color:var(--text-dim);">E-mail Corporativo / Suporte *</label>
-            <input id="tecnicoEmail" type="email" required placeholder="carlos.suporte@nexus.com" style="height:42px; border-radius:12px; font-size:13px;">
+            <input id="tecnicoEmail" type="email" required placeholder="tecnico.suporte@nexus.com" style="height:42px; border-radius:12px; font-size:13px;">
           </div>
           <div class="field" style="margin-bottom:0;">
             <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Telefone / WhatsApp</label>
@@ -19228,26 +19266,7 @@ function getLocalTecnicos() {
   } catch (e) {
     console.error('Erro ao ler local_tecnicos.json:', e);
   }
-  const defaultTecnicos = [
-    {
-      id: "1",
-      name: "Carlos Eduardo",
-      email: "carlos.tecnico@nexus.com",
-      phone: "(62) 99888-1234",
-      specialty: "Suporte Técnico N2",
-      active: true,
-      created_at: new Date().toISOString()
-    },
-    {
-      id: "2",
-      name: "Juliana Silveira",
-      email: "juliana.suporte@nexus.com",
-      phone: "(62) 99777-5678",
-      specialty: "Especialista em Banco & Dados",
-      active: true,
-      created_at: new Date().toISOString()
-    }
-  ];
+  const defaultTecnicos = [];
   saveLocalTecnicos(defaultTecnicos);
   return defaultTecnicos;
 }
@@ -20599,7 +20618,26 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET para Listar Técnicos Credenciados (Admin & Suporte)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/tecnicos') {
-    const tecnicos = getLocalTecnicos();
+    let tecnicos = getLocalTecnicos();
+    if (pool) {
+      try {
+        const dbTecs = await pool.query("SELECT id, name, email, phone, specialty, active, created_at FROM tecnicos_suporte WHERE LOWER(email) NOT IN ('carlos.tecnico@nexus.com', 'juliana.suporte@nexus.com') ORDER BY id ASC");
+        if (dbTecs.rows && Array.isArray(dbTecs.rows)) {
+          tecnicos = dbTecs.rows.map(row => ({
+            id: String(row.id),
+            name: row.name,
+            email: row.email,
+            phone: row.phone || '',
+            specialty: row.specialty || 'Suporte Geral',
+            active: row.active === 1 || row.active === true,
+            created_at: row.created_at ? new Date(row.created_at).toISOString() : new Date().toISOString()
+          }));
+          saveLocalTecnicos(tecnicos);
+        }
+      } catch(err) {
+        console.warn('[AVISO BD TECNICOS GET] Fallback para arquivo local:', err.message);
+      }
+    }
     res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({ success: true, tecnicos: tecnicos }));
   }
