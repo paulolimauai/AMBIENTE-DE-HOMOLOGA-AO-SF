@@ -981,30 +981,31 @@ async function setupDatabaseTablesAndSync() {
     END;
   `);
 
-  // 4. Garantir Administrador Padrão
-  await pool.query(
-    `IF NOT EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($2))
-     BEGIN
-       INSERT INTO usuarios (name, email, password, role, active)
-       VALUES ($1, $2, $3, $4, $5);
-     END`,
-    [DEFAULT_ADMIN.name, DEFAULT_ADMIN.email, DEFAULT_ADMIN.password, DEFAULT_ADMIN.role, DEFAULT_ADMIN.active]
-  );
+  // 4. Garantir Administradores Padrão Autorizados
+  for (const du of DEFAULT_AUTHORIZED_USERS) {
+    if (!du || !du.email) continue;
+    await pool.query(
+      `IF NOT EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($2))
+       BEGIN
+         INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
+       END`,
+      [du.name, du.email, du.password, du.role, du.active !== false ? 1 : 0, du.cpf || null, du.phone || null, du.birth_date || null, du.terms_accepted !== false ? 1 : 0]
+    ).catch(() => {});
+  }
 
-  // 5. Sincronização e Consolidação de Usuários entre Banco e Cache Local
+  // 5. Sincronização e Consolidação Total de Usuários entre Banco SQL e Cache Local
   try {
-    const existingInDb = await pool.query('SELECT COUNT(*) as cnt FROM usuarios');
-    const dbCount = (existingInDb.rows && existingInDb.rows[0]) ? parseInt(existingInDb.rows[0].cnt) : 0;
-
-    // Apenas se o banco estiver totalmente vazio sem usuários é que inicializa a partir do cache local
-    if (dbCount === 0) {
-      const localUsers = getLocalUsers();
-      for (const u of localUsers) {
-        if (!u || !u.email) continue;
-        const cleanEmail = u.email.toLowerCase().trim();
+    // Insere no banco quaisquer usuários presentes no cache local que ainda não existam no SQL Server
+    const localUsers = getLocalUsers();
+    for (const u of localUsers) {
+      if (!u || !u.email) continue;
+      const cleanEmail = u.email.toLowerCase().trim();
+      const checkU = await pool.query('SELECT id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+      if (!checkU.rows || checkU.rows.length === 0) {
         await pool.query(
           'INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-          [u.name || 'Usuário', cleanEmail, u.password || hashPassword('123456'), u.role || 'Usuário', u.active !== false, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false]
+          [u.name || 'Usuário', cleanEmail, u.password || hashPassword('86266049'), u.role || 'Usuário', u.active !== false ? 1 : 0, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0]
         ).catch(() => {});
       }
     }
