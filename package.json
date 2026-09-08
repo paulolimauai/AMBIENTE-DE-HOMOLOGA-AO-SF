@@ -1,6 +1,6 @@
 {
   "name": "nexus-financeiro-hub",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Sistema de gestão financeira pessoal - Nexus Financeiro Hub",
   "main": "server.js",
   "scripts": {
@@ -13,8 +13,10 @@
   "dependencies": {
     "@google/genai": "^2.16.0",
     "dotenv": "^16.6.1",
-    "msnodesqlv8": "^5.3.0",
     "mssql": "^12.7.0"
+  },
+  "optionalDependencies": {
+    "msnodesqlv8": "^5.3.0"
   },
   "engines": {
     "node": ">=18.0.0"

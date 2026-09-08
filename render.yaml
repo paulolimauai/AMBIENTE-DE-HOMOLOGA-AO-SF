@@ -3,7 +3,7 @@ services:
     name: sistema-financeiro
     runtime: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm install --no-audit --omit=optional || npm install --no-audit
     startCommand: npm start
     autoDeploy: true
     envVars:

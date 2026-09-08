@@ -178,8 +178,8 @@
             --auth-tab-bg: #E2E8F0;
             background-color: #F8FAFC !important;
             background-image: 
-                radial-gradient(ellipse at 50% 10%, rgba(254, 243, 199, 0.5) 0%, transparent 60%),
-                radial-gradient(ellipse at 85% 85%, rgba(219, 234, 254, 0.55) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 10%, rgba(254, 243, 199, 0.60) 0%, transparent 60%),
+                radial-gradient(ellipse at 85% 85%, rgba(219, 234, 254, 0.65) 0%, transparent 55%),
                 linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.98) 100%),
                 url('/images/nexus_cyber_office_bg.jpg') !important;
             background-size: cover !important;
@@ -220,11 +220,12 @@
 
         body {
             font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-            background-color: #060911;
+            background-color: #060913;
             background-image: 
-                radial-gradient(ellipse at 50% 0%, rgba(30, 58, 138, 0.32) 0%, transparent 65%),
-                radial-gradient(ellipse at 85% 85%, rgba(245, 158, 11, 0.16) 0%, transparent 55%),
-                linear-gradient(180deg, rgba(6, 9, 17, 0.55) 0%, rgba(7, 12, 23, 0.8) 50%, rgba(4, 7, 14, 0.95) 100%),
+                radial-gradient(ellipse at 20% 15%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 80%, rgba(59, 130, 246, 0.16) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 65%),
+                linear-gradient(180deg, rgba(6, 9, 19, 0.76) 0%, rgba(8, 13, 26, 0.88) 50%, rgba(4, 7, 15, 0.98) 100%),
                 url('/images/nexus_cyber_office_bg.jpg') !important;
             background-size: cover !important;
             background-position: center !important;
@@ -3089,96 +3090,7 @@
                 }
                 ctx.restore();
 
-                // Candlesticks
-                candlestickBars.forEach(candle => {
-                    candle.x += candle.vx;
-                    if (candle.x < -30) {
-                        candle.x = width + 30;
-                        candle.y = height * 0.72 + (Math.random() * 90 - 45);
-                        candle.isBullish = Math.random() > 0.45;
-                    }
-                    const candleColor = candle.isBullish ? '#10B981' : '#EF4444';
 
-                    ctx.save();
-                    ctx.globalAlpha = isLight ? candle.alpha * 0.6 : candle.alpha;
-                    ctx.strokeStyle = candleColor;
-                    ctx.fillStyle = candle.isBullish ? candleColor : 'rgba(239, 68, 68, 0.35)';
-                    ctx.lineWidth = 1.2;
-
-                    ctx.beginPath();
-                    ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
-                    ctx.lineTo(candle.x, candle.y + candle.height / 2 + candle.wickBottom);
-                    ctx.stroke();
-
-                    ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
-                    ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
-                    ctx.restore();
-                });
-
-                // Curva Suave de Evolução Patrimonial
-                const chartBaseY = height * 0.79;
-                const pointSpacing = width / (monthMilestones.length + 1);
-                const minVal = 10000;
-                const maxVal = 48000;
-                const range = maxVal - minVal;
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.moveTo(pointSpacing, height);
-                monthMilestones.forEach((m, idx) => {
-                    const cx = (idx + 1) * pointSpacing;
-                    const cy = chartBaseY - ((m.val - minVal) / range) * 95;
-                    if (idx === 0) ctx.lineTo(cx, cy);
-                    else {
-                        const prevX = idx * pointSpacing;
-                        const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
-                        const cpx = (prevX + cx) / 2;
-                        ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
-                    }
-                });
-                ctx.lineTo(monthMilestones.length * pointSpacing, height);
-                ctx.closePath();
-
-                const areaGrad = ctx.createLinearGradient(0, chartBaseY - 100, 0, height);
-                areaGrad.addColorStop(0, isLight ? 'rgba(245, 158, 11, 0.12)' : 'rgba(245, 158, 11, 0.18)');
-                areaGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
-                areaGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
-                ctx.fillStyle = areaGrad;
-                ctx.fill();
-
-                // Linha
-                ctx.beginPath();
-                monthMilestones.forEach((m, idx) => {
-                    const cx = (idx + 1) * pointSpacing;
-                    const cy = chartBaseY - ((m.val - minVal) / range) * 95;
-                    if (idx === 0) ctx.moveTo(cx, cy);
-                    else {
-                        const prevX = idx * pointSpacing;
-                        const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
-                        const cpx = (prevX + cx) / 2;
-                        ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
-                    }
-                });
-                ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.75)' : 'rgba(245, 158, 11, 0.85)';
-                ctx.lineWidth = 2.4;
-                ctx.stroke();
-
-                // Pontos e Rótulos
-                monthMilestones.forEach((m, idx) => {
-                    const cx = (idx + 1) * pointSpacing;
-                    const cy = chartBaseY - ((m.val - minVal) / range) * 95;
-
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
-                    ctx.fillStyle = isLight ? '#D97706' : '#FBBF24';
-                    ctx.fill();
-
-                    ctx.font = '700 9.5px "Outfit", sans-serif';
-                    ctx.fillStyle = isLight ? '#475569' : '#94A3B8';
-                    ctx.textAlign = 'center';
-                    ctx.fillText(m.month, cx, cy + 24);
-                });
-                ctx.restore();
 
                 // Partículas Bokeh
                 dustParticles.forEach(dp => {
