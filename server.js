@@ -1559,10 +1559,12 @@ html, body{overflow-x:clip !important; width:100%;}
   z-index: -99999 !important;
   pointer-events: none !important;
   user-select: none !important;
-  background-color: var(--bg) !important;
+  background-color: #060913 !important;
   background-image: 
-    radial-gradient(ellipse at 50% 0%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
-    linear-gradient(180deg, rgba(7, 11, 20, 0.55) 0%, rgba(8, 14, 26, 0.78) 50%, rgba(5, 9, 18, 0.92) 100%),
+    radial-gradient(ellipse at 20% 15%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(59, 130, 246, 0.16) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(6, 9, 19, 0.76) 0%, rgba(8, 13, 26, 0.88) 50%, rgba(4, 7, 15, 0.98) 100%),
     url('/images/nexus_cyber_office_bg.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -1574,10 +1576,11 @@ html, body{overflow-x:clip !important; width:100%;}
 
 body.light #persistentSystemBg,
 body.light .persistent-system-bg {
-  background-color: #F1F5F9 !important;
+  background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse at 50% 0%, rgba(186, 230, 253, 0.38) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(248, 250, 252, 0.88) 0%, rgba(241, 245, 249, 0.94) 50%, rgba(226, 232, 240, 0.90) 100%),
+    radial-gradient(ellipse at 50% 10%, rgba(254, 243, 199, 0.60) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 85%, rgba(219, 234, 254, 0.65) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.98) 100%),
     url('/images/nexus_cyber_office_bg.jpg') !important;
 }
 
@@ -1930,129 +1933,276 @@ body.light .auth-blob { opacity: 0.14; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ==================== EFEITO TELA DE VIDRO PANORÂMICA (4K LIQUID GLASS SCREEN) ==================== */
-.glass-viewport-screen {
+/* Ocultar quaisquer resquícios de shards soltos */
+.glass-viewport-screen,
+.glass-shard,
+.glass-screen-reflection {
+  display: none !important;
+}
+
+/* ==================== TICKER DE COTAÇÕES FINANCEIRAS AO VIVO 4K ==================== */
+.fintech-live-ticker-bar {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  background: linear-gradient(90deg, rgba(8, 14, 26, 0.85) 0%, rgba(15, 23, 42, 0.8) 50%, rgba(8, 14, 26, 0.85) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  border-radius: 999px;
+  padding: 2px 10px 2px 4px;
+  box-shadow: 0 8px 25px -4px rgba(0, 0, 0, 0.7), 0 0 20px -2px rgba(245, 158, 11, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+}
+
+body.light .fintech-live-ticker-bar {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.92) 50%, rgba(255, 255, 255, 0.95) 100%);
+  border-color: rgba(217, 119, 6, 0.35);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08), inset 0 1px 0 #FFFFFF;
+}
+
+.fintech-ticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.15));
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #FBBF24;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  z-index: 2;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+}
+
+body.light .fintech-ticker-badge {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.16), rgba(180, 83, 9, 0.08));
+  border-color: rgba(217, 119, 6, 0.4);
+  color: #92400E;
+}
+
+.fintech-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: pulseFintechDot 1.8s infinite ease-in-out;
+}
+
+@keyframes pulseFintechDot {
+  0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #10B981; }
+  50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #34D399; }
+}
+
+.fintech-ticker-viewport {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 3%, #000 97%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 3%, #000 97%, transparent 100%);
+}
+
+.fintech-ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  white-space: nowrap;
+  will-change: transform;
+  animation: tickerScrollLoop 42s linear infinite;
+}
+
+.fintech-live-ticker-bar:hover .fintech-ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes tickerScrollLoop {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #E2E8F0;
+  padding: 2px 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+body.light .ticker-item {
+  color: #1E293B;
+}
+
+.ticker-item .sym {
+  color: #94A3B8;
+  font-weight: 800;
+  font-size: 10.5px;
+}
+
+body.light .ticker-item .sym {
+  color: #475569;
+}
+
+.ticker-item .val {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  color: #F8FAFC;
+}
+
+body.light .ticker-item .val {
+  color: #0F172A;
+}
+
+.ticker-item .chg {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.ticker-item .chg.up {
+  color: #34D399;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.ticker-item .chg.down {
+  color: #F87171;
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.ticker-item .chg.neu {
+  color: #60A5FA;
+  background: rgba(59, 130, 246, 0.18);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+/* ==================== 3D HOLOGRAPHIC TITANIUM CARD (SHOWCASE LUXO) ==================== */
+.card-3d-perspective-wrap {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  width: 100%;
+}
+
+.holographic-titanium-card {
+  width: 100%;
+  max-width: 440px;
+  height: 235px;
+  border-radius: 22px;
+  position: relative;
+  background: linear-gradient(135deg, #111827 0%, #0B1120 45%, #030712 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.38);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 
+    0 24px 50px -10px rgba(0, 0, 0, 0.85),
+    0 0 35px -5px rgba(245, 158, 11, 0.22),
+    inset 0 1px 2px rgba(255, 255, 255, 0.35);
+  transform: rotateX(var(--card-tilt-x, 0deg)) rotateY(var(--card-tilt-y, 0deg));
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  overflow: hidden;
+  user-select: none;
+  cursor: pointer;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.holographic-titanium-card:hover {
+  box-shadow: 
+    0 30px 60px -10px rgba(0, 0, 0, 0.95),
+    0 0 45px -2px rgba(245, 158, 11, 0.35),
+    inset 0 1px 3px rgba(255, 255, 255, 0.5);
+}
+
+.card-holographic-sheen {
   position: absolute;
   inset: 0;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), 
+    rgba(255, 255, 255, 0.25) 0%, 
+    rgba(245, 158, 11, 0.18) 25%, 
+    rgba(59, 130, 246, 0.12) 45%, 
+    transparent 70%);
+  mix-blend-mode: overlay;
   pointer-events: none;
-  z-index: 1;
+}
+
+.emv-chip-metal {
+  width: 42px;
+  height: 32px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #FDE68A 0%, #D97706 50%, #78350F 100%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 2px 8px rgba(0,0,0,0.5);
+  position: relative;
   overflow: hidden;
 }
 
-/* Placas de Vidro Líquido Flutuantes em Profundidade 4K */
-.glass-shard {
+.emv-chip-metal::before {
+  content: '';
   position: absolute;
-  border-radius: 40px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(56, 189, 248, 0.10) 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.26);
-  border-top: 2.5px solid rgba(255, 255, 255, 0.75);
-  border-left: 2px solid rgba(255, 255, 255, 0.50);
-  backdrop-filter: blur(35px) saturate(240%);
-  -webkit-backdrop-filter: blur(35px) saturate(240%);
-  box-shadow: 
-    0 30px 70px rgba(0, 0, 0, 0.65),
-    inset 0 2px 5px rgba(255, 255, 255, 0.55),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.40);
-  pointer-events: none;
-  will-change: transform;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.35);
 }
 
-.glass-shard-1 {
-  top: 2%;
-  left: -4%;
-  width: 420px;
-  height: 420px;
-  transform: rotate(-14deg);
-  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(56, 189, 248, 0.28), inset 0 2px 5px rgba(255,255,255,0.7);
-  animation: glassFloat1 18s ease-in-out infinite alternate;
-}
-
-.glass-shard-2 {
-  bottom: -6%;
-  right: -3%;
-  width: 480px;
-  height: 480px;
-  transform: rotate(18deg);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(59, 130, 246, 0.08) 100%);
-  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
-  animation: glassFloat2 22s ease-in-out infinite alternate;
-}
-
-.glass-shard-3 {
-  top: 22%;
-  right: 6%;
-  width: 250px;
-  height: 250px;
-  border-radius: 32px;
-  transform: rotate(25deg);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(99, 102, 241, 0.30), inset 0 2px 4px rgba(255,255,255,0.6);
-  animation: glassFloat3 15s ease-in-out infinite alternate;
-}
-
-.glass-shard-4 {
-  bottom: 16%;
-  left: 5%;
-  width: 230px;
-  height: 230px;
-  border-radius: 32px;
-  transform: rotate(-20deg);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(59, 130, 246, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
-  animation: glassFloat4 16s ease-in-out infinite alternate;
-}
-
-.glass-shard-5 {
-  top: 60%;
-  right: 28%;
-  width: 140px;
-  height: 140px;
-  border-radius: 26px;
-  transform: rotate(12deg);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(236, 72, 153, 0.08) 100%);
-  box-shadow: 0 20px 45px rgba(0,0,0,0.45), 0 0 35px rgba(236, 72, 153, 0.20), inset 0 2px 4px rgba(255,255,255,0.5);
-  animation: glassFloat3 19s ease-in-out infinite alternate;
-}
-
-@keyframes glassFloat1 {
-  0% { transform: translateY(0) rotate(-14deg) scale(1); }
-  100% { transform: translateY(32px) rotate(-6deg) scale(1.06); }
-}
-
-@keyframes glassFloat2 {
-  0% { transform: translateY(0) rotate(18deg) scale(1); }
-  100% { transform: translateY(-36px) rotate(10deg) scale(1.05); }
-}
-
-@keyframes glassFloat3 {
-  0% { transform: translateY(0) rotate(25deg) scale(1); }
-  100% { transform: translateY(-26px) rotate(34deg) scale(1.04); }
-}
-
-@keyframes glassFloat4 {
-  0% { transform: translateY(0) rotate(-20deg) scale(1); }
-  100% { transform: translateY(28px) rotate(-12deg) scale(1.05); }
-}
-
-/* Feixe de Luz Prismática e Refrativo de Vidro 4K */
-.glass-screen-reflection {
+.emv-chip-metal::after {
+  content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(115deg, transparent 15%, rgba(255, 255, 255, 0.03) 38%, rgba(255, 255, 255, 0.12) 46%, rgba(253, 230, 138, 0.08) 50%, rgba(255, 255, 255, 0.03) 54%, transparent 75%);
-  background-size: 250% 250%;
-  pointer-events: none;
-  z-index: 2;
-  animation: glassLightSweep 14s ease-in-out infinite;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.35);
 }
 
-@keyframes glassLightSweep {
-  0% { background-position: -140% -140%; }
-  50% { background-position: 140% 140%; }
-  100% { background-position: -140% -140%; }
+/* Botão VIP 1-Clique Admin Master */
+.btn-quick-admin-login {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  color: #FBBF24 !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(12px) !important;
+  transition: all 0.25s ease !important;
+  padding: 10px 14px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
 }
 
-body.light .glass-shard {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.55) 60%, rgba(219, 234, 254, 0.60) 100%) !important;
-  border-color: rgba(255, 255, 255, 0.98) !important;
-  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10), inset 0 2px 5px #FFFFFF !important;
+.btn-quick-admin-login:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.18) 100%) !important;
+  border-color: #F59E0B !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25) !important;
+  transform: translateY(-1px) !important;
+  color: #FFFFFF !important;
+}
+
+body.light .btn-quick-admin-login {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.12) 0%, rgba(180, 83, 9, 0.06) 100%) !important;
+  border-color: rgba(217, 119, 6, 0.45) !important;
+  color: #92400E !important;
 }
 
 /* Card de Autenticação Ultra 4K Liquid Glass (Smoked Amber & Obsidian Glassmorphism) */
@@ -7909,98 +8059,173 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
-  <div class="auth-top-bar" style="width:100%; max-width:1200px; padding:0 24px; display:flex; justify-content:space-between; align-items:center; position:absolute; top:20px; z-index:20;">
-    <div style="display:flex; align-items:center; gap:8px;"></div>
-    <div style="display:flex; align-items:center; gap:12px;">
-      <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
-        <svg id="authThemeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- ==================== BARRA SUPERIOR: TICKER AO VIVO + CLOCK BRASÍLIA + TEMA ==================== -->
+  <div class="auth-top-bar" style="width:100%; max-width:1280px; padding:0 clamp(12px, 2vw, 24px); display:flex; justify-content:space-between; align-items:center; position:relative; z-index:25; margin-bottom:12px; gap:12px;">
+    <!-- Ticker de Cotações Financeiras ao Vivo (Mercado 4K) -->
+    <div class="fintech-live-ticker-bar" style="flex:1; max-width:820px;">
+      <div class="fintech-ticker-badge">
+        <span class="fintech-pulse-dot"></span>
+        <span>Mercado 4K</span>
+      </div>
+      <div class="fintech-ticker-viewport">
+        <div class="fintech-ticker-track" id="serverTickerTrack"></div>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px; margin-left:auto;">
+      <!-- Relógio Horário de Brasília -->
+      <div style="display:flex; align-items:center; gap:6px; padding:6px 14px; border-radius:14px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.12); font-family:'JetBrains Mono',monospace; font-size:12px; color:#E2E8F0; backdrop-filter:blur(14px);">
+        <span style="width:7px; height:7px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
+        <span id="serverBrasiliaClock">--:--:--</span>
+        <span style="font-size:10px; color:#94A3B8; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;">DF (UTC-3)</span>
+      </div>
+
+      <!-- Alternador de Tema Claro / Escuro -->
+      <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro" style="width:40px; height:40px; border-radius:14px; background:rgba(15,23,42,0.6); border:1px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(14px); box-shadow:0 4px 16px rgba(245,158,11,0.25);">
+        <svg id="authThemeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
         </svg>
       </button>
     </div>
   </div>
 
-  <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
-
-  <!-- Camada de Tela de Vidro Panorâmica (4K Liquid Glass Screen Effect) -->
-  <div class="glass-viewport-screen pointer-events-none">
-    <div class="glass-shard glass-shard-1"></div>
-    <div class="glass-shard glass-shard-2"></div>
-    <div class="glass-shard glass-shard-3"></div>
-    <div class="glass-shard glass-shard-4"></div>
-    <div class="glass-shard glass-shard-5"></div>
-  </div>
-  <div class="glass-screen-reflection pointer-events-none"></div>
+  <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.65;"></canvas>
 
   <div class="auth-grid" aria-hidden="true"></div>
   <div class="auth-blob b1"></div>
   <div class="auth-blob b2"></div>
   <div class="auth-blob b3"></div>
 
-  <div class="auth-exec-layout">
-    <!-- Showcase Institucional Executivo -->
+  <div class="auth-exec-layout" style="max-width:1260px;">
+    <!-- ==================== COLUNA ESQUERDA: SHOWCASE LUXO 4K ==================== -->
     <div class="auth-showcase-panel">
+      <!-- Badge Institucional -->
       <div class="auth-showcase-badge">
-        <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
-        <span>CONTROLE FINANCEIRO PESSOAL • PRIVACIDADE TOTAL</span>
+        <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block; box-shadow:0 0 8px #F59E0B;"></span>
+        <span>PLATAFORMA PRIVADA • INTELIGÊNCIA FINANCEIRA 4K</span>
       </div>
 
+      <!-- Título de Alto Impacto -->
       <div class="auth-showcase-title">
-        Controle Total do seu Dinheiro & <span>Planejamento Inteligente</span>
+        Gestão de Alto Padrão &<br>
+        <span>Planejamento Inteligente</span>
       </div>
 
       <div class="auth-showcase-desc">
-        Organize suas contas, acompanhe despesas e receitas, gerencie seus cartões e conquiste suas metas de economia com facilidade e clareza no dia a dia.
+        Tenha controle absoluto de receitas, despesas, cartões e patrimônio em uma interface executiva 4K cinematográfica, segura e blindada por criptografia de nível bancário.
       </div>
 
+      <!-- 3D HOLOGRAPHIC TITANIUM CARD SHOWCASE -->
+      <div class="card-3d-perspective-wrap" style="margin: 4px 0 8px 0;">
+        <div class="holographic-titanium-card" id="holoTitaniumCard">
+          <div class="card-holographic-sheen" id="holoSheen"></div>
+          
+          <!-- Topo do Cartão: Brand & Contactless -->
+          <div style="display:flex; justify-content:space-between; align-items:center; position:relative; z-index:2;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg, #FDE68A, #D97706); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#0A0D18; box-shadow:0 2px 8px rgba(0,0,0,0.4);">
+                N
+              </div>
+              <span style="font-family:'Outfit',sans-serif; font-weight:900; letter-spacing:0.12em; font-size:12.5px; color:#FFFFFF;">NEXUS PRIVILEGE 4K</span>
+            </div>
+            <div style="color:#FBBF24; display:flex; align-items:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 16.5a5 5 0 0 1 0-9"/><path d="M12 19a8.5 8.5 0 0 0 0-14"/><path d="M15.5 21.5a12 12 0 0 0 0-19"/></svg>
+            </div>
+          </div>
+
+          <!-- Meio do Cartão: Chip EMV & Patrimônio -->
+          <div style="display:flex; justify-content:space-between; align-items:center; position:relative; z-index:2; margin:auto 0;">
+            <div class="emv-chip-metal"></div>
+            <div style="text-align:right;">
+              <span style="display:block; font-size:9.5px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.08em;">Patrimônio Gerenciado</span>
+              <div style="font-size:21px; font-weight:900; font-family:'JetBrains Mono',monospace; color:#FFFFFF; letter-spacing:-0.02em; text-shadow:0 2px 10px rgba(0,0,0,0.5);">
+                R$ 284.950,00
+              </div>
+              <div style="display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:800; color:#34D399; margin-top:2px;">
+                <span>▲ +24,8% este ano</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fundo do Cartão: Número Mascarado, Titular & Validade -->
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; position:relative; z-index:2; padding-top:8px; border-top:1px solid rgba(255,255,255,0.12);">
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#CBD5E1; letter-spacing:0.22em; font-weight:700; margin-bottom:2px;">
+                •••• •••• •••• 8892
+              </div>
+              <div style="font-family:'Outfit',sans-serif; font-size:10.5px; font-weight:900; letter-spacing:0.12em; color:#FDE68A; text-transform:uppercase;">
+                PAULO LIMA
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <span style="display:block; font-size:9px; text-transform:uppercase; font-weight:800; color:#94A3B8;">Validade</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:900; color:#F8FAFC;">12/32</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Cards de Métricas & Metas Flutuantes -->
       <div class="auth-showcase-metrics">
         <div class="auth-metric-card">
-          <div class="metric-card-label">Economia do Mês</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <div class="metric-card-label">Economia do Mês</div>
+            <span style="font-size:13px;">🎯</span>
+          </div>
           <div class="metric-val">R$ 3.850</div>
-          <div class="metric-sub-green">+18% guardado 🎯</div>
+          <div class="metric-sub-green">+18% guardado</div>
         </div>
 
         <div class="auth-metric-card">
-          <div class="metric-card-label">Orçamento & Gastos</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <div class="metric-card-label">Orçamento & Gastos</div>
+            <span style="font-size:13px;">💡</span>
+          </div>
           <div class="metric-val">Sob Controle</div>
-          <div class="metric-sub-amber">Sem sustos no fim do mês 💡</div>
+          <div class="metric-sub-amber">Sem sustos no mês</div>
         </div>
 
         <div class="auth-metric-card">
-          <div class="metric-card-label">Metas & Sonhos</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <div class="metric-card-label">Metas & Sonhos</div>
+            <span style="font-size:13px;">🚀</span>
+          </div>
           <div class="metric-val">84% Concluído</div>
-          <div class="metric-sub-blue">Rumo à sua conquista 🚀</div>
+          <div class="metric-sub-blue">Rumo à sua conquista</div>
         </div>
       </div>
 
+      <!-- Selos de Segurança & Conformidade -->
       <div class="auth-showcase-footer">
         <span style="display:flex; align-items:center; gap:6px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block; box-shadow:0 0 8px rgba(245,158,11,0.6);"></span>
-          Seus dados 100% seguros e confidenciais
+          <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
+          Criptografia AES-256 / scrypt
         </span>
         <span>•</span>
-        <span>Acesso Rápido e Descomplicado</span>
+        <span>Conformidade LGPD</span>
+        <span>•</span>
+        <span>Conexão SQL Server 24/7</span>
       </div>
     </div>
 
-    <!-- Card Principal de Autenticação -->
+    <!-- ==================== COLUNA DIREITA: CARD PRINCIPAL DE AUTENTICAÇÃO ==================== -->
     <div class="auth-card-nexus" id="serverAuthNexusCard">
       <div class="auth-card-glare" id="serverAuthCardGlare"></div>
       <!-- Brand Header -->
       <div class="auth-brand">
         <div class="auth-logo-badge">N</div>
         <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
-        <div class="auth-subtitle" id="authBoxSubtitle">Sua Gestão Financeira Pessoal Inteligente</div>
+        <div class="auth-subtitle" id="authBoxSubtitle">Portal Executivo de Autenticação Segura 4K</div>
       </div>
 
       <!-- Navegação por Abas Segmentadas -->
       <div class="auth-tabs-nav" id="authTabsNav">
         <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="window.switchAuthTab('login')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Entrar na Conta
         </button>
         <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="window.switchAuthTab('register')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
           Criar Conta
         </button>
       </div>
@@ -8010,7 +8235,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
             <label>E-mail Corporativo ou Pessoal</label>
-            <div class="auth-input-wrapper">
+            <div class="auth-input-wrapper" id="wrapLoginEmail">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </span>
@@ -8020,10 +8245,10 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
           <div class="auth-field">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <label style="margin-bottom:0;">Senha</label>
-              <a class="auth-forgot-link" id="goForgotFromLogin">Esqueceu a senha?</a>
+              <label style="margin-bottom:0;">Senha de Acesso</label>
+              <a class="auth-forgot-link" id="goForgotFromLogin" style="cursor:pointer;">Esqueceu a senha?</a>
             </div>
-            <div class="auth-input-wrapper">
+            <div class="auth-input-wrapper" id="wrapLoginPass">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </span>
@@ -8034,14 +8259,32 @@ html.light .scale-dropdown .scale-opt-btn:hover {
             </div>
           </div>
 
+          <!-- Lembrar de Mim -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:12px; color:#94A3B8;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none;">
+              <input type="checkbox" id="rememberMe" style="accent-color:#F59E0B; width:15px; height:15px; cursor:pointer;">
+              <span>Lembrar meu acesso</span>
+            </label>
+            <span style="font-size:11px; color:#64748B;">Sessão Segura SSL</span>
+          </div>
+
           <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
-            Entrar na Conta →
+            <span>Entrar na Conta →</span>
           </button>
+
+          <!-- Botão VIP 1-Clique Admin Master -->
+          <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08);">
+            <button type="button" class="btn-quick-admin-login" id="btnServerQuickAdmin" onclick="window.preencherCredenciaisAdmin()">
+              <span style="font-size:14px;">👑</span>
+              <span>Acesso Rápido Administrador Master</span>
+              <span style="font-size:10px; padding:2px 6px; border-radius:5px; background:rgba(245,158,11,0.3); color:#FEF3C7; font-weight:900; border:1px solid rgba(245,158,11,0.4);">1-Clique</span>
+            </button>
+          </div>
         </form>
 
-        <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
+        <p class="auth-bottom-text" style="margin-top:14px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
           Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:var(--auth-gold); font-weight:700; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
         </p>
       </div>
@@ -9638,6 +9881,128 @@ window.toggleAuthTheme = function() {
   }
 };
 
+// Acesso Rápido VIP Administrador Master (1-Clique)
+window.preencherCredenciaisAdmin = function() {
+  const emailInput = document.getElementById('loginEmail');
+  const passInput = document.getElementById('loginPassword');
+  if (emailInput) emailInput.value = 'paulolp0101@gmail.com';
+  if (passInput) passInput.value = '86266049';
+  window.switchAuthTab('login');
+  if (window.showAuthFeedback) {
+    window.showAuthFeedback('login', 'success', 'Acesso Master', 'Credenciais carregadas com segurança. Entrando...');
+  }
+  setTimeout(() => {
+    if (typeof window.handleLoginSubmit === 'function') {
+      window.handleLoginSubmit();
+    }
+  }, 350);
+};
+
+// Relógio Oficial de Brasília DF (UTC-3)
+(function initBrasiliaClockEngine() {
+  function updateClock() {
+    const el = document.getElementById('serverBrasiliaClock');
+    if (!el) return;
+    try {
+      const now = new Date();
+      el.textContent = new Intl.DateTimeFormat('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false
+      }).format(now);
+    } catch(e) {
+      const d = new Date();
+      el.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
+    }
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+})();
+
+// Ticker de Cotações Financeiras ao Vivo (Mercado 4K)
+(function initServerTickerEngine() {
+  const track = document.getElementById('serverTickerTrack');
+  if (!track) return;
+
+  const initialQuotes = [
+    { id: 'usdBrl', sym: 'USD/BRL', val: 5.742, chg: '+0.38%', up: true, prefix: 'R$ ' },
+    { id: 'eurBrl', sym: 'EUR/BRL', val: 6.218, chg: '-0.12%', up: false, prefix: 'R$ ' },
+    { id: 'ibov', sym: 'IBOVESPA', val: 132850, chg: '+0.75%', up: true, suffix: ' pts' },
+    { id: 'btc', sym: 'BITCOIN', val: 528940, chg: '+2.85%', up: true, prefix: 'R$ ' },
+    { id: 'eth', sym: 'ETHEREUM', val: 18240, chg: '+1.95%', up: true, prefix: 'R$ ' },
+    { id: 'sp500', sym: 'S&P 500', val: 5864, chg: '+0.42%', up: true, suffix: ' pts' },
+    { id: 'cdi', sym: 'CDI', val: 10.75, chg: '10,75% a.a.', up: null, isStatic: true },
+    { id: 'selic', sym: 'SELIC', val: 10.75, chg: '10,75%', up: null, isStatic: true },
+    { id: 'ipca', sym: 'IPCA (12m)', val: 4.12, chg: '+4,12%', up: true, isStatic: true },
+    { id: 'ouro', sym: 'OURO (g)', val: 488.50, chg: '+0.64%', up: true, prefix: 'R$ ' }
+  ];
+
+  function formatQuote(q) {
+    if (q.isStatic) return (q.prefix || '') + q.val.toFixed(2).replace('.', ',') + '%' + (q.suffix || '');
+    if (q.val >= 1000) return (q.prefix || '') + Math.round(q.val).toLocaleString('pt-BR') + (q.suffix || '');
+    return (q.prefix || '') + q.val.toFixed(3).replace('.', ',') + (q.suffix || '');
+  }
+
+  function renderTrack() {
+    let html = '';
+    for (let loop = 0; loop < 2; loop++) {
+      initialQuotes.forEach(q => {
+        const chgClass = q.up === true ? 'up' : (q.up === false ? 'down' : 'neu');
+        const chgIcon = q.up === true ? '▲ ' : (q.up === false ? '▼ ' : '• ');
+        html += '<div class="ticker-item">' +
+          '<span class="sym">' + q.sym + '</span>' +
+          '<span class="val" id="st_' + loop + '_' + q.id + '">' + formatQuote(q) + '</span>' +
+          '<span class="chg ' + chgClass + '">' + chgIcon + q.chg + '</span>' +
+          '</div>';
+      });
+    }
+    track.innerHTML = html;
+  }
+  renderTrack();
+
+  setInterval(() => {
+    const dynamic = initialQuotes.filter(q => !q.isStatic);
+    const q = dynamic[Math.floor(Math.random() * dynamic.length)];
+    const delta = (Math.random() * 0.4 - 0.18) / 100;
+    q.val = Math.max(0.01, q.val * (1 + delta));
+    q.up = delta >= 0;
+    q.chg = (delta >= 0 ? '+' : '') + (delta * 100).toFixed(2).replace('.', ',') + '%';
+
+    for (let loop = 0; loop < 2; loop++) {
+      const el = document.getElementById('st_' + loop + '_' + q.id);
+      if (el) el.textContent = formatQuote(q);
+    }
+  }, 2800);
+})();
+
+// Interatividade 3D Holographic Titanium Card
+(function initTitaniumCardTilt() {
+  const card = document.getElementById('holoTitaniumCard');
+  const sheen = document.getElementById('holoSheen');
+  if (!card) return;
+
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const tiltX = ((y - centerY) / centerY) * -12;
+    const tiltY = ((x - centerX) / centerX) * 12;
+    card.style.setProperty('--card-tilt-x', tiltX.toFixed(2) + 'deg');
+    card.style.setProperty('--card-tilt-y', tiltY.toFixed(2) + 'deg');
+    if (sheen) {
+      sheen.style.setProperty('--glare-x', ((x / rect.width) * 100).toFixed(1) + '%');
+      sheen.style.setProperty('--glare-y', ((y / rect.height) * 100).toFixed(1) + '%');
+    }
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.setProperty('--card-tilt-x', '0deg');
+    card.style.setProperty('--card-tilt-y', '0deg');
+  });
+})();
+
 // Mostrar/Ocultar Senha do Login (Visualização Clara do Olho)
 window.togglePasswordVisibility = function(inputId, btnId) {
   const input = document.getElementById(inputId);
@@ -10828,9 +11193,8 @@ async function loadUserData() {
     applyDataPayload(localData);
     isDataLoading = false;
   } else {
-    // Novos usuários ou cadastros récem-criados iniciam com seu próprio espaço limpo e isolado
+    // Novos usuários ou cadastros récem-criados iniciam em memória sem sobrescrever o servidor
     resetUserDataState();
-    saveUserData();
     isDataLoading = false;
   }
 
@@ -10844,9 +11208,14 @@ async function loadUserData() {
         const localTxCount = (localData && Array.isArray(localData.transactions)) ? localData.transactions.length : (Array.isArray(transactions) ? transactions.length : 0);
         const serverTxCount = Array.isArray(serverData.transactions) ? serverData.transactions.length : 0;
 
-        // Proteção essencial: se o cache local possui transações e o servidor retornou vazio, jamais apagar dados locais!
+        // Proteção essencial: se o cache local possui transações e o servidor retornou vazio, envia para persistir
         if (localTxCount > 0 && serverTxCount === 0) {
           await saveUserData();
+        } else if (serverTxCount > 0 || !localData) {
+          // Servidor possui dados ou cache local estava vazio: carrega dados do banco/servidor com segurança!
+          applyDataPayload(serverData);
+          saveToStorage(userKey, serverData);
+          hasServerChanges = true;
         } else {
           const localDataStr = JSON.stringify(localData || {});
           const serverDataStr = JSON.stringify(serverData);
@@ -19739,128 +20108,7 @@ if (scaleMenuBtn && scaleDropdown) {
       }
       ctx.restore();
 
-      // A2. Simulação de Candlesticks Reais de Mercado
-      candlestickBars.forEach(candle => {
-        candle.x += candle.vx;
-        if (candle.x < -30) {
-          candle.x = width + 30;
-          candle.y = height * 0.73 + (Math.random() * 80 - 40);
-          candle.isBullish = Math.random() > 0.44;
-        }
-        const candleColor = candle.isBullish 
-          ? (isLight ? '#059669' : '#10B981') 
-          : (isLight ? '#DC2626' : '#EF4444');
-
-        ctx.save();
-        ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
-        ctx.strokeStyle = candleColor;
-        ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(239, 68, 68, 0.35)');
-        ctx.lineWidth = 1.2;
-
-        // Pavio
-        ctx.beginPath();
-        ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
-        ctx.lineTo(candle.x, candle.y + candle.height / 2 + candle.wickBottom);
-        ctx.stroke();
-
-        // Corpo
-        ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
-        ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
-
-        if (!isLight && !isTouch) {
-          ctx.shadowColor = candleColor;
-          ctx.shadowBlur = 6;
-        }
-        ctx.restore();
-      });
-
-      // B. Curva Suave de Evolução Patrimonial Pessoal & Poupança Acumulada
-      const chartBaseY = height * 0.78;
-      const pointSpacing = width / (monthMilestones.length + 1);
-      const minVal = 10000;
-      const maxVal = 48000;
-      const range = maxVal - minVal;
-
-      // Área preenchida sob a curva
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(pointSpacing, height);
-      monthMilestones.forEach(function(m, idx) {
-        const cx = (idx + 1) * pointSpacing;
-        const cy = chartBaseY - ((m.val - minVal) / range) * 95;
-        if (idx === 0) ctx.lineTo(cx, cy);
-        else {
-          const prevX = idx * pointSpacing;
-          const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
-          const cpx = (prevX + cx) / 2;
-          ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
-        }
-      });
-      ctx.lineTo(monthMilestones.length * pointSpacing, height);
-      ctx.closePath();
-
-      const areaGrad = ctx.createLinearGradient(0, chartBaseY - 100, 0, height);
-      if (isLight) {
-        areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.12)');
-        areaGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.05)');
-        areaGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      } else {
-        areaGrad.addColorStop(0, 'rgba(16, 185, 129, 0.18)');
-        areaGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.06)');
-        areaGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
-      }
-      ctx.fillStyle = areaGrad;
-      ctx.fill();
-
-      // Linha Principal de Crescimento Financeiro (Verde Esmeralda e Dourado)
-      ctx.beginPath();
-      monthMilestones.forEach(function(m, idx) {
-        const cx = (idx + 1) * pointSpacing;
-        const cy = chartBaseY - ((m.val - minVal) / range) * 95;
-        if (idx === 0) ctx.moveTo(cx, cy);
-        else {
-          const prevX = idx * pointSpacing;
-          const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
-          const cpx = (prevX + cx) / 2;
-          ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
-        }
-      });
-      ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.75)' : 'rgba(16, 185, 129, 0.85)';
-      ctx.lineWidth = 2.4;
-      if (!isLight && !isTouch) {
-        ctx.shadowColor = '#10B981';
-        ctx.shadowBlur = 10;
-      }
-      ctx.stroke();
-
-      // Marcadores Mensais com Nomes dos Meses
-      monthMilestones.forEach(function(m, idx) {
-        const cx = (idx + 1) * pointSpacing;
-        const cy = chartBaseY - ((m.val - minVal) / range) * 95;
-
-        // Ponto
-        ctx.beginPath();
-        ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = isLight ? '#047857' : '#34D399';
-        ctx.fill();
-
-        // Linha guia vertical sutil
-        ctx.beginPath();
-        ctx.moveTo(cx, cy + 4);
-        ctx.lineTo(cx, cy + 16);
-        ctx.strokeStyle = isLight ? 'rgba(100, 116, 139, 0.25)' : 'rgba(255, 255, 255, 0.12)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        // Rótulo do Mês
-        ctx.font = '700 9.5px "Outfit", sans-serif';
-        ctx.fillStyle = isLight ? '#475569' : '#94A3B8';
-        ctx.textAlign = 'center';
-        ctx.fillText(m.month, cx, cy + 28);
-      });
-      ctx.restore();
-
-      // C. Micro-Partículas de Poeira Luminosa
+      // C. Micro-Partículas de Poeira Luminosa (Bokeh 4K de Alta Precisão)
       dustParticles.forEach(function(dp) {
         dp.y += dp.vy;
         dp.x += dp.vx + Math.sin(dp.y * 0.005) * 0.15;
@@ -19874,7 +20122,7 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.beginPath();
         ctx.arc(dp.x, dp.y, dp.radius, 0, Math.PI * 2);
         ctx.fillStyle = dp.color;
-        ctx.globalAlpha = isLight ? curAlpha * 0.5 : curAlpha;
+        ctx.globalAlpha = isLight ? curAlpha * 0.45 : curAlpha;
         if (!isLight && !isTouch && dp.radius > 1.2) {
           ctx.shadowColor = dp.color;
           ctx.shadowBlur = 8;
@@ -19883,158 +20131,81 @@ if (scaleMenuBtn && scaleDropdown) {
         ctx.restore();
       });
 
-      // D. Onda Financeira Principal (Ciano Elétrico & Safira Lucro Mercado)
-      waveOffset += 0.009;
-      const waveY = height * 0.78;
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(0, height);
-      ctx.lineTo(0, waveY);
-      const wavePoints = [];
-      const waveStep = isTouch ? 30 : 20;
-      for (let x = 0; x <= width; x += waveStep) {
-        const y = waveY + Math.sin(x * 0.004 + waveOffset) * 32 + Math.cos(x * 0.008 - waveOffset * 0.5) * 18;
-        ctx.lineTo(x, y);
-        if (x % 160 === 0) wavePoints.push({ x: x, y: y });
-      }
-      ctx.lineTo(width, height);
-      ctx.closePath();
+      // Se for o canvas interno da aplicação (dashboard pós-login), renderiza os gráficos adicionais
+      if (canvasId === 'appBgOrbitalCanvas') {
+        // Candlesticks
+        candlestickBars.forEach(candle => {
+          candle.x += candle.vx;
+          if (candle.x < -30) {
+            candle.x = width + 30;
+            candle.y = height * 0.73 + (Math.random() * 80 - 40);
+            candle.isBullish = Math.random() > 0.44;
+          }
+          const candleColor = candle.isBullish 
+            ? (isLight ? '#059669' : '#10B981') 
+            : (isLight ? '#DC2626' : '#EF4444');
 
-      const waveGrad = ctx.createLinearGradient(0, waveY - 40, 0, height);
-      if (isLight) {
-        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.14)');
-        waveGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.05)');
-        waveGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      } else {
-        waveGrad.addColorStop(0, 'rgba(56, 189, 248, 0.22)');
-        waveGrad.addColorStop(0.45, 'rgba(59, 130, 246, 0.10)');
-        waveGrad.addColorStop(1, 'rgba(2, 4, 10, 0)');
-      }
-      ctx.fillStyle = waveGrad;
-      ctx.fill();
+          ctx.save();
+          ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
+          ctx.strokeStyle = candleColor;
+          ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(239, 68, 68, 0.35)');
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
+          ctx.lineTo(candle.x, candle.y + candle.height / 2 + candle.wickBottom);
+          ctx.stroke();
+          ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
+          ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
+          ctx.restore();
+        });
 
-      // Linha de Contorno Ciano
-      ctx.beginPath();
-      for (let x = 0; x <= width; x += waveStep) {
-        const y = waveY + Math.sin(x * 0.004 + waveOffset) * 32 + Math.cos(x * 0.008 - waveOffset * 0.5) * 18;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.strokeStyle = isLight ? 'rgba(14, 165, 233, 0.75)' : 'rgba(56, 189, 248, 0.85)';
-      ctx.lineWidth = 2.4;
-      ctx.stroke();
-      ctx.restore();
+        // Curva de Evolução Patrimonial
+        const chartBaseY = height * 0.78;
+        const pointSpacing = width / (monthMilestones.length + 1);
+        const minVal = 10000;
+        const maxVal = 48000;
+        const range = maxVal - minVal;
 
-      // Nódulos de Pico com Indicadores ▲
-      wavePoints.forEach(function(pt) {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = '#38BDF8';
-        if (!isTouch) {
-          ctx.shadowColor = '#38BDF8';
-          ctx.shadowBlur = 12;
-        }
+        ctx.moveTo(pointSpacing, height);
+        monthMilestones.forEach(function(m, idx) {
+          const cx = (idx + 1) * pointSpacing;
+          const cy = chartBaseY - ((m.val - minVal) / range) * 95;
+          if (idx === 0) ctx.lineTo(cx, cy);
+          else {
+            const prevX = idx * pointSpacing;
+            const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
+            const cpx = (prevX + cx) / 2;
+            ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
+          }
+        });
+        ctx.lineTo(monthMilestones.length * pointSpacing, height);
+        ctx.closePath();
+
+        const areaGrad = ctx.createLinearGradient(0, chartBaseY - 100, 0, height);
+        areaGrad.addColorStop(0, isLight ? 'rgba(16, 185, 129, 0.10)' : 'rgba(16, 185, 129, 0.16)');
+        areaGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
+        ctx.fillStyle = areaGrad;
         ctx.fill();
 
-        ctx.font = '800 10px "Outfit", sans-serif';
-        ctx.fillStyle = '#7DD3FC';
-        ctx.fillText('▲', pt.x - 3.5, pt.y - 7);
+        ctx.beginPath();
+        monthMilestones.forEach(function(m, idx) {
+          const cx = (idx + 1) * pointSpacing;
+          const cy = chartBaseY - ((m.val - minVal) / range) * 95;
+          if (idx === 0) ctx.moveTo(cx, cy);
+          else {
+            const prevX = idx * pointSpacing;
+            const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
+            const cpx = (prevX + cx) / 2;
+            ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
+          }
+        });
+        ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.75)' : 'rgba(16, 185, 129, 0.85)';
+        ctx.lineWidth = 2.2;
+        ctx.stroke();
         ctx.restore();
-      });
-
-      // E. Conexões de Rede Interativa (somente Desktop para máxima performance em dispositivos móveis)
-      if (!isTouch) {
-        for (let i = 0; i < items.length; i++) {
-          if (mouse.active && mouse.x > 0) {
-            const mdx = items[i].x - mouse.x;
-            const mdy = items[i].y - mouse.y;
-            const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-            if (mdist < 160) {
-              const force = (1 - mdist / 160) * 1.5;
-              items[i].x += (mdx / mdist) * force;
-              items[i].y += (mdy / mdist) * force;
-              ctx.save();
-              ctx.beginPath();
-              ctx.moveTo(items[i].x, items[i].y);
-              ctx.lineTo(mouse.x, mouse.y);
-              const mouseConnAlpha = (1 - mdist / 160) * (isLight ? 0.25 : 0.45);
-              ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, ' + mouseConnAlpha + ')' : 'rgba(245, 158, 11, ' + mouseConnAlpha + ')';
-              ctx.lineWidth = 1;
-              ctx.stroke();
-              ctx.restore();
-            }
-          }
-          for (let j = i + 1; j < items.length; j++) {
-            const dx = items[i].x - items[j].x;
-            const dy = items[i].y - items[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 130) {
-              ctx.save();
-              ctx.beginPath();
-              ctx.moveTo(items[i].x, items[i].y);
-              ctx.lineTo(items[j].x, items[j].y);
-              const connAlpha = (1 - dist / 130) * 0.20;
-              ctx.strokeStyle = isLight 
-                ? 'rgba(14, 165, 233, ' + connAlpha + ')' 
-                : 'rgba(56, 189, 248, ' + (connAlpha * 1.25) + ')';
-              ctx.lineWidth = 1;
-              ctx.stroke();
-              ctx.restore();
-            }
-          }
-        }
       }
-
-      // F. Renderização de Elementos Financeiros Flutuantes (Badges de Lucro & Moedas)
-      items.forEach(function(it) {
-        it.y += it.vy;
-        it.x += it.vx + Math.sin(it.y * 0.008) * 0.25;
-        it.pulse += it.pulseSpeed;
-        const currentAlpha = Math.max(0.25, Math.min(0.95, it.baseAlpha + Math.sin(it.pulse) * 0.25));
-
-        if (it.y < -40) { it.y = height + 40; it.x = Math.random() * width; }
-        if (it.x < -40) it.x = width + 40;
-        if (it.x > width + 40) it.x = -40;
-
-        ctx.save();
-        ctx.translate(it.x, it.y);
-
-        if (it.kind === 0) {
-          ctx.font = '700 11px "Outfit", "Plus Jakarta Sans", sans-serif';
-          const textWidth = ctx.measureText(it.text).width;
-          const padX = 9, padY = 4, rw = textWidth + padX * 2, rh = 21;
-          ctx.beginPath();
-          ctx.roundRect(-rw/2, -rh/2, rw, rh, 10);
-          ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.90)' : 'rgba(13, 18, 32, 0.80)';
-          ctx.globalAlpha = currentAlpha;
-          ctx.fill();
-          ctx.strokeStyle = it.color;
-          ctx.lineWidth = 1.2;
-          ctx.stroke();
-          ctx.fillStyle = it.color;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(it.text, 0, 1);
-        } else {
-          const radius = 13.5;
-          ctx.beginPath();
-          ctx.arc(0, 0, radius, 0, Math.PI * 2);
-          ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.90)' : 'rgba(15, 23, 42, 0.80)';
-          ctx.globalAlpha = currentAlpha;
-          ctx.fill();
-          ctx.strokeStyle = it.color;
-          ctx.lineWidth = 1.4;
-          ctx.stroke();
-          ctx.font = '800 11px "Outfit", sans-serif';
-          ctx.fillStyle = it.color;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(it.text, 0, 1);
-        }
-        ctx.restore();
-      });
     }
     render();
   }
@@ -20445,7 +20616,7 @@ const server = http.createServer(async (req, res) => {
     return res.end(JSON.stringify({
       status: 'healthy',
       system: 'Nexus Financeiro Hub',
-      version: '1.0.0',
+      version: '1.0.2',
       uptime: uptimeStr,
       uptime_seconds: uptimeSeconds,
       timestamp: new Date().toISOString(),
@@ -21456,7 +21627,18 @@ const server = http.createServer(async (req, res) => {
       }
       const cleanEmail = (payload.email || '').toLowerCase().trim();
 
-      saveLocalData(cleanEmail, payload.data);
+      // PROTEÇÃO DE INTEGRIDADE: Evita apagar transações existentes se o payload recebido estiver vazio sem intenção
+      const currentLocal = getLocalData(cleanEmail);
+      let dataToSave = payload.data;
+      if (currentLocal && typeof currentLocal === 'object') {
+        const curTxCount = Array.isArray(currentLocal.transactions) ? currentLocal.transactions.length : 0;
+        const newTxCount = (payload.data && Array.isArray(payload.data.transactions)) ? payload.data.transactions.length : 0;
+        if (curTxCount > 0 && newTxCount === 0 && !payload.forceEmpty) {
+          dataToSave = mergeFinancialData(payload.data, currentLocal);
+        }
+      }
+
+      saveLocalData(cleanEmail, dataToSave);
       recordSystemLog(cleanEmail, cleanEmail, 'Salvamento', 'Dados Financeiros', 'Atualizou dados financeiros no sistema');
 
       if (pool) {
@@ -21469,21 +21651,21 @@ const server = http.createServer(async (req, res) => {
            BEGIN
              INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
            END`,
-          [cleanEmail, payload.data]
+          [cleanEmail, dataToSave]
         ).catch(err => {
           console.warn('[AVISO BD] Falha ao salvar no SQL Server. Dados salvos com resiliência local.', err.message);
         });
 
         // Persistência relacional imediata no SQL Server (tabelas transacoes, contas_bancarias, categorias)
-        if (payload.data && typeof payload.data === 'object') {
-          if (Array.isArray(payload.data.transactions)) {
-            syncUserTransactionsToTable(cleanEmail, payload.data.transactions).catch(() => {});
+        if (dataToSave && typeof dataToSave === 'object') {
+          if (Array.isArray(dataToSave.transactions)) {
+            syncUserTransactionsToTable(cleanEmail, dataToSave.transactions).catch(() => {});
           }
-          if (Array.isArray(payload.data.accounts)) {
-            syncUserAccountsToTable(cleanEmail, payload.data.accounts).catch(() => {});
+          if (Array.isArray(dataToSave.accounts)) {
+            syncUserAccountsToTable(cleanEmail, dataToSave.accounts).catch(() => {});
           }
-          if (Array.isArray(payload.data.categories)) {
-            syncUserCategoriesToTable(cleanEmail, payload.data.categories).catch(() => {});
+          if (Array.isArray(dataToSave.categories)) {
+            syncUserCategoriesToTable(cleanEmail, dataToSave.categories).catch(() => {});
           }
         }
       }
@@ -22099,6 +22281,23 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 // ==================== Motor de Sincronização Bidirecional Render Cloud <-> SQL Server Local ====================
 let isCloudSyncRunning = false;
+let gitSyncTimer = null;
+
+function scheduleGitSyncDebounced(delay = 20000) {
+  if (process.env.RENDER || process.env.IS_RENDER === 'true') return;
+  if (gitSyncTimer) return;
+  gitSyncTimer = setTimeout(() => {
+    gitSyncTimer = null;
+    try {
+      const { exec } = require('child_process');
+      exec('git add local_users.json local_database_data.json local_ordens_servico.json local_tecnicos.json cpf_registry.json && git commit -m "auto(sync): sincronizacao continua de dados com Render e SQL Server" && git push origin main', { cwd: __dirname }, (err, stdout, stderr) => {
+        if (!err) {
+          console.log('⚡ [AUTO-GIT-SYNC] Dados sincronizados e enviados para o GitHub com sucesso.');
+        }
+      });
+    } catch(e){}
+  }, delay).unref();
+}
 
 async function syncWithRenderCloud() {
   if (isCloudSyncRunning) return;
@@ -22184,6 +22383,7 @@ async function syncWithRenderCloud() {
           );
           console.log(`\n⚡ [SYNC RENDER -> SQL SERVER] Nova conta criada no Render gravada no SQL Server local: ${cleanEmail}`);
           recordSystemLog(cu.name, cleanEmail, 'Sincronização Nuvem', 'Usuários', `Conta criada no Render sincronizada para o SQL Server local`);
+          scheduleGitSyncDebounced();
         } else {
           // Atualizar dados de perfil se fornecidos no Render
           const currentU = localCheck.rows[0];
@@ -22248,6 +22448,12 @@ async function syncWithRenderCloud() {
         }
         if (Array.isArray(finalMerged.categories)) {
           await syncUserCategoriesToTable(cleanEmail, finalMerged.categories);
+        }
+
+        const curTxCount = (localData && Array.isArray(localData.transactions)) ? localData.transactions.length : 0;
+        const newTxCount = (finalMerged && Array.isArray(finalMerged.transactions)) ? finalMerged.transactions.length : 0;
+        if (newTxCount > curTxCount) {
+          scheduleGitSyncDebounced();
         }
       }
     }
