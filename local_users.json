@@ -1,12 +1,12 @@
 [
   {
-    "id": "1",
+    "id": "3",
     "name": "Administrador",
     "email": "admin@nexusfinanceiro.com",
-    "password": "scrypt:d7348749514e407df71b4403d6f72c15:9f44abb6848489f3505a254f76b1813dc1ced6fb4c4c4526814dba3ab0463cb252b3b1bf1d717ae2056116b231599a16663eb837f7c20b8dda2158b9f2cf39f9",
+    "password": "scrypt:d9c712e1d6f4f910b2ba57ff19888204:34b3df3bea6875ca3c07ffc50ff4ba5f1f88ebe141fffa8decb6fff960acad7c1830ccb74b50821a0584b382d5d91eb6f4a46a42dc8b803489818a9c6a7507ca",
     "role": "Administrador",
     "active": true,
-    "created_at": "2026-09-08T19:52:45.546Z",
+    "created_at": "2026-09-08T20:00:01.846Z",
     "last_login": null,
     "cpf": null,
     "phone": null,
@@ -14,16 +14,28 @@
     "terms_accepted": true
   },
   {
-    "id": "2",
+    "id": 2,
     "name": "PAULO DE LIMA PEREIRA",
     "email": "paulolp0101@gmail.com",
-    "password": "scrypt:4e57ee5c583164cfca3b6d071d1264a7:989f9764c90dad8fd6e361b09ee5065e943d224a69f5276ce06847fefa41ff74deafa70523c083966060a668acdd13c7d9ac84e6251655d3c85d088dca77a1cf",
+    "password": "scrypt:f6976e6460ed751b6a7735d99517d549:ca4a69b6ce27b848e5df7af274628b6465502f50c7ea2f0a4327935293745e2958189d2a13accea19826e8ce7854660167e5f218e258ef33dfee748b653a546a",
     "role": "Administrador",
     "active": true,
-    "created_at": "2026-09-08T19:52:45.550Z",
-    "last_login": null,
     "cpf": "040.233.261-00",
     "phone": "(62) 99234-5372",
+    "birth_date": null,
+    "terms_accepted": true
+  },
+  {
+    "id": "1",
+    "name": "Administrador",
+    "email": "suporte.paulolima@outlook.com",
+    "password": "scrypt:d7348749514e407df71b4403d6f72c15:9f44abb6848489f3505a254f76b1813dc1ced6fb4c4c4526814dba3ab0463cb252b3b1bf1d717ae2056116b231599a16663eb837f7c20b8dda2158b9f2cf39f9",
+    "role": "Administrador",
+    "active": true,
+    "created_at": "2026-09-08T19:52:45.546Z",
+    "last_login": null,
+    "cpf": null,
+    "phone": null,
     "birth_date": null,
     "terms_accepted": true
   }

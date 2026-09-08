@@ -15821,12 +15821,12 @@ function renderOrdensTable(list) {
     const cleanPhone = String(o.client_phone || '').replace(/\D/g, '');
     const protoClean = escapeOsHtml(o.protocol || o.id);
 
-    html += '<tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s ease;" onmouseover="this.style.background=\'rgba(255,255,255,0.03)\'" onmouseout="this.style.background=\'transparent\'">';
+    html += '<tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s ease;">';
     
     html += '<td style="padding:13px 14px; white-space:nowrap;">';
     html += '<div style="display:inline-flex; align-items:center; gap:5px;">';
     html += '<span style="font-weight:800; font-family:monospace; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.12); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">#' + protoClean + '</span>';
-    html += '<button type="button" onclick="copyProtocolText(\'' + protoClean + '\')" style="background:none; border:none; cursor:pointer; font-size:13px; padding:2px; color:var(--text-dim);" title="Copiar Protocolo">📋</button>';
+    html += '<button type="button" onclick="copyProtocolText(&quot;' + protoClean + '&quot;)" style="background:none; border:none; cursor:pointer; font-size:13px; padding:2px; color:var(--text-dim);" title="Copiar Protocolo">📋</button>';
     html += '</div></td>';
 
     html += '<td style="padding:13px 14px; font-size:12px; color:var(--text-dim); white-space:nowrap;">';
@@ -15858,7 +15858,7 @@ function renderOrdensTable(list) {
       html += '<div style="font-weight:800; color:#38BDF8; font-size:12.5px; display:inline-flex; align-items:center; gap:4px;">👷 ' + escapeOsHtml(o.tecnico_responsavel) + '</div>';
       html += '<div style="font-size:10.5px; color:var(--text-dim); margin-top:2px;">' + (o.assumido_em ? ('Assumido ' + new Date(o.assumido_em).toLocaleDateString('pt-BR')) : 'Em atendimento') + '</div>';
     } else {
-      html += '<button type="button" onclick="quickAssumirOrdemPrompt(\'' + o.id + '\')" style="display:inline-flex; align-items:center; gap:4px; padding:5px 12px; border-radius:8px; background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.4); font-size:11.5px; font-weight:800; cursor:pointer;" title="Assumir esta Ordem de Serviço">';
+      html += '<button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; padding:5px 12px; border-radius:8px; background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.4); font-size:11.5px; font-weight:800; cursor:pointer;" title="Assumir esta Ordem de Serviço">';
       html += '<span>⚡ Assumir Chamado</span></button>';
     }
     html += '</td>';
@@ -15876,12 +15876,12 @@ function renderOrdensTable(list) {
 
     html += '<td style="padding:13px 14px; text-align:right; white-space:nowrap;">';
     html += '<div style="display:flex; gap:5px; justify-content:flex-end; align-items:center;">';
-    html += '<button type="button" onclick="openOrdemAdminModal(\'' + o.id + '\')" style="padding:6px 11px; border-radius:8px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-size:11.5px; font-weight:800; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(59,130,246,0.3);" title="Atender Chamado">👁️ Atender</button>';
+    html += '<button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="padding:6px 11px; border-radius:8px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-size:11.5px; font-weight:800; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(59,130,246,0.3);" title="Atender Chamado">👁️ Atender</button>';
     if (!st.includes('concl') && !st.includes('canc')) {
-      html += '<button type="button" onclick="quickConcluirOrdem(\'' + o.id + '\')" style="padding:6px 9px; border-radius:8px; background:rgba(16,185,129,0.18); color:#34D399; border:1px solid rgba(16,185,129,0.35); font-size:11.5px; font-weight:800; cursor:pointer;" title="Concluir O.S. Agora">✓ Concluir</button>';
+      html += '<button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 9px; border-radius:8px; background:rgba(16,185,129,0.18); color:#34D399; border:1px solid rgba(16,185,129,0.35); font-size:11.5px; font-weight:800; cursor:pointer;" title="Concluir O.S. Agora">✓ Concluir</button>';
     }
-    html += '<button type="button" onclick="imprimirFichaOrdem(\'' + o.id + '\')" style="padding:6px 8px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); font-size:11.5px; cursor:pointer;" title="Imprimir Ficha O.S.">🖨️</button>';
-    html += '<button type="button" onclick="excluirOrdemAdmin(\'' + o.id + '\')" style="padding:6px 8px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:11.5px; cursor:pointer;" title="Excluir O.S.">🗑️</button>';
+    html += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); font-size:11.5px; cursor:pointer;" title="Imprimir Ficha O.S.">🖨️</button>';
+    html += '<button type="button" onclick="excluirOrdemAdmin(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:11.5px; cursor:pointer;" title="Excluir O.S.">🗑️</button>';
     html += '</div></td>';
 
     html += '</tr>';
@@ -15942,7 +15942,7 @@ function pageOrdens(){
     userHtml += 'Central de Atendimento & Meus Chamados</h1>';
     userHtml += '<p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">Acompanhe o status e as respostas técnicas das suas solicitações em tempo real.</p></div>';
     userHtml += '<div class="head-actions" style="display:flex; gap:10px; align-items:center;">';
-    userHtml += '<button onclick="openNovaOrdemModal(\'abrir\')" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(16,185,129,0.5);">';
+    userHtml += '<button onclick="openNovaOrdemModal(&quot;abrir&quot;)" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(16,185,129,0.5);">';
     userHtml += '<span>➕ Abrir Nova Solicitação</span></button>';
     userHtml += '<button class="btn-ghost" onclick="syncOrdensWithServer().then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">🔄 Atualizar</button>';
     userHtml += '</div></div>';
@@ -15975,7 +15975,7 @@ function pageOrdens(){
         userHtml += '</div>';
         userHtml += '<div style="display:flex; gap:8px; align-items:center;">';
         userHtml += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
-        userHtml += '<button type="button" onclick="imprimirFichaOrdem(\'' + o.id + '\')" style="padding:4px 9px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); font-size:11px; cursor:pointer;" title="Imprimir Comprovante">🖨️ Imprimir</button>';
+        userHtml += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:4px 9px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); font-size:11px; cursor:pointer;" title="Imprimir Comprovante">🖨️ Imprimir</button>';
         userHtml += '</div></div>';
 
         userHtml += '<h4 style="font-size:15px; font-weight:800; color:var(--text); margin:0 0 6px 0;">' + escapeOsHtml(o.title || '') + '</h4>';
@@ -16036,7 +16036,7 @@ function pageOrdens(){
 
   h += '<div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:22px;">';
   
-  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(\'todas\')">';
+  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;todas&quot;)">';
   h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
   h += '<span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Total de Chamados</span>';
   h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">📋</div>';
@@ -16045,7 +16045,7 @@ function pageOrdens(){
   h += '<div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Todas as solicitações</div>';
   h += '</div>';
 
-  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid ' + (countPendentes > 0 ? 'rgba(245,158,11,0.5)' : 'rgba(255,255,255,0.13)') + '; box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(\'pendente\')">';
+  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid ' + (countPendentes > 0 ? 'rgba(245,158,11,0.5)' : 'rgba(255,255,255,0.13)') + '; box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;pendente&quot;)">';
   h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
   h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Pendentes</span>';
   h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⏳</div>';
@@ -16054,7 +16054,7 @@ function pageOrdens(){
   h += '<div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Aguardando atendimento</div>';
   h += '</div>';
 
-  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(\'andamento\')">';
+  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;andamento&quot;)">';
   h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
   h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Em Andamento</span>';
   h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⚙️</div>';
@@ -16063,7 +16063,7 @@ function pageOrdens(){
   h += '<div class="sub" style="font-size:12px; color:#BFDBFE; font-weight:600; margin-top:4px;">Sendo atendidos</div>';
   h += '</div>';
 
-  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(\'concluido\')">';
+  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;concluido&quot;)">';
   h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
   h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Concluídos</span>';
   h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.15)); border:1.5px solid rgba(52,211,153,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">✅</div>';
@@ -16082,11 +16082,11 @@ function pageOrdens(){
   h += '</div>';
 
   h += '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(\'todas\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid var(--card-border); background:' + (currentTab==='todas'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(255,255,255,0.05)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">Todas (' + countTotal + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(\'pendente\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.4); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.12)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">⏳ Pendentes (' + countPendentes + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(\'andamento\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(59,130,246,0.4); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(59,130,246,0.12)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#60A5FA') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(\'concluido\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(16,185,129,0.4); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #10B981, #059669)':'rgba(16,185,129,0.12)') + '; color:' + (currentTab==='concluido'?'#FFFFFF':'#34D399') + ';">✅ Concluídas (' + countConcluidas + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='cancelado'?'active':'') + '" data-tab="cancelado" onclick="setOsStatusTab(\'cancelado\')" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.4); background:' + (currentTab==='cancelado'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.12)') + '; color:' + (currentTab==='cancelado'?'#FFFFFF':'#F87171') + ';">❌ Canceladas (' + countCanceladas + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid var(--card-border); background:' + (currentTab==='todas'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(255,255,255,0.05)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">Todas (' + countTotal + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.4); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.12)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">⏳ Pendentes (' + countPendentes + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(59,130,246,0.4); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(59,130,246,0.12)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#60A5FA') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(16,185,129,0.4); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #10B981, #059669)':'rgba(16,185,129,0.12)') + '; color:' + (currentTab==='concluido'?'#FFFFFF':'#34D399') + ';">✅ Concluídas (' + countConcluidas + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='cancelado'?'active':'') + '" data-tab="cancelado" onclick="setOsStatusTab(&quot;cancelado&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.4); background:' + (currentTab==='cancelado'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.12)') + '; color:' + (currentTab==='cancelado'?'#FFFFFF':'#F87171') + ';">❌ Canceladas (' + countCanceladas + ')</button>';
   h += '</div>';
 
   h += '<div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; align-items:center;">';
@@ -16452,7 +16452,7 @@ window.imprimirFichaOrdem = function(id) {
   doc += '<span>Impresso em: ' + new Date().toLocaleString('pt-BR') + '</span>';
   doc += '</div>';
 
-  doc += '<script>window.onload = function() { setTimeout(function() { window.print(); }, 350); };</script>';
+  doc += '<scr' + 'ipt>window.onload = function() { setTimeout(function() { window.print(); }, 350); };<' + '/script>';
   doc += '</body></html>';
 
   printWin.document.write(doc);
@@ -16520,7 +16520,7 @@ window.imprimirFilaOrdens = function() {
   doc += 'Sincronizado diretamente no Microsoft SQL Server interno. Nexus Hub Homologação SF.';
   doc += '</div>';
 
-  doc += '<script>window.onload = function() { setTimeout(function() { window.print(); }, 350); };</script>';
+  doc += '<scr' + 'ipt>window.onload = function() { setTimeout(function() { window.print(); }, 350); };<' + '/script>';
   doc += '</body></html>';
 
   printWin.document.write(doc);
