@@ -14,13 +14,13 @@
     "terms_accepted": true
   },
   {
-    "id": "96",
+    "id": "102",
     "name": "Administrador",
     "email": "admin@nexusfinanceirohub.com.br",
     "password": "scrypt:2182dc618dbc04612c858977bcb15e2b:e37475e7afd6fc35b8531025beb167f0b11716480ffd40c13405330c0a7ff1bf4538bfd2ea72f88ffff4ec16987250b2320163ca1a5e1fd4234a713a79db037f",
     "role": "Administrador",
     "active": true,
-    "created_at": "2026-09-08T19:14:11.143Z",
+    "created_at": "2026-09-08T19:14:53.320Z",
     "last_login": "2026-09-08T02:09:02.000Z",
     "cpf": null,
     "phone": null,
