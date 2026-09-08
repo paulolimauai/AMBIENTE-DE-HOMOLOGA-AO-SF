@@ -22384,20 +22384,11 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 let isCloudSyncRunning = false;
 let gitSyncTimer = null;
 
-function scheduleGitSyncDebounced(delay = 20000) {
-  if (process.env.RENDER || process.env.IS_RENDER === 'true') return;
-  if (gitSyncTimer) return;
-  gitSyncTimer = setTimeout(() => {
-    gitSyncTimer = null;
-    try {
-      const { exec } = require('child_process');
-      exec('git add local_users.json local_database_data.json local_ordens_servico.json local_tecnicos.json cpf_registry.json && git commit -m "auto(sync): sincronizacao continua de dados com Render e SQL Server" && git push origin main', { cwd: __dirname }, (err, stdout, stderr) => {
-        if (!err) {
-          console.log('⚡ [AUTO-GIT-SYNC] Dados sincronizados e enviados para o GitHub com sucesso.');
-        }
-      });
-    } catch(e){}
-  }, delay).unref();
+function scheduleGitSyncDebounced(delay = 60000) {
+  // A sincronização bidirecional em tempo real via API HTTP (3s) já garante a persistência contínua
+  // entre o Render e o Microsoft SQL Server. Evitamos git push contínuo a cada 20 segundos
+  // para manter o Render 100% estável e online sem reconstruções ininterruptas.
+  return;
 }
 
 async function syncWithRenderCloud() {
