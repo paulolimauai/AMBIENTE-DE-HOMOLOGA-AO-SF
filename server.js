@@ -22374,22 +22374,30 @@ process.on('unhandledRejection', (reason, promise) => {
 // Encerramento Gracioso em Ambientes de Nuvem / Contêineres (Graceful Shutdown)
 function gracefulShutdown(signal) {
   console.log(`[PROCESSO] Recebido sinal ${signal}. Encerrando conexões com segurança...`);
-  server.close(() => {
-    console.log('[PROCESSO] Servidor HTTP finalizado.');
-    if (pool) {
-      pool.end(() => {
-        console.log('[BANCO] Conexão com Microsoft SQL Server encerrada.');
-        process.exit(0);
-      });
-    } else {
-      process.exit(0);
-    }
-  });
+  try {
+    sseClients.forEach(client => {
+      try { client.end(); } catch(e){}
+    });
+    sseClients.clear();
+  } catch(e){}
 
-  setTimeout(() => {
-    console.error('[PROCESSO] Encerramento forçado após timeout de 10s.');
-    process.exit(1);
-  }, 10000).unref();
+  try {
+    if (server) {
+      if (typeof server.closeAllConnections === 'function') {
+        server.closeAllConnections();
+      }
+      server.close();
+    }
+  } catch(e){}
+
+  try {
+    if (pool) {
+      if (typeof pool.close === 'function') pool.close();
+      else if (pool.pool && typeof pool.pool.close === 'function') pool.pool.close();
+    }
+  } catch(e){}
+
+  process.exit(0);
 }
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
