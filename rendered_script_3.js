@@ -1,0 +1,1 @@
+(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();
