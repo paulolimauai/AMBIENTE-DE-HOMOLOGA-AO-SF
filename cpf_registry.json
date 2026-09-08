@@ -1,1 +1,32 @@
-{}
+{
+  "04023326100": {
+    "cpf": "040.233.261-00",
+    "nome": "Paulo Lima Homologacao",
+    "data_nascimento": "1990-05-15",
+    "phone": "(62) 99234-5372",
+    "email": "homologacao.paulo@nexusfinanceiro.com",
+    "situacao": "REGULAR",
+    "origem": "Cadastro Oficial de Usuário",
+    "updated_at": "2026-09-08T22:25:00.867Z"
+  },
+  "00000000191": {
+    "cpf": "000.000.001-91",
+    "nome": "Paulo de Lima Teste Real",
+    "data_nascimento": "03/07/1984",
+    "phone": "(61) 99999-8888",
+    "email": "pauloteste.real@nexusfinanceiro.com",
+    "situacao": "REGULAR",
+    "origem": "Cadastro Oficial de Usuário",
+    "updated_at": "2026-09-08T22:25:00.843Z"
+  },
+  "99925109191": {
+    "cpf": "99925109191",
+    "nome": "CICERA DE LIMA PEREIRA",
+    "data_nascimento": "1966-06-27",
+    "phone": "(62) 99367-6783",
+    "email": "ciceragyn12@hotmail.com",
+    "situacao": "REGULAR",
+    "origem": "Cadastro Oficial de Usuário",
+    "updated_at": "2026-09-08T22:25:00.851Z"
+  }
+}
