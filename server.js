@@ -385,7 +385,7 @@ let pool = null;
 // Usuários autorizados padrão do sistema (sincronizados no Render e no SQL Server)
 const DEFAULT_AUTHORIZED_USERS = [
   {
-    id: 3,
+    id: 1,
     name: 'Administrador',
     email: 'admin@nexusfinanceiro.com',
     password: hashPassword('86266049'),
@@ -393,19 +393,11 @@ const DEFAULT_AUTHORIZED_USERS = [
     active: true
   },
   {
-    id: 4,
-    name: 'Administrador',
-    email: 'admin@nexusfinanceirohub.com.br',
-    password: hashPassword('86266049'),
-    role: 'Administrador',
-    active: true
-  },
-  {
-    id: 53,
+    id: 2,
     name: 'PAULO DE LIMA PEREIRA',
     email: 'paulolp0101@gmail.com',
     password: hashPassword('86266049'),
-    role: 'Usuário',
+    role: 'Administrador',
     active: true,
     cpf: '040.233.261-00',
     phone: '(62) 99234-5372',
@@ -21406,6 +21398,82 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Rota POST de Reset Total do Banco de Dados para Iniciar do Zero (ID 1)
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/database/reset') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        let authOk = false;
+        try {
+          const parsed = JSON.parse(body || '{}');
+          if (parsed.masterKey === '86266049' || parsed.sync_secret === JWT_SECRET) authOk = true;
+        } catch(e){}
+        if (req.headers['x-nexus-sync-token'] === JWT_SECRET || req.headers['authorization'] === 'Bearer ' + JWT_SECRET) {
+          authOk = true;
+        }
+
+        if (!authOk) {
+          res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ error: 'Não autorizado para reset' }));
+        }
+
+        if (pool) {
+          const resetStatements = [
+            "DELETE FROM dados_financeiros;",
+            "DELETE FROM transacoes;",
+            "DELETE FROM contas_bancarias;",
+            "DELETE FROM categorias;",
+            "DELETE FROM system_logs;",
+            "DELETE FROM ordens_servico;",
+            "IF EXISTS (SELECT * FROM sys.tables WHERE name = 'tecnicos_suporte') DELETE FROM tecnicos_suporte;",
+            "DELETE FROM usuarios;",
+            "DBCC CHECKIDENT ('usuarios', RESEED, 0);",
+            "IF EXISTS (SELECT * FROM sys.tables WHERE name = 'dados_financeiros') DBCC CHECKIDENT ('dados_financeiros', RESEED, 0);",
+            "IF EXISTS (SELECT * FROM sys.tables WHERE name = 'transacoes') DBCC CHECKIDENT ('transacoes', RESEED, 0);",
+            "IF EXISTS (SELECT * FROM sys.tables WHERE name = 'contas_bancarias') DBCC CHECKIDENT ('contas_bancarias', RESEED, 0);",
+            "IF EXISTS (SELECT * FROM sys.tables WHERE name = 'categorias') DBCC CHECKIDENT ('categorias', RESEED, 0);",
+            "IF EXISTS (SELECT * FROM sys.tables WHERE name = 'system_logs') DBCC CHECKIDENT ('system_logs', RESEED, 0);",
+            "IF EXISTS (SELECT * FROM sys.tables WHERE name = 'ordens_servico') DBCC CHECKIDENT ('ordens_servico', RESEED, 0);",
+            "IF EXISTS (SELECT * FROM sys.tables WHERE name = 'tecnicos_suporte') DBCC CHECKIDENT ('tecnicos_suporte', RESEED, 0);"
+          ];
+          for (const s of resetStatements) {
+            try { await pool.query(s); } catch(e){}
+          }
+        }
+
+        const freshUsers = DEFAULT_AUTHORIZED_USERS.map(u => ({ ...u }));
+        saveLocalUsers(freshUsers);
+
+        try {
+          fs.writeFileSync(path.join(__dirname, 'local_database_data.json'), '{}', 'utf8');
+          fs.writeFileSync(path.join(__dirname, 'local_database_data.backup.json'), '{}', 'utf8');
+          fs.writeFileSync(path.join(__dirname, 'cpf_registry.json'), '{}', 'utf8');
+          fs.writeFileSync(path.join(__dirname, 'cpf_registry.backup.json'), '{}', 'utf8');
+          fs.writeFileSync(path.join(__dirname, 'local_ordens_servico.json'), '[]', 'utf8');
+        } catch(e){}
+
+        if (pool) {
+          for (const u of freshUsers) {
+            await pool.query(
+              'INSERT INTO usuarios (name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted) VALUES ($1, $2, $3, $4, $5, GETDATE(), NULL, $6, $7, $8, $9)',
+              [u.name, u.email, u.password, u.role, u.active ? 1 : 0, u.cpf || null, u.phone || null, u.birth_date || null, 1]
+            ).catch(() => {});
+          }
+        }
+
+        recordSystemLog('Sistema', 'admin@nexusfinanceiro.com', 'Reset Total', 'Banco de Dados', 'Banco de dados reiniciado do zero com sucesso.');
+
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, message: 'Banco de dados reiniciado com sucesso do zero (ID 1)' }));
+      } catch(err) {
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+    });
+    return;
+  }
+
   // Rota POST de Usuários (Sincronização Segura sem Deleção Involuntária e com Preservação de Senhas)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/users') {
     let body = '';
@@ -21413,15 +21481,18 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
-        const users = Array.isArray(parsed) ? parsed : [parsed];
+        const isOverwrite = (parsedUrl.query && parsedUrl.query.overwrite === 'true') || parsed.overwrite === true;
+        const users = Array.isArray(parsed) ? parsed : (parsed.users || [parsed]);
         if (!users.length) throw new Error('Formato inválido');
 
         // Mescla localmente com cadastros existentes no servidor preservando credenciais
-        const existingLocal = getLocalUsers();
         const userMap = new Map();
-        existingLocal.forEach(u => {
-          if (u && u.email) userMap.set(u.email.toLowerCase().trim(), u);
-        });
+        if (!isOverwrite) {
+          const existingLocal = getLocalUsers();
+          existingLocal.forEach(u => {
+            if (u && u.email) userMap.set(u.email.toLowerCase().trim(), u);
+          });
+        }
 
         users.forEach(u => {
           if (u && u.email) {

@@ -1,15 +1,4 @@
 {
-  "12345678909": {
-    "cpf": "12345678909",
-    "nome": "Helena Alves Melo",
-    "data_nascimento": "03/07/1984",
-    "phone": "(47) 97678-3034",
-    "email": "",
-    "situacao": "REGULAR",
-    "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
-    "origem": "Receita Federal do Brasil (Base Cadastral Oficial)",
-    "updated_at": "2026-09-08T19:11:49.860Z"
-  },
   "04023326100": {
     "cpf": "040.233.261-00",
     "nome": "Paulo Lima Homologacao",
@@ -17,9 +6,8 @@
     "phone": "(62) 99234-5372",
     "email": "homologacao.paulo@nexusfinanceiro.com",
     "situacao": "REGULAR",
-    "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:12:04.876Z"
+    "updated_at": "2026-09-08T22:25:00.867Z"
   },
   "00000000191": {
     "cpf": "000.000.001-91",
@@ -28,9 +16,8 @@
     "phone": "(61) 99999-8888",
     "email": "pauloteste.real@nexusfinanceiro.com",
     "situacao": "REGULAR",
-    "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:12:04.861Z"
+    "updated_at": "2026-09-08T22:25:00.843Z"
   },
   "99925109191": {
     "cpf": "99925109191",
@@ -39,8 +26,7 @@
     "phone": "(62) 99367-6783",
     "email": "ciceragyn12@hotmail.com",
     "situacao": "REGULAR",
-    "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:12:04.869Z"
+    "updated_at": "2026-09-08T22:25:00.851Z"
   }
 }
