@@ -8064,20 +8064,9 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
-  <!-- ==================== BARRA SUPERIOR: TICKER AO VIVO + CLOCK BRASÍLIA + TEMA ==================== -->
-  <div class="auth-top-bar" style="width:100%; max-width:1280px; padding:0 clamp(12px, 2vw, 24px); display:flex; justify-content:space-between; align-items:center; position:relative; z-index:25; margin-bottom:12px; gap:12px;">
-    <!-- Ticker de Cotações Financeiras ao Vivo (Mercado 4K) -->
-    <div class="fintech-live-ticker-bar" style="flex:1; max-width:820px;">
-      <div class="fintech-ticker-badge">
-        <span class="fintech-pulse-dot"></span>
-        <span>Mercado 4K</span>
-      </div>
-      <div class="fintech-ticker-viewport">
-        <div class="fintech-ticker-track" id="serverTickerTrack"></div>
-      </div>
-    </div>
-
-    <div style="display:flex; align-items:center; gap:10px; margin-left:auto;">
+  <!-- ==================== BARRA SUPERIOR: CLOCK BRASÍLIA + TEMA ==================== -->
+  <div class="auth-top-bar" style="width:100%; max-width:1280px; padding:0 clamp(12px, 2vw, 24px); display:flex; justify-content:flex-end; align-items:center; position:relative; z-index:25; margin-bottom:12px; gap:12px;">
+    <div style="display:flex; align-items:center; gap:10px;">
       <!-- Relógio Horário de Brasília -->
       <div style="display:flex; align-items:center; gap:6px; padding:6px 14px; border-radius:14px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.12); font-family:'JetBrains Mono',monospace; font-size:12px; color:#E2E8F0; backdrop-filter:blur(14px);">
         <span style="width:7px; height:7px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
@@ -8202,14 +8191,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
       <!-- Selos de Segurança & Conformidade -->
       <div class="auth-showcase-footer">
-        <span style="display:flex; align-items:center; gap:6px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
-          Criptografia AES-256 / scrypt
-        </span>
-        <span>•</span>
         <span>Conformidade LGPD</span>
-        <span>•</span>
-        <span>Conexão SQL Server 24/7</span>
       </div>
     </div>
 
@@ -8265,12 +8247,11 @@ html.light .scale-dropdown .scale-opt-btn:hover {
           </div>
 
           <!-- Lembrar de Mim -->
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:12px; color:#94A3B8;">
+          <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#94A3B8;">
             <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none;">
               <input type="checkbox" id="rememberMe" style="accent-color:#F59E0B; width:15px; height:15px; cursor:pointer;">
               <span>Lembrar meu acesso</span>
             </label>
-            <span style="font-size:11px; color:#64748B;">Sessão Segura SSL</span>
           </div>
 
           <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
@@ -8278,15 +8259,6 @@ html.light .scale-dropdown .scale-opt-btn:hover {
           <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
             <span>Entrar na Conta →</span>
           </button>
-
-          <!-- Botão VIP 1-Clique Admin Master -->
-          <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08);">
-            <button type="button" class="btn-quick-admin-login" id="btnServerQuickAdmin" onclick="window.preencherCredenciaisAdmin()">
-              <span style="font-size:14px;">👑</span>
-              <span>Acesso Rápido Administrador Master</span>
-              <span style="font-size:10px; padding:2px 6px; border-radius:5px; background:rgba(245,158,11,0.3); color:#FEF3C7; font-weight:900; border:1px solid rgba(245,158,11,0.4);">1-Clique</span>
-            </button>
-          </div>
         </form>
 
         <p class="auth-bottom-text" style="margin-top:14px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">

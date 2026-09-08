@@ -1171,19 +1171,8 @@
         </div>
     </div>
 
-    <!-- ==================== BARRA SUPERIOR: TICKER AO VIVO + CLOCK BRASÍLIA + TEMA ==================== -->
-    <header class="w-full max-w-[1360px] flex items-center justify-between gap-4 z-30 mb-4 px-3 sm:px-6 pt-3">
-        <!-- Ticker de Cotações Financeiras ao Vivo (Ultra-HD FinTech Glass) -->
-        <div class="fintech-live-ticker-bar flex-1 max-w-[840px] hidden sm:flex">
-            <div class="fintech-ticker-badge">
-                <span class="fintech-pulse-dot"></span>
-                <span>Mercado 4K</span>
-            </div>
-            <div class="fintech-ticker-viewport">
-                <div class="fintech-ticker-track" id="loginTickerTrack"></div>
-            </div>
-        </div>
-
+    <!-- ==================== BARRA SUPERIOR: CLOCK BRASÍLIA + TEMA ==================== -->
+    <header class="w-full max-w-[1360px] flex items-center justify-end gap-4 z-30 mb-4 px-3 sm:px-6 pt-3">
         <div class="flex items-center gap-3 ml-auto">
             <!-- Relógio Horário de Brasília -->
             <div class="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-black/40 border border-white/10 text-xs font-mono text-slate-300 backdrop-blur-md">
@@ -1346,14 +1335,7 @@
 
                 <!-- Selos de Segurança & Conformidade -->
                 <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-400 pt-1">
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span class="text-slate-300">Criptografia AES-256 / scrypt</span>
-                    </div>
-                    <span>•</span>
                     <div>Conformidade LGPD</div>
-                    <span>•</span>
-                    <div>Backup Contínuo SQL Server</div>
                 </div>
 
             </div>
@@ -1440,12 +1422,11 @@
                             </div>
 
                             <!-- Lembrar de Mim -->
-                            <div class="flex items-center justify-between pt-0.5 text-xs text-[#94A3B8] auth-label">
+                            <div class="flex items-center justify-start pt-0.5 text-xs text-[#94A3B8] auth-label">
                                 <label class="flex items-center gap-2 cursor-pointer select-none">
                                     <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer">
                                     <span>Lembrar meu acesso</span>
                                 </label>
-                                <span class="text-[11px] text-slate-400 font-medium">Sessão Segura SSL</span>
                             </div>
 
                             <!-- Botão de Login Primário -->
@@ -1453,16 +1434,6 @@
                                 <button type="submit" id="btnLoginSubmit" class="btn-auth-gradient w-full py-3.5 text-sm font-black flex items-center justify-center gap-2 focus:outline-none">
                                     <span>Entrar na Conta</span>
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                                </button>
-                            </div>
-
-                            <!-- Botão VIP de 1-Clique para o Administrador Master -->
-                            <div class="pt-3 border-t border-white/10 mt-3">
-                                <button type="button" id="btnQuickAdminLogin" onclick="preencherCredenciaisAdmin()" 
-                                    class="btn-quick-admin-login w-full py-2.5 px-3 font-extrabold text-xs flex items-center justify-center gap-2 group focus:outline-none cursor-pointer">
-                                    <span class="text-sm transition-transform group-hover:scale-125 filter drop-shadow">👑</span>
-                                    <span>Acesso Rápido Administrador Master</span>
-                                    <span class="text-[10px] px-2 py-0.5 rounded-md bg-amber-500/30 text-amber-200 uppercase font-black tracking-wider border border-amber-400/40">1-Clique</span>
                                 </button>
                             </div>
                         </form>
