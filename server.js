@@ -993,22 +993,25 @@ async function setupDatabaseTablesAndSync() {
 
   // 5. Sincronização e Consolidação de Usuários entre Banco e Cache Local
   try {
-    const localUsers = getLocalUsers();
-    for (const u of localUsers) {
-      if (!u || !u.email) continue;
-      const cleanEmail = u.email.toLowerCase().trim();
-      const existing = await pool.query('SELECT id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-      if (existing.rows.length === 0) {
+    const existingInDb = await pool.query('SELECT COUNT(*) as cnt FROM usuarios');
+    const dbCount = (existingInDb.rows && existingInDb.rows[0]) ? parseInt(existingInDb.rows[0].cnt) : 0;
+
+    // Apenas se o banco estiver totalmente vazio sem usuários é que inicializa a partir do cache local
+    if (dbCount === 0) {
+      const localUsers = getLocalUsers();
+      for (const u of localUsers) {
+        if (!u || !u.email) continue;
+        const cleanEmail = u.email.toLowerCase().trim();
         await pool.query(
           'INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
           [u.name || 'Usuário', cleanEmail, u.password || hashPassword('123456'), u.role || 'Usuário', u.active !== false, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false]
-        );
+        ).catch(() => {});
       }
     }
 
     const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
     if (res.rows && res.rows.length > 0) {
-      saveLocalUsers(res.rows);
+      saveLocalUsers(res.rows, true);
       console.log(`[BANCO] ${res.rows.length} usuário(s) sincronizado(s) e consolidados no banco interno e no cache local.`);
     }
   } catch(syncErr) {
@@ -22367,12 +22370,24 @@ const server = http.createServer(async (req, res) => {
 });
 
 // Proteção Global de Processo contra Exceções Não Tratadas
-process.on('uncaughtException', (err) => {
-  console.error('[PROCESSO] Erro não capturado tratado com segurança:', err.message);
+process.on('uncaughtException', (err, origin) => {
+  try {
+    console.error(`[PROCESSO] Erro não capturado tratado com segurança (${origin}):`, (err && err.stack) || err);
+  } catch(e) {}
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.warn('[PROCESSO] Rejeição de Promise tratada com segurança:', reason);
+  try {
+    console.warn('[PROCESSO] Rejeição de Promise tratada com segurança:', (reason && reason.stack) || reason);
+  } catch(e) {}
+});
+
+process.on('beforeExit', (code) => {
+  console.log(`[PROCESSO] Evento beforeExit disparado com código ${code}. Event loop sem referências!`);
+});
+
+process.on('exit', (code) => {
+  console.log(`[PROCESSO] Processo Node.js finalizando com código: ${code}`);
 });
 
 // Encerramento Gracioso em Ambientes de Nuvem / Contêineres (Graceful Shutdown)
@@ -22486,7 +22501,9 @@ async function syncWithRenderCloud() {
         if (!cu || !cu.email) continue;
         const cleanEmail = cu.email.toLowerCase().trim();
         const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-        if (!localCheck.rows || localCheck.rows.length === 0) {
+        // Só insere se for cadastro novo legítimo (ex: criado recentemente nos últimos 15 minutos)
+        const isRecentSignup = cu.created_at && (Math.abs(Date.now() - new Date(cu.created_at).getTime()) < 15 * 60 * 1000);
+        if ((!localCheck.rows || localCheck.rows.length === 0) && isRecentSignup) {
           const defaultPass = cu.password || hashPassword('86266049');
           const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
           await pool.query(
@@ -22670,9 +22687,9 @@ function startRenderCloudSyncWorker() {
   cloudSyncWorkerStarted = true;
   setTimeout(() => {
     syncWithRenderCloud();
-    setInterval(syncWithRenderCloud, 3000).unref();
+    setInterval(syncWithRenderCloud, 3000);
     console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real (3s): Render <-> Microsoft SQL Server`);
-  }, 1000).unref();
+  }, 1000);
 }
 
 server.on('error', (err) => {
