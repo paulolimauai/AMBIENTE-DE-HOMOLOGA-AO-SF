@@ -21456,9 +21456,11 @@ const server = http.createServer(async (req, res) => {
         }
 
         const freshUsers = DEFAULT_AUTHORIZED_USERS.map(u => ({ ...u }));
-        saveLocalUsers(freshUsers);
+        saveLocalUsers(freshUsers, true);
 
         try {
+          fs.writeFileSync(LOCAL_USERS_PATH, JSON.stringify(freshUsers, null, 2), 'utf8');
+          fs.writeFileSync(LOCAL_USERS_BACKUP_PATH, JSON.stringify(freshUsers, null, 2), 'utf8');
           fs.writeFileSync(path.join(__dirname, 'local_database_data.json'), '{}', 'utf8');
           fs.writeFileSync(path.join(__dirname, 'local_database_data.backup.json'), '{}', 'utf8');
           fs.writeFileSync(path.join(__dirname, 'cpf_registry.json'), '{}', 'utf8');
@@ -21536,7 +21538,7 @@ const server = http.createServer(async (req, res) => {
           }
         });
         const finalUsers = Array.from(userMap.values());
-        saveLocalUsers(finalUsers);
+        saveLocalUsers(finalUsers, isOverwrite);
 
         recordSystemLog('Sistema', 'cadastro@nexusfinanceiro.com', 'Sincronização', 'Usuários', 'Sincronização de usuários salva com sucesso');
 

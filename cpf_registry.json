@@ -7,7 +7,7 @@
     "email": "paulol@gmail.com",
     "situacao": "REGULAR",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:31:46.992Z"
+    "updated_at": "2026-09-08T22:35:53.554Z"
   },
   "00000000191": {
     "cpf": "000.000.001-91",
@@ -17,7 +17,7 @@
     "email": "pauloteste.real@nexusfinanceiro.com",
     "situacao": "REGULAR",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:31:46.960Z"
+    "updated_at": "2026-09-08T22:35:53.540Z"
   },
   "99925109191": {
     "cpf": "99925109191",
@@ -27,6 +27,6 @@
     "email": "ciceragyn12@hotmail.com",
     "situacao": "REGULAR",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:31:46.968Z"
+    "updated_at": "2026-09-08T22:35:53.543Z"
   }
 }
