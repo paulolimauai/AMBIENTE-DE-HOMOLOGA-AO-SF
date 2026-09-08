@@ -19,7 +19,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:14:29.407Z"
+    "updated_at": "2026-09-08T22:14:50.262Z"
   },
   "00000000191": {
     "cpf": "000.000.001-91",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:14:29.350Z"
+    "updated_at": "2026-09-08T22:14:50.249Z"
   },
   "99925109191": {
     "cpf": "99925109191",
@@ -41,6 +41,6 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:14:29.381Z"
+    "updated_at": "2026-09-08T22:14:50.252Z"
   }
 }
