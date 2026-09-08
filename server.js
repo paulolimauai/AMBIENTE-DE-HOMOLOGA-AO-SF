@@ -35,7 +35,7 @@ const LOCAL_TECNICOS_PATH = path.join(__dirname, 'local_tecnicos.json');
 const RENDER_CLOUD_URL = process.env.RENDER_CLOUD_URL || 'https://ambiente-de-homologa-ao-sf.onrender.com';
 const https = require('https');
 const fetchCloud = (pathname, options = {}) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     try {
       const u = new URL(pathname, RENDER_CLOUD_URL);
       const reqTimeout = options.timeout || 4000;
@@ -53,6 +53,7 @@ const fetchCloud = (pathname, options = {}) => {
       }, res => {
         let data = '';
         res.on('data', chunk => data += chunk);
+        res.on('error', () => resolve({ ok: false, status: res.statusCode || 500, json: () => Promise.resolve(null) }));
         res.on('end', () => {
           try {
             resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, status: res.statusCode, json: () => Promise.resolve(JSON.parse(data)) });
@@ -61,12 +62,15 @@ const fetchCloud = (pathname, options = {}) => {
           }
         });
       });
-      req.on('error', reject);
-      req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
+      req.on('error', () => resolve({ ok: false, status: 500, json: () => Promise.resolve(null) }));
+      req.on('timeout', () => {
+        try { req.destroy(); } catch(e){}
+        resolve({ ok: false, status: 408, json: () => Promise.resolve(null) });
+      });
       if (options.body) req.write(options.body);
       req.end();
     } catch(err) {
-      reject(err);
+      resolve({ ok: false, status: 500, json: () => Promise.resolve(null) });
     }
   });
 };
@@ -22670,6 +22674,10 @@ function startRenderCloudSyncWorker() {
     console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real (3s): Render <-> Microsoft SQL Server`);
   }, 1000).unref();
 }
+
+server.on('error', (err) => {
+  console.warn('[HTTP SERVIDOR] Erro no servidor HTTP tratado com segurança:', err.message);
+});
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`==================================================`);
