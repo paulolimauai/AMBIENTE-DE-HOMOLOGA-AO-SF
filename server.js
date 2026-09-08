@@ -706,7 +706,8 @@ async function syncUserTransactionsToTable(userEmail, transactionsList) {
   const cleanEmail = userEmail.toLowerCase().trim();
   try {
     const validTxIds = [];
-    for (const t of transactionsList) {
+    for (let i = 0; i < transactionsList.length; i++) {
+      const t = transactionsList[i];
       if (!t) continue;
       const desc = (t.desc || t.description || 'Transação').trim();
       const val = parseFloat(t.val !== undefined ? t.val : (t.amount || 0)) || 0;
@@ -715,8 +716,8 @@ async function syncUserTransactionsToTable(userEmail, transactionsList) {
       const tipo = (t.type === 'in' || t.type === 'receita') ? 'Receita' : 'Despesa';
       const conta = (t.acc || t.account || 'Principal').trim();
       const status = (t.status || 'Pendente').trim();
-      const txId = (t.id !== undefined && t.id !== null && !isNaN(parseInt(t.id))) ? parseInt(t.id) : null;
-      if (txId !== null) validTxIds.push(txId);
+      const txId = (t.id !== undefined && t.id !== null && !isNaN(parseInt(t.id))) ? parseInt(t.id) : (i + 1);
+      validTxIds.push(txId);
 
       await pool.query(`
         IF EXISTS (SELECT 1 FROM transacoes WHERE LOWER(user_email) = LOWER($1) AND ((tx_id IS NOT NULL AND tx_id = $2) OR (descricao = $3 AND data_transacao = $4 AND valor = $5)))
@@ -21660,15 +21661,11 @@ const server = http.createServer(async (req, res) => {
       }
       const cleanEmail = (payload.email || '').toLowerCase().trim();
 
-      // PROTEÇÃO DE INTEGRIDADE: Evita apagar transações existentes se o payload recebido estiver vazio sem intenção
+      // PROTEÇÃO ABSOLUTA DE INTEGRIDADE: Sempre mescla os dados financeiros com os existentes para prevenir perda de transações
       const currentLocal = getLocalData(cleanEmail);
       let dataToSave = payload.data;
-      if (currentLocal && typeof currentLocal === 'object') {
-        const curTxCount = Array.isArray(currentLocal.transactions) ? currentLocal.transactions.length : 0;
-        const newTxCount = (payload.data && Array.isArray(payload.data.transactions)) ? payload.data.transactions.length : 0;
-        if (curTxCount > 0 && newTxCount === 0 && !payload.forceEmpty) {
-          dataToSave = mergeFinancialData(payload.data, currentLocal);
-        }
+      if (currentLocal && typeof currentLocal === 'object' && !payload.forceEmpty) {
+        dataToSave = mergeFinancialData(payload.data, currentLocal);
       }
 
       saveLocalData(cleanEmail, dataToSave);
@@ -22399,7 +22396,7 @@ async function syncWithRenderCloud() {
       for (const cu of cloudUsers) {
         if (!cu || !cu.email) continue;
         const cleanEmail = cu.email.toLowerCase().trim();
-        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+        const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
         if (!localCheck.rows || localCheck.rows.length === 0) {
           const defaultPass = cu.password || hashPassword('86266049');
           const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
@@ -22416,6 +22413,18 @@ async function syncWithRenderCloud() {
              END`,
             [cleanEmail]
           );
+          if (cu.cpf) {
+            const numCpf = cu.cpf.replace(/\D/g, '');
+            saveCpfRegistryEntry(numCpf, {
+              cpf: cu.cpf,
+              nome: cu.name || 'Usuário',
+              data_nascimento: cu.birth_date || null,
+              phone: cu.phone || null,
+              email: cleanEmail,
+              situacao: 'REGULAR',
+              origem: 'Cadastro Oficial de Usuário'
+            });
+          }
           console.log(`\n⚡ [SYNC RENDER -> SQL SERVER] Nova conta criada no Render gravada no SQL Server local: ${cleanEmail}`);
           recordSystemLog(cu.name, cleanEmail, 'Sincronização Nuvem', 'Usuários', `Conta criada no Render sincronizada para o SQL Server local`);
           scheduleGitSyncDebounced();
@@ -22426,6 +22435,9 @@ async function syncWithRenderCloud() {
           const updatedCpf = cu.cpf || currentU.cpf;
           const updatedPhone = cu.phone || currentU.phone;
           const updatedBirth = cu.birth_date || cu.birthDate || currentU.birth_date;
+          if (cu.password && cu.password.startsWith('scrypt:') && cu.password !== currentU.password) {
+            await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [cu.password, cleanEmail]).catch(()=>{});
+          }
           if (updatedName !== currentU.name || updatedCpf !== currentU.cpf || updatedPhone !== currentU.phone || updatedBirth !== currentU.birth_date) {
             await pool.query(
               `UPDATE usuarios 
@@ -22433,6 +22445,18 @@ async function syncWithRenderCloud() {
                WHERE LOWER(email) = LOWER($5)`,
               [updatedName, updatedCpf, updatedPhone, updatedBirth, cleanEmail]
             ).catch(() => {});
+          }
+          if (updatedCpf) {
+            const numCpf = updatedCpf.replace(/\D/g, '');
+            saveCpfRegistryEntry(numCpf, {
+              cpf: updatedCpf,
+              nome: updatedName || 'Usuário',
+              data_nascimento: updatedBirth || null,
+              phone: updatedPhone || null,
+              email: cleanEmail,
+              situacao: 'REGULAR',
+              origem: 'Cadastro Oficial de Usuário'
+            });
           }
 
           // Sincronização automática e contínua do last_login do Render para o SQL Server local (Fuso de Brasília)

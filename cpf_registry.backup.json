@@ -8,21 +8,21 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Receita Federal do Brasil (Base Cadastral Oficial)",
-    "updated_at": "2026-09-08T17:16:51.123Z"
+    "updated_at": "2026-09-08T19:11:49.860Z"
   },
   "04023326100": {
-    "cpf": "04023326100",
+    "cpf": "040.233.261-00",
     "nome": "Paulo Lima Homologacao",
     "data_nascimento": "1990-05-15",
     "phone": "(62) 99234-5372",
     "email": "homologacao.paulo@nexusfinanceiro.com",
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
-    "origem": "Receita Federal do Brasil (Base Cadastral Verificada)",
-    "updated_at": "2026-09-08T17:16:51.146Z"
+    "origem": "Cadastro Oficial de Usuário",
+    "updated_at": "2026-09-08T22:12:04.876Z"
   },
   "00000000191": {
-    "cpf": "00000000191",
+    "cpf": "000.000.001-91",
     "nome": "Paulo de Lima Teste Real",
     "data_nascimento": "03/07/1984",
     "phone": "(61) 99999-8888",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T17:16:51.153Z"
+    "updated_at": "2026-09-08T22:12:04.861Z"
   },
   "99925109191": {
     "cpf": "99925109191",
@@ -41,6 +41,6 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T17:16:51.163Z"
+    "updated_at": "2026-09-08T22:12:04.869Z"
   }
 }
