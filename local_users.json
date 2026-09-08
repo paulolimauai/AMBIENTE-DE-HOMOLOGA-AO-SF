@@ -14,21 +14,21 @@
     "terms_accepted": true
   },
   {
-    "id": "90",
+    "id": "96",
     "name": "Administrador",
     "email": "admin@nexusfinanceirohub.com.br",
     "password": "scrypt:2182dc618dbc04612c858977bcb15e2b:e37475e7afd6fc35b8531025beb167f0b11716480ffd40c13405330c0a7ff1bf4538bfd2ea72f88ffff4ec16987250b2320163ca1a5e1fd4234a713a79db037f",
     "role": "Administrador",
     "active": true,
-    "created_at": "2026-09-08T19:13:38.030Z",
-    "last_login": "2026-09-08T05:09:02.000Z",
+    "created_at": "2026-09-08T19:14:11.143Z",
+    "last_login": "2026-09-08T02:09:02.000Z",
     "cpf": null,
     "phone": null,
     "birth_date": null,
     "terms_accepted": true
   },
   {
-    "id": "91",
+    "id": "97",
     "name": "PAULO DE LIMA PEREIRA",
     "email": "paulolp0101@gmail.com",
     "password": "scrypt:7aacf3b6d15a47f878de65d64c16d690:27ac55d742b8dc5e67c00e9350a17b6fe1d11418a6037c4ee7b3dc2a38b1b454de097d7de9481d73a0c518881917461a179e404a9ab3a2d8c73020c5e3c2986b",
@@ -38,17 +38,17 @@
     "phone": "(62) 99234-5372",
     "birth_date": null,
     "terms_accepted": true,
-    "created_at": "2026-09-08T19:13:38.056Z",
-    "last_login": "2026-09-08T05:17:01.000Z"
+    "created_at": "2026-09-08T19:14:20.200Z",
+    "last_login": "2026-09-08T02:17:01.000Z"
   },
   {
-    "id": "92",
+    "id": "98",
     "name": "Paulo de Lima Teste Real",
     "email": "pauloteste.real@nexusfinanceiro.com",
     "password": "scrypt:a0fa5dc174162b97fd4cb073f6e496fe:bd334a941ce481a2e7c3de266db82182a03094538bb2ee09db3eca562ab6ca8dc14cee633d6d83f3c624336b12ea15cd0fb5e73e20c24d57cb2bcb38db33350e",
     "role": "Usuário",
     "active": true,
-    "created_at": "2026-09-08T19:13:38.083Z",
+    "created_at": "2026-09-08T19:14:26.230Z",
     "last_login": null,
     "cpf": "000.000.001-91",
     "phone": "(61) 99999-8888",
