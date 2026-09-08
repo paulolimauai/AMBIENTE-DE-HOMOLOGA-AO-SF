@@ -1938,276 +1938,129 @@ body.light .auth-blob { opacity: 0.14; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Ocultar quaisquer resquícios de shards soltos */
-.glass-viewport-screen,
-.glass-shard,
-.glass-screen-reflection {
-  display: none !important;
-}
-
-/* ==================== TICKER DE COTAÇÕES FINANCEIRAS AO VIVO 4K ==================== */
-.fintech-live-ticker-bar {
-  display: flex;
-  align-items: center;
-  height: 40px;
-  background: linear-gradient(90deg, rgba(8, 14, 26, 0.85) 0%, rgba(15, 23, 42, 0.8) 50%, rgba(8, 14, 26, 0.85) 100%);
-  border: 1px solid rgba(245, 158, 11, 0.28);
-  border-radius: 999px;
-  padding: 2px 10px 2px 4px;
-  box-shadow: 0 8px 25px -4px rgba(0, 0, 0, 0.7), 0 0 20px -2px rgba(245, 158, 11, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px) saturate(190%);
-  -webkit-backdrop-filter: blur(20px) saturate(190%);
-  overflow: hidden;
-  position: relative;
-  user-select: none;
-}
-
-body.light .fintech-live-ticker-bar {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.92) 50%, rgba(255, 255, 255, 0.95) 100%);
-  border-color: rgba(217, 119, 6, 0.35);
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08), inset 0 1px 0 #FFFFFF;
-}
-
-.fintech-ticker-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.15));
-  border: 1px solid rgba(245, 158, 11, 0.5);
-  border-radius: 999px;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: #FBBF24;
-  text-transform: uppercase;
-  flex-shrink: 0;
-  z-index: 2;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
-}
-
-body.light .fintech-ticker-badge {
-  background: linear-gradient(135deg, rgba(217, 119, 6, 0.16), rgba(180, 83, 9, 0.08));
-  border-color: rgba(217, 119, 6, 0.4);
-  color: #92400E;
-}
-
-.fintech-pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 8px #10B981;
-  animation: pulseFintechDot 1.8s infinite ease-in-out;
-}
-
-@keyframes pulseFintechDot {
-  0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #10B981; }
-  50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #34D399; }
-}
-
-.fintech-ticker-viewport {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 3%, #000 97%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 3%, #000 97%, transparent 100%);
-}
-
-.fintech-ticker-track {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  white-space: nowrap;
-  will-change: transform;
-  animation: tickerScrollLoop 42s linear infinite;
-}
-
-.fintech-live-ticker-bar:hover .fintech-ticker-track {
-  animation-play-state: paused;
-}
-
-@keyframes tickerScrollLoop {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.ticker-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #E2E8F0;
-  padding: 2px 4px;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-body.light .ticker-item {
-  color: #1E293B;
-}
-
-.ticker-item .sym {
-  color: #94A3B8;
-  font-weight: 800;
-  font-size: 10.5px;
-}
-
-body.light .ticker-item .sym {
-  color: #475569;
-}
-
-.ticker-item .val {
-  font-variant-numeric: tabular-nums;
-  font-weight: 800;
-  color: #F8FAFC;
-}
-
-body.light .ticker-item .val {
-  color: #0F172A;
-}
-
-.ticker-item .chg {
-  font-size: 10px;
-  font-weight: 800;
-  padding: 1px 5px;
-  border-radius: 4px;
-}
-
-.ticker-item .chg.up {
-  color: #34D399;
-  background: rgba(16, 185, 129, 0.18);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-}
-
-.ticker-item .chg.down {
-  color: #F87171;
-  background: rgba(239, 68, 68, 0.18);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-}
-
-.ticker-item .chg.neu {
-  color: #60A5FA;
-  background: rgba(59, 130, 246, 0.18);
-  border: 1px solid rgba(59, 130, 246, 0.35);
-}
-
-/* ==================== 3D HOLOGRAPHIC TITANIUM CARD (SHOWCASE LUXO) ==================== */
-.card-3d-perspective-wrap {
-  perspective: 1200px;
-  transform-style: preserve-3d;
-  width: 100%;
-}
-
-.holographic-titanium-card {
-  width: 100%;
-  max-width: 440px;
-  height: 235px;
-  border-radius: 22px;
-  position: relative;
-  background: linear-gradient(135deg, #111827 0%, #0B1120 45%, #030712 100%);
-  border: 1.5px solid rgba(245, 158, 11, 0.38);
-  border-top: 1.5px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 
-    0 24px 50px -10px rgba(0, 0, 0, 0.85),
-    0 0 35px -5px rgba(245, 158, 11, 0.22),
-    inset 0 1px 2px rgba(255, 255, 255, 0.35);
-  transform: rotateX(var(--card-tilt-x, 0deg)) rotateY(var(--card-tilt-y, 0deg));
-  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
-  transform-style: preserve-3d;
-  overflow: hidden;
-  user-select: none;
-  cursor: pointer;
-  padding: 20px 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.holographic-titanium-card:hover {
-  box-shadow: 
-    0 30px 60px -10px rgba(0, 0, 0, 0.95),
-    0 0 45px -2px rgba(245, 158, 11, 0.35),
-    inset 0 1px 3px rgba(255, 255, 255, 0.5);
-}
-
-.card-holographic-sheen {
+/* ==================== EFEITO TELA DE VIDRO PANORÂMICA (4K LIQUID GLASS SCREEN) ==================== */
+.glass-viewport-screen {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), 
-    rgba(255, 255, 255, 0.25) 0%, 
-    rgba(245, 158, 11, 0.18) 25%, 
-    rgba(59, 130, 246, 0.12) 45%, 
-    transparent 70%);
-  mix-blend-mode: overlay;
   pointer-events: none;
-}
-
-.emv-chip-metal {
-  width: 42px;
-  height: 32px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, #FDE68A 0%, #D97706 50%, #78350F 100%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 2px 8px rgba(0,0,0,0.5);
-  position: relative;
+  z-index: 1;
   overflow: hidden;
 }
 
-.emv-chip-metal::before {
-  content: '';
+/* Placas de Vidro Líquido Flutuantes em Profundidade 4K */
+.glass-shard {
   position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.35);
+  border-radius: 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(56, 189, 248, 0.10) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.26);
+  border-top: 2.5px solid rgba(255, 255, 255, 0.75);
+  border-left: 2px solid rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(35px) saturate(240%);
+  -webkit-backdrop-filter: blur(35px) saturate(240%);
+  box-shadow: 
+    0 30px 70px rgba(0, 0, 0, 0.65),
+    inset 0 2px 5px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.40);
+  pointer-events: none;
+  will-change: transform;
 }
 
-.emv-chip-metal::after {
-  content: '';
+.glass-shard-1 {
+  top: 2%;
+  left: -4%;
+  width: 420px;
+  height: 420px;
+  transform: rotate(-14deg);
+  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(56, 189, 248, 0.28), inset 0 2px 5px rgba(255,255,255,0.7);
+  animation: glassFloat1 18s ease-in-out infinite alternate;
+}
+
+.glass-shard-2 {
+  bottom: -6%;
+  right: -3%;
+  width: 480px;
+  height: 480px;
+  transform: rotate(18deg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(59, 130, 246, 0.08) 100%);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
+  animation: glassFloat2 22s ease-in-out infinite alternate;
+}
+
+.glass-shard-3 {
+  top: 22%;
+  right: 6%;
+  width: 250px;
+  height: 250px;
+  border-radius: 32px;
+  transform: rotate(25deg);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(99, 102, 241, 0.30), inset 0 2px 4px rgba(255,255,255,0.6);
+  animation: glassFloat3 15s ease-in-out infinite alternate;
+}
+
+.glass-shard-4 {
+  bottom: 16%;
+  left: 5%;
+  width: 230px;
+  height: 230px;
+  border-radius: 32px;
+  transform: rotate(-20deg);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(59, 130, 246, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
+  animation: glassFloat4 16s ease-in-out infinite alternate;
+}
+
+.glass-shard-5 {
+  top: 60%;
+  right: 28%;
+  width: 140px;
+  height: 140px;
+  border-radius: 26px;
+  transform: rotate(12deg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(236, 72, 153, 0.08) 100%);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.45), 0 0 35px rgba(236, 72, 153, 0.20), inset 0 2px 4px rgba(255,255,255,0.5);
+  animation: glassFloat3 19s ease-in-out infinite alternate;
+}
+
+@keyframes glassFloat1 {
+  0% { transform: translateY(0) rotate(-14deg) scale(1); }
+  100% { transform: translateY(32px) rotate(-6deg) scale(1.06); }
+}
+
+@keyframes glassFloat2 {
+  0% { transform: translateY(0) rotate(18deg) scale(1); }
+  100% { transform: translateY(-36px) rotate(10deg) scale(1.05); }
+}
+
+@keyframes glassFloat3 {
+  0% { transform: translateY(0) rotate(25deg) scale(1); }
+  100% { transform: translateY(-26px) rotate(34deg) scale(1.04); }
+}
+
+@keyframes glassFloat4 {
+  0% { transform: translateY(0) rotate(-20deg) scale(1); }
+  100% { transform: translateY(28px) rotate(-12deg) scale(1.05); }
+}
+
+/* Feixe de Luz Prismática e Refrativo de Vidro 4K */
+.glass-screen-reflection {
   position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: rgba(0, 0, 0, 0.35);
+  inset: 0;
+  background: linear-gradient(115deg, transparent 15%, rgba(255, 255, 255, 0.03) 38%, rgba(255, 255, 255, 0.12) 46%, rgba(253, 230, 138, 0.08) 50%, rgba(255, 255, 255, 0.03) 54%, transparent 75%);
+  background-size: 250% 250%;
+  pointer-events: none;
+  z-index: 2;
+  animation: glassLightSweep 14s ease-in-out infinite;
 }
 
-/* Botão VIP 1-Clique Admin Master */
-.btn-quick-admin-login {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
-  border: 1px solid rgba(245, 158, 11, 0.45) !important;
-  color: #FBBF24 !important;
-  border-radius: 12px !important;
-  backdrop-filter: blur(12px) !important;
-  transition: all 0.25s ease !important;
-  padding: 10px 14px !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  cursor: pointer !important;
+@keyframes glassLightSweep {
+  0% { background-position: -140% -140%; }
+  50% { background-position: 140% 140%; }
+  100% { background-position: -140% -140%; }
 }
 
-.btn-quick-admin-login:hover {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.18) 100%) !important;
-  border-color: #F59E0B !important;
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25) !important;
-  transform: translateY(-1px) !important;
-  color: #FFFFFF !important;
-}
-
-body.light .btn-quick-admin-login {
-  background: linear-gradient(135deg, rgba(217, 119, 6, 0.12) 0%, rgba(180, 83, 9, 0.06) 100%) !important;
-  border-color: rgba(217, 119, 6, 0.45) !important;
-  color: #92400E !important;
+body.light .glass-shard {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.55) 60%, rgba(219, 234, 254, 0.60) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10), inset 0 2px 5px #FFFFFF !important;
 }
 
 /* Card de Autenticação Ultra 4K Liquid Glass (Smoked Amber & Obsidian Glassmorphism) */
@@ -8064,155 +7917,98 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
-  <!-- ==================== BARRA SUPERIOR: CLOCK BRASÍLIA + TEMA ==================== -->
-  <div class="auth-top-bar" style="width:100%; max-width:1280px; padding:0 clamp(12px, 2vw, 24px); display:flex; justify-content:flex-end; align-items:center; position:relative; z-index:25; margin-bottom:12px; gap:12px;">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <!-- Relógio Horário de Brasília -->
-      <div style="display:flex; align-items:center; gap:6px; padding:6px 14px; border-radius:14px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.12); font-family:'JetBrains Mono',monospace; font-size:12px; color:#E2E8F0; backdrop-filter:blur(14px);">
-        <span style="width:7px; height:7px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
-        <span id="serverBrasiliaClock">--:--:--</span>
-        <span style="font-size:10px; color:#94A3B8; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;">DF (UTC-3)</span>
-      </div>
-
-      <!-- Alternador de Tema Claro / Escuro -->
-      <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro" style="width:40px; height:40px; border-radius:14px; background:rgba(15,23,42,0.6); border:1px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(14px); box-shadow:0 4px 16px rgba(245,158,11,0.25);">
-        <svg id="authThemeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <div class="auth-top-bar" style="width:100%; max-width:1200px; padding:0 24px; display:flex; justify-content:space-between; align-items:center; position:absolute; top:20px; z-index:20;">
+    <div style="display:flex; align-items:center; gap:8px;"></div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
+        <svg id="authThemeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
         </svg>
       </button>
     </div>
   </div>
 
-  <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.65;"></canvas>
+  <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
+
+  <!-- Camada de Tela de Vidro Panorâmica (4K Liquid Glass Screen Effect) -->
+  <div class="glass-viewport-screen pointer-events-none">
+    <div class="glass-shard glass-shard-1"></div>
+    <div class="glass-shard glass-shard-2"></div>
+    <div class="glass-shard glass-shard-3"></div>
+    <div class="glass-shard glass-shard-4"></div>
+    <div class="glass-shard glass-shard-5"></div>
+  </div>
+  <div class="glass-screen-reflection pointer-events-none"></div>
 
   <div class="auth-grid" aria-hidden="true"></div>
   <div class="auth-blob b1"></div>
   <div class="auth-blob b2"></div>
   <div class="auth-blob b3"></div>
 
-  <div class="auth-exec-layout" style="max-width:1260px;">
-    <!-- ==================== COLUNA ESQUERDA: SHOWCASE LUXO 4K ==================== -->
+  <div class="auth-exec-layout">
+    <!-- Showcase Institucional Executivo -->
     <div class="auth-showcase-panel">
-      <!-- Badge Institucional -->
       <div class="auth-showcase-badge">
-        <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block; box-shadow:0 0 8px #F59E0B;"></span>
-        <span>PLATAFORMA PRIVADA • INTELIGÊNCIA FINANCEIRA 4K</span>
+        <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
+        <span>CONTROLE FINANCEIRO PESSOAL • PRIVACIDADE TOTAL</span>
       </div>
 
-      <!-- Título de Alto Impacto -->
       <div class="auth-showcase-title">
-        Gestão de Alto Padrão &<br>
-        <span>Planejamento Inteligente</span>
+        Controle Total do seu Dinheiro & <span>Planejamento Inteligente</span>
       </div>
 
       <div class="auth-showcase-desc">
-        Tenha controle absoluto de receitas, despesas, cartões e patrimônio em uma interface executiva 4K cinematográfica, segura e blindada por criptografia de nível bancário.
+        Organize suas contas, acompanhe despesas e receitas, gerencie seus cartões e conquiste suas metas de economia com facilidade e clareza no dia a dia.
       </div>
 
-      <!-- 3D HOLOGRAPHIC TITANIUM CARD SHOWCASE -->
-      <div class="card-3d-perspective-wrap" style="margin: 4px 0 8px 0;">
-        <div class="holographic-titanium-card" id="holoTitaniumCard">
-          <div class="card-holographic-sheen" id="holoSheen"></div>
-          
-          <!-- Topo do Cartão: Brand & Contactless -->
-          <div style="display:flex; justify-content:space-between; align-items:center; position:relative; z-index:2;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg, #FDE68A, #D97706); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#0A0D18; box-shadow:0 2px 8px rgba(0,0,0,0.4);">
-                N
-              </div>
-              <span style="font-family:'Outfit',sans-serif; font-weight:900; letter-spacing:0.12em; font-size:12.5px; color:#FFFFFF;">NEXUS PRIVILEGE 4K</span>
-            </div>
-            <div style="color:#FBBF24; display:flex; align-items:center;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 16.5a5 5 0 0 1 0-9"/><path d="M12 19a8.5 8.5 0 0 0 0-14"/><path d="M15.5 21.5a12 12 0 0 0 0-19"/></svg>
-            </div>
-          </div>
-
-          <!-- Meio do Cartão: Chip EMV & Patrimônio -->
-          <div style="display:flex; justify-content:space-between; align-items:center; position:relative; z-index:2; margin:auto 0;">
-            <div class="emv-chip-metal"></div>
-            <div style="text-align:right;">
-              <span style="display:block; font-size:9.5px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.08em;">Patrimônio Gerenciado</span>
-              <div style="font-size:21px; font-weight:900; font-family:'JetBrains Mono',monospace; color:#FFFFFF; letter-spacing:-0.02em; text-shadow:0 2px 10px rgba(0,0,0,0.5);">
-                R$ 284.950,00
-              </div>
-              <div style="display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:800; color:#34D399; margin-top:2px;">
-                <span>▲ +24,8% este ano</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Fundo do Cartão: Número Mascarado, Titular & Validade -->
-          <div style="display:flex; justify-content:space-between; align-items:flex-end; position:relative; z-index:2; padding-top:8px; border-top:1px solid rgba(255,255,255,0.12);">
-            <div>
-              <div style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#CBD5E1; letter-spacing:0.22em; font-weight:700; margin-bottom:2px;">
-                •••• •••• •••• 8892
-              </div>
-              <div style="font-family:'Outfit',sans-serif; font-size:10.5px; font-weight:900; letter-spacing:0.12em; color:#FDE68A; text-transform:uppercase;">
-                PAULO LIMA
-              </div>
-            </div>
-            <div style="text-align:right;">
-              <span style="display:block; font-size:9px; text-transform:uppercase; font-weight:800; color:#94A3B8;">Validade</span>
-              <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:900; color:#F8FAFC;">12/32</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3 Cards de Métricas & Metas Flutuantes -->
       <div class="auth-showcase-metrics">
         <div class="auth-metric-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <div class="metric-card-label">Economia do Mês</div>
-            <span style="font-size:13px;">🎯</span>
-          </div>
+          <div class="metric-card-label">Economia do Mês</div>
           <div class="metric-val">R$ 3.850</div>
-          <div class="metric-sub-green">+18% guardado</div>
+          <div class="metric-sub-green">+18% guardado 🎯</div>
         </div>
 
         <div class="auth-metric-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <div class="metric-card-label">Orçamento & Gastos</div>
-            <span style="font-size:13px;">💡</span>
-          </div>
+          <div class="metric-card-label">Orçamento & Gastos</div>
           <div class="metric-val">Sob Controle</div>
-          <div class="metric-sub-amber">Sem sustos no mês</div>
+          <div class="metric-sub-amber">Sem sustos no fim do mês 💡</div>
         </div>
 
         <div class="auth-metric-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <div class="metric-card-label">Metas & Sonhos</div>
-            <span style="font-size:13px;">🚀</span>
-          </div>
+          <div class="metric-card-label">Metas & Sonhos</div>
           <div class="metric-val">84% Concluído</div>
-          <div class="metric-sub-blue">Rumo à sua conquista</div>
+          <div class="metric-sub-blue">Rumo à sua conquista 🚀</div>
         </div>
       </div>
 
-      <!-- Selos de Segurança & Conformidade -->
       <div class="auth-showcase-footer">
-        <span>Conformidade LGPD</span>
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block; box-shadow:0 0 8px rgba(245,158,11,0.6);"></span>
+          Seus dados 100% seguros e confidenciais
+        </span>
+        <span>•</span>
+        <span>Acesso Rápido e Descomplicado</span>
       </div>
     </div>
 
-    <!-- ==================== COLUNA DIREITA: CARD PRINCIPAL DE AUTENTICAÇÃO ==================== -->
+    <!-- Card Principal de Autenticação -->
     <div class="auth-card-nexus" id="serverAuthNexusCard">
       <div class="auth-card-glare" id="serverAuthCardGlare"></div>
       <!-- Brand Header -->
       <div class="auth-brand">
         <div class="auth-logo-badge">N</div>
         <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
-        <div class="auth-subtitle" id="authBoxSubtitle">Portal Executivo de Autenticação Segura 4K</div>
+        <div class="auth-subtitle" id="authBoxSubtitle">Sua Gestão Financeira Pessoal Inteligente</div>
       </div>
 
       <!-- Navegação por Abas Segmentadas -->
       <div class="auth-tabs-nav" id="authTabsNav">
         <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="window.switchAuthTab('login')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Entrar na Conta
         </button>
         <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="window.switchAuthTab('register')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
           Criar Conta
         </button>
       </div>
@@ -8222,7 +8018,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
             <label>E-mail Corporativo ou Pessoal</label>
-            <div class="auth-input-wrapper" id="wrapLoginEmail">
+            <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </span>
@@ -8232,10 +8028,10 @@ html.light .scale-dropdown .scale-opt-btn:hover {
 
           <div class="auth-field">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <label style="margin-bottom:0;">Senha de Acesso</label>
-              <a class="auth-forgot-link" id="goForgotFromLogin" style="cursor:pointer;">Esqueceu a senha?</a>
+              <label style="margin-bottom:0;">Senha</label>
+              <a class="auth-forgot-link" id="goForgotFromLogin">Esqueceu a senha?</a>
             </div>
-            <div class="auth-input-wrapper" id="wrapLoginPass">
+            <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </span>
@@ -8257,11 +8053,11 @@ html.light .scale-dropdown .scale-opt-btn:hover {
           <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
-            <span>Entrar na Conta →</span>
+            Entrar na Conta →
           </button>
         </form>
 
-        <p class="auth-bottom-text" style="margin-top:14px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
+        <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
           Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:var(--auth-gold); font-weight:700; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
         </p>
       </div>
@@ -9874,111 +9670,6 @@ window.preencherCredenciaisAdmin = function() {
     }
   }, 350);
 };
-
-// Relógio Oficial de Brasília DF (UTC-3)
-(function initBrasiliaClockEngine() {
-  function updateClock() {
-    const el = document.getElementById('serverBrasiliaClock');
-    if (!el) return;
-    try {
-      const now = new Date();
-      el.textContent = new Intl.DateTimeFormat('pt-BR', {
-        timeZone: 'America/Sao_Paulo',
-        hour: '2-digit', minute: '2-digit', second: '2-digit',
-        hour12: false
-      }).format(now);
-    } catch(e) {
-      const d = new Date();
-      el.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
-    }
-  }
-  setInterval(updateClock, 1000);
-  updateClock();
-})();
-
-// Ticker de Cotações Financeiras ao Vivo (Mercado 4K)
-(function initServerTickerEngine() {
-  const track = document.getElementById('serverTickerTrack');
-  if (!track) return;
-
-  const initialQuotes = [
-    { id: 'usdBrl', sym: 'USD/BRL', val: 5.742, chg: '+0.38%', up: true, prefix: 'R$ ' },
-    { id: 'eurBrl', sym: 'EUR/BRL', val: 6.218, chg: '-0.12%', up: false, prefix: 'R$ ' },
-    { id: 'ibov', sym: 'IBOVESPA', val: 132850, chg: '+0.75%', up: true, suffix: ' pts' },
-    { id: 'btc', sym: 'BITCOIN', val: 528940, chg: '+2.85%', up: true, prefix: 'R$ ' },
-    { id: 'eth', sym: 'ETHEREUM', val: 18240, chg: '+1.95%', up: true, prefix: 'R$ ' },
-    { id: 'sp500', sym: 'S&P 500', val: 5864, chg: '+0.42%', up: true, suffix: ' pts' },
-    { id: 'cdi', sym: 'CDI', val: 10.75, chg: '10,75% a.a.', up: null, isStatic: true },
-    { id: 'selic', sym: 'SELIC', val: 10.75, chg: '10,75%', up: null, isStatic: true },
-    { id: 'ipca', sym: 'IPCA (12m)', val: 4.12, chg: '+4,12%', up: true, isStatic: true },
-    { id: 'ouro', sym: 'OURO (g)', val: 488.50, chg: '+0.64%', up: true, prefix: 'R$ ' }
-  ];
-
-  function formatQuote(q) {
-    if (q.isStatic) return (q.prefix || '') + q.val.toFixed(2).replace('.', ',') + '%' + (q.suffix || '');
-    if (q.val >= 1000) return (q.prefix || '') + Math.round(q.val).toLocaleString('pt-BR') + (q.suffix || '');
-    return (q.prefix || '') + q.val.toFixed(3).replace('.', ',') + (q.suffix || '');
-  }
-
-  function renderTrack() {
-    let html = '';
-    for (let loop = 0; loop < 2; loop++) {
-      initialQuotes.forEach(q => {
-        const chgClass = q.up === true ? 'up' : (q.up === false ? 'down' : 'neu');
-        const chgIcon = q.up === true ? '▲ ' : (q.up === false ? '▼ ' : '• ');
-        html += '<div class="ticker-item">' +
-          '<span class="sym">' + q.sym + '</span>' +
-          '<span class="val" id="st_' + loop + '_' + q.id + '">' + formatQuote(q) + '</span>' +
-          '<span class="chg ' + chgClass + '">' + chgIcon + q.chg + '</span>' +
-          '</div>';
-      });
-    }
-    track.innerHTML = html;
-  }
-  renderTrack();
-
-  setInterval(() => {
-    const dynamic = initialQuotes.filter(q => !q.isStatic);
-    const q = dynamic[Math.floor(Math.random() * dynamic.length)];
-    const delta = (Math.random() * 0.4 - 0.18) / 100;
-    q.val = Math.max(0.01, q.val * (1 + delta));
-    q.up = delta >= 0;
-    q.chg = (delta >= 0 ? '+' : '') + (delta * 100).toFixed(2).replace('.', ',') + '%';
-
-    for (let loop = 0; loop < 2; loop++) {
-      const el = document.getElementById('st_' + loop + '_' + q.id);
-      if (el) el.textContent = formatQuote(q);
-    }
-  }, 2800);
-})();
-
-// Interatividade 3D Holographic Titanium Card
-(function initTitaniumCardTilt() {
-  const card = document.getElementById('holoTitaniumCard');
-  const sheen = document.getElementById('holoSheen');
-  if (!card) return;
-
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const tiltX = ((y - centerY) / centerY) * -12;
-    const tiltY = ((x - centerX) / centerX) * 12;
-    card.style.setProperty('--card-tilt-x', tiltX.toFixed(2) + 'deg');
-    card.style.setProperty('--card-tilt-y', tiltY.toFixed(2) + 'deg');
-    if (sheen) {
-      sheen.style.setProperty('--glare-x', ((x / rect.width) * 100).toFixed(1) + '%');
-      sheen.style.setProperty('--glare-y', ((y / rect.height) * 100).toFixed(1) + '%');
-    }
-  });
-
-  card.addEventListener('mouseleave', () => {
-    card.style.setProperty('--card-tilt-x', '0deg');
-    card.style.setProperty('--card-tilt-y', '0deg');
-  });
-})();
 
 // Mostrar/Ocultar Senha do Login (Visualização Clara do Olho)
 window.togglePasswordVisibility = function(inputId, btnId) {
