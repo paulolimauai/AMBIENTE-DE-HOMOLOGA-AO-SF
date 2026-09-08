@@ -20338,46 +20338,59 @@ function getLocalUsers() {
   return Array.from(userMap.values());
 }
 
-function saveLocalUsers(users) {
+function saveLocalUsers(users, overwrite = false) {
   try {
-    const existingMap = new Map();
-    // Carregar usuários conhecidos atuais
-    const current = getLocalUsers();
-    current.forEach(u => {
-      if (u && u.email) existingMap.set(u.email.toLowerCase().trim(), u);
-    });
-
-    const incomingMap = new Map();
-    (Array.isArray(users) ? users : []).forEach(u => {
-      if (u && u.email) incomingMap.set(u.email.toLowerCase().trim(), u);
-    });
-
-    // Mesclar preservando todos os usuários e senhas
-    const mergedList = [];
-    existingMap.forEach((oldUser, emailKey) => {
-      const incoming = incomingMap.get(emailKey);
-      if (incoming) {
-        const resolvedLastLogin = (incoming.last_login && incoming.last_login !== 'null') ? incoming.last_login : (oldUser.last_login || null);
-        mergedList.push({
-          ...oldUser,
-          ...incoming,
-          last_login: resolvedLastLogin,
-          password: incoming.password || oldUser.password || hashPassword('86266049')
-        });
-        incomingMap.delete(emailKey);
-      } else {
-        mergedList.push(oldUser);
-      }
-    });
-
-    incomingMap.forEach(newUser => {
-      mergedList.push({
-        ...newUser,
-        password: newUser.password || hashPassword('86266049')
+    let finalUsers = [];
+    if (overwrite) {
+      const userMap = new Map();
+      DEFAULT_AUTHORIZED_USERS.forEach(du => {
+        if (du && du.email) userMap.set(du.email.toLowerCase().trim(), { ...du });
       });
-    });
+      (Array.isArray(users) ? users : []).forEach(u => {
+        if (u && u.email) userMap.set(u.email.toLowerCase().trim(), u);
+      });
+      finalUsers = Array.from(userMap.values());
+    } else {
+      const existingMap = new Map();
+      // Carregar usuários conhecidos atuais
+      const current = getLocalUsers();
+      current.forEach(u => {
+        if (u && u.email) existingMap.set(u.email.toLowerCase().trim(), u);
+      });
 
-    const jsonContent = JSON.stringify(mergedList, null, 2);
+      const incomingMap = new Map();
+      (Array.isArray(users) ? users : []).forEach(u => {
+        if (u && u.email) incomingMap.set(u.email.toLowerCase().trim(), u);
+      });
+
+      // Mesclar preservando todos os usuários e senhas
+      const mergedList = [];
+      existingMap.forEach((oldUser, emailKey) => {
+        const incoming = incomingMap.get(emailKey);
+        if (incoming) {
+          const resolvedLastLogin = (incoming.last_login && incoming.last_login !== 'null') ? incoming.last_login : (oldUser.last_login || null);
+          mergedList.push({
+            ...oldUser,
+            ...incoming,
+            last_login: resolvedLastLogin,
+            password: incoming.password || oldUser.password || hashPassword('86266049')
+          });
+          incomingMap.delete(emailKey);
+        } else {
+          mergedList.push(oldUser);
+        }
+      });
+
+      incomingMap.forEach(newUser => {
+        mergedList.push({
+          ...newUser,
+          password: newUser.password || hashPassword('86266049')
+        });
+      });
+      finalUsers = mergedList;
+    }
+
+    const jsonContent = JSON.stringify(finalUsers, null, 2);
     // Gravação segura atômica e backup duplo contínuo
     fs.writeFileSync(LOCAL_USERS_PATH, jsonContent, 'utf8');
     try {
@@ -22613,8 +22626,8 @@ async function syncWithRenderCloud() {
         }
         return uCopy;
       });
-      saveLocalUsers(localUsersRes.rows);
-      await fetchCloud('/api/users', {
+      saveLocalUsers(localUsersRes.rows, true);
+      await fetchCloud('/api/users?overwrite=true', {
         method: 'POST',
         headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
         body: JSON.stringify(usersToSync)
