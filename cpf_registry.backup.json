@@ -1,14 +1,14 @@
 {
   "04023326100": {
-    "cpf": "040.233.261-00",
+    "cpf": "04023326100",
     "nome": "PAULO DE LIMA PEREIRA",
-    "data_nascimento": null,
+    "data_nascimento": "02/06/1560",
     "phone": "(62) 99234-5372",
     "email": "paulolp0101@gmail.com",
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T22:54:02.362Z"
+    "updated_at": "2026-09-08T20:00:02.300Z"
   },
   "00000000191": {
     "cpf": "00000000191",
@@ -19,7 +19,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T19:53:23.253Z"
+    "updated_at": "2026-09-08T20:00:02.303Z"
   },
   "99925109191": {
     "cpf": "99925109191",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-08T19:53:23.260Z"
+    "updated_at": "2026-09-08T20:00:02.306Z"
   },
   "12345678909": {
     "cpf": "12345678909",
@@ -41,6 +41,6 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Receita Federal do Brasil (Base Cadastral Oficial)",
-    "updated_at": "2026-09-08T19:53:23.260Z"
+    "updated_at": "2026-09-08T20:00:02.313Z"
   }
 }
