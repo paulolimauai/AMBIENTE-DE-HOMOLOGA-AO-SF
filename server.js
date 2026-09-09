@@ -1288,9 +1288,34 @@ const htmlContent = `<!DOCTYPE html>
     if (isLight) {
       document.documentElement.classList.add('light');
     }
-    var cu = localStorage.getItem('nexus_cached_user');
-    var s = localStorage.getItem('nexus_session');
-    var loggedIn = !!(s || cu);
+    // Validação estrita: se a página de internet foi fechada e reaberta (sessionStorage vazio), invalida a sessão antiga
+    var isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
+    if (!isSessionActive) {
+      try {
+        localStorage.removeItem('nexus_session');
+        localStorage.removeItem('nexus_cached_user');
+        localStorage.removeItem('nexus_token');
+        localStorage.removeItem('nexus_viewing_user');
+      } catch(e){}
+    } else {
+      // Se a sessão está ativa na aba atual, valida se não expirou os 5 minutos de inatividade
+      var lastAct = parseInt(sessionStorage.getItem('nexus_last_activity') || '0', 10);
+      if (lastAct && (Date.now() - lastAct >= 5 * 60 * 1000)) {
+        isSessionActive = false;
+        try {
+          sessionStorage.removeItem('nexus_session_active');
+          sessionStorage.removeItem('nexus_last_activity');
+          sessionStorage.setItem('nexus_session_expired_reason', 'timeout');
+          localStorage.removeItem('nexus_session');
+          localStorage.removeItem('nexus_cached_user');
+          localStorage.removeItem('nexus_token');
+          localStorage.removeItem('nexus_viewing_user');
+        } catch(e){}
+      }
+    }
+    var cu = isSessionActive ? localStorage.getItem('nexus_cached_user') : null;
+    var s = isSessionActive ? localStorage.getItem('nexus_session') : null;
+    var loggedIn = !!(s || cu) && isSessionActive;
     if (loggedIn) {
       document.documentElement.classList.add('user-logged-in');
       var uObj = cu ? JSON.parse(cu) : null;
@@ -7738,24 +7763,56 @@ body.light .toast-close:hover {
 }
 
 /* Suporte Refinado para Tema Claro */
-body.light .login-success-box {
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.94) 0%, rgba(241, 245, 249, 0.97) 100%) !important;
+body.light .login-success-box,
+html.light .login-success-box {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.96) 0%, rgba(241, 245, 249, 0.98) 100%) !important;
   border: 1px solid rgba(203, 213, 225, 0.85) !important;
   border-top: 1px solid rgba(255, 255, 255, 1) !important;
   box-shadow: 0 30px 80px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.9), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
 }
-body.light .login-success-box h3 {
-  color: #0F172A !important;
+body.light .login-success-box h3,
+html.light .login-success-box h3 {
+  color: #000000 !important;
   text-shadow: none !important;
 }
-body.light .login-success-box p {
-  color: #475569 !important;
+body.light .login-success-box p,
+html.light .login-success-box p {
+  color: #000000 !important;
+  font-weight: 600 !important;
 }
-body.light .auth-ambient-glow {
+body.light .auth-ambient-glow,
+html.light .auth-ambient-glow {
   opacity: 0.35;
 }
-body.light .logout-timer-bar {
+body.light .logout-timer-bar,
+html.light .logout-timer-bar {
   background: rgba(0, 0, 0, 0.08);
+}
+.login-success-box.timeout-box {
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  box-shadow: 0 35px 95px -12px rgba(0, 0, 0, 0.88), 0 0 30px rgba(245, 158, 11, 0.22) !important;
+}
+.login-success-box.warning-box {
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 35px 95px -12px rgba(0, 0, 0, 0.88), 0 0 30px rgba(245, 158, 11, 0.25) !important;
+}
+html.light .login-success-box.timeout-box,
+html.light .login-success-box.warning-box,
+body.light .login-success-box.timeout-box,
+body.light .login-success-box.warning-box {
+  border: 1.5px solid rgba(245, 158, 11, 0.6) !important;
+}
+html.light .login-success-box.timeout-box h3,
+html.light .login-success-box.warning-box h3,
+body.light .login-success-box.timeout-box h3,
+body.light .login-success-box.warning-box h3 {
+  color: #000000 !important;
+}
+html.light .login-success-box.timeout-box p,
+html.light .login-success-box.warning-box p,
+body.light .login-success-box.timeout-box p,
+body.light .login-success-box.warning-box p {
+  color: #000000 !important;
 }
 
 /* ==================== Responsividade Master Fluida em Todos os Dispositivos (com Suporte 4K Ultra-HD) ==================== */
@@ -9579,6 +9636,57 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   </div>
 </div>
 
+<div class="login-success-overlay" id="sessionTimeoutOverlay" role="dialog" aria-modal="true" onclick="if(event.target===this) hideSessionTimeoutPopup()">
+  <div class="login-success-box timeout-box">
+    <div class="auth-ambient-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.45) 0%, rgba(217, 119, 6, 0.22) 55%, transparent 75%);"></div>
+    <div class="timeout-icon" style="width:80px; height:80px; margin:0 auto 18px; border-radius:50%; background:radial-gradient(circle at 35% 30%, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%); border:1.5px solid rgba(245, 158, 11, 0.65); display:flex; align-items:center; justify-content:center; box-shadow:0 0 35px rgba(245, 158, 11, 0.42), inset 0 2px 4px rgba(255,255,255,0.6); backdrop-filter:blur(20px); position:relative; z-index:2;">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(245,158,11,0.85));">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+    </div>
+    <div class="auth-modal-badge auth-badge-timeout" style="background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.45); color:#F59E0B; box-shadow:0 0 16px rgba(245,158,11,0.2);">
+      <span class="auth-badge-dot" style="background:#F59E0B; box-shadow:0 0 8px #F59E0B;"></span>
+      <span>Proteção de Segurança (5 Minutos)</span>
+    </div>
+    <h3 id="sessionTimeoutTitle">Sessão Expirada por Inatividade</h3>
+    <p id="sessionTimeoutMsg">Você ficou 5 minutos sem movimentação. Para proteger seus dados financeiros e bancários, sua conta foi desconectada automaticamente.</p>
+    <button type="button" class="logout-btn-action" id="sessionTimeoutCloseBtn" onclick="hideSessionTimeoutPopup()" style="background:linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%) !important; box-shadow:0 14px 30px -4px rgba(245,158,11,0.45), inset 0 1px 2px rgba(255,255,255,0.6) !important;">
+      <span>Fazer Login Novamente</span>
+      <svg class="logout-btn-arrow" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<div class="login-success-overlay" id="inactivityWarningOverlay" role="dialog" aria-modal="true">
+  <div class="login-success-box warning-box" style="border-color: rgba(245, 158, 11, 0.45) !important;">
+    <div class="auth-ambient-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.45) 0%, rgba(217, 119, 6, 0.22) 55%, transparent 75%);"></div>
+    <div class="warning-icon" style="width:72px; height:72px; margin:0 auto 16px; border-radius:50%; background:radial-gradient(circle at 35% 30%, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%); border:1.5px solid rgba(245, 158, 11, 0.6); display:flex; align-items:center; justify-content:center; box-shadow:0 0 30px rgba(245, 158, 11, 0.4), inset 0 2px 4px rgba(255,255,255,0.6); backdrop-filter:blur(20px); position:relative; z-index:2;">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(245,158,11,0.85));">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+    </div>
+    <div class="auth-modal-badge auth-badge-warning" style="background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.45); color:#F59E0B; box-shadow:0 0 16px rgba(245,158,11,0.2);">
+      <span class="auth-badge-dot" style="background:#F59E0B; box-shadow:0 0 8px #F59E0B;"></span>
+      <span>Aviso de Inatividade</span>
+    </div>
+    <h3 style="font-size:20px;">Sua sessão vai expirar</h3>
+    <p style="margin-bottom:18px;">Você está sem mexer há mais de 4 minutos. Sua conta será desconectada automaticamente em <span id="inactivityCountdownSecs" style="font-weight:900; font-size:16px; color:#F59E0B; text-decoration:underline;">30</span> segundos por segurança.</p>
+    <div style="display:flex; gap:10px; width:100%; position:relative; z-index:2;">
+      <button type="button" class="logout-btn-action" onclick="window.keepSessionAlive()" style="flex:1; padding:13px 18px !important; font-size:13.5px !important; background:linear-gradient(135deg, #10B981 0%, #059669 100%) !important; box-shadow:0 8px 20px -3px rgba(16,185,129,0.5) !important;">
+        <span>Continuar Conectado</span>
+      </button>
+      <button type="button" onclick="window.handleAppLogout()" style="padding:13px 18px; border-radius:16px; font-weight:700; font-size:13.5px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); color:#cbd5e1; cursor:pointer; transition:all 0.2s ease;">
+        <span>Sair Agora</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ==================== Gerenciamento de LocalStorage e Servidor ==================== */
 function getApiBaseUrl() {
@@ -10207,6 +10315,12 @@ window.handleLoginSubmit = async function(e) {
     saveToStorage('nexus_session', { email: currentUser.email });
     saveToStorage('nexus_cached_user', currentUser);
     saveToStorage('nexus_token', data.token || ('token_' + Date.now()));
+    sessionStorage.setItem('nexus_session_active', 'true');
+    sessionStorage.setItem('nexus_last_activity', Date.now().toString());
+    sessionStorage.removeItem('nexus_session_expired_reason');
+    if (typeof window.startInactivityMonitoring === 'function') {
+      window.startInactivityMonitoring();
+    }
     
     // Notificação e sincronização imediata de last_login no SQL Server e Nuvem (Fuso Horário de Brasília)
     const nowLoginIso = new Date().toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }).replace(' ', 'T') + '-03:00';
@@ -10269,6 +10383,12 @@ window.handleLoginSubmit = async function(e) {
   saveToStorage('nexus_session', { email: currentUser.email });
   saveToStorage('nexus_cached_user', currentUser);
   saveToStorage('nexus_token', 'offline_token_' + Date.now());
+  sessionStorage.setItem('nexus_session_active', 'true');
+  sessionStorage.setItem('nexus_last_activity', Date.now().toString());
+  sessionStorage.removeItem('nexus_session_expired_reason');
+  if (typeof window.startInactivityMonitoring === 'function') {
+    window.startInactivityMonitoring();
+  }
 
   document.documentElement.classList.add('user-logged-in');
   document.documentElement.classList.toggle('is-admin', currentUser.role === 'Administrador');
@@ -10455,11 +10575,212 @@ function hideLogoutPopup(){
   }, 320);
 }
 
+let sessionTimeoutTimer = null;
+function showSessionTimeoutPopup(msg) {
+  if (typeof window.hideInactivityWarning === 'function') {
+    window.hideInactivityWarning();
+  }
+  const overlay = document.getElementById('sessionTimeoutOverlay');
+  if (!overlay) return;
+  if (msg) {
+    const msgEl = document.getElementById('sessionTimeoutMsg');
+    if (msgEl) msgEl.textContent = msg;
+  }
+  overlay.style.display = 'flex';
+  overlay.classList.add('show');
+  void overlay.offsetHeight;
+  overlay.classList.add('in');
+
+  setTimeout(() => {
+    const loginEmailInput = document.getElementById('loginEmail');
+    if (loginEmailInput) loginEmailInput.focus();
+  }, 80);
+
+  if (sessionTimeoutTimer) clearTimeout(sessionTimeoutTimer);
+  sessionTimeoutTimer = setTimeout(() => {
+    hideSessionTimeoutPopup();
+  }, 8000);
+}
+
+function hideSessionTimeoutPopup() {
+  const overlay = document.getElementById('sessionTimeoutOverlay');
+  if (!overlay) return;
+  if (sessionTimeoutTimer) {
+    clearTimeout(sessionTimeoutTimer);
+    sessionTimeoutTimer = null;
+  }
+  overlay.classList.remove('in');
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    overlay.style.display = 'none';
+    const loginEmailInput = document.getElementById('loginEmail');
+    if (loginEmailInput) loginEmailInput.focus();
+  }, 320);
+}
+
+/* ==================== Motor de Timeout de Inatividade (5 Minutos) ==================== */
+const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutos (300.000 ms)
+const INACTIVITY_WARNING_MS = 30 * 1000;      // Aviso nos últimos 30 segundos
+let inactivityCheckInterval = null;
+let inactivityLastEventTime = Date.now();
+let isWarningModalShown = false;
+
+window.recordUserActivity = function() {
+  const now = Date.now();
+  if (!document.documentElement.classList.contains('user-logged-in')) return;
+
+  // Throttle de atualização (1s) para não sobrecarregar
+  if (now - inactivityLastEventTime > 1000) {
+    inactivityLastEventTime = now;
+    sessionStorage.setItem('nexus_last_activity', now.toString());
+  }
+
+  // Se o aviso estiver visível e o usuário moveu o cursor/teclou/tocou, fecha o aviso e mantém conectado
+  if (isWarningModalShown) {
+    window.hideInactivityWarning();
+  }
+};
+
+window.keepSessionAlive = function() {
+  inactivityLastEventTime = Date.now();
+  sessionStorage.setItem('nexus_last_activity', inactivityLastEventTime.toString());
+  window.hideInactivityWarning();
+  if (typeof showToast === 'function') {
+    showToast('Sessão renovada com sucesso! Você continuará conectado.');
+  }
+};
+
+window.showInactivityWarning = function(remainingSecs) {
+  isWarningModalShown = true;
+  const overlay = document.getElementById('inactivityWarningOverlay');
+  if (!overlay) return;
+  const countdownEl = document.getElementById('inactivityCountdownSecs');
+  if (countdownEl) countdownEl.textContent = Math.max(1, Math.round(remainingSecs));
+  overlay.style.display = 'flex';
+  overlay.classList.add('show');
+  void overlay.offsetHeight;
+  overlay.classList.add('in');
+};
+
+window.hideInactivityWarning = function() {
+  isWarningModalShown = false;
+  const overlay = document.getElementById('inactivityWarningOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('in');
+  setTimeout(() => {
+    if (!isWarningModalShown) {
+      overlay.classList.remove('show');
+      overlay.style.display = 'none';
+    }
+  }, 250);
+};
+
+window.triggerSessionTimeout = function() {
+  if (inactivityCheckInterval) {
+    clearInterval(inactivityCheckInterval);
+    inactivityCheckInterval = null;
+  }
+  window.hideInactivityWarning();
+
+  // Executa encerramento completo de sessão por inatividade
+  if (typeof window.handleAppLogout === 'function') {
+    window.handleAppLogout(true);
+  } else {
+    sessionStorage.removeItem('nexus_session_active');
+    sessionStorage.removeItem('nexus_last_activity');
+    sessionStorage.setItem('nexus_session_expired_reason', 'timeout');
+    try {
+      localStorage.removeItem('nexus_session');
+      localStorage.removeItem('nexus_cached_user');
+      localStorage.removeItem('nexus_token');
+      localStorage.removeItem('nexus_viewing_user');
+    } catch(e){}
+    currentUser = null;
+    document.documentElement.classList.remove('user-logged-in');
+    document.documentElement.classList.remove('is-admin');
+    const am = document.getElementById('appMain');
+    const ap = document.getElementById('authPage');
+    if (am) { am.classList.remove('show'); am.style.display = 'none'; }
+    if (ap) { ap.classList.add('show'); ap.style.display = 'flex'; }
+    showSessionTimeoutPopup();
+  }
+};
+
+window.checkInactivityStatus = function() {
+  const isLoggedIn = document.documentElement.classList.contains('user-logged-in') || !!localStorage.getItem('nexus_session');
+  if (!isLoggedIn) return;
+
+  const now = Date.now();
+  const storedLast = parseInt(sessionStorage.getItem('nexus_last_activity') || '0', 10);
+  const lastActive = Math.max(inactivityLastEventTime, storedLast || 0);
+
+  if (!lastActive) {
+    inactivityLastEventTime = now;
+    sessionStorage.setItem('nexus_last_activity', now.toString());
+    return;
+  }
+
+  const elapsed = now - lastActive;
+
+  // Mais de 5 minutos sem mexer
+  if (elapsed >= INACTIVITY_TIMEOUT_MS) {
+    window.triggerSessionTimeout();
+    return;
+  }
+
+  // Entre 4min30s e 5min (contagem regressiva de aviso nos últimos 30 segundos)
+  const remaining = INACTIVITY_TIMEOUT_MS - elapsed;
+  if (remaining <= INACTIVITY_WARNING_MS) {
+    window.showInactivityWarning(Math.ceil(remaining / 1000));
+  } else if (isWarningModalShown) {
+    window.hideInactivityWarning();
+  }
+};
+
+window.startInactivityMonitoring = function() {
+  if (inactivityCheckInterval) clearInterval(inactivityCheckInterval);
+  inactivityLastEventTime = Date.now();
+  sessionStorage.setItem('nexus_last_activity', inactivityLastEventTime.toString());
+
+  const events = ['mousemove', 'mousedown', 'keydown', 'keypress', 'touchstart', 'touchmove', 'wheel', 'scroll', 'pointerdown'];
+  events.forEach(evt => {
+    window.addEventListener(evt, window.recordUserActivity, { passive: true });
+  });
+
+  window.addEventListener('focus', window.checkInactivityStatus);
+  window.addEventListener('pageshow', window.checkInactivityStatus);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      window.checkInactivityStatus();
+    }
+  });
+
+  inactivityCheckInterval = setInterval(window.checkInactivityStatus, 1000);
+};
+
+window.stopInactivityMonitoring = function() {
+  if (inactivityCheckInterval) {
+    clearInterval(inactivityCheckInterval);
+    inactivityCheckInterval = null;
+  }
+  window.hideInactivityWarning();
+  const events = ['mousemove', 'mousedown', 'keydown', 'keypress', 'touchstart', 'touchmove', 'wheel', 'scroll', 'pointerdown'];
+  events.forEach(evt => {
+    window.removeEventListener(evt, window.recordUserActivity);
+  });
+  window.removeEventListener('focus', window.checkInactivityStatus);
+  window.removeEventListener('pageshow', window.checkInactivityStatus);
+};
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     const logoutOverlay = document.getElementById('logoutSuccessOverlay');
     if (logoutOverlay && logoutOverlay.classList.contains('show')) {
       hideLogoutPopup();
+    }
+    const timeoutOverlay = document.getElementById('sessionTimeoutOverlay');
+    if (timeoutOverlay && timeoutOverlay.classList.contains('show')) {
+      hideSessionTimeoutPopup();
     }
   }
 });
@@ -10758,13 +11079,19 @@ if (registerFormElem) {
 }
 
 // Logout seguro global (Desktop & Mobile)
-window.handleAppLogout = async () => {
+window.handleAppLogout = async (isTimeout = false) => {
   try { await saveUserData(); } catch(e){}
+  if (typeof window.stopInactivityMonitoring === 'function') {
+    window.stopInactivityMonitoring();
+  }
   resetUserDataState();
   currentUser = null;
   isViewingOtherUser = false;
   adminOriginalUser = null;
   isDataLoading = false;
+  sessionStorage.removeItem('nexus_session_active');
+  sessionStorage.removeItem('nexus_last_activity');
+  sessionStorage.removeItem('nexus_session_expired_reason');
   localStorage.removeItem('nexus_session');
   localStorage.removeItem('nexus_cached_user');
   localStorage.removeItem('nexus_token');
@@ -10788,7 +11115,11 @@ window.handleAppLogout = async () => {
     authPage.classList.add('show');
     authPage.style.display = 'flex';
   }
-  showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.');
+  if (isTimeout) {
+    showSessionTimeoutPopup();
+  } else {
+    showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.');
+  }
 };
 
 const logoutButton = document.getElementById('logoutBtn');
@@ -19674,6 +20005,30 @@ if (scaleMenuBtn && scaleDropdown) {
 /* ==================== Restaurar sessão ao atualizar a página sem flicker ==================== */
 (function initSessionStateImmediate() {
   try {
+    const isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
+    const lastAct = parseInt(sessionStorage.getItem('nexus_last_activity') || '0', 10);
+    const isTimedOut = lastAct && (Date.now() - lastAct >= 5 * 60 * 1000);
+
+    if (!isSessionActive || isTimedOut) {
+      if (isTimedOut) {
+        sessionStorage.setItem('nexus_session_expired_reason', 'timeout');
+      }
+      sessionStorage.removeItem('nexus_session_active');
+      sessionStorage.removeItem('nexus_last_activity');
+      try {
+        localStorage.removeItem('nexus_session');
+        localStorage.removeItem('nexus_cached_user');
+        localStorage.removeItem('nexus_token');
+        localStorage.removeItem('nexus_viewing_user');
+      } catch(e){}
+      document.documentElement.classList.remove('user-logged-in');
+      const ap = document.getElementById('authPage');
+      const am = document.getElementById('appMain');
+      if (ap) { ap.classList.add('show'); ap.style.display = 'flex'; }
+      if (am) { am.classList.remove('show'); am.style.display = 'none'; }
+      return;
+    }
+
     const session = loadFromStorage('nexus_session', null);
     const cachedUser = loadFromStorage('nexus_cached_user', null);
     if ((session && session.email) || (cachedUser && cachedUser.email)) {
@@ -19720,6 +20075,40 @@ if (scaleMenuBtn && scaleDropdown) {
 })();
 
 (async function restoreSession(){
+  const isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
+  const lastAct = parseInt(sessionStorage.getItem('nexus_last_activity') || '0', 10);
+  const isTimedOut = lastAct && (Date.now() - lastAct >= 5 * 60 * 1000);
+  const expiredReason = isTimedOut ? 'timeout' : sessionStorage.getItem('nexus_session_expired_reason');
+
+  if (!isSessionActive || isTimedOut) {
+    sessionStorage.removeItem('nexus_session_active');
+    sessionStorage.removeItem('nexus_last_activity');
+    sessionStorage.removeItem('nexus_session_expired_reason');
+    try {
+      localStorage.removeItem('nexus_session');
+      localStorage.removeItem('nexus_cached_user');
+      localStorage.removeItem('nexus_token');
+      localStorage.removeItem('nexus_viewing_user');
+    } catch(e){}
+
+    document.documentElement.classList.remove('user-logged-in');
+    const am = document.getElementById('appMain');
+    const ap = document.getElementById('authPage');
+    if (am) { am.classList.remove('show'); am.style.display = 'none'; }
+    if (ap) { ap.classList.add('show'); ap.style.display = 'flex'; }
+
+    if (expiredReason === 'timeout') {
+      setTimeout(() => {
+        if (typeof showSessionTimeoutPopup === 'function') {
+          showSessionTimeoutPopup();
+        } else if (typeof showLogoutPopup === 'function') {
+          showLogoutPopup('Sua sessão expirou por inatividade (5 minutos sem movimentação). Faça login novamente.');
+        }
+      }, 250);
+    }
+    return;
+  }
+
   const session = loadFromStorage('nexus_session', null);
   const cachedUser = loadFromStorage('nexus_cached_user', null);
   const viewingEmail = loadFromStorage('nexus_viewing_user', null);
@@ -19801,6 +20190,15 @@ if (scaleMenuBtn && scaleDropdown) {
 
   await loadUserData();
   if (!window.__initialRenderDone && typeof render === 'function') render();
+
+  // Inicia o motor de monitoramento de inatividade de 5 minutos
+  sessionStorage.setItem('nexus_session_active', 'true');
+  if (!sessionStorage.getItem('nexus_last_activity')) {
+    sessionStorage.setItem('nexus_last_activity', Date.now().toString());
+  }
+  if (typeof window.startInactivityMonitoring === 'function') {
+    window.startInactivityMonitoring();
+  }
 
   function checkAndShowJustLoggedInPopup() {
     try {

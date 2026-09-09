@@ -9,6 +9,15 @@
                 if (t === 'light') {
                     document.documentElement.classList.add('light');
                 }
+                var isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
+                if (!isSessionActive) {
+                    try {
+                        localStorage.removeItem('nexus_session');
+                        localStorage.removeItem('nexus_cached_user');
+                        localStorage.removeItem('nexus_token');
+                        localStorage.removeItem('nexus_viewing_user');
+                    } catch(e){}
+                }
             } catch(e){}
         })();
     </script>
@@ -3020,11 +3029,20 @@
             }, 320);
         };
 
-        // Verifica parâmetro ?logout=true na URL
+        // Verifica parâmetro ?logout=true ou ?timeout=true na URL e flag de expiração
         try {
             if (new URLSearchParams(window.location.search).get('logout') === 'true') {
                 setTimeout(function() {
                     window.showLogoutModal();
+                }, 300);
+            }
+            if (new URLSearchParams(window.location.search).get('timeout') === 'true' || sessionStorage.getItem('nexus_session_expired_reason') === 'timeout') {
+                sessionStorage.removeItem('nexus_session_expired_reason');
+                setTimeout(function() {
+                    window.showLogoutModal(
+                        'Sessão Expirada por Inatividade',
+                        'Você ficou mais de 5 minutos sem movimentação. Por segurança, sua conta foi desconectada automaticamente.'
+                    );
                 }, 300);
             }
         } catch(e){}
@@ -3412,6 +3430,9 @@
                 localStorage.setItem('nexus_cached_user', JSON.stringify(data.user));
                 localStorage.setItem('nexus_just_logged_in', 'true');
                 sessionStorage.setItem('nexus_just_logged_in', 'true');
+                sessionStorage.setItem('nexus_session_active', 'true');
+                sessionStorage.setItem('nexus_last_activity', Date.now().toString());
+                sessionStorage.removeItem('nexus_session_expired_reason');
 
                 try {
                     var pingUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/user/login-ping' : targetOrigin + '/api/user/login-ping';
@@ -3444,6 +3465,9 @@
                         localStorage.setItem('nexus_cached_user', JSON.stringify(foundUser));
                         localStorage.setItem('nexus_just_logged_in', 'true');
                         sessionStorage.setItem('nexus_just_logged_in', 'true');
+                        sessionStorage.setItem('nexus_session_active', 'true');
+                        sessionStorage.setItem('nexus_last_activity', Date.now().toString());
+                        sessionStorage.removeItem('nexus_session_expired_reason');
                         setTimeout(function() {
                             window.location.href = targetOrigin.endsWith('/') ? targetOrigin : targetOrigin + '/';
                         }, 1800);
