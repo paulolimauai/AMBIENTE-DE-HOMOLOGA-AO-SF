@@ -3413,7 +3413,15 @@
                 const data = await res.json();
 
                 if (!res.ok || !data.success) {
-                    showAlert(data.error || 'E-mail ou senha incorretos!', 'error');
+                    if (data && data.errorType === 'user_not_found') {
+                        showAlert('Esta conta de usuário não existe no banco de dados.', 'error');
+                    } else if (data && data.errorType === 'invalid_password') {
+                        showAlert('Senha incorreta para este usuário.', 'error');
+                    } else if (data && data.errorType === 'user_inactive') {
+                        showAlert('Esta conta de usuário está desativada no banco de dados.', 'error');
+                    } else {
+                        showAlert((data && data.error) || 'Esta conta de usuário não existe no banco de dados.', 'error');
+                    }
                     if (btn) {
                         btn.disabled = false;
                         btn.innerHTML = '<span>Entrar na Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
@@ -3448,38 +3456,8 @@
                 }, 2300);
 
             } catch (err) {
-                console.warn('Falha na requisição de login via API. Tentando autenticação local:', err);
-                try {
-                    let localUsers = [];
-                    try {
-                        localUsers = JSON.parse(localStorage.getItem('nexus_users') || '[]');
-                    } catch(e){}
-                    const cleanEmail = email.toLowerCase().trim();
-                    const foundUser = (Array.isArray(localUsers) ? localUsers : []).find(u => u.email && u.email.toLowerCase() === cleanEmail);
-                    
-                    if (foundUser && (foundUser.password === password || !foundUser.password)) {
-                        const userName = foundUser.name || 'Usuário';
-                        showLoginSuccessModal('Bem-vindo, ' + userName + '!', 'Sessão local ativa com sucesso.');
-                        localStorage.setItem('nexus_session', JSON.stringify({ email: cleanEmail }));
-                        localStorage.setItem('nexus_token', 'token_local_' + Date.now());
-                        localStorage.setItem('nexus_cached_user', JSON.stringify(foundUser));
-                        localStorage.setItem('nexus_just_logged_in', 'true');
-                        sessionStorage.setItem('nexus_just_logged_in', 'true');
-                        sessionStorage.setItem('nexus_session_active', 'true');
-                        sessionStorage.setItem('nexus_last_activity', Date.now().toString());
-                        sessionStorage.removeItem('nexus_session_expired_reason');
-                        setTimeout(function() {
-                            window.location.href = targetOrigin.endsWith('/') ? targetOrigin : targetOrigin + '/';
-                        }, 1800);
-                        return true;
-                    } else if (foundUser) {
-                        showAlert('Senha incorreta para este usuário.', 'error');
-                    } else {
-                        showAlert('E-mail não encontrado. Clique na aba "Criar Conta" para se cadastrar.', 'error');
-                    }
-                } catch(localAuthErr) {
-                    showAlert('Erro ao autenticar usuário. Verifique as credenciais digitadas.', 'error');
-                }
+                console.warn('Falha na requisição de login via API:', err);
+                showAlert('Não foi possível conectar ao banco de dados SQL Server. O login é estritamente validado pelo banco de dados.', 'error');
                 if (btn) {
                     btn.disabled = false;
                     btn.innerHTML = '<span>Entrar na Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
