@@ -7792,11 +7792,142 @@ body.light .logout-timer-bar {
   .grid-2-1 { grid-template-columns: 1fr !important; }
 }
 
+/* Botão de Sair no Drawer Mobile */
+.mobile-drawer-logout-btn {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 13px 16px !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.22) 0%, rgba(185, 28, 28, 0.12) 100%) !important;
+  border: 1.5px solid rgba(239, 68, 68, 0.55) !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  transition: all 0.22s ease !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25) !important;
+}
+.mobile-drawer-logout-btn:hover,
+.mobile-drawer-logout-btn:active {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.40) 0%, rgba(220, 38, 38, 0.28) 100%) !important;
+  border-color: #EF4444 !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4) !important;
+}
+.mobile-drawer-logout-btn .ic {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 9px !important;
+  background: rgba(239, 68, 68, 0.25) !important;
+  border: 1px solid rgba(239, 68, 68, 0.60) !important;
+  color: #FFFFFF !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+.mobile-drawer-logout-btn .ic svg {
+  width: 17px !important;
+  height: 17px !important;
+  stroke: #FFFFFF !important;
+  stroke-width: 2.4px !important;
+  display: block !important;
+}
+body.light .mobile-drawer-logout-btn {
+  background: #FEF2F2 !important;
+  border-color: #F87171 !important;
+  color: #DC2626 !important;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15) !important;
+}
+body.light .mobile-drawer-logout-btn:hover,
+body.light .mobile-drawer-logout-btn:active {
+  background: #FEE2E2 !important;
+  border-color: #EF4444 !important;
+  color: #B91C1C !important;
+}
+body.light .mobile-drawer-logout-btn .ic {
+  background: #FEE2E2 !important;
+  border-color: #F87171 !important;
+  color: #DC2626 !important;
+}
+body.light .mobile-drawer-logout-btn .ic svg {
+  stroke: #DC2626 !important;
+}
+
 @media (max-width: 860px) {
   .mobile-menu-btn { display: flex !important; }
   nav.menu { display: none !important; }
   .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 14px 60px !important; }
   .aether-credit-pill { display: none !important; }
+  .aether-settings-btn,
+  .scale-selector-wrap {
+    display: none !important;
+  }
+  .aether-user-sub {
+    display: none !important;
+  }
+  .topheader-row {
+    padding: 0 12px !important;
+    gap: 8px !important;
+  }
+  .aether-header-right {
+    gap: 8px !important;
+  }
+  #logoutBtn,
+  .topheader-row #logoutBtn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    height: 36px !important;
+    padding: 0 12px !important;
+    border-radius: 10px !important;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(185, 28, 28, 0.15) 100%) !important;
+    border: 1.5px solid rgba(239, 68, 68, 0.6) !important;
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+    font-size: 12px !important;
+    flex-shrink: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35) !important;
+    z-index: 20 !important;
+  }
+  #logoutBtn span,
+  .topheader-row #logoutBtn span {
+    display: inline !important;
+    color: #FFFFFF !important;
+  }
+  #logoutBtn svg,
+  .topheader-row #logoutBtn svg {
+    width: 15px !important;
+    height: 15px !important;
+    stroke-width: 2.4px !important;
+    color: #FCA5A5 !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .aether-user-meta {
+    display: none !important;
+  }
+  .aether-brand-user {
+    padding: 2px !important;
+  }
+  .topheader-row {
+    padding: 0 8px !important;
+    gap: 6px !important;
+  }
+  .aether-header-right {
+    gap: 6px !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -8513,6 +8644,20 @@ html.light .scale-dropdown .scale-opt-btn:hover {
       <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Central de Suporte & O.S.</button>
       <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
     </nav>
+
+    <!-- Botão de Sair no Rodapé do Mobile Drawer -->
+    <div style="margin-top:auto; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); width:100%;">
+      <button type="button" id="mobileDrawerLogoutBtn" class="mobile-drawer-logout-btn" title="Encerrar Sessão com Segurança">
+        <span class="ic">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </span>
+        <span>Sair da Conta</span>
+      </button>
+    </div>
   </div>
 
   <main class="main">
@@ -10612,34 +10757,48 @@ if (registerFormElem) {
   registerFormElem.onsubmit = window.handleRegisterSubmit;
 }
 
-// Logout seguro sem deletar as credenciais persistidas
+// Logout seguro global (Desktop & Mobile)
+window.handleAppLogout = async () => {
+  try { await saveUserData(); } catch(e){}
+  resetUserDataState();
+  currentUser = null;
+  isViewingOtherUser = false;
+  adminOriginalUser = null;
+  isDataLoading = false;
+  localStorage.removeItem('nexus_session');
+  localStorage.removeItem('nexus_cached_user');
+  localStorage.removeItem('nexus_token');
+  localStorage.removeItem('nexus_viewing_user');
+  document.documentElement.classList.remove('user-logged-in');
+  document.documentElement.classList.remove('is-admin');
+
+  // Fechar menu gaveta mobile se aberto
+  const mobileDrawer = document.getElementById('mobileDrawer');
+  const mobileDrawerOverlay = document.getElementById('mobileDrawerOverlay');
+  if (mobileDrawer) mobileDrawer.classList.remove('open');
+  if (mobileDrawerOverlay) mobileDrawerOverlay.classList.remove('show');
+
+  const appMain = document.getElementById('appMain');
+  const authPage = document.getElementById('authPage');
+  if (appMain) {
+    appMain.classList.remove('show');
+    appMain.style.display = 'none';
+  }
+  if (authPage) {
+    authPage.classList.add('show');
+    authPage.style.display = 'flex';
+  }
+  showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.');
+};
+
 const logoutButton = document.getElementById('logoutBtn');
 if (logoutButton) {
-  logoutButton.onclick = async () => {
-    try { await saveUserData(); } catch(e){}
-    resetUserDataState();
-    currentUser = null;
-    isViewingOtherUser = false;
-    adminOriginalUser = null;
-    isDataLoading = false;
-    localStorage.removeItem('nexus_session');
-    localStorage.removeItem('nexus_cached_user');
-    localStorage.removeItem('nexus_token');
-    localStorage.removeItem('nexus_viewing_user');
-    document.documentElement.classList.remove('user-logged-in');
-    document.documentElement.classList.remove('is-admin');
-    const appMain = document.getElementById('appMain');
-    const authPage = document.getElementById('authPage');
-    if (appMain) {
-      appMain.classList.remove('show');
-      appMain.style.display = 'none';
-    }
-    if (authPage) {
-      authPage.classList.add('show');
-      authPage.style.display = 'flex';
-    }
-    showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.');
-  };
+  logoutButton.onclick = window.handleAppLogout;
+}
+
+const mobileDrawerLogoutBtn = document.getElementById('mobileDrawerLogoutBtn');
+if (mobileDrawerLogoutBtn) {
+  mobileDrawerLogoutBtn.onclick = window.handleAppLogout;
 }
 
 /* ==================== Isolamento de Dados por Usuário ==================== */
