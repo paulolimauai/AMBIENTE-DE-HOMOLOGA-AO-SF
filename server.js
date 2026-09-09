@@ -10201,28 +10201,39 @@ window.handleLoginSubmit = async function(e) {
     localStorage.removeItem('nexus_remembered_email');
   }
   const apiBase = getApiBaseUrl();
-  let res = null;
-  let data = null;
+  const endpointsToTry = [apiBase];
+  if (apiBase.includes('localhost') && !endpointsToTry.includes('https://ambiente-de-homologa-ao-sf.onrender.com')) {
+    endpointsToTry.push('https://ambiente-de-homologa-ao-sf.onrender.com');
+  }
 
   try {
-    res = await fetch(apiBase + '/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: cleanEmail, password })
-    });
-    data = await res.json();
-  } catch (fetchErr) {
-    if (apiBase !== 'http://localhost:3000') {
-      try {
-        res = await fetch('http://localhost:3000/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: cleanEmail, password })
-        });
-        data = await res.json();
-      } catch (retryErr) {}
+    attemptLoginLoop:
+    for (const base of endpointsToTry) {
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          const targetUrl = base.endsWith('/') ? base + 'api/login' : base + '/api/login';
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 12000);
+          const r = await fetch(targetUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: cleanEmail, password }),
+            signal: controller.signal
+          });
+          clearTimeout(timer);
+          let parsed = null;
+          try { parsed = await r.json(); } catch(e){}
+          if (r && parsed) {
+            res = r;
+            data = parsed;
+            break attemptLoginLoop;
+          }
+        } catch (netErr) {
+          await new Promise(w => setTimeout(w, 500));
+        }
+      }
     }
-  }
+  } catch(e){}
 
   if (res && data) {
     if (!res.ok || !data.success) {
@@ -10887,43 +10898,65 @@ window.handleRegisterSubmit = async function(e) {
   };
 
   try {
-    try {
-      response = await fetch(apiBase + '/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      data = await response.json();
-    } catch (e) {
-      if (apiBase !== 'http://localhost:3000') {
+    const endpointsToTry = [apiBase];
+    if (apiBase.includes('localhost') && !endpointsToTry.includes('https://ambiente-de-homologa-ao-sf.onrender.com')) {
+      endpointsToTry.push('https://ambiente-de-homologa-ao-sf.onrender.com');
+    }
+
+    let fetchError = null;
+    attemptBlock:
+    for (const base of endpointsToTry) {
+      for (let attempt = 1; attempt <= 2; attempt++) {
         try {
-          response = await fetch('http://localhost:3000/api/register', {
+          const targetUrl = base.endsWith('/') ? base + 'api/register' : base + '/api/register';
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 12000);
+
+          const res = await fetch(targetUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            signal: controller.signal
           });
-          data = await response.json();
-        } catch (retryErr) {}
+          clearTimeout(timer);
+
+          let parsed = null;
+          try { parsed = await res.json(); } catch(e){}
+
+          if (res.ok && parsed && parsed.success) {
+            response = res;
+            data = parsed;
+            break attemptBlock;
+          } else if (parsed && parsed.error) {
+            response = res;
+            data = parsed;
+            break attemptBlock;
+          }
+        } catch (netErr) {
+          fetchError = netErr;
+          await new Promise(r => setTimeout(r, 600));
+        }
       }
     }
 
-    if (response && response.ok && data && data.success) {
+    if (data && data.success) {
       registerSuccess = true;
-      serverMessage = data.message || 'Conta financeira criada e salva diretamente no banco de dados com sucesso!';
+      serverMessage = data.message || 'Conta financeira criada e sincronizada com sucesso no banco de dados!';
+      localStorage.removeItem('nexus_data_' + cleanEmail);
       await syncUsersWithServer();
     } else if (data && data.error) {
-      showCustomAlert('Erro no Banco de Dados', data.error, 'error');
+      showCustomAlert('Erro no Cadastro', data.error, 'error');
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Concluir Abertura de Conta →';
       }
       return false;
     } else {
-      throw new Error('Falha de comunicação com o servidor SQL Server');
+      throw new Error(fetchError ? fetchError.message : 'Servidor temporariamente ocupado. Tente novamente em alguns segundos.');
     }
   } catch (err) {
     console.error('[ERRO CADASTRO API]:', err);
-    showCustomAlert('Falha na Gravação do Banco', 'Não foi possível gravar a conta no banco de dados SQL Server: ' + (err.message || 'Verifique o servidor.'), 'error');
+    showCustomAlert('Falha de Comunicação', 'Não foi possível concluir a gravação no servidor: ' + (err.message || 'Verifique sua conexão e tente novamente.'), 'error');
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Concluir Abertura de Conta →';
@@ -22668,7 +22701,15 @@ async function syncWithRenderCloud() {
                VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9)`,
               [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin]
             );
-            console.log(`⚡ [SYNC RENDER -> SQL SERVER] Novo cadastro salvo diretamente no SQL Server: ${cleanEmail}`);
+            await pool.query(
+              `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+               BEGIN
+                 INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+               END`,
+              [cleanEmail, JSON.stringify(getEmptyFinancialData())]
+            ).catch(() => {});
+            saveLocalData(cleanEmail, getEmptyFinancialData());
+            console.log(`⚡ [SYNC RENDER -> SQL SERVER] Novo cadastro salvo diretamente no SQL Server (dados zerados): ${cleanEmail}`);
           }
         } else {
           // Atualizar dados de perfil se fornecidos no Render
@@ -22823,8 +22864,8 @@ function startRenderCloudSyncWorker() {
   cloudSyncWorkerStarted = true;
   setTimeout(() => {
     syncWithRenderCloud();
-    setInterval(syncWithRenderCloud, 3000);
-    console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real (3s): Render <-> Microsoft SQL Server`);
+    setInterval(syncWithRenderCloud, 2000);
+    console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real (2s): Render <-> Microsoft SQL Server`);
   }, 1000);
 }
 

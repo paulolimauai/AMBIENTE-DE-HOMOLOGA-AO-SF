@@ -82,5 +82,19 @@
     "phone": "(62) 99367-6783",
     "birth_date": "27/06/1966",
     "terms_accepted": true
+  },
+  {
+    "id": "14",
+    "name": "Teste Celular 4G",
+    "email": "celular4g@teste.com",
+    "password": "scrypt:1558a12633cefa13f07448ee79e0bcce:92a472939129cb762219f487a001778ed4515218af6bf7f709e46fed798f9bfadab75a2bc85a981def659d03c1f2cb0cb31039d0fcc2932bd3990b69b3b00a06",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-09T10:40:10.046Z",
+    "last_login": null,
+    "cpf": "444.555.666-77",
+    "phone": "(62) 99999-0000",
+    "birth_date": "1992-04-10",
+    "terms_accepted": true
   }
 ]
