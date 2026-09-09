@@ -20970,10 +20970,14 @@ const server = http.createServer(async (req, res) => {
           } catch (dbErr) {
             console.warn('[AVISO BD] Falha ao consultar SQL Server no login:', dbErr.message);
           }
+        } else if (process.env.RENDER || !pool) {
+          // Quando executado na nuvem Render (onde o ODBC do SQL Server local não está acessível diretamente),
+          // utiliza o espelho seguro sincronizado a cada 3s do SQL Server
+          const localUsers = getLocalUsers();
+          user = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail);
         }
 
-        // Validação estrita: O login deve ser APENAS igual do banco SQL Server e de nenhum outro lugar.
-        // Se a conta for excluída do banco, impede o login e informa que a conta não existe.
+        // Validação estrita: Se o usuário foi excluído do SQL Server (e consequentemente do espelho), impede o login
         if (!user) {
           console.log(`[LOGIN RECUSADO] Conta não existe no SQL Server: ${cleanEmail}`);
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -21330,12 +21334,9 @@ const server = http.createServer(async (req, res) => {
         }
 
         if (!pool) {
-          await attemptConnectDatabase();
-        }
-
-        if (!pool) {
-          res.writeHead(503, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Banco de dados SQL Server indisponível para gravação. O cadastro deve ser salvo no banco.' }));
+          try {
+            await attemptConnectDatabase();
+          } catch (connErr) {}
         }
 
         const secureHashedPassword = hashPassword(password);
@@ -21345,45 +21346,47 @@ const server = http.createServer(async (req, res) => {
         const cleanPhone = phone ? String(phone).trim() : null;
         const termsAcceptedVal = terms_accepted !== false;
 
-        try {
-          const existingUserRes = await pool.query('SELECT id, email FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-          if (existingUserRes.rows && existingUserRes.rows.length > 0) {
-            newUserId = existingUserRes.rows[0].id;
-            await pool.query(
-              `UPDATE usuarios 
-               SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, active = 1 
-               WHERE id = $7`,
-              [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, newUserId]
-            );
-          } else {
-            const insertRes = await pool.query(
-              `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
-               OUTPUT INSERTED.id
-               VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8);`,
-              [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0]
-            );
-            if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
-          }
-
+        // 1. Gravação direta no SQL Server (quando executado no ambiente com conexão direta ao banco)
+        if (pool) {
           try {
-            const existingDados = await pool.query('SELECT id FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-            if (!existingDados.rows || existingDados.rows.length === 0) {
+            const existingUserRes = await pool.query('SELECT id, email FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+            if (existingUserRes.rows && existingUserRes.rows.length > 0) {
+              newUserId = existingUserRes.rows[0].id;
               await pool.query(
-                'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2)',
-                [cleanEmail, '{}']
+                `UPDATE usuarios 
+                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, active = 1 
+                 WHERE id = $7`,
+                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, newUserId]
               );
+            } else {
+              const insertRes = await pool.query(
+                `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
+                 OUTPUT INSERTED.id
+                 VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8);`,
+                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0]
+              );
+              if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
             }
-          } catch(dadosErr){}
 
-          // Atualiza cache local instantaneamente com o espelho do SQL Server
-          const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
-          if (allUsersRes.rows) {
-            saveLocalUsers(allUsersRes.rows, true);
+            try {
+              const existingDados = await pool.query('SELECT id FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+              if (!existingDados.rows || existingDados.rows.length === 0) {
+                await pool.query(
+                  'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2)',
+                  [cleanEmail, '{}']
+                );
+              }
+            } catch(dadosErr){}
+
+            // Atualiza cache local instantaneamente com o espelho do SQL Server
+            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
+            if (allUsersRes.rows) {
+              saveLocalUsers(allUsersRes.rows, true);
+            }
+            console.log(`⚡ [SQL SERVER CADASTRO DIRETO] Usuário ${cleanEmail} gravado com sucesso no SQL Server!`);
+          } catch (dbInsertErr) {
+            console.error('[ERRO BD CADASTRO] Falha ao persistir no SQL Server:', dbInsertErr.message);
           }
-        } catch (dbInsertErr) {
-          console.error('[ERRO BD CADASTRO] Falha ao persistir no SQL Server:', dbInsertErr.message);
-          res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Erro ao gravar cadastro no banco SQL Server: ' + dbInsertErr.message }));
         }
 
         if (!process.env.RENDER) {

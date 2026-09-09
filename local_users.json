@@ -40,5 +40,19 @@
     "phone": "(11) 99999-1111",
     "birth_date": "1990-01-01",
     "terms_accepted": true
+  },
+  {
+    "id": "11",
+    "name": "Roberto Alcantara Teste",
+    "email": "roberto.alcantara@teste.com",
+    "password": "scrypt:1c7f6b6c2f14fda7cc63aba85dafaf70:cb8a11c47ad0a630f969dab755d1b5a3d030d2817e2dd1d3dc59a905cb5e340799696260caff35f9d7d09e1751cdacae3bb55accf3f197ad01e51b55fdfdc0aa",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-09T10:27:01.020Z",
+    "last_login": "2026-09-09T07:26:42.000Z",
+    "cpf": "333.444.555-66",
+    "phone": "(62) 98888-2222",
+    "birth_date": "1988-03-20",
+    "terms_accepted": true
   }
 ]

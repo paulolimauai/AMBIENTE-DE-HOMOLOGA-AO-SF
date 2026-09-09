@@ -8,7 +8,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-09T13:19:01.392Z"
+    "updated_at": "2026-09-09T13:27:07.017Z"
   },
   "00000000191": {
     "cpf": "00000000191",
@@ -19,7 +19,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-09T10:18:49.080Z"
+    "updated_at": "2026-09-09T10:26:29.530Z"
   },
   "99925109191": {
     "cpf": "99925109191",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-09T10:18:49.093Z"
+    "updated_at": "2026-09-09T10:26:29.540Z"
   },
   "12345678909": {
     "cpf": "12345678909",
@@ -41,7 +41,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Receita Federal do Brasil (Base Cadastral Oficial)",
-    "updated_at": "2026-09-09T10:18:49.110Z"
+    "updated_at": "2026-09-09T10:26:29.553Z"
   },
   "12345678900": {
     "cpf": "123.456.789-00",
@@ -52,6 +52,17 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-09T13:19:01.395Z"
+    "updated_at": "2026-09-09T13:27:07.025Z"
+  },
+  "33344455566": {
+    "cpf": "333.444.555-66",
+    "nome": "Roberto Alcantara Teste",
+    "data_nascimento": "1988-03-20",
+    "phone": "(62) 98888-2222",
+    "email": "roberto.alcantara@teste.com",
+    "situacao": "REGULAR",
+    "regiao_fiscal": "5ª Região Fiscal (BA, SE)",
+    "origem": "Cadastro Oficial de Usuário",
+    "updated_at": "2026-09-09T13:27:07.039Z"
   }
 }
