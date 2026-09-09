@@ -386,31 +386,9 @@ class MssqlAdapter {
 
 let pool = null;
 
-// Usuários autorizados padrão do sistema (sincronizados no Render e no SQL Server)
-const DEFAULT_AUTHORIZED_USERS = [
-  {
-    id: 1,
-    name: 'Administrador',
-    email: 'admin@nexusfinanceiro.com',
-    password: hashPassword('86266049'),
-    role: 'Administrador',
-    active: true
-  },
-  {
-    id: 2,
-    name: 'PAULO DE LIMA PEREIRA',
-    email: 'paulolp0101@gmail.com',
-    password: hashPassword('86266049'),
-    role: 'Administrador',
-    active: true,
-    cpf: '040.233.261-00',
-    phone: '(62) 99234-5372',
-    birth_date: null,
-    terms_accepted: true
-  }
-];
-
-const DEFAULT_ADMIN = DEFAULT_AUTHORIZED_USERS[0];
+// Usuários autorizados: O banco de dados SQL Server é a FONTE ÚNICA E EXCLUSIVA da verdade
+const DEFAULT_AUTHORIZED_USERS = [];
+const DEFAULT_ADMIN = null;
 
 // Disparo real de e-mail via Socket SMTP Nativo (compatível com Gmail sem pacotes externos)
 function sendPasswordEmail(toEmail, userName, userPassword) {
@@ -981,42 +959,15 @@ async function setupDatabaseTablesAndSync() {
     END;
   `);
 
-  // 4. Garantir Administradores Padrão Autorizados
-  for (const du of DEFAULT_AUTHORIZED_USERS) {
-    if (!du || !du.email) continue;
-    await pool.query(
-      `IF NOT EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($2))
-       BEGIN
-         INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
-       END`,
-      [du.name, du.email, du.password, du.role, du.active !== false ? 1 : 0, du.cpf || null, du.phone || null, du.birth_date || null, du.terms_accepted !== false ? 1 : 0]
-    ).catch(() => {});
-  }
-
-  // 5. Sincronização e Consolidação Total de Usuários entre Banco SQL e Cache Local
+  // 4. Sincronização Estrita: O SQL Server é a FONTE ÚNICA E SOBERANA de usuários
   try {
-    // Insere no banco quaisquer usuários presentes no cache local que ainda não existam no SQL Server
-    const localUsers = getLocalUsers();
-    for (const u of localUsers) {
-      if (!u || !u.email) continue;
-      const cleanEmail = u.email.toLowerCase().trim();
-      const checkU = await pool.query('SELECT id FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-      if (!checkU.rows || checkU.rows.length === 0) {
-        await pool.query(
-          'INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-          [u.name || 'Usuário', cleanEmail, u.password || hashPassword('86266049'), u.role || 'Usuário', u.active !== false ? 1 : 0, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0]
-        ).catch(() => {});
-      }
-    }
-
     const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
-    if (res.rows && res.rows.length > 0) {
+    if (res.rows) {
       saveLocalUsers(res.rows, true);
-      console.log(`[BANCO] ${res.rows.length} usuário(s) sincronizado(s) e consolidados no banco interno e no cache local.`);
+      console.log(`[BANCO] ${res.rows.length} usuário(s) carregados soberanamente do banco de dados SQL Server.`);
     }
   } catch(syncErr) {
-    console.warn('[BANCO AVISO] Erro ao sincronizar cache local de usuários:', syncErr.message);
+    console.warn('[BANCO AVISO] Erro ao sincronizar lista de usuários do SQL Server:', syncErr.message);
   }
 
   // 6. Sincronização dos dados financeiros locais para o banco SQL (com merge inteligente para nunca perder transações)
@@ -10280,10 +10231,9 @@ window.handleLoginSubmit = async function(e) {
         if (emailInput) emailInput.focus();
         window.showAuthFeedback(
           'login',
-          'warning',
-          'Usuário não cadastrado',
-          'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + cleanEmail + '</strong>.',
-          '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(217,119,6,0.32) 100%); border:1px solid rgba(245,158,11,0.55); color:#FEF3C7; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Criar Conta com este E-mail →</button>'
+          'error',
+          'Conta de Usuário Não Existe',
+          'A conta de usuário informada (<strong>' + cleanEmail + '</strong>) <strong>não existe no banco de dados SQL Server</strong>. Caso o usuário tenha sido excluído do banco, o acesso é expressamente bloqueado.'
         );
       } else if (data.errorType === 'invalid_password') {
         if (passWrap) passWrap.classList.add('input-error');
@@ -10294,14 +10244,13 @@ window.handleLoginSubmit = async function(e) {
         window.showAuthFeedback(
           'login',
           'error',
-          'Senha incorreta',
-          'A senha digitada está incorreta para este e-mail. Verifique se o Caps Lock está ativado ou recupere o acesso.',
-          '<button type="button" onclick="window.switchToForgotTab()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.30); color:#FFFFFF; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Esqueci Minha Senha →</button>'
+          'Senha Incorreta',
+          'A senha digitada está incorreta para este usuário no banco de dados.'
         );
       } else if (data.errorType === 'user_inactive') {
-        window.showAuthFeedback('login', 'error', 'Conta desativada', data.error || 'Seu usuário foi desativado pelo administrador.');
+        window.showAuthFeedback('login', 'error', 'Conta Desativada', data.error || 'Seu usuário foi desativado no banco de dados pelo administrador.');
       } else {
-        window.showAuthFeedback('login', 'error', 'Falha na autenticação', data.error || 'E-mail ou senha incorretos.');
+        window.showAuthFeedback('login', 'error', 'Falha na Autenticação', data.error || 'E-mail ou senha incorretos no banco de dados.');
       }
 
       if (submitBtn) {
@@ -10353,59 +10302,20 @@ window.handleLoginSubmit = async function(e) {
     return;
   }
 
-  // Fallback offline caso API esteja totalmente inacessível
-  await syncUsersWithServer();
-  const existingUser = registeredUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail);
-  if (!existingUser) {
+  // Falha de comunicação com o banco de dados SQL Server (Sem bypass offline)
+  if (!res || !data) {
     if (emailWrap) emailWrap.classList.add('input-error');
-    if (emailInput) emailInput.focus();
-    if (!res) {
-      window.showAuthFeedback(
-        'login',
-        'error',
-        'Servidor Backend Offline',
-        'Não foi possível estabelecer conexão com o servidor local (<strong>localhost:3000</strong>). Certifique-se de que o comando <code>node server.js</code> está em execução no terminal.'
-      );
-    } else {
-      window.showAuthFeedback(
-        'login',
-        'warning',
-        'Usuário não cadastrado',
-        'Não encontramos nenhuma conta cadastrada para o e-mail <strong>' + cleanEmail + '</strong>.',
-        '<button type="button" onclick="window.switchToRegisterWithEmail()" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-size:12px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(217,119,6,0.32) 100%); border:1px solid rgba(245,158,11,0.55); color:#FEF3C7; border-radius:9px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.25);">Criar Conta com este E-mail →</button>'
-      );
+    window.showAuthFeedback(
+      'login',
+      'error',
+      'Banco de Dados Inacessível',
+      'Não foi possível estabelecer conexão com o banco de dados SQL Server para validar as credenciais. O login é estritamente autenticado pelo banco de dados.'
+    );
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Entrar na Conta →';
     }
-    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Entrar na Conta →'; }
     return;
-  }
-
-  currentUser = { id: existingUser.id || Date.now(), name: existingUser.name || cleanEmail.split('@')[0], email: cleanEmail, role: existingUser.role || 'Usuário' };
-  saveToStorage('nexus_session', { email: currentUser.email });
-  saveToStorage('nexus_cached_user', currentUser);
-  saveToStorage('nexus_token', 'offline_token_' + Date.now());
-  sessionStorage.setItem('nexus_session_active', 'true');
-  sessionStorage.setItem('nexus_last_activity', Date.now().toString());
-  sessionStorage.removeItem('nexus_session_expired_reason');
-  if (typeof window.startInactivityMonitoring === 'function') {
-    window.startInactivityMonitoring();
-  }
-
-  document.documentElement.classList.add('user-logged-in');
-  document.documentElement.classList.toggle('is-admin', currentUser.role === 'Administrador');
-  currentPage = (currentUser.role === 'Administrador') ? 'usuarios' : 'dashboard';
-  await loadUserData();
-  showLoginSuccessPopup('Acesso offline autenticado!');
-  setTimeout(() => {
-    document.getElementById('authPage').classList.remove('show');
-    document.getElementById('authPage').style.display = 'none';
-    document.getElementById('appMain').classList.add('show');
-    document.getElementById('appMain').style.display = 'flex';
-    render();
-  }, 1200);
-
-  if (submitBtn) {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Entrar na Conta →';
   }
 };
 
@@ -20126,8 +20036,28 @@ if (scaleMenuBtn && scaleDropdown) {
     await syncUsersWithServer();
   } catch(e) {}
 
-  const serverUser = registeredUsers.find(u => u.email.toLowerCase() === (sessionEmail || '').toLowerCase());
-  const realUser = serverUser || cachedUser || { email: sessionEmail, name: sessionEmail.split('@')[0], role: 'Usuário' };
+  const serverUser = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === (sessionEmail || '').toLowerCase());
+  if (!serverUser) {
+    console.warn('[ACESSO REVOGADO] Usuário não existe no SQL Server:', sessionEmail);
+    localStorage.removeItem('nexus_session');
+    localStorage.removeItem('nexus_cached_user');
+    localStorage.removeItem('nexus_token');
+    localStorage.removeItem('nexus_viewing_user');
+    sessionStorage.removeItem('nexus_session_active');
+    sessionStorage.removeItem('nexus_last_activity');
+    document.documentElement.classList.remove('user-logged-in');
+    document.documentElement.classList.remove('is-admin');
+    const appM = document.getElementById('appMain');
+    const authP = document.getElementById('authPage');
+    if (appM) { appM.classList.remove('show'); appM.style.display = 'none'; }
+    if (authP) { authP.classList.add('show'); authP.style.display = 'flex'; }
+    if (window.showAuthFeedback) {
+      window.showAuthFeedback('login', 'error', 'Conta Não Existe', 'Esta conta de usuário não existe no banco de dados. O acesso foi encerrado.');
+    }
+    return;
+  }
+
+  const realUser = serverUser;
 
   if (realUser && realUser.active === false) {
     localStorage.removeItem('nexus_session');
@@ -20607,83 +20537,13 @@ function getLocalUsers() {
     }
   }
 
-  // Garantir que todos os usuários mestres e autorizados NUNCA sejam perdidos
-  const userMap = new Map();
-  DEFAULT_AUTHORIZED_USERS.forEach(du => {
-    if (du && du.email) userMap.set(du.email.toLowerCase().trim(), { ...du });
-  });
-
-  if (Array.isArray(fileUsers)) {
-    fileUsers.forEach(fu => {
-      if (fu && fu.email) {
-        const emailKey = fu.email.toLowerCase().trim();
-        const base = userMap.get(emailKey) || {};
-        userMap.set(emailKey, {
-          ...base,
-          ...fu,
-          password: fu.password || base.password || hashPassword('86266049')
-        });
-      }
-    });
-  }
-
-  return Array.from(userMap.values());
+  return Array.isArray(fileUsers) ? fileUsers : [];
 }
 
 function saveLocalUsers(users, overwrite = false) {
   try {
-    let finalUsers = [];
-    if (overwrite) {
-      const userMap = new Map();
-      DEFAULT_AUTHORIZED_USERS.forEach(du => {
-        if (du && du.email) userMap.set(du.email.toLowerCase().trim(), { ...du });
-      });
-      (Array.isArray(users) ? users : []).forEach(u => {
-        if (u && u.email) userMap.set(u.email.toLowerCase().trim(), u);
-      });
-      finalUsers = Array.from(userMap.values());
-    } else {
-      const existingMap = new Map();
-      // Carregar usuários conhecidos atuais
-      const current = getLocalUsers();
-      current.forEach(u => {
-        if (u && u.email) existingMap.set(u.email.toLowerCase().trim(), u);
-      });
-
-      const incomingMap = new Map();
-      (Array.isArray(users) ? users : []).forEach(u => {
-        if (u && u.email) incomingMap.set(u.email.toLowerCase().trim(), u);
-      });
-
-      // Mesclar preservando todos os usuários e senhas
-      const mergedList = [];
-      existingMap.forEach((oldUser, emailKey) => {
-        const incoming = incomingMap.get(emailKey);
-        if (incoming) {
-          const resolvedLastLogin = (incoming.last_login && incoming.last_login !== 'null') ? incoming.last_login : (oldUser.last_login || null);
-          mergedList.push({
-            ...oldUser,
-            ...incoming,
-            last_login: resolvedLastLogin,
-            password: incoming.password || oldUser.password || hashPassword('86266049')
-          });
-          incomingMap.delete(emailKey);
-        } else {
-          mergedList.push(oldUser);
-        }
-      });
-
-      incomingMap.forEach(newUser => {
-        mergedList.push({
-          ...newUser,
-          password: newUser.password || hashPassword('86266049')
-        });
-      });
-      finalUsers = mergedList;
-    }
-
-    const jsonContent = JSON.stringify(finalUsers, null, 2);
-    // Gravação segura atômica e backup duplo contínuo
+    const listToSave = Array.isArray(users) ? users : [];
+    const jsonContent = JSON.stringify(listToSave, null, 2);
     fs.writeFileSync(LOCAL_USERS_PATH, jsonContent, 'utf8');
     try {
       fs.writeFileSync(LOCAL_USERS_BACKUP_PATH, jsonContent, 'utf8');
@@ -21107,28 +20967,31 @@ const server = http.createServer(async (req, res) => {
 
         const cleanEmail = email.toLowerCase().trim();
         let user = null;
+        if (!pool) {
+          await attemptConnectDatabase();
+        }
+
         if (pool) {
           try {
             const result = await pool.query(
               'SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at FROM usuarios WHERE LOWER(email) = LOWER($1)',
               [cleanEmail]
             );
-            if (result.rows.length > 0) user = result.rows[0];
+            if (result.rows && result.rows.length > 0) user = result.rows[0];
           } catch (dbErr) {
-            console.warn('[AVISO BD] Falha ao consultar SQL Server no login. Usando cache local:', dbErr.message);
+            console.warn('[AVISO BD] Falha ao consultar SQL Server no login:', dbErr.message);
           }
         }
-        if (!user) {
-          const localUsers = getLocalUsers();
-          user = localUsers.find(u => u.email.toLowerCase() === cleanEmail) || null;
-        }
 
+        // Validação estrita: O login deve ser APENAS igual do banco SQL Server e de nenhum outro lugar.
+        // Se a conta for excluída do banco, impede o login e informa que a conta não existe.
         if (!user) {
+          console.log(`[LOGIN RECUSADO] Conta não existe no SQL Server: ${cleanEmail}`);
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({
             success: false,
             errorType: 'user_not_found',
-            error: 'Este e-mail não possui cadastro no sistema. Clique em "Criar Conta" para se cadastrar.'
+            error: 'Esta conta de usuário não existe no banco de dados.'
           }));
         }
 
@@ -21137,7 +21000,7 @@ const server = http.createServer(async (req, res) => {
           return res.end(JSON.stringify({
             success: false,
             errorType: 'invalid_password',
-            error: 'Senha incorreta para este e-mail. Verifique a senha digitada ou clique em "Esqueceu a senha?".'
+            error: 'Senha incorreta para este usuário.'
           }));
         }
 
@@ -21150,12 +21013,12 @@ const server = http.createServer(async (req, res) => {
           }
         }
 
-        if (user.active === false) {
+        if (user.active === false || user.active === 0) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({
             success: false,
             errorType: 'user_inactive',
-            error: 'Seu usuário foi desativado pelo administrador.'
+            error: 'Esta conta de usuário foi desativada no banco de dados pelo administrador.'
           }));
         }
 
@@ -21680,17 +21543,14 @@ const server = http.createServer(async (req, res) => {
         : 'SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC';
       pool.query(sqlFields)
         .then(result => {
-          if (result.rows && result.rows.length > 0) {
-            res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(result.rows));
-          } else {
-            const localUsers = isInternalSync ? getLocalUsers() : getLocalUsers().map(sanitizeUser);
-            res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(localUsers));
-          }
+          const rows = result.rows || [];
+          saveLocalUsers(rows, true);
+          const sanitized = isInternalSync ? rows : rows.map(sanitizeUser);
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(sanitized));
         })
         .catch(err => {
-          console.warn('Usando lista de usuários do backup local:', err.message);
+          console.warn('[BANCO AVISO] Erro ao consultar usuários no SQL Server:', err.message);
           const localUsers = isInternalSync ? getLocalUsers() : getLocalUsers().map(sanitizeUser);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(localUsers));
@@ -22786,40 +22646,8 @@ async function syncWithRenderCloud() {
         if (!cu || !cu.email) continue;
         const cleanEmail = cu.email.toLowerCase().trim();
         const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-        // Só insere se for cadastro novo legítimo (ex: criado recentemente nos últimos 15 minutos)
-        const isRecentSignup = cu.created_at && (Math.abs(Date.now() - new Date(cu.created_at).getTime()) < 15 * 60 * 1000);
-        if ((!localCheck.rows || localCheck.rows.length === 0) && isRecentSignup) {
-          const defaultPass = cu.password || hashPassword('86266049');
-          const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
-          await pool.query(
-            `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login)
-             OUTPUT INSERTED.id
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-            [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.active !== false, cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin]
-          );
-          await pool.query(
-            `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
-             BEGIN
-               INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, '{}', GETDATE());
-             END`,
-            [cleanEmail]
-          );
-          if (cu.cpf) {
-            const numCpf = cu.cpf.replace(/\D/g, '');
-            saveCpfRegistryEntry(numCpf, {
-              cpf: cu.cpf,
-              nome: cu.name || 'Usuário',
-              data_nascimento: cu.birth_date || null,
-              phone: cu.phone || null,
-              email: cleanEmail,
-              situacao: 'REGULAR',
-              origem: 'Cadastro Oficial de Usuário'
-            });
-          }
-          console.log(`\n⚡ [SYNC RENDER -> SQL SERVER] Nova conta criada no Render gravada no SQL Server local: ${cleanEmail}`);
-          recordSystemLog(cu.name, cleanEmail, 'Sincronização Nuvem', 'Usuários', `Conta criada no Render sincronizada para o SQL Server local`);
-          scheduleGitSyncDebounced();
-        } else {
+        // O SQL Server local é a autoridade máxima: só atualiza perfis existentes, nunca insere usuários excluídos
+        if (localCheck.rows && localCheck.rows.length > 0) {
           // Atualizar dados de perfil se fornecidos no Render
           const currentU = localCheck.rows[0];
           const updatedName = (cu.name && cu.name !== 'Usuário') ? cu.name : currentU.name;
