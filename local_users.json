@@ -54,5 +54,33 @@
     "phone": "(62) 98888-2222",
     "birth_date": "1988-03-20",
     "terms_accepted": true
+  },
+  {
+    "id": "12",
+    "name": "PAULO DE LIMA PEREIRA",
+    "email": "paulolp0101@gmail.com",
+    "password": "scrypt:44bb506cb3f6f8e9cd63e89e6a0a7252:ad885945d8f580f401d68aeed280048b9ee9d1b1638ab257313274abc5fb881455b0a245b64c5e4ff035987149a56202bea1506f6198014327c6f239b054cfc3",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-09T10:28:37.296Z",
+    "last_login": "2026-09-09T10:28:36.000Z",
+    "cpf": "040.233.261-00",
+    "phone": "(62) 99234-5372",
+    "birth_date": "02/06/1992",
+    "terms_accepted": true
+  },
+  {
+    "id": "13",
+    "name": "CICERA DE LIMA PEREIRA",
+    "email": "ciceragyn12@hotmail.com",
+    "password": "scrypt:65ff0e57282b801ba4634564cd57ee6e:46ad12f40aa4c9b8fb0187097b10178629914a8128f724c5dfbb77763d9646e3038a1ab7fadac652e5017c29f15cc07cc519c4984109ebf708d8467310d77e81",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-09T10:33:10.873Z",
+    "last_login": "2026-09-09T10:33:11.000Z",
+    "cpf": "999.251.091-91",
+    "phone": "(62) 99367-6783",
+    "birth_date": "27/06/1966",
+    "terms_accepted": true
   }
 ]

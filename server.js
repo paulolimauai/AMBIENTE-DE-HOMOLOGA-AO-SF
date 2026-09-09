@@ -11315,54 +11315,26 @@ async function loadUserData() {
   const cleanEmail = (currentUser.email || '').toLowerCase().trim();
   const userKey = 'nexus_data_' + cleanEmail;
   
-  // 1. Reset state e carrega dados do cache local do próprio usuário se existir
+  // 1. Reset limpo do estado do usuário em memória
+  resetUserDataState();
   let localData = loadFromStorage(userKey, null);
-  if (localData && Array.isArray(localData.transactions)) {
-    const isMock = localData.transactions.some(t => t.desc === 'Salário' && t.val === 3335 && (t.acc === 'Dinheiro em Espécie' || t.accId === 4));
-    if (isMock) {
-      localData.transactions = [];
-      if (Array.isArray(localData.accounts) && localData.accounts.some(a => a.name === 'AMAZON' || a.name === 'DIGIO')) {
-        localData.accounts = [];
-      }
-      saveToStorage(userKey, localData);
-    }
-  }
   if (localData) {
     applyDataPayload(localData);
-    isDataLoading = false;
   } else {
-    // Novos usuários ou cadastros récem-criados iniciam em memória sem sobrescrever o servidor
     resetUserDataState();
-    isDataLoading = false;
   }
+  isDataLoading = false;
 
-  // 2. Sincroniza em segundo plano com o servidor SQL Server / API especificamente para este e-mail
+  // 2. Sincroniza em tempo real com o servidor SQL Server / API especificamente para este e-mail
   let hasServerChanges = false;
   try {
     const res = await fetch(window.location.origin + '/api/data?email=' + encodeURIComponent(cleanEmail));
     if (res.ok) {
       const serverData = await res.json();
-      if (serverData && typeof serverData === 'object' && Object.keys(serverData).length > 0) {
-        const localTxCount = (localData && Array.isArray(localData.transactions)) ? localData.transactions.length : (Array.isArray(transactions) ? transactions.length : 0);
-        const serverTxCount = Array.isArray(serverData.transactions) ? serverData.transactions.length : 0;
-
-        // Proteção essencial: se o cache local possui transações e o servidor retornou vazio, envia para persistir
-        if (localTxCount > 0 && serverTxCount === 0) {
-          await saveUserData();
-        } else if (serverTxCount > 0 || !localData) {
-          // Servidor possui dados ou cache local estava vazio: carrega dados do banco/servidor com segurança!
-          applyDataPayload(serverData);
-          saveToStorage(userKey, serverData);
-          hasServerChanges = true;
-        } else {
-          const localDataStr = JSON.stringify(localData || {});
-          const serverDataStr = JSON.stringify(serverData);
-          if (localDataStr !== serverDataStr) {
-            applyDataPayload(serverData);
-            saveToStorage(userKey, serverData);
-            hasServerChanges = true;
-          }
-        }
+      if (serverData && typeof serverData === 'object') {
+        applyDataPayload(serverData);
+        saveToStorage(userKey, serverData);
+        hasServerChanges = true;
       }
     }
   } catch(e) {
@@ -11370,7 +11342,7 @@ async function loadUserData() {
   } finally {
     isDataLoading = false;
   }
-  if (hasServerChanges && typeof render === 'function' && document.getElementById('appMain') && document.getElementById('appMain').classList.contains('show')) {
+  if (typeof render === 'function' && document.getElementById('appMain') && document.getElementById('appMain').classList.contains('show')) {
     render();
   }
 }
@@ -20622,6 +20594,28 @@ function saveLocalTecnicos(tecnicos) {
   }
 }
 
+function getEmptyFinancialData() {
+  return {
+    categories: [],
+    accounts: [],
+    transactions: [],
+    budgets: [],
+    goals: [],
+    recurringList: [],
+    alerts: [],
+    attachments: [],
+    notifications: [],
+    nextAccId: 1,
+    nextTxId: 1,
+    nextBudgetId: 1,
+    nextGoalId: 1,
+    nextRecId: 1,
+    nextAlertId: 1,
+    nextAttId: 1,
+    nextNotifId: 1
+  };
+}
+
 function getLocalData(email) {
   try {
     let allData = null;
@@ -20630,7 +20624,7 @@ function getLocalData(email) {
     } else if (fs.existsSync(LOCAL_DATA_BACKUP_PATH)) {
       allData = JSON.parse(fs.readFileSync(LOCAL_DATA_BACKUP_PATH, 'utf8')) || {};
     }
-    if (allData) return allData[email.toLowerCase().trim()] || null;
+    if (allData && allData[email.toLowerCase().trim()]) return allData[email.toLowerCase().trim()];
   } catch (e) {
     if (fs.existsSync(LOCAL_DATA_BACKUP_PATH)) {
       try {
@@ -21370,12 +21364,14 @@ const server = http.createServer(async (req, res) => {
 
             try {
               const existingDados = await pool.query('SELECT id FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+              const emptyStructure = getEmptyFinancialData();
               if (!existingDados.rows || existingDados.rows.length === 0) {
                 await pool.query(
-                  'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2)',
-                  [cleanEmail, '{}']
+                  'INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE())',
+                  [cleanEmail, JSON.stringify(emptyStructure)]
                 );
               }
+              saveLocalData(cleanEmail, emptyStructure);
             } catch(dadosErr){}
 
             // Atualiza cache local instantaneamente com o espelho do SQL Server
@@ -21383,10 +21379,13 @@ const server = http.createServer(async (req, res) => {
             if (allUsersRes.rows) {
               saveLocalUsers(allUsersRes.rows, true);
             }
-            console.log(`⚡ [SQL SERVER CADASTRO DIRETO] Usuário ${cleanEmail} gravado com sucesso no SQL Server!`);
+            console.log(`⚡ [SQL SERVER CADASTRO DIRETO] Usuário ${cleanEmail} gravado com sucesso no SQL Server (dados zerados)!`);
           } catch (dbInsertErr) {
             console.error('[ERRO BD CADASTRO] Falha ao persistir no SQL Server:', dbInsertErr.message);
           }
+        } else {
+          // Quando cadastrado no Render / Cloud, assegura que o cache local também inicie com dados 100% zerados
+          saveLocalData(cleanEmail, getEmptyFinancialData());
         }
 
         if (!process.env.RENDER) {
@@ -21851,44 +21850,44 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota GET para buscar dados financeiros do Usuário no banco (com Merge Inteligente e Persistência Garantida)
+  // Rota GET para buscar dados financeiros do Usuário no banco (com Inicialização Zerada Soberana para Novos Cadastros)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/data') {
     const email = (parsedUrl.query.email || '').toLowerCase().trim();
     const localData = getLocalData(email);
     if (pool) {
       pool.query('SELECT dados FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [email])
         .then(result => {
-          const serverData = result.rows[0] ? result.rows[0].dados : null;
-          const finalData = mergeFinancialData(serverData, localData);
+          let serverData = result.rows[0] ? result.rows[0].dados : null;
+          let finalData = mergeFinancialData(serverData, localData);
+          if (!finalData || typeof finalData !== 'object' || Object.keys(finalData).length === 0) {
+            finalData = getEmptyFinancialData();
+          }
           if (finalData) {
             saveLocalData(email, finalData);
-            // Se os dados consolidados contêm mais transações do que existiam no banco, grava imediatamente no SQL Server
-            const srvTxLen = (serverData && serverData.transactions) ? serverData.transactions.length : 0;
-            const finalTxLen = (finalData && finalData.transactions) ? finalData.transactions.length : 0;
-            if (finalTxLen > srvTxLen || !serverData) {
-              pool.query(
-                `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
-                 BEGIN
-                   UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
-                 END
-                 ELSE
-                 BEGIN
-                   INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
-                 END`,
-                [email, finalData]
-              ).catch(() => {});
-            }
+            pool.query(
+              `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+               BEGIN
+                 UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
+               END
+               ELSE
+               BEGIN
+                 INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+               END`,
+              [email, JSON.stringify(finalData)]
+            ).catch(() => {});
           }
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(finalData));
         })
         .catch(err => {
+          const fallbackData = localData || getEmptyFinancialData();
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(localData));
+          res.end(JSON.stringify(fallbackData));
         });
     } else {
+      const fallbackData = localData || getEmptyFinancialData();
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(localData));
+      res.end(JSON.stringify(fallbackData));
     }
     return;
   }
