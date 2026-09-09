@@ -11,7 +11,8 @@
     "cpf": null,
     "phone": null,
     "birth_date": null,
-    "terms_accepted": true
+    "terms_accepted": true,
+    "device_type": "Computador"
   },
   {
     "id": "7",
@@ -25,7 +26,8 @@
     "cpf": "040.233.261-00",
     "phone": "(62) 99999-8888",
     "birth_date": "10/10/1990",
-    "terms_accepted": true
+    "terms_accepted": true,
+    "device_type": "Computador"
   },
   {
     "id": "9",
@@ -39,7 +41,8 @@
     "cpf": "123.456.789-00",
     "phone": "(11) 99999-1111",
     "birth_date": "1990-01-01",
-    "terms_accepted": true
+    "terms_accepted": true,
+    "device_type": "Computador"
   },
   {
     "id": "11",
@@ -53,7 +56,8 @@
     "cpf": "333.444.555-66",
     "phone": "(62) 98888-2222",
     "birth_date": "1988-03-20",
-    "terms_accepted": true
+    "terms_accepted": true,
+    "device_type": "Computador"
   },
   {
     "id": "12",
@@ -67,7 +71,8 @@
     "cpf": "040.233.261-00",
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
-    "terms_accepted": true
+    "terms_accepted": true,
+    "device_type": "Computador"
   },
   {
     "id": "13",
@@ -81,7 +86,8 @@
     "cpf": "999.251.091-91",
     "phone": "(62) 99367-6783",
     "birth_date": "27/06/1966",
-    "terms_accepted": true
+    "terms_accepted": true,
+    "device_type": "Computador"
   },
   {
     "id": "14",
@@ -95,6 +101,37 @@
     "cpf": "444.555.666-77",
     "phone": "(62) 99999-0000",
     "birth_date": "1992-04-10",
-    "terms_accepted": true
+    "terms_accepted": true,
+    "device_type": "Mobile"
+  },
+  {
+    "id": "15",
+    "name": "PAULO ROBERTO PEREIRA",
+    "email": "pauloroberto@gmail.com",
+    "password": "scrypt:8f013b5d14cecbe588bc5488398f273d:9a6825b97aee69cc690a8e03b894474f20486a516bc1036d95f1b0fa4dd55326136f53ef970a932726ebb0f54e64e7839c67808765797ef388bc8135cc8e92b8",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-09T11:00:21.890Z",
+    "last_login": "2026-09-09T11:00:23.000Z",
+    "cpf": "634.810.906-25",
+    "phone": "(62) 99264-7115",
+    "birth_date": "27/10/1966",
+    "terms_accepted": true,
+    "device_type": "Mobile"
+  },
+  {
+    "id": "17",
+    "name": "Teste Auditoria Mobile",
+    "email": "mobile.auditoria@teste.com",
+    "password": "scrypt:2b3262d9c4d109d84b4ebd0c770b46e2:8fe7c554caac9d53a9055e39fb099111255b6aa7e2ad322a512daa732f8a39eaeb161ed5850e2aa818fa90e531999cef96d1b138d777171d9df9c6fb8e5cebf4",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-09T11:08:48.793Z",
+    "last_login": null,
+    "cpf": "111.222.333-44",
+    "phone": "(62) 98888-7777",
+    "birth_date": null,
+    "terms_accepted": true,
+    "device_type": "Computador"
   }
 ]

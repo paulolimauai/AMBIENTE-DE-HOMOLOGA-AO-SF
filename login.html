@@ -3799,6 +3799,9 @@
                 let serverMessage = '';
 
                 try {
+                    const isMobileClient = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent || '') || (('ontouchstart' in window) && window.innerWidth <= 1024);
+                    const detectedDevice = isMobileClient ? 'Mobile' : 'Computador';
+
                     const payload = {
                         name: name,
                         email: email,
@@ -3806,7 +3809,8 @@
                         cpf: cpf,
                         birth_date: birthDate,
                         phone: phone,
-                        terms_accepted: true
+                        terms_accepted: true,
+                        device_type: detectedDevice
                     };
 
                     const res = await fetch(apiUrl, {
