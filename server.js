@@ -2228,15 +2228,15 @@ html.light .auth-support-link:hover {
   color: #0369A1 !important;
 }
 
-@media (max-width: 1024px) {
-  .auth-exec-layout {
-    grid-template-columns: 1fr;
-    max-width: 440px;
-    gap: 20px;
-    padding: 12px 10px;
-  }
-  .auth-showcase-panel {
-    display: none;
+.auth-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 640px) {
+  .auth-grid-2col {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
   }
 }
 
@@ -2246,6 +2246,66 @@ html.light .auth-support-link:hover {
   gap: clamp(12px, 1.8vh, 20px);
   text-align: left;
   justify-content: center;
+}
+
+@media (max-width: 1024px), (hover: none) {
+  .auth-exec-layout {
+    grid-template-columns: 1fr !important;
+    max-width: 460px !important;
+    gap: 16px !important;
+    padding: 8px 10px !important;
+  }
+  .auth-showcase-panel {
+    display: none !important;
+  }
+  .glass-viewport-screen,
+  .glass-shard,
+  .glass-screen-reflection,
+  .auth-blob,
+  .auth-container::before,
+  #authBgCanvas {
+    display: none !important;
+  }
+  .auth-card-nexus {
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    justify-content: flex-start !important;
+    padding: 12px 10px 48px !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+  .auth-top-bar {
+    position: static !important;
+    max-width: 440px !important;
+    padding: 0 4px !important;
+    margin: 0 auto 10px auto !important;
+  }
+  .auth-card-nexus {
+    padding: 18px 14px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+  }
+  .auth-input-wrapper input,
+  .auth-input-wrapper select,
+  .auth-input-wrapper textarea {
+    font-size: 16px !important;
+    min-height: 46px !important;
+  }
+  .auth-pass-toggle,
+  .auth-pass-toggle-btn {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+  .btn-auth-primary {
+    min-height: 46px !important;
+    font-size: 15px !important;
+  }
 }
 
 .auth-showcase-badge {
@@ -8106,7 +8166,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
             2. Contato & Notificações
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="auth-grid-2col">
             <div class="auth-field">
               <label>Celular / 2FA</label>
               <div class="auth-input-wrapper">
@@ -8132,7 +8192,7 @@ html.light .scale-dropdown .scale-opt-btn:hover {
             3. Senha de Acesso Financeiro
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="auth-grid-2col">
             <div class="auth-field">
               <label>Senha (Mín. 8 chars)</label>
               <div class="auth-input-wrapper">
@@ -19621,7 +19681,11 @@ if (scaleMenuBtn && scaleDropdown) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 1024);
+    if (isTouch && canvasId === 'authBgCanvas') {
+      canvas.style.display = 'none';
+      return;
+    }
 
     function isCanvasVisible() {
       if (document.hidden) return false;

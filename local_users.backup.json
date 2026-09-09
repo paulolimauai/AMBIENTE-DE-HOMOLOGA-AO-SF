@@ -40,5 +40,33 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true
+  },
+  {
+    "id": "5",
+    "name": "JOAO CARNEIRO DOS SANTOS FERNANDES PINTO DE OLIVEIRA MARQUES DOS SANTOS REIS FILHO",
+    "email": "joao@gmail.com",
+    "password": "scrypt:6ea6016c0d67e47327eedb852835e237:0f2038ebd20e6ecee674949857dcbe5773bf0fda4b820e925f2d10fc79ce266be2ffc340a7f2d89500e5bb7618a21ef7c737d2117f884dc02b745d8157632a4d",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-08T20:48:44.986Z",
+    "last_login": "2026-09-08T20:48:43.000Z",
+    "cpf": "040.233.261-00",
+    "phone": "(62) 99999-9999",
+    "birth_date": "02/05/1992",
+    "terms_accepted": true
+  },
+  {
+    "id": "6",
+    "name": "Gabriel ferreira dos Santos",
+    "email": "gabriel@gmail.com",
+    "password": "scrypt:99acdc837cc8c4f04010681d8abf1c60:f3f8472271ee9be0ffaa22902376262a205955171df7d2bb3f3cfdee10d506de9d1fcce513f1a2768550ff59e7149b4f1294055cc47c4b2daa7399e8ceca2610",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-08T20:51:15.276Z",
+    "last_login": "2026-09-08T20:51:12.000Z",
+    "cpf": "040.233.261-00",
+    "phone": "(62) 99234-5211",
+    "birth_date": "02/06/1992",
+    "terms_accepted": true
   }
 ]
