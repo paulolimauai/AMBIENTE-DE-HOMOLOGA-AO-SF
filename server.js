@@ -809,8 +809,14 @@ async function setupDatabaseTablesAndSync() {
         cpf NVARCHAR(20) NULL,
         phone NVARCHAR(25) NULL,
         birth_date NVARCHAR(20) NULL,
-        terms_accepted BIT NOT NULL DEFAULT 1
+        terms_accepted BIT NOT NULL DEFAULT 1,
+        device_type NVARCHAR(50) NOT NULL DEFAULT 'Computador'
       );
+    END;
+
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('usuarios') AND name = 'device_type')
+    BEGIN
+      ALTER TABLE usuarios ADD device_type NVARCHAR(50) DEFAULT 'Computador';
     END;
 
     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'dados_financeiros')
@@ -961,7 +967,7 @@ async function setupDatabaseTablesAndSync() {
 
   // 4. Sincronização Estrita: O SQL Server é a FONTE ÚNICA E SOBERANA de usuários
   try {
-    const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
+    const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
     if (res.rows) {
       saveLocalUsers(res.rows, true);
       console.log(`[BANCO] ${res.rows.length} usuário(s) carregados soberanamente do banco de dados SQL Server.`);
@@ -10887,6 +10893,9 @@ window.handleRegisterSubmit = async function(e) {
   let response = null;
   let data = null;
 
+  const isMobileClient = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent || '') || (('ontouchstart' in window) && window.innerWidth <= 1024);
+  const detectedDevice = isMobileClient ? 'Mobile' : 'Computador';
+
   const payload = {
     name,
     email: cleanEmail,
@@ -10894,7 +10903,8 @@ window.handleRegisterSubmit = async function(e) {
     cpf,
     birth_date: birthDate,
     phone,
-    terms_accepted: true
+    terms_accepted: true,
+    device_type: detectedDevice
   };
 
   try {
@@ -15211,6 +15221,9 @@ function pageUsuarios(){
               <div class="user-card-name-row">
                 <span class="user-card-name">\${u.name}</span>
                 <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
+                \${(u.device_type === 'Mobile' || u.device === 'Mobile') 
+                  ? '<span class="role-badge" style="background:linear-gradient(135deg, rgba(168,85,247,0.22), rgba(147,51,234,0.12)); border:1px solid rgba(192,132,252,0.4); color:#D8B4FE; display:inline-flex; align-items:center; gap:4px; font-weight:700;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> 📱 Mobile</span>' 
+                  : '<span class="role-badge" style="background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(37,99,235,0.1)); border:1px solid rgba(96,165,250,0.35); color:#93C5FD; display:inline-flex; align-items:center; gap:4px; font-weight:700;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 💻 Computador</span>'}
                 \${isInactive ? '<span class="role-badge inactive">Desativado</span>' : ''}
               </div>
               <div class="user-card-email" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:3px;">
@@ -20990,7 +21003,7 @@ const server = http.createServer(async (req, res) => {
         if (pool) {
           try {
             const result = await pool.query(
-              'SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at FROM usuarios WHERE LOWER(email) = LOWER($1)',
+              'SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at, device_type FROM usuarios WHERE LOWER(email) = LOWER($1)',
               [cleanEmail]
             );
             if (result.rows && result.rows.length > 0) user = result.rows[0];
@@ -21373,6 +21386,10 @@ const server = http.createServer(async (req, res) => {
         const cleanPhone = phone ? String(phone).trim() : null;
         const termsAcceptedVal = terms_accepted !== false;
 
+        const ua = (req.headers && req.headers['user-agent']) ? req.headers['user-agent'] : '';
+        const isMobileUA = /mobile|android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua);
+        const deviceTypeVal = (parsed.device_type || parsed.device || (isMobileUA ? 'Mobile' : 'Computador')).trim();
+
         // 1. Gravação direta no SQL Server (quando executado no ambiente com conexão direta ao banco)
         if (pool) {
           try {
@@ -21381,16 +21398,16 @@ const server = http.createServer(async (req, res) => {
               newUserId = existingUserRes.rows[0].id;
               await pool.query(
                 `UPDATE usuarios 
-                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, active = 1 
-                 WHERE id = $7`,
-                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, newUserId]
+                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, device_type = $7, active = 1 
+                 WHERE id = $8`,
+                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, deviceTypeVal, newUserId]
               );
             } else {
               const insertRes = await pool.query(
-                `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
+                `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, device_type)
                  OUTPUT INSERTED.id
-                 VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8);`,
-                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0]
+                 VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9);`,
+                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, deviceTypeVal]
               );
               if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
             }
@@ -21408,11 +21425,11 @@ const server = http.createServer(async (req, res) => {
             } catch(dadosErr){}
 
             // Atualiza cache local instantaneamente com o espelho do SQL Server
-            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
+            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
             if (allUsersRes.rows) {
               saveLocalUsers(allUsersRes.rows, true);
             }
-            console.log(`⚡ [SQL SERVER CADASTRO DIRETO] Usuário ${cleanEmail} gravado com sucesso no SQL Server (dados zerados)!`);
+            console.log(`⚡ [SQL SERVER CADASTRO DIRETO] Usuário ${cleanEmail} gravado com sucesso no SQL Server (Dispositivo: ${deviceTypeVal})!`);
           } catch (dbInsertErr) {
             console.error('[ERRO BD CADASTRO] Falha ao persistir no SQL Server:', dbInsertErr.message);
           }
@@ -21424,7 +21441,7 @@ const server = http.createServer(async (req, res) => {
         if (!process.env.RENDER) {
           fetchCloud('/api/register', {
             method: 'POST',
-            body: JSON.stringify({ name: name.trim(), email: cleanEmail, password, cpf: cleanCpf, phone: cleanPhone, birth_date: cleanBirthDate, terms_accepted: termsAcceptedVal })
+            body: JSON.stringify({ name: name.trim(), email: cleanEmail, password, cpf: cleanCpf, phone: cleanPhone, birth_date: cleanBirthDate, terms_accepted: termsAcceptedVal, device_type: deviceTypeVal })
           }).catch(() => {});
         }
 
@@ -21440,6 +21457,7 @@ const server = http.createServer(async (req, res) => {
           phone: cleanPhone,
           birth_date: cleanBirthDate,
           terms_accepted: termsAcceptedVal,
+          device_type: deviceTypeVal,
           created_at: new Date().toISOString()
         };
         localUsers.push(newUserObj);
@@ -21458,7 +21476,7 @@ const server = http.createServer(async (req, res) => {
           });
         }
 
-        recordSystemLog(name.trim(), cleanEmail, 'Cadastro Financeiro', 'Autenticação', 'Abertura de conta financeira realizada com sucesso e em conformidade com LGPD');
+        recordSystemLog(name.trim(), cleanEmail, 'Cadastro Financeiro', 'Autenticação', `Abertura de conta financeira realizada com sucesso (${deviceTypeVal})`);
 
         // Notificação em tempo real via SSE
         broadcastEvent('new_user_registered', {
@@ -21467,6 +21485,7 @@ const server = http.createServer(async (req, res) => {
           email: cleanEmail,
           cpf: cleanCpf ? cleanCpf.replace(/(\d{3})\.(\d{3})\.(\d{3})-(\d{2})/, '***.$2.***-$4') : null,
           role: 'Usuário',
+          device_type: deviceTypeVal,
           timestamp: new Date().toISOString()
         });
 
@@ -21479,10 +21498,11 @@ const server = http.createServer(async (req, res) => {
         console.log(`📅 Nascimento:    ${cleanBirthDate || 'N/A'} (Maioridade Confirmada)`);
         console.log(`📱 Celular/2FA:   ${cleanPhone || 'N/A'}`);
         console.log(`📧 E-mail:        ${cleanEmail}`);
+        console.log(`💻 Dispositivo:   ${deviceTypeVal === 'Mobile' ? '📱 Celular / Mobile' : '💻 Computador / Desktop'}`);
         console.log(`🛡️ Segurança:     Hash Criptográfico scrypt + Conformidade LGPD`);
         console.log(`🕒 Data/Hora:    ${new Date().toLocaleString('pt-BR')}`);
         console.log('💻 Apresentação: Credenciais sincronizadas e prontas para Logon no VS Code');
-        console.log('📂 Persistência: local_users.json e SQL Server');
+        console.log('📂 Persistência: local_users.json e SQL Server (coluna device_type)');
         console.log('='.repeat(70) + '\n');
 
         const token = generateSecureToken(newUserObj);
@@ -21574,8 +21594,8 @@ const server = http.createServer(async (req, res) => {
                            (parsedUrl.query && parsedUrl.query.sync_secret === JWT_SECRET);
     if (pool) {
       const sqlFields = isInternalSync
-        ? 'SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC'
-        : 'SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC';
+        ? 'SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC'
+        : 'SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC';
       pool.query(sqlFields)
         .then(result => {
           const rows = result.rows || [];
@@ -22696,10 +22716,11 @@ async function syncWithRenderCloud() {
           if (isRealUser) {
             const defaultPass = (cu.password && cu.password.startsWith('scrypt:')) ? cu.password : hashPassword(cu.password || '86266049');
             const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
+            const deviceVal = cu.device_type || cu.device || (cu.is_mobile ? 'Mobile' : 'Computador');
             await pool.query(
-              `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login)
-               VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9)`,
-              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin]
+              `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login, device_type)
+               VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9, $10)`,
+              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal]
             );
             await pool.query(
               `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
@@ -22709,7 +22730,7 @@ async function syncWithRenderCloud() {
               [cleanEmail, JSON.stringify(getEmptyFinancialData())]
             ).catch(() => {});
             saveLocalData(cleanEmail, getEmptyFinancialData());
-            console.log(`⚡ [SYNC RENDER -> SQL SERVER] Novo cadastro salvo diretamente no SQL Server (dados zerados): ${cleanEmail}`);
+            console.log(`⚡ [SYNC RENDER -> SQL SERVER] Novo cadastro salvo diretamente no SQL Server (dados zerados, Dispositivo: ${deviceVal}): ${cleanEmail}`);
           }
         } else {
           // Atualizar dados de perfil se fornecidos no Render
@@ -22718,6 +22739,9 @@ async function syncWithRenderCloud() {
           const updatedCpf = cu.cpf || currentU.cpf;
           const updatedPhone = cu.phone || currentU.phone;
           const updatedBirth = cu.birth_date || cu.birthDate || currentU.birth_date;
+          if (cu.device_type && cu.device_type !== currentU.device_type) {
+            await pool.query('UPDATE usuarios SET device_type = $1 WHERE LOWER(email) = LOWER($2)', [cu.device_type, cleanEmail]).catch(()=>{});
+          }
           if (cu.password && cu.password.startsWith('scrypt:') && cu.password !== currentU.password) {
             await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [cu.password, cleanEmail]).catch(()=>{});
           }
@@ -22825,7 +22849,7 @@ async function syncWithRenderCloud() {
     }
 
     // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS)
-    const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios');
+    const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios');
     if (localUsersRes.rows && localUsersRes.rows.length > 0) {
       const usersToSync = localUsersRes.rows.map(u => {
         const uCopy = { ...u };
