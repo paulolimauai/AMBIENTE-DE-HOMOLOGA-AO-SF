@@ -12,5 +12,33 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true
+  },
+  {
+    "id": "7",
+    "name": "Carlos Silva",
+    "email": "carlos.silva@gmail.com",
+    "password": "scrypt:dfd24fad44b31670b37d8834eb90c6dc:02557fe58f773785d699254615822061c22055288a2e1a22ff9c039db16f0133388f30e9f1b38f0debd39a797e0746f94f35a25ac4f418ec16cdf3b7148bb2b6",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-09T10:08:11.246Z",
+    "last_login": null,
+    "cpf": "040.233.261-00",
+    "phone": "(62) 99999-8888",
+    "birth_date": "10/10/1990",
+    "terms_accepted": true
+  },
+  {
+    "id": "9",
+    "name": "Carlos Oliveira Teste",
+    "email": "carlos.oliveira@teste.com",
+    "password": "scrypt:2962140a2152762b137ca07d130bf81f:b931d07df16541905ebd05100455f711b4e295d261a23d8ce2ebdd6dce7aea50c9c6c61b97ba82e230c813841ec86d510ad73aa91f3f44fa00f9fc1676de90fe",
+    "role": "Usuário",
+    "active": true,
+    "created_at": "2026-09-09T10:18:16.690Z",
+    "last_login": "2026-09-09T07:18:05.000Z",
+    "cpf": "123.456.789-00",
+    "phone": "(11) 99999-1111",
+    "birth_date": "1990-01-01",
+    "terms_accepted": true
   }
 ]

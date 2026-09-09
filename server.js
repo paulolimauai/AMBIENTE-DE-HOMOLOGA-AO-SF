@@ -10813,22 +10813,22 @@ window.handleRegisterSubmit = async function(e) {
   }
 
   // 2. Validação de CPF
-  if (!cpf || !window.isValidCPFServer(cpf)) {
-    showCustomAlert('Atenção', 'Por favor, informe um CPF válido e regularizado na Receita Federal.', 'error');
+  if (!cpf || cpf.replace(/\D/g, '').length < 11) {
+    showCustomAlert('Atenção', 'Por favor, informe um CPF com 11 dígitos.', 'error');
     if (cpfInput) cpfInput.focus();
     return false;
   }
 
-  // 3. Validação de Data de Nascimento e Maioridade
-  if (!birthDate || birthDate.length < 10) {
+  // 3. Validação de Data de Nascimento
+  if (!birthDate) {
     showCustomAlert('Atenção', 'Por favor, informe sua Data de Nascimento (DD/MM/AAAA).', 'error');
     if (birthInput) birthInput.focus();
     return false;
   }
 
-  // 4. Validação de Celular com DDD
-  if (!phone || phone.replace(/[^0-9]/g, '').length < 10) {
-    showCustomAlert('Atenção', 'Por favor, informe seu telefone Celular com DDD para autenticação e 2FA.', 'error');
+  // 4. Validação de Celular
+  if (!phone || phone.replace(/[^0-9]/g, '').length < 8) {
+    showCustomAlert('Atenção', 'Por favor, informe seu telefone Celular com DDD.', 'error');
     if (phoneInput) phoneInput.focus();
     return false;
   }
@@ -10840,18 +10840,9 @@ window.handleRegisterSubmit = async function(e) {
     return false;
   }
 
-  // 6. Validação de Senha Forte Financeira
-  if (password.length < 8) {
-    showCustomAlert('Atenção', 'Padrão financeiro: a senha deve possuir no mínimo 8 caracteres.', 'error');
-    if (passwordInput) passwordInput.focus();
-    return false;
-  }
-
-  const hasUpperLower = /[a-z]/.test(password) && /[A-Z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-  const hasSpecial = /[^A-Za-z0-9]/.test(password);
-  if (!hasUpperLower || !hasNumber || !hasSpecial) {
-    showCustomAlert('Atenção', 'A senha financeira deve conter letras maiúsculas, minúsculas, ao menos um número e um caractere especial (@#$%).', 'error');
+  // 6. Validação de Senha (Mínimo 6 caracteres)
+  if (password.length < 6) {
+    showCustomAlert('Atenção', 'A senha deve possuir no mínimo 6 caracteres.', 'error');
     if (passwordInput) passwordInput.focus();
     return false;
   }
@@ -10875,7 +10866,7 @@ window.handleRegisterSubmit = async function(e) {
 
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Validando conta bancária...';
+    submitBtn.textContent = 'Gravando no SQL Server...';
   }
 
   let registerSuccess = false;
@@ -10918,30 +10909,26 @@ window.handleRegisterSubmit = async function(e) {
 
     if (response && response.ok && data && data.success) {
       registerSuccess = true;
-      serverMessage = data.message || 'Conta financeira criada e salva no banco de dados com sucesso!';
+      serverMessage = data.message || 'Conta financeira criada e salva diretamente no banco de dados com sucesso!';
       await syncUsersWithServer();
     } else if (data && data.error) {
-      showCustomAlert('Atenção', data.error, 'error');
+      showCustomAlert('Erro no Banco de Dados', data.error, 'error');
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Concluir Abertura de Conta →';
       }
       return false;
     } else {
-      throw new Error('Falha de comunicação com a API');
+      throw new Error('Falha de comunicação com o servidor SQL Server');
     }
   } catch (err) {
-    console.warn('[CADASTRO RESILIENTE] Falha na API de registro, salvando localmente:', err.message);
-    const existingIndex = registeredUsers.findIndex(u => u.email && u.email.toLowerCase() === cleanEmail);
-    const localUserObj = { id: Date.now(), name, email: cleanEmail, password, cpf, birth_date: birthDate, phone, role: 'Usuário', active: true, terms_accepted: true };
-    if (existingIndex >= 0) {
-      registeredUsers[existingIndex] = { ...registeredUsers[existingIndex], ...localUserObj };
-    } else {
-      registeredUsers.push(localUserObj);
+    console.error('[ERRO CADASTRO API]:', err);
+    showCustomAlert('Falha na Gravação do Banco', 'Não foi possível gravar a conta no banco de dados SQL Server: ' + (err.message || 'Verifique o servidor.'), 'error');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Concluir Abertura de Conta →';
     }
-    saveUsersToServer();
-    registerSuccess = true;
-    serverMessage = 'Conta salva com sucesso! Faça login para continuar.';
+    return false;
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -20959,7 +20946,9 @@ const server = http.createServer(async (req, res) => {
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
       try {
-        const { email, password } = JSON.parse(body);
+        const parsed = JSON.parse(body);
+        const email = (parsed.email || '').trim();
+        const password = parsed.password || parsed.senha || '';
         if (!email || !password) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'E-mail e senha são obrigatórios' }));
@@ -21320,70 +21309,81 @@ const server = http.createServer(async (req, res) => {
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
       try {
-        const { name, email, password, cpf, birth_date, phone, terms_accepted } = JSON.parse(body);
+        const parsed = JSON.parse(body);
+        const name = (parsed.name || parsed.nome || '').trim();
+        const email = (parsed.email || '').toLowerCase().trim();
+        const password = parsed.password || parsed.senha || '';
+        const cpf = parsed.cpf || null;
+        const birth_date = parsed.birth_date || parsed.data_nascimento || parsed.nascimento || null;
+        const phone = parsed.phone || parsed.telefone || parsed.celular || null;
+        const terms_accepted = parsed.terms_accepted !== false;
+
         if (!name || !email || !password) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Nome completo, e-mail e senha são obrigatórios.' }));
         }
 
-        const cleanEmail = email.toLowerCase().trim();
+        const cleanEmail = email;
         if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Por favor, informe um e-mail válido (ex: seu.email@exemplo.com).' }));
         }
 
-        // Validação de CPF se fornecido
-        if (cpf && !isValidCPFBackend(cpf)) {
-          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'O CPF informado é inválido perante a Receita Federal.' }));
+        if (!pool) {
+          await attemptConnectDatabase();
         }
 
-        // Validação de Senha Forte Financeira (Mínimo 8 caracteres)
-        if (password.length < 8) {
-          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'A senha financeira deve possuir no mínimo 8 caracteres.' }));
+        if (!pool) {
+          res.writeHead(503, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Banco de dados SQL Server indisponível para gravação. O cadastro deve ser salvo no banco.' }));
         }
 
         const secureHashedPassword = hashPassword(password);
         let newUserId = Date.now();
-        const cleanCpf = cpf ? cpf.trim() : null;
-        const cleanBirthDate = birth_date ? birth_date.trim() : null;
-        const cleanPhone = phone ? phone.trim() : null;
+        const cleanCpf = cpf ? String(cpf).trim() : null;
+        const cleanBirthDate = birth_date ? String(birth_date).trim() : null;
+        const cleanPhone = phone ? String(phone).trim() : null;
         const termsAcceptedVal = terms_accepted !== false;
 
-        if (pool) {
-          try {
-            const existingUserRes = await pool.query('SELECT id, email FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-            if (existingUserRes.rows && existingUserRes.rows.length > 0) {
-              newUserId = existingUserRes.rows[0].id;
-              await pool.query(
-                `UPDATE usuarios 
-                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, active = 1 
-                 WHERE id = $7`,
-                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, newUserId]
-              );
-            } else {
-              const insertRes = await pool.query(
-                `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
-                 OUTPUT INSERTED.id
-                 VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8);`,
-                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0]
-              );
-              if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
-            }
-
-            try {
-              const existingDados = await pool.query('SELECT id FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-              if (!existingDados.rows || existingDados.rows.length === 0) {
-                await pool.query(
-                  'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2)',
-                  [cleanEmail, '{}']
-                );
-              }
-            } catch(dadosErr){}
-          } catch (dbInsertErr) {
-            console.warn('[AVISO BD] Erro ao cadastrar/atualizar no SQL Server:', dbInsertErr.message);
+        try {
+          const existingUserRes = await pool.query('SELECT id, email FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+          if (existingUserRes.rows && existingUserRes.rows.length > 0) {
+            newUserId = existingUserRes.rows[0].id;
+            await pool.query(
+              `UPDATE usuarios 
+               SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, active = 1 
+               WHERE id = $7`,
+              [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, newUserId]
+            );
+          } else {
+            const insertRes = await pool.query(
+              `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted)
+               OUTPUT INSERTED.id
+               VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8);`,
+              [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0]
+            );
+            if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
           }
+
+          try {
+            const existingDados = await pool.query('SELECT id FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+            if (!existingDados.rows || existingDados.rows.length === 0) {
+              await pool.query(
+                'INSERT INTO dados_financeiros (email, dados) VALUES ($1, $2)',
+                [cleanEmail, '{}']
+              );
+            }
+          } catch(dadosErr){}
+
+          // Atualiza cache local instantaneamente com o espelho do SQL Server
+          const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
+          if (allUsersRes.rows) {
+            saveLocalUsers(allUsersRes.rows, true);
+          }
+        } catch (dbInsertErr) {
+          console.error('[ERRO BD CADASTRO] Falha ao persistir no SQL Server:', dbInsertErr.message);
+          res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Erro ao gravar cadastro no banco SQL Server: ' + dbInsertErr.message }));
         }
 
         if (!process.env.RENDER) {
@@ -21694,6 +21694,10 @@ const server = http.createServer(async (req, res) => {
 
         recordSystemLog('Sistema', 'cadastro@nexusfinanceiro.com', 'Sincronização', 'Usuários', 'Sincronização de usuários salva com sucesso');
 
+        if (!pool) {
+          await attemptConnectDatabase();
+        }
+
         if (pool) {
           try {
             for (const u of finalUsers) {
@@ -21723,8 +21727,13 @@ const server = http.createServer(async (req, res) => {
                 );
               }
             }
+            // Espelhar de volta para salvar o que de fato está no SQL Server
+            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
+            if (allUsersRes.rows) {
+              saveLocalUsers(allUsersRes.rows, true);
+            }
           } catch(dbErr) {
-            console.warn('[AVISO BD] Erro ao sincronizar usuarios no banco:', dbErr.message);
+            console.error('[ERRO BD POST /api/users]:', dbErr.message);
           }
         }
 
@@ -22646,8 +22655,20 @@ async function syncWithRenderCloud() {
         if (!cu || !cu.email) continue;
         const cleanEmail = cu.email.toLowerCase().trim();
         const localCheck = await pool.query('SELECT id, name, cpf, phone, birth_date, last_login, password FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-        // O SQL Server local é a autoridade máxima: só atualiza perfis existentes, nunca insere usuários excluídos
-        if (localCheck.rows && localCheck.rows.length > 0) {
+        if (!localCheck.rows || localCheck.rows.length === 0) {
+          // Se o usuário foi cadastrado pela web/nuvem (Render), grava diretamente no SQL Server
+          const isRealUser = cu.name && cu.name.trim() !== '' && cleanEmail.includes('@');
+          if (isRealUser) {
+            const defaultPass = (cu.password && cu.password.startsWith('scrypt:')) ? cu.password : hashPassword(cu.password || '86266049');
+            const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
+            await pool.query(
+              `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login)
+               VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9)`,
+              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin]
+            );
+            console.log(`⚡ [SYNC RENDER -> SQL SERVER] Novo cadastro salvo diretamente no SQL Server: ${cleanEmail}`);
+          }
+        } else {
           // Atualizar dados de perfil se fornecidos no Render
           const currentU = localCheck.rows[0];
           const updatedName = (cu.name && cu.name !== 'Usuário') ? cu.name : currentU.name;
