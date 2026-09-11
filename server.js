@@ -1642,14 +1642,80 @@ body.light .persistent-system-bg {
     url('/images/nexus_cyber_office_bg.jpg') !important;
 }
 
-html,
-body,
+/* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - 4K High-Tech) ==================== */
+:root {
+  --postlogin-bg: #070B16;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(14, 165, 233, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 65% 45% at 95% 35%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 5% 75%, rgba(245, 158, 11, 0.05) 0%, transparent 60%),
+    linear-gradient(180deg, #090E1D 0%, #070B16 45%, #04070E 100%);
+}
+
+html[data-app-bg="obsidian"] {
+  --postlogin-bg: #070B16;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(14, 165, 233, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 65% 45% at 95% 35%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 5% 75%, rgba(245, 158, 11, 0.05) 0%, transparent 60%),
+    linear-gradient(180deg, #090E1D 0%, #070B16 45%, #04070E 100%);
+}
+
+html[data-app-bg="midnight"] {
+  --postlogin-bg: #020408;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30, 41, 59, 0.25) 0%, transparent 70%),
+    linear-gradient(180deg, #050811 0%, #020408 50%, #000000 100%);
+}
+
+html[data-app-bg="cyber-blue"] {
+  --postlogin-bg: #050E22;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(2, 132, 199, 0.20) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 40%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
+    linear-gradient(180deg, #071536 0%, #050E22 50%, #020712 100%);
+}
+
+html[data-app-bg="emerald"] {
+  --postlogin-bg: #03140F;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(16, 185, 129, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 30%, rgba(52, 211, 153, 0.10) 0%, transparent 60%),
+    linear-gradient(180deg, #051C15 0%, #03140F 50%, #010A07 100%);
+}
+
+html[data-app-bg="slate"] {
+  --postlogin-bg: #0B1120;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(71, 85, 105, 0.25) 0%, transparent 70%),
+    linear-gradient(180deg, #111B30 0%, #0B1120 50%, #070B14 100%);
+}
+
+/* Modo Claro Pós-Login */
+body.light, html.light {
+  --postlogin-bg: #F1F5F9;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(2, 132, 199, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 65% 45% at 95% 25%, rgba(16, 185, 129, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 5% 75%, rgba(245, 158, 11, 0.04) 0%, transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 100%);
+}
+
+html.user-logged-in #persistentSystemBg,
+html.user-logged-in .persistent-system-bg {
+  background-color: var(--postlogin-bg) !important;
+  background-image: var(--postlogin-gradient) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: scroll !important;
+}
+
 html.user-logged-in,
 html.user-logged-in body,
 body.user-logged-in {
   font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-  background-color: transparent !important;
-  background-image: none !important;
+  background-color: var(--postlogin-bg) !important;
+  background-image: var(--postlogin-gradient) !important;
   color:var(--text); min-height:100vh;
   -webkit-overflow-scrolling: touch !important;
   scroll-behavior: smooth;
@@ -1661,6 +1727,8 @@ html.user-logged-in #authPage {
 }
 html.user-logged-in #appMain {
   display: flex !important;
+  background-color: var(--postlogin-bg) !important;
+  background-image: var(--postlogin-gradient) !important;
 }
 
 button, input, select{font-family:inherit; color:inherit;}
@@ -8143,6 +8211,68 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   background: #f1f5f9 !important;
   color: #0284c7 !important;
 }
+
+/* ==================== Dropdown de Temas de Fundo Pós-Login ==================== */
+.bg-theme-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--card, #0f172a) !important;
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.15)) !important;
+  border-radius: 14px !important;
+  padding: 8px !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.75), 0 0 20px rgba(14,165,233,0.18) !important;
+  z-index: 999999 !important;
+  min-width: 235px;
+}
+.bg-theme-dropdown .bg-opt-btn {
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text, #F8FAFC);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.15s ease;
+}
+.bg-theme-dropdown .bg-opt-btn:hover {
+  background: rgba(14, 165, 233, 0.18) !important;
+  color: #FFFFFF !important;
+}
+.bg-theme-dropdown .bg-opt-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+body.light .bg-theme-dropdown,
+html.light .bg-theme-dropdown {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 12px 36px rgba(15,23,42,0.15) !important;
+}
+body.light .bg-theme-dropdown div,
+html.light .bg-theme-dropdown div {
+  color: #64748b !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+body.light .bg-theme-dropdown .bg-opt-btn,
+html.light .bg-theme-dropdown .bg-opt-btn {
+  color: #0f172a !important;
+  background: transparent;
+}
+body.light .bg-theme-dropdown .bg-opt-btn:hover,
+html.light .bg-theme-dropdown .bg-opt-btn:hover {
+  background: #f1f5f9 !important;
+  color: #0284c7 !important;
+}
 @media (max-width: 640px) {
   .topheader-row {
     padding: 8px 10px !important;
@@ -8152,7 +8282,8 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   .topheader-row .right {
     gap: 5px !important;
   }
-  .scale-selector-wrap #scaleMenuBtn {
+  .scale-selector-wrap #scaleMenuBtn,
+  .bg-selector-wrap #bgThemeBtn {
     padding: 0 !important;
     width: 36px !important;
     height: 36px !important;
@@ -8166,7 +8297,12 @@ html.light .scale-dropdown .scale-opt-btn:hover {
     max-width: calc(100vw - 24px) !important;
     min-width: 210px !important;
   }
-  .icon-btn, #miniThemeBtn, #notifBtn {
+  .bg-theme-dropdown {
+    right: -25px !important;
+    max-width: calc(100vw - 24px) !important;
+    min-width: 215px !important;
+  }
+  .icon-btn, #miniThemeBtn, #notifBtn, #bgThemeBtn {
     width: 36px !important;
     height: 36px !important;
   }
@@ -11925,23 +12061,22 @@ function autoCompleteAllRecurringMonths() {
 
 function applyDataPayload(data) {
   resetUserDataState();
+  if (typeof data === 'string') {
+    try { data = JSON.parse(data); } catch(e){ data = null; }
+  }
   if (!data || typeof data !== 'object') return;
   
   if (Array.isArray(data.categories) && data.categories.length > 0) {
     categories = data.categories;
   }
-  if (Array.isArray(data.accounts)) {
-    accounts = data.accounts;
-  }
-  if (Array.isArray(data.transactions)) {
-    transactions = data.transactions;
-  }
-  if (Array.isArray(data.budgets)) budgets = data.budgets;
-  if (Array.isArray(data.goals)) goals = data.goals;
-  if (Array.isArray(data.recurringList)) recurringList = data.recurringList;
-  if (Array.isArray(data.alerts)) alerts = data.alerts;
-  if (Array.isArray(data.attachments)) attachments = data.attachments;
-  if (Array.isArray(data.notifications)) notifications = data.notifications;
+  accounts = Array.isArray(data.accounts) ? data.accounts : [];
+  transactions = Array.isArray(data.transactions) ? data.transactions : [];
+  budgets = Array.isArray(data.budgets) ? data.budgets : [];
+  goals = Array.isArray(data.goals) ? data.goals : [];
+  recurringList = Array.isArray(data.recurringList) ? data.recurringList : [];
+  alerts = Array.isArray(data.alerts) ? data.alerts : [];
+  attachments = Array.isArray(data.attachments) ? data.attachments : [];
+  notifications = Array.isArray(data.notifications) ? data.notifications : [];
 
   if (data.nextAccId) nextAccId = Math.max(nextAccId, data.nextAccId);
   if (data.nextTxId) nextTxId = Math.max(nextTxId, data.nextTxId);
@@ -11984,7 +12119,10 @@ async function loadUserData() {
   try {
     const res = await fetch(window.location.origin + '/api/data?email=' + encodeURIComponent(cleanEmail));
     if (res.ok) {
-      const serverData = await res.json();
+      let serverData = await res.json();
+      if (typeof serverData === 'string') {
+        try { serverData = JSON.parse(serverData); } catch(e){}
+      }
       if (serverData && typeof serverData === 'object') {
         applyDataPayload(serverData);
         saveToStorage(userKey, serverData);
@@ -19184,6 +19322,7 @@ async function saveUserAdmin(){
       active: active,
       created_at: new Date().toISOString()
     };
+    try { localStorage.removeItem('nexus_data_' + rawEmail.toLowerCase().trim()); } catch(e) {}
     registeredUsers.push(newUser);
     await saveUsersToServer();
     showToast('Usuário cadastrado com sucesso!');
@@ -21332,21 +21471,29 @@ function saveLocalData(email, data) {
 
 // Consolidação e Merge Inteligente de Dados Financeiros (Prevenção Absoluta de Perda de Dados)
 function mergeFinancialData(serverData, localData) {
-  if (!serverData && !localData) return null;
-  if (!serverData) return localData;
-  if (!localData) return serverData;
+  let sData = serverData;
+  let lData = localData;
+  if (typeof sData === 'string') {
+    try { sData = JSON.parse(sData); } catch(e){ sData = null; }
+  }
+  if (typeof lData === 'string') {
+    try { lData = JSON.parse(lData); } catch(e){ lData = null; }
+  }
+  if (!sData && !lData) return getEmptyFinancialData();
+  if (!sData) return lData;
+  if (!lData) return sData;
 
-  const merged = { ...localData, ...serverData };
+  const merged = { ...lData, ...sData };
 
   // 1. Transações: união inteligente por ID + detalhes para garantir que nenhuma transação seja perdida
   const txMap = new Map();
-  (serverData.transactions || []).forEach(t => {
+  (sData.transactions || []).forEach(t => {
     if (t) {
       const key = `${t.id || ''}_${t.desc || t.description || ''}_${t.date || ''}_${t.val || t.amount || 0}`;
       txMap.set(key, t);
     }
   });
-  (localData.transactions || []).forEach(t => {
+  (lData.transactions || []).forEach(t => {
     if (t) {
       const key = `${t.id || ''}_${t.desc || t.description || ''}_${t.date || ''}_${t.val || t.amount || 0}`;
       if (!txMap.has(key)) {
@@ -21358,13 +21505,13 @@ function mergeFinancialData(serverData, localData) {
 
   // 2. Categorias: união preservando categorias cadastradas
   const catMap = new Map();
-  (serverData.categories || []).forEach(c => {
+  (sData.categories || []).forEach(c => {
     if (c) {
       const key = c.id ? String(c.id) : (c.name || JSON.stringify(c));
       catMap.set(key, c);
     }
   });
-  (localData.categories || []).forEach(c => {
+  (lData.categories || []).forEach(c => {
     if (c) {
       const key = c.id ? String(c.id) : (c.name || JSON.stringify(c));
       if (!catMap.has(key)) {
@@ -21376,13 +21523,13 @@ function mergeFinancialData(serverData, localData) {
 
   // 3. Contas bancárias: união preservando contas cadastradas
   const accMap = new Map();
-  (serverData.accounts || []).forEach(a => {
+  (sData.accounts || []).forEach(a => {
     if (a) {
       const key = a.id ? String(a.id) : (a.name || JSON.stringify(a));
       accMap.set(key, a);
     }
   });
-  (localData.accounts || []).forEach(a => {
+  (lData.accounts || []).forEach(a => {
     if (a) {
       const key = a.id ? String(a.id) : (a.name || JSON.stringify(a));
       if (!accMap.has(key)) {
@@ -21394,16 +21541,16 @@ function mergeFinancialData(serverData, localData) {
 
   // 4. Metas e Orçamentos
   const goalMap = new Map();
-  (serverData.goals || []).forEach(g => { if (g) goalMap.set(String(g.id || g.title), g); });
-  (localData.goals || []).forEach(g => {
+  (sData.goals || []).forEach(g => { if (g) goalMap.set(String(g.id || g.title), g); });
+  (lData.goals || []).forEach(g => {
     const key = String(g && (g.id || g.title));
     if (key && !goalMap.has(key)) goalMap.set(key, g);
   });
   merged.goals = Array.from(goalMap.values());
 
   const budgetMap = new Map();
-  (serverData.budgets || []).forEach(b => { if (b) budgetMap.set(String(b.id || b.cat), b); });
-  (localData.budgets || []).forEach(b => {
+  (sData.budgets || []).forEach(b => { if (b) budgetMap.set(String(b.id || b.cat), b); });
+  (lData.budgets || []).forEach(b => {
     const key = String(b && (b.id || b.cat));
     if (key && !budgetMap.has(key)) budgetMap.set(key, b);
   });
@@ -22096,14 +22243,18 @@ const server = http.createServer(async (req, res) => {
             }
 
             try {
-              const existingDados = await pool.query('SELECT id FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
               const emptyStructure = getEmptyFinancialData();
-              if (!existingDados.rows || existingDados.rows.length === 0) {
-                await pool.query(
-                  'INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE())',
-                  [cleanEmail, JSON.stringify(emptyStructure)]
-                );
-              }
+              await pool.query(
+                `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+                 BEGIN
+                   UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
+                 END
+                 ELSE
+                 BEGIN
+                   INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+                 END`,
+                [cleanEmail, JSON.stringify(emptyStructure)]
+              );
               saveLocalData(cleanEmail, emptyStructure);
             } catch(dadosErr){}
 
@@ -22709,6 +22860,18 @@ const server = http.createServer(async (req, res) => {
                    END;`,
                   [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador']
                 );
+
+                // Garante que todo novo usuário cadastrado tenha dados financeiros 100% zerados
+                await pool.query(
+                  `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+                   BEGIN
+                     INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+                   END`,
+                  [uEmail, JSON.stringify(getEmptyFinancialData())]
+                ).catch(() => {});
+                if (!getLocalData(uEmail)) {
+                  saveLocalData(uEmail, getEmptyFinancialData());
+                }
               }
             }
             // Espelhar de volta para salvar o que de fato está no SQL Server
@@ -22845,10 +23008,19 @@ const server = http.createServer(async (req, res) => {
       pool.query('SELECT dados FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [email])
         .then(result => {
           let serverData = result.rows[0] ? result.rows[0].dados : null;
+          if (typeof serverData === 'string') {
+            try { serverData = JSON.parse(serverData); } catch(e){ serverData = null; }
+          }
           let finalData = mergeFinancialData(serverData, localData);
           if (!finalData || typeof finalData !== 'object' || Object.keys(finalData).length === 0) {
             finalData = getEmptyFinancialData();
           }
+          if (!Array.isArray(finalData.transactions)) finalData.transactions = [];
+          if (!Array.isArray(finalData.accounts)) finalData.accounts = [];
+          if (!Array.isArray(finalData.budgets)) finalData.budgets = [];
+          if (!Array.isArray(finalData.goals)) finalData.goals = [];
+          if (!Array.isArray(finalData.recurringList)) finalData.recurringList = [];
+
           if (finalData) {
             saveLocalData(email, finalData);
             pool.query(
@@ -22867,12 +23039,18 @@ const server = http.createServer(async (req, res) => {
           res.end(JSON.stringify(finalData));
         })
         .catch(err => {
-          const fallbackData = localData || getEmptyFinancialData();
+          let fallbackData = localData || getEmptyFinancialData();
+          if (typeof fallbackData === 'string') {
+            try { fallbackData = JSON.parse(fallbackData); } catch(e){ fallbackData = getEmptyFinancialData(); }
+          }
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(fallbackData));
         });
     } else {
-      const fallbackData = localData || getEmptyFinancialData();
+      let fallbackData = localData || getEmptyFinancialData();
+      if (typeof fallbackData === 'string') {
+        try { fallbackData = JSON.parse(fallbackData); } catch(e){ fallbackData = getEmptyFinancialData(); }
+      }
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       res.end(JSON.stringify(fallbackData));
     }

@@ -4137,6 +4137,7 @@
                     localUsers.push(userObj);
                 }
                 localStorage.setItem('nexus_users', JSON.stringify(localUsers));
+                try { localStorage.removeItem('nexus_data_' + email.toLowerCase().trim()); } catch(e) {}
 
                 // Preenche formulário de Logon com as credenciais criadas
                 const loginEmailEl = document.getElementById('loginEmail');
