@@ -2840,7 +2840,7 @@
             if (alertBox) alertBox.classList.add('hidden');
         };
 
-        // Alternador de Abas
+        // Alternador de Abas Robusto e Seguro
         window.switchAuthTab = function(tabName) {
             hideAlert();
             const loginBox = document.getElementById('loginBox');
@@ -2853,45 +2853,65 @@
             const tabBtnUsers = document.getElementById('tabBtnUsers');
             const subTitle = document.getElementById('authSubtitle');
 
-            if (loginBox) loginBox.classList.add('hidden');
-            if (registerBox) registerBox.classList.add('hidden');
-            if (forgotBox) forgotBox.classList.add('hidden');
-            if (usersBox) usersBox.classList.add('hidden');
+            [loginBox, registerBox, forgotBox, usersBox].forEach(box => {
+                if (box) {
+                    box.classList.add('hidden');
+                    box.classList.remove('block');
+                    box.style.display = 'none';
+                }
+            });
 
             if (tabBtnLogin) tabBtnLogin.classList.remove('active');
             if (tabBtnRegister) tabBtnRegister.classList.remove('active');
             if (tabBtnUsers) tabBtnUsers.classList.remove('active');
 
             if (tabName === 'register') {
-                if (registerBox) registerBox.classList.remove('hidden');
-                if (tabsNav) tabsNav.classList.remove('hidden');
+                if (registerBox) {
+                    registerBox.classList.remove('hidden');
+                    registerBox.classList.add('block');
+                    registerBox.style.display = 'block';
+                }
+                if (tabsNav) { tabsNav.classList.remove('hidden'); tabsNav.style.display = 'flex'; }
                 if (tabBtnRegister) tabBtnRegister.classList.add('active');
                 if (subTitle) subTitle.textContent = 'Crie sua conta para gerenciar suas finanças com IA';
                 const regName = document.getElementById('regName');
                 if (regName) regName.focus();
             } else if (tabName === 'users') {
-                if (usersBox) usersBox.classList.remove('hidden');
-                if (tabsNav) tabsNav.classList.remove('hidden');
+                if (usersBox) {
+                    usersBox.classList.remove('hidden');
+                    usersBox.classList.add('block');
+                    usersBox.style.display = 'block';
+                }
+                if (tabsNav) { tabsNav.classList.remove('hidden'); tabsNav.style.display = 'flex'; }
                 if (tabBtnUsers) tabBtnUsers.classList.add('active');
                 if (subTitle) subTitle.textContent = 'Selecione um usuário cadastrado para realizar logon imediato';
                 carregarUsuariosLogon();
                 const searchInput = document.getElementById('searchUsersLogonInput');
                 if (searchInput) searchInput.focus();
             } else if (tabName === 'forgot') {
-                if (forgotBox) forgotBox.classList.remove('hidden');
-                if (tabsNav) tabsNav.classList.add('hidden');
+                if (forgotBox) {
+                    forgotBox.classList.remove('hidden');
+                    forgotBox.classList.add('block');
+                    forgotBox.style.display = 'block';
+                }
+                if (tabsNav) { tabsNav.classList.add('hidden'); tabsNav.style.display = 'none'; }
                 if (subTitle) subTitle.textContent = 'Recuperação segura de acesso ao sistema';
                 const forgotEmail = document.getElementById('forgotEmail');
                 if (forgotEmail) forgotEmail.focus();
             } else {
-                if (loginBox) loginBox.classList.remove('hidden');
-                if (tabsNav) tabsNav.classList.remove('hidden');
+                if (loginBox) {
+                    loginBox.classList.remove('hidden');
+                    loginBox.classList.add('block');
+                    loginBox.style.display = 'block';
+                }
+                if (tabsNav) { tabsNav.classList.remove('hidden'); tabsNav.style.display = 'flex'; }
                 if (tabBtnLogin) tabBtnLogin.classList.add('active');
                 if (subTitle) subTitle.textContent = 'Plataforma Inteligente de Gestão Financeira Pessoal';
                 const loginEmail = document.getElementById('loginEmail');
                 if (loginEmail) loginEmail.focus();
             }
         };
+        const switchAuthTab = window.switchAuthTab;
 
         // Alternador de Visibilidade da Senha (Olho Nitido e Funcional)
         window.togglePasswordVisibility = function(inputId, btnId) {
@@ -3606,12 +3626,14 @@
                 }
 
                 // Validação de Troca Obrigatória de Senha no Primeiro Login com Senha Temporária
-                if (data.user && (data.user.must_change_password === true || data.user.must_change_password === 1)) {
+                const mustChange = (data.must_change_password === true || data.must_change_password === 1 || data.must_change_password === '1' ||
+                                    (data.user && (data.user.must_change_password === true || data.user.must_change_password === 1 || data.user.must_change_password === '1')));
+                if (mustChange) {
                     if (btn) {
                         btn.disabled = false;
                         btn.innerHTML = '<span>Entrar na Conta</span><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
                     }
-                    showMandatoryPasswordModal(data.user, data.token);
+                    showMandatoryPasswordModal(data.user || { email: email, name: email }, data.token);
                     return false;
                 }
 

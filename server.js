@@ -8389,7 +8389,7 @@ html.light .mand-input-wrapper input {
           <div class="auth-field">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <label style="margin-bottom:0;">Senha</label>
-              <a class="auth-forgot-link" id="goForgotFromLogin">Esqueceu a senha?</a>
+              <a class="auth-forgot-link" id="goForgotFromLogin" href="javascript:void(0)" onclick="window.switchAuthTab('forgot'); return false;" style="cursor:pointer;">Esqueceu a senha?</a>
             </div>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
@@ -8555,7 +8555,7 @@ html.light .mand-input-wrapper input {
           Para emitir sua senha temporária com máxima segurança, confirme seus dados cadastrados de titularidade da conta:
         </p>
 
-        <form id="forgotStep1">
+        <form id="forgotStep1" onsubmit="window.handleServerForgotSubmit(event); return false;">
           <div class="auth-field">
             <label>E-mail Cadastrado</label>
             <div class="auth-input-wrapper">
@@ -8577,12 +8577,12 @@ html.light .mand-input-wrapper input {
           </div>
 
           <div class="auth-field">
-            <label>Data de Nascimento</label>
+            <label>Data de Nascimento (Opcional)</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
               </span>
-              <input type="text" id="forgotBirthDate" placeholder="DD/MM/AAAA" maxlength="10" required autocomplete="bday" oninput="window.handleServerBirthInput(this)">
+              <input type="text" id="forgotBirthDate" placeholder="DD/MM/AAAA" maxlength="10" autocomplete="bday" oninput="window.handleServerBirthInput(this)">
             </div>
           </div>
 
@@ -8594,7 +8594,7 @@ html.light .mand-input-wrapper input {
         </form>
 
         <div style="text-align:center; margin-top:18px;">
-          <a class="auth-forgot-link" id="goLoginFromForgot">← Voltar para o Login</a>
+          <a class="auth-forgot-link" id="goLoginFromForgot" href="javascript:void(0)" onclick="window.switchAuthTab('login'); return false;" style="cursor:pointer;">← Voltar para o Login</a>
         </div>
       </div>
 
@@ -10372,7 +10372,7 @@ if (authThemeBtn) authThemeBtn.onclick = () => window.toggleAuthTheme();
 const loginPassToggle = document.getElementById('loginPasswordToggle') || document.getElementById('toggleLoginPassBtn');
 if (loginPassToggle) loginPassToggle.onclick = () => window.togglePasswordVisibility('loginPassword', loginPassToggle.id);
 
-const goForgot = document.getElementById('goForgot');
+const goForgot = document.getElementById('goForgot') || document.getElementById('goForgotFromLogin');
 if (goForgot) goForgot.onclick = (e) => { e.preventDefault(); window.switchAuthTab('forgot'); };
 
 const goLoginFromForgot = document.getElementById('goLoginFromForgot');
@@ -10383,77 +10383,79 @@ let serverCurrentTempEmail = '';
 let serverCurrentTempPassword = '';
 let serverCurrentMandatoryToken = '';
 
+window.handleServerForgotSubmit = async function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (window.clearAuthFeedback) window.clearAuthFeedback('forgot');
+
+  const emailInput = document.getElementById('forgotEmail');
+  const cpfInput = document.getElementById('forgotCpf');
+  const birthInput = document.getElementById('forgotBirthDate');
+  const btn = document.getElementById('btnSendPassword');
+
+  const email = emailInput ? emailInput.value.trim() : '';
+  const cpf = cpfInput ? cpfInput.value.trim() : '';
+  const birth_date = birthInput ? birthInput.value.trim() : '';
+
+  if (!email) {
+    window.showAuthFeedback('forgot', 'error', 'E-mail não informado', 'Por favor, informe o e-mail cadastrado da sua conta.');
+    if (emailInput) emailInput.focus();
+    return;
+  }
+  if (!cpf) {
+    window.showAuthFeedback('forgot', 'error', 'CPF Obrigatório', 'Por favor, informe o CPF do titular para confirmação dos dados cadastrais.');
+    if (cpfInput) cpfInput.focus();
+    return;
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Validando Dados Cadastrais...';
+  }
+
+  try {
+    const res = await fetch(window.location.origin + '/api/send-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, cpf, birth_date })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      window.showAuthFeedback('forgot', 'error', 'Confirmação Recusada', data.error || 'Dados cadastrais não localizados ou divergentes.');
+      return;
+    }
+
+    serverCurrentTempEmail = email;
+    serverCurrentTempPassword = data.tempPassword || '';
+
+    // Apresentar Senha Temporária em Tela no Overlay 4K
+    const valEl = document.getElementById('tempPasswordValServer');
+    if (valEl) valEl.textContent = serverCurrentTempPassword;
+
+    const copyBtnTxt = document.getElementById('btnCopyTempTextServer');
+    if (copyBtnTxt) copyBtnTxt.textContent = 'Copiar';
+
+    const overlay = document.getElementById('tempPasswordOverlay');
+    if (overlay) {
+      overlay.style.display = 'flex';
+      overlay.classList.add('show');
+      void overlay.offsetHeight;
+      overlay.classList.add('in');
+    }
+
+  } catch(err) {
+    window.showAuthFeedback('forgot', 'error', 'Falha na Conexão', 'Erro ao processar solicitação no servidor. Verifique sua conexão.');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Confirmar Dados & Gerar Senha Temporária →';
+    }
+  }
+};
+
 const forgotFormElement = document.getElementById('forgotStep1') || document.getElementById('forgotForm');
 if (forgotFormElement) {
-  forgotFormElement.onsubmit = async (e) => {
-    e.preventDefault();
-    if (window.clearAuthFeedback) window.clearAuthFeedback('forgot');
-
-    const emailInput = document.getElementById('forgotEmail');
-    const cpfInput = document.getElementById('forgotCpf');
-    const birthInput = document.getElementById('forgotBirthDate');
-    const btn = document.getElementById('btnSendPassword');
-
-    const email = emailInput ? emailInput.value.trim() : '';
-    const cpf = cpfInput ? cpfInput.value.trim() : '';
-    const birth_date = birthInput ? birthInput.value.trim() : '';
-
-    if (!email) {
-      window.showAuthFeedback('forgot', 'error', 'E-mail não informado', 'Por favor, informe o e-mail cadastrado da sua conta.');
-      if (emailInput) emailInput.focus();
-      return;
-    }
-    if (!cpf) {
-      window.showAuthFeedback('forgot', 'error', 'CPF Obrigatório', 'Por favor, informe o CPF do titular para confirmação dos dados cadastrais.');
-      if (cpfInput) cpfInput.focus();
-      return;
-    }
-
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'Validando Dados Cadastrais...';
-    }
-
-    try {
-      const res = await fetch(window.location.origin + '/api/send-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, cpf, birth_date })
-      });
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        window.showAuthFeedback('forgot', 'error', 'Confirmação Recusada', data.error || 'Dados cadastrais não localizados ou divergentes.');
-        return;
-      }
-
-      serverCurrentTempEmail = email;
-      serverCurrentTempPassword = data.tempPassword || '';
-
-      // Apresentar Senha Temporária em Tela no Overlay 4K
-      const valEl = document.getElementById('tempPasswordValServer');
-      if (valEl) valEl.textContent = serverCurrentTempPassword;
-
-      const copyBtnTxt = document.getElementById('btnCopyTempTextServer');
-      if (copyBtnTxt) copyBtnTxt.textContent = 'Copiar';
-
-      const overlay = document.getElementById('tempPasswordOverlay');
-      if (overlay) {
-        overlay.style.display = 'flex';
-        overlay.classList.add('show');
-        void overlay.offsetHeight;
-        overlay.classList.add('in');
-      }
-
-    } catch(err) {
-      window.showAuthFeedback('forgot', 'error', 'Falha na Conexão', 'Erro ao processar solicitação no servidor. Verifique sua conexão.');
-    } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = 'Confirmar Dados & Gerar Senha Temporária →';
-      }
-    }
-  };
+  forgotFormElement.onsubmit = window.handleServerForgotSubmit;
 }
 
 // Copiar Senha Temporária para a Área de Transferência
@@ -10875,12 +10877,14 @@ window.handleLoginSubmit = async function(e) {
     }
 
     // Interceptação de Troca Obrigatória no Primeiro Login com Senha Temporária
-    if (data.user && (data.user.must_change_password === true || data.user.must_change_password === 1)) {
+    const mustChange = (data.must_change_password === true || data.must_change_password === 1 || data.must_change_password === '1' ||
+                        (data.user && (data.user.must_change_password === true || data.user.must_change_password === 1 || data.user.must_change_password === '1')));
+    if (mustChange) {
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Entrar na Conta →';
       }
-      window.showMandatoryPasswordModal(data.user, data.token);
+      window.showMandatoryPasswordModal(data.user || { email: cleanEmail, name: cleanEmail }, data.token);
       return;
     }
 
