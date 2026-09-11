@@ -8859,6 +8859,24 @@ html.light .mand-input-wrapper input {
           </div>
         </div>
 
+        <div class="bg-selector-wrap" style="position:relative;">
+          <button class="icon-btn" id="bgThemeBtn" title="Cor de Fundo do Sistema Pós-Login" style="gap:5px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+            <span id="currentBgLabel" style="font-size:11px;">Fundo</span>
+          </button>
+          <div class="bg-theme-dropdown" id="bgThemeDropdown" style="display:none;">
+            <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); padding:6px 10px 4px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:4px;">
+              <span>Fundo Pós-Login</span>
+              <span>🎨</span>
+            </div>
+            <button type="button" class="bg-opt-btn" data-bg="obsidian"><span class="bg-opt-dot" style="background:#070B16; border:1.5px solid #38BDF8;"></span> Obsidian Navy (Padrão 4K)</button>
+            <button type="button" class="bg-opt-btn" data-bg="midnight"><span class="bg-opt-dot" style="background:#020408; border:1.5px solid #64748B;"></span> Midnight AMOLED (Preto)</button>
+            <button type="button" class="bg-opt-btn" data-bg="cyber-blue"><span class="bg-opt-dot" style="background:#050E22; border:1.5px solid #0284C7;"></span> Deep Cyber Blue</button>
+            <button type="button" class="bg-opt-btn" data-bg="emerald"><span class="bg-opt-dot" style="background:#03140F; border:1.5px solid #10B981;"></span> Dark Emerald (Banking)</button>
+            <button type="button" class="bg-opt-btn" data-bg="slate"><span class="bg-opt-dot" style="background:#0B1120; border:1.5px solid #94A3B8;"></span> Royal Slate (Grafite)</button>
+          </div>
+        </div>
+
         <div class="icon-btn" id="miniThemeBtn" title="Alternar Modo Noturno / Diurno">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>
         </div>
@@ -20669,6 +20687,62 @@ if (scaleMenuBtn && scaleDropdown) {
   });
   document.addEventListener('click', () => {
     if (scaleDropdown) scaleDropdown.style.display = 'none';
+  });
+}
+
+// ==================== Gerenciador de Cor de Fundo do Pós-Login ====================
+window.applyPostLoginBg = function(theme) {
+  const selected = theme || 'obsidian';
+  document.documentElement.setAttribute('data-app-bg', selected);
+  if (document.body) document.body.setAttribute('data-app-bg', selected);
+  try { localStorage.setItem('nexus_post_login_bg', selected); } catch(e){}
+
+  const bgLabelMap = {
+    'obsidian': 'Obsidian',
+    'midnight': 'Midnight',
+    'cyber-blue': 'Cyber Blue',
+    'emerald': 'Emerald',
+    'slate': 'Slate'
+  };
+
+  const lbl = document.getElementById('currentBgLabel');
+  if (lbl) {
+    lbl.textContent = bgLabelMap[selected] || 'Fundo';
+  }
+
+  document.querySelectorAll('.bg-opt-btn').forEach(btn => {
+    const bTheme = btn.getAttribute('data-bg');
+    const isSel = (bTheme === selected);
+    btn.style.fontWeight = isSel ? '700' : '500';
+    btn.style.background = isSel ? 'rgba(14, 165, 233, 0.18)' : 'transparent';
+  });
+};
+
+(function initPostLoginBg() {
+  try {
+    const savedBg = localStorage.getItem('nexus_post_login_bg') || 'obsidian';
+    window.applyPostLoginBg(savedBg);
+  } catch(e){}
+})();
+
+const bgThemeBtn = document.getElementById('bgThemeBtn');
+const bgThemeDropdown = document.getElementById('bgThemeDropdown');
+if (bgThemeBtn && bgThemeDropdown) {
+  bgThemeBtn.onclick = (e) => {
+    e.stopPropagation();
+    if (typeof scaleDropdown !== 'undefined' && scaleDropdown) scaleDropdown.style.display = 'none';
+    bgThemeDropdown.style.display = bgThemeDropdown.style.display === 'none' ? 'block' : 'none';
+  };
+  document.querySelectorAll('.bg-opt-btn').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const themeVal = btn.getAttribute('data-bg');
+      window.applyPostLoginBg(themeVal);
+      bgThemeDropdown.style.display = 'none';
+    };
+  });
+  document.addEventListener('click', () => {
+    if (bgThemeDropdown) bgThemeDropdown.style.display = 'none';
   });
 }
 
