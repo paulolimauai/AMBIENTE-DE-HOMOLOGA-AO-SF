@@ -33,7 +33,7 @@
     "id": "39",
     "name": "PAULO DE LIMA PEREIRA",
     "email": "paulolp0101@gmail.com",
-    "password": "scrypt:44bb506cb3f6f8e9cd63e89e6a0a7252:ad885945d8f580f401d68aeed280048b9ee9d1b1638ab257313274abc5fb881455b0a245b64c5e4ff035987149a56202bea1506f6198014327c6f239b054cfc3",
+    "password": "scrypt:cacdbc79f3a1d07ce78c1dc86e391dfa:188f53c3d8d10fd791be58a660cec45705fc51fb42b038bc9506cce57856f93272b795c0d13b163d52c76b57d3751d6356c75c3f83b3a42f443fdcf82634b164",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
