@@ -1713,61 +1713,63 @@ body.light .persistent-system-bg {
 
 /* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - 4K High-Tech) ==================== */
 :root {
-  --postlogin-bg: #070B16;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(14, 165, 233, 0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 65% 45% at 95% 35%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 40% at 5% 75%, rgba(245, 158, 11, 0.05) 0%, transparent 60%),
-    linear-gradient(180deg, #090E1D 0%, #070B16 45%, #04070E 100%);
+  --postlogin-bg: #0B0F19;
+  --postlogin-gradient: linear-gradient(180deg, #131B2E 0%, #0B0F19 50%, #060910 100%);
 }
 
-html[data-app-bg="obsidian"] {
-  --postlogin-bg: #070B16;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(14, 165, 233, 0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 65% 45% at 95% 35%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 40% at 5% 75%, rgba(245, 158, 11, 0.05) 0%, transparent 60%),
-    linear-gradient(180deg, #090E1D 0%, #070B16 45%, #04070E 100%);
-}
-
-html[data-app-bg="midnight"] {
-  --postlogin-bg: #020408;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30, 41, 59, 0.25) 0%, transparent 70%),
-    linear-gradient(180deg, #050811 0%, #020408 50%, #000000 100%);
-}
-
-html[data-app-bg="cyber-blue"] {
-  --postlogin-bg: #050E22;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(2, 132, 199, 0.20) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 90% 40%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
-    linear-gradient(180deg, #071536 0%, #050E22 50%, #020712 100%);
-}
-
-html[data-app-bg="emerald"] {
-  --postlogin-bg: #03140F;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(16, 185, 129, 0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 90% 30%, rgba(52, 211, 153, 0.10) 0%, transparent 60%),
-    linear-gradient(180deg, #051C15 0%, #03140F 50%, #010A07 100%);
-}
-
+/* 1. Titanium Slate (Novo Padrão Executivo Limpo - Alta Definição) */
+html[data-app-bg="titanium"],
+html[data-app-bg="obsidian"],
 html[data-app-bg="slate"] {
-  --postlogin-bg: #0B1120;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(71, 85, 105, 0.25) 0%, transparent 70%),
-    linear-gradient(180deg, #111B30 0%, #0B1120 50%, #070B14 100%);
+  --postlogin-bg: #0B0F19;
+  --postlogin-gradient: linear-gradient(180deg, #131B2E 0%, #0B0F19 50%, #060910 100%);
 }
 
-/* Modo Claro Pós-Login */
+/* 2. Preto Absoluto / Minimalist AMOLED (Zero Reflexos, Preto Puro) */
+html[data-app-bg="pure-black"],
+html[data-app-bg="midnight"] {
+  --postlogin-bg: #000000;
+  --postlogin-gradient: linear-gradient(180deg, #0A0A0A 0%, #000000 100%);
+}
+
+/* 3. Azul Marinho Real / Royal Sapphire Banking */
+html[data-app-bg="royal-navy"],
+html[data-app-bg="cyber-blue"] {
+  --postlogin-bg: #081A36;
+  --postlogin-gradient: linear-gradient(180deg, #0E2954 0%, #081A36 55%, #040E1E 100%);
+}
+
+/* 4. Verde Esmeralda Suíço / Private Wealth Banking */
+html[data-app-bg="emerald"],
+html[data-app-bg="emerald-wealth"] {
+  --postlogin-bg: #032015;
+  --postlogin-gradient: linear-gradient(180deg, #053322 0%, #032015 55%, #01110B 100%);
+}
+
+/* 5. Vinho Imperial / Ametista Bordeaux Luxo */
+html[data-app-bg="burgundy"],
+html[data-app-bg="wine"] {
+  --postlogin-bg: #220D1D;
+  --postlogin-gradient: linear-gradient(180deg, #37162F 0%, #220D1D 55%, #130710 100%);
+}
+
+/* 6. Bronze & Café Espresso Executivo */
+html[data-app-bg="espresso"],
+html[data-app-bg="bronze"] {
+  --postlogin-bg: #1A130D;
+  --postlogin-gradient: linear-gradient(180deg, #2B1F16 0%, #1A130D 55%, #100B07 100%);
+}
+
+/* 7. Platina Clean / Modo Claro de Alto Contraste */
+html[data-app-bg="platinum"],
 body.light, html.light {
   --postlogin-bg: #F1F5F9;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(2, 132, 199, 0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 65% 45% at 95% 25%, rgba(16, 185, 129, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 55% 40% at 5% 75%, rgba(245, 158, 11, 0.04) 0%, transparent 60%),
-    linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 100%);
+  --postlogin-gradient: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 50%, #E2E8F0 100%);
+}
+
+html.user-logged-in .app-blob {
+  opacity: 0.01 !important;
+  display: none !important;
 }
 
 html.user-logged-in #persistentSystemBg,
@@ -8281,7 +8283,49 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   color: #0284c7 !important;
 }
 
-/* ==================== Dropdown de Temas de Fundo Pós-Login ==================== */
+/* ==================== Barra Rápida e Dropdown de Cores de Fundo Pós-Login ==================== */
+.header-bg-swatches {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 999px !important;
+  padding: 4px 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.header-bg-swatch-dot {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  outline: none;
+  position: relative;
+  flex-shrink: 0;
+}
+.header-bg-swatch-dot:hover {
+  transform: scale(1.25);
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+.header-bg-swatch-dot.active {
+  transform: scale(1.2);
+  border-color: #38BDF8 !important;
+  box-shadow: 0 0 12px #38BDF8 !important;
+}
+body.light .header-bg-swatches,
+html.light .header-bg-swatches {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+@media (max-width: 900px) {
+  .header-bg-swatches { display: none !important; }
+}
+
 .bg-theme-dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -8290,14 +8334,14 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   border: 1px solid var(--card-border, rgba(255, 255, 255, 0.15)) !important;
   border-radius: 14px !important;
   padding: 8px !important;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.75), 0 0 20px rgba(14,165,233,0.18) !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.85), 0 0 24px rgba(14,165,233,0.2) !important;
   z-index: 999999 !important;
-  min-width: 235px;
+  min-width: 250px;
 }
 .bg-theme-dropdown .bg-opt-btn {
   width: 100%;
   text-align: left;
-  padding: 8px 12px;
+  padding: 9px 12px;
   border: none;
   background: transparent;
   color: var(--text, #F8FAFC);
@@ -8315,8 +8359,8 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   color: #FFFFFF !important;
 }
 .bg-theme-dropdown .bg-opt-dot {
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   flex-shrink: 0;
   display: inline-block;
@@ -8928,21 +8972,34 @@ html.light .mand-input-wrapper input {
           </div>
         </div>
 
+        <!-- Barra Rápida de Swatches de Cores (Troca Instantânea) -->
+        <div class="header-bg-swatches" id="headerBgSwatches" title="Alterar Cor de Fundo em Tempo Real">
+          <button type="button" class="header-bg-swatch-dot" data-bg="titanium" title="Titanium Slate (Novo Padrão)" style="background:#0B0F19; border-color:#38BDF8;"></button>
+          <button type="button" class="header-bg-swatch-dot" data-bg="pure-black" title="Preto Absoluto AMOLED" style="background:#000000; border-color:#64748B;"></button>
+          <button type="button" class="header-bg-swatch-dot" data-bg="royal-navy" title="Azul Marinho Real" style="background:#081A36; border-color:#2563EB;"></button>
+          <button type="button" class="header-bg-swatch-dot" data-bg="emerald" title="Verde Esmeralda Nobre" style="background:#032015; border-color:#10B981;"></button>
+          <button type="button" class="header-bg-swatch-dot" data-bg="burgundy" title="Vinho Imperial / Ametista" style="background:#220D1D; border-color:#EC4899;"></button>
+          <button type="button" class="header-bg-swatch-dot" data-bg="espresso" title="Bronze & Café Espresso" style="background:#1A130D; border-color:#F59E0B;"></button>
+          <button type="button" class="header-bg-swatch-dot" data-bg="platinum" title="Platina Clean (Modo Claro)" style="background:#F1F5F9; border-color:#94A3B8;"></button>
+        </div>
+
         <div class="bg-selector-wrap" style="position:relative;">
-          <button class="icon-btn" id="bgThemeBtn" title="Cor de Fundo do Sistema Pós-Login" style="gap:5px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
+          <button class="icon-btn" id="bgThemeBtn" title="Paleta Completa de Cores de Fundo" style="gap:5px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-            <span id="currentBgLabel" style="font-size:11px;">Fundo</span>
+            <span id="currentBgLabel" style="font-size:11px;">Cor Fundo</span>
           </button>
           <div class="bg-theme-dropdown" id="bgThemeDropdown" style="display:none;">
             <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); padding:6px 10px 4px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:4px;">
-              <span>Fundo Pós-Login</span>
+              <span>Cores de Fundo</span>
               <span>🎨</span>
             </div>
-            <button type="button" class="bg-opt-btn" data-bg="obsidian"><span class="bg-opt-dot" style="background:#070B16; border:1.5px solid #38BDF8;"></span> Obsidian Navy (Padrão 4K)</button>
-            <button type="button" class="bg-opt-btn" data-bg="midnight"><span class="bg-opt-dot" style="background:#020408; border:1.5px solid #64748B;"></span> Midnight AMOLED (Preto)</button>
-            <button type="button" class="bg-opt-btn" data-bg="cyber-blue"><span class="bg-opt-dot" style="background:#050E22; border:1.5px solid #0284C7;"></span> Deep Cyber Blue</button>
-            <button type="button" class="bg-opt-btn" data-bg="emerald"><span class="bg-opt-dot" style="background:#03140F; border:1.5px solid #10B981;"></span> Dark Emerald (Banking)</button>
-            <button type="button" class="bg-opt-btn" data-bg="slate"><span class="bg-opt-dot" style="background:#0B1120; border:1.5px solid #94A3B8;"></span> Royal Slate (Grafite)</button>
+            <button type="button" class="bg-opt-btn" data-bg="titanium"><span class="bg-opt-dot" style="background:#0B0F19; border:1.5px solid #38BDF8;"></span> Titanium Slate (Novo Padrão)</button>
+            <button type="button" class="bg-opt-btn" data-bg="pure-black"><span class="bg-opt-dot" style="background:#000000; border:1.5px solid #64748B;"></span> Preto Absoluto (AMOLED)</button>
+            <button type="button" class="bg-opt-btn" data-bg="royal-navy"><span class="bg-opt-dot" style="background:#081A36; border:1.5px solid #2563EB;"></span> Azul Marinho Cobalto Real</button>
+            <button type="button" class="bg-opt-btn" data-bg="emerald"><span class="bg-opt-dot" style="background:#032015; border:1.5px solid #10B981;"></span> Verde Esmeralda (Banking)</button>
+            <button type="button" class="bg-opt-btn" data-bg="burgundy"><span class="bg-opt-dot" style="background:#220D1D; border:1.5px solid #EC4899;"></span> Vinho Imperial (Bordeaux)</button>
+            <button type="button" class="bg-opt-btn" data-bg="espresso"><span class="bg-opt-dot" style="background:#1A130D; border:1.5px solid #F59E0B;"></span> Bronze & Café Espresso</button>
+            <button type="button" class="bg-opt-btn" data-bg="platinum"><span class="bg-opt-dot" style="background:#F1F5F9; border:1.5px solid #94A3B8;"></span> Platina Clean (Modo Claro)</button>
           </div>
         </div>
 
@@ -20761,17 +20818,23 @@ if (scaleMenuBtn && scaleDropdown) {
 
 // ==================== Gerenciador de Cor de Fundo do Pós-Login ====================
 window.applyPostLoginBg = function(theme) {
-  const selected = theme || 'obsidian';
+  let selected = theme || 'titanium';
+  if (selected === 'obsidian' || selected === 'slate') selected = 'titanium';
+  if (selected === 'midnight') selected = 'pure-black';
+  if (selected === 'cyber-blue') selected = 'royal-navy';
+
   document.documentElement.setAttribute('data-app-bg', selected);
   if (document.body) document.body.setAttribute('data-app-bg', selected);
   try { localStorage.setItem('nexus_post_login_bg', selected); } catch(e){}
 
   const bgLabelMap = {
-    'obsidian': 'Obsidian',
-    'midnight': 'Midnight',
-    'cyber-blue': 'Cyber Blue',
-    'emerald': 'Emerald',
-    'slate': 'Slate'
+    'titanium': 'Titanium',
+    'pure-black': 'Preto Puro',
+    'royal-navy': 'Azul Marinho',
+    'emerald': 'Esmeralda',
+    'burgundy': 'Vinho',
+    'espresso': 'Espresso',
+    'platinum': 'Platina'
   };
 
   const lbl = document.getElementById('currentBgLabel');
@@ -20779,17 +20842,29 @@ window.applyPostLoginBg = function(theme) {
     lbl.textContent = bgLabelMap[selected] || 'Fundo';
   }
 
+  // Atualizar seleção no dropdown
   document.querySelectorAll('.bg-opt-btn').forEach(btn => {
     const bTheme = btn.getAttribute('data-bg');
     const isSel = (bTheme === selected);
     btn.style.fontWeight = isSel ? '700' : '500';
     btn.style.background = isSel ? 'rgba(14, 165, 233, 0.18)' : 'transparent';
   });
+
+  // Atualizar swatches rápidos do header
+  document.querySelectorAll('.header-bg-swatch-dot').forEach(dot => {
+    const dTheme = dot.getAttribute('data-bg');
+    if (dTheme === selected) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+    }
+  });
 };
 
 (function initPostLoginBg() {
   try {
-    const savedBg = localStorage.getItem('nexus_post_login_bg') || 'obsidian';
+    let savedBg = localStorage.getItem('nexus_post_login_bg') || 'titanium';
+    if (savedBg === 'obsidian' || savedBg === 'slate') savedBg = 'titanium';
     window.applyPostLoginBg(savedBg);
   } catch(e){}
 })();
@@ -20808,6 +20883,13 @@ if (bgThemeBtn && bgThemeDropdown) {
       const themeVal = btn.getAttribute('data-bg');
       window.applyPostLoginBg(themeVal);
       bgThemeDropdown.style.display = 'none';
+    };
+  });
+  document.querySelectorAll('.header-bg-swatch-dot').forEach(dot => {
+    dot.onclick = (e) => {
+      e.stopPropagation();
+      const themeVal = dot.getAttribute('data-bg');
+      window.applyPostLoginBg(themeVal);
     };
   });
   document.addEventListener('click', () => {
