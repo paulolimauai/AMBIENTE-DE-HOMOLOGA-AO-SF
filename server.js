@@ -3895,36 +3895,46 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Dock Lateral de Navegação Vertical (Estilo Aether 4K - Tamanho Mais Visual) ==================== */
+/* ==================== Dock Lateral de Navegação Vertical (Padrão Profissional & Auto-Fit) ==================== */
 nav.menu{
   position:fixed !important;
   top:68px !important;
   left:0 !important;
   bottom:0 !important;
-  width:96px !important;
-  max-width:96px !important;
+  width:86px !important;
+  max-width:86px !important;
   margin:0 !important;
-  padding:14px 0 20px !important;
+  padding:10px 0 16px !important;
   display:flex !important;
   flex-direction:column !important;
   align-items:center !important;
   justify-content:flex-start !important;
-  gap:8px !important;
-  background:linear-gradient(180deg, rgba(9, 14, 26, 0.94) 0%, rgba(6, 10, 20, 0.97) 100%) !important;
-  border-right:1px solid rgba(0, 229, 255, 0.16) !important;
+  gap:4px !important;
+  background:rgba(11, 15, 25, 0.94) !important;
+  border-right:1px solid rgba(255, 255, 255, 0.08) !important;
   border-top:none !important;
   border-left:none !important;
   border-bottom:none !important;
   border-radius:0 !important;
-  box-shadow:8px 0 32px rgba(0, 0, 0, 0.7), inset -1px 0 0 rgba(0, 229, 255, 0.08) !important;
-  backdrop-filter:blur(28px) saturate(190%) !important;
-  -webkit-backdrop-filter:blur(28px) saturate(190%) !important;
+  box-shadow:4px 0 24px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter:blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter:blur(24px) saturate(190%) !important;
   overflow-y:auto !important;
   overflow-x:hidden !important;
-  scrollbar-width:none !important;
+  scrollbar-width:thin !important;
+  scrollbar-color:rgba(255, 255, 255, 0.15) transparent !important;
   z-index:9999 !important;
 }
-nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height:0 !important; }
+nav.menu::-webkit-scrollbar{
+  width:3px !important;
+}
+nav.menu::-webkit-scrollbar-thumb{
+  background:rgba(255, 255, 255, 0.15) !important;
+  border-radius:999px !important;
+}
+nav.menu::-webkit-scrollbar-track{
+  background:transparent !important;
+}
 
 .menu button{
   position:relative !important;
@@ -3933,49 +3943,58 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   align-items:center !important;
   justify-content:center !important;
   text-align:center !important;
-  gap:5px !important;
-  width:80px !important;
-  min-height:68px !important;
-  height:68px !important;
-  padding:8px 4px 6px !important;
-  border-radius:16px !important;
+  gap:3px !important;
+  width:74px !important;
+  min-height:52px !important;
+  height:52px !important;
+  padding:5px 3px 4px !important;
+  border-radius:12px !important;
   background:transparent !important;
   border:1px solid transparent !important;
   color:#94A3B8 !important;
-  font-size:11px !important;
+  font-size:10px !important;
   font-weight:600 !important;
-  letter-spacing:0.01em !important;
+  letter-spacing:-0.01em !important;
   white-space:nowrap !important;
   cursor:pointer !important;
-  transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition:all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select:none !important;
   box-sizing:border-box !important;
   flex-shrink:0 !important;
 }
 .menu button:hover{
-  background:rgba(0, 229, 255, 0.09) !important;
+  background:rgba(255, 255, 255, 0.06) !important;
   color:#FFFFFF !important;
-  border-color:rgba(0, 229, 255, 0.3) !important;
-  transform:translateY(-2px) scale(1.03) !important;
-  box-shadow:0 6px 18px rgba(0, 229, 255, 0.2) !important;
+  border-color:rgba(255, 255, 255, 0.12) !important;
+  transform:translateY(-1px) !important;
 }
 .menu button.active{
-  background:linear-gradient(135deg, rgba(0, 229, 255, 0.25) 0%, rgba(14, 165, 233, 0.18) 100%) !important;
-  border:1.8px solid rgba(0, 229, 255, 0.72) !important;
-  border-radius:16px !important;
+  background:linear-gradient(135deg, rgba(14, 165, 233, 0.18) 0%, rgba(56, 189, 248, 0.06) 100%) !important;
+  border:1px solid rgba(56, 189, 248, 0.42) !important;
+  border-radius:12px !important;
   color:#FFFFFF !important;
-  font-weight:800 !important;
-  box-shadow:0 0 24px rgba(0, 229, 255, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.65), 0 6px 16px rgba(0,0,0,0.5) !important;
-  transform:translateY(-1.5px) scale(1.02) !important;
-  text-shadow:0 1px 4px rgba(0,0,0,0.6) !important;
+  font-weight:700 !important;
+  box-shadow:inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 4px 14px rgba(14, 165, 233, 0.20) !important;
+}
+.menu button.active::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:50%;
+  transform:translateY(-50%);
+  width:3.5px;
+  height:20px;
+  border-radius:0 3px 3px 0;
+  background:#38BDF8;
+  box-shadow:0 0 10px rgba(56, 189, 248, 0.85);
 }
 .menu button.active::after{
   display:none !important;
 }
 .menu button .ic{
-  width:32px !important;
-  height:32px !important;
-  border-radius:10px !important;
+  width:26px !important;
+  height:26px !important;
+  border-radius:8px !important;
   background:transparent !important;
   border:none !important;
   box-shadow:none !important;
@@ -3983,26 +4002,26 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   align-items:center !important;
   justify-content:center !important;
   color:inherit !important;
-  transition:all 0.2s ease !important;
+  transition:all 0.18s ease !important;
 }
 .menu button .ic svg{
-  width:23px !important;
-  height:23px !important;
-  stroke-width:2.2px !important;
+  width:19px !important;
+  height:19px !important;
+  stroke-width:2.1px !important;
 }
 .menu button:hover .ic{
-  transform:scale(1.1) !important;
-  color:#00E5FF !important;
+  transform:scale(1.08) !important;
+  color:#38BDF8 !important;
 }
 .menu button.active .ic{
-  color:#00E5FF !important;
-  transform:scale(1.1) !important;
-  filter:drop-shadow(0 0 10px rgba(0, 229, 255, 0.95)) !important;
+  color:#38BDF8 !important;
+  transform:scale(1.08) !important;
+  filter:drop-shadow(0 0 7px rgba(56, 189, 248, 0.75)) !important;
 }
 .menu button span:not(.ic){
-  font-size:11px !important;
-  font-weight:700 !important;
-  line-height:1.2 !important;
+  font-size:10px !important;
+  font-weight:600 !important;
+  line-height:1.15 !important;
   letter-spacing:-0.01em !important;
   display:block !important;
   white-space:nowrap !important;
@@ -4010,6 +4029,24 @@ nav.menu::-webkit-scrollbar{ display:none !important; width:0 !important; height
   max-width:100% !important;
   overflow:hidden !important;
   text-overflow:ellipsis !important;
+}
+
+/* Ajustes Responsivos por Altura de Tela (Laptops, Telas Menores e Split-Screen) */
+@media (max-height: 760px) {
+  nav.menu { padding:6px 0 10px !important; gap:3px !important; }
+  .menu button { width:72px !important; height:45px !important; min-height:45px !important; padding:4px 2px 3px !important; gap:2px !important; border-radius:10px !important; }
+  .menu button .ic { width:22px !important; height:22px !important; }
+  .menu button .ic svg { width:17px !important; height:17px !important; }
+  .menu button span:not(.ic) { font-size:9.5px !important; }
+  .menu button.active::before { height:16px !important; width:3px !important; }
+}
+@media (max-height: 640px) {
+  nav.menu { padding:4px 0 8px !important; gap:2px !important; }
+  .menu button { width:66px !important; height:38px !important; min-height:38px !important; padding:2px !important; }
+  .menu button span:not(.ic) { display:none !important; }
+  .menu button .ic { width:28px !important; height:28px !important; }
+  .menu button .ic svg { width:19px !important; height:19px !important; }
+  .menu button.active::before { height:16px !important; }
 }
 
 /* ==================== Estilo Executivo Premium do Menu Administrativo ==================== */
@@ -4120,16 +4157,20 @@ body.light .menu button:hover .ic svg{
   stroke: #2563EB !important;
 }
 body.light .menu button.active{
-  background: linear-gradient(135deg, rgba(2, 132, 199, 0.14) 0%, rgba(56, 189, 248, 0.10) 100%) !important;
-  border: 1.5px solid rgba(2, 132, 199, 0.70) !important;
-  border-radius: 16px !important;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(56, 189, 248, 0.05) 100%) !important;
+  border: 1px solid rgba(2, 132, 199, 0.45) !important;
+  border-radius: 12px !important;
   color: #0284C7 !important;
-  font-weight: 800 !important;
-  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+body.light .menu button.active::before{
+  background: #0284C7 !important;
+  box-shadow: 0 0 8px rgba(2, 132, 199, 0.5) !important;
 }
 body.light .menu button.active span:not(.ic){
   color: #0284C7 !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
 }
 body.light .menu button.active .ic{
   color: #0284C7 !important;
@@ -5152,8 +5193,8 @@ body.light .dev-signature-name {
 /* Centralização do conteúdo principal */
 .main{
   flex:1 !important; min-width:0 !important; padding:16px 28px 40px !important;
-  margin-top:76px !important; margin-left:104px !important;
-  width:calc(100% - 104px) !important; max-width:1760px !important; margin-right:auto !important;
+  margin-top:76px !important; margin-left:98px !important;
+  width:calc(100% - 98px) !important; max-width:1760px !important; margin-right:auto !important;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
 .icon-btn{
@@ -7988,7 +8029,7 @@ body.light .login-success-box.warning-box p {
   .brand .name { font-size: 20px !important; }
   .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }
   .topheader-row { max-width: 100% !important; padding: 0 36px !important; height: 68px !important; }
-  .main { max-width: 2400px !important; padding: 16px 36px 40px !important; margin-top: 76px !important; margin-left: 104px !important; width: calc(100% - 104px) !important; }
+  .main { max-width: 2400px !important; padding: 16px 36px 40px !important; margin-top: 76px !important; margin-left: 98px !important; width: calc(100% - 98px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
   .kpi .val { font-size: 26px !important; }
   .kpi .sub { font-size: 12.5px !important; }
@@ -8002,7 +8043,7 @@ body.light .login-success-box.warning-box p {
 @media (min-width: 1700px) and (max-width: 2559px) {
   .brand .name { font-size: 18px; }
   .topheader-row { max-width: 100% !important; padding: 0 28px !important; height: 68px !important; }
-  .main { max-width: 1920px !important; padding: 16px 28px 36px !important; margin-top: 76px !important; margin-left: 104px !important; width: calc(100% - 104px) !important; }
+  .main { max-width: 1920px !important; padding: 16px 28px 36px !important; margin-top: 76px !important; margin-left: 98px !important; width: calc(100% - 98px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; }
 }
 
@@ -8014,6 +8055,9 @@ body.light .login-success-box.warning-box p {
   .kpis { grid-template-columns: repeat(3, 1fr) !important; }
   .grid3 { grid-template-columns: 1fr 1fr !important; }
   .grid-2-1 { grid-template-columns: 1fr !important; }
+  nav.menu { width: 78px !important; }
+  .menu button { width: 68px !important; height: 48px !important; min-height: 48px !important; }
+  .main { margin-left: 88px !important; width: calc(100% - 88px) !important; padding: 16px 18px 36px !important; }
 }
 
 /* Botão de Sair no Drawer Mobile */
@@ -8083,10 +8127,90 @@ body.light .mobile-drawer-logout-btn .ic svg {
   stroke: #DC2626 !important;
 }
 
+/* ==================== Barra Inferior Mobile (Bottom Tab Bar de Alta Fidelidade) ==================== */
+.mobile-bottom-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(11, 15, 25, 0.95) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.45) !important;
+  z-index: 998 !important;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 4px env(safe-area-inset-bottom, 0px);
+}
+.mobile-bottom-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 52px;
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.16s ease;
+  user-select: none;
+  padding: 4px 2px;
+  text-decoration: none;
+  outline: none;
+}
+.mobile-bottom-btn .ic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+.mobile-bottom-btn .ic svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 2.1px;
+}
+.mobile-bottom-btn:hover {
+  color: #FFFFFF;
+}
+.mobile-bottom-btn.active {
+  color: #38BDF8 !important;
+  font-weight: 700;
+}
+.mobile-bottom-btn.active .ic svg {
+  stroke: #38BDF8;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.7));
+}
+
+body.light .mobile-bottom-bar {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-top-color: #CBD5E1 !important;
+  box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08) !important;
+}
+body.light .mobile-bottom-btn {
+  color: #64748B;
+}
+body.light .mobile-bottom-btn.active {
+  color: #0284C7 !important;
+}
+body.light .mobile-bottom-btn.active .ic svg {
+  stroke: #0284C7;
+  filter: drop-shadow(0 0 4px rgba(2, 132, 199, 0.4));
+}
+
 @media (max-width: 860px) {
   .mobile-menu-btn { display: flex !important; }
   nav.menu { display: none !important; }
-  .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 14px 60px !important; }
+  .mobile-bottom-bar { display: flex !important; }
+  .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 14px 76px !important; }
   .aether-credit-pill { display: none !important; }
   .aether-settings-btn,
   .scale-selector-wrap {
@@ -8901,6 +9025,30 @@ html.light .mand-input-wrapper input {
     <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
     <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
     <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
+  </nav>
+
+  <!-- BARRA INFERIOR MOBILE MODERNA (BOTTOM TAB BAR DE ALTO PADRÃO) -->
+  <nav class="mobile-bottom-bar" id="mobileBottomBar">
+    <button type="button" data-page="dashboard" class="mobile-bottom-btn" title="Dashboard">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span>
+      <span>Início</span>
+    </button>
+    <button type="button" data-page="transacoes" class="mobile-bottom-btn" title="Transações">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span>
+      <span>Extrato</span>
+    </button>
+    <button type="button" data-page="cartoes" class="mobile-bottom-btn" title="Cartões">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span>
+      <span>Cartões</span>
+    </button>
+    <button type="button" data-page="metas" class="mobile-bottom-btn" title="Metas">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span>
+      <span>Metas</span>
+    </button>
+    <button type="button" class="mobile-bottom-btn" id="mobileBottomMoreBtn" title="Todas as Opções">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></span>
+      <span>Mais</span>
+    </button>
   </nav>
 
   <script>
@@ -20207,7 +20355,7 @@ function navigate(page){
     }
   } catch(e){}
 
-  document.querySelectorAll('.menu button').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
+  document.querySelectorAll('.menu button, .mobile-drawer-nav button, .mobile-bottom-btn').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
 
   // Se o usuário clicou na mesma página de Transações, resetar filtros e garantir visibilidade completa
   if (isSamePage && page === 'transacoes') {
@@ -20269,6 +20417,19 @@ document.getElementById('menu').addEventListener('click', e=>{
   const btn = targetEl ? targetEl.closest('button[data-page]') : null;
   if(btn && btn.dataset.page) navigate(btn.dataset.page);
 });
+
+const mobileBottomBar = document.getElementById('mobileBottomBar');
+if(mobileBottomBar){
+  mobileBottomBar.addEventListener('click', e=>{
+    const targetEl = e.target.nodeType === 3 ? e.target.parentElement : e.target;
+    const btn = targetEl ? targetEl.closest('button[data-page]') : null;
+    if(btn && btn.dataset.page) navigate(btn.dataset.page);
+  });
+}
+const mobileBottomMoreBtn = document.getElementById('mobileBottomMoreBtn');
+if(mobileBottomMoreBtn){
+  mobileBottomMoreBtn.onclick = ()=> toggleMobileDrawer(true);
+}
 document.addEventListener('click', e=>{
   const targetEl = e.target.nodeType === 3 ? e.target.parentElement : e.target;
   const panel = document.getElementById('periodPanel');
