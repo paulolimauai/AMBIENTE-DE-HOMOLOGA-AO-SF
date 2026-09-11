@@ -8283,47 +8283,200 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   color: #0284c7 !important;
 }
 
-/* ==================== Barra Rápida e Dropdown de Cores de Fundo Pós-Login ==================== */
-.header-bg-swatches {
+/* ==================== Dock Integrado de Temas e Cores de Fundo (Ultra-Luxo Glassmorphism) ==================== */
+.header-theme-dock {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 4px 0 9px;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 27, 43, 0.65) 50%, rgba(9, 13, 22, 0.85) 100%) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 12px !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 6px 18px rgba(0, 0, 0, 0.45) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  flex-shrink: 0;
+}
+.header-theme-dock:hover {
+  border-color: rgba(96, 165, 250, 0.4) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.4), 0 8px 22px rgba(0, 0, 0, 0.55) !important;
+}
+
+.header-theme-dock .header-bg-swatches {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(15, 23, 42, 0.65) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 999px !important;
-  padding: 4px 8px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
 }
+
+.header-theme-dock-divider {
+  width: 1px;
+  height: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.22) 50%, rgba(255, 255, 255, 0.04) 100%);
+  flex-shrink: 0;
+}
+
 .header-bg-swatch-dot {
   width: 17px;
   height: 17px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
   cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.22s ease;
   padding: 0;
   outline: none;
   position: relative;
   flex-shrink: 0;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 2px 5px rgba(0, 0, 0, 0.4);
 }
+
+/* Swatches com Efeito Jóia Radiante e Profundidade */
+.header-bg-swatch-dot[data-bg="titanium"] {
+  background: radial-gradient(circle at 35% 30%, #38BDF8 0%, #1E293B 55%, #0B0F19 100%) !important;
+  border-color: #38BDF8 !important;
+}
+.header-bg-swatch-dot[data-bg="pure-black"] {
+  background: radial-gradient(circle at 35% 30%, #71717A 0%, #27272A 50%, #09090B 100%) !important;
+  border-color: #71717A !important;
+}
+.header-bg-swatch-dot[data-bg="royal-navy"] {
+  background: radial-gradient(circle at 35% 30%, #60A5FA 0%, #2563EB 50%, #081A36 100%) !important;
+  border-color: #3B82F6 !important;
+}
+.header-bg-swatch-dot[data-bg="emerald"] {
+  background: radial-gradient(circle at 35% 30%, #34D399 0%, #059669 50%, #032015 100%) !important;
+  border-color: #10B981 !important;
+}
+.header-bg-swatch-dot[data-bg="burgundy"] {
+  background: radial-gradient(circle at 35% 30%, #F472B6 0%, #DB2777 50%, #220D1D 100%) !important;
+  border-color: #EC4899 !important;
+}
+.header-bg-swatch-dot[data-bg="espresso"] {
+  background: radial-gradient(circle at 35% 30%, #FBBF24 0%, #D97706 50%, #1A130D 100%) !important;
+  border-color: #F59E0B !important;
+}
+.header-bg-swatch-dot[data-bg="platinum"] {
+  background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E2E8F0 55%, #CBD5E1 100%) !important;
+  border-color: #94A3B8 !important;
+}
+
 .header-bg-swatch-dot:hover {
-  transform: scale(1.25);
+  transform: scale(1.3) translateY(-1px);
   border-color: #FFFFFF !important;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.75), 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+  z-index: 2;
 }
+
+/* Indicadores de Seleção Ativa com Aura Neon Harmônica */
 .header-bg-swatch-dot.active {
   transform: scale(1.2);
-  border-color: #38BDF8 !important;
-  box-shadow: 0 0 12px #38BDF8 !important;
+  border-color: #FFFFFF !important;
 }
-body.light .header-bg-swatches,
-html.light .header-bg-swatches {
-  background: rgba(255, 255, 255, 0.92) !important;
+.header-bg-swatch-dot[data-bg="titanium"].active {
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.95), 0 0 0 3.5px #38BDF8, 0 0 14px rgba(56, 189, 248, 0.9) !important;
+}
+.header-bg-swatch-dot[data-bg="pure-black"].active {
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.95), 0 0 0 3.5px #E2E8F0, 0 0 14px rgba(255, 255, 255, 0.8) !important;
+}
+.header-bg-swatch-dot[data-bg="royal-navy"].active {
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.95), 0 0 0 3.5px #3B82F6, 0 0 14px rgba(59, 130, 246, 0.9) !important;
+}
+.header-bg-swatch-dot[data-bg="emerald"].active {
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.95), 0 0 0 3.5px #10B981, 0 0 14px rgba(16, 185, 129, 0.9) !important;
+}
+.header-bg-swatch-dot[data-bg="burgundy"].active {
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.95), 0 0 0 3.5px #EC4899, 0 0 14px rgba(236, 72, 153, 0.9) !important;
+}
+.header-bg-swatch-dot[data-bg="espresso"].active {
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.95), 0 0 0 3.5px #F59E0B, 0 0 14px rgba(245, 158, 11, 0.9) !important;
+}
+.header-bg-swatch-dot[data-bg="platinum"].active {
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.95), 0 0 0 3.5px #38BDF8, 0 0 14px rgba(56, 189, 248, 0.85) !important;
+}
+
+/* Botão de Rótulo e Gatilho Integrado */
+.theme-dock-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 8px 0 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #E2E8F0;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+.theme-dock-trigger-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+}
+.theme-dock-trigger-btn .theme-palette-icon {
+  color: #38BDF8;
+  flex-shrink: 0;
+  transition: transform 0.22s ease;
+}
+.theme-dock-trigger-btn:hover .theme-palette-icon {
+  transform: rotate(18deg);
+}
+.theme-dock-trigger-btn .theme-chevron-icon {
+  color: rgba(255, 255, 255, 0.5);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.theme-dock-trigger-btn:hover .theme-chevron-icon {
+  color: #FFFFFF;
+}
+
+/* Modo Claro Adaptativo */
+body.light .header-theme-dock,
+html.light .header-theme-dock {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(241, 245, 249, 0.92) 100%) !important;
   border-color: #CBD5E1 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06), inset 0 1px 0 #FFFFFF !important;
 }
+body.light .header-theme-dock-divider,
+html.light .header-theme-dock-divider {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.04) 0%, rgba(15, 23, 42, 0.18) 50%, rgba(15, 23, 42, 0.04) 100%) !important;
+}
+body.light .theme-dock-trigger-btn,
+html.light .theme-dock-trigger-btn {
+  color: #0F172A !important;
+}
+body.light .theme-dock-trigger-btn:hover,
+html.light .theme-dock-trigger-btn:hover {
+  background: rgba(15, 23, 42, 0.06) !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: #0284C7 !important;
+}
+body.light .theme-dock-trigger-btn .theme-palette-icon,
+html.light .theme-dock-trigger-btn .theme-palette-icon {
+  color: #0284C7 !important;
+}
+body.light .theme-dock-trigger-btn .theme-chevron-icon,
+html.light .theme-dock-trigger-btn .theme-chevron-icon {
+  color: #64748B !important;
+}
+body.light .header-bg-swatch-dot.active,
+html.light .header-bg-swatch-dot.active {
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 3.5px #0284C7, 0 0 10px rgba(2, 132, 199, 0.5) !important;
+}
+
 @media (max-width: 900px) {
-  .header-bg-swatches { display: none !important; }
+  .header-theme-dock .header-bg-swatches,
+  .header-theme-dock .header-theme-dock-divider { display: none !important; }
 }
 
 .bg-theme-dropdown {
@@ -8972,34 +9125,39 @@ html.light .mand-input-wrapper input {
           </div>
         </div>
 
-        <!-- Barra Rápida de Swatches de Cores (Troca Instantânea) -->
-        <div class="header-bg-swatches" id="headerBgSwatches" title="Alterar Cor de Fundo em Tempo Real">
-          <button type="button" class="header-bg-swatch-dot" data-bg="titanium" title="Titanium Slate (Novo Padrão)" style="background:#0B0F19; border-color:#38BDF8;"></button>
-          <button type="button" class="header-bg-swatch-dot" data-bg="pure-black" title="Preto Absoluto AMOLED" style="background:#000000; border-color:#64748B;"></button>
-          <button type="button" class="header-bg-swatch-dot" data-bg="royal-navy" title="Azul Marinho Real" style="background:#081A36; border-color:#2563EB;"></button>
-          <button type="button" class="header-bg-swatch-dot" data-bg="emerald" title="Verde Esmeralda Nobre" style="background:#032015; border-color:#10B981;"></button>
-          <button type="button" class="header-bg-swatch-dot" data-bg="burgundy" title="Vinho Imperial / Ametista" style="background:#220D1D; border-color:#EC4899;"></button>
-          <button type="button" class="header-bg-swatch-dot" data-bg="espresso" title="Bronze & Café Espresso" style="background:#1A130D; border-color:#F59E0B;"></button>
-          <button type="button" class="header-bg-swatch-dot" data-bg="platinum" title="Platina Clean (Modo Claro)" style="background:#F1F5F9; border-color:#94A3B8;"></button>
-        </div>
+        <!-- Dock Integrado de Temas e Cores de Fundo (Ultra-Luxo Glassmorphism) -->
+        <div class="header-theme-dock" id="headerThemeDock">
+          <div class="header-bg-swatches" id="headerBgSwatches" title="Troca rápida de tema em 1 clique">
+            <button type="button" class="header-bg-swatch-dot" data-bg="titanium" title="Titanium Slate (Novo Padrão)"></button>
+            <button type="button" class="header-bg-swatch-dot" data-bg="pure-black" title="Preto Absoluto AMOLED"></button>
+            <button type="button" class="header-bg-swatch-dot" data-bg="royal-navy" title="Azul Marinho Cobalto Real"></button>
+            <button type="button" class="header-bg-swatch-dot" data-bg="emerald" title="Verde Esmeralda Nobre"></button>
+            <button type="button" class="header-bg-swatch-dot" data-bg="burgundy" title="Vinho Imperial / Ametista"></button>
+            <button type="button" class="header-bg-swatch-dot" data-bg="espresso" title="Bronze & Café Espresso"></button>
+            <button type="button" class="header-bg-swatch-dot" data-bg="platinum" title="Platina Clean (Modo Claro)"></button>
+          </div>
 
-        <div class="bg-selector-wrap" style="position:relative;">
-          <button class="icon-btn" id="bgThemeBtn" title="Paleta Completa de Cores de Fundo" style="gap:5px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-            <span id="currentBgLabel" style="font-size:11px;">Cor Fundo</span>
-          </button>
-          <div class="bg-theme-dropdown" id="bgThemeDropdown" style="display:none;">
-            <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); padding:6px 10px 4px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:4px;">
-              <span>Cores de Fundo</span>
-              <span>🎨</span>
+          <div class="header-theme-dock-divider"></div>
+
+          <div class="bg-selector-wrap" style="position:relative;">
+            <button type="button" class="theme-dock-trigger-btn" id="bgThemeBtn" title="Paleta Completa de Cores de Fundo">
+              <svg class="theme-palette-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+              <span id="currentBgLabel">Cor Fundo</span>
+              <svg class="theme-chevron-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="bg-theme-dropdown" id="bgThemeDropdown" style="display:none;">
+              <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); padding:6px 10px 4px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:4px;">
+                <span>Cores de Fundo</span>
+                <span>🎨</span>
+              </div>
+              <button type="button" class="bg-opt-btn" data-bg="titanium"><span class="bg-opt-dot" style="background:radial-gradient(circle at 35% 30%, #38BDF8 0%, #1E293B 55%, #0B0F19 100%); border:1.5px solid #38BDF8;"></span> Titanium Slate (Novo Padrão)</button>
+              <button type="button" class="bg-opt-btn" data-bg="pure-black"><span class="bg-opt-dot" style="background:radial-gradient(circle at 35% 30%, #71717A 0%, #27272A 50%, #000000 100%); border:1.5px solid #64748B;"></span> Preto Absoluto (AMOLED)</button>
+              <button type="button" class="bg-opt-btn" data-bg="royal-navy"><span class="bg-opt-dot" style="background:radial-gradient(circle at 35% 30%, #60A5FA 0%, #2563EB 50%, #081A36 100%); border:1.5px solid #2563EB;"></span> Azul Marinho Cobalto Real</button>
+              <button type="button" class="bg-opt-btn" data-bg="emerald"><span class="bg-opt-dot" style="background:radial-gradient(circle at 35% 30%, #34D399 0%, #059669 50%, #032015 100%); border:1.5px solid #10B981;"></span> Verde Esmeralda (Banking)</button>
+              <button type="button" class="bg-opt-btn" data-bg="burgundy"><span class="bg-opt-dot" style="background:radial-gradient(circle at 35% 30%, #F472B6 0%, #DB2777 50%, #220D1D 100%); border:1.5px solid #EC4899;"></span> Vinho Imperial (Bordeaux)</button>
+              <button type="button" class="bg-opt-btn" data-bg="espresso"><span class="bg-opt-dot" style="background:radial-gradient(circle at 35% 30%, #FBBF24 0%, #D97706 50%, #1A130D 100%); border:1.5px solid #F59E0B;"></span> Bronze & Café Espresso</button>
+              <button type="button" class="bg-opt-btn" data-bg="platinum"><span class="bg-opt-dot" style="background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E2E8F0 55%, #CBD5E1 100%); border:1.5px solid #94A3B8;"></span> Platina Clean (Modo Claro)</button>
             </div>
-            <button type="button" class="bg-opt-btn" data-bg="titanium"><span class="bg-opt-dot" style="background:#0B0F19; border:1.5px solid #38BDF8;"></span> Titanium Slate (Novo Padrão)</button>
-            <button type="button" class="bg-opt-btn" data-bg="pure-black"><span class="bg-opt-dot" style="background:#000000; border:1.5px solid #64748B;"></span> Preto Absoluto (AMOLED)</button>
-            <button type="button" class="bg-opt-btn" data-bg="royal-navy"><span class="bg-opt-dot" style="background:#081A36; border:1.5px solid #2563EB;"></span> Azul Marinho Cobalto Real</button>
-            <button type="button" class="bg-opt-btn" data-bg="emerald"><span class="bg-opt-dot" style="background:#032015; border:1.5px solid #10B981;"></span> Verde Esmeralda (Banking)</button>
-            <button type="button" class="bg-opt-btn" data-bg="burgundy"><span class="bg-opt-dot" style="background:#220D1D; border:1.5px solid #EC4899;"></span> Vinho Imperial (Bordeaux)</button>
-            <button type="button" class="bg-opt-btn" data-bg="espresso"><span class="bg-opt-dot" style="background:#1A130D; border:1.5px solid #F59E0B;"></span> Bronze & Café Espresso</button>
-            <button type="button" class="bg-opt-btn" data-bg="platinum"><span class="bg-opt-dot" style="background:#F1F5F9; border:1.5px solid #94A3B8;"></span> Platina Clean (Modo Claro)</button>
           </div>
         </div>
 
