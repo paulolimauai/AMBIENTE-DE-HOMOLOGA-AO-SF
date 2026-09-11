@@ -12345,6 +12345,10 @@ function formatDateBR(dateVal) {
 function formatDateTimeWithSeconds(dateVal) {
   if (!dateVal) return 'Primeiro acesso pendente';
   try {
+    if (dateVal instanceof Date && (dateVal.nanosecondsDelta !== undefined || dateVal._isSqlDate)) {
+      const pad = n => String(n).padStart(2, '0');
+      return pad(dateVal.getUTCDate()) + '/' + pad(dateVal.getUTCMonth() + 1) + '/' + dateVal.getUTCFullYear() + ' às ' + pad(dateVal.getUTCHours()) + ':' + pad(dateVal.getUTCMinutes()) + ':' + pad(dateVal.getUTCSeconds());
+    }
     if (typeof dateVal === 'string' && dateVal.includes(' ') && !dateVal.includes('T') && !dateVal.includes('Z')) {
       const parts = dateVal.split(' ');
       const dateParts = parts[0].split('-');
@@ -21165,7 +21169,14 @@ function getLocalUsers() {
 
 function saveLocalUsers(users, overwrite = false) {
   try {
-    const listToSave = Array.isArray(users) ? users : [];
+    const rawList = Array.isArray(users) ? users : [];
+    const listToSave = rawList.map(u => {
+      if (!u) return u;
+      const copy = { ...u };
+      if (copy.last_login) copy.last_login = getBrasiliaIsoString(copy.last_login);
+      if (copy.created_at) copy.created_at = getBrasiliaIsoString(copy.created_at);
+      return copy;
+    });
     const jsonContent = JSON.stringify(listToSave, null, 2);
     fs.writeFileSync(LOCAL_USERS_PATH, jsonContent, 'utf8');
     try {
@@ -22453,7 +22464,12 @@ const server = http.createServer(async (req, res) => {
         : 'SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password FROM usuarios ORDER BY id ASC';
       pool.query(sqlFields)
         .then(result => {
-          const rows = result.rows || [];
+          const rows = (result.rows || []).map(u => {
+            const copy = { ...u };
+            if (copy.last_login) copy.last_login = getBrasiliaIsoString(copy.last_login);
+            if (copy.created_at) copy.created_at = getBrasiliaIsoString(copy.created_at);
+            return copy;
+          });
           saveLocalUsers(rows, true);
           const sanitized = isInternalSync ? rows : rows.map(sanitizeUser);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
