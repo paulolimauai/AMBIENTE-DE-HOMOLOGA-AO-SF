@@ -30,6 +30,57 @@ const LOCAL_USERS_PATH = path.join(__dirname, 'local_users.json');
 const LOCAL_USERS_BACKUP_PATH = path.join(__dirname, 'local_users.backup.json');
 const LOCAL_ORDENS_PATH = path.join(__dirname, 'local_ordens_servico.json');
 const LOCAL_TECNICOS_PATH = path.join(__dirname, 'local_tecnicos.json');
+const PENDING_LOGINS_PATH = path.join(__dirname, 'pending_logins.json');
+
+function getPendingLogins() {
+  try {
+    if (fs.existsSync(PENDING_LOGINS_PATH)) {
+      const data = JSON.parse(fs.readFileSync(PENDING_LOGINS_PATH, 'utf8'));
+      if (Array.isArray(data)) return data;
+    }
+  } catch (e) {}
+  return [];
+}
+
+function pushPendingLogin(loginEntry) {
+  try {
+    if (!loginEntry) return;
+    const list = getPendingLogins();
+    const cleanEmail = (loginEntry.email || '').toLowerCase().trim();
+    const cleanId = loginEntry.id || null;
+    const entry = {
+      id: cleanId,
+      email: cleanEmail,
+      name: loginEntry.name || 'Usuário',
+      last_login: loginEntry.last_login || getBrasiliaIsoString(new Date()),
+      timestamp: loginEntry.timestamp || new Date().toISOString(),
+      ack: false
+    };
+    const isDup = list.some(item => !item.ack && ((cleanId && item.id && String(item.id) === String(cleanId)) || (cleanEmail && item.email === cleanEmail)) && (Date.now() - new Date(item.timestamp).getTime() < 10000));
+    if (!isDup) {
+      list.push(entry);
+      const trimmed = list.slice(-200);
+      fs.writeFileSync(PENDING_LOGINS_PATH, JSON.stringify(trimmed, null, 2), 'utf8');
+    }
+  } catch (e) {
+    console.warn('[AVISO] Falha ao gravar fila de login pendente:', e.message);
+  }
+}
+
+function acknowledgePendingLogins(emailsOrIds) {
+  try {
+    if (!Array.isArray(emailsOrIds) || emailsOrIds.length === 0) return;
+    const list = getPendingLogins();
+    const targets = emailsOrIds.map(v => String(v).toLowerCase().trim());
+    list.forEach(item => {
+      if (targets.includes(String(item.id)) || targets.includes(String(item.email).toLowerCase())) {
+        item.ack = true;
+      }
+    });
+    const remaining = list.filter(item => !item.ack || (Date.now() - new Date(item.timestamp).getTime() < 86400000));
+    fs.writeFileSync(PENDING_LOGINS_PATH, JSON.stringify(remaining, null, 2), 'utf8');
+  } catch (e) {}
+}
 
 // Sincronizador Nuvem Render
 const RENDER_CLOUD_URL = process.env.RENDER_CLOUD_URL || 'https://ambiente-de-homologa-ao-sf.onrender.com';
@@ -200,8 +251,16 @@ function sanitizeUser(user) {
 // ==================== Padronização de Fuso Horário Oficial de Brasília (America/Sao_Paulo / UTC-3) ====================
 function getBrasiliaSqlString(dateInput) {
   if (!dateInput) return null;
+  const pad = n => String(n).padStart(2, '0');
   if (typeof dateInput === 'string' && !dateInput.includes('Z') && !dateInput.includes('+') && !dateInput.includes('-03:00') && dateInput.includes(' ')) {
     return dateInput.split('.')[0];
+  }
+  if (typeof dateInput === 'string' && (dateInput.endsWith('-03:00') || dateInput.includes('-03:00'))) {
+    const clean = dateInput.replace('T', ' ').replace('-03:00', '').trim();
+    return clean.split('.')[0];
+  }
+  if (dateInput instanceof Date && (dateInput.nanosecondsDelta !== undefined || dateInput._isSqlDate)) {
+    return dateInput.getUTCFullYear() + '-' + pad(dateInput.getUTCMonth() + 1) + '-' + pad(dateInput.getUTCDate()) + ' ' + pad(dateInput.getUTCHours()) + ':' + pad(dateInput.getUTCMinutes()) + ':' + pad(dateInput.getUTCSeconds());
   }
   const d = new Date(dateInput);
   if (isNaN(d.getTime())) return null;
@@ -222,6 +281,13 @@ function getBrasiliaSqlString(dateInput) {
 
 function getBrasiliaIsoString(dateInput) {
   if (!dateInput) return null;
+  const pad = n => String(n).padStart(2, '0');
+  if (typeof dateInput === 'string' && (dateInput.endsWith('-03:00') || dateInput.includes('-03:00'))) {
+    return dateInput;
+  }
+  if (dateInput instanceof Date && (dateInput.nanosecondsDelta !== undefined || dateInput._isSqlDate)) {
+    return dateInput.getUTCFullYear() + '-' + pad(dateInput.getUTCMonth() + 1) + '-' + pad(dateInput.getUTCDate()) + 'T' + pad(dateInput.getUTCHours()) + ':' + pad(dateInput.getUTCMinutes()) + ':' + pad(dateInput.getUTCSeconds()) + '-03:00';
+  }
   const d = new Date(dateInput);
   if (isNaN(d.getTime())) return null;
   const brasiliaParts = new Intl.DateTimeFormat('pt-BR', {
@@ -817,6 +883,11 @@ async function setupDatabaseTablesAndSync() {
     IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('usuarios') AND name = 'device_type')
     BEGIN
       ALTER TABLE usuarios ADD device_type NVARCHAR(50) DEFAULT 'Computador';
+    END;
+
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('usuarios') AND name = 'must_change_password')
+    BEGIN
+      ALTER TABLE usuarios ADD must_change_password BIT DEFAULT 0;
     END;
 
     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'dados_financeiros')
@@ -8113,6 +8184,90 @@ html.light .scale-dropdown .scale-opt-btn:hover {
     display: none !important;
   }
 }
+
+/* Checklist de Critérios de Segurança da Senha */
+.pwd-req-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94A3B8;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.pwd-req-pill.valid {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  color: #34D399 !important;
+}
+body.light .pwd-req-pill,
+html.light .pwd-req-pill {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
+}
+body.light .pwd-req-pill.valid,
+html.light .pwd-req-pill.valid {
+  background: #ECFDF5 !important;
+  border-color: #A7F3D0 !important;
+  color: #059669 !important;
+}
+
+/* Overlays para Senha Temporária e Troca Obrigatória de Senha */
+.temp-pass-box,
+.mandatory-pass-box {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  background: linear-gradient(145deg, rgba(15,23,42,0.98), rgba(8,14,28,0.99));
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 24px;
+  padding: 28px 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.95), 0 0 45px rgba(245,158,11,0.25);
+  color: #FFFFFF;
+}
+
+body.light .temp-pass-box,
+html.light .temp-pass-box,
+body.light .mandatory-pass-box,
+html.light .mandatory-pass-box {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.2) !important;
+  color: #000000 !important;
+}
+
+body.light .temp-pass-box h3,
+html.light .temp-pass-box h3,
+body.light .temp-pass-box p,
+html.light .temp-pass-box p,
+body.light .mandatory-pass-box h3,
+html.light .mandatory-pass-box h3,
+body.light .mandatory-pass-box p,
+html.light .mandatory-pass-box p,
+body.light .mandatory-pass-box label,
+html.light .mandatory-pass-box label {
+  color: #000000 !important;
+}
+
+body.light .temp-pass-display-card,
+html.light .temp-pass-display-card,
+body.light .mand-criteria-card,
+html.light .mand-criteria-card {
+  background: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
+}
+
+body.light .mand-input-wrapper input,
+html.light .mand-input-wrapper input {
+  color: #000000 !important;
+  background: #FFFFFF !important;
+}
 </style>
 </head>
 <body>
@@ -8391,15 +8546,18 @@ html.light .scale-dropdown .scale-opt-btn:hover {
         </p>
       </div>
 
-      <!-- Box 3: Recuperação de Senha -->
+      <!-- Box 3: Recuperação de Senha com Confirmação Cadastral -->
       <div id="forgotBox" style="display:none;">
-        <p style="font-size:13.5px; color:var(--auth-text-dim); margin-bottom:20px; line-height:1.5;">
-          Informe seu e-mail cadastrado para enviarmos sua senha ou gerar uma credencial de acesso imediato.
+        <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+          <span>Confirmação de Dados Cadastrais (KYC)</span>
+        </div>
+        <p style="font-size:12.5px; color:var(--auth-text-dim); margin-bottom:16px; line-height:1.5;">
+          Para emitir sua senha temporária com máxima segurança, confirme seus dados cadastrados de titularidade da conta:
         </p>
 
         <form id="forgotStep1">
           <div class="auth-field">
-            <label>E-mail Corporativo ou Pessoal</label>
+            <label>E-mail Cadastrado</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -8408,10 +8566,30 @@ html.light .scale-dropdown .scale-opt-btn:hover {
             </div>
           </div>
 
+          <div class="auth-field">
+            <label>CPF do Titular</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+              </span>
+              <input type="text" id="forgotCpf" placeholder="000.000.000-00" maxlength="14" required autocomplete="off" oninput="window.handleServerCpfInput(this)">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label>Data de Nascimento</label>
+            <div class="auth-input-wrapper">
+              <span class="auth-input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              </span>
+              <input type="text" id="forgotBirthDate" placeholder="DD/MM/AAAA" maxlength="10" required autocomplete="bday" oninput="window.handleServerBirthInput(this)">
+            </div>
+          </div>
+
           <div id="forgotFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="btnSendPassword">
-            Recuperar Minha Senha →
+            Confirmar Dados & Gerar Senha Temporária →
           </button>
         </form>
 
@@ -9642,6 +9820,120 @@ html.light .scale-dropdown .scale-opt-btn:hover {
       </button>
     </div>
   </div>
+<!-- OVERLAY 4K: EXIBIÇÃO DA SENHA TEMPORÁRIA EM TELA -->
+<div class="login-success-overlay" id="tempPasswordOverlay" role="dialog" aria-modal="true" style="display:none;">
+  <div class="temp-pass-box" style="text-align:center;">
+    <div class="auth-ambient-glow glow-gold"></div>
+    <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:50%; background:radial-gradient(circle, rgba(245,158,11,0.25) 0%, rgba(15,23,42,0.6) 80%); border:2px solid rgba(245,158,11,0.5); display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px rgba(245,158,11,0.35);">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+    </div>
+    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 12px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+      <span>✓ Dados Confirmados com Sucesso</span>
+    </div>
+    <h3 style="font-size:20px; font-weight:900; margin:0 0 6px 0;">Senha Temporária Gerada</h3>
+    <p style="font-size:12.5px; color:var(--text-dim, #94A3B8); margin:0 0 16px 0; line-height:1.45;">
+      Seus dados foram validados. Utilize a credencial provisória abaixo para realizar seu login no sistema:
+    </p>
+
+    <div class="temp-pass-display-card" style="padding:14px 18px; border-radius:16px; background:rgba(0,0,0,0.4); border:1.5px solid rgba(245,158,11,0.45); display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
+      <div style="text-align:left;">
+        <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#F59E0B; display:block;">Sua Senha Temporária</span>
+        <span id="tempPasswordValServer" style="font-size:22px; font-weight:900; font-family:monospace; letter-spacing:0.06em; color:#FBBF24; user-select:all;"></span>
+      </div>
+      <button type="button" id="btnCopyTempServer" onclick="window.copyTempPasswordToClipboard()" style="padding:8px 14px; border-radius:10px; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        <span id="btnCopyTempTextServer">Copiar</span>
+      </button>
+    </div>
+
+    <div style="padding:10px 14px; border-radius:12px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); text-align:left; font-size:11px; color:#FDE68A; margin-bottom:18px; display:flex; gap:8px;">
+      <span style="font-size:13px; color:#F59E0B;">⚠️</span>
+      <span><strong>Aviso Obrigatório:</strong> No primeiro login com esta senha temporária, será <strong>obrigatório</strong> definir sua nova senha definitiva dentro dos critérios de segurança.</span>
+    </div>
+
+    <button type="button" class="btn-auth-primary" onclick="window.goToLoginWithTempPassword()" style="margin-top:0;">
+      Avançar para o Login com a Senha →
+    </button>
+  </div>
+</div>
+
+<!-- OVERLAY 4K: TROCA OBRIGATÓRIA DE SENHA NO PRIMEIRO LOGIN -->
+<div class="login-success-overlay" id="mandatoryPasswordOverlay" role="dialog" aria-modal="true" style="display:none;">
+  <div class="mandatory-pass-box" style="text-align:left;">
+    <div class="auth-ambient-glow glow-gold"></div>
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+      <div style="width:48px; height:48px; border-radius:14px; background:rgba(245,158,11,0.15); border:1.5px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; color:#F59E0B; flex-shrink:0;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+      </div>
+      <div>
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:2px 10px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
+          <span>Primeiro Acesso • Troca Obrigatória</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:900; margin:0; color:var(--text, #FFF);">Definir Nova Senha Pessoal</h3>
+      </div>
+    </div>
+
+    <p style="font-size:12px; color:var(--text-dim, #94A3B8); margin:0 0 14px 0; line-height:1.45;">
+      Você realizou o login utilizando uma senha temporária. Para sua segurança e continuidade no sistema, defina agora sua nova senha definitiva cumprindo todos os critérios abaixo:
+    </p>
+
+    <form id="formMandatoryPassword" onsubmit="window.handleMandatoryPasswordSubmit(event); return false;">
+      <input type="hidden" id="mandatoryEmailServer">
+
+      <div class="auth-field" style="margin-bottom:12px;">
+        <label>Nova Senha Pessoal</label>
+        <div class="auth-input-wrapper mand-input-wrapper">
+          <span class="auth-input-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <input type="password" id="mandNewPass" placeholder="••••••••" required autocomplete="new-password" spellcheck="false" oninput="window.checkMandatoryPasswordStrength(this.value)">
+          <button type="button" class="auth-pass-toggle-btn" id="toggleMandNewPassBtn" onclick="window.togglePasswordVisibility('mandNewPass', 'toggleMandNewPassBtn')" title="Visualizar Senha">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Checklist de Critérios de Segurança Estabelecidos -->
+      <div class="mand-criteria-card" style="padding:12px 14px; border-radius:14px; background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:11px;">
+          <span style="color:var(--text-dim, #94A3B8); font-weight:600;">Força da Senha:</span>
+          <span id="mandStrengthTextServer" style="color:#f87171; font-weight:800;">Muito Fraca</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:4px; height:5px; margin-bottom:8px;">
+          <div id="mandBar1Server" style="height:100%; border-radius:999px; background:rgba(255,255,255,0.1); transition:all 0.3s ease;"></div>
+          <div id="mandBar2Server" style="height:100%; border-radius:999px; background:rgba(255,255,255,0.1); transition:all 0.3s ease;"></div>
+          <div id="mandBar3Server" style="height:100%; border-radius:999px; background:rgba(255,255,255,0.1); transition:all 0.3s ease;"></div>
+          <div id="mandBar4Server" style="height:100%; border-radius:999px; background:rgba(255,255,255,0.1); transition:all 0.3s ease;"></div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span id="mandReqLenServer" class="pwd-req-pill"><span>•</span> 8+ caracteres</span>
+          <span id="mandReqCaseServer" class="pwd-req-pill"><span>•</span> Maiúsc./Minúsc.</span>
+          <span id="mandReqNumServer" class="pwd-req-pill"><span>•</span> Número</span>
+          <span id="mandReqSpecServer" class="pwd-req-pill"><span>•</span> Símbolo (@#$%)</span>
+        </div>
+      </div>
+
+      <div class="auth-field" style="margin-bottom:12px;">
+        <label>Confirmar Nova Senha</label>
+        <div class="auth-input-wrapper mand-input-wrapper">
+          <span class="auth-input-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </span>
+          <input type="password" id="mandConfPass" placeholder="Repita a nova senha" required autocomplete="new-password" spellcheck="false" oninput="window.checkMandatoryPasswordMatch()">
+          <button type="button" class="auth-pass-toggle-btn" id="toggleMandConfPassBtn" onclick="window.togglePasswordVisibility('mandConfPass', 'toggleMandConfPassBtn')" title="Visualizar Senha">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div id="mandMatchMsgServer" style="display:none; font-size:11px; font-weight:700; margin-top:4px;"></div>
+      </div>
+
+      <div id="mandFeedbackBannerServer" class="auth-feedback-banner error" style="display:none; margin-bottom:12px;"></div>
+
+      <button type="submit" id="btnSubmitMandServer" disabled class="btn-auth-primary" style="opacity:0.5; cursor:not-allowed;">
+        Salvar Nova Senha e Concluir Acesso →
+      </button>
+    </form>
+  </div>
 </div>
 
 <script>
@@ -9814,6 +10106,7 @@ window.renderUsuariosLogonServer = function(users) {
     const isAdmin = role === 'Administrador';
     const initials = name.trim().split(/\\s+/).map(p => p[0]).slice(0, 2).join('').toUpperCase();
     const passSafe = u.password ? u.password.replace(/'/g, "\\\\'") : '';
+    const lastLoginFormatted = formatDateTimeWithSeconds(u.last_login);
 
     html += \`
       <div style="padding:10px 12px; border-radius:12px; background:var(--card-bg, rgba(255,255,255,0.04)); border:1px solid var(--auth-border); display:flex; align-items:center; justify-content:space-between; gap:10px;">
@@ -9822,11 +10115,15 @@ window.renderUsuariosLogonServer = function(users) {
             \${initials}
           </div>
           <div style="min-width:0;">
-            <div style="display:flex; align-items:center; gap:6px;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <strong style="font-size:13px; color:var(--auth-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${name}</strong>
+              <span style="font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.1); color:var(--text, #fff); border:1px solid rgba(255,255,255,0.15);">ID #\${u.id || '-'}</span>
               <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(59,130,246,0.2)'}; color:\${isAdmin ? '#FBBF24' : '#60A5FA'};">\${role}</span>
             </div>
             <div style="font-size:11.5px; color:var(--auth-text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${email}</div>
+            <div style="font-size:10.5px; color:#38BDF8; margin-top:3px; display:flex; align-items:center; gap:4px;">
+              <span>🕒 Último login:</span> <strong style="color:var(--text, #E2E8F0);">\${lastLoginFormatted}</strong>
+            </div>
           </div>
         </div>
         <button type="button" onclick="selecionarUsuarioParaLogonServer('\${email}', '\${passSafe}', '\${name.replace(/'/g, "\\\\'")}')" style="padding:6px 10px; border-radius:8px; font-size:11px; font-weight:800; background:rgba(245,158,11,0.15); color:var(--auth-gold); border:1px solid rgba(245,158,11,0.4); cursor:pointer; flex-shrink:0;">
@@ -10081,52 +10378,352 @@ if (goForgot) goForgot.onclick = (e) => { e.preventDefault(); window.switchAuthT
 const goLoginFromForgot = document.getElementById('goLoginFromForgot');
 if (goLoginFromForgot) goLoginFromForgot.onclick = (e) => { e.preventDefault(); window.switchAuthTab('login'); };
 
+// Variáveis de Controle de Senha Temporária e Troca Obrigatória (Frontend Integrado)
+let serverCurrentTempEmail = '';
+let serverCurrentTempPassword = '';
+let serverCurrentMandatoryToken = '';
+
 const forgotFormElement = document.getElementById('forgotStep1') || document.getElementById('forgotForm');
 if (forgotFormElement) {
   forgotFormElement.onsubmit = async (e) => {
     e.preventDefault();
-    const email = document.getElementById('forgotEmail') ? document.getElementById('forgotEmail').value.trim() : '';
+    if (window.clearAuthFeedback) window.clearAuthFeedback('forgot');
+
+    const emailInput = document.getElementById('forgotEmail');
+    const cpfInput = document.getElementById('forgotCpf');
+    const birthInput = document.getElementById('forgotBirthDate');
     const btn = document.getElementById('btnSendPassword');
+
+    const email = emailInput ? emailInput.value.trim() : '';
+    const cpf = cpfInput ? cpfInput.value.trim() : '';
+    const birth_date = birthInput ? birthInput.value.trim() : '';
+
+    if (!email) {
+      window.showAuthFeedback('forgot', 'error', 'E-mail não informado', 'Por favor, informe o e-mail cadastrado da sua conta.');
+      if (emailInput) emailInput.focus();
+      return;
+    }
+    if (!cpf) {
+      window.showAuthFeedback('forgot', 'error', 'CPF Obrigatório', 'Por favor, informe o CPF do titular para confirmação dos dados cadastrais.');
+      if (cpfInput) cpfInput.focus();
+      return;
+    }
 
     if (btn) {
       btn.disabled = true;
-      btn.textContent = 'Enviando...';
+      btn.textContent = 'Validando Dados Cadastrais...';
     }
 
     try {
       const res = await fetch(window.location.origin + '/api/send-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, cpf, birth_date })
       });
       const data = await res.json();
 
-      if (!data.success) {
-        alert(data.error || 'Não encontramos nenhuma conta com esse e-mail ou falha no envio.');
+      if (!res.ok || !data.success) {
+        window.showAuthFeedback('forgot', 'error', 'Confirmação Recusada', data.error || 'Dados cadastrais não localizados ou divergentes.');
         return;
       }
 
-      if (data.mode === 'direct' && data.tempPassword) {
-        alert('Sua senha temporária de acesso é: ' + data.tempPassword);
-        const passInp = document.getElementById('loginPassword');
-        if (passInp) passInp.value = data.tempPassword;
-      } else {
-        alert('Sua senha foi enviada para o seu e-mail com sucesso!');
+      serverCurrentTempEmail = email;
+      serverCurrentTempPassword = data.tempPassword || '';
+
+      // Apresentar Senha Temporária em Tela no Overlay 4K
+      const valEl = document.getElementById('tempPasswordValServer');
+      if (valEl) valEl.textContent = serverCurrentTempPassword;
+
+      const copyBtnTxt = document.getElementById('btnCopyTempTextServer');
+      if (copyBtnTxt) copyBtnTxt.textContent = 'Copiar';
+
+      const overlay = document.getElementById('tempPasswordOverlay');
+      if (overlay) {
+        overlay.style.display = 'flex';
+        overlay.classList.add('show');
+        void overlay.offsetHeight;
+        overlay.classList.add('in');
       }
 
-      const emailInp = document.getElementById('loginEmail');
-      if (emailInp) emailInp.value = email;
-      window.switchAuthTab('login');
     } catch(err) {
-      alert('Erro ao processar solicitação de e-mail. Verifique suas credenciais SMTP no servidor.');
+      window.showAuthFeedback('forgot', 'error', 'Falha na Conexão', 'Erro ao processar solicitação no servidor. Verifique sua conexão.');
     } finally {
       if (btn) {
         btn.disabled = false;
-        btn.textContent = 'Recuperar Minha Senha →';
+        btn.textContent = 'Confirmar Dados & Gerar Senha Temporária →';
       }
     }
   };
 }
+
+// Copiar Senha Temporária para a Área de Transferência
+window.copyTempPasswordToClipboard = function() {
+  if (!serverCurrentTempPassword) return;
+  const txt = serverCurrentTempPassword;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(() => {
+      const btnTxt = document.getElementById('btnCopyTempTextServer');
+      if (btnTxt) btnTxt.textContent = '✓ Copiado!';
+      setTimeout(() => { if (btnTxt) btnTxt.textContent = 'Copiar'; }, 3000);
+    }).catch(() => {
+      const btnTxt = document.getElementById('btnCopyTempTextServer');
+      if (btnTxt) btnTxt.textContent = '✓ Copiado!';
+    });
+  } else {
+    const btnTxt = document.getElementById('btnCopyTempTextServer');
+    if (btnTxt) btnTxt.textContent = '✓ Copiado!';
+  }
+};
+
+// Avançar para o Login com a Senha Temporária Preenchida
+window.goToLoginWithTempPassword = function() {
+  const overlay = document.getElementById('tempPasswordOverlay');
+  if (overlay) {
+    overlay.classList.remove('in');
+    setTimeout(() => {
+      overlay.classList.remove('show');
+      overlay.style.display = 'none';
+    }, 250);
+  }
+
+  window.switchAuthTab('login');
+  const emailInput = document.getElementById('loginEmail');
+  const passInput = document.getElementById('loginPassword');
+
+  if (emailInput && serverCurrentTempEmail) emailInput.value = serverCurrentTempEmail;
+  if (passInput && serverCurrentTempPassword) passInput.value = serverCurrentTempPassword;
+
+  if (passInput) passInput.focus();
+  window.showAuthFeedback('login', 'success', 'Senha Preenchida', 'Sua senha temporária foi preenchida. Clique em "Entrar na Conta" para prosseguir.');
+};
+
+// Exibir Modal de Troca Obrigatória de Senha
+window.showMandatoryPasswordModal = function(user, token) {
+  serverCurrentMandatoryToken = token || '';
+  const emailField = document.getElementById('mandatoryEmailServer');
+  if (emailField && user) emailField.value = user.email || '';
+
+  const p1 = document.getElementById('mandNewPass');
+  const p2 = document.getElementById('mandConfPass');
+  if (p1) p1.value = '';
+  if (p2) p2.value = '';
+
+  window.checkMandatoryPasswordStrength('');
+
+  const overlay = document.getElementById('mandatoryPasswordOverlay');
+  if (overlay) {
+    overlay.style.display = 'flex';
+    overlay.classList.add('show');
+    void overlay.offsetHeight;
+    overlay.classList.add('in');
+    if (p1) p1.focus();
+  }
+};
+
+// Validação dos Critérios de Segurança Estabelecidos na Troca Obrigatória
+window.checkMandatoryPasswordStrength = function(pwd) {
+  const txt = document.getElementById('mandStrengthTextServer');
+  const b1 = document.getElementById('mandBar1Server');
+  const b2 = document.getElementById('mandBar2Server');
+  const b3 = document.getElementById('mandBar3Server');
+  const b4 = document.getElementById('mandBar4Server');
+
+  const reqLength = document.getElementById('mandReqLenServer');
+  const reqUpperLower = document.getElementById('mandReqCaseServer');
+  const reqNumber = document.getElementById('mandReqNumServer');
+  const reqSpecial = document.getElementById('mandReqSpecServer');
+
+  const hasLength = (pwd || '').length >= 8;
+  const hasUpperLower = /[a-z]/.test(pwd || '') && /[A-Z]/.test(pwd || '');
+  const hasNumber = /[0-9]/.test(pwd || '');
+  const hasSpecial = /[^A-Za-z0-9]/.test(pwd || '');
+
+  if (reqLength) {
+    reqLength.className = 'pwd-req-pill' + (hasLength ? ' valid' : '');
+    reqLength.innerHTML = '<span>' + (hasLength ? '✓' : '•') + '</span> 8+ caracteres';
+  }
+  if (reqUpperLower) {
+    reqUpperLower.className = 'pwd-req-pill' + (hasUpperLower ? ' valid' : '');
+    reqUpperLower.innerHTML = '<span>' + (hasUpperLower ? '✓' : '•') + '</span> Maiúsc./Minúsc.';
+  }
+  if (reqNumber) {
+    reqNumber.className = 'pwd-req-pill' + (hasNumber ? ' valid' : '');
+    reqNumber.innerHTML = '<span>' + (hasNumber ? '✓' : '•') + '</span> Número';
+  }
+  if (reqSpecial) {
+    reqSpecial.className = 'pwd-req-pill' + (hasSpecial ? ' valid' : '');
+    reqSpecial.innerHTML = '<span>' + (hasSpecial ? '✓' : '•') + '</span> Símbolo (@#$%)';
+  }
+
+  let score = 0;
+  if (hasLength) score++;
+  if (hasUpperLower) score++;
+  if (hasNumber) score++;
+  if (hasSpecial) score++;
+
+  if (b1) b1.style.background = score >= 1 ? (score === 1 ? '#f87171' : '#f59e0b') : 'rgba(255,255,255,0.1)';
+  if (b2) b2.style.background = score >= 2 ? (score === 2 ? '#f59e0b' : '#38bdf8') : 'rgba(255,255,255,0.1)';
+  if (b3) b3.style.background = score >= 3 ? (score === 3 ? '#38bdf8' : '#34d399') : 'rgba(255,255,255,0.1)';
+  if (b4) b4.style.background = score >= 4 ? '#34d399' : 'rgba(255,255,255,0.1)';
+
+  if (txt) {
+    if (score <= 1) {
+      txt.textContent = 'Muito Fraca';
+      txt.style.color = '#f87171';
+    } else if (score === 2) {
+      txt.textContent = 'Média';
+      txt.style.color = '#f59e0b';
+    } else if (score === 3) {
+      txt.textContent = 'Forte';
+      txt.style.color = '#38bdf8';
+    } else {
+      txt.textContent = 'Excelente';
+      txt.style.color = '#34d399';
+    }
+  }
+
+  window.checkMandatoryPasswordMatch();
+};
+
+window.checkMandatoryPasswordMatch = function() {
+  const p1 = document.getElementById('mandNewPass') ? document.getElementById('mandNewPass').value : '';
+  const p2 = document.getElementById('mandConfPass') ? document.getElementById('mandConfPass').value : '';
+  const msg = document.getElementById('mandMatchMsgServer');
+  const btn = document.getElementById('btnSubmitMandServer');
+
+  const hasLength = p1.length >= 8;
+  const hasUpperLower = /[a-z]/.test(p1) && /[A-Z]/.test(p1);
+  const hasNumber = /[0-9]/.test(p1);
+  const hasSpecial = /[^A-Za-z0-9]/.test(p1);
+  const allCriteriaMet = hasLength && hasUpperLower && hasNumber && hasSpecial;
+
+  const isMatch = p1.length > 0 && p1 === p2;
+
+  if (msg) {
+    if (!p2) {
+      msg.style.display = 'none';
+    } else if (isMatch) {
+      msg.style.display = 'block';
+      msg.textContent = '✓ As senhas coincidem perfeitamente';
+      msg.style.color = '#34d399';
+    } else {
+      msg.style.display = 'block';
+      msg.textContent = '✕ As senhas não conferem';
+      msg.style.color = '#f87171';
+    }
+  }
+
+  if (btn) {
+    if (allCriteriaMet && isMatch) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.cursor = 'pointer';
+    } else {
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.style.cursor = 'not-allowed';
+    }
+  }
+};
+
+// Enviar Troca Obrigatória de Senha no Servidor
+window.handleMandatoryPasswordSubmit = async function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const email = document.getElementById('mandatoryEmailServer')?.value || serverCurrentTempEmail;
+  const newPassword = document.getElementById('mandNewPass')?.value || '';
+  const confirmPassword = document.getElementById('mandConfPass')?.value || '';
+  const submitBtn = document.getElementById('btnSubmitMandServer');
+  const banner = document.getElementById('mandFeedbackBannerServer');
+
+  if (!email || !newPassword || !confirmPassword) {
+    if (banner) {
+      banner.style.display = 'block';
+      banner.textContent = 'Preencha todos os campos obrigatórios.';
+    }
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    if (banner) {
+      banner.style.display = 'block';
+      banner.textContent = 'A confirmação não coincide com a nova senha.';
+    }
+    return;
+  }
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Gravando Nova Senha Definitiva...';
+  }
+
+  try {
+    const res = await fetch(window.location.origin + '/api/auth/change-temp-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, newPassword, confirmPassword })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      if (banner) {
+        banner.style.display = 'block';
+        banner.textContent = data.error || 'Erro ao registrar nova senha.';
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Salvar Nova Senha e Concluir Acesso →';
+      }
+      return;
+    }
+
+    // Sucesso! Atualiza sessão e entra no sistema
+    const user = data.user || { email, must_change_password: false };
+    currentUser = user;
+    saveToStorage('nexus_session', { email: user.email });
+    saveToStorage('nexus_cached_user', user);
+    saveToStorage('nexus_token', data.token || serverCurrentMandatoryToken || ('token_' + Date.now()));
+    sessionStorage.setItem('nexus_session_active', 'true');
+    sessionStorage.setItem('nexus_last_activity', Date.now().toString());
+
+    const overlay = document.getElementById('mandatoryPasswordOverlay');
+    if (overlay) {
+      overlay.classList.remove('in');
+      setTimeout(() => {
+        overlay.classList.remove('show');
+        overlay.style.display = 'none';
+      }, 250);
+    }
+
+    document.documentElement.classList.add('user-logged-in');
+    if (currentUser.role === 'Administrador') {
+      document.documentElement.classList.add('is-admin');
+      currentPage = 'usuarios';
+    } else {
+      document.documentElement.classList.remove('is-admin');
+      currentPage = 'dashboard';
+    }
+
+    await loadUserData();
+    showLoginSuccessPopup('Senha definitiva configurada! Acessando sistema...');
+    setTimeout(() => {
+      document.getElementById('authPage').classList.remove('show');
+      document.getElementById('authPage').style.display = 'none';
+      document.getElementById('appMain').classList.add('show');
+      document.getElementById('appMain').style.display = 'flex';
+      render();
+    }, 1200);
+
+  } catch(err) {
+    if (banner) {
+      banner.style.display = 'block';
+      banner.textContent = 'Erro ao conectar ao servidor para atualizar senha.';
+    }
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Salvar Nova Senha e Concluir Acesso →';
+    }
+  }
+};
 
 // Limpa erros em tempo real conforme o usuário digita
 const loginEmailEl = document.getElementById('loginEmail');
@@ -10274,6 +10871,16 @@ window.handleLoginSubmit = async function(e) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Entrar na Conta →';
       }
+      return;
+    }
+
+    // Interceptação de Troca Obrigatória no Primeiro Login com Senha Temporária
+    if (data.user && (data.user.must_change_password === true || data.user.must_change_password === 1)) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Entrar na Conta →';
+      }
+      window.showMandatoryPasswordModal(data.user, data.token);
       return;
     }
 
@@ -15220,6 +15827,7 @@ function pageUsuarios(){
             <div class="user-card-info">
               <div class="user-card-name-row">
                 <span class="user-card-name">\${u.name}</span>
+                <span class="role-badge" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); color:var(--text); font-weight:800; padding:2px 8px; border-radius:6px;">ID #\${u.id || '-'}</span>
                 <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
                 \${(u.device_type === 'Mobile' || u.device === 'Mobile') 
                   ? '<span class="role-badge" style="background:linear-gradient(135deg, rgba(168,85,247,0.22), rgba(147,51,234,0.12)); border:1px solid rgba(192,132,252,0.4); color:#D8B4FE; display:inline-flex; align-items:center; gap:4px; font-weight:700;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> 📱 Mobile</span>' 
@@ -20076,6 +20684,16 @@ if (scaleMenuBtn && scaleDropdown) {
     return;
   }
 
+  if (realUser && (realUser.must_change_password === true || realUser.must_change_password === 1)) {
+    document.documentElement.classList.remove('user-logged-in');
+    const appM = document.getElementById('appMain');
+    const authP = document.getElementById('authPage');
+    if (appM) { appM.classList.remove('show'); appM.style.display = 'none'; }
+    if (authP) { authP.classList.add('show'); authP.style.display = 'flex'; }
+    window.showMandatoryPasswordModal(realUser);
+    return;
+  }
+
   // Mantém os dados da conta autenticada real
   saveToStorage('nexus_session', { email: realUser.email });
   saveToStorage('nexus_cached_user', realUser);
@@ -20953,25 +21571,57 @@ const server = http.createServer(async (req, res) => {
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
       try {
-        const { email, last_login } = JSON.parse(body || '{}');
-        const cleanEmail = (email || '').toLowerCase().trim();
-        if (!cleanEmail) {
+        const parsed = JSON.parse(body || '{}');
+        const cleanId = parsed.id || parsed.userId || null;
+        const cleanEmail = (parsed.email || '').toLowerCase().trim();
+        if (!cleanEmail && !cleanId) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
+          return res.end(JSON.stringify({ success: false, error: 'E-mail ou ID de usuário obrigatório' }));
         }
-        const brasiliaSqlTime = getBrasiliaSqlString(last_login) || getBrasiliaSqlString(new Date());
-        const nowIso = getBrasiliaIsoString(last_login) || getBrasiliaIsoString(new Date());
+        const brasiliaSqlTime = getBrasiliaSqlString(parsed.last_login) || getBrasiliaSqlString(new Date());
+        const nowIso = getBrasiliaIsoString(parsed.last_login) || getBrasiliaIsoString(new Date());
+        let targetUser = null;
         if (pool) {
-          await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]).catch(() => {});
+          try {
+            if (cleanId) {
+              await pool.query('UPDATE usuarios SET last_login = $1 WHERE id = $2 OR LOWER(email) = LOWER($3)', [brasiliaSqlTime, cleanId, cleanEmail]);
+            } else {
+              await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]);
+            }
+            const qRes = await pool.query('SELECT id, name, email, last_login FROM usuarios WHERE (id = $1 OR LOWER(email) = LOWER($2))', [cleanId || 0, cleanEmail]);
+            if (qRes.rows && qRes.rows.length > 0) targetUser = qRes.rows[0];
+            console.log(`⚡ [LOGIN-PING] last_login registrado no banco SQL Server para ID #${cleanId || (targetUser ? targetUser.id : '?')} (${cleanEmail}): ${brasiliaSqlTime}`);
+          } catch (dbErr) {
+            console.warn('[AVISO BD] Falha no login-ping SQL Server:', dbErr.message);
+          }
         }
         const localUsers = getLocalUsers();
-        const idx = localUsers.findIndex(u => u && u.email && u.email.toLowerCase() === cleanEmail);
+        const idx = localUsers.findIndex(u => u && ((cleanId && String(u.id) === String(cleanId)) || (cleanEmail && u.email && u.email.toLowerCase() === cleanEmail)));
         if (idx >= 0) {
           localUsers[idx].last_login = nowIso;
+          if (cleanId) localUsers[idx].id = cleanId;
+          if (!targetUser) targetUser = localUsers[idx];
         }
         saveLocalUsers(localUsers);
+
+        pushPendingLogin({
+          id: cleanId || (targetUser ? targetUser.id : null),
+          email: cleanEmail,
+          name: targetUser ? targetUser.name : 'Usuário',
+          last_login: nowIso,
+          timestamp: new Date().toISOString()
+        });
+
+        recordSystemLog(targetUser ? targetUser.name : 'Usuário', cleanEmail, 'Login', 'Autenticação', `Ping de login via site registrado para usuário ID #${cleanId || (targetUser ? targetUser.id : '?')}`);
+
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: true, email: cleanEmail, last_login: nowIso }));
+        return res.end(JSON.stringify({
+          success: true,
+          id: cleanId || (targetUser ? targetUser.id : null),
+          email: cleanEmail,
+          last_login: nowIso,
+          brasiliaSqlTime: brasiliaSqlTime
+        }));
       } catch (err) {
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, error: err.message }));
@@ -21003,7 +21653,7 @@ const server = http.createServer(async (req, res) => {
         if (pool) {
           try {
             const result = await pool.query(
-              'SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at, device_type FROM usuarios WHERE LOWER(email) = LOWER($1)',
+              'SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at, device_type, must_change_password FROM usuarios WHERE LOWER(email) = LOWER($1)',
               [cleanEmail]
             );
             if (result.rows && result.rows.length > 0) user = result.rows[0];
@@ -21061,24 +21711,40 @@ const server = http.createServer(async (req, res) => {
 
         if (pool) {
           try {
-            await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]);
-          } catch(e) {}
+            if (user.id) {
+              await pool.query('UPDATE usuarios SET last_login = $1 WHERE id = $2 OR LOWER(email) = LOWER($3)', [brasiliaSqlTime, user.id, cleanEmail]);
+            } else {
+              await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]);
+            }
+            console.log(`✅ [SQL SERVER] last_login atualizado com sucesso no banco para ID #${user.id} (${cleanEmail}): ${brasiliaSqlTime}`);
+          } catch(e) {
+            console.warn('[AVISO BD] Falha ao atualizar last_login no SQL Server:', e.message);
+          }
         }
 
-        recordSystemLog(user.name, user.email, 'Login', 'Autenticação', 'Usuário realizou login com sucesso no sistema');
+        recordSystemLog(user.name, user.email, 'Login', 'Autenticação', `Usuário realizou login via site (ID #${user.id})`);
+
+        pushPendingLogin({
+          id: user.id,
+          email: cleanEmail,
+          name: user.name,
+          last_login: nowTimestamp,
+          timestamp: new Date().toISOString()
+        });
 
         // Notificação em tempo real via SSE
         broadcastEvent('user_login', {
           name: user.name,
           email: user.email,
           role: user.role,
+          id: user.id,
           timestamp: nowTimestamp
         });
 
         // Exibição em destaque no terminal do VS Code
         console.log('\n' + '='.repeat(70));
         console.log('🔐 [VS CODE - LOGON REALIZADO COM SUCESSO]');
-        console.log(`👤 Usuário:      ${user.name} (${user.email})`);
+        console.log(`👤 Usuário:      ${user.name} (${user.email}) [ID #${user.id}]`);
         console.log(`👑 Perfil:       ${user.role || 'Usuário'}`);
         console.log(`🕒 Data/Hora:    ${new Date().toLocaleString('pt-BR')}`);
         console.log('🚀 Sessão:       Ambiente de Homologação Ativo (Token Criptografado)');
@@ -21086,7 +21752,7 @@ const server = http.createServer(async (req, res) => {
 
         try {
           const localUsers = getLocalUsers();
-          const idx = localUsers.findIndex(u => u.email.toLowerCase() === user.email.toLowerCase());
+          const idx = localUsers.findIndex(u => (u.id && String(u.id) === String(user.id)) || (u.email && u.email.toLowerCase() === user.email.toLowerCase()));
           if (idx >= 0) {
             localUsers[idx] = { ...localUsers[idx], ...user, last_login: nowTimestamp };
           } else {
@@ -21095,11 +21761,13 @@ const server = http.createServer(async (req, res) => {
           saveLocalUsers(localUsers);
         } catch(e){}
 
+        user.must_change_password = !!(user.must_change_password === 1 || user.must_change_password === true);
         const token = generateSecureToken(user);
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
           token: token,
+          must_change_password: user.must_change_password,
           user: sanitizeUser(user)
         }));
       } catch (err) {
@@ -21522,66 +22190,253 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota POST para Enviar a Senha por E-mail
-  if (req.method === 'POST' && parsedUrl.pathname === '/api/send-password') {
+  // Rota POST para Confirmação de Dados Cadastrais e Geração de Senha Temporária
+  if (req.method === 'POST' && (parsedUrl.pathname === '/api/send-password' || parsedUrl.pathname === '/api/auth/verify-and-reset' || parsedUrl.pathname === '/api/forgot-password')) {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
       try {
-        const { email } = JSON.parse(body);
+        const parsed = JSON.parse(body || '{}');
+        const email = (parsed.email || '').trim();
+        const cpf = (parsed.cpf || '').trim();
+        const birth_date = (parsed.birth_date || parsed.birthDate || '').trim();
+
         if (!email) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
+          return res.end(JSON.stringify({ success: false, error: 'Por favor, informe seu e-mail cadastrado.' }));
+        }
+        if (!cpf) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Por favor, confirme seu CPF para validação cadastral.' }));
         }
 
         const cleanEmail = email.toLowerCase().trim();
         let user = null;
+        if (!pool) {
+          await attemptConnectDatabase();
+        }
         if (pool) {
           try {
-            const result = await pool.query('SELECT id, name, email, password, role FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
-            if (result.rows.length > 0) user = result.rows[0];
+            const result = await pool.query(
+              'SELECT id, name, email, password, role, active, cpf, phone, birth_date, device_type FROM usuarios WHERE LOWER(email) = LOWER($1)',
+              [cleanEmail]
+            );
+            if (result.rows && result.rows.length > 0) user = result.rows[0];
           } catch(e){}
         }
         if (!user) {
           const localUsers = getLocalUsers();
-          user = localUsers.find(u => u.email.toLowerCase() === cleanEmail) || null;
+          user = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail) || null;
         }
 
         if (!user) {
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'E-mail não encontrado no sistema.' }));
-        }
-
-        let sendPassword = user.password;
-        if (!sendPassword || sendPassword.length > 30 || sendPassword.includes(':')) {
-          sendPassword = Math.floor(100000 + Math.random() * 900000).toString();
-          if (pool) {
-            pool.query('UPDATE usuarios SET password = $1 WHERE email = $2', [sendPassword, user.email]).catch(()=>{});
-          }
-          const localUsers = getLocalUsers();
-          const lu = localUsers.find(u => u.email.toLowerCase() === user.email.toLowerCase());
-          if (lu) { lu.password = sendPassword; saveLocalUsers(localUsers); }
-        }
-
-        recordSystemLog(user.name, user.email, 'Recuperação', 'Autenticação', 'Solicitou recuperação de senha');
-
-        const emailSent = await sendPasswordEmail(user.email, user.name, sendPassword);
-
-        if (emailSent) {
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: true, mode: 'email' }));
-        } else {
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ 
-            success: true, 
-            mode: 'direct', 
-            tempPassword: sendPassword 
+          return res.end(JSON.stringify({
+            success: false,
+            error: 'Dados não localizados. Verifique o e-mail e CPF informados.'
           }));
         }
+
+        if (user.active === false || user.active === 0) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({
+            success: false,
+            error: 'Esta conta de usuário foi desativada no banco de dados pelo administrador.'
+          }));
+        }
+
+        // Validação estrita de CPF
+        const rawUserCpf = (user.cpf || '').replace(/\D/g, '');
+        const rawReqCpf = cpf.replace(/\D/g, '');
+        if (rawUserCpf && rawReqCpf && rawUserCpf !== rawReqCpf) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({
+            success: false,
+            error: 'O CPF informado não coincide com as informações cadastrais desta conta.'
+          }));
+        }
+
+        // Validação de Data de Nascimento (se informada e se existir no banco)
+        if (birth_date && user.birth_date) {
+          const normalizeDateDigits = (d) => {
+            if (!d) return '';
+            const s = String(d).trim();
+            const m1 = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+            if (m1) return `${m1[1]}${m1[2]}${m1[3]}`;
+            const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (m2) return `${m2[3]}${m2[2]}${m2[1]}`;
+            return s.replace(/\D/g, '');
+          };
+          const userD = normalizeDateDigits(user.birth_date);
+          const reqD = normalizeDateDigits(birth_date);
+          if (userD && reqD && userD !== reqD) {
+            res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({
+              success: false,
+              error: 'A data de nascimento informada não coincide com os dados do titular.'
+            }));
+          }
+        }
+
+        // Gerar nova senha temporária dentro do padrão de alta segurança
+        const tempPassword = 'Nx@' + Math.floor(100000 + Math.random() * 900000);
+        const hashedTempPassword = hashPassword(tempPassword);
+
+        if (pool) {
+          try {
+            await pool.query(
+              'UPDATE usuarios SET password = $1, must_change_password = 1 WHERE LOWER(email) = LOWER($2)',
+              [hashedTempPassword, cleanEmail]
+            );
+          } catch(dbErr) {
+            console.warn('[AVISO BD] Falha ao gravar senha temporária no SQL Server:', dbErr.message);
+          }
+        }
+
+        const localUsers = getLocalUsers();
+        const lu = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail);
+        if (lu) {
+          lu.password = hashedTempPassword;
+          lu.must_change_password = true;
+          saveLocalUsers(localUsers);
+        }
+
+        recordSystemLog(
+          user.name,
+          user.email,
+          'Recuperação',
+          'Autenticação',
+          'Senha temporária gerada via confirmação de dados com troca obrigatória exigida no primeiro logon'
+        );
+
+        try {
+          sendPasswordEmail(user.email, user.name, tempPassword).catch(() => {});
+        } catch(e){}
+
+        // Retorna a senha temporária em tela de forma direta e transparente
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+          success: true,
+          mode: 'direct',
+          tempPassword: tempPassword,
+          email: user.email,
+          name: user.name,
+          message: 'Dados confirmados com sucesso! Sua senha temporária foi gerada.'
+        }));
       } catch (err) {
-        console.error('Erro ao processar recuperação de senha:', err);
+        console.error('Erro ao processar confirmação de dados e emissão de senha temporária:', err);
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: 'Falha ao processar solicitação de senha.' }));
+        res.end(JSON.stringify({ success: false, error: 'Falha no servidor ao confirmar dados cadastrais.' }));
+      }
+    });
+    return;
+  }
+
+  // Rota POST para Troca Obrigatória de Senha Temporária (Primeiro Acesso)
+  if (req.method === 'POST' && (parsedUrl.pathname === '/api/auth/change-temp-password' || parsedUrl.pathname === '/api/user/change-mandatory-password')) {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        const parsed = JSON.parse(body || '{}');
+        const email = (parsed.email || '').toLowerCase().trim();
+        const newPassword = parsed.newPassword || parsed.password || '';
+        const confirmPassword = parsed.confirmPassword || parsed.confirmarSenha || '';
+
+        if (!email || !newPassword || !confirmPassword) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'E-mail, nova senha e confirmação são obrigatórios.' }));
+        }
+
+        if (newPassword !== confirmPassword) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'A nova senha e a confirmação não coincidem.' }));
+        }
+
+        // Validação estrita dos critérios estabelecidos
+        const hasLength = newPassword.length >= 8;
+        const hasUpperLower = /[a-z]/.test(newPassword) && /[A-Z]/.test(newPassword);
+        const hasNumber = /[0-9]/.test(newPassword);
+        const hasSpecial = /[^A-Za-z0-9]/.test(newPassword);
+
+        if (!hasLength || !hasUpperLower || !hasNumber || !hasSpecial) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({
+            success: false,
+            error: 'A senha deve cumprir todos os critérios: mínimo 8 caracteres, maiúsculas, minúsculas, número e símbolo (@#$%).'
+          }));
+        }
+
+        let user = null;
+        if (!pool) {
+          await attemptConnectDatabase();
+        }
+        if (pool) {
+          try {
+            const result = await pool.query(
+              'SELECT id, name, email, password, role, active, cpf, phone, birth_date, terms_accepted, created_at, device_type FROM usuarios WHERE LOWER(email) = LOWER($1)',
+              [email]
+            );
+            if (result.rows && result.rows.length > 0) user = result.rows[0];
+          } catch(e){}
+        }
+        if (!user) {
+          const localUsers = getLocalUsers();
+          user = localUsers.find(u => u && u.email && u.email.toLowerCase() === email) || null;
+        }
+
+        if (!user) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado.' }));
+        }
+
+        if (verifyPassword(newPassword, user.password)) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'A nova senha não pode ser idêntica à senha temporária utilizada.' }));
+        }
+
+        const secureHashedPassword = hashPassword(newPassword);
+        if (pool) {
+          try {
+            await pool.query(
+              'UPDATE usuarios SET password = $1, must_change_password = 0 WHERE LOWER(email) = LOWER($2)',
+              [secureHashedPassword, email]
+            );
+          } catch(dbErr) {
+            console.warn('[AVISO BD] Falha ao atualizar senha definitiva no SQL Server:', dbErr.message);
+          }
+        }
+
+        const localUsers = getLocalUsers();
+        const lu = localUsers.find(u => u && u.email && u.email.toLowerCase() === email);
+        if (lu) {
+          lu.password = secureHashedPassword;
+          lu.must_change_password = false;
+          saveLocalUsers(localUsers);
+        }
+
+        recordSystemLog(
+          user.name,
+          user.email,
+          'Segurança',
+          'Autenticação',
+          'Senha temporária alterada com sucesso para nova senha pessoal definitiva'
+        );
+
+        const updatedUser = { ...user, must_change_password: false };
+        const token = generateSecureToken(updatedUser);
+
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+          success: true,
+          message: 'Nova senha cadastrada com sucesso!',
+          token: token,
+          user: sanitizeUser(updatedUser)
+        }));
+      } catch (err) {
+        console.error('Erro ao processar troca obrigatória de senha:', err);
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Erro interno ao registrar a nova senha.' }));
       }
     });
     return;
@@ -21594,8 +22449,8 @@ const server = http.createServer(async (req, res) => {
                            (parsedUrl.query && parsedUrl.query.sync_secret === JWT_SECRET);
     if (pool) {
       const sqlFields = isInternalSync
-        ? 'SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC'
-        : 'SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC';
+        ? 'SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password FROM usuarios ORDER BY id ASC'
+        : 'SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password FROM usuarios ORDER BY id ASC';
       pool.query(sqlFields)
         .then(result => {
           const rows = result.rows || [];
@@ -21615,6 +22470,39 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       res.end(JSON.stringify(localUsers));
     }
+    return;
+  }
+
+  // Rota GET para Sincronização de Logins Pendentes da Nuvem
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/sync/logins') {
+    const isInternalSync = (req.headers['x-nexus-sync-token'] === JWT_SECRET) || 
+                           (req.headers['user-agent'] === 'Nexus-Local-Sync-Engine/1.0') ||
+                           (parsedUrl.query && parsedUrl.query.sync_secret === JWT_SECRET);
+    if (!isInternalSync) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: 'Não autorizado' }));
+    }
+    const pending = getPendingLogins().filter(p => !p.ack);
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify(pending));
+  }
+
+  // Rota POST para Confirmação de Logins Processados (ACK)
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/sync/logins/ack') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(body || '{}');
+        const keys = parsed.keys || parsed.emails || parsed.ids || [];
+        acknowledgePendingLogins(keys);
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true }));
+      } catch (err) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
     return;
   }
 
@@ -21707,10 +22595,14 @@ const server = http.createServer(async (req, res) => {
         const users = Array.isArray(parsed) ? parsed : (parsed.users || [parsed]);
         if (!users.length) throw new Error('Formato inválido');
 
-        // Mescla localmente com cadastros existentes no servidor preservando credenciais
+        // Mescla localmente com cadastros existentes no servidor preservando credenciais e último login
         const userMap = new Map();
+        const existingMap = new Map();
+        const existingLocal = getLocalUsers();
+        existingLocal.forEach(u => {
+          if (u && u.email) existingMap.set(u.email.toLowerCase().trim(), u);
+        });
         if (!isOverwrite) {
-          const existingLocal = getLocalUsers();
           existingLocal.forEach(u => {
             if (u && u.email) userMap.set(u.email.toLowerCase().trim(), u);
           });
@@ -21719,13 +22611,27 @@ const server = http.createServer(async (req, res) => {
         users.forEach(u => {
           if (u && u.email) {
             const emailKey = u.email.toLowerCase().trim();
-            const existing = userMap.get(emailKey);
+            const existing = existingMap.get(emailKey) || userMap.get(emailKey);
             let finalPassword = existing ? existing.password : '';
             if (u.password && typeof u.password === 'string' && u.password.trim() !== '') {
               finalPassword = u.password.startsWith('scrypt:') ? u.password : hashPassword(u.password);
             }
             if (!finalPassword) {
               finalPassword = hashPassword('123456');
+            }
+
+            // Preserva o last_login mais recente entre o payload recebido e o existente localmente
+            let finalLastLogin = existing ? existing.last_login : null;
+            if (u.last_login && u.last_login !== 'null') {
+              if (!finalLastLogin) {
+                finalLastLogin = u.last_login;
+              } else {
+                const uMs = new Date(u.last_login).getTime();
+                const existMs = new Date(finalLastLogin).getTime();
+                if (!isNaN(uMs) && (isNaN(existMs) || uMs >= existMs)) {
+                  finalLastLogin = u.last_login;
+                }
+              }
             }
 
             userMap.set(emailKey, {
@@ -21739,8 +22645,9 @@ const server = http.createServer(async (req, res) => {
               phone: u.phone !== undefined ? u.phone : (existing ? existing.phone : null),
               birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
               terms_accepted: u.terms_accepted !== undefined ? u.terms_accepted : (existing ? existing.terms_accepted : true),
+              device_type: u.device_type || (existing ? existing.device_type : 'Computador'),
               created_at: u.created_at || (existing ? existing.created_at : new Date().toISOString()),
-              last_login: (u.last_login && u.last_login !== 'null') ? u.last_login : (existing ? existing.last_login : null)
+              last_login: finalLastLogin
             });
           }
         });
@@ -21758,6 +22665,7 @@ const server = http.createServer(async (req, res) => {
             for (const u of finalUsers) {
               if (u && u.email && u.name) {
                 const uEmail = u.email.toLowerCase().trim();
+                const sqlLastLogin = u.last_login ? getBrasiliaSqlString(u.last_login) : null;
                 await pool.query(
                   `IF EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($1))
                    BEGIN
@@ -21766,26 +22674,32 @@ const server = http.createServer(async (req, res) => {
                        password = CASE WHEN $3 IS NOT NULL AND $3 != '' THEN $3 ELSE password END,
                        role = $4,
                        active = 1,
-                       last_login = COALESCE($5, last_login),
+                       last_login = CASE WHEN $5 IS NOT NULL AND (last_login IS NULL OR $5 > last_login) THEN $5 ELSE last_login END,
                        cpf = COALESCE($6, cpf),
                        phone = COALESCE($7, phone),
                        birth_date = COALESCE($8, birth_date),
-                       terms_accepted = COALESCE($9, terms_accepted)
+                       terms_accepted = COALESCE($9, terms_accepted),
+                       device_type = COALESCE($10, device_type)
                      WHERE LOWER(email) = LOWER($1);
                    END
                    ELSE
                    BEGIN
-                     INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted)
-                     VALUES ($2, $1, $3, $4, 1, $5, $6, $7, $8, $9);
+                     INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, device_type)
+                     VALUES ($2, $1, $3, $4, 1, $5, $6, $7, $8, $9, $10);
                    END;`,
-                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', u.last_login || null, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0]
+                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador']
                 );
               }
             }
             // Espelhar de volta para salvar o que de fato está no SQL Server
-            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted FROM usuarios ORDER BY id ASC');
+            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
             if (allUsersRes.rows) {
-              saveLocalUsers(allUsersRes.rows, true);
+              const formattedRows = allUsersRes.rows.map(r => {
+                const c = { ...r };
+                if (c.last_login) c.last_login = getBrasiliaIsoString(c.last_login);
+                return c;
+              });
+              saveLocalUsers(formattedRows, true);
             }
           } catch(dbErr) {
             console.error('[ERRO BD POST /api/users]:', dbErr.message);
@@ -22664,6 +23578,45 @@ async function syncWithRenderCloud() {
       }
     } catch(uErr){}
 
+    // 1.1 Puxar e processar fila de logins pendentes da nuvem (Render)
+    try {
+      const resLogins = await fetchCloud('/api/sync/logins', {
+        headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+        timeout: 2500
+      });
+      if (resLogins.ok) {
+        const cloudLogins = await resLogins.json();
+        if (Array.isArray(cloudLogins) && cloudLogins.length > 0) {
+          const ackKeys = [];
+          for (const lg of cloudLogins) {
+            if (!lg || (!lg.email && !lg.id)) continue;
+            const cleanEmail = (lg.email || '').toLowerCase().trim();
+            const cleanId = lg.id || null;
+            const timeVal = lg.last_login || lg.timestamp;
+            const brasiliaSqlTime = getBrasiliaSqlString(timeVal);
+            if (brasiliaSqlTime) {
+              try {
+                if (cleanId) {
+                  await pool.query('UPDATE usuarios SET last_login = $1 WHERE id = $2 OR LOWER(email) = LOWER($3)', [brasiliaSqlTime, cleanId, cleanEmail]);
+                } else {
+                  await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]);
+                }
+                console.log(`⚡ [SYNC FILA -> SQL SERVER] Login sincronizado com sucesso para ID #${cleanId || '?'} (${cleanEmail}): ${brasiliaSqlTime}`);
+                ackKeys.push(cleanId || cleanEmail);
+              } catch(sqlErr){}
+            }
+          }
+          if (ackKeys.length > 0) {
+            fetchCloud('/api/sync/logins/ack', {
+              method: 'POST',
+              headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+              body: JSON.stringify({ keys: ackKeys })
+            }).catch(()=>{});
+          }
+        }
+      }
+    } catch(lErr){}
+
     // 2. Tentar puxar dados financeiros consolidados ou individualmente por usuário
     let gotBulkFinancial = false;
     try {
@@ -22768,15 +23721,23 @@ async function syncWithRenderCloud() {
 
           // Sincronização automática e contínua do last_login do Render para o SQL Server local (Fuso de Brasília)
           if (cu.last_login && cu.last_login !== 'null') {
-            const brasiliaSqlTime = getBrasiliaSqlString(cu.last_login);
-            if (brasiliaSqlTime) {
-              const currentSqlTime = currentU.last_login ? getBrasiliaSqlString(currentU.last_login) : null;
-              if (!currentSqlTime || brasiliaSqlTime > currentSqlTime) {
+            const cloudMs = new Date(cu.last_login).getTime();
+            const currentMs = currentU.last_login ? new Date(currentU.last_login).getTime() : 0;
+            if (!isNaN(cloudMs) && (isNaN(currentMs) || cloudMs > currentMs)) {
+              const brasiliaSqlTime = getBrasiliaSqlString(cu.last_login);
+              if (brasiliaSqlTime) {
                 await pool.query(
-                  `UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)`,
-                  [brasiliaSqlTime, cleanEmail]
+                  `UPDATE usuarios SET last_login = $1 WHERE id = $2 OR LOWER(email) = LOWER($3)`,
+                  [brasiliaSqlTime, currentU.id, cleanEmail]
                 ).catch(() => {});
-                console.log(`⚡ [SYNC RENDER -> SQL SERVER] last_login sincronizado em Horário de Brasília para ${cleanEmail}: ${brasiliaSqlTime}`);
+                console.log(`⚡ [SYNC RENDER -> SQL SERVER] last_login sincronizado em Horário de Brasília para ${cleanEmail} (ID #${currentU.id}): ${brasiliaSqlTime}`);
+                currentU.last_login = brasiliaSqlTime;
+                
+                pool.query(
+                  `INSERT INTO system_logs (timestamp, user_name, user_email, action, entity, details)
+                   VALUES (GETDATE(), $1, $2, 'Login', 'Autenticação', $3)`,
+                  [currentU.name || 'Usuário', cleanEmail, `Login realizado via site sincronizado no banco (ID #${currentU.id})`]
+                ).catch(()=>{});
               }
             }
           }
@@ -22848,8 +23809,8 @@ async function syncWithRenderCloud() {
       }
     }
 
-    // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS)
-    const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios');
+    // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS)
+    const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
     if (localUsersRes.rows && localUsersRes.rows.length > 0) {
       const usersToSync = localUsersRes.rows.map(u => {
         const uCopy = { ...u };
@@ -22858,7 +23819,7 @@ async function syncWithRenderCloud() {
         }
         return uCopy;
       });
-      saveLocalUsers(localUsersRes.rows, true);
+      saveLocalUsers(usersToSync, true);
       await fetchCloud('/api/users?overwrite=true', {
         method: 'POST',
         headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
