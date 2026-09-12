@@ -854,10 +854,10 @@ async function syncUserTransactionsToTable(userEmail, transactionsList) {
     if (validTxIds.length > 0) {
       const idListStr = validTxIds.map(id => parseInt(id)).join(',');
       await pool.query(
-        `DELETE FROM transacoes WHERE LOWER(user_email) = LOWER($1) AND tx_id IS NOT NULL AND tx_id NOT IN (${idListStr})`,
+        `DELETE FROM transacoes WHERE LOWER(user_email) = LOWER($1) AND (tx_id IS NULL OR tx_id NOT IN (${idListStr}))`,
         [cleanEmail]
       ).catch(() => {});
-    } else if (transactionsList.length === 0) {
+    } else {
       await pool.query('DELETE FROM transacoes WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]).catch(() => {});
     }
   } catch (err) {
@@ -869,13 +869,16 @@ async function syncUserAccountsToTable(userEmail, accountsList) {
   if (!pool || !userEmail || !Array.isArray(accountsList)) return;
   const cleanEmail = userEmail.toLowerCase().trim();
   try {
-    for (const a of accountsList) {
+    const validAccIds = [];
+    for (let i = 0; i < accountsList.length; i++) {
+      const a = accountsList[i];
       if (!a || !a.name) continue;
       const aName = a.name.trim();
-      const aId = (a.id !== undefined && a.id !== null && !isNaN(parseInt(a.id))) ? parseInt(a.id) : null;
+      const aId = (a.id !== undefined && a.id !== null && !isNaN(parseInt(a.id))) ? parseInt(a.id) : (i + 1);
       const aType = a.type || 'Conta Corrente';
       const aSaldo = parseFloat(a.balance !== undefined ? a.balance : (a.saldo || 0)) || 0;
       const aColor = a.color || null;
+      validAccIds.push(aId);
 
       await pool.query(`
         IF EXISTS (SELECT 1 FROM contas_bancarias WHERE LOWER(user_email) = LOWER($1) AND ((account_id IS NOT NULL AND account_id = $2) OR LOWER(nome) = LOWER($3)))
@@ -896,6 +899,16 @@ async function syncUserAccountsToTable(userEmail, accountsList) {
         END
       `, [cleanEmail, aId, aName, aType, aSaldo, aColor]).catch(() => {});
     }
+
+    if (validAccIds.length > 0) {
+      const idListStr = validAccIds.map(id => parseInt(id)).join(',');
+      await pool.query(
+        `DELETE FROM contas_bancarias WHERE LOWER(user_email) = LOWER($1) AND (account_id IS NULL OR account_id NOT IN (${idListStr}))`,
+        [cleanEmail]
+      ).catch(() => {});
+    } else {
+      await pool.query('DELETE FROM contas_bancarias WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]).catch(() => {});
+    }
   } catch (err) {
     console.warn('[BANCO CONTAS] Erro ao sincronizar contas_bancarias:', err.message);
   }
@@ -905,12 +918,14 @@ async function syncUserCategoriesToTable(userEmail, categoriesList) {
   if (!pool || !userEmail || !Array.isArray(categoriesList)) return;
   const cleanEmail = userEmail.toLowerCase().trim();
   try {
+    const validCatNames = [];
     for (const c of categoriesList) {
       if (!c || !c.name) continue;
       const cName = c.name.trim();
       const cType = c.type || 'despesa';
       const cIcon = c.icon || null;
       const cColor = c.color || null;
+      validCatNames.push(cName.toLowerCase().replace(/'/g, "''"));
 
       await pool.query(`
         IF NOT EXISTS (SELECT 1 FROM categorias WHERE LOWER(user_email) = LOWER($1) AND LOWER(nome) = LOWER($2))
@@ -918,7 +933,25 @@ async function syncUserCategoriesToTable(userEmail, categoriesList) {
           INSERT INTO categorias (user_email, nome, tipo, icone, cor, created_at)
           VALUES ($1, $2, $3, $4, $5, GETDATE());
         END
+        ELSE
+        BEGIN
+          UPDATE categorias SET
+            tipo = $3,
+            icone = $4,
+            cor = $5
+          WHERE LOWER(user_email) = LOWER($1) AND LOWER(nome) = LOWER($2);
+        END
       `, [cleanEmail, cName, cType, cIcon, cColor]).catch(() => {});
+    }
+
+    if (validCatNames.length > 0) {
+      const nameListStr = validCatNames.map(n => `'${n}'`).join(',');
+      await pool.query(
+        `DELETE FROM categorias WHERE LOWER(user_email) = LOWER($1) AND LOWER(nome) NOT IN (${nameListStr})`,
+        [cleanEmail]
+      ).catch(() => {});
+    } else {
+      await pool.query('DELETE FROM categorias WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]).catch(() => {});
     }
   } catch (err) {
     console.warn('[BANCO CATEGORIAS] Erro ao sincronizar categorias:', err.message);
@@ -1131,22 +1164,22 @@ async function setupDatabaseTablesAndSync() {
             [cleanEmail, dataVal]
           );
         } else {
-          // Se já existe, realiza merge e atualiza se o local possuir dados relevantes
+          // Se já existe, atualiza pelo timestamp ou pelo estado mais recente do local
           const dbDados = existingData.rows[0].dados;
           let shouldUpdateDb = false;
           if (!dbDados || typeof dbDados !== 'object' || Object.keys(dbDados).length === 0) {
             shouldUpdateDb = true;
           } else {
-            const localTxCount = (dataVal.transactions || []).length;
-            const dbTxCount = (dbDados.transactions || []).length;
-            if (localTxCount >= dbTxCount && localTxCount > 0) {
+            const localTime = dataVal.updated_at ? new Date(dataVal.updated_at).getTime() : 0;
+            const dbTime = dbDados.updated_at ? new Date(dbDados.updated_at).getTime() : 0;
+            if (localTime >= dbTime) {
               shouldUpdateDb = true;
             }
           }
           if (shouldUpdateDb) {
             await pool.query(
               'UPDATE dados_financeiros SET dados = $1, updated_at = GETDATE() WHERE LOWER(email) = LOWER($2)',
-              [dataVal, cleanEmail]
+              [JSON.stringify(dataVal), cleanEmail]
             );
           }
         }
@@ -12322,10 +12355,13 @@ async function saveUserData() {
 
   const cleanEmail = (currentUser.email || '').toLowerCase().trim();
   const userKey = 'nexus_data_' + cleanEmail;
+  const nowIso = new Date().toISOString();
 
   const payloadData = {
     categories, accounts, transactions, budgets, goals, recurringList, alerts, attachments, notifications,
-    nextAccId, nextTxId, nextBudgetId, nextGoalId, nextRecId, nextAlertId, nextAttId, nextNotifId
+    nextAccId, nextTxId, nextBudgetId, nextGoalId, nextRecId, nextAlertId, nextAttId, nextNotifId,
+    updated_at: nowIso,
+    updated_at_ms: Date.now()
   };
   
   saveToStorage(userKey, payloadData);
@@ -13190,8 +13226,9 @@ function refreshTxTable(){
   document.querySelectorAll('[data-del]').forEach(el => {
     el.onclick = (e) => {
       if (e) { e.preventDefault(); e.stopPropagation(); }
-      const id = parseInt(el.getAttribute('data-del'));
-      if (!isNaN(id)) deleteTransaction(id);
+      const attr = el.getAttribute('data-del');
+      const id = parseInt(attr);
+      deleteTransaction(!isNaN(id) ? id : attr);
     };
   });
   document.querySelectorAll('[data-togglestatus]').forEach(el => {
@@ -18297,9 +18334,9 @@ async function saveTransaction(){
   render();
 }
 async function deleteTransaction(id){
-  const target = transactions.find(t => t.id === id);
+  const target = transactions.find(t => t.id === id || String(t.id) === String(id));
   const desc = target ? target.desc : '';
-  transactions = transactions.filter(t => t.id !== id);
+  transactions = transactions.filter(t => t.id !== id && String(t.id) !== String(id));
   await saveUserData();
   showToast('🗑 Transação ' + (desc ? ('"' + desc + '" ') : '') + 'excluída!');
   logActivity('Exclusão', 'Transação', 'Excluiu transação "' + (desc || id) + '"');
@@ -19933,8 +19970,9 @@ function attachPageEvents(){
   document.querySelectorAll('[data-del]').forEach(el => {
     el.onclick = (e) => {
       if (e) { e.preventDefault(); e.stopPropagation(); }
-      const id = parseInt(el.getAttribute('data-del'));
-      if (!isNaN(id)) deleteTransaction(id);
+      const attr = el.getAttribute('data-del');
+      const id = parseInt(attr);
+      deleteTransaction(!isNaN(id) ? id : attr);
     };
   });
   document.querySelectorAll('[data-paytx]').forEach(el => {
@@ -21650,7 +21688,7 @@ function saveLocalData(email, data) {
   }
 }
 
-// Consolidação e Merge Inteligente de Dados Financeiros (Prevenção Absoluta de Perda de Dados)
+// Consolidação e Merge Inteligente de Dados Financeiros (Respeita estritamente exclusões e alterações por timestamp)
 function mergeFinancialData(serverData, localData) {
   let sData = serverData;
   let lData = localData;
@@ -21664,80 +21702,13 @@ function mergeFinancialData(serverData, localData) {
   if (!sData) return lData;
   if (!lData) return sData;
 
-  const merged = { ...lData, ...sData };
+  const sTime = sData.updated_at ? new Date(sData.updated_at).getTime() : 0;
+  const lTime = lData.updated_at ? new Date(lData.updated_at).getTime() : 0;
 
-  // 1. Transações: união inteligente por ID + detalhes para garantir que nenhuma transação seja perdida
-  const txMap = new Map();
-  (sData.transactions || []).forEach(t => {
-    if (t) {
-      const key = `${t.id || ''}_${t.desc || t.description || ''}_${t.date || ''}_${t.val || t.amount || 0}`;
-      txMap.set(key, t);
-    }
-  });
-  (lData.transactions || []).forEach(t => {
-    if (t) {
-      const key = `${t.id || ''}_${t.desc || t.description || ''}_${t.date || ''}_${t.val || t.amount || 0}`;
-      if (!txMap.has(key)) {
-        txMap.set(key, t);
-      }
-    }
-  });
-  merged.transactions = Array.from(txMap.values());
+  if (sTime > lTime) return sData;
+  if (lTime > sTime) return lData;
 
-  // 2. Categorias: união preservando categorias cadastradas
-  const catMap = new Map();
-  (sData.categories || []).forEach(c => {
-    if (c) {
-      const key = c.id ? String(c.id) : (c.name || JSON.stringify(c));
-      catMap.set(key, c);
-    }
-  });
-  (lData.categories || []).forEach(c => {
-    if (c) {
-      const key = c.id ? String(c.id) : (c.name || JSON.stringify(c));
-      if (!catMap.has(key)) {
-        catMap.set(key, c);
-      }
-    }
-  });
-  merged.categories = Array.from(catMap.values());
-
-  // 3. Contas bancárias: união preservando contas cadastradas
-  const accMap = new Map();
-  (sData.accounts || []).forEach(a => {
-    if (a) {
-      const key = a.id ? String(a.id) : (a.name || JSON.stringify(a));
-      accMap.set(key, a);
-    }
-  });
-  (lData.accounts || []).forEach(a => {
-    if (a) {
-      const key = a.id ? String(a.id) : (a.name || JSON.stringify(a));
-      if (!accMap.has(key)) {
-        accMap.set(key, a);
-      }
-    }
-  });
-  merged.accounts = Array.from(accMap.values());
-
-  // 4. Metas e Orçamentos
-  const goalMap = new Map();
-  (sData.goals || []).forEach(g => { if (g) goalMap.set(String(g.id || g.title), g); });
-  (lData.goals || []).forEach(g => {
-    const key = String(g && (g.id || g.title));
-    if (key && !goalMap.has(key)) goalMap.set(key, g);
-  });
-  merged.goals = Array.from(goalMap.values());
-
-  const budgetMap = new Map();
-  (sData.budgets || []).forEach(b => { if (b) budgetMap.set(String(b.id || b.cat), b); });
-  (lData.budgets || []).forEach(b => {
-    const key = String(b && (b.id || b.cat));
-    if (key && !budgetMap.has(key)) budgetMap.set(key, b);
-  });
-  merged.budgets = Array.from(budgetMap.values());
-
-  return merged;
+  return sData || lData;
 }
 
 
@@ -23202,7 +23173,7 @@ const server = http.createServer(async (req, res) => {
           if (typeof serverData === 'string') {
             try { serverData = JSON.parse(serverData); } catch(e){ serverData = null; }
           }
-          let finalData = mergeFinancialData(serverData, localData);
+          let finalData = serverData || localData || getEmptyFinancialData();
           if (!finalData || typeof finalData !== 'object' || Object.keys(finalData).length === 0) {
             finalData = getEmptyFinancialData();
           }
@@ -23214,17 +23185,6 @@ const server = http.createServer(async (req, res) => {
 
           if (finalData) {
             saveLocalData(email, finalData);
-            pool.query(
-              `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
-               BEGIN
-                 UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
-               END
-               ELSE
-               BEGIN
-                 INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
-               END`,
-              [email, JSON.stringify(finalData)]
-            ).catch(() => {});
           }
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(finalData));
@@ -23266,17 +23226,21 @@ const server = http.createServer(async (req, res) => {
       }
       const cleanEmail = (payload.email || '').toLowerCase().trim();
 
-      // PROTEÇÃO ABSOLUTA DE INTEGRIDADE: Sempre mescla os dados financeiros com os existentes para prevenir perda de transações
-      const currentLocal = getLocalData(cleanEmail);
+      // Soberania do usuário: os dados salvos (incluindo exclusões intencionais) são a verdade absoluta da conta
       let dataToSave = payload.data;
-      if (currentLocal && typeof currentLocal === 'object' && !payload.forceEmpty) {
-        dataToSave = mergeFinancialData(payload.data, currentLocal);
+      if (typeof dataToSave === 'string') {
+        try { dataToSave = JSON.parse(dataToSave); } catch(e){}
       }
+      if (!dataToSave || typeof dataToSave !== 'object') {
+        dataToSave = getEmptyFinancialData();
+      }
+      dataToSave.updated_at = dataToSave.updated_at || new Date().toISOString();
 
       saveLocalData(cleanEmail, dataToSave);
       recordSystemLog(cleanEmail, cleanEmail, 'Salvamento', 'Dados Financeiros', 'Atualizou dados financeiros no sistema');
 
       if (pool) {
+        const strDataToSave = JSON.stringify(dataToSave);
         pool.query(
           `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
            BEGIN
@@ -23286,23 +23250,15 @@ const server = http.createServer(async (req, res) => {
            BEGIN
              INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
            END`,
-          [cleanEmail, dataToSave]
+          [cleanEmail, strDataToSave]
         ).catch(err => {
           console.warn('[AVISO BD] Falha ao salvar no SQL Server. Dados salvos com resiliência local.', err.message);
         });
 
         // Persistência relacional imediata no SQL Server (tabelas transacoes, contas_bancarias, categorias)
-        if (dataToSave && typeof dataToSave === 'object') {
-          if (Array.isArray(dataToSave.transactions)) {
-            syncUserTransactionsToTable(cleanEmail, dataToSave.transactions).catch(() => {});
-          }
-          if (Array.isArray(dataToSave.accounts)) {
-            syncUserAccountsToTable(cleanEmail, dataToSave.accounts).catch(() => {});
-          }
-          if (Array.isArray(dataToSave.categories)) {
-            syncUserCategoriesToTable(cleanEmail, dataToSave.categories).catch(() => {});
-          }
-        }
+        syncUserTransactionsToTable(cleanEmail, Array.isArray(dataToSave.transactions) ? dataToSave.transactions : []).catch(() => {});
+        syncUserAccountsToTable(cleanEmail, Array.isArray(dataToSave.accounts) ? dataToSave.accounts : []).catch(() => {});
+        syncUserCategoriesToTable(cleanEmail, Array.isArray(dataToSave.categories) ? dataToSave.categories : []).catch(() => {});
       }
 
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -24134,14 +24090,27 @@ async function syncWithRenderCloud() {
       }
     }
 
-    // B) Sincronizar dados financeiros atualizados do Render para o SQL Server local (com merge de protecao e gravação relacional)
+    // B) Sincronizar dados financeiros atualizados do Render para o SQL Server local (respeitando soberania do banco local e timestamps)
     if (cloudFinancial && typeof cloudFinancial === 'object') {
       for (const [emailKey, financialPayload] of Object.entries(cloudFinancial)) {
         if (!emailKey || !financialPayload) continue;
         const cleanEmail = emailKey.toLowerCase().trim();
         const localData = getLocalData(cleanEmail);
-        const finalMerged = mergeFinancialData(financialPayload, localData);
-        const strPayload = JSON.stringify(finalMerged);
+
+        const localTime = localData && localData.updated_at ? new Date(localData.updated_at).getTime() : 0;
+        const cloudTime = financialPayload && financialPayload.updated_at ? new Date(financialPayload.updated_at).getTime() : 0;
+
+        // Se a nuvem tiver alteração estritamente mais recente, adota a nuvem; caso contrário, preserva a soberania do banco local
+        let finalDataToKeep;
+        if (cloudTime > localTime) {
+          finalDataToKeep = financialPayload;
+        } else if (localData) {
+          finalDataToKeep = localData;
+        } else {
+          finalDataToKeep = financialPayload;
+        }
+
+        const strPayload = JSON.stringify(finalDataToKeep);
         await pool.query(
           `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
            BEGIN
@@ -24153,23 +24122,17 @@ async function syncWithRenderCloud() {
            END`,
           [cleanEmail, strPayload]
         ).catch(() => {});
-        saveLocalData(cleanEmail, finalMerged);
+        saveLocalData(cleanEmail, finalDataToKeep);
 
         // Grava automaticamente todas as transações, contas e categorias no SQL Server relacional
-        if (Array.isArray(finalMerged.transactions)) {
-          await syncUserTransactionsToTable(cleanEmail, finalMerged.transactions);
+        if (Array.isArray(finalDataToKeep.transactions)) {
+          await syncUserTransactionsToTable(cleanEmail, finalDataToKeep.transactions);
         }
-        if (Array.isArray(finalMerged.accounts)) {
-          await syncUserAccountsToTable(cleanEmail, finalMerged.accounts);
+        if (Array.isArray(finalDataToKeep.accounts)) {
+          await syncUserAccountsToTable(cleanEmail, finalDataToKeep.accounts);
         }
-        if (Array.isArray(finalMerged.categories)) {
-          await syncUserCategoriesToTable(cleanEmail, finalMerged.categories);
-        }
-
-        const curTxCount = (localData && Array.isArray(localData.transactions)) ? localData.transactions.length : 0;
-        const newTxCount = (finalMerged && Array.isArray(finalMerged.transactions)) ? finalMerged.transactions.length : 0;
-        if (newTxCount > curTxCount) {
-          scheduleGitSyncDebounced();
+        if (Array.isArray(finalDataToKeep.categories)) {
+          await syncUserCategoriesToTable(cleanEmail, finalDataToKeep.categories);
         }
       }
     }
@@ -24216,13 +24179,13 @@ async function syncWithRenderCloud() {
       }).catch(() => {});
     }
 
-    // E) Enviar para o Render dados financeiros cadastrados localmente
+    // E) Enviar para o Render dados financeiros cadastrados localmente (com forceEmpty: true para respeitar deleções na nuvem)
     const allLocalFin = getLocalAllFinancialData();
     for (const [emKey, dataVal] of Object.entries(allLocalFin)) {
       if (!emKey || !dataVal) continue;
       await fetchCloud('/api/data', {
         method: 'POST',
-        body: JSON.stringify({ email: emKey, data: dataVal })
+        body: JSON.stringify({ email: emKey, data: dataVal, forceEmpty: true })
       }).catch(() => {});
     }
   } catch(syncErr) {
