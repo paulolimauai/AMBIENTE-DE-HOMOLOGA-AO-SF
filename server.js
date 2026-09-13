@@ -11837,11 +11837,21 @@ window.handleRegisterSubmit = async function(e) {
     return false;
   }
 
-  // 2. Validação de CPF
-  if (!cpf || cpf.replace(/\D/g, '').length < 11) {
-    showCustomAlert('Atenção', 'Por favor, informe um CPF com 11 dígitos.', 'error');
+  // 2. Validação e Ajuste de CPF do Titular (com ou sem pontos)
+  const cleanCpfDigits = cpf.replace(/\D/g, '');
+  if (!cleanCpfDigits || cleanCpfDigits.length < 11) {
+    showCustomAlert('Atenção', 'Por favor, informe seu CPF completo com 11 dígitos.', 'error');
     if (cpfInput) cpfInput.focus();
     return false;
+  }
+  if (!window.isValidCPFServer(cleanCpfDigits)) {
+    showCustomAlert('Atenção', '✕ CPF Inválido perante a Receita Federal. Por favor, verifique os dígitos digitados.', 'error');
+    if (cpfInput) cpfInput.focus();
+    return false;
+  }
+  // Auto-ajusta visualmente a máscara do campo
+  if (cpfInput) {
+    cpfInput.value = cleanCpfDigits.replace(/([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{1,2})/, '$1.$2.$3-$4');
   }
 
   // 3. Validação de Data de Nascimento
@@ -11908,7 +11918,7 @@ window.handleRegisterSubmit = async function(e) {
     name,
     email: cleanEmail,
     password,
-    cpf,
+    cpf: cleanCpfDigits, // CPF sem pontos ajustado (apenas números)
     birth_date: birthDate,
     phone,
     terms_accepted: true,
@@ -19580,7 +19590,7 @@ async function saveUserAdmin(){
     const newUser = {
       name,
       email: rawEmail,
-      cpf: formattedCpf,
+      cpf: rawCpf || null, // CPF ajustado sem pontos
       phone: rawPhone || null,
       password: newPass,
       role,
@@ -19619,7 +19629,7 @@ async function saveUserAdmin(){
 
   u.name = name;
   u.email = rawEmail;
-  u.cpf = formattedCpf;
+  u.cpf = rawCpf || null; // CPF ajustado sem pontos
   u.phone = rawPhone || null;
   u.role = role;
   u.active = active;
@@ -22448,7 +22458,9 @@ const server = http.createServer(async (req, res) => {
 
         const secureHashedPassword = hashPassword(password);
         let newUserId = Date.now();
-        const cleanCpf = cpf ? String(cpf).trim() : null;
+        // CPF sempre ajustado sem pontos (apenas números de 11 dígitos para o banco de dados)
+        const rawDigitsCpf = cpf ? String(cpf).replace(/\D/g, '').slice(0, 11) : null;
+        const cleanCpf = rawDigitsCpf || (cpf ? String(cpf).trim() : null);
         const cleanBirthDate = birth_date ? String(birth_date).trim() : null;
         const cleanPhone = phone ? String(phone).trim() : null;
         const termsAcceptedVal = terms_accepted !== false;
@@ -22536,7 +22548,7 @@ const server = http.createServer(async (req, res) => {
         if (cleanCpf) {
           const numCpf = cleanCpf.replace(/\D/g, '');
           saveCpfRegistryEntry(numCpf, {
-            cpf: cleanCpf,
+            cpf: numCpf, // Armazenado sem pontos para conformidade
             nome: name.trim(),
             data_nascimento: cleanBirthDate,
             phone: cleanPhone,
@@ -22549,23 +22561,28 @@ const server = http.createServer(async (req, res) => {
 
         recordSystemLog(name.trim(), cleanEmail, 'Cadastro Financeiro', 'Autenticação', `Abertura de conta financeira realizada com sucesso (${deviceTypeVal})`);
 
-        // Notificação em tempo real via SSE
+        // Notificação em tempo real via SSE (máscara de conformidade e proteção de dados LGPD)
+        const rawCpfDigits = cleanCpf ? String(cleanCpf).replace(/\D/g, '') : '';
+        const maskedCpf = rawCpfDigits.length === 11
+          ? rawCpfDigits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '***.$2.***-$4')
+          : (cleanCpf || null);
+
         broadcastEvent('new_user_registered', {
           id: newUserId,
           name: name.trim(),
           email: cleanEmail,
-          cpf: cleanCpf ? cleanCpf.replace(/(\d{3})\.(\d{3})\.(\d{3})-(\d{2})/, '***.$2.***-$4') : null,
+          cpf: maskedCpf,
           role: 'Usuário',
           device_type: deviceTypeVal,
           timestamp: new Date().toISOString()
         });
 
         // Exibição em destaque no terminal do VS Code
-        const maskedCpfLog = cleanCpf ? cleanCpf.replace(/(\d{3})\.(\d{3})\.(\d{3})-(\d{2})/, '***.$2.***-$4') : 'N/A';
+        const maskedCpfLog = maskedCpf || 'N/A';
         console.log('\n' + '='.repeat(70));
         console.log('👤 [VS CODE - ABERTURA DE CONTA FINANCEIRA REALIZADA]');
         console.log(`📌 Titular:       ${name.trim()}`);
-        console.log(`🆔 CPF:           ${maskedCpfLog} (Conformidade KYC/BACEN)`);
+        console.log(`🆔 CPF:           ${maskedCpfLog} (Conformidade KYC/BACEN - Sem Pontos no BD)`);
         console.log(`📅 Nascimento:    ${cleanBirthDate || 'N/A'} (Maioridade Confirmada)`);
         console.log(`📱 Celular/2FA:   ${cleanPhone || 'N/A'}`);
         console.log(`📧 E-mail:        ${cleanEmail}`);
@@ -24090,10 +24107,11 @@ async function syncWithRenderCloud() {
             const defaultPass = (cu.password && cu.password.startsWith('scrypt:')) ? cu.password : hashPassword(cu.password || '86266049');
             const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
             const deviceVal = cu.device_type || cu.device || (cu.is_mobile ? 'Mobile' : 'Computador');
+            const rawCuCpf = cu.cpf ? String(cu.cpf).replace(/\D/g, '') : null;
             await pool.query(
               `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login, device_type)
                VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9, $10)`,
-              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', cu.cpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal]
+              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', rawCuCpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal]
             );
             await pool.query(
               `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
@@ -24109,7 +24127,9 @@ async function syncWithRenderCloud() {
           // Atualizar dados de perfil se fornecidos no Render
           const currentU = localCheck.rows[0];
           const updatedName = (cu.name && cu.name !== 'Usuário') ? cu.name : currentU.name;
-          const updatedCpf = cu.cpf || currentU.cpf;
+          const rawCuCpf = cu.cpf ? String(cu.cpf).replace(/\D/g, '') : null;
+          const currentCleanCpf = currentU.cpf ? String(currentU.cpf).replace(/\D/g, '') : null;
+          const updatedCpf = rawCuCpf || currentCleanCpf;
           const updatedPhone = cu.phone || currentU.phone;
           const updatedBirth = cu.birth_date || cu.birthDate || currentU.birth_date;
           if (cu.device_type && cu.device_type !== currentU.device_type) {
@@ -24129,7 +24149,7 @@ async function syncWithRenderCloud() {
           if (updatedCpf) {
             const numCpf = updatedCpf.replace(/\D/g, '');
             saveCpfRegistryEntry(numCpf, {
-              cpf: updatedCpf,
+              cpf: numCpf,
               nome: updatedName || 'Usuário',
               data_nascimento: updatedBirth || null,
               phone: updatedPhone || null,
