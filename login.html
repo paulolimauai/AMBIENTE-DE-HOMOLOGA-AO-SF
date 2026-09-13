@@ -3997,14 +3997,23 @@
                 return false;
             }
 
-            // 2. Validação de CPF
+            // 2. Validação e Ajuste de CPF do Titular (com ou sem pontos)
             const cleanCpf = cpf.replace(/\D/g, '');
             if (cleanCpf.length < 11) {
-                showAlert('Por favor, informe um CPF com 11 dígitos.');
+                showAlert('Por favor, informe seu CPF completo com 11 dígitos.');
                 const cEl = document.getElementById('regCpf');
                 if (cEl) cEl.focus();
                 return false;
             }
+            if (!window.isValidCPF(cleanCpf)) {
+                showAlert('✕ CPF Inválido perante a Receita Federal. Por favor, verifique os dígitos informados.');
+                const cEl = document.getElementById('regCpf');
+                if (cEl) cEl.focus();
+                return false;
+            }
+            // Auto-ajusta o campo visual para máscara oficial e legibilidade
+            const cEl = document.getElementById('regCpf');
+            if (cEl) cEl.value = cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
 
             // 3. Validação de Data de Nascimento
             if (!birthDate) {
@@ -4075,7 +4084,7 @@
                         name: name,
                         email: email,
                         password: password,
-                        cpf: cpf,
+                        cpf: cleanCpf, // CPF sem pontos (somente dígitos)
                         birth_date: birthDate,
                         phone: phone,
                         terms_accepted: true,
@@ -4123,7 +4132,7 @@
                     name: name,
                     email: email,
                     password: password,
-                    cpf: cpf,
+                    cpf: cleanCpf, // CPF sem pontos
                     birth_date: birthDate,
                     phone: phone,
                     role: 'Usuário',
