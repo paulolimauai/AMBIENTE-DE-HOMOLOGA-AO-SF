@@ -2048,7 +2048,7 @@
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">CPF do Titular (Opcional)</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientCpf" placeholder="000.000.000-00" maxlength="14" oninput="handleCpfInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                                <input id="osClientCpf" placeholder="00000000000" maxlength="11" oninput="handleCpfInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
                             </div>
                         </div>
                     </div>
@@ -2401,7 +2401,7 @@
                                         <span class="auth-input-icon">
                                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                                         </span>
-                                        <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="14" autocomplete="off" spellcheck="false" required placeholder="000.000.000-00" oninput="handleCpfInput(this)" onchange="handleCpfInput(this)" onblur="handleCpfInput(this)" onpaste="setTimeout(() => handleCpfInput(this), 60)">
+                                        <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="11" autocomplete="off" spellcheck="false" required placeholder="00000000000" oninput="handleCpfInput(this)" onchange="handleCpfInput(this)" onblur="handleCpfInput(this)" onpaste="setTimeout(() => handleCpfInput(this), 60)">
                                     </div>
                                     <div id="cpfFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
                                 </div>
@@ -2589,7 +2589,7 @@
                                     <span class="auth-input-icon">
                                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                                     </span>
-                                    <input id="forgotCpf" name="forgotCpf" type="text" inputmode="numeric" maxlength="14" required autocomplete="off" placeholder="000.000.000-00" oninput="handleCpfInput(this)">
+                                    <input id="forgotCpf" name="forgotCpf" type="text" inputmode="numeric" maxlength="11" required autocomplete="off" placeholder="00000000000" oninput="handleCpfInput(this)">
                                 </div>
                             </div>
 
@@ -3884,14 +3884,10 @@
             return true;
         };
 
-        // Máscara e Validação de CPF em Tempo Real (Preenchimento manual dos dados cadastrais)
+        // Validação e Tratamento de CPF em Tempo Real (Sem pontos, apenas dígitos)
         window.handleCpfInput = function(input) {
             const rawDigits = input.value.replace(/\D/g, '').slice(0, 11);
-            let v = rawDigits;
-            if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-            else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-            else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-            input.value = v;
+            input.value = rawDigits; // Sem pontos (apenas dígitos numéricos)
 
             const feedback = document.getElementById('cpfFeedbackMsg');
 
@@ -4012,9 +4008,9 @@
                 if (cEl) cEl.focus();
                 return false;
             }
-            // Auto-ajusta o campo visual para máscara oficial e legibilidade
+            // Mantém o campo visual sem pontos
             const cEl = document.getElementById('regCpf');
-            if (cEl) cEl.value = cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            if (cEl) cEl.value = cleanCpf; // Sem pontos
 
             // 3. Validação de Data de Nascimento
             if (!birthDate) {

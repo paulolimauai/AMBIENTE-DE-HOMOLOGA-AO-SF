@@ -8838,7 +8838,7 @@ html.light .mand-input-wrapper input {
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
               </span>
-              <input type="text" id="regCpf" placeholder="000.000.000-00" maxlength="14" required autocomplete="off" oninput="window.handleServerCpfInput(this)" onchange="window.handleServerCpfInput(this)" onblur="window.handleServerCpfInput(this)" onpaste="setTimeout(() => window.handleServerCpfInput(this), 60)">
+              <input type="text" id="regCpf" placeholder="00000000000" maxlength="11" required autocomplete="off" oninput="window.handleServerCpfInput(this)" onchange="window.handleServerCpfInput(this)" onblur="window.handleServerCpfInput(this)" onpaste="setTimeout(() => window.handleServerCpfInput(this), 60)">
             </div>
             <div id="regCpfFeedbackMsg" style="display:none; font-size:11px; font-weight:600; margin-top:4px;"></div>
           </div>
@@ -8974,7 +8974,7 @@ html.light .mand-input-wrapper input {
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
               </span>
-              <input type="text" id="forgotCpf" placeholder="000.000.000-00" maxlength="14" required autocomplete="off" oninput="window.handleServerCpfInput(this)">
+              <input type="text" id="forgotCpf" placeholder="00000000000" maxlength="11" required autocomplete="off" oninput="window.handleServerCpfInput(this)">
             </div>
           </div>
 
@@ -9588,7 +9588,7 @@ html.light .mand-input-wrapper input {
 
       <div class="field" style="margin-bottom:0;">
         <label style="font-size:12px; font-weight:700; color:var(--text-dim);">CPF (Titular)</label>
-        <input id="userAdminCpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px; font-family:monospace;">
+        <input id="userAdminCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px; font-family:monospace;">
       </div>
 
       <div class="field" style="margin-bottom:0;">
@@ -9685,7 +9685,7 @@ html.light .mand-input-wrapper input {
           </div>
           <div class="field" style="flex:1;">
             <label>CPF do Solicitante (Opcional)</label>
-            <input id="osClientCpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpfInput(this)">
+            <input id="osClientCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)">
           </div>
         </div>
 
@@ -9964,7 +9964,7 @@ html.light .mand-input-wrapper input {
 
         <div class="field" style="margin-bottom:0;">
           <label style="font-size:12px; font-weight:700; color:var(--text-dim);">CPF do Solicitante (Opcional)</label>
-          <input id="suporteOsClientCpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
+          <input id="suporteOsClientCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
         </div>
 
         <div class="field" style="margin-bottom:0;">
@@ -11790,14 +11790,10 @@ window.isValidCPFServer = function(cpf) {
   return true;
 };
 
-// Máscara e Validação de CPF no Cadastro (Preenchimento manual dos dados cadastrais)
+// Validação e Tratamento de CPF no Cadastro (Sem pontos, apenas dígitos)
 window.handleServerCpfInput = function(input) {
   const rawDigits = input.value.replace(/[^0-9]/g, '').slice(0, 11);
-  let v = rawDigits;
-  if (v.length > 9) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{1,2})/, '$1.$2.$3-$4');
-  else if (v.length > 6) v = v.replace(/([0-9]{3})([0-9]{3})([0-9]{1,3})/, '$1.$2.$3');
-  else if (v.length > 3) v = v.replace(/([0-9]{3})([0-9]{1,3})/, '$1.$2');
-  input.value = v;
+  input.value = rawDigits; // Sem pontos (apenas números)
 
   const msg = document.getElementById('regCpfFeedbackMsg');
 
@@ -11880,9 +11876,9 @@ window.handleRegisterSubmit = async function(e) {
     if (cpfInput) cpfInput.focus();
     return false;
   }
-  // Auto-ajusta visualmente a máscara do campo
+  // Mantém visualmente o campo sem pontos
   if (cpfInput) {
-    cpfInput.value = cleanCpfDigits.replace(/([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{1,2})/, '$1.$2.$3-$4');
+    cpfInput.value = cleanCpfDigits; // Sem pontos
   }
 
   // 3. Validação de Data de Nascimento
@@ -15755,7 +15751,7 @@ function pageConfig(){
   const currentEmail = uData.email || (currentUser ? currentUser.email : '') || '';
   const rawCpf = uData.cpf || (currentUser ? currentUser.cpf : '') || '';
   const cleanCpf = rawCpf.replace(/\D/g, '');
-  const formattedCpf = cleanCpf.length === 11 ? cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : rawCpf;
+  const formattedCpf = cleanCpf || rawCpf;
   const currentBirthDate = uData.birth_date || uData.birthDate || (currentUser ? (currentUser.birth_date || currentUser.birthDate) : '') || '';
   const rawPhone = uData.phone || (currentUser ? currentUser.phone : '') || '';
   const cleanPhone = rawPhone.replace(/\D/g, '');
@@ -15768,10 +15764,10 @@ function pageConfig(){
   <div class="page-head">
     <div>
       <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
-        Minha Conta
+        Configurações da Conta
       </h1>
       <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
-        Dados cadastrais, titularidade KYC, segurança, preferências visuais e conformidade com LGPD
+        Personalize seu perfil, parâmetros de segurança, preferências e dados de acesso
       </p>
     </div>
   </div>
@@ -15805,7 +15801,7 @@ function pageConfig(){
             <span>CPF (Receita Federal)</span>
             <span style="font-size:10.5px; color:#34d399; font-weight:800; text-transform:none;">✓ Autenticado</span>
           </label>
-          <input id="cfgCpf" value="\${formattedCpf}" placeholder="000.000.000-00" maxlength="14" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
+          <input id="cfgCpf" value="\${formattedCpf}" placeholder="00000000000" maxlength="11" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
         </div>
 
         <!-- Data de Nascimento -->
@@ -19609,10 +19605,7 @@ window.maskCpfInput = function(el) {
   if (!el) return;
   let v = el.value.replace(/\D/g, '');
   if (v.length > 11) v = v.slice(0, 11);
-  v = v.replace(/(\d{3})(\d)/, '$1.$2');
-  v = v.replace(/(\d{3})(\d)/, '$1.$2');
-  v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-  el.value = v;
+  el.value = v; // Sem pontos (apenas números)
 };
 
 window.maskPhoneInput = function(el) {
@@ -19747,7 +19740,7 @@ async function saveUserAdmin(){
   }
 
   const oldEmail = u.email;
-  const formattedCpf = rawCpf.length === 11 ? rawCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : (rawCpf || null);
+  const formattedCpf = rawCpf || null;
 
   u.name = name;
   u.email = rawEmail;
