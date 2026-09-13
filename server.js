@@ -465,7 +465,11 @@ class MssqlAdapter {
         if (typeof sanitizedVal === 'boolean') {
           sanitizedVal = sanitizedVal ? 1 : 0;
         }
-        request.input(paramName, sanitizedVal);
+        if (typeof sanitizedVal === 'string' && mssql && mssql.NVarChar) {
+          request.input(paramName, mssql.NVarChar, sanitizedVal);
+        } else {
+          request.input(paramName, sanitizedVal);
+        }
       });
       queryText = queryText.replace(/\$([0-9]+)/g, '@arg$1');
     }
@@ -992,6 +996,11 @@ async function setupDatabaseTablesAndSync() {
       ALTER TABLE usuarios ADD must_change_password BIT DEFAULT 0;
     END;
 
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('usuarios') AND name = 'last_ip')
+    BEGIN
+      ALTER TABLE usuarios ADD last_ip NVARCHAR(50) NULL;
+    END;
+
     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'dados_financeiros')
     BEGIN
       CREATE TABLE dados_financeiros (
@@ -1147,6 +1156,27 @@ async function setupDatabaseTablesAndSync() {
     }
   } catch(syncErr) {
     console.warn('[BANCO AVISO] Erro ao sincronizar lista de usuários do SQL Server:', syncErr.message);
+  }
+
+  // 5. Garantir que TODOS os clientes no SQL Server possuam contas bancárias e categorias configuradas
+  try {
+    const allUsersRes = await pool.query('SELECT id, name, email, cpf, phone, birth_date, device_type FROM usuarios ORDER BY id ASC');
+    if (allUsersRes.rows && Array.isArray(allUsersRes.rows)) {
+      for (const u of allUsersRes.rows) {
+        if (!u || !u.email) continue;
+        const cleanEmail = u.email.toLowerCase().trim();
+        const accCheck = await pool.query('SELECT COUNT(*) as cnt FROM contas_bancarias WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]);
+        const catCheck = await pool.query('SELECT COUNT(*) as cnt FROM categorias WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]);
+        const hasAcc = accCheck.rows && accCheck.rows[0] && accCheck.rows[0].cnt > 0;
+        const hasCat = catCheck.rows && catCheck.rows[0] && catCheck.rows[0].cnt > 0;
+        if (!hasAcc || !hasCat) {
+          await ensureUserIsConfiguredInDatabase(cleanEmail, u);
+          console.log(`[BANCO AUTO-CONFIG] Cadastro do cliente #${u.id} (${cleanEmail}) configurado com contas e categorias no SQL Server.`);
+        }
+      }
+    }
+  } catch(cfgErr) {
+    console.warn('[BANCO AVISO] Erro na auto-configuração inicial de usuários:', cfgErr.message);
   }
 
   // 6. Sincronização dos dados financeiros locais para o banco SQL (com merge inteligente para nunca perder transações)
@@ -10516,6 +10546,7 @@ window.renderUsuariosLogonServer = function(users) {
               <strong style="font-size:13px; color:var(--auth-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${name}</strong>
               <span style="font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.1); color:var(--text, #fff); border:1px solid rgba(255,255,255,0.15);">ID #\${u.id || '-'}</span>
               <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(59,130,246,0.2)'}; color:\${isAdmin ? '#FBBF24' : '#60A5FA'};">\${role}</span>
+              <span style="font-size:9.5px; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(16,185,129,0.15); color:#34D399; border:1px solid rgba(16,185,129,0.3);">\${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
             </div>
             <div style="font-size:11.5px; color:var(--auth-text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${email}</div>
             <div style="font-size:10.5px; color:#38BDF8; margin-top:3px; display:flex; align-items:center; gap:4px;">
@@ -12275,57 +12306,111 @@ function autoMigrateTransactionsAndAccounts() {
   }
 }
 
+function syncRecurringTransactions(r) {
+  if (!r || !r.id) return false;
+  let changed = false;
+  const isContinuous = !r.totalMonths || parseInt(r.totalMonths) <= 0;
+  const totalM = isContinuous ? 36 : parseInt(r.totalMonths);
+  const startM = parseInt(r.startMonth) || (currentPeriod && currentPeriod.month > 0 ? currentPeriod.month : (new Date().getMonth() + 1));
+  const startY = parseInt(r.startYear) || (currentPeriod && currentPeriod.year ? currentPeriod.year : new Date().getFullYear());
+  const day = Math.min(31, Math.max(1, parseInt(r.day) || 5));
+  const val = parseInputValue(r.val);
+  const detectedMethod = r.paymentMethod || (typeof detectPaymentMethodFromName === 'function' ? detectPaymentMethodFromName(r.desc) : null) || ((r.cat && r.cat.toLowerCase().includes('cartão')) || (r.acc && r.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto');
+  const targetAcc = Array.isArray(accounts) ? accounts.find(a => a.name === r.acc) : null;
+  const accId = targetAcc ? targetAcc.id : null;
+  const finalAccName = targetAcc ? targetAcc.name : (r.acc || (accounts[0] ? accounts[0].name : 'Principal'));
+
+  if (!Array.isArray(r.appliedPeriods)) r.appliedPeriods = [];
+
+  for (let k = 1; k <= totalM; k++) {
+    const monthZero = (startM - 1) + (k - 1);
+    const y = startY + Math.floor(monthZero / 12);
+    const m = (monthZero % 12) + 1;
+    const date = pdCustom(y, m, day);
+    const instStr = isContinuous ? null : (k + '/' + totalM);
+    const itemDesc = isContinuous ? r.desc : (r.desc + ' (' + k + '/' + totalM + ')');
+    const periodKey = y + '-' + String(m).padStart(2, '0');
+
+    let existingTx = transactions.find(t => {
+      if (t.recurringId === r.id) {
+        if (!isContinuous && t.installment === instStr) return true;
+        const p = parseDateParts(t.date);
+        if (p && p.year === y && p.month === m) return true;
+      } else if (!t.recurringId && t.desc && (t.desc === itemDesc || t.desc === r.desc || t.desc.startsWith(r.desc + ' ('))) {
+        const p = parseDateParts(t.date);
+        if (p && p.year === y && p.month === m) {
+          t.recurringId = r.id;
+          return true;
+        }
+      }
+      return false;
+    });
+
+    if (!existingTx) {
+      transactions.unshift({
+        id: nextTxId++,
+        desc: itemDesc,
+        val: val,
+        date: date,
+        cat: r.cat,
+        acc: finalAccName,
+        accId: accId,
+        status: 'Pendente',
+        type: r.type || 'out',
+        installment: instStr,
+        recurringId: r.id,
+        paymentMethod: detectedMethod
+      });
+      changed = true;
+    } else {
+      if (existingTx.status === 'Pendente') {
+        if (existingTx.desc !== itemDesc || existingTx.val !== val || existingTx.cat !== r.cat || existingTx.acc !== finalAccName || existingTx.type !== r.type || existingTx.date !== date) {
+          existingTx.desc = itemDesc;
+          existingTx.val = val;
+          existingTx.date = date;
+          existingTx.cat = r.cat;
+          existingTx.acc = finalAccName;
+          existingTx.accId = accId;
+          existingTx.type = r.type || 'out';
+          existingTx.installment = instStr;
+          existingTx.paymentMethod = detectedMethod;
+          changed = true;
+        }
+      }
+    }
+
+    if (!r.appliedPeriods.includes(periodKey)) {
+      r.appliedPeriods.push(periodKey);
+      changed = true;
+    }
+  }
+
+  // Se reduziu a quantidade de meses, remove as parcelas pendentes que ultrapassam o novo total
+  if (!isContinuous) {
+    const beforeLen = transactions.length;
+    transactions = transactions.filter(t => {
+      if (t.recurringId === r.id && t.status === 'Pendente') {
+        if (t.installment) {
+          const parts = t.installment.split('/');
+          const instNum = parseInt(parts[0]);
+          if (!isNaN(instNum) && instNum > totalM) return false;
+        }
+      }
+      return true;
+    });
+    if (transactions.length !== beforeLen) changed = true;
+  }
+
+  r.appliedMonths = totalM;
+  r.paymentMethod = detectedMethod;
+  return changed;
+}
+
 function autoCompleteAllRecurringMonths() {
   if (!Array.isArray(recurringList) || recurringList.length === 0) return false;
   let changed = false;
   recurringList.forEach(r => {
-    const totalM = r.totalMonths ? parseInt(r.totalMonths) : 0;
-    const appliedM = r.appliedMonths ? parseInt(r.appliedMonths) : 0;
-    if (totalM > 0 && appliedM < totalM) {
-      const targetAcc = accounts.find(a => a.name === r.acc);
-      const accId = targetAcc ? targetAcc.id : null;
-      const finalAccName = targetAcc ? targetAcc.name : r.acc;
-      const startM = r.startMonth || 1;
-      const startY = r.startYear || new Date().getFullYear();
-      const detectedMethod = r.paymentMethod || (typeof detectPaymentMethodFromName === 'function' ? detectPaymentMethodFromName(r.desc) : null) || ((r.cat && r.cat.toLowerCase().includes('cartão')) || (r.acc && r.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : 'Boleto');
-
-      if (!Array.isArray(r.appliedPeriods)) r.appliedPeriods = [];
-
-      for (let k = appliedM + 1; k <= totalM; k++) {
-        const monthZero = (startM - 1) + (k - 1);
-        const y = startY + Math.floor(monthZero / 12);
-        const m = (monthZero % 12) + 1;
-        const date = pdCustom(y, m, r.day);
-        const itemDesc = r.desc + ' (' + k + '/' + totalM + ')';
-
-        // Evita duplicar se ja foi gerado
-        const alreadyExists = transactions.some(t => t.recurringId === r.id && t.installment === (k + '/' + totalM));
-        if (!alreadyExists) {
-          transactions.unshift({
-            id: nextTxId++,
-            desc: itemDesc,
-            val: r.val,
-            date: date,
-            cat: r.cat,
-            acc: finalAccName,
-            accId: accId,
-            status: 'Pendente',
-            type: r.type || 'out',
-            installment: k + '/' + totalM,
-            recurringId: r.id,
-            paymentMethod: detectedMethod
-          });
-        }
-        const periodKey = y + '-' + String(m).padStart(2, '0');
-        if (!r.appliedPeriods.includes(periodKey)) {
-          r.appliedPeriods.push(periodKey);
-        }
-      }
-
-      r.appliedMonths = totalM;
-      r.paymentMethod = detectedMethod;
-      changed = true;
-    }
+    if (syncRecurringTransactions(r)) changed = true;
   });
   return changed;
 }
@@ -15041,8 +15126,38 @@ function pageRecorrentes(){
       saveUserData();
     }
   }
-  const totalDespRec = recurringList.filter(r=>r.type==='out').reduce((s,r)=>s+parseInputValue(r.val),0);
-  const totalRecRec = recurringList.filter(r=>r.type==='in').reduce((s,r)=>s+parseInputValue(r.val),0);
+
+  const isAllDates = currentPeriod.month === 0;
+  const curM = currentPeriod.month;
+  const curY = currentPeriod.year;
+  const curMonthName = MONTHS[curM - 1] || '';
+
+  let totalDespRec = 0;
+  let totalRecRec = 0;
+  let activeInMonthCount = 0;
+
+  if (isAllDates) {
+    totalDespRec = recurringList.filter(r=>r.type==='out').reduce((s,r)=>s+parseInputValue(r.val),0);
+    totalRecRec = recurringList.filter(r=>r.type==='in').reduce((s,r)=>s+parseInputValue(r.val),0);
+    activeInMonthCount = recurringList.length;
+  } else {
+    recurringList.forEach(r => {
+      const monthTx = transactions.find(t => {
+        if (t.recurringId === r.id) {
+          const p = parseDateParts(t.date);
+          if (p && p.year === curY && p.month === curM) return true;
+        }
+        return false;
+      });
+      if (monthTx) {
+        activeInMonthCount++;
+        const val = parseInputValue(monthTx.val || r.val);
+        if (r.type === 'in') totalRecRec += val;
+        else totalDespRec += val;
+      }
+    });
+  }
+
   const totalLctos = recurringList.length;
   const totalComPrazo = recurringList.filter(r => (r.totalMonths && parseInt(r.totalMonths) > 0)).length;
   const totalContinuos = totalLctos - totalComPrazo;
@@ -15061,7 +15176,7 @@ function pageRecorrentes(){
         Lançamentos Recorrentes & Assinaturas
       </h1>
       <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
-        Automatize contas fixas, parcelamentos e rendimentos com controle exato de meses e aplicação em 1 clique
+        Controle automático de parcelas em todos os meses cadastrados com sincronização imediata no extrato
       </p>
     </div>
     <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
@@ -15075,24 +15190,36 @@ function pageRecorrentes(){
 
   <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:18px;">
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Despesas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></span></div>
+      <div class="row1" style="margin-bottom:6px;">
+        <span>Despesas Recorrentes \${isAllDates ? '(Mensal)' : ('em ' + (curMonthName ? curMonthName.substring(0,3) : 'Mês'))}</span>
+        <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></span>
+      </div>
       <div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">\${fmt(totalDespRec)}</div>
-      <div class="sub" style="font-size:11px;">Total de saídas programadas</div>
+      <div class="sub" style="font-size:11px;">\${isAllDates ? 'Total mensal de saídas programadas' : ('Contas ativas para ' + curMonthName + '/' + curY)}</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Receitas Fixas / Mês</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></div>
+      <div class="row1" style="margin-bottom:6px;">
+        <span>Receitas Recorrentes \${isAllDates ? '(Mensal)' : ('em ' + (curMonthName ? curMonthName.substring(0,3) : 'Mês'))}</span>
+        <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(16,185,129,0.14); color:var(--green); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span>
+      </div>
       <div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">\${fmt(totalRecRec)}</div>
-      <div class="sub" style="font-size:11px;">Total de entradas programadas</div>
+      <div class="sub" style="font-size:11px;">\${isAllDates ? 'Total mensal de entradas programadas' : ('Recebimentos em ' + curMonthName + '/' + curY)}</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Total Recorrentes</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg></span></div>
-      <div class="val" style="font-size:20px; margin-bottom:2px;">\${totalLctos}</div>
-      <div class="sub" style="font-size:11px;">\${totalComPrazo} com prazo · \${totalContinuos} contínuos</div>
+      <div class="row1" style="margin-bottom:6px;">
+        <span>\${isAllDates ? 'Total de Recorrentes' : 'Ativos no Mês Selecionado'}</span>
+        <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg></span>
+      </div>
+      <div class="val" style="font-size:20px; margin-bottom:2px;">\${isAllDates ? totalLctos : (activeInMonthCount + ' / ' + totalLctos)}</div>
+      <div class="sub" style="font-size:11px;">\${isAllDates ? (totalComPrazo + ' com prazo · ' + totalContinuos + ' contínuos') : (activeInMonthCount + ' contas em ' + curMonthName + '/' + curY)}</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Status de Conclusão</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span></div>
+      <div class="row1" style="margin-bottom:6px;">
+        <span>Status dos Contratos</span>
+        <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+      </div>
       <div class="val" style="font-size:20px; color:var(--blue); margin-bottom:2px;">\${totalConcluidos} / \${totalComPrazo || totalLctos}</div>
-      <div class="sub" style="font-size:11px;">\${totalConcluidos} contratos 100% aplicados</div>
+      <div class="sub" style="font-size:11px;">\${totalConcluidos} contratos 100% quitados</div>
     </div>
   </div>
 
@@ -15101,16 +15228,16 @@ function pageRecorrentes(){
     <table>
       <thead>
         <tr>
-          <th>Descrição</th>
+          <th>Descrição / Contrato</th>
           <th>Categoria</th>
-          <th>Conta de Cobrança</th>
-          <th>Frequência</th>
+          <th>Conta / Cartão</th>
           <th>Vencimento</th>
           <th>Duração Cadastrada</th>
-          <th>Progresso / Meses</th>
+          <th>\${isAllDates ? 'Status Geral' : ('Status em ' + (curMonthName ? curMonthName.substring(0,3) : 'Mês') + '/' + curY)}</th>
+          <th>Progresso dos Meses</th>
           <th>Tipo</th>
           <th>Valor</th>
-          <th style="text-align:center;">Ações Rápidas</th>
+          <th style="text-align:center;">Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -15128,6 +15255,15 @@ function pageRecorrentes(){
           const paidWord = isIncome ? 'recebida' : 'paga';
           const paidWordPlural = isIncome ? 'recebidas' : 'pagas';
 
+          // Localiza a transação correspondente a este mês selecionado
+          const monthTx = !isAllDates ? transactions.find(t => {
+            if (t.recurringId === r.id) {
+              const p = parseDateParts(t.date);
+              if (p && p.year === curY && p.month === curM) return true;
+            }
+            return false;
+          }) : null;
+
           return \`
           <tr class="trow">
             <td class="tx-desc">
@@ -15142,11 +15278,12 @@ function pageRecorrentes(){
                   \${isFixed ? \`<span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${isFullyPaid ? 'rgba(16,185,129,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--green)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓ Concluído' : paidWordPlural}</span>\` : ''}
                 </div>
                 \${isFixed ? \`
-                  <details style="font-size:10.5px; margin-top:2px;">
-                    <summary style="cursor:pointer; color:var(--blue); font-weight:600; user-select:none; display:inline-flex; align-items:center; gap:4px;">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg> Cronograma mês a mês (1 a \${totalM})
+                  <details style="font-size:10.5px; margin-top:4px;">
+                    <summary style="cursor:pointer; color:var(--blue); font-weight:700; user-select:none; display:inline-flex; align-items:center; gap:5px;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                      Cronograma completo (\${totalM} meses cadastrados)
                     </summary>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:4px; margin-top:6px; padding:6px; background:rgba(0,0,0,0.25); border-radius:8px; border:1px solid var(--card-border); max-height:160px; overflow-y:auto;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(155px, 1fr)); gap:5px; margin-top:6px; padding:8px; background:rgba(0,0,0,0.25); border-radius:8px; border:1px solid var(--card-border); max-height:170px; overflow-y:auto;">
                       \${(function(){
                         const items = [];
                         const sM = r.startMonth || 1;
@@ -15155,13 +15292,19 @@ function pageRecorrentes(){
                           const mZero = (sM - 1) + (k - 1);
                           const y = sY + Math.floor(mZero / 12);
                           const m = (mZero % 12) + 1;
-                          const targetTx = linkedTxs.find(t => t.installment === (k + '/' + totalM) || (t.desc && t.desc.includes('(' + k + '/' + totalM + ')')));
+                          const targetTx = linkedTxs.find(t => {
+                            if (t.installment === (k + '/' + totalM)) return true;
+                            const p = parseDateParts(t.date);
+                            return p && p.year === y && p.month === m;
+                          });
                           const isPaid = targetTx && (targetTx.status === 'Pago' || targetTx.status === 'Recebido');
                           const mName = MONTHS[m-1] ? MONTHS[m-1].substring(0,3) : m;
+                          const isSelectedPeriod = (!isAllDates && curM === m && curY === y);
+
                           items.push(
-                            \`<div style="padding:3px 6px; border-radius:5px; background:\${isPaid ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.10)'}; border:1px solid \${isPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)'}; display:flex; justify-content:space-between; align-items:center;">\` +
-                              \`<span>Mês \${k}: <strong style="color:var(--text);">\${mName}/\${y}</strong></span>\` +
-                              \`<span style="font-weight:700; font-size:9.5px; color:\${isPaid ? 'var(--green)' : '#F59E0B'}">\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</span>\` +
+                            \`<div style="padding:4px 8px; border-radius:6px; background:\${isSelectedPeriod ? 'rgba(59,130,246,0.18)' : (isPaid ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.10)')}; border:1px solid \${isSelectedPeriod ? 'var(--blue)' : (isPaid ? 'rgba(16,185,129,0.25)' : 'rgba(245,158,11,0.25)')}; display:flex; justify-content:space-between; align-items:center; gap:4px;">\` +
+                              \`<span style="font-size:10px;">\${k}ª: <strong style="color:var(--text);">\${mName}/\${y}</strong></span>\` +
+                              (targetTx ? \`<button data-togglestatus="\${targetTx.id}" title="Clique para alternar status" style="border:none; cursor:pointer; background:transparent; font-weight:800; font-size:9.5px; color:\${isPaid ? 'var(--green)' : '#F59E0B'}; padding:2px 4px; border-radius:4px;">\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</button>\` : \`<span style="font-weight:700; font-size:9.5px; color:#F59E0B;">⏳ Pendente</span>\`) +
                             \`</div>\`
                           );
                         }
@@ -15174,7 +15317,6 @@ function pageRecorrentes(){
             </td>
             <td><span class="pill cat-pill" style="background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
             <td><span class="pill acc-pill">\${getAccountIcon(r.acc)} \${r.acc}</span></td>
-            <td><span class="pill" style="background:rgba(255,255,255,0.06); color:var(--text); font-weight:600;">\${r.freq || 'Mensal'}</span></td>
             <td><span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-weight:700;">Dia \${r.day}</span></td>
             <td>
               \${isFixed ? \`
@@ -15191,27 +15333,37 @@ function pageRecorrentes(){
               \`}
             </td>
             <td>
+              \${!isAllDates ? (
+                monthTx ? \`
+                  <div style="display:flex; flex-direction:column; gap:4px;">
+                    \${monthTx.installment ? \`<span style="font-size:10px; font-weight:700; color:var(--text-dim);">\${monthTx.installment}</span>\` : ''}
+                    <button data-togglestatus="\${monthTx.id}" title="Clique para alternar o status deste mês" class="pill" style="cursor:pointer; border:1px solid \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}; background:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(16,185,129,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'var(--green)' : '#F59E0B'}; font-weight:800; font-size:11px; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; width:fit-content;">
+                      \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? ('✓ ' + (r.type === 'in' ? 'Recebido' : 'Pago')) : '⏳ Pendente'}
+                    </button>
+                  </div>
+                \` : \`
+                  <span class="pill" style="background:rgba(255,255,255,0.05); color:var(--text-dim); font-size:10px; border:1px solid rgba(255,255,255,0.08);">Fora deste mês</span>
+                \`
+              ) : \`
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                  <span class="pill" style="background:rgba(16,185,129,0.12); color:var(--green); font-size:10.5px; font-weight:700;">✓ \${paidCount} \${paidWordPlural}</span>
+                  \${remainingToPay > 0 ? \`<span style="font-size:10px; color:#F59E0B; font-weight:600;">⏳ \${remainingToPay} a \${isIncome ? 'receber' : 'pagar'}</span>\` : ''}
+                </div>
+              \`}
+            </td>
+            <td>
               \${isFixed ? \`
-                <div style="min-width:160px; display:flex; flex-direction:column; gap:5px;">
-                  <!-- 1. PRIMEIRO: O que ja foi pago -->
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:800;">
+                <div style="min-width:145px; display:flex; flex-direction:column; gap:4px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:10.5px; font-weight:800;">
                     <span style="display:inline-flex; align-items:center; gap:4px; color:\${isFullyPaid ? 'var(--green)' : (paidCount > 0 ? 'var(--green)' : 'var(--text-dim)')};">
-                      \${isFullyPaid ? '✓ 100% Concluído' : (paidCount > 0 ? (\`✓ \${paidCount}/\${totalM} \${paidCount === 1 ? paidWord : paidWordPlural}\`) : (\`0/\${totalM} \${paidWordPlural}\`))}
+                      \${isFullyPaid ? '✓ 100% Concluído' : (paidCount > 0 ? (\`✓ \${paidCount}/\${totalM}\`) : (\`0/\${totalM}\`))}
                     </span>
                     <span style="color:\${isFullyPaid ? 'var(--green)' : (paidCount > 0 ? 'var(--green)' : 'var(--text-dim)')}; font-weight:800;">
-                      \${paidPct}% \${isIncome ? 'recebido' : 'pago'}
+                      \${paidPct}%
                     </span>
                   </div>
-                  <!-- Barra verde de progresso pago -->
-                  <div class="rec-progress-bar" style="height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;">
+                  <div class="rec-progress-bar" style="height:5px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;">
                     <div class="rec-progress-fill" style="width:\${paidPct}%; height:100%; border-radius:3px; background:\${isFullyPaid ? 'var(--green)' : (paidPct > 0 ? 'var(--green)' : 'transparent')}; transition:width .4s ease;"></div>
-                  </div>
-                  <!-- 2. DEPOIS: O que ainda falta pagar -->
-                  <div style="font-size:10.5px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color:\${remainingToPay > 0 ? '#F59E0B' : 'var(--green)'}; font-weight:700; display:inline-flex; align-items:center; gap:3px;">
-                      \${remainingToPay > 0 ? (\`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Falta \${isIncome ? 'receber' : 'pagar'}: \${remainingToPay} \${remainingToPay === 1 ? 'parcela' : 'parcelas'}\`) : '✓ Todas quitadas'}
-                    </span>
-                    \${remainingToPay > 0 ? \`<span style="color:#F59E0B; font-size:10px; font-weight:700;">\${100 - paidPct}%</span>\` : ''}
                   </div>
                 </div>
               \` : \`
@@ -18872,6 +19024,9 @@ function updateRecMonthsPreview() {
   const preview = document.getElementById('recMonthsCountPreview');
   if(!totalInput) return;
   const num = parseInt(totalInput.value) || 0;
+  if(preview) {
+    preview.textContent = num === 1 ? '1 mês' : (num + ' meses');
+  }
   document.querySelectorAll('.rec-chip-btn').forEach(btn => {
     const m = parseInt(btn.getAttribute('data-months'));
     btn.classList.toggle('active', m === num);
@@ -19010,6 +19165,9 @@ function openRecurringModal(id){
     document.getElementById('recAppliedField').style.display = 'block';
   } else {
     const now = new Date();
+    const defaultM = (currentPeriod && currentPeriod.month > 0) ? currentPeriod.month : (now.getMonth() + 1);
+    const defaultY = (currentPeriod && currentPeriod.year) ? currentPeriod.year : now.getFullYear();
+
     document.getElementById('recModalTitle').textContent = 'Novo Lançamento Recorrente';
     document.getElementById('recDesc').value = '';
     document.getElementById('recVal').value = '';
@@ -19017,8 +19175,8 @@ function openRecurringModal(id){
     document.getElementById('recFreq').value = 'Mensal';
     document.getElementById('recDurationMode').value = 'custom';
     document.getElementById('recTotalMonths').value = '12';
-    document.getElementById('recStartMonth').value = now.getMonth() + 1;
-    document.getElementById('recStartYear').value = now.getFullYear();
+    document.getElementById('recStartMonth').value = defaultM;
+    document.getElementById('recStartYear').value = defaultY;
     document.getElementById('recAppliedMonths').value = '0';
     document.getElementById('recAppliedField').style.display = 'none';
     setRecType('out');
@@ -19064,22 +19222,17 @@ async function saveRecurring(){
   
   const nowRec = new Date();
   let totalMonths = 0;
-  let startMonth = nowRec.getMonth() + 1;
-  let startYear = nowRec.getFullYear();
-  let appliedMonths = 0;
+  let startMonth = (currentPeriod && currentPeriod.month > 0) ? currentPeriod.month : (nowRec.getMonth() + 1);
+  let startYear = (currentPeriod && currentPeriod.year) ? currentPeriod.year : nowRec.getFullYear();
 
   if (durMode === 'custom') {
     totalMonths = parseInt(document.getElementById('recTotalMonths').value) || 12;
     startMonth = parseInt(document.getElementById('recStartMonth').value) || startMonth;
     startYear = parseInt(document.getElementById('recStartYear').value) || startYear;
-    if (editingRecId) {
-      appliedMonths = parseInt(document.getElementById('recAppliedMonths').value) || 0;
-    }
   } else {
-    if (editingRecId) {
-      const existing = recurringList.find(r=>r.id===editingRecId);
-      if (existing) appliedMonths = existing.appliedMonths || 0;
-    }
+    totalMonths = 0; // Contínuo
+    startMonth = parseInt(document.getElementById('recStartMonth').value) || startMonth;
+    startYear = parseInt(document.getElementById('recStartYear').value) || startYear;
   }
 
   if(!desc || isNaN(val) || (currentRecType === 'out' ? val < 0 : val <= 0) || isNaN(day) || day < 1 || day > 31){
@@ -19092,50 +19245,18 @@ async function saveRecurring(){
   if(editingRecId){
     const existing = recurringList.find(r=>r.id===editingRecId);
     if (existing) {
-      Object.assign(existing, {desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths,paymentMethod:detectedMethod});
-      autoCompleteAllRecurringMonths();
+      Object.assign(existing, {desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,paymentMethod:detectedMethod});
+      syncRecurringTransactions(existing);
     }
-    showToast('Recorrente atualizado até concluir tudo!');
-    logActivity('Edição', 'Recorrente', 'Editou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses' : '') + ')');
+    showToast('Recorrente atualizado em todos os meses selecionados!');
+    logActivity('Edição', 'Recorrente', 'Editou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses' : ', contínuo') + ')');
   } else {
     const newRec = {id: nextRecId++, desc,val,day,cat,acc:accSel,freq,type:currentRecType,totalMonths,startMonth,startYear,appliedMonths:0,appliedPeriods:[],paymentMethod:detectedMethod};
-    
-    // Gera mês a mês no extrato até finalizar a duração cadastrada
-    const targetAcc = accounts.find(a => a.name === accSel);
-    const accId = targetAcc ? targetAcc.id : null;
-    const finalAccName = targetAcc ? targetAcc.name : accSel;
-    const genCount = totalMonths > 0 ? totalMonths : 1;
-
-    for (let k = 1; k <= genCount; k++) {
-      const monthZero = (startMonth - 1) + (k - 1);
-      const y = startYear + Math.floor(monthZero / 12);
-      const m = (monthZero % 12) + 1;
-      const date = pdCustom(y, m, day);
-      const itemDesc = totalMonths > 0 ? (desc + ' (' + k + '/' + totalMonths + ')') : desc;
-
-      transactions.unshift({
-        id: nextTxId++,
-        desc: itemDesc,
-        val: val,
-        date: date,
-        cat: cat,
-        acc: finalAccName,
-        accId: accId,
-        status: 'Pendente',
-        type: currentRecType,
-        installment: totalMonths > 0 ? (k + '/' + totalMonths) : null,
-        recurringId: newRec.id,
-        paymentMethod: detectedMethod
-      });
-
-      newRec.appliedPeriods.push(y + '-' + String(m).padStart(2, '0'));
-    }
-
-    newRec.appliedMonths = genCount;
     recurringList.push(newRec);
+    syncRecurringTransactions(newRec);
 
-    showToast(totalMonths > 0 ? ('Recorrente cadastrado! ' + totalMonths + ' meses gerados mês a mês no extrato até finalizar.') : 'Recorrente contínuo cadastrado!');
-    logActivity('Criação', 'Recorrente', 'Cadastrou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses gerados mês a mês' : '') + ')');
+    showToast(totalMonths > 0 ? ('Recorrente cadastrado! ' + totalMonths + ' meses gerados em todos os meses no extrato.') : 'Recorrente contínuo cadastrado em todos os meses!');
+    logActivity('Criação', 'Recorrente', 'Cadastrou lançamento recorrente "' + desc + '" (' + fmt(val) + (totalMonths > 0 ? ', ' + totalMonths + ' meses gerados mês a mês' : ', contínuo') + ')');
   }
   await saveUserData();
   closeRecurringModal();
@@ -19143,10 +19264,11 @@ async function saveRecurring(){
 }
 
 async function deleteRecurring(id){
-  if(!confirm('Excluir este lançamento recorrente?')) return;
+  if(!confirm('Excluir este lançamento recorrente e remover suas parcelas pendentes dos meses futuros?')) return;
   recurringList = recurringList.filter(r=>r.id!==id);
+  transactions = transactions.filter(t=> !(t.recurringId === id && t.status === 'Pendente'));
   await saveUserData();
-  showToast('Recorrente removido');
+  showToast('Recorrente e lançamentos futuros removidos com sucesso');
   render();
 }
 
@@ -21716,10 +21838,39 @@ function saveLocalTecnicos(tecnicos) {
   }
 }
 
-function getEmptyFinancialData() {
+// ==================== Estruturas Financeiras Padrão para Todo Novo Cadastro ====================
+const SYSTEM_BASE_CATEGORIES = [
+  { name: 'Alimentação', color: '#e8974b', type: 'despesa', icon: '🍔' },
+  { name: 'Supermercado', color: '#d8a34b', type: 'despesa', icon: '🛒' },
+  { name: 'Moradia', color: '#c98a3f', type: 'despesa', icon: '🏠' },
+  { name: 'Contas da Casa', color: '#f0a63a', type: 'despesa', icon: '💡' },
+  { name: 'Transporte', color: '#ef5a5a', type: 'despesa', icon: '🚗' },
+  { name: 'Saúde', color: '#5ac57e', type: 'despesa', icon: '⚕️' },
+  { name: 'Educação', color: '#4a90e2', type: 'despesa', icon: '📚' },
+  { name: 'Lazer', color: '#9b6bd8', type: 'despesa', icon: '🎮' },
+  { name: 'Vestuário', color: '#d85bb0', type: 'despesa', icon: '👕' },
+  { name: 'Assinaturas', color: '#6b7fd7', type: 'despesa', icon: '📺' },
+  { name: 'Cartão de Crédito', color: '#e8b04b', type: 'despesa', icon: '💳' },
+  { name: 'Pix Enviado', color: '#f0a63a', type: 'despesa', icon: '📤' },
+  { name: 'Cuidados Pessoais', color: '#e07bb0', type: 'despesa', icon: '💆' },
+  { name: 'Outros', color: '#8a93a3', type: 'despesa', icon: '📦' },
+  { name: 'Salário', color: '#e8b04b', type: 'receita', icon: '💼' },
+  { name: 'Freelance', color: '#4a90e2', type: 'receita', icon: '💻' },
+  { name: 'Investimentos', color: '#5ac57e', type: 'receita', icon: '📈' },
+  { name: 'Pix Recebido', color: '#3ec7c7', type: 'receita', icon: '📥' },
+  { name: 'Reembolso', color: '#6bcf9e', type: 'receita', icon: '💵' },
+  { name: 'Bônus / 13º', color: '#d8a34b', type: 'receita', icon: '🎉' },
+  { name: 'Outras Receitas', color: '#8a93a3', type: 'receita', icon: '💰' }
+];
+
+const SYSTEM_DEFAULT_ACCOUNTS = [
+  { id: 1, name: 'Conta Principal', type: 'Conta Corrente', balance: 0, saldo: 0, color: '#4a90e2' }
+];
+
+function getDefaultConfiguredFinancialData() {
   return {
-    categories: [],
-    accounts: [],
+    categories: SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 })),
+    accounts: SYSTEM_DEFAULT_ACCOUNTS.map(a => ({ ...a })),
     transactions: [],
     budgets: [],
     goals: [],
@@ -21727,15 +21878,81 @@ function getEmptyFinancialData() {
     alerts: [],
     attachments: [],
     notifications: [],
-    nextAccId: 1,
+    nextAccId: 2,
     nextTxId: 1,
     nextBudgetId: 1,
     nextGoalId: 1,
     nextRecId: 1,
     nextAlertId: 1,
     nextAttId: 1,
-    nextNotifId: 1
+    nextNotifId: 1,
+    updated_at: new Date().toISOString()
   };
+}
+
+function getEmptyFinancialData() {
+  return getDefaultConfiguredFinancialData();
+}
+
+async function ensureUserIsConfiguredInDatabase(cleanEmail, userMeta = {}) {
+  if (!cleanEmail) return;
+  const email = cleanEmail.toLowerCase().trim();
+  try {
+    let currentData = getLocalData(email);
+    if (!currentData || typeof currentData !== 'object' || !Array.isArray(currentData.categories) || currentData.categories.length === 0 || !Array.isArray(currentData.accounts) || currentData.accounts.length === 0) {
+      currentData = getDefaultConfiguredFinancialData();
+      saveLocalData(email, currentData);
+    }
+
+    if (pool) {
+      const jsonStr = JSON.stringify(currentData);
+      await pool.query(`
+        IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+        BEGIN
+          UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
+        END
+        ELSE
+        BEGIN
+          INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+        END
+      `, [email, jsonStr]).catch(() => {});
+
+      if (Array.isArray(currentData.accounts) && currentData.accounts.length > 0) {
+        await syncUserAccountsToTable(email, currentData.accounts);
+      }
+      if (Array.isArray(currentData.categories) && currentData.categories.length > 0) {
+        await syncUserCategoriesToTable(email, currentData.categories);
+      }
+
+      if (userMeta.cpf) {
+        const cleanCpf = String(userMeta.cpf).replace(/\D/g, '');
+        if (cleanCpf.length === 11) {
+          saveCpfRegistryEntry(cleanCpf, {
+            cpf: userMeta.cpf,
+            nome: userMeta.name || 'Usuário',
+            data_nascimento: userMeta.birth_date || null,
+            phone: userMeta.phone || null,
+            email: email,
+            situacao: 'REGULAR',
+            regiao_fiscal: REGIOES_FISCAIS_RFB[cleanCpf.charAt(8)] || '1ª Região Fiscal',
+            origem: 'Cadastro Oficial de Usuário'
+          });
+        }
+      }
+
+      const clientDevice = userMeta.device_type || 'Computador';
+      const clientIp = userMeta.client_ip || '';
+      await pool.query(`
+        IF NOT EXISTS (SELECT 1 FROM system_logs WHERE LOWER(user_email) = LOWER($1) AND action = 'Cadastro Financeiro')
+        BEGIN
+          INSERT INTO system_logs (timestamp, user_name, user_email, action, entity, details)
+          VALUES (GETDATE(), $2, $1, 'Cadastro Financeiro', 'Autenticação', $3);
+        END
+      `, [email, userMeta.name || 'Usuário', `Abertura de conta configurada no banco (${clientDevice}${clientIp ? ' - IP: ' + clientIp : ''})`]).catch(() => {});
+    }
+  } catch (err) {
+    console.warn(`[CONFIGURADOR USUARIO] Falha ao auto-configurar conta para ${email}:`, err.message);
+  }
 }
 
 function getLocalData(email) {
@@ -21817,7 +22034,7 @@ const server = http.createServer(async (req, res) => {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Nexus-Sync-Token, X-Requested-With, Accept, Origin',
     'Access-Control-Allow-Credentials': 'true',
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'SAMEORIGIN',
@@ -21979,17 +22196,21 @@ const server = http.createServer(async (req, res) => {
         }
         const brasiliaSqlTime = getBrasiliaSqlString(parsed.last_login) || getBrasiliaSqlString(new Date());
         const nowIso = getBrasiliaIsoString(parsed.last_login) || getBrasiliaIsoString(new Date());
+        const pingIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || (req.socket && req.socket.remoteAddress) || '';
         let targetUser = null;
         if (pool) {
           try {
             if (cleanId) {
-              await pool.query('UPDATE usuarios SET last_login = $1 WHERE id = $2 OR LOWER(email) = LOWER($3)', [brasiliaSqlTime, cleanId, cleanEmail]);
+              await pool.query('UPDATE usuarios SET last_login = $1, last_ip = COALESCE($4, last_ip) WHERE id = $2 OR LOWER(email) = LOWER($3)', [brasiliaSqlTime, cleanId, cleanEmail, pingIp]);
             } else {
-              await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]);
+              await pool.query('UPDATE usuarios SET last_login = $1, last_ip = COALESCE($3, last_ip) WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail, pingIp]);
             }
-            const qRes = await pool.query('SELECT id, name, email, last_login FROM usuarios WHERE (id = $1 OR LOWER(email) = LOWER($2))', [cleanId || 0, cleanEmail]);
-            if (qRes.rows && qRes.rows.length > 0) targetUser = qRes.rows[0];
-            console.log(`⚡ [LOGIN-PING] last_login registrado no banco SQL Server para ID #${cleanId || (targetUser ? targetUser.id : '?')} (${cleanEmail}): ${brasiliaSqlTime}`);
+            const qRes = await pool.query('SELECT id, name, email, last_login, cpf, phone, birth_date, device_type FROM usuarios WHERE (id = $1 OR LOWER(email) = LOWER($2))', [cleanId || 0, cleanEmail]);
+            if (qRes.rows && qRes.rows.length > 0) {
+              targetUser = qRes.rows[0];
+              ensureUserIsConfiguredInDatabase(cleanEmail, targetUser).catch(()=>{});
+            }
+            console.log(`⚡ [LOGIN-PING] last_login registrado no banco SQL Server para ID #${cleanId || (targetUser ? targetUser.id : '?')} (${cleanEmail}): ${brasiliaSqlTime} (IP: ${pingIp || 'local'})`);
           } catch (dbErr) {
             console.warn('[AVISO BD] Falha no login-ping SQL Server:', dbErr.message);
           }
@@ -22118,18 +22339,22 @@ const server = http.createServer(async (req, res) => {
         const brasiliaSqlTime = getBrasiliaSqlString(new Date());
         user.last_login = nowTimestamp;
 
+        const loginClientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || (req.socket && req.socket.remoteAddress) || '';
+
         if (pool) {
           try {
             if (user.id) {
-              await pool.query('UPDATE usuarios SET last_login = $1 WHERE id = $2 OR LOWER(email) = LOWER($3)', [brasiliaSqlTime, user.id, cleanEmail]);
+              await pool.query('UPDATE usuarios SET last_login = $1, last_ip = COALESCE($4, last_ip) WHERE id = $2 OR LOWER(email) = LOWER($3)', [brasiliaSqlTime, user.id, cleanEmail, loginClientIp]);
             } else {
-              await pool.query('UPDATE usuarios SET last_login = $1 WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail]);
+              await pool.query('UPDATE usuarios SET last_login = $1, last_ip = COALESCE($3, last_ip) WHERE LOWER(email) = LOWER($2)', [brasiliaSqlTime, cleanEmail, loginClientIp]);
             }
-            console.log(`✅ [SQL SERVER] last_login atualizado com sucesso no banco para ID #${user.id} (${cleanEmail}): ${brasiliaSqlTime}`);
+            console.log(`✅ [SQL SERVER] last_login atualizado com sucesso no banco para ID #${user.id} (${cleanEmail}): ${brasiliaSqlTime} (IP: ${loginClientIp || 'local'})`);
           } catch(e) {
             console.warn('[AVISO BD] Falha ao atualizar last_login no SQL Server:', e.message);
           }
         }
+
+        ensureUserIsConfiguredInDatabase(cleanEmail, user).catch(()=>{});
 
         recordSystemLog(user.name, user.email, 'Login', 'Autenticação', `Usuário realizou login via site (ID #${user.id})`);
 
@@ -22468,6 +22693,7 @@ const server = http.createServer(async (req, res) => {
         const ua = (req.headers && req.headers['user-agent']) ? req.headers['user-agent'] : '';
         const isMobileUA = /mobile|android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua);
         const deviceTypeVal = (parsed.device_type || parsed.device || (isMobileUA ? 'Mobile' : 'Computador')).trim();
+        const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || (req.socket && req.socket.remoteAddress) || '';
 
         // 1. Gravação direta no SQL Server (quando executado no ambiente com conexão direta ao banco)
         if (pool) {
@@ -22477,48 +22703,42 @@ const server = http.createServer(async (req, res) => {
               newUserId = existingUserRes.rows[0].id;
               await pool.query(
                 `UPDATE usuarios 
-                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, device_type = $7, active = 1 
+                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, device_type = $7, active = 1, last_ip = COALESCE($9, last_ip)
                  WHERE id = $8`,
-                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, deviceTypeVal, newUserId]
+                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, deviceTypeVal, newUserId, clientIp]
               );
             } else {
               const insertRes = await pool.query(
-                `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, device_type)
+                `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, device_type, last_ip)
                  OUTPUT INSERTED.id
-                 VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9);`,
-                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, deviceTypeVal]
+                 VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9, $10);`,
+                [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, deviceTypeVal, clientIp]
               );
               if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
             }
 
-            try {
-              const emptyStructure = getEmptyFinancialData();
-              await pool.query(
-                `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
-                 BEGIN
-                   UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
-                 END
-                 ELSE
-                 BEGIN
-                   INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
-                 END`,
-                [cleanEmail, JSON.stringify(emptyStructure)]
-              );
-              saveLocalData(cleanEmail, emptyStructure);
-            } catch(dadosErr){}
+            // Garante auto-configuração completa de contas, categorias e dados financeiros no SQL Server
+            await ensureUserIsConfiguredInDatabase(cleanEmail, {
+              name: name.trim(),
+              cpf: cleanCpf,
+              phone: cleanPhone,
+              birth_date: cleanBirthDate,
+              device_type: deviceTypeVal,
+              client_ip: clientIp
+            });
 
             // Atualiza cache local instantaneamente com o espelho do SQL Server
             const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
             if (allUsersRes.rows) {
               saveLocalUsers(allUsersRes.rows, true);
             }
-            console.log(`⚡ [SQL SERVER CADASTRO DIRETO] Usuário ${cleanEmail} gravado com sucesso no SQL Server (Dispositivo: ${deviceTypeVal})!`);
+            console.log(`⚡ [SQL SERVER CADASTRO DIRETO] Usuário ${cleanEmail} gravado e configurado com sucesso no SQL Server (Dispositivo: ${deviceTypeVal}, IP: ${clientIp || 'local'})!`);
           } catch (dbInsertErr) {
             console.error('[ERRO BD CADASTRO] Falha ao persistir no SQL Server:', dbInsertErr.message);
           }
         } else {
-          // Quando cadastrado no Render / Cloud, assegura que o cache local também inicie com dados 100% zerados
-          saveLocalData(cleanEmail, getEmptyFinancialData());
+          // Quando cadastrado no Render / Cloud, salva com a estrutura financeira configurada completa
+          saveLocalData(cleanEmail, getDefaultConfiguredFinancialData());
         }
 
         if (!process.env.RENDER) {
@@ -23270,7 +23490,14 @@ const server = http.createServer(async (req, res) => {
             finalData = getEmptyFinancialData();
           }
           if (!Array.isArray(finalData.transactions)) finalData.transactions = [];
-          if (!Array.isArray(finalData.accounts)) finalData.accounts = [];
+          if (!Array.isArray(finalData.accounts) || finalData.accounts.length === 0) {
+            finalData.accounts = SYSTEM_DEFAULT_ACCOUNTS.map(a => ({ ...a }));
+            syncUserAccountsToTable(email, finalData.accounts).catch(()=>{});
+          }
+          if (!Array.isArray(finalData.categories) || finalData.categories.length === 0) {
+            finalData.categories = SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 }));
+            syncUserCategoriesToTable(email, finalData.categories).catch(()=>{});
+          }
           if (!Array.isArray(finalData.budgets)) finalData.budgets = [];
           if (!Array.isArray(finalData.goals)) finalData.goals = [];
           if (!Array.isArray(finalData.recurringList)) finalData.recurringList = [];
@@ -23286,6 +23513,12 @@ const server = http.createServer(async (req, res) => {
           if (typeof fallbackData === 'string') {
             try { fallbackData = JSON.parse(fallbackData); } catch(e){ fallbackData = getEmptyFinancialData(); }
           }
+          if (!Array.isArray(fallbackData.accounts) || fallbackData.accounts.length === 0) {
+            fallbackData.accounts = SYSTEM_DEFAULT_ACCOUNTS.map(a => ({ ...a }));
+          }
+          if (!Array.isArray(fallbackData.categories) || fallbackData.categories.length === 0) {
+            fallbackData.categories = SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 }));
+          }
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(fallbackData));
         });
@@ -23293,6 +23526,12 @@ const server = http.createServer(async (req, res) => {
       let fallbackData = localData || getEmptyFinancialData();
       if (typeof fallbackData === 'string') {
         try { fallbackData = JSON.parse(fallbackData); } catch(e){ fallbackData = getEmptyFinancialData(); }
+      }
+      if (!Array.isArray(fallbackData.accounts) || fallbackData.accounts.length === 0) {
+        fallbackData.accounts = SYSTEM_DEFAULT_ACCOUNTS.map(a => ({ ...a }));
+      }
+      if (!Array.isArray(fallbackData.categories) || fallbackData.categories.length === 0) {
+        fallbackData.categories = SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 }));
       }
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       res.end(JSON.stringify(fallbackData));
@@ -24113,15 +24352,21 @@ async function syncWithRenderCloud() {
                VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9, $10)`,
               [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', rawCuCpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal]
             );
-            await pool.query(
-              `IF NOT EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
-               BEGIN
-                 INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
-               END`,
-              [cleanEmail, JSON.stringify(getEmptyFinancialData())]
-            ).catch(() => {});
-            saveLocalData(cleanEmail, getEmptyFinancialData());
-            console.log(`⚡ [SYNC RENDER -> SQL SERVER] Novo cadastro salvo diretamente no SQL Server (dados zerados, Dispositivo: ${deviceVal}): ${cleanEmail}`);
+            await ensureUserIsConfiguredInDatabase(cleanEmail, {
+              name: cu.name,
+              cpf: rawCuCpf,
+              phone: cu.phone,
+              birth_date: cu.birth_date,
+              device_type: deviceVal
+            });
+            console.log(`⚡ [SYNC RENDER -> SQL SERVER] Novo cadastro configurado no SQL Server com contas e categorias (Dispositivo: ${deviceVal}): ${cleanEmail}`);
+            broadcastEvent('new_user_registered', {
+              name: cu.name || 'Usuário',
+              email: cleanEmail,
+              role: cu.role || 'Usuário',
+              device_type: deviceVal,
+              timestamp: new Date().toISOString()
+            });
           }
         } else {
           // Atualizar dados de perfil se fornecidos no Render

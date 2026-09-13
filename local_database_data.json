@@ -233,13 +233,15 @@
   "paulolp0101@gmail.com": {
     "categories": [
       {
-        "name": "Alimenta��ão",
+        "id": 1,
+        "name": "Alimentação",
         "color": "#e8974b",
         "type": "despesa",
         "icon": "🍔",
         "count": 0
       },
       {
+        "id": 2,
         "name": "Supermercado",
         "color": "#d8a34b",
         "type": "despesa",
@@ -247,197 +249,7 @@
         "count": 0
       },
       {
-        "name": "Moradia",
-        "color": "#c98a3f",
-        "type": "despesa",
-        "icon": "��",
-        "count": 0
-      },
-      {
-        "name": "Contas da Casa",
-        "color": "#f0a63a",
-        "type": "despesa",
-        "icon": "���",
-        "count": 0
-      },
-      {
-        "name": "Transporte",
-        "color": "#ef5a5a",
-        "type": "despesa",
-        "icon": "��",
-        "count": 0
-      },
-      {
-        "name": "Saúde",
-        "color": "#5ac57e",
-        "type": "despesa",
-        "icon": "⚕️",
-        "count": 0
-      },
-      {
-        "name": "Educação",
-        "color": "#4a90e2",
-        "type": "despesa",
-        "icon": "��",
-        "count": 0
-      },
-      {
-        "name": "Lazer",
-        "color": "#9b6bd8",
-        "type": "despesa",
-        "icon": "🎮",
-        "count": 0
-      },
-      {
-        "name": "Vestu��rio",
-        "color": "#d85bb0",
-        "type": "despesa",
-        "icon": "�����������",
-        "count": 0
-      },
-      {
-        "name": "Assinaturas",
-        "color": "#6b7fd7",
-        "type": "despesa",
-        "icon": "📺",
-        "count": 0
-      },
-      {
-        "name": "Cartão de Crédito",
-        "color": "#e8b04b",
-        "type": "despesa",
-        "icon": "💳",
-        "count": 0
-      },
-      {
-        "name": "Pix Enviado",
-        "color": "#f0a63a",
-        "type": "despesa",
-        "icon": "📤",
-        "count": 0
-      },
-      {
-        "name": "Cuidados Pessoais",
-        "color": "#e07bb0",
-        "type": "despesa",
-        "icon": "��",
-        "count": 0
-      },
-      {
-        "name": "Outros",
-        "color": "#8a93a3",
-        "type": "despesa",
-        "icon": "��������",
-        "count": 0
-      },
-      {
-        "name": "Salário",
-        "color": "#e8b04b",
-        "type": "receita",
-        "icon": "💼",
-        "count": 1
-      },
-      {
-        "name": "Freelance",
-        "color": "#4a90e2",
-        "type": "receita",
-        "icon": "💻",
-        "count": 0
-      },
-      {
-        "name": "Investimentos",
-        "color": "#5ac57e",
-        "type": "receita",
-        "icon": "��",
-        "count": 0
-      },
-      {
-        "name": "Pix Recebido",
-        "color": "#3ec7c7",
-        "type": "receita",
-        "icon": "📥",
-        "count": 0
-      },
-      {
-        "name": "Reembolso",
-        "color": "#6bcf9e",
-        "type": "receita",
-        "icon": "����",
-        "count": 0
-      },
-      {
-        "name": "Bônus / 13º",
-        "color": "#d8a34b",
-        "type": "receita",
-        "icon": "🎉",
-        "count": 0
-      },
-      {
-        "name": "Outras Receitas",
-        "color": "#8a93a3",
-        "type": "receita",
-        "icon": "💰",
-        "count": 0
-      },
-      {
-        "name": "Alimentação",
-        "color": "#e8974b",
-        "type": "despesa",
-        "icon": "����",
-        "count": 0
-      },
-      {
-        "name": "Vestuário",
-        "color": "#d85bb0",
-        "type": "despesa",
-        "icon": "�����������",
-        "count": 0
-      }
-    ],
-    "accounts": [],
-    "transactions": [],
-    "budgets": [],
-    "goals": [],
-    "recurringList": [],
-    "alerts": [],
-    "attachments": [],
-    "notifications": [
-      {
-        "id": 1,
-        "text": "Nova transação cadastrada: Salario — R$ 3.300,00",
-        "icon": "💰",
-        "time": 1788699043919,
-        "read": true
-      }
-    ],
-    "nextAccId": 1,
-    "nextTxId": 2,
-    "nextBudgetId": 1,
-    "nextGoalId": 1,
-    "nextRecId": 1,
-    "nextAlertId": 1,
-    "nextAttId": 1,
-    "nextNotifId": 2,
-    "updated_at": "2026-09-13T11:41:02.018Z",
-    "updated_at_ms": 1789299662019
-  },
-  "ciceragyn12@hotmail.com": {
-    "categories": [
-      {
-        "name": "Alimentação",
-        "color": "#e8974b",
-        "type": "despesa",
-        "icon": "����",
-        "count": 0
-      },
-      {
-        "name": "Supermercado",
-        "color": "#d8a34b",
-        "type": "despesa",
-        "icon": "🛒",
-        "count": 0
-      },
-      {
+        "id": 3,
         "name": "Moradia",
         "color": "#c98a3f",
         "type": "despesa",
@@ -445,6 +257,7 @@
         "count": 0
       },
       {
+        "id": 4,
         "name": "Contas da Casa",
         "color": "#f0a63a",
         "type": "despesa",
@@ -452,125 +265,39 @@
         "count": 0
       },
       {
+        "id": 5,
         "name": "Transporte",
         "color": "#ef5a5a",
         "type": "despesa",
-        "icon": "���",
+        "icon": "🚗",
         "count": 0
       },
       {
-        "name": "Sa����de",
+        "id": 6,
+        "name": "Saúde",
         "color": "#5ac57e",
         "type": "despesa",
-        "icon": "��️",
+        "icon": "⚕️",
         "count": 0
       },
       {
+        "id": 7,
         "name": "Educação",
         "color": "#4a90e2",
         "type": "despesa",
-        "icon": "��",
+        "icon": "📚",
         "count": 0
       },
       {
+        "id": 8,
         "name": "Lazer",
         "color": "#9b6bd8",
         "type": "despesa",
-        "icon": "��������������",
+        "icon": "🎮",
         "count": 0
       },
       {
-        "name": "Vestu���rio",
-        "color": "#d85bb0",
-        "type": "despesa",
-        "icon": "👕",
-        "count": 0
-      },
-      {
-        "name": "Assinaturas",
-        "color": "#6b7fd7",
-        "type": "despesa",
-        "icon": "�����",
-        "count": 0
-      },
-      {
-        "name": "Cartão de Crédito",
-        "color": "#e8b04b",
-        "type": "despesa",
-        "icon": "�������������������",
-        "count": 0
-      },
-      {
-        "name": "Pix Enviado",
-        "color": "#f0a63a",
-        "type": "despesa",
-        "icon": "��",
-        "count": 0
-      },
-      {
-        "name": "Cuidados Pessoais",
-        "color": "#e07bb0",
-        "type": "despesa",
-        "icon": "�����",
-        "count": 0
-      },
-      {
-        "name": "Outros",
-        "color": "#8a93a3",
-        "type": "despesa",
-        "icon": "�������������",
-        "count": 0
-      },
-      {
-        "name": "Sal��rio",
-        "color": "#e8b04b",
-        "type": "receita",
-        "icon": "�����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������",
-        "count": 0
-      },
-      {
-        "name": "Freelance",
-        "color": "#4a90e2",
-        "type": "receita",
-        "icon": "������",
-        "count": 0
-      },
-      {
-        "name": "Investimentos",
-        "color": "#5ac57e",
-        "type": "receita",
-        "icon": "�����������",
-        "count": 0
-      },
-      {
-        "name": "Pix Recebido",
-        "color": "#3ec7c7",
-        "type": "receita",
-        "icon": "�����",
-        "count": 0
-      },
-      {
-        "name": "Reembolso",
-        "color": "#6bcf9e",
-        "type": "receita",
-        "icon": "💵",
-        "count": 0
-      },
-      {
-        "name": "Bônus / 13º",
-        "color": "#d8a34b",
-        "type": "receita",
-        "icon": "🎉",
-        "count": 0
-      },
-      {
-        "name": "Outras Receitas",
-        "color": "#8a93a3",
-        "type": "receita",
-        "icon": "💰",
-        "count": 0
-      },
-      {
+        "id": 9,
         "name": "Vestuário",
         "color": "#d85bb0",
         "type": "despesa",
@@ -578,35 +305,112 @@
         "count": 0
       },
       {
-        "name": "Vestu��rio",
-        "color": "#d85bb0",
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
         "type": "despesa",
-        "icon": "👕",
+        "icon": "📺",
         "count": 0
       },
       {
-        "name": "Saúde",
-        "color": "#5ac57e",
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
         "type": "despesa",
-        "icon": "������️",
+        "icon": "💳",
         "count": 0
       },
       {
-        "name": "Sa��de",
-        "color": "#5ac57e",
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
         "type": "despesa",
-        "icon": "��️",
+        "icon": "📤",
         "count": 0
       },
       {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
         "name": "Salário",
         "color": "#e8b04b",
         "type": "receita",
-        "icon": "�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
         "count": 0
       }
     ],
-    "accounts": [],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
     "transactions": [],
     "budgets": [],
     "goals": [],
@@ -614,7 +418,7 @@
     "alerts": [],
     "attachments": [],
     "notifications": [],
-    "nextAccId": 1,
+    "nextAccId": 2,
     "nextTxId": 1,
     "nextBudgetId": 1,
     "nextGoalId": 1,
@@ -622,7 +426,205 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:31.668Z"
+    "updated_at": "2026-09-13T12:04:02.751Z"
+  },
+  "ciceragyn12@hotmail.com": {
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
+    "transactions": [],
+    "budgets": [],
+    "goals": [],
+    "recurringList": [],
+    "alerts": [],
+    "attachments": [],
+    "notifications": [],
+    "nextAccId": 2,
+    "nextTxId": 1,
+    "nextBudgetId": 1,
+    "nextGoalId": 1,
+    "nextRecId": 1,
+    "nextAlertId": 1,
+    "nextAttId": 1,
+    "nextNotifId": 1,
+    "updated_at": "2026-09-13T12:04:03.730Z"
   },
   "homologacao.paulo@nexusfinanceiro.com": {
     "transactions": [
@@ -1224,8 +1226,186 @@
     "updated_at": "2026-09-12T14:10:32.504Z"
   },
   "carlos.silva@gmail.com": {
-    "categories": [],
-    "accounts": [],
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
     "transactions": [],
     "budgets": [],
     "goals": [],
@@ -1233,7 +1413,7 @@
     "alerts": [],
     "attachments": [],
     "notifications": [],
-    "nextAccId": 1,
+    "nextAccId": 2,
     "nextTxId": 1,
     "nextBudgetId": 1,
     "nextGoalId": 1,
@@ -1241,11 +1421,189 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:32.739Z"
+    "updated_at": "2026-09-13T12:04:01.555Z"
   },
   "celular4g@teste.com": {
-    "categories": [],
-    "accounts": [],
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
     "transactions": [],
     "budgets": [],
     "goals": [],
@@ -1253,7 +1611,7 @@
     "alerts": [],
     "attachments": [],
     "notifications": [],
-    "nextAccId": 1,
+    "nextAccId": 2,
     "nextTxId": 1,
     "nextBudgetId": 1,
     "nextGoalId": 1,
@@ -1261,11 +1619,189 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:33.013Z"
+    "updated_at": "2026-09-13T12:04:05.949Z"
   },
   "pauloroberto@gmail.com": {
-    "categories": [],
-    "accounts": [],
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
     "transactions": [],
     "budgets": [],
     "goals": [],
@@ -1273,7 +1809,7 @@
     "alerts": [],
     "attachments": [],
     "notifications": [],
-    "nextAccId": 1,
+    "nextAccId": 2,
     "nextTxId": 1,
     "nextBudgetId": 1,
     "nextGoalId": 1,
@@ -1281,11 +1817,189 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:33.224Z"
+    "updated_at": "2026-09-13T12:04:04.367Z"
   },
   "mobile.auditoria@teste.com": {
-    "categories": [],
-    "accounts": [],
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
     "transactions": [],
     "budgets": [],
     "goals": [],
@@ -1293,7 +2007,7 @@
     "alerts": [],
     "attachments": [],
     "notifications": [],
-    "nextAccId": 1,
+    "nextAccId": 2,
     "nextTxId": 1,
     "nextBudgetId": 1,
     "nextGoalId": 1,
@@ -1301,11 +2015,189 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:33.454Z"
+    "updated_at": "2026-09-13T12:04:06.262Z"
   },
   "carlos.oliveira@teste.com": {
-    "categories": [],
-    "accounts": [],
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
     "transactions": [],
     "budgets": [],
     "goals": [],
@@ -1313,7 +2205,7 @@
     "alerts": [],
     "attachments": [],
     "notifications": [],
-    "nextAccId": 1,
+    "nextAccId": 2,
     "nextTxId": 1,
     "nextBudgetId": 1,
     "nextGoalId": 1,
@@ -1321,11 +2213,189 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:33.664Z"
+    "updated_at": "2026-09-13T12:04:05.132Z"
   },
   "roberto.alcantara@teste.com": {
-    "categories": [],
-    "accounts": [],
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
     "transactions": [],
     "budgets": [],
     "goals": [],
@@ -1333,7 +2403,7 @@
     "alerts": [],
     "attachments": [],
     "notifications": [],
-    "nextAccId": 1,
+    "nextAccId": 2,
     "nextTxId": 1,
     "nextBudgetId": 1,
     "nextGoalId": 1,
@@ -1341,11 +2411,189 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:33.876Z"
+    "updated_at": "2026-09-13T12:04:05.555Z"
   },
   "novo.teste.zero@nexus.com": {
-    "categories": [],
-    "accounts": [],
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
     "transactions": [],
     "budgets": [],
     "goals": [],
@@ -1353,7 +2601,7 @@
     "alerts": [],
     "attachments": [],
     "notifications": [],
-    "nextAccId": 1,
+    "nextAccId": 2,
     "nextTxId": 1,
     "nextBudgetId": 1,
     "nextGoalId": 1,
@@ -1361,6 +2609,6 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:34.087Z"
+    "updated_at": "2026-09-13T12:04:06.670Z"
   }
 }
