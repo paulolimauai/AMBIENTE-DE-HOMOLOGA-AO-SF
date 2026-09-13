@@ -1,14 +1,14 @@
 {
   "04023326100": {
-    "cpf": "040.233.261-00",
+    "cpf": "04023326100",
     "nome": "PAULO DE LIMA PEREIRA",
-    "data_nascimento": "02/06/1992",
+    "data_nascimento": "1992-06-02",
     "phone": "(62) 99234-5372",
     "email": "paulolp0101@gmail.com",
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-12T14:14:44.551Z"
+    "updated_at": "2026-09-13T08:43:26.670Z"
   },
   "00000000191": {
     "cpf": "00000000191",
@@ -19,10 +19,10 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-12T11:08:37.440Z"
+    "updated_at": "2026-09-13T08:43:26.686Z"
   },
   "99925109191": {
-    "cpf": "999.251.091-91",
+    "cpf": "99925109191",
     "nome": "CICERA DE LIMA PEREIRA",
     "data_nascimento": "27/06/1966",
     "phone": "(62) 99367-6783",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-12T14:14:44.564Z"
+    "updated_at": "2026-09-13T08:43:26.700Z"
   },
   "12345678909": {
     "cpf": "12345678909",
@@ -41,10 +41,10 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Receita Federal do Brasil (Base Cadastral Oficial)",
-    "updated_at": "2026-09-12T11:08:37.470Z"
+    "updated_at": "2026-09-13T08:43:26.713Z"
   },
   "12345678900": {
-    "cpf": "123.456.789-00",
+    "cpf": "12345678900",
     "nome": "Carlos Oliveira Teste",
     "data_nascimento": "1990-01-01",
     "phone": "(11) 99999-1111",
@@ -52,10 +52,10 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-12T14:14:44.604Z"
+    "updated_at": "2026-09-13T08:43:26.733Z"
   },
   "33344455566": {
-    "cpf": "333.444.555-66",
+    "cpf": "33344455566",
     "nome": "Roberto Alcantara Teste",
     "data_nascimento": "1988-03-20",
     "phone": "(62) 98888-2222",
@@ -63,10 +63,10 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "5ª Região Fiscal (BA, SE)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-12T14:14:44.616Z"
+    "updated_at": "2026-09-13T08:43:26.753Z"
   },
   "44455566677": {
-    "cpf": "444.555.666-77",
+    "cpf": "44455566677",
     "nome": "Teste Celular 4G",
     "data_nascimento": "1992-04-10",
     "phone": "(62) 99999-0000",
@@ -74,10 +74,10 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-12T14:14:44.632Z"
+    "updated_at": "2026-09-13T08:43:26.756Z"
   },
   "63481090625": {
-    "cpf": "634.810.906-25",
+    "cpf": "63481090625",
     "nome": "PAULO ROBERTO PEREIRA",
     "data_nascimento": "27/10/1966",
     "phone": "(62) 99264-7115",
@@ -85,10 +85,10 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-12T14:14:44.578Z"
+    "updated_at": "2026-09-13T08:43:26.760Z"
   },
   "11122233344": {
-    "cpf": "111.222.333-44",
+    "cpf": "11122233344",
     "nome": "Teste Auditoria Mobile",
     "data_nascimento": null,
     "phone": "(62) 98888-7777",
@@ -96,6 +96,6 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "3ª Região Fiscal (CE, MA, PI)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-12T14:14:44.641Z"
+    "updated_at": "2026-09-13T08:43:26.773Z"
   }
 }
