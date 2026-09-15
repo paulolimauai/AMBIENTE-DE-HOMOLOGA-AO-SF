@@ -8670,6 +8670,568 @@ html.light .mand-input-wrapper input {
   color: #000000 !important;
   background: #FFFFFF !important;
 }
+
+/* ==========================================================================
+   MASTER EXECUTIVE GLASSMORPHISM SUITE (4K HIGH-TECH LIQUID & CRYSTAL GLASS)
+   Transformação Visual Profissional com Tom de Vidro Óptico, Reflexo Especular
+   e Profundidade em Camadas Translúcidas
+   ========================================================================== */
+
+/* 1. TOKENS DE VIDRO ÓPTICO DE ALTA PRECISÃO */
+:root {
+  --glass-card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 26, 44, 0.72) 42%, rgba(8, 13, 24, 0.88) 100%);
+  --glass-card-hover-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(22, 32, 54, 0.78) 45%, rgba(10, 16, 30, 0.92) 100%);
+  --glass-card-border: rgba(255, 255, 255, 0.12);
+  --glass-card-border-top: rgba(255, 255, 255, 0.38);
+  --glass-card-border-left: rgba(255, 255, 255, 0.22);
+  --glass-card-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.70), 0 0 35px -5px rgba(0, 229, 255, 0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.28), inset 0 -1px 2px rgba(0, 0, 0, 0.35);
+  --glass-card-hover-shadow: 0 26px 65px -10px rgba(0, 0, 0, 0.85), 0 0 45px -5px rgba(56, 189, 248, 0.22), inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  --glass-blur: blur(28px) saturate(210%) brightness(104%);
+  --glass-blur-heavy: blur(40px) saturate(220%) brightness(106%);
+  --glass-input-bg: rgba(14, 20, 35, 0.70);
+  --glass-input-border: rgba(255, 255, 255, 0.14);
+  --glass-specular-sheen: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.18) 50%, rgba(0, 229, 255, 0.08) 55%, transparent 70%);
+}
+
+/* Modo Claro: Vidro Suíço Crystal Ice Glass (Textos 100% Pretos para Contraste Absoluto) */
+body.light, html.light body, html.light {
+  --glass-card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(248, 250, 252, 0.82) 100%);
+  --glass-card-hover-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(241, 245, 249, 0.90) 100%);
+  --glass-card-border: rgba(203, 213, 225, 0.75);
+  --glass-card-border-top: #FFFFFF;
+  --glass-card-border-left: #FFFFFF;
+  --glass-card-shadow: 0 14px 40px -6px rgba(15, 23, 42, 0.07), 0 2px 8px rgba(15, 23, 42, 0.03), inset 0 1.5px 2px #FFFFFF;
+  --glass-card-hover-shadow: 0 20px 50px -6px rgba(15, 23, 42, 0.13), 0 0 25px rgba(2, 132, 199, 0.12), inset 0 1.5px 2px #FFFFFF;
+  --glass-blur: blur(28px) saturate(180%);
+  --glass-blur-heavy: blur(36px) saturate(190%);
+  --glass-input-bg: rgba(255, 255, 255, 0.92);
+  --glass-input-border: #CBD5E1;
+}
+
+/* 2. CABEÇALHO HORIZONTAL FIXO EM VIDRO LÍQUIDO FLUTUANTE (TOPHEADER GLASS) */
+.topheader {
+  background: linear-gradient(180deg, rgba(10, 16, 30, 0.84) 0%, rgba(6, 10, 20, 0.90) 100%) !important;
+  backdrop-filter: var(--glass-blur-heavy) !important;
+  -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 10px 35px -8px rgba(0, 0, 0, 0.75), inset 0 -1px 0 rgba(0, 229, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+body.light .topheader, html.light .topheader {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.90) 100%) !important;
+  border-bottom: 1.5px solid rgba(203, 213, 225, 0.85) !important;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06), inset 0 -1px 0 rgba(2, 132, 199, 0.12), inset 0 1px 0 #FFFFFF !important;
+}
+
+/* Perfil do Usuário e Botões em Cápsula de Vidro no Topo */
+.aether-brand-user {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 16px !important;
+  padding: 5px 14px 5px 8px !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+.aether-brand-user:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(0, 229, 255, 0.35) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 18px rgba(0, 229, 255, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-1px);
+}
+
+.aether-settings-btn,
+.icon-btn,
+.scale-selector-wrap #scaleMenuBtn,
+#miniThemeBtn,
+#notifBtn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 27, 43, 0.65) 50%, rgba(9, 13, 22, 0.85) 100%) !important;
+  backdrop-filter: blur(22px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-top: 1.2px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.aether-settings-btn:hover,
+.icon-btn:hover,
+.scale-selector-wrap #scaleMenuBtn:hover,
+#miniThemeBtn:hover,
+#notifBtn:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(24, 34, 56, 0.75) 50%, rgba(12, 18, 30, 0.90) 100%) !important;
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  border-top-color: rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55), 0 0 22px rgba(56, 189, 248, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-1.5px);
+}
+
+body.light .aether-brand-user {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-top: 1.5px solid #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF !important;
+}
+
+body.light .aether-settings-btn,
+body.light .icon-btn,
+body.light .scale-selector-wrap #scaleMenuBtn,
+body.light #miniThemeBtn,
+body.light #notifBtn {
+  background: rgba(255, 255, 255, 0.90) !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-top: 1.5px solid #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF !important;
+}
+
+body.light .aether-settings-btn:hover,
+body.light .icon-btn:hover,
+body.light .scale-selector-wrap #scaleMenuBtn:hover,
+body.light #miniThemeBtn:hover,
+body.light #notifBtn:hover {
+  background: #FFFFFF !important;
+  border-color: #0284C7 !important;
+  color: #0284C7 !important;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.18), inset 0 1px 0 #FFFFFF !important;
+}
+
+/* 3. DOCK LATERAL VERTICAL EM VIDRO FOSCO REFINADO (LATERAL DOCK GLASS) */
+nav.menu {
+  background: linear-gradient(180deg, rgba(13, 20, 36, 0.84) 0%, rgba(7, 11, 22, 0.92) 100%) !important;
+  backdrop-filter: var(--glass-blur-heavy) !important;
+  -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 10px 0 35px -8px rgba(0, 0, 0, 0.65), inset 1px 0 0 rgba(255, 255, 255, 0.10) !important;
+}
+
+body.light nav.menu, html.light nav.menu {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.90) 100%) !important;
+  border-right: 1.5px solid rgba(203, 213, 225, 0.85) !important;
+  box-shadow: 8px 0 25px rgba(15, 23, 42, 0.05), inset 1px 0 0 #FFFFFF !important;
+}
+
+/* Botões da Dock em Pastilha de Vidro */
+nav.menu button {
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+nav.menu button:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(0, 229, 255, 0.40) !important;
+  border-top-color: rgba(255, 255, 255, 0.50) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 229, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  transform: translateX(3px) scale(1.02);
+}
+
+nav.menu button.active {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(2, 132, 199, 0.32) 50%, rgba(0, 229, 255, 0.18) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  border-top: 2px solid #FFFFFF !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 26px rgba(0, 229, 255, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.65) !important;
+}
+
+body.light nav.menu button {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-top: 1.5px solid #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04), inset 0 1px 0 #FFFFFF !important;
+}
+
+body.light nav.menu button:hover {
+  background: #F1F5F9 !important;
+  border-color: #0284C7 !important;
+  color: #0284C7 !important;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.16), inset 0 1px 0 #FFFFFF !important;
+}
+
+body.light nav.menu button.active {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+  border: 1.5px solid #0284C7 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* 4. DASHBOARD WELCOME HERO EM PLACA DE VIDRO PANORÂMICA 4K */
+.dashboard-welcome-hero {
+  position: relative !important;
+  background: var(--glass-card-bg) !important;
+  backdrop-filter: var(--glass-blur-heavy) !important;
+  -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
+  border: 1px solid var(--glass-card-border) !important;
+  border-top: 2px solid var(--glass-card-border-top) !important;
+  border-left: 1.5px solid var(--glass-card-border-left) !important;
+  border-radius: 26px !important;
+  box-shadow: var(--glass-card-shadow) !important;
+  overflow: hidden !important;
+}
+
+.dashboard-welcome-hero::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: var(--glass-specular-sheen) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  opacity: 0.6 !important;
+}
+
+body.light .dashboard-welcome-hero {
+  background: var(--glass-card-bg) !important;
+  border: 1.5px solid var(--glass-card-border) !important;
+  border-top: 2px solid var(--glass-card-border-top) !important;
+  box-shadow: var(--glass-card-shadow) !important;
+}
+
+/* 5. CARDS DE KPI EM VIDRO LAPIDADO (CHAMFERED GLASS TILES) */
+.kpi {
+  position: relative !important;
+  background: var(--glass-card-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid var(--glass-card-border) !important;
+  border-top: 1.8px solid var(--glass-card-border-top) !important;
+  border-left: 1.2px solid var(--glass-card-border-left) !important;
+  border-radius: 22px !important;
+  box-shadow: var(--glass-card-shadow) !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  overflow: hidden !important;
+}
+
+.kpi:hover {
+  background: var(--glass-card-hover-bg) !important;
+  border-color: rgba(56, 189, 248, 0.45) !important;
+  border-top-color: rgba(255, 255, 255, 0.75) !important;
+  box-shadow: var(--glass-card-hover-shadow) !important;
+  transform: translateY(-3px) scale(1.01) !important;
+}
+
+.kpi .ic {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.40) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+}
+
+body.light .kpi {
+  background: var(--glass-card-bg) !important;
+  border: 1.5px solid var(--glass-card-border) !important;
+  border-top: 2px solid var(--glass-card-border-top) !important;
+  box-shadow: var(--glass-card-shadow) !important;
+}
+
+body.light .kpi:hover {
+  background: var(--glass-card-hover-bg) !important;
+  border-color: #0284C7 !important;
+  box-shadow: var(--glass-card-hover-shadow) !important;
+}
+
+body.light .kpi .ic {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06), inset 0 1px 0 #FFFFFF !important;
+}
+
+/* 6. PAINÉIS, GRIDS E WIDGETS EM VIDRO ÓPTICO (.panel, .card, .chart-card, .acc-card) */
+.panel,
+.card,
+.chart-card,
+.tx-summary-card,
+.acc-card,
+.table-panel {
+  position: relative !important;
+  background: var(--glass-card-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid var(--glass-card-border) !important;
+  border-top: 1.8px solid var(--glass-card-border-top) !important;
+  border-left: 1.2px solid var(--glass-card-border-left) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--glass-card-shadow) !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  overflow: hidden !important;
+}
+
+.panel:hover,
+.card:hover,
+.chart-card:hover,
+.tx-summary-card:hover,
+.acc-card:hover {
+  background: var(--glass-card-hover-bg) !important;
+  border-color: rgba(56, 189, 248, 0.45) !important;
+  border-top-color: rgba(255, 255, 255, 0.70) !important;
+  box-shadow: var(--glass-card-hover-shadow) !important;
+  transform: translateY(-2.5px) !important;
+}
+
+body.light .panel,
+body.light .card,
+body.light .chart-card,
+body.light .tx-summary-card,
+body.light .acc-card,
+body.light .table-panel {
+  background: var(--glass-card-bg) !important;
+  border: 1.5px solid var(--glass-card-border) !important;
+  border-top: 2px solid var(--glass-card-border-top) !important;
+  box-shadow: var(--glass-card-shadow) !important;
+}
+
+body.light .panel:hover,
+body.light .card:hover,
+body.light .chart-card:hover,
+body.light .tx-summary-card:hover,
+body.light .acc-card:hover {
+  background: var(--glass-card-hover-bg) !important;
+  border-color: #0284C7 !important;
+  box-shadow: var(--glass-card-hover-shadow) !important;
+}
+
+/* 7. TABELAS DE DADOS E TRANSAÇÕES COM EFEITO VIDRO FLUIDO */
+table th {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  padding: 12px 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+}
+
+table td {
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 14px 12px !important;
+  transition: background 0.2s ease !important;
+}
+
+tr.trow:hover td {
+  background: rgba(0, 229, 255, 0.05) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+body.light table th {
+  background: #F8FAFC !important;
+  border-bottom: 2px solid #CBD5E1 !important;
+  color: #000000 !important;
+}
+
+body.light table td {
+  border-top: 1px solid #E2E8F0 !important;
+  color: #000000 !important;
+}
+
+body.light tr.trow:hover td {
+  background: rgba(2, 132, 199, 0.06) !important;
+}
+
+/* 8. BADGES E CHIPS COMO GEMAS DE VIDRO LAPIDADO (GEM CHIPS) */
+.pill,
+.cat-pill,
+.acc-pill,
+.type-pill,
+.kpi-tag,
+.hero-badge,
+.status-pago,
+.status-recebido,
+.status-pendente {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.22) !important;
+  transition: all 0.2s ease !important;
+}
+
+.status-pago,
+.status-recebido {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #34D399 !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+}
+
+.status-pendente {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.12) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  color: #FBBF24 !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+}
+
+body.light .status-pago,
+body.light .status-recebido {
+  background: #DCFCE7 !important;
+  border: 1.5px solid #16A34A !important;
+  color: #15803D !important;
+}
+
+body.light .status-pendente {
+  background: #FEF3C7 !important;
+  border: 1.5px solid #D97706 !important;
+  color: #B45309 !important;
+}
+
+/* 9. CAMPOS DE FORMULÁRIO, SELECTS E INPUTS EM VIDRO FOSCO */
+.field input,
+.field select,
+.field textarea,
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+select {
+  background: var(--glass-input-bg) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--glass-input-border) !important;
+  border-top: 1.2px solid rgba(255, 255, 255, 0.30) !important;
+  border-radius: 12px !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+  transition: all 0.25s ease !important;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+input:focus,
+select:focus {
+  border-color: #00E5FF !important;
+  border-top-color: #FFFFFF !important;
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.25), 0 0 20px rgba(0, 229, 255, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  outline: none !important;
+}
+
+body.light .field input,
+body.light .field select,
+body.light .field textarea,
+body.light input,
+body.light select {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #000000 !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.light input:focus,
+body.light select:focus {
+  border-color: #0284C7 !important;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.22), 0 0 14px rgba(2, 132, 199, 0.15) !important;
+}
+
+/* 10. MODAIS, DROPDOWNS E POPUPS EM VIDRO ÓPTICO PROFUNDO */
+.modal,
+.modal-box,
+.scale-dropdown,
+.notif-panel {
+  background: linear-gradient(145deg, rgba(18, 26, 46, 0.88) 0%, rgba(9, 14, 26, 0.96) 100%) !important;
+  backdrop-filter: var(--glass-blur-heavy) !important;
+  -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.50) !important;
+  border-radius: 26px !important;
+  box-shadow: 0 35px 90px -15px rgba(0, 0, 0, 0.90), 0 0 45px rgba(0, 229, 255, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.40) !important;
+}
+
+body.light .modal,
+body.light .modal-box,
+body.light .scale-dropdown,
+body.light .notif-panel {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-top: 2px solid #FFFFFF !important;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.18), inset 0 1.5px 2px #FFFFFF !important;
+}
+
+/* 11. BOTÕES PRINCIPAIS DE AÇÃO COM EFEITO VIDRO LÍQUIDO (LIQUID GLASS BUTTONS) */
+.btn-hero-primary,
+.btn-primary,
+.modal-actions .save {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.95) 0%, rgba(14, 165, 233, 0.92) 50%, rgba(2, 132, 199, 0.95) 100%) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  border-top: 1.5px solid #FFFFFF !important;
+  box-shadow: 0 8px 25px rgba(0, 229, 255, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.80), inset 0 -2px 4px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-hero-primary:hover,
+.btn-primary:hover,
+.modal-actions .save:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 12px 32px rgba(0, 229, 255, 0.55), 0 0 30px rgba(0, 229, 255, 0.40), inset 0 1.5px 2px #FFFFFF !important;
+}
+
+.btn-hero-privacy {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.30) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+  transition: all 0.25s ease !important;
+}
+
+.btn-hero-privacy:hover {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(56, 189, 248, 0.40) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 18px rgba(56, 189, 248, 0.20), inset 0 1px 1.5px rgba(255, 255, 255, 0.30) !important;
+  transform: translateY(-1px);
+}
+
+body.light .btn-hero-privacy {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-top: 1.5px solid #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF !important;
+}
+
+/* 12. BARRA DE NAVEGAÇÃO INFERIOR MOBILE EM VIDRO CÁPSULA (BOTTOM TAB BAR GLASS) */
+.mobile-bottom-bar {
+  background: linear-gradient(180deg, rgba(12, 18, 34, 0.88) 0%, rgba(6, 10, 20, 0.94) 100%) !important;
+  backdrop-filter: var(--glass-blur-heavy) !important;
+  -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.20) !important;
+  box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+}
+
+body.light .mobile-bottom-bar {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-top: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 -8px 25px rgba(15, 23, 42, 0.06), inset 0 1px 0 #FFFFFF !important;
+}
+
+/* 13. TOAST EM DYNAMIC ISLAND GLASS DE ALTA DEFINIÇÃO */
+.toast {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(18, 27, 48, 0.88) 50%, rgba(8, 14, 26, 0.96) 100%) !important;
+  backdrop-filter: var(--glass-blur-heavy) !important;
+  -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
+  border: 1.2px solid rgba(255, 255, 255, 0.18) !important;
+  border-top: 1.8px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 229, 255, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
+}
+
+body.light .toast {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-top: 2px solid #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.14), inset 0 1px 0 #FFFFFF !important;
+}
 </style>
 </head>
 <body>
