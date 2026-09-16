@@ -1558,18 +1558,21 @@ html.is-admin .menu-admin-badge,
 html.is-admin #mobileDrawerAdminBadge {
   display: inline-flex !important;
 }
-html.is-admin #menuUsuariosBtn,
 html.is-admin #menuFuncoesBtn,
+html.is-admin #mobileDrawerFuncoesBtn {
+  display: none !important;
+}
+html.is-admin #menuUsuariosBtn,
 html.is-admin #menuOrdensBtn,
 html.is-admin #menuLogsBtn,
 html.is-admin #mobileDrawerUsuariosBtn,
-html.is-admin #mobileDrawerFuncoesBtn,
 html.is-admin #mobileDrawerOrdensBtn,
 html.is-admin #mobileDrawerLogsBtn {
   display: flex !important;
 }
 
-/* Perfil de Administrador: Ocultar estritamente módulos financeiros e manter o Dashboard e funções administrativas */
+/* Perfil de Administrador: Ocultar estritamente módulos financeiros e manter apenas funções administrativas */
+html.is-admin #menu button[data-page="dashboard"],
 html.is-admin #menu button[data-page="transacoes"],
 html.is-admin #menu button[data-page="cartoes"],
 html.is-admin #menu button[data-page="orcamentos"],
@@ -1579,6 +1582,7 @@ html.is-admin #menu button[data-page="recorrentes"],
 html.is-admin #menu button[data-page="importar"],
 html.is-admin #menu button[data-page="anexos"],
 html.is-admin #menu button[data-page="config"],
+html.is-admin #mobileDrawerMenu button[data-page="dashboard"],
 html.is-admin #mobileDrawerMenu button[data-page="transacoes"],
 html.is-admin #mobileDrawerMenu button[data-page="cartoes"],
 html.is-admin #mobileDrawerMenu button[data-page="orcamentos"],
@@ -1611,28 +1615,28 @@ html.is-admin .menu-admin-badge {
 
 html.is-admin .menu button.menu-btn-admin {
   position: relative !important;
-  width: 68px !important;
-  height: 52px !important;
-  min-height: 52px !important;
-  max-height: 52px !important;
-  padding: 5px 2px 4px !important;
-  gap: 2px !important;
+  width: 82px !important;
+  height: 74px !important;
+  min-height: 74px !important;
+  max-height: 74px !important;
+  padding: 8px 4px 6px !important;
+  gap: 4px !important;
   overflow: visible !important;
 }
 
 html.is-admin .menu button.menu-btn-admin .ic {
-  width: 24px !important;
-  height: 24px !important;
-  margin-bottom: 0 !important;
+  width: 28px !important;
+  height: 28px !important;
+  margin-bottom: 2px !important;
 }
 
 html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
-  font-size: 10px !important;
-  font-weight: 600 !important;
-  line-height: 1.15 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
   white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
   display: block !important;
 }
 
@@ -3960,24 +3964,24 @@ nav.menu{
   top:68px !important;
   left:0 !important;
   bottom:0 !important;
-  width:80px !important;
-  max-width:80px !important;
+  width:86px !important;
+  max-width:86px !important;
   margin:0 !important;
-  padding:10px 0 16px !important;
+  padding:12px 0 18px !important;
   display:flex !important;
   flex-direction:column !important;
   align-items:center !important;
   justify-content:flex-start !important;
   gap:4px !important;
-  background:#0B0F19 !important;
-  border-right:1px solid #1E293B !important;
+  background:linear-gradient(180deg, rgba(12, 17, 30, 0.96) 0%, rgba(7, 10, 19, 0.98) 100%) !important;
+  border-right:1px solid rgba(255, 255, 255, 0.08) !important;
   border-top:none !important;
   border-left:none !important;
   border-bottom:none !important;
   border-radius:0 !important;
-  box-shadow:none !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
+  box-shadow:6px 0 32px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter:blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter:blur(28px) saturate(200%) !important;
   overflow-y:auto !important;
   overflow-x:hidden !important;
   scrollbar-width:thin !important;
@@ -4003,39 +4007,39 @@ nav.menu::-webkit-scrollbar-track{
   justify-content:center !important;
   text-align:center !important;
   gap:3px !important;
-  width:68px !important;
-  min-height:50px !important;
-  height:50px !important;
-  padding:4px 2px !important;
-  border-radius:10px !important;
+  width:72px !important;
+  min-height:56px !important;
+  height:56px !important;
+  padding:6px 3px 5px !important;
+  border-radius:13px !important;
   background:transparent !important;
   border:1px solid transparent !important;
   color:#94A3B8 !important;
-  font-size:10.5px !important;
-  font-weight:500 !important;
+  font-size:10px !important;
+  font-weight:600 !important;
   letter-spacing:-0.01em !important;
   white-space:nowrap !important;
   cursor:pointer !important;
-  transition:all 0.18s ease !important;
+  transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select:none !important;
   box-sizing:border-box !important;
   flex-shrink:0 !important;
 }
 .menu button:hover{
-  background:rgba(255, 255, 255, 0.06) !important;
+  background:rgba(255, 255, 255, 0.05) !important;
   color:#FFFFFF !important;
-  border-color:rgba(255, 255, 255, 0.08) !important;
-  transform:none !important;
-  box-shadow:none !important;
+  border-color:rgba(255, 255, 255, 0.10) !important;
+  transform:translateY(-1.5px) !important;
+  box-shadow:0 4px 14px rgba(0, 0, 0, 0.3) !important;
 }
 .menu button.active{
-  background:rgba(14, 165, 233, 0.14) !important;
-  border:1px solid rgba(56, 189, 248, 0.35) !important;
-  border-radius:10px !important;
-  color:#38BDF8 !important;
-  font-weight:600 !important;
-  box-shadow:none !important;
-  transform:none !important;
+  background:linear-gradient(180deg, rgba(14, 165, 233, 0.18) 0%, rgba(15, 23, 42, 0.35) 100%) !important;
+  border:1px solid rgba(56, 189, 248, 0.42) !important;
+  border-radius:13px !important;
+  color:#FFFFFF !important;
+  font-weight:700 !important;
+  box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 18px rgba(14, 165, 233, 0.20), 0 0 1px rgba(56, 189, 248, 0.4) !important;
+  transform:translateY(-0.5px) !important;
 }
 .menu button.active::before{
   content:'' !important;
@@ -4043,52 +4047,59 @@ nav.menu::-webkit-scrollbar-track{
   left:2px !important;
   top:50% !important;
   transform:translateY(-50%) !important;
-  width:3px !important;
-  height:18px !important;
+  width:3.5px !important;
+  height:22px !important;
   border-radius:999px !important;
-  background:#38BDF8 !important;
-  box-shadow:0 0 8px rgba(56, 189, 248, 0.8) !important;
+  background:linear-gradient(180deg, #38BDF8 0%, #0284C7 100%) !important;
+  box-shadow:0 0 10px rgba(56, 189, 248, 0.9), 0 0 4px rgba(56, 189, 248, 0.8) !important;
 }
 .menu button.active::after{
-  display:none !important;
+  content:'' !important;
+  display:block !important;
+  position:absolute !important;
+  top:0 !important;
+  left:15% !important;
+  right:15% !important;
+  height:1px !important;
+  background:linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
 }
 .menu button .ic{
-  width:24px !important;
-  height:24px !important;
-  border-radius:6px !important;
-  background:transparent !important;
-  border:none !important;
+  width:28px !important;
+  height:28px !important;
+  border-radius:9px !important;
+  background:rgba(255, 255, 255, 0.035) !important;
+  border:1px solid rgba(255, 255, 255, 0.06) !important;
   box-shadow:none !important;
   display:inline-flex !important;
   align-items:center !important;
   justify-content:center !important;
-  color:inherit !important;
-  transition:all 0.18s ease !important;
+  color:#94A3B8 !important;
+  transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   flex-shrink:0 !important;
 }
 .menu button .ic svg{
-  width:18px !important;
-  height:18px !important;
-  stroke-width:1.9px !important;
+  width:17px !important;
+  height:17px !important;
+  stroke-width:2.1px !important;
 }
 .menu button:hover .ic{
-  transform:scale(1.08) !important;
+  transform:scale(1.06) !important;
   color:#38BDF8 !important;
-  background:transparent !important;
-  border:none !important;
-  box-shadow:none !important;
+  background:rgba(255, 255, 255, 0.08) !important;
+  border-color:rgba(255, 255, 255, 0.16) !important;
+  box-shadow:0 2px 10px rgba(0, 0, 0, 0.25) !important;
 }
 .menu button.active .ic{
   color:#38BDF8 !important;
-  transform:none !important;
-  background:transparent !important;
-  border:none !important;
-  box-shadow:none !important;
-  filter:none !important;
+  transform:scale(1.06) !important;
+  background:linear-gradient(135deg, rgba(56, 189, 248, 0.22) 0%, rgba(14, 165, 233, 0.10) 100%) !important;
+  border-color:rgba(56, 189, 248, 0.5) !important;
+  box-shadow:0 0 14px rgba(56, 189, 248, 0.35) !important;
+  filter:drop-shadow(0 0 6px rgba(56, 189, 248, 0.6)) !important;
 }
 .menu button span:not(.ic){
   font-size:10px !important;
-  font-weight:500 !important;
+  font-weight:600 !important;
   line-height:1.15 !important;
   letter-spacing:-0.01em !important;
   display:block !important;
@@ -4097,34 +4108,34 @@ nav.menu::-webkit-scrollbar-track{
   max-width:100% !important;
   overflow:hidden !important;
   text-overflow:ellipsis !important;
-  color:inherit !important;
-  transition:color 0.15s ease !important;
+  color:#94A3B8 !important;
+  transition:color 0.18s ease !important;
 }
 .menu button:hover span:not(.ic){
   color:#FFFFFF !important;
 }
 .menu button.active span:not(.ic){
-  color:#38BDF8 !important;
-  font-weight:600 !important;
-  text-shadow:none !important;
+  color:#FFFFFF !important;
+  font-weight:700 !important;
+  text-shadow:0 1px 3px rgba(0, 0, 0, 0.6) !important;
 }
 
 /* Ajustes Responsivos por Altura de Tela (Laptops, Telas Menores e Split-Screen) */
 @media (max-height: 760px) {
-  nav.menu { padding:8px 0 12px !important; gap:2px !important; }
-  .menu button { width:66px !important; height:46px !important; min-height:46px !important; padding:3px 2px !important; gap:2px !important; border-radius:8px !important; }
-  .menu button .ic { width:22px !important; height:22px !important; }
-  .menu button .ic svg { width:16px !important; height:16px !important; }
-  .menu button span:not(.ic) { font-size:9.5px !important; }
-  .menu button.active::before { height:16px !important; width:2.5px !important; }
+  nav.menu { padding:8px 0 12px !important; gap:3px !important; }
+  .menu button { width:70px !important; height:48px !important; min-height:48px !important; padding:4px 2px 3px !important; gap:2px !important; border-radius:11px !important; }
+  .menu button .ic { width:24px !important; height:24px !important; border-radius:7px !important; }
+  .menu button .ic svg { width:15px !important; height:15px !important; }
+  .menu button span:not(.ic) { font-size:9px !important; }
+  .menu button.active::before { height:18px !important; width:3px !important; }
 }
 @media (max-height: 640px) {
   nav.menu { padding:4px 0 8px !important; gap:2px !important; }
-  .menu button { width:62px !important; height:36px !important; min-height:36px !important; padding:2px !important; }
+  .menu button { width:66px !important; height:38px !important; min-height:38px !important; padding:2px !important; }
   .menu button span:not(.ic) { display:none !important; }
-  .menu button .ic { width:24px !important; height:24px !important; }
-  .menu button .ic svg { width:17px !important; height:17px !important; }
-  .menu button.active::before { height:14px !important; }
+  .menu button .ic { width:28px !important; height:28px !important; border-radius:8px !important; }
+  .menu button .ic svg { width:18px !important; height:18px !important; }
+  .menu button.active::before { height:16px !important; }
 }
 
 /* ==================== Estilo Executivo Premium do Menu Administrativo ==================== */
@@ -4169,32 +4180,31 @@ nav.menu::-webkit-scrollbar-track{
   color: #CBD5E1 !important;
 }
 .menu button.menu-btn-admin .ic {
-  background: transparent !important;
-  border: none !important;
-  color: #FBBF24 !important;
+  background: rgba(245, 158, 11, 0.06) !important;
+  border: 1px solid rgba(245, 158, 11, 0.16) !important;
+  color: #FCD34D !important;
 }
 .menu button.menu-btn-admin:hover {
-  background: rgba(245, 158, 11, 0.12) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
   color: #FDE68A !important;
-  border-color: rgba(245, 158, 11, 0.25) !important;
-  transform: none !important;
-  box-shadow: none !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.22) !important;
+  transform: translateY(-1.5px) !important;
 }
 .menu button.menu-btn-admin:hover .ic {
-  background: transparent !important;
-  border: none !important;
+  background: rgba(245, 158, 11, 0.20) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
   color: #FBBF24 !important;
-  box-shadow: none !important;
-  transform: scale(1.08) !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.5) !important;
 }
 .menu button.menu-btn-admin.active {
-  background: rgba(245, 158, 11, 0.16) !important;
-  border: 1px solid rgba(245, 158, 11, 0.45) !important;
-  border-radius: 10px !important;
-  color: #FBBF24 !important;
-  font-weight: 600 !important;
-  box-shadow: none !important;
-  transform: none !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.26) 0%, rgba(217, 119, 6, 0.14) 100%) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.65) !important;
+  border-radius: 13px !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  transform: translateY(-0.5px) !important;
 }
 .menu button.menu-btn-admin.active::before {
   content: '' !important;
@@ -4202,126 +4212,126 @@ nav.menu::-webkit-scrollbar-track{
   left: 2px !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  width: 3px !important;
-  height: 18px !important;
+  width: 3.5px !important;
+  height: 22px !important;
   border-radius: 999px !important;
-  background: #F59E0B !important;
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.8) !important;
+  background: linear-gradient(180deg, #F59E0B 0%, #D97706 100%) !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.9) !important;
 }
 .menu button.menu-btn-admin.active .ic {
   color: #FBBF24 !important;
-  background: transparent !important;
-  border: none !important;
-  transform: none !important;
-  box-shadow: none !important;
-  filter: none !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.32) 0%, rgba(217, 119, 6, 0.16) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.6) !important;
+  transform: scale(1.06) !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.5) !important;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.75)) !important;
 }
 
 body.light nav.menu{
-  background:#FFFFFF !important;
-  border-right:1px solid #E2E8F0 !important;
-  box-shadow:2px 0 16px rgba(15, 23, 42, 0.04) !important;
+  background:linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%) !important;
+  border-right:1px solid rgba(226, 232, 240, 0.95) !important;
+  box-shadow:4px 0 24px rgba(15, 23, 42, 0.05) !important;
 }
 body.light .menu-admin-divider {
-  background: #E2E8F0 !important;
-  box-shadow: none !important;
+  background: linear-gradient(90deg, rgba(217, 119, 6, 0) 0%, rgba(217, 119, 6, 0.6) 50%, rgba(217, 119, 6, 0) 100%) !important;
+  box-shadow: 0 0 8px rgba(217, 119, 6, 0.2) !important;
 }
 body.light .menu-admin-badge {
-  background: #FEF3C7 !important;
-  border-color: #FDE68A !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(217, 119, 6, 0.35) !important;
   color: #B45309 !important;
 }
 body.light .menu button{
-  color: #64748B !important;
-  font-weight: 500 !important;
+  color: #475569 !important;
+  font-weight: 600 !important;
   opacity: 1 !important;
 }
 body.light .menu button span:not(.ic){
-  color: inherit !important;
-  font-weight: 500 !important;
+  color: #475569 !important;
+  font-weight: 600 !important;
 }
 body.light .menu button .ic{
-  background: transparent !important;
-  border: none !important;
-  color: inherit !important;
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #475569 !important;
 }
 body.light .menu button .ic svg{
-  stroke: currentColor !important;
+  stroke: #475569 !important;
 }
 body.light .menu button:hover{
-  background: #F1F5F9 !important;
-  border-color: #E2E8F0 !important;
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
   color: #0F172A !important;
-  box-shadow: none !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
 }
 body.light .menu button:hover span:not(.ic){
   color: #0F172A !important;
 }
 body.light .menu button:hover .ic{
-  background: transparent !important;
-  border: none !important;
+  background: #FFFFFF !important;
+  border-color: #94A3B8 !important;
   color: #0284C7 !important;
-  box-shadow: none !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
 }
 body.light .menu button:hover .ic svg{
   stroke: #0284C7 !important;
 }
 body.light .menu button.active{
-  background: #EFF6FF !important;
-  border: 1px solid #BAE6FD !important;
-  border-radius: 10px !important;
+  background: linear-gradient(180deg, rgba(2, 132, 199, 0.12) 0%, rgba(240, 249, 255, 0.8) 100%) !important;
+  border: 1px solid rgba(2, 132, 199, 0.45) !important;
+  border-radius: 13px !important;
   color: #0284C7 !important;
-  font-weight: 600 !important;
-  box-shadow: none !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.14), inset 0 1px 0 #FFFFFF !important;
 }
 body.light .menu button.active::before{
-  background: #0284C7 !important;
-  box-shadow: none !important;
+  background: linear-gradient(180deg, #0284C7 0%, #0369A1 100%) !important;
+  box-shadow: 0 0 8px rgba(2, 132, 199, 0.5) !important;
 }
 body.light .menu button.active span:not(.ic){
   color: #0284C7 !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
 }
 body.light .menu button.active .ic{
-  background: transparent !important;
-  border: none !important;
+  background: rgba(2, 132, 199, 0.15) !important;
+  border-color: rgba(2, 132, 199, 0.45) !important;
   color: #0284C7 !important;
-  box-shadow: none !important;
-  filter: none !important;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.2) !important;
+  filter: drop-shadow(0 2px 6px rgba(2, 132, 199, 0.25)) !important;
 }
 body.light .menu button.active .ic svg{
   stroke: #0284C7 !important;
 }
 body.light .menu button.menu-btn-admin {
-  color: #64748B !important;
+  color: #475569 !important;
 }
 body.light .menu button.menu-btn-admin .ic {
-  background: transparent !important;
-  border: none !important;
-  color: #D97706 !important;
-}
-body.light .menu button.menu-btn-admin:hover {
-  background: #FFFBEB !important;
-  color: #92400E !important;
+  background: #FEF3C7 !important;
   border-color: #FDE68A !important;
-}
-body.light .menu button.menu-btn-admin:hover .ic {
-  background: transparent !important;
   color: #B45309 !important;
 }
-body.light .menu button.menu-btn-admin.active {
-  background: #FEF3C7 !important;
-  border-color: #FCD34D !important;
+body.light .menu button.menu-btn-admin:hover {
+  background: rgba(245, 158, 11, 0.10) !important;
   color: #92400E !important;
-  box-shadow: none !important;
+  border-color: rgba(217, 119, 6, 0.35) !important;
+}
+body.light .menu button.menu-btn-admin:hover .ic {
+  background: #FDE68A !important;
+  color: #92400E !important;
+}
+body.light .menu button.menu-btn-admin.active {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.18) 0%, rgba(254, 243, 199, 0.8) 100%) !important;
+  border-color: rgba(217, 119, 6, 0.6) !important;
+  color: #92400E !important;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.20), inset 0 1px 0 #FFFFFF !important;
 }
 body.light .menu button.menu-btn-admin.active::before {
-  background: #D97706 !important;
-  box-shadow: none !important;
+  background: linear-gradient(180deg, #D97706 0%, #B45309 100%) !important;
+  box-shadow: 0 0 8px rgba(217, 119, 6, 0.4) !important;
 }
 body.light .menu button.menu-btn-admin.active .ic {
-  background: transparent !important;
-  border: none !important;
+  background: rgba(217, 119, 6, 0.2) !important;
+  border-color: rgba(217, 119, 6, 0.5) !important;
   color: #B45309 !important;
   filter: none !important;
 }
@@ -5102,123 +5112,6 @@ html.light .funcoes-filter-btn.active {
   background: #2563EB !important;
   color: #FFFFFF !important;
   border-color: #1D4ED8 !important;
-}
-
-/* Central de Funções & Governança em Modo Claro 4K */
-body.light #funcoesPage h1, html.light #funcoesPage h1,
-body.light #funcoesPage h3, html.light #funcoesPage h3,
-body.light #funcoesPage h4, html.light #funcoesPage h4,
-body.light #funcoesPage p, html.light #funcoesPage p,
-body.light #funcoesPage strong, html.light #funcoesPage strong,
-body.light #funcoesPage td, html.light #funcoesPage td,
-body.light #funcoesPage th, html.light #funcoesPage th,
-body.light #funcoesPage .val, html.light #funcoesPage .val,
-body.light #funcoesPage .cfg-hint, html.light #funcoesPage .cfg-hint {
-  color: #000000 !important;
-}
-
-body.light #funcoesPage .panel,
-html.light #funcoesPage .panel {
-  background: #FFFFFF !important;
-  border: 1px solid #CBD5E1 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
-}
-
-body.light #funcoesPage .kpi,
-html.light #funcoesPage .kpi {
-  background: #FFFFFF !important;
-  border: 1px solid #CBD5E1 !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
-}
-
-body.light #funcoesPage .kpi .sub,
-html.light #funcoesPage .kpi .sub {
-  color: #334155 !important;
-}
-
-body.light .funcoes-subtabs-bar,
-html.light .funcoes-subtabs-bar {
-  background: #F1F5F9 !important;
-  border: 1px solid #CBD5E1 !important;
-}
-
-body.light .funcoes-subtab-btn,
-html.light .funcoes-subtab-btn {
-  background: #FFFFFF !important;
-  border: 1.5px solid #CBD5E1 !important;
-  color: #000000 !important;
-}
-
-body.light .funcoes-subtab-btn:hover,
-html.light .funcoes-subtab-btn:hover {
-  background: #E2E8F0 !important;
-  color: #000000 !important;
-}
-
-body.light .funcoes-subtab-btn.active,
-html.light .funcoes-subtab-btn.active {
-  background: #2563EB !important;
-  border-color: #1D4ED8 !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
-}
-
-body.light .funcoes-search-bar-wrap,
-html.light .funcoes-search-bar-wrap {
-  background: #F8FAFC !important;
-  border: 1px solid #E2E8F0 !important;
-}
-
-body.light #funcoesUserSearch,
-html.light #funcoesUserSearch {
-  background: #FFFFFF !important;
-  border: 1px solid #CBD5E1 !important;
-  color: #000000 !important;
-}
-
-body.light .funcoes-user-filter-btn,
-html.light .funcoes-user-filter-btn,
-body.light .funcoes-matrix-filter-btn,
-html.light .funcoes-matrix-filter-btn {
-  background: #FFFFFF !important;
-  border: 1px solid #CBD5E1 !important;
-  color: #000000 !important;
-}
-
-body.light .funcoes-user-filter-btn:hover,
-html.light .funcoes-user-filter-btn:hover,
-body.light .funcoes-matrix-filter-btn:hover,
-html.light .funcoes-matrix-filter-btn:hover {
-  background: #E2E8F0 !important;
-  color: #000000 !important;
-}
-
-body.light .funcoes-user-filter-btn.active,
-html.light .funcoes-user-filter-btn.active,
-body.light .funcoes-matrix-filter-btn.active,
-html.light .funcoes-matrix-filter-btn.active {
-  background: #2563EB !important;
-  border-color: #1D4ED8 !important;
-  color: #FFFFFF !important;
-}
-
-body.light .funcoes-role-select,
-html.light .funcoes-role-select {
-  background: #FFFFFF !important;
-  border: 1.5px solid #2563EB !important;
-  color: #000000 !important;
-}
-
-body.light .funcoes-user-row:hover,
-html.light .funcoes-user-row:hover {
-  background: rgba(37, 99, 235, 0.04) !important;
-}
-
-body.light #funcoesSecRotinas > div > div,
-html.light #funcoesSecRotinas > div > div {
-  background: #FFFFFF !important;
-  border: 1px solid #CBD5E1 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
 }
 
 /* Gaveta Mobile e Notificações em Modo Claro */
@@ -7067,603 +6960,6 @@ body.light .executive-welcome-toast {
 body.light .toast-title { color: #0F172A !important; }
 body.light .toast-desc { color: #475569 !important; }
 body.light .toast-desc strong { color: #0F172A !important; }
-
-/* ==================== Dashboard Options & Quick Hub 4K ==================== */
-.dash-options-hub {
-  position: relative;
-  background: var(--glass-card-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-card-border);
-  border-top: 1.8px solid var(--glass-card-border-top);
-  border-left: 1.2px solid var(--glass-card-border-left);
-  border-radius: 20px;
-  padding: 16px 20px;
-  margin-bottom: 22px;
-  box-shadow: var(--glass-card-shadow);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.dash-options-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-.dash-options-title-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.dash-options-title-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.22), rgba(59, 130, 246, 0.12));
-  border: 1px solid rgba(6, 182, 212, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #22D3EE;
-  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.2);
-}
-.dash-options-title {
-  font-size: 14.5px;
-  font-weight: 800;
-  color: #FFFFFF;
-  letter-spacing: -0.01em;
-  margin: 0;
-}
-.dash-options-sub {
-  font-size: 11.5px;
-  color: var(--text-dim);
-  margin: 1px 0 0 0;
-  font-weight: 500;
-}
-.dash-options-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 10px;
-}
-.dash-option-card {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 10px 14px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  text-decoration: none;
-  color: inherit;
-  user-select: none;
-  position: relative;
-  overflow: hidden;
-}
-.dash-option-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(56, 189, 248, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-}
-.dash-option-card:active {
-  transform: translateY(0);
-}
-.dash-option-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-  transition: transform 0.2s ease;
-}
-.dash-option-card:hover .dash-option-icon {
-  transform: scale(1.08);
-}
-.dash-option-text {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-.dash-option-name {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.dash-option-desc {
-  font-size: 10.5px;
-  color: var(--text-dim);
-  margin-top: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Specific Option Icon Colors */
-.opt-income .dash-option-icon {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.12));
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #34D399;
-}
-.opt-expense .dash-option-icon {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.12));
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  color: #F87171;
-}
-.opt-card .dash-option-icon {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(147, 51, 234, 0.12));
-  border: 1px solid rgba(168, 85, 247, 0.4);
-  color: #C084FC;
-}
-.opt-goal .dash-option-icon {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.12));
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  color: #FBBF24;
-}
-.opt-budget .dash-option-icon {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(2, 132, 199, 0.12));
-  border: 1px solid rgba(14, 165, 233, 0.4);
-  color: #38BDF8;
-}
-.opt-recurring .dash-option-icon {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(79, 70, 229, 0.12));
-  border: 1px solid rgba(99, 102, 241, 0.4);
-  color: #A5B4FC;
-}
-.opt-import .dash-option-icon {
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(219, 39, 119, 0.12));
-  border: 1px solid rgba(236, 72, 153, 0.4);
-  color: #F472B6;
-}
-.opt-report .dash-option-icon {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(22, 163, 74, 0.12));
-  border: 1px solid rgba(34, 197, 94, 0.4);
-  color: #4ADE80;
-}
-.opt-cat .dash-option-icon {
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(234, 88, 12, 0.12));
-  border: 1px solid rgba(249, 115, 22, 0.4);
-  color: #FB923C;
-}
-
-/* Light Mode Overrides for Options Hub */
-body.light .dash-options-hub {
-  background: var(--glass-card-bg) !important;
-  border-color: var(--glass-card-border) !important;
-  box-shadow: var(--glass-card-shadow) !important;
-}
-body.light .dash-options-title {
-  color: #000000 !important;
-}
-body.light .dash-options-sub {
-  color: #000000 !important;
-  opacity: 0.85;
-}
-body.light .dash-options-header {
-  border-bottom-color: rgba(0, 0, 0, 0.1) !important;
-}
-body.light .dash-option-card {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
-}
-body.light .dash-option-card:hover {
-  background: #F8FAFC !important;
-  border-color: #0284C7 !important;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08) !important;
-}
-body.light .dash-option-name {
-  color: #000000 !important;
-}
-body.light .dash-option-desc {
-  color: #000000 !important;
-  opacity: 0.75;
-}
-
-/* Quick Period Pills */
-.quick-period-pills {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.quick-period-pill {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 5px 11px;
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-dim);
-  cursor: pointer;
-  transition: all 0.18s ease;
-  user-select: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-.quick-period-pill:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text);
-  border-color: rgba(56, 189, 248, 0.35);
-  transform: translateY(-1px);
-}
-.quick-period-pill.active {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(2, 132, 199, 0.2));
-  border-color: rgba(6, 182, 212, 0.5);
-  color: #38BDF8;
-  box-shadow: 0 2px 10px rgba(6, 182, 212, 0.25);
-}
-body.light .quick-period-pill {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  color: #000000 !important;
-}
-body.light .quick-period-pill:hover {
-  background: #F1F5F9 !important;
-  border-color: #0284C7 !important;
-}
-body.light .quick-period-pill.active {
-  background: rgba(2, 132, 199, 0.12) !important;
-  border-color: #0284C7 !important;
-  color: #0284C7 !important;
-}
-
-/* Dashboard Transactions Header with Tabs & Instant Search */
-.dash-tx-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-.dash-tx-tabs {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 3px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-.dash-tx-tab {
-  border: none;
-  background: transparent;
-  color: var(--text-dim);
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 7px;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  user-select: none;
-}
-.dash-tx-tab:hover {
-  color: var(--text);
-}
-.dash-tx-tab.active {
-  background: rgba(255, 255, 255, 0.12);
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-}
-body.light .dash-tx-tabs {
-  background: #F1F5F9 !important;
-  border-color: #CBD5E1 !important;
-}
-body.light .dash-tx-tab {
-  color: #000000 !important;
-  opacity: 0.7;
-}
-body.light .dash-tx-tab.active {
-  background: #FFFFFF !important;
-  color: #000000 !important;
-  opacity: 1;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
-}
-.dash-tx-search-input {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 6px 12px;
-  color: var(--text);
-  font-size: 12px;
-  outline: none;
-  transition: all 0.2s ease;
-  min-width: 170px;
-}
-.dash-tx-search-input:focus {
-  border-color: #38BDF8;
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-}
-body.light .dash-tx-search-input {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  color: #000000 !important;
-}
-
-/* ==========================================================================
-   Dashboard Executivo & Focado: Atendimento O.S., Perfis Cadastrados & Auditoria
-   ========================================================================== */
-.dash-focus-hero {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 22px;
-  background: var(--glass-card-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-card-border);
-  border-top: 1.8px solid var(--glass-card-border-top);
-  border-radius: 20px;
-  padding: 20px 24px;
-  box-shadow: var(--glass-card-shadow);
-}
-.dash-focus-hero-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.dash-focus-hero-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.12));
-  border: 1.5px solid rgba(96, 165, 250, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
-  flex-shrink: 0;
-}
-.dash-focus-hero-title {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.dash-focus-hero-sub {
-  margin: 4px 0 0 0;
-  font-size: 13px;
-  color: var(--text-dim);
-  font-weight: 500;
-}
-.dash-focus-hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.dash-focus-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.dash-focus-card {
-  position: relative;
-  overflow: hidden;
-  padding: 20px 22px;
-  border-radius: 20px;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
-}
-.dash-focus-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
-  border-color: #38BDF8;
-}
-.dash-focus-card.active-tab-card {
-  border-color: #38BDF8;
-  box-shadow: 0 0 24px rgba(56, 189, 248, 0.25);
-}
-.dash-focus-card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.dash-focus-card-title {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--text-dim);
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-.dash-focus-card-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-}
-.dash-focus-card-val {
-  font-size: 32px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  color: var(--text);
-}
-.dash-focus-card-sub {
-  font-size: 12px;
-  color: var(--text-dim);
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.dash-focus-tabs-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-.dash-focus-tabs-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 4px;
-  border-radius: 14px;
-  border: 1px solid var(--card-border);
-  flex-wrap: wrap;
-}
-.dash-focus-tab-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  color: var(--text-dim);
-  transition: all 0.2s ease;
-  user-select: none;
-}
-.dash-focus-tab-btn:hover {
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.06);
-}
-.dash-focus-tab-btn.active {
-  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
-  color: #FFFFFF;
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
-}
-.dash-focus-tab-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 900;
-  background: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
-}
-.dash-focus-tab-btn:not(.active) .dash-focus-tab-badge {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-dim);
-}
-.dash-os-cards-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.dash-os-card {
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 18px 20px;
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.dash-os-card:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(59, 130, 246, 0.4);
-}
-.dash-os-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.dash-os-card-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/* Light Mode Overrides: Strict Preto Puro #000000 !important */
-body.light .dash-focus-hero {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
-}
-body.light .dash-focus-hero-title,
-body.light .dash-focus-hero-sub {
-  color: #000000 !important;
-}
-body.light .dash-focus-card {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
-}
-body.light .dash-focus-card-title,
-body.light .dash-focus-card-val,
-body.light .dash-focus-card-sub {
-  color: #000000 !important;
-}
-body.light .dash-focus-tabs-group {
-  background: #F1F5F9 !important;
-  border-color: #CBD5E1 !important;
-}
-body.light .dash-focus-tab-btn {
-  color: #000000 !important;
-  opacity: 0.75;
-}
-body.light .dash-focus-tab-btn:hover {
-  background: #E2E8F0 !important;
-  opacity: 1;
-}
-body.light .dash-focus-tab-btn.active {
-  background: #2563EB !important;
-  color: #FFFFFF !important;
-  opacity: 1;
-}
-body.light .dash-focus-tab-btn.active span {
-  color: #FFFFFF !important;
-}
-body.light .dash-focus-tab-btn:not(.active) .dash-focus-tab-badge {
-  background: #E2E8F0 !important;
-  color: #000000 !important;
-}
-body.light .dash-os-card {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
-}
-body.light .dash-os-card h4,
-body.light .dash-os-card div,
-body.light .dash-os-card span,
-body.light .dash-os-card strong {
-  color: #000000 !important;
-}
 
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
 .env-badge-homolog {
@@ -10426,10 +9722,9 @@ body.light .toast {
     <div class="menu-admin-divider" title="Área de Gestão"></div>
     <div class="menu-admin-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMIN</span></div>
 
-    <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Perfis Cadastrados</span></button>
-    <button data-page="funcoes" id="menuFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/><path d="M12 2v2"/></svg></span><span>Funções</span></button>
-    <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Atendimento O.S.</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
-    <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Log de Auditoria</span></button>
+    <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
+    <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
+    <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
   </nav>
 
   <!-- BARRA INFERIOR MOBILE MODERNA (BOTTOM TAB BAR DE ALTO PADRÃO) -->
@@ -10526,10 +9821,9 @@ body.light .toast {
       <div id="mobileDrawerAdminDivider" class="menu-admin-divider" style="display:none; width:88%; margin:14px auto 10px;"></div>
       <div id="mobileDrawerAdminBadge" class="menu-admin-badge" style="display:none; margin:0 16px 8px; width:fit-content;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMINISTRAÇÃO</span></div>
 
-      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Perfis Cadastrados</button>
-      <button data-page="funcoes" id="mobileDrawerFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/><path d="M12 2v2"/></svg></span> Funções & Permissões</button>
-      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Atendimento O.S.</button>
-      <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Log de Auditoria</button>
+      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
+      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Central de Suporte & O.S.</button>
+      <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
     </nav>
 
     <!-- Botão de Sair no Rodapé do Mobile Drawer -->
@@ -14037,7 +13331,7 @@ let currentPage = (function getInitialPage() {
     const cu = localStorage.getItem('nexus_cached_user');
     const u = cu ? JSON.parse(cu) : null;
     const isAdmin = u && u.role === 'Administrador';
-    const validPages = isAdmin ? ['usuarios', 'funcoes', 'ordens', 'logs'] : ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'];
+    const validPages = isAdmin ? ['usuarios', 'ordens', 'logs'] : ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'];
     const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
     const savedPage = localStorage.getItem('nexus_current_page');
     if (hashPage && validPages.includes(hashPage)) return hashPage;
@@ -14697,13 +13991,13 @@ function render(){
   const isAdminView = isAdmin && !isViewingOtherUser;
 
   if (isAdminView) {
-    // Perfil de Administrador acessa Dashboard Operacional e funções de controle
-    if (!['dashboard', 'usuarios', 'funcoes', 'ordens', 'logs'].includes(currentPage)) {
-      currentPage = 'dashboard';
+    // Perfil de Administrador acessa EXCLUSIVAMENTE funções administrativas
+    if (!['usuarios', 'ordens', 'logs'].includes(currentPage)) {
+      currentPage = 'usuarios';
     }
   } else {
-    // Usuários comuns nunca podem acessar páginas exclusivas de gestão de terceiros
-    if (['usuarios', 'funcoes', 'ordens', 'logs'].includes(currentPage)) {
+    // Usuários comuns nunca podem acessar páginas administrativas
+    if (['usuarios', 'ordens', 'logs'].includes(currentPage)) {
       currentPage = 'dashboard';
     }
   }
@@ -14792,12 +14086,12 @@ function updateActiveMenu(){
   const isAdminView = isAdmin && !isViewingOtherUser;
 
   if (isAdminView) {
-    if (!['usuarios', 'funcoes', 'ordens', 'logs'].includes(currentPage)) {
+    if (!['usuarios', 'ordens', 'logs'].includes(currentPage)) {
       currentPage = 'usuarios';
     }
   } else {
-    // Usuários comuns nunca podem permanecer em telas restritas de administração
-    if (['usuarios', 'funcoes', 'ordens', 'logs'].includes(currentPage)) {
+    // Usuários comuns nunca podem permanecer em telas de administração
+    if (['usuarios', 'ordens', 'logs'].includes(currentPage)) {
       currentPage = 'dashboard';
     }
   }
@@ -14829,7 +14123,7 @@ function updateAdminMenuVisibility(){
   });
 
   // Módulos de gestão administrativa aparecem EXCLUSIVAMENTE para o Administrador
-  const adminPages = ['usuarios', 'funcoes', 'ordens', 'logs'];
+  const adminPages = ['usuarios', 'ordens', 'logs'];
   adminPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdminView ? 'flex' : 'none';
@@ -15009,520 +14303,896 @@ async function markTransactionAsPaid(id) {
   render();
 }
 
-window.dashTxFilter = window.dashTxFilter || 'all';
-window.dashTxSearchQuery = window.dashTxSearchQuery || '';
-
-function getDashboardFilteredTxTableHTML(periodTx) {
-  var list = Array.isArray(periodTx) ? periodTx.slice() : [];
-  
-  if (window.dashTxFilter === 'out') {
-    list = list.filter(function(t){ return t.type === 'out'; });
-  } else if (window.dashTxFilter === 'in') {
-    list = list.filter(function(t){ return t.type === 'in'; });
-  } else if (window.dashTxFilter === 'pending') {
-    list = list.filter(function(t){ return t.status === 'Pendente'; });
-  }
-  
-  if (window.dashTxSearchQuery) {
-    var q = window.dashTxSearchQuery.toLowerCase();
-    list = list.filter(function(t){ 
-      return (t.desc && t.desc.toLowerCase().indexOf(q) !== -1) ||
-        (t.cat && t.cat.toLowerCase().indexOf(q) !== -1) ||
-        (t.acc && t.acc.toLowerCase().indexOf(q) !== -1) ||
-        (t.val && t.val.toString().indexOf(q) !== -1);
-    });
-  }
-  
-  var sorted = list.sort(function(a,b){ return b.date.localeCompare(a.date); }).slice(0, 8);
-  return transactionsTable(sorted, true);
-}
-
-window.setDashTxTab = function(tab) {
-  window.dashTxFilter = tab;
-  var container = document.getElementById('dashTxTableContainer');
-  if (container) {
-    var periodTx = Array.isArray(transactions) ? transactions.filter(inPeriod) : [];
-    container.innerHTML = getDashboardFilteredTxTableHTML(periodTx);
-    attachPageEvents();
-  }
-  var badge = document.getElementById('dashTxBadgeCount');
-  if (badge) {
-    var periodTx2 = Array.isArray(transactions) ? transactions.filter(inPeriod) : [];
-    var countList = periodTx2.slice();
-    if (tab === 'out') countList = countList.filter(function(t){ return t.type === 'out'; });
-    else if (tab === 'in') countList = countList.filter(function(t){ return t.type === 'in'; });
-    else if (tab === 'pending') countList = countList.filter(function(t){ return t.status === 'Pendente'; });
-    badge.textContent = Math.min(countList.length, 8) + ' de ' + countList.length + ' recentes';
-  }
-  document.querySelectorAll('.dash-tx-tab').forEach(function(b){
-    b.classList.remove('active');
-  });
-  if (window.event && window.event.currentTarget) {
-    window.event.currentTarget.classList.add('active');
-  }
-};
-
-window.onDashTxSearch = function(val) {
-  window.dashTxSearchQuery = (val || '').trim();
-  var container = document.getElementById('dashTxTableContainer');
-  if (container) {
-    var periodTx = Array.isArray(transactions) ? transactions.filter(inPeriod) : [];
-    container.innerHTML = getDashboardFilteredTxTableHTML(periodTx);
-    attachPageEvents();
-  }
-};
-
-window.setQuickPeriod = function(mode) {
-  var now = new Date();
-  if (mode === 'current') {
-    currentPeriod = { year: now.getFullYear(), month: now.getMonth() + 1 };
-  } else if (mode === 'previous') {
-    var m = now.getMonth();
-    var y = now.getFullYear();
-    if (m === 0) { m = 12; y--; }
-    currentPeriod = { year: y, month: m };
-  } else if (mode === 'all') {
-    currentPeriod = { year: now.getFullYear(), month: 0 };
-  }
-  try {
-    localStorage.setItem('fin_current_period', JSON.stringify(currentPeriod));
-  } catch(e){}
-  render();
-};
-
-window.currentDashFocusTab = window.currentDashFocusTab || 'os_aberta';
-window.currentDashOsFilter = window.currentDashOsFilter || 'abertas';
-window.currentDashOsSearch = window.currentDashOsSearch || '';
-window.currentDashUserSearch = window.currentDashUserSearch || '';
-window.currentDashLogSearch = window.currentDashLogSearch || '';
-
-window.setDashFocusTab = function(tab) {
-  window.currentDashFocusTab = tab;
-  render();
-};
-
-window.setDashOsFilter = function(filter) {
-  window.currentDashOsFilter = filter;
-  render();
-};
-
-window.onDashOsSearch = function(val) {
-  window.currentDashOsSearch = (val || '').toLowerCase().trim();
-  render();
-};
-
-window.onDashUserSearch = function(val) {
-  window.currentDashUserSearch = (val || '').toLowerCase().trim();
-  render();
-};
-
-window.onDashLogSearch = function(val) {
-  window.currentDashLogSearch = (val || '').toLowerCase().trim();
-  render();
-};
-
-window.navigateToTxFilter = function(type) {
-  navigate('transacoes');
-  setTimeout(function(){
-    var fTipo = document.getElementById('txFiltroTipo');
-    if (fTipo) {
-      fTipo.value = type;
-      fTipo.dispatchEvent(new Event('change'));
-    }
-  }, 60);
-};
-
 function pageDashboard(){
-  if (!window.dashDataSyncedRecently || (Date.now() - window.dashDataSyncedRecently > 8000)) {
-    window.dashDataSyncedRecently = Date.now();
-    Promise.all([
-      typeof syncOrdensWithServer === 'function' ? syncOrdensWithServer() : Promise.resolve(),
-      typeof syncUsersWithServer === 'function' ? syncUsersWithServer() : Promise.resolve(),
-      typeof loadSystemLogs === 'function' ? loadSystemLogs() : Promise.resolve()
-    ]).catch(function(){});
-  }
+  const periodTx = transactions.filter(inPeriod);
+  const {receitas,despesas,saldo} = computeTotals(periodTx);
+  const cats = despesasPorCategoria(periodTx);
+  const actualTotalDesp = cats.reduce((s,c)=>s+c.val,0);
+  const totalDesp = actualTotalDesp || 1;
+  const totalFluxo = receitas + despesas;
+  const recPct = totalFluxo > 0 ? Math.round((receitas / totalFluxo) * 100) : 0;
+  const despPct = totalFluxo > 0 ? (100 - recPct) : 0;
+  const resultado = receitas - despesas;
+  const savingsPct = receitas > 0 ? Math.max(0, Math.round((resultado / receitas) * 100)) : 0;
+  const commitPct = receitas > 0 ? Math.min(100, Math.round((despesas / receitas) * 100)) : (despesas > 0 ? 100 : 0);
+  const now = new Date();
+  const daysInPeriod = now.getDate() || 1;
+  const dailyAvg = despesas > 0 ? (despesas / daysInPeriod) : 0;
+  const lastTx = periodTx.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  const cardSummary = computeCardSummary();
+  const pendingSummary = getPendingBillsSummary();
 
-  const ordens = systemOrdens || [];
-  const countTotalOrdens = ordens.length;
-  const countPendentes = ordens.filter(function(o){ return (o.status || '').toLowerCase() === 'pendente'; }).length;
-  const countAndamento = ordens.filter(function(o){ return (o.status || '').toLowerCase().indexOf('anda') !== -1; }).length;
-  const countConcluidas = ordens.filter(function(o){ 
-    const s = (o.status || '').toLowerCase();
-    return s.indexOf('concl') !== -1 || s.indexOf('final') !== -1;
-  }).length;
-  const countAbertas = countPendentes + countAndamento;
+  const greeting = getGreetingTime();
+  const formattedToday = getFormattedToday();
+  const rawFirstName = currentUser ? (currentUser.name || '').split(' ')[0] : 'Usuário';
+  const firstName = rawFirstName ? (rawFirstName.charAt(0).toUpperCase() + rawFirstName.slice(1).toLowerCase()) : 'Usuário';
 
-  const userMap = new Map();
-  (registeredUsers || []).forEach(function(u){
-    if (u && u.email) userMap.set(u.email.toLowerCase(), u);
-  });
-  const users = Array.from(userMap.values());
-  const countTotalUsers = users.length;
-  const countAdmins = users.filter(function(u){ return u.role === 'Administrador'; }).length;
-  const countOperadores = users.filter(function(u){ return u.role !== 'Administrador'; }).length;
-
-  const logs = systemLogs || [];
-  const countTotalLogs = logs.length;
-  const lastLog = logs[0] || null;
-  const lastLogTime = lastLog ? (lastLog.timestamp ? new Date(lastLog.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 'Recente') : '--:--';
-
-  const activeTab = window.currentDashFocusTab || 'os_aberta';
-  const osFilter = window.currentDashOsFilter || 'abertas';
-  const osSearch = (window.currentDashOsSearch || '').toLowerCase();
-  const userSearch = (window.currentDashUserSearch || '').toLowerCase();
-  const logSearch = (window.currentDashLogSearch || '').toLowerCase();
-
-  let filteredOrdens = ordens.slice();
-  if (osFilter === 'abertas') {
-    filteredOrdens = filteredOrdens.filter(function(o){
-      const s = (o.status || '').toLowerCase();
-      return s === 'pendente' || s.indexOf('anda') !== -1 || s.indexOf('tria') !== -1;
-    });
-  } else if (osFilter === 'pendente') {
-    filteredOrdens = filteredOrdens.filter(function(o){ return (o.status || '').toLowerCase() === 'pendente'; });
-  } else if (osFilter === 'andamento') {
-    filteredOrdens = filteredOrdens.filter(function(o){ return (o.status || '').toLowerCase().indexOf('anda') !== -1; });
-  } else if (osFilter === 'concluido') {
-    filteredOrdens = filteredOrdens.filter(function(o){
-      const s = (o.status || '').toLowerCase();
-      return s.indexOf('concl') !== -1 || s.indexOf('final') !== -1;
-    });
-  }
-
-  if (osSearch) {
-    filteredOrdens = filteredOrdens.filter(function(o){
-      return (o.protocol && String(o.protocol).toLowerCase().indexOf(osSearch) !== -1) ||
-        (o.client_name && o.client_name.toLowerCase().indexOf(osSearch) !== -1) ||
-        (o.client_email && o.client_email.toLowerCase().indexOf(osSearch) !== -1) ||
-        (o.client_phone && String(o.client_phone).indexOf(osSearch) !== -1) ||
-        (o.client_cpf && String(o.client_cpf).indexOf(osSearch) !== -1) ||
-        (o.title && o.title.toLowerCase().indexOf(osSearch) !== -1) ||
-        (o.description && o.description.toLowerCase().indexOf(osSearch) !== -1) ||
-        (o.tecnico_responsavel && o.tecnico_responsavel.toLowerCase().indexOf(osSearch) !== -1);
-    });
-  }
-
-  let filteredUsers = users.slice();
-  if (userSearch) {
-    filteredUsers = filteredUsers.filter(function(u){
-      return (u.name && u.name.toLowerCase().indexOf(userSearch) !== -1) ||
-        (u.email && u.email.toLowerCase().indexOf(userSearch) !== -1) ||
-        (u.role && u.role.toLowerCase().indexOf(userSearch) !== -1) ||
-        (u.cpf && String(u.cpf).indexOf(userSearch) !== -1);
-    });
-  }
-
-  let filteredLogs = logs.slice();
-  if (logSearch) {
-    filteredLogs = filteredLogs.filter(function(l){
-      return (l.user_email && l.user_email.toLowerCase().indexOf(logSearch) !== -1) ||
-        (l.user_name && l.user_name.toLowerCase().indexOf(logSearch) !== -1) ||
-        (l.action && l.action.toLowerCase().indexOf(logSearch) !== -1) ||
-        (l.entity && l.entity.toLowerCase().indexOf(logSearch) !== -1) ||
-        (l.details && l.details.toLowerCase().indexOf(logSearch) !== -1);
-    });
-  }
-
-  let osCardsHtml = '';
-  if (filteredOrdens.length === 0) {
-    osCardsHtml = '<div style="text-align:center; padding:48px 20px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px dashed var(--card-border);">' +
-      '<div style="font-size:38px; margin-bottom:12px;">🎉</div>' +
-      '<h4 style="font-size:16px; font-weight:800; margin:0 0 6px 0; color:var(--text);">Fila de Atendimento Zerada!</h4>' +
-      '<p style="font-size:13px; color:var(--text-dim); margin:0 0 18px 0; max-width:460px; margin-left:auto; margin-right:auto;">' +
-        (osFilter === 'abertas' ? 'Não há Ordens de Serviço abertas aguardando atendimento no momento. Todos os chamados foram solucionados!' : 'Nenhum chamado encontrado com o filtro selecionado.') +
-      '</p>' +
-      '<button type="button" class="btn btn-primary" onclick="openNovaOrdemModal(&quot;abrir&quot;)" style="display:inline-flex; align-items:center; gap:8px;">' +
-        '<span>➕ Abrir Nova Solicitação</span>' +
-      '</button>' +
-    '</div>';
+  const h = new Date().getHours();
+  let greetingIconSvg = '';
+  let greetingBadgeBg = '';
+  let greetingBadgeBorder = '';
+  let greetingBadgeColor = '';
+  if (h >= 5 && h < 12) {
+    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+    greetingBadgeBg = 'linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.1))';
+    greetingBadgeBorder = 'rgba(245,158,11,0.38)';
+    greetingBadgeColor = '#FBBF24';
+  } else if (h >= 12 && h < 18) {
+    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+    greetingBadgeBg = 'linear-gradient(135deg, rgba(14,165,233,0.25), rgba(2,132,199,0.1))';
+    greetingBadgeBorder = 'rgba(14,165,233,0.38)';
+    greetingBadgeColor = '#38BDF8';
   } else {
-    osCardsHtml = '<div class="dash-os-cards-grid">';
-    filteredOrdens.forEach(function(o){
-      const isPendente = (o.status || '').toLowerCase() === 'pendente';
-      const isAndamento = (o.status || '').toLowerCase().indexOf('anda') !== -1;
-      
-      let statusBg = isPendente ? 'rgba(245,158,11,0.18)' : (isAndamento ? 'rgba(59,130,246,0.18)' : 'rgba(16,185,129,0.18)');
-      let statusColor = isPendente ? '#FBBF24' : (isAndamento ? '#60A5FA' : '#34D399');
-      let statusBorder = isPendente ? 'rgba(245,158,11,0.45)' : (isAndamento ? 'rgba(59,130,246,0.45)' : 'rgba(16,185,129,0.45)');
-      let statusLabel = isPendente ? '⏳ Pendente em Triagem' : (isAndamento ? '⚙️ Em Atendimento' : '✅ Concluído');
-
-      let prioBg = 'rgba(16,185,129,0.14)', prioColor = '#34D399', prioBorder = 'rgba(16,185,129,0.3)';
-      const pr = (o.priority || '').toLowerCase();
-      if (pr.indexOf('urg') !== -1) { prioBg = 'rgba(239,68,68,0.16)'; prioColor = '#F87171'; prioBorder = 'rgba(239,68,68,0.4)'; }
-      else if (pr.indexOf('alt') !== -1) { prioBg = 'rgba(245,158,11,0.16)'; prioColor = '#FBBF24'; prioBorder = 'rgba(245,158,11,0.4)'; }
-
-      const cleanPhone = String(o.client_phone || '').replace(/\D/g, '');
-      const waLink = cleanPhone ? ('https://wa.me/55' + cleanPhone + '?text=' + encodeURIComponent('Olá ' + (o.client_name || '') + ', aqui é do Suporte Técnico sobre a sua O.S. #' + (o.protocol || o.id) + '.')) : '';
-      const dateStr = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR') : 'Data não informada';
-
-      osCardsHtml += '<div class="dash-os-card trow" style="border-left: 4px solid ' + (isPendente ? '#F59E0B' : (isAndamento ? '#3B82F6' : '#10B981')) + ';">';
-      
-      osCardsHtml += '<div class="dash-os-card-header">';
-      osCardsHtml += '<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">';
-      osCardsHtml += '<span style="font-weight:900; font-family:monospace; font-size:13.5px; padding:3px 9px; border-radius:8px; background:rgba(59,130,246,0.15); color:#93C5FD; border:1px solid rgba(59,130,246,0.35);">#' + escapeOsHtml(o.protocol || o.id) + '</span>';
-      osCardsHtml += '<span style="font-size:11.5px; font-weight:800; padding:3px 9px; border-radius:8px; background:' + prioBg + '; color:' + prioColor + '; border:1px solid ' + prioBorder + ';">' + escapeOsHtml(o.priority || 'Normal') + '</span>';
-      osCardsHtml += '<span style="font-size:11.5px; font-weight:800; padding:3px 9px; border-radius:8px; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
-      if (o.canal_atendimento) {
-        osCardsHtml += '<span style="font-size:11px; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.06); color:var(--text-dim); border:1px solid var(--card-border);">📱 ' + escapeOsHtml(o.canal_atendimento) + '</span>';
-      }
-      osCardsHtml += '</div>';
-
-      osCardsHtml += '<div class="dash-os-card-actions">';
-      if (waLink) {
-        osCardsHtml += '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 10px; border-radius:8px; background:rgba(34,197,94,0.15); color:#22C55E; border:1px solid rgba(34,197,94,0.35); font-size:11.5px; font-weight:800; text-decoration:none;" title="Conversar no WhatsApp">💬 WhatsApp</a>';
-      }
-      osCardsHtml += '<button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 14px; border-radius:8px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; border:none; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 4px 12px rgba(59,130,246,0.3);" title="Atender chamado">' +
-        '<span>⚡ Atender / Despachar</span></button>';
-      osCardsHtml += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; height:32px; padding:0 10px; border-radius:8px; background:rgba(255,255,255,0.06); color:var(--text); border:1px solid var(--card-border); font-size:11.5px; font-weight:700; cursor:pointer;" title="Imprimir Comprovante">🖨️</button>';
-      osCardsHtml += '</div>';
-      osCardsHtml += '</div>';
-
-      osCardsHtml += '<div>';
-      osCardsHtml += '<h4 style="font-size:15.5px; font-weight:800; color:var(--text); margin:0 0 4px 0;">' + escapeOsHtml(o.title || 'Solicitação de Suporte') + '</h4>';
-      osCardsHtml += '<div style="font-size:12px; color:var(--text-dim); margin-bottom:8px;">';
-      osCardsHtml += '👤 <strong>' + escapeOsHtml(o.client_name || 'Cliente') + '</strong> &bull; ✉️ ' + escapeOsHtml(o.client_email || 'Não informado') + (o.client_phone ? (' &bull; 📞 ' + escapeOsHtml(o.client_phone)) : '');
-      osCardsHtml += '</div>';
-      osCardsHtml += '<div style="background:rgba(0,0,0,0.22); border-radius:10px; padding:10px 14px; font-size:12.5px; color:var(--text); line-height:1.5; border:1px solid var(--card-border);">';
-      osCardsHtml += escapeOsHtml(o.description || 'Sem descrição detalhada.');
-      osCardsHtml += '</div>';
-      osCardsHtml += '</div>';
-
-      osCardsHtml += '<div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.05); padding-top:8px; flex-wrap:wrap; gap:6px;">';
-      osCardsHtml += '<div>';
-      if (o.tecnico_responsavel) {
-        osCardsHtml += '<span style="color:#60A5FA; font-weight:700;">👷 Técnico Atribuído: ' + escapeOsHtml(o.tecnico_responsavel) + '</span>';
-      } else {
-        osCardsHtml += '<span style="color:#FBBF24; font-weight:700;">⚠️ Aguardando Atribuição Técnica</span>';
-      }
-      osCardsHtml += '</div>';
-      osCardsHtml += '<div>📅 Aberta em: ' + dateStr + '</div>';
-      osCardsHtml += '</div>';
-
-      osCardsHtml += '</div>';
-    });
-    osCardsHtml += '</div>';
-  }
-
-  let usersHtml = '';
-  if (filteredUsers.length === 0) {
-    usersHtml = '<div style="text-align:center; padding:36px; border-radius:16px; background:rgba(255,255,255,0.02); border:1px dashed var(--card-border);">' +
-      '<div style="font-size:32px; margin-bottom:8px;">🔍</div>' +
-      '<h4 style="font-size:15px; font-weight:800; margin:0 0 4px 0;">Nenhum perfil encontrado</h4>' +
-      '<p style="font-size:12.5px; color:var(--text-dim); margin:0;">Tente buscar por outro termo.</p>' +
-    '</div>';
-  } else {
-    usersHtml = '<div style="overflow-x:auto;">' +
-      '<table style="width:100%; border-collapse:collapse; font-size:12.5px; text-align:left;">' +
-        '<thead>' +
-          '<tr style="border-bottom:1px solid var(--card-border); color:var(--text-dim); font-size:11px; text-transform:uppercase; letter-spacing:0.04em;">' +
-            '<th style="padding:10px 14px;">Perfil / Usuário</th>' +
-            '<th style="padding:10px 14px;">E-mail</th>' +
-            '<th style="padding:10px 14px;">CPF</th>' +
-            '<th style="padding:10px 14px;">Função / Cargo</th>' +
-            '<th style="padding:10px 14px;">Último Login (Brasília)</th>' +
-            '<th style="padding:10px 14px; text-align:right;">Ações</th>' +
-          '</tr>' +
-        '</thead>' +
-        '<tbody>';
-    filteredUsers.forEach(function(u){
-      const nameParts = (u.name || 'U').trim().split(/\s+/);
-      const initials = ((nameParts[0] ? nameParts[0][0] : 'U') + (nameParts[1] ? nameParts[1][0] : '')).toUpperCase();
-      const role = u.role || 'Usuário';
-      let roleBg = 'rgba(59,130,246,0.16)', roleColor = '#60A5FA', roleBorder = 'rgba(59,130,246,0.35)';
-      if (role === 'Administrador') {
-        roleBg = 'rgba(245,158,11,0.18)'; roleColor = '#FBBF24'; roleBorder = 'rgba(245,158,11,0.4)';
-      } else if (role === 'Gerente Financeiro') {
-        roleBg = 'rgba(16,185,129,0.18)'; roleColor = '#34D399'; roleBorder = 'rgba(16,185,129,0.4)';
-      }
-      
-      let rawCpf = String(u.cpf || '').replace(/\D/g, '');
-      let fmtCpf = (rawCpf && rawCpf.length === 11) ? (rawCpf.slice(0,3) + '.' + rawCpf.slice(3,6) + '.' + rawCpf.slice(6,9) + '-' + rawCpf.slice(9,11)) : (u.cpf || 'Não cadastrado');
-      let lastLoginStr = u.last_login ? new Date(u.last_login).toLocaleString('pt-BR') : 'Nunca acessou';
-
-      usersHtml += '<tr class="trow" style="border-bottom:1px solid rgba(255,255,255,0.04);">' +
-        '<td style="padding:12px 14px;">' +
-          '<div style="display:flex; align-items:center; gap:10px;">' +
-            '<div style="width:32px; height:32px; border-radius:10px; background:' + roleBg + '; border:1px solid ' + roleBorder + '; display:flex; align-items:center; justify-content:center; color:' + roleColor + '; font-weight:900; font-size:12px; flex-shrink:0;">' +
-              initials +
-            '</div>' +
-            '<span style="font-weight:700; color:var(--text);">' + escapeOsHtml(u.name || 'Usuário') + '</span>' +
-          '</div>' +
-        '</td>' +
-        '<td style="padding:12px 14px; color:var(--text-dim);">' + escapeOsHtml(u.email || '') + '</td>' +
-        '<td style="padding:12px 14px; font-family:monospace; color:var(--text);">' + fmtCpf + '</td>' +
-        '<td style="padding:12px 14px;">' +
-          '<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:6px; font-size:11.5px; font-weight:800; background:' + roleBg + '; color:' + roleColor + '; border:1px solid ' + roleBorder + ';">' +
-            (role === 'Administrador' ? '👑 ' : '') + role +
-          '</span>' +
-        '</td>' +
-        '<td style="padding:12px 14px; color:var(--text-dim);">' + lastLoginStr + '</td>' +
-        '<td style="padding:12px 14px; text-align:right;">' +
-          '<button type="button" onclick="navigate(&quot;usuarios&quot;)" style="padding:4px 10px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700; cursor:pointer;">Ver Perfil</button>' +
-        '</td>' +
-      '</tr>';
-    });
-    usersHtml += '</tbody></table></div>';
-  }
-
-  let logsHtml = '';
-  if (filteredLogs.length === 0) {
-    logsHtml = '<div style="text-align:center; padding:36px; border-radius:16px; background:rgba(255,255,255,0.02); border:1px dashed var(--card-border);">' +
-      '<div style="font-size:32px; margin-bottom:8px;">📋</div>' +
-      '<h4 style="font-size:15px; font-weight:800; margin:0 0 4px 0;">Nenhum evento de auditoria encontrado</h4>' +
-      '<p style="font-size:12.5px; color:var(--text-dim); margin:0;">Tente outro filtro ou termo de busca.</p>' +
-    '</div>';
-  } else {
-    logsHtml = '<div style="overflow-x:auto;">' +
-      '<table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">' +
-        '<thead>' +
-          '<tr style="border-bottom:1px solid var(--card-border); color:var(--text-dim); font-size:11px; text-transform:uppercase; letter-spacing:0.04em;">' +
-            '<th style="padding:10px 14px;">Data & Hora (Brasília)</th>' +
-            '<th style="padding:10px 14px;">Usuário / Autor</th>' +
-            '<th style="padding:10px 14px;">Ação</th>' +
-            '<th style="padding:10px 14px;">Entidade</th>' +
-            '<th style="padding:10px 14px;">Detalhes do Evento</th>' +
-            '<th style="padding:10px 14px;">IP / Origem</th>' +
-          '</tr>' +
-        '</thead>' +
-        '<tbody>';
-    filteredLogs.slice(0, 25).forEach(function(l){
-      const timeStr = l.timestamp ? new Date(l.timestamp).toLocaleString('pt-BR') : 'Data não registrada';
-      let actBg = 'rgba(59,130,246,0.15)', actColor = '#60A5FA';
-      const act = (l.action || '').toLowerCase();
-      if (act.indexOf('login') !== -1 || act.indexOf('autent') !== -1) { actBg = 'rgba(16,185,129,0.15)'; actColor = '#34D399'; }
-      else if (act.indexOf('excl') !== -1 || act.indexOf('remov') !== -1) { actBg = 'rgba(239,68,68,0.15)'; actColor = '#F87171'; }
-      else if (act.indexOf('edi') !== -1 || act.indexOf('alte') !== -1) { actBg = 'rgba(245,158,11,0.15)'; actColor = '#FBBF24'; }
-
-      logsHtml += '<tr class="trow" style="border-bottom:1px solid rgba(255,255,255,0.04);">' +
-        '<td style="padding:11px 14px; font-family:monospace; color:var(--text-dim); white-space:nowrap;">' + timeStr + '</td>' +
-        '<td style="padding:11px 14px; font-weight:700; color:var(--text);">' + escapeOsHtml(l.user_name || l.user_email || 'Sistema') + '</td>' +
-        '<td style="padding:11px 14px;"><span style="padding:2px 8px; border-radius:6px; font-size:11px; font-weight:800; background:' + actBg + '; color:' + actColor + ';">' + escapeOsHtml(l.action || 'Ação') + '</span></td>' +
-        '<td style="padding:11px 14px; color:var(--text-dim);">' + escapeOsHtml(l.entity || 'Geral') + '</td>' +
-        '<td style="padding:11px 14px; color:var(--text); max-width:320px; line-height:1.4;">' + escapeOsHtml(l.details || '') + '</td>' +
-        '<td style="padding:11px 14px; font-family:monospace; font-size:11px; color:var(--text-dim);">' + escapeOsHtml(l.ip || '127.0.0.1') + '</td>' +
-      '</tr>';
-    });
-    logsHtml += '</tbody></table></div>';
+    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4"/><path d="M21 5h-4"/></svg>';
+    greetingBadgeBg = 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(79,70,229,0.1))';
+    greetingBadgeBorder = 'rgba(129,140,248,0.38)';
+    greetingBadgeColor = '#A5B4FC';
   }
 
   return \`
-  <!-- HERO EXECUTIVO DO PAINEL OPERACIONAL -->
-  <div class="dash-focus-hero">
-    <div class="dash-focus-hero-left">
-      <div class="dash-focus-hero-icon">⚙️</div>
-      <div>
-        <h2 class="dash-focus-hero-title">
-          Painel Operacional & Gestão Central
-          <span class="tag" style="background:rgba(16,185,129,0.15); color:#34D399; border:1px solid rgba(16,185,129,0.35); font-size:11px; font-weight:800; padding:3px 9px; border-radius:6px;">
-            ⚡ SQL Server Sincronizado
+  <!-- 4K EXECUTIVE DASHBOARD WELCOME HERO -->
+  <div class="dashboard-welcome-hero">
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-badge-strip">
+          <span class="hero-badge hide-mobile">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span>\${formattedToday}</span>
           </span>
-        </h2>
-        <p class="dash-focus-hero-sub">
-          Atendimento de O.S. • Perfis Cadastrados • Logs de Auditoria & Segurança
+        </div>
+        <h1 class="hero-greeting">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px; background:\${greetingBadgeBg}; border:1px solid \${greetingBadgeBorder}; color:\${greetingBadgeColor}; box-shadow:0 4px 16px rgba(0,0,0,0.4); flex-shrink:0;">
+            \${greetingIconSvg}
+          </span>
+          <span>\${greeting.text}, <span class="hero-name-gradient">\${firstName}</span></span>
+        </h1>
+        <p class="hero-sub">
+          Visão Consolidada • Inteligência Estratégica & Gestão Financeira Pessoal
         </p>
       </div>
-    </div>
-    <div class="dash-focus-hero-actions">
-      <button type="button" class="btn btn-primary" onclick="openNovaOrdemModal('abrir')" style="display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 18px; border-radius:12px; font-weight:800;">
-        <span>➕ Abrir Chamado O.S.</span>
-      </button>
-      <button type="button" class="btn btn-ghost" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:7px; height:40px; padding:0 16px; border-radius:12px; font-weight:700;">
-        <span>👥 + Novo Perfil</span>
-      </button>
-      <button type="button" class="btn btn-ghost" onclick="Promise.all([syncOrdensWithServer(), syncUsersWithServer(), loadSystemLogs()]).then(render)" style="display:inline-flex; align-items:center; gap:6px; height:40px; border-radius:12px; font-weight:700;">
-        <span>🔄 Atualizar</span>
-      </button>
-    </div>
-  </div>
 
-  <!-- 3 CARDS ESTRATÉGICOS: O.S. ABERTAS, PERFIS CADASTRADOS E LOGS -->
-  <div class="dash-focus-cards">
-    <!-- Card 1: Atendimento O.S. Abertas -->
-    <div class="dash-focus-card \${activeTab === 'os_aberta' ? 'active-tab-card' : ''}" onclick="setDashFocusTab('os_aberta')" title="Clique para abrir a fila de atendimento de O.S." style="border-left:4px solid #38BDF8;">
-      <div class="dash-focus-card-head">
-        <span class="dash-focus-card-title">Atendimento O.S. Abertas</span>
-        <div class="dash-focus-card-icon" style="background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.4); color:#38BDF8;">🎧</div>
-      </div>
-      <div class="dash-focus-card-val" style="color:\${countAbertas > 0 ? '#38BDF8' : '#34D399'};">\${countAbertas}</div>
-      <div class="dash-focus-card-sub">
-        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:\${countAbertas > 0 ? '#F59E0B' : '#10B981'}; box-shadow:0 0 8px currentColor;"></span>
-        <span>\${countAbertas > 0 ? countAbertas + ' chamado(s) aguardando atendimento' : 'Fila zerada e em dia'}</span>
-      </div>
-    </div>
-
-    <!-- Card 2: Perfis Cadastrados -->
-    <div class="dash-focus-card \${activeTab === 'perfis' ? 'active-tab-card' : ''}" onclick="setDashFocusTab('perfis')" title="Clique para ver os perfis cadastrados" style="border-left:4px solid #F59E0B;">
-      <div class="dash-focus-card-head">
-        <span class="dash-focus-card-title">Perfis Cadastrados</span>
-        <div class="dash-focus-card-icon" style="background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#FBBF24;">👥</div>
-      </div>
-      <div class="dash-focus-card-val" style="color:#FBBF24;">\${countTotalUsers}</div>
-      <div class="dash-focus-card-sub">
-        <span>\${countAdmins} Administrador(es) &bull; \${countOperadores} Usuário(s)</span>
-      </div>
-    </div>
-
-    <!-- Card 3: Log de Auditoria -->
-    <div class="dash-focus-card \${activeTab === 'logs' ? 'active-tab-card' : ''}" onclick="setDashFocusTab('logs')" title="Clique para ver os logs de auditoria" style="border-left:4px solid #10B981;">
-      <div class="dash-focus-card-head">
-        <span class="dash-focus-card-title">Log de Auditoria</span>
-        <div class="dash-focus-card-icon" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.4); color:#34D399;">📋</div>
-      </div>
-      <div class="dash-focus-card-val" style="color:#34D399;">\${countTotalLogs}</div>
-      <div class="dash-focus-card-sub">
-        <span>Último evento auditado às \${lastLogTime}</span>
+      <div class="hero-actions">
+        \${periodPickerHTML()}
+        <button type="button" class="btn-hero-privacy" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou Exibir Saldos">
+          <span class="btn-hero-icon-pill">
+            <span id="btnEyeIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          </span>
+          <span id="btnEyeText">Ocultar Saldos</span>
+        </button>
+        <button class="btn-hero-primary" id="btnNovaTransacao" title="Lançar Nova Receita ou Despesa">
+          <span class="btn-hero-icon-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
+          <span>Nova Transação</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- SEÇÃO PRINCIPAL COM ABAS (ABA DE ATENDIMENTO O.S. ABERTA POR PADRÃO) -->
-  <div class="card" style="border-radius:20px; padding:22px; box-shadow:0 16px 40px rgba(0,0,0,0.4); border:1px solid var(--card-border);">
-    <div class="dash-focus-tabs-bar">
-      <!-- Grupo de Botões das Abas -->
-      <div class="dash-focus-tabs-group">
-        <button type="button" class="dash-focus-tab-btn \${activeTab === 'os_aberta' ? 'active' : ''}" onclick="setDashFocusTab('os_aberta')">
-          <span>🎧 Atendimento das O.S. Abertas</span>
-          <span class="dash-focus-tab-badge">\${countAbertas}</span>
-        </button>
-        <button type="button" class="dash-focus-tab-btn \${activeTab === 'perfis' ? 'active' : ''}" onclick="setDashFocusTab('perfis')">
-          <span>👥 Perfis Cadastrados</span>
-          <span class="dash-focus-tab-badge">\${countTotalUsers}</span>
-        </button>
-        <button type="button" class="dash-focus-tab-btn \${activeTab === 'logs' ? 'active' : ''}" onclick="setDashFocusTab('logs')">
-          <span>📋 Log de Auditoria</span>
-          <span class="dash-focus-tab-badge">\${countTotalLogs}</span>
-        </button>
+  <div class="kpis">
+    <!-- 1. Saldo Total -->
+    <div class="kpi kpi-balance">
+      <div class="row1">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span>Saldo Total</span>
+          <button type="button" onclick="window.toggleSensitiveBalances()" title="Ocultar ou Exibir Saldos" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:13px; padding:0; display:inline-flex; align-items:center; opacity:0.8; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
+            <span class="btnEyeIconCard"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          </button>
+        </div>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(6,182,212,0.18), rgba(6,182,212,0.06)); border:1px solid rgba(6,182,212,0.3); color:#22D3EE;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+        </span>
       </div>
+      <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#34D399'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${saldo < 0 ? '#F87171' : '#34D399'};">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
+          <span>\${saldo < 0 ? 'Saldo Negativo' : 'Saldo Positivo'}</span>
+        </span>
+        <span class="kpi-tag \${saldo < 0 ? 'kpi-tag-danger' : 'kpi-tag-success'}">\${saldo < 0 ? 'Atenção' : 'Disponível'}</span>
+      </div>
+    </div>
 
-      <!-- Filtros contextuais por aba -->
-      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        \${activeTab === 'os_aberta' ? \`
-          <div style="display:flex; gap:5px; background:rgba(255,255,255,0.04); padding:3px; border-radius:10px; border:1px solid var(--card-border);">
-            <button type="button" class="btn-ghost \${osFilter === 'abertas' ? 'active' : ''}" onclick="setDashOsFilter('abertas')" style="padding:4px 10px; font-size:11.5px; border-radius:7px; font-weight:800;">Abertas (\${countAbertas})</button>
-            <button type="button" class="btn-ghost \${osFilter === 'pendente' ? 'active' : ''}" onclick="setDashOsFilter('pendente')" style="padding:4px 10px; font-size:11.5px; border-radius:7px; font-weight:800;">Pendentes (\${countPendentes})</button>
-            <button type="button" class="btn-ghost \${osFilter === 'andamento' ? 'active' : ''}" onclick="setDashOsFilter('andamento')" style="padding:4px 10px; font-size:11.5px; border-radius:7px; font-weight:800;">Em Atendimento (\${countAndamento})</button>
-            <button type="button" class="btn-ghost \${osFilter === 'todas' ? 'active' : ''}" onclick="setDashOsFilter('todas')" style="padding:4px 10px; font-size:11.5px; border-radius:7px; font-weight:800;">Todas (\${countTotalOrdens})</button>
+    <!-- 2. Receitas -->
+    <div class="kpi kpi-income">
+      <div class="row1">
+        <span>Receitas</span>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.06)); border:1px solid rgba(16,185,129,0.3); color:#34D399;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </span>
+      </div>
+      <div class="val" data-anim-val="\${receitas}" data-prefix="\${receitas > 0 ? '+' : ''}" style="color:#34D399; font-variant-numeric:tabular-nums;">\${receitas > 0 ? '+' : ''}\${fmt(receitas)}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
+          <span>Entradas no mês</span>
+        </span>
+        <span class="kpi-tag kpi-tag-success">Líquido</span>
+      </div>
+    </div>
+
+    <!-- 3. Despesas -->
+    <div class="kpi kpi-expense">
+      <div class="row1">
+        <span>Despesas</span>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.06)); border:1px solid rgba(239,68,68,0.3); color:#F87171;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+        </span>
+      </div>
+      <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#EF4444;"></span>
+          <span>Saídas no mês</span>
+        </span>
+        <span class="kpi-tag kpi-tag-danger">\${commitPct}% da Renda</span>
+      </div>
+    </div>
+
+    <!-- 4. Resultado Líquido -->
+    <div class="kpi kpi-net">
+      <div class="row1">
+        <span>Resultado Líquido</span>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(59,130,246,0.06)); border:1px solid rgba(59,130,246,0.3); color:#60A5FA;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </span>
+      </div>
+      <div class="val" data-anim-val="\${resultado}" style="color:\${resultado >= 0 ? '#34D399' : '#F87171'}; font-variant-numeric:tabular-nums;">\${resultado >= 0 ? '+' : ''}\${fmt(resultado)}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${resultado >= 0 ? '#34D399' : '#F87171'};">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
+          <span>\${resultado >= 0 ? 'Superávit no mês' : 'Déficit no mês'}</span>
+        </span>
+        <span class="kpi-tag \${resultado >= 0 ? 'kpi-tag-success' : 'kpi-tag-danger'}">\${savingsPct > 0 ? savingsPct + '% Poupado' : (resultado >= 0 ? 'Equilibrado' : 'Alerta')}</span>
+      </div>
+    </div>
+
+    <!-- 5. Lançamentos -->
+    <div class="kpi kpi-tx">
+      <div class="row1">
+        <span>Lançamentos</span>
+        <span class="ic" style="background:linear-gradient(135deg, rgba(168,85,247,0.18), rgba(168,85,247,0.06)); border:1px solid rgba(168,85,247,0.3); color:#C084FC;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </span>
+      </div>
+      <div class="val" data-anim-val="\${periodTx.length}" data-is-int="true" style="color:#C084FC; font-variant-numeric:tabular-nums;">\${periodTx.length}</div>
+      <div class="sub">
+        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#A855F7;"></span>
+          <span>Registros ativos</span>
+        </span>
+        <span class="kpi-tag kpi-tag-purple">Total</span>
+      </div>
+    </div>
+  </div>
+
+  \${cardSummary.creditCards.length > 0 ? \`
+  <!-- Resumo de Limite de Cartões de Crédito no Dashboard -->
+  <div class="panel cards-summary-panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25);">
+    <div class="panel-head" style="margin-bottom:12px;">
+      <h3 style="display:flex;align-items:center;gap:8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+        Cartões de Crédito — Limite & Faturas
+      </h3>
+      <span class="tag" data-nav="cartoes" style="cursor:pointer; background:var(--green-soft); color:var(--green);">Ver todos os cartões</span>
+    </div>
+    <div class="kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px;">
+      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
+        <div class="row1" style="color:var(--text-dim); font-size:12px;">Limite Disponível Total</div>
+        <div class="val" data-anim-val="\${cardSummary.availableLimitGeral}" style="font-size:20px; font-weight:800; color:var(--green); margin-top:2px;">\${fmt(cardSummary.availableLimitGeral)}</div>
+        <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">Para novas compras</div>
+      </div>
+      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
+        <div class="row1" style="color:var(--text-dim); font-size:12px;">Fatura do Mês</div>
+        <div class="val" data-anim-val="\${cardSummary.spentPeriodGeral}" style="font-size:20px; font-weight:800; color:var(--orange); margin-top:2px;">\${fmt(cardSummary.spentPeriodGeral)}</div>
+        <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">\${periodLabel()}</div>
+      </div>
+      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
+        <div class="row1" style="color:var(--text-dim); font-size:12px;">Fatura Acumulada em Aberto</div>
+        <div class="val" data-anim-val="\${cardSummary.spentTotalGeral}" style="font-size:20px; font-weight:800; color:var(--red); margin-top:2px;">\${fmt(cardSummary.spentTotalGeral)}</div>
+        <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">Compras minus pagamentos</div>
+      </div>
+      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
+        <div class="row1" style="color:var(--text-dim); font-size:12px;">Limite Aprovado Total</div>
+        <div class="val" data-anim-val="\${cardSummary.totalLimitGeral}" style="font-size:20px; font-weight:800; color:var(--blue); margin-top:2px;">\${fmt(cardSummary.totalLimitGeral)}</div>
+        <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">Soma dos cartões</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-bottom:4px;">
+        <span>Comprometimento Global dos Cartões</span>
+        <span style="font-weight:700; color:\${cardSummary.usagePctGeral>=90?'var(--red)':cardSummary.usagePctGeral>=70?'var(--orange)':'var(--green)'};">\${cardSummary.usagePctGeral}% comprometido</span>
+      </div>
+      <div class="bar-split" style="height:6px; background:var(--card-border); border-radius:4px; overflow:hidden;">
+        <div class="g" style="width:\${cardSummary.usagePctGeral}%; height:100%; background:\${cardSummary.usagePctGeral>=90?'var(--red)':cardSummary.usagePctGeral>=70?'var(--orange)':'var(--green)'}; border-radius:4px;"></div>
+      </div>
+    </div>
+  </div>
+  \` : ''}
+
+  <div class="grid3">
+    <!-- Painel 1: Resumo Financeiro (4K Executive Luxury Design) -->
+    <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;">
+      <div style="display:flex; flex-direction:column; gap:14px; width:100%;">
+        
+        <!-- Cabeçalho Executivo 4K Alinhado -->
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.22), rgba(37,99,235,0.08)); border:1px solid rgba(59,130,246,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(59,130,246,0.25); flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18"/>
+                <path d="M18 17V9"/>
+                <path d="M13 17V5"/>
+                <path d="M8 17v-3"/>
+              </svg>
+            </div>
+            <div>
+              <h3 style="font-size:15px; font-weight:800; color:#FFFFFF; margin:0; letter-spacing:-0.02em;">
+                Resumo Financeiro
+              </h3>
+              <span style="font-size:11px; color:var(--text-dim); margin-top:2px; display:block; opacity:0.85; font-weight:500;">
+                Balanço consolidado & fluxo operacional
+              </span>
+            </div>
           </div>
-          <input type="text" class="dash-tx-search-input" placeholder="🔍 Buscar O.S. ..." value="\${window.currentDashOsSearch || ''}" oninput="onDashOsSearch(this.value)" style="min-width:180px;">
-        \` : ''}
+          <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.11); padding:5px 12px; border-radius:20px; backdrop-filter:blur(10px); box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span style="font-weight:700; font-size:11px; color:var(--text); letter-spacing:0.02em;">\${periodLabel()}</span>
+          </div>
+        </div>
 
-        \${activeTab === 'perfis' ? \`
-          <input type="text" class="dash-tx-search-input" placeholder="🔍 Buscar perfil por nome, email ou CPF..." value="\${window.currentDashUserSearch || ''}" oninput="onDashUserSearch(this.value)" style="min-width:240px;">
-          <button type="button" class="btn btn-ghost" onclick="navigate('usuarios')" style="font-size:12px; font-weight:700; padding:6px 12px; border-radius:8px;">Central de Usuários Completa →</button>
-        \` : ''}
+        <!-- 1. Grid de 3 Cards Principais 4K (Receitas, Despesas, Resultado) -->
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+          <!-- Receitas -->
+          <div style="background:linear-gradient(145deg, rgba(16,185,129,0.10) 0%, rgba(16,185,129,0.02) 100%); border:1px solid rgba(16,185,129,0.25); border-radius:14px; padding:10px 8px; text-align:center; box-shadow:0 4px 16px -2px rgba(16,185,129,0.12), inset 0 1px 0 rgba(255,255,255,0.08);">
+            <div style="font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; display:flex; align-items:center; justify-content:center; gap:5px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981;"></span>
+              Receitas
+            </div>
+            <b style="color:#34D399; font-size:14px; font-weight:900; margin-top:5px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 10px rgba(16,185,129,0.35);">
+              \${fmt(receitas)}
+            </b>
+          </div>
 
-        \${activeTab === 'logs' ? \`
-          <input type="text" class="dash-tx-search-input" placeholder="🔍 Filtrar logs por ação, usuário ou IP..." value="\${window.currentDashLogSearch || ''}" oninput="onDashLogSearch(this.value)" style="min-width:240px;">
-          <button type="button" class="btn btn-ghost" onclick="navigate('logs')" style="font-size:12px; font-weight:700; padding:6px 12px; border-radius:8px;">Trilha de Auditoria Completa →</button>
-        \` : ''}
+          <!-- Despesas -->
+          <div style="background:linear-gradient(145deg, rgba(239,68,68,0.10) 0%, rgba(239,68,68,0.02) 100%); border:1px solid rgba(239,68,68,0.25); border-radius:14px; padding:10px 8px; text-align:center; box-shadow:0 4px 16px -2px rgba(239,68,68,0.12), inset 0 1px 0 rgba(255,255,255,0.08);">
+            <div style="font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#F87171; display:flex; align-items:center; justify-content:center; gap:5px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#EF4444; box-shadow:0 0 8px #EF4444;"></span>
+              Despesas
+            </div>
+            <b style="color:#F87171; font-size:14px; font-weight:900; margin-top:5px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 10px rgba(239,68,68,0.35);">
+              \${fmt(despesas)}
+            </b>
+          </div>
+
+          <!-- Resultado -->
+          <div style="background:linear-gradient(145deg, \${resultado >= 0 ? 'rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.02)' : 'rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.03)'} 100%); border:1px solid \${resultado >= 0 ? 'rgba(59,130,246,0.25)' : 'rgba(239,68,68,0.28)'}; border-radius:14px; padding:10px 8px; text-align:center; box-shadow:0 4px 16px -2px \${resultado >= 0 ? 'rgba(59,130,246,0.12)' : 'rgba(239,68,68,0.15)'}, inset 0 1px 0 rgba(255,255,255,0.08);">
+            <div style="font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:\${resultado >= 0 ? '#60A5FA' : '#F87171'}; display:flex; align-items:center; justify-content:center; gap:5px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:\${resultado >= 0 ? '#3B82F6' : '#EF4444'}; box-shadow:0 0 8px \${resultado >= 0 ? '#3B82F6' : '#EF4444'};"></span>
+              Resultado
+            </div>
+            <b style="color:\${resultado >= 0 ? '#34D399' : '#F87171'}; font-size:14px; font-weight:900; margin-top:5px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 10px \${resultado >= 0 ? 'rgba(52,211,153,0.35)' : 'rgba(239,68,68,0.35)'};">
+              \${fmt(resultado)}
+            </b>
+          </div>
+        </div>
+
+        <!-- 2. Medidor Visual de Economia (Executive 4K Precision Gauge) -->
+        <div style="display:flex; align-items:center; justify-content:center; position:relative; width:134px; height:134px; margin:4px auto;">
+          <svg viewBox="0 0 100 100" style="width:100%; height:100%; transform:rotate(-90deg); filter:drop-shadow(0 4px 14px rgba(0,0,0,0.4));">
+            <defs>
+              <linearGradient id="meterEmeraldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#059669"/>
+                <stop offset="50%" stop-color="#10B981"/>
+                <stop offset="100%" stop-color="#34D399"/>
+              </linearGradient>
+              <linearGradient id="meterTrackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+              </linearGradient>
+            </defs>
+            <!-- Background Outer Precision Guide -->
+            <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="2 3"/>
+            <!-- Background Sleek Glass Track (Nunca vermelho quando zerado!) -->
+            <circle cx="50" cy="50" r="38" fill="none" stroke="url(#meterTrackGrad)" stroke-width="7.5"/>
+            <!-- Inner Concentric Orbit -->
+            <circle cx="50" cy="50" r="30.5" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
+            
+            \${savingsPct > 0 ? \`
+            <!-- Active Neon Emerald Savings Arc -->
+            <circle cx="50" cy="50" r="38" fill="none" stroke="url(#meterEmeraldGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="238.76" stroke-dashoffset="\${238.76 * (1 - Math.min(savingsPct, 100) / 100)}" style="transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1); filter:drop-shadow(0 0 6px rgba(16,185,129,0.55));"/>
+            \` : \`
+            <!-- Idle Precision Ambient Ring (Zeroed State) -->
+            <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(59,130,246,0.18)" stroke-width="7.5" stroke-dasharray="3 5"/>
+            \`}
+          </svg>
+          
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; pointer-events:none;">
+            <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.14em; font-weight:800; color:var(--text-dim); opacity:0.85;">Economia</span>
+            <b style="font-size:23px; font-weight:900; letter-spacing:-0.03em; margin:2px 0; \${savingsPct > 0 ? 'color:#34D399; text-shadow:0 0 12px rgba(16,185,129,0.45);' : 'color:var(--text);'}; line-height:1; font-variant-numeric:tabular-nums;">
+              \${savingsPct}%
+            </b>
+            <span style="font-size:9.5px; color:var(--text-dim); font-weight:600; opacity:0.75;">
+              \${receitas > 0 ? 'da receita' : 'da renda'}
+            </span>
+          </div>
+        </div>
+
+        <!-- 3. Indicadores de Saúde Financeira 4K Glass -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <!-- Comprometimento -->
+          <div style="background:linear-gradient(135deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.01) 100%); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:9px 12px; display:flex; align-items:center; gap:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
+            <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(245,158,11,0.15);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700;">Comprometimento</div>
+              <div style="font-size:12px; font-weight:800; color:\${commitPct > 80 ? '#F87171' : commitPct > 60 ? '#FBBF24' : '#34D399'}; font-variant-numeric:tabular-nums; margin-top:1px;">\${commitPct}% da Renda</div>
+            </div>
+          </div>
+
+          <!-- Média Diária -->
+          <div style="background:linear-gradient(135deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.01) 100%); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:9px 12px; display:flex; align-items:center; gap:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
+            <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg, rgba(59,130,246,0.2), rgba(37,99,235,0.08)); border:1px solid rgba(59,130,246,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(59,130,246,0.15);">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700;">Média Diária</div>
+              <div style="font-size:12px; font-weight:800; color:var(--text); font-variant-numeric:tabular-nums; margin-top:1px;">\${fmt(dailyAvg)}/dia</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Barra de Distribuição de Renda 4K -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:11px; font-weight:700;">
+            <span style="color:#34D399; display:flex; align-items:center; gap:5px; letter-spacing:0.02em;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981; display:inline-block;"></span>
+              Receitas \${recPct}%
+            </span>
+            <span style="color:#F87171; display:flex; align-items:center; gap:5px; letter-spacing:0.02em;">
+              Despesas \${despPct}%
+              <span style="width:6px; height:6px; border-radius:50%; background:#EF4444; box-shadow:0 0 6px #EF4444; display:inline-block;"></span>
+            </span>
+          </div>
+          <div class="bar-split" style="height:7px; border-radius:8px; overflow:hidden; background:\${totalFluxo > 0 ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.06)'}; box-shadow:inset 0 1px 3px rgba(0,0,0,0.4); display:flex;">
+            <div class="g" style="width:\${recPct}%; border-radius:8px; background:linear-gradient(90deg, #10B981, #38BDF8); box-shadow:0 0 8px rgba(16,185,129,0.4); transition:width 0.5s ease;"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rodapé Alinhado com Link Interativo 4K -->
+      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.07); width:100%;">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981;"></span>
+          Poupança: <strong style="color:#34D399; font-weight:800;">\${savingsPct}%</strong>
+        </span>
+        <span style="cursor:pointer; color:#60A5FA; font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:4px;" data-nav="relatorios" class="hover:underline">
+          <span>Ver relatórios completos</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
       </div>
     </div>
 
-    <!-- Conteúdo da Aba Ativa -->
-    <div id="dashFocusTabContent">
-      \${activeTab === 'os_aberta' ? osCardsHtml : ''}
-      \${activeTab === 'perfis' ? usersHtml : ''}
-      \${activeTab === 'logs' ? logsHtml : ''}
+    <!-- Painel 2: Despesas por Categoria (Design Executivo 4K Alinhado) -->
+    <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;">
+      <div style="display:flex; flex-direction:column; gap:13px; width:100%;">
+        
+        <!-- Cabeçalho Executivo 4K Alinhado -->
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(245,158,11,0.25); flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+              </svg>
+            </div>
+            <div>
+              <h3 style="font-size:15px; font-weight:800; color:#FFFFFF; margin:0; letter-spacing:-0.02em;">
+                Despesas por Categoria
+              </h3>
+              <span style="font-size:11px; color:var(--text-dim); margin-top:2px; display:block; opacity:0.85; font-weight:500;">
+                Distribuição analítica dos gastos
+              </span>
+            </div>
+          </div>
+          <span class="tag" style="\${actualTotalDesp > 0 ? 'background:rgba(239,68,68,0.12); color:var(--red); border:1px solid rgba(239,68,68,0.25); box-shadow:0 2px 6px rgba(239,68,68,0.15);' : 'background:rgba(255,255,255,0.04); color:var(--text-dim); border:1px solid rgba(255,255,255,0.10);'}; font-weight:800; font-size:12px; padding:4px 10px; border-radius:8px; font-variant-numeric: tabular-nums;">
+            \${fmt(actualTotalDesp)}
+          </span>
+        </div>
+
+        \${cats.length > 0 ? \`
+        <!-- Barra de Composição Contínua Multi-Segmentos -->
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:8px 10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:10.5px; color:var(--text-dim); margin-bottom:6px; font-weight:600;">
+            <span style="display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:var(--gold);"></span>
+              Composição Visual
+            </span>
+            <span style="color:var(--text); font-weight:700;">\${cats.length} categoria\${cats.length === 1 ? '' : 's'}</span>
+          </div>
+          <div style="width:100%; height:6px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden; display:flex; gap:1.5px; box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);">
+            \${cats.map(c => {
+              const pct = Math.max(Math.round(c.val / totalDesp * 100), 2);
+              return \`<div style="width:\${pct}%; height:100%; background:\${c.color}; border-radius:2px; transition:width 0.4s ease;" title="\${c.name}: \${fmt(c.val)} (\${pct}%)"></div>\`;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- Lista Executiva em Cards com Alinhamento Preciso e Micro-Barras -->
+        <div style="display:flex; flex-direction:column; gap:8px; width:100%; box-sizing:border-box;">
+          \${cats.map(c => {
+            const pct = Math.round(c.val / totalDesp * 100);
+            const icon = getCategoryIcon(c.name);
+            const count = periodTx.filter(t => t.cat === c.name && t.type === 'out').length;
+            return \`
+            <div style="display:flex; flex-direction:column; gap:7px; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-left:3.5px solid \${c.color}; transition:transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;" class="cat-item-card">
+              <div style="display:flex; align-items:center; justify-content:space-between; width:100%; gap:10px;">
+                
+                <!-- Esquerda: Ícone Estilizado + Nome + Contagem -->
+                <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                  <span style="background:\${c.color}18; color:\${c.color}; border:1px solid \${c.color}35; width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; box-shadow:0 2px 8px \${c.color}18;">
+                    \${icon}
+                  </span>
+                  <div style="min-width:0;">
+                    <div style="font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${c.name}</div>
+                    <div style="font-size:10.5px; color:var(--text-dim); font-weight:500; display:flex; align-items:center; gap:5px; margin-top:1px;">
+                      <span>\${count} lançamento\${count === 1 ? '' : 's'}</span>
+                      <span style="opacity:0.4;">•</span>
+                      <span style="color:\${c.color}; font-weight:700;">\${pct}% do total</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Direita: Valor e Percentual em Badge Homogênea -->
+                <div style="text-align:right; flex-shrink:0;">
+                  <div style="font-size:13.5px; font-weight:800; color:var(--text); font-variant-numeric: tabular-nums; letter-spacing:-0.01em;">
+                    \${fmt(c.val)}
+                  </div>
+                  <div style="display:inline-block; font-size:9.5px; font-weight:700; color:\${c.color}; background:\${c.color}15; border:1px solid \${c.color}30; padding:1.5px 7px; border-radius:6px; margin-top:2px;">
+                    \${pct}%
+                  </div>
+                </div>
+              </div>
+
+              <!-- Micro-Barra de Progresso com Brilho Sutil -->
+              <div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+                <div style="width:\${pct}%; height:100%; background:\${c.color}; border-radius:3px; box-shadow:0 0 8px \${c.color}40; transition:width .4s ease;"></div>
+              </div>
+            </div>\`;
+          }).join('')}
+        </div>
+
+        <!-- Box de Insight / Destaque de Concentração -->
+        \${cats.length > 0 ? \`
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:9px 12px; display:flex; align-items:center; gap:9px; margin-top:2px;">
+          <span style="font-size:13px; background:rgba(229,169,60,0.12); color:var(--gold); border:1px solid rgba(229,169,60,0.25); width:26px; height:26px; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">💡</span>
+          <div style="font-size:11px; color:var(--text-dim); min-width:0; line-height:1.35;">
+            Maior concentração em <strong style="color:var(--text); font-weight:700;">\${cats[0].name}</strong> (<span style="color:var(--gold); font-weight:700;">\${Math.round(cats[0].val / totalDesp * 100)}%</span> dos gastos).
+          </div>
+        </div>\` : ''}
+
+        \` : \`
+        <!-- Estado Vazio Executivo 4K (Design de Alta Fidelidade) -->
+        <div style="text-align:center; padding:24px 14px 10px; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <!-- 4K Holographic Analytics Donut SVG -->
+          <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:18px; background:linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(217,119,6,0.04) 100%); border:1px solid rgba(245,158,11,0.30); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px -4px rgba(245,158,11,0.25), inset 0 1px 0 rgba(255,255,255,0.12);">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2a10 10 0 0 1 10 10h-5.5a4.5 4.5 0 0 0-4.5-4.5V2z" fill="#F59E0B" opacity="0.95"/>
+              <path d="M22 12a10 10 0 0 1-10 10v-5.5a4.5 4.5 0 0 0 4.5-4.5h5.5z" fill="#EF4444" opacity="0.75"/>
+              <path d="M12 22A10 10 0 0 1 2 12a10 10 0 0 1 10-10v5.5a4.5 4.5 0 0 0-4.5 4.5 4.5 4.5 0 0 0 4.5 4.5v5.5z" fill="#3B82F6" opacity="0.45"/>
+            </svg>
+          </div>
+
+          <h4 style="font-size:14.5px; font-weight:800; color:#FFFFFF; margin:0 0 4px 0; letter-spacing:-0.02em;">
+            Nenhum gasto categorizado
+          </h4>
+          <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.45; max-width:260px;">
+            Suas despesas serão agrupadas automaticamente por grupos e faixas de impacto.
+          </p>
+
+          <!-- Category Preview Micro-Chips -->
+          <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:16px; opacity:0.8;">
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#EF4444; box-shadow:0 0 6px #EF4444;"></span> Alimentação
+            </span>
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#3B82F6; box-shadow:0 0 6px #3B82F6;"></span> Moradia
+            </span>
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981;"></span> Transporte
+            </span>
+            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:#8B5CF6; box-shadow:0 0 6px #8B5CF6;"></span> Lazer
+            </span>
+          </div>
+        </div>
+        \`}
+      </div>
+
+      <!-- Rodapé Alinhado com Contador e Link Interativo 4K -->
+      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.07); width:100%;">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 6px var(--gold);"></span>
+          Total: <strong style="color:var(--text); font-weight:700;">\${cats.length}</strong> categoria\${cats.length === 1 ? '' : 's'}
+        </span>
+        <span style="cursor:pointer; color:var(--gold); font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:4px;" data-nav="transacoes" class="hover:underline">
+          <span>Ver todas as despesas</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- Painel 3: Contas e Cartões (Design Executivo 4K Alinhado) -->
+    <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;">
+      <div style="display:flex; flex-direction:column; gap:13px; width:100%;">
+        
+        <!-- Cabeçalho Executivo 4K Alinhado -->
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(139,92,246,0.22), rgba(109,40,217,0.08)); border:1px solid rgba(139,92,246,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(139,92,246,0.25); flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+            </div>
+            <div>
+              <h3 style="font-size:15px; font-weight:800; color:#FFFFFF; margin:0; letter-spacing:-0.02em;">
+                Contas e Cartões
+              </h3>
+              <span style="font-size:11px; color:var(--text-dim); margin-top:2px; display:block; opacity:0.85; font-weight:500;">
+                Limites, faturas e saldos consolidados
+              </span>
+            </div>
+          </div>
+          <button class="tag" data-nav="cartoes" style="font-size:11.5px; padding:5px 12px; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); color:var(--text); border-radius:8px; transition:all 0.2s ease; display:flex; align-items:center; gap:5px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <span>Gerenciar</span>
+          </button>
+        </div>
+
+        \${accounts.length > 0 ? \`
+        <div class="accounts-list" style="display:flex; flex-direction:column; gap:8px; width:100%; box-sizing:border-box;">
+          \${accounts.slice().sort((a,b)=>a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' })).map(a=>{
+            const stats = getCardStats(a);
+            return \`
+            <div class="acc-row" style="display:flex; flex-direction:column; width:100%; box-sizing:border-box; padding:10px 12px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-left:3.5px solid \${a.color}; border-radius:12px; gap:8px; transition:transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;">
+              
+              <!-- Linha 1: Nome à Esquerda e Disponível/Saldo à Direita -->
+              <div style="display:flex; align-items:center; justify-content:space-between; width:100%; box-sizing:border-box; gap:10px;">
+                <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                  <div class="acc-ic" style="background:\${a.color}; width:34px; height:34px; border-radius:9px; font-weight:800; font-size:12px; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 3px 10px rgba(0,0,0,0.35); text-shadow:0 1px 2px rgba(0,0,0,0.4);">
+                    \${a.name.slice(0,2).toUpperCase()}
+                  </div>
+                  <div style="min-width:0;">
+                    <div style="font-weight:700; font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${a.name}</div>
+                    <div style="font-size:10.5px; color:var(--text-dim); margin-top:1px; opacity:0.85; font-weight:500;">\${a.type}</div>
+                  </div>
+                </div>
+
+                <div style="text-align:right; flex-shrink:0;">
+                  \${stats.isCreditCard ? \`
+                    <div style="font-size:9.5px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; opacity:0.85;">Disponível</div>
+                    <div style="color:\${stats.availableLimit < 200 ? 'var(--red)' : 'var(--green)'}; font-weight:800; font-size:13.5px; letter-spacing:-0.01em; font-variant-numeric: tabular-nums;">
+                      \${fmt(stats.availableLimit)}
+                    </div>
+                  \` : \`
+                    <div style="font-size:9.5px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; opacity:0.85;">Saldo</div>
+                    <div style="color:\${stats.currentBalance < 0 ? 'var(--red)' : 'var(--green)'}; font-weight:800; font-size:13.5px; font-variant-numeric: tabular-nums;">
+                      \${fmt(stats.currentBalance)}
+                    </div>
+                  \`}
+                </div>
+              </div>
+
+              \${stats.isCreditCard ? \`
+              <!-- Linha 2: Barra de Progresso do Limite (com trilho padronizado mesmo se uso for 0%) -->
+              <div style="width:100%; box-sizing:border-box; display:flex; flex-direction:column; gap:5px; padding-top:6px; border-top:1px solid rgba(255,255,255,0.06);">
+                <div style="width:100%; height:4.5px; background:rgba(255,255,255,0.08); border-radius:2.5px; overflow:hidden;">
+                  <div style="width:\${Math.max(stats.usagePct, 0)}%; height:100%; background:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'}; border-radius:2.5px; transition:width .4s ease;"></div>
+                </div>
+                
+                <!-- Linha 3: Fatura na Esquerda e Limite Total na Direita -->
+                <div style="display:flex; justify-content:space-between; align-items:center; width:100%; box-sizing:border-box; font-size:11px;">
+                  <div style="display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.03); padding:2px 7px; border-radius:6px;">
+                    <span style="color:var(--text-dim); font-size:10px; opacity:0.85;">Fatura:</span>
+                    <strong style="color:\${stats.spentTotal > 0 ? 'var(--orange)' : 'var(--text-dim)'}; font-weight:700; font-variant-numeric: tabular-nums;">\${fmt(stats.spentTotal)}</strong>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.03); padding:2px 7px; border-radius:6px;">
+                    <span style="color:var(--text-dim); font-size:10px; opacity:0.85;">Limite:</span>
+                    <strong style="color:var(--text); font-weight:700; font-variant-numeric: tabular-nums;">\${fmt(stats.totalLimit)}</strong>
+                  </div>
+                </div>
+              </div>
+              \` : \`
+              <!-- Conta Corrente / Poupança / Investimento -->
+              <div style="width:100%; box-sizing:border-box; background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.18); border-radius:8px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10.5px; font-weight:600; color:var(--text-dim);">Saldo em Conta:</span>
+                <strong style="color:\${stats.currentBalance < 0 ? 'var(--red)' : 'var(--green)'}; font-weight:800; font-size:13px; font-variant-numeric: tabular-nums;">\${fmt(stats.currentBalance)}</strong>
+              </div>
+              \`}
+            </div>\`;
+          }).join('')}
+        </div>
+        \` : \`
+        <!-- Estado Vazio Executivo 4K Titanium (Contas e Cartões) -->
+        <div style="text-align:center; padding:18px 12px 10px; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <!-- 4K Holographic Titanium Card Graphic -->
+          <div style="width:108px; height:68px; margin:0 auto 12px; border-radius:12px; background:linear-gradient(135deg, rgba(168,85,247,0.28) 0%, rgba(99,102,241,0.16) 50%, rgba(139,92,246,0.06) 100%); border:1px solid rgba(168,85,247,0.45); box-shadow:0 12px 28px -4px rgba(139,92,246,0.35), inset 0 1px 0 rgba(255,255,255,0.25); display:flex; flex-direction:column; justify-content:space-between; padding:8px 10px; box-sizing:border-box; position:relative; overflow:hidden;">
+            <!-- Glow Accent Corner -->
+            <div style="position:absolute; top:-15px; right:-15px; width:40px; height:40px; border-radius:50%; background:radial-gradient(circle, rgba(167,139,250,0.6) 0%, transparent 70%);"></div>
+            
+            <!-- Top Line: Chip & Contactless -->
+            <div style="display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1;">
+              <div style="width:15px; height:11px; border-radius:3px; background:linear-gradient(135deg, #FBBF24, #D97706); box-shadow:0 1px 3px rgba(0,0,0,0.3); border:0.5px solid rgba(255,255,255,0.3);"></div>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"><path d="M8.5 16.5a5 5 0 0 1 0-9"/><path d="M12 19a8.5 8.5 0 0 1 0-14"/></svg>
+            </div>
+            
+            <!-- Bottom Line: Digits & Brand Spheres -->
+            <div style="display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1;">
+              <span style="font-family:monospace; font-size:7.5px; letter-spacing:0.12em; color:rgba(255,255,255,0.7); font-weight:800;">•••• 4092</span>
+              <div style="display:flex; align-items:center;">
+                <span style="width:9px; height:9px; border-radius:50%; background:#EF4444; opacity:0.85; display:inline-block;"></span>
+                <span style="width:9px; height:9px; border-radius:50%; background:#F59E0B; opacity:0.85; display:inline-block; margin-left:-3.5px;"></span>
+              </div>
+            </div>
+          </div>
+
+          <h4 style="font-size:14.5px; font-weight:800; color:#FFFFFF; margin:0 0 4px 0; letter-spacing:-0.02em;">
+            Nenhum meio de pagamento ativo
+          </h4>
+          <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.45; max-width:270px;">
+            Cadastre cartões de crédito, contas digitais ou dinheiro para acompanhar limites e faturas.
+          </p>
+
+          <!-- 3 Interactive Feature Preview Slots -->
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; width:100%; margin-top:15px;" data-nav="cartoes">
+            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:7px 4px; text-align:center; cursor:pointer; transition:border-color 0.2s ease;">
+              <div style="font-size:13px; margin-bottom:2px;">💳</div>
+              <div style="font-size:9.5px; font-weight:700; color:var(--text);">Cartão Crédito</div>
+              <div style="font-size:8px; color:var(--text-dim); opacity:0.8;">Limites & Fatura</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:7px 4px; text-align:center; cursor:pointer; transition:border-color 0.2s ease;">
+              <div style="font-size:13px; margin-bottom:2px;">🏦</div>
+              <div style="font-size:9.5px; font-weight:700; color:var(--text);">Conta Bancária</div>
+              <div style="font-size:8px; color:var(--text-dim); opacity:0.8;">Saldos & Pix</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:7px 4px; text-align:center; cursor:pointer; transition:border-color 0.2s ease;">
+              <div style="font-size:13px; margin-bottom:2px;">💵</div>
+              <div style="font-size:9.5px; font-weight:700; color:var(--text);">Dinheiro / Espécie</div>
+              <div style="font-size:8px; color:var(--text-dim); opacity:0.8;">Controle Físico</div>
+            </div>
+          </div>
+        </div>
+        \`}
+      </div>
+
+      <!-- Rodapé Alinhado com Contador e Link Interativo 4K -->
+      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.07); width:100%;">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--purple); box-shadow:0 0 6px var(--purple);"></span>
+          Total: <strong style="color:var(--text); font-weight:700;">\${accounts.length}</strong> conta\${accounts.length === 1 ? '' : 's'}/cartões
+        </span>
+        <span style="cursor:pointer; color:var(--purple); font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:4px;" data-nav="cartoes" class="hover:underline">
+          <span>Ver todas as contas</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  \${pendingSummary.items.length > 0 ? \`
+  <!-- Mini Card Quadrado Compacto & Discreto (Posicionado com Organização Perfeita) -->
+  <div class="panel due-bills-panel" style="margin-bottom:22px; padding:14px 18px; border:1px solid \${pendingSummary.overdueCount > 0 ? 'rgba(239,90,90,0.5)' : 'rgba(240,166,58,0.45)'}; background:\${pendingSummary.overdueCount > 0 ? 'rgba(239,90,90,0.08)' : 'rgba(240,166,58,0.06)'}; border-radius:16px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+    
+    <!-- Cabeçalho Discreto -->
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--card-border);">
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span style="font-size:15px;">\${pendingSummary.overdueCount > 0 ? '🚨' : '⚠️'}</span>
+        <h4 style="margin:0; font-size:12.5px; font-weight:800; letter-spacing:0.02em; color:\${pendingSummary.overdueCount > 0 ? 'var(--red)' : 'var(--orange)'}; text-transform:uppercase;">
+          CONTAS A VENCER (\${pendingSummary.items.length})
+        </h4>
+      </div>
+      <span style="font-size:11px; font-weight:700; color:var(--text-dim);">
+        Total: <strong style="color:var(--red);">\${fmt(pendingSummary.totalValue)}</strong>
+      </span>
+    </div>
+
+    <!-- Lista Enxuta Sem Cortes -->
+    <div class="due-bills-list" style="display:flex; flex-direction:column; gap:6px;">
+      \${pendingSummary.items.map(item => \`
+        <div class="due-bill-row" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px 12px; padding:8px 12px; border-radius:8px; background:var(--card); border:1px solid \${item.statusType === 'overdue' ? 'rgba(239,90,90,0.4)' : item.statusType === 'today' ? 'rgba(240,166,58,0.4)' : 'var(--card-border)'}; font-size:12px;">
+          
+          <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:180px;">
+            <!-- Sinal de Emergência -->
+            <span style="font-size:13px; flex-shrink:0;" title="\${item.statusText}">
+              \${item.statusType === 'overdue' ? '🚨' : item.statusType === 'today' ? '⚡' : '⚠️'}
+            </span>
+
+            <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px 8px;">
+              <span style="font-weight:700; color:var(--text);">\${item.desc}</span>
+              <!-- Vencimento na Frente -->
+              <span style="font-size:11px; font-weight:700; color:\${item.statusType === 'overdue' ? 'var(--red)' : 'var(--orange)'}; background:\${item.statusType === 'overdue' ? 'var(--red-soft)' : 'rgba(240,166,58,0.15)'}; padding:1px 6px; border-radius:4px;">
+                Vence: \${item.formattedDate}
+              </span>
+            </div>
+          </div>
+
+          <!-- Valor & Botão Pagar -->
+          <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+            <span style="font-size:13px; font-weight:800; color:var(--red);">\${fmt(item.val)}</span>
+            <button class="btn-primary" data-paytx="\${item.id}" title="Marcar como Pago" style="padding:3px 8px; font-size:10.5px; font-weight:700; background:linear-gradient(135deg, var(--green), #c9862a); border:none; border-radius:6px; cursor:pointer; color:#08130c; white-space:nowrap;">
+              ✅ Pagar
+            </button>
+          </div>
+        </div>
+      \`).join('')}
+    </div>
+
+  </div>
+  \` : ''}
+
+  <div class="table-panel">
+    <div class="panel-head"><h3>Últimas Transações</h3><span class="tag" data-nav="transacoes">Ver todas</span></div>
+    \${transactionsTable(lastTx, false)}
+  </div>
+  \`;
+}
+
+function getAccountIcon(accName) {
+  if (!accName) return '💳';
+  const name = accName.toLowerCase();
+  if (name.includes('banco') || name.includes('brasil') || name.includes('itau') || name.includes('bradesco') || name.includes('santander') || name.includes('caixa') || name.includes('nubank') || name.includes('inter') || name.includes('sifre')) return '🏦';
+  if (name.includes('dinheiro') || name.includes('espécie') || name.includes('carteira')) return '💵';
+  if (name.includes('boleto') || name.includes('pix') || name.includes('outros')) return '⚡';
+  return '💳';
+}
+
+function transactionsTable(list, showActions){
+  if (typeof isDataLoading !== 'undefined' && isDataLoading && list.length === 0) {
+    return \`<div class="placeholder" style="padding:40px 20px;"><div class="big" style="font-size:30px;margin-bottom:12px;">⏳</div><h3>Carregando suas transações...</h3><p>Sincronizando seus dados financeiros com o servidor.</p></div>\`;
+  }
+  if(list.length===0) {
+    const totalAllTxs = Array.isArray(transactions) ? transactions.length : 0;
+    const isFiltered = Boolean(
+      (typeof document !== 'undefined') && (
+        (document.getElementById('txSearch') && document.getElementById('txSearch').value.trim()) ||
+        (document.getElementById('txFiltroTipo') && document.getElementById('txFiltroTipo').value) ||
+        (document.getElementById('txFiltroCat') && document.getElementById('txFiltroCat').value) ||
+        (document.getElementById('txFiltroStatus') && document.getElementById('txFiltroStatus').value) ||
+        (document.getElementById('txFiltroConta') && document.getElementById('txFiltroConta').value)
+      )
+    );
+
+    if (totalAllTxs > 0) {
+      return \`
+      <div class="placeholder" style="padding:36px 20px; text-align:center;">
+        <div class="big" style="font-size:34px; margin-bottom:10px;">🔍</div>
+        <h3 style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:6px;">
+          \${isFiltered ? 'Nenhum lançamento encontrado para os filtros selecionados' : 'Nenhuma transação encontrada no período de ' + periodLabel()}
+        </h3>
+        <p style="font-size:12.5px; color:var(--text-dim); margin-bottom:16px; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.5;">
+          Você possui <strong style="color:var(--text);">\${totalAllTxs} lançamento(s)</strong> no seu extrato geral.
+        </p>
+        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+          <button type="button" class="btn-primary" onclick="window.clearAllTxFilters(true)" style="padding:8px 16px; font-size:12.5px; font-weight:700; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            🌐 Ver Todas as Transações (Todas as Datas)
+          </button>
+          \${isFiltered ? \`
+          <button type="button" class="btn-ghost" onclick="window.clearAllTxFilters(false)" style="padding:8px 16px; font-size:12.5px; font-weight:700; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.15); color:var(--text);">
+            ✕ Limpar Filtros do Mês
+          </button>\` : ''}
+        </div>
+      </div>\`;
+    }
+
+    return \`<div class="placeholder"><div class="big">🗂️</div><h3>Nenhuma transação encontrada</h3><p>Nenhuma transação registrada no período selecionado.</p></div>\`;
+  }
+
+  const totalDespesas = list.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val), 0);
+  const totalReceitas = list.filter(t=>t.type==='in').reduce((s,t)=>s+parseInputValue(t.val), 0);
+  const saldoPeriodo = totalReceitas - totalDespesas;
+  const countDespesas = list.filter(t=>t.type==='out').length;
+  const countReceitas = list.filter(t=>t.type==='in').length;
+
+  return \`
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Categoria</th>
+        <th>Conta / Cartão</th>
+        <th>Tipo</th>
+        <th>Valor</th>
+        <th>Status</th>
+        \${showActions?'<th style="text-align:center;">Ações</th>':''}
+      </tr>
+    </thead>
+    <tbody>
+      \${list.map(t=>{
+        const method = t.paymentMethod || detectPaymentMethodFromName(t.desc) || ((t.cat && t.cat.toLowerCase().includes('cartão')) || (t.acc && t.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : (t.type === 'out' ? 'Boleto' : null));
+        return \`
+        <tr class="trow">
+          <td><span class="tx-date-badge">\${formatDateBR(t.date)}</span></td>
+          <td class="tx-desc">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span>\${t.desc}</span>
+              \${t.type === 'out' && method ? \`<span class="pill" style="padding:1.5px 6px; font-size:10px; font-weight:700; border-radius:5px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.16)' : 'rgba(245,158,11,0.16)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.35)' : 'rgba(245,158,11,0.35)'};">\${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}</span>\` : ''}
+            </div>
+          </td>
+          <td><span class="pill cat-pill" style="background:\${catColor(t.cat)}18; color:\${catColor(t.cat)}; border:1px solid \${catColor(t.cat)}35">\${catIcon(t.cat)} \${t.cat}</span></td>
+          <td><span class="pill acc-pill">\${getAccountIcon(t.acc)} \${t.acc || '—'}</span></td>
+          <td><span class="type-pill \${t.type}">\${t.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
+          <td class="\${t.type==='in'?'val-in':'val-out'}">\${t.type==='in'?'+':'-'}\${fmt(t.val)}</td>
+          <td>
+            <span class="pill status-\${t.status.toLowerCase()} status-toggle-btn" data-togglestatus="\${t.id}" title="Clique para alternar o status (Pendente / Pago)">
+              \${t.status === 'Pendente' ? '⏳ Pendente' : (t.type === 'in' ? '✓ Recebido' : '✓ Pago')}
+            </span>
+          </td>
+          \${showActions?\`<td><div class="row-actions" style="justify-content:center;"><button data-edit="\${t.id}" title="Editar Transação" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button><button data-del="\${t.id}" title="Excluir Transação" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></td>\`:''}
+        </tr>\`;
+      }).join('')}
+    </tbody>
+    <tfoot>
+      <tr class="tfoot-row">
+        <td colspan="5" class="tfoot-label">TOTAL DE GASTOS (\${countDespesas} despesa\${countDespesas===1?'':'s'}):</td>
+        <td class="tfoot-value">-\${fmt(totalDespesas)}</td>
+        <td colspan="\${showActions?2:1}"></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- Aba / Card com Cálculo Consolidado dos Gastos ao final -->
+  <div class="tx-footer-summary">
+    <div class="tx-summary-card expense">
+      <div class="tx-summary-icon expense">↓</div>
+      <div>
+        <div class="tx-summary-label">Cálculo Total de Gastos</div>
+        <div class="tx-summary-val expense">-\${fmt(totalDespesas)}</div>
+        <div class="tx-summary-sub">\${countDespesas} lançamento(s) de despesa</div>
+      </div>
+    </div>
+
+    <div class="tx-summary-card income">
+      <div class="tx-summary-icon income">↑</div>
+      <div>
+        <div class="tx-summary-label">Total de Entradas (Receitas)</div>
+        <div class="tx-summary-val income">+\${fmt(totalReceitas)}</div>
+        <div class="tx-summary-sub">\${countReceitas} lançamento(s) de receita</div>
+      </div>
+    </div>
+
+    <div class="tx-summary-card \${saldoPeriodo < 0 ? 'expense' : 'balance'}">
+      <div class="tx-summary-icon \${saldoPeriodo < 0 ? 'expense' : 'balance'}">⇄</div>
+      <div>
+        <div class="tx-summary-label">Balanço do Período</div>
+        <div class="tx-summary-val \${saldoPeriodo < 0 ? 'expense' : 'income'}">\${fmt(saldoPeriodo)}</div>
+        <div class="tx-summary-sub">\${list.length} registro(s) no filtro</div>
+      </div>
     </div>
   </div>\`;
 }
@@ -16812,77 +16482,12 @@ function pageConfig(){
   \`;
 }
 
-/* ==================== Aba 4K: Central de Funções & Permissões (Executive Master Suite) ==================== */
+/* ==================== Aba 4K: Central de Funções & Permissões ==================== */
 let currentFuncoesRoleFilter = 'all';
-let currentFuncoesUserFilter = 'all';
-let currentFuncoesUserSearch = '';
-let currentFuncoesActiveTab = 'atribuicao'; // 'atribuicao' | 'matriz' | 'rotinas' | 'ferramentas' | 'all'
 
-window.setFuncoesActiveTab = function(tabName, btnEl) {
-  currentFuncoesActiveTab = tabName;
-  document.querySelectorAll('.funcoes-subtab-btn').forEach(b => b.classList.remove('active'));
-  if (btnEl) btnEl.classList.add('active');
-  
-  const secAtribuicao = document.getElementById('funcoesSecAtribuicao');
-  const secMatriz = document.getElementById('funcoesSecMatriz');
-  const secRotinas = document.getElementById('funcoesSecRotinas');
-  const secFerramentas = document.getElementById('funcoesSecFerramentas');
-
-  if (secAtribuicao) secAtribuicao.style.display = (tabName === 'atribuicao' || tabName === 'all') ? 'block' : 'none';
-  if (secMatriz) secMatriz.style.display = (tabName === 'matriz' || tabName === 'all') ? 'block' : 'none';
-  if (secRotinas) secRotinas.style.display = (tabName === 'rotinas' || tabName === 'all') ? 'block' : 'none';
-  if (secFerramentas) secFerramentas.style.display = (tabName === 'ferramentas' || tabName === 'all') ? 'block' : 'none';
-};
-
-window.setFuncoesUserFilter = function(filterRole, btnEl) {
-  currentFuncoesUserFilter = filterRole;
-  document.querySelectorAll('.funcoes-user-filter-btn').forEach(b => b.classList.remove('active'));
-  if (btnEl) btnEl.classList.add('active');
-  window.applyFuncoesUserFiltering();
-};
-
-window.handleFuncoesUserSearch = function(query) {
-  currentFuncoesUserSearch = (query || '').toLowerCase().trim();
-  window.applyFuncoesUserFiltering();
-};
-
-window.applyFuncoesUserFiltering = function() {
-  const rows = document.querySelectorAll('.funcoes-user-row');
-  let visibleCount = 0;
-  rows.forEach(row => {
-    const email = (row.getAttribute('data-user-email') || '').toLowerCase();
-    const name = (row.getAttribute('data-user-name') || '').toLowerCase();
-    const role = (row.getAttribute('data-user-role') || '').toLowerCase();
-    const cpf = (row.getAttribute('data-user-cpf') || '').toLowerCase();
-    const cpfDigits = cpf.replace(/\D/g, '');
-
-    let matchesFilter = true;
-    if (currentFuncoesUserFilter === 'admin') matchesFilter = (role === 'administrador');
-    else if (currentFuncoesUserFilter === 'gerente') matchesFilter = (role === 'gerente financeiro');
-    else if (currentFuncoesUserFilter === 'usuario') matchesFilter = (role === 'usuário' || role === 'usuario');
-    else if (currentFuncoesUserFilter === 'auditor') matchesFilter = (role === 'auditor');
-
-    let matchesSearch = true;
-    if (currentFuncoesUserSearch) {
-      const q = currentFuncoesUserSearch;
-      const qDigits = q.replace(/\D/g, '');
-      matchesSearch = email.includes(q) || name.includes(q) || role.includes(q) || (qDigits && cpfDigits.includes(qDigits)) || cpf.includes(q);
-    }
-
-    const show = matchesFilter && matchesSearch;
-    row.style.display = show ? '' : 'none';
-    if (show) visibleCount++;
-  });
-
-  const countBadge = document.getElementById('funcoesVisibleUserCount');
-  if (countBadge) countBadge.textContent = visibleCount;
-  const noMatchMsg = document.getElementById('funcoesNoUserMatch');
-  if (noMatchMsg) noMatchMsg.style.display = (visibleCount === 0) ? 'block' : 'none';
-};
-
-window.setFuncoesRoleFilter = function(roleFilter, btnEl) {
+function setFuncoesRoleFilter(roleFilter, btnEl) {
   currentFuncoesRoleFilter = roleFilter;
-  document.querySelectorAll('.funcoes-matrix-filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.funcoes-filter-btn').forEach(b => b.classList.remove('active'));
   if (btnEl) btnEl.classList.add('active');
   
   const cols = document.querySelectorAll('.perm-matrix-th, .perm-matrix-td');
@@ -16895,16 +16500,16 @@ window.setFuncoesRoleFilter = function(roleFilter, btnEl) {
     } else if (roleAttr === currentFuncoesRoleFilter) {
       col.style.display = '';
       col.style.opacity = '1';
-      col.style.background = 'rgba(232,176,75,0.12)';
+      col.style.background = 'rgba(232,176,75,0.08)';
     } else {
       col.style.display = 'none';
     }
   });
-};
+}
 
 async function changeUserRoleFromFuncoes(email, newRole) {
   await syncUsersWithServer();
-  const u = (registeredUsers || []).find(x => x.email.toLowerCase() === (email || '').toLowerCase());
+  const u = registeredUsers.find(x => x.email.toLowerCase() === (email || '').toLowerCase());
   if (!u) {
     if (typeof showToast === 'function') showToast('Usuário não encontrado');
     return;
@@ -16916,7 +16521,7 @@ async function changeUserRoleFromFuncoes(email, newRole) {
     logActivity('Alteração de Função', 'Usuário / Permissões', 'Administrador alterou a função do usuário ' + u.email + ' (' + u.name + ') de ' + oldRole + ' para ' + newRole);
   }
   if (typeof showLoginSuccessPopup === 'function') {
-    showLoginSuccessPopup('Função de ' + u.name + ' alterada para ' + newRole + ' com sucesso!');
+    showLoginSuccessPopup('Função do usuário ' + u.name + ' alterada para ' + newRole + '!');
   } else if (typeof showToast === 'function') {
     showToast('Função de ' + u.name + ' alterada para ' + newRole + '!');
   }
@@ -16925,478 +16530,247 @@ async function changeUserRoleFromFuncoes(email, newRole) {
 
 function exportPermissionsMatrixCSV() {
   const rows = [
-    ['Modulo do Sistema', 'Administrador Master', 'Gerente Financeiro', 'Usuario / Operador', 'Auditor de Seguranca'],
-    ['Dashboard Executivo & Metricas', 'Total (Criar/Editar/Excluir/Exportar)', 'Total no Escopo Proprio', 'Total Proprio', 'Somente Leitura Analitica'],
-    ['Gestao de Transacoes & Extratos', 'Total (Qualquer Conta ou Usuario)', 'Total nas Contas Vinculadas', 'Total Proprio', 'Somente Leitura e Auditoria'],
-    ['Cartoes de Credito, Contas & Faturas', 'Total (Limites, Vencimentos & Ajustes)', 'Total nas Contas do Setor', 'Total Proprio', 'Somente Leitura de Saldos'],
-    ['Orcamentos & Metas Financeiras', 'Total + Projecao Geral 4K', 'Total + Projecao Setorial', 'Total Proprio', 'Leitura e Exportacao'],
-    ['Exportacao de Relatorios Executivos', 'Total 4K (CSV, OFX, PDF, JSON)', 'Total (CSV, PDF)', 'Total Proprio (CSV, PDF)', 'Total Analitico (Auditoria)'],
-    ['Automacao de Transacoes Recorrentes', 'Total (Multi-meses e Reprocessamento)', 'Total nas Contas Proprias', 'Total Proprio', 'Somente Leitura de Cronogramas'],
-    ['Central de Usuarios & Modo Espelho', 'Controle Total + Modo Espelho 👁️', 'Sem Acesso', 'Sem Acesso', 'Leitura de Contas Ativas'],
-    ['Central de Funcoes & Permissoes', 'Controle Total (Nivel 1 Irrestrito)', 'Sem Acesso', 'Visualizacao Propria', 'Sem Acesso'],
-    ['Suporte & Ordens de Servico (O.S.)', 'Total (Abertura, Atribuicao & Fechamento)', 'Abertura e Acompanhamento', 'Abertura de Chamados', 'Leitura de Protocolos'],
-    ['Logs de Auditoria & Seguranca', 'Auditoria Geral + Filtro IP/Email/Beacon', 'Logs Proprios', 'Sem Acesso', 'Auditoria de Eventos do Sistema']
+    ['Modulo', 'Administrador', 'Gerente Financeiro', 'Usuario / Operador', 'Auditor'],
+    ['Dashboard Executivo', 'Total (Criar/Editar/Excluir)', 'Total', 'Total Próprio', 'Somente Leitura'],
+    ['Gestão de Transações & Cartões', 'Total (Qualquer Usuário)', 'Total Próprio', 'Total Próprio', 'Somente Leitura'],
+    ['Orçamentos, Metas & Relatórios', 'Total + Exportação 4K', 'Total + Exportação', 'Total Próprio', 'Exportação CSV/PDF'],
+    ['Gerenciamento de Usuários & Contas', 'Controle Total + Modo Espelho', 'Sem Acesso', 'Sem Acesso', 'Lista de Contas'],
+    ['Central de Funções & Permissões', 'Controle Total (Nível 1)', 'Sem Acesso', 'Sem Acesso', 'Sem Acesso'],
+    ['Logs de Auditoria & Segurança', 'Auditoria Geral + Filtro IP/Email', 'Logs Próprios', 'Sem Acesso', 'Leitura de Eventos']
   ];
-  let csvContent = 'data:text/csv;charset=utf-8,' + rows.map(function(e){ return e.map(function(x){ return '"' + x + '"'; }).join(','); }).join(String.fromCharCode(10));
+  let csvContent = 'data:text/csv;charset=utf-8,' + rows.map(function(e){ return e.map(function(x){ return '"' + x + '"'; }).join(','); }).join('\\n');
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement('a');
   link.setAttribute('href', encodedUri);
-  link.setAttribute('download', 'matriz_de_funcoes_e_permissoes_nexus_' + new Date().toISOString().slice(0,10) + '.csv');
+  link.setAttribute('download', 'matriz_de_permissoes_' + new Date().toISOString().slice(0,10) + '.csv');
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  if (typeof showToast === 'function') showToast('Matriz de Permissões exportada com sucesso!');
+  if (typeof showToast === 'function') showToast('Matriz de Permissões exportada em CSV com sucesso!');
 }
 
 function pageFuncoes(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
-  const userRole = (currentUser && currentUser.role) || 'Usuário';
-
-  // Deduplica e consolida usuários registrados
-  const userMap = new Map();
-  (registeredUsers || []).forEach(u => {
-    if (u && u.email) userMap.set(u.email.toLowerCase(), u);
-  });
-  const users = Array.from(userMap.values());
-  const totalUsers = users.length || 1;
-  const adminCount = users.filter(u => u.role === 'Administrador').length;
-  const managerCount = users.filter(u => u.role === 'Gerente Financeiro').length;
-  const auditorCount = users.filter(u => u.role === 'Auditor').length;
-  const standardCount = totalUsers - adminCount - managerCount - auditorCount;
-  const activeCount = users.filter(u => u.active !== false).length;
-
-  let userRowsHtml = '';
-  for (let i = 0; i < users.length; i++) {
-    const u = users[i];
-    const isMe = currentUser && u.email.toLowerCase() === currentUser.email.toLowerCase();
-    const rawCpf = String(u.cpf || '').replace(/\D/g, '');
-    const formattedCpf = rawCpf.length === 11 ? rawCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : (u.cpf || 'Sem CPF');
-    const phone = u.phone ? String(u.phone).trim() : 'Sem telefone';
-    const role = u.role || 'Usuário';
-    const isActive = u.active !== false;
-    
-    let roleColor = '#60A5FA';
-    let roleBg = 'rgba(59,130,246,0.14)';
-    let roleBorder = 'rgba(59,130,246,0.35)';
-    let roleIcon = '👤';
-    if (role === 'Administrador') {
-      roleColor = '#FBBF24';
-      roleBg = 'rgba(245,158,11,0.18)';
-      roleBorder = 'rgba(245,158,11,0.45)';
-      roleIcon = '👑';
-    } else if (role === 'Gerente Financeiro') {
-      roleColor = '#34D399';
-      roleBg = 'rgba(16,185,129,0.18)';
-      roleBorder = 'rgba(16,185,129,0.45)';
-      roleIcon = '💼';
-    } else if (role === 'Auditor') {
-      roleColor = '#C084FC';
-      roleBg = 'rgba(168,85,247,0.18)';
-      roleBorder = 'rgba(168,85,247,0.45)';
-      roleIcon = '🔍';
-    }
-
-    const nameParts = (u.name || 'U').trim().split(/\s+/);
-    const initials = ((nameParts[0] ? nameParts[0][0] : 'U') + (nameParts[1] ? nameParts[1][0] : '')).toUpperCase();
-
-    let selectHtml = '';
-    if (isAdmin) {
-      selectHtml = '<select data-user-email="' + (u.email || '') + '" onchange="changeUserRoleFromFuncoes(this.dataset.userEmail, this.value)" class="funcoes-role-select" style="height:36px; padding:0 12px; border-radius:10px; background:var(--input-bg, rgba(0,0,0,0.5)); border:1.5px solid ' + roleBorder + '; color:' + roleColor + '; font-weight:800; font-size:12.5px; cursor:pointer; outline:none; transition:all 0.2s ease;">' +
-        '<option value="Administrador" ' + (role === 'Administrador' ? 'selected' : '') + '>👑 Administrador Master</option>' +
-        '<option value="Gerente Financeiro" ' + (role === 'Gerente Financeiro' ? 'selected' : '') + '>💼 Gerente Financeiro</option>' +
-        '<option value="Usuário" ' + (role === 'Usuário' ? 'selected' : '') + '>👤 Usuário / Operador</option>' +
-        '<option value="Auditor" ' + (role === 'Auditor' ? 'selected' : '') + '>🔍 Auditor (Somente Leitura)</option>' +
-      '</select>';
-    } else {
-      selectHtml = '<span style="font-size:12px; font-weight:700; color:var(--text-dim); background:rgba(255,255,255,0.04); padding:4px 10px; border-radius:8px;">Fixado por Administrador</span>';
-    }
-
-    userRowsHtml += '<tr class="funcoes-user-row trow" data-user-email="' + u.email + '" data-user-name="' + (u.name || '') + '" data-user-role="' + role + '" data-user-cpf="' + rawCpf + '" style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.2s ease;">' +
-      '<td style="padding:14px 16px;">' +
-        '<div style="display:flex; align-items:center; gap:12px;">' +
-          '<div style="width:38px; height:38px; border-radius:12px; background:' + roleBg + '; border:1.5px solid ' + roleBorder + '; display:flex; align-items:center; justify-content:center; color:' + roleColor + '; font-weight:900; font-size:13px; box-shadow:0 2px 10px rgba(0,0,0,0.25); flex-shrink:0;">' +
-            initials +
-          '</div>' +
-          '<div>' +
-            '<div style="font-weight:800; font-size:13.5px; color:var(--text); display:flex; align-items:center; gap:6px;">' +
-              '<span>' + (u.name || 'Sem nome') + '</span>' +
-              (isMe ? '<span style="font-size:10px; color:#FBBF24; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); padding:1px 6px; border-radius:6px; font-weight:800;">Você</span>' : '') +
-            '</div>' +
-            '<div style="font-size:11.5px; color:var(--text-dim); margin-top:2px; font-family:monospace;">' +
-              'CPF: ' + formattedCpf +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-      '</td>' +
-      '<td style="padding:14px 16px;">' +
-        '<div style="font-size:13px; color:var(--text); font-weight:600;">' + u.email + '</div>' +
-        '<div style="font-size:11.5px; color:var(--text-dim); margin-top:2px;">' + phone + '</div>' +
-      '</td>' +
-      '<td style="padding:14px 16px;">' +
-        '<div style="display:flex; align-items:center; gap:6px;">' +
-          '<span style="width:8px; height:8px; border-radius:50%; background:' + (isActive ? '#10B981' : '#EF4444') + '; box-shadow:0 0 8px ' + (isActive ? '#10B981' : '#EF4444') + ';"></span>' +
-          '<span style="font-size:12px; font-weight:800; color:' + (isActive ? '#34D399' : '#F87171') + ';">' + (isActive ? 'Ativo' : 'Desativado') + '</span>' +
-        '</div>' +
-        '<div style="font-size:11px; color:var(--text-dim); margin-top:2px;">' + (u.device_type || 'Computador') + '</div>' +
-      '</td>' +
-      '<td style="padding:14px 16px;">' +
-        '<span class="pill" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:800; padding:5px 12px; border-radius:10px; background:' + roleBg + '; border:1px solid ' + roleBorder + '; color:' + roleColor + ';">' +
-          '<span>' + roleIcon + '</span>' +
-          '<span>' + role + '</span>' +
-        '</span>' +
-      '</td>' +
-      '<td style="padding:14px 16px; text-align:right;">' +
-        selectHtml +
-      '</td>' +
-    '</tr>';
+  if(!isAdmin || isViewingOtherUser){
+    return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área de Gestão de Funções é exclusiva para administradores.</p></div>\`;
   }
+  const userRole = (currentUser && currentUser.role) || 'Usuário';
+  const totalUsers = registeredUsers ? registeredUsers.length : 1;
+  const adminCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Administrador').length : 1;
+  const managerCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Gerente Financeiro').length : 0;
+  const auditorCount = registeredUsers ? registeredUsers.filter(u => u.role === 'Auditor').length : 0;
+  const standardCount = totalUsers - adminCount - managerCount - auditorCount;
 
   return \`
-  <div id="funcoesPage" style="display:flex; flex-direction:column; gap:20px;">
-    
-    <!-- 1. Cabeçalho Executivo em Vidro 4K -->
-    <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:4px;">
+  <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:20px;">
+    <div>
+      <h1 style="display:flex; align-items:center; gap:10px; font-size:22px; font-weight:800; color:var(--text);">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, rgba(232,176,75,0.25), rgba(201,134,42,0.15)); border:1px solid rgba(232,176,75,0.4); color:#fbbf24; font-size:18px;">🛡️</span>
+        Central de Funções & Permissões
+      </h1>
+      <p style="font-size:13.5px; color:var(--text-dim); margin:4px 0 0 0;">Gerencie papéis de usuários, atribuição rápida de funções, matriz de controle de acessos e permissões do sistema em tempo real.</p>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <span class="tag" style="background:rgba(232,176,75,0.15); color:#fbbf24; border:1px solid rgba(232,176,75,0.3); font-weight:700; padding:6px 14px; border-radius:20px; font-size:12px;">
+        👑 Modo Administrador (Acesso Irrestrito)
+      </span>
+      <button onclick="exportPermissionsMatrixCSV()" class="btn-ghost" style="height:36px; padding:0 14px; border-radius:10px; border-color:rgba(232,176,75,0.3); color:#fbbf24; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Exportar CSV</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Cards de Resumo Executivo das Funções 4K -->
+  <div class="kpis" style="margin-bottom:20px;">
+    <div class="kpi" style="border:1px solid rgba(232,176,75,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95)); shadow:0 10px 30px rgba(0,0,0,0.5);">
+      <div class="kpi-head"><span class="lbl">Sua Função Atual</span><span class="ic" style="background:rgba(232,176,75,0.2); color:#fbbf24;">👑</span></div>
+      <div class="val" style="color:#fbbf24; font-size:22px;">\${userRole}</div>
+      <div class="sub" style="color:var(--text-dim); margin-top:4px;">Nível de Privilégio: Acesso Total (Nível 1)</div>
+    </div>
+    <div class="kpi" style="border:1px solid rgba(16,185,129,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95));">
+      <div class="kpi-head"><span class="lbl">Administradores</span><span class="ic" style="background:rgba(16,185,129,0.2); color:#10b981;">👥</span></div>
+      <div class="val" style="color:#10b981; font-size:22px;">\${adminCount} Admin\${adminCount===1?'':'s'}</div>
+      <div class="sub" style="color:var(--text-dim); margin-top:4px;">Gestores com Acesso Irrestrito</div>
+    </div>
+    <div class="kpi" style="border:1px solid rgba(59,130,246,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95));">
+      <div class="kpi-head"><span class="lbl">Operadores & Outras Funções</span><span class="ic" style="background:rgba(59,130,246,0.2); color:#3b82f6;">👤</span></div>
+      <div class="val" style="color:#3b82f6; font-size:22px;">\${totalUsers - adminCount} Usuário\${(totalUsers - adminCount)===1?'':'s'}</div>
+      <div class="sub" style="color:var(--text-dim); margin-top:4px;">\${standardCount} Operadores · \${managerCount} Gerentes · \${auditorCount} Auditores</div>
+    </div>
+  </div>
+
+  <!-- Atribuição Direta de Funções aos Usuários -->
+  <div class="panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25); background:var(--card);">
+    <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
       <div>
-        <h1 style="display:flex; align-items:center; gap:12px; font-size:24px; font-weight:900; letter-spacing:-0.02em; margin:0; color:var(--text);">
-          <span style="display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.25) 0%, rgba(217,119,6,0.12) 100%); border:1.5px solid rgba(245,158,11,0.45); box-shadow:0 0 20px rgba(245,158,11,0.3); font-size:22px;">🛡️</span>
-          <span>Central de Funções & Governança de Acessos</span>
-        </h1>
-        <p style="font-size:13px; color:var(--text-dim); margin:6px 0 0 0; font-weight:500;">
-          Gestão executiva de papéis de usuários, matriz analítica de permissões, automações funcionais e diagnóstico contínuo em tempo real.
-        </p>
+        <h3 style="font-size:16px; font-weight:700; color:var(--text);">⚡ Atribuição Direta de Funções aos Usuários</h3>
+        <p class="cfg-hint" style="margin-top:4px;">Altere o perfil e nível de acesso de qualquer usuário cadastrado instantaneamente.</p>
       </div>
-      
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-        <span class="tag" style="background:linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(217,119,6,0.12) 100%); color:#FBBF24; border:1px solid rgba(245,158,11,0.45); font-weight:800; padding:8px 16px; border-radius:12px; font-size:12px; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 10px rgba(245,158,11,0.2);">
-          <span>👑</span>
-          <span>\${isAdmin ? 'Administrador Master (Nível 1)' : 'Perfil Operador (' + userRole + ')'}</span>
-        </span>
-        <button type="button" onclick="exportPermissionsMatrixCSV()" class="btn-ghost" style="height:40px; padding:0 16px; border-radius:12px; border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:all 0.2s ease;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span>Exportar Matriz CSV</span>
-        </button>
-        <button type="button" onclick="syncUsersWithServer().then(()=>showLoginSuccessPopup('Funções sincronizadas com o SQL Server!'));" class="btn-ghost" style="height:40px; padding:0 16px; border-radius:12px; border:1px solid rgba(59,130,246,0.35); color:#60A5FA; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:all 0.2s ease;">
-          <span>⚡</span>
-          <span>Sincronizar SQL Server</span>
-        </button>
+      <span class="tag" style="background:rgba(16,185,129,0.15); color:#34D399; border-color:rgba(16,185,129,0.3); font-weight:700;">\${totalUsers} Conta(s) no Sistema</span>
+    </div>
+    
+    <div class="table-panel" style="padding:0; border:none; background:transparent; overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; text-align:left;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.3);">
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">Usuário</th>
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">E-mail</th>
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">Função Atual</th>
+            <th style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase;">Alterar Função do Usuário</th>
+          </tr>
+        </thead>
+        <tbody>
+          \${(registeredUsers || []).map(u => {
+            const isMe = currentUser && u.email.toLowerCase() === currentUser.email.toLowerCase();
+            return \`
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+              <td style="padding:14px 16px; font-weight:600; color:var(--text);">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #3b82f6, #1d4ed8); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px;">
+                    \${u.name.slice(0,2).toUpperCase()}
+                  </div>
+                  <div>
+                    <span>\${u.name}</span>
+                    \${isMe ? ' <span style="font-size:10px; color:#fbbf24; background:rgba(232,176,75,0.15); padding:1px 6px; border-radius:6px; font-weight:700;">Você</span>' : ''}
+                  </div>
+                </div>
+              </td>
+              <td style="padding:14px 16px; color:var(--text-dim); font-size:13px;">\${u.email}</td>
+              <td style="padding:14px 16px;">
+                <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:12px; padding:4px 10px;">\${u.role}</span>
+              </td>
+              <td style="padding:14px 16px;">
+                <select onchange="changeUserRoleFromFuncoes('\${u.email}', this.value)" style="height:36px; padding:0 12px; border-radius:10px; background:var(--input-bg, rgba(0,0,0,0.4)); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; font-weight:700; font-size:13px; cursor:pointer;">
+                  <option value="Administrador" \${u.role==='Administrador'?'selected':''}>👑 Administrador (Acesso Irrestrito)</option>
+                  <option value="Gerente Financeiro" \${u.role==='Gerente Financeiro'?'selected':''}>💼 Gerente Financeiro</option>
+                  <option value="Usuário" \${u.role==='Usuário'?'selected':''}>👤 Usuário / Operador Padrão</option>
+                  <option value="Auditor" \${u.role==='Auditor'?'selected':''}>🔍 Auditor (Somente Leitura)</option>
+                </select>
+              </td>
+            </tr>\`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Matriz de Permissões por Função do Sistema -->
+  <div class="panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25); background:var(--card);">
+    <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h3 style="font-size:16px; font-weight:700; color:var(--text);">Matriz de Permissões e Capacidades do Sistema</h3>
+        <p class="cfg-hint" style="margin-top:4px;">Tabela detalhada de acessos, privilégios de edição e permissões ativas para cada nível de usuário.</p>
+      </div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button onclick="setFuncoesRoleFilter('all', this)" class="funcoes-filter-btn active" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; cursor:pointer;">Todas</button>
+        <button onclick="setFuncoesRoleFilter('admin', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(232,176,75,0.12); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; cursor:pointer;">👑 Administrador</button>
+        <button onclick="setFuncoesRoleFilter('gerente', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#34d399; cursor:pointer;">💼 Gerente</button>
+        <button onclick="setFuncoesRoleFilter('usuario', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); color:#60a5fa; cursor:pointer;">👤 Usuário</button>
+        <button onclick="setFuncoesRoleFilter('auditor', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.3); color:#c084fc; cursor:pointer;">🔍 Auditor</button>
       </div>
     </div>
-
-    <!-- 2. KPIs Executivos das Funções 4K -->
-    <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-bottom:4px;">
-      <!-- Sua Função Atual -->
-      <div class="kpi" style="padding:18px 20px; border-radius:18px; background:linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(15,23,42,0.7) 100%); border:1px solid rgba(245,158,11,0.3); box-shadow:0 12px 32px -8px rgba(0,0,0,0.6);">
-        <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span style="font-size:12px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">Sua Função Vigente</span>
-          <span style="width:34px; height:34px; border-radius:10px; background:rgba(245,158,11,0.22); border:1px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">👑</span>
-        </div>
-        <div class="val" style="font-size:22px; font-weight:900; color:#FBBF24; margin-bottom:2px; letter-spacing:-0.02em;">\${userRole}</div>
-        <div class="sub" style="font-size:11.5px; color:#FDE68A; font-weight:600; margin-top:4px;">\${isAdmin ? 'Nível 1 — Controle Total Irrestrito' : 'Acesso Operacional Autorizado'}</div>
-      </div>
-
-      <!-- Administradores -->
-      <div class="kpi" style="padding:18px 20px; border-radius:18px; background:linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(15,23,42,0.7) 100%); border:1px solid rgba(16,185,129,0.3); box-shadow:0 12px 32px -8px rgba(0,0,0,0.6);">
-        <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span style="font-size:12px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">Administradores Master</span>
-          <span style="width:34px; height:34px; border-radius:10px; background:rgba(16,185,129,0.22); border:1px solid rgba(16,185,129,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">🛡️</span>
-        </div>
-        <div class="val" style="font-size:22px; font-weight:900; color:#34D399; margin-bottom:2px; letter-spacing:-0.02em;">\${adminCount} Gestor\${adminCount===1?'':'es'}</div>
-        <div class="sub" style="font-size:11.5px; color:#A7F3D0; font-weight:600; margin-top:4px;">Permissão total e irrestrita</div>
-      </div>
-
-      <!-- Usuários & Operadores -->
-      <div class="kpi" style="padding:18px 20px; border-radius:18px; background:linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(15,23,42,0.7) 100%); border:1px solid rgba(59,130,246,0.3); box-shadow:0 12px 32px -8px rgba(0,0,0,0.6);">
-        <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span style="font-size:12px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">Operadores & Usuários</span>
-          <span style="width:34px; height:34px; border-radius:10px; background:rgba(59,130,246,0.22); border:1px solid rgba(59,130,246,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">👤</span>
-        </div>
-        <div class="val" style="font-size:22px; font-weight:900; color:#60A5FA; margin-bottom:2px; letter-spacing:-0.02em;">\${standardCount} Contas</div>
-        <div class="sub" style="font-size:11.5px; color:#BFDBFE; font-weight:600; margin-top:4px;">\${activeCount} ativas no sistema</div>
-      </div>
-
-      <!-- Gestores & Auditores -->
-      <div class="kpi" style="padding:18px 20px; border-radius:18px; background:linear-gradient(135deg, rgba(168,85,247,0.12) 0%, rgba(15,23,42,0.7) 100%); border:1px solid rgba(168,85,247,0.3); box-shadow:0 12px 32px -8px rgba(0,0,0,0.6);">
-        <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span style="font-size:12px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">Gerentes & Auditores</span>
-          <span style="width:34px; height:34px; border-radius:10px; background:rgba(168,85,247,0.22); border:1px solid rgba(168,85,247,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">🔍</span>
-        </div>
-        <div class="val" style="font-size:22px; font-weight:900; color:#C084FC; margin-bottom:2px; letter-spacing:-0.02em;">\${managerCount + auditorCount} Contas</div>
-        <div class="sub" style="font-size:11.5px; color:#E9D5FF; font-weight:600; margin-top:4px;">\${managerCount} Gerente(s) · \${auditorCount} Auditor(es)</div>
-      </div>
+    
+    <div class="table-panel" style="padding:0; border:none; background:transparent; overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; text-align:left;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.25);">
+            <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Módulo do Sistema</th>
+            <th class="perm-matrix-th" data-perm-role="admin" style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👑 Administrador</th>
+            <th class="perm-matrix-th" data-perm-role="gerente" style="padding:14px 16px; color:#34d399; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">💼 Gerente Financeiro</th>
+            <th class="perm-matrix-th" data-perm-role="usuario" style="padding:14px 16px; color:#60a5fa; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👤 Usuário / Operador</th>
+            <th class="perm-matrix-th" data-perm-role="auditor" style="padding:14px 16px; color:#c084fc; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">🔍 Auditor (Leitura)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">📊</span> Dashboard Executivo</td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total (Criar/Editar/Excluir)</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Somente Leitura</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">💳</span> Gestão de Transações & Cartões</td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total (Qualquer Usuário)</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Somente Leitura</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">🎯</span> Orçamentos, Metas & Relatórios</td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total + Exportação 4K</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total + Exportação</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Total Próprio</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Exportação CSV/PDF</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">👥</span> Gerenciamento de Usuários & Contas</td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Controle Total + Modo Espelho 👁️</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Lista de Contas</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">🛡️</span> Central de Funções & Permissões</td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Controle Total (Nível 1)</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:14px 16px; font-weight:600; color:var(--text);"><span style="margin-right:8px;">📜</span> Logs de Auditoria & Segurança</td>
+            <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="funcoes-badge full">✅ Auditoria Geral + Filtro IP/Email</span></td>
+            <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Logs Próprios</span></td>
+            <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="funcoes-badge lock">🔒 Sem Acesso</span></td>
+            <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="funcoes-badge read">👁️ Leitura de Eventos</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 
-    <!-- 3. Barra de Seleção de Sub-Abas das Funções (Executive Tabs Glass) -->
-    <div class="funcoes-subtabs-bar" style="display:flex; gap:8px; flex-wrap:wrap; padding:8px; border-radius:16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);">
-      <button type="button" onclick="window.setFuncoesActiveTab('atribuicao', this)" class="funcoes-subtab-btn active" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; transition:all 0.2s ease;">
-        <span>👥</span><span>Usuários & Cargos (\${totalUsers})</span>
-      </button>
-      <button type="button" onclick="window.setFuncoesActiveTab('matriz', this)" class="funcoes-subtab-btn" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text-dim); transition:all 0.2s ease;">
-        <span>🛡️</span><span>Matriz de Permissões</span>
-      </button>
-      <button type="button" onclick="window.setFuncoesActiveTab('rotinas', this)" class="funcoes-subtab-btn" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text-dim); transition:all 0.2s ease;">
-        <span>⚡</span><span>Rotinas & Automações</span>
-      </button>
-      <button type="button" onclick="window.setFuncoesActiveTab('ferramentas', this)" class="funcoes-subtab-btn" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text-dim); transition:all 0.2s ease;">
-        <span>🛠️</span><span>Ferramentas de Gestão</span>
-      </button>
-      <button type="button" onclick="window.setFuncoesActiveTab('all', this)" class="funcoes-subtab-btn" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text-dim); transition:all 0.2s ease;">
-        <span>🌐</span><span>Ver Todos os Painéis</span>
-      </button>
-    </div>
-
-    <!-- SEÇÃO 1: Atribuição Direta de Funções aos Usuários -->
-    <div id="funcoesSecAtribuicao" class="panel" style="border:1px solid rgba(245,158,11,0.25); background:var(--card); border-radius:20px; box-shadow:0 16px 40px -10px rgba(0,0,0,0.6); padding:22px 24px;">
-      <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
-        <div>
-          <h3 style="font-size:17px; font-weight:800; color:var(--text); margin:0; display:flex; align-items:center; gap:8px;">
-            <span>⚡ Atribuição Direta de Funções aos Usuários</span>
-          </h3>
-          <p class="cfg-hint" style="margin:4px 0 0 0; font-size:12.5px;">
-            Gerencie o nível de governança, permissões imediatas e papéis de cada conta com sincronização instantânea.
-          </p>
-        </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span class="tag" style="background:rgba(16,185,129,0.15); color:#34D399; border:1px solid rgba(16,185,129,0.3); font-weight:800; padding:6px 14px; border-radius:10px;">
-            <span id="funcoesVisibleUserCount">\${totalUsers}</span> de \${totalUsers} contas exibidas
-          </span>
-        </div>
-      </div>
-
-      <!-- Barra de Filtros & Busca Reativa de Usuários -->
-      <div class="funcoes-search-bar-wrap" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px; padding:12px; border-radius:14px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07);">
-        <div style="flex:1; min-width:260px; position:relative;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--text-dim); pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="funcoesUserSearch" oninput="window.handleFuncoesUserSearch(this.value)" placeholder="Buscar usuário por nome, e-mail, CPF ou função..." style="width:100%; height:40px; padding-left:42px; padding-right:14px; border-radius:10px; font-size:13px; box-sizing:border-box;">
-        </div>
-        
-        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <button type="button" onclick="window.setFuncoesUserFilter('all', this)" class="funcoes-user-filter-btn active" style="padding:7px 14px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:var(--text);">Todos (\${totalUsers})</button>
-          <button type="button" onclick="window.setFuncoesUserFilter('admin', this)" class="funcoes-user-filter-btn" style="padding:7px 14px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); color:#FBBF24;">👑 Admins (\${adminCount})</button>
-          <button type="button" onclick="window.setFuncoesUserFilter('gerente', this)" class="funcoes-user-filter-btn" style="padding:7px 14px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#34D399;">💼 Gerentes (\${managerCount})</button>
-          <button type="button" onclick="window.setFuncoesUserFilter('usuario', this)" class="funcoes-user-filter-btn" style="padding:7px 14px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); color:#60A5FA;">👤 Usuários (\${standardCount})</button>
-          <button type="button" onclick="window.setFuncoesUserFilter('auditor', this)" class="funcoes-user-filter-btn" style="padding:7px 14px; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; background:rgba(168,85,247,0.12); border:1px solid rgba(168,85,247,0.3); color:#C084FC;">🔍 Auditores (\${auditorCount})</button>
-        </div>
-      </div>
-      
-      <!-- Tabela Executiva de Usuários & Funções -->
-      <div class="table-panel" style="padding:0; border:none; background:transparent; overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; text-align:left;">
-          <thead>
-            <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.3);">
-              <th style="padding:14px 16px; color:var(--text-dim); font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;">Identidade & Usuário</th>
-              <th style="padding:14px 16px; color:var(--text-dim); font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;">E-mail & Telefone</th>
-              <th style="padding:14px 16px; color:var(--text-dim); font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;">Status & Acesso</th>
-              <th style="padding:14px 16px; color:var(--text-dim); font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;">Função Vigente</th>
-              <th style="padding:14px 16px; color:#FBBF24; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; text-align:right;">\${isAdmin ? 'Alterar Função Imediatamente' : 'Nível Atribuído'}</th>
-            </tr>
-          </thead>
-          <tbody>
-            \${userRowsHtml}
-          </tbody>
-        </table>
-
-        <!-- Mensagem de busca sem resultados -->
-        <div id="funcoesNoUserMatch" style="display:none; padding:32px 16px; text-align:center;">
-          <div style="font-size:28px; margin-bottom:8px;">🔍</div>
-          <h4 style="font-size:14px; font-weight:700; color:var(--text); margin:0 0 4px 0;">Nenhum usuário corresponde aos filtros selecionados</h4>
-          <p style="font-size:12px; color:var(--text-dim); margin:0 0 12px 0;">Tente buscar por outro termo ou limpe o filtro atual.</p>
-          <button type="button" onclick="document.getElementById('funcoesUserSearch').value=''; window.handleFuncoesUserSearch(''); window.setFuncoesUserFilter('all', document.querySelector('.funcoes-user-filter-btn'));" class="btn-ghost" style="padding:6px 14px; font-size:12px; font-weight:700; border-radius:8px;">✕ Limpar Filtros</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SEÇÃO 2: Matriz Interativa de Permissões & Capacidades do Sistema -->
-    <div id="funcoesSecMatriz" class="panel" style="display:\${currentFuncoesActiveTab === 'matriz' ? 'block' : 'none'}; border:1px solid rgba(245,158,11,0.25); background:var(--card); border-radius:20px; box-shadow:0 16px 40px -10px rgba(0,0,0,0.6); padding:22px 24px;">
-      <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
-        <div>
-          <h3 style="font-size:17px; font-weight:800; color:var(--text); margin:0; display:flex; align-items:center; gap:8px;">
-            <span>🛡️ Matriz Comparativa de Permissões & Capacidades</span>
-          </h3>
-          <p class="cfg-hint" style="margin:4px 0 0 0; font-size:12.5px;">
-            Mapa analítico de direitos de acesso, privilégios operacionais e visibilidade hierárquica por nível funcional.
-          </p>
-        </div>
-        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <button type="button" onclick="window.setFuncoesRoleFilter('all', this)" class="funcoes-matrix-filter-btn active" style="padding:6px 12px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:var(--text); cursor:pointer;">Todas as Colunas</button>
-          <button type="button" onclick="window.setFuncoesRoleFilter('admin', this)" class="funcoes-matrix-filter-btn" style="padding:6px 12px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); color:#FBBF24; cursor:pointer;">👑 Administrador</button>
-          <button type="button" onclick="window.setFuncoesRoleFilter('gerente', this)" class="funcoes-matrix-filter-btn" style="padding:6px 12px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#34D399; cursor:pointer;">💼 Gerente</button>
-          <button type="button" onclick="window.setFuncoesRoleFilter('usuario', this)" class="funcoes-matrix-filter-btn" style="padding:6px 12px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); color:#60A5FA; cursor:pointer;">👤 Usuário</button>
-          <button type="button" onclick="window.setFuncoesRoleFilter('auditor', this)" class="funcoes-matrix-filter-btn" style="padding:6px 12px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(168,85,247,0.12); border:1px solid rgba(168,85,247,0.3); color:#C084FC; cursor:pointer;">🔍 Auditor</button>
-        </div>
-      </div>
-      
-      <div class="table-panel" style="padding:0; border:none; background:transparent; overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; text-align:left;">
-          <thead>
-            <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.25);">
-              <th style="padding:14px 16px; color:var(--text-dim); font-size:11.5px; text-transform:uppercase; letter-spacing:0.05em; min-width:220px;">Módulo do Sistema</th>
-              <th class="perm-matrix-th" data-perm-role="admin" style="padding:14px 16px; color:#FBBF24; font-size:11.5px; text-transform:uppercase; letter-spacing:0.05em; min-width:180px;">👑 Administrador</th>
-              <th class="perm-matrix-th" data-perm-role="gerente" style="padding:14px 16px; color:#34D399; font-size:11.5px; text-transform:uppercase; letter-spacing:0.05em; min-width:180px;">💼 Gerente Financeiro</th>
-              <th class="perm-matrix-th" data-perm-role="usuario" style="padding:14px 16px; color:#60A5FA; font-size:11.5px; text-transform:uppercase; letter-spacing:0.05em; min-width:180px;">👤 Usuário / Operador</th>
-              <th class="perm-matrix-th" data-perm-role="auditor" style="padding:14px 16px; color:#C084FC; font-size:11.5px; text-transform:uppercase; letter-spacing:0.05em; min-width:180px;">🔍 Auditor (Leitura)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td style="padding:14px 16px; font-weight:700; color:var(--text);"><span style="margin-right:8px;">📊</span> Dashboard Executivo & Métricas</td>
-              <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total Irrestrito</span></td>
-              <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total Próprio</span></td>
-              <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total Próprio</span></td>
-              <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="pill" style="background:rgba(168,85,247,0.18); border:1px solid rgba(168,85,247,0.35); color:#C084FC; font-weight:800; font-size:11.5px; padding:4px 8px;">👁️ Somente Leitura</span></td>
-            </tr>
-
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td style="padding:14px 16px; font-weight:700; color:var(--text);"><span style="margin-right:8px;">💳</span> Transações, Extratos & Cartões</td>
-              <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total (Qualquer Conta)</span></td>
-              <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total Próprio</span></td>
-              <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total Próprio</span></td>
-              <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="pill" style="background:rgba(168,85,247,0.18); border:1px solid rgba(168,85,247,0.35); color:#C084FC; font-weight:800; font-size:11.5px; padding:4px 8px;">👁️ Somente Leitura</span></td>
-            </tr>
-
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td style="padding:14px 16px; font-weight:700; color:var(--text);"><span style="margin-right:8px;">🎯</span> Orçamentos, Metas & Projeções</td>
-              <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total + Projeção 4K</span></td>
-              <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total + Exportação</span></td>
-              <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total Próprio</span></td>
-              <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="pill" style="background:rgba(168,85,247,0.18); border:1px solid rgba(168,85,247,0.35); color:#C084FC; font-weight:800; font-size:11.5px; padding:4px 8px;">👁️ Exportação CSV/PDF</span></td>
-            </tr>
-
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td style="padding:14px 16px; font-weight:700; color:var(--text);"><span style="margin-right:8px;">🔄</span> Automação de Recorrentes Multi-Meses</td>
-              <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total (Geral & Todos Meses)</span></td>
-              <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total Próprio</span></td>
-              <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total Próprio</span></td>
-              <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="pill" style="background:rgba(168,85,247,0.18); border:1px solid rgba(168,85,247,0.35); color:#C084FC; font-weight:800; font-size:11.5px; padding:4px 8px;">👁️ Somente Leitura</span></td>
-            </tr>
-
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td style="padding:14px 16px; font-weight:700; color:var(--text);"><span style="margin-right:8px;">👥</span> Gerenciamento de Usuários & Contas</td>
-              <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Controle Total + Modo Espelho 👁️</span></td>
-              <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="pill" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); color:#F87171; font-weight:700; font-size:11.5px; padding:4px 8px;">🔒 Sem Acesso</span></td>
-              <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="pill" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); color:#F87171; font-weight:700; font-size:11.5px; padding:4px 8px;">🔒 Sem Acesso</span></td>
-              <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="pill" style="background:rgba(168,85,247,0.18); border:1px solid rgba(168,85,247,0.35); color:#C084FC; font-weight:800; font-size:11.5px; padding:4px 8px;">👁️ Lista de Contas Ativas</span></td>
-            </tr>
-
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td style="padding:14px 16px; font-weight:700; color:var(--text);"><span style="margin-right:8px;">🛡️</span> Central de Funções & Governança</td>
-              <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Controle Total (Nível 1)</span></td>
-              <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="pill" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); color:#F87171; font-weight:700; font-size:11.5px; padding:4px 8px;">🔒 Sem Acesso</span></td>
-              <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="pill" style="background:rgba(59,130,246,0.18); border:1px solid rgba(59,130,246,0.35); color:#60A5FA; font-weight:800; font-size:11.5px; padding:4px 8px;">👁️ Consulta Própria</span></td>
-              <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="pill" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); color:#F87171; font-weight:700; font-size:11.5px; padding:4px 8px;">🔒 Sem Acesso</span></td>
-            </tr>
-
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td style="padding:14px 16px; font-weight:700; color:var(--text);"><span style="margin-right:8px;">🛠️</span> Suporte & Ordens de Serviço (O.S.)</td>
-              <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Total (Gestão & Fechamento)</span></td>
-              <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Abertura & Acompanhamento</span></td>
-              <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Abertura de Chamados</span></td>
-              <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="pill" style="background:rgba(168,85,247,0.18); border:1px solid rgba(168,85,247,0.35); color:#C084FC; font-weight:800; font-size:11.5px; padding:4px 8px;">👁️ Leitura de Protocolos</span></td>
-            </tr>
-
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td style="padding:14px 16px; font-weight:700; color:var(--text);"><span style="margin-right:8px;">📜</span> Logs de Auditoria & Segurança</td>
-              <td class="perm-matrix-td" data-perm-role="admin" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Auditoria Geral + Filtros</span></td>
-              <td class="perm-matrix-td" data-perm-role="gerente" style="padding:14px 16px;"><span class="pill" style="background:rgba(168,85,247,0.18); border:1px solid rgba(168,85,247,0.35); color:#C084FC; font-weight:800; font-size:11.5px; padding:4px 8px;">👁️ Logs Próprios</span></td>
-              <td class="perm-matrix-td" data-perm-role="usuario" style="padding:14px 16px;"><span class="pill" style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); color:#F87171; font-weight:700; font-size:11.5px; padding:4px 8px;">🔒 Sem Acesso</span></td>
-              <td class="perm-matrix-td" data-perm-role="auditor" style="padding:14px 16px;"><span class="pill" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); color:#34D399; font-weight:800; font-size:11.5px; padding:4px 8px;">✅ Leitura Integral de Eventos</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- SEÇÃO 3: Central de Rotinas & Automação Funcional 4K -->
-    <div id="funcoesSecRotinas" class="panel" style="display:\${currentFuncoesActiveTab === 'rotinas' ? 'block' : 'none'}; border:1px solid rgba(245,158,11,0.25); background:var(--card); border-radius:20px; box-shadow:0 16px 40px -10px rgba(0,0,0,0.6); padding:22px 24px;">
-      <div class="panel-head" style="margin-bottom:16px;">
-        <h3 style="font-size:17px; font-weight:800; color:var(--text); margin:0; display:flex; align-items:center; gap:8px;">
-          <span>⚡ Status Operacional das Rotinas & Automações</span>
-        </h3>
-        <p class="cfg-hint" style="margin:4px 0 0 0; font-size:12.5px;">
-          Monitoramento contínuo dos serviços de integração externa, persistência de banco e segurança.
-        </p>
-      </div>
-
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
-        <!-- Rotina 1: Nuvem Render -->
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 18px; background:rgba(0,0,0,0.28); border-radius:14px; border:1px solid rgba(255,255,255,0.08); box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span style="width:12px; height:12px; border-radius:50%; background:#10B981; box-shadow:0 0 12px #10B981; flex-shrink:0;"></span>
-            <div>
-              <strong style="font-size:13.5px; color:var(--text); display:block;">Sincronizador Nuvem Render</strong>
-              <span style="font-size:11.5px; color:var(--text-dim);">Daemon contínuo ativo a cada 3s</span>
-            </div>
+  <!-- Central de Rotinas & Automação Funcional 4K -->
+  <div class="cfg-grid" style="margin-bottom:20px;">
+    <div class="panel" style="border:1px solid rgba(232,176,75,0.2); background:var(--card);">
+      <div class="panel-head"><h3>⚡ Status das Rotinas Funcionais</h3></div>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow:0 0 10px #10b981;"></span>
+            <div><strong style="font-size:13.5px; color:var(--text);">Persistência SQL Server / JSON</strong><div style="font-size:11px; color:var(--text-faint);">Sincronização em tempo real</div></div>
           </div>
-          <span style="font-size:11px; font-weight:800; color:#34D399; background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.35); padding:4px 10px; border-radius:8px;">Online</span>
+          <span style="font-size:11px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.15); padding:3px 8px; border-radius:6px;">Online</span>
         </div>
-
-        <!-- Rotina 2: SQL Server / Fallback JSON -->
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 18px; background:rgba(0,0,0,0.28); border-radius:14px; border:1px solid rgba(255,255,255,0.08); box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span style="width:12px; height:12px; border-radius:50%; background:#3B82F6; box-shadow:0 0 12px #3B82F6; flex-shrink:0;"></span>
-            <div>
-              <strong style="font-size:13.5px; color:var(--text); display:block;">SQL Server & Cache Local</strong>
-              <span style="font-size:11.5px; color:var(--text-dim);">Tabelas dbo.usuarios & transacoes</span>
-            </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#3b82f6; box-shadow:0 0 10px #3b82f6;"></span>
+            <div><strong style="font-size:13.5px; color:var(--text);">Engine de Funções & Permissões</strong><div style="font-size:11px; color:var(--text-faint);">Validação de Acesso JWT / Sessão</div></div>
           </div>
-          <span style="font-size:11px; font-weight:800; color:#60A5FA; background:rgba(59,130,246,0.18); border:1px solid rgba(59,130,246,0.35); padding:4px 10px; border-radius:8px;">Persistido</span>
+          <span style="font-size:11px; font-weight:700; color:#3b82f6; background:rgba(59,130,246,0.15); padding:3px 8px; border-radius:6px;">Ativo</span>
         </div>
-
-        <!-- Rotina 3: Engine JWT -->
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 18px; background:rgba(0,0,0,0.28); border-radius:14px; border:1px solid rgba(255,255,255,0.08); box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span style="width:12px; height:12px; border-radius:50%; background:#F59E0B; box-shadow:0 0 12px #F59E0B; flex-shrink:0;"></span>
-            <div>
-              <strong style="font-size:13.5px; color:var(--text); display:block;">Motor de Autenticação JWT</strong>
-              <span style="font-size:11.5px; color:var(--text-dim);">Sessões criptografadas & seguras</span>
-            </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b; box-shadow:0 0 10px #f59e0b;"></span>
+            <div><strong style="font-size:13.5px; color:var(--text);">Auditoria beacon & API Logs</strong><div style="font-size:11px; color:var(--text-faint);">Rastreamento de ações do sistema</div></div>
           </div>
-          <span style="font-size:11px; font-weight:800; color:#FBBF24; background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.35); padding:4px 10px; border-radius:8px;">Ativo</span>
-        </div>
-
-        <!-- Rotina 4: Recorrentes Multi-Meses -->
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 18px; background:rgba(0,0,0,0.28); border-radius:14px; border:1px solid rgba(255,255,255,0.08); box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span style="width:12px; height:12px; border-radius:50%; background:#A855F7; box-shadow:0 0 12px #A855F7; flex-shrink:0;"></span>
-            <div>
-              <strong style="font-size:13.5px; color:var(--text); display:block;">Automação de Recorrentes</strong>
-              <span style="font-size:11.5px; color:var(--text-dim);">Replicação contínua para todos os meses</span>
-            </div>
-          </div>
-          <span style="font-size:11px; font-weight:800; color:#C084FC; background:rgba(168,85,247,0.18); border:1px solid rgba(168,85,247,0.35); padding:4px 10px; border-radius:8px;">Auto-Sync</span>
+          <span style="font-size:11px; font-weight:700; color:#f59e0b; background:rgba(245,158,11,0.15); padding:3px 8px; border-radius:6px;">Gravando</span>
         </div>
       </div>
     </div>
 
-    <!-- SEÇÃO 4: Ferramentas & Diagnóstico Rápido de Funções -->
-    <div id="funcoesSecFerramentas" class="panel" style="display:\${currentFuncoesActiveTab === 'ferramentas' ? 'block' : 'none'}; border:1px solid rgba(245,158,11,0.25); background:var(--card); border-radius:20px; box-shadow:0 16px 40px -10px rgba(0,0,0,0.6); padding:22px 24px;">
-      <div class="panel-head" style="margin-bottom:16px;">
-        <h3 style="font-size:17px; font-weight:800; color:var(--text); margin:0; display:flex; align-items:center; gap:8px;">
-          <span>🛠️ Ferramentas & Diagnóstico Operacional de Funções</span>
-        </h3>
-        <p class="cfg-hint" style="margin:4px 0 0 0; font-size:12.5px;">
-          Ações rápidas para recalcular saldos, forçar sincronização entre servidores, sanear estados e exportar relatórios.
-        </p>
-      </div>
-
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px;">
-        <button type="button" class="btn-primary" onclick="if(typeof recalculateAllBalances==='function') recalculateAllBalances(); showLoginSuccessPopup('Saldos, faturas e projeções reprocessados com sucesso!');" style="height:48px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:12px; font-size:13px; font-weight:800; cursor:pointer;">
-          <span>🔄</span><span>Recalcular Saldos & Projeções</span>
+    <div class="panel" style="border:1px solid rgba(232,176,75,0.2); background:var(--card);">
+      <div class="panel-head"><h3>🛠️ Ferramentas & Teste de Função</h3></div>
+      <p class="cfg-hint" style="margin-bottom:14px;">Utilize as ferramentas abaixo para validar o estado e o recálculo imediato de todas as funções ativas.</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn-primary" onclick="if(typeof recalculateAllBalances==='function') recalculateAllBalances(); showLoginSuccessPopup('Saldos e funções reprocessados com sucesso!');" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+          <span>🔄</span> Recalcular Saldos & Projeções
         </button>
-        
-        <button type="button" class="btn-ghost" onclick="syncUsersWithServer().then(()=>showLoginSuccessPopup('Funções e usuários sincronizados com o SQL Server!'));" style="height:48px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:12px; border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:13px; font-weight:800; cursor:pointer;">
-          <span>⚡</span><span>Sincronizar Funções & SQL Server</span>
-        </button>
-
-        <button type="button" class="btn-ghost" onclick="if(typeof autoSyncRecurringToAllRegisteredMonths==='function') autoSyncRecurringToAllRegisteredMonths(); showLoginSuccessPopup('Recorrentes reprocessados em todos os meses!');" style="height:48px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:12px; border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:13px; font-weight:800; cursor:pointer;">
-          <span>🔁</span><span>Reprocessar Recorrentes Multi-Meses</span>
-        </button>
-
-        <button type="button" class="btn-ghost" onclick="exportPermissionsMatrixCSV();" style="height:48px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:12px; border:1px solid rgba(168,85,247,0.4); color:#C084FC; font-size:13px; font-weight:800; cursor:pointer;">
-          <span>📋</span><span>Baixar Matriz de Conformidade CSV</span>
+        <button class="btn-ghost" onclick="syncUsersWithServer().then(()=>showLoginSuccessPopup('Funções de usuários atualizadas com o servidor!'));" style="display:flex; align-items:center; justify-content:center; gap:8px; border-color:rgba(232,176,75,0.3); color:#fbbf24;">
+          <span>⚡</span> Sincronizar Tabela de Funções & Usuários
         </button>
       </div>
     </div>
-
   </div>\`;
 }
 
@@ -19565,7 +18939,7 @@ function updateAccBalanceLabel() {
 }
 
 /* ==================== Modais e Ações de Dados ==================== */
-function openModal(id, initialType){
+function openModal(id){
   if(categories.length===0){ showToast('Cadastre uma categoria antes de lançar uma transação'); return; }
   editingId = id || null;
   document.getElementById('overlay').classList.add('show');
@@ -19581,17 +18955,15 @@ function openModal(id, initialType){
     document.getElementById('fStatus').value = t.status;
     if(t.acc) selectedAcc = t.acc;
   } else {
-    var isIncome = (initialType === 'in');
-    var isExpense = (initialType === 'out');
-    document.getElementById('modalTitle').textContent = isIncome ? 'Nova Receita' : (isExpense ? 'Nova Despesa' : 'Nova Transação');
+    document.getElementById('modalTitle').textContent = 'Nova Transação';
     document.getElementById('fDesc').value = '';
     document.getElementById('fValor').value = '';
     
     const now = new Date();
     const defaultDate = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
     document.getElementById('fData').value = defaultDate;
-    document.getElementById('fStatus').value = isIncome ? 'Recebido' : 'Pago';
-    setType(initialType || 'out');
+    document.getElementById('fStatus').value = 'Pago';
+    setType('out');
   }
   populateAccountOptions(selectedAcc);
   const fContaEl = document.getElementById('fConta');
@@ -21763,15 +21135,15 @@ function navigate(page){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
   if (isAdminView) {
-    if (!['dashboard', 'usuarios', 'funcoes', 'ordens', 'logs'].includes(page)) {
-      page = 'dashboard';
+    if (!['usuarios', 'ordens', 'logs'].includes(page)) {
+      page = 'usuarios';
     }
   } else {
-    if (['usuarios', 'funcoes', 'ordens', 'logs'].includes(page)) {
+    if (['usuarios', 'ordens', 'logs'].includes(page)) {
       page = 'dashboard';
     }
   }
-  if(!page) page = 'dashboard';
+  if(!page) page = isAdminView ? 'usuarios' : 'dashboard';
   const isSamePage = (currentPage === page);
   currentPage = page;
   try {
@@ -22324,7 +21696,7 @@ window.applyPostLoginBg = function(theme) {
 
       if (currentUser.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
-        const validAdminTargets = ['usuarios', 'funcoes', 'ordens', 'logs'];
+        const validAdminTargets = ['usuarios', 'ordens', 'logs'];
         if (validAdminTargets.includes(pageTarget)) {
           currentPage = pageTarget;
         } else {
@@ -22483,7 +21855,7 @@ window.applyPostLoginBg = function(theme) {
   const pageTarget = hashPage || savedPage || currentPage;
 
   if (currentUser.role === 'Administrador') {
-    const validAdminTargets = ['usuarios', 'funcoes', 'ordens', 'logs'];
+    const validAdminTargets = ['usuarios', 'ordens', 'logs'];
     if (validAdminTargets.includes(pageTarget)) {
       currentPage = pageTarget;
     } else {
@@ -24272,8 +23644,8 @@ const server = http.createServer(async (req, res) => {
                            (parsedUrl.query && parsedUrl.query.sync_secret === JWT_SECRET);
     if (pool) {
       const sqlFields = isInternalSync
-        ? 'SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, last_ip, must_change_password FROM usuarios ORDER BY id ASC'
-        : 'SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, last_ip, must_change_password FROM usuarios ORDER BY id ASC';
+        ? 'SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password FROM usuarios ORDER BY id ASC'
+        : 'SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password FROM usuarios ORDER BY id ASC';
       pool.query(sqlFields)
         .then(result => {
           const rows = (result.rows || []).map(u => {
@@ -24474,7 +23846,6 @@ const server = http.createServer(async (req, res) => {
               birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
               terms_accepted: u.terms_accepted !== undefined ? u.terms_accepted : (existing ? existing.terms_accepted : true),
               device_type: u.device_type || (existing ? existing.device_type : 'Computador'),
-              last_ip: u.last_ip || (existing ? existing.last_ip : null),
               created_at: u.created_at || (existing ? existing.created_at : new Date().toISOString()),
               last_login: finalLastLogin
             });
@@ -24508,16 +23879,15 @@ const server = http.createServer(async (req, res) => {
                        phone = COALESCE($7, phone),
                        birth_date = COALESCE($8, birth_date),
                        terms_accepted = COALESCE($9, terms_accepted),
-                       device_type = COALESCE($10, device_type),
-                       last_ip = COALESCE($11, last_ip)
+                       device_type = COALESCE($10, device_type)
                      WHERE LOWER(email) = LOWER($1);
                    END
                    ELSE
                    BEGIN
-                     INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, device_type, last_ip)
-                     VALUES ($2, $1, $3, $4, 1, $5, $6, $7, $8, $9, $10, $11);
+                     INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, device_type)
+                     VALUES ($2, $1, $3, $4, 1, $5, $6, $7, $8, $9, $10);
                    END;`,
-                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador', u.last_ip || null]
+                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador']
                 );
 
                 // Garante que todo novo usuário cadastrado tenha dados financeiros 100% zerados
@@ -24534,7 +23904,7 @@ const server = http.createServer(async (req, res) => {
               }
             }
             // Espelhar de volta para salvar o que de fato está no SQL Server
-            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, last_ip FROM usuarios ORDER BY id ASC');
+            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
             if (allUsersRes.rows) {
               const formattedRows = allUsersRes.rows.map(r => {
                 const c = { ...r };
@@ -24728,7 +24098,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'POST' && parsedUrl.pathname === '/api/data') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
-    req.on('end', async () => {
+    req.on('end', () => {
       let payload;
       try {
         payload = JSON.parse(body);
@@ -24757,7 +24127,7 @@ const server = http.createServer(async (req, res) => {
 
       if (pool) {
         const strDataToSave = JSON.stringify(dataToSave);
-        await pool.query(
+        pool.query(
           `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
            BEGIN
              UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
@@ -24771,12 +24141,10 @@ const server = http.createServer(async (req, res) => {
           console.warn('[AVISO BD] Falha ao salvar no SQL Server. Dados salvos com resiliência local.', err.message);
         });
 
-        // Persistência relacional imediata garantida no SQL Server (tabelas transacoes, contas_bancarias, categorias)
-        await Promise.allSettled([
-          syncUserTransactionsToTable(cleanEmail, Array.isArray(dataToSave.transactions) ? dataToSave.transactions : []),
-          syncUserAccountsToTable(cleanEmail, Array.isArray(dataToSave.accounts) ? dataToSave.accounts : []),
-          syncUserCategoriesToTable(cleanEmail, Array.isArray(dataToSave.categories) ? dataToSave.categories : [])
-        ]);
+        // Persistência relacional imediata no SQL Server (tabelas transacoes, contas_bancarias, categorias)
+        syncUserTransactionsToTable(cleanEmail, Array.isArray(dataToSave.transactions) ? dataToSave.transactions : []).catch(() => {});
+        syncUserAccountsToTable(cleanEmail, Array.isArray(dataToSave.accounts) ? dataToSave.accounts : []).catch(() => {});
+        syncUserCategoriesToTable(cleanEmail, Array.isArray(dataToSave.categories) ? dataToSave.categories : []).catch(() => {});
       }
 
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -25533,20 +24901,18 @@ async function syncWithRenderCloud() {
             const defaultPass = (cu.password && cu.password.startsWith('scrypt:')) ? cu.password : hashPassword(cu.password || '86266049');
             const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
             const deviceVal = cu.device_type || cu.device || (cu.is_mobile ? 'Mobile' : 'Computador');
-            const ipVal = cu.last_ip || cu.ip || null;
             const rawCuCpf = cu.cpf ? String(cu.cpf).replace(/\D/g, '') : null;
             await pool.query(
-              `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login, device_type, last_ip)
-               VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9, $10, $11)`,
-              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', rawCuCpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal, ipVal]
+              `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, last_login, device_type)
+               VALUES ($1, $2, $3, $4, 1, $5, $6, $7, $8, $9, $10)`,
+              [cu.name || 'Usuário', cleanEmail, defaultPass, cu.role || 'Usuário', rawCuCpf || null, cu.phone || null, cu.birth_date || null, cu.terms_accepted !== false, initialLastLogin, deviceVal]
             );
             await ensureUserIsConfiguredInDatabase(cleanEmail, {
               name: cu.name,
               cpf: rawCuCpf,
               phone: cu.phone,
               birth_date: cu.birth_date,
-              device_type: deviceVal,
-              client_ip: ipVal
+              device_type: deviceVal
             });
             console.log(`⚡ [SYNC RENDER -> SQL SERVER] Novo cadastro configurado no SQL Server com contas e categorias (Dispositivo: ${deviceVal}): ${cleanEmail}`);
             broadcastEvent('new_user_registered', {
@@ -25568,9 +24934,6 @@ async function syncWithRenderCloud() {
           const updatedBirth = cu.birth_date || cu.birthDate || currentU.birth_date;
           if (cu.device_type && cu.device_type !== currentU.device_type) {
             await pool.query('UPDATE usuarios SET device_type = $1 WHERE LOWER(email) = LOWER($2)', [cu.device_type, cleanEmail]).catch(()=>{});
-          }
-          if (cu.last_ip && cu.last_ip !== currentU.last_ip) {
-            await pool.query('UPDATE usuarios SET last_ip = $1 WHERE LOWER(email) = LOWER($2)', [cu.last_ip, cleanEmail]).catch(()=>{});
           }
           if (cu.password && cu.password.startsWith('scrypt:') && cu.password !== currentU.password) {
             await pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [cu.password, cleanEmail]).catch(()=>{});
@@ -25694,7 +25057,7 @@ async function syncWithRenderCloud() {
     }
 
     // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS)
-    const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, last_ip FROM usuarios ORDER BY id ASC');
+    const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
     if (localUsersRes.rows && localUsersRes.rows.length > 0) {
       const usersToSync = localUsersRes.rows.map(u => {
         const uCopy = { ...u };

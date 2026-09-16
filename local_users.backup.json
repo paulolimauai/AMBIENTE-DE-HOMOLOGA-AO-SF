@@ -12,8 +12,7 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": null
+    "device_type": "Computador"
   },
   {
     "id": "38",
@@ -28,8 +27,7 @@
     "phone": "(62) 99999-8888",
     "birth_date": "10/10/1990",
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": null
+    "device_type": "Computador"
   },
   {
     "id": "39",
@@ -44,8 +42,7 @@
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": "127.0.0.1"
+    "device_type": "Computador"
   },
   {
     "id": "40",
@@ -55,13 +52,12 @@
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
-    "last_login": "2026-09-16T08:01:25-03:00",
+    "last_login": "2026-09-16T08:23:27-03:00",
     "cpf": "99925109191",
     "phone": "(62) 99367-6783",
     "birth_date": "27/06/1966",
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": "127.0.0.1"
+    "device_type": "Computador"
   },
   {
     "id": "41",
@@ -76,8 +72,7 @@
     "phone": "(62) 99264-7115",
     "birth_date": "27/10/1966",
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": null
+    "device_type": "Computador"
   },
   {
     "id": "42",
@@ -92,8 +87,7 @@
     "phone": "(11) 99999-1111",
     "birth_date": "1990-01-01",
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": null
+    "device_type": "Computador"
   },
   {
     "id": "43",
@@ -108,8 +102,7 @@
     "phone": "(62) 98888-2222",
     "birth_date": "1988-03-20",
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": null
+    "device_type": "Computador"
   },
   {
     "id": "44",
@@ -124,8 +117,7 @@
     "phone": "(62) 99999-0000",
     "birth_date": "1992-04-10",
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": null
+    "device_type": "Computador"
   },
   {
     "id": "45",
@@ -140,8 +132,7 @@
     "phone": "(62) 98888-7777",
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": null
+    "device_type": "Computador"
   },
   {
     "id": "47",
@@ -156,8 +147,7 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador",
-    "last_ip": null
+    "device_type": "Computador"
   },
   {
     "id": "51",
@@ -172,7 +162,6 @@
     "phone": "62988880001",
     "birth_date": "10/10/1990",
     "terms_accepted": true,
-    "device_type": "Mobile",
-    "last_ip": null
+    "device_type": "Mobile"
   }
 ]
