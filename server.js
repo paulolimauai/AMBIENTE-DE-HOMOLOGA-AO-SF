@@ -3934,12 +3934,12 @@ nav.menu{
   width:78px !important;
   max-width:78px !important;
   margin:0 !important;
-  padding:10px 0 14px !important;
+  padding:8px 0 10px !important;
   display:flex !important;
   flex-direction:column !important;
   align-items:center !important;
-  justify-content:space-evenly !important;
-  gap:2px !important;
+  justify-content:space-between !important;
+  gap:4px !important;
   background:#090E17 !important;
   border-right:1px solid #1E293B !important;
   border-top:none !important;
@@ -3951,19 +3951,12 @@ nav.menu{
   -webkit-backdrop-filter:none !important;
   overflow-y:auto !important;
   overflow-x:hidden !important;
-  scrollbar-width:thin !important;
-  scrollbar-color:#334155 transparent !important;
+  scrollbar-width:none !important;
   z-index:9999 !important;
 }
 nav.menu::-webkit-scrollbar{
-  width:3px !important;
-}
-nav.menu::-webkit-scrollbar-thumb{
-  background:#334155 !important;
-  border-radius:999px !important;
-}
-nav.menu::-webkit-scrollbar-track{
-  background:transparent !important;
+  display:none !important;
+  width:0 !important;
 }
 
 .menu button{
@@ -3973,12 +3966,12 @@ nav.menu::-webkit-scrollbar-track{
   align-items:center !important;
   justify-content:center !important;
   text-align:center !important;
-  gap:2px !important;
+  gap:3px !important;
   width:66px !important;
-  flex:1 1 auto !important;
-  max-height:56px !important;
-  min-height:38px !important;
-  padding:3px 2px !important;
+  flex:1 1 0 !important;
+  min-height:36px !important;
+  max-height:80px !important;
+  padding:4px 2px !important;
   border-radius:10px !important;
   background:transparent !important;
   border:1px solid transparent !important;
@@ -4015,7 +4008,7 @@ nav.menu::-webkit-scrollbar-track{
   top:50% !important;
   transform:translateY(-50%) !important;
   width:3px !important;
-  height:20px !important;
+  height:24px !important;
   border-radius:0 4px 4px 0 !important;
   background:#38BDF8 !important;
   box-shadow:0 0 8px rgba(56, 189, 248, 0.6) !important;
@@ -4024,8 +4017,8 @@ nav.menu::-webkit-scrollbar-track{
   display:none !important;
 }
 .menu button .ic{
-  width:22px !important;
-  height:22px !important;
+  width:24px !important;
+  height:24px !important;
   border-radius:6px !important;
   background:transparent !important;
   border:none !important;
@@ -4038,9 +4031,9 @@ nav.menu::-webkit-scrollbar-track{
   flex-shrink:0 !important;
 }
 .menu button .ic svg{
-  width:18px !important;
-  height:18px !important;
-  stroke-width:2px !important;
+  width:19px !important;
+  height:19px !important;
+  stroke-width:2.1px !important;
 }
 .menu button:hover .ic{
   transform:none !important;
@@ -4082,16 +4075,16 @@ nav.menu::-webkit-scrollbar-track{
 
 /* Ajustes Responsivos Fluidos por Altura e Largura de Tela (Monitores, Laptops, Telas Menores e Dispositivos) */
 @media (min-height: 900px) {
-  nav.menu { padding: 14px 0 18px !important; gap: 4px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 68px !important; max-height: 60px !important; min-height: 48px !important; }
-  .menu button .ic, .menu button.menu-btn-admin .ic { width: 22px !important; height: 22px !important; }
-  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 19px !important; height: 19px !important; }
+  nav.menu { padding: 12px 0 16px !important; gap: 6px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 68px !important; }
+  .menu button .ic, .menu button.menu-btn-admin .ic { width: 24px !important; height: 24px !important; }
+  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 20px !important; height: 20px !important; }
   .menu button span:not(.ic) { font-size: 10.5px !important; }
 }
 
 @media (max-height: 800px) {
-  nav.menu { padding: 6px 0 10px !important; gap: 2px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 66px !important; max-height: 48px !important; min-height: 40px !important; padding: 2px 2px !important; gap: 1px !important; border-radius: 8px !important; }
+  nav.menu { padding: 6px 0 8px !important; gap: 2px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 66px !important; padding: 2px !important; border-radius: 8px !important; }
   .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
   .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
   .menu button span:not(.ic) { font-size: 9.5px !important; }
@@ -4099,8 +4092,8 @@ nav.menu::-webkit-scrollbar-track{
 }
 
 @media (max-height: 680px) {
-  nav.menu { padding: 4px 0 6px !important; gap: 2px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 64px !important; max-height: 42px !important; min-height: 36px !important; padding: 2px 1px !important; gap: 1px !important; border-radius: 8px !important; }
+  nav.menu { padding: 4px 0 6px !important; gap: 1px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 64px !important; padding: 2px 1px !important; border-radius: 8px !important; }
   .menu button span:not(.ic) { font-size: 9px !important; }
   .menu button .ic, .menu button.menu-btn-admin .ic { width: 18px !important; height: 18px !important; }
   .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 15px !important; height: 15px !important; }
@@ -4109,7 +4102,7 @@ nav.menu::-webkit-scrollbar-track{
 
 @media (max-height: 560px) {
   nav.menu { padding: 2px 0 4px !important; gap: 1px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 60px !important; max-height: 34px !important; min-height: 28px !important; padding: 2px !important; border-radius: 6px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 60px !important; padding: 2px !important; border-radius: 6px !important; }
   .menu button span:not(.ic) { display: none !important; }
   .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
   .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
@@ -7068,7 +7061,152 @@ body.light .btn-hero-ghost:hover {
   color: #38BDF8;
 }
 
-/* Light mode overrides */
+/* ==================== 4K Executive Dashboard Wheels, Charts & Widgets ==================== */
+.dash-chart-mode-strip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 3px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.dash-chart-mode-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: #94A3B8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+.dash-chart-mode-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.06);
+}
+.dash-chart-mode-btn.active {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(2, 132, 199, 0.2));
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dash-wheel-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.dash-wheel-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+}
+.dash-wheel-score {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.dash-wheel-label {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.dash-pillars-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  margin-top: 14px;
+}
+@media (max-width: 420px) {
+  .dash-pillars-list { grid-template-columns: 1fr; }
+}
+.dash-pillar-item {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.dash-pillar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+}
+.dash-pillar-bar {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.dash-pillar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dash-pace-box {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 12px;
+}
+.dash-pace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.dash-pace-meter {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dash-pace-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+.dash-pace-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #FFFFFF;
+  box-shadow: 0 0 6px #FFFFFF;
+  z-index: 2;
+}
+
+/* Light mode overrides - REGRA: PRETO SÓLIDO #000000 PARA TEXTOS */
 body.light .dashboard-quick-actions {
   background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
   border-color: #E2E8F0 !important;
@@ -7077,28 +7215,61 @@ body.light .dashboard-quick-actions {
 body.light .quick-act-neutral {
   background: #F1F5F9 !important;
   border-color: #CBD5E1 !important;
-  color: #334155 !important;
+  color: #000000 !important;
 }
 body.light .dash-card {
   background: #FFFFFF !important;
   border-color: #E2E8F0 !important;
   box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06) !important;
 }
-body.light .dash-card-title { color: #0F172A !important; }
-body.light .dash-metric-item {
-  background: #F8FAFC !important;
-  border-color: #E2E8F0 !important;
+body.light .dash-card-title,
+body.light .dash-card-title div,
+body.light .dash-card h1,
+body.light .dash-card h2,
+body.light .dash-card h3,
+body.light .dash-card h4,
+body.light .dash-card strong,
+body.light .dash-card b {
+  color: #000000 !important;
 }
-body.light .dash-metric-val { color: #0F172A !important; }
+body.light .dash-card-head .tag,
+body.light .dash-filter-pill,
+body.light .dash-chart-mode-btn {
+  color: #000000 !important;
+}
+body.light .dash-chart-mode-strip,
 body.light .dash-filter-strip {
   background: #F1F5F9 !important;
-  border-color: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
 }
-body.light .dash-filter-pill { color: #64748B !important; }
+body.light .dash-chart-mode-btn.active,
 body.light .dash-filter-pill.active {
   background: #FFFFFF !important;
   color: #0284C7 !important;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1) !important;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12) !important;
+}
+body.light .dash-metric-item,
+body.light .dash-pillar-item,
+body.light .dash-pace-box {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+body.light .dash-metric-label,
+body.light .dash-wheel-label,
+body.light .dash-pillar-head span {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+body.light .dash-metric-val {
+  color: #000000 !important;
+}
+body.light .dash-wheel-center b,
+body.light .dash-wheel-center strong {
+  color: #000000 !important;
+}
+body.light .dash-card p,
+body.light .dash-card span:not([class*="tag"]):not([class*="badge"]) {
+  color: #000000 !important;
 }
 
 
