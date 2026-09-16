@@ -1437,8 +1437,7 @@ const htmlContent = `<!DOCTYPE html>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#060913" id="metaThemeColor">
-<link rel="preload" as="image" href="/images/nexus_cyber_office_bg.jpg" fetchpriority="high">
+<meta name="theme-color" content="#000000" id="metaThemeColor">
 <script>
 (function() {
   try {
@@ -1509,7 +1508,7 @@ const htmlContent = `<!DOCTYPE html>
       sn = parseFloat(sc) / 100 || 1.0;
     }
     document.documentElement.style.setProperty('--app-zoom', sn);
-    var bgCol = isLight ? '#F2F7F4' : '#060913';
+    var bgCol = isLight ? '#F2F7F4' : '#000000';
     document.write('<style id="critical-fouc-shield">background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + '</style>');
     var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || sn === 1.0);
     var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('html, body { zoom: ' + sn + ' !important; }');
@@ -1675,12 +1674,12 @@ html.light.is-admin #menuOrdensBtn #osBadgeCount {
 
 :root{
   color-scheme: dark;
-  --bg:#070B14;
-  --sidebar:rgba(10, 16, 30, 0.92);
-  --card:rgba(13, 20, 36, 0.85);
-  --card-border:rgba(56, 189, 248, 0.20);
-  --card-hover:rgba(18, 28, 50, 0.88);
-  --input-bg:rgba(15, 23, 42, 0.65);
+  --bg:#000000;
+  --sidebar:#000000;
+  --card:rgba(14, 14, 14, 0.92);
+  --card-border:rgba(255, 255, 255, 0.10);
+  --card-hover:rgba(24, 24, 24, 0.95);
+  --input-bg:rgba(18, 18, 18, 0.85);
   --input-border:rgba(255, 255, 255, 0.14);
   --text:#F8FAFC;
   --text-dim:#94A3B8;
@@ -1749,17 +1748,8 @@ html, body{overflow-x:clip !important; width:100%;}
   z-index: -99999 !important;
   pointer-events: none !important;
   user-select: none !important;
-  background-color: #060913 !important;
-  background-image: 
-    radial-gradient(ellipse at 20% 15%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 80%, rgba(59, 130, 246, 0.16) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 65%),
-    linear-gradient(180deg, rgba(6, 9, 19, 0.76) 0%, rgba(8, 13, 26, 0.88) 50%, rgba(4, 7, 15, 0.98) 100%),
-    url('/images/nexus_cyber_office_bg.jpg') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: scroll !important;
+  background-color: #000000 !important;
+  background-image: none !important;
   transform: translateZ(0) !important;
   -webkit-transform: translateZ(0) !important;
 }
@@ -1767,39 +1757,25 @@ html, body{overflow-x:clip !important; width:100%;}
 body.light #persistentSystemBg,
 body.light .persistent-system-bg {
   background-color: #F8FAFC !important;
-  background-image: 
-    radial-gradient(ellipse at 50% 10%, rgba(254, 243, 199, 0.60) 0%, transparent 60%),
-    radial-gradient(ellipse at 85% 85%, rgba(219, 234, 254, 0.65) 0%, transparent 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.98) 100%),
-    url('/images/nexus_cyber_office_bg.jpg') !important;
+  background-image: none !important;
 }
 
 /* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - 4K High-Tech) ==================== */
 :root {
-  --postlogin-bg: #0B0F19;
-  --postlogin-gradient: linear-gradient(180deg, #131B2E 0%, #0B0F19 50%, #060910 100%);
+  --postlogin-bg: #000000;
+  --postlogin-gradient: #000000;
 }
 
-/* 1. Titanium Slate (Novo Padrão Executivo Limpo - Alta Definição) */
+/* 1. Titanium Slate & Preto Absoluto (Zero Reflexos Azuis, Preto Puro AMOLED) */
 html[data-app-bg="titanium"],
 html[data-app-bg="obsidian"],
-html[data-app-bg="slate"] {
-  --postlogin-bg: #0B0F19;
-  --postlogin-gradient: linear-gradient(180deg, #131B2E 0%, #0B0F19 50%, #060910 100%);
-}
-
-/* 2. Preto Absoluto / Minimalist AMOLED (Zero Reflexos, Preto Puro) */
+html[data-app-bg="slate"],
 html[data-app-bg="pure-black"],
-html[data-app-bg="midnight"] {
-  --postlogin-bg: #000000;
-  --postlogin-gradient: linear-gradient(180deg, #0A0A0A 0%, #000000 100%);
-}
-
-/* 3. Azul Marinho Real / Royal Sapphire Banking */
+html[data-app-bg="midnight"],
 html[data-app-bg="royal-navy"],
 html[data-app-bg="cyber-blue"] {
-  --postlogin-bg: #081A36;
-  --postlogin-gradient: linear-gradient(180deg, #0E2954 0%, #081A36 55%, #040E1E 100%);
+  --postlogin-bg: #000000;
+  --postlogin-gradient: #000000;
 }
 
 /* 4. Verde Esmeralda Suíço / Private Wealth Banking */
@@ -1925,7 +1901,7 @@ html, body {
     overflow: visible !important;
     overflow-x: visible !important;
     overflow-y: visible !important;
-    background-color: #060913 !important;
+    background-color: #000000 !important;
     background-image: none !important;
     color: #F8FAFC !important;
     zoom: 1 !important;
@@ -2066,7 +2042,7 @@ html, body {
   transform: translate(-50%, -50%);
   width: 750px;
   height: 750px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, rgba(14, 165, 233, 0.12) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(255, 255, 255, 0.03) 40%, transparent 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 1;
@@ -2138,7 +2114,7 @@ body.light .auth-theme-btn {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(245, 158, 11, 0.06) 1px, transparent 1px);
   background-size: 44px 44px;
   -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
@@ -2161,15 +2137,7 @@ body.light .auth-theme-btn {
   left: -110px;
   animation: blobFloat 22s ease-in-out infinite;
 }
-.auth-blob.b2 {
-  width: 440px;
-  height: 440px;
-  background: #3B82F6;
-  bottom: -130px;
-  right: -90px;
-  animation: blobFloat 26s ease-in-out infinite;
-  animation-delay: -9s;
-}
+.auth-blob.b2 { width: 440px; height: 440px; background: transparent; display: none !important; }
 .auth-blob.b3 {
   width: 420px;
   height: 420px;
@@ -3543,14 +3511,14 @@ html.light #appMain {
 .app-bg-grid{
   position:absolute; inset:0;
   background-image:
-    linear-gradient(to right, rgba(0, 229, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
   background-size:40px 40px;
   -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 75%);
   mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 75%);
 }
 .app-bg-chart{position:absolute; inset:0; width:100%; height:100%; opacity:.16;}
-.app-blob{position:absolute; border-radius:50%; filter:blur(90px); opacity:.07; will-change:transform;}
+.app-blob{display:none !important;}
 .app-blob.a1{width:420px; height:420px; background:#00E5FF; top:-140px; right:-120px; animation:blobFloat 30s ease-in-out infinite;}
 .app-blob.a2{width:360px; height:360px; background:#0284C7; bottom:-150px; left:20%; animation:blobFloat 34s ease-in-out infinite; animation-delay:-10s;}
 .app-blob.a3{width:300px; height:300px; background:#38BDF8; opacity:.05; top:38%; left:-100px; animation:blobFloat 38s ease-in-out infinite; animation-delay:-18s;}
@@ -3568,8 +3536,8 @@ body.light .app-blob.a3{opacity:.04;}
   z-index:99999 !important;
   width:100% !important;
   height:68px !important;
-  background:linear-gradient(180deg, rgba(9, 14, 26, 0.94) 0%, rgba(6, 10, 20, 0.96) 100%) !important;
-  border-bottom:1px solid rgba(0, 229, 255, 0.16) !important;
+  background:#000000 !important;
+  border-bottom:1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow:0 4px 24px rgba(0,0,0,0.75), inset 0 -1px 0 rgba(0, 229, 255, 0.12) !important;
   backdrop-filter:blur(30px) saturate(190%) !important;
   -webkit-backdrop-filter:blur(30px) saturate(190%) !important;
@@ -3842,7 +3810,7 @@ body.light .header-live-time {
 .scale-selector-wrap #scaleMenuBtn,
 #miniThemeBtn,
 #notifBtn {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 27, 43, 0.65) 50%, rgba(9, 13, 22, 0.85) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(22, 22, 22, 0.75) 50%, rgba(12, 12, 12, 0.90) 100%) !important;
   backdrop-filter: blur(20px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
   border: 1px solid rgba(255, 255, 255, 0.16) !important;
@@ -3973,7 +3941,7 @@ nav.menu{
   align-items:center !important;
   justify-content:flex-start !important;
   gap:4px !important;
-  background:linear-gradient(180deg, rgba(12, 17, 30, 0.96) 0%, rgba(7, 10, 19, 0.98) 100%) !important;
+  background:#000000 !important;
   border-right:1px solid rgba(255, 255, 255, 0.08) !important;
   border-top:none !important;
   border-left:none !important;
@@ -6635,7 +6603,7 @@ body.light .rec-progress-bar {
   position: relative;
   overflow: hidden !important;
   z-index: 20;
-  background: linear-gradient(145deg, rgba(13, 20, 36, 0.92) 0%, rgba(7, 11, 20, 0.98) 100%) !important;
+  background: linear-gradient(145deg, rgba(16, 16, 16, 0.94) 0%, rgba(6, 6, 6, 0.98) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
   border-radius: 22px !important;
   padding: 22px 28px !important;
@@ -6848,7 +6816,7 @@ body.light .btn-hero-ghost:hover {
   margin-bottom: 20px;
   padding: 10px 14px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(13, 20, 36, 0.72) 0%, rgba(8, 13, 25, 0.82) 100%) !important;
+  background: linear-gradient(135deg, rgba(16, 16, 16, 0.88) 0%, rgba(8, 8, 8, 0.94) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -6959,7 +6927,7 @@ body.light .btn-hero-ghost:hover {
 .dash-card {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(145deg, rgba(13, 20, 36, 0.88) 0%, rgba(8, 13, 25, 0.94) 100%) !important;
+  background: linear-gradient(145deg, rgba(16, 16, 16, 0.92) 0%, rgba(8, 8, 8, 0.96) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 20px !important;
   padding: 20px 22px;
@@ -8972,8 +8940,8 @@ html.light .mand-input-wrapper input {
 
 /* 1. TOKENS DE VIDRO ÓPTICO DE ALTA PRECISÃO */
 :root {
-  --glass-card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 26, 44, 0.72) 42%, rgba(8, 13, 24, 0.88) 100%);
-  --glass-card-hover-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(22, 32, 54, 0.78) 45%, rgba(10, 16, 30, 0.92) 100%);
+  --glass-card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(18, 18, 18, 0.88) 45%, rgba(10, 10, 10, 0.96) 100%);
+  --glass-card-hover-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(26, 26, 26, 0.90) 45%, rgba(14, 14, 14, 0.98) 100%);
   --glass-card-border: rgba(255, 255, 255, 0.12);
   --glass-card-border-top: rgba(255, 255, 255, 0.38);
   --glass-card-border-left: rgba(255, 255, 255, 0.22);
@@ -8981,7 +8949,7 @@ html.light .mand-input-wrapper input {
   --glass-card-hover-shadow: 0 26px 65px -10px rgba(0, 0, 0, 0.85), 0 0 45px -5px rgba(56, 189, 248, 0.22), inset 0 1px 2px rgba(255, 255, 255, 0.45);
   --glass-blur: blur(28px) saturate(210%) brightness(104%);
   --glass-blur-heavy: blur(40px) saturate(220%) brightness(106%);
-  --glass-input-bg: rgba(14, 20, 35, 0.70);
+  --glass-input-bg: rgba(18, 18, 18, 0.85);
   --glass-input-border: rgba(255, 255, 255, 0.14);
   --glass-specular-sheen: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.18) 50%, rgba(0, 229, 255, 0.08) 55%, transparent 70%);
 }
@@ -9003,10 +8971,10 @@ body.light, html.light body, html.light {
 
 /* 2. CABEÇALHO HORIZONTAL FIXO EM VIDRO LÍQUIDO FLUTUANTE (TOPHEADER GLASS) */
 .topheader {
-  background: linear-gradient(180deg, rgba(10, 16, 30, 0.84) 0%, rgba(6, 10, 20, 0.90) 100%) !important;
+  background: #000000 !important;
   backdrop-filter: var(--glass-blur-heavy) !important;
   -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 10px 35px -8px rgba(0, 0, 0, 0.75), inset 0 -1px 0 rgba(0, 229, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
@@ -9093,10 +9061,10 @@ body.light #notifBtn:hover {
 
 /* 3. DOCK LATERAL VERTICAL EM VIDRO FOSCO REFINADO (LATERAL DOCK GLASS) */
 nav.menu {
-  background: linear-gradient(180deg, rgba(13, 20, 36, 0.84) 0%, rgba(7, 11, 22, 0.92) 100%) !important;
+  background: #000000 !important;
   backdrop-filter: var(--glass-blur-heavy) !important;
   -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
   box-shadow: 10px 0 35px -8px rgba(0, 0, 0, 0.65), inset 1px 0 0 rgba(255, 255, 255, 0.10) !important;
 }
@@ -21950,7 +21918,7 @@ if (scaleMenuBtn && scaleDropdown) {
 
 // ==================== Gerenciador de Cor de Fundo do Pós-Login (Padrão: Titanium) ====================
 window.applyPostLoginBg = function(theme) {
-  const selected = 'titanium';
+  const selected = 'pure-black';
   document.documentElement.setAttribute('data-app-bg', selected);
   if (document.body) document.body.setAttribute('data-app-bg', selected);
   try { localStorage.setItem('nexus_post_login_bg', selected); } catch(e){}
@@ -21958,7 +21926,7 @@ window.applyPostLoginBg = function(theme) {
 
 (function initPostLoginBg() {
   try {
-    window.applyPostLoginBg('titanium');
+    window.applyPostLoginBg('pure-black');
   } catch(e){}
 })();
 
