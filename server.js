@@ -15084,46 +15084,6 @@ function pageDashboard(){
     </div>
   </div>
 
-  <!-- ATALHOS OPERACIONAIS RÁPIDOS -->
-  <div class="dashboard-quick-actions">
-    <button type="button" class="quick-act-btn quick-act-income" onclick="openModal(null, 'in')" title="Lançar Receita">
-      <span class="quick-act-icon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </span>
-      <span>+ Nova Receita</span>
-    </button>
-    <button type="button" class="quick-act-btn quick-act-expense" onclick="openModal(null, 'out')" title="Lançar Despesa">
-      <span class="quick-act-icon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </span>
-      <span>- Nova Despesa</span>
-    </button>
-    <button type="button" class="quick-act-btn quick-act-neutral" data-nav="cartoes" title="Ver Contas e Cartões">
-      <span class="quick-act-icon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg>
-      </span>
-      <span>Contas & Cartões</span>
-    </button>
-    <button type="button" class="quick-act-btn quick-act-neutral" data-nav="orcamentos" title="Ver Orçamentos">
-      <span class="quick-act-icon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      </span>
-      <span>Orçamentos</span>
-    </button>
-    <button type="button" class="quick-act-btn quick-act-neutral" data-nav="relatorios" title="Ver Relatórios e Estatísticas">
-      <span class="quick-act-icon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      </span>
-      <span>Relatórios</span>
-    </button>
-    <button type="button" class="quick-act-btn quick-act-sync" onclick="syncDashboardData()" title="Atualizar Dados Agora">
-      <span class="quick-act-icon" id="quickSyncIcon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-      </span>
-      <span>Sincronizar</span>
-    </button>
-  </div>
-
   <!-- EXECUTIVE 6-CARD KPI BENTO GRID -->
   <div class="kpis-grid-6">
     <!-- 1. Saldo Geral -->
