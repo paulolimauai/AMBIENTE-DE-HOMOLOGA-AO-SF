@@ -1597,45 +1597,44 @@ html.is-admin .aether-settings-btn {
 
 /* ==================== Layout Executivo e Posicionamento Perfeito do Menu Administrador (Zero Cortes) ==================== */
 html.is-admin nav.menu {
-  padding: 24px 0 30px !important;
-  gap: 16px !important;
+  padding: 12px 0 16px !important;
+  gap: 4px !important;
   justify-content: flex-start !important;
 }
 
 html.is-admin .menu-admin-badge {
-  margin: 0 auto 12px !important;
-  padding: 4px 12px !important;
-  font-size: 9.5px !important;
-  font-weight: 900 !important;
-  letter-spacing: 0.12em !important;
+  margin: 0 auto 6px !important;
+  padding: 2px 8px !important;
+  font-size: 8.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
   border-radius: 999px !important;
-  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35) !important;
+  box-shadow: none !important;
 }
 
 html.is-admin .menu button.menu-btn-admin {
   position: relative !important;
-  width: 82px !important;
-  height: 74px !important;
-  min-height: 74px !important;
-  max-height: 74px !important;
-  padding: 8px 4px 6px !important;
-  gap: 4px !important;
-  overflow: visible !important;
+  width: 64px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  padding: 4px 2px !important;
+  gap: 3px !important;
 }
 
 html.is-admin .menu button.menu-btn-admin .ic {
-  width: 28px !important;
-  height: 28px !important;
-  margin-bottom: 2px !important;
+  width: 22px !important;
+  height: 22px !important;
+  margin-bottom: 0 !important;
 }
 
 html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  line-height: 1.25 !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  line-height: 1.15 !important;
   white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
   display: block !important;
 }
 
@@ -4081,22 +4080,37 @@ nav.menu::-webkit-scrollbar-track{
   text-shadow:none !important;
 }
 
-/* Ajustes Responsivos por Altura de Tela (Laptops, Telas Menores e Split-Screen) */
-@media (max-height: 760px) {
-  nav.menu { padding:8px 0 12px !important; gap:2px !important; }
-  .menu button { width:64px !important; height:44px !important; min-height:44px !important; padding:3px 2px !important; gap:2px !important; border-radius:8px !important; }
-  .menu button .ic { width:20px !important; height:20px !important; }
-  .menu button .ic svg { width:16px !important; height:16px !important; }
-  .menu button span:not(.ic) { font-size:9.5px !important; }
-  .menu button.active::before { height:16px !important; width:3px !important; }
+/* Ajustes Responsivos Fluidos por Altura e Largura de Tela (Monitores, Laptops, Telas Menores e Dispositivos) */
+@media (min-height: 900px) {
+  nav.menu { padding: 16px 0 20px !important; gap: 6px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 68px !important; height: 52px !important; min-height: 52px !important; }
 }
-@media (max-height: 640px) {
-  nav.menu { padding:4px 0 8px !important; gap:2px !important; }
-  .menu button { width:60px !important; height:36px !important; min-height:36px !important; padding:2px !important; }
-  .menu button span:not(.ic) { display:none !important; }
-  .menu button .ic { width:22px !important; height:22px !important; }
-  .menu button .ic svg { width:17px !important; height:17px !important; }
-  .menu button.active::before { height:14px !important; }
+
+@media (max-height: 800px) {
+  nav.menu { padding: 8px 0 12px !important; gap: 3px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 64px !important; height: 44px !important; min-height: 44px !important; padding: 3px 2px !important; gap: 2px !important; border-radius: 8px !important; }
+  .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
+  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
+  .menu button span:not(.ic) { font-size: 9.5px !important; }
+  .menu button.active::before, .menu button.menu-btn-admin.active::before { height: 16px !important; width: 3px !important; }
+}
+
+@media (max-height: 680px) {
+  nav.menu { padding: 4px 0 8px !important; gap: 2px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 60px !important; height: 38px !important; min-height: 38px !important; padding: 2px !important; gap: 1px !important; }
+  .menu button span:not(.ic) { font-size: 8.5px !important; }
+  .menu button .ic, .menu button.menu-btn-admin .ic { width: 18px !important; height: 18px !important; }
+  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 15px !important; height: 15px !important; }
+  .menu button.active::before, .menu button.menu-btn-admin.active::before { height: 14px !important; }
+}
+
+@media (max-height: 560px) {
+  nav.menu { padding: 2px 0 4px !important; gap: 1px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 56px !important; height: 32px !important; min-height: 32px !important; padding: 2px !important; }
+  .menu button span:not(.ic) { display: none !important; }
+  .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
+  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
+  .menu button.active::before, .menu button.menu-btn-admin.active::before { height: 12px !important; }
 }
 
 /* ==================== Estilo Executivo Premium do Menu Administrativo ==================== */
@@ -9050,71 +9064,70 @@ body.light #notifBtn:hover {
   box-shadow: 0 6px 18px rgba(2, 132, 199, 0.18), inset 0 1px 0 #FFFFFF !important;
 }
 
-/* 3. DOCK LATERAL VERTICAL EM VIDRO FOSCO REFINADO (LATERAL DOCK GLASS) */
+/* 3. DOCK LATERAL VERTICAL (Menu limpo, plano, sem efeito de vidro) */
 nav.menu {
-  background: #000000 !important;
-  backdrop-filter: var(--glass-blur-heavy) !important;
-  -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
-  box-shadow: 10px 0 35px -8px rgba(0, 0, 0, 0.65), inset 1px 0 0 rgba(255, 255, 255, 0.10) !important;
+  background: #090E17 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-right: 1px solid #1E293B !important;
+  border-top: none !important;
+  box-shadow: none !important;
 }
 
 body.light nav.menu, html.light nav.menu {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.90) 100%) !important;
-  border-right: 1.5px solid rgba(203, 213, 225, 0.85) !important;
-  box-shadow: 8px 0 25px rgba(15, 23, 42, 0.05), inset 1px 0 0 #FFFFFF !important;
+  background: #FFFFFF !important;
+  border-right: 1px solid #E2E8F0 !important;
+  box-shadow: none !important;
 }
 
-/* Botões da Dock em Pastilha de Vidro */
+/* Botões da Dock normais, planos e sem relevo ou vidro */
 nav.menu button {
-  background: rgba(255, 255, 255, 0.035) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
-  border-radius: 16px !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  transition: all 0.18s ease !important;
+  transform: none !important;
 }
 
 nav.menu button:hover {
-  background: rgba(255, 255, 255, 0.09) !important;
-  border-color: rgba(0, 229, 255, 0.40) !important;
-  border-top-color: rgba(255, 255, 255, 0.50) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: transparent !important;
   color: #FFFFFF !important;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 229, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
-  transform: translateX(3px) scale(1.02);
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 nav.menu button.active {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(2, 132, 199, 0.32) 50%, rgba(0, 229, 255, 0.18) 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
-  border-top: 2px solid #FFFFFF !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 26px rgba(0, 229, 255, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.65) !important;
+  background: rgba(14, 165, 233, 0.12) !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 10px !important;
+  color: #38BDF8 !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 body.light nav.menu button {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border: 1.5px solid #CBD5E1 !important;
-  border-top: 1.5px solid #FFFFFF !important;
-  color: #000000 !important;
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04), inset 0 1px 0 #FFFFFF !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #64748B !important;
+  box-shadow: none !important;
 }
 
 body.light nav.menu button:hover {
   background: #F1F5F9 !important;
-  border-color: #0284C7 !important;
-  color: #0284C7 !important;
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.16), inset 0 1px 0 #FFFFFF !important;
+  border-color: transparent !important;
+  color: #0F172A !important;
+  box-shadow: none !important;
 }
 
 body.light nav.menu button.active {
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
-  border: 1.5px solid #0284C7 !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.5) !important;
+  background: #EFF6FF !important;
+  border: 1px solid #BAE6FD !important;
+  color: #0284C7 !important;
+  box-shadow: none !important;
 }
 
 /* 4. DASHBOARD WELCOME HERO EM PLACA DE VIDRO PANORÂMICA 4K */
