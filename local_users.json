@@ -39,7 +39,7 @@
     "role": "Administrador",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
-    "last_login": "2026-09-15T22:40:12-03:00",
+    "last_login": "2026-09-16T07:55:25-03:00",
     "cpf": "04023326100",
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
@@ -55,13 +55,13 @@
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
-    "last_login": "2026-09-09T01:33:11-03:00",
+    "last_login": "2026-09-16T08:01:25-03:00",
     "cpf": "99925109191",
     "phone": "(62) 99367-6783",
     "birth_date": "27/06/1966",
     "terms_accepted": true,
     "device_type": "Computador",
-    "last_ip": null
+    "last_ip": "127.0.0.1"
   },
   {
     "id": "41",
