@@ -426,7 +426,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-13T12:04:02.751Z"
+    "updated_at": "2026-09-16T01:48:04.177Z",
+    "updated_at_ms": 1789523284177
   },
   "ciceragyn12@hotmail.com": {
     "categories": [
@@ -2610,5 +2611,57 @@
     "nextAttId": 1,
     "nextNotifId": 1,
     "updated_at": "2026-09-13T12:04:06.670Z"
+  },
+  "cliente.celular5g@teste.com": {
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 1000
+      }
+    ],
+    "categories": [
+      {
+        "id": 1,
+        "name": "Internet Fibra",
+        "type": "despesa",
+        "icon": "📶",
+        "color": "#6b7fd7"
+      },
+      {
+        "id": 2,
+        "name": "Equipamentos",
+        "type": "despesa",
+        "icon": "💻",
+        "color": "#4a90e2"
+      }
+    ],
+    "transactions": [
+      {
+        "id": 1,
+        "desc": "Internet Fibra Óptica 500MB",
+        "val": 149.9,
+        "date": "2026-09-16",
+        "cat": "Internet Fibra",
+        "type": "out",
+        "acc": "Conta Principal",
+        "status": "Efetivado"
+      },
+      {
+        "id": 2,
+        "desc": "Equipamento Notebook Dell Latitude",
+        "val": 3500,
+        "date": "2026-09-16",
+        "cat": "Equipamentos",
+        "type": "out",
+        "acc": "Conta Principal",
+        "status": "Efetivado"
+      }
+    ],
+    "updated_at": "2026-09-16T10:38:13.163Z",
+    "budgets": [],
+    "goals": [],
+    "recurringList": []
   }
 }
