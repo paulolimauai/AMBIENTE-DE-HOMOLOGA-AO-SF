@@ -17322,7 +17322,7 @@ function exportPermissionsMatrixCSV() {
     ['Suporte & Ordens de Servico (O.S.)', 'Total (Abertura, Atribuicao & Fechamento)', 'Abertura e Acompanhamento', 'Abertura de Chamados', 'Leitura de Protocolos'],
     ['Logs de Auditoria & Seguranca', 'Auditoria Geral + Filtro IP/Email/Beacon', 'Logs Proprios', 'Sem Acesso', 'Auditoria de Eventos do Sistema']
   ];
-  let csvContent = 'data:text/csv;charset=utf-8,' + rows.map(function(e){ return e.map(function(x){ return '"' + x + '"'; }).join(','); }).join('\n');
+  let csvContent = 'data:text/csv;charset=utf-8,' + rows.map(function(e){ return e.map(function(x){ return '"' + x + '"'; }).join(','); }).join(String.fromCharCode(10));
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement('a');
   link.setAttribute('href', encodedUri);
@@ -17386,7 +17386,7 @@ function pageFuncoes(){
 
     let selectHtml = '';
     if (isAdmin) {
-      selectHtml = '<select onchange="changeUserRoleFromFuncoes(\'' + u.email + '\', this.value)" class="funcoes-role-select" style="height:36px; padding:0 12px; border-radius:10px; background:var(--input-bg, rgba(0,0,0,0.5)); border:1.5px solid ' + roleBorder + '; color:' + roleColor + '; font-weight:800; font-size:12.5px; cursor:pointer; outline:none; transition:all 0.2s ease;">' +
+      selectHtml = '<select data-user-email="' + (u.email || '') + '" onchange="changeUserRoleFromFuncoes(this.dataset.userEmail, this.value)" class="funcoes-role-select" style="height:36px; padding:0 12px; border-radius:10px; background:var(--input-bg, rgba(0,0,0,0.5)); border:1.5px solid ' + roleBorder + '; color:' + roleColor + '; font-weight:800; font-size:12.5px; cursor:pointer; outline:none; transition:all 0.2s ease;">' +
         '<option value="Administrador" ' + (role === 'Administrador' ? 'selected' : '') + '>👑 Administrador Master</option>' +
         '<option value="Gerente Financeiro" ' + (role === 'Gerente Financeiro' ? 'selected' : '') + '>💼 Gerente Financeiro</option>' +
         '<option value="Usuário" ' + (role === 'Usuário' ? 'selected' : '') + '>👤 Usuário / Operador</option>' +
