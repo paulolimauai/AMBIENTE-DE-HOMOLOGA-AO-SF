@@ -12,7 +12,8 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": null
   },
   {
     "id": "38",
@@ -27,7 +28,8 @@
     "phone": "(62) 99999-8888",
     "birth_date": "10/10/1990",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": null
   },
   {
     "id": "39",
@@ -37,12 +39,13 @@
     "role": "Administrador",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
-    "last_login": "2026-09-12T10:57:26-03:00",
+    "last_login": "2026-09-15T22:40:12-03:00",
     "cpf": "04023326100",
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": "127.0.0.1"
   },
   {
     "id": "40",
@@ -57,7 +60,8 @@
     "phone": "(62) 99367-6783",
     "birth_date": "27/06/1966",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": null
   },
   {
     "id": "41",
@@ -72,7 +76,8 @@
     "phone": "(62) 99264-7115",
     "birth_date": "27/10/1966",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": null
   },
   {
     "id": "42",
@@ -87,7 +92,8 @@
     "phone": "(11) 99999-1111",
     "birth_date": "1990-01-01",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": null
   },
   {
     "id": "43",
@@ -102,7 +108,8 @@
     "phone": "(62) 98888-2222",
     "birth_date": "1988-03-20",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": null
   },
   {
     "id": "44",
@@ -117,7 +124,8 @@
     "phone": "(62) 99999-0000",
     "birth_date": "1992-04-10",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": null
   },
   {
     "id": "45",
@@ -132,7 +140,8 @@
     "phone": "(62) 98888-7777",
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": null
   },
   {
     "id": "47",
@@ -147,20 +156,23 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "last_ip": null
   },
   {
-    "id": "50",
+    "id": "51",
     "name": "Cliente Celular iPhone",
     "email": "cliente.celular5g@teste.com",
     "password": "scrypt:1bead457f49e852145ba6cf97eaf8d83:1211c2ef4f37c9c82d4ace33933b7dfbff7da5d122fb0e8e3681114f9d121d87b5badb63d1328b543c7055e1ff840d0af98ec0b2ddcf4e92cd5e6cda55be9e00",
     "role": "Usuário",
     "active": true,
+    "created_at": "2026-09-16T07:41:35-03:00",
+    "last_login": null,
     "cpf": "04023326199",
     "phone": "62988880001",
     "birth_date": "10/10/1990",
     "terms_accepted": true,
     "device_type": "Mobile",
-    "created_at": "2026-09-16T07:41:17-03:00"
+    "last_ip": null
   }
 ]
