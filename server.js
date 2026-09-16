@@ -3934,12 +3934,12 @@ nav.menu{
   width:78px !important;
   max-width:78px !important;
   margin:0 !important;
-  padding:12px 0 16px !important;
+  padding:10px 0 14px !important;
   display:flex !important;
   flex-direction:column !important;
   align-items:center !important;
-  justify-content:flex-start !important;
-  gap:4px !important;
+  justify-content:space-evenly !important;
+  gap:2px !important;
   background:#090E17 !important;
   border-right:1px solid #1E293B !important;
   border-top:none !important;
@@ -3973,11 +3973,12 @@ nav.menu::-webkit-scrollbar-track{
   align-items:center !important;
   justify-content:center !important;
   text-align:center !important;
-  gap:3px !important;
-  width:64px !important;
-  min-height:48px !important;
-  height:48px !important;
-  padding:4px 2px !important;
+  gap:2px !important;
+  width:66px !important;
+  flex:1 1 auto !important;
+  max-height:56px !important;
+  min-height:38px !important;
+  padding:3px 2px !important;
   border-radius:10px !important;
   background:transparent !important;
   border:1px solid transparent !important;
@@ -3990,7 +3991,6 @@ nav.menu::-webkit-scrollbar-track{
   transition:all 0.18s ease !important;
   user-select:none !important;
   box-sizing:border-box !important;
-  flex-shrink:0 !important;
 }
 .menu button:hover{
   background:rgba(255, 255, 255, 0.05) !important;
@@ -4082,13 +4082,16 @@ nav.menu::-webkit-scrollbar-track{
 
 /* Ajustes Responsivos Fluidos por Altura e Largura de Tela (Monitores, Laptops, Telas Menores e Dispositivos) */
 @media (min-height: 900px) {
-  nav.menu { padding: 16px 0 20px !important; gap: 6px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 68px !important; height: 52px !important; min-height: 52px !important; }
+  nav.menu { padding: 14px 0 18px !important; gap: 4px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 68px !important; max-height: 60px !important; min-height: 48px !important; }
+  .menu button .ic, .menu button.menu-btn-admin .ic { width: 22px !important; height: 22px !important; }
+  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 19px !important; height: 19px !important; }
+  .menu button span:not(.ic) { font-size: 10.5px !important; }
 }
 
 @media (max-height: 800px) {
-  nav.menu { padding: 8px 0 12px !important; gap: 3px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 64px !important; height: 44px !important; min-height: 44px !important; padding: 3px 2px !important; gap: 2px !important; border-radius: 8px !important; }
+  nav.menu { padding: 6px 0 10px !important; gap: 2px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 66px !important; max-height: 48px !important; min-height: 40px !important; padding: 2px 2px !important; gap: 1px !important; border-radius: 8px !important; }
   .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
   .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
   .menu button span:not(.ic) { font-size: 9.5px !important; }
@@ -4096,9 +4099,9 @@ nav.menu::-webkit-scrollbar-track{
 }
 
 @media (max-height: 680px) {
-  nav.menu { padding: 4px 0 8px !important; gap: 2px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 60px !important; height: 38px !important; min-height: 38px !important; padding: 2px !important; gap: 1px !important; }
-  .menu button span:not(.ic) { font-size: 8.5px !important; }
+  nav.menu { padding: 4px 0 6px !important; gap: 2px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 64px !important; max-height: 42px !important; min-height: 36px !important; padding: 2px 1px !important; gap: 1px !important; border-radius: 8px !important; }
+  .menu button span:not(.ic) { font-size: 9px !important; }
   .menu button .ic, .menu button.menu-btn-admin .ic { width: 18px !important; height: 18px !important; }
   .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 15px !important; height: 15px !important; }
   .menu button.active::before, .menu button.menu-btn-admin.active::before { height: 14px !important; }
@@ -4106,7 +4109,7 @@ nav.menu::-webkit-scrollbar-track{
 
 @media (max-height: 560px) {
   nav.menu { padding: 2px 0 4px !important; gap: 1px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 56px !important; height: 32px !important; min-height: 32px !important; padding: 2px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 60px !important; max-height: 34px !important; min-height: 28px !important; padding: 2px !important; border-radius: 6px !important; }
   .menu button span:not(.ic) { display: none !important; }
   .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
   .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
