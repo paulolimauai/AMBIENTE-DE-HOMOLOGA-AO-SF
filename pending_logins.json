@@ -110,5 +110,37 @@
     "last_login": "2026-09-15T22:40:12-03:00",
     "timestamp": "2026-09-16T01:40:12.507Z",
     "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-09-16T07:55:25-03:00",
+    "timestamp": "2026-09-16T10:55:25.048Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-09-16T07:58:50-03:00",
+    "timestamp": "2026-09-16T10:58:50.455Z",
+    "ack": false
+  },
+  {
+    "id": "40",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-09-16T08:01:25-03:00",
+    "timestamp": "2026-09-16T11:01:25.079Z",
+    "ack": false
+  },
+  {
+    "id": "40",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-09-16T08:02:27-03:00",
+    "timestamp": "2026-09-16T11:02:27.698Z",
+    "ack": false
   }
 ]
