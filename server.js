@@ -3507,7 +3507,7 @@ html.light #appMain {
 }
 
 .app-bg-scene{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
-.app-bg-orbital-canvas{position:absolute; inset:0; width:100%; height:100%; opacity:.75; pointer-events:none;}
+.app-bg-orbital-canvas{position:absolute; inset:0; width:100%; height:100%; opacity:.92; pointer-events:none;}
 .app-bg-grid{
   position:absolute; inset:0;
   background-image:
@@ -22181,7 +22181,7 @@ window.applyPostLoginBg = function(theme) {
   setInterval(updateClock, 1000);
 })();
 
-// Engine de Simulação Financeira 4K Ultra-HD (Candlesticks Reais de Mercado, Fitas EMA, Moedas & Física de Cursor)
+// Engine de Simulação Financeira Pessoal 4K Ultra-HD (Moedas R$, Badges de Metas, Constelação de Patrimônio, Candlesticks & Ondas de Prosperidade)
 (function initFinancialCanvasEngine() {
   function setupCanvas(canvasId) {
     const canvas = document.getElementById(canvasId);
@@ -22252,94 +22252,121 @@ window.applyPostLoginBg = function(theme) {
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    // 1. Simulação de Evolução Patrimonial Pessoal ao Longo do Ano
-    const monthMilestones = [
-      { month: 'Jan', val: 12500 },
-      { month: 'Fev', val: 14800 },
-      { month: 'Mar', val: 16900 },
-      { month: 'Abr', val: 19400 },
-      { month: 'Mai', val: 22100 },
-      { month: 'Jun', val: 24700 },
-      { month: 'Jul', val: 27900 },
-      { month: 'Ago', val: 30800 },
-      { month: 'Set', val: 33400 },
-      { month: 'Out', val: 36200 },
-      { month: 'Nov', val: 39500 },
-      { month: 'Dez', val: 43800 }
+    // 1. Pílulas de Metas e Conquistas Financeiras Pessoais
+    const personalFinanceBadges = [
+      { text: '🛡️ Reserva 100%', type: 'gold' },
+      { text: '💰 Economia +R$ 2.500', type: 'emerald' },
+      { text: '🎯 Meta 2026: 86%', type: 'gold' },
+      { text: '📈 Rendimento +16.2%', type: 'emerald' },
+      { text: '💳 Contas em Dia ✓', type: 'emerald' },
+      { text: '📊 Orçamento: 78%', type: 'gold' },
+      { text: '✨ Poupança Ativa', type: 'gold' },
+      { text: '💎 Patrimônio Seguro', type: 'emerald' },
+      { text: '🌱 Investimento Mensal', type: 'emerald' },
+      { text: '🚀 Rumo à Liberdade', type: 'gold' }
     ];
 
-    const badgeTexts = [
-      'Economia: +18% 🎯',
-      'Reserva: 100% 🛡️',
-      'Contas em Dia ✓',
-      'Orçamento: 85% 📊',
-      'Meta Concluída: 84% 🚀',
-      'Poupança: +R$ 1.500',
-      'Renda Sob Controle',
-      'Planejamento 2026',
-      'Saldo Positivo ↗',
-      'Sonhos em Andamento ✨'
-    ];
-    const currencyCoins = ['R$', '$', '€', '₿', '£', '¥', '%', '▲'];
-    const colors = ['#38BDF8', '#F59E0B', '#10B981', '#818CF8', '#FBBF24', '#60A5FA', '#34D399'];
+    const currencyTokens = ['R$', '$', '€', '₿', '▲', '%', '💎', '🪙'];
+    const goldTones = ['#F59E0B', '#FBBF24', '#FCD34D', '#EAB308'];
+    const emeraldTones = ['#10B981', '#34D399', '#059669', '#6EE7B7'];
 
-    // 2. Candlesticks Financeiros Reais de Mercado
+    // 2. Moedas Douradas e Tokens Financeiros Flutuantes
+    const wealthCoins = [];
+    const coinCount = isTouch ? 8 : 16;
+    for (let i = 0; i < coinCount; i++) {
+      const isEmerald = Math.random() > 0.6;
+      wealthCoins.push({
+        x: Math.random() * (width || 1200),
+        y: Math.random() * (height || 800),
+        sym: currencyTokens[i % currencyTokens.length],
+        radius: Math.floor(Math.random() * 6) + 16,
+        vy: -(Math.random() * 0.32 + 0.15),
+        vx: (Math.random() - 0.5) * 0.22,
+        color: isEmerald ? '#34D399' : '#FBBF24',
+        borderTone: isEmerald ? 'rgba(16, 185, 129, 0.45)' : 'rgba(245, 158, 11, 0.45)',
+        bgTone: isEmerald ? 'rgba(5, 150, 105, 0.16)' : 'rgba(217, 119, 6, 0.16)',
+        alpha: Math.random() * 0.40 + 0.35,
+        angle: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.015,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: Math.random() * 0.02 + 0.01
+      });
+    }
+
+    // 3. Pílulas de Metas Flutuantes
+    const floatingBadges = [];
+    const badgeCount = isTouch ? 4 : 8;
+    for (let b = 0; b < badgeCount; b++) {
+      const item = personalFinanceBadges[b % personalFinanceBadges.length];
+      floatingBadges.push({
+        x: Math.random() * ((width || 1200) - 180) + 90,
+        y: Math.random() * ((height || 800) - 120) + 60,
+        text: item.text,
+        type: item.type,
+        color: item.type === 'emerald' ? '#34D399' : '#FBBF24',
+        border: item.type === 'emerald' ? 'rgba(16, 185, 129, 0.38)' : 'rgba(245, 158, 11, 0.38)',
+        bg: item.type === 'emerald' ? 'rgba(5, 150, 105, 0.18)' : 'rgba(217, 119, 6, 0.18)',
+        vy: -(Math.random() * 0.24 + 0.10),
+        vx: (Math.random() - 0.5) * 0.15,
+        alpha: Math.random() * 0.35 + 0.40,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: Math.random() * 0.018 + 0.008
+      });
+    }
+
+    // 4. Rede / Constelação de Patrimônio Pessoal
+    const wealthNodes = [];
+    const nodeCount = isTouch ? 14 : 28;
+    for (let n = 0; n < nodeCount; n++) {
+      const isGreen = Math.random() > 0.45;
+      wealthNodes.push({
+        x: Math.random() * (width || 1200),
+        y: Math.random() * (height || 800),
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        radius: Math.random() * 2.0 + 1.2,
+        color: isGreen ? '#10B981' : '#F59E0B',
+        alpha: Math.random() * 0.45 + 0.25
+      });
+    }
+
+    // 5. Candlesticks de Prosperidade
     const candlestickBars = [];
-    const candleCount = isTouch ? 10 : 28;
+    const candleCount = isTouch ? 8 : 22;
     for (let c = 0; c < candleCount; c++) {
-      const isBullish = Math.random() > 0.44;
+      const isBullish = Math.random() > 0.32;
       candlestickBars.push({
         x: Math.random() * (width || 1200),
-        y: (height || 800) * 0.73 + (Math.random() * 80 - 40),
-        height: Math.floor(Math.random() * 26) + 10,
-        wickTop: Math.floor(Math.random() * 12) + 4,
-        wickBottom: Math.floor(Math.random() * 12) + 4,
-        width: 6.5,
+        y: (height || 800) * 0.76 + (Math.random() * 60 - 30),
+        height: Math.floor(Math.random() * 24) + 10,
+        wickTop: Math.floor(Math.random() * 10) + 4,
+        wickBottom: Math.floor(Math.random() * 10) + 4,
+        width: 7,
         isBullish: isBullish,
-        alpha: Math.random() * 0.35 + 0.25,
-        vx: -(Math.random() * 0.28 + 0.14)
+        alpha: Math.random() * 0.30 + 0.22,
+        vx: -(Math.random() * 0.24 + 0.10)
       });
     }
 
-    // 3. Elementos Financeiros Flutuantes com Profundidade
-    const items = [];
-    const itemCount = isTouch ? 12 : 38;
-    for (let i = 0; i < itemCount; i++) {
-      const kind = i % 2;
-      items.push({
-        kind: kind,
-        x: Math.random() * width,
-        y: Math.random() * height,
-        text: kind === 0 ? badgeTexts[Math.floor(Math.random() * badgeTexts.length)] : currencyCoins[Math.floor(Math.random() * currencyCoins.length)],
-        color: colors[Math.floor(Math.random() * colors.length)],
-        size: Math.floor(Math.random() * 6) + 12,
-        vy: -(Math.random() * 0.45 + 0.18),
-        vx: (Math.random() - 0.5) * 0.35,
-        baseAlpha: Math.random() * 0.45 + 0.35,
-        pulseSpeed: Math.random() * 0.02 + 0.008,
-        pulse: Math.random() * Math.PI * 2
-      });
-    }
-
-    // 4. Partículas de Poeira Luminosa (Bokeh 4K)
+    // 6. Micro-Fagulhas de Ouro e Esmeralda (Gold Dust)
     const dustParticles = [];
-    const dustCount = isTouch ? 14 : 45;
+    const dustCount = isTouch ? 16 : 42;
     for (let d = 0; d < dustCount; d++) {
+      const isGold = Math.random() > 0.4;
       dustParticles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 1.8 + 0.6,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        alpha: Math.random() * 0.5 + 0.2,
-        vy: -(Math.random() * 0.25 + 0.05),
-        vx: (Math.random() - 0.5) * 0.2,
+        x: Math.random() * (width || 1200),
+        y: Math.random() * (height || 800),
+        radius: Math.random() * 1.6 + 0.6,
+        color: isGold ? '#FBBF24' : '#34D399',
+        alpha: Math.random() * 0.55 + 0.25,
+        vy: -(Math.random() * 0.28 + 0.08),
+        vx: (Math.random() - 0.5) * 0.18,
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: Math.random() * 0.03 + 0.01
+        pulseSpeed: Math.random() * 0.03 + 0.015
       });
     }
 
     let waveOffset = 0;
-    let tickCounter = 0;
 
     function render() {
       requestAnimationFrame(render);
@@ -22355,62 +22382,155 @@ window.applyPostLoginBg = function(theme) {
         mouse.y += (mouse.targetY - mouse.y) * 0.08;
       }
 
-      // A. Grid Terminal Financeiro com Pontos de Mira (+)
-      const step = 65;
+      // A. Grid Terminal Financeiro Discreto
+      const step = 70;
       ctx.save();
-      ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.035)' : 'rgba(255, 255, 255, 0.035)';
+      ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.04)' : 'rgba(255, 255, 255, 0.025)';
       ctx.lineWidth = 1;
       for (let gx = step; gx < width; gx += step) {
         for (let gy = step; gy < height; gy += step) {
           ctx.beginPath();
-          ctx.moveTo(gx - 3.5, gy); ctx.lineTo(gx + 3.5, gy);
-          ctx.moveTo(gx, gy - 3.5); ctx.lineTo(gx, gy + 3.5);
+          ctx.moveTo(gx - 3, gy); ctx.lineTo(gx + 3, gy);
+          ctx.moveTo(gx, gy - 3); ctx.lineTo(gx, gy + 3);
           ctx.stroke();
         }
       }
       ctx.restore();
 
-      // C. Micro-Partículas de Poeira Luminosa (Bokeh 4K de Alta Precisão)
+      // B. Ondas de Fluxo Financeiro e Crescimento Patrimonial (Horizonte Suave)
+      waveOffset += 0.008;
+      const baseWaveY = height * 0.82;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      ctx.lineTo(0, baseWaveY);
+      for (let x = 0; x <= width; x += 30) {
+        const y1 = baseWaveY + Math.sin(x * 0.0035 + waveOffset) * 22 + Math.cos(x * 0.006 + waveOffset * 0.8) * 14;
+        ctx.lineTo(x, y1);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      const waveGrad1 = ctx.createLinearGradient(0, baseWaveY - 40, 0, height);
+      waveGrad1.addColorStop(0, isLight ? 'rgba(16, 185, 129, 0.07)' : 'rgba(16, 185, 129, 0.10)');
+      waveGrad1.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = waveGrad1;
+      ctx.fill();
+
+      // Linha de contorno da onda esmeralda
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 30) {
+        const y1 = baseWaveY + Math.sin(x * 0.0035 + waveOffset) * 22 + Math.cos(x * 0.006 + waveOffset * 0.8) * 14;
+        if (x === 0) ctx.moveTo(x, y1);
+        else ctx.lineTo(x, y1);
+      }
+      ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.35)' : 'rgba(16, 185, 129, 0.45)';
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+
+      // Segunda onda dourada harmônica
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 30) {
+        const y2 = (baseWaveY + 16) + Math.sin(x * 0.0042 - waveOffset * 0.9) * 18 + Math.cos(x * 0.005 + waveOffset) * 10;
+        if (x === 0) ctx.moveTo(x, y2);
+        else ctx.lineTo(x, y2);
+      }
+      ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.28)' : 'rgba(245, 158, 11, 0.40)';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      ctx.restore();
+
+      // C. Rede / Constelação de Nós de Patrimônio Interligados
+      ctx.save();
+      for (let i = 0; i < wealthNodes.length; i++) {
+        const n1 = wealthNodes[i];
+        n1.x += n1.vx;
+        n1.y += n1.vy;
+        if (n1.x < 0 || n1.x > width) n1.vx *= -1;
+        if (n1.y < 0 || n1.y > height) n1.vy *= -1;
+
+        // Desenhar nó
+        ctx.beginPath();
+        ctx.arc(n1.x, n1.y, n1.radius, 0, Math.PI * 2);
+        ctx.fillStyle = n1.color;
+        ctx.globalAlpha = isLight ? n1.alpha * 0.5 : n1.alpha;
+        ctx.fill();
+
+        // Conectar a nós vizinhos próximos
+        for (let j = i + 1; j < wealthNodes.length; j++) {
+          const n2 = wealthNodes[j];
+          const dx = n1.x - n2.x;
+          const dy = n1.y - n2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 125) {
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            const lineAlpha = (1 - dist / 125) * 0.18;
+            ctx.strokeStyle = n1.color;
+            ctx.globalAlpha = isLight ? lineAlpha * 0.5 : lineAlpha;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+
+        // Interação com o Mouse
+        if (!isTouch && mouse.active) {
+          const mdx = n1.x - mouse.x;
+          const mdy = n1.y - mouse.y;
+          const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+          if (mDist < 140) {
+            ctx.beginPath();
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = '#FBBF24';
+            ctx.globalAlpha = (1 - mDist / 140) * 0.35;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      ctx.restore();
+
+      // D. Micro-Fagulhas Douradas (Gold Dust Bokeh)
+      ctx.save();
       dustParticles.forEach(function(dp) {
         dp.y += dp.vy;
-        dp.x += dp.vx + Math.sin(dp.y * 0.005) * 0.15;
+        dp.x += dp.vx + Math.sin(dp.y * 0.006) * 0.2;
         dp.pulse += dp.pulseSpeed;
         if (dp.y < -10) { dp.y = height + 10; dp.x = Math.random() * width; }
         if (dp.x < -10) dp.x = width + 10;
         if (dp.x > width + 10) dp.x = -10;
 
         const curAlpha = dp.alpha * (0.6 + 0.4 * Math.sin(dp.pulse));
-        ctx.save();
         ctx.beginPath();
         ctx.arc(dp.x, dp.y, dp.radius, 0, Math.PI * 2);
         ctx.fillStyle = dp.color;
         ctx.globalAlpha = isLight ? curAlpha * 0.45 : curAlpha;
-        if (!isLight && !isTouch && dp.radius > 1.2) {
+        if (!isLight && dp.radius > 1.2) {
           ctx.shadowColor = dp.color;
-          ctx.shadowBlur = 8;
+          ctx.shadowBlur = 6;
         }
         ctx.fill();
-        ctx.restore();
       });
+      ctx.restore();
 
-      // Se for o canvas interno da aplicação (dashboard pós-login), renderiza os gráficos adicionais
+      // E. Candlesticks de Prosperidade (Mercado & Alta)
       if (canvasId === 'appBgOrbitalCanvas') {
-        // Candlesticks
+        ctx.save();
         candlestickBars.forEach(candle => {
           candle.x += candle.vx;
           if (candle.x < -30) {
             candle.x = width + 30;
-            candle.y = height * 0.73 + (Math.random() * 80 - 40);
-            candle.isBullish = Math.random() > 0.44;
+            candle.y = height * 0.76 + (Math.random() * 60 - 30);
+            candle.isBullish = Math.random() > 0.32;
           }
           const candleColor = candle.isBullish 
             ? (isLight ? '#059669' : '#10B981') 
-            : (isLight ? '#DC2626' : '#EF4444');
+            : (isLight ? '#D97706' : '#F59E0B');
 
-          ctx.save();
           ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
           ctx.strokeStyle = candleColor;
-          ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(239, 68, 68, 0.35)');
+          ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(245, 158, 11, 0.25)');
           ctx.lineWidth = 1.2;
           ctx.beginPath();
           ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
@@ -22418,56 +22538,116 @@ window.applyPostLoginBg = function(theme) {
           ctx.stroke();
           ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
           ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
-          ctx.restore();
         });
-
-        // Curva de Evolução Patrimonial
-        const chartBaseY = height * 0.78;
-        const pointSpacing = width / (monthMilestones.length + 1);
-        const minVal = 10000;
-        const maxVal = 48000;
-        const range = maxVal - minVal;
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(pointSpacing, height);
-        monthMilestones.forEach(function(m, idx) {
-          const cx = (idx + 1) * pointSpacing;
-          const cy = chartBaseY - ((m.val - minVal) / range) * 95;
-          if (idx === 0) ctx.lineTo(cx, cy);
-          else {
-            const prevX = idx * pointSpacing;
-            const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
-            const cpx = (prevX + cx) / 2;
-            ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
-          }
-        });
-        ctx.lineTo(monthMilestones.length * pointSpacing, height);
-        ctx.closePath();
-
-        const areaGrad = ctx.createLinearGradient(0, chartBaseY - 100, 0, height);
-        areaGrad.addColorStop(0, isLight ? 'rgba(16, 185, 129, 0.10)' : 'rgba(16, 185, 129, 0.16)');
-        areaGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
-        ctx.fillStyle = areaGrad;
-        ctx.fill();
-
-        ctx.beginPath();
-        monthMilestones.forEach(function(m, idx) {
-          const cx = (idx + 1) * pointSpacing;
-          const cy = chartBaseY - ((m.val - minVal) / range) * 95;
-          if (idx === 0) ctx.moveTo(cx, cy);
-          else {
-            const prevX = idx * pointSpacing;
-            const prevY = chartBaseY - ((monthMilestones[idx - 1].val - minVal) / range) * 95;
-            const cpx = (prevX + cx) / 2;
-            ctx.bezierCurveTo(cpx, prevY, cpx, cy, cx, cy);
-          }
-        });
-        ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.75)' : 'rgba(16, 185, 129, 0.85)';
-        ctx.lineWidth = 2.2;
-        ctx.stroke();
         ctx.restore();
       }
+
+      // F. Moedas Douradas e Tokens de Riqueza Flutuantes (R$, $, €, ₿, 💎)
+      ctx.save();
+      wealthCoins.forEach(function(coin) {
+        coin.y += coin.vy;
+        coin.x += coin.vx + Math.sin(coin.y * 0.005) * 0.25;
+        coin.pulse += coin.pulseSpeed;
+        coin.angle += coin.rotSpeed;
+
+        if (coin.y < -40) { coin.y = height + 40; coin.x = Math.random() * width; }
+        if (coin.x < -40) coin.x = width + 40;
+        if (coin.x > width + 40) coin.x = -40;
+
+        const dynAlpha = coin.alpha * (0.8 + 0.2 * Math.sin(coin.pulse));
+        ctx.globalAlpha = isLight ? dynAlpha * 0.5 : dynAlpha;
+
+        ctx.save();
+        ctx.translate(coin.x, coin.y);
+
+        // Halo de luz dourada
+        if (!isLight) {
+          ctx.shadowColor = coin.color;
+          ctx.shadowBlur = 10;
+        }
+
+        // Círculo base da moeda translúcida
+        ctx.beginPath();
+        ctx.arc(0, 0, coin.radius, 0, Math.PI * 2);
+        ctx.fillStyle = coin.bgTone;
+        ctx.fill();
+
+        // Borda lapidada dupla
+        ctx.lineWidth = 1.4;
+        ctx.strokeStyle = coin.borderTone;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(0, 0, coin.radius - 3, 0, Math.PI * 2);
+        ctx.lineWidth = 0.7;
+        ctx.strokeStyle = coin.color;
+        ctx.stroke();
+
+        // Símbolo central
+        ctx.fillStyle = coin.color;
+        ctx.font = 'bold ' + Math.round(coin.radius * 0.95) + 'px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(coin.sym, 0, 1);
+        ctx.restore();
+      });
+      ctx.restore();
+
+      // G. Pílulas de Metas e Conquistas Financeiras Pessoais
+      ctx.save();
+      floatingBadges.forEach(function(badge) {
+        badge.y += badge.vy;
+        badge.x += badge.vx + Math.sin(badge.y * 0.004) * 0.18;
+        badge.pulse += badge.pulseSpeed;
+
+        if (badge.y < -35) { badge.y = height + 35; badge.x = Math.random() * (width - 180) + 90; }
+        if (badge.x < -100) badge.x = width + 50;
+        if (badge.x > width + 100) badge.x = -50;
+
+        const curAlpha = badge.alpha * (0.85 + 0.15 * Math.sin(badge.pulse));
+        ctx.globalAlpha = isLight ? curAlpha * 0.6 : curAlpha;
+
+        ctx.font = 'bold 11px "Plus Jakarta Sans", sans-serif';
+        const metrics = ctx.measureText(badge.text);
+        const pillWidth = metrics.width + 20;
+        const pillHeight = 24;
+        const px = badge.x - pillWidth / 2;
+        const py = badge.y - pillHeight / 2;
+        const r = 12;
+
+        ctx.save();
+        if (!isLight) {
+          ctx.shadowColor = badge.color;
+          ctx.shadowBlur = 8;
+        }
+
+        // Fundo da pílula
+        ctx.beginPath();
+        ctx.moveTo(px + r, py);
+        ctx.lineTo(px + pillWidth - r, py);
+        ctx.quadraticCurveTo(px + pillWidth, py, px + pillWidth, py + r);
+        ctx.lineTo(px + pillWidth, py + pillHeight - r);
+        ctx.quadraticCurveTo(px + pillWidth, py + pillHeight, px + pillWidth - r, py + pillHeight);
+        ctx.lineTo(px + r, py + pillHeight);
+        ctx.quadraticCurveTo(px, py + pillHeight, px, py + pillHeight - r);
+        ctx.lineTo(px, py + r);
+        ctx.quadraticCurveTo(px, py, px + r, py);
+        ctx.closePath();
+
+        ctx.fillStyle = badge.bg;
+        ctx.fill();
+        ctx.strokeStyle = badge.border;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Texto da Meta Financeira
+        ctx.fillStyle = badge.color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(badge.text, badge.x, badge.y + 1);
+        ctx.restore();
+      });
+      ctx.restore();
     }
     render();
   }
@@ -22475,8 +22655,6 @@ window.applyPostLoginBg = function(theme) {
   setupCanvas('authBgCanvas');
   setupCanvas('appBgOrbitalCanvas');
 })();
-
-
 
   // Tela de login estável e fixa (sem oscilação ou inclinação ao passar o mouse)
   (function initServerCardStability() {
