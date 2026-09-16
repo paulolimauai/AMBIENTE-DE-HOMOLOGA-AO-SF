@@ -3934,12 +3934,12 @@ nav.menu{
   width:78px !important;
   max-width:78px !important;
   margin:0 !important;
-  padding:8px 0 10px !important;
+  padding:10px 0 14px !important;
   display:flex !important;
   flex-direction:column !important;
   align-items:center !important;
-  justify-content:space-between !important;
-  gap:4px !important;
+  justify-content:space-evenly !important;
+  gap:2px !important;
   background:#090E17 !important;
   border-right:1px solid #1E293B !important;
   border-top:none !important;
@@ -3951,12 +3951,19 @@ nav.menu{
   -webkit-backdrop-filter:none !important;
   overflow-y:auto !important;
   overflow-x:hidden !important;
-  scrollbar-width:none !important;
+  scrollbar-width:thin !important;
+  scrollbar-color:#334155 transparent !important;
   z-index:9999 !important;
 }
 nav.menu::-webkit-scrollbar{
-  display:none !important;
-  width:0 !important;
+  width:3px !important;
+}
+nav.menu::-webkit-scrollbar-thumb{
+  background:#334155 !important;
+  border-radius:999px !important;
+}
+nav.menu::-webkit-scrollbar-track{
+  background:transparent !important;
 }
 
 .menu button{
@@ -3966,12 +3973,12 @@ nav.menu::-webkit-scrollbar{
   align-items:center !important;
   justify-content:center !important;
   text-align:center !important;
-  gap:3px !important;
+  gap:2px !important;
   width:66px !important;
-  flex:1 1 0 !important;
-  min-height:36px !important;
-  max-height:80px !important;
-  padding:4px 2px !important;
+  flex:1 1 auto !important;
+  max-height:56px !important;
+  min-height:38px !important;
+  padding:3px 2px !important;
   border-radius:10px !important;
   background:transparent !important;
   border:1px solid transparent !important;
@@ -4008,7 +4015,7 @@ nav.menu::-webkit-scrollbar{
   top:50% !important;
   transform:translateY(-50%) !important;
   width:3px !important;
-  height:24px !important;
+  height:20px !important;
   border-radius:0 4px 4px 0 !important;
   background:#38BDF8 !important;
   box-shadow:0 0 8px rgba(56, 189, 248, 0.6) !important;
@@ -4017,8 +4024,8 @@ nav.menu::-webkit-scrollbar{
   display:none !important;
 }
 .menu button .ic{
-  width:24px !important;
-  height:24px !important;
+  width:22px !important;
+  height:22px !important;
   border-radius:6px !important;
   background:transparent !important;
   border:none !important;
@@ -4031,9 +4038,9 @@ nav.menu::-webkit-scrollbar{
   flex-shrink:0 !important;
 }
 .menu button .ic svg{
-  width:19px !important;
-  height:19px !important;
-  stroke-width:2.1px !important;
+  width:18px !important;
+  height:18px !important;
+  stroke-width:2px !important;
 }
 .menu button:hover .ic{
   transform:none !important;
@@ -4075,16 +4082,16 @@ nav.menu::-webkit-scrollbar{
 
 /* Ajustes Responsivos Fluidos por Altura e Largura de Tela (Monitores, Laptops, Telas Menores e Dispositivos) */
 @media (min-height: 900px) {
-  nav.menu { padding: 12px 0 16px !important; gap: 6px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 68px !important; }
-  .menu button .ic, .menu button.menu-btn-admin .ic { width: 24px !important; height: 24px !important; }
-  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 20px !important; height: 20px !important; }
+  nav.menu { padding: 14px 0 18px !important; gap: 4px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 68px !important; max-height: 60px !important; min-height: 48px !important; }
+  .menu button .ic, .menu button.menu-btn-admin .ic { width: 22px !important; height: 22px !important; }
+  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 19px !important; height: 19px !important; }
   .menu button span:not(.ic) { font-size: 10.5px !important; }
 }
 
 @media (max-height: 800px) {
-  nav.menu { padding: 6px 0 8px !important; gap: 2px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 66px !important; padding: 2px !important; border-radius: 8px !important; }
+  nav.menu { padding: 6px 0 10px !important; gap: 2px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 66px !important; max-height: 48px !important; min-height: 40px !important; padding: 2px 2px !important; gap: 1px !important; border-radius: 8px !important; }
   .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
   .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
   .menu button span:not(.ic) { font-size: 9.5px !important; }
@@ -4092,8 +4099,8 @@ nav.menu::-webkit-scrollbar{
 }
 
 @media (max-height: 680px) {
-  nav.menu { padding: 4px 0 6px !important; gap: 1px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 64px !important; padding: 2px 1px !important; border-radius: 8px !important; }
+  nav.menu { padding: 4px 0 6px !important; gap: 2px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 64px !important; max-height: 42px !important; min-height: 36px !important; padding: 2px 1px !important; gap: 1px !important; border-radius: 8px !important; }
   .menu button span:not(.ic) { font-size: 9px !important; }
   .menu button .ic, .menu button.menu-btn-admin .ic { width: 18px !important; height: 18px !important; }
   .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 15px !important; height: 15px !important; }
@@ -4102,7 +4109,7 @@ nav.menu::-webkit-scrollbar{
 
 @media (max-height: 560px) {
   nav.menu { padding: 2px 0 4px !important; gap: 1px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 60px !important; padding: 2px !important; border-radius: 6px !important; }
+  .menu button, .menu button.menu-btn-admin { width: 60px !important; max-height: 34px !important; min-height: 28px !important; padding: 2px !important; border-radius: 6px !important; }
   .menu button span:not(.ic) { display: none !important; }
   .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
   .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
@@ -14801,6 +14808,53 @@ function pageDashboard(){
     healthBadgeBorder = 'rgba(245,158,11,0.3)';
   }
 
+  // 4 Pilares Estratégicos de Sustentabilidade Financeira
+  const pilarPoupanca = savingsPct;
+  const pilarComprometimento = Math.min(100, commitPct);
+  const pilarCartao = Math.min(100, cardSummary.usagePctGeral);
+  const pilarPontualidade = pendingSummary.overdueCount > 0 ? Math.max(0, 100 - pendingSummary.overdueCount * 25) : 100;
+
+  let aiHealthInsight = '';
+  if (healthScore >= 75) {
+    aiHealthInsight = 'Excelente gestão orçamentária! Você retém ' + savingsPct + '% dos seus ganhos e mantém limites e prazos em conformidade de alto padrão.';
+  } else if (healthScore >= 50) {
+    aiHealthInsight = 'Equilíbrio funcional atingido. Seu índice de comprometimento é de ' + commitPct + '%. Fortalecer a poupança acima de 20% elevará seu score para a faixa Excelente.';
+  } else {
+    aiHealthInsight = (pendingSummary.overdueCount > 0 ? 'Atenção imediata: ' + pendingSummary.overdueCount + ' fatura(s) em atraso exigem baixa priorizada.' : 'Atenção: seus gastos superaram a margem preventiva recomendada para o período.');
+  }
+
+  // Budget & Pace calculation
+  const budgetList = typeof budgetStatus === 'function' ? budgetStatus() : [];
+  const hasCustomBudgets = budgetList.length > 0;
+  const totalBudgetLimit = hasCustomBudgets
+    ? budgetList.reduce((s, b) => s + (b.limit || 0), 0)
+    : (receitas > 0 ? receitas * 0.8 : 0);
+  const totalBudgetSpent = hasCustomBudgets
+    ? budgetList.reduce((s, b) => s + (b.spent || 0), 0)
+    : despesas;
+  const budgetPct = totalBudgetLimit > 0 ? Math.min(150, Math.round((totalBudgetSpent / totalBudgetLimit) * 100)) : (totalBudgetSpent > 0 ? 100 : 0);
+  const monthTimePct = Math.round((daysInPeriod / daysInMonthTotal) * 100);
+  const projectedMonthEnd = daysInPeriod > 0 ? Math.round(dailyAvg * daysInMonthTotal) : 0;
+
+  let paceStatus = 'Ritmo Seguro';
+  let paceColor = '#10B981';
+  let paceBadgeBg = 'rgba(16,185,129,0.14)';
+  let paceBadgeBorder = 'rgba(16,185,129,0.3)';
+  let paceDesc = 'Gastos crescendo abaixo da velocidade dos dias do mês.';
+  if (budgetPct > monthTimePct + 15) {
+    paceStatus = 'Ritmo Acelerado';
+    paceColor = '#EF4444';
+    paceBadgeBg = 'rgba(239,68,68,0.14)';
+    paceBadgeBorder = 'rgba(239,68,68,0.3)';
+    paceDesc = 'Atenção: consumo orçamentário avançando mais rápido que os dias do mês.';
+  } else if (budgetPct > monthTimePct) {
+    paceStatus = 'Ritmo Alinhado';
+    paceColor = '#F59E0B';
+    paceBadgeBg = 'rgba(245,158,11,0.14)';
+    paceBadgeBorder = 'rgba(245,158,11,0.3)';
+    paceDesc = 'Consumo nivelado com o decorrer do calendário.';
+  }
+
   const greeting = getGreetingTime();
   const formattedToday = getFormattedToday();
   const rawFirstName = currentUser ? (currentUser.name || '').split(' ')[0] : 'Usuário';
@@ -14985,6 +15039,8 @@ function pageDashboard(){
       '<button type="button" class="btn-primary" data-nav="cartoes" style="margin-top:10px; padding:6px 14px; font-size:11.5px; border-radius:8px;">Cadastrar Conta</button>' +
     '</div>';
   }
+
+  const currentChartMode = (typeof window !== 'undefined' && window.dashFlowChartMode) ? window.dashFlowChartMode : 'area';
 
   return \`
   <!-- 4K EXECUTIVE COMMAND HERO BANNER -->
@@ -15197,7 +15253,7 @@ function pageDashboard(){
     <!-- COLUNA PRINCIPAL ESQUERDA (1.62fr) -->
     <div style="display:flex; flex-direction:column; gap:20px;">
 
-      <!-- CARD 1: EVOLUÇÃO TEMPORAL & FLUXO DE CAIXA (Chart.js Interativo) -->
+      <!-- CARD 1: EVOLUÇÃO TEMPORAL & FLUXO DE CAIXA (Chart.js Interativo com 3 Modos) -->
       <div class="dash-card">
         <div class="dash-card-head">
           <div class="dash-card-title">
@@ -15209,13 +15265,28 @@ function pageDashboard(){
               <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Entradas vs Saídas registradas ao longo do período</div>
             </div>
           </div>
-          <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <!-- Seletor de Modo de Visualização do Gráfico -->
+            <div class="dash-chart-mode-strip">
+              <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'area' ? 'active' : ''}" data-mode="area" onclick="window.switchCashFlowChartMode('area')" title="Visualização em Linhas com Área Suave">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-6 6"/></svg>
+                <span>Área</span>
+              </button>
+              <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'bar' ? 'active' : ''}" data-mode="bar" onclick="window.switchCashFlowChartMode('bar')" title="Visualização em Barras Comparativas">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                <span>Barras</span>
+              </button>
+              <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'cum' ? 'active' : ''}" data-mode="cum" onclick="window.switchCashFlowChartMode('cum')" title="Visualização de Saldo Acumulado">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span>Acumulado</span>
+              </button>
+            </div>
             <span class="tag" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text); font-size:11.5px; padding:4px 10px; border-radius:8px;">\${periodLabel()}</span>
           </div>
         </div>
 
         <!-- Área do Canvas Chart.js -->
-        <div style="position:relative; width:100%; height:260px;">
+        <div style="position:relative; width:100%; height:270px;">
           <canvas id="chartCashFlow"></canvas>
         </div>
 
@@ -15234,8 +15305,8 @@ function pageDashboard(){
             <span class="dash-metric-val" style="color:#F87171;">\${fmt(maxExpense)}</span>
           </div>
           <div class="dash-metric-item">
-            <span class="dash-metric-label">Taxa Poupança</span>
-            <span class="dash-metric-val" style="color:#60A5FA;">\${savingsPct}%</span>
+            <span class="dash-metric-label">Projeção Fim do Mês</span>
+            <span class="dash-metric-val" style="color:#60A5FA;">\${fmt(projectedMonthEnd)}</span>
           </div>
         </div>
       </div>
@@ -15275,10 +15346,85 @@ function pageDashboard(){
 
     </div>
 
-    <!-- COLUNA LATERAL DIREITA (1fr) -->
+    <!-- COLUNA LATERAL DIREITA (1fr - RODAS E MEDIDORES VISUAIS) -->
     <div style="display:flex; flex-direction:column; gap:20px;">
 
-      <!-- CARD 1: DESPESAS POR CATEGORIA (Chart.js Doughnut + Ranking) -->
+      <!-- RODA 1: VELOCÍMETRO / RADIAL GAUGE 360° DE SAÚDE FINANCEIRA & 4 PILARES -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <div class="dash-card-title">
+            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); color:#34D399;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div>
+              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Roda de Saúde Financeira</div>
+              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Score de performance & 4 pilares</div>
+            </div>
+          </div>
+          <span class="kpi-tag" style="background:\${healthBadgeBg}; border:1px solid \${healthBadgeBorder}; color:\${healthColor};">\${healthStatus}</span>
+        </div>
+
+        <!-- Roda Radial 360° com SVG de Alta Precisão -->
+        <div style="display:flex; align-items:center; justify-content:center; position:relative; width:140px; height:140px; margin:4px auto 10px;">
+          <svg viewBox="0 0 100 100" style="width:100%; height:100%; transform:rotate(-90deg);">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="9"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="\${healthColor}" stroke-width="9" stroke-linecap="round" stroke-dasharray="251.32" stroke-dashoffset="\${251.32 * (1 - healthScore / 100)}" style="transition: stroke-dashoffset 0.9s cubic-bezier(0.16, 1, 0.3, 1);"/>
+          </svg>
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+            <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); font-weight:800;">Score 360°</span>
+            <b style="font-size:24px; font-weight:900; color:\${healthColor}; line-height:1; margin:2px 0;">\${healthScore}</b>
+            <span style="font-size:10px; font-weight:700; color:var(--text-dim);">de 100</span>
+          </div>
+        </div>
+
+        <!-- 4 Pilares Estruturais -->
+        <div class="dash-pillars-list">
+          <div class="dash-pillar-item">
+            <div class="dash-pillar-head">
+              <span style="color:var(--text-dim); font-weight:600;">Poupança</span>
+              <strong style="color:\${pilarPoupanca >= 20 ? '#10B981' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};">\${pilarPoupanca}%</strong>
+            </div>
+            <div class="dash-pillar-bar">
+              <div class="dash-pillar-fill" style="width:\${Math.min(100, pilarPoupanca)}%; background:\${pilarPoupanca >= 20 ? '#10B981' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};"></div>
+            </div>
+          </div>
+          <div class="dash-pillar-item">
+            <div class="dash-pillar-head">
+              <span style="color:var(--text-dim); font-weight:600;">Comprometido</span>
+              <strong style="color:\${pilarComprometimento <= 60 ? '#10B981' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};">\${pilarComprometimento}%</strong>
+            </div>
+            <div class="dash-pillar-bar">
+              <div class="dash-pillar-fill" style="width:\${pilarComprometimento}%; background:\${pilarComprometimento <= 60 ? '#10B981' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};"></div>
+            </div>
+          </div>
+          <div class="dash-pillar-item">
+            <div class="dash-pillar-head">
+              <span style="color:var(--text-dim); font-weight:600;">Uso Cartão</span>
+              <strong style="color:\${pilarCartao <= 50 ? '#10B981' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};">\${pilarCartao}%</strong>
+            </div>
+            <div class="dash-pillar-bar">
+              <div class="dash-pillar-fill" style="width:\${pilarCartao}%; background:\${pilarCartao <= 50 ? '#10B981' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};"></div>
+            </div>
+          </div>
+          <div class="dash-pillar-item">
+            <div class="dash-pillar-head">
+              <span style="color:var(--text-dim); font-weight:600;">Pontualidade</span>
+              <strong style="color:\${pilarPontualidade >= 90 ? '#10B981' : '#F87171'};">\${pilarPontualidade}%</strong>
+            </div>
+            <div class="dash-pillar-bar">
+              <div class="dash-pillar-fill" style="width:\${pilarPontualidade}%; background:\${pilarPontualidade >= 90 ? '#10B981' : '#F87171'};"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diagnóstico com IA Financeira -->
+        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:9px 12px; margin-top:12px; display:flex; align-items:flex-start; gap:8px;">
+          <span style="font-size:14px; flex-shrink:0;">💡</span>
+          <span style="font-size:11.5px; color:var(--text-dim); line-height:1.4;">\${aiHealthInsight}</span>
+        </div>
+      </div>
+
+      <!-- RODA 2: DESPESAS POR CATEGORIA (Chart.js Doughnut) -->
       <div class="dash-card">
         <div class="dash-card-head">
           <div class="dash-card-title">
@@ -15306,69 +15452,89 @@ function pageDashboard(){
         \${categoriesSectionHtml}
       </div>
 
-      <!-- CARD 2: CARTEIRA CONSOLIDADA (Contas e Cartões) -->
+      <!-- RODA 3: UTILIZAÇÃO DE LIMITES DE CARTÕES (Chart.js Doughnut) -->
       <div class="dash-card">
         <div class="dash-card-head">
           <div class="dash-card-title">
-            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(56,189,248,0.22), rgba(14,165,233,0.08)); border:1px solid rgba(56,189,248,0.35); color:#38BDF8;">
+            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); color:#FBBF24;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg>
             </div>
             <div>
-              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Meios de Pagamento</div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Saldos em conta & limites de crédito</div>
+              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Roda de Limites & Cartões</div>
+              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Consumo de crédito consolidado</div>
             </div>
           </div>
           <span class="tag" data-nav="cartoes" style="cursor:pointer; font-size:11px; padding:3px 8px;">Gerenciar</span>
         </div>
 
-        <!-- Contas Bancárias / Carteira -->
-        \${bankAccountsHtml}
+        \${creditCardsList.length > 0 ? \`
+        <!-- Doughnut Canvas Cartões -->
+        <div style="position:relative; width:100%; height:180px; margin-bottom:12px;">
+          <canvas id="chartCartoesWheel"></canvas>
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
+            <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Uso Global</span>
+            <b style="font-size:18px; font-weight:900; color:\${cardSummary.usagePctGeral >= 85 ? '#F87171' : '#FBBF24'}; line-height:1; margin-top:1px;">\${cardSummary.usagePctGeral}%</b>
+          </div>
+        </div>
 
-        <!-- Cartões de Crédito -->
+        <div style="display:flex; justify-content:space-between; font-size:11.5px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); margin-bottom:10px;">
+          <span>Fatura: <strong style="color:#FBBF24;">\${fmt(cardSummary.spentTotalGeral)}</strong></span>
+          <span>Disp: <strong style="color:#34D399;">\${fmt(cardSummary.availableLimitGeral)}</strong></span>
+        </div>
+
         \${creditCardsHtml}
-
-        \${emptyMeiosHtml}
+        \` : \`
+        <div style="text-align:center; padding:24px 12px; color:var(--text-dim);">
+          <div style="font-size:32px; margin-bottom:8px;">💳</div>
+          <p style="font-size:12.5px; margin:0 0 10px 0;">Nenhum cartão de crédito cadastrado.</p>
+          <button type="button" class="btn-primary" data-nav="cartoes" style="padding:6px 14px; font-size:11.5px; border-radius:8px;">+ Cadastrar Cartão</button>
+        </div>
+        \`}
       </div>
 
-      <!-- CARD 3: DIAGNÓSTICO & SAÚDE FINANCEIRA 4K -->
+      <!-- RODA 4: EXECUÇÃO ORÇAMENTÁRIA & RITMO MENSAL -->
       <div class="dash-card">
         <div class="dash-card-head">
           <div class="dash-card-title">
-            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(99,102,241,0.22), rgba(79,70,229,0.08)); border:1px solid rgba(99,102,241,0.35); color:#818CF8;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(6,182,212,0.22), rgba(14,165,233,0.08)); border:1px solid rgba(6,182,212,0.35); color:#22D3EE;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
             <div>
-              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Diagnóstico Estratégico</div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Indicadores de sustentabilidade e metas</div>
+              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Roda de Orçamento & Ritmo</div>
+              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Velocidade de consumo do período</div>
             </div>
           </div>
+          <span class="kpi-tag" style="background:\${paceBadgeBg}; border:1px solid \${paceBadgeBorder}; color:\${paceColor};">\${paceStatus}</span>
         </div>
 
-        <div style="display:flex; align-items:center; justify-content:center; position:relative; width:120px; height:120px; margin:0 auto 10px;">
-          <svg viewBox="0 0 100 100" style="width:100%; height:100%; transform:rotate(-90deg);">
-            <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
-            <circle cx="50" cy="50" r="38" fill="none" stroke="\${healthColor}" stroke-width="8" stroke-linecap="round" stroke-dasharray="238.76" stroke-dashoffset="\${238.76 * (1 - healthScore / 100)}" style="transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);"/>
-          </svg>
-          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-            <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); font-weight:700;">Score</span>
-            <b style="font-size:20px; font-weight:900; color:\${healthColor}; line-height:1; margin:2px 0;">\${healthScore}</b>
-            <span style="font-size:9.5px; color:var(--text-dim); font-weight:600;">/100</span>
+        <!-- Doughnut Canvas Orçamento & Ritmo -->
+        <div style="position:relative; width:100%; height:180px; margin-bottom:12px;">
+          <canvas id="chartBudgetWheel"></canvas>
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
+            <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Executado</span>
+            <b style="font-size:18px; font-weight:900; color:\${paceColor}; line-height:1; margin-top:1px;">\${budgetPct}%</b>
           </div>
         </div>
 
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 10px; border-radius:8px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); font-size:11.5px;">
-            <span style="color:var(--text-dim);">Comprometimento da Renda</span>
-            <strong style="color:\${commitPct > 80 ? '#F87171' : commitPct > 60 ? '#FBBF24' : '#34D399'};">\${commitPct}%</strong>
+        <!-- Comparador de Ritmo Temporal vs Orçamentário -->
+        <div class="dash-pace-box">
+          <div class="dash-pace-header">
+            <span style="font-size:11px; color:var(--text-dim); font-weight:600;">Dia \${daysInPeriod} de \${daysInMonthTotal} (\${monthTimePct}% do mês decorrido)</span>
+            <strong style="font-size:11.5px; color:\${paceColor};">\${budgetPct}% Gasto</strong>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 10px; border-radius:8px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); font-size:11.5px;">
-            <span style="color:var(--text-dim);">Dias Restantes no Mês</span>
-            <strong style="color:var(--text);">\${daysRemaining} dia\${daysRemaining === 1 ? '' : 's'}</strong>
+          <div class="dash-pace-meter">
+            <div class="dash-pace-fill" style="width:\${Math.min(100, budgetPct)}%; background:\${paceColor};"></div>
+            <div class="dash-pace-marker" style="left:\${monthTimePct}%;" title="Tempo decorrido no mês"></div>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 10px; border-radius:8px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); font-size:11.5px;">
-            <span style="color:var(--text-dim);">Distribuição de Fluxo</span>
-            <strong style="color:#38BDF8;">\${recPct}% in / \${despPct}% out</strong>
+          <div style="font-size:11px; color:var(--text-dim); line-height:1.3; margin-top:2px;">
+            \${paceDesc}
           </div>
+        </div>
+
+        <!-- Contas Bancárias & Saldos -->
+        <div style="margin-top:14px;">
+          \${bankAccountsHtml}
+          \${emptyMeiosHtml}
         </div>
       </div>
 
@@ -18957,6 +19123,19 @@ window.excluirOrdemAdmin = async function(paramId) {
 };
 
 /* ==================== Charts ==================== */
+window.dashFlowChartMode = window.dashFlowChartMode || 'area';
+
+window.switchCashFlowChartMode = function(mode) {
+  window.dashFlowChartMode = mode;
+  document.querySelectorAll('.dash-chart-mode-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-mode') === mode);
+  });
+  if (typeof drawDashboardCharts === 'function') {
+    drawDashboardCharts();
+  }
+};
+
+/* ==================== Charts ==================== */
 function drawDashboardCharts(){
   if (typeof Chart === 'undefined') return;
   try {
@@ -18964,7 +19143,7 @@ function drawDashboardCharts(){
     const periodTx = Array.isArray(transactions) ? transactions.filter(inPeriod) : [];
     const { receitas, despesas } = computeTotals(periodTx);
 
-    // 1. Chart: Fluxo de Caixa Dinâmico (Linha com Gradiente Suave)
+    // 1. Chart: Fluxo de Caixa Dinâmico (Linha Área / Barras / Acumulado)
     const ctxCash = document.getElementById('chartCashFlow');
     if (ctxCash) {
       const dayTotals = {};
@@ -18989,49 +19168,99 @@ function drawDashboardCharts(){
       const dataIn = Object.values(dayTotals).map(v => v.in);
       const dataOut = Object.values(dayTotals).map(v => v.out);
 
+      let runningBal = 0;
+      const dataCum = Object.values(dayTotals).map(v => {
+        runningBal += (v.in - v.out);
+        return runningBal;
+      });
+
       if (charts.cashFlow && charts.cashFlow.destroy) {
         charts.cashFlow.destroy();
       }
 
+      const mode = window.dashFlowChartMode || 'area';
+      let chartType = 'line';
+      let datasets = [];
+
+      if (mode === 'bar') {
+        chartType = 'bar';
+        datasets = [
+          {
+            label: 'Receitas (R$)',
+            data: dataIn,
+            backgroundColor: '#10B981',
+            borderRadius: 5,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          },
+          {
+            label: 'Despesas (R$)',
+            data: dataOut,
+            backgroundColor: '#EF4444',
+            borderRadius: 5,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          }
+        ];
+      } else if (mode === 'cum') {
+        chartType = 'line';
+        datasets = [
+          {
+            label: 'Saldo Acumulado (R$)',
+            data: dataCum,
+            borderColor: '#06B6D4',
+            backgroundColor: isLightMode ? 'rgba(6, 182, 212, 0.15)' : 'rgba(6, 182, 212, 0.10)',
+            borderWidth: 2.8,
+            tension: 0.38,
+            fill: true,
+            pointRadius: 2.8,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#06B6D4',
+            pointBorderColor: '#FFFFFF',
+            pointBorderWidth: 1.5
+          }
+        ];
+      } else {
+        chartType = 'line';
+        datasets = [
+          {
+            label: 'Receitas (R$)',
+            data: dataIn,
+            borderColor: '#10B981',
+            backgroundColor: isLightMode ? 'rgba(16, 185, 129, 0.16)' : 'rgba(16, 185, 129, 0.12)',
+            borderWidth: 2.6,
+            tension: 0.38,
+            fill: true,
+            pointRadius: 2.5,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#10B981',
+            pointBorderColor: '#FFFFFF',
+            pointBorderWidth: 1.5
+          },
+          {
+            label: 'Despesas (R$)',
+            data: dataOut,
+            borderColor: '#EF4444',
+            backgroundColor: isLightMode ? 'rgba(239, 68, 68, 0.12)' : 'rgba(239, 68, 68, 0.08)',
+            borderWidth: 2.6,
+            tension: 0.38,
+            fill: true,
+            pointRadius: 2.5,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#EF4444',
+            pointBorderColor: '#FFFFFF',
+            pointBorderWidth: 1.5
+          }
+        ];
+      }
+
       charts.cashFlow = new Chart(ctxCash, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Receitas (R$)',
-              data: dataIn,
-              borderColor: '#10B981',
-              backgroundColor: 'rgba(16, 185, 129, 0.12)',
-              borderWidth: 2.5,
-              tension: 0.38,
-              fill: true,
-              pointRadius: 2.5,
-              pointHoverRadius: 6,
-              pointBackgroundColor: '#10B981',
-              pointBorderColor: '#FFFFFF',
-              pointBorderWidth: 1.5
-            },
-            {
-              label: 'Despesas (R$)',
-              data: dataOut,
-              borderColor: '#EF4444',
-              backgroundColor: 'rgba(239, 68, 68, 0.08)',
-              borderWidth: 2.5,
-              tension: 0.38,
-              fill: true,
-              pointRadius: 2.5,
-              pointHoverRadius: 6,
-              pointBackgroundColor: '#EF4444',
-              pointBorderColor: '#FFFFFF',
-              pointBorderWidth: 1.5
-            }
-          ]
-        },
+        type: chartType,
+        data: { labels: labels, datasets: datasets },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: { duration: 500 },
+          animation: { duration: 450 },
           interaction: { mode: 'index', intersect: false },
           plugins: {
             legend: {
@@ -19039,7 +19268,7 @@ function drawDashboardCharts(){
               position: 'top',
               align: 'end',
               labels: {
-                color: isLightMode ? '#334155' : '#CBD5E1',
+                color: isLightMode ? '#000000' : '#CBD5E1',
                 font: { weight: '700', size: 11 },
                 boxWidth: 8,
                 boxHeight: 8,
@@ -19048,10 +19277,10 @@ function drawDashboardCharts(){
               }
             },
             tooltip: {
-              backgroundColor: isLightMode ? 'rgba(255,255,255,0.96)' : 'rgba(15,23,42,0.94)',
-              titleColor: isLightMode ? '#0F172A' : '#F8FAFC',
-              bodyColor: isLightMode ? '#334155' : '#E2E8F0',
-              borderColor: isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.12)',
+              backgroundColor: isLightMode ? 'rgba(255,255,255,0.98)' : 'rgba(15,23,42,0.95)',
+              titleColor: isLightMode ? '#000000' : '#F8FAFC',
+              bodyColor: isLightMode ? '#000000' : '#E2E8F0',
+              borderColor: isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.14)',
               borderWidth: 1,
               padding: 10,
               boxPadding: 4,
@@ -19066,22 +19295,22 @@ function drawDashboardCharts(){
           scales: {
             x: {
               grid: {
-                color: isLightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)',
+                color: isLightMode ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.04)',
                 drawBorder: false
               },
               ticks: {
-                color: isLightMode ? '#64748B' : '#94A3B8',
-                font: { size: 10, weight: '600' }
+                color: isLightMode ? '#000000' : '#94A3B8',
+                font: { size: 10, weight: '700' }
               }
             },
             y: {
               grid: {
-                color: isLightMode ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)',
+                color: isLightMode ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.04)',
                 drawBorder: false
               },
               ticks: {
-                color: isLightMode ? '#64748B' : '#94A3B8',
-                font: { size: 10, weight: '600' },
+                color: isLightMode ? '#000000' : '#94A3B8',
+                font: { size: 10, weight: '700' },
                 callback: function(v) { return fmt(v); }
               }
             }
@@ -19090,7 +19319,7 @@ function drawDashboardCharts(){
       });
     }
 
-    // 2. Chart: Despesas por Categoria (Doughnut)
+    // 2. Roda 2: Despesas por Categoria (Doughnut)
     const cats = despesasPorCategoria(periodTx);
     const ctxCat = document.getElementById('chartCategorias');
     if (ctxCat) {
@@ -19111,7 +19340,7 @@ function drawDashboardCharts(){
             backgroundColor: catColors,
             borderWidth: 2,
             borderColor: isLightMode ? '#FFFFFF' : 'rgba(13,20,36,0.95)',
-            hoverOffset: 6
+            hoverOffset: 7
           }]
         },
         options: {
@@ -19122,12 +19351,12 @@ function drawDashboardCharts(){
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: isLightMode ? 'rgba(255,255,255,0.96)' : 'rgba(15,23,42,0.94)',
-              titleColor: isLightMode ? '#0F172A' : '#F8FAFC',
-              bodyColor: isLightMode ? '#334155' : '#E2E8F0',
+              backgroundColor: isLightMode ? 'rgba(255,255,255,0.98)' : 'rgba(15,23,42,0.95)',
+              titleColor: isLightMode ? '#000000' : '#F8FAFC',
+              bodyColor: isLightMode ? '#000000' : '#E2E8F0',
               borderColor: isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.12)',
               borderWidth: 1,
-              padding: 8,
+              padding: 9,
               callbacks: {
                 label: function(c) {
                   if (!cats.length) return ' Sem despesas registradas';
@@ -19141,6 +19370,121 @@ function drawDashboardCharts(){
         }
       });
     }
+
+    // 3. Roda 3: Limites & Cartões de Crédito (Doughnut Wheel)
+    const ctxCartoes = document.getElementById('chartCartoesWheel');
+    if (ctxCartoes) {
+      if (charts.cartoesWheel && charts.cartoesWheel.destroy) {
+        charts.cartoesWheel.destroy();
+      }
+      const cardSummary = computeCardSummary();
+      const spent = Math.max(0, cardSummary.spentTotalGeral);
+      const available = Math.max(0, cardSummary.availableLimitGeral);
+      const hasLimit = (spent + available) > 0;
+
+      const cardData = hasLimit ? [spent, available] : [1, 0];
+      const cardColor = cardSummary.usagePctGeral >= 85 ? '#EF4444' : cardSummary.usagePctGeral >= 60 ? '#F59E0B' : '#FBBF24';
+      const bgColors = hasLimit 
+        ? [cardColor, isLightMode ? 'rgba(16, 185, 129, 0.45)' : 'rgba(16, 185, 129, 0.25)'] 
+        : [isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.1)'];
+
+      charts.cartoesWheel = new Chart(ctxCartoes, {
+        type: 'doughnut',
+        data: {
+          labels: ['Fatura Utilizada', 'Limite Disponível'],
+          datasets: [{
+            data: cardData,
+            backgroundColor: bgColors,
+            borderWidth: 2,
+            borderColor: isLightMode ? '#FFFFFF' : 'rgba(13,20,36,0.95)',
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '72%',
+          animation: { duration: 450 },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: isLightMode ? 'rgba(255,255,255,0.98)' : 'rgba(15,23,42,0.95)',
+              titleColor: isLightMode ? '#000000' : '#F8FAFC',
+              bodyColor: isLightMode ? '#000000' : '#E2E8F0',
+              borderColor: isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.12)',
+              borderWidth: 1,
+              padding: 9,
+              callbacks: {
+                label: function(c) {
+                  return ' ' + c.label + ': ' + fmt(c.raw);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // 4. Roda 4: Orçamento & Ritmo Mensal (Doughnut Wheel)
+    const ctxBudget = document.getElementById('chartBudgetWheel');
+    if (ctxBudget) {
+      if (charts.budgetWheel && charts.budgetWheel.destroy) {
+        charts.budgetWheel.destroy();
+      }
+      const budgetList = typeof budgetStatus === 'function' ? budgetStatus() : [];
+      const hasCustom = budgetList.length > 0;
+      const totalLimit = hasCustom 
+        ? budgetList.reduce((s, b) => s + (b.limit || 0), 0)
+        : (receitas > 0 ? receitas * 0.8 : 0);
+      const totalSpent = hasCustom 
+        ? budgetList.reduce((s, b) => s + (b.spent || 0), 0)
+        : despesas;
+      const remaining = Math.max(0, totalLimit - totalSpent);
+      const budgetPct = totalLimit > 0 ? Math.round((totalSpent / totalLimit) * 100) : 0;
+      const budgetColor = budgetPct >= 100 ? '#EF4444' : budgetPct >= 80 ? '#F59E0B' : '#10B981';
+
+      const bData = (totalSpent > 0 || remaining > 0) ? [totalSpent, remaining] : [1, 0];
+      const bColors = (totalSpent > 0 || remaining > 0) 
+        ? [budgetColor, isLightMode ? 'rgba(6, 182, 212, 0.35)' : 'rgba(6, 182, 212, 0.2)'] 
+        : [isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.1)'];
+
+      charts.budgetWheel = new Chart(ctxBudget, {
+        type: 'doughnut',
+        data: {
+          labels: ['Gasto no Orçamento', 'Saldo Disponível'],
+          datasets: [{
+            data: bData,
+            backgroundColor: bColors,
+            borderWidth: 2,
+            borderColor: isLightMode ? '#FFFFFF' : 'rgba(13,20,36,0.95)',
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '72%',
+          animation: { duration: 450 },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: isLightMode ? 'rgba(255,255,255,0.98)' : 'rgba(15,23,42,0.95)',
+              titleColor: isLightMode ? '#000000' : '#F8FAFC',
+              bodyColor: isLightMode ? '#000000' : '#E2E8F0',
+              borderColor: isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.12)',
+              borderWidth: 1,
+              padding: 9,
+              callbacks: {
+                label: function(c) {
+                  return ' ' + c.label + ': ' + fmt(c.raw);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
   } catch(e) {
     console.warn("Aviso ao gerar gráficos:", e);
   }

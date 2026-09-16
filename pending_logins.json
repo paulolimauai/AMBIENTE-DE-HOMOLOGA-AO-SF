@@ -150,5 +150,29 @@
     "last_login": "2026-09-16T08:29:49-03:00",
     "timestamp": "2026-09-16T11:29:49.707Z",
     "ack": false
+  },
+  {
+    "id": "40",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-09-16T09:00:26-03:00",
+    "timestamp": "2026-09-16T12:00:26.891Z",
+    "ack": false
+  },
+  {
+    "id": "40",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-09-16T19:44:45-03:00",
+    "timestamp": "2026-09-16T22:44:45.209Z",
+    "ack": false
+  },
+  {
+    "id": "40",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-09-16T19:50:20-03:00",
+    "timestamp": "2026-09-16T22:50:20.108Z",
+    "ack": false
   }
 ]
