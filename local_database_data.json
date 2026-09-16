@@ -2616,9 +2616,10 @@
     "accounts": [
       {
         "id": 1,
-        "name": "Conta Principal",
+        "name": "Conta Corrente",
         "type": "Conta Corrente",
-        "balance": 1000
+        "balance": 5000,
+        "color": "#4a90e2"
       }
     ],
     "categories": [
@@ -2640,28 +2641,25 @@
     "transactions": [
       {
         "id": 1,
-        "desc": "Internet Fibra Óptica 500MB",
-        "val": 149.9,
+        "desc": "Mensalidade Internet Fibra 500 Mega",
+        "val": 129.9,
         "date": "2026-09-16",
         "cat": "Internet Fibra",
         "type": "out",
-        "acc": "Conta Principal",
+        "acc": "Conta Corrente",
         "status": "Efetivado"
       },
       {
         "id": 2,
-        "desc": "Equipamento Notebook Dell Latitude",
-        "val": 3500,
+        "desc": "Compra Equipamento Notebook Dell",
+        "val": 3450,
         "date": "2026-09-16",
         "cat": "Equipamentos",
         "type": "out",
-        "acc": "Conta Principal",
+        "acc": "Conta Corrente",
         "status": "Efetivado"
       }
     ],
-    "updated_at": "2026-09-16T10:38:13.163Z",
-    "budgets": [],
-    "goals": [],
-    "recurringList": []
+    "updated_at": "2026-09-16T10:41:17.248Z"
   }
 }

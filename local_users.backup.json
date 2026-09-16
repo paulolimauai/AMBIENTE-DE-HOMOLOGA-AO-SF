@@ -150,18 +150,17 @@
     "device_type": "Computador"
   },
   {
-    "id": "49",
+    "id": "50",
     "name": "Cliente Celular iPhone",
     "email": "cliente.celular5g@teste.com",
-    "password": "scrypt:3b4960cb055143e6b60bac009fb29ce2:72a10a3b64a7c6a5dfa1af2ba6d59a977d81bb067a363fe0d804f4fcdbfb7fffefe4df55d92fd9ebb935a4580eadf67ff6d56d94674a5047cd9ed67ee19d7470",
+    "password": "scrypt:1bead457f49e852145ba6cf97eaf8d83:1211c2ef4f37c9c82d4ace33933b7dfbff7da5d122fb0e8e3681114f9d121d87b5badb63d1328b543c7055e1ff840d0af98ec0b2ddcf4e92cd5e6cda55be9e00",
     "role": "Usuário",
     "active": true,
-    "created_at": "2026-09-16T07:35:39-03:00",
-    "last_login": null,
     "cpf": "04023326199",
     "phone": "62988880001",
     "birth_date": "10/10/1990",
     "terms_accepted": true,
-    "device_type": "Mobile"
+    "device_type": "Mobile",
+    "created_at": "2026-09-16T07:41:17-03:00"
   }
 ]
