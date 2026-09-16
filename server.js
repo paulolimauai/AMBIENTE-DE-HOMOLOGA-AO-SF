@@ -1569,8 +1569,7 @@ html.is-admin #mobileDrawerLogsBtn {
   display: flex !important;
 }
 
-/* Perfil de Administrador: Ocultar estritamente módulos financeiros e manter apenas funções administrativas */
-html.is-admin #menu button[data-page="dashboard"],
+/* Perfil de Administrador: Ocultar estritamente módulos financeiros e manter o Dashboard e funções administrativas */
 html.is-admin #menu button[data-page="transacoes"],
 html.is-admin #menu button[data-page="cartoes"],
 html.is-admin #menu button[data-page="orcamentos"],
@@ -1580,7 +1579,6 @@ html.is-admin #menu button[data-page="recorrentes"],
 html.is-admin #menu button[data-page="importar"],
 html.is-admin #menu button[data-page="anexos"],
 html.is-admin #menu button[data-page="config"],
-html.is-admin #mobileDrawerMenu button[data-page="dashboard"],
 html.is-admin #mobileDrawerMenu button[data-page="transacoes"],
 html.is-admin #mobileDrawerMenu button[data-page="cartoes"],
 html.is-admin #mobileDrawerMenu button[data-page="orcamentos"],
@@ -3971,15 +3969,15 @@ nav.menu{
   align-items:center !important;
   justify-content:flex-start !important;
   gap:4px !important;
-  background:rgba(8, 12, 22, 0.95) !important;
-  border-right:1px solid rgba(255, 255, 255, 0.08) !important;
+  background:#0B0F19 !important;
+  border-right:1px solid #1E293B !important;
   border-top:none !important;
   border-left:none !important;
   border-bottom:none !important;
   border-radius:0 !important;
-  box-shadow:4px 0 24px rgba(0, 0, 0, 0.35) !important;
-  backdrop-filter:blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter:blur(20px) saturate(180%) !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
   overflow-y:auto !important;
   overflow-x:hidden !important;
   scrollbar-width:thin !important;
@@ -7396,6 +7394,277 @@ body.light .dash-tx-search-input {
   color: #000000 !important;
 }
 
+/* ==========================================================================
+   Dashboard Executivo & Focado: Atendimento O.S., Perfis Cadastrados & Auditoria
+   ========================================================================== */
+.dash-focus-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 22px;
+  background: var(--glass-card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-card-border);
+  border-top: 1.8px solid var(--glass-card-border-top);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: var(--glass-card-shadow);
+}
+.dash-focus-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.dash-focus-hero-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.12));
+  border: 1.5px solid rgba(96, 165, 250, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+  flex-shrink: 0;
+}
+.dash-focus-hero-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dash-focus-hero-sub {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.dash-focus-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.dash-focus-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.dash-focus-card {
+  position: relative;
+  overflow: hidden;
+  padding: 20px 22px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dash-focus-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  border-color: #38BDF8;
+}
+.dash-focus-card.active-tab-card {
+  border-color: #38BDF8;
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.25);
+}
+.dash-focus-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dash-focus-card-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.dash-focus-card-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+}
+.dash-focus-card-val {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text);
+}
+.dash-focus-card-sub {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dash-focus-tabs-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.dash-focus-tabs-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px;
+  border-radius: 14px;
+  border: 1px solid var(--card-border);
+  flex-wrap: wrap;
+}
+.dash-focus-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.dash-focus-tab-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+.dash-focus-tab-btn.active {
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+}
+.dash-focus-tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+.dash-focus-tab-btn:not(.active) .dash-focus-tab-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-dim);
+}
+.dash-os-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.dash-os-card {
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dash-os-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+.dash-os-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.dash-os-card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Light Mode Overrides: Strict Preto Puro #000000 !important */
+body.light .dash-focus-hero {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+}
+body.light .dash-focus-hero-title,
+body.light .dash-focus-hero-sub {
+  color: #000000 !important;
+}
+body.light .dash-focus-card {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+}
+body.light .dash-focus-card-title,
+body.light .dash-focus-card-val,
+body.light .dash-focus-card-sub {
+  color: #000000 !important;
+}
+body.light .dash-focus-tabs-group {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+}
+body.light .dash-focus-tab-btn {
+  color: #000000 !important;
+  opacity: 0.75;
+}
+body.light .dash-focus-tab-btn:hover {
+  background: #E2E8F0 !important;
+  opacity: 1;
+}
+body.light .dash-focus-tab-btn.active {
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  opacity: 1;
+}
+body.light .dash-focus-tab-btn.active span {
+  color: #FFFFFF !important;
+}
+body.light .dash-focus-tab-btn:not(.active) .dash-focus-tab-badge {
+  background: #E2E8F0 !important;
+  color: #000000 !important;
+}
+body.light .dash-os-card {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+}
+body.light .dash-os-card h4,
+body.light .dash-os-card div,
+body.light .dash-os-card span,
+body.light .dash-os-card strong {
+  color: #000000 !important;
+}
+
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
 .env-badge-homolog {
   display: inline-flex;
@@ -10157,10 +10426,10 @@ body.light .toast {
     <div class="menu-admin-divider" title="Área de Gestão"></div>
     <div class="menu-admin-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMIN</span></div>
 
-    <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
+    <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Perfis Cadastrados</span></button>
     <button data-page="funcoes" id="menuFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/><path d="M12 2v2"/></svg></span><span>Funções</span></button>
-    <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
-    <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
+    <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Atendimento O.S.</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
+    <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Log de Auditoria</span></button>
   </nav>
 
   <!-- BARRA INFERIOR MOBILE MODERNA (BOTTOM TAB BAR DE ALTO PADRÃO) -->
@@ -10257,10 +10526,10 @@ body.light .toast {
       <div id="mobileDrawerAdminDivider" class="menu-admin-divider" style="display:none; width:88%; margin:14px auto 10px;"></div>
       <div id="mobileDrawerAdminBadge" class="menu-admin-badge" style="display:none; margin:0 16px 8px; width:fit-content;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMINISTRAÇÃO</span></div>
 
-      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
+      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Perfis Cadastrados</button>
       <button data-page="funcoes" id="mobileDrawerFuncoesBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/><path d="M12 2v2"/></svg></span> Funções & Permissões</button>
-      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Central de Suporte & O.S.</button>
-      <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
+      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Atendimento O.S.</button>
+      <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Log de Auditoria</button>
     </nav>
 
     <!-- Botão de Sair no Rodapé do Mobile Drawer -->
@@ -14428,9 +14697,9 @@ function render(){
   const isAdminView = isAdmin && !isViewingOtherUser;
 
   if (isAdminView) {
-    // Perfil de Administrador acessa funções administrativas e de controle do sistema
-    if (!['usuarios', 'funcoes', 'ordens', 'logs'].includes(currentPage)) {
-      currentPage = 'usuarios';
+    // Perfil de Administrador acessa Dashboard Operacional e funções de controle
+    if (!['dashboard', 'usuarios', 'funcoes', 'ordens', 'logs'].includes(currentPage)) {
+      currentPage = 'dashboard';
     }
   } else {
     // Usuários comuns nunca podem acessar páginas exclusivas de gestão de terceiros
@@ -14821,6 +15090,37 @@ window.setQuickPeriod = function(mode) {
   render();
 };
 
+window.currentDashFocusTab = window.currentDashFocusTab || 'os_aberta';
+window.currentDashOsFilter = window.currentDashOsFilter || 'abertas';
+window.currentDashOsSearch = window.currentDashOsSearch || '';
+window.currentDashUserSearch = window.currentDashUserSearch || '';
+window.currentDashLogSearch = window.currentDashLogSearch || '';
+
+window.setDashFocusTab = function(tab) {
+  window.currentDashFocusTab = tab;
+  render();
+};
+
+window.setDashOsFilter = function(filter) {
+  window.currentDashOsFilter = filter;
+  render();
+};
+
+window.onDashOsSearch = function(val) {
+  window.currentDashOsSearch = (val || '').toLowerCase().trim();
+  render();
+};
+
+window.onDashUserSearch = function(val) {
+  window.currentDashUserSearch = (val || '').toLowerCase().trim();
+  render();
+};
+
+window.onDashLogSearch = function(val) {
+  window.currentDashLogSearch = (val || '').toLowerCase().trim();
+  render();
+};
+
 window.navigateToTxFilter = function(type) {
   navigate('transacoes');
   setTimeout(function(){
@@ -14833,1075 +15133,396 @@ window.navigateToTxFilter = function(type) {
 };
 
 function pageDashboard(){
-  const periodTx = transactions.filter(inPeriod);
-  const {receitas,despesas,saldo} = computeTotals(periodTx);
-  const cats = despesasPorCategoria(periodTx);
-  const actualTotalDesp = cats.reduce((s,c)=>s+c.val,0);
-  const totalDesp = actualTotalDesp || 1;
-  const totalFluxo = receitas + despesas;
-  const recPct = totalFluxo > 0 ? Math.round((receitas / totalFluxo) * 100) : 0;
-  const despPct = totalFluxo > 0 ? (100 - recPct) : 0;
-  const resultado = receitas - despesas;
-  const savingsPct = receitas > 0 ? Math.max(0, Math.round((resultado / receitas) * 100)) : 0;
-  const commitPct = receitas > 0 ? Math.min(100, Math.round((despesas / receitas) * 100)) : (despesas > 0 ? 100 : 0);
-  const now = new Date();
-  const daysInPeriod = now.getDate() || 1;
-  const dailyAvg = despesas > 0 ? (despesas / daysInPeriod) : 0;
-  const lastTx = periodTx.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-  const cardSummary = computeCardSummary();
-  const pendingSummary = getPendingBillsSummary();
+  if (!window.dashDataSyncedRecently || (Date.now() - window.dashDataSyncedRecently > 8000)) {
+    window.dashDataSyncedRecently = Date.now();
+    Promise.all([
+      typeof syncOrdensWithServer === 'function' ? syncOrdensWithServer() : Promise.resolve(),
+      typeof syncUsersWithServer === 'function' ? syncUsersWithServer() : Promise.resolve(),
+      typeof loadSystemLogs === 'function' ? loadSystemLogs() : Promise.resolve()
+    ]).catch(function(){});
+  }
 
-  const isCurrentMonth = currentPeriod.month === (now.getMonth() + 1) && currentPeriod.year === now.getFullYear();
-  let prevMonth = now.getMonth();
-  let prevYear = now.getFullYear();
-  if (prevMonth === 0) { prevMonth = 12; prevYear--; }
-  const isPreviousMonth = currentPeriod.month === prevMonth && currentPeriod.year === prevYear;
-  const isAllDates = currentPeriod.month === 0;
+  const ordens = systemOrdens || [];
+  const countTotalOrdens = ordens.length;
+  const countPendentes = ordens.filter(function(o){ return (o.status || '').toLowerCase() === 'pendente'; }).length;
+  const countAndamento = ordens.filter(function(o){ return (o.status || '').toLowerCase().indexOf('anda') !== -1; }).length;
+  const countConcluidas = ordens.filter(function(o){ 
+    const s = (o.status || '').toLowerCase();
+    return s.indexOf('concl') !== -1 || s.indexOf('final') !== -1;
+  }).length;
+  const countAbertas = countPendentes + countAndamento;
 
-  const greeting = getGreetingTime();
-  const formattedToday = getFormattedToday();
-  const rawFirstName = currentUser ? (currentUser.name || '').split(' ')[0] : 'Usuário';
-  const firstName = rawFirstName ? (rawFirstName.charAt(0).toUpperCase() + rawFirstName.slice(1).toLowerCase()) : 'Usuário';
+  const userMap = new Map();
+  (registeredUsers || []).forEach(function(u){
+    if (u && u.email) userMap.set(u.email.toLowerCase(), u);
+  });
+  const users = Array.from(userMap.values());
+  const countTotalUsers = users.length;
+  const countAdmins = users.filter(function(u){ return u.role === 'Administrador'; }).length;
+  const countOperadores = users.filter(function(u){ return u.role !== 'Administrador'; }).length;
 
-  const h = new Date().getHours();
-  let greetingIconSvg = '';
-  let greetingBadgeBg = '';
-  let greetingBadgeBorder = '';
-  let greetingBadgeColor = '';
-  if (h >= 5 && h < 12) {
-    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
-    greetingBadgeBg = 'linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.1))';
-    greetingBadgeBorder = 'rgba(245,158,11,0.38)';
-    greetingBadgeColor = '#FBBF24';
-  } else if (h >= 12 && h < 18) {
-    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
-    greetingBadgeBg = 'linear-gradient(135deg, rgba(14,165,233,0.25), rgba(2,132,199,0.1))';
-    greetingBadgeBorder = 'rgba(14,165,233,0.38)';
-    greetingBadgeColor = '#38BDF8';
+  const logs = systemLogs || [];
+  const countTotalLogs = logs.length;
+  const lastLog = logs[0] || null;
+  const lastLogTime = lastLog ? (lastLog.timestamp ? new Date(lastLog.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 'Recente') : '--:--';
+
+  const activeTab = window.currentDashFocusTab || 'os_aberta';
+  const osFilter = window.currentDashOsFilter || 'abertas';
+  const osSearch = (window.currentDashOsSearch || '').toLowerCase();
+  const userSearch = (window.currentDashUserSearch || '').toLowerCase();
+  const logSearch = (window.currentDashLogSearch || '').toLowerCase();
+
+  let filteredOrdens = ordens.slice();
+  if (osFilter === 'abertas') {
+    filteredOrdens = filteredOrdens.filter(function(o){
+      const s = (o.status || '').toLowerCase();
+      return s === 'pendente' || s.indexOf('anda') !== -1 || s.indexOf('tria') !== -1;
+    });
+  } else if (osFilter === 'pendente') {
+    filteredOrdens = filteredOrdens.filter(function(o){ return (o.status || '').toLowerCase() === 'pendente'; });
+  } else if (osFilter === 'andamento') {
+    filteredOrdens = filteredOrdens.filter(function(o){ return (o.status || '').toLowerCase().indexOf('anda') !== -1; });
+  } else if (osFilter === 'concluido') {
+    filteredOrdens = filteredOrdens.filter(function(o){
+      const s = (o.status || '').toLowerCase();
+      return s.indexOf('concl') !== -1 || s.indexOf('final') !== -1;
+    });
+  }
+
+  if (osSearch) {
+    filteredOrdens = filteredOrdens.filter(function(o){
+      return (o.protocol && String(o.protocol).toLowerCase().indexOf(osSearch) !== -1) ||
+        (o.client_name && o.client_name.toLowerCase().indexOf(osSearch) !== -1) ||
+        (o.client_email && o.client_email.toLowerCase().indexOf(osSearch) !== -1) ||
+        (o.client_phone && String(o.client_phone).indexOf(osSearch) !== -1) ||
+        (o.client_cpf && String(o.client_cpf).indexOf(osSearch) !== -1) ||
+        (o.title && o.title.toLowerCase().indexOf(osSearch) !== -1) ||
+        (o.description && o.description.toLowerCase().indexOf(osSearch) !== -1) ||
+        (o.tecnico_responsavel && o.tecnico_responsavel.toLowerCase().indexOf(osSearch) !== -1);
+    });
+  }
+
+  let filteredUsers = users.slice();
+  if (userSearch) {
+    filteredUsers = filteredUsers.filter(function(u){
+      return (u.name && u.name.toLowerCase().indexOf(userSearch) !== -1) ||
+        (u.email && u.email.toLowerCase().indexOf(userSearch) !== -1) ||
+        (u.role && u.role.toLowerCase().indexOf(userSearch) !== -1) ||
+        (u.cpf && String(u.cpf).indexOf(userSearch) !== -1);
+    });
+  }
+
+  let filteredLogs = logs.slice();
+  if (logSearch) {
+    filteredLogs = filteredLogs.filter(function(l){
+      return (l.user_email && l.user_email.toLowerCase().indexOf(logSearch) !== -1) ||
+        (l.user_name && l.user_name.toLowerCase().indexOf(logSearch) !== -1) ||
+        (l.action && l.action.toLowerCase().indexOf(logSearch) !== -1) ||
+        (l.entity && l.entity.toLowerCase().indexOf(logSearch) !== -1) ||
+        (l.details && l.details.toLowerCase().indexOf(logSearch) !== -1);
+    });
+  }
+
+  let osCardsHtml = '';
+  if (filteredOrdens.length === 0) {
+    osCardsHtml = '<div style="text-align:center; padding:48px 20px; border-radius:18px; background:rgba(255,255,255,0.02); border:1px dashed var(--card-border);">' +
+      '<div style="font-size:38px; margin-bottom:12px;">🎉</div>' +
+      '<h4 style="font-size:16px; font-weight:800; margin:0 0 6px 0; color:var(--text);">Fila de Atendimento Zerada!</h4>' +
+      '<p style="font-size:13px; color:var(--text-dim); margin:0 0 18px 0; max-width:460px; margin-left:auto; margin-right:auto;">' +
+        (osFilter === 'abertas' ? 'Não há Ordens de Serviço abertas aguardando atendimento no momento. Todos os chamados foram solucionados!' : 'Nenhum chamado encontrado com o filtro selecionado.') +
+      '</p>' +
+      '<button type="button" class="btn btn-primary" onclick="openNovaOrdemModal(&quot;abrir&quot;)" style="display:inline-flex; align-items:center; gap:8px;">' +
+        '<span>➕ Abrir Nova Solicitação</span>' +
+      '</button>' +
+    '</div>';
   } else {
-    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4"/><path d="M21 5h-4"/></svg>';
-    greetingBadgeBg = 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(79,70,229,0.1))';
-    greetingBadgeBorder = 'rgba(129,140,248,0.38)';
-    greetingBadgeColor = '#A5B4FC';
+    osCardsHtml = '<div class="dash-os-cards-grid">';
+    filteredOrdens.forEach(function(o){
+      const isPendente = (o.status || '').toLowerCase() === 'pendente';
+      const isAndamento = (o.status || '').toLowerCase().indexOf('anda') !== -1;
+      
+      let statusBg = isPendente ? 'rgba(245,158,11,0.18)' : (isAndamento ? 'rgba(59,130,246,0.18)' : 'rgba(16,185,129,0.18)');
+      let statusColor = isPendente ? '#FBBF24' : (isAndamento ? '#60A5FA' : '#34D399');
+      let statusBorder = isPendente ? 'rgba(245,158,11,0.45)' : (isAndamento ? 'rgba(59,130,246,0.45)' : 'rgba(16,185,129,0.45)');
+      let statusLabel = isPendente ? '⏳ Pendente em Triagem' : (isAndamento ? '⚙️ Em Atendimento' : '✅ Concluído');
+
+      let prioBg = 'rgba(16,185,129,0.14)', prioColor = '#34D399', prioBorder = 'rgba(16,185,129,0.3)';
+      const pr = (o.priority || '').toLowerCase();
+      if (pr.indexOf('urg') !== -1) { prioBg = 'rgba(239,68,68,0.16)'; prioColor = '#F87171'; prioBorder = 'rgba(239,68,68,0.4)'; }
+      else if (pr.indexOf('alt') !== -1) { prioBg = 'rgba(245,158,11,0.16)'; prioColor = '#FBBF24'; prioBorder = 'rgba(245,158,11,0.4)'; }
+
+      const cleanPhone = String(o.client_phone || '').replace(/\D/g, '');
+      const waLink = cleanPhone ? ('https://wa.me/55' + cleanPhone + '?text=' + encodeURIComponent('Olá ' + (o.client_name || '') + ', aqui é do Suporte Técnico sobre a sua O.S. #' + (o.protocol || o.id) + '.')) : '';
+      const dateStr = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR') : 'Data não informada';
+
+      osCardsHtml += '<div class="dash-os-card trow" style="border-left: 4px solid ' + (isPendente ? '#F59E0B' : (isAndamento ? '#3B82F6' : '#10B981')) + ';">';
+      
+      osCardsHtml += '<div class="dash-os-card-header">';
+      osCardsHtml += '<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">';
+      osCardsHtml += '<span style="font-weight:900; font-family:monospace; font-size:13.5px; padding:3px 9px; border-radius:8px; background:rgba(59,130,246,0.15); color:#93C5FD; border:1px solid rgba(59,130,246,0.35);">#' + escapeOsHtml(o.protocol || o.id) + '</span>';
+      osCardsHtml += '<span style="font-size:11.5px; font-weight:800; padding:3px 9px; border-radius:8px; background:' + prioBg + '; color:' + prioColor + '; border:1px solid ' + prioBorder + ';">' + escapeOsHtml(o.priority || 'Normal') + '</span>';
+      osCardsHtml += '<span style="font-size:11.5px; font-weight:800; padding:3px 9px; border-radius:8px; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
+      if (o.canal_atendimento) {
+        osCardsHtml += '<span style="font-size:11px; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.06); color:var(--text-dim); border:1px solid var(--card-border);">📱 ' + escapeOsHtml(o.canal_atendimento) + '</span>';
+      }
+      osCardsHtml += '</div>';
+
+      osCardsHtml += '<div class="dash-os-card-actions">';
+      if (waLink) {
+        osCardsHtml += '<a href="' + waLink + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 10px; border-radius:8px; background:rgba(34,197,94,0.15); color:#22C55E; border:1px solid rgba(34,197,94,0.35); font-size:11.5px; font-weight:800; text-decoration:none;" title="Conversar no WhatsApp">💬 WhatsApp</a>';
+      }
+      osCardsHtml += '<button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 14px; border-radius:8px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; border:none; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 4px 12px rgba(59,130,246,0.3);" title="Atender chamado">' +
+        '<span>⚡ Atender / Despachar</span></button>';
+      osCardsHtml += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; height:32px; padding:0 10px; border-radius:8px; background:rgba(255,255,255,0.06); color:var(--text); border:1px solid var(--card-border); font-size:11.5px; font-weight:700; cursor:pointer;" title="Imprimir Comprovante">🖨️</button>';
+      osCardsHtml += '</div>';
+      osCardsHtml += '</div>';
+
+      osCardsHtml += '<div>';
+      osCardsHtml += '<h4 style="font-size:15.5px; font-weight:800; color:var(--text); margin:0 0 4px 0;">' + escapeOsHtml(o.title || 'Solicitação de Suporte') + '</h4>';
+      osCardsHtml += '<div style="font-size:12px; color:var(--text-dim); margin-bottom:8px;">';
+      osCardsHtml += '👤 <strong>' + escapeOsHtml(o.client_name || 'Cliente') + '</strong> &bull; ✉️ ' + escapeOsHtml(o.client_email || 'Não informado') + (o.client_phone ? (' &bull; 📞 ' + escapeOsHtml(o.client_phone)) : '');
+      osCardsHtml += '</div>';
+      osCardsHtml += '<div style="background:rgba(0,0,0,0.22); border-radius:10px; padding:10px 14px; font-size:12.5px; color:var(--text); line-height:1.5; border:1px solid var(--card-border);">';
+      osCardsHtml += escapeOsHtml(o.description || 'Sem descrição detalhada.');
+      osCardsHtml += '</div>';
+      osCardsHtml += '</div>';
+
+      osCardsHtml += '<div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.05); padding-top:8px; flex-wrap:wrap; gap:6px;">';
+      osCardsHtml += '<div>';
+      if (o.tecnico_responsavel) {
+        osCardsHtml += '<span style="color:#60A5FA; font-weight:700;">👷 Técnico Atribuído: ' + escapeOsHtml(o.tecnico_responsavel) + '</span>';
+      } else {
+        osCardsHtml += '<span style="color:#FBBF24; font-weight:700;">⚠️ Aguardando Atribuição Técnica</span>';
+      }
+      osCardsHtml += '</div>';
+      osCardsHtml += '<div>📅 Aberta em: ' + dateStr + '</div>';
+      osCardsHtml += '</div>';
+
+      osCardsHtml += '</div>';
+    });
+    osCardsHtml += '</div>';
+  }
+
+  let usersHtml = '';
+  if (filteredUsers.length === 0) {
+    usersHtml = '<div style="text-align:center; padding:36px; border-radius:16px; background:rgba(255,255,255,0.02); border:1px dashed var(--card-border);">' +
+      '<div style="font-size:32px; margin-bottom:8px;">🔍</div>' +
+      '<h4 style="font-size:15px; font-weight:800; margin:0 0 4px 0;">Nenhum perfil encontrado</h4>' +
+      '<p style="font-size:12.5px; color:var(--text-dim); margin:0;">Tente buscar por outro termo.</p>' +
+    '</div>';
+  } else {
+    usersHtml = '<div style="overflow-x:auto;">' +
+      '<table style="width:100%; border-collapse:collapse; font-size:12.5px; text-align:left;">' +
+        '<thead>' +
+          '<tr style="border-bottom:1px solid var(--card-border); color:var(--text-dim); font-size:11px; text-transform:uppercase; letter-spacing:0.04em;">' +
+            '<th style="padding:10px 14px;">Perfil / Usuário</th>' +
+            '<th style="padding:10px 14px;">E-mail</th>' +
+            '<th style="padding:10px 14px;">CPF</th>' +
+            '<th style="padding:10px 14px;">Função / Cargo</th>' +
+            '<th style="padding:10px 14px;">Último Login (Brasília)</th>' +
+            '<th style="padding:10px 14px; text-align:right;">Ações</th>' +
+          '</tr>' +
+        '</thead>' +
+        '<tbody>';
+    filteredUsers.forEach(function(u){
+      const nameParts = (u.name || 'U').trim().split(/\s+/);
+      const initials = ((nameParts[0] ? nameParts[0][0] : 'U') + (nameParts[1] ? nameParts[1][0] : '')).toUpperCase();
+      const role = u.role || 'Usuário';
+      let roleBg = 'rgba(59,130,246,0.16)', roleColor = '#60A5FA', roleBorder = 'rgba(59,130,246,0.35)';
+      if (role === 'Administrador') {
+        roleBg = 'rgba(245,158,11,0.18)'; roleColor = '#FBBF24'; roleBorder = 'rgba(245,158,11,0.4)';
+      } else if (role === 'Gerente Financeiro') {
+        roleBg = 'rgba(16,185,129,0.18)'; roleColor = '#34D399'; roleBorder = 'rgba(16,185,129,0.4)';
+      }
+      
+      let rawCpf = String(u.cpf || '').replace(/\D/g, '');
+      let fmtCpf = (rawCpf && rawCpf.length === 11) ? (rawCpf.slice(0,3) + '.' + rawCpf.slice(3,6) + '.' + rawCpf.slice(6,9) + '-' + rawCpf.slice(9,11)) : (u.cpf || 'Não cadastrado');
+      let lastLoginStr = u.last_login ? new Date(u.last_login).toLocaleString('pt-BR') : 'Nunca acessou';
+
+      usersHtml += '<tr class="trow" style="border-bottom:1px solid rgba(255,255,255,0.04);">' +
+        '<td style="padding:12px 14px;">' +
+          '<div style="display:flex; align-items:center; gap:10px;">' +
+            '<div style="width:32px; height:32px; border-radius:10px; background:' + roleBg + '; border:1px solid ' + roleBorder + '; display:flex; align-items:center; justify-content:center; color:' + roleColor + '; font-weight:900; font-size:12px; flex-shrink:0;">' +
+              initials +
+            '</div>' +
+            '<span style="font-weight:700; color:var(--text);">' + escapeOsHtml(u.name || 'Usuário') + '</span>' +
+          '</div>' +
+        '</td>' +
+        '<td style="padding:12px 14px; color:var(--text-dim);">' + escapeOsHtml(u.email || '') + '</td>' +
+        '<td style="padding:12px 14px; font-family:monospace; color:var(--text);">' + fmtCpf + '</td>' +
+        '<td style="padding:12px 14px;">' +
+          '<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:6px; font-size:11.5px; font-weight:800; background:' + roleBg + '; color:' + roleColor + '; border:1px solid ' + roleBorder + ';">' +
+            (role === 'Administrador' ? '👑 ' : '') + role +
+          '</span>' +
+        '</td>' +
+        '<td style="padding:12px 14px; color:var(--text-dim);">' + lastLoginStr + '</td>' +
+        '<td style="padding:12px 14px; text-align:right;">' +
+          '<button type="button" onclick="navigate(&quot;usuarios&quot;)" style="padding:4px 10px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700; cursor:pointer;">Ver Perfil</button>' +
+        '</td>' +
+      '</tr>';
+    });
+    usersHtml += '</tbody></table></div>';
+  }
+
+  let logsHtml = '';
+  if (filteredLogs.length === 0) {
+    logsHtml = '<div style="text-align:center; padding:36px; border-radius:16px; background:rgba(255,255,255,0.02); border:1px dashed var(--card-border);">' +
+      '<div style="font-size:32px; margin-bottom:8px;">📋</div>' +
+      '<h4 style="font-size:15px; font-weight:800; margin:0 0 4px 0;">Nenhum evento de auditoria encontrado</h4>' +
+      '<p style="font-size:12.5px; color:var(--text-dim); margin:0;">Tente outro filtro ou termo de busca.</p>' +
+    '</div>';
+  } else {
+    logsHtml = '<div style="overflow-x:auto;">' +
+      '<table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">' +
+        '<thead>' +
+          '<tr style="border-bottom:1px solid var(--card-border); color:var(--text-dim); font-size:11px; text-transform:uppercase; letter-spacing:0.04em;">' +
+            '<th style="padding:10px 14px;">Data & Hora (Brasília)</th>' +
+            '<th style="padding:10px 14px;">Usuário / Autor</th>' +
+            '<th style="padding:10px 14px;">Ação</th>' +
+            '<th style="padding:10px 14px;">Entidade</th>' +
+            '<th style="padding:10px 14px;">Detalhes do Evento</th>' +
+            '<th style="padding:10px 14px;">IP / Origem</th>' +
+          '</tr>' +
+        '</thead>' +
+        '<tbody>';
+    filteredLogs.slice(0, 25).forEach(function(l){
+      const timeStr = l.timestamp ? new Date(l.timestamp).toLocaleString('pt-BR') : 'Data não registrada';
+      let actBg = 'rgba(59,130,246,0.15)', actColor = '#60A5FA';
+      const act = (l.action || '').toLowerCase();
+      if (act.indexOf('login') !== -1 || act.indexOf('autent') !== -1) { actBg = 'rgba(16,185,129,0.15)'; actColor = '#34D399'; }
+      else if (act.indexOf('excl') !== -1 || act.indexOf('remov') !== -1) { actBg = 'rgba(239,68,68,0.15)'; actColor = '#F87171'; }
+      else if (act.indexOf('edi') !== -1 || act.indexOf('alte') !== -1) { actBg = 'rgba(245,158,11,0.15)'; actColor = '#FBBF24'; }
+
+      logsHtml += '<tr class="trow" style="border-bottom:1px solid rgba(255,255,255,0.04);">' +
+        '<td style="padding:11px 14px; font-family:monospace; color:var(--text-dim); white-space:nowrap;">' + timeStr + '</td>' +
+        '<td style="padding:11px 14px; font-weight:700; color:var(--text);">' + escapeOsHtml(l.user_name || l.user_email || 'Sistema') + '</td>' +
+        '<td style="padding:11px 14px;"><span style="padding:2px 8px; border-radius:6px; font-size:11px; font-weight:800; background:' + actBg + '; color:' + actColor + ';">' + escapeOsHtml(l.action || 'Ação') + '</span></td>' +
+        '<td style="padding:11px 14px; color:var(--text-dim);">' + escapeOsHtml(l.entity || 'Geral') + '</td>' +
+        '<td style="padding:11px 14px; color:var(--text); max-width:320px; line-height:1.4;">' + escapeOsHtml(l.details || '') + '</td>' +
+        '<td style="padding:11px 14px; font-family:monospace; font-size:11px; color:var(--text-dim);">' + escapeOsHtml(l.ip || '127.0.0.1') + '</td>' +
+      '</tr>';
+    });
+    logsHtml += '</tbody></table></div>';
   }
 
   return \`
-  <!-- 4K EXECUTIVE DASHBOARD WELCOME HERO -->
-  <div class="dashboard-welcome-hero">
-    <div class="hero-content">
-      <div class="hero-left">
-        <div class="hero-badge-strip">
-          <span class="hero-badge hide-mobile">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span>\${formattedToday}</span>
+  <!-- HERO EXECUTIVO DO PAINEL OPERACIONAL -->
+  <div class="dash-focus-hero">
+    <div class="dash-focus-hero-left">
+      <div class="dash-focus-hero-icon">⚙️</div>
+      <div>
+        <h2 class="dash-focus-hero-title">
+          Painel Operacional & Gestão Central
+          <span class="tag" style="background:rgba(16,185,129,0.15); color:#34D399; border:1px solid rgba(16,185,129,0.35); font-size:11px; font-weight:800; padding:3px 9px; border-radius:6px;">
+            ⚡ SQL Server Sincronizado
           </span>
-          <span class="hero-badge live-dot hide-mobile">
-            <span class="pulse-dot"></span>
-            <span>Painel Ativo</span>
-          </span>
-        </div>
-        <h1 class="hero-greeting">
-          <span style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px; background:\${greetingBadgeBg}; border:1px solid \${greetingBadgeBorder}; color:\${greetingBadgeColor}; box-shadow:0 4px 16px rgba(0,0,0,0.4); flex-shrink:0;">
-            \${greetingIconSvg}
-          </span>
-          <span>\${greeting.text}, <span class="hero-name-gradient">\${firstName}</span></span>
-        </h1>
-        <p class="hero-sub">
-          Visão Consolidada • Inteligência Estratégica & Gestão Financeira Pessoal
+        </h2>
+        <p class="dash-focus-hero-sub">
+          Atendimento de O.S. • Perfis Cadastrados • Logs de Auditoria & Segurança
         </p>
       </div>
+    </div>
+    <div class="dash-focus-hero-actions">
+      <button type="button" class="btn btn-primary" onclick="openNovaOrdemModal('abrir')" style="display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 18px; border-radius:12px; font-weight:800;">
+        <span>➕ Abrir Chamado O.S.</span>
+      </button>
+      <button type="button" class="btn btn-ghost" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:7px; height:40px; padding:0 16px; border-radius:12px; font-weight:700;">
+        <span>👥 + Novo Perfil</span>
+      </button>
+      <button type="button" class="btn btn-ghost" onclick="Promise.all([syncOrdensWithServer(), syncUsersWithServer(), loadSystemLogs()]).then(render)" style="display:inline-flex; align-items:center; gap:6px; height:40px; border-radius:12px; font-weight:700;">
+        <span>🔄 Atualizar</span>
+      </button>
+    </div>
+  </div>
 
-      <div class="hero-actions">
-        \${periodPickerHTML()}
-        <div class="quick-period-pills hide-mobile">
-          <span class="quick-period-pill \${isCurrentMonth ? 'active' : ''}" onclick="window.setQuickPeriod('current')" title="Visualizar mês atual">📅 Este Mês</span>
-          <span class="quick-period-pill \${isPreviousMonth ? 'active' : ''}" onclick="window.setQuickPeriod('previous')" title="Visualizar mês anterior">⏪ Mês Anterior</span>
-          <span class="quick-period-pill \${isAllDates ? 'active' : ''}" onclick="window.setQuickPeriod('all')" title="Visualizar todas as datas">🌐 Geral</span>
-        </div>
-        <button type="button" class="btn-hero-privacy" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou Exibir Saldos">
-          <span class="btn-hero-icon-pill">
-            <span id="btnEyeIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
-          </span>
-          <span id="btnEyeText">Ocultar Saldos</span>
+  <!-- 3 CARDS ESTRATÉGICOS: O.S. ABERTAS, PERFIS CADASTRADOS E LOGS -->
+  <div class="dash-focus-cards">
+    <!-- Card 1: Atendimento O.S. Abertas -->
+    <div class="dash-focus-card \${activeTab === 'os_aberta' ? 'active-tab-card' : ''}" onclick="setDashFocusTab('os_aberta')" title="Clique para abrir a fila de atendimento de O.S." style="border-left:4px solid #38BDF8;">
+      <div class="dash-focus-card-head">
+        <span class="dash-focus-card-title">Atendimento O.S. Abertas</span>
+        <div class="dash-focus-card-icon" style="background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.4); color:#38BDF8;">🎧</div>
+      </div>
+      <div class="dash-focus-card-val" style="color:\${countAbertas > 0 ? '#38BDF8' : '#34D399'};">\${countAbertas}</div>
+      <div class="dash-focus-card-sub">
+        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:\${countAbertas > 0 ? '#F59E0B' : '#10B981'}; box-shadow:0 0 8px currentColor;"></span>
+        <span>\${countAbertas > 0 ? countAbertas + ' chamado(s) aguardando atendimento' : 'Fila zerada e em dia'}</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Perfis Cadastrados -->
+    <div class="dash-focus-card \${activeTab === 'perfis' ? 'active-tab-card' : ''}" onclick="setDashFocusTab('perfis')" title="Clique para ver os perfis cadastrados" style="border-left:4px solid #F59E0B;">
+      <div class="dash-focus-card-head">
+        <span class="dash-focus-card-title">Perfis Cadastrados</span>
+        <div class="dash-focus-card-icon" style="background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#FBBF24;">👥</div>
+      </div>
+      <div class="dash-focus-card-val" style="color:#FBBF24;">\${countTotalUsers}</div>
+      <div class="dash-focus-card-sub">
+        <span>\${countAdmins} Administrador(es) &bull; \${countOperadores} Usuário(s)</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Log de Auditoria -->
+    <div class="dash-focus-card \${activeTab === 'logs' ? 'active-tab-card' : ''}" onclick="setDashFocusTab('logs')" title="Clique para ver os logs de auditoria" style="border-left:4px solid #10B981;">
+      <div class="dash-focus-card-head">
+        <span class="dash-focus-card-title">Log de Auditoria</span>
+        <div class="dash-focus-card-icon" style="background:rgba(16,185,129,0.18); border:1px solid rgba(16,185,129,0.4); color:#34D399;">📋</div>
+      </div>
+      <div class="dash-focus-card-val" style="color:#34D399;">\${countTotalLogs}</div>
+      <div class="dash-focus-card-sub">
+        <span>Último evento auditado às \${lastLogTime}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO PRINCIPAL COM ABAS (ABA DE ATENDIMENTO O.S. ABERTA POR PADRÃO) -->
+  <div class="card" style="border-radius:20px; padding:22px; box-shadow:0 16px 40px rgba(0,0,0,0.4); border:1px solid var(--card-border);">
+    <div class="dash-focus-tabs-bar">
+      <!-- Grupo de Botões das Abas -->
+      <div class="dash-focus-tabs-group">
+        <button type="button" class="dash-focus-tab-btn \${activeTab === 'os_aberta' ? 'active' : ''}" onclick="setDashFocusTab('os_aberta')">
+          <span>🎧 Atendimento das O.S. Abertas</span>
+          <span class="dash-focus-tab-badge">\${countAbertas}</span>
         </button>
-        <button class="btn-hero-primary" id="btnNovaTransacao" title="Lançar Nova Receita ou Despesa">
-          <span class="btn-hero-icon-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-          </span>
-          <span>Nova Transação</span>
+        <button type="button" class="dash-focus-tab-btn \${activeTab === 'perfis' ? 'active' : ''}" onclick="setDashFocusTab('perfis')">
+          <span>👥 Perfis Cadastrados</span>
+          <span class="dash-focus-tab-badge">\${countTotalUsers}</span>
+        </button>
+        <button type="button" class="dash-focus-tab-btn \${activeTab === 'logs' ? 'active' : ''}" onclick="setDashFocusTab('logs')">
+          <span>📋 Log de Auditoria</span>
+          <span class="dash-focus-tab-badge">\${countTotalLogs}</span>
         </button>
       </div>
-    </div>
-  </div>
 
-  <!-- CENTRAL DE AÇÕES RÁPIDAS & HUB DE OPÇÕES DO DASHBOARD (4K CYBER GLASS) -->
-  <div class="dash-options-hub">
-    <div class="dash-options-header">
-      <div class="dash-options-title-box">
-        <div class="dash-options-title-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-          </svg>
-        </div>
-        <div>
-          <h3 class="dash-options-title">Central de Ações Rápidas & Gestão</h3>
-          <p class="dash-options-sub">Atalhos imediatos organizados para lançamentos e controle financeiro</p>
-        </div>
-      </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span class="tag" style="background:rgba(6,182,212,0.12); color:#22D3EE; border:1px solid rgba(6,182,212,0.3); font-weight:700; font-size:11px; padding:3px 9px; border-radius:6px;">
-          ⚡ Acesso em 1 Clique
-        </span>
-      </div>
-    </div>
-
-    <!-- Grid de Opções Rápidas Organizadas -->
-    <div class="dash-options-grid">
-      <!-- 1. Nova Receita -->
-      <div class="dash-option-card opt-income" onclick="openModal(null, 'in')" title="Lançar entrada financeira (Salário, Pix, Rendimento)">
-        <div class="dash-option-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        </div>
-        <div class="dash-option-text">
-          <span class="dash-option-name">+ Nova Receita</span>
-          <span class="dash-option-desc">Salário, Pix ou extra</span>
-        </div>
-      </div>
-
-      <!-- 2. Nova Despesa -->
-      <div class="dash-option-card opt-expense" onclick="openModal(null, 'out')" title="Lançar saída financeira (Conta, Compra, Boleto)">
-        <div class="dash-option-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
-        </div>
-        <div class="dash-option-text">
-          <span class="dash-option-name">- Nova Despesa</span>
-          <span class="dash-option-desc">Contas e compras</span>
-        </div>
-      </div>
-
-      <!-- 3. Novo Cartão ou Conta -->
-      <div class="dash-option-card opt-card" onclick="openAccountModal(null)" title="Cadastrar nova conta bancária ou cartão de crédito">
-        <div class="dash-option-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/></svg>
-        </div>
-        <div class="dash-option-text">
-          <span class="dash-option-name">+ Conta / Cartão</span>
-          <span class="dash-option-desc">Bancos e limites</span>
-        </div>
-      </div>
-
-      <!-- 4. Metas Financeiras -->
-      <div class="dash-option-card opt-goal" onclick="openGoalModal(null)" title="Definir nova meta de poupança ou reserva">
-        <div class="dash-option-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
-        </div>
-        <div class="dash-option-text">
-          <span class="dash-option-name">Metas & Reservas</span>
-          <span class="dash-option-desc">Objetivos de poupança</span>
-        </div>
-      </div>
-
-      <!-- 5. Tetos de Orçamento -->
-      <div class="dash-option-card opt-budget" onclick="navigate('orcamentos')" title="Gerenciar limites de gastos por categoria">
-        <div class="dash-option-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-        </div>
-        <div class="dash-option-text">
-          <span class="dash-option-name">Orçamentos</span>
-          <span class="dash-option-desc">Tetos por categoria</span>
-        </div>
-      </div>
-
-      <!-- 6. Assinaturas & Recorrentes -->
-      <div class="dash-option-card opt-recurring" onclick="navigate('recorrentes')" title="Visualizar despesas fixas e contratos mensais">
-        <div class="dash-option-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg>
-        </div>
-        <div class="dash-option-text">
-          <span class="dash-option-name">Recorrentes</span>
-          <span class="dash-option-desc">Assinaturas e fixas</span>
-        </div>
-      </div>
-
-      <!-- 7. Importar Extrato OFX/CSV -->
-      <div class="dash-option-card opt-import" onclick="navigate('importar')" title="Importar extrato bancário em lote">
-        <div class="dash-option-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </div>
-        <div class="dash-option-text">
-          <span class="dash-option-name">Importar Extrato</span>
-          <span class="dash-option-desc">Arquivos OFX e CSV</span>
-        </div>
-      </div>
-
-      <!-- 8. Relatórios Consolidados -->
-      <div class="dash-option-card opt-report" onclick="navigate('relatorios')" title="Relatórios analíticos, gráficos e DRE">
-        <div class="dash-option-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg>
-        </div>
-        <div class="dash-option-text">
-          <span class="dash-option-name">Relatórios & DRE</span>
-          <span class="dash-option-desc">Análise de evolução</span>
-        </div>
-      </div>
-
-      <!-- 9. Gerenciar Categorias -->
-      <div class="dash-option-card opt-cat" onclick="openCatManageModal()" title="Gerenciar categorias e cores">
-        <div class="dash-option-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-        </div>
-        <div class="dash-option-text">
-          <span class="dash-option-name">Categorias</span>
-          <span class="dash-option-desc">Personalizar grupos</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="kpis">
-    <!-- 1. Saldo Total -->
-    <div class="kpi kpi-balance" style="cursor:pointer;" onclick="navigate('cartoes')" title="Clique para ver detalhes das contas e cartões">
-      <div class="row1">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span>Saldo Total</span>
-          <button type="button" onclick="event.stopPropagation(); window.toggleSensitiveBalances();" title="Ocultar ou Exibir Saldos" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:13px; padding:0; display:inline-flex; align-items:center; opacity:0.8; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
-            <span class="btnEyeIconCard"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
-          </button>
-        </div>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(6,182,212,0.18), rgba(6,182,212,0.06)); border:1px solid rgba(6,182,212,0.3); color:#22D3EE;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#34D399'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${saldo < 0 ? '#F87171' : '#34D399'};">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
-          <span>\${saldo < 0 ? 'Saldo Negativo' : 'Saldo Positivo'}</span>
-        </span>
-        <span class="kpi-tag \${saldo < 0 ? 'kpi-tag-danger' : 'kpi-tag-success'}">\${saldo < 0 ? 'Atenção' : 'Disponível'}</span>
-      </div>
-    </div>
-
-    <!-- 2. Receitas -->
-    <div class="kpi kpi-income" style="cursor:pointer;" onclick="window.navigateToTxFilter('in')" title="Clique para ver o extrato de receitas">
-      <div class="row1">
-        <span>Receitas</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.06)); border:1px solid rgba(16,185,129,0.3); color:#34D399;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${receitas}" data-prefix="\${receitas > 0 ? '+' : ''}" style="color:#34D399; font-variant-numeric:tabular-nums;">\${receitas > 0 ? '+' : ''}\${fmt(receitas)}</div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
-          <span>Entradas no mês</span>
-        </span>
-        <span class="kpi-tag kpi-tag-success">Líquido</span>
-      </div>
-    </div>
-
-    <!-- 3. Despesas -->
-    <div class="kpi kpi-expense" style="cursor:pointer;" onclick="window.navigateToTxFilter('out')" title="Clique para ver o extrato de despesas">
-      <div class="row1">
-        <span>Despesas</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.06)); border:1px solid rgba(239,68,68,0.3); color:#F87171;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#EF4444;"></span>
-          <span>Saídas no mês</span>
-        </span>
-        <span class="kpi-tag kpi-tag-danger">\${commitPct}% da Renda</span>
-      </div>
-    </div>
-
-    <!-- 4. Resultado Líquido -->
-    <div class="kpi kpi-net" style="cursor:pointer;" onclick="navigate('relatorios')" title="Clique para ver a análise e relatórios detalhados">
-      <div class="row1">
-        <span>Resultado Líquido</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(59,130,246,0.06)); border:1px solid rgba(59,130,246,0.3); color:#60A5FA;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${resultado}" style="color:\${resultado >= 0 ? '#34D399' : '#F87171'}; font-variant-numeric:tabular-nums;">\${resultado >= 0 ? '+' : ''}\${fmt(resultado)}</div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${resultado >= 0 ? '#34D399' : '#F87171'};">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
-          <span>\${resultado >= 0 ? 'Superávit no mês' : 'Déficit no mês'}</span>
-        </span>
-        <span class="kpi-tag \${resultado >= 0 ? 'kpi-tag-success' : 'kpi-tag-danger'}">\${savingsPct > 0 ? savingsPct + '% Poupado' : (resultado >= 0 ? 'Equilibrado' : 'Alerta')}</span>
-      </div>
-    </div>
-
-    <!-- 5. Lançamentos -->
-    <div class="kpi kpi-tx" style="cursor:pointer;" onclick="navigate('transacoes')" title="Clique para ver todos os lançamentos">
-      <div class="row1">
-        <span>Lançamentos</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(168,85,247,0.18), rgba(168,85,247,0.06)); border:1px solid rgba(168,85,247,0.3); color:#C084FC;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${periodTx.length}" data-is-int="true" style="color:#C084FC; font-variant-numeric:tabular-nums;">\${periodTx.length}</div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#A855F7;"></span>
-          <span>Registros ativos</span>
-        </span>
-        <span class="kpi-tag kpi-tag-purple">Total</span>
-      </div>
-    </div>
-  </div>
-
-  \${cardSummary.creditCards.length > 0 ? \`
-  <!-- Resumo de Limite de Cartões de Crédito no Dashboard -->
-  <div class="panel cards-summary-panel" style="margin-bottom:20px; border:1px solid rgba(232,176,75,0.25);">
-    <div class="panel-head" style="margin-bottom:12px;">
-      <h3 style="display:flex;align-items:center;gap:8px;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-        Cartões de Crédito — Limite & Faturas
-      </h3>
-      <span class="tag" data-nav="cartoes" style="cursor:pointer; background:var(--green-soft); color:var(--green);">Ver todos os cartões</span>
-    </div>
-    <div class="kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px;">
-      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px;">Limite Disponível Total</div>
-        <div class="val" data-anim-val="\${cardSummary.availableLimitGeral}" style="font-size:20px; font-weight:800; color:var(--green); margin-top:2px;">\${fmt(cardSummary.availableLimitGeral)}</div>
-        <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">Para novas compras</div>
-      </div>
-      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px;">Fatura do Mês</div>
-        <div class="val" data-anim-val="\${cardSummary.spentPeriodGeral}" style="font-size:20px; font-weight:800; color:var(--orange); margin-top:2px;">\${fmt(cardSummary.spentPeriodGeral)}</div>
-        <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">\${periodLabel()}</div>
-      </div>
-      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px;">Fatura Acumulada em Aberto</div>
-        <div class="val" data-anim-val="\${cardSummary.spentTotalGeral}" style="font-size:20px; font-weight:800; color:var(--red); margin-top:2px;">\${fmt(cardSummary.spentTotalGeral)}</div>
-        <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">Compras minus pagamentos</div>
-      </div>
-      <div class="kpi" style="background:rgba(255,255,255,0.03); padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);">
-        <div class="row1" style="color:var(--text-dim); font-size:12px;">Limite Aprovado Total</div>
-        <div class="val" data-anim-val="\${cardSummary.totalLimitGeral}" style="font-size:20px; font-weight:800; color:var(--blue); margin-top:2px;">\${fmt(cardSummary.totalLimitGeral)}</div>
-        <div class="sub" style="font-size:10.5px; color:var(--text-faint); margin-top:2px;">Soma dos cartões</div>
-      </div>
-    </div>
-    <div style="margin-top:10px;">
-      <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-bottom:4px;">
-        <span>Comprometimento Global dos Cartões</span>
-        <span style="font-weight:700; color:\${cardSummary.usagePctGeral>=90?'var(--red)':cardSummary.usagePctGeral>=70?'var(--orange)':'var(--green)'};">\${cardSummary.usagePctGeral}% comprometido</span>
-      </div>
-      <div class="bar-split" style="height:6px; background:var(--card-border); border-radius:4px; overflow:hidden;">
-        <div class="g" style="width:\${cardSummary.usagePctGeral}%; height:100%; background:\${cardSummary.usagePctGeral>=90?'var(--red)':cardSummary.usagePctGeral>=70?'var(--orange)':'var(--green)'}; border-radius:4px;"></div>
-      </div>
-    </div>
-  </div>
-  \` : ''}
-
-  <div class="grid3">
-    <!-- Painel 1: Resumo Financeiro (4K Executive Luxury Design) -->
-    <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;">
-      <div style="display:flex; flex-direction:column; gap:14px; width:100%;">
-        
-        <!-- Cabeçalho Executivo 4K Alinhado -->
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.22), rgba(37,99,235,0.08)); border:1px solid rgba(59,130,246,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(59,130,246,0.25); flex-shrink:0;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 3v18h18"/>
-                <path d="M18 17V9"/>
-                <path d="M13 17V5"/>
-                <path d="M8 17v-3"/>
-              </svg>
-            </div>
-            <div>
-              <h3 style="font-size:15px; font-weight:800; color:#FFFFFF; margin:0; letter-spacing:-0.02em;">
-                Resumo Financeiro
-              </h3>
-              <span style="font-size:11px; color:var(--text-dim); margin-top:2px; display:block; opacity:0.85; font-weight:500;">
-                Balanço consolidado & fluxo operacional
-              </span>
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.11); padding:5px 12px; border-radius:20px; backdrop-filter:blur(10px); box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span style="font-weight:700; font-size:11px; color:var(--text); letter-spacing:0.02em;">\${periodLabel()}</span>
-          </div>
-        </div>
-
-        <!-- 1. Grid de 3 Cards Principais 4K (Receitas, Despesas, Resultado) -->
-        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
-          <!-- Receitas -->
-          <div style="background:linear-gradient(145deg, rgba(16,185,129,0.10) 0%, rgba(16,185,129,0.02) 100%); border:1px solid rgba(16,185,129,0.25); border-radius:14px; padding:10px 8px; text-align:center; box-shadow:0 4px 16px -2px rgba(16,185,129,0.12), inset 0 1px 0 rgba(255,255,255,0.08);">
-            <div style="font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; display:flex; align-items:center; justify-content:center; gap:5px;">
-              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981;"></span>
-              Receitas
-            </div>
-            <b style="color:#34D399; font-size:14px; font-weight:900; margin-top:5px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 10px rgba(16,185,129,0.35);">
-              \${fmt(receitas)}
-            </b>
-          </div>
-
-          <!-- Despesas -->
-          <div style="background:linear-gradient(145deg, rgba(239,68,68,0.10) 0%, rgba(239,68,68,0.02) 100%); border:1px solid rgba(239,68,68,0.25); border-radius:14px; padding:10px 8px; text-align:center; box-shadow:0 4px 16px -2px rgba(239,68,68,0.12), inset 0 1px 0 rgba(255,255,255,0.08);">
-            <div style="font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#F87171; display:flex; align-items:center; justify-content:center; gap:5px;">
-              <span style="width:6px; height:6px; border-radius:50%; background:#EF4444; box-shadow:0 0 8px #EF4444;"></span>
-              Despesas
-            </div>
-            <b style="color:#F87171; font-size:14px; font-weight:900; margin-top:5px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 10px rgba(239,68,68,0.35);">
-              \${fmt(despesas)}
-            </b>
-          </div>
-
-          <!-- Resultado -->
-          <div style="background:linear-gradient(145deg, \${resultado >= 0 ? 'rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.02)' : 'rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.03)'} 100%); border:1px solid \${resultado >= 0 ? 'rgba(59,130,246,0.25)' : 'rgba(239,68,68,0.28)'}; border-radius:14px; padding:10px 8px; text-align:center; box-shadow:0 4px 16px -2px \${resultado >= 0 ? 'rgba(59,130,246,0.12)' : 'rgba(239,68,68,0.15)'}, inset 0 1px 0 rgba(255,255,255,0.08);">
-            <div style="font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:\${resultado >= 0 ? '#60A5FA' : '#F87171'}; display:flex; align-items:center; justify-content:center; gap:5px;">
-              <span style="width:6px; height:6px; border-radius:50%; background:\${resultado >= 0 ? '#3B82F6' : '#EF4444'}; box-shadow:0 0 8px \${resultado >= 0 ? '#3B82F6' : '#EF4444'};"></span>
-              Resultado
-            </div>
-            <b style="color:\${resultado >= 0 ? '#34D399' : '#F87171'}; font-size:14px; font-weight:900; margin-top:5px; display:block; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 10px \${resultado >= 0 ? 'rgba(52,211,153,0.35)' : 'rgba(239,68,68,0.35)'};">
-              \${fmt(resultado)}
-            </b>
-          </div>
-        </div>
-
-        <!-- 2. Medidor Visual de Economia (Executive 4K Precision Gauge) -->
-        <div style="display:flex; align-items:center; justify-content:center; position:relative; width:134px; height:134px; margin:4px auto;">
-          <svg viewBox="0 0 100 100" style="width:100%; height:100%; transform:rotate(-90deg); filter:drop-shadow(0 4px 14px rgba(0,0,0,0.4));">
-            <defs>
-              <linearGradient id="meterEmeraldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#059669"/>
-                <stop offset="50%" stop-color="#10B981"/>
-                <stop offset="100%" stop-color="#34D399"/>
-              </linearGradient>
-              <linearGradient id="meterTrackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
-                <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
-              </linearGradient>
-            </defs>
-            <!-- Background Outer Precision Guide -->
-            <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="2 3"/>
-            <!-- Background Sleek Glass Track (Nunca vermelho quando zerado!) -->
-            <circle cx="50" cy="50" r="38" fill="none" stroke="url(#meterTrackGrad)" stroke-width="7.5"/>
-            <!-- Inner Concentric Orbit -->
-            <circle cx="50" cy="50" r="30.5" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
-            
-            \${savingsPct > 0 ? \`
-            <!-- Active Neon Emerald Savings Arc -->
-            <circle cx="50" cy="50" r="38" fill="none" stroke="url(#meterEmeraldGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="238.76" stroke-dashoffset="\${238.76 * (1 - Math.min(savingsPct, 100) / 100)}" style="transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1); filter:drop-shadow(0 0 6px rgba(16,185,129,0.55));"/>
-            \` : \`
-            <!-- Idle Precision Ambient Ring (Zeroed State) -->
-            <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(59,130,246,0.18)" stroke-width="7.5" stroke-dasharray="3 5"/>
-            \`}
-          </svg>
-          
-          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; pointer-events:none;">
-            <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.14em; font-weight:800; color:var(--text-dim); opacity:0.85;">Economia</span>
-            <b style="font-size:23px; font-weight:900; letter-spacing:-0.03em; margin:2px 0; \${savingsPct > 0 ? 'color:#34D399; text-shadow:0 0 12px rgba(16,185,129,0.45);' : 'color:var(--text);'}; line-height:1; font-variant-numeric:tabular-nums;">
-              \${savingsPct}%
-            </b>
-            <span style="font-size:9.5px; color:var(--text-dim); font-weight:600; opacity:0.75;">
-              \${receitas > 0 ? 'da receita' : 'da renda'}
-            </span>
-          </div>
-        </div>
-
-        <!-- 3. Indicadores de Saúde Financeira 4K Glass -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <!-- Comprometimento -->
-          <div style="background:linear-gradient(135deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.01) 100%); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:9px 12px; display:flex; align-items:center; gap:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
-            <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(245,158,11,0.15);">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            </div>
-            <div style="min-width:0;">
-              <div style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700;">Comprometimento</div>
-              <div style="font-size:12px; font-weight:800; color:\${commitPct > 80 ? '#F87171' : commitPct > 60 ? '#FBBF24' : '#34D399'}; font-variant-numeric:tabular-nums; margin-top:1px;">\${commitPct}% da Renda</div>
-            </div>
-          </div>
-
-          <!-- Média Diária -->
-          <div style="background:linear-gradient(135deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.01) 100%); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:9px 12px; display:flex; align-items:center; gap:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
-            <div style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg, rgba(59,130,246,0.2), rgba(37,99,235,0.08)); border:1px solid rgba(59,130,246,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(59,130,246,0.15);">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            </div>
-            <div style="min-width:0;">
-              <div style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700;">Média Diária</div>
-              <div style="font-size:12px; font-weight:800; color:var(--text); font-variant-numeric:tabular-nums; margin-top:1px;">\${fmt(dailyAvg)}/dia</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. Barra de Distribuição de Renda 4K -->
-        <div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:11px; font-weight:700;">
-            <span style="color:#34D399; display:flex; align-items:center; gap:5px; letter-spacing:0.02em;">
-              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981; display:inline-block;"></span>
-              Receitas \${recPct}%
-            </span>
-            <span style="color:#F87171; display:flex; align-items:center; gap:5px; letter-spacing:0.02em;">
-              Despesas \${despPct}%
-              <span style="width:6px; height:6px; border-radius:50%; background:#EF4444; box-shadow:0 0 6px #EF4444; display:inline-block;"></span>
-            </span>
-          </div>
-          <div class="bar-split" style="height:7px; border-radius:8px; overflow:hidden; background:\${totalFluxo > 0 ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.06)'}; box-shadow:inset 0 1px 3px rgba(0,0,0,0.4); display:flex;">
-            <div class="g" style="width:\${recPct}%; border-radius:8px; background:linear-gradient(90deg, #10B981, #38BDF8); box-shadow:0 0 8px rgba(16,185,129,0.4); transition:width 0.5s ease;"></div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Rodapé Alinhado com Link Interativo 4K -->
-      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.07); width:100%;">
-        <span style="display:flex; align-items:center; gap:6px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981;"></span>
-          Poupança: <strong style="color:#34D399; font-weight:800;">\${savingsPct}%</strong>
-        </span>
-        <span style="cursor:pointer; color:#60A5FA; font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:4px;" data-nav="relatorios" class="hover:underline">
-          <span>Ver relatórios completos</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </span>
-      </div>
-    </div>
-
-    <!-- Painel 2: Despesas por Categoria (Design Executivo 4K Alinhado) -->
-    <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;">
-      <div style="display:flex; flex-direction:column; gap:13px; width:100%;">
-        
-        <!-- Cabeçalho Executivo 4K Alinhado -->
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(245,158,11,0.25); flex-shrink:0;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-                <line x1="7" y1="7" x2="7.01" y2="7"/>
-              </svg>
-            </div>
-            <div>
-              <h3 style="font-size:15px; font-weight:800; color:#FFFFFF; margin:0; letter-spacing:-0.02em;">
-                Despesas por Categoria
-              </h3>
-              <span style="font-size:11px; color:var(--text-dim); margin-top:2px; display:block; opacity:0.85; font-weight:500;">
-                Distribuição analítica dos gastos
-              </span>
-            </div>
-          </div>
-          <span class="tag" style="\${actualTotalDesp > 0 ? 'background:rgba(239,68,68,0.12); color:var(--red); border:1px solid rgba(239,68,68,0.25); box-shadow:0 2px 6px rgba(239,68,68,0.15);' : 'background:rgba(255,255,255,0.04); color:var(--text-dim); border:1px solid rgba(255,255,255,0.10);'}; font-weight:800; font-size:12px; padding:4px 10px; border-radius:8px; font-variant-numeric: tabular-nums;">
-            \${fmt(actualTotalDesp)}
-          </span>
-        </div>
-
-        \${cats.length > 0 ? \`
-        <!-- Barra de Composição Contínua Multi-Segmentos -->
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:8px 10px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; font-size:10.5px; color:var(--text-dim); margin-bottom:6px; font-weight:600;">
-            <span style="display:flex; align-items:center; gap:4px;">
-              <span style="width:5px; height:5px; border-radius:50%; background:var(--gold);"></span>
-              Composição Visual
-            </span>
-            <span style="color:var(--text); font-weight:700;">\${cats.length} categoria\${cats.length === 1 ? '' : 's'}</span>
-          </div>
-          <div style="width:100%; height:6px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden; display:flex; gap:1.5px; box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);">
-            \${cats.map(c => {
-              const pct = Math.max(Math.round(c.val / totalDesp * 100), 2);
-              return \`<div style="width:\${pct}%; height:100%; background:\${c.color}; border-radius:2px; transition:width 0.4s ease;" title="\${c.name}: \${fmt(c.val)} (\${pct}%)"></div>\`;
-            }).join('')}
-          </div>
-        </div>
-
-        <!-- Lista Executiva em Cards com Alinhamento Preciso e Micro-Barras -->
-        <div style="display:flex; flex-direction:column; gap:8px; width:100%; box-sizing:border-box;">
-          \${cats.map(c => {
-            const pct = Math.round(c.val / totalDesp * 100);
-            const icon = getCategoryIcon(c.name);
-            const count = periodTx.filter(t => t.cat === c.name && t.type === 'out').length;
-            return \`
-            <div style="display:flex; flex-direction:column; gap:7px; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-left:3.5px solid \${c.color}; transition:transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;" class="cat-item-card">
-              <div style="display:flex; align-items:center; justify-content:space-between; width:100%; gap:10px;">
-                
-                <!-- Esquerda: Ícone Estilizado + Nome + Contagem -->
-                <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-                  <span style="background:\${c.color}18; color:\${c.color}; border:1px solid \${c.color}35; width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; box-shadow:0 2px 8px \${c.color}18;">
-                    \${icon}
-                  </span>
-                  <div style="min-width:0;">
-                    <div style="font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${c.name}</div>
-                    <div style="font-size:10.5px; color:var(--text-dim); font-weight:500; display:flex; align-items:center; gap:5px; margin-top:1px;">
-                      <span>\${count} lançamento\${count === 1 ? '' : 's'}</span>
-                      <span style="opacity:0.4;">•</span>
-                      <span style="color:\${c.color}; font-weight:700;">\${pct}% do total</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Direita: Valor e Percentual em Badge Homogênea -->
-                <div style="text-align:right; flex-shrink:0;">
-                  <div style="font-size:13.5px; font-weight:800; color:var(--text); font-variant-numeric: tabular-nums; letter-spacing:-0.01em;">
-                    \${fmt(c.val)}
-                  </div>
-                  <div style="display:inline-block; font-size:9.5px; font-weight:700; color:\${c.color}; background:\${c.color}15; border:1px solid \${c.color}30; padding:1.5px 7px; border-radius:6px; margin-top:2px;">
-                    \${pct}%
-                  </div>
-                </div>
-              </div>
-
-              <!-- Micro-Barra de Progresso com Brilho Sutil -->
-              <div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
-                <div style="width:\${pct}%; height:100%; background:\${c.color}; border-radius:3px; box-shadow:0 0 8px \${c.color}40; transition:width .4s ease;"></div>
-              </div>
-            </div>\`;
-          }).join('')}
-        </div>
-
-        <!-- Box de Insight / Destaque de Concentração -->
-        \${cats.length > 0 ? \`
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:9px 12px; display:flex; align-items:center; gap:9px; margin-top:2px;">
-          <span style="font-size:13px; background:rgba(229,169,60,0.12); color:var(--gold); border:1px solid rgba(229,169,60,0.25); width:26px; height:26px; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">💡</span>
-          <div style="font-size:11px; color:var(--text-dim); min-width:0; line-height:1.35;">
-            Maior concentração em <strong style="color:var(--text); font-weight:700;">\${cats[0].name}</strong> (<span style="color:var(--gold); font-weight:700;">\${Math.round(cats[0].val / totalDesp * 100)}%</span> dos gastos).
-          </div>
-        </div>\` : ''}
-
-        \` : \`
-        <!-- Estado Vazio Executivo 4K (Design de Alta Fidelidade) -->
-        <div style="text-align:center; padding:24px 14px 10px; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; justify-content:center;">
-          <!-- 4K Holographic Analytics Donut SVG -->
-          <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:18px; background:linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(217,119,6,0.04) 100%); border:1px solid rgba(245,158,11,0.30); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px -4px rgba(245,158,11,0.25), inset 0 1px 0 rgba(255,255,255,0.12);">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2a10 10 0 0 1 10 10h-5.5a4.5 4.5 0 0 0-4.5-4.5V2z" fill="#F59E0B" opacity="0.95"/>
-              <path d="M22 12a10 10 0 0 1-10 10v-5.5a4.5 4.5 0 0 0 4.5-4.5h5.5z" fill="#EF4444" opacity="0.75"/>
-              <path d="M12 22A10 10 0 0 1 2 12a10 10 0 0 1 10-10v5.5a4.5 4.5 0 0 0-4.5 4.5 4.5 4.5 0 0 0 4.5 4.5v5.5z" fill="#3B82F6" opacity="0.45"/>
-            </svg>
-          </div>
-
-          <h4 style="font-size:14.5px; font-weight:800; color:#FFFFFF; margin:0 0 4px 0; letter-spacing:-0.02em;">
-            Nenhum gasto categorizado
-          </h4>
-          <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.45; max-width:260px;">
-            Suas despesas serão agrupadas automaticamente por grupos e faixas de impacto.
-          </p>
-
-          <!-- Category Preview Micro-Chips -->
-          <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:16px; opacity:0.8;">
-            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
-              <span style="width:5px; height:5px; border-radius:50%; background:#EF4444; box-shadow:0 0 6px #EF4444;"></span> Alimentação
-            </span>
-            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
-              <span style="width:5px; height:5px; border-radius:50%; background:#3B82F6; box-shadow:0 0 6px #3B82F6;"></span> Moradia
-            </span>
-            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
-              <span style="width:5px; height:5px; border-radius:50%; background:#10B981; box-shadow:0 0 6px #10B981;"></span> Transporte
-            </span>
-            <span style="font-size:10px; font-weight:700; background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); padding:3px 8px; border-radius:12px; color:var(--text-dim); display:flex; align-items:center; gap:4px;">
-              <span style="width:5px; height:5px; border-radius:50%; background:#8B5CF6; box-shadow:0 0 6px #8B5CF6;"></span> Lazer
-            </span>
-          </div>
-        </div>
-        \`}
-      </div>
-
-      <!-- Rodapé Alinhado com Contador e Link Interativo 4K -->
-      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.07); width:100%;">
-        <span style="display:flex; align-items:center; gap:6px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 6px var(--gold);"></span>
-          Total: <strong style="color:var(--text); font-weight:700;">\${cats.length}</strong> categoria\${cats.length === 1 ? '' : 's'}
-        </span>
-        <span style="cursor:pointer; color:var(--gold); font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:4px;" data-nav="transacoes" class="hover:underline">
-          <span>Ver todas as despesas</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </span>
-      </div>
-    </div>
-
-    <!-- Painel 3: Contas e Cartões (Design Executivo 4K Alinhado) -->
-    <div class="panel" style="display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;">
-      <div style="display:flex; flex-direction:column; gap:13px; width:100%;">
-        
-        <!-- Cabeçalho Executivo 4K Alinhado -->
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(139,92,246,0.22), rgba(109,40,217,0.08)); border:1px solid rgba(139,92,246,0.35); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(139,92,246,0.25); flex-shrink:0;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2"/>
-                <line x1="2" y1="10" x2="22" y2="10"/>
-              </svg>
-            </div>
-            <div>
-              <h3 style="font-size:15px; font-weight:800; color:#FFFFFF; margin:0; letter-spacing:-0.02em;">
-                Contas e Cartões
-              </h3>
-              <span style="font-size:11px; color:var(--text-dim); margin-top:2px; display:block; opacity:0.85; font-weight:500;">
-                Limites, faturas e saldos consolidados
-              </span>
-            </div>
-          </div>
-          <button class="tag" data-nav="cartoes" style="font-size:11.5px; padding:5px 12px; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); color:var(--text); border-radius:8px; transition:all 0.2s ease; display:flex; align-items:center; gap:5px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            <span>Gerenciar</span>
-          </button>
-        </div>
-
-        \${accounts.length > 0 ? \`
-        <div class="accounts-list" style="display:flex; flex-direction:column; gap:8px; width:100%; box-sizing:border-box;">
-          \${accounts.slice().sort((a,b)=>a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' })).map(a=>{
-            const stats = getCardStats(a);
-            return \`
-            <div class="acc-row" style="display:flex; flex-direction:column; width:100%; box-sizing:border-box; padding:10px 12px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-left:3.5px solid \${a.color}; border-radius:12px; gap:8px; transition:transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;">
-              
-              <!-- Linha 1: Nome à Esquerda e Disponível/Saldo à Direita -->
-              <div style="display:flex; align-items:center; justify-content:space-between; width:100%; box-sizing:border-box; gap:10px;">
-                <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-                  <div class="acc-ic" style="background:\${a.color}; width:34px; height:34px; border-radius:9px; font-weight:800; font-size:12px; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 3px 10px rgba(0,0,0,0.35); text-shadow:0 1px 2px rgba(0,0,0,0.4);">
-                    \${a.name.slice(0,2).toUpperCase()}
-                  </div>
-                  <div style="min-width:0;">
-                    <div style="font-weight:700; font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${a.name}</div>
-                    <div style="font-size:10.5px; color:var(--text-dim); margin-top:1px; opacity:0.85; font-weight:500;">\${a.type}</div>
-                  </div>
-                </div>
-
-                <div style="text-align:right; flex-shrink:0;">
-                  \${stats.isCreditCard ? \`
-                    <div style="font-size:9.5px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; opacity:0.85;">Disponível</div>
-                    <div style="color:\${stats.availableLimit < 200 ? 'var(--red)' : 'var(--green)'}; font-weight:800; font-size:13.5px; letter-spacing:-0.01em; font-variant-numeric: tabular-nums;">
-                      \${fmt(stats.availableLimit)}
-                    </div>
-                  \` : \`
-                    <div style="font-size:9.5px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; opacity:0.85;">Saldo</div>
-                    <div style="color:\${stats.currentBalance < 0 ? 'var(--red)' : 'var(--green)'}; font-weight:800; font-size:13.5px; font-variant-numeric: tabular-nums;">
-                      \${fmt(stats.currentBalance)}
-                    </div>
-                  \`}
-                </div>
-              </div>
-
-              \${stats.isCreditCard ? \`
-              <!-- Linha 2: Barra de Progresso do Limite (com trilho padronizado mesmo se uso for 0%) -->
-              <div style="width:100%; box-sizing:border-box; display:flex; flex-direction:column; gap:5px; padding-top:6px; border-top:1px solid rgba(255,255,255,0.06);">
-                <div style="width:100%; height:4.5px; background:rgba(255,255,255,0.08); border-radius:2.5px; overflow:hidden;">
-                  <div style="width:\${Math.max(stats.usagePct, 0)}%; height:100%; background:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'}; border-radius:2.5px; transition:width .4s ease;"></div>
-                </div>
-                
-                <!-- Linha 3: Fatura na Esquerda e Limite Total na Direita -->
-                <div style="display:flex; justify-content:space-between; align-items:center; width:100%; box-sizing:border-box; font-size:11px;">
-                  <div style="display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.03); padding:2px 7px; border-radius:6px;">
-                    <span style="color:var(--text-dim); font-size:10px; opacity:0.85;">Fatura:</span>
-                    <strong style="color:\${stats.spentTotal > 0 ? 'var(--orange)' : 'var(--text-dim)'}; font-weight:700; font-variant-numeric: tabular-nums;">\${fmt(stats.spentTotal)}</strong>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.03); padding:2px 7px; border-radius:6px;">
-                    <span style="color:var(--text-dim); font-size:10px; opacity:0.85;">Limite:</span>
-                    <strong style="color:var(--text); font-weight:700; font-variant-numeric: tabular-nums;">\${fmt(stats.totalLimit)}</strong>
-                  </div>
-                </div>
-              </div>
-              \` : \`
-              <!-- Conta Corrente / Poupança / Investimento -->
-              <div style="width:100%; box-sizing:border-box; background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.18); border-radius:8px; padding:6px 10px; display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:10.5px; font-weight:600; color:var(--text-dim);">Saldo em Conta:</span>
-                <strong style="color:\${stats.currentBalance < 0 ? 'var(--red)' : 'var(--green)'}; font-weight:800; font-size:13px; font-variant-numeric: tabular-nums;">\${fmt(stats.currentBalance)}</strong>
-              </div>
-              \`}
-            </div>\`;
-          }).join('')}
-        </div>
-        \` : \`
-        <!-- Estado Vazio Executivo 4K Titanium (Contas e Cartões) -->
-        <div style="text-align:center; padding:18px 12px 10px; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; justify-content:center;">
-          <!-- 4K Holographic Titanium Card Graphic -->
-          <div style="width:108px; height:68px; margin:0 auto 12px; border-radius:12px; background:linear-gradient(135deg, rgba(168,85,247,0.28) 0%, rgba(99,102,241,0.16) 50%, rgba(139,92,246,0.06) 100%); border:1px solid rgba(168,85,247,0.45); box-shadow:0 12px 28px -4px rgba(139,92,246,0.35), inset 0 1px 0 rgba(255,255,255,0.25); display:flex; flex-direction:column; justify-content:space-between; padding:8px 10px; box-sizing:border-box; position:relative; overflow:hidden;">
-            <!-- Glow Accent Corner -->
-            <div style="position:absolute; top:-15px; right:-15px; width:40px; height:40px; border-radius:50%; background:radial-gradient(circle, rgba(167,139,250,0.6) 0%, transparent 70%);"></div>
-            
-            <!-- Top Line: Chip & Contactless -->
-            <div style="display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1;">
-              <div style="width:15px; height:11px; border-radius:3px; background:linear-gradient(135deg, #FBBF24, #D97706); box-shadow:0 1px 3px rgba(0,0,0,0.3); border:0.5px solid rgba(255,255,255,0.3);"></div>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"><path d="M8.5 16.5a5 5 0 0 1 0-9"/><path d="M12 19a8.5 8.5 0 0 1 0-14"/></svg>
-            </div>
-            
-            <!-- Bottom Line: Digits & Brand Spheres -->
-            <div style="display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1;">
-              <span style="font-family:monospace; font-size:7.5px; letter-spacing:0.12em; color:rgba(255,255,255,0.7); font-weight:800;">•••• 4092</span>
-              <div style="display:flex; align-items:center;">
-                <span style="width:9px; height:9px; border-radius:50%; background:#EF4444; opacity:0.85; display:inline-block;"></span>
-                <span style="width:9px; height:9px; border-radius:50%; background:#F59E0B; opacity:0.85; display:inline-block; margin-left:-3.5px;"></span>
-              </div>
-            </div>
-          </div>
-
-          <h4 style="font-size:14.5px; font-weight:800; color:#FFFFFF; margin:0 0 4px 0; letter-spacing:-0.02em;">
-            Nenhum meio de pagamento ativo
-          </h4>
-          <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0; line-height:1.45; max-width:270px;">
-            Cadastre cartões de crédito, contas digitais ou dinheiro para acompanhar limites e faturas.
-          </p>
-
-          <!-- 3 Interactive Feature Preview Slots -->
-          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; width:100%; margin-top:15px;" data-nav="cartoes">
-            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:7px 4px; text-align:center; cursor:pointer; transition:border-color 0.2s ease;">
-              <div style="font-size:13px; margin-bottom:2px;">💳</div>
-              <div style="font-size:9.5px; font-weight:700; color:var(--text);">Cartão Crédito</div>
-              <div style="font-size:8px; color:var(--text-dim); opacity:0.8;">Limites & Fatura</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:7px 4px; text-align:center; cursor:pointer; transition:border-color 0.2s ease;">
-              <div style="font-size:13px; margin-bottom:2px;">🏦</div>
-              <div style="font-size:9.5px; font-weight:700; color:var(--text);">Conta Bancária</div>
-              <div style="font-size:8px; color:var(--text-dim); opacity:0.8;">Saldos & Pix</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:7px 4px; text-align:center; cursor:pointer; transition:border-color 0.2s ease;">
-              <div style="font-size:13px; margin-bottom:2px;">💵</div>
-              <div style="font-size:9.5px; font-weight:700; color:var(--text);">Dinheiro / Espécie</div>
-              <div style="font-size:8px; color:var(--text-dim); opacity:0.8;">Controle Físico</div>
-            </div>
-          </div>
-        </div>
-        \`}
-      </div>
-
-      <!-- Rodapé Alinhado com Contador e Link Interativo 4K -->
-      <div style="margin-top:14px; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.07); width:100%;">
-        <span style="display:flex; align-items:center; gap:6px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:var(--purple); box-shadow:0 0 6px var(--purple);"></span>
-          Total: <strong style="color:var(--text); font-weight:700;">\${accounts.length}</strong> conta\${accounts.length === 1 ? '' : 's'}/cartões
-        </span>
-        <span style="cursor:pointer; color:var(--purple); font-weight:700; transition:all 0.2s ease; display:flex; align-items:center; gap:4px;" data-nav="cartoes" class="hover:underline">
-          <span>Ver todas as contas</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </span>
-      </div>
-    </div>
-  </div>
-
-  \${pendingSummary.items.length > 0 ? \`
-  <!-- Mini Card Quadrado Compacto & Discreto (Posicionado com Organização Perfeita) -->
-  <div class="panel due-bills-panel" style="margin-bottom:22px; padding:14px 18px; border:1px solid \${pendingSummary.overdueCount > 0 ? 'rgba(239,90,90,0.5)' : 'rgba(240,166,58,0.45)'}; background:\${pendingSummary.overdueCount > 0 ? 'rgba(239,90,90,0.08)' : 'rgba(240,166,58,0.06)'}; border-radius:16px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-    
-    <!-- Cabeçalho Discreto -->
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--card-border);">
-      <div style="display:flex; align-items:center; gap:6px;">
-        <span style="font-size:15px;">\${pendingSummary.overdueCount > 0 ? '🚨' : '⚠️'}</span>
-        <h4 style="margin:0; font-size:12.5px; font-weight:800; letter-spacing:0.02em; color:\${pendingSummary.overdueCount > 0 ? 'var(--red)' : 'var(--orange)'}; text-transform:uppercase;">
-          CONTAS A VENCER (\${pendingSummary.items.length})
-        </h4>
-      </div>
-      <span style="font-size:11px; font-weight:700; color:var(--text-dim);">
-        Total: <strong style="color:var(--red);">\${fmt(pendingSummary.totalValue)}</strong>
-      </span>
-    </div>
-
-    <!-- Lista Enxuta Sem Cortes -->
-    <div class="due-bills-list" style="display:flex; flex-direction:column; gap:6px;">
-      \${pendingSummary.items.map(item => \`
-        <div class="due-bill-row" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px 12px; padding:8px 12px; border-radius:8px; background:var(--card); border:1px solid \${item.statusType === 'overdue' ? 'rgba(239,90,90,0.4)' : item.statusType === 'today' ? 'rgba(240,166,58,0.4)' : 'var(--card-border)'}; font-size:12px;">
-          
-          <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:180px;">
-            <!-- Sinal de Emergência -->
-            <span style="font-size:13px; flex-shrink:0;" title="\${item.statusText}">
-              \${item.statusType === 'overdue' ? '🚨' : item.statusType === 'today' ? '⚡' : '⚠️'}
-            </span>
-
-            <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px 8px;">
-              <span style="font-weight:700; color:var(--text);">\${item.desc}</span>
-              <!-- Vencimento na Frente -->
-              <span style="font-size:11px; font-weight:700; color:\${item.statusType === 'overdue' ? 'var(--red)' : 'var(--orange)'}; background:\${item.statusType === 'overdue' ? 'var(--red-soft)' : 'rgba(240,166,58,0.15)'}; padding:1px 6px; border-radius:4px;">
-                Vence: \${item.formattedDate}
-              </span>
-            </div>
-          </div>
-
-          <!-- Valor & Botão Pagar -->
-          <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
-            <span style="font-size:13px; font-weight:800; color:var(--red);">\${fmt(item.val)}</span>
-            <button class="btn-primary" data-paytx="\${item.id}" title="Marcar como Pago" style="padding:3px 8px; font-size:10.5px; font-weight:700; background:linear-gradient(135deg, var(--green), #c9862a); border:none; border-radius:6px; cursor:pointer; color:#08130c; white-space:nowrap;">
-              ✅ Pagar
-            </button>
-          </div>
-        </div>
-      \`).join('')}
-    </div>
-
-  </div>
-  \` : ''}
-
-  <!-- SEÇÃO DE ÚLTIMAS TRANSAÇÕES COM FILTROS RÁPIDOS & BUSCA INSTANTÂNEA -->
-  <div class="table-panel" id="dashTxSection">
-    <div class="dash-tx-header">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div style="width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg, rgba(168,85,247,0.22), rgba(139,92,246,0.1)); border:1px solid rgba(168,85,247,0.35); display:flex; align-items:center; justify-content:center; color:#C084FC; flex-shrink:0;">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        </div>
-        <div>
-          <h3 style="margin:0; font-size:15px; font-weight:800; color:var(--text); letter-spacing:-0.02em; display:flex; align-items:center; gap:8px;">
-            <span>Últimas Transações</span>
-            <span class="tag" id="dashTxBadgeCount" style="font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.06); color:var(--text-dim);">\${Math.min(periodTx.length, 8)} de \${periodTx.length} recentes</span>
-          </h3>
-          <span style="font-size:11px; color:var(--text-dim); font-weight:500;">Controle direto, edição rápida e alternância de status</span>
-        </div>
-      </div>
-
-      <!-- Abas e Opções de Filtro Rápido no Dashboard -->
+      <!-- Filtros contextuais por aba -->
       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <div class="dash-tx-tabs">
-          <button type="button" class="dash-tx-tab \${(!window.dashTxFilter || window.dashTxFilter === 'all') ? 'active' : ''}" onclick="window.setDashTxTab('all')">Todas</button>
-          <button type="button" class="dash-tx-tab \${window.dashTxFilter === 'out' ? 'active' : ''}" onclick="window.setDashTxTab('out')">↓ Despesas</button>
-          <button type="button" class="dash-tx-tab \${window.dashTxFilter === 'in' ? 'active' : ''}" onclick="window.setDashTxTab('in')">↑ Receitas</button>
-          <button type="button" class="dash-tx-tab \${window.dashTxFilter === 'pending' ? 'active' : ''}" onclick="window.setDashTxTab('pending')">⏳ Pendentes</button>
-        </div>
+        \${activeTab === 'os_aberta' ? \`
+          <div style="display:flex; gap:5px; background:rgba(255,255,255,0.04); padding:3px; border-radius:10px; border:1px solid var(--card-border);">
+            <button type="button" class="btn-ghost \${osFilter === 'abertas' ? 'active' : ''}" onclick="setDashOsFilter('abertas')" style="padding:4px 10px; font-size:11.5px; border-radius:7px; font-weight:800;">Abertas (\${countAbertas})</button>
+            <button type="button" class="btn-ghost \${osFilter === 'pendente' ? 'active' : ''}" onclick="setDashOsFilter('pendente')" style="padding:4px 10px; font-size:11.5px; border-radius:7px; font-weight:800;">Pendentes (\${countPendentes})</button>
+            <button type="button" class="btn-ghost \${osFilter === 'andamento' ? 'active' : ''}" onclick="setDashOsFilter('andamento')" style="padding:4px 10px; font-size:11.5px; border-radius:7px; font-weight:800;">Em Atendimento (\${countAndamento})</button>
+            <button type="button" class="btn-ghost \${osFilter === 'todas' ? 'active' : ''}" onclick="setDashOsFilter('todas')" style="padding:4px 10px; font-size:11.5px; border-radius:7px; font-weight:800;">Todas (\${countTotalOrdens})</button>
+          </div>
+          <input type="text" class="dash-tx-search-input" placeholder="🔍 Buscar O.S. ..." value="\${window.currentDashOsSearch || ''}" oninput="onDashOsSearch(this.value)" style="min-width:180px;">
+        \` : ''}
 
-        <input type="search" id="dashTxSearch" class="dash-tx-search-input" placeholder="🔍 Filtrar nesta lista..." value="\${window.dashTxSearchQuery || ''}" oninput="window.onDashTxSearch(this.value)">
+        \${activeTab === 'perfis' ? \`
+          <input type="text" class="dash-tx-search-input" placeholder="🔍 Buscar perfil por nome, email ou CPF..." value="\${window.currentDashUserSearch || ''}" oninput="onDashUserSearch(this.value)" style="min-width:240px;">
+          <button type="button" class="btn btn-ghost" onclick="navigate('usuarios')" style="font-size:12px; font-weight:700; padding:6px 12px; border-radius:8px;">Central de Usuários Completa →</button>
+        \` : ''}
 
-        <button type="button" class="btn-primary" onclick="openModal(null)" style="padding:6px 13px; font-size:12px; font-weight:700; border-radius:9px; display:inline-flex; align-items:center; gap:5px;" title="Lançar transação rápida">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span>Nova</span>
-        </button>
-
-        <span class="tag" data-nav="transacoes" style="cursor:pointer; font-weight:700; font-size:12px; padding:6px 12px; border-radius:9px; background:rgba(255,255,255,0.06); color:var(--text); transition:all 0.2s ease; display:inline-flex; align-items:center; gap:4px;">
-          <span>Extrato Geral</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </span>
+        \${activeTab === 'logs' ? \`
+          <input type="text" class="dash-tx-search-input" placeholder="🔍 Filtrar logs por ação, usuário ou IP..." value="\${window.currentDashLogSearch || ''}" oninput="onDashLogSearch(this.value)" style="min-width:240px;">
+          <button type="button" class="btn btn-ghost" onclick="navigate('logs')" style="font-size:12px; font-weight:700; padding:6px 12px; border-radius:8px;">Trilha de Auditoria Completa →</button>
+        \` : ''}
       </div>
     </div>
 
-    <!-- Tabela Filtrada com Ações Rápidas -->
-    <div id="dashTxTableContainer">
-      \${getDashboardFilteredTxTableHTML(periodTx)}
-    </div>
-  </div>
-  \`;
-}
-
-function getAccountIcon(accName) {
-  if (!accName) return '💳';
-  const name = accName.toLowerCase();
-  if (name.includes('banco') || name.includes('brasil') || name.includes('itau') || name.includes('bradesco') || name.includes('santander') || name.includes('caixa') || name.includes('nubank') || name.includes('inter') || name.includes('sifre')) return '🏦';
-  if (name.includes('dinheiro') || name.includes('espécie') || name.includes('carteira')) return '💵';
-  if (name.includes('boleto') || name.includes('pix') || name.includes('outros')) return '⚡';
-  return '💳';
-}
-
-function transactionsTable(list, showActions){
-  if (typeof isDataLoading !== 'undefined' && isDataLoading && list.length === 0) {
-    return \`<div class="placeholder" style="padding:40px 20px;"><div class="big" style="font-size:30px;margin-bottom:12px;">⏳</div><h3>Carregando suas transações...</h3><p>Sincronizando seus dados financeiros com o servidor.</p></div>\`;
-  }
-  if(list.length===0) {
-    const totalAllTxs = Array.isArray(transactions) ? transactions.length : 0;
-    const isFiltered = Boolean(
-      (typeof document !== 'undefined') && (
-        (document.getElementById('txSearch') && document.getElementById('txSearch').value.trim()) ||
-        (document.getElementById('txFiltroTipo') && document.getElementById('txFiltroTipo').value) ||
-        (document.getElementById('txFiltroCat') && document.getElementById('txFiltroCat').value) ||
-        (document.getElementById('txFiltroStatus') && document.getElementById('txFiltroStatus').value) ||
-        (document.getElementById('txFiltroConta') && document.getElementById('txFiltroConta').value)
-      )
-    );
-
-    if (totalAllTxs > 0) {
-      return \`
-      <div class="placeholder" style="padding:36px 20px; text-align:center;">
-        <div class="big" style="font-size:34px; margin-bottom:10px;">🔍</div>
-        <h3 style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:6px;">
-          \${isFiltered ? 'Nenhum lançamento encontrado para os filtros selecionados' : 'Nenhuma transação encontrada no período de ' + periodLabel()}
-        </h3>
-        <p style="font-size:12.5px; color:var(--text-dim); margin-bottom:16px; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.5;">
-          Você possui <strong style="color:var(--text);">\${totalAllTxs} lançamento(s)</strong> no seu extrato geral.
-        </p>
-        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-          <button type="button" class="btn-primary" onclick="window.clearAllTxFilters(true)" style="padding:8px 16px; font-size:12.5px; font-weight:700; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-            🌐 Ver Todas as Transações (Todas as Datas)
-          </button>
-          \${isFiltered ? \`
-          <button type="button" class="btn-ghost" onclick="window.clearAllTxFilters(false)" style="padding:8px 16px; font-size:12.5px; font-weight:700; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.15); color:var(--text);">
-            ✕ Limpar Filtros do Mês
-          </button>\` : ''}
-        </div>
-      </div>\`;
-    }
-
-    return \`<div class="placeholder"><div class="big">🗂️</div><h3>Nenhuma transação encontrada</h3><p>Nenhuma transação registrada no período selecionado.</p></div>\`;
-  }
-
-  const totalDespesas = list.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val), 0);
-  const totalReceitas = list.filter(t=>t.type==='in').reduce((s,t)=>s+parseInputValue(t.val), 0);
-  const saldoPeriodo = totalReceitas - totalDespesas;
-  const countDespesas = list.filter(t=>t.type==='out').length;
-  const countReceitas = list.filter(t=>t.type==='in').length;
-
-  return \`
-  <table>
-    <thead>
-      <tr>
-        <th>Data</th>
-        <th>Descrição</th>
-        <th>Categoria</th>
-        <th>Conta / Cartão</th>
-        <th>Tipo</th>
-        <th>Valor</th>
-        <th>Status</th>
-        \${showActions?'<th style="text-align:center;">Ações</th>':''}
-      </tr>
-    </thead>
-    <tbody>
-      \${list.map(t=>{
-        const method = t.paymentMethod || detectPaymentMethodFromName(t.desc) || ((t.cat && t.cat.toLowerCase().includes('cartão')) || (t.acc && t.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : (t.type === 'out' ? 'Boleto' : null));
-        return \`
-        <tr class="trow">
-          <td><span class="tx-date-badge">\${formatDateBR(t.date)}</span></td>
-          <td class="tx-desc">
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <span>\${t.desc}</span>
-              \${t.type === 'out' && method ? \`<span class="pill" style="padding:1.5px 6px; font-size:10px; font-weight:700; border-radius:5px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.16)' : 'rgba(245,158,11,0.16)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.35)' : 'rgba(245,158,11,0.35)'};">\${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}</span>\` : ''}
-            </div>
-          </td>
-          <td><span class="pill cat-pill" style="background:\${catColor(t.cat)}18; color:\${catColor(t.cat)}; border:1px solid \${catColor(t.cat)}35">\${catIcon(t.cat)} \${t.cat}</span></td>
-          <td><span class="pill acc-pill">\${getAccountIcon(t.acc)} \${t.acc || '—'}</span></td>
-          <td><span class="type-pill \${t.type}">\${t.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
-          <td class="\${t.type==='in'?'val-in':'val-out'}">\${t.type==='in'?'+':'-'}\${fmt(t.val)}</td>
-          <td>
-            <span class="pill status-\${t.status.toLowerCase()} status-toggle-btn" data-togglestatus="\${t.id}" title="Clique para alternar o status (Pendente / Pago)">
-              \${t.status === 'Pendente' ? '⏳ Pendente' : (t.type === 'in' ? '✓ Recebido' : '✓ Pago')}
-            </span>
-          </td>
-          \${showActions?\`<td><div class="row-actions" style="justify-content:center;"><button data-edit="\${t.id}" title="Editar Transação" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button><button data-del="\${t.id}" title="Excluir Transação" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></td>\`:''}
-        </tr>\`;
-      }).join('')}
-    </tbody>
-    <tfoot>
-      <tr class="tfoot-row">
-        <td colspan="5" class="tfoot-label">TOTAL DE GASTOS (\${countDespesas} despesa\${countDespesas===1?'':'s'}):</td>
-        <td class="tfoot-value">-\${fmt(totalDespesas)}</td>
-        <td colspan="\${showActions?2:1}"></td>
-      </tr>
-    </tfoot>
-  </table>
-
-  <!-- Aba / Card com Cálculo Consolidado dos Gastos ao final -->
-  <div class="tx-footer-summary">
-    <div class="tx-summary-card expense">
-      <div class="tx-summary-icon expense">↓</div>
-      <div>
-        <div class="tx-summary-label">Cálculo Total de Gastos</div>
-        <div class="tx-summary-val expense">-\${fmt(totalDespesas)}</div>
-        <div class="tx-summary-sub">\${countDespesas} lançamento(s) de despesa</div>
-      </div>
-    </div>
-
-    <div class="tx-summary-card income">
-      <div class="tx-summary-icon income">↑</div>
-      <div>
-        <div class="tx-summary-label">Total de Entradas (Receitas)</div>
-        <div class="tx-summary-val income">+\${fmt(totalReceitas)}</div>
-        <div class="tx-summary-sub">\${countReceitas} lançamento(s) de receita</div>
-      </div>
-    </div>
-
-    <div class="tx-summary-card \${saldoPeriodo < 0 ? 'expense' : 'balance'}">
-      <div class="tx-summary-icon \${saldoPeriodo < 0 ? 'expense' : 'balance'}">⇄</div>
-      <div>
-        <div class="tx-summary-label">Balanço do Período</div>
-        <div class="tx-summary-val \${saldoPeriodo < 0 ? 'expense' : 'income'}">\${fmt(saldoPeriodo)}</div>
-        <div class="tx-summary-sub">\${list.length} registro(s) no filtro</div>
-      </div>
+    <!-- Conteúdo da Aba Ativa -->
+    <div id="dashFocusTabContent">
+      \${activeTab === 'os_aberta' ? osCardsHtml : ''}
+      \${activeTab === 'perfis' ? usersHtml : ''}
+      \${activeTab === 'logs' ? logsHtml : ''}
     </div>
   </div>\`;
 }
@@ -22142,15 +21763,15 @@ function navigate(page){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
   if (isAdminView) {
-    if (!['usuarios', 'funcoes', 'ordens', 'logs'].includes(page)) {
-      page = 'usuarios';
+    if (!['dashboard', 'usuarios', 'funcoes', 'ordens', 'logs'].includes(page)) {
+      page = 'dashboard';
     }
   } else {
     if (['usuarios', 'funcoes', 'ordens', 'logs'].includes(page)) {
       page = 'dashboard';
     }
   }
-  if(!page) page = isAdminView ? 'usuarios' : 'dashboard';
+  if(!page) page = 'dashboard';
   const isSamePage = (currentPage === page);
   currentPage = page;
   try {
