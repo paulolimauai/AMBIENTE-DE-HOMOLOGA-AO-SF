@@ -18796,7 +18796,7 @@ window.imprimirFilaOrdens = function() {
   let rowsHtml = '';
   list.forEach(o => {
     rowsHtml += '<tr>';
-    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-family:\'Inter\', \'Plus Jakarta Sans\', sans-serif; font-weight:700;">#' + escapeOsHtml(o.protocol || o.id) + '</td>';
+    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-family:inherit; font-weight:700;">#' + escapeOsHtml(o.protocol || o.id) + '</td>';
     rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-size:11.5px;">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('pt-BR') : '-') + '</td>';
     rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0;"><div style="font-weight:700;">' + escapeOsHtml(o.client_name || 'Anônimo') + '</div><div style="font-size:10.5px; color:#64748B;">' + escapeOsHtml(o.client_phone || o.client_email || '') + '</div></td>';
     rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0;"><div style="font-weight:600;">' + escapeOsHtml(o.title || '') + '</div><div style="font-size:10.5px; color:#64748B;">' + escapeOsHtml(o.service_type || '') + '</div></td>';

@@ -2662,5 +2662,203 @@
       }
     ],
     "updated_at": "2026-09-16T10:41:17.248Z"
+  },
+  "suporte.paulolima@outlook.com": {
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 0
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 0
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 0
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 1,
+        "name": "Conta Principal",
+        "type": "Conta Corrente",
+        "balance": 0,
+        "saldo": 0,
+        "color": "#4a90e2"
+      }
+    ],
+    "transactions": [],
+    "budgets": [],
+    "goals": [],
+    "recurringList": [],
+    "alerts": [],
+    "attachments": [],
+    "notifications": [],
+    "nextAccId": 2,
+    "nextTxId": 1,
+    "nextBudgetId": 1,
+    "nextGoalId": 1,
+    "nextRecId": 1,
+    "nextAlertId": 1,
+    "nextAttId": 1,
+    "nextNotifId": 1,
+    "updated_at": "2026-09-17T13:00:35.747Z"
   }
 }
