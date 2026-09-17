@@ -2031,14 +2031,15 @@ html, body {
 
 /* ==================== Tela de Auth Ultra Moderna (Visual Liquid Glass 4K) ==================== */
 .auth-container {
+  --auth-bg: #050811;
   --auth-gold: #F59E0B;
   --auth-gold-dark: #D97706;
   --auth-blue: #38BDF8;
-  --auth-emerald: #F59E0B;
-  --auth-cyan: #FBBF24;
-  --auth-card: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 26, 40, 0.88) 40%, rgba(10, 14, 24, 0.95) 100%);
+  --auth-emerald: #10B981;
+  --auth-cyan: #38BDF8;
+  --auth-card: linear-gradient(145deg, rgba(20, 28, 48, 0.82) 0%, rgba(10, 16, 30, 0.90) 35%, rgba(5, 8, 17, 0.98) 100%);
   --auth-border: rgba(255, 255, 255, 0.16);
-  --auth-input-bg: rgba(15, 23, 42, 0.65);
+  --auth-input-bg: rgba(11, 18, 33, 0.72);
   --auth-text: #FFFFFF;
   --auth-text-dim: #94A3B8;
   position: relative;
@@ -2063,7 +2064,7 @@ html, body {
   transform: translate(-50%, -50%);
   width: 750px;
   height: 750px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(255, 255, 255, 0.03) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(56, 189, 248, 0.05) 35%, transparent 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 1;
@@ -2076,9 +2077,10 @@ html, body {
 }
 
 body.light .auth-container {
+  --auth-bg: #F8FAFC;
   --auth-gold: #D97706;
   --auth-gold-dark: #B45309;
-  --auth-card: #FFFFFF;
+  --auth-card: rgba(255, 255, 255, 0.94);
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
   --auth-text: #0F172A;
@@ -2311,7 +2313,7 @@ body.light .glass-shard {
 .auth-card-nexus {
   position: relative;
   z-index: 10;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 26, 40, 0.88) 35%, rgba(10, 14, 24, 0.95) 100%) !important;
+  background: linear-gradient(145deg, rgba(20, 28, 48, 0.82) 0%, rgba(10, 16, 30, 0.90) 35%, rgba(5, 8, 17, 0.98) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
   border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
@@ -2320,14 +2322,15 @@ body.light .glass-shard {
   width: 100%;
   max-width: 440px;
   box-shadow: 
-    0 30px 80px -15px rgba(0, 0, 0, 0.85),
+    0 35px 85px -15px rgba(0, 0, 0, 0.90),
     0 0 50px -10px rgba(245, 158, 11, 0.20),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.35),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.5) !important;
-  backdrop-filter: blur(40px) saturate(190%);
-  -webkit-backdrop-filter: blur(40px) saturate(190%);
+    0 0 30px -10px rgba(56, 189, 248, 0.12),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.35),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(40px) saturate(210%);
+  -webkit-backdrop-filter: blur(40px) saturate(210%);
   animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
   overflow: hidden;
   transform: none !important;
 }
@@ -2356,10 +2359,10 @@ body.light .glass-shard {
 }
 
 body.light .auth-card-nexus {
-  background: rgba(255, 255, 255, 0.90) !important;
-  border: 1px solid rgba(255, 255, 255, 0.95) !important;
-  border-top: 1.5px solid #FFFFFF !important;
-  box-shadow: 0 25px 60px -10px rgba(15, 23, 42, 0.10), 0 0 30px -5px rgba(245, 158, 11, 0.10), inset 0 1px 1.5px #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-top: 2px solid #FFFFFF !important;
+  box-shadow: 0 25px 65px -10px rgba(15, 23, 42, 0.12), 0 0 35px -5px rgba(245, 158, 11, 0.10), inset 0 1.5px 2px #FFFFFF !important;
   backdrop-filter: blur(40px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
 }
@@ -6831,27 +6834,73 @@ body.light .btn-hero-ghost:hover {
   to { transform: rotate(360deg); }
 }
 
-.dashboard-quick-actions {
+/* ==================== Barra Executiva de Ações Rápidas & Pulse 4K ==================== */
+.hero-pulse-ribbon {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 20px;
-  padding: 10px 14px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(16, 16, 16, 0.88) 0%, rgba(8, 8, 8, 0.94) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  margin-top: 14px;
 }
-.quick-act-btn {
+.pulse-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  font-size: 11.5px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+.pulse-chip:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(56, 189, 248, 0.35) !important;
+}
+.pulse-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pulse-chip-dot.green { background: #10B981; box-shadow: 0 0 8px #10B981; }
+.pulse-chip-dot.amber { background: #F59E0B; box-shadow: 0 0 8px #F59E0B; }
+.pulse-chip-dot.red { background: #EF4444; box-shadow: 0 0 8px #EF4444; }
+.pulse-chip-dot.cyan { background: #06B6D4; box-shadow: 0 0 8px #06B6D4; }
+.pulse-chip-label { color: #94A3B8; font-weight: 600; }
+.pulse-chip-val { font-weight: 800; }
+
+body.light .pulse-chip {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+}
+body.light .pulse-chip-label { color: #000000 !important; }
+
+/* Barra de Ações Rápidas 4K */
+.dashboard-quick-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+  padding: 10px 14px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(16, 16, 16, 0.90) 0%, rgba(8, 8, 8, 0.96) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+.dash-quick-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  border-radius: 11px;
-  font-size: 12px;
+  border-radius: 12px;
+  font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
   border: 1px solid transparent;
@@ -6859,7 +6908,7 @@ body.light .btn-hero-ghost:hover {
   white-space: nowrap;
   user-select: none;
 }
-.quick-act-btn .quick-act-icon {
+.dash-quick-btn .q-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -6867,56 +6916,80 @@ body.light .btn-hero-ghost:hover {
   height: 22px;
   border-radius: 7px;
 }
-.quick-act-income {
+.dash-quick-btn.q-income {
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.08));
   border-color: rgba(16, 185, 129, 0.35);
   color: #34D399;
 }
-.quick-act-income:hover {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.18));
+.dash-quick-btn.q-income:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.32), rgba(5, 150, 105, 0.18));
   border-color: #10B981;
   color: #6EE7B7;
-  transform: translateY(-1.5px);
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
 }
-.quick-act-expense {
-  background: linear-gradient(135deg, rgba(244, 63, 94, 0.18), rgba(225, 29, 72, 0.08));
-  border-color: rgba(244, 63, 94, 0.35);
-  color: #FB7185;
+.dash-quick-btn.q-expense {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(220, 38, 38, 0.08));
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #F87171;
 }
-.quick-act-expense:hover {
-  background: linear-gradient(135deg, rgba(244, 63, 94, 0.3), rgba(225, 29, 72, 0.18));
-  border-color: #F43F5E;
+.dash-quick-btn.q-expense:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.32), rgba(220, 38, 38, 0.18));
+  border-color: #EF4444;
   color: #FDA4AF;
-  transform: translateY(-1.5px);
-  box-shadow: 0 4px 16px rgba(244, 63, 94, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
 }
-.quick-act-neutral {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.10);
-  color: #E2E8F0;
-}
-.quick-act-neutral:hover {
-  background: rgba(255, 255, 255, 0.10);
-  border-color: rgba(56, 189, 248, 0.4);
+.dash-quick-btn.q-transfer {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(14, 165, 233, 0.08));
+  border-color: rgba(6, 182, 212, 0.35);
   color: #38BDF8;
-  transform: translateY(-1.5px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 }
-.quick-act-sync {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(14, 165, 233, 0.06));
-  border-color: rgba(56, 189, 248, 0.3);
-  color: #38BDF8;
+.dash-quick-btn.q-transfer:hover {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.32), rgba(14, 165, 233, 0.18));
+  border-color: #06B6D4;
+  color: #7DD3FC;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
+}
+.dash-quick-btn.q-report {
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.18), rgba(99, 102, 241, 0.08));
+  border-color: rgba(129, 140, 248, 0.35);
+  color: #A5B4FC;
+}
+.dash-quick-btn.q-report:hover {
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.32), rgba(99, 102, 241, 0.18));
+  border-color: #818CF8;
+  color: #C7D2FE;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(129, 140, 248, 0.35);
+}
+.dash-quick-btn.q-cards {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.08));
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
   margin-left: auto;
 }
-.quick-act-sync:hover {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.28), rgba(14, 165, 233, 0.15));
-  border-color: #38BDF8;
-  color: #7DD3FC;
-  transform: translateY(-1.5px);
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.25);
+.dash-quick-btn.q-cards:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.32), rgba(217, 119, 6, 0.18));
+  border-color: #F59E0B;
+  color: #FDE68A;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
 }
 
+body.light .dashboard-quick-actions-bar {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
+}
+body.light .dash-quick-btn.q-income { background: #ECFDF5 !important; border-color: #A7F3D0 !important; color: #065F46 !important; }
+body.light .dash-quick-btn.q-expense { background: #FEF2F2 !important; border-color: #FECACA !important; color: #991B1B !important; }
+body.light .dash-quick-btn.q-transfer { background: #F0F9FF !important; border-color: #BAE6FD !important; color: #075985 !important; }
+body.light .dash-quick-btn.q-report { background: #EEF2FF !important; border-color: #C7D2FE !important; color: #3730A3 !important; }
+body.light .dash-quick-btn.q-cards { background: #FFFBEB !important; border-color: #FDE68A !important; color: #92400E !important; }
+
+/* Grid de 6 KPIs 4K */
 .kpis-grid-6 {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -6933,8 +7006,32 @@ body.light .btn-hero-ghost:hover {
   .kpis-grid-6 { grid-template-columns: 1fr; }
 }
 
+.kpi.kpi-balance { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(6, 182, 212, 0.08) !important; }
+.kpi.kpi-income { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(16, 185, 129, 0.08) !important; }
+.kpi.kpi-expense { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(244, 63, 94, 0.08) !important; }
+.kpi.kpi-net { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(59, 130, 246, 0.08) !important; }
+.kpi.kpi-card { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(245, 158, 11, 0.08) !important; }
+.kpi.kpi-bills { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(236, 72, 153, 0.08) !important; }
+
 .kpi.kpi-card::before { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
 .kpi.kpi-bills::before { background: linear-gradient(90deg, #EC4899, #F43F5E); }
+
+.kpi-mini-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 6px 0 10px;
+}
+.kpi-mini-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.light .kpi-mini-bar {
+  background: rgba(0, 0, 0, 0.06);
+}
 
 .dashboard-main-grid {
   display: grid;
@@ -6998,11 +7095,14 @@ body.light .btn-hero-ghost:hover {
 
 .dash-chart-metrics {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+@media (max-width: 960px) {
+  .dash-chart-metrics { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 600px) {
   .dash-chart-metrics { grid-template-columns: repeat(2, 1fr); }
@@ -8631,8 +8731,15 @@ body.light .login-success-box.warning-box p {
   .topheader-row { max-width: 100% !important; padding: 0 36px !important; height: 68px !important; }
   .main { max-width: 2400px !important; padding: 16px 36px 40px !important; margin-top: 76px !important; margin-left: 98px !important; width: calc(100% - 98px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
-  .kpi .val { font-size: 26px !important; }
-  .kpi .sub { font-size: 12.5px !important; }
+  .kpis-grid-6 { grid-template-columns: repeat(6, 1fr) !important; gap: 20px !important; margin-bottom: 26px !important; }
+  .kpi .val { font-size: 28px !important; }
+  .kpi .sub { font-size: 13px !important; }
+  .dashboard-main-grid { gap: 26px !important; margin-bottom: 28px !important; }
+  .dash-card { padding: 26px 28px !important; border-radius: 24px !important; }
+  .dashboard-welcome-hero { padding: 32px 36px !important; border-radius: 24px !important; }
+  .hero-greeting { font-size: 26px !important; }
+  .dashboard-quick-actions-bar { padding: 14px 22px !important; border-radius: 18px !important; gap: 12px !important; }
+  .dash-quick-btn { padding: 10px 20px !important; font-size: 13.5px !important; border-radius: 13px !important; }
   .table-panel { padding: 26px !important; border-radius: 22px !important; }
   th { font-size: 11.5px !important; letter-spacing: .07em !important; }
   td { font-size: 13.5px !important; padding: 15px 14px !important; }
@@ -14781,6 +14888,7 @@ function pageDashboard(){
   const daysInMonthTotal = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   const daysRemaining = Math.max(0, daysInMonthTotal - daysInPeriod);
   const dailyAvg = despesas > 0 ? (despesas / daysInPeriod) : 0;
+  const runwayDays = (dailyAvg > 0 && saldo > 0) ? Math.min(999, Math.round(saldo / dailyAvg)) : (saldo > 0 ? 180 : 0);
   const cardSummary = computeCardSummary();
   const pendingSummary = getPendingBillsSummary();
 
@@ -15077,6 +15185,28 @@ function pageDashboard(){
         <p class="hero-sub">
           Painel Executivo 4K & Gestão Financeira Estratégica
         </p>
+        <div class="hero-pulse-ribbon">
+          <div class="pulse-chip" title="Eficiência de retenção orçamentária do período">
+            <span class="pulse-chip-dot \${savingsPct >= 20 ? 'green' : savingsPct > 0 ? 'amber' : 'red'}"></span>
+            <span class="pulse-chip-label">Retenção:</span>
+            <span class="pulse-chip-val" style="color:\${savingsPct >= 20 ? '#34D399' : savingsPct > 0 ? '#FBBF24' : '#F87171'};">\${savingsPct}%</span>
+          </div>
+          <div class="pulse-chip" title="Estimativa de dias de autonomia financeira em caixa">
+            <span class="pulse-chip-dot \${runwayDays >= 60 ? 'cyan' : runwayDays >= 30 ? 'green' : 'amber'}"></span>
+            <span class="pulse-chip-label">Fôlego de Caixa:</span>
+            <span class="pulse-chip-val" style="color:\${runwayDays >= 60 ? '#38BDF8' : runwayDays >= 30 ? '#34D399' : '#FBBF24'};">\${runwayDays > 0 ? runwayDays + ' dias' : 'Alerta'}</span>
+          </div>
+          <div class="pulse-chip" title="Comprometimento da receita com despesas">
+            <span class="pulse-chip-dot \${commitPct <= 60 ? 'green' : commitPct <= 80 ? 'amber' : 'red'}"></span>
+            <span class="pulse-chip-label">Comprometimento:</span>
+            <span class="pulse-chip-val" style="color:\${commitPct <= 60 ? '#34D399' : commitPct <= 80 ? '#FBBF24' : '#F87171'};">\${commitPct}%</span>
+          </div>
+          <div class="pulse-chip" title="Banco de dados Microsoft SQL Server conectado e sincronizado em tempo real">
+            <span class="pulse-chip-dot green"></span>
+            <span class="pulse-chip-label">MSSQL & Render:</span>
+            <span class="pulse-chip-val" style="color:#34D399;">Ativo 4K</span>
+          </div>
+        </div>
       </div>
 
       <div class="hero-actions">
@@ -15099,6 +15229,40 @@ function pageDashboard(){
     </div>
   </div>
 
+  <!-- EXECUTIVE 4K QUICK ACTIONS COMMAND BAR -->
+  <div class="dashboard-quick-actions-bar">
+    <button type="button" class="dash-quick-btn q-income" onclick="openModal(null, 'in')" title="Lançar Nova Receita Imediata">
+      <span class="q-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </span>
+      <span>+ Nova Receita</span>
+    </button>
+    <button type="button" class="dash-quick-btn q-expense" onclick="openModal(null, 'out')" title="Lançar Nova Despesa Imediata">
+      <span class="q-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+      </span>
+      <span>- Nova Despesa</span>
+    </button>
+    <button type="button" class="dash-quick-btn q-transfer" onclick="navigate('transacoes')" title="Transferências e Movimentações Financeiras">
+      <span class="q-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      </span>
+      <span>⚡ Transferência / PIX</span>
+    </button>
+    <button type="button" class="dash-quick-btn q-report" onclick="navigate('relatorios')" title="Relatórios Financeiros Executivos">
+      <span class="q-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </span>
+      <span>📊 Relatório 4K</span>
+    </button>
+    <button type="button" class="dash-quick-btn q-cards" onclick="navigate('cartoes')" title="Gestão de Cartões de Crédito e Limites">
+      <span class="q-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg>
+      </span>
+      <span>💳 Cartões & Limites</span>
+    </button>
+  </div>
+
   <!-- EXECUTIVE 6-CARD KPI BENTO GRID -->
   <div class="kpis-grid-6">
     <!-- 1. Saldo Geral -->
@@ -15115,6 +15279,9 @@ function pageDashboard(){
         </span>
       </div>
       <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#34D399'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
+      <div class="kpi-mini-bar">
+        <div class="kpi-mini-fill" style="width:\${saldo > 0 ? (savingsPct > 0 ? Math.max(25, savingsPct) : 70) : 10}%; background:linear-gradient(90deg, #06B6D4, #34D399);"></div>
+      </div>
       <div class="sub">
         <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${saldo < 0 ? '#F87171' : '#34D399'};">
           <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
@@ -15133,6 +15300,9 @@ function pageDashboard(){
         </span>
       </div>
       <div class="val" data-anim-val="\${receitas}" style="color:#34D399; font-variant-numeric:tabular-nums;">\${fmt(receitas)}</div>
+      <div class="kpi-mini-bar">
+        <div class="kpi-mini-fill" style="width:\${recPct}%; background:linear-gradient(90deg, #10B981, #34D399);"></div>
+      </div>
       <div class="sub">
         <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
           <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
@@ -15151,6 +15321,9 @@ function pageDashboard(){
         </span>
       </div>
       <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
+      <div class="kpi-mini-bar">
+        <div class="kpi-mini-fill" style="width:\${commitPct}%; background:linear-gradient(90deg, #EF4444, #F43F5E);"></div>
+      </div>
       <div class="sub">
         <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
           <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#EF4444;"></span>
@@ -15169,6 +15342,9 @@ function pageDashboard(){
         </span>
       </div>
       <div class="val" data-anim-val="\${resultado}" style="color:\${resultado >= 0 ? '#34D399' : '#F87171'}; font-variant-numeric:tabular-nums;">\${resultado >= 0 ? '+' : ''}\${fmt(resultado)}</div>
+      <div class="kpi-mini-bar">
+        <div class="kpi-mini-fill" style="width:\${Math.max(10, Math.min(100, savingsPct > 0 ? savingsPct : 50))}%; background:linear-gradient(90deg, #3B82F6, #60A5FA);"></div>
+      </div>
       <div class="sub">
         <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${resultado >= 0 ? '#34D399' : '#F87171'};">
           <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
@@ -15187,6 +15363,9 @@ function pageDashboard(){
         </span>
       </div>
       <div class="val" data-anim-val="\${cardSummary.spentTotalGeral}" style="color:\${cardSummary.spentTotalGeral > 0 ? '#FBBF24' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${fmt(cardSummary.spentTotalGeral)}</div>
+      <div class="kpi-mini-bar">
+        <div class="kpi-mini-fill" style="width:\${Math.max(5, Math.min(100, cardSummary.usagePctGeral))}%; background:linear-gradient(90deg, #F59E0B, #FBBF24);"></div>
+      </div>
       <div class="sub">
         <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
           <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#F59E0B;"></span>
@@ -15205,6 +15384,9 @@ function pageDashboard(){
         </span>
       </div>
       <div class="val" data-anim-val="\${pendingSummary.totalValue}" style="color:\${pendingSummary.totalValue > 0 ? '#F472B6' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${fmt(pendingSummary.totalValue)}</div>
+      <div class="kpi-mini-bar">
+        <div class="kpi-mini-fill" style="width:\${pendingSummary.overdueCount > 0 ? 100 : Math.min(100, pendingSummary.items.length * 25)}%; background:linear-gradient(90deg, #EC4899, #F43F5E);"></div>
+      </div>
       <div class="sub">
         <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
           <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#EC4899;"></span>
@@ -15275,6 +15457,10 @@ function pageDashboard(){
           <div class="dash-metric-item">
             <span class="dash-metric-label">Projeção Fim do Mês</span>
             <span class="dash-metric-val" style="color:#60A5FA;">\${fmt(projectedMonthEnd)}</span>
+          </div>
+          <div class="dash-metric-item">
+            <span class="dash-metric-label">Retenção Líquida</span>
+            <span class="dash-metric-val" style="color:\${resultado >= 0 ? '#34D399' : '#F87171'};">\${savingsPct}%</span>
           </div>
         </div>
       </div>
@@ -19674,7 +19860,7 @@ function updateAccBalanceLabel() {
 }
 
 /* ==================== Modais e Ações de Dados ==================== */
-function openModal(id){
+function openModal(id, initialType){
   if(categories.length===0){ showToast('Cadastre uma categoria antes de lançar uma transação'); return; }
   editingId = id || null;
   document.getElementById('overlay').classList.add('show');
@@ -19690,7 +19876,8 @@ function openModal(id){
     document.getElementById('fStatus').value = t.status;
     if(t.acc) selectedAcc = t.acc;
   } else {
-    document.getElementById('modalTitle').textContent = 'Nova Transação';
+    const tType = (initialType === 'in' || initialType === 'out') ? initialType : 'out';
+    document.getElementById('modalTitle').textContent = tType === 'in' ? 'Nova Receita' : 'Nova Despesa';
     document.getElementById('fDesc').value = '';
     document.getElementById('fValor').value = '';
     
@@ -19698,7 +19885,7 @@ function openModal(id){
     const defaultDate = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
     document.getElementById('fData').value = defaultDate;
     document.getElementById('fStatus').value = 'Pago';
-    setType('out');
+    setType(tType);
   }
   populateAccountOptions(selectedAcc);
   const fContaEl = document.getElementById('fConta');
@@ -22738,7 +22925,7 @@ window.applyPostLoginBg = function(theme) {
     }
 
     function resize() {
-      dpr = isTouch ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+      dpr = isTouch ? 1 : Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = Math.floor(width * dpr);
