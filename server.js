@@ -1598,71 +1598,93 @@ html.is-admin #mobileDrawerMenu button[data-page="config"] {
   display: none !important;
 }
 
-/* ==================== Layout Executivo e Posicionamento Perfeito do Menu Administrador (Zero Cortes) ==================== */
+/* ==================== Layout Executivo e Posicionamento Perfeito do Menu Administrador (Horizontal e Alinhado) ==================== */
 html.is-admin nav.menu {
-  padding: 0 20px !important;
-  gap: 6px !important;
+  padding: 0 !important;
+}
+
+html.is-admin .menu-track {
+  display: flex !important;
+  align-items: center !important;
   justify-content: center !important;
+  gap: 6px !important;
 }
 
 html.is-admin .menu-admin-badge {
-  margin: 0 auto 6px !important;
-  padding: 2px 8px !important;
-  font-size: 8.5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  height: 24px !important;
+  padding: 0 8px !important;
+  font-size: 9.5px !important;
   font-weight: 800 !important;
   letter-spacing: 0.08em !important;
-  border-radius: 999px !important;
+  border-radius: 6px !important;
   box-shadow: none !important;
+  margin: 0 4px !important;
 }
 
 html.is-admin .menu button.menu-btn-admin {
   position: relative !important;
-  width: 64px !important;
-  height: 48px !important;
-  min-height: 48px !important;
-  max-height: 48px !important;
-  padding: 4px 2px !important;
-  gap: 3px !important;
+  width: auto !important;
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  padding: 0 13px !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  font-size: 12.5px !important;
+  font-weight: 550 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
 }
 
 html.is-admin .menu button.menu-btn-admin .ic {
-  width: 22px !important;
-  height: 22px !important;
-  margin-bottom: 0 !important;
-}
-
-html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
-  font-size: 10px !important;
-  font-weight: 500 !important;
-  line-height: 1.15 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  display: block !important;
-}
-
-/* Badge Flutuante de Notificação no Canto Superior Direito (Zero sobreposição no texto) */
-html.is-admin #menuOrdensBtn #osBadgeCount {
-  position: absolute !important;
-  top: 4px !important;
-  right: 6px !important;
+  width: 17px !important;
+  height: 17px !important;
   margin: 0 !important;
-  padding: 0 6px !important;
-  min-width: 18px !important;
-  height: 18px !important;
-  line-height: 18px !important;
-  border-radius: 999px !important;
-  font-size: 10px !important;
-  font-weight: 900 !important;
-  background: #EF4444 !important;
-  color: #FFFFFF !important;
-  border: 1.5px solid #060B18 !important;
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.9) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  z-index: 5 !important;
+}
+
+html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
+  font-size: 12.5px !important;
+  font-weight: 550 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  display: inline-block !important;
+}
+
+/* Badge de Notificação de O.S. Inline Perfeitamente Alinhado */
+html.is-admin #menuOrdensBtn #osBadgeCount,
+.menu #osBadgeCount {
+  position: static !important;
+  margin: 0 0 0 4px !important;
+  padding: 0 6px !important;
+  min-width: 17px !important;
+  height: 17px !important;
+  line-height: 17px !important;
+  border-radius: 999px !important;
+  font-size: 9.5px !important;
+  font-weight: 900 !important;
+  background: #EF4444 !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.7) !important;
+  align-items: center !important;
+  justify-content: center !important;
   pointer-events: none !important;
+  vertical-align: middle !important;
+}
+
+html.is-admin #menuOrdensBtn #osBadgeCount:not([style*="display: none"]):not([style*="display:none"]),
+.menu #osBadgeCount:not([style*="display: none"]):not([style*="display:none"]) {
+  display: inline-flex !important;
 }
 
 body.light html.is-admin #menuOrdensBtn #osBadgeCount,
@@ -3949,7 +3971,7 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Barra de Menu Horizontal no Topo ==================== */
+/* ==================== Barra de Menu Horizontal no Topo (Design Executivo Alinhado) ==================== */
 nav.menu {
   position: fixed !important;
   top: 68px !important;
@@ -3958,31 +3980,57 @@ nav.menu {
   bottom: auto !important;
   width: 100% !important;
   max-width: 100% !important;
-  height: 52px !important;
-  min-height: 52px !important;
+  height: 50px !important;
+  min-height: 50px !important;
   margin: 0 !important;
-  padding: 0 20px !important;
+  padding: 0 !important;
   display: flex !important;
-  flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px !important;
-  background: #090E17 !important;
-  border-bottom: 1px solid #1E293B !important;
+  background: rgba(8, 12, 22, 0.95) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(24px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  z-index: 9990 !important;
+}
+
+.menu-track {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  width: 100% !important;
+  max-width: 1760px !important;
+  height: 100% !important;
+  padding: 0 20px !important;
+  margin: 0 auto !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   scrollbar-width: none !important;
-  z-index: 9990 !important;
+  -ms-overflow-style: none !important;
 }
+.menu-track::-webkit-scrollbar,
 nav.menu::-webkit-scrollbar {
   display: none !important;
+}
+
+@media (min-width: 2560px) {
+  .menu-track {
+    max-width: 2400px !important;
+    gap: 8px !important;
+    padding: 0 28px !important;
+  }
+}
+
+@media (max-width: 1350px) {
+  .menu-track {
+    justify-content: flex-start !important;
+  }
 }
 
 .menu button {
@@ -3992,22 +4040,22 @@ nav.menu::-webkit-scrollbar {
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  gap: 7px !important;
+  gap: 6.5px !important;
   width: auto !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  max-height: 38px !important;
-  padding: 0 13px !important;
-  border-radius: 10px !important;
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  padding: 0 12px !important;
+  border-radius: 8px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
   font-size: 12.5px !important;
-  font-weight: 600 !important;
+  font-weight: 550 !important;
   letter-spacing: -0.01em !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  transition: all 0.18s ease !important;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select: none !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
@@ -4015,30 +4063,32 @@ nav.menu::-webkit-scrollbar {
 
 .menu button:hover {
   background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
   color: #FFFFFF !important;
-  border-color: transparent !important;
+  transform: translateY(-0.5px) !important;
 }
 
 .menu button.active {
-  background: rgba(14, 165, 233, 0.14) !important;
-  border: 1px solid rgba(56, 189, 248, 0.4) !important;
-  border-radius: 10px !important;
+  background: linear-gradient(180deg, rgba(14, 165, 233, 0.16) 0%, rgba(14, 165, 233, 0.08) 100%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.40) !important;
+  border-radius: 8px !important;
   color: #38BDF8 !important;
-  font-weight: 700 !important;
+  font-weight: 650 !important;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
 .menu button.active::before {
   content: '' !important;
   position: absolute !important;
-  bottom: 0 !important;
-  left: 15% !important;
-  right: 15% !important;
+  bottom: -1px !important;
+  left: 10px !important;
+  right: 10px !important;
   top: auto !important;
-  width: 70% !important;
-  height: 3px !important;
-  border-radius: 3px 3px 0 0 !important;
+  width: auto !important;
+  height: 2px !important;
+  border-radius: 2px !important;
   background: #38BDF8 !important;
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.8) !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.9) !important;
   transform: none !important;
 }
 
@@ -4047,35 +4097,40 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button .ic {
-  width: 18px !important;
-  height: 18px !important;
+  width: 17px !important;
+  height: 17px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   color: inherit !important;
   flex-shrink: 0 !important;
+  line-height: 0 !important;
+  margin: 0 !important;
 }
 .menu button .ic svg {
-  width: 16px !important;
-  height: 16px !important;
-  stroke-width: 2.2px !important;
+  width: 15.5px !important;
+  height: 15.5px !important;
+  stroke-width: 2.1px !important;
+  stroke: currentColor !important;
+  display: block !important;
 }
 
 .menu button span:not(.ic) {
   font-size: 12.5px !important;
-  font-weight: 600 !important;
+  font-weight: inherit !important;
   line-height: 1 !important;
   display: inline-block !important;
   white-space: nowrap !important;
   color: inherit !important;
+  vertical-align: middle !important;
 }
 
 .menu-admin-divider {
   width: 1px !important;
-  height: 24px !important;
-  background: rgba(245, 158, 11, 0.4) !important;
+  height: 20px !important;
+  background: rgba(245, 158, 11, 0.3) !important;
   border-radius: 999px !important;
-  margin: 0 5px !important;
+  margin: 0 4px !important;
   flex-shrink: 0 !important;
 }
 
@@ -4083,30 +4138,39 @@ nav.menu::-webkit-scrollbar {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 3px !important;
-  padding: 3px 7px !important;
-  border-radius: 999px !important;
-  background: rgba(245, 158, 11, 0.15) !important;
+  gap: 4px !important;
+  height: 24px !important;
+  padding: 0 8px !important;
+  border-radius: 6px !important;
+  background: rgba(245, 158, 11, 0.14) !important;
   border: 1px solid rgba(245, 158, 11, 0.35) !important;
   color: #FBBF24 !important;
-  font-size: 9px !important;
+  font-size: 9.5px !important;
   font-weight: 800 !important;
   letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
   flex-shrink: 0 !important;
-  margin: 0 3px !important;
+  margin: 0 4px !important;
   user-select: none !important;
   cursor: default !important;
 }
 .menu-admin-badge svg {
-  width: 8px;
-  height: 8px;
-  stroke-width: 2.6px;
+  width: 9px !important;
+  height: 9px !important;
+  stroke-width: 2.6px !important;
 }
 
 .menu button.menu-btn-admin {
   position: relative !important;
+  width: auto !important;
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  padding: 0 12px !important;
+  border-radius: 8px !important;
   color: #CBD5E1 !important;
+  background: rgba(245, 158, 11, 0.04) !important;
+  border: 1px solid rgba(245, 158, 11, 0.16) !important;
 }
 .menu button.menu-btn-admin .ic {
   background: transparent !important;
@@ -4114,10 +4178,10 @@ nav.menu::-webkit-scrollbar {
   color: #FBBF24 !important;
 }
 .menu button.menu-btn-admin:hover {
-  background: rgba(245, 158, 11, 0.10) !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(245, 158, 11, 0.38) !important;
   color: #FDE68A !important;
-  border-color: transparent !important;
-  transform: none !important;
+  transform: translateY(-0.5px) !important;
   box-shadow: none !important;
 }
 .menu button.menu-btn-admin:hover .ic {
@@ -4127,25 +4191,27 @@ nav.menu::-webkit-scrollbar {
   box-shadow: none !important;
 }
 .menu button.menu-btn-admin.active {
-  background: rgba(245, 158, 11, 0.15) !important;
-  border: 1px solid rgba(245, 158, 11, 0.45) !important;
-  border-radius: 10px !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.20) 0%, rgba(245, 158, 11, 0.10) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.5) !important;
+  border-radius: 8px !important;
   color: #FBBF24 !important;
-  font-weight: 600 !important;
-  box-shadow: none !important;
+  font-weight: 650 !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
   transform: none !important;
 }
 .menu button.menu-btn-admin.active::before {
   content: '' !important;
   position: absolute !important;
-  left: 0 !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  width: 3px !important;
-  height: 20px !important;
-  border-radius: 0 4px 4px 0 !important;
+  bottom: -1px !important;
+  left: 10px !important;
+  right: 10px !important;
+  top: auto !important;
+  width: auto !important;
+  height: 2px !important;
+  border-radius: 2px !important;
   background: #F59E0B !important;
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.7) !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.9) !important;
+  transform: none !important;
 }
 .menu button.menu-btn-admin.active .ic {
   color: #FBBF24 !important;
@@ -4156,109 +4222,162 @@ nav.menu::-webkit-scrollbar {
   filter: none !important;
 }
 
-body.light nav.menu{
-  background:#FFFFFF !important;
-  border-right:1px solid #E2E8F0 !important;
-  box-shadow:none !important;
+/* ==================== Modo Claro do Menu ==================== */
+body.light nav.menu,
+html.light nav.menu {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-left: none !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
 }
-body.light .menu-admin-divider {
+body.light .menu-admin-divider,
+html.light .menu-admin-divider {
   background: #E2E8F0 !important;
   box-shadow: none !important;
 }
-body.light .menu-admin-badge {
+body.light .menu-admin-badge,
+html.light .menu-admin-badge {
   background: #FEF3C7 !important;
   border-color: #FDE68A !important;
   color: #B45309 !important;
 }
-body.light .menu button{
-  color: #64748B !important;
-  font-weight: 500 !important;
+body.light .menu button,
+html.light .menu button {
+  color: #475569 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  font-weight: 550 !important;
   opacity: 1 !important;
 }
-body.light .menu button span:not(.ic){
+body.light .menu button span:not(.ic),
+html.light .menu button span:not(.ic) {
   color: inherit !important;
-  font-weight: 500 !important;
+  font-weight: 550 !important;
 }
-body.light .menu button .ic{
+body.light .menu button .ic,
+html.light .menu button .ic {
   background: transparent !important;
   border: none !important;
   color: inherit !important;
 }
-body.light .menu button .ic svg{
+body.light .menu button .ic svg,
+html.light .menu button .ic svg {
   stroke: currentColor !important;
 }
-body.light .menu button:hover{
+body.light .menu button:hover,
+html.light .menu button:hover {
   background: #F1F5F9 !important;
-  border-color: transparent !important;
+  border-color: #E2E8F0 !important;
   color: #0F172A !important;
   box-shadow: none !important;
+  transform: translateY(-0.5px) !important;
 }
-body.light .menu button:hover span:not(.ic){
+body.light .menu button:hover span:not(.ic),
+html.light .menu button:hover span:not(.ic) {
   color: #0F172A !important;
 }
-body.light .menu button:hover .ic{
+body.light .menu button:hover .ic,
+html.light .menu button:hover .ic {
   background: transparent !important;
   border: none !important;
   color: #0284C7 !important;
   box-shadow: none !important;
 }
-body.light .menu button:hover .ic svg{
+body.light .menu button:hover .ic svg,
+html.light .menu button:hover .ic svg {
   stroke: #0284C7 !important;
 }
-body.light .menu button.active{
+body.light .menu button.active,
+html.light .menu button.active {
   background: #EFF6FF !important;
   border: 1px solid #BAE6FD !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   color: #0284C7 !important;
-  font-weight: 600 !important;
-  box-shadow: none !important;
+  font-weight: 650 !important;
+  box-shadow: 0 1px 4px rgba(2, 132, 199, 0.12) !important;
 }
-body.light .menu button.active::before{
+body.light .menu button.active::before,
+html.light .menu button.active::before {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -1px !important;
+  left: 10px !important;
+  right: 10px !important;
+  top: auto !important;
+  width: auto !important;
+  height: 2px !important;
+  border-radius: 2px !important;
   background: #0284C7 !important;
-  box-shadow: none !important;
+  box-shadow: 0 0 6px rgba(2, 132, 199, 0.6) !important;
 }
-body.light .menu button.active span:not(.ic){
+body.light .menu button.active span:not(.ic),
+html.light .menu button.active span:not(.ic) {
   color: #0284C7 !important;
-  font-weight: 600 !important;
+  font-weight: 650 !important;
 }
-body.light .menu button.active .ic{
+body.light .menu button.active .ic,
+html.light .menu button.active .ic {
   background: transparent !important;
   border: none !important;
   color: #0284C7 !important;
   box-shadow: none !important;
   filter: none !important;
 }
-body.light .menu button.active .ic svg{
+body.light .menu button.active .ic svg,
+html.light .menu button.active .ic svg {
   stroke: #0284C7 !important;
 }
-body.light .menu button.menu-btn-admin {
-  color: #64748B !important;
+body.light .menu button.menu-btn-admin,
+html.light .menu button.menu-btn-admin {
+  color: #475569 !important;
+  background: rgba(245, 158, 11, 0.06) !important;
+  border: 1px solid rgba(245, 158, 11, 0.20) !important;
 }
-body.light .menu button.menu-btn-admin .ic {
+body.light .menu button.menu-btn-admin .ic,
+html.light .menu button.menu-btn-admin .ic {
   background: transparent !important;
   border: none !important;
   color: #D97706 !important;
 }
-body.light .menu button.menu-btn-admin:hover {
+body.light .menu button.menu-btn-admin:hover,
+html.light .menu button.menu-btn-admin:hover {
   background: #FFFBEB !important;
+  border-color: #FDE68A !important;
   color: #92400E !important;
-  border-color: transparent !important;
 }
-body.light .menu button.menu-btn-admin:hover .ic {
+body.light .menu button.menu-btn-admin:hover .ic,
+html.light .menu button.menu-btn-admin:hover .ic {
   background: transparent !important;
+  border: none !important;
   color: #B45309 !important;
 }
-body.light .menu button.menu-btn-admin.active {
+body.light .menu button.menu-btn-admin.active,
+html.light .menu button.menu-btn-admin.active {
   background: #FEF3C7 !important;
-  border-color: #FCD34D !important;
+  border: 1px solid #FCD34D !important;
+  border-radius: 8px !important;
   color: #92400E !important;
-  box-shadow: none !important;
+  font-weight: 650 !important;
+  box-shadow: 0 1px 4px rgba(217, 119, 6, 0.12) !important;
 }
-body.light .menu button.menu-btn-admin.active::before {
+body.light .menu button.menu-btn-admin.active::before,
+html.light .menu button.menu-btn-admin.active::before {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -1px !important;
+  left: 10px !important;
+  right: 10px !important;
+  top: auto !important;
+  width: auto !important;
+  height: 2px !important;
+  border-radius: 2px !important;
   background: #D97706 !important;
-  box-shadow: none !important;
+  box-shadow: 0 0 6px rgba(217, 119, 6, 0.6) !important;
 }
-body.light .menu button.menu-btn-admin.active .ic {
+body.light .menu button.menu-btn-admin.active .ic,
+html.light .menu button.menu-btn-admin.active .ic {
   background: transparent !important;
   border: none !important;
   color: #B45309 !important;
@@ -9305,68 +9424,19 @@ body.light #notifBtn:hover {
 
 /* 3. BARRA DE MENU HORIZONTAL NO TOPO */
 nav.menu {
-  background: #090E17 !important;
-  border-bottom: 1px solid #1E293B !important;
+  background: rgba(8, 12, 22, 0.95) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-right: none !important;
   border-top: none !important;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45) !important;
+  border-left: none !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
 }
 
 body.light nav.menu, html.light nav.menu {
-  background: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.97) !important;
   border-bottom: 1px solid #E2E8F0 !important;
   border-right: none !important;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05) !important;
-}
-
-/* Botões da Dock normais, planos e sem relevo ou vidro */
-nav.menu button {
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  border-radius: 10px !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: none !important;
-  transition: all 0.18s ease !important;
-  transform: none !important;
-}
-
-nav.menu button:hover {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: transparent !important;
-  color: #FFFFFF !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-nav.menu button.active {
-  background: rgba(14, 165, 233, 0.12) !important;
-  border: 1px solid rgba(56, 189, 248, 0.35) !important;
-  border-radius: 10px !important;
-  color: #38BDF8 !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-body.light nav.menu button {
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  color: #64748B !important;
-  box-shadow: none !important;
-}
-
-body.light nav.menu button:hover {
-  background: #F1F5F9 !important;
-  border-color: transparent !important;
-  color: #0F172A !important;
-  box-shadow: none !important;
-}
-
-body.light nav.menu button.active {
-  background: #EFF6FF !important;
-  border: 1px solid #BAE6FD !important;
-  color: #0284C7 !important;
-  box-shadow: none !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
 }
 
 /* 4. DASHBOARD WELCOME HERO EM PLACA DE VIDRO PANORÂMICA 4K */
@@ -10200,26 +10270,28 @@ body.light .toast {
     </div>
   </div>
 
-  <!-- MENU DOCK LATERAL VERTICAL ESTILO AETHER -->
+  <!-- BARRA DE MENU HORIZONTAL NO TOPO ESTILO AETHER 4K -->
   <nav class="menu" id="menu">
-    <button data-page="dashboard"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><span>Dashboard</span></button>
-    <button data-page="transacoes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span><span>Transações</span></button>
-    <button data-page="cartoes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span><span>Cartões</span></button>
-    <button data-page="orcamentos"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span><span>Orçamentos</span></button>
-    <button data-page="metas"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span><span>Metas</span></button>
-    <button data-page="relatorios"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span><span>Relatórios</span></button>
-    <button data-page="recorrentes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span><span>Recorrentes</span></button>
-    <button data-page="importar"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Importar</span></button>
-    <button data-page="anexos"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span>Anexos</span></button>
-    <button data-page="config" title="Minha Conta"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Minha Conta</span></button>
-    
-    <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
-    <div class="menu-admin-divider" title="Área de Gestão"></div>
-    <div class="menu-admin-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMIN</span></div>
+    <div class="menu-track" id="menuTrack">
+      <button data-page="dashboard"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><span>Dashboard</span></button>
+      <button data-page="transacoes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span><span>Transações</span></button>
+      <button data-page="cartoes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span><span>Cartões</span></button>
+      <button data-page="orcamentos"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span><span>Orçamentos</span></button>
+      <button data-page="metas"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span><span>Metas</span></button>
+      <button data-page="relatorios"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span><span>Relatórios</span></button>
+      <button data-page="recorrentes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span><span>Recorrentes</span></button>
+      <button data-page="importar"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Importar</span></button>
+      <button data-page="anexos"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span>Anexos</span></button>
+      <button data-page="config" title="Minha Conta"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Minha Conta</span></button>
+      
+      <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
+      <div class="menu-admin-divider" title="Área de Gestão"></div>
+      <div class="menu-admin-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMIN</span></div>
 
-    <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
-    <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="margin-top:2px; padding:1px 6px; border-radius:999px; font-size:9px; font-weight:800; background:rgba(239,68,68,0.25); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4); display:none;"></span></button>
-    <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
+      <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
+      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="display:none;"></span></button>
+      <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
+    </div>
   </nav>
 
   <!-- BARRA INFERIOR MOBILE MODERNA (BOTTOM TAB BAR DE ALTO PADRÃO) -->
