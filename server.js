@@ -583,7 +583,7 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
               'MIME-Version: 1.0',
               'Content-Type: text/html; charset=UTF-8',
               '',
-              '<div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #1f2530; border-radius: 10px; background-color: #0b0e12; color: #e9edf3;">',
+              '<div style="font-family: \'Inter\', \'Plus Jakarta Sans\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #1f2530; border-radius: 10px; background-color: #0b0e12; color: #e9edf3;">',
               '  <h2 style="color: #e8b04b; text-align: center;">Nexus Financeiro Hub</h2>',
               `  <p>Olá, <strong>${userName}</strong>!</p>`,
               '  <p>Você solicitou o envio da sua senha de acesso ao sistema Nexus Financeiro.</p>',
@@ -1438,6 +1438,10 @@ const htmlContent = `<!DOCTYPE html>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#000000" id="metaThemeColor">
+<!-- Tipografia Padrão de Site: Inter e Plus Jakarta Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script>
 (function() {
   try {
@@ -1731,8 +1735,23 @@ body.light, html.light body, html.light {
   --radius:20px;
   --shadow:0 12px 32px -4px rgba(15, 23, 42, 0.06), 0 4px 8px -2px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
-*{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
-html, body{overflow-x:clip !important; width:100%;}
+/* ==================== Tipografia Padrão de Site para Toda a Escrita ==================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+html, body {
+  overflow-x: clip !important;
+  width: 100%;
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+button, input, select, textarea, optgroup, option,
+h1, h2, h3, h4, h5, h6, p, span, a, label, table, th, td, div, small, strong, b, i, em {
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
 
 /* ==================== Camada de Fundo Permanente Zero-Flicker (Hardware Accelerated) ==================== */
 #persistentSystemBg,
@@ -1822,7 +1841,7 @@ html.user-logged-in .persistent-system-bg {
 html.user-logged-in,
 html.user-logged-in body,
 body.user-logged-in {
-  font-family:'Plus Jakarta Sans','Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
   background-color: var(--postlogin-bg) !important;
   background-image: var(--postlogin-gradient) !important;
   color:var(--text); min-height:100vh;
@@ -1840,7 +1859,10 @@ html.user-logged-in #appMain {
   background-image: var(--postlogin-gradient) !important;
 }
 
-button, input, select{font-family:inherit; color:inherit;}
+button, input, select, textarea {
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+  color: inherit;
+}
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
 
 /* ==================== Estabilidade de Renderização para Screenshot & Print ==================== */
@@ -2699,7 +2721,7 @@ body.light .auth-showcase-footer span {
   justify-content: center;
   font-weight: 900;
   font-size: 25px;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Inter', 'Plus Jakarta Sans', sans-serif !important;
   border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
   box-shadow: 
     0 10px 24px -4px rgba(245, 158, 11, 0.55),
@@ -2728,7 +2750,7 @@ body.light .auth-showcase-footer span {
 }
 
 .auth-title {
-  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
   font-size: 22px;
   font-weight: 900;
   color: #FFFFFF;
@@ -10589,7 +10611,7 @@ body.light .toast {
 
       <div class="field" style="margin-bottom:0;">
         <label style="font-size:12px; font-weight:700; color:var(--text-dim);">CPF (Titular)</label>
-        <input id="userAdminCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px; font-family:monospace;">
+        <input id="userAdminCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
       </div>
 
       <div class="field" style="margin-bottom:0;">
@@ -10800,7 +10822,7 @@ body.light .toast {
     
     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap;">
       <div>
-        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11.5px; font-weight:800; font-family:monospace; margin-bottom:6px;">
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11.5px; font-weight:800; margin-bottom:6px;">
           <span id="osAdminProtocolBadge">#OS-000000</span>
         </div>
         <h2 style="font-size:19px; font-weight:900; margin:0;" id="osAdminTitle">Título da Solicitação</h2>
@@ -15044,13 +15066,6 @@ function pageDashboard(){
           <span class="hero-badge hide-mobile">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             <span>\${formattedToday}</span>
-          </span>
-          <span class="hero-badge live-dot">
-            <span class="pulse-dot"></span>
-            <span>Sistema Online • Conectado</span>
-          </span>
-          <span class="hero-badge" style="background:\${healthBadgeBg}; border-color:\${healthBadgeBorder}; color:\${healthColor};">
-            <span>Saúde Financeira: <strong>\${healthScore}% (\${healthStatus})</strong></span>
           </span>
         </div>
         <h1 class="hero-greeting">

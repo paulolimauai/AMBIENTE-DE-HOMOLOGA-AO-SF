@@ -109,10 +109,10 @@
         })();
     </script>
 
-    <!-- Fontes do Google: Outfit, Plus Jakarta Sans, Inter -->
+    <!-- Tipografia Padrão de Site: Inter e Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -122,8 +122,8 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-                        display: ['Outfit', '"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['Inter', '"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+                        display: ['Inter', '"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
                     },
                     colors: {
                         nexus: {
@@ -200,11 +200,18 @@
             color: #000000 !important;
         }
 
-        * {
+        /* ==================== Tipografia Padrão de Site para Toda a Escrita ==================== */
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        }
+
+        html, body, button, input, select, textarea, optgroup, option,
+        h1, h2, h3, h4, h5, h6, p, span, a, label, table, th, td, div, small, strong, b, i, em {
+            font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
         }
 
         html, body {
@@ -214,7 +221,7 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
             background-color: #070B14;
             background-image: 
                 radial-gradient(ellipse at 50% 0%, rgba(30, 58, 138, 0.28) 0%, transparent 65%),
