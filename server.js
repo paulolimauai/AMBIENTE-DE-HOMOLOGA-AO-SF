@@ -1594,16 +1594,15 @@ html.is-admin #mobileDrawerMenu button[data-page="relatorios"],
 html.is-admin #mobileDrawerMenu button[data-page="recorrentes"],
 html.is-admin #mobileDrawerMenu button[data-page="importar"],
 html.is-admin #mobileDrawerMenu button[data-page="anexos"],
-html.is-admin #mobileDrawerMenu button[data-page="config"],
-html.is-admin .aether-settings-btn {
+html.is-admin #mobileDrawerMenu button[data-page="config"] {
   display: none !important;
 }
 
 /* ==================== Layout Executivo e Posicionamento Perfeito do Menu Administrador (Zero Cortes) ==================== */
 html.is-admin nav.menu {
-  padding: 12px 0 16px !important;
-  gap: 4px !important;
-  justify-content: flex-start !important;
+  padding: 0 20px !important;
+  gap: 6px !important;
+  justify-content: center !important;
 }
 
 html.is-admin .menu-admin-badge {
@@ -3950,218 +3949,154 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Dock Lateral de Navegação Vertical (Simples, Elegante e Bem Sinalizado) ==================== */
-nav.menu{
-  position:fixed !important;
-  top:68px !important;
-  left:0 !important;
-  bottom:0 !important;
-  width:78px !important;
-  max-width:78px !important;
-  margin:0 !important;
-  padding:12px 0 16px !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:flex-start !important;
-  gap:5px !important;
-  background:#090E17 !important;
-  border-right:1px solid #1E293B !important;
-  border-top:none !important;
-  border-left:none !important;
-  border-bottom:none !important;
-  border-radius:0 !important;
-  box-shadow:none !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
-  overflow-y:auto !important;
-  overflow-x:hidden !important;
-  scrollbar-width:thin !important;
-  scrollbar-color:#334155 transparent !important;
-  z-index:9999 !important;
+/* ==================== Barra de Menu Horizontal no Topo ==================== */
+nav.menu {
+  position: fixed !important;
+  top: 68px !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  margin: 0 !important;
+  padding: 0 20px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  background: #090E17 !important;
+  border-bottom: 1px solid #1E293B !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-radius: 0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  z-index: 9990 !important;
 }
-nav.menu::-webkit-scrollbar{
-  width:3px !important;
-}
-nav.menu::-webkit-scrollbar-thumb{
-  background:#334155 !important;
-  border-radius:999px !important;
-}
-nav.menu::-webkit-scrollbar-track{
-  background:transparent !important;
+nav.menu::-webkit-scrollbar {
+  display: none !important;
 }
 
-.menu button{
-  position:relative !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
-  text-align:center !important;
-  gap:3px !important;
-  width:66px !important;
-  height:50px !important;
-  min-height:50px !important;
-  max-height:50px !important;
-  padding:4px 2px !important;
-  border-radius:10px !important;
-  background:transparent !important;
-  border:1px solid transparent !important;
-  color:#94A3B8 !important;
-  font-size:10px !important;
-  font-weight:500 !important;
-  letter-spacing:-0.01em !important;
-  white-space:nowrap !important;
-  cursor:pointer !important;
-  transition:all 0.18s ease !important;
-  user-select:none !important;
-  box-sizing:border-box !important;
-  flex-shrink:0 !important;
-}
-.menu button:hover{
-  background:rgba(255, 255, 255, 0.05) !important;
-  color:#FFFFFF !important;
-  border-color:transparent !important;
-  transform:none !important;
-  box-shadow:none !important;
-}
-.menu button.active{
-  background:rgba(14, 165, 233, 0.12) !important;
-  border:1px solid rgba(56, 189, 248, 0.35) !important;
-  border-radius:10px !important;
-  color:#38BDF8 !important;
-  font-weight:600 !important;
-  box-shadow:none !important;
-  transform:none !important;
-}
-.menu button.active::before{
-  content:'' !important;
-  position:absolute !important;
-  left:0 !important;
-  top:50% !important;
-  transform:translateY(-50%) !important;
-  width:3px !important;
-  height:20px !important;
-  border-radius:0 4px 4px 0 !important;
-  background:#38BDF8 !important;
-  box-shadow:0 0 8px rgba(56, 189, 248, 0.6) !important;
-}
-.menu button.active::after{
-  display:none !important;
-}
-.menu button .ic{
-  width:22px !important;
-  height:22px !important;
-  border-radius:6px !important;
-  background:transparent !important;
-  border:none !important;
-  box-shadow:none !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  color:inherit !important;
-  transition:all 0.18s ease !important;
-  flex-shrink:0 !important;
-}
-.menu button .ic svg{
-  width:18px !important;
-  height:18px !important;
-  stroke-width:2px !important;
-}
-.menu button:hover .ic{
-  transform:none !important;
-  color:#FFFFFF !important;
-  background:transparent !important;
-  border:none !important;
-  box-shadow:none !important;
-}
-.menu button.active .ic{
-  color:#38BDF8 !important;
-  transform:none !important;
-  background:transparent !important;
-  border:none !important;
-  box-shadow:none !important;
-  filter:none !important;
-}
-.menu button span:not(.ic){
-  font-size:10px !important;
-  font-weight:500 !important;
-  line-height:1.15 !important;
-  letter-spacing:-0.01em !important;
-  display:block !important;
-  white-space:nowrap !important;
-  text-align:center !important;
-  max-width:100% !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  color:inherit !important;
-  transition:color 0.15s ease !important;
-}
-.menu button:hover span:not(.ic){
-  color:#FFFFFF !important;
-}
-.menu button.active span:not(.ic){
-  color:#38BDF8 !important;
-  font-weight:600 !important;
-  text-shadow:none !important;
+.menu button {
+  position: relative !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 7px !important;
+  width: auto !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 13px !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #94A3B8 !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+  user-select: none !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
 }
 
-/* Ajustes Responsivos Fluidos por Altura de Tela (Monitores, Laptops e Telas Compactas) */
-@media (max-height: 800px) {
-  nav.menu { padding: 8px 0 12px !important; gap: 3px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 64px !important; height: 44px !important; min-height: 44px !important; max-height: 44px !important; padding: 3px 2px !important; gap: 2px !important; border-radius: 8px !important; }
-  .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
-  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
-  .menu button span:not(.ic) { font-size: 9.5px !important; }
-  .menu button.active::before, .menu button.menu-btn-admin.active::before { height: 16px !important; width: 3px !important; }
+.menu button:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #FFFFFF !important;
+  border-color: transparent !important;
 }
 
-@media (max-height: 680px) {
-  nav.menu { padding: 4px 0 8px !important; gap: 2px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 62px !important; height: 38px !important; min-height: 38px !important; max-height: 38px !important; padding: 2px 1px !important; gap: 1px !important; border-radius: 8px !important; }
-  .menu button span:not(.ic) { font-size: 8.5px !important; }
-  .menu button .ic, .menu button.menu-btn-admin .ic { width: 18px !important; height: 18px !important; }
-  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 15px !important; height: 15px !important; }
-  .menu button.active::before, .menu button.menu-btn-admin.active::before { height: 14px !important; }
+.menu button.active {
+  background: rgba(14, 165, 233, 0.14) !important;
+  border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  border-radius: 10px !important;
+  color: #38BDF8 !important;
+  font-weight: 700 !important;
 }
 
-@media (max-height: 560px) {
-  nav.menu { padding: 2px 0 4px !important; gap: 1px !important; }
-  .menu button, .menu button.menu-btn-admin { width: 58px !important; height: 32px !important; min-height: 32px !important; max-height: 32px !important; padding: 2px !important; border-radius: 6px !important; }
-  .menu button span:not(.ic) { display: none !important; }
-  .menu button .ic, .menu button.menu-btn-admin .ic { width: 20px !important; height: 20px !important; }
-  .menu button .ic svg, .menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
-  .menu button.active::before, .menu button.menu-btn-admin.active::before { height: 12px !important; }
+.menu button.active::before {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  top: auto !important;
+  width: 70% !important;
+  height: 3px !important;
+  border-radius: 3px 3px 0 0 !important;
+  background: #38BDF8 !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.8) !important;
+  transform: none !important;
 }
 
-/* ==================== Estilo Executivo Premium do Menu Administrativo ==================== */
+.menu button.active::after {
+  display: none !important;
+}
+
+.menu button .ic {
+  width: 18px !important;
+  height: 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: inherit !important;
+  flex-shrink: 0 !important;
+}
+.menu button .ic svg {
+  width: 16px !important;
+  height: 16px !important;
+  stroke-width: 2.2px !important;
+}
+
+.menu button span:not(.ic) {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+  color: inherit !important;
+}
+
 .menu-admin-divider {
-  width: 40px;
-  height: 1px;
-  margin: 8px auto 6px;
-  background: rgba(245, 158, 11, 0.4);
-  border-radius: 999px;
-  flex-shrink: 0;
+  width: 1px !important;
+  height: 24px !important;
+  background: rgba(245, 158, 11, 0.4) !important;
+  border-radius: 999px !important;
+  margin: 0 5px !important;
+  flex-shrink: 0 !important;
 }
 
 .menu-admin-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  color: #FBBF24;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  flex-shrink: 0;
-  margin: 0 auto 4px;
-  user-select: none;
-  cursor: default;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  padding: 3px 7px !important;
+  border-radius: 999px !important;
+  background: rgba(245, 158, 11, 0.15) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #FBBF24 !important;
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  flex-shrink: 0 !important;
+  margin: 0 3px !important;
+  user-select: none !important;
+  cursor: default !important;
 }
 .menu-admin-badge svg {
   width: 8px;
@@ -5325,8 +5260,8 @@ body.light .dev-signature-name {
 /* Centralização do conteúdo principal */
 .main{
   flex:1 !important; min-width:0 !important; padding:16px 28px 40px !important;
-  margin-top:76px !important; margin-left:98px !important;
-  width:calc(100% - 98px) !important; max-width:1760px !important; margin-right:auto !important;
+  margin-top:132px !important; margin-left:auto !important; margin-right:auto !important;
+  width:100% !important; max-width:1760px !important;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
 .icon-btn{
@@ -6721,6 +6656,8 @@ body.light .rec-progress-bar {
   opacity: 0.92 !important;
 }
 .hero-actions {
+  position: relative;
+  z-index: 1000;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -8728,7 +8665,7 @@ body.light .login-success-box.warning-box p {
   .brand .name { font-size: 20px !important; }
   .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }
   .topheader-row { max-width: 100% !important; padding: 0 36px !important; height: 68px !important; }
-  .main { max-width: 2400px !important; padding: 16px 36px 40px !important; margin-top: 76px !important; margin-left: 98px !important; width: calc(100% - 98px) !important; }
+  .main { max-width: 2400px !important; padding: 16px 36px 40px !important; margin-top: 140px !important; margin-left: auto !important; margin-right: auto !important; width: 100% !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
   .kpis-grid-6 { grid-template-columns: repeat(6, 1fr) !important; gap: 20px !important; margin-bottom: 26px !important; }
   .kpi .val { font-size: 28px !important; }
@@ -8749,7 +8686,7 @@ body.light .login-success-box.warning-box p {
 @media (min-width: 1700px) and (max-width: 2559px) {
   .brand .name { font-size: 18px; }
   .topheader-row { max-width: 100% !important; padding: 0 28px !important; height: 68px !important; }
-  .main { max-width: 1920px !important; padding: 16px 28px 36px !important; margin-top: 76px !important; margin-left: 98px !important; width: calc(100% - 98px) !important; }
+  .main { max-width: 1920px !important; padding: 16px 28px 36px !important; margin-top: 136px !important; margin-left: auto !important; margin-right: auto !important; width: 100% !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; }
 }
 
@@ -8761,9 +8698,9 @@ body.light .login-success-box.warning-box p {
   .kpis { grid-template-columns: repeat(3, 1fr) !important; }
   .grid3 { grid-template-columns: 1fr 1fr !important; }
   .grid-2-1 { grid-template-columns: 1fr !important; }
-  nav.menu { width: 78px !important; }
-  .menu button { width: 68px !important; height: 48px !important; min-height: 48px !important; }
-  .main { margin-left: 88px !important; width: calc(100% - 88px) !important; padding: 16px 18px 36px !important; }
+  nav.menu { width: 100% !important; height: 52px !important; justify-content: flex-start !important; }
+  .menu button { width: auto !important; height: 38px !important; min-height: 38px !important; }
+  .main { margin-left: auto !important; margin-right: auto !important; width: 100% !important; margin-top: 136px !important; padding: 16px 18px 36px !important; }
 }
 
 /* Botão de Sair no Drawer Mobile */
@@ -9366,20 +9303,20 @@ body.light #notifBtn:hover {
   box-shadow: 0 6px 18px rgba(2, 132, 199, 0.18), inset 0 1px 0 #FFFFFF !important;
 }
 
-/* 3. DOCK LATERAL VERTICAL (Menu limpo, plano, sem efeito de vidro) */
+/* 3. BARRA DE MENU HORIZONTAL NO TOPO */
 nav.menu {
   background: #090E17 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-right: 1px solid #1E293B !important;
+  border-bottom: 1px solid #1E293B !important;
+  border-right: none !important;
   border-top: none !important;
-  box-shadow: none !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45) !important;
 }
 
 body.light nav.menu, html.light nav.menu {
   background: #FFFFFF !important;
-  border-right: 1px solid #E2E8F0 !important;
-  box-shadow: none !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+  border-right: none !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05) !important;
 }
 
 /* Botões da Dock normais, planos e sem relevo ou vidro */
@@ -10197,28 +10134,19 @@ body.light .toast {
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         
-        <div class="aether-brand-user" id="userMenu" data-nav="config" title="Minha Conta & Perfil">
-          <div class="aether-avatar-container">
-            <div class="avatar" id="headerAvatar"></div>
-            <span class="aether-avatar-dot"></span>
-          </div>
-          <div class="aether-user-meta">
-            <div class="aether-user-title" id="headerName">Aether</div>
-            <div class="aether-user-sub" id="headerRole">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>Prompt Engine</span>
-            </div>
-          </div>
+        <div class="brand" data-nav="dashboard" style="cursor:pointer;" title="Nexus Financeiro Hub">
+          <div class="logo">⚡</div>
+          <div class="name">NEXUS<span>Financeiro Hub</span></div>
         </div>
       </div>
 
       <div class="aether-header-right">
-        <button type="button" class="aether-settings-btn" data-nav="config" title="Minha Conta">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-          <span>Minha Conta</span>
+        <button type="button" class="aether-settings-btn" id="headerMinhaContaBtn" data-nav="config" title="Minha Conta & Perfil do Usuário">
+          <div class="avatar" id="headerAvatar" style="width:26px; height:26px; font-size:11px; font-weight:800; border-radius:50%; background:linear-gradient(135deg, #0284C7, #0369A1); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">PL</div>
+          <span style="font-weight:700;">Minha Conta:</span>
+          <span class="header-user-name-pill" id="headerName" style="font-weight:800; color:#38BDF8; font-size:13px; max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Usuário</span>
         </button>
+        <span id="headerRole" style="display:none;"></span>
 
         <div class="notif-wrap">
           <div class="icon-btn" id="notifBtn" title="Notificações & Alertas em Tempo Real">
