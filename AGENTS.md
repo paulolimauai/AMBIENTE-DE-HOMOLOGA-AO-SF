@@ -34,3 +34,7 @@
   - `-` Linhas vermelhas para código antigo removido/substituído
   - `+` Linhas verdes para código novo inserido
   - Linhas de contexto para facilitar a leitura imediata
+
+## 5. Atualização Obrigatória do Servidor Local em Tempo Real (localhost:3000)
+- **Sempre Atualizar o Localhost**: Toda vez que qualquer arquivo for modificado (backend `server.js`, frontend, templates, estilos), o agente deve **obrigatoriamente reiniciar/atualizar o processo do servidor na porta 3000** (ex: `Stop-Process -Id (Get-NetTCPConnection -LocalPort 3000 -State Listen).OwningProcess -Force`) para que o `localhost:3000` reflita a versão mais recente imediatamente, sem que o usuário precise reiniciar nada manualmente.
+
