@@ -11288,7 +11288,7 @@ body.light .toast {
     <div class="temp-pass-display-card" style="padding:14px 18px; border-radius:16px; background:rgba(0,0,0,0.4); border:1.5px solid rgba(245,158,11,0.45); display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
       <div style="text-align:left;">
         <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#F59E0B; display:block;">Sua Senha Temporária</span>
-        <span id="tempPasswordValServer" style="font-size:22px; font-weight:900; font-family:monospace; letter-spacing:0.06em; color:#FBBF24; user-select:all;"></span>
+        <span id="tempPasswordValServer" style="font-size:22px; font-weight:900; letter-spacing:0.06em; color:#FBBF24; user-select:all;"></span>
       </div>
       <button type="button" id="btnCopyTempServer" onclick="window.copyTempPasswordToClipboard()" style="padding:8px 14px; border-radius:10px; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
@@ -16816,7 +16816,7 @@ function pageConfig(){
             <span>CPF (Receita Federal)</span>
             <span style="font-size:10.5px; color:#34d399; font-weight:800; text-transform:none;">✓ Autenticado</span>
           </label>
-          <input id="cfgCpf" value="\${formattedCpf}" placeholder="00000000000" maxlength="11" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
+          <input id="cfgCpf" value="\${formattedCpf}" placeholder="00000000000" maxlength="11" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
         </div>
 
         <!-- Data de Nascimento -->
@@ -16834,7 +16834,7 @@ function pageConfig(){
             <span>Celular com DDD (2FA)</span>
             <span style="font-size:10.5px; color:var(--text-dim); text-transform:none;">Segurança</span>
           </label>
-          <input id="cfgPhone" value="\${formattedPhone}" placeholder="(00) 00000-0000" maxlength="15" style="width:100%; height:44px; font-size:13.5px; font-family:monospace; font-weight:700;">
+          <input id="cfgPhone" value="\${formattedPhone}" placeholder="(00) 00000-0000" maxlength="15" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
         </div>
 
         <!-- E-mail Cadastrado -->
@@ -17930,7 +17930,7 @@ window.executarConsultaOrdens = async function(e) {
             <div class="os-consult-card">
               <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">
                 <div style="display:flex; align-items:center; gap:8px;">
-                  <span style="font-weight:900; font-family:monospace; font-size:12.5px; padding:3px 9px; border-radius:6px; background:rgba(59,130,246,0.18); color:#93C5FD; border:1px solid rgba(59,130,246,0.35);">
+                  <span style="font-weight:900; font-size:12.5px; padding:3px 9px; border-radius:6px; background:rgba(59,130,246,0.18); color:#93C5FD; border:1px solid rgba(59,130,246,0.35);">
                     #\${o.protocol || o.id}
                   </span>
                   <span style="font-size:11.5px; color:#94A3B8;">\${dateFormatted}</span>
@@ -18146,7 +18146,7 @@ function renderOrdensTable(list) {
     
     html += '<td style="padding:13px 14px; white-space:nowrap;">';
     html += '<div style="display:inline-flex; align-items:center; gap:5px;">';
-    html += '<span style="font-weight:800; font-family:monospace; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.12); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">#' + protoClean + '</span>';
+    html += '<span style="font-weight:800; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.12); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">#' + protoClean + '</span>';
     html += '<button type="button" onclick="copyProtocolText(&quot;' + protoClean + '&quot;)" style="background:none; border:none; cursor:pointer; font-size:13px; padding:2px; color:var(--text-dim);" title="Copiar Protocolo">📋</button>';
     html += '</div></td>';
 
@@ -18291,7 +18291,7 @@ function pageOrdens(){
         userHtml += '<div style="border:1px solid var(--card-border); border-radius:14px; padding:16px 18px; background:rgba(255,255,255,0.02);">';
         userHtml += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">';
         userHtml += '<div style="display:flex; align-items:center; gap:8px;">';
-        userHtml += '<span style="font-weight:900; font-family:monospace; font-size:13px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.14); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">#' + escapeOsHtml(o.protocol || o.id) + '</span>';
+        userHtml += '<span style="font-weight:900; font-size:13px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.14); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">#' + escapeOsHtml(o.protocol || o.id) + '</span>';
         userHtml += '<span style="font-size:12px; color:var(--text-dim);">' + (o.created_at ? new Date(o.created_at).toLocaleString('pt-BR') : '') + '</span>';
         userHtml += '</div>';
         userHtml += '<div style="display:flex; gap:8px; align-items:center;">';
@@ -18701,10 +18701,10 @@ window.imprimirFichaOrdem = function(id) {
 
   let doc = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Comprovante O.S. #' + (o.protocol || o.id) + '</title>';
   doc += '<style>';
-  doc += 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 13px; margin: 0; }';
+  doc += 'body { font-family: "Inter", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 13px; margin: 0; }';
   doc += '.header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0F172A; padding-bottom: 14px; margin-bottom: 20px; }';
   doc += '.logo { font-size: 20px; font-weight: 900; letter-spacing: -0.02em; }';
-  doc += '.proto-badge { font-size: 16px; font-weight: 900; font-family: monospace; background: #F1F5F9; border: 1.5px solid #0F172A; padding: 6px 14px; border-radius: 8px; }';
+  doc += '.proto-badge { font-size: 16px; font-weight: 900; font-family: "Inter", "Plus Jakarta Sans", sans-serif; background: #F1F5F9; border: 1.5px solid #0F172A; padding: 6px 14px; border-radius: 8px; }';
   doc += '.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }';
   doc += '.card { border: 1px solid #CBD5E1; border-radius: 10px; padding: 12px 14px; background: #F8FAFC; }';
   doc += '.card-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 8px; border-bottom: 1px solid #E2E8F0; padding-bottom: 4px; }';
@@ -18796,7 +18796,7 @@ window.imprimirFilaOrdens = function() {
   let rowsHtml = '';
   list.forEach(o => {
     rowsHtml += '<tr>';
-    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-family:monospace; font-weight:700;">#' + escapeOsHtml(o.protocol || o.id) + '</td>';
+    rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-family:\'Inter\', \'Plus Jakarta Sans\', sans-serif; font-weight:700;">#' + escapeOsHtml(o.protocol || o.id) + '</td>';
     rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0; font-size:11.5px;">' + (o.created_at ? new Date(o.created_at).toLocaleDateString('pt-BR') : '-') + '</td>';
     rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0;"><div style="font-weight:700;">' + escapeOsHtml(o.client_name || 'Anônimo') + '</div><div style="font-size:10.5px; color:#64748B;">' + escapeOsHtml(o.client_phone || o.client_email || '') + '</div></td>';
     rowsHtml += '<td style="padding:8px 10px; border-bottom:1px solid #E2E8F0;"><div style="font-weight:600;">' + escapeOsHtml(o.title || '') + '</div><div style="font-size:10.5px; color:#64748B;">' + escapeOsHtml(o.service_type || '') + '</div></td>';
@@ -18808,7 +18808,7 @@ window.imprimirFilaOrdens = function() {
 
   let doc = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório da Fila de O.S. - Nexus Hub</title>';
   doc += '<style>';
-  doc += 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 12px; margin: 0; }';
+  doc += 'body { font-family: "Inter", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 12px; margin: 0; }';
   doc += '.header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0F172A; padding-bottom: 14px; margin-bottom: 16px; }';
   doc += '.logo { font-size: 18px; font-weight: 900; }';
   doc += '.stats { display: flex; gap: 14px; margin-bottom: 18px; }';

@@ -5104,7 +5104,7 @@
                     ctx.stroke();
 
                     // Rótulo do Mês
-                    ctx.font = '700 9.5px "Outfit", sans-serif';
+                    ctx.font = '700 9.5px "Inter", "Plus Jakarta Sans", sans-serif';
                     ctx.fillStyle = isLight ? '#475569' : '#94A3B8';
                     ctx.textAlign = 'center';
                     ctx.fillText(m.month, cx, cy + 28);
@@ -5188,7 +5188,7 @@
                     }
                     ctx.fill();
 
-                    ctx.font = '800 10px "Outfit", sans-serif';
+                    ctx.font = '800 10px "Inter", "Plus Jakarta Sans", sans-serif';
                     ctx.fillStyle = '#7DD3FC';
                     ctx.fillText('▲', pt.x - 3.5, pt.y - 7);
                     ctx.restore();
@@ -5258,7 +5258,7 @@
 
                     if (it.kind === 0) {
                         // TYPE 0: BADGE DE LUCRO GLASSMORPHIC (Ex: "▲ +18.4%")
-                        ctx.font = '700 11px "Outfit", "Plus Jakarta Sans", sans-serif';
+                        ctx.font = '700 11px "Inter", "Plus Jakarta Sans", sans-serif';
                         const textWidth = ctx.measureText(it.text).width;
                         const padX = 9;
                         const padY = 4;
@@ -5293,7 +5293,7 @@
                         ctx.lineWidth = 1.4;
                         ctx.stroke();
 
-                        ctx.font = '800 11px "Outfit", sans-serif';
+                        ctx.font = '800 11px "Inter", "Plus Jakarta Sans", sans-serif';
                         ctx.fillStyle = it.color;
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
