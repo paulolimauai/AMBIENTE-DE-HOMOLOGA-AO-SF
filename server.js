@@ -6624,10 +6624,9 @@ body.light .rec-progress-bar {
 }
 
 /* ==================== Dashboard Welcome Hero Banner (4K Executive) ==================== */
-/* ==================== Dashboard Welcome Hero Banner (4K Executive) ==================== */
 .dashboard-welcome-hero {
   position: relative;
-  overflow: hidden !important;
+  overflow: visible !important;
   z-index: 20;
   background: linear-gradient(145deg, rgba(16, 16, 16, 0.94) 0%, rgba(6, 6, 6, 0.98) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
@@ -9444,7 +9443,7 @@ body.light nav.menu button.active {
   border-left: 1.5px solid var(--glass-card-border-left) !important;
   border-radius: 26px !important;
   box-shadow: var(--glass-card-shadow) !important;
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 .dashboard-welcome-hero::after {
@@ -15158,8 +15157,7 @@ function pageDashboard(){
   if (bankAccounts.length === 0 && creditCardsList.length === 0) {
     emptyMeiosHtml = '<div style="text-align:center; padding:20px 10px; color:var(--text-dim);">' +
       '<div style="font-size:26px; margin-bottom:6px;">💳</div>' +
-      '<p style="font-size:12px; margin:0;">Nenhum meio de pagamento cadastrado.</p>' +
-      '<button type="button" class="btn-primary" data-nav="cartoes" style="margin-top:10px; padding:6px 14px; font-size:11.5px; border-radius:8px;">Cadastrar Conta</button>' +
+      '<p style="font-size:12px; margin:0;">Nenhum meio de pagamento registrado.</p>' +
     '</div>';
   }
 
@@ -15217,50 +15215,8 @@ function pageDashboard(){
           </span>
           <span id="btnEyeText">Ocultar Saldos</span>
         </button>
-        <button class="btn-hero-primary" id="btnNovaTransacao" onclick="openModal(null)" title="Lançar Nova Transação">
-          <span class="btn-hero-icon-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-          </span>
-          <span>Nova Transação</span>
-        </button>
       </div>
     </div>
-  </div>
-
-  <!-- EXECUTIVE 4K QUICK ACTIONS COMMAND BAR -->
-  <div class="dashboard-quick-actions-bar">
-    <button type="button" class="dash-quick-btn q-income" onclick="openModal(null, 'in')" title="Lançar Nova Receita Imediata">
-      <span class="q-icon">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-      </span>
-      <span>+ Nova Receita</span>
-    </button>
-    <button type="button" class="dash-quick-btn q-expense" onclick="openModal(null, 'out')" title="Lançar Nova Despesa Imediata">
-      <span class="q-icon">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
-      </span>
-      <span>- Nova Despesa</span>
-    </button>
-    <button type="button" class="dash-quick-btn q-transfer" onclick="navigate('transacoes')" title="Transferências e Movimentações Financeiras">
-      <span class="q-icon">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-      </span>
-      <span>⚡ Transferência / PIX</span>
-    </button>
-    <button type="button" class="dash-quick-btn q-report" onclick="navigate('relatorios')" title="Relatórios Financeiros Executivos">
-      <span class="q-icon">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      </span>
-      <span>📊 Relatório 4K</span>
-    </button>
-    <button type="button" class="dash-quick-btn q-cards" onclick="navigate('cartoes')" title="Gestão de Cartões de Crédito e Limites">
-      <span class="q-icon">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg>
-      </span>
-      <span>💳 Cartões & Limites</span>
-    </button>
   </div>
 
   <!-- EXECUTIVE 6-CARD KPI BENTO GRID -->
@@ -15640,8 +15596,7 @@ function pageDashboard(){
         \` : \`
         <div style="text-align:center; padding:24px 12px; color:var(--text-dim);">
           <div style="font-size:32px; margin-bottom:8px;">💳</div>
-          <p style="font-size:12.5px; margin:0 0 10px 0;">Nenhum cartão de crédito cadastrado.</p>
-          <button type="button" class="btn-primary" data-nav="cartoes" style="padding:6px 14px; font-size:11.5px; border-radius:8px;">+ Cadastrar Cartão</button>
+          <p style="font-size:12.5px; margin:0;">Nenhum cartão de crédito registrado.</p>
         </div>
         \`}
       </div>
