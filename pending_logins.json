@@ -182,5 +182,21 @@
     "last_login": "2026-09-17T09:50:24-03:00",
     "timestamp": "2026-09-17T12:50:24.985Z",
     "ack": false
+  },
+  {
+    "id": "40",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-09-17T10:02:08-03:00",
+    "timestamp": "2026-09-17T13:02:08.047Z",
+    "ack": false
+  },
+  {
+    "id": "40",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-09-17T10:16:03-03:00",
+    "timestamp": "2026-09-17T13:16:03.576Z",
+    "ack": false
   }
 ]
