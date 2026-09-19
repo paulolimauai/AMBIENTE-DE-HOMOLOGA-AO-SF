@@ -4117,20 +4117,20 @@ nav.menu {
   bottom: auto !important;
   width: 100% !important;
   max-width: 100% !important;
-  height: 56px !important;
-  min-height: 56px !important;
+  height: 62px !important;
+  min-height: 62px !important;
   margin: 0 !important;
   padding: 0 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(5, 12, 24, 0.85) !important;
-  border-bottom: 1px solid rgba(16, 185, 129, 0.20) !important;
+  background: rgba(5, 12, 24, 0.88) !important;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.22) !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.55), inset 0 -1px 0 rgba(16, 185, 129, 0.12) !important;
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.60), inset 0 -1px 0 rgba(16, 185, 129, 0.14) !important;
   backdrop-filter: blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   z-index: 9990 !important;
@@ -4140,11 +4140,11 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
+  gap: 10px !important;
   width: 100% !important;
   max-width: 1760px !important;
   height: 100% !important;
-  padding: 0 20px !important;
+  padding: 0 22px !important;
   margin: 0 auto !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
@@ -4160,7 +4160,7 @@ nav.menu::-webkit-scrollbar {
 @media (min-width: 2560px) {
   .menu-track {
     max-width: 2400px !important;
-    gap: 12px !important;
+    gap: 14px !important;
     padding: 0 32px !important;
   }
 }
@@ -4178,18 +4178,18 @@ nav.menu::-webkit-scrollbar {
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  gap: 8px !important;
+  gap: 9px !important;
   width: auto !important;
-  height: 40px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
-  padding: 0 15px !important;
-  border-radius: 11px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  padding: 0 18px !important;
+  border-radius: 12px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
-  font-size: 13.5px !important;
-  font-weight: 550 !important;
+  font-size: 14.5px !important;
+  font-weight: 650 !important;
   letter-spacing: -0.01em !important;
   white-space: nowrap !important;
   cursor: pointer !important;
@@ -4253,8 +4253,8 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button .ic {
-  width: 19px !important;
-  height: 19px !important;
+  width: 22px !important;
+  height: 22px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4265,16 +4265,16 @@ nav.menu::-webkit-scrollbar {
   transition: transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s ease !important;
 }
 .menu button .ic svg {
-  width: 17px !important;
-  height: 17px !important;
-  stroke-width: 2.1px !important;
+  width: 19px !important;
+  height: 19px !important;
+  stroke-width: 2.2px !important;
   stroke: currentColor !important;
   display: block !important;
 }
 
 .menu button span:not(.ic) {
-  font-size: 13.5px !important;
-  font-weight: inherit !important;
+  font-size: 14.5px !important;
+  font-weight: 650 !important;
   line-height: 1 !important;
   display: inline-block !important;
   white-space: nowrap !important;
@@ -4321,11 +4321,11 @@ nav.menu::-webkit-scrollbar {
 .menu button.menu-btn-admin {
   position: relative !important;
   width: auto !important;
-  height: 40px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
-  padding: 0 16px !important;
-  border-radius: 11px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  padding: 0 18px !important;
+  border-radius: 12px !important;
   color: #CBD5E1 !important;
   background: rgba(245, 158, 11, 0.05) !important;
   border: 1px solid rgba(245, 158, 11, 0.18) !important;
@@ -5547,7 +5547,7 @@ body.light .app-dev-credit {
 /* Centralização do conteúdo principal */
 .main{
   flex:1 !important; min-width:0 !important; padding:16px 28px 40px !important;
-  margin-top:132px !important; margin-left:auto !important; margin-right:auto !important;
+  margin-top:138px !important; margin-left:auto !important; margin-right:auto !important;
   width:100% !important; max-width:1760px !important;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
@@ -10227,19 +10227,19 @@ body.light nav.menu {
 }
 
 .menu button {
-  height: 38px !important;
-  min-height: 38px !important;
-  padding: 0 14px !important;
-  border-radius: 10px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 18px !important;
+  border-radius: 12px !important;
   border: 1px solid transparent !important;
   background: transparent !important;
   color: var(--text-dim) !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
+  font-size: 14.5px !important;
+  font-weight: 650 !important;
   letter-spacing: -0.01em !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 7px !important;
+  gap: 9px !important;
   white-space: nowrap !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   cursor: pointer !important;
