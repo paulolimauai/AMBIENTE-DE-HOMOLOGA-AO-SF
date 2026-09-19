@@ -314,6 +314,9 @@ function generateSecureToken(user) {
 function sanitizeUser(user) {
   if (!user) return null;
   const { password, ...safeUser } = user;
+  if (!safeUser.name || /^(admin|administrador)$/i.test(String(safeUser.name).trim())) {
+    safeUser.name = 'Paulo Lima';
+  }
   return safeUser;
 }
 
@@ -1149,6 +1152,9 @@ async function setupDatabaseTablesAndSync() {
 
   // 4. Sincronização Estrita: O SQL Server é a FONTE ÚNICA E SOBERANA de usuários
   try {
+    try {
+      await pool.query("UPDATE usuarios SET name = 'Paulo Lima' WHERE LOWER(RTRIM(LTRIM(name))) IN ('admin', 'administrador') OR (LOWER(email) = 'suporte.paulolima@outlook.com' AND LOWER(RTRIM(LTRIM(name))) IN ('admin', 'administrador'))");
+    } catch(autoFixNameErr) {}
     const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
     if (res.rows) {
       saveLocalUsers(res.rows, true);
@@ -3836,7 +3842,9 @@ html.light .aether-credit-pill .credit-val {
   font-weight: 800 !important;
 }
 body.light .aether-settings-btn,
-html.light .aether-settings-btn {
+html.light .aether-settings-btn,
+body.light .header-user-badge,
+html.light .header-user-badge {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
   color: #000000 !important;
@@ -3844,7 +3852,9 @@ html.light .aether-settings-btn {
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 body.light .aether-settings-btn:hover,
-html.light .aether-settings-btn:hover {
+html.light .aether-settings-btn:hover,
+body.light .header-user-badge:hover,
+html.light .header-user-badge:hover {
   background: #F1F5F9 !important;
   border-color: #2563EB !important;
   color: #2563EB !important;
@@ -3857,6 +3867,45 @@ html.light .aether-settings-btn svg {
 body.light .aether-settings-btn:hover svg,
 html.light .aether-settings-btn:hover svg {
   stroke: #2563EB !important;
+}
+.header-user-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 4px 12px 4px 5px !important;
+  border-radius: 999px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.header-user-badge .avatar {
+  width: 26px !important;
+  height: 26px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #0284C7, #0369A1) !important;
+  color: #FFFFFF !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.35) !important;
+}
+.header-user-badge .header-user-name {
+  font-weight: 800 !important;
+  color: #38BDF8 !important;
+  font-size: 13px !important;
+  max-width: 200px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  letter-spacing: -0.01em !important;
+}
+body.light .header-user-badge .header-user-name,
+html.light .header-user-badge .header-user-name {
+  color: #0F172A !important;
 }
 
 .header-live-time {
@@ -9640,6 +9689,7 @@ body.light .topheader, html.light .topheader {
 }
 
 .aether-settings-btn,
+.header-user-badge,
 .icon-btn,
 .scale-selector-wrap #scaleMenuBtn,
 #miniThemeBtn,
@@ -9654,6 +9704,7 @@ body.light .topheader, html.light .topheader {
 }
 
 .aether-settings-btn:hover,
+.header-user-badge:hover,
 .icon-btn:hover,
 .scale-selector-wrap #scaleMenuBtn:hover,
 #miniThemeBtn:hover,
@@ -9673,6 +9724,7 @@ body.light .aether-brand-user {
 }
 
 body.light .aether-settings-btn,
+body.light .header-user-badge,
 body.light .icon-btn,
 body.light .scale-selector-wrap #scaleMenuBtn,
 body.light #miniThemeBtn,
@@ -9685,6 +9737,7 @@ body.light #notifBtn {
 }
 
 body.light .aether-settings-btn:hover,
+body.light .header-user-badge:hover,
 body.light .icon-btn:hover,
 body.light .scale-selector-wrap #scaleMenuBtn:hover,
 body.light #miniThemeBtn:hover,
@@ -10885,10 +10938,16 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       </div>
 
       <div class="aether-header-right">
-        <button type="button" class="aether-settings-btn" id="headerMinhaContaBtn" data-nav="config" title="Minha Conta & Perfil do Usuário">
+        <!-- 1. Cápsula de Identidade do Usuário (Avatar e Nome Separados de Minha Conta) -->
+        <div class="header-user-badge" id="headerUserBadge" data-nav="config" title="Perfil do Usuário Conectado">
           <div class="avatar" id="headerAvatar" style="width:26px; height:26px; font-size:11px; font-weight:800; border-radius:50%; background:linear-gradient(135deg, #0284C7, #0369A1); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">PL</div>
-          <span style="font-weight:700;">Minha Conta:</span>
-          <span class="header-user-name-pill" id="headerName" style="font-weight:800; color:#38BDF8; font-size:13px; max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Usuário</span>
+          <span class="header-user-name" id="headerName" style="font-weight:800; color:#38BDF8; font-size:13px; max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Paulo Lima</span>
+        </div>
+
+        <!-- 2. Botão Independente 'Minha Conta' -->
+        <button type="button" class="aether-settings-btn header-minha-conta-btn" id="headerMinhaContaBtn" data-nav="config" title="Acessar Minha Conta & Configurações">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Minha Conta</span>
         </button>
         <span id="headerRole" style="display:none;"></span>
 
@@ -11013,14 +11072,16 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       var cu = localStorage.getItem('nexus_cached_user');
       if (cu) {
         var u = JSON.parse(cu);
-        if (u && u.name) {
+        if (u) {
+          var cleanName = (u.name || '').trim();
+          if (!cleanName || /^admin(istrador)?$/i.test(cleanName)) {
+            cleanName = 'Paulo Lima';
+          }
           var n = document.getElementById('headerName');
-          var r = document.getElementById('headerRole');
           var a = document.getElementById('headerAvatar');
-          if (n) n.textContent = u.name;
-          if (r) r.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>' + (u.role || 'Usuário') + '</span>';
+          if (n) n.textContent = cleanName;
           if (a) {
-            var p = u.name.trim().split(/\s+/);
+            var p = cleanName.split(/\s+/);
             a.textContent = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
           }
         }
@@ -12514,7 +12575,12 @@ async function syncUsersWithServer() {
     if (res && res.ok) {
       const usersData = await res.json();
       if (Array.isArray(usersData) && usersData.length > 0) {
-        registeredUsers = usersData;
+        registeredUsers = usersData.map(u => {
+          if (u && (!u.name || /^(admin|administrador)$/i.test(String(u.name).trim()))) {
+            u.name = 'Paulo Lima';
+          }
+          return u;
+        });
         saveToStorage('nexus_users', registeredUsers);
         if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
         return;
@@ -12527,7 +12593,12 @@ async function syncUsersWithServer() {
         if (fallbackRes.ok) {
           const usersData = await fallbackRes.json();
           if (Array.isArray(usersData) && usersData.length > 0) {
-            registeredUsers = usersData;
+            registeredUsers = usersData.map(u => {
+              if (u && (!u.name || /^(admin|administrador)$/i.test(String(u.name).trim()))) {
+                u.name = 'Paulo Lima';
+              }
+              return u;
+            });
             saveToStorage('nexus_users', registeredUsers);
             if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
             return;
@@ -12539,11 +12610,16 @@ async function syncUsersWithServer() {
   }
   const cached = loadFromStorage('nexus_users', null);
   if (Array.isArray(cached) && cached.length > 0) {
-    registeredUsers = cached;
+    registeredUsers = cached.map(u => {
+      if (u && (!u.name || /^(admin|administrador)$/i.test(String(u.name).trim()))) {
+        u.name = 'Paulo Lima';
+      }
+      return u;
+    });
   } else {
     registeredUsers = [
-      { id: 3, name: 'Administrador', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
-      { id: 4, name: 'Administrador', email: 'admin@nexusfinanceirohub.com.br', password: '86266049', role: 'Administrador', active: true }
+      { id: 3, name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
+      { id: 4, name: 'Paulo Lima', email: 'admin@nexusfinanceirohub.com.br', password: '86266049', role: 'Administrador', active: true }
     ];
     saveToStorage('nexus_users', registeredUsers);
   }
@@ -15395,21 +15471,28 @@ function updateHeaderUser(){
   const avatarEl = document.getElementById('headerAvatar');
   const roleEl = document.getElementById('headerRole');
 
-  if(unameEl) unameEl.textContent = currentUser.name;
+  let cleanName = (currentUser.name || '').trim();
+  if (!cleanName || /^(admin|administrador)$/i.test(cleanName)) {
+    cleanName = 'Paulo Lima';
+    currentUser.name = cleanName;
+  }
+
+  if(unameEl) unameEl.textContent = cleanName;
   if(roleEl) {
     if (isViewingOtherUser) {
       roleEl.innerHTML = '<span style="color:#FBBF24; font-weight:800;">👁️ Modo Espelho</span>';
+      roleEl.style.display = 'inline-flex';
     } else {
-      const roleText = currentUser.role || 'Usuário';
-      roleEl.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>' + roleText + '</span>';
+      // Em contas normais de usuário e cabeçalho limpo, oculta tag admin
+      roleEl.style.display = 'none';
     }
   }
   if(avatarEl) {
-    const rawParts = currentUser.name.trim().split(/\s+/);
+    const rawParts = cleanName.split(/\s+/);
     let inits = 'PL';
     if (rawParts.length >= 2) {
       inits = (rawParts[0][0] + rawParts[1][0]).toUpperCase();
-    } else if (rawParts.length === 1) {
+    } else if (rawParts.length === 1 && rawParts[0].length >= 2) {
       inits = rawParts[0].slice(0, 2).toUpperCase();
     }
     avatarEl.textContent = inits;
@@ -17695,7 +17778,10 @@ function pageAlertas(){
 
 function pageConfig(){
   const uData = (registeredUsers || []).find(x => x && x.email && currentUser && x.email.toLowerCase() === currentUser.email.toLowerCase()) || currentUser || {};
-  const currentName = uData.name || (currentUser ? currentUser.name : '') || '';
+  let currentName = uData.name || (currentUser ? currentUser.name : '') || '';
+  if (!currentName || /^admin(istrador)?$/i.test(currentName.trim())) {
+    currentName = 'Paulo Lima';
+  }
   const currentEmail = uData.email || (currentUser ? currentUser.email : '') || '';
   const rawCpf = uData.cpf || (currentUser ? currentUser.cpf : '') || '';
   const cleanCpf = rawCpf.replace(/\D/g, '');
@@ -24199,7 +24285,15 @@ function getLocalUsers() {
     }
   }
 
-  return Array.isArray(fileUsers) ? fileUsers : [];
+  const rawList = Array.isArray(fileUsers) ? fileUsers : [];
+  return rawList.map(u => {
+    if (!u) return u;
+    const cleanU = { ...u };
+    if (!cleanU.name || /^(admin|administrador)$/i.test(String(cleanU.name).trim())) {
+      cleanU.name = 'Paulo Lima';
+    }
+    return cleanU;
+  });
 }
 
 function saveLocalUsers(users, overwrite = false) {
@@ -24208,6 +24302,9 @@ function saveLocalUsers(users, overwrite = false) {
     const listToSave = rawList.map(u => {
       if (!u) return u;
       const copy = { ...u };
+      if (!copy.name || /^(admin|administrador)$/i.test(String(copy.name).trim())) {
+        copy.name = 'Paulo Lima';
+      }
       if (copy.last_login) copy.last_login = getBrasiliaIsoString(copy.last_login);
       if (copy.created_at) copy.created_at = getBrasiliaIsoString(copy.created_at);
       return copy;
@@ -24818,6 +24915,10 @@ const server = http.createServer(async (req, res) => {
           } catch(e) {
             console.warn('[AVISO BD] Falha ao atualizar last_login no SQL Server:', e.message);
           }
+        }
+
+        if (!user.name || /^(admin|administrador)$/i.test(String(user.name).trim())) {
+          user.name = 'Paulo Lima';
         }
 
         ensureUserIsConfiguredInDatabase(cleanEmail, user).catch(()=>{});
