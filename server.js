@@ -1813,28 +1813,32 @@ code, pre, kbd, samp, .font-mono {
   z-index: -99999 !important;
   pointer-events: none !important;
   user-select: none !important;
-  background-color: #000000 !important;
+  background-color: #030712 !important;
   background-image: 
-    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.06) 0%, transparent 65%),
-    linear-gradient(175deg, #000000 0%, #030508 45%, #010403 85%, #000000 100%) !important;
+    linear-gradient(135deg, rgba(3, 7, 18, 0.82) 0%, rgba(10, 15, 30, 0.68) 50%, rgba(2, 4, 10, 0.88) 100%),
+    radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+    url('/images/75e57cc01266bfd34f8e2189776828a3.jpg') !important;
   background-size: cover !important;
+  background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
   transform: translateZ(0) !important;
   -webkit-transform: translateZ(0) !important;
 }
 
 body.light #persistentSystemBg,
 body.light .persistent-system-bg {
-  background-color: #F0FDF4 !important;
+  background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(16, 185, 129, 0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.10) 0%, transparent 50%),
-    radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.08) 0%, transparent 60%),
-    linear-gradient(175deg, #F8FCF9 0%, #EFF8F3 45%, #EAF3FB 85%, #F0FDF4 100%) !important;
+    linear-gradient(135deg, rgba(248, 250, 252, 0.90) 0%, rgba(241, 245, 249, 0.82) 50%, rgba(226, 232, 240, 0.92) 100%),
+    radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.10) 0%, transparent 50%),
+    url('/images/75e57cc01266bfd34f8e2189776828a3.jpg') !important;
   background-size: cover !important;
+  background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 
 /* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - 4K High-Tech) ==================== */
@@ -2458,14 +2462,14 @@ body.light .auth-card-glare {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 1180px;
+  max-width: 1220px;
   margin: auto;
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: clamp(20px, 3vw, 44px);
-  align-items: center;
+  grid-template-columns: 1.14fr 0.86fr;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: stretch;
   justify-content: center;
-  padding: clamp(6px, 1.2vh, 16px) 12px;
+  padding: clamp(10px, 2vh, 22px) 16px;
   flex: 1;
 }
 
@@ -2570,11 +2574,36 @@ html.light .auth-support-link:hover {
 }
 
 .auth-showcase-panel {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: clamp(12px, 1.8vh, 20px);
+  gap: clamp(14px, 2vh, 22px);
   text-align: left;
-  justify-content: center;
+  justify-content: space-between;
+  background: linear-gradient(145deg, rgba(20, 28, 48, 0.72) 0%, rgba(10, 16, 30, 0.84) 40%, rgba(5, 8, 17, 0.94) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.42) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 28px;
+  padding: clamp(24px, 3.2vh, 36px) clamp(22px, 2.5vw, 36px);
+  box-shadow: 
+    0 35px 85px -15px rgba(0, 0, 0, 0.85),
+    0 0 45px -10px rgba(56, 189, 248, 0.12),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.30),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(40px) saturate(210%);
+  -webkit-backdrop-filter: blur(40px) saturate(210%);
+  transition: all 0.3s ease;
+}
+
+body.light .auth-showcase-panel {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1.5px solid #CBD5E1 !important;
+  border-top: 2.2px solid #FFFFFF !important;
+  box-shadow: 0 25px 65px -10px rgba(15, 23, 42, 0.10), inset 0 1.5px 2px #FFFFFF !important;
+  backdrop-filter: blur(36px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(180%) !important;
 }
 
 @media (max-width: 1024px), (hover: none) {
@@ -2682,18 +2711,21 @@ html.light .auth-support-link:hover {
 }
 
 .auth-metric-card {
-  padding: clamp(10px, 1.4vh, 14px) 12px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
+  padding: clamp(12px, 1.6vh, 16px) 14px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 28, 48, 0.70) 50%, rgba(9, 14, 26, 0.85) 100%);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(20px);
-  transition: all 0.25s ease;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.40);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 12px 32px -6px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
 .auth-metric-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2.5px);
   border-color: rgba(245, 158, 11, 0.45);
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.6);
+  border-top-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 18px 42px -6px rgba(0, 0, 0, 0.7), 0 0 25px rgba(245, 158, 11, 0.20), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
 }
 
 .metric-card-label {
@@ -10521,7 +10553,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     </div>
   </div>
 
-  <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
+  <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.30;"></canvas>
 
   <!-- Camada de Tela de Vidro Panorâmica (4K Liquid Glass Screen Effect) -->
   <div class="glass-viewport-screen pointer-events-none">
