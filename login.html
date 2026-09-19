@@ -247,33 +247,20 @@
 
         body {
             font-family: var(--font-sans);
-            background-color: #030712;
+            background-color: #050E1A;
             background-image: 
-                linear-gradient(135deg, rgba(3, 7, 18, 0.82) 0%, rgba(10, 15, 30, 0.68) 50%, rgba(2, 4, 10, 0.88) 100%),
-                radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
-                url('/images/75e57cc01266bfd34f8e2189776828a3.jpg') !important;
+                radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
+                radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
+                linear-gradient(175deg, #040812 0%, #061222 45%, #031510 85%, #02090E 100%) !important;
             background-size: cover !important;
-            background-position: center center !important;
+            background-position: center !important;
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
             color: var(--auth-text);
             min-height: 100vh;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        body.light {
-            background-color: #F8FAFC !important;
-            background-image: 
-                linear-gradient(135deg, rgba(248, 250, 252, 0.90) 0%, rgba(241, 245, 249, 0.82) 50%, rgba(226, 232, 240, 0.92) 100%),
-                radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.10) 0%, transparent 50%),
-                url('/images/75e57cc01266bfd34f8e2189776828a3.jpg') !important;
-            background-size: cover !important;
-            background-position: center center !important;
-            background-attachment: fixed !important;
-            background-repeat: no-repeat !important;
         }
 
         /* Fundo Geométrico Sutil em Alta Definição 4K */
@@ -1925,27 +1912,22 @@
             box-shadow: var(--auth-glass-shadow) !important;
         }
 
-        /* Showcase Institucional em Vidro Lapidado 4K */
+        /* Showcase Institucional em Vidro Lapidado */
         .auth-showcase-panel {
-            position: relative !important;
-            background: linear-gradient(145deg, rgba(20, 28, 48, 0.72) 0%, rgba(10, 16, 30, 0.84) 40%, rgba(5, 8, 17, 0.94) 100%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            border-top: 2px solid rgba(255, 255, 255, 0.42) !important;
-            border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(15, 23, 40, 0.72) 45%, rgba(7, 11, 20, 0.88) 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-top: 1.8px solid rgba(255, 255, 255, 0.35) !important;
             border-radius: 28px !important;
-            backdrop-filter: blur(36px) saturate(210%) !important;
-            -webkit-backdrop-filter: blur(36px) saturate(210%) !important;
-            box-shadow: 0 32px 80px -15px rgba(0, 0, 0, 0.85), 0 0 40px -10px rgba(56, 189, 248, 0.12), inset 0 1.5px 2px rgba(255, 255, 255, 0.30), inset 0 -1.5px 2px rgba(0, 0, 0, 0.5) !important;
-            transition: all 0.3s ease !important;
+            backdrop-filter: blur(28px) saturate(200%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+            box-shadow: 0 25px 65px -12px rgba(0, 0, 0, 0.75), inset 0 1px 1.5px rgba(255, 255, 255, 0.25) !important;
         }
 
         body.light .auth-showcase-panel {
-            background: rgba(255, 255, 255, 0.92) !important;
+            background: rgba(255, 255, 255, 0.88) !important;
             border: 1.5px solid #CBD5E1 !important;
-            border-top: 2.2px solid #FFFFFF !important;
-            box-shadow: 0 25px 65px -10px rgba(15, 23, 42, 0.10), inset 0 1.5px 2px #FFFFFF !important;
-            backdrop-filter: blur(30px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+            border-top: 2px solid #FFFFFF !important;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08), inset 0 1px 2px #FFFFFF !important;
         }
 
         /* Metric Cards em Pastilhas de Vidro Translúcidas */
@@ -2388,7 +2370,7 @@
     </header>
 
     <!-- Canvas de Animação Financeira 4K (Símbolos, Métricas & Gráficos Vivos) -->
-    <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-30"></canvas>
+    <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-85"></canvas>
 
     <!-- Camada de Tela de Vidro Panorâmica (4K Liquid Glass Screen Effect) -->
     <div class="glass-viewport-screen pointer-events-none">
@@ -2409,10 +2391,10 @@
 
     <!-- CONTAINER PRINCIPAL EXECUTIVO 2 COLUNAS (FINTECH SHOWCASE + CARD DE AUTENTICAÇÃO) -->
     <main class="w-full max-w-[1240px] z-10 my-1 sm:my-auto py-2 sm:py-6 px-1 sm:px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
             
-            <!-- COLUNA ESQUERDA: SHOWCASE INSTITUCIONAL & MÉTRICAS EM TEMPO REAL (VIDRO 4K ALINHADO) -->
-            <div class="hidden lg:flex lg:col-span-7 flex-col justify-between space-y-6 text-left auth-showcase-panel p-6 sm:p-8 md:p-9 rounded-3xl relative overflow-hidden">
+            <!-- COLUNA ESQUERDA: SHOWCASE INSTITUCIONAL & MÉTRICAS EM TEMPO REAL -->
+            <div class="hidden lg:flex lg:col-span-7 flex-col justify-center space-y-6 text-left">
                 
                 <!-- Badge de Segurança e Foco -->
                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-blue-500/15 to-emerald-500/15 border border-amber-500/35 text-amber-300 text-xs font-black tracking-wide w-fit backdrop-blur-md shadow-[0_4px_18px_rgba(245,158,11,0.20)]">
