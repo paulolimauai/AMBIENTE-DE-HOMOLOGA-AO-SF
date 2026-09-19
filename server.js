@@ -583,7 +583,7 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
               'MIME-Version: 1.0',
               'Content-Type: text/html; charset=UTF-8',
               '',
-              '<div style="font-family: \'Inter\', \'Plus Jakarta Sans\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #1f2530; border-radius: 10px; background-color: #0b0e12; color: #e9edf3;">',
+              '<div style="font-family: \'Inter\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; border: 1px solid #1f2530; border-radius: 10px; background-color: #0b0e12; color: #e9edf3;">',
               '  <h2 style="color: #e8b04b; text-align: center;">Nexus Financeiro Hub</h2>',
               `  <p>Olá, <strong>${userName}</strong>!</p>`,
               '  <p>Você solicitou o envio da sua senha de acesso ao sistema Nexus Financeiro.</p>',
@@ -1438,10 +1438,10 @@ const htmlContent = `<!DOCTYPE html>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#050E1A" id="metaThemeColor">
-<!-- Tipografia Padrão de Site: Inter e Plus Jakarta Sans -->
+<!-- Tipografia Padrão de Site (Standard Web Typography): Inter com Suporte Óptico Completo -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 <script>
 (function() {
   try {
@@ -1758,22 +1758,48 @@ body.light, html.light body, html.light {
   --radius:20px;
   --shadow:0 12px 32px -4px rgba(15, 23, 42, 0.06), 0 4px 8px -2px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
-/* ==================== Tipografia Padrão de Site para Toda a Escrita ==================== */
+/* ==================== Tipografia Padrão de Site (Standard Web Typography) ==================== */
+:root {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
-  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
 }
+
 html, body {
   overflow-x: clip !important;
   width: 100%;
-  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.011em;
 }
-button, input, select, textarea, optgroup, option,
-h1, h2, h3, h4, h5, h6, p, span, a, label, table, th, td, div, small, strong, b, i, em {
-  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+
+button, input, select, textarea, optgroup, option {
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+code, pre, kbd, samp, .font-mono {
+  font-family: var(--font-mono) !important;
+  font-feature-settings: normal;
 }
 
 /* ==================== Camada de Fundo Permanente Zero-Flicker (Hardware Accelerated) ==================== */
@@ -1899,7 +1925,7 @@ html.user-logged-in .persistent-system-bg {
 html.user-logged-in,
 html.user-logged-in body,
 body.user-logged-in {
-  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+  font-family: var(--font-sans);
   background-color: var(--postlogin-bg) !important;
   background-image: var(--postlogin-gradient) !important;
   color:var(--text); min-height:100vh;
@@ -1918,7 +1944,7 @@ html.user-logged-in #appMain {
 }
 
 button, input, select, textarea {
-  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+  font-family: inherit;
   color: inherit;
 }
 code{background:var(--hover); padding:1px 6px; border-radius:5px; font-size:11.5px;}
@@ -2782,7 +2808,7 @@ body.light .auth-showcase-footer span {
   justify-content: center;
   font-weight: 900;
   font-size: 25px;
-  font-family: 'Inter', 'Plus Jakarta Sans', sans-serif !important;
+  font-family: var(--font-sans);
   border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
   box-shadow: 
     0 10px 24px -4px rgba(245, 158, 11, 0.55),
@@ -2811,11 +2837,11 @@ body.light .auth-showcase-footer span {
 }
 
 .auth-title {
-  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+  font-family: var(--font-sans);
   font-size: 22px;
-  font-weight: 900;
+  font-weight: 800;
   color: #FFFFFF;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.01em;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -9921,7 +9947,407 @@ body.light .toast {
   border: 1.5px solid #CBD5E1 !important;
   border-top: 2px solid #FFFFFF !important;
   color: #000000 !important;
-  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.14), inset 0 1px 0 #FFFFFF !important;
+/* ==================== POLIMENTO GLOBAL DA INTERFACE & TIPOGRAFIA PADRÃO DE SITE ==================== */
+/* 1. Tipografia Padrão de Site e Legibilidade Global */
+html, body, button, input, select, textarea, p, span, a, label, div {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Números, saldos, valores monetários em layout tabular de alta precisão */
+.val, .kpi-value, .kpi .val, .amount, .tx-val, .metric-val,
+[data-currency], td.val, .trans-amount {
+  font-family: var(--font-sans) !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
+  font-feature-settings: "tnum" 1, "cv02" 1, "cv03" 1 !important;
+  letter-spacing: -0.02em !important;
+  font-weight: 700 !important;
+}
+
+/* Elementos com identificadores, códigos e protocolos */
+code, pre, kbd, samp, .proto-badge, .badge-mono, .code-pill {
+  font-family: var(--font-mono) !important;
+  font-feature-settings: normal !important;
+  letter-spacing: 0 !important;
+}
+
+/* 2. Cabeçalho Superior (Topheader) de Alto Padrão */
+.topheader {
+  height: 66px !important;
+  background: rgba(6, 10, 18, 0.88) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: background 0.3s ease, border-color 0.3s ease !important;
+}
+
+body.light .topheader {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Marca / Logotipo Nexus */
+.brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.brand .logo-badge, .topheader-brand-logo {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 800 !important;
+  font-size: 16px !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Cápsula de Usuário Conectado */
+.aether-brand-user {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 20px !important;
+  padding: 4px 14px 4px 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+.aether-brand-user:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+body.light .aether-brand-user {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Botões Utilitários do Topo */
+.icon-btn,
+.scale-selector-wrap #scaleMenuBtn,
+#miniThemeBtn,
+#notifBtn,
+#logoutBtn {
+  border-radius: 12px !important;
+  min-height: 38px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.icon-btn:hover,
+.scale-selector-wrap #scaleMenuBtn:hover,
+#miniThemeBtn:hover,
+#notifBtn:hover,
+#logoutBtn:hover {
+  transform: translateY(-1.5px) !important;
+}
+
+/* 3. Navegação Horizontal do Menu (nav.menu) */
+nav.menu {
+  background: rgba(6, 10, 18, 0.94) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  padding: 6px 16px !important;
+}
+
+body.light nav.menu {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+}
+
+.menu-track {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.menu-track::-webkit-scrollbar {
+  display: none !important;
+}
+
+.menu button {
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 14px !important;
+  border-radius: 10px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  color: var(--text-dim) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  white-space: nowrap !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+}
+
+.menu button:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
+}
+
+body.light .menu button:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #000000 !important;
+}
+
+.menu button.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(14, 165, 233, 0.12) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #10B981 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.20) !important;
+}
+
+body.light .menu button.active {
+  background: rgba(5, 150, 105, 0.12) !important;
+  border-color: rgba(5, 150, 105, 0.4) !important;
+  color: #059669 !important;
+}
+
+/* 4. Cards de Métricas e KPIs Financeiros (.kpi) */
+.kpi {
+  border-radius: 18px !important;
+  padding: 20px !important;
+  position: relative !important;
+  background: linear-gradient(145deg, rgba(13, 20, 36, 0.88) 0%, rgba(8, 12, 24, 0.94) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-top: 2.5px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease !important;
+}
+
+.kpi:hover {
+  transform: translateY(-3px) !important;
+  border-color: rgba(56, 189, 248, 0.45) !important;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(56, 189, 248, 0.15) !important;
+}
+
+body.light .kpi {
+  background: #FFFFFF !important;
+  border: 1.5px solid #E2E8F0 !important;
+  border-top: 3px solid #10B981 !important;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.light .kpi:hover {
+  border-color: #0284C7 !important;
+  box-shadow: 0 8px 25px rgba(2, 132, 199, 0.12) !important;
+}
+
+.kpi .ic {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.kpi .val {
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.2 !important;
+  margin: 6px 0 4px !important;
+}
+
+/* 5. Painéis de Conteúdo e Gráficos (.panel, .table-panel) */
+.panel, .table-panel {
+  border-radius: 20px !important;
+  background: linear-gradient(145deg, rgba(12, 18, 32, 0.88) 0%, rgba(7, 11, 22, 0.94) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 14px 40px -10px rgba(0, 0, 0, 0.6) !important;
+  transition: all 0.25s ease !important;
+}
+
+body.light .panel, body.light .table-panel {
+  background: #FFFFFF !important;
+  border: 1.5px solid #E2E8F0 !important;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* 6. Tabelas de Transações e Extrato */
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+table th {
+  padding: 12px 14px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #38BDF8 !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.light table th {
+  color: #0F172A !important;
+  border-bottom: 2px solid #E2E8F0 !important;
+  background: #F8FAFC !important;
+}
+
+table td {
+  padding: 14px 12px !important;
+  font-size: 13.5px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  vertical-align: middle !important;
+}
+
+body.light table td {
+  border-bottom: 1px solid #F1F5F9 !important;
+  color: #000000 !important;
+}
+
+tr.trow:hover td {
+  background: rgba(16, 185, 129, 0.04) !important;
+}
+
+body.light tr.trow:hover td {
+  background: rgba(5, 150, 105, 0.04) !important;
+}
+
+/* 7. Botões e Ações Rápidas (.btn-primary, .btn-ghost, etc.) */
+.btn-primary {
+  border-radius: 12px !important;
+  padding: 10px 18px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35) !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5) !important;
+}
+
+.btn-primary:active {
+  transform: translateY(1px) scale(0.98) !important;
+}
+
+.btn-ghost {
+  border-radius: 12px !important;
+  padding: 9px 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--text) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-1px) !important;
+}
+
+body.light .btn-ghost {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+body.light .btn-ghost:hover {
+  background: #E2E8F0 !important;
+}
+
+/* 8. Formulários e Inputs */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+select, textarea {
+  border-radius: 12px !important;
+  padding: 10px 14px !important;
+  font-size: 13.5px !important;
+  letter-spacing: -0.01em !important;
+  background: rgba(14, 20, 34, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: var(--text) !important;
+  transition: all 0.2s ease !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #10B981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25) !important;
+  outline: none !important;
+}
+
+body.light input, body.light select, body.light textarea {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
+
+body.light input:focus, body.light select:focus, body.light textarea:focus {
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2) !important;
+}
+
+/* 9. Pílulas e Badges de Status (.pill, .cat-pill, .status-pago, etc.) */
+.pill, .cat-pill, .acc-pill, .type-pill, .kpi-tag, .status-pago, .status-recebido, .status-pendente {
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  padding: 4px 10px !important;
+  border-radius: 8px !important;
+  letter-spacing: 0.01em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+/* 10. Modais e Popups (.modal, .modal-box) */
+.modal-box {
+  border-radius: 22px !important;
+  padding: 24px !important;
+  box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.85) !important;
 }
 </style>
 </head>
@@ -18960,10 +19386,10 @@ window.imprimirFichaOrdem = function(id) {
 
   let doc = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Comprovante O.S. #' + (o.protocol || o.id) + '</title>';
   doc += '<style>';
-  doc += 'body { font-family: "Inter", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 13px; margin: 0; }';
+  doc += 'body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 13px; margin: 0; }';
   doc += '.header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0F172A; padding-bottom: 14px; margin-bottom: 20px; }';
-  doc += '.logo { font-size: 20px; font-weight: 900; letter-spacing: -0.02em; }';
-  doc += '.proto-badge { font-size: 16px; font-weight: 900; font-family: "Inter", "Plus Jakarta Sans", sans-serif; background: #F1F5F9; border: 1.5px solid #0F172A; padding: 6px 14px; border-radius: 8px; }';
+  doc += '.logo { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }';
+  doc += '.proto-badge { font-size: 16px; font-weight: 800; font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif; background: #F1F5F9; border: 1.5px solid #0F172A; padding: 6px 14px; border-radius: 8px; }';
   doc += '.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }';
   doc += '.card { border: 1px solid #CBD5E1; border-radius: 10px; padding: 12px 14px; background: #F8FAFC; }';
   doc += '.card-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #475569; margin-bottom: 8px; border-bottom: 1px solid #E2E8F0; padding-bottom: 4px; }';
@@ -19067,7 +19493,7 @@ window.imprimirFilaOrdens = function() {
 
   let doc = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório da Fila de O.S. - Nexus Hub</title>';
   doc += '<style>';
-  doc += 'body { font-family: "Inter", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 12px; margin: 0; }';
+  doc += 'body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 24px; color: #0F172A; background: #FFFFFF; font-size: 12px; margin: 0; }';
   doc += '.header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0F172A; padding-bottom: 14px; margin-bottom: 16px; }';
   doc += '.logo { font-size: 18px; font-weight: 900; }';
   doc += '.stats { display: flex; gap: 14px; margin-bottom: 18px; }';
@@ -23359,7 +23785,7 @@ window.applyPostLoginBg = function(theme) {
 
         // Símbolo central
         ctx.fillStyle = coin.color;
-        ctx.font = 'bold ' + Math.round(coin.radius * 0.95) + 'px "Plus Jakarta Sans", sans-serif';
+        ctx.font = 'bold ' + Math.round(coin.radius * 0.95) + 'px "Inter", -apple-system, BlinkMacSystemFont, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(coin.sym, 0, 1);
@@ -23381,7 +23807,7 @@ window.applyPostLoginBg = function(theme) {
         const curAlpha = badge.alpha * (0.85 + 0.15 * Math.sin(badge.pulse));
         ctx.globalAlpha = isLight ? curAlpha * 0.6 : curAlpha;
 
-        ctx.font = 'bold 11px "Plus Jakarta Sans", sans-serif';
+        ctx.font = 'bold 11px "Inter", -apple-system, BlinkMacSystemFont, sans-serif';
         const metrics = ctx.measureText(badge.text);
         const pillWidth = metrics.width + 20;
         const pillHeight = 24;
