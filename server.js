@@ -7166,7 +7166,6 @@ body.light .pulse-chip-label { color: #000000 !important; }
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.08));
   border-color: rgba(245, 158, 11, 0.35);
   color: #FBBF24;
-  margin-left: auto;
 }
 .dash-quick-btn.q-cards:hover {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.32), rgba(217, 119, 6, 0.18));
@@ -7174,6 +7173,19 @@ body.light .pulse-chip-label { color: #000000 !important; }
   color: #FDE68A;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+}
+.dash-quick-btn.q-sync {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(16, 185, 129, 0.08));
+  border-color: rgba(6, 182, 212, 0.35);
+  color: #22D3EE;
+  margin-left: auto;
+}
+.dash-quick-btn.q-sync:hover {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.32), rgba(16, 185, 129, 0.18));
+  border-color: #06B6D4;
+  color: #67E8F9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
 }
 
 body.light .dashboard-quick-actions-bar {
@@ -7186,6 +7198,7 @@ body.light .dash-quick-btn.q-expense { background: #FEF2F2 !important; border-co
 body.light .dash-quick-btn.q-transfer { background: #F0F9FF !important; border-color: #BAE6FD !important; color: #075985 !important; }
 body.light .dash-quick-btn.q-report { background: #EEF2FF !important; border-color: #C7D2FE !important; color: #3730A3 !important; }
 body.light .dash-quick-btn.q-cards { background: #FFFBEB !important; border-color: #FDE68A !important; color: #92400E !important; }
+body.light .dash-quick-btn.q-sync { background: #F0FDF4 !important; border-color: #A7F3D0 !important; color: #065F46 !important; }
 
 /* Grid de 6 KPIs 4K */
 .kpis-grid-6 {
@@ -7526,6 +7539,77 @@ body.light .kpi-mini-bar {
   z-index: 2;
 }
 
+/* Tab Strip & Panes para Hub de Rodas Visuais 360° */
+.dash-wheel-tab-strip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 3px 5px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+}
+.dash-wheel-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94A3B8;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  user-select: none;
+}
+.dash-wheel-tab-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.06);
+}
+.dash-wheel-tab-btn.active {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(2, 132, 199, 0.2));
+  color: #38BDF8;
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dash-wheel-pane {
+  display: none;
+  animation: fadeInDashPane 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.dash-wheel-pane.active {
+  display: block;
+}
+
+@keyframes fadeInDashPane {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Grid Consolidada de Visão 360° */
+.dash-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.dash-overview-card {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.dash-overview-card:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
 /* Light mode overrides - REGRA: PRETO SÓLIDO #000000 PARA TEXTOS */
 body.light .dashboard-quick-actions {
   background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
@@ -7590,6 +7674,27 @@ body.light .dash-wheel-center strong {
 body.light .dash-card p,
 body.light .dash-card span:not([class*="tag"]):not([class*="badge"]) {
   color: #000000 !important;
+}
+body.light .dash-wheel-tab-strip {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+}
+body.light .dash-wheel-tab-btn {
+  color: #475569 !important;
+}
+body.light .dash-wheel-tab-btn:hover {
+  color: #000000 !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+body.light .dash-wheel-tab-btn.active {
+  background: #FFFFFF !important;
+  color: #0284C7 !important;
+  border-color: #BAE6FD !important;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12) !important;
+}
+body.light .dash-overview-card {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
 }
 
 
@@ -15685,489 +15790,628 @@ function pageDashboard(){
   }
 
   const currentChartMode = (typeof window !== 'undefined' && window.dashFlowChartMode) ? window.dashFlowChartMode : 'area';
+  const activeDashTab = (typeof window !== 'undefined' && window.activeDashWheelTab) ? window.activeDashWheelTab : 'categorias';
+
+  const topCatName = cats.length ? cats[0].name : 'Nenhuma';
+  const topCatVal = cats.length ? cats[0].val : 0;
+  const topCatPct = totalDesp > 0 ? Math.round((topCatVal / totalDesp) * 100) : 0;
+
+  const overviewSectionHtml = '<div class="dash-overview-grid">' +
+    '<div class="dash-overview-card">' +
+      '<div style="display:flex; align-items:center; justify-content:space-between;">' +
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+          '<span style="font-size:15px;">🏷️</span>' +
+          '<div>' +
+            '<strong style="font-size:12.5px; color:var(--text);">Despesas por Categoria</strong>' +
+            '<div style="font-size:10.5px; color:var(--text-dim);">' + cats.length + ' categorias ativas no período</div>' +
+          '</div>' +
+        '</div>' +
+        '<span class="kpi-tag kpi-tag-cyan" style="font-variant-numeric:tabular-nums;">' + fmt(actualTotalDesp) + '</span>' +
+      '</div>' +
+      '<div style="font-size:11.5px; color:var(--text-dim); display:flex; justify-content:space-between; margin-top:2px;">' +
+        '<span>Maior Categoria: <strong style="color:var(--text);">' + topCatName + '</strong></span>' +
+        '<strong style="color:#FBBF24;">' + topCatPct + '% do total</strong>' +
+      '</div>' +
+      '<div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:2.5px; overflow:hidden;">' +
+        '<div style="width:' + topCatPct + '%; height:100%; background:#FBBF24; border-radius:2.5px;"></div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="dash-overview-card">' +
+      '<div style="display:flex; align-items:center; justify-content:space-between;">' +
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+          '<span style="font-size:15px;">💳</span>' +
+          '<div>' +
+            '<strong style="font-size:12.5px; color:var(--text);">Cartões de Crédito</strong>' +
+            '<div style="font-size:10.5px; color:var(--text-dim);">' + creditCardsList.length + ' cartão(ões) registrado(s)</div>' +
+          '</div>' +
+        '</div>' +
+        '<span class="kpi-tag ' + (cardSummary.usagePctGeral >= 85 ? 'kpi-tag-danger' : 'kpi-tag-cyan') + '">' + cardSummary.usagePctGeral + '% Uso</span>' +
+      '</div>' +
+      '<div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-top:2px;">' +
+        '<span>Fatura: <strong style="color:#FBBF24; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.spentTotalGeral) + '</strong></span>' +
+        '<span>Disponível: <strong style="color:#34D399; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.availableLimitGeral) + '</strong></span>' +
+      '</div>' +
+      '<div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:2.5px; overflow:hidden;">' +
+        '<div style="width:' + Math.min(100, cardSummary.usagePctGeral) + '%; height:100%; background:' + (cardSummary.usagePctGeral >= 85 ? '#F87171' : cardSummary.usagePctGeral >= 60 ? '#F59E0B' : '#10B981') + '; border-radius:2.5px;"></div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="dash-overview-card">' +
+      '<div style="display:flex; align-items:center; justify-content:space-between;">' +
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+          '<span style="font-size:15px;">🎯</span>' +
+          '<div>' +
+            '<strong style="font-size:12.5px; color:var(--text);">Orçamento do Período</strong>' +
+            '<div style="font-size:10.5px; color:var(--text-dim);">Teto: ' + fmt(totalBudgetLimit) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<span class="kpi-tag" style="background:' + paceBadgeBg + '; border:1px solid ' + paceBadgeBorder + '; color:' + paceColor + ';">' + paceStatus + '</span>' +
+      '</div>' +
+      '<div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-top:2px;">' +
+        '<span>Consumido: <strong style="color:' + paceColor + ';">' + budgetPct + '%</strong></span>' +
+        '<span>Dia ' + daysInPeriod + ' de ' + daysInMonthTotal + ' (' + monthTimePct + '%)</span>' +
+      '</div>' +
+      '<div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:2.5px; overflow:hidden;">' +
+        '<div style="width:' + Math.min(100, budgetPct) + '%; height:100%; background:' + paceColor + '; border-radius:2.5px;"></div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="dash-overview-card">' +
+      '<div style="display:flex; align-items:center; justify-content:space-between;">' +
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+          '<span style="font-size:15px;">🏦</span>' +
+          '<div>' +
+            '<strong style="font-size:12.5px; color:var(--text);">Contas & Liquidez</strong>' +
+            '<div style="font-size:10.5px; color:var(--text-dim);">' + bankAccounts.length + ' conta(s) bancária(s)</div>' +
+          '</div>' +
+        '</div>' +
+        '<span class="kpi-tag ' + (saldo >= 0 ? 'kpi-tag-success' : 'kpi-tag-danger') + '" style="font-variant-numeric:tabular-nums;">' + fmt(saldo) + '</span>' +
+      '</div>' +
+      '<div style="font-size:11px; color:var(--text-dim); line-height:1.4; margin-top:2px;">' +
+        'Autonomia estimada de <strong style="color:' + (runwayDays >= 60 ? '#38BDF8' : '#34D399') + ';">' + (runwayDays > 0 ? runwayDays + ' dias' : 'Alerta') + '</strong> com base no consumo diário de ' + fmt(dailyAvg) + '.' +
+      '</div>' +
+    '</div>' +
+  '</div>';
 
   return \`
-  <!-- 4K EXECUTIVE COMMAND HERO BANNER -->
-  <div class="dashboard-welcome-hero">
-    <div class="hero-content">
-      <div class="hero-left">
-        <div class="hero-badge-strip">
-          <span class="hero-badge hide-mobile">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span>\${formattedToday}</span>
-          </span>
-        </div>
-        <h1 class="hero-greeting">
-          <span style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px; background:\${greetingBadgeBg}; border:1px solid \${greetingBadgeBorder}; color:\${greetingBadgeColor}; box-shadow:0 4px 16px rgba(0,0,0,0.4); flex-shrink:0;">
-            \${greetingIconSvg}
-          </span>
-          <span>\${greeting.text}, <span class="hero-name-gradient">\${firstName}</span></span>
-        </h1>
-        <p class="hero-sub">
-          Painel Executivo 4K & Gestão Financeira Estratégica
-        </p>
-        <div class="hero-pulse-ribbon">
-          <div class="pulse-chip" title="Eficiência de retenção orçamentária do período">
-            <span class="pulse-chip-dot \${savingsPct >= 20 ? 'green' : savingsPct > 0 ? 'amber' : 'red'}"></span>
-            <span class="pulse-chip-label">Retenção:</span>
-            <span class="pulse-chip-val" style="color:\${savingsPct >= 20 ? '#34D399' : savingsPct > 0 ? '#FBBF24' : '#F87171'};">\${savingsPct}%</span>
-          </div>
-          <div class="pulse-chip" title="Estimativa de dias de autonomia financeira em caixa">
-            <span class="pulse-chip-dot \${runwayDays >= 60 ? 'cyan' : runwayDays >= 30 ? 'green' : 'amber'}"></span>
-            <span class="pulse-chip-label">Fôlego de Caixa:</span>
-            <span class="pulse-chip-val" style="color:\${runwayDays >= 60 ? '#38BDF8' : runwayDays >= 30 ? '#34D399' : '#FBBF24'};">\${runwayDays > 0 ? runwayDays + ' dias' : 'Alerta'}</span>
-          </div>
-          <div class="pulse-chip" title="Comprometimento da receita com despesas">
-            <span class="pulse-chip-dot \${commitPct <= 60 ? 'green' : commitPct <= 80 ? 'amber' : 'red'}"></span>
-            <span class="pulse-chip-label">Comprometimento:</span>
-            <span class="pulse-chip-val" style="color:\${commitPct <= 60 ? '#34D399' : commitPct <= 80 ? '#FBBF24' : '#F87171'};">\${commitPct}%</span>
-          </div>
-          <div class="pulse-chip" title="Banco de dados Microsoft SQL Server conectado e sincronizado em tempo real">
-            <span class="pulse-chip-dot green"></span>
-            <span class="pulse-chip-label">MSSQL & Render:</span>
-            <span class="pulse-chip-val" style="color:#34D399;">Ativo 4K</span>
-          </div>
-        </div>
-      </div>
+  <!-- UNIFIED 4K EXECUTIVE COCKPIT CONTAINER -->
+  <div class="dashboard-cockpit-frame">
 
-      <div class="hero-actions">
-        \${periodPickerHTML()}
-        <button type="button" class="btn-hero-privacy" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou Exibir Saldos">
-          <span class="btn-hero-icon-pill">
-            <span id="btnEyeIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
-          </span>
-          <span id="btnEyeText">Ocultar Saldos</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- EXECUTIVE 6-CARD KPI BENTO GRID -->
-  <div class="kpis-grid-6">
-    <!-- 1. Saldo Geral -->
-    <div class="kpi kpi-balance">
-      <div class="row1">
-        <div style="display:flex; align-items:center; gap:6px;">
-          <span>Saldo Consolidado</span>
-          <button type="button" onclick="window.toggleSensitiveBalances()" title="Ocultar ou Exibir Saldos" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:12px; padding:0; display:inline-flex; align-items:center; opacity:0.8;">
-            <span class="btnEyeIconCard"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
-          </button>
-        </div>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(6,182,212,0.18), rgba(6,182,212,0.06)); border:1px solid rgba(6,182,212,0.3); color:#22D3EE;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#34D399'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
-      <div class="kpi-mini-bar">
-        <div class="kpi-mini-fill" style="width:\${saldo > 0 ? (savingsPct > 0 ? Math.max(25, savingsPct) : 70) : 10}%; background:linear-gradient(90deg, #06B6D4, #34D399);"></div>
-      </div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${saldo < 0 ? '#F87171' : '#34D399'};">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
-          <span>\${accounts.length} conta\${accounts.length === 1 ? '' : 's'} ativa\${accounts.length === 1 ? '' : 's'}</span>
-        </span>
-        <span class="kpi-tag \${saldo < 0 ? 'kpi-tag-danger' : 'kpi-tag-success'}">\${saldo < 0 ? 'Déficit' : 'Patrimônio'}</span>
-      </div>
-    </div>
-
-    <!-- 2. Receitas -->
-    <div class="kpi kpi-income">
-      <div class="row1">
-        <span>Receitas</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.06)); border:1px solid rgba(16,185,129,0.3); color:#34D399;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${receitas}" style="color:#34D399; font-variant-numeric:tabular-nums;">\${fmt(receitas)}</div>
-      <div class="kpi-mini-bar">
-        <div class="kpi-mini-fill" style="width:\${recPct}%; background:linear-gradient(90deg, #10B981, #34D399);"></div>
-      </div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
-          <span>\${inTxs.length} entrada\${inTxs.length === 1 ? '' : 's'}</span>
-        </span>
-        <span class="kpi-tag kpi-tag-success">Realizado</span>
-      </div>
-    </div>
-
-    <!-- 3. Despesas -->
-    <div class="kpi kpi-expense">
-      <div class="row1">
-        <span>Despesas</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.06)); border:1px solid rgba(239,68,68,0.3); color:#F87171;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
-      <div class="kpi-mini-bar">
-        <div class="kpi-mini-fill" style="width:\${commitPct}%; background:linear-gradient(90deg, #EF4444, #F43F5E);"></div>
-      </div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#EF4444;"></span>
-          <span>\${outTxs.length} saída\${outTxs.length === 1 ? '' : 's'}</span>
-        </span>
-        <span class="kpi-tag \${commitPct > 80 ? 'kpi-tag-danger' : commitPct > 60 ? 'kpi-tag-cyan' : 'kpi-tag-success'}">\${commitPct}% da Renda</span>
-      </div>
-    </div>
-
-    <!-- 4. Resultado Líquido -->
-    <div class="kpi kpi-net">
-      <div class="row1">
-        <span>Resultado</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(59,130,246,0.06)); border:1px solid rgba(59,130,246,0.3); color:#60A5FA;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${resultado}" style="color:\${resultado >= 0 ? '#34D399' : '#F87171'}; font-variant-numeric:tabular-nums;">\${resultado >= 0 ? '+' : ''}\${fmt(resultado)}</div>
-      <div class="kpi-mini-bar">
-        <div class="kpi-mini-fill" style="width:\${Math.max(10, Math.min(100, savingsPct > 0 ? savingsPct : 50))}%; background:linear-gradient(90deg, #3B82F6, #60A5FA);"></div>
-      </div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${resultado >= 0 ? '#34D399' : '#F87171'};">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
-          <span>\${resultado >= 0 ? 'Superávit' : 'Déficit'}</span>
-        </span>
-        <span class="kpi-tag \${resultado >= 0 ? 'kpi-tag-success' : 'kpi-tag-danger'}">\${savingsPct > 0 ? savingsPct + '% Poupado' : (resultado >= 0 ? 'Equilibrado' : 'Alerta')}</span>
-      </div>
-    </div>
-
-    <!-- 5. Cartões de Crédito -->
-    <div class="kpi kpi-card">
-      <div class="row1">
-        <span>Cartões de Crédito</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(245,158,11,0.18), rgba(217,119,6,0.06)); border:1px solid rgba(245,158,11,0.3); color:#FBBF24;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${cardSummary.spentTotalGeral}" style="color:\${cardSummary.spentTotalGeral > 0 ? '#FBBF24' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${fmt(cardSummary.spentTotalGeral)}</div>
-      <div class="kpi-mini-bar">
-        <div class="kpi-mini-fill" style="width:\${Math.max(5, Math.min(100, cardSummary.usagePctGeral))}%; background:linear-gradient(90deg, #F59E0B, #FBBF24);"></div>
-      </div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#F59E0B;"></span>
-          <span>Disp: \${fmt(cardSummary.availableLimitGeral)}</span>
-        </span>
-        <span class="kpi-tag \${cardSummary.usagePctGeral >= 85 ? 'kpi-tag-danger' : 'kpi-tag-cyan'}">\${cardSummary.usagePctGeral}% Uso</span>
-      </div>
-    </div>
-
-    <!-- 6. Contas a Pagar -->
-    <div class="kpi kpi-bills">
-      <div class="row1">
-        <span>Contas a Pagar</span>
-        <span class="ic" style="background:linear-gradient(135deg, rgba(236,72,153,0.18), rgba(219,39,119,0.06)); border:1px solid rgba(236,72,153,0.3); color:#F472B6;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        </span>
-      </div>
-      <div class="val" data-anim-val="\${pendingSummary.totalValue}" style="color:\${pendingSummary.totalValue > 0 ? '#F472B6' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${fmt(pendingSummary.totalValue)}</div>
-      <div class="kpi-mini-bar">
-        <div class="kpi-mini-fill" style="width:\${pendingSummary.overdueCount > 0 ? 100 : Math.min(100, pendingSummary.items.length * 25)}%; background:linear-gradient(90deg, #EC4899, #F43F5E);"></div>
-      </div>
-      <div class="sub">
-        <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
-          <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#EC4899;"></span>
-          <span>\${pendingSummary.items.length} pendência\${pendingSummary.items.length === 1 ? '' : 's'}</span>
-        </span>
-        <span class="kpi-tag \${pendingSummary.overdueCount > 0 ? 'kpi-tag-danger' : 'kpi-tag-purple'}">\${pendingSummary.overdueCount > 0 ? pendingSummary.overdueCount + ' Vencida' + (pendingSummary.overdueCount > 1 ? 's' : '') : 'Em dia'}</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- DASHBOARD PRINCIPAL (GRID 2 COLUNAS DE ALTA PERFORMANCE) -->
-  <div class="dashboard-main-grid">
-
-    <!-- COLUNA PRINCIPAL ESQUERDA (1.62fr) -->
-    <div style="display:flex; flex-direction:column; gap:20px;">
-
-      <!-- CARD 1: EVOLUÇÃO TEMPORAL & FLUXO DE CAIXA (Chart.js Interativo com 3 Modos) -->
-      <div class="dash-card">
-        <div class="dash-card-head">
-          <div class="dash-card-title">
-            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); color:#34D399;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
-            </div>
-            <div>
-              <div style="font-size:15px; font-weight:800; color:#FFFFFF; letter-spacing:-0.015em;">Evolução do Fluxo de Caixa</div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Entradas vs Saídas registradas ao longo do período</div>
-            </div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <!-- Seletor de Modo de Visualização do Gráfico -->
-            <div class="dash-chart-mode-strip">
-              <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'area' ? 'active' : ''}" data-mode="area" onclick="window.switchCashFlowChartMode('area')" title="Visualização em Linhas com Área Suave">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-6 6"/></svg>
-                <span>Área</span>
-              </button>
-              <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'bar' ? 'active' : ''}" data-mode="bar" onclick="window.switchCashFlowChartMode('bar')" title="Visualização em Barras Comparativas">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-                <span>Barras</span>
-              </button>
-              <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'cum' ? 'active' : ''}" data-mode="cum" onclick="window.switchCashFlowChartMode('cum')" title="Visualização de Saldo Acumulado">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                <span>Acumulado</span>
-              </button>
-            </div>
-            <span class="tag" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text); font-size:11.5px; padding:4px 10px; border-radius:8px;">\${periodLabel()}</span>
-          </div>
-        </div>
-
-        <!-- Área do Canvas Chart.js -->
-        <div style="position:relative; width:100%; height:270px;">
-          <canvas id="chartCashFlow"></canvas>
-        </div>
-
-        <!-- Métricas Rápidas da Linha do Tempo -->
-        <div class="dash-chart-metrics">
-          <div class="dash-metric-item">
-            <span class="dash-metric-label">Média Diária Gastos</span>
-            <span class="dash-metric-val" style="color:#F87171;">\${fmt(dailyAvg)}/dia</span>
-          </div>
-          <div class="dash-metric-item">
-            <span class="dash-metric-label">Maior Entrada</span>
-            <span class="dash-metric-val" style="color:#34D399;">\${fmt(maxIncome)}</span>
-          </div>
-          <div class="dash-metric-item">
-            <span class="dash-metric-label">Maior Despesa</span>
-            <span class="dash-metric-val" style="color:#F87171;">\${fmt(maxExpense)}</span>
-          </div>
-          <div class="dash-metric-item">
-            <span class="dash-metric-label">Projeção Fim do Mês</span>
-            <span class="dash-metric-val" style="color:#60A5FA;">\${fmt(projectedMonthEnd)}</span>
-          </div>
-          <div class="dash-metric-item">
-            <span class="dash-metric-label">Retenção Líquida</span>
-            <span class="dash-metric-val" style="color:\${resultado >= 0 ? '#34D399' : '#F87171'};">\${savingsPct}%</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- CARD 2: RADAR DE CONTAS A PAGAR & VENCIMENTOS -->
-      \${pendingSectionHtml}
-
-      <!-- CARD 3: ÚLTIMAS TRANSAÇÕES COM FILTROS RÁPIDOS -->
-      <div class="dash-card">
-        <div class="dash-card-head">
-          <div class="dash-card-title">
-            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(168,85,247,0.22), rgba(147,51,234,0.08)); border:1px solid rgba(168,85,247,0.35); color:#C084FC;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            </div>
-            <div>
-              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Últimas Transações</div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Atividades recentes no período selecionado</div>
-            </div>
-          </div>
-
-          <div style="display:flex; align-items:center; gap:8px;">
-            <div class="dash-filter-strip">
-              <button type="button" class="dash-filter-pill active" onclick="filterDashboardTx('all', this)">Todas</button>
-              <button type="button" class="dash-filter-pill" onclick="filterDashboardTx('in', this)">Receitas</button>
-              <button type="button" class="dash-filter-pill" onclick="filterDashboardTx('out', this)">Despesas</button>
-            </div>
-            <span class="tag" data-nav="transacoes" style="cursor:pointer; font-size:11.5px; padding:5px 12px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.25);">
-              Ver Extrato
+    <!-- 1. 4K EXECUTIVE COMMAND HERO BANNER -->
+    <div class="dashboard-welcome-hero">
+      <div class="hero-content">
+        <div class="hero-left">
+          <div class="hero-badge-strip">
+            <span class="hero-badge hide-mobile">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>\${formattedToday}</span>
             </span>
           </div>
+          <h1 class="hero-greeting">
+            <span style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px; background:\${greetingBadgeBg}; border:1px solid \${greetingBadgeBorder}; color:\${greetingBadgeColor}; box-shadow:0 4px 16px rgba(0,0,0,0.4); flex-shrink:0;">
+              \${greetingIconSvg}
+            </span>
+            <span>\${greeting.text}, <span class="hero-name-gradient">\${firstName}</span></span>
+          </h1>
+          <p class="hero-sub">
+            Painel Executivo 4K & Gestão Financeira Estratégica
+          </p>
+          <div class="hero-pulse-ribbon">
+            <div class="pulse-chip" title="Eficiência de retenção orçamentária do período">
+              <span class="pulse-chip-dot \${savingsPct >= 20 ? 'green' : savingsPct > 0 ? 'amber' : 'red'}"></span>
+              <span class="pulse-chip-label">Retenção:</span>
+              <span class="pulse-chip-val" style="color:\${savingsPct >= 20 ? '#34D399' : savingsPct > 0 ? '#FBBF24' : '#F87171'};">\${savingsPct}%</span>
+            </div>
+            <div class="pulse-chip" title="Estimativa de dias de autonomia financeira em caixa">
+              <span class="pulse-chip-dot \${runwayDays >= 60 ? 'cyan' : runwayDays >= 30 ? 'green' : 'amber'}"></span>
+              <span class="pulse-chip-label">Fôlego de Caixa:</span>
+              <span class="pulse-chip-val" style="color:\${runwayDays >= 60 ? '#38BDF8' : runwayDays >= 30 ? '#34D399' : '#FBBF24'};">\${runwayDays > 0 ? runwayDays + ' dias' : 'Alerta'}</span>
+            </div>
+            <div class="pulse-chip" title="Comprometimento da receita com despesas">
+              <span class="pulse-chip-dot \${commitPct <= 60 ? 'green' : commitPct <= 80 ? 'amber' : 'red'}"></span>
+              <span class="pulse-chip-label">Comprometimento:</span>
+              <span class="pulse-chip-val" style="color:\${commitPct <= 60 ? '#34D399' : commitPct <= 80 ? '#FBBF24' : '#F87171'};">\${commitPct}%</span>
+            </div>
+            <div class="pulse-chip" title="Score de Saúde Financeira Consolidado">
+              <span class="pulse-chip-dot \${healthScore >= 75 ? 'green' : healthScore >= 50 ? 'amber' : 'red'}"></span>
+              <span class="pulse-chip-label">Score 360°:</span>
+              <span class="pulse-chip-val" style="color:\${healthColor};">\${healthScore}/100</span>
+            </div>
+            <div class="pulse-chip" title="Banco de dados Microsoft SQL Server conectado e sincronizado em tempo real">
+              <span class="pulse-chip-dot green"></span>
+              <span class="pulse-chip-label">MSSQL & Nuvem:</span>
+              <span class="pulse-chip-val" style="color:#34D399;">Ativo 4K</span>
+            </div>
+          </div>
         </div>
 
-        <div id="dashTxContainer">
-          \${transactionsTable(lastTx, false)}
+        <div class="hero-actions">
+          \${periodPickerHTML()}
+          <button type="button" class="btn-hero-privacy" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou Exibir Saldos">
+            <span class="btn-hero-icon-pill">
+              <span id="btnEyeIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            </span>
+            <span id="btnEyeText">Ocultar Saldos</span>
+          </button>
         </div>
       </div>
-
     </div>
 
-    <!-- COLUNA LATERAL DIREITA (1fr - RODAS E MEDIDORES VISUAIS) -->
-    <div style="display:flex; flex-direction:column; gap:20px;">
+    <!-- 2. BARRA DE AÇÕES RÁPIDAS INTEGRADAS (Cockpit Actions) -->
+    <div class="dashboard-quick-actions-bar">
+      <button type="button" class="dash-quick-btn q-income" onclick="window.openModal(null, 'in')" title="Lançar Nova Receita">
+        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        <span>+ Nova Receita</span>
+      </button>
+      <button type="button" class="dash-quick-btn q-expense" onclick="window.openModal(null, 'out')" title="Lançar Nova Despesa">
+        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        <span>- Nova Despesa</span>
+      </button>
+      <button type="button" class="dash-quick-btn q-transfer" data-nav="transacoes" onclick="navigate('transacoes')" title="Ver Extrato Completo de Transações">
+        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+        <span>Extrato Geral</span>
+      </button>
+      <button type="button" class="dash-quick-btn q-cards" data-nav="cartoes" onclick="navigate('cartoes')" title="Gerenciar Contas Bancárias e Cartões">
+        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg></span>
+        <span>Cartões & Contas</span>
+      </button>
+      <button type="button" class="dash-quick-btn q-report" data-nav="orcamentos" onclick="navigate('orcamentos')" title="Gerenciar Orçamentos e Metas Mensais">
+        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+        <span>Orçamentos</span>
+      </button>
+      <button type="button" class="dash-quick-btn q-sync" onclick="window.syncDashboardData()" title="Sincronizar Dados Nuvem & Microsoft SQL Server">
+        <span class="q-icon" id="quickSyncIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg></span>
+        <span>Sincronizar</span>
+      </button>
+    </div>
 
-      <!-- RODA 1: VELOCÍMETRO / RADIAL GAUGE 360° DE SAÚDE FINANCEIRA & 4 PILARES -->
-      <div class="dash-card">
-        <div class="dash-card-head">
-          <div class="dash-card-title">
-            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); color:#34D399;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <div>
-              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Roda de Saúde Financeira</div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Score de performance & 4 pilares</div>
-            </div>
+    <!-- 3. EXECUTIVE 6-CARD KPI BENTO GRID -->
+    <div class="kpis-grid-6">
+      <!-- 1. Saldo Geral -->
+      <div class="kpi kpi-balance">
+        <div class="row1">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span>Saldo Consolidado</span>
+            <button type="button" onclick="window.toggleSensitiveBalances()" title="Ocultar ou Exibir Saldos" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:12px; padding:0; display:inline-flex; align-items:center; opacity:0.8;">
+              <span class="btnEyeIconCard"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            </button>
           </div>
-          <span class="kpi-tag" style="background:\${healthBadgeBg}; border:1px solid \${healthBadgeBorder}; color:\${healthColor};">\${healthStatus}</span>
+          <span class="ic" style="background:linear-gradient(135deg, rgba(6,182,212,0.18), rgba(6,182,212,0.06)); border:1px solid rgba(6,182,212,0.3); color:#22D3EE;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+          </span>
         </div>
-
-        <!-- Roda Radial 360° com SVG de Alta Precisão -->
-        <div style="display:flex; align-items:center; justify-content:center; position:relative; width:140px; height:140px; margin:4px auto 10px;">
-          <svg viewBox="0 0 100 100" style="width:100%; height:100%; transform:rotate(-90deg);">
-            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="9"/>
-            <circle cx="50" cy="50" r="40" fill="none" stroke="\${healthColor}" stroke-width="9" stroke-linecap="round" stroke-dasharray="251.32" stroke-dashoffset="\${251.32 * (1 - healthScore / 100)}" style="transition: stroke-dashoffset 0.9s cubic-bezier(0.16, 1, 0.3, 1);"/>
-          </svg>
-          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-            <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); font-weight:800;">Score 360°</span>
-            <b style="font-size:24px; font-weight:900; color:\${healthColor}; line-height:1; margin:2px 0;">\${healthScore}</b>
-            <span style="font-size:10px; font-weight:700; color:var(--text-dim);">de 100</span>
-          </div>
+        <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#34D399'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
+        <div class="kpi-mini-bar">
+          <div class="kpi-mini-fill" style="width:\${saldo > 0 ? (savingsPct > 0 ? Math.max(25, savingsPct) : 70) : 10}%; background:linear-gradient(90deg, #06B6D4, #34D399);"></div>
         </div>
-
-        <!-- 4 Pilares Estruturais -->
-        <div class="dash-pillars-list">
-          <div class="dash-pillar-item">
-            <div class="dash-pillar-head">
-              <span style="color:var(--text-dim); font-weight:600;">Poupança</span>
-              <strong style="color:\${pilarPoupanca >= 20 ? '#10B981' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};">\${pilarPoupanca}%</strong>
-            </div>
-            <div class="dash-pillar-bar">
-              <div class="dash-pillar-fill" style="width:\${Math.min(100, pilarPoupanca)}%; background:\${pilarPoupanca >= 20 ? '#10B981' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};"></div>
-            </div>
-          </div>
-          <div class="dash-pillar-item">
-            <div class="dash-pillar-head">
-              <span style="color:var(--text-dim); font-weight:600;">Comprometido</span>
-              <strong style="color:\${pilarComprometimento <= 60 ? '#10B981' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};">\${pilarComprometimento}%</strong>
-            </div>
-            <div class="dash-pillar-bar">
-              <div class="dash-pillar-fill" style="width:\${pilarComprometimento}%; background:\${pilarComprometimento <= 60 ? '#10B981' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};"></div>
-            </div>
-          </div>
-          <div class="dash-pillar-item">
-            <div class="dash-pillar-head">
-              <span style="color:var(--text-dim); font-weight:600;">Uso Cartão</span>
-              <strong style="color:\${pilarCartao <= 50 ? '#10B981' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};">\${pilarCartao}%</strong>
-            </div>
-            <div class="dash-pillar-bar">
-              <div class="dash-pillar-fill" style="width:\${pilarCartao}%; background:\${pilarCartao <= 50 ? '#10B981' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};"></div>
-            </div>
-          </div>
-          <div class="dash-pillar-item">
-            <div class="dash-pillar-head">
-              <span style="color:var(--text-dim); font-weight:600;">Pontualidade</span>
-              <strong style="color:\${pilarPontualidade >= 90 ? '#10B981' : '#F87171'};">\${pilarPontualidade}%</strong>
-            </div>
-            <div class="dash-pillar-bar">
-              <div class="dash-pillar-fill" style="width:\${pilarPontualidade}%; background:\${pilarPontualidade >= 90 ? '#10B981' : '#F87171'};"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Diagnóstico com IA Financeira -->
-        <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:9px 12px; margin-top:12px; display:flex; align-items:flex-start; gap:8px;">
-          <span style="font-size:14px; flex-shrink:0;">💡</span>
-          <span style="font-size:11.5px; color:var(--text-dim); line-height:1.4;">\${aiHealthInsight}</span>
+        <div class="sub">
+          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${saldo < 0 ? '#F87171' : '#34D399'};">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
+            <span>\${accounts.length} conta\${accounts.length === 1 ? '' : 's'} ativa\${accounts.length === 1 ? '' : 's'}</span>
+          </span>
+          <span class="kpi-tag \${saldo < 0 ? 'kpi-tag-danger' : 'kpi-tag-success'}">\${saldo < 0 ? 'Déficit' : 'Patrimônio'}</span>
         </div>
       </div>
 
-      <!-- RODA 2: DESPESAS POR CATEGORIA (Chart.js Doughnut) -->
-      <div class="dash-card">
-        <div class="dash-card-head">
-          <div class="dash-card-title">
-            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); color:#FBBF24;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-            </div>
-            <div>
-              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Gastos por Categoria</div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">\${cats.length} categoria\${cats.length === 1 ? '' : 's'} ativa\${cats.length === 1 ? '' : 's'}</div>
-            </div>
-          </div>
-          <span class="tag" data-nav="transacoes" style="cursor:pointer; font-size:11px; padding:3px 8px;">Detalhes</span>
+      <!-- 2. Receitas -->
+      <div class="kpi kpi-income">
+        <div class="row1">
+          <span>Receitas</span>
+          <span class="ic" style="background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.06)); border:1px solid rgba(16,185,129,0.3); color:#34D399;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </span>
         </div>
-
-        <!-- Doughnut Canvas -->
-        <div style="position:relative; width:100%; height:180px; margin-bottom:14px;">
-          <canvas id="chartCategorias"></canvas>
-          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-            <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Total</span>
-            <b style="font-size:14.5px; font-weight:900; color:#FFFFFF; font-variant-numeric:tabular-nums; margin-top:1px;">\${fmt(actualTotalDesp)}</b>
-          </div>
+        <div class="val" data-anim-val="\${receitas}" style="color:#34D399; font-variant-numeric:tabular-nums;">\${fmt(receitas)}</div>
+        <div class="kpi-mini-bar">
+          <div class="kpi-mini-fill" style="width:\${recPct}%; background:linear-gradient(90deg, #10B981, #34D399);"></div>
         </div>
-
-        <!-- Ranking de Categorias -->
-        \${categoriesSectionHtml}
+        <div class="sub">
+          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
+            <span>\${inTxs.length} entrada\${inTxs.length === 1 ? '' : 's'}</span>
+          </span>
+          <span class="kpi-tag kpi-tag-success">Realizado</span>
+        </div>
       </div>
 
-      <!-- RODA 3: UTILIZAÇÃO DE LIMITES DE CARTÕES (Chart.js Doughnut) -->
-      <div class="dash-card">
-        <div class="dash-card-head">
-          <div class="dash-card-title">
-            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); color:#FBBF24;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg>
-            </div>
-            <div>
-              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Roda de Limites & Cartões</div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Consumo de crédito consolidado</div>
-            </div>
-          </div>
-          <span class="tag" data-nav="cartoes" style="cursor:pointer; font-size:11px; padding:3px 8px;">Gerenciar</span>
+      <!-- 3. Despesas -->
+      <div class="kpi kpi-expense">
+        <div class="row1">
+          <span>Despesas</span>
+          <span class="ic" style="background:linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.06)); border:1px solid rgba(239,68,68,0.3); color:#F87171;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+          </span>
         </div>
-
-        \${creditCardsList.length > 0 ? \`
-        <!-- Doughnut Canvas Cartões -->
-        <div style="position:relative; width:100%; height:180px; margin-bottom:12px;">
-          <canvas id="chartCartoesWheel"></canvas>
-          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-            <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Uso Global</span>
-            <b style="font-size:18px; font-weight:900; color:\${cardSummary.usagePctGeral >= 85 ? '#F87171' : '#FBBF24'}; line-height:1; margin-top:1px;">\${cardSummary.usagePctGeral}%</b>
-          </div>
+        <div class="val" data-anim-val="\${despesas}" data-prefix="\${despesas > 0 ? '-' : ''}" style="color:\${despesas > 0 ? '#F87171' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${despesas > 0 ? '-' : ''}\${fmt(despesas)}</div>
+        <div class="kpi-mini-bar">
+          <div class="kpi-mini-fill" style="width:\${commitPct}%; background:linear-gradient(90deg, #EF4444, #F43F5E);"></div>
         </div>
-
-        <div style="display:flex; justify-content:space-between; font-size:11.5px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); margin-bottom:10px;">
-          <span>Fatura: <strong style="color:#FBBF24;">\${fmt(cardSummary.spentTotalGeral)}</strong></span>
-          <span>Disp: <strong style="color:#34D399;">\${fmt(cardSummary.availableLimitGeral)}</strong></span>
+        <div class="sub">
+          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#EF4444;"></span>
+            <span>\${outTxs.length} saída\${outTxs.length === 1 ? '' : 's'}</span>
+          </span>
+          <span class="kpi-tag \${commitPct > 80 ? 'kpi-tag-danger' : commitPct > 60 ? 'kpi-tag-cyan' : 'kpi-tag-success'}">\${commitPct}% da Renda</span>
         </div>
-
-        \${creditCardsHtml}
-        \` : \`
-        <div style="text-align:center; padding:24px 12px; color:var(--text-dim);">
-          <div style="font-size:32px; margin-bottom:8px;">💳</div>
-          <p style="font-size:12.5px; margin:0;">Nenhum cartão de crédito registrado.</p>
-        </div>
-        \`}
       </div>
 
-      <!-- RODA 4: EXECUÇÃO ORÇAMENTÁRIA & RITMO MENSAL -->
-      <div class="dash-card">
-        <div class="dash-card-head">
-          <div class="dash-card-title">
-            <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(6,182,212,0.22), rgba(14,165,233,0.08)); border:1px solid rgba(6,182,212,0.35); color:#22D3EE;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <!-- 4. Resultado Líquido -->
+      <div class="kpi kpi-net">
+        <div class="row1">
+          <span>Resultado</span>
+          <span class="ic" style="background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(59,130,246,0.06)); border:1px solid rgba(59,130,246,0.3); color:#60A5FA;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+        </div>
+        <div class="val" data-anim-val="\${resultado}" style="color:\${resultado >= 0 ? '#34D399' : '#F87171'}; font-variant-numeric:tabular-nums;">\${resultado >= 0 ? '+' : ''}\${fmt(resultado)}</div>
+        <div class="kpi-mini-bar">
+          <div class="kpi-mini-fill" style="width:\${Math.max(10, Math.min(100, savingsPct > 0 ? savingsPct : 50))}%; background:linear-gradient(90deg, #3B82F6, #60A5FA);"></div>
+        </div>
+        <div class="sub">
+          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${resultado >= 0 ? '#34D399' : '#F87171'};">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
+            <span>\${resultado >= 0 ? 'Superávit' : 'Déficit'}</span>
+          </span>
+          <span class="kpi-tag \${resultado >= 0 ? 'kpi-tag-success' : 'kpi-tag-danger'}">\${savingsPct > 0 ? savingsPct + '% Poupado' : (resultado >= 0 ? 'Equilibrado' : 'Alerta')}</span>
+        </div>
+      </div>
+
+      <!-- 5. Cartões de Crédito -->
+      <div class="kpi kpi-card">
+        <div class="row1">
+          <span>Cartões de Crédito</span>
+          <span class="ic" style="background:linear-gradient(135deg, rgba(245,158,11,0.18), rgba(217,119,6,0.06)); border:1px solid rgba(245,158,11,0.3); color:#FBBF24;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg>
+          </span>
+        </div>
+        <div class="val" data-anim-val="\${cardSummary.spentTotalGeral}" style="color:\${cardSummary.spentTotalGeral > 0 ? '#FBBF24' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${fmt(cardSummary.spentTotalGeral)}</div>
+        <div class="kpi-mini-bar">
+          <div class="kpi-mini-fill" style="width:\${Math.max(5, Math.min(100, cardSummary.usagePctGeral))}%; background:linear-gradient(90deg, #F59E0B, #FBBF24);"></div>
+        </div>
+        <div class="sub">
+          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#F59E0B;"></span>
+            <span>Disp: \${fmt(cardSummary.availableLimitGeral)}</span>
+          </span>
+          <span class="kpi-tag \${cardSummary.usagePctGeral >= 85 ? 'kpi-tag-danger' : 'kpi-tag-cyan'}">\${cardSummary.usagePctGeral}% Uso</span>
+        </div>
+      </div>
+
+      <!-- 6. Contas a Pagar -->
+      <div class="kpi kpi-bills">
+        <div class="row1">
+          <span>Contas a Pagar</span>
+          <span class="ic" style="background:linear-gradient(135deg, rgba(236,72,153,0.18), rgba(219,39,119,0.06)); border:1px solid rgba(236,72,153,0.3); color:#F472B6;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </span>
+        </div>
+        <div class="val" data-anim-val="\${pendingSummary.totalValue}" style="color:\${pendingSummary.totalValue > 0 ? '#F472B6' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${fmt(pendingSummary.totalValue)}</div>
+        <div class="kpi-mini-bar">
+          <div class="kpi-mini-fill" style="width:\${pendingSummary.overdueCount > 0 ? 100 : Math.min(100, pendingSummary.items.length * 25)}%; background:linear-gradient(90deg, #EC4899, #F43F5E);"></div>
+        </div>
+        <div class="sub">
+          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#EC4899;"></span>
+            <span>\${pendingSummary.items.length} pendência\${pendingSummary.items.length === 1 ? '' : 's'}</span>
+          </span>
+          <span class="kpi-tag \${pendingSummary.overdueCount > 0 ? 'kpi-tag-danger' : 'kpi-tag-purple'}">\${pendingSummary.overdueCount > 0 ? pendingSummary.overdueCount + ' Vencida' + (pendingSummary.overdueCount > 1 ? 's' : '') : 'Em dia'}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. DASHBOARD PRINCIPAL (GRID 2 COLUNAS DE ALTA PERFORMANCE) -->
+    <div class="dashboard-main-grid">
+
+      <!-- COLUNA PRINCIPAL ESQUERDA (1.62fr) -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <!-- CARD 1: EVOLUÇÃO TEMPORAL & FLUXO DE CAIXA (Chart.js Interativo com 3 Modos) -->
+        <div class="dash-card">
+          <div class="dash-card-head">
+            <div class="dash-card-title">
+              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); color:#34D399;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+              </div>
+              <div>
+                <div style="font-size:15px; font-weight:800; color:#FFFFFF; letter-spacing:-0.015em;">Evolução do Fluxo de Caixa</div>
+                <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Entradas vs Saídas registradas ao longo do período</div>
+              </div>
             </div>
-            <div>
-              <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Roda de Orçamento & Ritmo</div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Velocidade de consumo do período</div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <!-- Seletor de Modo de Visualização do Gráfico -->
+              <div class="dash-chart-mode-strip">
+                <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'area' ? 'active' : ''}" data-mode="area" onclick="window.switchCashFlowChartMode('area')" title="Visualização em Linhas com Área Suave">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-6 6"/></svg>
+                  <span>Área</span>
+                </button>
+                <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'bar' ? 'active' : ''}" data-mode="bar" onclick="window.switchCashFlowChartMode('bar')" title="Visualização em Barras Comparativas">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                  <span>Barras</span>
+                </button>
+                <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'cum' ? 'active' : ''}" data-mode="cum" onclick="window.switchCashFlowChartMode('cum')" title="Visualização de Saldo Acumulado">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  <span>Acumulado</span>
+                </button>
+              </div>
+              <span class="tag" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text); font-size:11.5px; padding:4px 10px; border-radius:8px;">\${periodLabel()}</span>
             </div>
           </div>
-          <span class="kpi-tag" style="background:\${paceBadgeBg}; border:1px solid \${paceBadgeBorder}; color:\${paceColor};">\${paceStatus}</span>
+
+          <!-- Área do Canvas Chart.js -->
+          <div style="position:relative; width:100%; height:270px;">
+            <canvas id="chartCashFlow"></canvas>
+          </div>
+
+          <!-- Métricas Rápidas da Linha do Tempo -->
+          <div class="dash-chart-metrics">
+            <div class="dash-metric-item">
+              <span class="dash-metric-label">Média Diária Gastos</span>
+              <span class="dash-metric-val" style="color:#F87171;">\${fmt(dailyAvg)}/dia</span>
+            </div>
+            <div class="dash-metric-item">
+              <span class="dash-metric-label">Maior Entrada</span>
+              <span class="dash-metric-val" style="color:#34D399;">\${fmt(maxIncome)}</span>
+            </div>
+            <div class="dash-metric-item">
+              <span class="dash-metric-label">Maior Despesa</span>
+              <span class="dash-metric-val" style="color:#F87171;">\${fmt(maxExpense)}</span>
+            </div>
+            <div class="dash-metric-item">
+              <span class="dash-metric-label">Projeção Fim do Mês</span>
+              <span class="dash-metric-val" style="color:#60A5FA;">\${fmt(projectedMonthEnd)}</span>
+            </div>
+            <div class="dash-metric-item">
+              <span class="dash-metric-label">Retenção Líquida</span>
+              <span class="dash-metric-val" style="color:\${resultado >= 0 ? '#34D399' : '#F87171'};">\${savingsPct}%</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Doughnut Canvas Orçamento & Ritmo -->
-        <div style="position:relative; width:100%; height:180px; margin-bottom:12px;">
-          <canvas id="chartBudgetWheel"></canvas>
-          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
-            <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Executado</span>
-            <b style="font-size:18px; font-weight:900; color:\${paceColor}; line-height:1; margin-top:1px;">\${budgetPct}%</b>
+        <!-- CARD 2: RADAR DE CONTAS A PAGAR & VENCIMENTOS -->
+        \${pendingSectionHtml}
+
+        <!-- CARD 3: ÚLTIMAS TRANSAÇÕES COM FILTROS RÁPIDOS -->
+        <div class="dash-card">
+          <div class="dash-card-head">
+            <div class="dash-card-title">
+              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(168,85,247,0.22), rgba(147,51,234,0.08)); border:1px solid rgba(168,85,247,0.35); color:#C084FC;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </div>
+              <div>
+                <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Últimas Transações</div>
+                <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Atividades recentes no período selecionado</div>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div class="dash-filter-strip">
+                <button type="button" class="dash-filter-pill active" onclick="filterDashboardTx('all', this)">Todas</button>
+                <button type="button" class="dash-filter-pill" onclick="filterDashboardTx('in', this)">Receitas</button>
+                <button type="button" class="dash-filter-pill" onclick="filterDashboardTx('out', this)">Despesas</button>
+              </div>
+              <span class="tag" data-nav="transacoes" onclick="navigate('transacoes')" style="cursor:pointer; font-size:11.5px; padding:5px 12px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.25);">
+                Ver Extrato
+              </span>
+            </div>
+          </div>
+
+          <div id="dashTxContainer">
+            \${transactionsTable(lastTx, false)}
           </div>
         </div>
 
-        <!-- Comparador de Ritmo Temporal vs Orçamentário -->
-        <div class="dash-pace-box">
-          <div class="dash-pace-header">
-            <span style="font-size:11px; color:var(--text-dim); font-weight:600;">Dia \${daysInPeriod} de \${daysInMonthTotal} (\${monthTimePct}% do mês decorrido)</span>
-            <strong style="font-size:11.5px; color:\${paceColor};">\${budgetPct}% Gasto</strong>
+      </div>
+
+      <!-- COLUNA LATERAL DIREITA (1fr - RODAS E MEDIDORES VISUAIS HARMONIZADOS) -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <!-- RODA 1: VELOCÍMETRO / RADIAL GAUGE 360° DE SAÚDE FINANCEIRA & 4 PILARES -->
+        <div class="dash-card">
+          <div class="dash-card-head">
+            <div class="dash-card-title">
+              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(5,150,105,0.08)); border:1px solid rgba(16,185,129,0.35); color:#34D399;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div>
+                <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Roda de Saúde Financeira</div>
+                <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Score de performance & 4 pilares</div>
+              </div>
+            </div>
+            <span class="kpi-tag" style="background:\${healthBadgeBg}; border:1px solid \${healthBadgeBorder}; color:\${healthColor};">\${healthStatus}</span>
           </div>
-          <div class="dash-pace-meter">
-            <div class="dash-pace-fill" style="width:\${Math.min(100, budgetPct)}%; background:\${paceColor};"></div>
-            <div class="dash-pace-marker" style="left:\${monthTimePct}%;" title="Tempo decorrido no mês"></div>
+
+          <!-- Roda Radial 360° com SVG de Alta Precisão -->
+          <div style="display:flex; align-items:center; justify-content:center; position:relative; width:140px; height:140px; margin:4px auto 10px;">
+            <svg viewBox="0 0 100 100" style="width:100%; height:100%; transform:rotate(-90deg);">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="9"/>
+              <circle cx="50" cy="50" r="40" fill="none" stroke="\${healthColor}" stroke-width="9" stroke-linecap="round" stroke-dasharray="251.32" stroke-dashoffset="\${251.32 * (1 - healthScore / 100)}" style="transition: stroke-dashoffset 0.9s cubic-bezier(0.16, 1, 0.3, 1);"/>
+            </svg>
+            <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+              <span style="font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); font-weight:800;">Score 360°</span>
+              <b style="font-size:24px; font-weight:900; color:\${healthColor}; line-height:1; margin:2px 0;">\${healthScore}</b>
+              <span style="font-size:10px; font-weight:700; color:var(--text-dim);">de 100</span>
+            </div>
           </div>
-          <div style="font-size:11px; color:var(--text-dim); line-height:1.3; margin-top:2px;">
-            \${paceDesc}
+
+          <!-- 4 Pilares Estruturais -->
+          <div class="dash-pillars-list">
+            <div class="dash-pillar-item">
+              <div class="dash-pillar-head">
+                <span style="color:var(--text-dim); font-weight:600;">Poupança</span>
+                <strong style="color:\${pilarPoupanca >= 20 ? '#10B981' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};">\${pilarPoupanca}%</strong>
+              </div>
+              <div class="dash-pillar-bar">
+                <div class="dash-pillar-fill" style="width:\${Math.min(100, pilarPoupanca)}%; background:\${pilarPoupanca >= 20 ? '#10B981' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};"></div>
+              </div>
+            </div>
+            <div class="dash-pillar-item">
+              <div class="dash-pillar-head">
+                <span style="color:var(--text-dim); font-weight:600;">Comprometido</span>
+                <strong style="color:\${pilarComprometimento <= 60 ? '#10B981' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};">\${pilarComprometimento}%</strong>
+              </div>
+              <div class="dash-pillar-bar">
+                <div class="dash-pillar-fill" style="width:\${pilarComprometimento}%; background:\${pilarComprometimento <= 60 ? '#10B981' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};"></div>
+              </div>
+            </div>
+            <div class="dash-pillar-item">
+              <div class="dash-pillar-head">
+                <span style="color:var(--text-dim); font-weight:600;">Uso Cartão</span>
+                <strong style="color:\${pilarCartao <= 50 ? '#10B981' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};">\${pilarCartao}%</strong>
+              </div>
+              <div class="dash-pillar-bar">
+                <div class="dash-pillar-fill" style="width:\${pilarCartao}%; background:\${pilarCartao <= 50 ? '#10B981' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};"></div>
+              </div>
+            </div>
+            <div class="dash-pillar-item">
+              <div class="dash-pillar-head">
+                <span style="color:var(--text-dim); font-weight:600;">Pontualidade</span>
+                <strong style="color:\${pilarPontualidade >= 90 ? '#10B981' : '#F87171'};">\${pilarPontualidade}%</strong>
+              </div>
+              <div class="dash-pillar-bar">
+                <div class="dash-pillar-fill" style="width:\${pilarPontualidade}%; background:\${pilarPontualidade >= 90 ? '#10B981' : '#F87171'};"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Diagnóstico com IA Financeira -->
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:9px 12px; margin-top:12px; display:flex; align-items:flex-start; gap:8px;">
+            <span style="font-size:14px; flex-shrink:0;">💡</span>
+            <span style="font-size:11.5px; color:var(--text-dim); line-height:1.4;">\${aiHealthInsight}</span>
           </div>
         </div>
 
-        <!-- Contas Bancárias & Saldos -->
-        <div style="margin-top:14px;">
-          \${bankAccountsHtml}
-          \${emptyMeiosHtml}
+        <!-- RODA 2: CENTRAL DE VISÃO ANALÍTICA 360° (HUB COM ABAS HARMONIZADAS) -->
+        <div class="dash-card">
+          <div class="dash-card-head">
+            <div class="dash-card-title">
+              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(6,182,212,0.22), rgba(14,165,233,0.08)); border:1px solid rgba(6,182,212,0.35); color:#22D3EE;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <div style="font-size:15px; font-weight:800; color:#FFFFFF;">Visão Analítica 360°</div>
+                <div style="font-size:11px; color:var(--text-dim); margin-top:2px;">Rodas de categorias, cartões e metas</div>
+              </div>
+            </div>
+
+            <!-- Abas Interativas das Rodas -->
+            <div class="dash-wheel-tab-strip">
+              <button type="button" class="dash-wheel-tab-btn \${activeDashTab === 'categorias' ? 'active' : ''}" data-tab="categorias" onclick="window.switchDashWheelTab('categorias', this)" title="Despesas por Categoria">
+                <span>🏷️ Categorias</span>
+              </button>
+              <button type="button" class="dash-wheel-tab-btn \${activeDashTab === 'cartoes' ? 'active' : ''}" data-tab="cartoes" onclick="window.switchDashWheelTab('cartoes', this)" title="Consumo de Cartões">
+                <span>💳 Cartões</span>
+              </button>
+              <button type="button" class="dash-wheel-tab-btn \${activeDashTab === 'orcamento' ? 'active' : ''}" data-tab="orcamento" onclick="window.switchDashWheelTab('orcamento', this)" title="Execução do Orçamento">
+                <span>🎯 Orçamento</span>
+              </button>
+              <button type="button" class="dash-wheel-tab-btn \${activeDashTab === 'todos' ? 'active' : ''}" data-tab="todos" onclick="window.switchDashWheelTab('todos', this)" title="Visão Geral Consolidada">
+                <span>📊 Todos</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ABA 1: Despesas por Categoria -->
+          <div class="dash-wheel-pane \${activeDashTab === 'categorias' ? 'active' : ''}" data-pane="categorias">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <span style="font-size:12px; color:var(--text-dim); font-weight:600;">\${cats.length} categoria\${cats.length === 1 ? '' : 's'} ativa\${cats.length === 1 ? '' : 's'} no período</span>
+              <span class="tag" data-nav="transacoes" onclick="navigate('transacoes')" style="cursor:pointer; font-size:11px; padding:3px 8px;">Detalhes</span>
+            </div>
+
+            <!-- Doughnut Canvas Categorias -->
+            <div style="position:relative; width:100%; height:180px; margin-bottom:14px;">
+              <canvas id="chartCategorias"></canvas>
+              <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
+                <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Total</span>
+                <b style="font-size:14.5px; font-weight:900; color:#FFFFFF; font-variant-numeric:tabular-nums; margin-top:1px;">\${fmt(actualTotalDesp)}</b>
+              </div>
+            </div>
+
+            <!-- Ranking de Categorias -->
+            \${categoriesSectionHtml}
+          </div>
+
+          <!-- ABA 2: Limites & Cartões de Crédito -->
+          <div class="dash-wheel-pane \${activeDashTab === 'cartoes' ? 'active' : ''}" data-pane="cartoes">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <span style="font-size:12px; color:var(--text-dim); font-weight:600;">Consumo consolidado de crédito</span>
+              <span class="tag" data-nav="cartoes" onclick="navigate('cartoes')" style="cursor:pointer; font-size:11px; padding:3px 8px;">Gerenciar</span>
+            </div>
+
+            \${creditCardsList.length > 0 ? \`
+            <!-- Doughnut Canvas Cartões -->
+            <div style="position:relative; width:100%; height:180px; margin-bottom:12px;">
+              <canvas id="chartCartoesWheel"></canvas>
+              <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
+                <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Uso Global</span>
+                <b style="font-size:18px; font-weight:900; color:\${cardSummary.usagePctGeral >= 85 ? '#F87171' : '#FBBF24'}; line-height:1; margin-top:1px;">\${cardSummary.usagePctGeral}%</b>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; font-size:11.5px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); margin-bottom:10px;">
+              <span>Fatura: <strong style="color:#FBBF24;">\${fmt(cardSummary.spentTotalGeral)}</strong></span>
+              <span>Disp: <strong style="color:#34D399;">\${fmt(cardSummary.availableLimitGeral)}</strong></span>
+            </div>
+
+            \${creditCardsHtml}
+            \` : \`
+            <div style="text-align:center; padding:28px 12px; color:var(--text-dim);">
+              <div style="font-size:32px; margin-bottom:8px;">💳</div>
+              <p style="font-size:12.5px; margin:0 0 10px;">Nenhum cartão de crédito cadastrado.</p>
+              <button type="button" class="btn-primary" data-nav="cartoes" onclick="navigate('cartoes')" style="font-size:11.5px; padding:6px 14px; border-radius:8px; cursor:pointer;">+ Cadastrar Cartão</button>
+            </div>
+            \`}
+          </div>
+
+          <!-- ABA 3: Orçamento & Ritmo Mensal -->
+          <div class="dash-wheel-pane \${activeDashTab === 'orcamento' ? 'active' : ''}" data-pane="orcamento">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <span style="font-size:12px; color:var(--text-dim); font-weight:600;">Velocidade de consumo do período</span>
+              <span class="kpi-tag" style="background:\${paceBadgeBg}; border:1px solid \${paceBadgeBorder}; color:\${paceColor};">\${paceStatus}</span>
+            </div>
+
+            <!-- Doughnut Canvas Orçamento & Ritmo -->
+            <div style="position:relative; width:100%; height:180px; margin-bottom:12px;">
+              <canvas id="chartBudgetWheel"></canvas>
+              <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
+                <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Executado</span>
+                <b style="font-size:18px; font-weight:900; color:\${paceColor}; line-height:1; margin-top:1px;">\${budgetPct}%</b>
+              </div>
+            </div>
+
+            <!-- Comparador de Ritmo Temporal vs Orçamentário -->
+            <div class="dash-pace-box" style="margin-top:0; margin-bottom:12px;">
+              <div class="dash-pace-header">
+                <span style="font-size:11px; color:var(--text-dim); font-weight:600;">Dia \${daysInPeriod} de \${daysInMonthTotal} (\${monthTimePct}% do mês decorrido)</span>
+                <strong style="font-size:11.5px; color:\${paceColor};">\${budgetPct}% Gasto</strong>
+              </div>
+              <div class="dash-pace-meter">
+                <div class="dash-pace-fill" style="width:\${Math.min(100, budgetPct)}%; background:\${paceColor};"></div>
+                <div class="dash-pace-marker" style="left:\${monthTimePct}%;" title="Tempo decorrido no mês"></div>
+              </div>
+              <div style="font-size:11px; color:var(--text-dim); line-height:1.3; margin-top:2px;">
+                \${paceDesc}
+              </div>
+            </div>
+
+            <!-- Contas Bancárias & Saldos -->
+            <div style="margin-top:10px;">
+              \${bankAccountsHtml}
+              \${emptyMeiosHtml}
+            </div>
+          </div>
+
+          <!-- ABA 4: Visão Geral / Todos os Pilares -->
+          <div class="dash-wheel-pane \${activeDashTab === 'todos' ? 'active' : ''}" data-pane="todos">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <span style="font-size:12px; color:var(--text-dim); font-weight:600;">Sumário executivo de todos os pilares</span>
+              <span class="tag" style="font-size:11px; padding:3px 8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.25);">Consolidado</span>
+            </div>
+            \${overviewSectionHtml}
+          </div>
+
         </div>
+
       </div>
 
     </div>
@@ -19756,6 +20000,7 @@ window.excluirOrdemAdmin = async function(paramId) {
 
 /* ==================== Charts ==================== */
 window.dashFlowChartMode = window.dashFlowChartMode || 'area';
+window.activeDashWheelTab = window.activeDashWheelTab || 'categorias';
 
 window.switchCashFlowChartMode = function(mode) {
   window.dashFlowChartMode = mode;
@@ -19765,6 +20010,21 @@ window.switchCashFlowChartMode = function(mode) {
   if (typeof drawDashboardCharts === 'function') {
     drawDashboardCharts();
   }
+};
+
+window.switchDashWheelTab = function(tabName, btnEl) {
+  window.activeDashWheelTab = tabName;
+  document.querySelectorAll('.dash-wheel-tab-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-tab') === tabName);
+  });
+  document.querySelectorAll('.dash-wheel-pane').forEach(p => {
+    p.classList.toggle('active', p.getAttribute('data-pane') === tabName);
+  });
+  requestAnimationFrame(() => {
+    if (typeof drawDashboardCharts === 'function') {
+      drawDashboardCharts();
+    }
+  });
 };
 
 /* ==================== Charts ==================== */
@@ -19954,7 +20214,7 @@ function drawDashboardCharts(){
     // 2. Roda 2: Despesas por Categoria (Doughnut)
     const cats = despesasPorCategoria(periodTx);
     const ctxCat = document.getElementById('chartCategorias');
-    if (ctxCat) {
+    if (ctxCat && (ctxCat.offsetParent !== null || ctxCat.offsetWidth > 0 || (window.activeDashWheelTab || 'categorias') === 'categorias')) {
       const catLabels = cats.length ? cats.map(c => c.name) : ['Nenhum gasto'];
       const catData = cats.length ? cats.map(c => c.val) : [1];
       const catColors = cats.length ? cats.map(c => c.color) : [isLightMode ? '#E2E8F0' : 'rgba(255,255,255,0.08)'];
@@ -20005,7 +20265,7 @@ function drawDashboardCharts(){
 
     // 3. Roda 3: Limites & Cartões de Crédito (Doughnut Wheel)
     const ctxCartoes = document.getElementById('chartCartoesWheel');
-    if (ctxCartoes) {
+    if (ctxCartoes && (ctxCartoes.offsetParent !== null || ctxCartoes.offsetWidth > 0 || window.activeDashWheelTab === 'cartoes')) {
       if (charts.cartoesWheel && charts.cartoesWheel.destroy) {
         charts.cartoesWheel.destroy();
       }
@@ -20059,7 +20319,7 @@ function drawDashboardCharts(){
 
     // 4. Roda 4: Orçamento & Ritmo Mensal (Doughnut Wheel)
     const ctxBudget = document.getElementById('chartBudgetWheel');
-    if (ctxBudget) {
+    if (ctxBudget && (ctxBudget.offsetParent !== null || ctxBudget.offsetWidth > 0 || window.activeDashWheelTab === 'orcamento')) {
       if (charts.budgetWheel && charts.budgetWheel.destroy) {
         charts.budgetWheel.destroy();
       }
