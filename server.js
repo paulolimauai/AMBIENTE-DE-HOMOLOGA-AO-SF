@@ -1558,14 +1558,16 @@ html:not(.user-logged-in) #authPage {
   display: none !important;
 }
 
-/* Exclusivo para Perfil de Administrador: exibir badge e botões administrativos */
+/* Exclusivo para Perfil de Administrador: botões administrativos (badge ADMIN ocultado conforme solicitação) */
 html.is-admin .menu-admin-divider,
 html.is-admin #mobileDrawerAdminDivider {
   display: none !important;
 }
 html.is-admin .menu-admin-badge,
-html.is-admin #mobileDrawerAdminBadge {
-  display: inline-flex !important;
+html.is-admin #mobileDrawerAdminBadge,
+.menu-admin-badge,
+#mobileDrawerAdminBadge {
+  display: none !important;
 }
 html.is-admin #menuFuncoesBtn,
 html.is-admin #mobileDrawerFuncoesBtn {
@@ -1617,17 +1619,7 @@ html.is-admin .menu-track {
 }
 
 html.is-admin .menu-admin-badge {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  height: 24px !important;
-  padding: 0 8px !important;
-  font-size: 9.5px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  border-radius: 6px !important;
-  box-shadow: none !important;
-  margin: 0 4px !important;
+  display: none !important;
 }
 
 html.is-admin .menu button.menu-btn-admin {
@@ -4341,30 +4333,7 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu-admin-badge {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 4px !important;
-  height: 26px !important;
-  padding: 0 10px !important;
-  border-radius: 8px !important;
-  background: rgba(245, 158, 11, 0.14) !important;
-  border: 1px solid rgba(245, 158, 11, 0.35) !important;
-  color: #FBBF24 !important;
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  flex-shrink: 0 !important;
-  margin: 0 4px !important;
-  user-select: none !important;
-  cursor: default !important;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12) !important;
-}
-.menu-admin-badge svg {
-  width: 10px !important;
-  height: 10px !important;
-  stroke-width: 2.6px !important;
+  display: none !important;
 }
 
 .menu button.menu-btn-admin {
@@ -11018,9 +10987,6 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       <button data-page="config" title="Minha Conta"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Minha Conta</span></button>
       
       <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
-      <div class="menu-admin-divider" title="Área de Gestão"></div>
-      <div class="menu-admin-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMIN</span></div>
-
       <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
       <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="display:none;"></span></button>
       <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
@@ -11120,9 +11086,6 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       <button data-page="config"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Minha Conta</button>
       
       <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
-      <div id="mobileDrawerAdminDivider" class="menu-admin-divider" style="display:none; width:88%; margin:14px auto 10px;"></div>
-      <div id="mobileDrawerAdminBadge" class="menu-admin-badge" style="display:none; margin:0 16px 8px; width:fit-content;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMINISTRAÇÃO</span></div>
-
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
       <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Central de Suporte & O.S.</button>
       <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
@@ -15431,7 +15394,7 @@ function updateAdminMenuVisibility(){
     el.style.display = 'none';
   });
   document.querySelectorAll('.menu-admin-badge, #mobileDrawerAdminBadge').forEach(function(el) {
-    el.style.display = isAdminView ? 'inline-flex' : 'none';
+    el.style.display = 'none';
   });
 
   // Ocultar atalho Minha Conta no header para Perfil Administrador
