@@ -625,8 +625,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-17T13:36:26.669Z",
-    "updated_at_ms": 1789652186670
+    "updated_at": "2026-09-17T13:45:56.454Z",
+    "updated_at_ms": 1789652756454
   },
   "homologacao.paulo@nexusfinanceiro.com": {
     "transactions": [
@@ -2860,5 +2860,357 @@
     "nextAttId": 1,
     "nextNotifId": 1,
     "updated_at": "2026-09-17T13:00:35.747Z"
+  },
+  "paulodelima21@gmail.com": {
+    "categories": [
+      {
+        "id": 1,
+        "name": "Alimentação",
+        "color": "#e8974b",
+        "type": "despesa",
+        "icon": "🍔",
+        "count": 0
+      },
+      {
+        "id": 2,
+        "name": "Supermercado",
+        "color": "#d8a34b",
+        "type": "despesa",
+        "icon": "🛒",
+        "count": 0
+      },
+      {
+        "id": 3,
+        "name": "Moradia",
+        "color": "#c98a3f",
+        "type": "despesa",
+        "icon": "🏠",
+        "count": 0
+      },
+      {
+        "id": 4,
+        "name": "Contas da Casa",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "💡",
+        "count": 3
+      },
+      {
+        "id": 5,
+        "name": "Transporte",
+        "color": "#ef5a5a",
+        "type": "despesa",
+        "icon": "🚗",
+        "count": 0
+      },
+      {
+        "id": 6,
+        "name": "Saúde",
+        "color": "#5ac57e",
+        "type": "despesa",
+        "icon": "⚕️",
+        "count": 0
+      },
+      {
+        "id": 7,
+        "name": "Educação",
+        "color": "#4a90e2",
+        "type": "despesa",
+        "icon": "📚",
+        "count": 0
+      },
+      {
+        "id": 8,
+        "name": "Lazer",
+        "color": "#9b6bd8",
+        "type": "despesa",
+        "icon": "🎮",
+        "count": 0
+      },
+      {
+        "id": 9,
+        "name": "Vestuário",
+        "color": "#d85bb0",
+        "type": "despesa",
+        "icon": "👕",
+        "count": 0
+      },
+      {
+        "id": 10,
+        "name": "Assinaturas",
+        "color": "#6b7fd7",
+        "type": "despesa",
+        "icon": "📺",
+        "count": 0
+      },
+      {
+        "id": 11,
+        "name": "Cartão de Crédito",
+        "color": "#e8b04b",
+        "type": "despesa",
+        "icon": "💳",
+        "count": 2
+      },
+      {
+        "id": 12,
+        "name": "Pix Enviado",
+        "color": "#f0a63a",
+        "type": "despesa",
+        "icon": "📤",
+        "count": 0
+      },
+      {
+        "id": 13,
+        "name": "Cuidados Pessoais",
+        "color": "#e07bb0",
+        "type": "despesa",
+        "icon": "💆",
+        "count": 0
+      },
+      {
+        "id": 14,
+        "name": "Outros",
+        "color": "#8a93a3",
+        "type": "despesa",
+        "icon": "📦",
+        "count": 0
+      },
+      {
+        "id": 15,
+        "name": "Salário",
+        "color": "#e8b04b",
+        "type": "receita",
+        "icon": "💼",
+        "count": 1
+      },
+      {
+        "id": 16,
+        "name": "Freelance",
+        "color": "#4a90e2",
+        "type": "receita",
+        "icon": "💻",
+        "count": 0
+      },
+      {
+        "id": 17,
+        "name": "Investimentos",
+        "color": "#5ac57e",
+        "type": "receita",
+        "icon": "📈",
+        "count": 0
+      },
+      {
+        "id": 18,
+        "name": "Pix Recebido",
+        "color": "#3ec7c7",
+        "type": "receita",
+        "icon": "📥",
+        "count": 0
+      },
+      {
+        "id": 19,
+        "name": "Reembolso",
+        "color": "#6bcf9e",
+        "type": "receita",
+        "icon": "💵",
+        "count": 0
+      },
+      {
+        "id": 20,
+        "name": "Bônus / 13º",
+        "color": "#d8a34b",
+        "type": "receita",
+        "icon": "🎉",
+        "count": 0
+      },
+      {
+        "id": 21,
+        "name": "Outras Receitas",
+        "color": "#8a93a3",
+        "type": "receita",
+        "icon": "💰",
+        "count": 0
+      }
+    ],
+    "accounts": [
+      {
+        "id": 2,
+        "name": "Nubank",
+        "type": "Cartão de Crédito",
+        "balance": 2100,
+        "limit": 2100,
+        "color": "#820ad1",
+        "isCard": true,
+        "isCreditCard": true
+      },
+      {
+        "id": 3,
+        "name": "DIGIO",
+        "type": "Cartão de Crédito",
+        "balance": 4050,
+        "limit": 4050,
+        "color": "#1b2d4f",
+        "isCard": true,
+        "isCreditCard": true
+      },
+      {
+        "id": 4,
+        "name": "Amazon",
+        "type": "Conta Corrente",
+        "balance": 2000,
+        "limit": 0,
+        "color": "#e8b04b",
+        "isCard": false,
+        "isCreditCard": false
+      }
+    ],
+    "transactions": [
+      {
+        "id": 6,
+        "desc": "MOTO",
+        "val": 930,
+        "date": "2026-09-30",
+        "cat": "Contas da Casa",
+        "status": "Pendente",
+        "type": "out",
+        "acc": "Boleto / Pix / Outros",
+        "accId": null
+      },
+      {
+        "id": 5,
+        "desc": "INTERNET",
+        "val": 65,
+        "date": "2026-09-30",
+        "cat": "Contas da Casa",
+        "status": "Pendente",
+        "type": "out",
+        "acc": "Boleto / Pix / Outros",
+        "accId": null
+      },
+      {
+        "id": 4,
+        "desc": "Mae",
+        "val": 300,
+        "date": "2026-09-30",
+        "cat": "Contas da Casa",
+        "status": "Pendente",
+        "type": "out",
+        "acc": "Boleto / Pix / Outros",
+        "accId": null
+      },
+      {
+        "id": 3,
+        "desc": "Digio",
+        "val": 308.27,
+        "date": "2026-09-30",
+        "cat": "Cartão de Crédito",
+        "status": "Pendente",
+        "type": "out",
+        "acc": "DIGIO",
+        "accId": 3
+      },
+      {
+        "id": 2,
+        "desc": "Nubank",
+        "val": 1666.09,
+        "date": "2026-09-30",
+        "cat": "Cartão de Crédito",
+        "status": "Pendente",
+        "type": "out",
+        "acc": "Nubank",
+        "accId": 2
+      },
+      {
+        "id": 1,
+        "desc": "Salario",
+        "val": 3300,
+        "date": "2026-09-30",
+        "cat": "Salário",
+        "status": "Pendente",
+        "type": "in",
+        "acc": "Boleto / Pix / Outros",
+        "accId": null
+      }
+    ],
+    "budgets": [],
+    "goals": [],
+    "recurringList": [],
+    "alerts": [],
+    "attachments": [],
+    "notifications": [
+      {
+        "id": 9,
+        "text": "Nova conta/cartão cadastrado: Amazon (Conta Corrente)",
+        "icon": "🏦",
+        "time": 1789653043931,
+        "read": false
+      },
+      {
+        "id": 8,
+        "text": "Nova conta/cartão cadastrado: DIGIO (Cartão de Crédito)",
+        "icon": "🏦",
+        "time": 1789653033609,
+        "read": false
+      },
+      {
+        "id": 7,
+        "text": "Nova conta/cartão cadastrado: Nubank (Cartão de Crédito)",
+        "icon": "🏦",
+        "time": 1789653019738,
+        "read": false
+      },
+      {
+        "id": 6,
+        "text": "Nova transação cadastrada: MOTO — R$ 930,00",
+        "icon": "💸",
+        "time": 1789652967095,
+        "read": false
+      },
+      {
+        "id": 5,
+        "text": "Nova transação cadastrada: INTERNET — R$ 65,00",
+        "icon": "💸",
+        "time": 1789652937152,
+        "read": false
+      },
+      {
+        "id": 4,
+        "text": "Nova transação cadastrada: Mae — R$ 300,00",
+        "icon": "💸",
+        "time": 1789652918621,
+        "read": false
+      },
+      {
+        "id": 3,
+        "text": "Nova transação cadastrada: Digio — R$ 308,27",
+        "icon": "💸",
+        "time": 1789652894937,
+        "read": false
+      },
+      {
+        "id": 2,
+        "text": "Nova transação cadastrada: Nubank — R$ 1.646,09",
+        "icon": "💸",
+        "time": 1789652875627,
+        "read": false
+      },
+      {
+        "id": 1,
+        "text": "Nova transação cadastrada: Salario — R$ 3.300,00",
+        "icon": "💰",
+        "time": 1789652829405,
+        "read": false
+      }
+    ],
+    "nextAccId": 5,
+    "nextTxId": 7,
+    "nextBudgetId": 1,
+    "nextGoalId": 1,
+    "nextRecId": 1,
+    "nextAlertId": 1,
+    "nextAttId": 1,
+    "nextNotifId": 10,
+    "updated_at": "2026-09-19T04:27:03.159Z",
+    "updated_at_ms": 1789792023159
   }
 }
