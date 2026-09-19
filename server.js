@@ -1437,7 +1437,7 @@ const htmlContent = `<!DOCTYPE html>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#000000" id="metaThemeColor">
+<meta name="theme-color" content="#050E1A" id="metaThemeColor">
 <!-- Tipografia Padrão de Site: Inter e Plus Jakarta Sans -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1512,7 +1512,7 @@ const htmlContent = `<!DOCTYPE html>
       sn = parseFloat(sc) / 100 || 1.0;
     }
     document.documentElement.style.setProperty('--app-zoom', sn);
-    var bgCol = isLight ? '#F2F7F4' : '#000000';
+    var bgCol = isLight ? '#F0FDF4' : '#050E1A';
     document.write('<style id="critical-fouc-shield">background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + '</style>');
     var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || sn === 1.0);
     var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('html, body { zoom: ' + sn + ' !important; }');
@@ -1700,12 +1700,12 @@ html.light.is-admin #menuOrdensBtn #osBadgeCount {
 
 :root{
   color-scheme: dark;
-  --bg:#000000;
-  --sidebar:#000000;
-  --card:rgba(14, 14, 14, 0.92);
-  --card-border:rgba(255, 255, 255, 0.10);
-  --card-hover:rgba(24, 24, 24, 0.95);
-  --input-bg:rgba(18, 18, 18, 0.85);
+  --bg:#050E1A;
+  --sidebar:#060D19;
+  --card:rgba(12, 22, 38, 0.88);
+  --card-border:rgba(16, 185, 129, 0.20);
+  --card-hover:rgba(18, 32, 54, 0.94);
+  --input-bg:rgba(10, 18, 32, 0.85);
   --input-border:rgba(255, 255, 255, 0.14);
   --text:#F8FAFC;
   --text-dim:#94A3B8;
@@ -1723,25 +1723,25 @@ html.light.is-admin #menuOrdensBtn #osBadgeCount {
   --orange:#F59E0B;
   --teal:#06B6D4;
   --pink:#EC4899;
-  --hover:rgba(56, 189, 248, 0.09);
-  --border-subtle:rgba(255, 255, 255, 0.08);
+  --hover:rgba(16, 185, 129, 0.09);
+  --border-subtle:rgba(16, 185, 129, 0.14);
   --radius:20px;
-  --shadow:0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px -5px rgba(0, 229, 255, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.16);
+  --shadow:0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px -5px rgba(16, 185, 129, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.16);
 }
 body.light, html.light body, html.light {
   color-scheme: light !important;
-  --bg:#F1F5F9;
+  --bg:#F0FDF4;
   --sidebar:rgba(255, 255, 255, 0.96);
   --card:rgba(255, 255, 255, 0.98);
-  --card-border:rgba(203, 213, 225, 0.85);
+  --card-border:rgba(16, 185, 129, 0.25);
   --card-hover:#F8FAFC;
   --input-bg:#FFFFFF;
   --input-border:#CBD5E1;
   --text:#000000;
   --text-dim:#1E293B;
   --text-faint:#334155;
-  --primary:#0284C7;
-  --primary-hover:#0369A1;
+  --primary:#059669;
+  --primary-hover:#047857;
   --green:#059669;
   --green-soft:rgba(5, 150, 105, 0.12);
   --emerald:#059669;
@@ -1753,8 +1753,8 @@ body.light, html.light body, html.light {
   --orange:#D97706;
   --teal:#0D9488;
   --pink:#DB2777;
-  --hover:rgba(2, 132, 199, 0.08);
-  --border-subtle:rgba(226, 232, 240, 0.90);
+  --hover:rgba(5, 150, 105, 0.08);
+  --border-subtle:rgba(16, 185, 129, 0.20);
   --radius:20px;
   --shadow:0 12px 32px -4px rgba(15, 23, 42, 0.06), 0 4px 8px -2px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
@@ -1789,67 +1789,102 @@ h1, h2, h3, h4, h5, h6, p, span, a, label, table, th, td, div, small, strong, b,
   z-index: -99999 !important;
   pointer-events: none !important;
   user-select: none !important;
-  background-color: #000000 !important;
-  background-image: none !important;
+  background-color: #050E1A !important;
+  background-image: 
+    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
+    linear-gradient(175deg, #040812 0%, #061222 45%, #031510 85%, #02090E 100%) !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
   transform: translateZ(0) !important;
   -webkit-transform: translateZ(0) !important;
 }
 
 body.light #persistentSystemBg,
 body.light .persistent-system-bg {
-  background-color: #F8FAFC !important;
-  background-image: none !important;
+  background-color: #F0FDF4 !important;
+  background-image: 
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(16, 185, 129, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.08) 0%, transparent 60%),
+    linear-gradient(175deg, #F8FCF9 0%, #EFF8F3 45%, #EAF3FB 85%, #F0FDF4 100%) !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
 }
 
 /* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - 4K High-Tech) ==================== */
 :root {
-  --postlogin-bg: #000000;
-  --postlogin-gradient: #000000;
+  --postlogin-bg: #050E1A;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
+    linear-gradient(175deg, #040812 0%, #061222 45%, #031510 85%, #02090E 100%);
 }
 
-/* 1. Titanium Slate & Preto Absoluto (Zero Reflexos Azuis, Preto Puro AMOLED) */
+/* 1. Opções de Fundo Temático Financeiro */
 html[data-app-bg="titanium"],
 html[data-app-bg="obsidian"],
 html[data-app-bg="slate"],
 html[data-app-bg="pure-black"],
-html[data-app-bg="midnight"],
+html[data-app-bg="midnight"] {
+  --postlogin-bg: #050E1A;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
+    linear-gradient(175deg, #040812 0%, #061222 45%, #031510 85%, #02090E 100%);
+}
+
 html[data-app-bg="royal-navy"],
 html[data-app-bg="cyber-blue"] {
-  --postlogin-bg: #000000;
-  --postlogin-gradient: #000000;
+  --postlogin-bg: #040F24;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 85% 65% at 20% 20%, rgba(14, 165, 233, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 80% 25%, rgba(16, 185, 129, 0.15) 0%, transparent 55%),
+    linear-gradient(175deg, #030B1A 0%, #081B38 50%, #031024 100%);
 }
 
 /* 4. Verde Esmeralda Suíço / Private Wealth Banking */
 html[data-app-bg="emerald"],
 html[data-app-bg="emerald-wealth"] {
-  --postlogin-bg: #032015;
-  --postlogin-gradient: linear-gradient(180deg, #053322 0%, #032015 55%, #01110B 100%);
+  --postlogin-bg: #02170F;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 85% 65% at 20% 20%, rgba(16, 185, 129, 0.26) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 80% 25%, rgba(245, 158, 11, 0.18) 0%, transparent 55%),
+    linear-gradient(175deg, #02140D 0%, #053322 50%, #01110B 100%);
 }
 
 /* 5. Vinho Imperial / Ametista Bordeaux Luxo */
 html[data-app-bg="burgundy"],
 html[data-app-bg="wine"] {
-  --postlogin-bg: #220D1D;
-  --postlogin-gradient: linear-gradient(180deg, #37162F 0%, #220D1D 55%, #130710 100%);
+  --postlogin-bg: #1B0B17;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 85% 65% at 20% 20%, rgba(236, 72, 153, 0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 80% 25%, rgba(245, 158, 11, 0.15) 0%, transparent 55%),
+    linear-gradient(175deg, #160813 0%, #37162F 50%, #130710 100%);
 }
 
 /* 6. Bronze & Café Espresso Executivo */
 html[data-app-bg="espresso"],
 html[data-app-bg="bronze"] {
-  --postlogin-bg: #1A130D;
-  --postlogin-gradient: linear-gradient(180deg, #2B1F16 0%, #1A130D 55%, #100B07 100%);
+  --postlogin-bg: #160F0B;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 85% 65% at 20% 20%, rgba(245, 158, 11, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 80% 25%, rgba(16, 185, 129, 0.14) 0%, transparent 55%),
+    linear-gradient(175deg, #120C08 0%, #2B1F16 50%, #100B07 100%);
 }
 
 /* 7. Platina Clean / Modo Claro de Alto Contraste */
 html[data-app-bg="platinum"],
 body.light, html.light {
-  --postlogin-bg: #F1F5F9;
-  --postlogin-gradient: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 50%, #E2E8F0 100%);
-}
-
-html.user-logged-in .app-blob {
-  opacity: 0.01 !important;
-  display: none !important;
+  --postlogin-bg: #F0FDF4;
+  --postlogin-gradient: 
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(16, 185, 129, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.08) 0%, transparent 60%),
+    linear-gradient(175deg, #F8FCF9 0%, #EFF8F3 45%, #EAF3FB 85%, #F0FDF4 100%);
 }
 
 html.user-logged-in #persistentSystemBg,
@@ -1858,7 +1893,7 @@ html.user-logged-in .persistent-system-bg {
   background-image: var(--postlogin-gradient) !important;
   background-size: cover !important;
   background-position: center center !important;
-  background-attachment: scroll !important;
+  background-attachment: fixed !important;
 }
 
 html.user-logged-in,
@@ -1878,8 +1913,8 @@ html.user-logged-in #authPage {
 }
 html.user-logged-in #appMain {
   display: flex !important;
-  background-color: var(--postlogin-bg) !important;
-  background-image: var(--postlogin-gradient) !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
 button, input, select, textarea {
@@ -3554,25 +3589,76 @@ html.light #appMain {
 }
 
 .app-bg-scene{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
-.app-bg-orbital-canvas{position:absolute; inset:0; width:100%; height:100%; opacity:.92; pointer-events:none;}
+.app-bg-orbital-canvas{position:absolute; inset:0; width:100%; height:100%; opacity:.95; pointer-events:none;}
 .app-bg-grid{
   position:absolute; inset:0;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size:40px 40px;
-  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 75%);
-  mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 75%);
+    linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+  background-size:48px 48px;
+  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 85%);
+  mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 85%);
 }
-.app-bg-chart{position:absolute; inset:0; width:100%; height:100%; opacity:.16;}
-.app-blob{display:none !important;}
-.app-blob.a1{width:420px; height:420px; background:#00E5FF; top:-140px; right:-120px; animation:blobFloat 30s ease-in-out infinite;}
-.app-blob.a2{width:360px; height:360px; background:#0284C7; bottom:-150px; left:20%; animation:blobFloat 34s ease-in-out infinite; animation-delay:-10s;}
-.app-blob.a3{width:300px; height:300px; background:#38BDF8; opacity:.05; top:38%; left:-100px; animation:blobFloat 38s ease-in-out infinite; animation-delay:-18s;}
-body.light .app-bg-grid{opacity:.6;}
-body.light .app-bg-chart{opacity:.08;}
-body.light .app-blob{opacity:.06;}
-body.light .app-blob.a3{opacity:.04;}
+.app-bg-chart{position:absolute; inset:0; width:100%; height:100%; opacity:.22;}
+.app-blob{
+  position:absolute; border-radius:50%; pointer-events:none;
+  filter:blur(80px); -webkit-filter:blur(80px);
+  will-change:transform, opacity;
+  display:block !important;
+}
+.app-blob.a1{
+  width:520px; height:520px;
+  background:radial-gradient(circle, rgba(16, 185, 129, 0.32) 0%, rgba(5, 150, 105, 0.10) 55%, transparent 75%);
+  top:-120px; right:-80px;
+  animation:wealthBlobFloat1 24s ease-in-out infinite alternate;
+}
+.app-blob.a2{
+  width:460px; height:460px;
+  background:radial-gradient(circle, rgba(245, 158, 11, 0.26) 0%, rgba(217, 119, 6, 0.08) 55%, transparent 75%);
+  bottom:-120px; left:18%;
+  animation:wealthBlobFloat2 28s ease-in-out infinite alternate;
+  animation-delay:-9s;
+}
+.app-blob.a3{
+  width:400px; height:400px;
+  background:radial-gradient(circle, rgba(14, 165, 233, 0.24) 0%, rgba(2, 132, 199, 0.07) 55%, transparent 75%);
+  top:32%; left:-100px;
+  animation:wealthBlobFloat3 32s ease-in-out infinite alternate;
+  animation-delay:-16s;
+}
+.app-blob.a4{
+  width:440px; height:440px;
+  background:radial-gradient(circle, rgba(52, 211, 153, 0.22) 0%, rgba(16, 185, 129, 0.06) 55%, transparent 75%);
+  top:65%; right:8%;
+  animation:wealthBlobFloat4 26s ease-in-out infinite alternate;
+  animation-delay:-12s;
+}
+@keyframes wealthBlobFloat1 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(45px, 35px, 0) scale(1.10); }
+  100% { transform: translate3d(-35px, 50px, 0) scale(0.95); }
+}
+@keyframes wealthBlobFloat2 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-50px, -40px, 0) scale(1.12); }
+  100% { transform: translate3d(40px, -25px, 0) scale(0.92); }
+}
+@keyframes wealthBlobFloat3 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(35px, -45px, 0) scale(1.08); }
+  100% { transform: translate3d(-25px, 40px, 0) scale(0.96); }
+}
+@keyframes wealthBlobFloat4 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-40px, 30px, 0) scale(1.14); }
+  100% { transform: translate3d(30px, -35px, 0) scale(0.90); }
+}
+body.light .app-bg-grid{opacity:.7; background-image: linear-gradient(to right, rgba(5, 150, 105, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(5, 150, 105, 0.06) 1px, transparent 1px);}
+body.light .app-bg-chart{opacity:.12;}
+body.light .app-blob.a1{opacity:.16; background:radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, transparent 70%);}
+body.light .app-blob.a2{opacity:.14; background:radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, transparent 70%);}
+body.light .app-blob.a3{opacity:.14; background:radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, transparent 70%);}
+body.light .app-blob.a4{opacity:.14; background:radial-gradient(circle, rgba(52, 211, 153, 0.18) 0%, transparent 70%);}
 
 /* ==================== Cabeçalho superior (nav horizontal & drawer mobile) ==================== */
 .topheader{
@@ -3583,12 +3669,18 @@ body.light .app-blob.a3{opacity:.04;}
   z-index:99999 !important;
   width:100% !important;
   height:68px !important;
-  background:#000000 !important;
-  border-bottom:1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow:0 4px 24px rgba(0,0,0,0.75), inset 0 -1px 0 rgba(0, 229, 255, 0.12) !important;
-  backdrop-filter:blur(30px) saturate(190%) !important;
-  -webkit-backdrop-filter:blur(30px) saturate(190%) !important;
+  background:rgba(5, 14, 26, 0.84) !important;
+  border-bottom:1px solid rgba(16, 185, 129, 0.20) !important;
+  box-shadow:0 4px 24px rgba(0,0,0,0.55), inset 0 -1px 0 rgba(16, 185, 129, 0.14) !important;
+  backdrop-filter:blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter:blur(24px) saturate(180%) !important;
   padding-top:env(safe-area-inset-top);
+}
+body.light .topheader{
+  background:rgba(255, 255, 255, 0.88) !important;
+  border-bottom:1px solid rgba(16, 185, 129, 0.24) !important;
+  box-shadow:0 4px 20px rgba(15, 23, 42, 0.05), inset 0 -1px 0 rgba(16, 185, 129, 0.20) !important;
+  backdrop-filter:blur(24px) !important;
 }
 .topheader-row{
   display:flex !important;
@@ -3991,13 +4083,13 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(8, 12, 22, 0.94) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(5, 12, 24, 0.85) !important;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.20) !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.55) !important;
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.55), inset 0 -1px 0 rgba(16, 185, 129, 0.12) !important;
   backdrop-filter: blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   z-index: 9990 !important;
@@ -10219,6 +10311,7 @@ body.light .toast {
     <div class="app-blob a1"></div>
     <div class="app-blob a2"></div>
     <div class="app-blob a3"></div>
+    <div class="app-blob a4"></div>
   </div>
   
   <!-- CABEÇALHO SUPERIOR ESTILO AETHER 4K -->
@@ -22582,9 +22675,9 @@ if (scaleMenuBtn && scaleDropdown) {
   });
 }
 
-// ==================== Gerenciador de Cor de Fundo do Pós-Login (Padrão: Titanium) ====================
+// ==================== Gerenciador de Cor de Fundo do Pós-Login (Padrão: Esmeralda Wealth) ====================
 window.applyPostLoginBg = function(theme) {
-  const selected = 'pure-black';
+  const selected = theme || localStorage.getItem('nexus_post_login_bg') || 'emerald-wealth';
   document.documentElement.setAttribute('data-app-bg', selected);
   if (document.body) document.body.setAttribute('data-app-bg', selected);
   try { localStorage.setItem('nexus_post_login_bg', selected); } catch(e){}
@@ -22592,7 +22685,8 @@ window.applyPostLoginBg = function(theme) {
 
 (function initPostLoginBg() {
   try {
-    window.applyPostLoginBg('pure-black');
+    const saved = localStorage.getItem('nexus_post_login_bg') || 'emerald-wealth';
+    window.applyPostLoginBg(saved);
   } catch(e){}
 })();
 
@@ -22863,11 +22957,8 @@ window.applyPostLoginBg = function(theme) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 1024);
-    if (isTouch && canvasId === 'authBgCanvas') {
-      canvas.style.display = 'none';
-      return;
-    }
+    const isMobile = (window.innerWidth <= 768) || (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
+    const isTouch = ('ontouchstart' in window) && isMobile;
 
     function isCanvasVisible() {
       if (document.hidden) return false;
@@ -22900,21 +22991,19 @@ window.applyPostLoginBg = function(theme) {
     let height = 0;
     let mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false };
 
-    if (!isTouch) {
-      window.addEventListener('mousemove', (e) => {
-        mouse.targetX = e.clientX;
-        mouse.targetY = e.clientY;
-        mouse.active = true;
-      }, { passive: true });
-      window.addEventListener('mouseleave', () => {
-        mouse.active = false;
-        mouse.targetX = -1000;
-        mouse.targetY = -1000;
-      }, { passive: true });
-    }
+    window.addEventListener('mousemove', (e) => {
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+      mouse.active = true;
+    }, { passive: true });
+    window.addEventListener('mouseleave', () => {
+      mouse.active = false;
+      mouse.targetX = -1000;
+      mouse.targetY = -1000;
+    }, { passive: true });
 
     function resize() {
-      dpr = isTouch ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+      dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = Math.floor(width * dpr);
@@ -22926,28 +23015,40 @@ window.applyPostLoginBg = function(theme) {
     }
     resize();
     window.addEventListener('resize', resize, { passive: true });
+    window.addEventListener('orientationchange', resize, { passive: true });
+    window.addEventListener('nexus:session-changed', resize, { passive: true });
+    try {
+      const obs = new MutationObserver(function() {
+        if (isCanvasVisible() && (canvas.width === 0 || width !== window.innerWidth)) {
+          resize();
+        }
+      });
+      obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    } catch(e){}
 
     // 1. Pílulas de Metas e Conquistas Financeiras Pessoais
     const personalFinanceBadges = [
-      { text: '🛡️ Reserva 100%', type: 'gold' },
-      { text: '💰 Economia +R$ 2.500', type: 'emerald' },
-      { text: '🎯 Meta 2026: 86%', type: 'gold' },
-      { text: '📈 Rendimento +16.2%', type: 'emerald' },
-      { text: '💳 Contas em Dia ✓', type: 'emerald' },
-      { text: '📊 Orçamento: 78%', type: 'gold' },
-      { text: '✨ Poupança Ativa', type: 'gold' },
-      { text: '💎 Patrimônio Seguro', type: 'emerald' },
-      { text: '🌱 Investimento Mensal', type: 'emerald' },
-      { text: '🚀 Rumo à Liberdade', type: 'gold' }
+      { text: '🛡️ Reserva 100% Blindada', type: 'gold' },
+      { text: '💰 Economia +R$ 3.500', type: 'emerald' },
+      { text: '🎯 Meta 2026: 94%', type: 'gold' },
+      { text: '📈 Rentabilidade +24.8%', type: 'emerald' },
+      { text: '💳 Faturas em Dia ✓', type: 'emerald' },
+      { text: '📊 Orçamento Sob Controle', type: 'gold' },
+      { text: '✨ Dividendos Mensais Ativos', type: 'gold' },
+      { text: '💎 Liberdade Financeira', type: 'emerald' },
+      { text: '🌱 Investimento Automático', type: 'emerald' },
+      { text: '🚀 Patrimônio em Expansão', type: 'gold' },
+      { text: '▲ Saldo Positivo Mensal', type: 'emerald' },
+      { text: '🪙 Fundo de Prosperidade', type: 'gold' }
     ];
 
-    const currencyTokens = ['R$', '$', '€', '₿', '▲', '%', '💎', '🪙'];
+    const currencyTokens = ['R$', '$', '€', '₿', '▲', '+24%', '💎', '🪙', '📈', '↗', '£', '¥'];
     const goldTones = ['#F59E0B', '#FBBF24', '#FCD34D', '#EAB308'];
     const emeraldTones = ['#10B981', '#34D399', '#059669', '#6EE7B7'];
 
     // 2. Moedas Douradas e Tokens Financeiros Flutuantes
     const wealthCoins = [];
-    const coinCount = isTouch ? 8 : 16;
+    const coinCount = isMobile ? 12 : 22;
     for (let i = 0; i < coinCount; i++) {
       const isEmerald = Math.random() > 0.6;
       wealthCoins.push({
@@ -22970,7 +23071,7 @@ window.applyPostLoginBg = function(theme) {
 
     // 3. Pílulas de Metas Flutuantes
     const floatingBadges = [];
-    const badgeCount = isTouch ? 4 : 8;
+    const badgeCount = isMobile ? 5 : 9;
     for (let b = 0; b < badgeCount; b++) {
       const item = personalFinanceBadges[b % personalFinanceBadges.length];
       floatingBadges.push({
@@ -22991,7 +23092,7 @@ window.applyPostLoginBg = function(theme) {
 
     // 4. Rede / Constelação de Patrimônio Pessoal
     const wealthNodes = [];
-    const nodeCount = isTouch ? 14 : 28;
+    const nodeCount = isMobile ? 18 : 34;
     for (let n = 0; n < nodeCount; n++) {
       const isGreen = Math.random() > 0.45;
       wealthNodes.push({
@@ -23007,7 +23108,7 @@ window.applyPostLoginBg = function(theme) {
 
     // 5. Candlesticks de Prosperidade
     const candlestickBars = [];
-    const candleCount = isTouch ? 8 : 22;
+    const candleCount = isMobile ? 14 : 28;
     for (let c = 0; c < candleCount; c++) {
       const isBullish = Math.random() > 0.32;
       candlestickBars.push({
@@ -23025,7 +23126,7 @@ window.applyPostLoginBg = function(theme) {
 
     // 6. Micro-Fagulhas de Ouro e Esmeralda (Gold Dust)
     const dustParticles = [];
-    const dustCount = isTouch ? 16 : 42;
+    const dustCount = isMobile ? 22 : 46;
     for (let d = 0; d < dustCount; d++) {
       const isGold = Math.random() > 0.4;
       dustParticles.push({
@@ -23190,32 +23291,30 @@ window.applyPostLoginBg = function(theme) {
       ctx.restore();
 
       // E. Candlesticks de Prosperidade (Mercado & Alta)
-      if (canvasId === 'appBgOrbitalCanvas') {
-        ctx.save();
-        candlestickBars.forEach(candle => {
-          candle.x += candle.vx;
-          if (candle.x < -30) {
-            candle.x = width + 30;
-            candle.y = height * 0.76 + (Math.random() * 60 - 30);
-            candle.isBullish = Math.random() > 0.32;
-          }
-          const candleColor = candle.isBullish 
-            ? (isLight ? '#059669' : '#10B981') 
-            : (isLight ? '#D97706' : '#F59E0B');
+      ctx.save();
+      candlestickBars.forEach(candle => {
+        candle.x += candle.vx;
+        if (candle.x < -30) {
+          candle.x = width + 30;
+          candle.y = height * 0.76 + (Math.random() * 60 - 30);
+          candle.isBullish = Math.random() > 0.32;
+        }
+        const candleColor = candle.isBullish 
+          ? (isLight ? '#059669' : '#10B981') 
+          : (isLight ? '#D97706' : '#F59E0B');
 
-          ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
-          ctx.strokeStyle = candleColor;
-          ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(245, 158, 11, 0.25)');
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
-          ctx.lineTo(candle.x, candle.y + candle.height / 2 + candle.wickBottom);
-          ctx.stroke();
-          ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
-          ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
-        });
-        ctx.restore();
-      }
+        ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
+        ctx.strokeStyle = candleColor;
+        ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(245, 158, 11, 0.25)');
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
+        ctx.lineTo(candle.x, candle.y + candle.height / 2 + candle.wickBottom);
+        ctx.stroke();
+        ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
+        ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
+      });
+      ctx.restore();
 
       // F. Moedas Douradas e Tokens de Riqueza Flutuantes (R$, $, €, ₿, 💎)
       ctx.save();
