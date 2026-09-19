@@ -1815,9 +1815,9 @@ code, pre, kbd, samp, .font-mono {
   user-select: none !important;
   background-color: #030712 !important;
   background-image: 
-    linear-gradient(135deg, rgba(3, 7, 18, 0.58) 0%, rgba(10, 15, 30, 0.42) 50%, rgba(2, 4, 10, 0.65) 100%),
-    radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.18) 0%, transparent 50%),
-    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.14) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(3, 7, 18, 0.82) 0%, rgba(10, 15, 30, 0.68) 50%, rgba(2, 4, 10, 0.88) 100%),
+    radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
     url('/images/75e57cc01266bfd34f8e2189776828a3.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -1831,9 +1831,9 @@ body.light #persistentSystemBg,
 body.light .persistent-system-bg {
   background-color: #F8FAFC !important;
   background-image: 
-    linear-gradient(135deg, rgba(248, 250, 252, 0.82) 0%, rgba(241, 245, 249, 0.72) 50%, rgba(226, 232, 240, 0.85) 100%),
-    radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.14) 0%, transparent 50%),
-    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(248, 250, 252, 0.90) 0%, rgba(241, 245, 249, 0.82) 50%, rgba(226, 232, 240, 0.92) 100%),
+    radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.10) 0%, transparent 50%),
     url('/images/75e57cc01266bfd34f8e2189776828a3.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -2457,40 +2457,20 @@ body.light .auth-card-glare {
   background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(245, 158, 11, 0.10), transparent 70%) !important;
 }
 
-/* Layout Executivo 2 Colunas para o Login no server.js (Cockpit Panorâmico em Vidro Líquido 4K) */
+/* Layout Executivo 2 Colunas para o Login no server.js (Split Harmonizado) */
 .auth-exec-layout {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 1240px;
+  max-width: 1220px;
   margin: auto;
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: clamp(20px, 2.8vw, 36px);
+  grid-template-columns: 1.14fr 0.86fr;
+  gap: clamp(20px, 3vw, 40px);
   align-items: stretch;
   justify-content: center;
-  padding: clamp(18px, 2.5vh, 32px) clamp(16px, 2.2vw, 32px);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.45) 45%, rgba(6, 10, 22, 0.68) 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.14) !important;
-  border-top: 2px solid rgba(255, 255, 255, 0.38) !important;
-  border-radius: 36px !important;
-  backdrop-filter: blur(28px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-  box-shadow: 
-    0 40px 100px -20px rgba(0, 0, 0, 0.85),
-    0 0 50px -15px rgba(245, 158, 11, 0.15),
-    inset 0 1.5px 2px rgba(255, 255, 255, 0.28),
-    inset 0 -1.5px 2px rgba(0, 0, 0, 0.5) !important;
+  padding: clamp(10px, 2vh, 22px) 16px;
   flex: 1;
-}
-
-body.light .auth-exec-layout {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(248, 250, 252, 0.78) 50%, rgba(241, 245, 249, 0.85) 100%) !important;
-  border: 1.5px solid #CBD5E1 !important;
-  border-top: 2.5px solid #FFFFFF !important;
-  box-shadow: 0 30px 80px -15px rgba(15, 23, 42, 0.12), 0 0 35px -10px rgba(245, 158, 11, 0.08), inset 0 2px 3px #FFFFFF !important;
-  backdrop-filter: blur(24px) saturate(170%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
 }
 
 .auth-global-footer {
@@ -2731,66 +2711,21 @@ body.light .auth-showcase-panel {
 }
 
 .auth-metric-card {
-  position: relative;
-  overflow: hidden;
   padding: clamp(12px, 1.6vh, 16px) 14px;
   border-radius: 18px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 28, 48, 0.70) 50%, rgba(8, 12, 24, 0.85) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-top: 1.8px solid rgba(255, 255, 255, 0.45) !important;
-  backdrop-filter: blur(24px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  box-shadow: 0 12px 32px -6px rgba(0, 0, 0, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.28) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 28, 48, 0.70) 50%, rgba(9, 14, 26, 0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.40);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 12px 32px -6px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
-.auth-metric-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2.5px;
-  opacity: 0.9;
-}
-.metric-card-emerald::after { background: linear-gradient(90deg, transparent, #10B981 40%, #34D399 60%, transparent); }
-.metric-card-amber::after { background: linear-gradient(90deg, transparent, #F59E0B 40%, #FBBF24 60%, transparent); }
-.metric-card-sapphire::after { background: linear-gradient(90deg, transparent, #38BDF8 40%, #7DD3FC 60%, transparent); }
-
 .auth-metric-card:hover {
-  transform: translateY(-3px) scale(1.02) !important;
-  border-color: rgba(245, 158, 11, 0.50) !important;
-  border-top-color: rgba(255, 255, 255, 0.75) !important;
-  box-shadow: 0 18px 42px -6px rgba(0, 0, 0, 0.75), 0 0 25px rgba(245, 158, 11, 0.22), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
-}
-
-.auth-security-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.30);
-  color: #34D399;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  backdrop-filter: blur(10px);
-}
-.auth-security-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 8px #10B981;
-  animation: pulseFintechDot 1.8s infinite ease-in-out;
-}
-body.light .auth-security-pill {
-  background: rgba(16, 185, 129, 0.10);
-  border-color: rgba(5, 150, 105, 0.30);
-  color: #047857;
+  transform: translateY(-2.5px);
+  border-color: rgba(245, 158, 11, 0.45);
+  border-top-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 18px 42px -6px rgba(0, 0, 0, 0.7), 0 0 25px rgba(245, 158, 11, 0.20), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
 }
 
 .metric-card-label {
@@ -10652,19 +10587,19 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       </div>
 
       <div class="auth-showcase-metrics">
-        <div class="auth-metric-card metric-card-emerald">
+        <div class="auth-metric-card">
           <div class="metric-card-label">Economia do Mês</div>
           <div class="metric-val">R$ 3.850</div>
           <div class="metric-sub-green">+18% guardado 🎯</div>
         </div>
 
-        <div class="auth-metric-card metric-card-amber">
+        <div class="auth-metric-card">
           <div class="metric-card-label">Orçamento & Gastos</div>
           <div class="metric-val">Sob Controle</div>
           <div class="metric-sub-amber">Sem sustos no fim do mês 💡</div>
         </div>
 
-        <div class="auth-metric-card metric-card-sapphire">
+        <div class="auth-metric-card">
           <div class="metric-card-label">Metas & Sonhos</div>
           <div class="metric-val">84% Concluído</div>
           <div class="metric-sub-blue">Rumo à sua conquista 🚀</div>
@@ -10673,7 +10608,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
       <div class="auth-showcase-footer">
         <span style="display:flex; align-items:center; gap:6px;">
-          <span style="width:7px; height:7px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 10px #10B981;"></span>
+          <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block; box-shadow:0 0 8px rgba(245,158,11,0.6);"></span>
           Seus dados 100% seguros e confidenciais
         </span>
         <span>•</span>
@@ -10689,10 +10624,6 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         <div class="auth-logo-badge">N</div>
         <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
         <div class="auth-subtitle" id="authBoxSubtitle">Sua Gestão Financeira Pessoal Inteligente</div>
-        <div class="auth-security-pill">
-          <span class="auth-security-dot"></span>
-          <span>Ambiente Seguro • Criptografia 256-Bit SSL</span>
-        </div>
       </div>
 
       <!-- Navegação por Abas Segmentadas -->
