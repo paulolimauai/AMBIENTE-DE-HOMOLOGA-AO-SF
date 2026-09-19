@@ -1627,34 +1627,36 @@ html.is-admin .menu-admin-badge {
 html.is-admin .menu button.menu-btn-admin {
   position: relative !important;
   width: auto !important;
-  height: 35px !important;
-  min-height: 35px !important;
-  max-height: 35px !important;
-  padding: 0 13px !important;
-  border-radius: 8px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 16px !important;
+  border-radius: 11px !important;
   display: inline-flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px !important;
-  font-size: 12.5px !important;
-  font-weight: 550 !important;
+  gap: 8px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
+  flex-shrink: 0 !important;
 }
 
 html.is-admin .menu button.menu-btn-admin .ic {
-  width: 17px !important;
-  height: 17px !important;
+  width: 19px !important;
+  height: 19px !important;
   margin: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+  flex-shrink: 0 !important;
 }
 
 html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
-  font-size: 12.5px !important;
-  font-weight: 550 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
   display: inline-block !important;
@@ -3973,7 +3975,7 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Barra de Menu Horizontal no Topo (Design Executivo Interativo Ultra-Ajustado) ==================== */
+/* ==================== Barra de Menu Horizontal no Topo (Design Executivo Interativo Ultra-Ajustado & Espaçoso) ==================== */
 nav.menu {
   position: fixed !important;
   top: 68px !important;
@@ -3982,8 +3984,8 @@ nav.menu {
   bottom: auto !important;
   width: 100% !important;
   max-width: 100% !important;
-  height: 52px !important;
-  min-height: 52px !important;
+  height: 56px !important;
+  min-height: 56px !important;
   margin: 0 !important;
   padding: 0 !important;
   display: flex !important;
@@ -4005,7 +4007,7 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px !important;
+  gap: 8px !important;
   width: 100% !important;
   max-width: 1760px !important;
   height: 100% !important;
@@ -4025,7 +4027,7 @@ nav.menu::-webkit-scrollbar {
 @media (min-width: 2560px) {
   .menu-track {
     max-width: 2400px !important;
-    gap: 9px !important;
+    gap: 12px !important;
     padding: 0 32px !important;
   }
 }
@@ -4043,17 +4045,17 @@ nav.menu::-webkit-scrollbar {
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  gap: 7px !important;
+  gap: 8px !important;
   width: auto !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  padding: 0 13px !important;
-  border-radius: 10px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 15px !important;
+  border-radius: 11px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
-  font-size: 13px !important;
+  font-size: 13.5px !important;
   font-weight: 550 !important;
   letter-spacing: -0.01em !important;
   white-space: nowrap !important;
@@ -4086,7 +4088,7 @@ nav.menu::-webkit-scrollbar {
 .menu button.active {
   background: linear-gradient(180deg, rgba(14, 165, 233, 0.18) 0%, rgba(14, 165, 233, 0.08) 100%) !important;
   border: 1px solid rgba(56, 189, 248, 0.45) !important;
-  border-radius: 10px !important;
+  border-radius: 11px !important;
   color: #38BDF8 !important;
   font-weight: 650 !important;
   box-shadow: 0 4px 16px rgba(14, 165, 233, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
@@ -4102,8 +4104,8 @@ nav.menu::-webkit-scrollbar {
   content: '' !important;
   position: absolute !important;
   bottom: 0 !important;
-  left: 12px !important;
-  right: 12px !important;
+  left: 14px !important;
+  right: 14px !important;
   top: auto !important;
   width: auto !important;
   height: 2.5px !important;
@@ -4118,8 +4120,8 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button .ic {
-  width: 18px !important;
-  height: 18px !important;
+  width: 19px !important;
+  height: 19px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4130,15 +4132,15 @@ nav.menu::-webkit-scrollbar {
   transition: transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s ease !important;
 }
 .menu button .ic svg {
-  width: 16px !important;
-  height: 16px !important;
+  width: 17px !important;
+  height: 17px !important;
   stroke-width: 2.1px !important;
   stroke: currentColor !important;
   display: block !important;
 }
 
 .menu button span:not(.ic) {
-  font-size: 13px !important;
+  font-size: 13.5px !important;
   font-weight: inherit !important;
   line-height: 1 !important;
   display: inline-block !important;
@@ -4149,10 +4151,10 @@ nav.menu::-webkit-scrollbar {
 
 .menu-admin-divider {
   width: 1px !important;
-  height: 22px !important;
+  height: 24px !important;
   background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.45) 50%, rgba(245, 158, 11, 0.1) 100%) !important;
   border-radius: 999px !important;
-  margin: 0 5px !important;
+  margin: 0 6px !important;
   flex-shrink: 0 !important;
 }
 
@@ -4161,13 +4163,13 @@ nav.menu::-webkit-scrollbar {
   align-items: center !important;
   justify-content: center !important;
   gap: 4px !important;
-  height: 24px !important;
-  padding: 0 9px !important;
-  border-radius: 7px !important;
+  height: 26px !important;
+  padding: 0 10px !important;
+  border-radius: 8px !important;
   background: rgba(245, 158, 11, 0.14) !important;
   border: 1px solid rgba(245, 158, 11, 0.35) !important;
   color: #FBBF24 !important;
-  font-size: 9.5px !important;
+  font-size: 10px !important;
   font-weight: 800 !important;
   letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
@@ -4178,19 +4180,19 @@ nav.menu::-webkit-scrollbar {
   box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12) !important;
 }
 .menu-admin-badge svg {
-  width: 9.5px !important;
-  height: 9.5px !important;
+  width: 10px !important;
+  height: 10px !important;
   stroke-width: 2.6px !important;
 }
 
 .menu button.menu-btn-admin {
   position: relative !important;
   width: auto !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  padding: 0 13px !important;
-  border-radius: 10px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 16px !important;
+  border-radius: 11px !important;
   color: #CBD5E1 !important;
   background: rgba(245, 158, 11, 0.05) !important;
   border: 1px solid rgba(245, 158, 11, 0.18) !important;
@@ -4216,7 +4218,7 @@ nav.menu::-webkit-scrollbar {
 .menu button.menu-btn-admin.active {
   background: linear-gradient(180deg, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.10) 100%) !important;
   border: 1px solid rgba(245, 158, 11, 0.55) !important;
-  border-radius: 10px !important;
+  border-radius: 11px !important;
   color: #FBBF24 !important;
   font-weight: 650 !important;
   box-shadow: 0 4px 16px rgba(245, 158, 11, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
@@ -4226,8 +4228,8 @@ nav.menu::-webkit-scrollbar {
   content: '' !important;
   position: absolute !important;
   bottom: 0 !important;
-  left: 12px !important;
-  right: 12px !important;
+  left: 14px !important;
+  right: 14px !important;
   top: auto !important;
   width: auto !important;
   height: 2.5px !important;
@@ -4314,7 +4316,7 @@ body.light .menu button.active,
 html.light .menu button.active {
   background: #EFF6FF !important;
   border: 1px solid #BAE6FD !important;
-  border-radius: 10px !important;
+  border-radius: 11px !important;
   color: #0284C7 !important;
   font-weight: 650 !important;
   box-shadow: 0 2px 10px rgba(2, 132, 199, 0.15) !important;
@@ -4324,8 +4326,8 @@ html.light .menu button.active::before {
   content: '' !important;
   position: absolute !important;
   bottom: 0 !important;
-  left: 12px !important;
-  right: 12px !important;
+  left: 14px !important;
+  right: 14px !important;
   top: auto !important;
   width: auto !important;
   height: 2.5px !important;
@@ -4380,7 +4382,7 @@ body.light .menu button.menu-btn-admin.active,
 html.light .menu button.menu-btn-admin.active {
   background: #FEF3C7 !important;
   border: 1px solid #FCD34D !important;
-  border-radius: 10px !important;
+  border-radius: 11px !important;
   color: #92400E !important;
   font-weight: 650 !important;
   box-shadow: 0 2px 10px rgba(217, 119, 6, 0.18) !important;
@@ -4390,8 +4392,8 @@ html.light .menu button.menu-btn-admin.active::before {
   content: '' !important;
   position: absolute !important;
   bottom: 0 !important;
-  left: 12px !important;
-  right: 12px !important;
+  left: 14px !important;
+  right: 14px !important;
   top: auto !important;
   width: auto !important;
   height: 2.5px !important;
