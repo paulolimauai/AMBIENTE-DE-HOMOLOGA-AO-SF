@@ -2880,16 +2880,17 @@ body.light .auth-subtitle {
   font-weight: 700 !important;
 }
 
-/* Abas de Navegação Segmentada (Entrar / Criar Conta) */
+/* Abas de Navegação Segmentada (Entrar / Criar Conta - Menu Executivo Ampliado) */
 .auth-tabs-nav {
   display: flex;
   background: rgba(15, 23, 42, 0.65) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
-  border-radius: 14px !important;
-  padding: 4px !important;
-  margin-bottom: 18px;
-  gap: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 16px !important;
+  padding: 6px !important;
+  margin-bottom: 22px;
+  gap: 6px;
+  min-height: 56px;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.40) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
@@ -2902,42 +2903,56 @@ body.light .auth-tabs-nav {
 
 .auth-tab-btn {
   flex: 1;
-  padding: 9px 12px;
-  border-radius: 10px;
+  height: 48px;
+  padding: 10px 18px;
+  border-radius: 12px;
   border: 1px solid transparent;
   background: transparent;
   color: #94A3B8;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 14.5px;
+  font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 9px;
+  letter-spacing: 0.015em;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.auth-tab-btn svg {
+  width: 19px !important;
+  height: 19px !important;
+  stroke-width: 2.3 !important;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 .auth-tab-btn:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.07);
+}
+.auth-tab-btn:hover svg {
+  transform: scale(1.12);
 }
 .auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(217, 119, 6, 0.18) 100%) !important;
-  color: #FCD34D !important;
-  border: 1px solid rgba(245, 158, 11, 0.55) !important;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
-  font-weight: 800;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.20) 100%) !important;
+  color: #FDE68A !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.70) !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.32), inset 0 1px 1.5px rgba(255, 255, 255, 0.40) !important;
+  font-weight: 900 !important;
 }
 body.light .auth-tab-btn {
-  color: #64748B !important;
+  color: #1E293B !important;
+  font-weight: 800 !important;
 }
 body.light .auth-tab-btn:hover {
   color: #0F172A !important;
 }
 body.light .auth-tab-btn.active {
   background: #FFFFFF !important;
-  color: #D97706 !important;
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 2px 8px rgba(15,23,42,0.08) !important;
+  color: #B45309 !important;
+  border: 1.8px solid #D97706 !important;
+  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.22), inset 0 1px 1.5px #FFFFFF !important;
+  font-weight: 900 !important;
 }
 
 /* Campos de Formulário Modernos com Ícones */
@@ -5372,25 +5387,26 @@ html.light .notif-desc {
 }
 .app-dev-credit{
   position:relative; width:100%; z-index:10; margin-top:auto;
-  display:flex; justify-content:center; padding:14px 16px calc(14px + env(safe-area-inset-bottom));
-  background:var(--sidebar); border-top:1px solid var(--card-border);
+  display:flex; justify-content:center; padding:16px 16px calc(16px + env(safe-area-inset-bottom));
+  background: transparent !important; border-top: 1px solid rgba(168, 85, 247, 0.15) !important;
 }
-/* ==================== Assinatura Executiva Ultra 4K Glass Estável (Paulo Lima) ==================== */
+/* ==================== Assinatura Executiva Glassmorphism Ultra 4K (Paulo Lima) ==================== */
 .dev-signature {
   position: relative !important;
   overflow: hidden !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 10px !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 28, 52, 0.85) 45%, rgba(10, 16, 32, 0.95) 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.20) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.50) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(26, 12, 48, 0.82) 40%, rgba(8, 4, 18, 0.96) 100%) !important;
+  border: 1.5px solid rgba(168, 85, 247, 0.45) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.70) !important;
+  border-bottom: 1.5px solid rgba(147, 51, 234, 0.55) !important;
   border-radius: 999px !important;
   padding: 7px 22px 7px 8px !important;
-  backdrop-filter: blur(25px) saturate(210%) !important;
-  -webkit-backdrop-filter: blur(25px) saturate(210%) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.50), inset 0 1.5px 2px rgba(255, 255, 255, 0.25) !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  backdrop-filter: blur(28px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
+  box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.85), 0 0 25px rgba(168, 85, 247, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.35), inset 0 -1.5px 2px rgba(0, 0, 0, 0.6) !important;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
   text-decoration: none !important;
   cursor: pointer !important;
   user-select: none !important;
@@ -5404,39 +5420,41 @@ html.light .notif-desc {
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(192, 132, 252, 0.08) 35%, transparent 65%) !important;
   pointer-events: none !important;
   z-index: 1 !important;
 }
 
 .dev-signature:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(30, 48, 80, 0.90) 45%, rgba(15, 25, 48, 0.98) 100%) !important;
-  border-color: rgba(255, 255, 255, 0.40) !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 20px rgba(239, 68, 68, 0.3), inset 0 1.5px 2px rgba(255, 255, 255, 0.35) !important;
-  transform: translateY(-2px) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(48, 18, 88, 0.88) 40%, rgba(14, 5, 28, 0.98) 100%) !important;
+  border-color: rgba(216, 180, 254, 0.85) !important;
+  border-top-color: #FFFFFF !important;
+  box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.95), 0 0 36px rgba(192, 132, 252, 0.65), inset 0 2px 3px rgba(255, 255, 255, 0.50) !important;
+  transform: translateY(-2.5px) scale(1.02) !important;
 }
 
-/* Ícone 3D Rubi / Vidro Estável */
+/* Ícone 3D de Vidro Roxo Ametista */
 .dev-signature-icon {
   width: 30px !important;
   height: 30px !important;
   border-radius: 50% !important;
   flex-shrink: 0 !important;
-  background: radial-gradient(circle at 35% 28%, #FFA4A4 0%, #EF4444 42%, #DC2626 70%, #7F1D1D 100%) !important;
+  background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #E9D5FF 24%, #C084FC 48%, #9333EA 72%, #3B0764 100%) !important;
   color: #FFFFFF !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.70) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.65) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.80), 0 3px 10px rgba(0, 0, 0, 0.6), inset 0 2px 2px rgba(255, 255, 255, 0.85) !important;
   position: relative !important;
   z-index: 2 !important;
-  transition: transform 0.25s ease !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease !important;
   animation: none !important;
 }
 
 .dev-signature:hover .dev-signature-icon {
-  transform: scale(1.08) !important;
+  transform: scale(1.14) rotate(-6deg) !important;
+  box-shadow: 0 0 26px rgba(192, 132, 252, 1), 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 2px #FFFFFF !important;
 }
 
 .dev-signature-icon svg {
@@ -5445,7 +5463,7 @@ html.light .notif-desc {
   stroke-width: 2.8px !important;
   display: block !important;
   stroke: #FFFFFF !important;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)) !important;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.8)) !important;
 }
 
 .dev-signature-text {
@@ -5459,18 +5477,22 @@ html.light .notif-desc {
 .dev-signature-label {
   font-size: 11px !important;
   font-weight: 800 !important;
-  color: #94A3B8 !important;
-  letter-spacing: 0.08em !important;
+  color: #E2E8F0 !important;
+  letter-spacing: 0.10em !important;
   text-transform: uppercase !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
 }
 
-/* Nome Executivo Estável sem piscar */
+/* Nome Executivo em Branco Puro com Realce Roxo Ametista */
 .dev-signature-name {
-  font-size: 14px !important;
+  font-size: 14.5px !important;
   font-weight: 900 !important;
   color: #FFFFFF !important;
-  letter-spacing: 0.04em !important;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+  letter-spacing: 0.05em !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAF5FF 30%, #E9D5FF 65%, #C084FC 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 0 14px rgba(192, 132, 252, 0.80)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 5px !important;
@@ -5479,40 +5501,43 @@ html.light .notif-desc {
 
 .dev-sparkle {
   display: inline-block !important;
-  font-size: 12px !important;
-  color: #F87171 !important;
+  font-size: 13px !important;
+  color: #D8B4FE !important;
+  filter: drop-shadow(0 0 8px #C084FC) drop-shadow(0 0 16px #A855F7) !important;
   animation: none !important;
 }
 
-/* Suporte Refinado para Tema Claro */
+/* Suporte de Alto Contraste para Tema Claro */
 body.light .dev-signature {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(147, 51, 234, 0.45) !important;
+  border-top-color: rgba(168, 85, 247, 0.80) !important;
+  border-bottom-color: rgba(147, 51, 234, 0.60) !important;
+  box-shadow: 0 8px 24px rgba(147, 51, 234, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
 }
 body.light .dev-signature:hover {
-  background: #F8FAFC !important;
-  border-color: #94A3B8 !important;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12) !important;
+  background: #FAF5FF !important;
+  border-color: #9333EA !important;
+  box-shadow: 0 12px 28px rgba(147, 51, 234, 0.28), 0 0 20px rgba(168, 85, 247, 0.25) !important;
 }
 body.light .dev-signature-label {
-  color: #64748B !important;
-}
-body.light .dev-signature-name {
-  color: #0F172A !important;
-  text-shadow: none !important;
-}
-body.light .dev-signature-label {
-  color: #475569 !important;
+  color: #09090B !important;
+  font-weight: 800 !important;
   text-shadow: none !important;
 }
 body.light .dev-signature-name {
-  background: linear-gradient(90deg, #991B1B 0%, #DC2626 25%, #EF4444 50%, #DC2626 75%, #991B1B 100%) !important;
-  background-size: 200% auto !important;
-  animation: devTextShine 3.2s linear infinite !important;
+  background: linear-gradient(135deg, #09090B 0%, #3B0764 45%, #6B21A8 75%, #9333EA 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 1px 4px rgba(239, 68, 68, 0.35)) !important;
+  filter: drop-shadow(0 1px 3px rgba(147, 51, 234, 0.35)) !important;
+}
+body.light .dev-sparkle {
+  color: #7E22CE !important;
+  filter: drop-shadow(0 0 6px rgba(147, 51, 234, 0.5)) !important;
+}
+body.light .app-dev-credit {
+  background: transparent !important;
+  border-top: 1px solid rgba(147, 51, 234, 0.15) !important;
 }
 
 .cfg-divider{display:flex; align-items:center; gap:10px; margin:22px 0 14px;}

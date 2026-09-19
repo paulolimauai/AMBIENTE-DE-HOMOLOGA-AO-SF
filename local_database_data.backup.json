@@ -2973,7 +2973,7 @@
         "color": "#8a93a3",
         "type": "despesa",
         "icon": "📦",
-        "count": 0
+        "count": 1
       },
       {
         "id": 15,
@@ -3066,6 +3066,17 @@
     ],
     "transactions": [
       {
+        "id": 7,
+        "desc": "SEM PARAR",
+        "val": 24,
+        "date": "2026-09-30",
+        "cat": "Outros",
+        "status": "Pendente",
+        "type": "out",
+        "acc": "Boleto / Pix / Outros",
+        "accId": null
+      },
+      {
         "id": 6,
         "desc": "MOTO",
         "val": 930,
@@ -3139,6 +3150,13 @@
     "attachments": [],
     "notifications": [
       {
+        "id": 10,
+        "text": "Nova transação cadastrada: SEM PARAR — R$ 24,00",
+        "icon": "💸",
+        "time": 1789819636463,
+        "read": false
+      },
+      {
         "id": 9,
         "text": "Nova conta/cartão cadastrado: Amazon (Conta Corrente)",
         "icon": "🏦",
@@ -3203,14 +3221,14 @@
       }
     ],
     "nextAccId": 5,
-    "nextTxId": 7,
+    "nextTxId": 8,
     "nextBudgetId": 1,
     "nextGoalId": 1,
     "nextRecId": 1,
     "nextAlertId": 1,
     "nextAttId": 1,
-    "nextNotifId": 10,
-    "updated_at": "2026-09-19T11:59:28.629Z",
-    "updated_at_ms": 1789819168629
+    "nextNotifId": 11,
+    "updated_at": "2026-09-19T12:09:10.851Z",
+    "updated_at_ms": 1789819750851
   }
 }
