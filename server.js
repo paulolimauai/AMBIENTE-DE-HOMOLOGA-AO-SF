@@ -1700,13 +1700,13 @@ html.light.is-admin #menuOrdensBtn #osBadgeCount {
 
 :root{
   color-scheme: dark;
-  --bg:#050E1A;
-  --sidebar:#060D19;
-  --card:rgba(12, 22, 38, 0.88);
-  --card-border:rgba(16, 185, 129, 0.20);
-  --card-hover:rgba(18, 32, 54, 0.94);
-  --input-bg:rgba(10, 18, 32, 0.85);
-  --input-border:rgba(255, 255, 255, 0.14);
+  --bg:#000000;
+  --sidebar:#000000;
+  --card:rgba(8, 8, 12, 0.94);
+  --card-border:rgba(255, 255, 255, 0.12);
+  --card-hover:rgba(16, 16, 22, 0.96);
+  --input-bg:rgba(12, 12, 18, 0.90);
+  --input-border:rgba(255, 255, 255, 0.16);
   --text:#F8FAFC;
   --text-dim:#94A3B8;
   --text-faint:#64748B;
@@ -1789,12 +1789,12 @@ h1, h2, h3, h4, h5, h6, p, span, a, label, table, th, td, div, small, strong, b,
   z-index: -99999 !important;
   pointer-events: none !important;
   user-select: none !important;
-  background-color: #050E1A !important;
+  background-color: #000000 !important;
   background-image: 
-    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
-    linear-gradient(175deg, #040812 0%, #061222 45%, #031510 85%, #02090E 100%) !important;
+    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.06) 0%, transparent 65%),
+    linear-gradient(175deg, #000000 0%, #030508 45%, #010403 85%, #000000 100%) !important;
   background-size: cover !important;
   background-attachment: fixed !important;
   transform: translateZ(0) !important;
@@ -1815,12 +1815,12 @@ body.light .persistent-system-bg {
 
 /* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - 4K High-Tech) ==================== */
 :root {
-  --postlogin-bg: #050E1A;
+  --postlogin-bg: #000000;
   --postlogin-gradient: 
-    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
-    linear-gradient(175deg, #040812 0%, #061222 45%, #031510 85%, #02090E 100%);
+    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.06) 0%, transparent 65%),
+    linear-gradient(175deg, #000000 0%, #030508 45%, #010403 85%, #000000 100%);
 }
 
 /* 1. Opções de Fundo Temático Financeiro */
@@ -1829,12 +1829,12 @@ html[data-app-bg="obsidian"],
 html[data-app-bg="slate"],
 html[data-app-bg="pure-black"],
 html[data-app-bg="midnight"] {
-  --postlogin-bg: #050E1A;
+  --postlogin-bg: #000000;
   --postlogin-gradient: 
-    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
-    linear-gradient(175deg, #040812 0%, #061222 45%, #031510 85%, #02090E 100%);
+    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.06) 0%, transparent 65%),
+    linear-gradient(175deg, #000000 0%, #030508 45%, #010403 85%, #000000 100%);
 }
 
 html[data-app-bg="royal-navy"],
@@ -2089,15 +2089,15 @@ html, body {
 
 /* ==================== Tela de Auth Ultra Moderna (Visual Liquid Glass 4K) ==================== */
 .auth-container {
-  --auth-bg: #050811;
+  --auth-bg: #000000;
   --auth-gold: #F59E0B;
   --auth-gold-dark: #D97706;
   --auth-blue: #38BDF8;
   --auth-emerald: #10B981;
   --auth-cyan: #38BDF8;
-  --auth-card: linear-gradient(145deg, rgba(20, 28, 48, 0.82) 0%, rgba(10, 16, 30, 0.90) 35%, rgba(5, 8, 17, 0.98) 100%);
-  --auth-border: rgba(255, 255, 255, 0.16);
-  --auth-input-bg: rgba(11, 18, 33, 0.72);
+  --auth-card: linear-gradient(145deg, rgba(12, 14, 20, 0.92) 0%, rgba(6, 7, 12, 0.96) 35%, rgba(0, 0, 0, 0.99) 100%);
+  --auth-border: rgba(255, 255, 255, 0.14);
+  --auth-input-bg: rgba(10, 10, 14, 0.85);
   --auth-text: #FFFFFF;
   --auth-text-dim: #94A3B8;
   position: relative;
