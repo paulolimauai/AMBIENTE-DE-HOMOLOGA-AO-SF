@@ -1625,26 +1625,26 @@ html.is-admin .menu-admin-badge {
 html.is-admin .menu button.menu-btn-admin {
   position: relative !important;
   width: auto !important;
-  height: 40px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
-  padding: 0 16px !important;
-  border-radius: 11px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  padding: 0 18px !important;
+  border-radius: 12px !important;
   display: inline-flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
+  gap: 9px !important;
+  font-size: 14.5px !important;
+  font-weight: 650 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
   flex-shrink: 0 !important;
 }
 
 html.is-admin .menu button.menu-btn-admin .ic {
-  width: 19px !important;
-  height: 19px !important;
+  width: 22px !important;
+  height: 22px !important;
   margin: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -1653,8 +1653,8 @@ html.is-admin .menu button.menu-btn-admin .ic {
 }
 
 html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
+  font-size: 14.5px !important;
+  font-weight: 650 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
   display: inline-block !important;
@@ -3863,41 +3863,54 @@ html.light .aether-settings-btn:hover svg {
 .header-user-badge {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 8px !important;
-  padding: 4px 12px 4px 5px !important;
+  gap: 10px !important;
+  padding: 5px 14px 5px 6px !important;
   border-radius: 999px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(14, 165, 233, 0.10) 100%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.28) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
   cursor: pointer !important;
   user-select: none !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.header-user-badge:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(14, 165, 233, 0.18) 100%) !important;
+  border-color: rgba(56, 189, 248, 0.55) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
 }
 .header-user-badge .avatar {
-  width: 26px !important;
-  height: 26px !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 11.5px !important;
+  font-weight: 850 !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg, #0284C7, #0369A1) !important;
+  background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 60%, #0369A1 100%) !important;
   color: #FFFFFF !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.35) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.7) !important;
 }
 .header-user-badge .header-user-name {
-  font-weight: 800 !important;
-  color: #38BDF8 !important;
-  font-size: 13px !important;
-  max-width: 200px !important;
+  font-weight: 700 !important;
+  color: #E0F2FE !important;
+  font-size: 13.5px !important;
+  max-width: 220px !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   letter-spacing: -0.01em !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
 }
 body.light .header-user-badge .header-user-name,
 html.light .header-user-badge .header-user-name {
   color: #0F172A !important;
+  text-shadow: none !important;
 }
 
 .header-live-time {
@@ -4260,32 +4273,32 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button.active {
-  background: linear-gradient(180deg, rgba(14, 165, 233, 0.18) 0%, rgba(14, 165, 233, 0.08) 100%) !important;
-  border: 1px solid rgba(56, 189, 248, 0.45) !important;
-  border-radius: 11px !important;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.16) 0%, rgba(56, 189, 248, 0.08) 50%, rgba(14, 165, 233, 0.04) 100%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.38) !important;
+  border-radius: 12px !important;
   color: #38BDF8 !important;
-  font-weight: 650 !important;
-  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 18px rgba(14, 165, 233, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.16) !important;
 }
 
 .menu button.active .ic {
   color: #38BDF8 !important;
-  transform: scale(1.08) !important;
-  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6)) !important;
+  transform: scale(1.06) !important;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.65)) !important;
 }
 
 .menu button.active::before {
   content: '' !important;
   position: absolute !important;
   bottom: 0 !important;
-  left: 14px !important;
-  right: 14px !important;
+  left: 12px !important;
+  right: 12px !important;
   top: auto !important;
   width: auto !important;
   height: 2.5px !important;
-  border-radius: 3px 3px 0 0 !important;
-  background: linear-gradient(90deg, #38BDF8 0%, #818CF8 100%) !important;
-  box-shadow: 0 -1px 8px rgba(56, 189, 248, 0.95), 0 0 12px rgba(129, 140, 248, 0.6) !important;
+  border-radius: 999px 999px 0 0 !important;
+  background: linear-gradient(90deg, #0EA5E9 0%, #38BDF8 50%, #818CF8 100%) !important;
+  box-shadow: 0 -1px 10px rgba(56, 189, 248, 0.95), 0 0 14px rgba(14, 165, 233, 0.65) !important;
   transform: none !important;
 }
 
@@ -4467,9 +4480,9 @@ body.light .menu button.active,
 html.light .menu button.active {
   background: #EFF6FF !important;
   border: 1px solid #BAE6FD !important;
-  border-radius: 11px !important;
+  border-radius: 12px !important;
   color: #0284C7 !important;
-  font-weight: 650 !important;
+  font-weight: 700 !important;
   box-shadow: 0 2px 10px rgba(2, 132, 199, 0.15) !important;
 }
 body.light .menu button.active::before,
@@ -4477,12 +4490,12 @@ html.light .menu button.active::before {
   content: '' !important;
   position: absolute !important;
   bottom: 0 !important;
-  left: 14px !important;
-  right: 14px !important;
+  left: 12px !important;
+  right: 12px !important;
   top: auto !important;
   width: auto !important;
   height: 2.5px !important;
-  border-radius: 3px 3px 0 0 !important;
+  border-radius: 999px 999px 0 0 !important;
   background: #0284C7 !important;
   box-shadow: 0 -1px 8px rgba(2, 132, 199, 0.6) !important;
 }
@@ -10221,76 +10234,7 @@ body.light .aether-brand-user {
   transform: translateY(-1.5px) !important;
 }
 
-/* 3. Navegação Horizontal do Menu (nav.menu) */
-nav.menu {
-  background: rgba(6, 10, 18, 0.94) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  padding: 6px 16px !important;
-}
-
-body.light nav.menu {
-  background: rgba(255, 255, 255, 0.96) !important;
-  border-bottom: 1px solid #E2E8F0 !important;
-}
-
-.menu-track {
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  overflow-x: auto !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-.menu-track::-webkit-scrollbar {
-  display: none !important;
-}
-
-.menu button {
-  height: 44px !important;
-  min-height: 44px !important;
-  padding: 0 18px !important;
-  border-radius: 12px !important;
-  border: 1px solid transparent !important;
-  background: transparent !important;
-  color: var(--text-dim) !important;
-  font-size: 14.5px !important;
-  font-weight: 650 !important;
-  letter-spacing: -0.01em !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 9px !important;
-  white-space: nowrap !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  cursor: pointer !important;
-}
-
-.menu button:hover {
-  background: rgba(255, 255, 255, 0.06) !important;
-  color: #FFFFFF !important;
-  transform: translateY(-1px) !important;
-}
-
-body.light .menu button:hover {
-  background: rgba(0, 0, 0, 0.05) !important;
-  color: #000000 !important;
-}
-
-.menu button.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(14, 165, 233, 0.12) 100%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.45) !important;
-  color: #10B981 !important;
-  font-weight: 700 !important;
-  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.20) !important;
-}
-
-body.light .menu button.active {
-  background: rgba(5, 150, 105, 0.12) !important;
-  border-color: rgba(5, 150, 105, 0.4) !important;
-  color: #059669 !important;
-}
+/* 3. Navegação Horizontal do Menu integrada com as regras mestre */
 
 /* 4. Cards de Métricas e KPIs Financeiros (.kpi) */
 .kpi {
