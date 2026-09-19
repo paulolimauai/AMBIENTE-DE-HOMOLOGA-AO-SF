@@ -3143,63 +3143,63 @@
         "text": "Nova conta/cartão cadastrado: Amazon (Conta Corrente)",
         "icon": "🏦",
         "time": 1789653043931,
-        "read": false
+        "read": true
       },
       {
         "id": 8,
         "text": "Nova conta/cartão cadastrado: DIGIO (Cartão de Crédito)",
         "icon": "🏦",
         "time": 1789653033609,
-        "read": false
+        "read": true
       },
       {
         "id": 7,
         "text": "Nova conta/cartão cadastrado: Nubank (Cartão de Crédito)",
         "icon": "🏦",
         "time": 1789653019738,
-        "read": false
+        "read": true
       },
       {
         "id": 6,
         "text": "Nova transação cadastrada: MOTO — R$ 930,00",
         "icon": "💸",
         "time": 1789652967095,
-        "read": false
+        "read": true
       },
       {
         "id": 5,
         "text": "Nova transação cadastrada: INTERNET — R$ 65,00",
         "icon": "💸",
         "time": 1789652937152,
-        "read": false
+        "read": true
       },
       {
         "id": 4,
         "text": "Nova transação cadastrada: Mae — R$ 300,00",
         "icon": "💸",
         "time": 1789652918621,
-        "read": false
+        "read": true
       },
       {
         "id": 3,
         "text": "Nova transação cadastrada: Digio — R$ 308,27",
         "icon": "💸",
         "time": 1789652894937,
-        "read": false
+        "read": true
       },
       {
         "id": 2,
         "text": "Nova transação cadastrada: Nubank — R$ 1.646,09",
         "icon": "💸",
         "time": 1789652875627,
-        "read": false
+        "read": true
       },
       {
         "id": 1,
         "text": "Nova transação cadastrada: Salario — R$ 3.300,00",
         "icon": "💰",
         "time": 1789652829405,
-        "read": false
+        "read": true
       }
     ],
     "nextAccId": 5,
@@ -3210,7 +3210,7 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 10,
-    "updated_at": "2026-09-19T04:27:03.159Z",
-    "updated_at_ms": 1789792023159
+    "updated_at": "2026-09-19T11:59:28.629Z",
+    "updated_at_ms": 1789819168629
   }
 }
