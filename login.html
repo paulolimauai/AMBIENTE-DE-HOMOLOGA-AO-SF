@@ -1049,48 +1049,70 @@
             box-shadow: 0 6px 18px rgba(217, 119, 6, 0.22), inset 0 1px 1px #FFFFFF !important;
         }
 
-        /* Abas Segmentadas Ultra Alinhadas */
+        /* Abas Segmentadas Ultra Alinhadas - Menu Executivo Ampliado */
+        #authTabsNav,
+        .auth-tabs-nav {
+            padding: 6px !important;
+            border-radius: 16px !important;
+            gap: 6px !important;
+            min-height: 58px;
+        }
+
         .auth-tab-btn {
             flex: 1;
-            height: 42px;
-            border-radius: 12px;
+            height: 48px;
+            padding: 10px 18px;
+            border-radius: 13px;
             border: 1px solid transparent;
             background: transparent;
             color: var(--auth-text-dim);
-            font-size: 13px;
-            font-weight: 700;
+            font-size: 14.5px;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 7px;
+            gap: 9px;
+            letter-spacing: 0.015em;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .auth-tab-btn svg {
+            width: 19px !important;
+            height: 19px !important;
+            stroke-width: 2.4 !important;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
         }
 
         .auth-tab-btn:hover {
             color: #FFFFFF;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .auth-tab-btn:hover svg {
+            transform: scale(1.12);
         }
 
         .auth-tab-btn.active {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.14) 100%) !important;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.20) 100%) !important;
             color: #FDE68A !important;
-            border: 1.5px solid rgba(245, 158, 11, 0.60) !important;
-            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.25), inset 0 1px 1.5px rgba(255, 255, 255, 0.30) !important;
-            font-weight: 800 !important;
+            border: 1.5px solid rgba(245, 158, 11, 0.70) !important;
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.32), inset 0 1px 1.5px rgba(255, 255, 255, 0.40) !important;
+            font-weight: 900 !important;
         }
 
         body.light .auth-tab-btn {
-            color: #000000 !important;
-            font-weight: 700 !important;
+            color: #1E293B !important;
+            font-weight: 800 !important;
         }
 
         body.light .auth-tab-btn.active {
             background: #FFFFFF !important;
-            color: #92400E !important;
-            border: 1.5px solid #D97706 !important;
-            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.18), inset 0 1px 1px #FFFFFF !important;
-            font-weight: 800 !important;
+            color: #B45309 !important;
+            border: 1.8px solid #D97706 !important;
+            box-shadow: 0 6px 18px rgba(217, 119, 6, 0.22), inset 0 1px 1.5px #FFFFFF !important;
+            font-weight: 900 !important;
         }
 
         .form-fade {
@@ -1524,22 +1546,23 @@
             color: #1D4ED8 !important;
         }
 
-        /* ==================== Assinatura Executiva Ultra 4K Glass Estável (Paulo Lima) ==================== */
+        /* ==================== Assinatura Executiva Glassmorphism Ultra 4K (Paulo Lima) ==================== */
         .dev-signature {
             position: relative !important;
             overflow: hidden !important;
             display: inline-flex !important;
             align-items: center !important;
             gap: 10px !important;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.85) 45%, rgba(8, 12, 22, 0.95) 100%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.16) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.35) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(26, 12, 48, 0.82) 40%, rgba(8, 4, 18, 0.96) 100%) !important;
+            border: 1.5px solid rgba(168, 85, 247, 0.45) !important;
+            border-top: 1.5px solid rgba(255, 255, 255, 0.70) !important;
+            border-bottom: 1.5px solid rgba(147, 51, 234, 0.55) !important;
             border-radius: 999px !important;
-            padding: 6px 20px 6px 7px !important;
-            backdrop-filter: blur(24px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            padding: 7px 22px 7px 8px !important;
+            backdrop-filter: blur(28px) saturate(220%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
+            box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.85), 0 0 25px rgba(168, 85, 247, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.35), inset 0 -1.5px 2px rgba(0, 0, 0, 0.6) !important;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
             text-decoration: none !important;
             cursor: pointer !important;
             user-select: none !important;
@@ -1553,39 +1576,41 @@
             left: 0 !important;
             width: 100% !important;
             height: 100% !important;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(192, 132, 252, 0.08) 35%, transparent 65%) !important;
             pointer-events: none !important;
             z-index: 1 !important;
         }
 
         .dev-signature:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(30, 41, 59, 0.90) 45%, rgba(15, 23, 42, 0.98) 100%) !important;
-            border-color: rgba(255, 255, 255, 0.32) !important;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.60), inset 0 1px 1px rgba(255, 255, 255, 0.28) !important;
-            transform: translateY(-2px) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(48, 18, 88, 0.88) 40%, rgba(14, 5, 28, 0.98) 100%) !important;
+            border-color: rgba(216, 180, 254, 0.85) !important;
+            border-top-color: #FFFFFF !important;
+            box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.95), 0 0 36px rgba(192, 132, 252, 0.65), inset 0 2px 3px rgba(255, 255, 255, 0.50) !important;
+            transform: translateY(-2.5px) scale(1.02) !important;
         }
 
-        /* Ícone 3D Rubi / Vidro Estável */
+        /* Ícone 3D de Vidro Roxo Ametista */
         .dev-signature-icon {
             width: 30px !important;
             height: 30px !important;
             border-radius: 50% !important;
             flex-shrink: 0 !important;
-            background: radial-gradient(circle at 35% 28%, #FFA4A4 0%, #EF4444 42%, #DC2626 70%, #7F1D1D 100%) !important;
+            background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #E9D5FF 24%, #C084FC 48%, #9333EA 72%, #3B0764 100%) !important;
             color: #FFFFFF !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            border: 1.5px solid rgba(255, 255, 255, 0.70) !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), inset 0 1.5px 2px rgba(255, 255, 255, 0.65) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+            box-shadow: 0 0 18px rgba(168, 85, 247, 0.80), 0 3px 10px rgba(0, 0, 0, 0.6), inset 0 2px 2px rgba(255, 255, 255, 0.85) !important;
             position: relative !important;
             z-index: 2 !important;
-            transition: transform 0.25s ease !important;
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease !important;
             animation: none !important;
         }
 
         .dev-signature:hover .dev-signature-icon {
-            transform: scale(1.08) !important;
+            transform: scale(1.14) rotate(-6deg) !important;
+            box-shadow: 0 0 26px rgba(192, 132, 252, 1), 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 2px #FFFFFF !important;
         }
 
         .dev-signature-icon svg {
@@ -1594,7 +1619,7 @@
             stroke-width: 2.8px !important;
             display: block !important;
             stroke: #FFFFFF !important;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)) !important;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.8)) !important;
         }
 
         .dev-signature-text {
@@ -1608,18 +1633,22 @@
         .dev-signature-label {
             font-size: 11px !important;
             font-weight: 800 !important;
-            color: #94A3B8 !important;
-            letter-spacing: 0.08em !important;
+            color: #E2E8F0 !important;
+            letter-spacing: 0.10em !important;
             text-transform: uppercase !important;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
         }
 
-        /* Nome Executivo Estável sem piscar */
+        /* Nome Executivo em Branco Puro com Realce Roxo Ametista */
         .dev-signature-name {
-            font-size: 14px !important;
+            font-size: 14.5px !important;
             font-weight: 900 !important;
             color: #FFFFFF !important;
-            letter-spacing: 0.04em !important;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+            letter-spacing: 0.05em !important;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FAF5FF 30%, #E9D5FF 65%, #C084FC 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            filter: drop-shadow(0 0 14px rgba(192, 132, 252, 0.80)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) !important;
             display: inline-flex !important;
             align-items: center !important;
             gap: 5px !important;
@@ -1628,34 +1657,39 @@
 
         .dev-sparkle {
             display: inline-block !important;
-            font-size: 12px !important;
-            color: #F87171 !important;
+            font-size: 13px !important;
+            color: #D8B4FE !important;
+            filter: drop-shadow(0 0 8px #C084FC) drop-shadow(0 0 16px #A855F7) !important;
             animation: none !important;
         }
 
-        /* Suporte Refinado para Tema Claro */
+        /* Suporte de Alto Contraste para Tema Claro */
         body.light .dev-signature {
-            background: #FFFFFF !important;
-            border-color: #CBD5E1 !important;
-            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
+            background: rgba(255, 255, 255, 0.94) !important;
+            border-color: rgba(147, 51, 234, 0.45) !important;
+            border-top-color: rgba(168, 85, 247, 0.80) !important;
+            border-bottom-color: rgba(147, 51, 234, 0.60) !important;
+            box-shadow: 0 8px 24px rgba(147, 51, 234, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
         }
         body.light .dev-signature:hover {
-            background: #F8FAFC !important;
-            border-color: #94A3B8 !important;
-            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12) !important;
+            background: #FAF5FF !important;
+            border-color: #9333EA !important;
+            box-shadow: 0 12px 28px rgba(147, 51, 234, 0.28), 0 0 20px rgba(168, 85, 247, 0.25) !important;
         }
         body.light .dev-signature-label {
-            color: #000000 !important;
+            color: #09090B !important;
             font-weight: 800 !important;
             text-shadow: none !important;
         }
         body.light .dev-signature-name {
-            background: linear-gradient(90deg, #991B1B 0%, #DC2626 25%, #EF4444 50%, #DC2626 75%, #991B1B 100%) !important;
-            background-size: 200% auto !important;
-            animation: devTextShine 3.2s linear infinite !important;
+            background: linear-gradient(135deg, #09090B 0%, #3B0764 45%, #6B21A8 75%, #9333EA 100%) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
-            filter: drop-shadow(0 1px 4px rgba(239, 68, 68, 0.35)) !important;
+            filter: drop-shadow(0 1px 3px rgba(147, 51, 234, 0.35)) !important;
+        }
+        body.light .dev-sparkle {
+            color: #7E22CE !important;
+            filter: drop-shadow(0 0 6px rgba(147, 51, 234, 0.5)) !important;
         }
 
         /* Barra de Suporte Abaixo da Abertura de O.S. (Alinhado Perfeito, Zero Cortes) */
@@ -2027,17 +2061,17 @@
     <div class="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[99999] p-4 sm:p-6 opacity-0 transition-all duration-300 pointer-events-none" id="loginSuccessOverlay" style="display:none;">
         <div class="absolute w-[360px] h-[360px] rounded-full bg-emerald-500/15 blur-[100px] pointer-events-none animate-pulse"></div>
 
-        <div id="successModalBox" class="bg-gradient-to-b from-[#0f172a]/95 via-[#0b1324]/98 to-[#060a14]/99 border border-emerald-500/30 border-t-white/30 rounded-[28px] p-6 sm:p-8 w-full max-w-[400px] text-center shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(16,185,129,0.2),inset_0_1px_1px_rgba(255,255,255,0.2)] transform translate-y-4 scale-95 transition-all duration-400 relative overflow-hidden pointer-events-auto">
+        <div id="successModalBox" class="bg-gradient-to-b from-[#0f172a]/95 via-[#0b1324]/98 to-[#060a14]/99 border border-emerald-500/40 border-t-white/40 rounded-[32px] p-8 sm:p-10 w-full max-w-[480px] text-center shadow-[0_30px_90px_rgba(0,0,0,0.95),0_0_55px_rgba(16,185,129,0.28),inset_0_1.5px_2px_rgba(255,255,255,0.25)] transform translate-y-4 scale-95 transition-all duration-400 relative overflow-hidden pointer-events-auto">
             <!-- Linha de Brilho Superior -->
             <div class="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent pointer-events-none"></div>
 
-            <!-- Ícone Dinâmico com Ondas de Pulso (Sucesso) -->
-            <div class="relative w-20 h-20 mx-auto mb-5 flex items-center justify-center">
+            <!-- Ícone Dinâmico com Ondas de Pulso (Sucesso Ampliado) -->
+            <div class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center">
                 <div class="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping" style="animation-duration: 2s;"></div>
-                <div class="absolute inset-1 rounded-full border border-emerald-400/30"></div>
-                <div class="relative w-16 h-16 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 p-[2px] shadow-[0_0_25px_rgba(16,185,129,0.5)]">
+                <div class="absolute inset-1 rounded-full border border-emerald-400/35"></div>
+                <div class="relative w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 p-[2.5px] shadow-[0_0_30px_rgba(16,185,129,0.6)]">
                     <div class="w-full h-full rounded-full bg-[#0b1324] flex items-center justify-center">
-                        <svg class="w-8 h-8 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-10 h-10 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </div>
@@ -2045,16 +2079,16 @@
             </div>
 
             <!-- Mensagem Principal e Subtítulo Dinâmico -->
-            <h3 class="text-xl sm:text-2xl font-black text-white mb-2 tracking-tight" id="loginSuccessTitle">
+            <h3 class="text-2xl sm:text-3xl font-black text-white mb-2.5 tracking-tight font-display" id="loginSuccessTitle">
                 Login efetuado com sucesso!
             </h3>
-            <p class="text-slate-300 font-medium text-xs sm:text-sm mb-6 leading-relaxed" id="loginSuccessSub">
+            <p class="text-slate-300 font-medium text-sm sm:text-base mb-7 leading-relaxed" id="loginSuccessSub">
                 Redirecionando com segurança para o seu sistema...
             </p>
 
             <!-- Barra de Progresso Dinâmica com Gradiente Suave -->
-            <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden p-[1px]">
-                <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 rounded-full w-0 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+            <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden p-[1px]">
+                <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 rounded-full w-0 shadow-[0_0_12px_rgba(16,185,129,0.9)]"></div>
             </div>
         </div>
     </div>
@@ -2453,14 +2487,14 @@
                         </p>
                     </div>
 
-                    <!-- NAVEGAÇÃO SEGMENTADA POR ABAS -->
-                    <div class="flex rounded-xl p-1 mb-5 gap-1" id="authTabsNav" style="background-color: var(--auth-tab-bg); border: 1px solid var(--auth-border);">
-                        <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="switchAuthTab('login')">
-                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    <!-- NAVEGAÇÃO SEGMENTADA POR ABAS (MENU AMPLIADO & AJUSTADO) -->
+                    <div class="flex rounded-2xl p-1.5 mb-6 gap-2" id="authTabsNav" style="background-color: var(--auth-tab-bg); border: 1.5px solid var(--auth-border); box-shadow: inset 0 2px 4px rgba(0,0,0,0.35);">
+                        <button type="button" class="auth-tab-btn active text-sm sm:text-[15px]" id="tabBtnLogin" onclick="switchAuthTab('login')">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                             <span>Entrar na Conta</span>
                         </button>
-                        <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="switchAuthTab('register')">
-                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+                        <button type="button" class="auth-tab-btn text-sm sm:text-[15px]" id="tabBtnRegister" onclick="switchAuthTab('register')">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
                             <span>Criar Conta</span>
                         </button>
                     </div>
