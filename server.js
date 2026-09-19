@@ -11790,39 +11790,18 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 </div>
 
 <div class="login-success-overlay" id="loginSuccessOverlay" role="dialog" aria-modal="true">
-  <div class="login-success-box" style="max-width:480px; padding:32px 28px; border-radius:28px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(15,23,42,0.96), rgba(8,14,28,0.99)); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 45px rgba(245,158,11,0.25);">
-    <div class="auth-ambient-glow glow-gold"></div>
-    
-    <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#fbbf24; margin-bottom:16px;">
-      <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#f59e0b; box-shadow:0 0 8px #f59e0b;"></span>
-      <span>Autenticação Bancária • Sessão Criptografada</span>
+  <div class="login-success-box" style="max-width:390px; padding:32px 24px; border-radius:26px; border:1px solid rgba(16,185,129,0.3); border-top:1.5px solid rgba(255,255,255,0.4); background:linear-gradient(165deg, rgba(15,23,42,0.96), rgba(6,10,20,0.98)); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 40px rgba(16,185,129,0.25);">
+    <div class="auth-ambient-glow glow-emerald"></div>
+
+    <div class="login-success-check" style="width:72px; height:72px; margin:0 auto 16px; border-radius:50%; border:2px solid rgba(16,185,129,0.45); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(16,185,129,0.25) 0%, rgba(15,23,42,0.6) 80%); box-shadow:0 0 25px rgba(16,185,129,0.4);">
+      <svg viewBox="0 0 52 52" style="width:38px; height:38px; stroke:#10B981;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
     </div>
 
-    <div class="login-success-check" style="width:68px; height:68px; margin:0 auto 14px; border-radius:50%; border:2px solid rgba(245,158,11,0.45); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(245,158,11,0.25) 0%, rgba(15,23,42,0.6) 80%); box-shadow:0 0 25px rgba(245,158,11,0.35);">
-      <svg viewBox="0 0 52 52" style="width:38px; height:38px; stroke:#fbbf24;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
-    </div>
+    <h3 id="loginSuccessTitle" style="font-size:22px; font-weight:900; color:#ffffff; margin:0 0 8px; letter-spacing:-0.02em;">Login efetuado com sucesso!</h3>
+    <p id="loginSuccessMsg" style="font-size:13px; color:#cbd5e1; margin:0 0 20px;">Redirecionando com segurança para o seu sistema...</p>
 
-    <h3 id="loginSuccessTitle" style="font-size:22px; font-weight:900; color:#ffffff; margin:0 0 6px; letter-spacing:-0.02em;">Acesso Autorizado!</h3>
-    <p id="loginSuccessMsg" style="font-size:13px; color:#cbd5e1; margin:0 0 16px;">Conectando ao ambiente de alta precisão financeira...</p>
-
-    <!-- Checklist de Verificação de Segurança em Tempo Real -->
-    <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px 16px; margin-bottom:18px; text-align:left; font-size:11px; display:flex; flex-direction:column; gap:6px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; color:#94a3b8;">
-        <span>✓ Identidade & Assinatura Digital</span>
-        <span style="color:#fbbf24; font-weight:700;">Verificado</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; align-items:center; color:#94a3b8;">
-        <span>✓ Token Criptográfico scrypt / JWT</span>
-        <span style="color:#fbbf24; font-weight:700;">Ativo</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; align-items:center; color:#94a3b8;">
-        <span>✓ Sincronização SQL Server / Local</span>
-        <span style="color:#60a5fa; font-weight:700;">Conectado</span>
-      </div>
-    </div>
-
-    <div class="login-success-progress-bar" style="height:6px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden;">
-      <div class="login-success-progress-fill" style="background:linear-gradient(90deg, #f59e0b, #fbbf24, #38bdf8); box-shadow:0 0 12px rgba(245,158,11,0.6);"></div>
+    <div class="login-success-progress-bar" style="height:5px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden;">
+      <div class="login-success-progress-fill" style="background:linear-gradient(90deg, #10b981, #14b8a6, #38bdf8); box-shadow:0 0 12px rgba(16,185,129,0.7);"></div>
     </div>
   </div>
 </div>
