@@ -3592,9 +3592,11 @@ body.light .app-blob.a3{opacity:.04;}
   display:flex !important;
   align-items:center !important;
   justify-content:space-between !important;
-  gap:14px !important;
+  gap:16px !important;
   padding:0 24px !important;
-  max-width:100% !important;
+  max-width:1760px !important;
+  width:100% !important;
+  box-sizing:border-box !important;
   margin:0 auto !important;
   height:68px !important;
 }
@@ -3971,7 +3973,7 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Barra de Menu Horizontal no Topo (Design Executivo Alinhado) ==================== */
+/* ==================== Barra de Menu Horizontal no Topo (Design Executivo Interativo Ultra-Ajustado) ==================== */
 nav.menu {
   position: fixed !important;
   top: 68px !important;
@@ -3980,22 +3982,22 @@ nav.menu {
   bottom: auto !important;
   width: 100% !important;
   max-width: 100% !important;
-  height: 50px !important;
-  min-height: 50px !important;
+  height: 52px !important;
+  min-height: 52px !important;
   margin: 0 !important;
   padding: 0 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(8, 12, 22, 0.95) !important;
+  background: rgba(8, 12, 22, 0.94) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   z-index: 9990 !important;
 }
 
@@ -4003,7 +4005,7 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 5px !important;
+  gap: 6px !important;
   width: 100% !important;
   max-width: 1760px !important;
   height: 100% !important;
@@ -4013,6 +4015,7 @@ nav.menu {
   overflow-y: hidden !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+  scroll-behavior: smooth !important;
 }
 .menu-track::-webkit-scrollbar,
 nav.menu::-webkit-scrollbar {
@@ -4022,8 +4025,8 @@ nav.menu::-webkit-scrollbar {
 @media (min-width: 2560px) {
   .menu-track {
     max-width: 2400px !important;
-    gap: 8px !important;
-    padding: 0 28px !important;
+    gap: 9px !important;
+    padding: 0 32px !important;
   }
 }
 
@@ -4040,55 +4043,73 @@ nav.menu::-webkit-scrollbar {
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  gap: 6.5px !important;
+  gap: 7px !important;
   width: auto !important;
-  height: 35px !important;
-  min-height: 35px !important;
-  max-height: 35px !important;
-  padding: 0 12px !important;
-  border-radius: 8px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 13px !important;
+  border-radius: 10px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
-  font-size: 12.5px !important;
+  font-size: 13px !important;
   font-weight: 550 !important;
   letter-spacing: -0.01em !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
   user-select: none !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
+  overflow: hidden !important;
 }
 
 .menu button:hover {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.10) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
   color: #FFFFFF !important;
-  transform: translateY(-0.5px) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+}
+
+.menu button:hover .ic {
+  transform: scale(1.14) rotate(-3deg) !important;
+  color: #38BDF8 !important;
+}
+
+.menu button:active {
+  transform: translateY(0.5px) scale(0.97) !important;
+  transition-duration: 0.08s !important;
 }
 
 .menu button.active {
-  background: linear-gradient(180deg, rgba(14, 165, 233, 0.16) 0%, rgba(14, 165, 233, 0.08) 100%) !important;
-  border: 1px solid rgba(56, 189, 248, 0.40) !important;
-  border-radius: 8px !important;
+  background: linear-gradient(180deg, rgba(14, 165, 233, 0.18) 0%, rgba(14, 165, 233, 0.08) 100%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  border-radius: 10px !important;
   color: #38BDF8 !important;
   font-weight: 650 !important;
-  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+.menu button.active .ic {
+  color: #38BDF8 !important;
+  transform: scale(1.08) !important;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6)) !important;
 }
 
 .menu button.active::before {
   content: '' !important;
   position: absolute !important;
-  bottom: -1px !important;
-  left: 10px !important;
-  right: 10px !important;
+  bottom: 0 !important;
+  left: 12px !important;
+  right: 12px !important;
   top: auto !important;
   width: auto !important;
-  height: 2px !important;
-  border-radius: 2px !important;
-  background: #38BDF8 !important;
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.9) !important;
+  height: 2.5px !important;
+  border-radius: 3px 3px 0 0 !important;
+  background: linear-gradient(90deg, #38BDF8 0%, #818CF8 100%) !important;
+  box-shadow: 0 -1px 8px rgba(56, 189, 248, 0.95), 0 0 12px rgba(129, 140, 248, 0.6) !important;
   transform: none !important;
 }
 
@@ -4097,8 +4118,8 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button .ic {
-  width: 17px !important;
-  height: 17px !important;
+  width: 18px !important;
+  height: 18px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4106,17 +4127,18 @@ nav.menu::-webkit-scrollbar {
   flex-shrink: 0 !important;
   line-height: 0 !important;
   margin: 0 !important;
+  transition: transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s ease !important;
 }
 .menu button .ic svg {
-  width: 15.5px !important;
-  height: 15.5px !important;
+  width: 16px !important;
+  height: 16px !important;
   stroke-width: 2.1px !important;
   stroke: currentColor !important;
   display: block !important;
 }
 
 .menu button span:not(.ic) {
-  font-size: 12.5px !important;
+  font-size: 13px !important;
   font-weight: inherit !important;
   line-height: 1 !important;
   display: inline-block !important;
@@ -4127,10 +4149,10 @@ nav.menu::-webkit-scrollbar {
 
 .menu-admin-divider {
   width: 1px !important;
-  height: 20px !important;
-  background: rgba(245, 158, 11, 0.3) !important;
+  height: 22px !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.45) 50%, rgba(245, 158, 11, 0.1) 100%) !important;
   border-radius: 999px !important;
-  margin: 0 4px !important;
+  margin: 0 5px !important;
   flex-shrink: 0 !important;
 }
 
@@ -4140,8 +4162,8 @@ nav.menu::-webkit-scrollbar {
   justify-content: center !important;
   gap: 4px !important;
   height: 24px !important;
-  padding: 0 8px !important;
-  border-radius: 6px !important;
+  padding: 0 9px !important;
+  border-radius: 7px !important;
   background: rgba(245, 158, 11, 0.14) !important;
   border: 1px solid rgba(245, 158, 11, 0.35) !important;
   color: #FBBF24 !important;
@@ -4153,24 +4175,25 @@ nav.menu::-webkit-scrollbar {
   margin: 0 4px !important;
   user-select: none !important;
   cursor: default !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12) !important;
 }
 .menu-admin-badge svg {
-  width: 9px !important;
-  height: 9px !important;
+  width: 9.5px !important;
+  height: 9.5px !important;
   stroke-width: 2.6px !important;
 }
 
 .menu button.menu-btn-admin {
   position: relative !important;
   width: auto !important;
-  height: 35px !important;
-  min-height: 35px !important;
-  max-height: 35px !important;
-  padding: 0 12px !important;
-  border-radius: 8px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 13px !important;
+  border-radius: 10px !important;
   color: #CBD5E1 !important;
-  background: rgba(245, 158, 11, 0.04) !important;
-  border: 1px solid rgba(245, 158, 11, 0.16) !important;
+  background: rgba(245, 158, 11, 0.05) !important;
+  border: 1px solid rgba(245, 158, 11, 0.18) !important;
 }
 .menu button.menu-btn-admin .ic {
   background: transparent !important;
@@ -4178,59 +4201,57 @@ nav.menu::-webkit-scrollbar {
   color: #FBBF24 !important;
 }
 .menu button.menu-btn-admin:hover {
-  background: rgba(245, 158, 11, 0.12) !important;
-  border-color: rgba(245, 158, 11, 0.38) !important;
+  background: rgba(245, 158, 11, 0.14) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
   color: #FDE68A !important;
-  transform: translateY(-0.5px) !important;
-  box-shadow: none !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.18) !important;
 }
 .menu button.menu-btn-admin:hover .ic {
   background: transparent !important;
   border: none !important;
-  color: #FBBF24 !important;
-  box-shadow: none !important;
+  color: #FDE68A !important;
+  transform: scale(1.14) rotate(-3deg) !important;
 }
 .menu button.menu-btn-admin.active {
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.20) 0%, rgba(245, 158, 11, 0.10) 100%) !important;
-  border: 1px solid rgba(245, 158, 11, 0.5) !important;
-  border-radius: 8px !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.10) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.55) !important;
+  border-radius: 10px !important;
   color: #FBBF24 !important;
   font-weight: 650 !important;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
   transform: none !important;
 }
 .menu button.menu-btn-admin.active::before {
   content: '' !important;
   position: absolute !important;
-  bottom: -1px !important;
-  left: 10px !important;
-  right: 10px !important;
+  bottom: 0 !important;
+  left: 12px !important;
+  right: 12px !important;
   top: auto !important;
   width: auto !important;
-  height: 2px !important;
-  border-radius: 2px !important;
-  background: #F59E0B !important;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.9) !important;
+  height: 2.5px !important;
+  border-radius: 3px 3px 0 0 !important;
+  background: linear-gradient(90deg, #F59E0B 0%, #FBBF24 100%) !important;
+  box-shadow: 0 -1px 8px rgba(245, 158, 11, 0.95) !important;
   transform: none !important;
 }
 .menu button.menu-btn-admin.active .ic {
   color: #FBBF24 !important;
   background: transparent !important;
-  border: none !important;
-  transform: none !important;
-  box-shadow: none !important;
-  filter: none !important;
+  transform: scale(1.08) !important;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6)) !important;
 }
 
 /* ==================== Modo Claro do Menu ==================== */
 body.light nav.menu,
 html.light nav.menu {
-  background: rgba(255, 255, 255, 0.97) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
   border-bottom: 1px solid #E2E8F0 !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
 }
 body.light .menu-admin-divider,
 html.light .menu-admin-divider {
@@ -4269,10 +4290,10 @@ html.light .menu button .ic svg {
 body.light .menu button:hover,
 html.light .menu button:hover {
   background: #F1F5F9 !important;
-  border-color: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
   color: #0F172A !important;
-  box-shadow: none !important;
-  transform: translateY(-0.5px) !important;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06) !important;
+  transform: translateY(-1.5px) !important;
 }
 body.light .menu button:hover span:not(.ic),
 html.light .menu button:hover span:not(.ic) {
@@ -4293,24 +4314,24 @@ body.light .menu button.active,
 html.light .menu button.active {
   background: #EFF6FF !important;
   border: 1px solid #BAE6FD !important;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   color: #0284C7 !important;
   font-weight: 650 !important;
-  box-shadow: 0 1px 4px rgba(2, 132, 199, 0.12) !important;
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.15) !important;
 }
 body.light .menu button.active::before,
 html.light .menu button.active::before {
   content: '' !important;
   position: absolute !important;
-  bottom: -1px !important;
-  left: 10px !important;
-  right: 10px !important;
+  bottom: 0 !important;
+  left: 12px !important;
+  right: 12px !important;
   top: auto !important;
   width: auto !important;
-  height: 2px !important;
-  border-radius: 2px !important;
+  height: 2.5px !important;
+  border-radius: 3px 3px 0 0 !important;
   background: #0284C7 !important;
-  box-shadow: 0 0 6px rgba(2, 132, 199, 0.6) !important;
+  box-shadow: 0 -1px 8px rgba(2, 132, 199, 0.6) !important;
 }
 body.light .menu button.active span:not(.ic),
 html.light .menu button.active span:not(.ic) {
@@ -4346,6 +4367,8 @@ html.light .menu button.menu-btn-admin:hover {
   background: #FFFBEB !important;
   border-color: #FDE68A !important;
   color: #92400E !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 3px 10px rgba(217, 119, 6, 0.12) !important;
 }
 body.light .menu button.menu-btn-admin:hover .ic,
 html.light .menu button.menu-btn-admin:hover .ic {
@@ -4357,24 +4380,24 @@ body.light .menu button.menu-btn-admin.active,
 html.light .menu button.menu-btn-admin.active {
   background: #FEF3C7 !important;
   border: 1px solid #FCD34D !important;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   color: #92400E !important;
   font-weight: 650 !important;
-  box-shadow: 0 1px 4px rgba(217, 119, 6, 0.12) !important;
+  box-shadow: 0 2px 10px rgba(217, 119, 6, 0.18) !important;
 }
 body.light .menu button.menu-btn-admin.active::before,
 html.light .menu button.menu-btn-admin.active::before {
   content: '' !important;
   position: absolute !important;
-  bottom: -1px !important;
-  left: 10px !important;
-  right: 10px !important;
+  bottom: 0 !important;
+  left: 12px !important;
+  right: 12px !important;
   top: auto !important;
   width: auto !important;
-  height: 2px !important;
-  border-radius: 2px !important;
+  height: 2.5px !important;
+  border-radius: 3px 3px 0 0 !important;
   background: #D97706 !important;
-  box-shadow: 0 0 6px rgba(217, 119, 6, 0.6) !important;
+  box-shadow: 0 -1px 8px rgba(217, 119, 6, 0.6) !important;
 }
 body.light .menu button.menu-btn-admin.active .ic,
 html.light .menu button.menu-btn-admin.active .ic {
@@ -22066,6 +22089,15 @@ function navigate(page){
   } catch(e){}
 
   document.querySelectorAll('.menu button, .mobile-drawer-nav button, .mobile-bottom-btn').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
+
+  // Auto-ajuste e centralização suave do item ativo na barra de navegação superior
+  try {
+    const activeMenuBtn = document.querySelector('.menu button.active');
+    const menuTrackEl = document.getElementById('menuTrack');
+    if (activeMenuBtn && menuTrackEl && typeof activeMenuBtn.scrollIntoView === 'function') {
+      activeMenuBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  } catch(e){}
 
   // Se o usuário clicou na mesma página de Transações, resetar filtros e garantir visibilidade completa
   if (isSamePage && page === 'transacoes') {
