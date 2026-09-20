@@ -177,7 +177,6 @@
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
     "terms_accepted": true,
-    "device_type": "Computador",
-    "must_change_password": false
+    "device_type": "Computador"
   }
 ]

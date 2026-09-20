@@ -15912,33 +15912,6 @@ function pageDashboard(){
           <p class="hero-sub">
             Painel Executivo 4K & Gestão Financeira Estratégica
           </p>
-          <div class="hero-pulse-ribbon">
-            <div class="pulse-chip" title="Eficiência de retenção orçamentária do período">
-              <span class="pulse-chip-dot \${savingsPct >= 20 ? 'green' : savingsPct > 0 ? 'amber' : 'red'}"></span>
-              <span class="pulse-chip-label">Retenção:</span>
-              <span class="pulse-chip-val" style="color:\${savingsPct >= 20 ? '#34D399' : savingsPct > 0 ? '#FBBF24' : '#F87171'};">\${savingsPct}%</span>
-            </div>
-            <div class="pulse-chip" title="Estimativa de dias de autonomia financeira em caixa">
-              <span class="pulse-chip-dot \${runwayDays >= 60 ? 'cyan' : runwayDays >= 30 ? 'green' : 'amber'}"></span>
-              <span class="pulse-chip-label">Fôlego de Caixa:</span>
-              <span class="pulse-chip-val" style="color:\${runwayDays >= 60 ? '#38BDF8' : runwayDays >= 30 ? '#34D399' : '#FBBF24'};">\${runwayDays > 0 ? runwayDays + ' dias' : 'Alerta'}</span>
-            </div>
-            <div class="pulse-chip" title="Comprometimento da receita com despesas">
-              <span class="pulse-chip-dot \${commitPct <= 60 ? 'green' : commitPct <= 80 ? 'amber' : 'red'}"></span>
-              <span class="pulse-chip-label">Comprometimento:</span>
-              <span class="pulse-chip-val" style="color:\${commitPct <= 60 ? '#34D399' : commitPct <= 80 ? '#FBBF24' : '#F87171'};">\${commitPct}%</span>
-            </div>
-            <div class="pulse-chip" title="Score de Saúde Financeira Consolidado">
-              <span class="pulse-chip-dot \${healthScore >= 75 ? 'green' : healthScore >= 50 ? 'amber' : 'red'}"></span>
-              <span class="pulse-chip-label">Score 360°:</span>
-              <span class="pulse-chip-val" style="color:\${healthColor};">\${healthScore}/100</span>
-            </div>
-            <div class="pulse-chip" title="Banco de dados Microsoft SQL Server conectado e sincronizado em tempo real">
-              <span class="pulse-chip-dot green"></span>
-              <span class="pulse-chip-label">MSSQL & Nuvem:</span>
-              <span class="pulse-chip-val" style="color:#34D399;">Ativo 4K</span>
-            </div>
-          </div>
         </div>
 
         <div class="hero-actions">
@@ -15951,34 +15924,6 @@ function pageDashboard(){
           </button>
         </div>
       </div>
-    </div>
-
-    <!-- 2. BARRA DE AÇÕES RÁPIDAS INTEGRADAS (Cockpit Actions) -->
-    <div class="dashboard-quick-actions-bar">
-      <button type="button" class="dash-quick-btn q-income" onclick="window.openModal(null, 'in')" title="Lançar Nova Receita">
-        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-        <span>+ Nova Receita</span>
-      </button>
-      <button type="button" class="dash-quick-btn q-expense" onclick="window.openModal(null, 'out')" title="Lançar Nova Despesa">
-        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-        <span>- Nova Despesa</span>
-      </button>
-      <button type="button" class="dash-quick-btn q-transfer" data-nav="transacoes" onclick="navigate('transacoes')" title="Ver Extrato Completo de Transações">
-        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
-        <span>Extrato Geral</span>
-      </button>
-      <button type="button" class="dash-quick-btn q-cards" data-nav="cartoes" onclick="navigate('cartoes')" title="Gerenciar Contas Bancárias e Cartões">
-        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg></span>
-        <span>Cartões & Contas</span>
-      </button>
-      <button type="button" class="dash-quick-btn q-report" data-nav="orcamentos" onclick="navigate('orcamentos')" title="Gerenciar Orçamentos e Metas Mensais">
-        <span class="q-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-        <span>Orçamentos</span>
-      </button>
-      <button type="button" class="dash-quick-btn q-sync" onclick="window.syncDashboardData()" title="Sincronizar Dados Nuvem & Microsoft SQL Server">
-        <span class="q-icon" id="quickSyncIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg></span>
-        <span>Sincronizar</span>
-      </button>
     </div>
 
     <!-- 3. EXECUTIVE 6-CARD KPI BENTO GRID -->
