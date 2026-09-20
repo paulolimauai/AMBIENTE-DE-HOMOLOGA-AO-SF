@@ -3990,56 +3990,76 @@ body.light .header-live-time {
   box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
 }
 .mobile-drawer-nav button .ic svg { width:18px; height:18px; display:block; stroke-width:2.2px; }
-.brand{
-  display:flex; align-items:center; gap:14px; flex-shrink:0;
-  padding:6px 18px 6px 8px; border-radius:18px;
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(14, 22, 38, 0.75) 50%, rgba(7, 11, 22, 0.90) 100%);
-  border:1px solid rgba(255, 255, 255, 0.16);
-  backdrop-filter:blur(24px) saturate(200%);
-  -webkit-backdrop-filter:blur(24px) saturate(200%);
-  box-shadow:0 10px 30px -5px rgba(0,0,0,0.7), inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 0 25px rgba(0, 229, 255, 0.20);
-  transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  user-select:none; cursor:pointer;
+.brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-shrink: 0 !important;
+  padding: 6px 14px 6px 8px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  user-select: none !important;
+  cursor: pointer !important;
 }
-.brand:hover{
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(14, 22, 38, 0.85) 50%, rgba(7, 11, 22, 0.95) 100%);
-  border-color:rgba(0, 229, 255, 0.50);
-  box-shadow:0 14px 40px -5px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 0 35px rgba(0, 229, 255, 0.40);
-  transform:translateY(-1px);
+.brand:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(56, 189, 248, 0.40) !important;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45), 0 0 16px rgba(56, 189, 248, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-1px) !important;
 }
-.brand .logo{
-  width:46px; height:46px; border-radius:14px;
-  background:linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(0, 229, 255, 0.90) 45%, rgba(2, 132, 199, 0.95) 80%, rgba(14, 165, 233, 0.85) 100%);
-  display:flex; align-items:center; justify-content:center;
-  font-weight:900; color:#FFFFFF; flex-shrink:0;
-  box-shadow:0 0 28px rgba(0, 229, 255, 0.65), 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1.5px 2px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.4);
-  border:1.5px solid rgba(255, 255, 255, 0.5);
-  backdrop-filter:blur(20px) saturate(220%);
-  transition:all 0.25s ease;
+.brand .logo {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 50%, #075985 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.65), inset 0 -1.5px 2px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(10px) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
 }
-.brand:hover .logo{
-  transform:scale(1.04);
-  box-shadow:0 0 36px rgba(0, 229, 255, 0.85), 0 10px 28px rgba(0, 0, 0, 0.7), inset 0 1.5px 2px rgba(255, 255, 255, 0.95);
+.brand:hover .logo {
+  transform: scale(1.05) !important;
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.55), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.8) !important;
 }
-.brand .name{
-  font-weight:900; font-size:16px; line-height:1.15; white-space:nowrap; letter-spacing:0.04em; color:#FFFFFF;
-  text-shadow:0 0 20px rgba(255, 255, 255, 0.35), 0 2px 6px rgba(0, 0, 0, 0.7);
-  display:flex; flex-direction:column;
+.brand .name {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  text-align: left !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
 }
-.brand .name span{
-  display:block; font-size:9.5px; letter-spacing:0.14em; font-weight:800; text-transform:uppercase;
-  background:linear-gradient(90deg, #00E5FF 0%, #38BDF8 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  text-shadow:0 0 12px rgba(0, 229, 255, 0.45);
-  margin-top:1px;
+.brand .name .brand-title {
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  color: #FFFFFF !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+.brand .name .brand-sub {
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: #38BDF8 !important;
+  margin-top: 1.5px !important;
 }
 @media (max-width: 900px) {
-  .brand{
-    padding:4px 12px 4px 6px;
-  }
-  .brand .logo{width:38px; height:38px;}
-  .brand .name{font-size:14px;}
-  .brand .name span{font-size:8.5px;}
+  .brand { padding: 4px 10px 4px 6px !important; gap: 8px !important; }
+  .brand .logo { width: 32px !important; height: 32px !important; min-width: 32px !important; min-height: 32px !important; }
+  .brand .name .brand-title { font-size: 13px !important; }
+  .brand .name .brand-sub { font-size: 8px !important; }
 }
 
 .icon-btn,
@@ -10350,28 +10370,21 @@ body.light .topheader {
   box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05) !important;
 }
 
-/* Marca / Logotipo Nexus */
-.brand {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.02em !important;
+/* Marca / Logotipo Nexus Integrada */
+.brand .logo svg {
+  display: block;
 }
-
-.brand .logo-badge, .topheader-brand-logo {
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 10px !important;
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-  color: #FFFFFF !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-weight: 800 !important;
-  font-size: 16px !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+body.light .brand {
+  background: #FFFFFF !important;
+  border: 1.5px solid #E2E8F0 !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05) !important;
+}
+body.light .brand .name .brand-title {
+  color: #0F172A !important;
+  text-shadow: none !important;
+}
+body.light .brand .name .brand-sub {
+  color: #0284C7 !important;
 }
 
 /* Cápsula de Usuário Conectado */
@@ -11025,14 +11038,22 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
   <!-- CABEÇALHO SUPERIOR ESTILO AETHER 4K -->
   <div class="topheader">
     <div class="topheader-row">
-      <div style="display:flex; align-items:center; gap:10px;">
+      <div style="display:flex; align-items:center; gap:14px;">
         <button class="mobile-menu-btn" id="mobileMenuToggle" title="Abrir Menu">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         
         <div class="brand" data-nav="dashboard" style="cursor:pointer;" title="Nexus Financeiro Hub">
-          <div class="logo">⚡</div>
-          <div class="name">NEXUS<span>Financeiro Hub</span></div>
+          <div class="logo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 20L4 4L14 16L14 4" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="19" cy="5" r="2.5" fill="#38BDF8"/>
+            </svg>
+          </div>
+          <div class="name">
+            <span class="brand-title">NEXUS</span>
+            <span class="brand-sub">FINANCEIRO HUB</span>
+          </div>
         </div>
       </div>
 
