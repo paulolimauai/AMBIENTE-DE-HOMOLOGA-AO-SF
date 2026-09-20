@@ -977,10 +977,13 @@
             font-size: 14.5px !important;
             letter-spacing: 0.02em;
             box-shadow: 0 10px 24px -4px rgba(245, 158, 11, 0.55), 0 2px 6px rgba(0, 0, 0, 0.30), inset 0 1.5px 2px #FFFFFF, inset 0 -1.5px 2px rgba(180, 83, 9, 0.40) !important;
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.15s ease;
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
             height: 46px;
             display: flex;
             align-items: center;
@@ -3838,7 +3841,7 @@
 
                 setTimeout(function() {
                     window.location.href = targetOrigin.endsWith('/') ? targetOrigin : targetOrigin + '/';
-                }, 2300);
+                }, 150);
 
             } catch (err) {
                 console.warn('Falha na requisição de login via API:', err);
@@ -4000,9 +4003,12 @@
 
             switchAuthTab('login');
             
-            showAlert('Usuário <strong>' + name + '</strong> carregado no formulário de logon.', 'info');
-            const submitBtn = document.getElementById('btnLoginSubmit');
-            if (submitBtn) submitBtn.focus();
+            if (typeof window.handleLoginSubmit === 'function') {
+                window.handleLoginSubmit();
+            } else {
+                const submitBtn = document.getElementById('btnLoginSubmit');
+                if (submitBtn) submitBtn.click();
+            }
         };
 
         // ==================== Funções de Apoio ao Cadastro com Padrão Financeiro ====================
@@ -4645,7 +4651,7 @@
 
                 setTimeout(() => {
                     window.location.href = targetOrigin.endsWith('/') ? targetOrigin : targetOrigin + '/';
-                }, 2000);
+                }, 150);
 
             } catch(err) {
                 if (feedbackMsg) {
@@ -4833,7 +4839,7 @@
             }
 
             function resize() {
-                dpr = isTouch ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+                dpr = 1;
                 width = window.innerWidth;
                 height = window.innerHeight;
                 canvas.width = Math.floor(width * dpr);
@@ -4934,11 +4940,15 @@
 
             let waveOffset = 0;
             let tickCounter = 0;
+            let lastRenderTime = 0;
+            const targetFpsInterval = 1000 / 30;
 
-            function render() {
+            function render(nowTime) {
                 requestAnimationFrame(render);
                 if (!isCanvasVisible()) return;
                 if (isTouch && isScrolling) return;
+                if (nowTime && (nowTime - lastRenderTime < targetFpsInterval)) return;
+                lastRenderTime = nowTime || performance.now();
 
                 ctx.clearRect(0, 0, width, height);
                 const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');

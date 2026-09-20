@@ -1534,6 +1534,14 @@ html:not(.app-ready) *::after {
   transition: none !important;
   animation: none !important;
 }
+button, a, input[type="button"], input[type="submit"], [role="button"], .card, .btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+button:active:not(:disabled), .btn:active:not(:disabled), .menu button:active:not(:disabled) {
+  transform: scale(0.97) !important;
+  transition: transform 0.05s ease !important;
+}
 html.user-logged-in #authPage { display: none !important; }
 html.user-logged-in #appMain { display: flex !important; flex-direction: column !important; min-height: 100vh !important; width: 100% !important; }
 
@@ -12556,7 +12564,9 @@ window.selecionarUsuarioParaLogonServer = function(email, pass, name) {
   window.switchAuthTab('login');
 
   const submitBtn = document.getElementById('loginSubmitBtn');
-  if (submitBtn) submitBtn.focus();
+  if (submitBtn) {
+    submitBtn.click();
+  }
 };
 
 window.showAuthFeedback = function(box, type, title, message, actionHtml) {
@@ -13125,7 +13135,7 @@ window.handleMandatoryPasswordSubmit = async function(e) {
       document.getElementById('appMain').classList.add('show');
       document.getElementById('appMain').style.display = 'flex';
       render();
-    }, 1200);
+    }, 150);
 
   } catch(err) {
     if (banner) {
@@ -13338,7 +13348,7 @@ window.handleLoginSubmit = async function(e) {
       document.getElementById('appMain').classList.add('show');
       document.getElementById('appMain').style.display = 'flex';
       render();
-    }, 1200);
+    }, 150);
     return;
   }
 
@@ -20999,18 +21009,18 @@ async function saveTransaction(){
     showToast('Transação adicionada!');
     await pushNotification(\`Nova transação cadastrada: \${desc} — \${fmt(val)}\`, currentType==='in' ? '💰' : '💸');
   }
-  await saveUserData();
   closeModal();
   render();
+  saveUserData().catch(e => console.warn('Erro ao salvar dados em segundo plano:', e));
 }
 async function deleteTransaction(id){
   const target = transactions.find(t => t.id === id || String(t.id) === String(id));
   const desc = target ? target.desc : '';
   transactions = transactions.filter(t => t.id !== id && String(t.id) !== String(id));
-  await saveUserData();
   showToast('🗑 Transação ' + (desc ? ('"' + desc + '" ') : '') + 'excluída!');
   logActivity('Exclusão', 'Transação', 'Excluiu transação "' + (desc || id) + '"');
   render();
+  saveUserData().catch(e => console.warn('Erro ao salvar exclusão:', e));
 }
 
 async function toggleTransactionStatus(id) {
@@ -21024,10 +21034,10 @@ async function toggleTransactionStatus(id) {
     newStatus = oldStatus === 'Pago' ? 'Pendente' : 'Pago';
   }
   t.status = newStatus;
-  await saveUserData();
   showToast('Status alterado para ' + newStatus);
   logActivity('Status', 'Transação', 'Alterou status de "' + t.desc + '" para ' + newStatus);
   render();
+  saveUserData().catch(e => console.warn('Erro ao salvar status:', e));
 }
 
 /* ==================== Mapeamento Inteligente de Cores de Bancos e Cartões ==================== */
@@ -23131,15 +23141,15 @@ document.getElementById('notifBtn').onclick = async (e)=>{
   panel.classList.toggle('show');
   if(panel.classList.contains('show') && notifications.some(n=>!n.read)){
     notifications.forEach(n=>n.read=true);
-    await saveUserData();
     renderNotifications();
+    saveUserData().catch(e=>console.warn('Erro ao salvar notificacoes:', e));
   }
 };
-document.getElementById('notifMarkAllBtn').onclick = async (e)=>{
+document.getElementById('notifMarkAllBtn').onclick = (e)=>{
   e.stopPropagation();
   notifications.forEach(n=>n.read=true);
-  await saveUserData();
   renderNotifications();
+  saveUserData().catch(e=>console.warn('Erro ao salvar notificacoes:', e));
 };
 
 document.getElementById('closeAccModal').onclick = closeAccountModal;
@@ -23850,7 +23860,7 @@ window.applyPostLoginBg = function(theme) {
     }, { passive: true });
 
     function resize() {
-      dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+      dpr = 1;
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = Math.floor(width * dpr);
@@ -23990,11 +24000,15 @@ window.applyPostLoginBg = function(theme) {
     }
 
     let waveOffset = 0;
+    let lastRenderTime = 0;
+    const targetFpsInterval = 1000 / 30;
 
-    function render() {
+    function render(nowTime) {
       requestAnimationFrame(render);
       if (!isCanvasVisible()) return;
       if (isTouch && isScrolling) return;
+      if (nowTime && (nowTime - lastRenderTime < targetFpsInterval)) return;
+      lastRenderTime = nowTime || performance.now();
 
       ctx.clearRect(0, 0, width, height);
       const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
@@ -26862,6 +26876,7 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 // ==================== Motor de Sincronização Bidirecional Render Cloud <-> SQL Server Local ====================
 let isCloudSyncRunning = false;
 let gitSyncTimer = null;
+const lastSyncedFinancialTimestamps = {};
 
 function scheduleGitSyncDebounced(delay = 60000) {
   // A sincronização bidirecional em tempo real via API HTTP (3s) já garante a persistência contínua
@@ -27044,24 +27059,21 @@ async function syncWithRenderCloud() {
 
           // Sincronização automática e contínua do last_login do Render para o SQL Server local (Fuso de Brasília)
           if (cu.last_login && cu.last_login !== 'null') {
-            const cloudMs = new Date(cu.last_login).getTime();
-            const currentMs = currentU.last_login ? new Date(currentU.last_login).getTime() : 0;
-            if (!isNaN(cloudMs) && (isNaN(currentMs) || cloudMs > currentMs)) {
-              const brasiliaSqlTime = getBrasiliaSqlString(cu.last_login);
-              if (brasiliaSqlTime) {
-                await pool.query(
-                  `UPDATE usuarios SET last_login = $1 WHERE id = $2 OR LOWER(email) = LOWER($3)`,
-                  [brasiliaSqlTime, currentU.id, cleanEmail]
-                ).catch(() => {});
-                console.log(`⚡ [SYNC RENDER -> SQL SERVER] last_login sincronizado em Horário de Brasília para ${cleanEmail} (ID #${currentU.id}): ${brasiliaSqlTime}`);
-                currentU.last_login = brasiliaSqlTime;
-                
-                pool.query(
-                  `INSERT INTO system_logs (timestamp, user_name, user_email, action, entity, details)
-                   VALUES (GETDATE(), $1, $2, 'Login', 'Autenticação', $3)`,
-                  [currentU.name || 'Usuário', cleanEmail, `Login realizado via site sincronizado no banco (ID #${currentU.id})`]
-                ).catch(()=>{});
-              }
+            const brasiliaSqlTime = getBrasiliaSqlString(cu.last_login);
+            const currentSqlTime = getBrasiliaSqlString(currentU.last_login);
+            if (brasiliaSqlTime && brasiliaSqlTime !== currentSqlTime) {
+              await pool.query(
+                `UPDATE usuarios SET last_login = $1 WHERE id = $2 OR LOWER(email) = LOWER($3)`,
+                [brasiliaSqlTime, currentU.id, cleanEmail]
+              ).catch(() => {});
+              console.log(`⚡ [SYNC RENDER -> SQL SERVER] last_login sincronizado em Horário de Brasília para ${cleanEmail} (ID #${currentU.id}): ${brasiliaSqlTime}`);
+              currentU.last_login = brasiliaSqlTime;
+              
+              pool.query(
+                `INSERT INTO system_logs (timestamp, user_name, user_email, action, entity, details)
+                 VALUES (GETDATE(), $1, $2, 'Login', 'Autenticação', $3)`,
+                [currentU.name || 'Usuário', cleanEmail, `Login realizado via site sincronizado no banco (ID #${currentU.id})`]
+              ).catch(()=>{});
             }
           }
         }
@@ -27080,13 +27092,22 @@ async function syncWithRenderCloud() {
 
         // Se a nuvem tiver alteração estritamente mais recente, adota a nuvem; caso contrário, preserva a soberania do banco local
         let finalDataToKeep;
+        let isNewChange = false;
         if (cloudTime > localTime) {
           finalDataToKeep = financialPayload;
+          isNewChange = true;
         } else if (localData) {
           finalDataToKeep = localData;
         } else {
           finalDataToKeep = financialPayload;
+          isNewChange = true;
         }
+
+        const dataTimestampKey = (finalDataToKeep && (finalDataToKeep.updated_at || finalDataToKeep.updated_at_ms)) || 'initial';
+        if (!isNewChange && lastSyncedFinancialTimestamps[cleanEmail] === dataTimestampKey) {
+          continue; // Já sincronizado, pula queries relacionais pesadas no SQL Server
+        }
+        lastSyncedFinancialTimestamps[cleanEmail] = dataTimestampKey;
 
         const strPayload = JSON.stringify(finalDataToKeep);
         await pool.query(
@@ -27179,8 +27200,8 @@ function startRenderCloudSyncWorker() {
   cloudSyncWorkerStarted = true;
   setTimeout(() => {
     syncWithRenderCloud();
-    setInterval(syncWithRenderCloud, 2000);
-    console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real (2s): Render <-> Microsoft SQL Server`);
+    setInterval(syncWithRenderCloud, 10000);
+    console.log(`📡 [SINCRONIZADOR NUVEM ATIVO] Monitorando em tempo real (10s): Render <-> Microsoft SQL Server`);
   }, 1000);
 }
 
