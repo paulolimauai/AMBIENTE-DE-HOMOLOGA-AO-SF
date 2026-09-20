@@ -3123,7 +3123,7 @@
       {
         "id": 2,
         "desc": "Nubank",
-        "val": 1666.09,
+        "val": 1793.91,
         "date": "2026-09-30",
         "cat": "Cartão de Crédito",
         "status": "Pendente",
@@ -3228,7 +3228,7 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 11,
-    "updated_at": "2026-09-19T14:38:34.769Z",
-    "updated_at_ms": 1789828714769
+    "updated_at": "2026-09-20T11:33:51.179Z",
+    "updated_at_ms": 1789904031179
   }
 }

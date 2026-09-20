@@ -7257,47 +7257,233 @@ body.light .dash-quick-btn.q-cards { background: #FFFBEB !important; border-colo
 body.light .dash-quick-btn.q-sync { background: #F0FDF4 !important; border-color: #A7F3D0 !important; color: #065F46 !important; }
 
 /* Grid de 6 KPIs 4K */
+/* Grid de 6 KPIs 4K Refinados & Polidos */
 .kpis-grid-6 {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 14px;
-  margin-bottom: 22px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 @media (max-width: 1400px) {
-  .kpis-grid-6 { grid-template-columns: repeat(3, 1fr); }
+  .kpis-grid-6 { grid-template-columns: repeat(3, 1fr); gap: 14px; }
 }
 @media (max-width: 820px) {
-  .kpis-grid-6 { grid-template-columns: repeat(2, 1fr); }
+  .kpis-grid-6 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 }
 @media (max-width: 480px) {
-  .kpis-grid-6 { grid-template-columns: 1fr; }
+  .kpis-grid-6 { grid-template-columns: 1fr; gap: 12px; }
 }
 
-.kpi.kpi-balance { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(6, 182, 212, 0.08) !important; }
-.kpi.kpi-income { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(16, 185, 129, 0.08) !important; }
-.kpi.kpi-expense { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(244, 63, 94, 0.08) !important; }
-.kpi.kpi-net { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(59, 130, 246, 0.08) !important; }
-.kpi.kpi-card { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(245, 158, 11, 0.08) !important; }
-.kpi.kpi-bills { box-shadow: 0 12px 32px -6px rgba(0,0,0,0.55), 0 0 20px rgba(236, 72, 153, 0.08) !important; }
+/* Master Design dos Cards de KPI (.kpis-grid-6 .kpi) */
+.kpis-grid-6 .kpi {
+  position: relative !important;
+  background: linear-gradient(155deg, rgba(20, 24, 33, 0.82) 0%, rgba(11, 14, 20, 0.94) 100%) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border-radius: 20px !important;
+  padding: 18px 20px 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top-width: 2.5px !important;
+  box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
 
-.kpi.kpi-card::before { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
-.kpi.kpi-bills::before { background: linear-gradient(90deg, #EC4899, #F43F5E); }
+/* Pseudo-reflexo luminoso no topo do card */
+.kpis-grid-6 .kpi::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 10% !important;
+  right: 10% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent) !important;
+  pointer-events: none !important;
+}
 
+.kpis-grid-6 .kpi:hover {
+  transform: translateY(-4px) scale(1.01) !important;
+}
+
+/* Cores temáticas por categoria de KPI com brilhos sutis */
+.kpis-grid-6 .kpi.kpi-balance {
+  border-top-color: #06B6D4 !important;
+}
+.kpis-grid-6 .kpi.kpi-balance:hover {
+  border-color: rgba(6, 182, 212, 0.45) !important;
+  border-top-color: #22D3EE !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(6, 182, 212, 0.2) !important;
+}
+
+.kpis-grid-6 .kpi.kpi-income {
+  border-top-color: #10B981 !important;
+}
+.kpis-grid-6 .kpi.kpi-income:hover {
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  border-top-color: #34D399 !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(16, 185, 129, 0.2) !important;
+}
+
+.kpis-grid-6 .kpi.kpi-expense {
+  border-top-color: #EF4444 !important;
+}
+.kpis-grid-6 .kpi.kpi-expense:hover {
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  border-top-color: #F87171 !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(239, 68, 68, 0.2) !important;
+}
+
+.kpis-grid-6 .kpi.kpi-net {
+  border-top-color: #3B82F6 !important;
+}
+.kpis-grid-6 .kpi.kpi-net:hover {
+  border-color: rgba(59, 130, 246, 0.45) !important;
+  border-top-color: #60A5FA !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(59, 130, 246, 0.2) !important;
+}
+
+.kpis-grid-6 .kpi.kpi-card {
+  border-top-color: #F59E0B !important;
+}
+.kpis-grid-6 .kpi.kpi-card:hover {
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  border-top-color: #FBBF24 !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(245, 158, 11, 0.2) !important;
+}
+
+.kpis-grid-6 .kpi.kpi-bills {
+  border-top-color: #EC4899 !important;
+}
+.kpis-grid-6 .kpi.kpi-bills:hover {
+  border-color: rgba(236, 72, 153, 0.45) !important;
+  border-top-color: #F472B6 !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(236, 72, 153, 0.2) !important;
+}
+
+/* Tipografia e elementos internos */
+.kpis-grid-6 .kpi .row1 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 6px !important;
+}
+.kpis-grid-6 .kpi .row1 span:first-child {
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: #94A3B8 !important;
+}
+
+.kpis-grid-6 .kpi .ic {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  backdrop-filter: blur(10px) !important;
+  transition: transform 0.25s ease !important;
+}
+.kpis-grid-6 .kpi:hover .ic {
+  transform: scale(1.1) rotate(3deg) !important;
+}
+
+.kpis-grid-6 .kpi .val {
+  font-size: clamp(21px, 1.45vw, 26px) !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1.15 !important;
+  margin: 6px 0 10px !important;
+  font-family: inherit !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4)) !important;
+}
+
+/* Barra de Progresso Fina com Gradiente Glow */
 .kpi-mini-bar {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 2px;
-  overflow: hidden;
-  margin: 6px 0 10px;
+  width: 100% !important;
+  height: 4.5px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  margin: 4px 0 12px !important;
+  position: relative !important;
 }
 .kpi-mini-fill {
-  height: 100%;
-  border-radius: 2px;
-  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 100% !important;
+  border-radius: 999px !important;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 0 10px currentColor !important;
+}
+
+/* Linha de Rodapé do Card (.sub) */
+.kpis-grid-6 .kpi .sub {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  font-size: 11px !important;
+  margin-top: auto !important;
+}
+
+/* Badges / Tags Elegantes */
+.kpi-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 2.5px 8px !important;
+  border-radius: 6px !important;
+  font-size: 9.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  line-height: 1.2 !important;
+  border: 1px solid transparent !important;
+  backdrop-filter: blur(8px) !important;
+}
+.kpi-tag.kpi-tag-success {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #34D399 !important;
+  border-color: rgba(16, 185, 129, 0.28) !important;
+}
+.kpi-tag.kpi-tag-danger {
+  background: rgba(239, 68, 68, 0.14) !important;
+  color: #F87171 !important;
+  border-color: rgba(239, 68, 68, 0.28) !important;
+}
+.kpi-tag.kpi-tag-cyan {
+  background: rgba(6, 182, 212, 0.14) !important;
+  color: #22D3EE !important;
+  border-color: rgba(6, 182, 212, 0.28) !important;
+}
+.kpi-tag.kpi-tag-purple {
+  background: rgba(236, 72, 153, 0.14) !important;
+  color: #F472B6 !important;
+  border-color: rgba(236, 72, 153, 0.28) !important;
+}
+
+/* Adaptação para o Modo Claro */
+body.light .kpis-grid-6 .kpi {
+  background: linear-gradient(155deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+  border: 1.5px solid #E2E8F0 !important;
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.07) !important;
+}
+body.light .kpis-grid-6 .kpi .row1 span:first-child {
+  color: #64748B !important;
+}
+body.light .kpis-grid-6 .kpi::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent) !important;
 }
 body.light .kpi-mini-bar {
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.06) !important;
 }
 
 .dashboard-main-grid {
