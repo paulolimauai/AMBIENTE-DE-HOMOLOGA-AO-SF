@@ -9161,10 +9161,10 @@ body.light .toast-close:hover {
 .login-success-progress-fill {
   height: 100% !important;
   width: 0;
-  background: linear-gradient(90deg, #3B82F6 0%, #06B6D4 50%, #10B981 100%) !important;
+  background: linear-gradient(90deg, #10B981 0%, #14B8A6 40%, #06B6D4 75%, #38BDF8 100%) !important;
   border-radius: 999px !important;
   box-shadow: 0 0 14px rgba(16, 185, 129, 0.85) !important;
-  animation: loginProgressFill 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: loginProgressFill 1.35s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
 }
 @keyframes loginProgressFill{
   from{width:0%;}
@@ -12074,18 +12074,30 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 </div>
 
 <div class="login-success-overlay" id="loginSuccessOverlay" role="dialog" aria-modal="true">
-  <div class="login-success-box" style="max-width:390px; padding:32px 24px; border-radius:26px; border:1px solid rgba(16,185,129,0.3); border-top:1.5px solid rgba(255,255,255,0.4); background:linear-gradient(165deg, rgba(15,23,42,0.96), rgba(6,10,20,0.98)); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 40px rgba(16,185,129,0.25);">
+  <div class="login-success-box" style="max-width:440px; padding:38px 30px 32px; border-radius:28px; border:1px solid rgba(16,185,129,0.35); border-top:1.8px solid rgba(255,255,255,0.45); background:linear-gradient(165deg, rgba(17,24,39,0.96) 0%, rgba(10,15,28,0.98) 100%); box-shadow:0 35px 95px rgba(0,0,0,0.95), 0 0 50px rgba(16,185,129,0.22), inset 0 1px 1px rgba(255,255,255,0.25);">
     <div class="auth-ambient-glow glow-emerald"></div>
 
-    <div class="login-success-check" style="width:72px; height:72px; margin:0 auto 16px; border-radius:50%; border:2px solid rgba(16,185,129,0.45); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(16,185,129,0.25) 0%, rgba(15,23,42,0.6) 80%); box-shadow:0 0 25px rgba(16,185,129,0.4);">
-      <svg viewBox="0 0 52 52" style="width:38px; height:38px; stroke:#10B981;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
+    <!-- Badge Executiva de Status de Autenticação -->
+    <div class="auth-modal-badge auth-badge-logout" style="margin-bottom:18px;">
+      <span class="auth-badge-dot"></span>
+      <span>Autenticação Validada</span>
     </div>
 
-    <h3 id="loginSuccessTitle" style="font-size:22px; font-weight:900; color:#ffffff; margin:0 0 8px; letter-spacing:-0.02em;">Login efetuado com sucesso!</h3>
-    <p id="loginSuccessMsg" style="font-size:13px; color:#cbd5e1; margin:0 0 20px;">Redirecionando com segurança para o seu sistema...</p>
+    <!-- Ícone Dinâmico com Duplo Anel e Checkmark Suave -->
+    <div class="login-success-check" style="width:76px; height:76px; margin:0 auto 20px; border-radius:50%; border:2px solid rgba(52,211,153,0.5); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 35% 30%, rgba(16,185,129,0.28) 0%, rgba(6,182,212,0.12) 55%, rgba(10,15,28,0.9) 100%); box-shadow:0 0 35px rgba(16,185,129,0.45), inset 0 2px 4px rgba(255,255,255,0.5);">
+      <svg viewBox="0 0 52 52" style="width:40px; height:40px; stroke:#10B981;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
+    </div>
 
-    <div class="login-success-progress-bar" style="height:5px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden;">
-      <div class="login-success-progress-fill" style="background:linear-gradient(90deg, #10b981, #14b8a6, #38bdf8); box-shadow:0 0 12px rgba(16,185,129,0.7);"></div>
+    <h3 id="loginSuccessTitle" style="font-size:23px; font-weight:900; color:#ffffff; margin:0 0 8px; letter-spacing:-0.025em; text-shadow:0 2px 10px rgba(0,0,0,0.5);">Login efetuado com sucesso!</h3>
+    <p id="loginSuccessMsg" style="font-size:13.5px; color:#94a3b8; margin:0 0 22px; line-height:1.55; font-weight:500;">Redirecionando com segurança para o seu sistema...</p>
+
+    <!-- Barra de Progresso Suave com Glow Dinâmico -->
+    <div class="login-success-progress-bar" style="height:5px; background:rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.6);">
+      <div class="login-success-progress-fill" style="height:100%; border-radius:999px; background:linear-gradient(90deg, #10B981 0%, #14B8A6 45%, #06B6D4 80%, #38BDF8 100%); box-shadow:0 0 16px rgba(16,185,129,0.9);"></div>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; font-size:10.5px; color:#64748b; font-weight:600; letter-spacing:0.02em;">
+      <span style="display:inline-flex; align-items:center; gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Conexão Criptografada</span>
+      <span style="color:#10B981;">Carregando dados...</span>
     </div>
   </div>
 </div>
