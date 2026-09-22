@@ -4170,31 +4170,31 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Barra de Menu Horizontal no Topo (Design Executivo Interativo Ultra-Ajustado & Espaçoso) ==================== */
+/* ==================== Barra de Menu Horizontal no Topo (Design Executivo de Alta Fidelidade - Frosted Glass) ==================== */
 nav.menu {
   position: fixed !important;
-  top: 68px !important;
+  top: 64px !important;
   left: 0 !important;
   right: 0 !important;
   bottom: auto !important;
   width: 100% !important;
   max-width: 100% !important;
-  height: 62px !important;
-  min-height: 62px !important;
+  height: 56px !important;
+  min-height: 56px !important;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 0 20px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(5, 12, 24, 0.88) !important;
-  border-bottom: 1px solid rgba(16, 185, 129, 0.22) !important;
+  background: rgba(6, 11, 22, 0.82) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.60), inset 0 -1px 0 rgba(16, 185, 129, 0.14) !important;
-  backdrop-filter: blur(28px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
   z-index: 9990 !important;
 }
 
@@ -4202,12 +4202,19 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 10px !important;
-  width: 100% !important;
-  max-width: 1760px !important;
-  height: 100% !important;
-  padding: 0 22px !important;
+  gap: 4px !important;
+  width: auto !important;
+  max-width: 100% !important;
+  height: 42px !important;
+  padding: 3px 6px !important;
   margin: 0 auto !important;
+  background: rgba(12, 19, 36, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25) !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   scrollbar-width: none !important;
@@ -4219,17 +4226,14 @@ nav.menu::-webkit-scrollbar {
   display: none !important;
 }
 
-@media (min-width: 2560px) {
-  .menu-track {
-    max-width: 2400px !important;
-    gap: 14px !important;
-    padding: 0 32px !important;
-  }
-}
-
 @media (max-width: 1350px) {
+  nav.menu {
+    justify-content: flex-start !important;
+    padding: 0 12px !important;
+  }
   .menu-track {
     justify-content: flex-start !important;
+    width: 100% !important;
   }
 }
 
@@ -4240,22 +4244,22 @@ nav.menu::-webkit-scrollbar {
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  gap: 9px !important;
+  gap: 7px !important;
   width: auto !important;
-  height: 44px !important;
-  min-height: 44px !important;
-  max-height: 44px !important;
-  padding: 0 18px !important;
-  border-radius: 12px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 14px !important;
+  border-radius: 10px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
-  font-size: 14.5px !important;
-  font-weight: 650 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
   letter-spacing: -0.01em !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select: none !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
@@ -4264,49 +4268,54 @@ nav.menu::-webkit-scrollbar {
 
 .menu button:hover {
   background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  color: #FFFFFF !important;
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  border-top-color: rgba(255, 255, 255, 0.25) !important;
+  color: #F8FAFC !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
 .menu button:hover .ic {
-  transform: scale(1.14) rotate(-3deg) !important;
+  transform: scale(1.1) !important;
   color: #38BDF8 !important;
 }
 
 .menu button:active {
-  transform: translateY(0.5px) scale(0.97) !important;
-  transition-duration: 0.08s !important;
+  transform: scale(0.97) !important;
+  transition-duration: 0.06s !important;
 }
 
+/* Estado Ativo Sofisticado: Cápsula Lapidada com Brilho Superior Suave (Sem barra azul pesada embaixo) */
 .menu button.active {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.16) 0%, rgba(56, 189, 248, 0.08) 50%, rgba(14, 165, 233, 0.04) 100%) !important;
-  border: 1px solid rgba(56, 189, 248, 0.38) !important;
-  border-radius: 12px !important;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.22) 0%, rgba(2, 132, 199, 0.14) 100%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  border-top: 1.2px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 10px !important;
   color: #38BDF8 !important;
   font-weight: 700 !important;
-  box-shadow: 0 4px 18px rgba(14, 165, 233, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.22), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+  transform: none !important;
 }
 
 .menu button.active .ic {
   color: #38BDF8 !important;
-  transform: scale(1.06) !important;
-  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.65)) !important;
+  transform: scale(1.05) !important;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5)) !important;
 }
 
 .menu button.active::before {
   content: '' !important;
   position: absolute !important;
-  bottom: 0 !important;
-  left: 12px !important;
-  right: 12px !important;
-  top: auto !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  bottom: auto !important;
   width: auto !important;
-  height: 2.5px !important;
-  border-radius: 999px 999px 0 0 !important;
-  background: linear-gradient(90deg, #0EA5E9 0%, #38BDF8 50%, #818CF8 100%) !important;
-  box-shadow: 0 -1px 10px rgba(56, 189, 248, 0.95), 0 0 14px rgba(14, 165, 233, 0.65) !important;
+  height: 1px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, transparent, #FFFFFF 50%, transparent) !important;
+  opacity: 0.8 !important;
+  box-shadow: 0 0 8px #FFFFFF !important;
   transform: none !important;
 }
 
@@ -4315,8 +4324,8 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button .ic {
-  width: 22px !important;
-  height: 22px !important;
+  width: 18px !important;
+  height: 18px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4324,19 +4333,19 @@ nav.menu::-webkit-scrollbar {
   flex-shrink: 0 !important;
   line-height: 0 !important;
   margin: 0 !important;
-  transition: transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s ease !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease !important;
 }
 .menu button .ic svg {
-  width: 19px !important;
-  height: 19px !important;
-  stroke-width: 2.2px !important;
+  width: 17px !important;
+  height: 17px !important;
+  stroke-width: 2.1px !important;
   stroke: currentColor !important;
   display: block !important;
 }
 
 .menu button span:not(.ic) {
-  font-size: 14.5px !important;
-  font-weight: 650 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
   line-height: 1 !important;
   display: inline-block !important;
   white-space: nowrap !important;
@@ -4346,10 +4355,10 @@ nav.menu::-webkit-scrollbar {
 
 .menu-admin-divider {
   width: 1px !important;
-  height: 24px !important;
+  height: 20px !important;
   background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.45) 50%, rgba(245, 158, 11, 0.1) 100%) !important;
   border-radius: 999px !important;
-  margin: 0 6px !important;
+  margin: 0 4px !important;
   flex-shrink: 0 !important;
 }
 
@@ -4360,14 +4369,14 @@ nav.menu::-webkit-scrollbar {
 .menu button.menu-btn-admin {
   position: relative !important;
   width: auto !important;
-  height: 44px !important;
-  min-height: 44px !important;
-  max-height: 44px !important;
-  padding: 0 18px !important;
-  border-radius: 12px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 14px !important;
+  border-radius: 10px !important;
   color: #CBD5E1 !important;
-  background: rgba(245, 158, 11, 0.05) !important;
-  border: 1px solid rgba(245, 158, 11, 0.18) !important;
+  background: rgba(245, 158, 11, 0.06) !important;
+  border: 1px solid rgba(245, 158, 11, 0.20) !important;
 }
 .menu button.menu-btn-admin .ic {
   background: transparent !important;
@@ -4375,57 +4384,66 @@ nav.menu::-webkit-scrollbar {
   color: #FBBF24 !important;
 }
 .menu button.menu-btn-admin:hover {
-  background: rgba(245, 158, 11, 0.14) !important;
-  border-color: rgba(245, 158, 11, 0.45) !important;
+  background: rgba(245, 158, 11, 0.16) !important;
+  border-color: rgba(245, 158, 11, 0.50) !important;
   color: #FDE68A !important;
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.18) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.20) !important;
 }
 .menu button.menu-btn-admin:hover .ic {
   background: transparent !important;
   border: none !important;
   color: #FDE68A !important;
-  transform: scale(1.14) rotate(-3deg) !important;
+  transform: scale(1.1) !important;
 }
 .menu button.menu-btn-admin.active {
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.22) 0%, rgba(245, 158, 11, 0.10) 100%) !important;
-  border: 1px solid rgba(245, 158, 11, 0.55) !important;
-  border-radius: 11px !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.24) 0%, rgba(217, 119, 6, 0.12) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.60) !important;
+  border-top: 1.2px solid rgba(255, 255, 255, 0.60) !important;
+  border-radius: 10px !important;
   color: #FBBF24 !important;
-  font-weight: 650 !important;
-  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
   transform: none !important;
 }
 .menu button.menu-btn-admin.active::before {
   content: '' !important;
   position: absolute !important;
-  bottom: 0 !important;
-  left: 14px !important;
-  right: 14px !important;
-  top: auto !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  bottom: auto !important;
   width: auto !important;
-  height: 2.5px !important;
-  border-radius: 3px 3px 0 0 !important;
-  background: linear-gradient(90deg, #F59E0B 0%, #FBBF24 100%) !important;
-  box-shadow: 0 -1px 8px rgba(245, 158, 11, 0.95) !important;
+  height: 1px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, transparent, #FDE68A 50%, transparent) !important;
+  box-shadow: 0 0 8px #F59E0B !important;
   transform: none !important;
 }
 .menu button.menu-btn-admin.active .ic {
   color: #FBBF24 !important;
   background: transparent !important;
-  transform: scale(1.08) !important;
+  transform: scale(1.06) !important;
   filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6)) !important;
 }
 
 /* ==================== Modo Claro do Menu ==================== */
 body.light nav.menu,
 html.light nav.menu {
-  background: rgba(255, 255, 255, 0.96) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
   border-bottom: 1px solid #E2E8F0 !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+body.light .menu-track,
+html.light .menu-track {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05) !important;
 }
 body.light .menu-admin-divider,
 html.light .menu-admin-divider {
@@ -10749,58 +10767,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
   font-weight: 800;
 }
 
-/* 4. BARRA DE MENU HORIZONTAL PADRÃO FINTECH */
-nav.menu {
-  background: rgba(10, 15, 28, 0.85) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
-  padding: 6px 16px !important;
-  display: flex !important;
-  justify-content: center !important;
-}
-
-.menu-track {
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-}
-
-nav.menu button, .menu button {
-  border-radius: 12px !important;
-  padding: 8px 16px !important;
-  font-size: 13.5px !important;
-  font-weight: 650 !important;
-  color: #94A3B8 !important;
-  background: transparent !important;
-  border: 1px solid transparent !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  cursor: pointer !important;
-  white-space: nowrap !important;
-}
-
-nav.menu button:hover, .menu button:hover {
-  color: #FFFFFF !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  transform: translateY(-1px) !important;
-}
-
-nav.menu button.active, .menu button.active {
-  color: #FFFFFF !important;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(56, 189, 248, 0.14) 100%) !important;
-  border: 1px solid rgba(56, 189, 248, 0.35) !important;
-  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-}
-
-nav.menu button.active .ic svg {
-  stroke: #38BDF8 !important;
-}
+/* 4. BARRA DE MENU - Padronizada na suite executiva Aether */
 
 /* 5. CARDS DE KPI & DASHBOARD PADRÃO BANCO DIGITAL */
 .kpi, .dash-card, .dash-overview-card, .panel, .table-panel {
