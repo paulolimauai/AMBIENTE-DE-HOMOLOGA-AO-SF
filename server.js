@@ -10629,6 +10629,467 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
   padding: 24px !important;
   box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.85) !important;
 }
+
+
+/* ==========================================================================
+   NEXUS FINANCEIRO HUB - MASTER FINANCIAL DESIGN SYSTEM (PADRÃO FINANCEIRO DE ELITE)
+   ========================================================================== */
+
+/* 1. TOKENS & VARIÁVEIS EXECUTIVAS GLOBAIS */
+:root {
+  --fin-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --fin-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --fin-emerald: #10B981;
+  --fin-emerald-soft: rgba(16, 185, 129, 0.14);
+  --fin-emerald-border: rgba(16, 185, 129, 0.35);
+  --fin-crimson: #F43F5E;
+  --fin-crimson-soft: rgba(244, 63, 94, 0.14);
+  --fin-crimson-border: rgba(244, 63, 94, 0.35);
+  --fin-sapphire: #38BDF8;
+  --fin-sapphire-soft: rgba(56, 189, 248, 0.14);
+  --fin-sapphire-border: rgba(56, 189, 248, 0.35);
+  --fin-amber: #F59E0B;
+  --fin-amber-soft: rgba(245, 158, 11, 0.14);
+  --fin-amber-border: rgba(245, 158, 11, 0.35);
+  --fin-card-bg: linear-gradient(165deg, rgba(13, 20, 36, 0.88) 0%, rgba(9, 14, 26, 0.96) 100%);
+  --fin-card-border: 1px solid rgba(255, 255, 255, 0.08);
+  --fin-card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* 2. TIPOGRAFIA NUMÉRICA & VALORES TABULARES DE ALTA PRECISÃO */
+.val, .kpi-value, .amount, .tx-val, .metric-val, [data-currency], td.val,
+.trans-amount, .due-bill-val, .account-balance, .stat-value, .summary-num,
+.dash-card strong, .kpi strong, .kpi-tag, .badge-fin {
+  font-family: var(--fin-font-sans) !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
+  font-feature-settings: "tnum" 1, "cv02" 1, "cv03" 1, "cv04" 1, "cv11" 1 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* 3. TOPHEADER & STATUS EXECUTIVO EM TEMPO REAL */
+.topheader {
+  height: 64px !important;
+  background: rgba(6, 10, 20, 0.90) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.6) !important;
+  z-index: 1000 !important;
+}
+
+.topheader-row {
+  max-width: 1680px !important;
+  margin: 0 auto !important;
+  padding: 0 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 100% !important;
+}
+
+/* Cápsula Central de Status Financeiro & Relógio de Brasília */
+.fintech-header-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fintech-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(16, 185, 129, 0.10);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+  color: #34D399;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+  cursor: default;
+  transition: all 0.2s ease;
+}
+
+.fintech-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: finPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes finPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.fintech-clock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  color: #94A3B8;
+  font-variant-numeric: tabular-nums;
+  cursor: default;
+}
+
+.fintech-clock-badge span#fintechBrasiliaClock {
+  color: #F8FAFC;
+  font-weight: 800;
+}
+
+/* 4. BARRA DE MENU HORIZONTAL PADRÃO FINTECH */
+nav.menu {
+  background: rgba(10, 15, 28, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  padding: 6px 16px !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.menu-track {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+}
+
+nav.menu button, .menu button {
+  border-radius: 12px !important;
+  padding: 8px 16px !important;
+  font-size: 13.5px !important;
+  font-weight: 650 !important;
+  color: #94A3B8 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+
+nav.menu button:hover, .menu button:hover {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+nav.menu button.active, .menu button.active {
+  color: #FFFFFF !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(56, 189, 248, 0.14) 100%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+nav.menu button.active .ic svg {
+  stroke: #38BDF8 !important;
+}
+
+/* 5. CARDS DE KPI & DASHBOARD PADRÃO BANCO DIGITAL */
+.kpi, .dash-card, .dash-overview-card, .panel, .table-panel {
+  border-radius: 16px !important;
+  background: var(--fin-card-bg) !important;
+  border: var(--fin-card-border) !important;
+  box-shadow: var(--fin-card-shadow) !important;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.kpi::before, .dash-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
+  pointer-events: none;
+}
+
+.kpi:hover, .dash-card:hover, .dash-overview-card:hover {
+  transform: translateY(-2.5px) !important;
+  border-color: rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.7), 0 0 25px -4px rgba(56, 189, 248, 0.15) !important;
+}
+
+/* Títulos e Rótulos de KPIs */
+.kpi .kpi-label, .dash-card-title, .kpi-title {
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: #94A3B8 !important;
+  margin-bottom: 6px !important;
+}
+
+/* Valores Grandes de KPIs */
+.kpi .val, .kpi-value {
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.03em !important;
+  color: #FFFFFF !important;
+}
+
+/* 6. RADAR DE CONTAS A PAGAR & BOLETOS */
+.due-bill-badge {
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+}
+
+.due-bill-badge.overdue {
+  background: rgba(239, 68, 68, 0.18) !important;
+  color: #F87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.3) !important;
+}
+
+.due-bill-badge.today {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #FBBF24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+}
+
+.due-bill-badge.future {
+  background: rgba(56, 189, 248, 0.14) !important;
+  color: #38BDF8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+
+/* 7. TABELAS DE TRANSAÇÕES & EXTRATOS (LEDGER FINANCEIRO) */
+table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+table th {
+  padding: 12px 16px !important;
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: #64748B !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+table td {
+  padding: 13px 16px !important;
+  font-size: 13.5px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  vertical-align: middle !important;
+  transition: background 0.15s ease !important;
+}
+
+tr:hover td {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Alinhamento estrito à direita para colunas de valor */
+td:last-child, th:last-child, td.val, td.amount, td.tx-val, th.th-val {
+  text-align: right !important;
+}
+
+/* Badges de Status das Transações */
+.status-pago, .status-recebido, .status-badge.paid {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #34D399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.32) !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+.status-pendente, .status-badge.pending {
+  background: rgba(245, 158, 11, 0.14) !important;
+  color: #FBBF24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.32) !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+
+/* 8. FORMULÁRIOS & MODAIS FINANCEIROS */
+.overlay {
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  background: rgba(4, 7, 15, 0.82) !important;
+}
+
+.modal, .modal-box {
+  border-radius: 20px !important;
+  background: linear-gradient(165deg, rgba(14, 22, 38, 0.96) 0%, rgba(8, 12, 22, 0.98) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top: 2px solid rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.12) !important;
+  padding: 26px !important;
+}
+
+input[type="text"], input[type="number"], input[type="date"], input[type="email"], input[type="password"], select, textarea {
+  border-radius: 12px !important;
+  padding: 11px 15px !important;
+  font-size: 13.5px !important;
+  background: rgba(12, 18, 32, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #F8FAFC !important;
+  transition: all 0.2s ease !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #10B981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25), 0 0 15px rgba(16, 185, 129, 0.15) !important;
+  outline: none !important;
+}
+
+/* Botão Salvar / Ação Primária */
+.btn-primary, button.save, #saveBtn, #accSaveBtn, #catSaveBtn {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+  font-weight: 750 !important;
+  border-radius: 12px !important;
+  padding: 11px 22px !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-primary:hover, button.save:hover, #saveBtn:hover, #accSaveBtn:hover, #catSaveBtn:hover {
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.55) !important;
+}
+
+/* 9. MODO CLARO (LIGHT MODE) - ALTO CONTRASTE TOTAL CONFORME REGRA SKILL */
+body.light, html.light body, html.light {
+  background-color: #F8FAFC !important;
+  color: #000000 !important;
+}
+
+body.light .topheader {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.light .fintech-status-badge {
+  background: rgba(5, 150, 105, 0.1) !important;
+  border-color: rgba(5, 150, 105, 0.25) !important;
+  color: #047857 !important;
+}
+
+body.light .fintech-clock-badge {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #000000 !important;
+}
+
+body.light .fintech-clock-badge span#fintechBrasiliaClock {
+  color: #000000 !important;
+}
+
+body.light nav.menu {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+}
+
+body.light nav.menu button, body.light .menu button {
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+body.light nav.menu button:hover, body.light .menu button:hover {
+  background: #F1F5F9 !important;
+  color: #000000 !important;
+}
+
+body.light nav.menu button.active, body.light .menu button.active {
+  background: #E6F4EA !important;
+  border-color: #059669 !important;
+  color: #047857 !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15) !important;
+}
+
+body.light nav.menu button.active .ic svg {
+  stroke: #059669 !important;
+}
+
+body.light .kpi, body.light .dash-card, body.light .dash-overview-card, body.light .panel, body.light .table-panel, body.light .modal, body.light .modal-box {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.light .kpi::before, body.light .dash-card::before {
+  background: linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.4), transparent) !important;
+}
+
+body.light .kpi .val, body.light .kpi-value, body.light h1, body.light h2, body.light h3, body.light h4, body.light p, body.light span:not(.due-bill-badge):not(.status-pago):not(.status-recebido):not(.status-pendente), body.light strong, body.light label {
+  color: #000000 !important;
+}
+
+body.light table th {
+  background: #F8FAFC !important;
+  color: #000000 !important;
+  border-bottom: 2px solid #E2E8F0 !important;
+}
+
+body.light table td {
+  border-bottom: 1px solid #F1F5F9 !important;
+  color: #000000 !important;
+}
+
+body.light tr:hover td {
+  background: #F8FAFC !important;
+}
+
+body.light input, body.light select, body.light textarea {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
+
+body.light input:focus, body.light select:focus, body.light textarea:focus {
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2) !important;
+}
+
+/* 10. MICRO-INTERAÇÕES & RESPONSIVIDADE ULTRA 4K */
+@media (max-width: 900px) {
+  .fintech-header-center {
+    display: none !important;
+  }
+  .topheader {
+    height: 56px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -11039,6 +11500,19 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
             <span class="brand-title">NEXUS</span>
             <span class="brand-sub">FINANCEIRO HUB</span>
           </div>
+        </div>
+      </div>
+
+      <div class="fintech-header-center">
+        <div class="fintech-status-badge" title="Ambiente Operacional Homologado SF - MSSQL Conectado">
+          <span class="fintech-pulse-dot"></span>
+          <span>MSSQL ONLINE</span>
+          <span style="opacity:0.65; font-size:10px;">• SF HUB</span>
+        </div>
+        <div class="fintech-clock-badge" title="Horário Oficial de Brasília (UTC-3)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="fintechBrasiliaClock">--:--:--</span>
+          <span style="font-size:10px; opacity:0.75; font-weight:700;">BRT</span>
         </div>
       </div>
 
@@ -24271,6 +24745,19 @@ window.applyPostLoginBg = function(theme) {
       card.style.transform = 'none';
     }
   })();
+
+  // Relógio Financeiro de Brasília em Tempo Real (Oficial UTC-3)
+  (function initBrasiliaClock() {
+    function updateClock() {
+      var el = document.getElementById('fintechBrasiliaClock');
+      if (!el) return;
+      var now = new Date();
+      el.textContent = now.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+  })();
+
 </script>
 </body>
 </html>`;
