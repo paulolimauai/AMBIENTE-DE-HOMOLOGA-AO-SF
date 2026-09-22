@@ -135,7 +135,7 @@
                             goldBorder: '#C89B3C',
                             blue: '#3B82F6',
                             sapphire: '#5B94D9',
-                            emerald: '#F59E0B',
+                            cyan: '#38BDF8',
                         }
                     },
                     animation: {
@@ -155,46 +155,45 @@
 
     <style>
         :root {
-            --auth-bg: #050E1A;
-            --auth-card: linear-gradient(145deg, rgba(16, 28, 48, 0.82) 0%, rgba(8, 18, 34, 0.90) 45%, rgba(4, 12, 22, 0.96) 100%);
-            --auth-border: rgba(16, 185, 129, 0.22);
-            --auth-border-hover: #10B981;
+            --auth-bg: #030712;
+            --auth-card: linear-gradient(145deg, rgba(16, 26, 46, 0.82) 0%, rgba(10, 18, 34, 0.90) 45%, rgba(4, 10, 22, 0.96) 100%);
+            --auth-border: rgba(14, 165, 233, 0.26);
+            --auth-border-hover: #0EA5E9;
             --auth-input-bg: rgba(10, 18, 32, 0.75);
-            --auth-input-border: rgba(255, 255, 255, 0.15);
+            --auth-input-border: rgba(255, 255, 255, 0.16);
             --auth-text: #FFFFFF;
             --auth-text-dim: #94A3B8;
             --auth-gold: #F59E0B;
             --auth-gold-light: #FCD34D;
-            --auth-emerald: #10B981;
-            --auth-emerald-glow: rgba(16, 185, 129, 0.35);
-            --auth-sapphire: #38BDF8;
             --auth-cyan: #38BDF8;
+            --auth-cyan-glow: rgba(14, 165, 233, 0.35);
+            --auth-sapphire: #0284C7;
             --auth-gold-glow: rgba(245, 158, 11, 0.40);
             --auth-tab-bg: rgba(15, 23, 42, 0.75);
         }
 
         body.light, html.light body, html.light {
             color-scheme: light !important;
-            --auth-bg: #F0FDF4;
+            --auth-bg: #F8FAFC;
             --auth-card: rgba(255, 255, 255, 0.94);
-            --auth-border: rgba(16, 185, 129, 0.25);
-            --auth-border-hover: #059669;
+            --auth-border: rgba(14, 165, 233, 0.28);
+            --auth-border-hover: #0284C7;
             --auth-input-bg: #FFFFFF;
             --auth-input-border: #CBD5E1;
             --auth-text: #000000 !important;
             --auth-text-dim: #334155 !important;
             --auth-gold: #B45309;
             --auth-gold-light: #92400E;
-            --auth-emerald: #047857;
+            --auth-cyan: #0284C7;
             --auth-sapphire: #1D4ED8;
             --auth-gold-glow: rgba(217, 119, 6, 0.20);
             --auth-tab-bg: #E2E8F0;
-            background-color: #F0FDF4 !important;
+            background-color: #F8FAFC !important;
             background-image: 
-                radial-gradient(ellipse 70% 50% at 15% 15%, rgba(16, 185, 129, 0.12) 0%, transparent 55%),
-                radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.10) 0%, transparent 50%),
-                radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.08) 0%, transparent 60%),
-                linear-gradient(175deg, #F8FCF9 0%, #EFF8F3 45%, #EAF3FB 85%, #F0FDF4 100%) !important;
+                radial-gradient(ellipse 70% 50% at 15% 15%, rgba(14, 165, 233, 0.08) 0%, transparent 55%),
+                radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 80% 60% at 50% 90%, rgba(99, 102, 241, 0.06) 0%, transparent 60%),
+                linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%) !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
@@ -247,12 +246,12 @@
 
         body {
             font-family: var(--font-sans);
-            background-color: #050E1A;
+            background-color: #030712;
             background-image: 
-                radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
-                radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.14) 0%, transparent 55%),
-                radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.14) 0%, transparent 65%),
-                linear-gradient(175deg, #040812 0%, #061222 45%, #031510 85%, #02090E 100%) !important;
+                radial-gradient(ellipse 85% 65% at 18% 18%, rgba(14, 165, 233, 0.20) 0%, transparent 60%),
+                radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.15) 0%, transparent 55%),
+                radial-gradient(ellipse 90% 70% at 50% 88%, rgba(99, 102, 241, 0.16) 0%, transparent 65%),
+                linear-gradient(165deg, #020617 0%, #070F1E 40%, #0A162B 75%, #020617 100%) !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
@@ -277,27 +276,27 @@
                 linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
         }
 
-        /* ==================== TICKER DE COTAÇÕES FINANCEIRAS AO VIVO ==================== */
+        /* ==================== TICKER DE COTAÇÕES FINANCEIRAS AO VIVO 4K ==================== */
         .fintech-live-ticker-bar {
             display: flex;
             align-items: center;
             height: 38px;
-            background: linear-gradient(90deg, rgba(7, 16, 11, 0.85) 0%, rgba(13, 27, 20, 0.75) 50%, rgba(7, 16, 11, 0.85) 100%);
-            border: 1px solid rgba(52, 211, 153, 0.28);
+            background: linear-gradient(90deg, rgba(6, 12, 24, 0.88) 0%, rgba(12, 24, 48, 0.78) 50%, rgba(6, 12, 24, 0.88) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.35);
             border-radius: 999px;
             padding: 2px 6px 2px 4px;
-            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6), 0 0 20px -2px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.65), 0 0 20px -2px rgba(14, 165, 233, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.20);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
             overflow: hidden;
             position: relative;
             user-select: none;
         }
 
         body.light .fintech-live-ticker-bar {
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 253, 244, 0.90) 50%, rgba(255, 255, 255, 0.92) 100%);
-            border-color: rgba(16, 185, 129, 0.35);
-            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08), 0 0 15px rgba(16, 185, 129, 0.10), inset 0 1px 0 #FFFFFF;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(240, 249, 255, 0.90) 50%, rgba(255, 255, 255, 0.94) 100%);
+            border-color: rgba(14, 165, 233, 0.35);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08), 0 0 15px rgba(14, 165, 233, 0.12), inset 0 1px 0 #FFFFFF;
         }
 
         .fintech-ticker-badge {
@@ -305,23 +304,23 @@
             align-items: center;
             gap: 6px;
             padding: 4px 12px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.15));
-            border: 1px solid rgba(52, 211, 153, 0.4);
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.28), rgba(2, 132, 199, 0.18));
+            border: 1px solid rgba(56, 189, 248, 0.45);
             border-radius: 999px;
             font-size: 10.5px;
             font-weight: 900;
             letter-spacing: 0.04em;
-            color: #34D399;
+            color: #38BDF8;
             text-transform: uppercase;
             flex-shrink: 0;
             z-index: 2;
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+            box-shadow: 0 0 14px rgba(14, 165, 233, 0.30);
         }
 
         body.light .fintech-ticker-badge {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.10));
-            border-color: rgba(5, 150, 105, 0.35);
-            color: #047857;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.18), rgba(2, 132, 199, 0.10));
+            border-color: rgba(2, 132, 199, 0.35);
+            color: #0284C7;
         }
 
         .fintech-pulse-dot {
@@ -413,9 +412,9 @@
         }
 
         .ticker-item .chg.up {
-            color: #34D399;
-            background: rgba(16, 185, 129, 0.16);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #38BDF8;
+            background: rgba(14, 165, 233, 0.18);
+            border: 1px solid rgba(56, 189, 248, 0.35);
         }
 
         .ticker-item .chg.down {
@@ -440,7 +439,7 @@
         }
 
         @keyframes flashValUp {
-            0% { color: #34D399 !important; text-shadow: 0 0 12px #34D399; transform: scale(1.08); }
+            0% { color: #38BDF8 !important; text-shadow: 0 0 14px #38BDF8; transform: scale(1.08); }
             100% { color: inherit; text-shadow: none; transform: scale(1); }
         }
 
@@ -483,12 +482,12 @@
             inset: -1px;
             border-radius: inherit;
             padding: 1.5px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.4), rgba(245, 158, 11, 0.25), rgba(59, 130, 246, 0.35), rgba(16, 185, 129, 0.4));
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.45), rgba(245, 158, 11, 0.28), rgba(99, 102, 241, 0.35), rgba(14, 165, 233, 0.45));
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             pointer-events: none;
-            opacity: 0.75;
+            opacity: 0.85;
             animation: borderGradientSpin 10s linear infinite;
         }
 
@@ -510,15 +509,16 @@
         .glass-shard {
             position: absolute;
             border-radius: 40px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(56, 189, 248, 0.10) 100%);
-            border: 1.5px solid rgba(255, 255, 255, 0.26);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 45%, rgba(14, 165, 233, 0.09) 100%);
+            border: 1.2px solid rgba(255, 255, 255, 0.24);
             border-top: 2.5px solid rgba(255, 255, 255, 0.75);
             border-left: 2px solid rgba(255, 255, 255, 0.50);
-            backdrop-filter: blur(35px) saturate(240%);
-            -webkit-backdrop-filter: blur(35px) saturate(240%);
+            backdrop-filter: blur(45px) saturate(220%);
+            -webkit-backdrop-filter: blur(45px) saturate(220%);
             box-shadow: 
-                0 30px 70px rgba(0, 0, 0, 0.65),
-                inset 0 2px 5px rgba(255, 255, 255, 0.55),
+                0 35px 80px rgba(0, 0, 0, 0.70),
+                0 0 50px rgba(14, 165, 233, 0.16),
+                inset 0 2px 5px rgba(255, 255, 255, 0.60),
                 inset 0 -2px 4px rgba(0, 0, 0, 0.40);
             pointer-events: none;
             will-change: transform;
@@ -540,7 +540,7 @@
             width: 480px;
             height: 480px;
             transform: rotate(18deg);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(16, 185, 129, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(14, 165, 233, 0.10) 100%);
             box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
             animation: glassFloat2 22s ease-in-out infinite alternate;
         }
@@ -563,7 +563,7 @@
             height: 230px;
             border-radius: 32px;
             transform: rotate(-20deg);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(16, 185, 129, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(14, 165, 233, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
             animation: glassFloat4 16s ease-in-out infinite alternate;
         }
 
@@ -574,8 +574,8 @@
             height: 140px;
             border-radius: 26px;
             transform: rotate(12deg);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(16, 185, 129, 0.10) 100%);
-            box-shadow: 0 20px 45px rgba(0,0,0,0.45), 0 0 35px rgba(16, 185, 129, 0.22), inset 0 2px 4px rgba(255,255,255,0.5);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(14, 165, 233, 0.12) 100%);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.45), 0 0 35px rgba(14, 165, 233, 0.22), inset 0 2px 4px rgba(255,255,255,0.5);
             animation: glassFloat3 19s ease-in-out infinite alternate;
         }
 
@@ -624,19 +624,19 @@
 
         /* Card de Autenticação Ultra 4K Liquid Glass (Ultra-HD Glassmorphism) */
         .auth-card-nexus {
-            background: linear-gradient(145deg, rgba(26, 36, 60, 0.78) 0%, rgba(13, 20, 36, 0.88) 35%, rgba(6, 11, 24, 0.96) 100%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.16) !important;
-            border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
-            border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+            background: linear-gradient(145deg, rgba(16, 26, 46, 0.82) 0%, rgba(10, 18, 34, 0.90) 45%, rgba(4, 10, 22, 0.96) 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            border-top: 1.8px solid rgba(255, 255, 255, 0.55) !important;
+            border-left: 1.2px solid rgba(255, 255, 255, 0.32) !important;
             border-radius: 28px;
             box-shadow: 
-                0 35px 85px -15px rgba(0, 0, 0, 0.90),
-                0 0 45px -8px rgba(245, 158, 11, 0.18),
-                0 0 30px -10px rgba(56, 189, 248, 0.12),
-                inset 0 1.5px 2px rgba(255, 255, 255, 0.35),
+                0 40px 90px -15px rgba(0, 0, 0, 0.92),
+                0 0 50px -10px rgba(14, 165, 233, 0.22),
+                0 0 35px -8px rgba(245, 158, 11, 0.16),
+                inset 0 1.5px 2px rgba(255, 255, 255, 0.40),
                 inset 0 -1.5px 2px rgba(0, 0, 0, 0.6) !important;
-            backdrop-filter: blur(40px) saturate(210%);
-            -webkit-backdrop-filter: blur(40px) saturate(210%);
+            backdrop-filter: blur(45px) saturate(220%);
+            -webkit-backdrop-filter: blur(45px) saturate(220%);
             transition: box-shadow 0.3s ease, border-color 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -1188,9 +1188,9 @@
             transition: all 0.2s ease;
         }
         .pwd-req-pill.valid {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: rgba(16, 185, 129, 0.35);
-            color: #34D399;
+            background: rgba(14, 165, 233, 0.18);
+            border-color: rgba(56, 189, 248, 0.40);
+            color: #38BDF8;
         }
         body.light .pwd-req-pill {
             background: #F1F5F9;
@@ -1198,9 +1198,9 @@
             color: #64748B;
         }
         body.light .pwd-req-pill.valid {
-            background: #ECFDF5;
-            border-color: #A7F3D0;
-            color: #059669;
+            background: #E0F2FE;
+            border-color: #7DD3FC;
+            color: #0284C7;
         }
 
         /* Botão 4K Glass para Abertura e Consulta de Ordem de Serviço */
@@ -2062,19 +2062,19 @@
     <!-- 4K ULTRA SUCCESS MODAL OVERLAY (ENTRADA / PÓS-LOGIN BANCÁRIO) -->
     <!-- MODAL DINÂMICO & PROFISSIONAL (LOGIN EFETUADO COM SUCESSO) -->
     <div class="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[99999] p-4 sm:p-6 opacity-0 transition-all duration-300 pointer-events-none" id="loginSuccessOverlay" style="display:none;">
-        <div class="absolute w-[360px] h-[360px] rounded-full bg-emerald-500/15 blur-[100px] pointer-events-none animate-pulse"></div>
+        <div class="absolute w-[360px] h-[360px] rounded-full bg-cyan-500/15 blur-[100px] pointer-events-none animate-pulse"></div>
 
-        <div id="successModalBox" class="bg-gradient-to-b from-[#0f172a]/95 via-[#0b1324]/98 to-[#060a14]/99 border border-emerald-500/40 border-t-white/40 rounded-[32px] p-8 sm:p-10 w-full max-w-[480px] text-center shadow-[0_30px_90px_rgba(0,0,0,0.95),0_0_55px_rgba(16,185,129,0.28),inset_0_1.5px_2px_rgba(255,255,255,0.25)] transform translate-y-4 scale-95 transition-all duration-400 relative overflow-hidden pointer-events-auto">
+        <div id="successModalBox" class="bg-gradient-to-b from-[#0f172a]/95 via-[#0b1324]/98 to-[#060a14]/99 border border-cyan-500/40 border-t-white/40 rounded-[32px] p-8 sm:p-10 w-full max-w-[480px] text-center shadow-[0_30px_90px_rgba(0,0,0,0.95),0_0_55px_rgba(6,182,212,0.28),inset_0_1.5px_2px_rgba(255,255,255,0.25)] transform translate-y-4 scale-95 transition-all duration-400 relative overflow-hidden pointer-events-auto">
             <!-- Linha de Brilho Superior -->
-            <div class="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent pointer-events-none"></div>
+            <div class="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/80 to-transparent pointer-events-none"></div>
 
             <!-- Ícone Dinâmico com Ondas de Pulso (Sucesso Ampliado) -->
             <div class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                <div class="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping" style="animation-duration: 2s;"></div>
-                <div class="absolute inset-1 rounded-full border border-emerald-400/35"></div>
-                <div class="relative w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 p-[2.5px] shadow-[0_0_30px_rgba(16,185,129,0.6)]">
+                <div class="absolute inset-0 rounded-full bg-cyan-500/20 animate-ping" style="animation-duration: 2s;"></div>
+                <div class="absolute inset-1 rounded-full border border-cyan-400/35"></div>
+                <div class="relative w-20 h-20 rounded-full bg-gradient-to-tr from-cyan-600 to-sky-400 p-[2.5px] shadow-[0_0_30px_rgba(6,182,212,0.6)]">
                     <div class="w-full h-full rounded-full bg-[#0b1324] flex items-center justify-center">
-                        <svg class="w-10 h-10 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </div>
@@ -2091,7 +2091,7 @@
 
             <!-- Barra de Progresso Dinâmica com Gradiente Suave -->
             <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden p-[1px]">
-                <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 rounded-full w-0 shadow-[0_0_12px_rgba(16,185,129,0.9)]"></div>
+                <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-cyan-500 via-sky-400 to-blue-500 rounded-full w-0 shadow-[0_0_12px_rgba(6,182,212,0.9)]"></div>
             </div>
         </div>
     </div>
@@ -2385,11 +2385,11 @@
     </div>
     <div class="glass-screen-reflection pointer-events-none"></div>
 
-    <!-- Ambient Financial Aura Glows (Dourado, Esmeralda & Safira) -->
+    <!-- Ambient Financial Aura Glows (Dourado, Ciano & Safira) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div class="absolute top-1/4 left-1/4 w-[550px] h-[550px] bg-amber-500/18 rounded-full blur-[160px] animate-glow-pulse"></div>
-        <div class="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-emerald-500/14 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -1.5s;"></div>
-        <div class="absolute bottom-1/4 left-1/3 w-[600px] h-[600px] bg-blue-600/15 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -3s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-cyan-500/16 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -1.5s;"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-[600px] h-[600px] bg-blue-600/16 rounded-full blur-[160px] animate-glow-pulse" style="animation-delay: -3s;"></div>
     </div>
 
     <!-- CONTAINER PRINCIPAL EXECUTIVO 2 COLUNAS (FINTECH SHOWCASE + CARD DE AUTENTICAÇÃO) -->
@@ -2400,7 +2400,7 @@
             <div class="hidden lg:flex lg:col-span-7 flex-col justify-center space-y-6 text-left">
                 
                 <!-- Badge de Segurança e Foco -->
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-blue-500/15 to-emerald-500/15 border border-amber-500/35 text-amber-300 text-xs font-black tracking-wide w-fit backdrop-blur-md shadow-[0_4px_18px_rgba(245,158,11,0.20)]">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-blue-500/15 to-cyan-500/15 border border-amber-500/35 text-amber-300 text-xs font-black tracking-wide w-fit backdrop-blur-md shadow-[0_4px_18px_rgba(245,158,11,0.20)]">
                     <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
                     <span class="uppercase text-[10.5px] tracking-wider">Controle Financeiro Pessoal • Privacidade Total</span>
                 </div>
@@ -2418,14 +2418,14 @@
                 <!-- 3 Cards de Métricas e Recursos Financeiros Pessoais Flutuantes com Efeito de Vidro -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
                     
-                    <!-- Card 1: Economia do Mês (Esmeralda Prosperidade) -->
-                    <div class="p-4 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-slate-900/60 to-slate-950/80 border border-emerald-500/30 hover:border-emerald-400/60 backdrop-blur-xl transition-all hover:translate-y-[-2px] shadow-lg shadow-black/40 fintech-card-glow group">
+                    <!-- Card 1: Economia do Mês (Ciano & Safira Prosperidade) -->
+                    <div class="p-4 rounded-2xl bg-gradient-to-br from-cyan-500/15 via-slate-900/60 to-slate-950/80 border border-cyan-500/30 hover:border-cyan-400/60 backdrop-blur-xl transition-all hover:translate-y-[-2px] shadow-lg shadow-black/40 fintech-card-glow group">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-[11px] font-bold uppercase tracking-wider text-slate-300">Economia do Mês</span>
-                            <span class="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/35 text-emerald-400 flex items-center justify-center text-xs font-black shadow-[0_0_10px_rgba(16,185,129,0.3)]">🎯</span>
+                            <span class="w-6 h-6 rounded-lg bg-cyan-500/20 border border-cyan-500/35 text-cyan-400 flex items-center justify-center text-xs font-black shadow-[0_0_12px_rgba(6,182,212,0.35)]">🎯</span>
                         </div>
                         <div class="text-xl font-black text-white font-display" id="metricEconomia" data-target="3850" data-prefix="R$ ">R$ 3.850</div>
-                        <div class="text-[11px] font-bold text-emerald-400 flex items-center gap-1 mt-0.5">
+                        <div class="text-[11px] font-bold text-cyan-400 flex items-center gap-1 mt-0.5">
                             <span>+18% guardado</span>
                         </div>
                     </div>
@@ -2479,7 +2479,7 @@
                     <div class="flex flex-col items-center text-center mb-6">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FDE68A] via-[#F59E0B] to-[#D97706] flex items-center justify-center text-[#0A0D18] font-black text-2xl shadow-[0_0_24px_rgba(245,158,11,0.55),inset_0_2px_3px_rgba(255,255,255,0.7)] mb-3.5 border border-white/50 relative">
                             <span>N</span>
-                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#0A0D18] shadow-[0_0_10px_rgba(16,185,129,0.9)]" title="Sistema Operacional Online"></div>
+                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-cyan-400 rounded-full border-2 border-[#0A0D18] shadow-[0_0_12px_rgba(34,211,238,0.95)]" title="Sistema Operacional Online"></div>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span class="text-xl sm:text-2xl font-black tracking-tight auth-brand-nexus text-white font-display">NEXUS</span>
@@ -2733,8 +2733,8 @@
                             </div>
 
                             <!-- SELO DE SEGURANÇA BANCÁRIA -->
-                            <div class="p-3 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-slate-900/70 to-amber-500/10 border border-emerald-500/30 flex items-center gap-3 text-[10.5px] text-slate-300 shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
-                                <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+                            <div class="p-3 rounded-2xl bg-gradient-to-r from-cyan-500/12 via-slate-900/70 to-blue-500/12 border border-cyan-500/30 flex items-center gap-3 text-[10.5px] text-slate-300 shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
+                                <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(6,182,212,0.35)]">
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                                 </div>
                                 <div class="leading-tight">
@@ -2823,7 +2823,7 @@
                             <div class="w-14 h-14 mx-auto mb-3.5 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
                                 <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
                             </div>
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10.5px] font-extrabold uppercase tracking-wider mb-2">
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[10.5px] font-extrabold uppercase tracking-wider mb-2">
                                 <span>✓ Dados Confirmados com Sucesso</span>
                             </div>
                             <h3 class="text-xl font-black mb-1.5 text-white">Senha Temporária Gerada</h3>
@@ -3215,8 +3215,8 @@
 
             b1.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 1 ? (score === 1 ? 'bg-rose-500' : 'bg-amber-500') : 'bg-white/10');
             b2.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 2 ? (score === 2 ? 'bg-amber-500' : 'bg-blue-500') : 'bg-white/10');
-            b3.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 3 ? (score === 3 ? 'bg-blue-500' : 'bg-emerald-500') : 'bg-white/10');
-            b4.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 4 ? 'bg-emerald-500' : 'bg-white/10');
+            b3.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 3 ? (score === 3 ? 'bg-blue-500' : 'bg-cyan-500') : 'bg-white/10');
+            b4.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 4 ? 'bg-cyan-500' : 'bg-white/10');
 
             if (score <= 1) {
                 txt.textContent = 'Muito Fraca';
@@ -3229,7 +3229,7 @@
                 txt.className = 'text-blue-400 font-bold';
             } else {
                 txt.textContent = 'Excelente';
-                txt.className = 'text-emerald-400 font-bold';
+                txt.className = 'text-cyan-400 font-bold';
             }
             checkPasswordMatch();
         };
@@ -3565,7 +3565,7 @@
                             if (st.includes('anda')) {
                                 statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Em Andamento';
                             } else if (st.includes('concl') || st.includes('final')) {
-                                statusBg = 'rgba(16,185,129,0.18)'; statusColor = '#34D399'; statusBorder = 'rgba(16,185,129,0.4)'; statusLabel = '✅ Concluído';
+                                statusBg = 'rgba(6,182,212,0.18)'; statusColor = '#22D3EE'; statusBorder = 'rgba(6,182,212,0.4)'; statusLabel = '✅ Concluído';
                             } else if (st.includes('canc') || st.includes('recus')) {
                                 statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
                             }
@@ -3594,7 +3594,7 @@
                                         <span><strong>Solicitante:</strong> ${escapeOsHtml(o.client_name || 'Anônimo')}</span>
                                         <span><strong>Tipo:</strong> ${escapeOsHtml(o.service_type || 'Geral')}</span>
                                         <span><strong>Prioridade:</strong> ${escapeOsHtml(o.priority || 'Normal')}</span>
-                                        ${o.client_phone ? `<span class="text-emerald-400">📱 <strong>WhatsApp:</strong> ${escapeOsHtml(o.client_phone)}</span>` : ''}
+                                        ${o.client_phone ? `<span class="text-cyan-400">📱 <strong>WhatsApp:</strong> ${escapeOsHtml(o.client_phone)}</span>` : ''}
                                         ${o.tecnico_responsavel ? `<span class="text-cyan-400">👷 <strong>Técnico:</strong> ${escapeOsHtml(o.tecnico_responsavel)}</span>` : ''}
                                     </div>
 
@@ -3962,7 +3962,7 @@
                                 <span class="text-xs font-bold text-white truncate">${escapeOsHtml(name)}</span>
                                 <span class="text-[9px] font-black px-1.5 py-0.2 rounded bg-white/10 text-slate-200 border border-white/15">ID #${u.id || '-'}</span>
                                 <span class="text-[9px] font-black px-1.5 py-0.2 rounded ${isAdmin ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'} uppercase">${role}</span>
-                                <span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
+                                <span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
                             </div>
                             <span class="text-[11px] text-slate-400 block truncate">${escapeOsHtml(email)}</span>
                             <div class="text-[10px] text-sky-400 mt-0.5 flex items-center gap-1">
@@ -4073,7 +4073,7 @@
                 if (feedback) {
                     feedback.classList.remove('hidden');
                     feedback.textContent = '✓ CPF Válido';
-                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-emerald-400';
+                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-cyan-400';
                 }
             } else {
                 if (feedback) feedback.classList.add('hidden');
@@ -4518,8 +4518,8 @@
 
             if (b1) b1.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 1 ? (score === 1 ? 'bg-rose-500' : 'bg-amber-500') : 'bg-white/10');
             if (b2) b2.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 2 ? (score === 2 ? 'bg-amber-500' : 'bg-blue-500') : 'bg-white/10');
-            if (b3) b3.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 3 ? (score === 3 ? 'bg-blue-500' : 'bg-emerald-500') : 'bg-white/10');
-            if (b4) b4.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 4 ? 'bg-emerald-500' : 'bg-white/10');
+            if (b3) b3.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 3 ? (score === 3 ? 'bg-blue-500' : 'bg-cyan-500') : 'bg-white/10');
+            if (b4) b4.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 4 ? 'bg-cyan-500' : 'bg-white/10');
 
             if (txt) {
                 if (score <= 1) {
@@ -4533,7 +4533,7 @@
                     txt.className = 'text-blue-400 font-bold';
                 } else {
                     txt.textContent = 'Excelente';
-                    txt.className = 'text-emerald-400 font-bold';
+                    txt.className = 'text-cyan-400 font-bold';
                 }
             }
 
@@ -4560,7 +4560,7 @@
                 } else if (isMatch) {
                     msg.classList.remove('hidden');
                     msg.textContent = '✓ As senhas coincidem perfeitamente';
-                    msg.className = 'mt-1.5 text-[11px] font-bold text-emerald-400';
+                    msg.className = 'mt-1.5 text-[11px] font-bold text-cyan-400';
                 } else {
                     msg.classList.remove('hidden');
                     msg.textContent = '✕ As senhas não conferem';
@@ -4881,7 +4881,7 @@
                 'Sonhos em Andamento ✨'
             ];
             const currencyCoins = ['R$', '$', '€', '₿', '£', '¥', '%', '▲'];
-            const colors = ['#10B981', '#34D399', '#38BDF8', '#F59E0B', '#FCD34D', '#818CF8', '#FBBF24', '#60A5FA', '#FDE68A'];
+            const colors = ['#0EA5E9', '#38BDF8', '#0284C7', '#F59E0B', '#FCD34D', '#818CF8', '#FBBF24', '#60A5FA', '#FDE68A'];
 
             // 2. Candlesticks Financeiros Reais de Mercado
             const candlestickBars = [];
@@ -4983,7 +4983,7 @@
                         candle.isBullish = Math.random() > 0.44;
                     }
                     const candleColor = candle.isBullish 
-                        ? (isLight ? '#059669' : '#10B981') 
+                        ? (isLight ? '#0284C7' : '#38BDF8') 
                         : (isLight ? '#DC2626' : '#EF4444');
 
                     ctx.save();
