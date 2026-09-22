@@ -2283,7 +2283,7 @@ body.light .auth-blob { opacity: 0.14; }
   overflow: hidden;
 }
 
-/* Placas de Vidro Líquido Flutuantes em Profundidade 4K */
+/* Placas de Vidro Líquido Flutuantes em Profundidade 4K (Otimizadas para Resposta Instantânea) */
 .glass-shard {
   position: absolute;
   border-radius: 40px;
@@ -2291,14 +2291,14 @@ body.light .auth-blob { opacity: 0.14; }
   border: 1.5px solid rgba(255, 255, 255, 0.26);
   border-top: 2.5px solid rgba(255, 255, 255, 0.75);
   border-left: 2px solid rgba(255, 255, 255, 0.50);
-  backdrop-filter: blur(35px) saturate(240%);
-  -webkit-backdrop-filter: blur(35px) saturate(240%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
   box-shadow: 
     0 30px 70px rgba(0, 0, 0, 0.65),
     inset 0 2px 5px rgba(255, 255, 255, 0.55),
     inset 0 -2px 4px rgba(0, 0, 0, 0.40);
   pointer-events: none;
-  will-change: transform;
+  transform: translateZ(0);
 }
 
 .glass-shard-1 {
@@ -2306,9 +2306,8 @@ body.light .auth-blob { opacity: 0.14; }
   left: -4%;
   width: 420px;
   height: 420px;
-  transform: rotate(-14deg);
+  transform: rotate(-14deg) translateZ(0);
   box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(56, 189, 248, 0.28), inset 0 2px 5px rgba(255,255,255,0.7);
-  animation: glassFloat1 18s ease-in-out infinite alternate;
 }
 
 .glass-shard-2 {
@@ -2316,10 +2315,9 @@ body.light .auth-blob { opacity: 0.14; }
   right: -3%;
   width: 480px;
   height: 480px;
-  transform: rotate(18deg);
+  transform: rotate(18deg) translateZ(0);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(59, 130, 246, 0.08) 100%);
   box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
-  animation: glassFloat2 22s ease-in-out infinite alternate;
 }
 
 .glass-shard-3 {
@@ -2328,9 +2326,8 @@ body.light .auth-blob { opacity: 0.14; }
   width: 250px;
   height: 250px;
   border-radius: 32px;
-  transform: rotate(25deg);
+  transform: rotate(25deg) translateZ(0);
   box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(99, 102, 241, 0.30), inset 0 2px 4px rgba(255,255,255,0.6);
-  animation: glassFloat3 15s ease-in-out infinite alternate;
 }
 
 .glass-shard-4 {
@@ -2339,9 +2336,8 @@ body.light .auth-blob { opacity: 0.14; }
   width: 230px;
   height: 230px;
   border-radius: 32px;
-  transform: rotate(-20deg);
+  transform: rotate(-20deg) translateZ(0);
   box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(59, 130, 246, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
-  animation: glassFloat4 16s ease-in-out infinite alternate;
 }
 
 .glass-shard-5 {
@@ -2350,47 +2346,18 @@ body.light .auth-blob { opacity: 0.14; }
   width: 140px;
   height: 140px;
   border-radius: 26px;
-  transform: rotate(12deg);
+  transform: rotate(12deg) translateZ(0);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(236, 72, 153, 0.08) 100%);
   box-shadow: 0 20px 45px rgba(0,0,0,0.45), 0 0 35px rgba(236, 72, 153, 0.20), inset 0 2px 4px rgba(255,255,255,0.5);
-  animation: glassFloat3 19s ease-in-out infinite alternate;
-}
-
-@keyframes glassFloat1 {
-  0% { transform: translateY(0) rotate(-14deg) scale(1); }
-  100% { transform: translateY(32px) rotate(-6deg) scale(1.06); }
-}
-
-@keyframes glassFloat2 {
-  0% { transform: translateY(0) rotate(18deg) scale(1); }
-  100% { transform: translateY(-36px) rotate(10deg) scale(1.05); }
-}
-
-@keyframes glassFloat3 {
-  0% { transform: translateY(0) rotate(25deg) scale(1); }
-  100% { transform: translateY(-26px) rotate(34deg) scale(1.04); }
-}
-
-@keyframes glassFloat4 {
-  0% { transform: translateY(0) rotate(-20deg) scale(1); }
-  100% { transform: translateY(28px) rotate(-12deg) scale(1.05); }
 }
 
 /* Feixe de Luz Prismática e Refrativo de Vidro 4K */
 .glass-screen-reflection {
   position: absolute;
   inset: 0;
-  background: linear-gradient(115deg, transparent 15%, rgba(255, 255, 255, 0.03) 38%, rgba(255, 255, 255, 0.12) 46%, rgba(253, 230, 138, 0.08) 50%, rgba(255, 255, 255, 0.03) 54%, transparent 75%);
-  background-size: 250% 250%;
+  background: linear-gradient(115deg, transparent 15%, rgba(255, 255, 255, 0.03) 38%, rgba(255, 255, 255, 0.08) 46%, rgba(253, 230, 138, 0.05) 50%, rgba(255, 255, 255, 0.03) 54%, transparent 75%);
   pointer-events: none;
   z-index: 2;
-  animation: glassLightSweep 14s ease-in-out infinite;
-}
-
-@keyframes glassLightSweep {
-  0% { background-position: -140% -140%; }
-  50% { background-position: 140% 140%; }
-  100% { background-position: -140% -140%; }
 }
 
 body.light .glass-shard {
@@ -2403,7 +2370,7 @@ body.light .glass-shard {
 .auth-card-nexus {
   position: relative;
   z-index: 10;
-  background: linear-gradient(145deg, rgba(20, 28, 48, 0.82) 0%, rgba(10, 16, 30, 0.90) 35%, rgba(5, 8, 17, 0.98) 100%) !important;
+  background: linear-gradient(145deg, rgba(20, 28, 48, 0.88) 0%, rgba(10, 16, 30, 0.94) 35%, rgba(5, 8, 17, 0.98) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
   border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
@@ -2417,12 +2384,22 @@ body.light .glass-shard {
     0 0 30px -10px rgba(56, 189, 248, 0.12),
     inset 0 1.5px 2px rgba(255, 255, 255, 0.35),
     inset 0 -1.5px 2px rgba(0, 0, 0, 0.6) !important;
-  backdrop-filter: blur(40px) saturate(210%);
-  -webkit-backdrop-filter: blur(40px) saturate(210%);
-  animation: authCardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  animation: authCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
   overflow: hidden;
   transform: none !important;
+}
+
+/* Otimização Global de Cliques Ultra-Rápidos */
+button, input, select, textarea, a, [role="button"], .auth-tab-btn, .btn-quick-admin-login {
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+button:active, .auth-tab-btn:active, .btn-quick-admin-login:active {
+  transform: scale(0.98) !important;
+  transition: transform 0.05s ease !important;
 }
 
 .auth-card-nexus::before {
@@ -12628,7 +12605,7 @@ window.toggleAuthTheme = function() {
   }
 };
 
-// Acesso Rápido VIP Administrador Master (1-Clique)
+// Acesso Rápido VIP Administrador Master (Instantâneo 0ms)
 window.preencherCredenciaisAdmin = function() {
   const emailInput = document.getElementById('loginEmail');
   const passInput = document.getElementById('loginPassword');
@@ -12638,11 +12615,9 @@ window.preencherCredenciaisAdmin = function() {
   if (window.showAuthFeedback) {
     window.showAuthFeedback('login', 'success', 'Acesso Master', 'Credenciais carregadas com segurança. Entrando...');
   }
-  setTimeout(() => {
-    if (typeof window.handleLoginSubmit === 'function') {
-      window.handleLoginSubmit();
-    }
-  }, 350);
+  if (typeof window.handleLoginSubmit === 'function') {
+    window.handleLoginSubmit();
+  }
 };
 
 // Mostrar/Ocultar Senha do Login (Visualização Clara do Olho)
@@ -13228,39 +13203,37 @@ window.handleLoginSubmit = async function(e) {
     localStorage.removeItem('nexus_remembered_email');
   }
   const apiBase = getApiBaseUrl();
-  const endpointsToTry = [apiBase];
-  if (apiBase.includes('localhost') && !endpointsToTry.includes('https://ambiente-de-homologa-ao-sf.onrender.com')) {
-    endpointsToTry.push('https://ambiente-de-homologa-ao-sf.onrender.com');
-  }
-
   try {
-    attemptLoginLoop:
-    for (const base of endpointsToTry) {
-      for (let attempt = 1; attempt <= 2; attempt++) {
-        try {
-          const targetUrl = base.endsWith('/') ? base + 'api/login' : base + '/api/login';
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), 12000);
-          const r = await fetch(targetUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: cleanEmail, password }),
-            signal: controller.signal
-          });
-          clearTimeout(timer);
-          let parsed = null;
-          try { parsed = await r.json(); } catch(e){}
-          if (r && parsed) {
-            res = r;
-            data = parsed;
-            break attemptLoginLoop;
-          }
-        } catch (netErr) {
-          await new Promise(w => setTimeout(w, 500));
-        }
-      }
+    const targetUrl = apiBase.endsWith('/') ? apiBase + 'api/login' : apiBase + '/api/login';
+    const r = await fetch(targetUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: cleanEmail, password })
+    });
+    if (r) {
+      res = r;
+      try { data = await r.json(); } catch(e){}
     }
-  } catch(e){}
+  } catch(netErr) {
+    if (apiBase.includes('localhost')) {
+      try {
+        const remoteUrl = 'https://ambiente-de-homologa-ao-sf.onrender.com/api/login';
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 3500);
+        const r2 = await fetch(remoteUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: cleanEmail, password }),
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+        if (r2) {
+          res = r2;
+          try { data = await r2.json(); } catch(e){}
+        }
+      } catch(e2){}
+    }
+  }
 
   if (res && data) {
     if (!res.ok || !data.success) {
@@ -13348,7 +13321,7 @@ window.handleLoginSubmit = async function(e) {
       document.getElementById('appMain').classList.add('show');
       document.getElementById('appMain').style.display = 'flex';
       render();
-    }, 150);
+    }, 40);
     return;
   }
 
