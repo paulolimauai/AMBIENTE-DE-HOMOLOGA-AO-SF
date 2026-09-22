@@ -2366,28 +2366,30 @@ body.light .glass-shard {
   box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10), inset 0 2px 5px #FFFFFF !important;
 }
 
-/* Card de Autenticação Ultra 4K Liquid Glass (Smoked Amber & Obsidian Glassmorphism) */
+/* Card de Autenticação Ultra 4K Executive Frosted Glass (Efeito Fundo de Vidro Puro & Luxo) */
 .auth-card-nexus {
   position: relative;
   z-index: 10;
-  background: linear-gradient(145deg, rgba(20, 28, 48, 0.88) 0%, rgba(10, 16, 30, 0.94) 35%, rgba(5, 8, 17, 0.98) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(16, 26, 48, 0.52) 42%, rgba(6, 12, 24, 0.72) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-top: 1.8px solid rgba(255, 255, 255, 0.65) !important;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.38) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 28px;
-  padding: clamp(18px, 2.4vh, 26px) clamp(18px, 2.2vw, 28px);
+  padding: clamp(20px, 2.6vh, 28px) clamp(20px, 2.4vw, 30px);
   width: 100%;
-  max-width: 440px;
+  max-width: 446px;
   box-shadow: 
-    0 35px 85px -15px rgba(0, 0, 0, 0.90),
-    0 0 50px -10px rgba(245, 158, 11, 0.20),
-    0 0 30px -10px rgba(56, 189, 248, 0.12),
-    inset 0 1.5px 2px rgba(255, 255, 255, 0.35),
-    inset 0 -1.5px 2px rgba(0, 0, 0, 0.6) !important;
-  backdrop-filter: blur(14px) saturate(180%);
-  -webkit-backdrop-filter: blur(14px) saturate(180%);
+    0 35px 85px -15px rgba(0, 0, 0, 0.75),
+    0 0 50px -10px rgba(56, 189, 248, 0.18),
+    0 0 40px -10px rgba(245, 158, 11, 0.14),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(28px) saturate(210%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%);
   animation: authCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   overflow: hidden;
   transform: none !important;
 }
@@ -2419,19 +2421,20 @@ button:active, .auth-tab-btn:active, .btn-quick-admin-login:active {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.12), transparent 70%);
+  background: radial-gradient(circle 420px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.20), rgba(56, 189, 248, 0.08) 40%, transparent 70%);
   opacity: var(--card-glare-opacity, 0);
   transition: opacity 0.35s ease;
   z-index: 4;
 }
 
 body.light .auth-card-nexus {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border: 1.5px solid #CBD5E1 !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(248, 250, 252, 0.78) 100%) !important;
+  border: 1.5px solid rgba(203, 213, 225, 0.80) !important;
   border-top: 2px solid #FFFFFF !important;
-  box-shadow: 0 25px 65px -10px rgba(15, 23, 42, 0.12), 0 0 35px -5px rgba(245, 158, 11, 0.10), inset 0 1.5px 2px #FFFFFF !important;
-  backdrop-filter: blur(40px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border-left: 1.8px solid #FFFFFF !important;
+  box-shadow: 0 25px 65px -10px rgba(15, 23, 42, 0.12), 0 0 35px -5px rgba(245, 158, 11, 0.10), inset 0 2px 3px #FFFFFF !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
 }
 
 body.light .auth-card-glare {
@@ -2866,17 +2869,17 @@ body.light .auth-subtitle {
 /* Abas de Navegação Segmentada (Entrar / Criar Conta - Menu Executivo Ampliado) */
 .auth-tabs-nav {
   display: flex;
-  background: rgba(15, 23, 42, 0.65) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+  background: rgba(8, 14, 28, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
   border-radius: 16px !important;
   padding: 6px !important;
   margin-bottom: 22px;
   gap: 6px;
   min-height: 56px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.40) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(22px) !important;
+  -webkit-backdrop-filter: blur(22px) !important;
 }
 
 body.light .auth-tabs-nav {
@@ -2959,13 +2962,13 @@ body.light .auth-field label {
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(15, 23, 42, 0.50) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+  background: rgba(10, 18, 34, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.38) !important;
   border-radius: 14px !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.06) !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.10) !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 body.light .auth-input-wrapper {
