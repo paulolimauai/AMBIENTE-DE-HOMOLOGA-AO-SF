@@ -2671,7 +2671,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">WhatsApp / Celular (Opcional)</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="handlePhoneMask(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                                <input id="osClientPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="handlePhoneInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
                             </div>
                         </div>
                         <div>
@@ -4572,6 +4572,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         };
 
         // Máscara de Telefone Celular com DDD em Tempo Real
+        window.handlePhoneMask = function(input) { return window.handlePhoneInput(input); };
         window.handlePhoneInput = function(input) {
             let v = input.value.replace(/\D/g, '').slice(0, 11);
             if (v.length > 10) v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');

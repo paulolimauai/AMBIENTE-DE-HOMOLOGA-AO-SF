@@ -19633,6 +19633,20 @@ window.copyOsProtocol = function() {
   });
 };
 
+window.copyProtocolText = function(text) {
+  if (!text) return;
+  const clean = String(text).replace(/^#/, '');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(clean).then(() => {
+      showToast('Protocolo #' + clean + ' copiado para a área de transferência!');
+    }).catch(() => {
+      showToast('Protocolo: #' + clean);
+    });
+  } else {
+    showToast('Protocolo: #' + clean);
+  }
+};
+
 window.currentOsTabFilter = 'todas';
 
 window.setOsStatusTab = function(tab) {
