@@ -16742,7 +16742,7 @@ function pageDashboard(){
       <!-- COLUNA PRINCIPAL ESQUERDA (1.62fr) -->
       <div style="display:flex; flex-direction:column; gap:20px;">
 
-        <!-- CARD 1: EVOLUÇÃO TEMPORAL & FLUXO DE CAIXA (Chart.js Interativo com 3 Modos) -->
+        <!-- CARD 1: EVOLUÇÃO TEMPORAL & FLUXO DE CAIXA (Chart.js Interativo: Área, Barras, Acumulado, Pizza e Bolinha) -->
         <div class="dash-card">
           <div class="dash-card-head">
             <div class="dash-card-title">
@@ -16768,6 +16768,14 @@ function pageDashboard(){
                 <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'cum' ? 'active' : ''}" data-mode="cum" onclick="window.switchCashFlowChartMode('cum')" title="Visualização de Saldo Acumulado">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                   <span>Acumulado</span>
+                </button>
+                <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'pie' ? 'active' : ''}" data-mode="pie" onclick="window.switchCashFlowChartMode('pie')" title="Visualização em Formato de Pizza">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                  <span>Pizza</span>
+                </button>
+                <button type="button" class="dash-chart-mode-btn \${currentChartMode === 'doughnut' ? 'active' : ''}" data-mode="doughnut" onclick="window.switchCashFlowChartMode('doughnut')" title="Visualização em Formato de Bolinha / Rosca">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+                  <span>Bolinha</span>
                 </button>
               </div>
               <span class="tag" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text); font-size:11.5px; padding:4px 10px; border-radius:8px;">\${periodLabel()}</span>
@@ -20765,6 +20773,62 @@ function drawDashboardCharts(){
             pointBorderWidth: 1.5
           }
         ];
+      } else if (mode === 'pie' || mode === 'doughnut') {
+        chartType = mode;
+        const totalReceitas = dataIn.reduce((a, b) => a + b, 0);
+        const totalDespesas = dataOut.reduce((a, b) => a + b, 0);
+        const hasData = (totalReceitas > 0 || totalDespesas > 0);
+
+        charts.cashFlow = new Chart(ctxCash, {
+          type: chartType,
+          data: {
+            labels: hasData ? ['Receitas (Entradas)', 'Despesas (Saídas)'] : ['Sem movimentações no período'],
+            datasets: [{
+              data: hasData ? [totalReceitas, totalDespesas] : [1],
+              backgroundColor: hasData ? ['#10B981', '#EF4444'] : [isLightMode ? '#E2E8F0' : 'rgba(255,255,255,0.08)'],
+              borderColor: isLightMode ? '#FFFFFF' : 'rgba(15,23,42,0.95)',
+              borderWidth: 2.5,
+              hoverOffset: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: mode === 'doughnut' ? '68%' : '0%',
+            animation: { duration: 450 },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                  color: isLightMode ? '#000000' : '#CBD5E1',
+                  font: { weight: '700', size: 11.5 },
+                  boxWidth: 10,
+                  boxHeight: 10,
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
+              },
+              tooltip: {
+                backgroundColor: isLightMode ? 'rgba(255,255,255,0.98)' : 'rgba(15,23,42,0.95)',
+                titleColor: isLightMode ? '#000000' : '#F8FAFC',
+                bodyColor: isLightMode ? '#000000' : '#E2E8F0',
+                borderColor: isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.14)',
+                borderWidth: 1,
+                padding: 10,
+                callbacks: {
+                  label: function(c) {
+                    if (!hasData) return ' Sem registros no período';
+                    const sum = totalReceitas + totalDespesas;
+                    const pct = sum > 0 ? Math.round((c.raw / sum) * 100) : 0;
+                    return ' ' + c.label + ': ' + fmt(c.raw) + ' (' + pct + '%)';
+                  }
+                }
+              }
+            }
+          }
+        });
+        return;
       } else {
         chartType = 'line';
         datasets = [
