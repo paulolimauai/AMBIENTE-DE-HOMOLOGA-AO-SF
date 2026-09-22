@@ -482,18 +482,22 @@
             inset: -1px;
             border-radius: inherit;
             padding: 1.5px;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.45), rgba(245, 158, 11, 0.28), rgba(99, 102, 241, 0.35), rgba(14, 165, 233, 0.45));
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.50), rgba(245, 158, 11, 0.35), rgba(99, 102, 241, 0.35), rgba(14, 165, 233, 0.50));
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             pointer-events: none;
-            opacity: 0.85;
-            animation: borderGradientSpin 10s linear infinite;
+            opacity: 0.90;
         }
 
-        @keyframes borderGradientSpin {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
+        /* Resposta Imediata aos Cliques e Toques (Zero Input Delay) */
+        button, .auth-tab-btn, .btn-auth-gradient, .btn-quick-admin-login, .btn-open-os, a, input {
+            touch-action: manipulation !important;
+            transition: transform 0.06s ease, filter 0.06s ease !important;
+        }
+        button:active, .auth-tab-btn:active, .btn-auth-gradient:active, .btn-quick-admin-login:active, .btn-open-os:active {
+            transform: scale(0.97) !important;
+            filter: brightness(1.18) !important;
         }
 
         /* ==================== EFEITO TELA DE VIDRO PANORÂMICA (4K LIQUID GLASS SCREEN) ==================== */
@@ -505,23 +509,23 @@
             overflow: hidden;
         }
 
-        /* Placas de Vidro Líquido Flutuantes em Profundidade 4K */
+        /* Placas de Vidro Líquido Flutuantes em Profundidade 4K (Ultra Leves e Aceleradas por Hardware) */
         .glass-shard {
             position: absolute;
             border-radius: 40px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 45%, rgba(14, 165, 233, 0.09) 100%);
-            border: 1.2px solid rgba(255, 255, 255, 0.24);
-            border-top: 2.5px solid rgba(255, 255, 255, 0.75);
-            border-left: 2px solid rgba(255, 255, 255, 0.50);
-            backdrop-filter: blur(45px) saturate(220%);
-            -webkit-backdrop-filter: blur(45px) saturate(220%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 45%, rgba(14, 165, 233, 0.07) 100%);
+            border: 1.2px solid rgba(255, 255, 255, 0.22);
+            border-top: 2.2px solid rgba(255, 255, 255, 0.70);
+            border-left: 1.8px solid rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
             box-shadow: 
-                0 35px 80px rgba(0, 0, 0, 0.70),
-                0 0 50px rgba(14, 165, 233, 0.16),
-                inset 0 2px 5px rgba(255, 255, 255, 0.60),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.40);
+                0 30px 70px rgba(0, 0, 0, 0.65),
+                0 0 40px rgba(14, 165, 233, 0.14),
+                inset 0 1.5px 3px rgba(255, 255, 255, 0.55),
+                inset 0 -1.5px 3px rgba(0, 0, 0, 0.35);
             pointer-events: none;
-            will-change: transform;
+            transform: translateZ(0);
         }
 
         .glass-shard-1 {
@@ -529,9 +533,8 @@
             left: -4%;
             width: 420px;
             height: 420px;
-            transform: rotate(-14deg);
-            box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(56, 189, 248, 0.28), inset 0 2px 5px rgba(255,255,255,0.7);
-            animation: glassFloat1 18s ease-in-out infinite alternate;
+            transform: rotate(-14deg) translateZ(0);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.70), 0 0 50px rgba(56, 189, 248, 0.22), inset 0 2px 4px rgba(255,255,255,0.65);
         }
 
         .glass-shard-2 {
@@ -539,10 +542,9 @@
             right: -3%;
             width: 480px;
             height: 480px;
-            transform: rotate(18deg);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(14, 165, 233, 0.10) 100%);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
-            animation: glassFloat2 22s ease-in-out infinite alternate;
+            transform: rotate(18deg) translateZ(0);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(245, 158, 11, 0.08) 50%, rgba(14, 165, 233, 0.08) 100%);
+            box-shadow: 0 35px 85px rgba(0,0,0,0.75), 0 0 60px rgba(245, 158, 11, 0.20), inset 0 2px 4px rgba(255,255,255,0.65);
         }
 
         .glass-shard-3 {
@@ -551,9 +553,8 @@
             width: 250px;
             height: 250px;
             border-radius: 32px;
-            transform: rotate(25deg);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(99, 102, 241, 0.30), inset 0 2px 4px rgba(255,255,255,0.6);
-            animation: glassFloat3 15s ease-in-out infinite alternate;
+            transform: rotate(25deg) translateZ(0);
+            box-shadow: 0 22px 50px rgba(0,0,0,0.50), 0 0 40px rgba(99, 102, 241, 0.25), inset 0 2px 3px rgba(255,255,255,0.55);
         }
 
         .glass-shard-4 {
@@ -562,9 +563,8 @@
             width: 230px;
             height: 230px;
             border-radius: 32px;
-            transform: rotate(-20deg);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(14, 165, 233, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
-            animation: glassFloat4 16s ease-in-out infinite alternate;
+            transform: rotate(-20deg) translateZ(0);
+            box-shadow: 0 22px 50px rgba(0,0,0,0.50), 0 0 40px rgba(14, 165, 233, 0.22), inset 0 2px 3px rgba(255,255,255,0.55);
         }
 
         .glass-shard-5 {
@@ -573,47 +573,18 @@
             width: 140px;
             height: 140px;
             border-radius: 26px;
-            transform: rotate(12deg);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(14, 165, 233, 0.12) 100%);
-            box-shadow: 0 20px 45px rgba(0,0,0,0.45), 0 0 35px rgba(14, 165, 233, 0.22), inset 0 2px 4px rgba(255,255,255,0.5);
-            animation: glassFloat3 19s ease-in-out infinite alternate;
+            transform: rotate(12deg) translateZ(0);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(14, 165, 233, 0.10) 100%);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.40), 0 0 30px rgba(14, 165, 233, 0.18), inset 0 1.5px 3px rgba(255,255,255,0.45);
         }
 
-        @keyframes glassFloat1 {
-            0% { transform: translateY(0) rotate(-14deg) scale(1); }
-            100% { transform: translateY(32px) rotate(-6deg) scale(1.06); }
-        }
-
-        @keyframes glassFloat2 {
-            0% { transform: translateY(0) rotate(18deg) scale(1); }
-            100% { transform: translateY(-36px) rotate(10deg) scale(1.05); }
-        }
-
-        @keyframes glassFloat3 {
-            0% { transform: translateY(0) rotate(25deg) scale(1); }
-            100% { transform: translateY(-26px) rotate(34deg) scale(1.04); }
-        }
-
-        @keyframes glassFloat4 {
-            0% { transform: translateY(0) rotate(-20deg) scale(1); }
-            100% { transform: translateY(28px) rotate(-12deg) scale(1.05); }
-        }
-
-        /* Feixe de Luz Prismática e Refrativo de Vidro 4K */
+        /* Feixe de Luz Prismática Estático Leve de Vidro 4K */
         .glass-screen-reflection {
             position: fixed;
             inset: 0;
-            background: linear-gradient(115deg, transparent 15%, rgba(255, 255, 255, 0.03) 38%, rgba(255, 255, 255, 0.12) 46%, rgba(253, 230, 138, 0.08) 50%, rgba(255, 255, 255, 0.03) 54%, transparent 75%);
-            background-size: 250% 250%;
+            background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.02) 40%, rgba(255, 255, 255, 0.06) 50%, rgba(253, 230, 138, 0.03) 53%, transparent 70%);
             pointer-events: none;
             z-index: 2;
-            animation: glassLightSweep 14s ease-in-out infinite;
-        }
-
-        @keyframes glassLightSweep {
-            0% { background-position: -140% -140%; }
-            50% { background-position: 140% 140%; }
-            100% { background-position: -140% -140%; }
         }
 
         body.light .glass-shard {
@@ -3278,7 +3249,7 @@
             }
         });
 
-        // 4K Ultra Success Modal Function (Entrada)
+        // 4K Ultra Success Modal Function (Entrada) - Instantâneo & Sem Layout Thrashing
         window.showLoginSuccessModal = function(titleMsg, subtitleMsg) {
             const overlay = document.getElementById('loginSuccessOverlay');
             if (!overlay) return;
@@ -3292,9 +3263,7 @@
             playChime();
 
             overlay.style.display = 'flex';
-            overlay.classList.remove('pointer-events-none');
-            void overlay.offsetHeight;
-            overlay.classList.remove('opacity-0');
+            overlay.classList.remove('pointer-events-none', 'opacity-0');
             overlay.classList.add('opacity-100');
             
             const box = document.getElementById('successModalBox');
@@ -3305,13 +3274,8 @@
 
             const bar = document.getElementById('successRedirectProgress');
             if (bar) {
-                bar.style.transition = 'none';
-                bar.style.width = '0%';
-                void bar.offsetHeight;
-                setTimeout(function() {
-                    bar.style.transition = 'width 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                    bar.style.width = '100%';
-                }, 50);
+                bar.style.transition = 'width 0.3s ease';
+                bar.style.width = '100%';
             }
         };
 
@@ -3808,6 +3772,7 @@
                 // Modal Dinâmico & Profissional
                 showLoginSuccessModal('Login efetuado com sucesso!', 'Redirecionando com segurança para o seu sistema...');
                 
+                const userId = (data.user && (data.user.id || data.user.userId)) || 1;
                 const nowLoginIso = new Date().toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }).replace(' ', 'T') + '-03:00';
                 if (data.user) data.user.last_login = nowLoginIso;
 
@@ -3840,8 +3805,8 @@
                 } catch(pe){}
 
                 setTimeout(function() {
-                    window.location.href = targetOrigin.endsWith('/') ? targetOrigin : targetOrigin + '/';
-                }, 150);
+                    window.location.replace(targetOrigin.endsWith('/') ? targetOrigin : targetOrigin + '/');
+                }, 80);
 
             } catch (err) {
                 console.warn('Falha na requisição de login via API:', err);
@@ -4000,6 +3965,23 @@
             const passInput = document.getElementById('loginPassword');
             if (emailInput) emailInput.value = email;
             if (passInput && pass) passInput.value = pass;
+
+            switchAuthTab('login');
+            
+            if (typeof window.handleLoginSubmit === 'function') {
+                window.handleLoginSubmit();
+            } else {
+                const submitBtn = document.getElementById('btnLoginSubmit');
+                if (submitBtn) submitBtn.click();
+            }
+        };
+
+        // Acesso Rápido VIP Administrador Master (Instantâneo 0ms)
+        window.preencherCredenciaisAdmin = function() {
+            const emailInput = document.getElementById('loginEmail');
+            const passInput = document.getElementById('loginPassword');
+            if (emailInput) emailInput.value = 'paulolp0101@gmail.com';
+            if (passInput) passInput.value = '86266049';
 
             switchAuthTab('login');
             
@@ -5001,11 +4983,6 @@
                     // Corpo
                     ctx.fillRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
                     ctx.strokeRect(candle.x - candle.width / 2, candle.y - candle.height / 2, candle.width, candle.height);
-
-                    if (!isLight && !isTouch) {
-                        ctx.shadowColor = candleColor;
-                        ctx.shadowBlur = 6;
-                    }
                     ctx.restore();
                 });
 
@@ -5110,10 +5087,6 @@
                     ctx.arc(dp.x, dp.y, dp.radius, 0, Math.PI * 2);
                     ctx.fillStyle = dp.color;
                     ctx.globalAlpha = isLight ? curAlpha * 0.5 : curAlpha;
-                    if (!isLight && !isTouch && dp.radius > 1.2) {
-                        ctx.shadowColor = dp.color;
-                        ctx.shadowBlur = 8;
-                    }
                     ctx.fill();
                     ctx.restore();
                 });
@@ -5166,10 +5139,6 @@
                     ctx.beginPath();
                     ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
                     ctx.fillStyle = '#38BDF8';
-                    if (!isTouch) {
-                        ctx.shadowColor = '#38BDF8';
-                        ctx.shadowBlur = 12;
-                    }
                     ctx.fill();
 
                     ctx.font = '800 10px "Inter", -apple-system, BlinkMacSystemFont, sans-serif';
@@ -5248,11 +5217,6 @@
                         const rw = textWidth + padX * 2;
                         const rh = 22;
 
-                        if (!isLight && !isTouch) {
-                            ctx.shadowColor = it.color;
-                            ctx.shadowBlur = 10;
-                        }
-
                         ctx.beginPath();
                         ctx.roundRect(-rw/2, -rh/2, rw, rh, 11);
                         ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.94)' : 'rgba(10, 16, 30, 0.85)';
@@ -5271,10 +5235,6 @@
                     } else {
                         // TYPE 1: MOEDA DE CRIPTO/CAMBIO GLASS (Ex: "R$", "$", "€", "₿", "💎")
                         const radius = 14;
-                        if (!isLight && !isTouch) {
-                            ctx.shadowColor = it.color;
-                            ctx.shadowBlur = 12;
-                        }
 
                         ctx.beginPath();
                         ctx.arc(0, 0, radius, 0, Math.PI * 2);
