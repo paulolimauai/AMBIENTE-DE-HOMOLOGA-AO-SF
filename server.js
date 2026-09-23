@@ -1538,7 +1538,7 @@ button, a, input[type="button"], input[type="submit"], [role="button"], .card, .
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-button:active:not(:disabled), .btn:active:not(:disabled), .menu button:active:not(:disabled) {
+button:active:not(:disabled), .btn:active:not(:disabled) {
   transform: scale(0.97) !important;
   transition: transform 0.05s ease !important;
 }
@@ -3938,9 +3938,11 @@ body.light .header-live-time {
   background:linear-gradient(180deg, rgba(13, 18, 30, 0.98) 0%, rgba(9, 13, 22, 0.99) 100%) !important;
   border-right:1px solid rgba(255, 255, 255, 0.10);
   z-index:995; display:flex; flex-direction:column; padding:20px 16px;
-  transform:translateX(-100%); transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform:translateX(-100%); transition:transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow:10px 0 30px rgba(0,0,0,0.6); overflow-y:auto;
-  backdrop-filter:blur(28px) !important;
+  backdrop-filter:blur(14px) !important;
+  -webkit-backdrop-filter:blur(14px) !important;
+  will-change: transform;
 }
 .mobile-drawer.open { transform:translateX(0); }
 .mobile-drawer-head {
@@ -3952,19 +3954,17 @@ body.light .header-live-time {
   position:relative; display:flex; align-items:center; gap:12px; padding:12px 16px;
   border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); color:#94A3B8;
   font-size:14px; font-weight:600; cursor:pointer; text-align:left;
-  transition:all 0.22s cubic-bezier(0.16, 1, 0.3, 1); white-space:nowrap;
+  transition:background 0.1s ease, color 0.1s ease, border-color 0.1s ease; white-space:nowrap;
+  touch-action: manipulation;
 }
 .mobile-drawer-nav button:hover {
   background:rgba(255,255,255,0.06); color:#F8FAFC; border-color:rgba(255,255,255,0.12);
-  transform:translateX(4px);
 }
 .mobile-drawer-nav button.active {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(59, 130, 246, 0.22) 50%, rgba(16, 185, 129, 0.14) 100%) !important;
-  backdrop-filter: blur(20px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
   color: #FFFFFF !important; font-weight: 800;
   border: 1px solid rgba(255, 255, 255, 0.28) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.5), 0 0 18px rgba(59, 130, 246, 0.25) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
 }
 .mobile-drawer-nav button .ic {
   width:28px; height:28px; border-radius:9px; background:rgba(255,255,255,0.06);
@@ -4186,16 +4186,17 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(6, 11, 22, 0.82) !important;
+  background: rgba(6, 11, 22, 0.88) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(24px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   z-index: 9990 !important;
+  contain: layout style;
 }
 
 .menu-track {
@@ -4208,18 +4209,15 @@ nav.menu {
   height: 42px !important;
   padding: 3px 6px !important;
   margin: 0 auto !important;
-  background: rgba(12, 19, 36, 0.55) !important;
+  background: rgba(12, 19, 36, 0.65) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: 14px !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
   box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25) !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
-  scroll-behavior: smooth !important;
 }
 .menu-track::-webkit-scrollbar,
 nav.menu::-webkit-scrollbar {
@@ -4259,30 +4257,27 @@ nav.menu::-webkit-scrollbar {
   letter-spacing: -0.01em !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease !important;
   user-select: none !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
   overflow: hidden !important;
+  touch-action: manipulation !important;
 }
 
 .menu button:hover {
   background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
   border-top-color: rgba(255, 255, 255, 0.25) !important;
   color: #F8FAFC !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
 .menu button:hover .ic {
-  transform: scale(1.1) !important;
   color: #38BDF8 !important;
 }
 
 .menu button:active {
-  transform: scale(0.97) !important;
-  transition-duration: 0.06s !important;
+  background: rgba(255, 255, 255, 0.14) !important;
 }
 
 /* Estado Ativo Sofisticado: Cápsula Lapidada com Brilho Superior Suave (Sem barra azul pesada embaixo) */
@@ -4294,13 +4289,10 @@ nav.menu::-webkit-scrollbar {
   color: #38BDF8 !important;
   font-weight: 700 !important;
   box-shadow: 0 4px 14px rgba(14, 165, 233, 0.22), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
-  transform: none !important;
 }
 
 .menu button.active .ic {
   color: #38BDF8 !important;
-  transform: scale(1.05) !important;
-  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5)) !important;
 }
 
 .menu button.active::before {
@@ -4316,7 +4308,6 @@ nav.menu::-webkit-scrollbar {
   background: linear-gradient(90deg, transparent, #FFFFFF 50%, transparent) !important;
   opacity: 0.8 !important;
   box-shadow: 0 0 8px #FFFFFF !important;
-  transform: none !important;
 }
 
 .menu button.active::after {
@@ -4333,7 +4324,7 @@ nav.menu::-webkit-scrollbar {
   flex-shrink: 0 !important;
   line-height: 0 !important;
   margin: 0 !important;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease !important;
+  transition: color 0.1s ease !important;
 }
 .menu button .ic svg {
   width: 17px !important;
@@ -4377,24 +4368,27 @@ nav.menu::-webkit-scrollbar {
   color: #CBD5E1 !important;
   background: rgba(245, 158, 11, 0.06) !important;
   border: 1px solid rgba(245, 158, 11, 0.20) !important;
+  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease !important;
+  touch-action: manipulation !important;
 }
 .menu button.menu-btn-admin .ic {
   background: transparent !important;
   border: none !important;
   color: #FBBF24 !important;
+  transition: color 0.1s ease !important;
 }
 .menu button.menu-btn-admin:hover {
   background: rgba(245, 158, 11, 0.16) !important;
   border-color: rgba(245, 158, 11, 0.50) !important;
   color: #FDE68A !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.20) !important;
 }
 .menu button.menu-btn-admin:hover .ic {
   background: transparent !important;
   border: none !important;
   color: #FDE68A !important;
-  transform: scale(1.1) !important;
+}
+.menu button.menu-btn-admin:active {
+  background: rgba(245, 158, 11, 0.24) !important;
 }
 .menu button.menu-btn-admin.active {
   background: linear-gradient(180deg, rgba(245, 158, 11, 0.24) 0%, rgba(217, 119, 6, 0.12) 100%) !important;
@@ -4404,7 +4398,6 @@ nav.menu::-webkit-scrollbar {
   color: #FBBF24 !important;
   font-weight: 700 !important;
   box-shadow: 0 4px 14px rgba(245, 158, 11, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
-  transform: none !important;
 }
 .menu button.menu-btn-admin.active::before {
   content: '' !important;
@@ -4418,12 +4411,11 @@ nav.menu::-webkit-scrollbar {
   border-radius: 999px !important;
   background: linear-gradient(90deg, transparent, #FDE68A 50%, transparent) !important;
   box-shadow: 0 0 8px #F59E0B !important;
-  transform: none !important;
 }
 .menu button.menu-btn-admin.active .ic {
   color: #FBBF24 !important;
   background: transparent !important;
-  transform: scale(1.06) !important;
+}  transform: scale(1.06) !important;
   filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6)) !important;
 }
 
@@ -4484,8 +4476,6 @@ html.light .menu button:hover {
   background: #F1F5F9 !important;
   border-color: #CBD5E1 !important;
   color: #0F172A !important;
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06) !important;
-  transform: translateY(-1.5px) !important;
 }
 body.light .menu button:hover span:not(.ic),
 html.light .menu button:hover span:not(.ic) {
@@ -4559,8 +4549,6 @@ html.light .menu button.menu-btn-admin:hover {
   background: #FFFBEB !important;
   border-color: #FDE68A !important;
   color: #92400E !important;
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 3px 10px rgba(217, 119, 6, 0.12) !important;
 }
 body.light .menu button.menu-btn-admin:hover .ic,
 html.light .menu button.menu-btn-admin:hover .ic {
@@ -15725,23 +15713,39 @@ function refreshTxTable(){
   return true;
 }
 
-/* ==================== Render Suave sem Flickering ==================== */
-function updateMainHeaderSpacing() {
-  const th = document.querySelector('.topheader');
+
+/* ==================== Render Suave sem Flickering de Alta Performance ==================== */
+let _cachedHeaderHeight = 0;
+let _lastRenderedHtml = '';
+let _lastAdminVisibilityKey = null;
+let _lastUsersSyncTime = 0;
+let _lastLogsSyncTime = 0;
+let _lastOrdensSyncTime = 0;
+
+function updateMainHeaderSpacing(force = false) {
   const mainEl = document.querySelector('.main');
-  if (th && mainEl && window.innerWidth > 900) {
-    const banner = document.querySelector('.view-mode-banner');
-    const bannerH = (banner && document.body.classList.contains('has-view-mode-banner')) ? banner.offsetHeight : 0;
-    const thH = th.offsetHeight || 125;
-    mainEl.style.marginTop = (thH + bannerH + 4) + 'px';
+  if (!mainEl) return;
+  if (window.innerWidth <= 900) {
+    mainEl.style.marginTop = '';
+    return;
+  }
+  const banner = document.querySelector('.view-mode-banner');
+  const bannerH = (banner && document.body.classList.contains('has-view-mode-banner')) ? 38 : 0;
+  if (!_cachedHeaderHeight || force) {
+    const th = document.querySelector('.topheader');
+    _cachedHeaderHeight = (th ? th.offsetHeight : 0) || 120;
+  }
+  const targetMargin = (_cachedHeaderHeight + bannerH + 4) + 'px';
+  if (mainEl.style.marginTop !== targetMargin) {
+    mainEl.style.marginTop = targetMargin;
   }
 }
-window.addEventListener('resize', updateMainHeaderSpacing);
+window.addEventListener('resize', () => updateMainHeaderSpacing(true));
 
 function render(){
   const el = document.getElementById('pageContent');
   if (!el) return;
-  updateMainHeaderSpacing();
+  updateMainHeaderSpacing(false);
 
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
@@ -15758,38 +15762,59 @@ function render(){
     }
   }
 
-
   let newHTML = '';
   try {
+    const now = Date.now();
     if(currentPage==='usuarios') {
       newHTML = pageUsuarios();
-      syncUsersWithServer().then(() => {
-        const uEl = document.getElementById('pageContent');
-        if (uEl && currentPage === 'usuarios') {
-          const freshHTML = pageUsuarios();
-          if (uEl.innerHTML !== freshHTML) uEl.innerHTML = freshHTML;
-        }
-      }).catch(() => {});
+      if (!window._lastUsersSyncTime || now - window._lastUsersSyncTime > 20000) {
+        window._lastUsersSyncTime = now;
+        syncUsersWithServer().then(() => {
+          const uEl = document.getElementById('pageContent');
+          if (uEl && currentPage === 'usuarios') {
+            const freshHTML = pageUsuarios();
+            if (_lastRenderedHtml !== freshHTML) {
+              _lastRenderedHtml = freshHTML;
+              uEl.innerHTML = freshHTML;
+              attachPageEvents();
+            }
+          }
+        }).catch(() => {});
+      }
     }
     else if(currentPage==='logs') {
       newHTML = pageLogs();
-      loadSystemLogs().then(() => {
-        const lEl = document.getElementById('pageContent');
-        if (lEl && currentPage === 'logs') {
-          const freshHTML = pageLogs();
-          if (lEl.innerHTML !== freshHTML) lEl.innerHTML = freshHTML;
-        }
-      }).catch(() => {});
+      if (!window._lastLogsSyncTime || now - window._lastLogsSyncTime > 20000) {
+        window._lastLogsSyncTime = now;
+        loadSystemLogs().then(() => {
+          const lEl = document.getElementById('pageContent');
+          if (lEl && currentPage === 'logs') {
+            const freshHTML = pageLogs();
+            if (_lastRenderedHtml !== freshHTML) {
+              _lastRenderedHtml = freshHTML;
+              lEl.innerHTML = freshHTML;
+              attachPageEvents();
+            }
+          }
+        }).catch(() => {});
+      }
     }
     else if(currentPage==='ordens') {
       newHTML = pageOrdens();
-      syncOrdensWithServer().then(() => {
-        const oEl = document.getElementById('pageContent');
-        if (oEl && currentPage === 'ordens') {
-          const freshHTML = pageOrdens();
-          if (oEl.innerHTML !== freshHTML) oEl.innerHTML = freshHTML;
-        }
-      }).catch(() => {});
+      if (!window._lastOrdensSyncTime || now - window._lastOrdensSyncTime > 20000) {
+        window._lastOrdensSyncTime = now;
+        syncOrdensWithServer().then(() => {
+          const oEl = document.getElementById('pageContent');
+          if (oEl && currentPage === 'ordens') {
+            const freshHTML = pageOrdens();
+            if (_lastRenderedHtml !== freshHTML) {
+              _lastRenderedHtml = freshHTML;
+              oEl.innerHTML = freshHTML;
+              attachPageEvents();
+            }
+          }
+        }).catch(() => {});
+      }
     }
     else if(currentPage==='dashboard') newHTML = pageDashboard();
     else if(currentPage==='transacoes') newHTML = pageTransacoes();
@@ -15806,11 +15831,11 @@ function render(){
     else newHTML = pageDashboard();
 
     const pageChanged = el.getAttribute('data-current-rendered-page') !== currentPage;
-    const htmlChanged = el.dataset.renderedHtml !== newHTML;
+    const htmlChanged = (_lastRenderedHtml !== newHTML);
 
     if (pageChanged || htmlChanged) {
       el.innerHTML = newHTML;
-      el.dataset.renderedHtml = newHTML;
+      _lastRenderedHtml = newHTML;
       el.setAttribute('data-current-rendered-page', currentPage);
       attachPageEvents();
     }
@@ -15823,7 +15848,6 @@ function render(){
 
   try {
     updateHeaderUser();
-    renderNotifications();
     updateViewModeBanner();
     updateAdminMenuVisibility();
     updateActiveMenu();
@@ -15846,22 +15870,27 @@ function updateActiveMenu(){
       currentPage = 'usuarios';
     }
   } else {
-    // Usuários comuns nunca podem permanecer em telas de administração
     if (['usuarios', 'ordens', 'logs'].includes(currentPage)) {
       currentPage = 'dashboard';
     }
   }
 
-  const buttons = document.querySelectorAll('button[data-page]');
-  buttons.forEach(b => {
+  const buttons = document.querySelectorAll('.menu button, .mobile-drawer-nav button, .mobile-bottom-btn');
+  for (let i = 0; i < buttons.length; i++) {
+    const b = buttons[i];
     const isCurrent = (b.getAttribute('data-page') === currentPage);
-    b.classList.toggle('active', isCurrent);
-  });
+    if (b.classList.contains('active') !== isCurrent) {
+      b.classList.toggle('active', isCurrent);
+    }
+  }
 }
 
-function updateAdminMenuVisibility(){
+function updateAdminMenuVisibility(force = false){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
+  const currentKey = String(isAdminView);
+  if (!force && _lastAdminVisibilityKey === currentKey) return;
+  _lastAdminVisibilityKey = currentKey;
 
   if (isAdminView) {
     document.documentElement.classList.add('is-admin');
@@ -15870,7 +15899,6 @@ function updateAdminMenuVisibility(){
   }
 
   // Módulos financeiros: visíveis apenas para perfis comuns (ou em Modo Espelho)
-  // Administrador tem acesso estritamente a módulos administrativos
   const financialPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
   financialPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
@@ -23442,19 +23470,28 @@ function navigate(page){
     }
   } catch(e){}
 
-  document.querySelectorAll('.menu button, .mobile-drawer-nav button, .mobile-bottom-btn').forEach(b=>b.classList.toggle('active', b.dataset.page===page));
+  const buttons = document.querySelectorAll('.menu button, .mobile-drawer-nav button, .mobile-bottom-btn');
+  for (let i = 0; i < buttons.length; i++) {
+    const b = buttons[i];
+    const isCurrent = (b.dataset.page === page);
+    if (b.classList.contains('active') !== isCurrent) {
+      b.classList.toggle('active', isCurrent);
+    }
+  }
 
-  // Auto-ajuste e centralização suave do item ativo na barra de navegação superior
+  // Centralização instantânea de alta performance na barra horizontal sem animação de smooth scroll bloqueante
   try {
     const activeMenuBtn = document.querySelector('.menu button.active');
     const menuTrackEl = document.getElementById('menuTrack');
-    if (activeMenuBtn && menuTrackEl && typeof activeMenuBtn.scrollIntoView === 'function') {
-      activeMenuBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    if (activeMenuBtn && menuTrackEl) {
+      const scrollPos = activeMenuBtn.offsetLeft - (menuTrackEl.clientWidth / 2) + (activeMenuBtn.clientWidth / 2);
+      menuTrackEl.scrollLeft = Math.max(0, scrollPos);
     }
   } catch(e){}
 
   // Se o usuário clicou na mesma página de Transações, resetar filtros e garantir visibilidade completa
   if (isSamePage && page === 'transacoes') {
+    _lastRenderedHtml = '';
     const el = document.getElementById('pageContent');
     if (el) el.removeAttribute('data-current-rendered-page');
     const s = document.getElementById('txSearch'); if(s) s.value = '';
@@ -23502,8 +23539,8 @@ if(mobileDrawerMenu){
     const targetEl = e.target.nodeType === 3 ? e.target.parentElement : e.target;
     const btn = targetEl ? targetEl.closest('button[data-page]') : null;
     if(btn && btn.dataset.page){
-      navigate(btn.dataset.page);
       toggleMobileDrawer(false);
+      navigate(btn.dataset.page);
     }
   });
 }
