@@ -30,7 +30,10 @@ Esta skill define os runbooks, arquitetura e fluxos de trabalho específicos do 
 - **Modo Escuro (Dark Mode)**: Tema Cyber Glass 4K nativo com fundos translúcidos escuros e gradientes azuis/esmeralda/âmbar.
 - **Modo Claro (Light Mode)**: Todos os textos, títulos (`h1`-`h6`), parágrafos (`p`), labels, células de tabela, descrições de transação e badges secundárias utilizam **preto sólido (`#000000 !important`)** para legibilidade absoluta e contraste máximo.
 
-### 2.3 Auto-Approve, Auto-Exec & Auto-Git Sync
+### 2.3 Visual do Cabeçalho (Header)
+- **Topheader Limpo**: Proibido adicionar badges de status (ex: "MSSQL ONLINE", pulse dots) ou relógio com fuso horário ("fintechBrasiliaClock", "BRT") no cabeçalho superior. O cabeçalho deve manter apenas o logotipo à esquerda e a identificação do usuário/ações à direita.
+
+### 2.4 Auto-Approve, Auto-Exec & Auto-Git Sync
 - Não pedir confirmação ao usuário para comandos de terminal, deploys ou edições de arquivo.
 - Validar sintaxe automaticamente com `node --check server.js`.
 - Reiniciar o processo de background quando houver alteração em `server.js`.

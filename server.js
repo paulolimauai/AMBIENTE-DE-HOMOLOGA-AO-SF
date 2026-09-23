@@ -10708,64 +10708,6 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
   height: 100% !important;
 }
 
-/* Cápsula Central de Status Financeiro & Relógio de Brasília */
-.fintech-header-center {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.fintech-status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(16, 185, 129, 0.10);
-  border: 1px solid rgba(16, 185, 129, 0.28);
-  border-radius: 999px;
-  padding: 5px 12px;
-  font-size: 11px;
-  font-weight: 750;
-  letter-spacing: 0.03em;
-  color: #34D399;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
-  cursor: default;
-  transition: all 0.2s ease;
-}
-
-.fintech-pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 8px #10B981;
-  animation: finPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes finPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
-}
-
-.fintech-clock-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  padding: 5px 12px;
-  font-size: 11.5px;
-  font-weight: 750;
-  letter-spacing: 0.02em;
-  color: #94A3B8;
-  font-variant-numeric: tabular-nums;
-  cursor: default;
-}
-
-.fintech-clock-badge span#fintechBrasiliaClock {
-  color: #F8FAFC;
-  font-weight: 800;
-}
 
 /* 4. BARRA DE MENU - Padronizada na suite executiva Aether */
 
@@ -10968,21 +10910,6 @@ body.light .topheader {
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
 }
 
-body.light .fintech-status-badge {
-  background: rgba(5, 150, 105, 0.1) !important;
-  border-color: rgba(5, 150, 105, 0.25) !important;
-  color: #047857 !important;
-}
-
-body.light .fintech-clock-badge {
-  background: #FFFFFF !important;
-  border-color: #E2E8F0 !important;
-  color: #000000 !important;
-}
-
-body.light .fintech-clock-badge span#fintechBrasiliaClock {
-  color: #000000 !important;
-}
 
 body.light nav.menu {
   background: rgba(255, 255, 255, 0.95) !important;
@@ -11051,14 +10978,6 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 }
 
 /* 10. MICRO-INTERAÇÕES & RESPONSIVIDADE ULTRA 4K */
-@media (max-width: 900px) {
-  .fintech-header-center {
-    display: none !important;
-  }
-  .topheader {
-    height: 56px !important;
-  }
-}
 
 </style>
 </head>
@@ -11473,18 +11392,6 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         </div>
       </div>
 
-      <div class="fintech-header-center">
-        <div class="fintech-status-badge" title="Ambiente Operacional Homologado SF - MSSQL Conectado">
-          <span class="fintech-pulse-dot"></span>
-          <span>MSSQL ONLINE</span>
-          <span style="opacity:0.65; font-size:10px;">• SF HUB</span>
-        </div>
-        <div class="fintech-clock-badge" title="Horário Oficial de Brasília (UTC-3)">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span id="fintechBrasiliaClock">--:--:--</span>
-          <span style="font-size:10px; opacity:0.75; font-weight:700;">BRT</span>
-        </div>
-      </div>
 
       <div class="aether-header-right">
         <!-- 1. Cápsula de Identidade do Usuário (Avatar e Nome Separados de Minha Conta) -->
@@ -24794,17 +24701,6 @@ window.applyPostLoginBg = function(theme) {
     }
   })();
 
-  // Relógio Financeiro de Brasília em Tempo Real (Oficial UTC-3)
-  (function initBrasiliaClock() {
-    function updateClock() {
-      var el = document.getElementById('fintechBrasiliaClock');
-      if (!el) return;
-      var now = new Date();
-      el.textContent = now.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-  })();
 
 </script>
 </body>

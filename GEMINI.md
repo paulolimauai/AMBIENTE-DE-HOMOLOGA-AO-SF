@@ -38,3 +38,7 @@
 ## 5. Atualização Obrigatória do Servidor Local em Tempo Real (localhost:3000)
 - **Sempre Atualizar o Localhost**: Toda vez que qualquer arquivo for modificado (backend `server.js`, frontend, templates, estilos), o agente deve **obrigatoriamente reiniciar/atualizar o processo do servidor na porta 3000** (ex: `Stop-Process -Id (Get-NetTCPConnection -LocalPort 3000 -State Listen).OwningProcess -Force`) para que o `localhost:3000` reflita a versão mais recente imediatamente, sem que o usuário precise reiniciar nada manualmente.
 
+## 6. Diretriz Visual Definitiva: Proibição de Badges de Status MSSQL e Relógio no Topo do Cabeçalho
+- **NUNCA inserir ou reintroduzir badges de status (ex: "MSSQL ONLINE", "SF HUB", pulse dots) ou relógio com fuso horário (ex: "BRT", "fintechBrasiliaClock") no centro ou topo do cabeçalho principal.**
+- O cabeçalho deve permanecer limpo, contendo apenas o logotipo/marca à esquerda e a identidade do usuário/ações do sistema à direita.
+
