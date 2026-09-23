@@ -422,5 +422,13 @@
     "last_login": "2026-09-23T08:32:19-03:00",
     "timestamp": "2026-09-23T11:32:19.630Z",
     "ack": false
+  },
+  {
+    "id": "52",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-09-23T08:39:50-03:00",
+    "timestamp": "2026-09-23T11:39:50.915Z",
+    "ack": false
   }
 ]
