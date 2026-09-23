@@ -1518,7 +1518,7 @@ const htmlContent = `<!DOCTYPE html>
       sn = parseFloat(sc) / 100 || 1.0;
     }
     document.documentElement.style.setProperty('--app-zoom', sn);
-    var bgCol = isLight ? '#F0FDF4' : '#050E1A';
+    var bgCol = isLight ? '#F0FDF4' : '#000000';
     document.write('<style id="critical-fouc-shield">background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + '</style>');
     var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || sn === 1.0);
     var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('html, body { zoom: ' + sn + ' !important; }');
@@ -1822,11 +1822,7 @@ code, pre, kbd, samp, .font-mono {
   pointer-events: none !important;
   user-select: none !important;
   background-color: #000000 !important;
-  background-image: 
-    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.06) 0%, transparent 65%),
-    linear-gradient(175deg, #000000 0%, #030508 45%, #010403 85%, #000000 100%) !important;
+  background-image: none !important;
   background-size: cover !important;
   background-attachment: fixed !important;
   transform: translateZ(0) !important;
@@ -1845,67 +1841,28 @@ body.light .persistent-system-bg {
   background-attachment: fixed !important;
 }
 
-/* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - 4K High-Tech) ==================== */
+/* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - Preto Puro Obsidian) ==================== */
 :root {
   --postlogin-bg: #000000;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.06) 0%, transparent 65%),
-    linear-gradient(175deg, #000000 0%, #030508 45%, #010403 85%, #000000 100%);
+  --postlogin-gradient: none;
 }
 
-/* 1. Opções de Fundo Temático Financeiro */
+/* 1. Todos os Perfis Escuros Padronizados em Preto Puro Absoluto (#000000) */
 html[data-app-bg="titanium"],
 html[data-app-bg="obsidian"],
 html[data-app-bg="slate"],
 html[data-app-bg="pure-black"],
-html[data-app-bg="midnight"] {
-  --postlogin-bg: #000000;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 85% 65% at 18% 18%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 82% 22%, rgba(245, 158, 11, 0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 70% at 50% 88%, rgba(14, 165, 233, 0.06) 0%, transparent 65%),
-    linear-gradient(175deg, #000000 0%, #030508 45%, #010403 85%, #000000 100%);
-}
-
-html[data-app-bg="royal-navy"],
-html[data-app-bg="cyber-blue"] {
-  --postlogin-bg: #040F24;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 85% 65% at 20% 20%, rgba(14, 165, 233, 0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 80% 25%, rgba(16, 185, 129, 0.15) 0%, transparent 55%),
-    linear-gradient(175deg, #030B1A 0%, #081B38 50%, #031024 100%);
-}
-
-/* 4. Verde Esmeralda Suíço / Private Wealth Banking */
+html[data-app-bg="midnight"],
 html[data-app-bg="emerald"],
-html[data-app-bg="emerald-wealth"] {
-  --postlogin-bg: #02170F;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 85% 65% at 20% 20%, rgba(16, 185, 129, 0.26) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 80% 25%, rgba(245, 158, 11, 0.18) 0%, transparent 55%),
-    linear-gradient(175deg, #02140D 0%, #053322 50%, #01110B 100%);
-}
-
-/* 5. Vinho Imperial / Ametista Bordeaux Luxo */
+html[data-app-bg="emerald-wealth"],
+html[data-app-bg="royal-navy"],
+html[data-app-bg="cyber-blue"],
 html[data-app-bg="burgundy"],
-html[data-app-bg="wine"] {
-  --postlogin-bg: #1B0B17;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 85% 65% at 20% 20%, rgba(236, 72, 153, 0.20) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 80% 25%, rgba(245, 158, 11, 0.15) 0%, transparent 55%),
-    linear-gradient(175deg, #160813 0%, #37162F 50%, #130710 100%);
-}
-
-/* 6. Bronze & Café Espresso Executivo */
+html[data-app-bg="wine"],
 html[data-app-bg="espresso"],
 html[data-app-bg="bronze"] {
-  --postlogin-bg: #160F0B;
-  --postlogin-gradient: 
-    radial-gradient(ellipse 85% 65% at 20% 20%, rgba(245, 158, 11, 0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 80% 25%, rgba(16, 185, 129, 0.14) 0%, transparent 55%),
-    linear-gradient(175deg, #120C08 0%, #2B1F16 50%, #100B07 100%);
+  --postlogin-bg: #000000;
+  --postlogin-gradient: none;
 }
 
 /* 7. Platina Clean / Modo Claro de Alto Contraste */
@@ -3631,7 +3588,7 @@ html.light #appMain {
   position:absolute; border-radius:50%; pointer-events:none;
   filter:blur(80px); -webkit-filter:blur(80px);
   will-change:transform, opacity;
-  display:block !important;
+  display:none !important;
 }
 .app-blob.a1{
   width:520px; height:520px;
@@ -3696,9 +3653,9 @@ body.light .app-blob.a4{opacity:.14; background:radial-gradient(circle, rgba(52,
   z-index:99999 !important;
   width:100% !important;
   height:68px !important;
-  background:rgba(5, 14, 26, 0.84) !important;
-  border-bottom:1px solid rgba(16, 185, 129, 0.20) !important;
-  box-shadow:0 4px 24px rgba(0,0,0,0.55), inset 0 -1px 0 rgba(16, 185, 129, 0.14) !important;
+  background:#000000 !important;
+  border-bottom:1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow:0 4px 24px rgba(0,0,0,0.7), inset 0 -1px 0 rgba(255, 255, 255, 0.05) !important;
   backdrop-filter:blur(24px) saturate(180%) !important;
   -webkit-backdrop-filter:blur(24px) saturate(180%) !important;
   padding-top:env(safe-area-inset-top);
@@ -3935,7 +3892,7 @@ body.light .header-live-time {
 
 .mobile-drawer {
   position:fixed; top:0; left:0; bottom:0; width:290px; max-width:84vw;
-  background:linear-gradient(180deg, rgba(13, 18, 30, 0.98) 0%, rgba(9, 13, 22, 0.99) 100%) !important;
+  background:#000000 !important;
   border-right:1px solid rgba(255, 255, 255, 0.10);
   z-index:995; display:flex; flex-direction:column; padding:20px 16px;
   transform:translateX(-100%); transition:transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -4182,13 +4139,13 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(6, 11, 22, 0.88) !important;
+  background: #000000 !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
   z-index: 9990 !important;
@@ -4205,9 +4162,9 @@ nav.menu {
   height: 42px !important;
   padding: 3px 6px !important;
   margin: 0 auto !important;
-  background: rgba(12, 19, 36, 0.65) !important;
+  background: rgba(18, 18, 18, 0.85) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 14px !important;
   box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25) !important;
   overflow-x: auto !important;
@@ -9397,11 +9354,11 @@ body.light .mobile-drawer-logout-btn .ic svg {
   left: 0;
   right: 0;
   height: 60px;
-  background: rgba(11, 15, 25, 0.95) !important;
+  background: #000000 !important;
   backdrop-filter: blur(24px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.45) !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7) !important;
   z-index: 998 !important;
   align-items: center;
   justify-content: space-around;
@@ -9928,12 +9885,12 @@ body.light #notifBtn:hover {
 
 /* 3. BARRA DE MENU HORIZONTAL NO TOPO */
 nav.menu {
-  background: rgba(8, 12, 22, 0.95) !important;
+  background: #000000 !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7) !important;
 }
 
 body.light nav.menu, html.light nav.menu {
@@ -10280,11 +10237,11 @@ body.light .btn-hero-privacy {
 
 /* 12. BARRA DE NAVEGAÇÃO INFERIOR MOBILE EM VIDRO CÁPSULA (BOTTOM TAB BAR GLASS) */
 .mobile-bottom-bar {
-  background: linear-gradient(180deg, rgba(12, 18, 34, 0.88) 0%, rgba(6, 10, 20, 0.94) 100%) !important;
+  background: #000000 !important;
   backdrop-filter: var(--glass-blur-heavy) !important;
   -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.20) !important;
-  box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
 }
 
 body.light .mobile-bottom-bar {
@@ -10344,11 +10301,11 @@ code, pre, kbd, samp, .proto-badge, .badge-mono, .code-pill {
 /* 2. Cabeçalho Superior (Topheader) de Alto Padrão */
 .topheader {
   height: 66px !important;
-  background: rgba(6, 10, 18, 0.88) !important;
+  background: #000000 !important;
   backdrop-filter: blur(24px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7) !important;
   display: flex !important;
   align-items: center !important;
   transition: background 0.3s ease, border-color 0.3s ease !important;
@@ -10680,11 +10637,11 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 /* 3. TOPHEADER & STATUS EXECUTIVO EM TEMPO REAL */
 .topheader {
   height: 64px !important;
-  background: rgba(6, 10, 20, 0.90) !important;
+  background: #000000 !important;
   backdrop-filter: blur(24px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.7) !important;
   z-index: 1000 !important;
 }
 
@@ -24013,9 +23970,12 @@ if (scaleMenuBtn && scaleDropdown) {
   });
 }
 
-// ==================== Gerenciador de Cor de Fundo do Pós-Login (Padrão: Esmeralda Wealth) ====================
+// ==================== Gerenciador de Cor de Fundo do Pós-Login (Padrão: Preto Puro Obsidian) ====================
 window.applyPostLoginBg = function(theme) {
-  const selected = theme || localStorage.getItem('nexus_post_login_bg') || 'emerald-wealth';
+  let selected = theme || localStorage.getItem('nexus_post_login_bg') || 'pure-black';
+  if (selected === 'emerald-wealth' || selected === 'emerald') {
+    selected = 'pure-black';
+  }
   document.documentElement.setAttribute('data-app-bg', selected);
   if (document.body) document.body.setAttribute('data-app-bg', selected);
   try { localStorage.setItem('nexus_post_login_bg', selected); } catch(e){}
@@ -24023,7 +23983,10 @@ window.applyPostLoginBg = function(theme) {
 
 (function initPostLoginBg() {
   try {
-    const saved = localStorage.getItem('nexus_post_login_bg') || 'emerald-wealth';
+    let saved = localStorage.getItem('nexus_post_login_bg') || 'pure-black';
+    if (saved === 'emerald-wealth' || saved === 'emerald') {
+      saved = 'pure-black';
+    }
     window.applyPostLoginBg(saved);
   } catch(e){}
 })();
