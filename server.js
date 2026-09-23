@@ -1726,8 +1726,7 @@ html.light.is-admin #menuOrdensBtn #osBadgeCount {
   --red-soft:rgba(244, 63, 94, 0.16);
   --blue:#38BDF8;
   --purple:#818CF8;
-  --violet:#A855F7;
-  --violet-accent:var(--violet);
+  --orange:#F59E0B;
   --teal:#06B6D4;
   --pink:#EC4899;
   --hover:rgba(0, 229, 255, 0.08);
@@ -1757,8 +1756,7 @@ body.light, html.light body, html.light {
   --red-soft:rgba(220, 38, 38, 0.12);
   --blue:#2563EB;
   --purple:#6366F1;
-  --violet:#7C3AED;
-  --violet-accent:var(--violet);
+  --orange:#D97706;
   --teal:#0D9488;
   --pink:#DB2777;
   --hover:rgba(2, 132, 199, 0.08);
@@ -1836,7 +1834,7 @@ body.light .persistent-system-bg {
   background-color: #F8FAFC !important;
   background-image: 
     radial-gradient(ellipse 70% 50% at 15% 15%, rgba(2, 132, 199, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
     linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%) !important;
   background-size: cover !important;
@@ -1873,7 +1871,7 @@ body.light, html.light {
   --postlogin-bg: #F8FAFC;
   --postlogin-gradient: 
     radial-gradient(ellipse 70% 50% at 15% 15%, rgba(2, 132, 199, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
     linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%);
 }
@@ -2081,8 +2079,8 @@ html, body {
 /* ==================== Tela de Auth Ultra Moderna (Visual Liquid Glass 4K) ==================== */
 .auth-container {
   --auth-bg: #000000;
-  --auth-gold: #00E5FF;
-  --auth-gold-dark: #0284C7;
+  --auth-gold: #F59E0B;
+  --auth-gold-dark: #D97706;
   --auth-blue: #38BDF8;
   --auth-emerald: #00E5FF;
   --auth-cyan: #38BDF8;
@@ -2113,7 +2111,7 @@ html, body {
   transform: translate(-50%, -50%);
   width: 750px;
   height: 750px;
-  background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(56, 189, 248, 0.06) 35%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(56, 189, 248, 0.05) 35%, transparent 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 1;
@@ -2127,8 +2125,8 @@ html, body {
 
 body.light .auth-container {
   --auth-bg: #F8FAFC;
-  --auth-gold: #0284C7;
-  --auth-gold-dark: #0369A1;
+  --auth-gold: #D97706;
+  --auth-gold-dark: #B45309;
   --auth-card: rgba(255, 255, 255, 0.94);
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
@@ -2150,7 +2148,7 @@ body.light .auth-container {
 
 .auth-theme-btn {
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(0, 229, 255, 0.45);
+  border: 1px solid rgba(245, 158, 11, 0.45);
   color: var(--auth-gold);
   width: 48px;
   height: 48px;
@@ -2160,7 +2158,7 @@ body.light .auth-container {
   justify-content: center;
   cursor: pointer;
   backdrop-filter: blur(14px);
-  box-shadow: 0 4px 18px rgba(0, 229, 255, 0.25);
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.25);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .auth-theme-btn svg {
@@ -2171,8 +2169,8 @@ body.light .auth-container {
 .auth-theme-btn:hover {
   transform: scale(1.08);
   background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(0, 229, 255, 0.70);
-  box-shadow: 0 6px 24px rgba(0, 229, 255, 0.40);
+  border-color: rgba(245, 158, 11, 0.70);
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.40);
 }
 body.light .auth-theme-btn {
   background: #FFFFFF;
@@ -2187,7 +2185,7 @@ body.light .auth-theme-btn {
   pointer-events: none;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.06) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(245, 158, 11, 0.06) 1px, transparent 1px);
   background-size: 44px 44px;
   -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
   mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
@@ -2201,13 +2199,19 @@ body.light .auth-theme-btn {
   pointer-events: none;
   will-change: transform;
 }
-.auth-blob.b1 { width: 460px; height: 460px; background: #00E5FF;
+.auth-blob.b1 {
+  width: 460px;
+  height: 460px;
+  background: #F59E0B;
   top: -110px;
   left: -110px;
   animation: blobFloat 22s ease-in-out infinite;
 }
 .auth-blob.b2 { width: 440px; height: 440px; background: transparent; display: none !important; }
-.auth-blob.b3 { width: 420px; height: 420px; background: #38BDF8;
+.auth-blob.b3 {
+  width: 420px;
+  height: 420px;
+  background: #F59E0B;
   top: 28%;
   right: 12%;
   opacity: 0.24;
@@ -2269,8 +2273,8 @@ body.light .auth-blob { opacity: 0.14; }
   width: 480px;
   height: 480px;
   transform: rotate(18deg) translateZ(0);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(0, 229, 255, 0.10) 50%, rgba(59, 130, 246, 0.08) 100%);
-  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(0, 229, 255, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(59, 130, 246, 0.08) 100%);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
 }
 
 .glass-shard-3 {
@@ -2336,7 +2340,7 @@ body.light .glass-shard {
   box-shadow: 
     0 35px 85px -15px rgba(0, 0, 0, 0.75),
     0 0 50px -10px rgba(56, 189, 248, 0.18),
-    0 0 40px -10px rgba(0, 229, 255, 0.14),
+    0 0 40px -10px rgba(245, 158, 11, 0.14),
     inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
     inset 0 -1.5px 2px rgba(0, 0, 0, 0.45) !important;
   backdrop-filter: blur(28px) saturate(210%);
@@ -2364,7 +2368,7 @@ button:active, .auth-tab-btn:active, .btn-quick-admin-login:active {
   left: 8%;
   right: 8%;
   height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #FFFFFF 50%, rgba(0, 229, 255, 0.85) 65%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #FFFFFF 50%, rgba(251, 191, 36, 0.85) 65%, transparent);
   pointer-events: none;
   z-index: 3;
 }
@@ -2385,13 +2389,13 @@ body.light .auth-card-nexus {
   border: 1.5px solid rgba(203, 213, 225, 0.80) !important;
   border-top: 2px solid #FFFFFF !important;
   border-left: 1.8px solid #FFFFFF !important;
-  box-shadow: 0 25px 65px -10px rgba(15, 23, 42, 0.12), 0 0 35px -5px rgba(0, 229, 255, 0.10), inset 0 2px 3px #FFFFFF !important;
+  box-shadow: 0 25px 65px -10px rgba(15, 23, 42, 0.12), 0 0 35px -5px rgba(245, 158, 11, 0.10), inset 0 2px 3px #FFFFFF !important;
   backdrop-filter: blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
 }
 
 body.light .auth-card-glare {
-  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(0, 229, 255, 0.10), transparent 70%) !important;
+  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(245, 158, 11, 0.10), transparent 70%) !important;
 }
 
 /* Layout Executivo 2 Colunas para o Login no server.js (Split Harmonizado) */
@@ -2584,9 +2588,9 @@ html.light .auth-support-link:hover {
   gap: 8px;
   padding: 5px 14px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(56, 189, 248, 0.12));
-  border: 1px solid rgba(0, 229, 255, 0.35);
-  color: #38BDF8;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(59, 130, 246, 0.12));
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FCD34D;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -2603,7 +2607,7 @@ html.light .auth-support-link:hover {
 }
 
 .auth-showcase-title span {
-  background: linear-gradient(90deg, #E0F2FE 0%, #38BDF8 50%, #00E5FF 100%);
+  background: linear-gradient(90deg, #FCD34D 0%, #F59E0B 50%, #FBBF24 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -2633,7 +2637,7 @@ html.light .auth-support-link:hover {
 }
 .auth-metric-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(0, 229, 255, 0.45);
+  border-color: rgba(245, 158, 11, 0.45);
   box-shadow: 0 14px 38px rgba(0, 0, 0, 0.6);
 }
 
@@ -2652,10 +2656,13 @@ html.light .auth-support-link:hover {
 .metric-sub-green {
   font-size: 11px;
   font-weight: 700;
-  color: #00E5FF;
+  color: #F59E0B;
   margin-top: 2px;
 }
-.metric-sub-violet { font-size: 11px; font-weight: 700; color: #00E5FF;
+.metric-sub-amber {
+  font-size: 11px;
+  font-weight: 700;
+  color: #F59E0B;
   margin-top: 2px;
 }
 .metric-sub-blue {
@@ -2674,16 +2681,23 @@ html.light .auth-support-link:hover {
   margin-top: 4px;
 }
 
-body.light .auth-showcase-badge { background: rgba(2, 132, 199, 0.12) !important; border: 1.5px solid rgba(2, 132, 199, 0.35) !important; color: #0369A1 !important; font-weight: 800 !important; }
-body.light .auth-showcase-badge span:first-child { background: #0284C7 !important; }
+body.light .auth-showcase-badge {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border: 1.5px solid rgba(180, 83, 9, 0.35) !important;
+  color: #92400E !important;
+  font-weight: 800 !important;
+}
+body.light .auth-showcase-badge span:first-child {
+  background: #D97706 !important;
+}
 body.light .auth-showcase-title {
   color: #0F172A !important;
 }
 body.light .auth-showcase-title span {
-  background: linear-gradient(90deg, #0284C7 0%, #0369A1 60%, #075985 100%) !important;
+  background: linear-gradient(90deg, #D97706 0%, #B45309 60%, #92400E 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 1px 1px rgba(2, 132, 199, 0.20)) !important;
+  filter: drop-shadow(0 1px 1px rgba(180, 83, 9, 0.20)) !important;
 }
 body.light .auth-showcase-desc {
   color: #334155 !important;
@@ -2701,11 +2715,11 @@ body.light .auth-metric-card .metric-val {
   color: #0F172A !important;
 }
 body.light .metric-sub-green {
-  color: #0284C7 !important;
+  color: #D97706 !important;
   font-weight: 800 !important;
 }
-body.light .metric-sub-violet {
-  color: #0369A1 !important;
+body.light .metric-sub-amber {
+  color: #B45309 !important;
   font-weight: 800 !important;
 }
 body.light .metric-sub-blue {
@@ -2730,7 +2744,8 @@ body.light .auth-showcase-footer span {
   width: 58px;
   height: 58px;
   border-radius: 18px;
-  background: linear-gradient(135deg, #FFFFFF 0%, #E0F2FE 25%, #38BDF8 60%, #0284C7 100%) !important; color: #041325 !important;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 25%, #F59E0B 60%, #B45309 100%) !important;
+  color: #451A03 !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2739,10 +2754,10 @@ body.light .auth-showcase-footer span {
   font-family: var(--font-sans);
   border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
   box-shadow: 
-    0 10px 24px -4px rgba(0, 229, 255, 0.55),
+    0 10px 24px -4px rgba(245, 158, 11, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.35),
     inset 0 2px 3px #FFFFFF,
-    inset 0 -2px 3px rgba(2, 132, 199, 0.45) !important;
+    inset 0 -2px 3px rgba(180, 83, 9, 0.45) !important;
   margin-bottom: 12px;
   position: relative;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
@@ -2750,7 +2765,7 @@ body.light .auth-showcase-footer span {
 .auth-logo-badge:hover {
   transform: scale(1.06) translateY(-2px);
   box-shadow: 
-    0 14px 30px -4px rgba(0, 229, 255, 0.70),
+    0 14px 30px -4px rgba(245, 158, 11, 0.70),
     0 4px 10px rgba(0, 0, 0, 0.40),
     inset 0 2px 3px #FFFFFF !important;
 }
@@ -2759,7 +2774,7 @@ body.light .auth-showcase-footer span {
   position: absolute;
   inset: -4px;
   border-radius: 22px;
-  background: radial-gradient(circle, rgba(0, 229, 255, 0.30) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.30) 0%, transparent 70%);
   z-index: -1;
   pointer-events: none;
 }
@@ -2776,7 +2791,7 @@ body.light .auth-showcase-footer span {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 .auth-title span {
-  background: linear-gradient(135deg, #FFFFFF 0%, #E0F2FE 35%, #38BDF8 75%, #00E5FF 100%) !important;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FCD34D 35%, #F59E0B 75%, #D97706 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   font-size: 13.5px;
@@ -2797,7 +2812,8 @@ body.light .auth-title {
   color: #0F172A !important;
   text-shadow: none !important;
 }
-body.light .auth-title span { color: #0284C7 !important;
+body.light .auth-title span {
+  color: #D97706 !important;
   text-shadow: none !important;
   font-weight: 900 !important;
 }
@@ -2861,7 +2877,10 @@ body.light .auth-tabs-nav {
   transform: scale(1.12);
 }
 .auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.28) 0%, rgba(2, 132, 199, 0.20) 100%) !important; color: #00E5FF !important; border: 1.5px solid rgba(0, 229, 255, 0.70) !important; box-shadow: 0 6px 20px rgba(0, 229, 255, 0.32), inset 0 1px 1.5px rgba(255, 255, 255, 0.40) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.20) 100%) !important;
+  color: #FDE68A !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.70) !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.32), inset 0 1px 1.5px rgba(255, 255, 255, 0.40) !important;
   font-weight: 900 !important;
 }
 body.light .auth-tab-btn {
@@ -2873,7 +2892,9 @@ body.light .auth-tab-btn:hover {
 }
 body.light .auth-tab-btn.active {
   background: #FFFFFF !important;
-  color: #0284C7 !important; border: 1.8px solid #0284C7 !important; box-shadow: 0 6px 18px rgba(2, 132, 199, 0.22), inset 0 1px 1.5px #FFFFFF !important;
+  color: #B45309 !important;
+  border: 1.8px solid #D97706 !important;
+  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.22), inset 0 1px 1.5px #FFFFFF !important;
   font-weight: 900 !important;
 }
 
@@ -2914,19 +2935,20 @@ body.light .auth-input-wrapper {
 }
 
 .auth-input-wrapper:focus-within {
-  border-color: rgba(0, 229, 255, 0.80) !important;
+  border-color: rgba(245, 158, 11, 0.80) !important;
   background: rgba(15, 23, 42, 0.75) !important;
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.16), 0 8px 20px -4px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.16), 0 8px 20px -4px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
   transform: translateY(-1px);
 }
 body.light .auth-input-wrapper:focus-within {
   background: #FFFFFF !important;
-  border-color: #0284C7 !important; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15), 0 6px 16px -2px rgba(15, 23, 42, 0.08) !important;
+  border-color: #D97706 !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15), 0 6px 16px -2px rgba(15, 23, 42, 0.08) !important;
 }
 
 .auth-input-wrapper.highlight-glow {
   border-color: var(--auth-gold) !important;
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.35) !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important;
 }
 
 @keyframes authShake {
@@ -2963,17 +2985,17 @@ body.light .auth-input-wrapper:focus-within {
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
 }
 .auth-feedback-banner.warning {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.12) 0%, rgba(124, 58, 237, 0.06) 100%) !important;
-  border: 1px solid rgba(192, 132, 252, 0.35) !important;
-  border-left: 3.5px solid #A855F7 !important;
-  color: #F3E8FF !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(180, 83, 9, 0.06) 100%) !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+  border-left: 3.5px solid #F59E0B !important;
+  color: #FEF3C7 !important;
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
 }
 .auth-feedback-banner.success {
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.14) 0%, rgba(2, 132, 199, 0.08) 100%) !important;
-  border: 1px solid rgba(0, 229, 255, 0.35) !important;
-  border-left: 3.5px solid #00E5FF !important;
-  color: #E0F2FE !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+  border-left: 3.5px solid #F59E0B !important;
+  color: #FEF3C7 !important;
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
 }
 
@@ -2989,7 +3011,9 @@ body.light .auth-input-icon {
   color: #64748B !important;
 }
 body.light .auth-input-wrapper:focus-within .auth-input-icon {
-  color: #0284C7 !important; }
+  color: #D97706 !important;
+}
+
 .auth-input-wrapper input {
   flex: 1;
   min-width: 0;
@@ -3061,7 +3085,8 @@ input[type="text"]::-ms-clear {
 }
 .auth-pass-toggle:hover,
 .auth-pass-toggle-btn:hover {
-  color: #00E5FF !important; background: rgba(0, 229, 255, 0.15) !important;
+  color: #F59E0B !important;
+  background: rgba(245, 158, 11, 0.15) !important;
   transform: scale(1.08);
 }
 .auth-pass-toggle svg,
@@ -3080,17 +3105,19 @@ body.light .auth-pass-toggle-btn {
 }
 body.light .auth-pass-toggle:hover,
 body.light .auth-pass-toggle-btn:hover {
-  color: #0284C7 !important; background: rgba(2, 132, 199, 0.10) !important;
+  color: #D97706 !important;
+  background: rgba(217, 119, 6, 0.10) !important;
 }
 
-/* Botão Primário 4K Liquid Cyan / Cyber Blue */
+/* Botão Primário 4K Liquid Amber / Royal Gold */
 .btn-auth-primary {
   position: relative;
   overflow: hidden;
   width: 100%;
   height: 46px;
   padding: 0 20px;
-  background: linear-gradient(135deg, #00E5FF 0%, #38BDF8 35%, #0284C7 75%, #0369A1 100%) !important; color: #FFFFFF !important;
+  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 28%, #D97706 65%, #B45309 100%) !important;
+  color: #1A0D00 !important;
   border: 1px solid rgba(255, 255, 255, 0.85) !important;
   border-top: 1.5px solid #FFFFFF !important;
   border-radius: 14px !important;
@@ -3100,10 +3127,10 @@ body.light .auth-pass-toggle-btn:hover {
   cursor: pointer;
   margin-top: 8px;
   box-shadow: 
-    0 10px 24px -4px rgba(0, 229, 255, 0.55),
+    0 10px 24px -4px rgba(245, 158, 11, 0.55),
     0 2px 6px rgba(0, 0, 0, 0.30),
     inset 0 1.5px 2px #FFFFFF,
-    inset 0 -1.5px 2px rgba(2, 132, 199, 0.40) !important;
+    inset 0 -1.5px 2px rgba(180, 83, 9, 0.40) !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
@@ -3124,7 +3151,7 @@ body.light .auth-pass-toggle-btn:hover {
   filter: brightness(1.06);
   transform: translateY(-2px);
   box-shadow: 
-    0 14px 30px -4px rgba(0, 229, 255, 0.70),
+    0 14px 30px -4px rgba(245, 158, 11, 0.70),
     0 4px 10px rgba(0, 0, 0, 0.35),
     inset 0 1.5px 2px #FFFFFF !important;
 }
@@ -3150,20 +3177,38 @@ body.light .auth-pass-toggle-btn:hover {
 }
 .auth-forgot-link:hover {
   text-decoration: underline;
-  color: #38BDF8;
+  color: #FCD34D;
 }
 
-body.light .btn-auth-primary { background: linear-gradient(135deg, #00E5FF 0%, #38BDF8 35%, #0284C7 70%, #0369A1 100%) !important; color: #FFFFFF !important; border: 1.5px solid rgba(2, 132, 199, 0.5) !important; box-shadow: 0 10px 24px -4px rgba(2, 132, 199, 0.45), inset 0 1.5px 2px #FFFFFF !important; }
-body.light .btn-auth-primary:hover { filter: brightness(1.06) !important; box-shadow: 0 14px 32px -4px rgba(2, 132, 199, 0.60), inset 0 1.5px 2px #FFFFFF !important; }
+body.light .btn-auth-primary {
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 35%, #D97706 70%, #B45309 100%) !important;
+  color: #1A0D00 !important;
+  border: 1.5px solid rgba(180, 83, 9, 0.5) !important;
+  box-shadow: 0 10px 24px -4px rgba(245, 158, 11, 0.45), inset 0 1.5px 2px #FFFFFF !important;
+}
+body.light .btn-auth-primary:hover {
+  filter: brightness(1.06) !important;
+  box-shadow: 0 14px 32px -4px rgba(245, 158, 11, 0.60), inset 0 1.5px 2px #FFFFFF !important;
+}
 
-body.light .auth-forgot-link { color: #0284C7 !important; font-weight: 800 !important; }
-body.light .auth-forgot-link:hover { color: #0369A1 !important; }
+body.light .auth-forgot-link {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+body.light .auth-forgot-link:hover {
+  color: #92400E !important;
+}
 
 body.light .auth-bottom-text {
   color: #475569 !important;
 }
-body.light .auth-bottom-text a { color: #0284C7 !important; font-weight: 800 !important; }
-body.light .auth-bottom-text a:hover { color: #0369A1 !important; }
+body.light .auth-bottom-text a {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+body.light .auth-bottom-text a:hover {
+  color: #92400E !important;
+}
 
 /* Botão 4K Glass para Abertura e Consulta de Ordem de Serviço */
 .btn-open-os {
@@ -3553,7 +3598,7 @@ html.light #appMain {
 }
 .app-blob.a2{
   width:460px; height:460px;
-  background:radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, rgba(124, 58, 237, 0.08) 55%, transparent 75%);
+  background:radial-gradient(circle, rgba(245, 158, 11, 0.26) 0%, rgba(217, 119, 6, 0.08) 55%, transparent 75%);
   bottom:-120px; left:18%;
   animation:wealthBlobFloat2 28s ease-in-out infinite alternate;
   animation-delay:-9s;
@@ -3595,7 +3640,7 @@ html.light #appMain {
 body.light .app-bg-grid{opacity:.7; background-image: linear-gradient(to right, rgba(2, 132, 199, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(2, 132, 199, 0.06) 1px, transparent 1px);}
 body.light .app-bg-chart{opacity:.12;}
 body.light .app-blob.a1{opacity:.16; background:radial-gradient(circle, rgba(2, 132, 199, 0.18) 0%, transparent 70%);}
-body.light .app-blob.a2{opacity:.12; background:radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);}
+body.light .app-blob.a2{opacity:.14; background:radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);}
 body.light .app-blob.a3{opacity:.14; background:radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, transparent 70%);}
 body.light .app-blob.a4{opacity:.14; background:radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, transparent 70%);}
 
@@ -4013,7 +4058,16 @@ body.light .header-live-time {
   width: 36px !important;
   height: 36px !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg, #00E5FF 0%, #0284C7 70%, #0369A1 100%) !important; display: flex !important; align-items: center !important; justify-content: center !important; font-weight: 900 !important; font-size: 13.5px !important; color: #FFFFFF !important; flex-shrink: 0 !important; border: 2px solid rgba(224, 242, 254, 0.75) !important; box-shadow: 0 0 18px rgba(0, 229, 255, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 70%, #B45309 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 900 !important;
+  font-size: 13.5px !important;
+  color: #FFFFFF !important;
+  flex-shrink: 0 !important;
+  border: 2px solid rgba(253, 230, 138, 0.75) !important;
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
 }
 
 .user .uname {
@@ -4246,7 +4300,7 @@ nav.menu::-webkit-scrollbar {
 .menu-admin-divider {
   width: 1px !important;
   height: 20px !important;
-  background: linear-gradient(180deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.45) 50%, rgba(168, 85, 247, 0.1) 100%) !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.45) 50%, rgba(245, 158, 11, 0.1) 100%) !important;
   border-radius: 999px !important;
   margin: 0 4px !important;
   flex-shrink: 0 !important;
@@ -4265,28 +4319,38 @@ nav.menu::-webkit-scrollbar {
   padding: 0 14px !important;
   border-radius: 10px !important;
   color: #CBD5E1 !important;
-  background: rgba(168, 85, 247, 0.08) !important; border: 1px solid rgba(168, 85, 247, 0.25) !important;
+  background: rgba(245, 158, 11, 0.06) !important;
+  border: 1px solid rgba(245, 158, 11, 0.20) !important;
   transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease !important;
   touch-action: manipulation !important;
 }
-.menu button.menu-btn-admin .ic { background: transparent !important; border: none !important; color: #C084FC !important;
+.menu button.menu-btn-admin .ic {
+  background: transparent !important;
+  border: none !important;
+  color: #FBBF24 !important;
   transition: color 0.1s ease !important;
 }
 .menu button.menu-btn-admin:hover {
-  background: rgba(168, 85, 247, 0.18) !important; border-color: rgba(168, 85, 247, 0.55) !important; color: #E9D5FF !important;
+  background: rgba(245, 158, 11, 0.16) !important;
+  border-color: rgba(245, 158, 11, 0.50) !important;
+  color: #FDE68A !important;
 }
 .menu button.menu-btn-admin:hover .ic {
   background: transparent !important;
   border: none !important;
-  color: #E9D5FF !important; }
+  color: #FDE68A !important;
+}
 .menu button.menu-btn-admin:active {
-  background: rgba(168, 85, 247, 0.24) !important;
+  background: rgba(245, 158, 11, 0.24) !important;
 }
 .menu button.menu-btn-admin.active {
-  background: linear-gradient(180deg, rgba(168, 85, 247, 0.24) 0%, rgba(109, 40, 217, 0.14) 100%) !important; border: 1px solid rgba(168, 85, 247, 0.60) !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.24) 0%, rgba(217, 119, 6, 0.12) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.60) !important;
   border-top: 1.2px solid rgba(255, 255, 255, 0.60) !important;
   border-radius: 10px !important;
-  color: #C084FC !important; font-weight: 700 !important; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  color: #FBBF24 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
 }
 .menu button.menu-btn-admin.active::before {
   content: '' !important;
@@ -4298,12 +4362,14 @@ nav.menu::-webkit-scrollbar {
   width: auto !important;
   height: 1px !important;
   border-radius: 999px !important;
-  background: linear-gradient(90deg, transparent, #E9D5FF 50%, transparent) !important; box-shadow: 0 0 8px #A855F7 !important;
+  background: linear-gradient(90deg, transparent, #FDE68A 50%, transparent) !important;
+  box-shadow: 0 0 8px #F59E0B !important;
 }
-.menu button.menu-btn-admin.active .ic { color: #C084FC !important;
+.menu button.menu-btn-admin.active .ic {
+  color: #FBBF24 !important;
   background: transparent !important;
 }  transform: scale(1.06) !important;
-  filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.6)) !important;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6)) !important;
 }
 
 /* ==================== Modo Claro do Menu ==================== */
@@ -4331,9 +4397,9 @@ html.light .menu-admin-divider {
 }
 body.light .menu-admin-badge,
 html.light .menu-admin-badge {
-  background: #EDE9FE !important;
-  border-color: #DDD6FE !important;
-  color: #6D28D9 !important;
+  background: #FEF3C7 !important;
+  border-color: #FDE68A !important;
+  color: #B45309 !important;
 }
 body.light .menu button,
 html.light .menu button {
@@ -4422,33 +4488,35 @@ html.light .menu button.active .ic svg {
 body.light .menu button.menu-btn-admin,
 html.light .menu button.menu-btn-admin {
   color: #475569 !important;
-  background: rgba(168, 85, 247, 0.08) !important; border: 1px solid rgba(168, 85, 247, 0.25) !important;
+  background: rgba(245, 158, 11, 0.06) !important;
+  border: 1px solid rgba(245, 158, 11, 0.20) !important;
 }
 body.light .menu button.menu-btn-admin .ic,
-  html.light .menu button.menu-btn-admin .ic {
+html.light .menu button.menu-btn-admin .ic {
   background: transparent !important;
   border: none !important;
-  color: #7C3AED !important;
+  color: #D97706 !important;
 }
 body.light .menu button.menu-btn-admin:hover,
-  html.light .menu button.menu-btn-admin:hover {
-  background: #F5F3FF !important;
-  border-color: #DDD6FE !important;
-  color: #6D28D9 !important; }
+html.light .menu button.menu-btn-admin:hover {
+  background: #FFFBEB !important;
+  border-color: #FDE68A !important;
+  color: #92400E !important;
+}
 body.light .menu button.menu-btn-admin:hover .ic,
-  html.light .menu button.menu-btn-admin:hover .ic {
+html.light .menu button.menu-btn-admin:hover .ic {
   background: transparent !important;
   border: none !important;
-  color: #6D28D9 !important;
+  color: #B45309 !important;
 }
 body.light .menu button.menu-btn-admin.active,
-  html.light .menu button.menu-btn-admin.active {
-  background: #EDE9FE !important;
-  border: 1px solid #C4B5FD !important;
+html.light .menu button.menu-btn-admin.active {
+  background: #FEF3C7 !important;
+  border: 1px solid #FCD34D !important;
   border-radius: 11px !important;
-  color: #5B21B6 !important;
+  color: #92400E !important;
   font-weight: 650 !important;
-  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.18) !important;
+  box-shadow: 0 2px 10px rgba(217, 119, 6, 0.18) !important;
 }
 body.light .menu button.menu-btn-admin.active::before,
 html.light .menu button.menu-btn-admin.active::before {
@@ -4461,13 +4529,14 @@ html.light .menu button.menu-btn-admin.active::before {
   width: auto !important;
   height: 2.5px !important;
   border-radius: 3px 3px 0 0 !important;
-  background: #7C3AED !important; box-shadow: 0 -1px 8px rgba(124, 58, 237, 0.6) !important;
+  background: #D97706 !important;
+  box-shadow: 0 -1px 8px rgba(217, 119, 6, 0.6) !important;
 }
 body.light .menu button.menu-btn-admin.active .ic,
-  html.light .menu button.menu-btn-admin.active .ic {
+html.light .menu button.menu-btn-admin.active .ic {
   background: transparent !important;
   border: none !important;
-  color: #6D28D9 !important;
+  color: #B45309 !important;
   filter: none !important;
 }
 
@@ -4887,10 +4956,10 @@ html.light .cat-manage-tabs .cat-tab:hover {
   color: #0F172A !important;
 }
 body.light .cat-manage-tabs .cat-tab.active,
-  html.light .cat-manage-tabs .cat-tab.active {
-  background: rgba(2, 132, 199, 0.15) !important;
-  border-color: #0284C7 !important;
-  color: #0369A1 !important;
+html.light .cat-manage-tabs .cat-tab.active {
+  background: rgba(217, 119, 6, 0.15) !important;
+  border-color: #D97706 !important;
+  color: #B45309 !important;
 }
 
 /* Tabelas e Registros em Modo Claro */
@@ -4944,8 +5013,8 @@ html.light .acc-pill {
 }
 
 body.light .acc-val,
-  html.light .acc-val {
-  color: #0284C7 !important;
+html.light .acc-val {
+  color: #D97706 !important;
 }
 
 /* Cards & Painéis em Modo Claro */
@@ -5317,7 +5386,7 @@ html.light .notif-desc {
 .app-dev-credit{
   position:relative; width:100%; z-index:10; margin-top:auto;
   display:flex; justify-content:center; padding:16px 16px calc(16px + env(safe-area-inset-bottom));
-  background: transparent !important; border-top: 1px solid rgba(0, 229, 255, 0.15) !important;
+  background: transparent !important; border-top: 1px solid rgba(245, 158, 11, 0.15) !important;
 }
 /* ==================== Assinatura Executiva Glassmorphism Ultra 4K (Paulo Lima) ==================== */
 .dev-signature {
@@ -5327,14 +5396,14 @@ html.light .notif-desc {
   align-items: center !important;
   gap: 10px !important;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(20, 28, 48, 0.85) 40%, rgba(6, 10, 20, 0.96) 100%) !important;
-  border: 1.5px solid rgba(0, 229, 255, 0.45) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.45) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.70) !important;
-  border-bottom: 1.5px solid rgba(2, 132, 199, 0.55) !important;
+  border-bottom: 1.5px solid rgba(217, 119, 6, 0.55) !important;
   border-radius: 999px !important;
   padding: 7px 22px 7px 8px !important;
   backdrop-filter: blur(28px) saturate(220%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
-  box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 229, 255, 0.30), inset 0 1.5px 2px rgba(255, 255, 255, 0.35), inset 0 -1.5px 2px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.85), 0 0 25px rgba(245, 158, 11, 0.30), inset 0 1.5px 2px rgba(255, 255, 255, 0.35), inset 0 -1.5px 2px rgba(0, 0, 0, 0.6) !important;
   transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
   text-decoration: none !important;
   cursor: pointer !important;
@@ -5349,16 +5418,16 @@ html.light .notif-desc {
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(0, 229, 255, 0.08) 35%, transparent 65%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(245, 158, 11, 0.08) 35%, transparent 65%) !important;
   pointer-events: none !important;
   z-index: 1 !important;
 }
 
 .dev-signature:hover {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(30, 41, 68, 0.90) 40%, rgba(10, 16, 32, 0.98) 100%) !important;
-  border-color: rgba(0, 229, 255, 0.85) !important;
+  border-color: rgba(252, 211, 77, 0.85) !important;
   border-top-color: #FFFFFF !important;
-  box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.95), 0 0 36px rgba(0, 229, 255, 0.50), inset 0 2px 3px rgba(255, 255, 255, 0.50) !important;
+  box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.95), 0 0 36px rgba(245, 158, 11, 0.50), inset 0 2px 3px rgba(255, 255, 255, 0.50) !important;
   transform: translateY(-2.5px) scale(1.02) !important;
 }
 
@@ -5368,13 +5437,13 @@ html.light .notif-desc {
   height: 30px !important;
   border-radius: 50% !important;
   flex-shrink: 0 !important;
-  background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #E0F2FE 24%, #BAE6FD 48%, #00E5FF 72%, #0284C7 100%) !important;
+  background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #FEF3C7 24%, #FCD34D 48%, #F59E0B 72%, #78350F 100%) !important;
   color: #FFFFFF !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
-  box-shadow: 0 0 18px rgba(0, 229, 255, 0.75), 0 3px 10px rgba(0, 0, 0, 0.6), inset 0 2px 2px rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.75), 0 3px 10px rgba(0, 0, 0, 0.6), inset 0 2px 2px rgba(255, 255, 255, 0.85) !important;
   position: relative !important;
   z-index: 2 !important;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease !important;
@@ -5383,7 +5452,7 @@ html.light .notif-desc {
 
 .dev-signature:hover .dev-signature-icon {
   transform: scale(1.14) rotate(-6deg) !important;
-  box-shadow: 0 0 26px rgba(0, 229, 255, 1), 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 2px #FFFFFF !important;
+  box-shadow: 0 0 26px rgba(251, 191, 36, 1), 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 2px #FFFFFF !important;
 }
 
 .dev-signature-icon svg {
@@ -5418,10 +5487,10 @@ html.light .notif-desc {
   font-weight: 900 !important;
   color: #FFFFFF !important;
   letter-spacing: 0.05em !important;
-  background: linear-gradient(135deg, #FFFFFF 0%, #E0F2FE 30%, #38BDF8 65%, #00E5FF 100%) !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFFBEB 30%, #FDE68A 65%, #F59E0B 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 0 14px rgba(0, 229, 255, 0.70)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) !important;
+  filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.70)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 5px !important;
@@ -5431,21 +5500,23 @@ html.light .notif-desc {
 .dev-sparkle {
   display: inline-block !important;
   font-size: 13px !important;
-  color: #00E5FF !important; filter: drop-shadow(0 0 8px #00E5FF) drop-shadow(0 0 16px #0284C7) !important;
+  color: #FCD34D !important;
+  filter: drop-shadow(0 0 8px #F59E0B) drop-shadow(0 0 16px #D97706) !important;
   animation: none !important;
 }
 
 /* Suporte de Alto Contraste para Tema Claro */
 body.light .dev-signature {
   background: rgba(255, 255, 255, 0.94) !important;
-  border-color: rgba(2, 132, 199, 0.45) !important;
-  border-top-color: rgba(0, 229, 255, 0.80) !important;
-  border-bottom-color: rgba(3, 105, 161, 0.60) !important;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
+  border-color: rgba(217, 119, 6, 0.45) !important;
+  border-top-color: rgba(245, 158, 11, 0.80) !important;
+  border-bottom-color: rgba(180, 83, 9, 0.60) !important;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
 }
 body.light .dev-signature:hover {
-  background: #F0F9FF !important; border-color: #0284C7 !important;
-  box-shadow: 0 12px 28px rgba(2, 132, 199, 0.28), 0 0 20px rgba(0, 229, 255, 0.25) !important;
+  background: #FFFBEB !important;
+  border-color: #D97706 !important;
+  box-shadow: 0 12px 28px rgba(245, 158, 11, 0.28), 0 0 20px rgba(245, 158, 11, 0.25) !important;
 }
 body.light .dev-signature-label {
   color: #09090B !important;
@@ -5453,17 +5524,18 @@ body.light .dev-signature-label {
   text-shadow: none !important;
 }
 body.light .dev-signature-name {
-  background: linear-gradient(135deg, #09090B 0%, #0369A1 45%, #0284C7 75%, #00E5FF 100%) !important;
+  background: linear-gradient(135deg, #09090B 0%, #451A03 45%, #92400E 75%, #B45309 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 1px 3px rgba(2, 132, 199, 0.35)) !important;
+  filter: drop-shadow(0 1px 3px rgba(245, 158, 11, 0.35)) !important;
 }
 body.light .dev-sparkle {
-  color: #0284C7 !important; filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.5)) !important;
+  color: #B45309 !important;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5)) !important;
 }
 body.light .app-dev-credit {
   background: transparent !important;
-  border-top: 1px solid rgba(0, 229, 255, 0.15) !important;
+  border-top: 1px solid rgba(245, 158, 11, 0.15) !important;
 }
 
 .cfg-divider{display:flex; align-items:center; gap:10px; margin:22px 0 14px;}
@@ -5516,7 +5588,11 @@ body.light .app-dev-credit {
 .avatar{
   width:32px !important; height:32px !important; min-width:32px !important; min-height:32px !important;
   border-radius:50% !important;
-  background:linear-gradient(135deg, #00E5FF 0%, #0284C7 50%, #0369A1 100%) !important; display:flex !important; align-items:center !important; justify-content:center !important; font-weight:800 !important; font-size:12px !important; color:#FFFFFF !important; border:1.5px solid rgba(255, 255, 255, 0.5) !important; box-shadow:0 0 14px rgba(0, 229, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  background:linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%) !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  font-weight:800 !important; font-size:12px !important; color:#FFFFFF !important;
+  border:1.5px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow:0 0 14px rgba(245, 158, 11, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
   flex-shrink:0 !important;
 }
 .user .uname{font-size:13px !important; font-weight:700 !important; color:#F8FAFC !important; white-space:nowrap !important; letter-spacing:-0.01em !important;}
@@ -6516,9 +6592,9 @@ body.light .status-recebido {
   border-color: rgba(2, 132, 199, 0.35) !important;
 }
 body.light .status-pendente {
-  background: rgba(124, 58, 237, 0.12) !important;
-  color: #6D28D9 !important;
-  border-color: rgba(124, 58, 237, 0.35) !important;
+  background: rgba(217, 119, 6, 0.12) !important;
+  color: #B45309 !important;
+  border-color: rgba(217, 119, 6, 0.35) !important;
 }
 
 .tx-date-badge{font-weight:700; color:var(--text); font-size:12.5px; letter-spacing:0.02em;}
@@ -6533,7 +6609,7 @@ body.light .status-pendente {
 .status-toggle-btn{cursor:pointer; user-select:none; transition:transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;}
 .status-toggle-btn:hover{transform:translateY(-1px) scale(1.04); filter:brightness(1.12); box-shadow:0 4px 12px rgba(0,0,0,0.25);}
 .status-pago, .status-recebido{background:rgba(0,229,255,0.16) !important; color:#00E5FF !important; border:1px solid rgba(0,229,255,0.35) !important; box-shadow:0 2px 8px rgba(0,229,255,0.15);}
-.status-pendente{background:rgba(168,85,247,0.16) !important; color:#C084FC !important; border:1px solid rgba(168,85,247,0.35) !important; box-shadow:0 2px 8px rgba(168,85,247,0.20);}
+.status-pendente{background:rgba(245,158,11,0.16) !important; color:#F59E0B !important; border:1px solid rgba(245,158,11,0.35) !important; box-shadow:0 2px 8px rgba(245,158,11,0.15);}
 
 .val-in{color:#00E5FF; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
 .val-out{color:#F43F5E; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
@@ -6949,7 +7025,7 @@ body.light .dashboard-welcome-hero {
 }
 body.light .hero-greeting { color: #0F172A !important; text-shadow: none !important; }
 body.light .hero-name-gradient {
-  background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #0284C7 100%) !important;
+  background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #D97706 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.25)) !important;
@@ -7011,7 +7087,7 @@ body.light .btn-hero-ghost:hover {
   flex-shrink: 0;
 }
 .pulse-chip-dot.green { background: #00E5FF; box-shadow: 0 0 8px #00E5FF; }
-.pulse-chip-dot.violet { background: #A855F7; box-shadow: 0 0 8px #A855F7; }
+.pulse-chip-dot.amber { background: #F59E0B; box-shadow: 0 0 8px #F59E0B; }
 .pulse-chip-dot.red { background: #EF4444; box-shadow: 0 0 8px #EF4444; }
 .pulse-chip-dot.cyan { background: #06B6D4; box-shadow: 0 0 8px #06B6D4; }
 .pulse-chip-label { color: #94A3B8; font-weight: 600; }
@@ -7110,16 +7186,16 @@ body.light .pulse-chip-label { color: #000000 !important; }
   box-shadow: 0 6px 20px rgba(129, 140, 248, 0.35);
 }
 .dash-quick-btn.q-cards {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(124, 58, 237, 0.08));
-  border-color: rgba(168, 85, 247, 0.35);
-  color: #C084FC;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.08));
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
 }
 .dash-quick-btn.q-cards:hover {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.32), rgba(124, 58, 237, 0.18));
-  border-color: #A855F7;
-  color: #E9D5FF;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.32), rgba(217, 119, 6, 0.18));
+  border-color: #F59E0B;
+  color: #FDE68A;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.35);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
 }
 .dash-quick-btn.q-sync {
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(0, 229, 255, 0.08));
@@ -7144,7 +7220,7 @@ body.light .dash-quick-btn.q-income { background: #E0F2FE !important; border-col
 body.light .dash-quick-btn.q-expense { background: #FEF2F2 !important; border-color: #FECACA !important; color: #991B1B !important; }
 body.light .dash-quick-btn.q-transfer { background: #F0F9FF !important; border-color: #BAE6FD !important; color: #075985 !important; }
 body.light .dash-quick-btn.q-report { background: #EEF2FF !important; border-color: #C7D2FE !important; color: #3730A3 !important; }
-body.light .dash-quick-btn.q-cards { background: #F5F3FF !important; border-color: #DDD6FE !important; color: #6D28D9 !important; }
+body.light .dash-quick-btn.q-cards { background: #FFFBEB !important; border-color: #FDE68A !important; color: #92400E !important; }
 body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color: #BAE6FD !important; color: #0284C7 !important; }
 
 /* Grid de 6 KPIs 4K */
@@ -7238,12 +7314,12 @@ body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color
 }
 
 .kpis-grid-6 .kpi.kpi-card {
-  border-top-color: #A855F7 !important;
+  border-top-color: #F59E0B !important;
 }
 .kpis-grid-6 .kpi.kpi-card:hover {
-  border-color: rgba(168, 85, 247, 0.45) !important;
-  border-top-color: #C084FC !important;
-  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(168, 85, 247, 0.2) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  border-top-color: #FBBF24 !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(245, 158, 11, 0.2) !important;
 }
 
 .kpis-grid-6 .kpi.kpi-bills {
@@ -7517,9 +7593,9 @@ body.light .kpi-mini-bar {
   color: #F87171;
 }
 .due-bill-badge.today {
-  background: rgba(168, 85, 247, 0.18);
-  border: 1px solid rgba(168, 85, 247, 0.35);
-  color: #C084FC;
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
 }
 .due-bill-badge.soon {
   background: rgba(56, 189, 248, 0.14);
@@ -7966,9 +8042,9 @@ body.light .toast-desc strong { color: #0F172A !important; }
   gap: 6px;
   padding: 4px 12px;
   border-radius: 9999px;
-  background: rgba(168, 85, 247, 0.16);
-  border: 1px solid rgba(168, 85, 247, 0.35);
-  color: #C084FC;
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -7981,9 +8057,9 @@ body.light .toast-desc strong { color: #0F172A !important; }
   gap: 6px;
   padding: 4px 12px;
   border-radius: 9999px;
-  background: rgba(168, 85, 247, 0.16);
-  border: 1px solid rgba(168, 85, 247, 0.35);
-  color: #C084FC;
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -8121,7 +8197,9 @@ body.light .admin-filter-btn.active {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
 }
 .user-card-avatar.admin-av {
-  background: linear-gradient(135deg, #A855F7 0%, #7C3AED 60%, #6D28D9 100%); border: 1.5px solid rgba(192, 132, 252, 0.5); box-shadow: 0 0 18px rgba(168, 85, 247, 0.35), inset 0 1px 1px rgba(255,255,255,0.5);
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #B45309 100%);
+  border: 1.5px solid rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.35), inset 0 1px 1px rgba(255,255,255,0.5);
 }
 .user-card-avatar.user-av {
   background: linear-gradient(135deg, #3B82F6 0%, #2563EB 60%, #1D4ED8 100%);
@@ -8215,7 +8293,11 @@ body.light .admin-filter-btn.active {
   display: inline-flex;
   align-items: center;
 }
-.role-badge.admin { background: rgba(168, 85, 247, 0.18); border: 1px solid rgba(168, 85, 247, 0.4); color: #C084FC; }
+.role-badge.admin {
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #FBBF24;
+}
 .role-badge.user {
   background: rgba(59, 130, 246, 0.18);
   border: 1px solid rgba(59, 130, 246, 0.4);
@@ -8254,7 +8336,10 @@ body.light .user-stat-chip strong { color: #0F172A !important; }
   gap: 14px;
   flex-wrap: wrap;
   padding: 10px 24px !important;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.96) 0%, rgba(109, 40, 217, 0.98) 100%) !important; border-bottom: 2px solid #C084FC !important; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(168, 85, 247, 0.4) !important; color: #FFFFFF !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.96) 0%, rgba(217, 119, 6, 0.98) 100%) !important;
+  border-bottom: 2px solid #FDE68A !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.4) !important;
+  color: #060B18 !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;
   backdrop-filter: blur(20px) !important;
@@ -8284,7 +8369,9 @@ body.light .user-stat-chip strong { color: #0F172A !important; }
 .view-mode-exit-btn {
   background: #0F172A !important;
   color: #FFFFFF !important;
-  border: 1.5px solid #C084FC !important; font-weight: 800 !important; font-size: 13px !important;
+  border: 1.5px solid #FDE68A !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
   padding: 8px 18px !important;
   border-radius: 10px !important;
   cursor: pointer !important;
@@ -8323,7 +8410,12 @@ body.has-view-mode-banner .sidebar {
   gap: 10px;
   padding: 14px 24px !important;
   border-radius: 999px !important;
-  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%) !important; color: #FFFFFF !important; font-size: 14px !important; font-weight: 900 !important; border: 2px solid #E9D5FF !important; box-shadow: 0 12px 35px -5px rgba(139, 92, 246, 0.7), 0 0 25px rgba(168, 85, 247, 0.4) !important;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+  color: #060B18 !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  border: 2px solid #FEF08A !important;
+  box-shadow: 0 12px 35px -5px rgba(245, 158, 11, 0.7), 0 0 25px rgba(245, 158, 11, 0.4) !important;
   cursor: pointer !important;
   animation: pulseFab 2.2s infinite;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -8331,11 +8423,11 @@ body.has-view-mode-banner .sidebar {
 .floating-mirror-exit-fab:hover {
   transform: translateY(-3px) scale(1.05) !important;
   filter: brightness(1.1) !important;
-  box-shadow: 0 16px 45px -2px rgba(168, 85, 247, 0.9) !important;
+  box-shadow: 0 16px 45px -2px rgba(245, 158, 11, 0.9) !important;
 }
 @keyframes pulseFab {
-  0%, 100% { box-shadow: 0 12px 35px -5px rgba(168, 85, 247, 0.7), 0 0 25px rgba(168, 85, 247, 0.4); }
-  50% { box-shadow: 0 14px 45px 2px rgba(168, 85, 247, 1), 0 0 35px rgba(168, 85, 247, 0.75); }
+  0%, 100% { box-shadow: 0 12px 35px -5px rgba(245, 158, 11, 0.7), 0 0 25px rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 14px 45px 2px rgba(245, 158, 11, 1), 0 0 35px rgba(245, 158, 11, 0.75); }
 }
 
 /* ==================== 4K Titanium Executive Bank & Card Cards ==================== */
@@ -9117,18 +9209,18 @@ html.light .logout-timer-bar {
   background: rgba(0, 0, 0, 0.08);
 }
 .login-success-box.timeout-box {
-  border-color: rgba(168, 85, 247, 0.45) !important;
-  box-shadow: 0 35px 95px -12px rgba(0, 0, 0, 0.88), 0 0 30px rgba(168, 85, 247, 0.22) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  box-shadow: 0 35px 95px -12px rgba(0, 0, 0, 0.88), 0 0 30px rgba(245, 158, 11, 0.22) !important;
 }
 .login-success-box.warning-box {
-  border-color: rgba(168, 85, 247, 0.5) !important;
-  box-shadow: 0 35px 95px -12px rgba(0, 0, 0, 0.88), 0 0 30px rgba(168, 85, 247, 0.25) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 35px 95px -12px rgba(0, 0, 0, 0.88), 0 0 30px rgba(245, 158, 11, 0.25) !important;
 }
 html.light .login-success-box.timeout-box,
 html.light .login-success-box.warning-box,
 body.light .login-success-box.timeout-box,
 body.light .login-success-box.warning-box {
-  border: 1.5px solid rgba(168, 85, 247, 0.6) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.6) !important;
 }
 html.light .login-success-box.timeout-box h3,
 html.light .login-success-box.warning-box h3,
@@ -9616,10 +9708,10 @@ html.light .pwd-req-pill.valid {
   width: 100%;
   max-width: 500px;
   background: linear-gradient(145deg, rgba(15,23,42,0.98), rgba(8,14,28,0.99));
-  border: 1px solid rgba(0, 229, 255, 0.35);
+  border: 1px solid rgba(245, 158, 11, 0.35);
   border-radius: 24px;
   padding: 28px 24px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.95), 0 0 45px rgba(0, 229, 255, 0.25);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.95), 0 0 45px rgba(245,158,11,0.25);
   color: #FFFFFF;
 }
 
@@ -10007,10 +10099,10 @@ body.light tr.trow:hover td {
 }
 
 .status-pendente {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.22) 0%, rgba(124, 58, 237, 0.12) 100%) !important;
-  border: 1px solid rgba(168, 85, 247, 0.45) !important;
-  color: #C084FC !important;
-  box-shadow: 0 0 16px rgba(168, 85, 247, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.12) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  color: #FBBF24 !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.light .status-pago,
@@ -10021,9 +10113,9 @@ body.light .status-recebido {
 }
 
 body.light .status-pendente {
-  background: #EDE9FE !important;
-  border: 1.5px solid #8B5CF6 !important;
-  color: #6D28D9 !important;
+  background: #FEF3C7 !important;
+  border: 1.5px solid #D97706 !important;
+  color: #B45309 !important;
 }
 
 /* 9. CAMPOS DE FORMULÁRIO, SELECTS E INPUTS EM VIDRO FOSCO */
@@ -10524,9 +10616,9 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
   --fin-sapphire: #38BDF8;
   --fin-sapphire-soft: rgba(56, 189, 248, 0.14);
   --fin-sapphire-border: rgba(56, 189, 248, 0.35);
-  --fin-violet: #A855F7;
-  --fin-violet-soft: rgba(0, 229, 255, 0.14);
-  --fin-violet-border: rgba(168, 85, 247, 0.35);
+  --fin-amber: #F59E0B;
+  --fin-amber-soft: rgba(245, 158, 11, 0.14);
+  --fin-amber-border: rgba(245, 158, 11, 0.35);
   --fin-card-bg: linear-gradient(165deg, rgba(13, 20, 36, 0.88) 0%, rgba(9, 14, 26, 0.96) 100%);
   --fin-card-border: 1px solid rgba(255, 255, 255, 0.08);
   --fin-card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -10631,9 +10723,9 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 }
 
 .due-bill-badge.today {
-  background: rgba(168, 85, 247, 0.18) !important;
-  color: #C084FC !important;
-  border: 1px solid rgba(168, 85, 247, 0.4) !important;
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #FBBF24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
 }
 
 .due-bill-badge.future {
@@ -10692,9 +10784,9 @@ td:last-child, th:last-child, td.val, td.amount, td.tx-val, th.th-val {
 }
 
 .status-pendente, .status-badge.pending {
-  background: rgba(168, 85, 247, 0.14) !important;
-  color: #C084FC !important;
-  border: 1px solid rgba(168, 85, 247, 0.32) !important;
+  background: rgba(245, 158, 11, 0.14) !important;
+  color: #FBBF24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.32) !important;
   padding: 3px 9px !important;
   border-radius: 999px !important;
   font-size: 11px !important;
@@ -10875,7 +10967,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     <!-- Showcase Institucional Executivo -->
     <div class="auth-showcase-panel">
       <div class="auth-showcase-badge">
-        <span style="width:7px; height:7px; border-radius:50%; background:#00E5FF; display:inline-block;"></span>
+        <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
         <span>CONTROLE FINANCEIRO PESSOAL • PRIVACIDADE TOTAL</span>
       </div>
 
@@ -10897,7 +10989,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         <div class="auth-metric-card">
           <div class="metric-card-label">Orçamento & Gastos</div>
           <div class="metric-val">Sob Controle</div>
-          <div class="metric-sub-violet">Sem sustos no fim do mês 💡</div>
+          <div class="metric-sub-amber">Sem sustos no fim do mês 💡</div>
         </div>
 
         <div class="auth-metric-card">
@@ -10909,7 +11001,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
       <div class="auth-showcase-footer">
         <span style="display:flex; align-items:center; gap:6px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:#00E5FF; display:inline-block; box-shadow:0 0 8px rgba(0,229,255,0.6);"></span>
+          <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block; box-shadow:0 0 8px rgba(245,158,11,0.6);"></span>
           Seus dados 100% seguros e confidenciais
         </span>
         <span>•</span>
@@ -10971,7 +11063,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
           <!-- Lembrar de Mim -->
           <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#94A3B8;">
             <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none;">
-              <input type="checkbox" id="rememberMe" style="accent-color:#00E5FF; width:15px; height:15px; cursor:pointer;">
+              <input type="checkbox" id="rememberMe" style="accent-color:#F59E0B; width:15px; height:15px; cursor:pointer;">
               <span>Lembrar meu acesso</span>
             </label>
           </div>
@@ -10992,7 +11084,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       <div id="registerBox" style="display:none;">
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
-          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#00E5FF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
             <span>1. Identificação do Titular (KYC)</span>
           </div>
 
@@ -11028,7 +11120,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
             <div id="regBirthFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
           </div>
 
-          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#00E5FF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
             2. Contato & Notificações
           </div>
 
@@ -11054,7 +11146,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
             </div>
           </div>
 
-          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#00E5FF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
             3. Senha de Acesso Financeiro
           </div>
 
@@ -11086,17 +11178,17 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
           <div style="margin:12px 0 6px; font-size:11px; color:#94a3b8; display:flex; flex-direction:column; gap:6px;">
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
-              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#00E5FF; cursor:pointer;">
+              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#f59e0b; cursor:pointer;">
               <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade (LGPD - Lei 13.709/18).</span>
             </label>
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
-              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#00E5FF; cursor:pointer;">
+              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#f59e0b; cursor:pointer;">
               <span>Declaro que as informações e dados cadastrais informados são verídicos e de minha titularidade.</span>
             </label>
           </div>
 
           <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px; font-size:10px; color:#cbd5e1;">
-            <span style="color:#00E5FF; font-weight:800; font-size:14px;">🔒</span>
+            <span style="color:#f59e0b; font-weight:800; font-size:14px;">🔒</span>
             <span>Ambiente seguro com criptografia de ponta a ponta e monitoramento antifraude 24/7.</span>
           </div>
 
@@ -11108,13 +11200,13 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         </form>
 
         <p style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
-          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#00E5FF; font-weight:700; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
+          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#f59e0b; font-weight:700; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
         </p>
       </div>
 
       <!-- Box 3: Recuperação de Senha com Confirmação Cadastral -->
       <div id="forgotBox" style="display:none;">
-        <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#00E5FF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+        <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
           <span>Confirmação de Dados Cadastrais (KYC)</span>
         </div>
         <p style="font-size:12.5px; color:var(--auth-text-dim); margin-bottom:16px; line-height:1.5;">
@@ -11254,8 +11346,8 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
               <rect x="4.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColLeftHeader)"/>
               <path d="M7 5.5L18.5 20.5H22.5L11 5.5H7Z" fill="url(#nexusDiagonalHeader)"/>
               <rect x="19.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColRightHeader)"/>
-              <circle cx="21.5" cy="5.5" r="2.2" fill="#00E5FF"/>
-              <circle cx="21.5" cy="5.5" r="3.2" stroke="#38BDF8" stroke-width="0.8" opacity="0.6"/>
+              <circle cx="21.5" cy="5.5" r="2.2" fill="#F59E0B"/>
+              <circle cx="21.5" cy="5.5" r="3.2" stroke="#FDE68A" stroke-width="0.8" opacity="0.6"/>
             </svg>
           </div>
           <div class="name">
@@ -11319,7 +11411,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>
         </div>
 
-        <button type="button" class="btn-primary" id="headerMirrorExitBtn" onclick="exitViewMode()" style="display:none; background:linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%) !important; color:#FFFFFF !important; font-weight:800 !important; font-size:12px !important; padding:6px 14px !important; border-radius:10px !important; border:1.5px solid #E9D5FF !important; box-shadow:0 0 16px rgba(139,92,246,0.5) !important; cursor:pointer !important; align-items:center; gap:6px;">
+        <button type="button" class="btn-primary" id="headerMirrorExitBtn" onclick="exitViewMode()" style="display:none; background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important; color:#060B18 !important; font-weight:800 !important; font-size:12px !important; padding:6px 14px !important; border-radius:10px !important; border:1.5px solid #FDE68A !important; box-shadow:0 0 16px rgba(245,158,11,0.5) !important; cursor:pointer !important; align-items:center; gap:6px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
           <span>Voltar ao Admin</span>
         </button>
@@ -11444,8 +11536,8 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
             <rect x="4.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColLeftDrawer)"/>
             <path d="M7 5.5L18.5 20.5H22.5L11 5.5H7Z" fill="url(#nexusDiagonalDrawer)"/>
             <rect x="19.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColRightDrawer)"/>
-            <circle cx="21.5" cy="5.5" r="2.2" fill="#00E5FF"/>
-            <circle cx="21.5" cy="5.5" r="3.2" stroke="#38BDF8" stroke-width="0.8" opacity="0.6"/>
+            <circle cx="21.5" cy="5.5" r="2.2" fill="#F59E0B"/>
+            <circle cx="21.5" cy="5.5" r="3.2" stroke="#FDE68A" stroke-width="0.8" opacity="0.6"/>
           </svg>
         </div>
         <div class="name">
@@ -11781,7 +11873,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 <div class="overlay" id="overlayUserAdmin" onclick="if(event.target===this) closeUserAdminModal()">
   <div class="modal" style="max-width:560px; border-radius:26px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.95) 0%, rgba(10,15,30,0.98) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(59,130,246,0.18); padding:26px;">
     <button class="close-x" id="closeUserAdminModal" type="button" onclick="closeUserAdminModal()">✕</button>
-    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.35); color:#C084FC; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
       <span>🛠️ Auditoria & Correção Cadastral</span>
     </div>
     <h2 style="font-size:20px; font-weight:900; margin:0 0 4px 0; color:var(--text);">Corrigir Cadastro do Usuário</h2>
@@ -12016,7 +12108,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       </div>
       <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
         <label style="font-size:10.5px; font-weight:800; text-transform:uppercase; color:#93C5FD; letter-spacing:0.04em;">Prioridade do Chamado:</label>
-        <select id="osAdminPrioritySelect" onchange="atualizarEstiloPrioridadeAdmin(this.value)" style="height:34px; padding:0 12px; border-radius:10px; font-size:12px; font-weight:800; background:rgba(15,23,42,0.85); border:1.5px solid rgba(168,85,247,0.5); color:#C084FC; cursor:pointer; outline:none; box-shadow:0 4px 14px rgba(0,0,0,0.4); transition:all 0.2s ease;">
+        <select id="osAdminPrioritySelect" onchange="atualizarEstiloPrioridadeAdmin(this.value)" style="height:34px; padding:0 12px; border-radius:10px; font-size:12px; font-weight:800; background:rgba(15,23,42,0.85); border:1.5px solid rgba(245,158,11,0.5); color:#FBBF24; cursor:pointer; outline:none; box-shadow:0 4px 14px rgba(0,0,0,0.4); transition:all 0.2s ease;">
           <option value="Normal">🟢 Prioridade Normal</option>
           <option value="Alta">🟡 Prioridade Alta</option>
           <option value="Urgente">🔴 Prioridade Urgente / Crítica</option>
@@ -12238,12 +12330,12 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 <!-- Modal Gerenciar Técnicos de Suporte (Administrador) -->
 <div class="overlay" id="overlayGerenciarTecnicos" onclick="if(event.target===this) closeGerenciarTecnicosModal()">
-  <div class="modal" style="max-width:700px; border-radius:26px; border: 1px solid rgba(0, 229, 255, 0.35); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 35px rgba(168,85,247,0.2); background:linear-gradient(145deg, rgba(20,28,48,0.97) 0%, rgba(10,15,30,0.99) 100%);">
+  <div class="modal" style="max-width:700px; border-radius:26px; border:1px solid rgba(245,158,11,0.35); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 35px rgba(245,158,11,0.2); background:linear-gradient(145deg, rgba(20,28,48,0.97) 0%, rgba(10,15,30,0.99) 100%);">
     <button class="close-x" type="button" onclick="closeGerenciarTecnicosModal()">✕</button>
 
     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap;">
       <div>
-        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(168,85,247,0.16); border:1px solid rgba(168,85,247,0.4); color:#C084FC; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
           <span>👷 Equipe Técnica & Especialistas</span>
         </div>
         <h2 style="font-size:20px; font-weight:900; margin:0; color:var(--text);">Credenciamento de Técnicos</h2>
@@ -12252,14 +12344,14 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         </p>
       </div>
 
-      <button type="button" onclick="toggleFormTecnico()" style="display:inline-flex; align-items:center; gap:6px; height:38px; padding:0 16px; border-radius:12px; background:linear-gradient(135deg, #A855F7, #7C3AED); color:#FFFFFF; font-size:12.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(168,85,247,0.35);">
+      <button type="button" onclick="toggleFormTecnico()" style="display:inline-flex; align-items:center; gap:6px; height:38px; padding:0 16px; border-radius:12px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:12.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(245,158,11,0.35);">
         <span>➕ Cadastrar Técnico</span>
       </button>
     </div>
 
     <!-- Formulário Cadastro / Edição de Técnico (Alternável) -->
-    <div id="boxFormTecnico" style="display:none; background:rgba(255,255,255,0.035); border:1.5px solid rgba(168,85,247,0.3); border-radius:18px; padding:18px; margin-bottom:18px;">
-      <h3 id="formTecnicoTitle" style="font-size:15px; font-weight:800; color:#C084FC; margin:0 0 12px 0;">➕ Novo Cadastro de Técnico</h3>
+    <div id="boxFormTecnico" style="display:none; background:rgba(255,255,255,0.035); border:1.5px solid rgba(245,158,11,0.3); border-radius:18px; padding:18px; margin-bottom:18px;">
+      <h3 id="formTecnicoTitle" style="font-size:15px; font-weight:800; color:#FBBF24; margin:0 0 12px 0;">➕ Novo Cadastro de Técnico</h3>
       <form id="formTecnico" onsubmit="salvarTecnico(event)">
         <input type="hidden" id="tecnicoEditId">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
@@ -12400,20 +12492,20 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 <div class="login-success-overlay" id="sessionTimeoutOverlay" role="dialog" aria-modal="true" onclick="if(event.target===this) hideSessionTimeoutPopup()">
   <div class="login-success-box timeout-box">
-    <div class="auth-ambient-glow" style="background: radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, rgba(124, 58, 237, 0.22) 55%, transparent 75%);"></div>
-    <div class="timeout-icon" style="width:80px; height:80px; margin:0 auto 18px; border-radius:50%; background:radial-gradient(circle at 35% 30%, rgba(168, 85, 247, 0.3) 0%, rgba(124, 58, 237, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%); border: 1.5px solid rgba(168, 85, 247, 0.65); display:flex; align-items:center; justify-content:center; box-shadow: 0 0 35px rgba(168, 85, 247, 0.42), inset 0 2px 4px rgba(255,255,255,0.6); backdrop-filter:blur(20px); position:relative; z-index:2;">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(168,85,247,0.85));">
+    <div class="auth-ambient-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.45) 0%, rgba(217, 119, 6, 0.22) 55%, transparent 75%);"></div>
+    <div class="timeout-icon" style="width:80px; height:80px; margin:0 auto 18px; border-radius:50%; background:radial-gradient(circle at 35% 30%, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%); border:1.5px solid rgba(245, 158, 11, 0.65); display:flex; align-items:center; justify-content:center; box-shadow:0 0 35px rgba(245, 158, 11, 0.42), inset 0 2px 4px rgba(255,255,255,0.6); backdrop-filter:blur(20px); position:relative; z-index:2;">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(245,158,11,0.85));">
         <circle cx="12" cy="12" r="10"></circle>
         <polyline points="12 6 12 12 16 14"></polyline>
       </svg>
     </div>
-    <div class="auth-modal-badge auth-badge-timeout" style="background:rgba(168, 85, 247, 0.14); border: 1px solid rgba(168, 85, 247, 0.45); color:#C084FC; box-shadow: 0 0 16px rgba(168, 85, 247, 0.2);">
-      <span class="auth-badge-dot" style="background:#A855F7; box-shadow:0 0 8px #A855F7;"></span>
+    <div class="auth-modal-badge auth-badge-timeout" style="background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.45); color:#F59E0B; box-shadow:0 0 16px rgba(245,158,11,0.2);">
+      <span class="auth-badge-dot" style="background:#F59E0B; box-shadow:0 0 8px #F59E0B;"></span>
       <span>Proteção de Segurança (5 Minutos)</span>
     </div>
     <h3 id="sessionTimeoutTitle">Sessão Expirada por Inatividade</h3>
     <p id="sessionTimeoutMsg">Você ficou 5 minutos sem movimentação. Para proteger seus dados financeiros e bancários, sua conta foi desconectada automaticamente.</p>
-    <button type="button" class="logout-btn-action" id="sessionTimeoutCloseBtn" onclick="hideSessionTimeoutPopup()" style="background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 50%, #6D28D9 100%) !important; box-shadow: 0 14px 30px -4px rgba(168,158,247,0.45), inset 0 1px 2px rgba(255,255,255,0.6) !important;">
+    <button type="button" class="logout-btn-action" id="sessionTimeoutCloseBtn" onclick="hideSessionTimeoutPopup()" style="background:linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%) !important; box-shadow:0 14px 30px -4px rgba(245,158,11,0.45), inset 0 1px 2px rgba(255,255,255,0.6) !important;">
       <span>Fazer Login Novamente</span>
       <svg class="logout-btn-arrow" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -12423,21 +12515,21 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 </div>
 
 <div class="login-success-overlay" id="inactivityWarningOverlay" role="dialog" aria-modal="true">
-  <div class="login-success-box warning-box" style="border-color: rgba(168, 85, 247, 0.45) !important;">
-    <div class="auth-ambient-glow" style="background: radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, rgba(124, 58, 237, 0.22) 55%, transparent 75%);"></div>
-    <div class="warning-icon" style="width:72px; height:72px; margin:0 auto 16px; border-radius:50%; background:radial-gradient(circle at 35% 30%, rgba(168, 85, 247, 0.3) 0%, rgba(124, 58, 237, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%); border: 1.5px solid rgba(168, 85, 247, 0.6); display:flex; align-items:center; justify-content:center; box-shadow: 0 0 30px rgba(168, 85, 247, 0.4), inset 0 2px 4px rgba(255,255,255,0.6); backdrop-filter:blur(20px); position:relative; z-index:2;">
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(168,85,247,0.85));">
+  <div class="login-success-box warning-box" style="border-color: rgba(245, 158, 11, 0.45) !important;">
+    <div class="auth-ambient-glow" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.45) 0%, rgba(217, 119, 6, 0.22) 55%, transparent 75%);"></div>
+    <div class="warning-icon" style="width:72px; height:72px; margin:0 auto 16px; border-radius:50%; background:radial-gradient(circle at 35% 30%, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%); border:1.5px solid rgba(245, 158, 11, 0.6); display:flex; align-items:center; justify-content:center; box-shadow:0 0 30px rgba(245, 158, 11, 0.4), inset 0 2px 4px rgba(255,255,255,0.6); backdrop-filter:blur(20px); position:relative; z-index:2;">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(245,158,11,0.85));">
         <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
         <line x1="12" y1="9" x2="12" y2="13"></line>
         <line x1="12" y1="17" x2="12.01" y2="17"></line>
       </svg>
     </div>
-    <div class="auth-modal-badge auth-badge-warning" style="background:rgba(168, 85, 247, 0.14); border: 1px solid rgba(168, 85, 247, 0.45); color:#C084FC; box-shadow: 0 0 16px rgba(168, 85, 247, 0.2);">
-      <span class="auth-badge-dot" style="background:#A855F7; box-shadow:0 0 8px #A855F7;"></span>
+    <div class="auth-modal-badge auth-badge-warning" style="background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.45); color:#F59E0B; box-shadow:0 0 16px rgba(245,158,11,0.2);">
+      <span class="auth-badge-dot" style="background:#F59E0B; box-shadow:0 0 8px #F59E0B;"></span>
       <span>Aviso de Inatividade</span>
     </div>
     <h3 style="font-size:20px;">Sua sessão vai expirar</h3>
-    <p style="margin-bottom:18px;">Você está sem mexer há mais de 4 minutos. Sua conta será desconectada automaticamente em <span id="inactivityCountdownSecs" style="font-weight:900; font-size:16px; color:#C084FC; text-decoration:underline;">30</span> segundos por segurança.</p>
+    <p style="margin-bottom:18px;">Você está sem mexer há mais de 4 minutos. Sua conta será desconectada automaticamente em <span id="inactivityCountdownSecs" style="font-weight:900; font-size:16px; color:#F59E0B; text-decoration:underline;">30</span> segundos por segurança.</p>
     <div style="display:flex; gap:10px; width:100%; position:relative; z-index:2;">
       <button type="button" class="logout-btn-action" onclick="window.keepSessionAlive()" style="flex:1; padding:13px 18px !important; font-size:13.5px !important; background:linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important; box-shadow:0 8px 20px -3px rgba(2,132,199,0.5) !important;">
         <span>Continuar Conectado</span>
@@ -12451,8 +12543,8 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 <div class="login-success-overlay" id="tempPasswordOverlay" role="dialog" aria-modal="true" style="display:none;">
   <div class="temp-pass-box" style="text-align:center;">
     <div class="auth-ambient-glow glow-gold"></div>
-    <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:50%; background:radial-gradient(circle, rgba(0, 229, 255, 0.25) 0%, rgba(15,23,42,0.6) 80%); border:2px solid rgba(168,85,247,0.5); display:flex; align-items:center; justify-content:center; box-shadow: 0 0 25px rgba(168,85,247,0.35);">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+    <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:50%; background:radial-gradient(circle, rgba(245,158,11,0.25) 0%, rgba(15,23,42,0.6) 80%); border:2px solid rgba(245,158,11,0.5); display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px rgba(245,158,11,0.35);">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
     </div>
     <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 12px; border-radius:999px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.35); color:#38BDF8; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
       <span>✓ Dados Confirmados com Sucesso</span>
@@ -12462,19 +12554,19 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       Seus dados foram validados. Utilize a credencial provisória abaixo para realizar seu login no sistema:
     </p>
 
-    <div class="temp-pass-display-card" style="padding:14px 18px; border-radius:16px; background:rgba(0,0,0,0.4); border: 1.5px solid rgba(168,85,247,0.45); display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
+    <div class="temp-pass-display-card" style="padding:14px 18px; border-radius:16px; background:rgba(0,0,0,0.4); border:1.5px solid rgba(245,158,11,0.45); display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
       <div style="text-align:left;">
-        <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#C084FC; display:block;">Sua Senha Temporária</span>
-        <span id="tempPasswordValServer" style="font-size:22px; font-weight:900; letter-spacing:0.06em; color:#E9D5FF; user-select:all;"></span>
+        <span style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#F59E0B; display:block;">Sua Senha Temporária</span>
+        <span id="tempPasswordValServer" style="font-size:22px; font-weight:900; letter-spacing:0.06em; color:#FBBF24; user-select:all;"></span>
       </div>
-      <button type="button" id="btnCopyTempServer" onclick="window.copyTempPasswordToClipboard()" style="padding:8px 14px; border-radius:10px; background:rgba(168,85,247,0.2); border:1px solid rgba(168,85,247,0.4); color:#C084FC; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+      <button type="button" id="btnCopyTempServer" onclick="window.copyTempPasswordToClipboard()" style="padding:8px 14px; border-radius:10px; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
         <span id="btnCopyTempTextServer">Copiar</span>
       </button>
     </div>
 
-    <div style="padding:10px 14px; border-radius:12px; background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.25); text-align:left; font-size:11px; color:#E9D5FF; margin-bottom:18px; display:flex; gap:8px;">
-      <span style="font-size:13px; color:#C084FC;">⚠️</span>
+    <div style="padding:10px 14px; border-radius:12px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); text-align:left; font-size:11px; color:#FDE68A; margin-bottom:18px; display:flex; gap:8px;">
+      <span style="font-size:13px; color:#F59E0B;">⚠️</span>
       <span><strong>Aviso Obrigatório:</strong> No primeiro login com esta senha temporária, será <strong>obrigatório</strong> definir sua nova senha definitiva dentro dos critérios de segurança.</span>
     </div>
 
@@ -12489,11 +12581,11 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
   <div class="mandatory-pass-box" style="text-align:left;">
     <div class="auth-ambient-glow glow-gold"></div>
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-      <div style="width:48px; height:48px; border-radius:14px; background:rgba(168,85,247,0.15); border:1.5px solid rgba(168,85,247,0.4); display:flex; align-items:center; justify-content:center; color:#C084FC; flex-shrink:0;">
+      <div style="width:48px; height:48px; border-radius:14px; background:rgba(245,158,11,0.15); border:1.5px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; color:#F59E0B; flex-shrink:0;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
       </div>
       <div>
-        <div style="display:inline-flex; align-items:center; gap:6px; padding:2px 10px; border-radius:999px; background:rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.35); color:#C084FC; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:2px 10px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
           <span>Primeiro Acesso • Troca Obrigatória</span>
         </div>
         <h3 style="font-size:18px; font-weight:900; margin:0; color:var(--text, #FFF);">Definir Nova Senha Pessoal</h3>
@@ -12738,14 +12830,14 @@ window.renderUsuariosLogonServer = function(users) {
     html += \`
       <div style="padding:10px 12px; border-radius:12px; background:var(--card-bg, rgba(255,255,255,0.04)); border:1px solid var(--auth-border); display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-          <div style="width:34px; height:34px; border-radius:50%; background:\${isAdmin ? 'linear-gradient(135deg, #A855F7, #6D28D9)' : 'linear-gradient(135deg, #3B82F6, #1D4ED8)'}; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <div style="width:34px; height:34px; border-radius:50%; background:\${isAdmin ? 'linear-gradient(135deg, #F59E0B, #B45309)' : 'linear-gradient(135deg, #3B82F6, #1D4ED8)'}; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
             \${initials}
           </div>
           <div style="min-width:0;">
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <strong style="font-size:13px; color:var(--auth-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${name}</strong>
               <span style="font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.1); color:var(--text, #fff); border:1px solid rgba(255,255,255,0.15);">ID #\${u.id || '-'}</span>
-              <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(168,85,247,0.2)' : 'rgba(59,130,246,0.2)'}; color:\${isAdmin ? '#C084FC' : '#60A5FA'};">\${role}</span>
+              <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(59,130,246,0.2)'}; color:\${isAdmin ? '#FBBF24' : '#60A5FA'};">\${role}</span>
               <span style="font-size:9.5px; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(0,229,255,0.15); color:#38BDF8; border:1px solid rgba(0,229,255,0.3);">\${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
             </div>
             <div style="font-size:11.5px; color:var(--auth-text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${email}</div>
@@ -12754,7 +12846,7 @@ window.renderUsuariosLogonServer = function(users) {
             </div>
           </div>
         </div>
-        <button type="button" onclick="selecionarUsuarioParaLogonServer('\${email}', '\${passSafe}', '\${name.replace(/'/g, "\\\\'")}')" style="padding:6px 10px; border-radius:8px; font-size:11px; font-weight:800; background:rgba(0, 229, 255, 0.15); color:var(--auth-gold); border:1px solid rgba(0, 229, 255, 0.4); cursor:pointer; flex-shrink:0;">
+        <button type="button" onclick="selecionarUsuarioParaLogonServer('\${email}', '\${passSafe}', '\${name.replace(/'/g, "\\\\'")}')" style="padding:6px 10px; border-radius:8px; font-size:11px; font-weight:800; background:rgba(245,158,11,0.15); color:var(--auth-gold); border:1px solid rgba(245,158,11,0.4); cursor:pointer; flex-shrink:0;">
           ⚡ Logon
         </button>
       </div>
@@ -13206,8 +13298,8 @@ window.checkMandatoryPasswordStrength = function(pwd) {
   if (hasNumber) score++;
   if (hasSpecial) score++;
 
-  if (b1) b1.style.background = score >= 1 ? (score === 1 ? '#f87171' : '#a855f7') : 'rgba(255,255,255,0.1)';
-  if (b2) b2.style.background = score >= 2 ? (score === 2 ? '#a855f7' : '#38bdf8') : 'rgba(255,255,255,0.1)';
+  if (b1) b1.style.background = score >= 1 ? (score === 1 ? '#f87171' : '#f59e0b') : 'rgba(255,255,255,0.1)';
+  if (b2) b2.style.background = score >= 2 ? (score === 2 ? '#f59e0b' : '#38bdf8') : 'rgba(255,255,255,0.1)';
   if (b3) b3.style.background = score >= 3 ? (score === 3 ? '#38bdf8' : '#00e5ff') : 'rgba(255,255,255,0.1)';
   if (b4) b4.style.background = score >= 4 ? '#00e5ff' : 'rgba(255,255,255,0.1)';
 
@@ -13217,7 +13309,7 @@ window.checkMandatoryPasswordStrength = function(pwd) {
       txt.style.color = '#f87171';
     } else if (score === 2) {
       txt.textContent = 'Média';
-      txt.style.color = '#c084fc';
+      txt.style.color = '#f59e0b';
     } else if (score === 3) {
       txt.textContent = 'Forte';
       txt.style.color = '#38bdf8';
@@ -15875,7 +15967,7 @@ function updateHeaderUser(){
   if(unameEl) unameEl.textContent = cleanName;
   if(roleEl) {
     if (isViewingOtherUser) {
-      roleEl.innerHTML = '<span style="color:#C084FC; font-weight:800;">👁️ Modo Espelho</span>';
+      roleEl.innerHTML = '<span style="color:#FBBF24; font-weight:800;">👁️ Modo Espelho</span>';
       roleEl.style.display = 'inline-flex';
     } else {
       // Em contas normais de usuário e cabeçalho limpo, oculta tag admin
@@ -16056,9 +16148,9 @@ function pageDashboard(){
     healthBadgeBorder = 'rgba(239,68,68,0.3)';
   } else if (healthScore < 75) {
     healthStatus = 'Equilibrado';
-    healthColor = '#A855F7';
-    healthBadgeBg = 'rgba(0, 229, 255, 0.14)';
-    healthBadgeBorder = 'rgba(168,85,247,0.3)';
+    healthColor = '#F59E0B';
+    healthBadgeBg = 'rgba(245,158,11,0.14)';
+    healthBadgeBorder = 'rgba(245,158,11,0.3)';
   }
 
   // 4 Pilares Estratégicos de Sustentabilidade Financeira
@@ -16102,9 +16194,9 @@ function pageDashboard(){
     paceDesc = 'Atenção: consumo orçamentário avançando mais rápido que os dias do mês.';
   } else if (budgetPct > monthTimePct) {
     paceStatus = 'Ritmo Alinhado';
-    paceColor = '#A855F7';
-    paceBadgeBg = 'rgba(0, 229, 255, 0.14)';
-    paceBadgeBorder = 'rgba(168,85,247,0.3)';
+    paceColor = '#F59E0B';
+    paceBadgeBg = 'rgba(245,158,11,0.14)';
+    paceBadgeBorder = 'rgba(245,158,11,0.3)';
     paceDesc = 'Consumo nivelado com o decorrer do calendário.';
   }
 
@@ -16120,9 +16212,9 @@ function pageDashboard(){
   let greetingBadgeColor = '';
   if (h >= 5 && h < 12) {
     greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
-    greetingBadgeBg = 'linear-gradient(135deg, rgba(0, 229, 255, 0.25), rgba(168,85,247,0.1))';
-    greetingBadgeBorder = 'rgba(168,85,247,0.38)';
-    greetingBadgeColor = '#C084FC';
+    greetingBadgeBg = 'linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.1))';
+    greetingBadgeBorder = 'rgba(245,158,11,0.38)';
+    greetingBadgeColor = '#FBBF24';
   } else if (h >= 12 && h < 18) {
     greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
     greetingBadgeBg = 'linear-gradient(135deg, rgba(14,165,233,0.25), rgba(2,132,199,0.1))';
@@ -16144,7 +16236,7 @@ function pageDashboard(){
   if (pendingSummary.items.length > 0) {
     let rows = '';
     pendingSummary.items.forEach(item => {
-      rows += '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid ' + (item.statusType === 'overdue' ? 'rgba(239,68,68,0.35)' : item.statusType === 'today' ? 'rgba(168,85,247,0.35)' : 'rgba(255,255,255,0.08)') + ';">' +
+      rows += '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid ' + (item.statusType === 'overdue' ? 'rgba(239,68,68,0.35)' : item.statusType === 'today' ? 'rgba(245,158,11,0.35)' : 'rgba(255,255,255,0.08)') + ';">' +
         '<div style="display:flex; align-items:center; gap:10px; min-width:180px;">' +
           '<span class="due-bill-badge ' + item.statusType + '">' + item.statusText + '</span>' +
           '<div>' +
@@ -16162,16 +16254,16 @@ function pageDashboard(){
       '</div>';
     });
 
-    pendingSectionHtml = '<div class="dash-card" style="border-color:' + (pendingSummary.overdueCount > 0 ? 'rgba(239,68,68,0.45)' : 'rgba(168,85,247,0.35)') + ' !important; background:linear-gradient(145deg, ' + (pendingSummary.overdueCount > 0 ? 'rgba(239,68,68,0.08)' : 'rgba(168,85,247,0.06)') + ' 0%, rgba(10,15,28,0.95) 100%) !important;">' +
+    pendingSectionHtml = '<div class="dash-card" style="border-color:' + (pendingSummary.overdueCount > 0 ? 'rgba(239,68,68,0.45)' : 'rgba(245,158,11,0.35)') + ' !important; background:linear-gradient(145deg, ' + (pendingSummary.overdueCount > 0 ? 'rgba(239,68,68,0.08)' : 'rgba(245,158,11,0.06)') + ' 0%, rgba(10,15,28,0.95) 100%) !important;">' +
       '<div class="dash-card-head">' +
         '<div class="dash-card-title">' +
-          '<div class="dash-card-icon" style="background:' + (pendingSummary.overdueCount > 0 ? 'rgba(239,68,68,0.2)' : 'rgba(168,85,247,0.2)') + '; border:1px solid ' + (pendingSummary.overdueCount > 0 ? 'rgba(239,68,68,0.4)' : 'rgba(168,85,247,0.4)') + '; color:' + (pendingSummary.overdueCount > 0 ? '#F87171' : '#C084FC') + ';">' +
+          '<div class="dash-card-icon" style="background:' + (pendingSummary.overdueCount > 0 ? 'rgba(239,68,68,0.2)' : 'rgba(245,158,11,0.2)') + '; border:1px solid ' + (pendingSummary.overdueCount > 0 ? 'rgba(239,68,68,0.4)' : 'rgba(245,158,11,0.4)') + '; color:' + (pendingSummary.overdueCount > 0 ? '#F87171' : '#FBBF24') + ';">' +
             '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
           '</div>' +
           '<div>' +
             '<div style="font-size:15px; font-weight:800; color:#FFFFFF;">Radar de Contas a Pagar (' + pendingSummary.items.length + ')</div>' +
             '<div style="font-size:11px; color:var(--text-dim); margin-top:2px;">' +
-              'Total a quitar: <strong style="color:' + (pendingSummary.overdueCount > 0 ? '#F87171' : '#C084FC') + ';">' + fmt(pendingSummary.totalValue) + '</strong>' +
+              'Total a quitar: <strong style="color:' + (pendingSummary.overdueCount > 0 ? '#F87171' : '#FBBF24') + ';">' + fmt(pendingSummary.totalValue) + '</strong>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -16270,10 +16362,10 @@ function pageDashboard(){
           '<span style="font-size:11px; font-weight:700; color:' + (stats.usagePct >= 85 ? '#F87171' : '#38BDF8') + ';">' + stats.usagePct + '% uso</span>' +
         '</div>' +
         '<div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:2.5px; overflow:hidden;">' +
-          '<div style="width:' + Math.max(stats.usagePct, 0) + '%; height:100%; background:' + (stats.usagePct >= 90 ? '#F87171' : stats.usagePct >= 70 ? '#A855F7' : '#00E5FF') + '; border-radius:2.5px; transition:width 0.4s ease;"></div>' +
+          '<div style="width:' + Math.max(stats.usagePct, 0) + '%; height:100%; background:' + (stats.usagePct >= 90 ? '#F87171' : stats.usagePct >= 70 ? '#F59E0B' : '#00E5FF') + '; border-radius:2.5px; transition:width 0.4s ease;"></div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-dim);">' +
-          '<span>Fatura: <strong style="color:' + (stats.spentTotal > 0 ? '#C084FC' : 'var(--text-dim)') + ';">' + fmt(stats.spentTotal) + '</strong></span>' +
+          '<span>Fatura: <strong style="color:' + (stats.spentTotal > 0 ? '#FBBF24' : 'var(--text-dim)') + ';">' + fmt(stats.spentTotal) + '</strong></span>' +
           '<span>Disp: <strong style="color:#00E5FF;">' + fmt(stats.availableLimit) + '</strong></span>' +
         '</div>' +
       '</div>';
@@ -16313,10 +16405,10 @@ function pageDashboard(){
       '</div>' +
       '<div style="font-size:11.5px; color:var(--text-dim); display:flex; justify-content:space-between; margin-top:2px;">' +
         '<span>Maior Categoria: <strong style="color:var(--text);">' + topCatName + '</strong></span>' +
-        '<strong style="color:#C084FC;">' + topCatPct + '% do total</strong>' +
+        '<strong style="color:#FBBF24;">' + topCatPct + '% do total</strong>' +
       '</div>' +
       '<div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:2.5px; overflow:hidden;">' +
-        '<div style="width:' + topCatPct + '%; height:100%; background:#C084FC; border-radius:2.5px;"></div>' +
+        '<div style="width:' + topCatPct + '%; height:100%; background:#FBBF24; border-radius:2.5px;"></div>' +
       '</div>' +
     '</div>' +
 
@@ -16332,11 +16424,11 @@ function pageDashboard(){
         '<span class="kpi-tag ' + (cardSummary.usagePctGeral >= 85 ? 'kpi-tag-danger' : 'kpi-tag-cyan') + '">' + cardSummary.usagePctGeral + '% Uso</span>' +
       '</div>' +
       '<div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-top:2px;">' +
-        '<span>Fatura: <strong style="color:#C084FC; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.spentTotalGeral) + '</strong></span>' +
+        '<span>Fatura: <strong style="color:#FBBF24; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.spentTotalGeral) + '</strong></span>' +
         '<span>Disponível: <strong style="color:#00E5FF; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.availableLimitGeral) + '</strong></span>' +
       '</div>' +
       '<div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:2.5px; overflow:hidden;">' +
-        '<div style="width:' + Math.min(100, cardSummary.usagePctGeral) + '%; height:100%; background:' + (cardSummary.usagePctGeral >= 85 ? '#F87171' : cardSummary.usagePctGeral >= 60 ? '#A855F7' : '#00E5FF') + '; border-radius:2.5px;"></div>' +
+        '<div style="width:' + Math.min(100, cardSummary.usagePctGeral) + '%; height:100%; background:' + (cardSummary.usagePctGeral >= 85 ? '#F87171' : cardSummary.usagePctGeral >= 60 ? '#F59E0B' : '#00E5FF') + '; border-radius:2.5px;"></div>' +
       '</div>' +
     '</div>' +
 
@@ -16509,17 +16601,17 @@ function pageDashboard(){
       <div class="kpi kpi-card">
         <div class="row1">
           <span>Cartões de Crédito</span>
-          <span class="ic" style="background:linear-gradient(135deg, rgba(168,85,247,0.18), rgba(124,58,237,0.06)); border:1px solid rgba(168,85,247,0.3); color:#C084FC;">
+          <span class="ic" style="background:linear-gradient(135deg, rgba(245,158,11,0.18), rgba(217,119,6,0.06)); border:1px solid rgba(245,158,11,0.3); color:#FBBF24;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/></svg>
           </span>
         </div>
-        <div class="val" data-anim-val="\${cardSummary.spentTotalGeral}" style="color:\${cardSummary.spentTotalGeral > 0 ? '#C084FC' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${fmt(cardSummary.spentTotalGeral)}</div>
+        <div class="val" data-anim-val="\${cardSummary.spentTotalGeral}" style="color:\${cardSummary.spentTotalGeral > 0 ? '#FBBF24' : 'var(--text-dim)'}; font-variant-numeric:tabular-nums;">\${fmt(cardSummary.spentTotalGeral)}</div>
         <div class="kpi-mini-bar">
-          <div class="kpi-mini-fill" style="width:\${Math.max(5, Math.min(100, cardSummary.usagePctGeral))}%; background:linear-gradient(90deg, #A855F7, #C084FC);"></div>
+          <div class="kpi-mini-fill" style="width:\${Math.max(5, Math.min(100, cardSummary.usagePctGeral))}%; background:linear-gradient(90deg, #F59E0B, #FBBF24);"></div>
         </div>
         <div class="sub">
           <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
-            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#A855F7;"></span>
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#F59E0B;"></span>
             <span>Disp: \${fmt(cardSummary.availableLimitGeral)}</span>
           </span>
           <span class="kpi-tag \${cardSummary.usagePctGeral >= 85 ? 'kpi-tag-danger' : 'kpi-tag-cyan'}">\${cardSummary.usagePctGeral}% Uso</span>
@@ -16695,28 +16787,28 @@ function pageDashboard(){
             <div class="dash-pillar-item">
               <div class="dash-pillar-head">
                 <span style="color:var(--text-dim); font-weight:600;">Poupança</span>
-                <strong style="color:\${pilarPoupanca >= 20 ? '#00E5FF' : pilarPoupanca >= 10 ? '#A855F7' : '#F87171'};">\${pilarPoupanca}%</strong>
+                <strong style="color:\${pilarPoupanca >= 20 ? '#00E5FF' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};">\${pilarPoupanca}%</strong>
               </div>
               <div class="dash-pillar-bar">
-                <div class="dash-pillar-fill" style="width:\${Math.min(100, pilarPoupanca)}%; background:\${pilarPoupanca >= 20 ? '#00E5FF' : pilarPoupanca >= 10 ? '#A855F7' : '#F87171'};"></div>
+                <div class="dash-pillar-fill" style="width:\${Math.min(100, pilarPoupanca)}%; background:\${pilarPoupanca >= 20 ? '#00E5FF' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};"></div>
               </div>
             </div>
             <div class="dash-pillar-item">
               <div class="dash-pillar-head">
                 <span style="color:var(--text-dim); font-weight:600;">Comprometido</span>
-                <strong style="color:\${pilarComprometimento <= 60 ? '#00E5FF' : pilarComprometimento <= 80 ? '#A855F7' : '#F87171'};">\${pilarComprometimento}%</strong>
+                <strong style="color:\${pilarComprometimento <= 60 ? '#00E5FF' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};">\${pilarComprometimento}%</strong>
               </div>
               <div class="dash-pillar-bar">
-                <div class="dash-pillar-fill" style="width:\${pilarComprometimento}%; background:\${pilarComprometimento <= 60 ? '#00E5FF' : pilarComprometimento <= 80 ? '#A855F7' : '#F87171'};"></div>
+                <div class="dash-pillar-fill" style="width:\${pilarComprometimento}%; background:\${pilarComprometimento <= 60 ? '#00E5FF' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};"></div>
               </div>
             </div>
             <div class="dash-pillar-item">
               <div class="dash-pillar-head">
                 <span style="color:var(--text-dim); font-weight:600;">Uso Cartão</span>
-                <strong style="color:\${pilarCartao <= 50 ? '#00E5FF' : pilarCartao <= 80 ? '#A855F7' : '#F87171'};">\${pilarCartao}%</strong>
+                <strong style="color:\${pilarCartao <= 50 ? '#00E5FF' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};">\${pilarCartao}%</strong>
               </div>
               <div class="dash-pillar-bar">
-                <div class="dash-pillar-fill" style="width:\${pilarCartao}%; background:\${pilarCartao <= 50 ? '#00E5FF' : pilarCartao <= 80 ? '#A855F7' : '#F87171'};"></div>
+                <div class="dash-pillar-fill" style="width:\${pilarCartao}%; background:\${pilarCartao <= 50 ? '#00E5FF' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};"></div>
               </div>
             </div>
             <div class="dash-pillar-item">
@@ -16800,12 +16892,12 @@ function pageDashboard(){
               <canvas id="chartCartoesWheel"></canvas>
               <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">
                 <span style="font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">Uso Global</span>
-                <b style="font-size:18px; font-weight:900; color:\${cardSummary.usagePctGeral >= 85 ? '#F87171' : '#C084FC'}; line-height:1; margin-top:1px;">\${cardSummary.usagePctGeral}%</b>
+                <b style="font-size:18px; font-weight:900; color:\${cardSummary.usagePctGeral >= 85 ? '#F87171' : '#FBBF24'}; line-height:1; margin-top:1px;">\${cardSummary.usagePctGeral}%</b>
               </div>
             </div>
 
             <div style="display:flex; justify-content:space-between; font-size:11.5px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); margin-bottom:10px;">
-              <span>Fatura: <strong style="color:#C084FC;">\${fmt(cardSummary.spentTotalGeral)}</strong></span>
+              <span>Fatura: <strong style="color:#FBBF24;">\${fmt(cardSummary.spentTotalGeral)}</strong></span>
               <span>Disp: <strong style="color:#00E5FF;">\${fmt(cardSummary.availableLimitGeral)}</strong></span>
             </div>
 
@@ -16956,7 +17048,7 @@ function transactionsTable(list, showActions){
           <td class="tx-desc">
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <span>\${t.desc}</span>
-              \${t.type === 'out' && method ? \`<span class="pill" style="padding:1.5px 6px; font-size:10px; font-weight:700; border-radius:5px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.16)' : 'rgba(168,85,247,0.16)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#C084FC'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.35)' : 'rgba(168,85,247,0.35)'};">\${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}</span>\` : ''}
+              \${t.type === 'out' && method ? \`<span class="pill" style="padding:1.5px 6px; font-size:10px; font-weight:700; border-radius:5px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.16)' : 'rgba(245,158,11,0.16)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.35)' : 'rgba(245,158,11,0.35)'};">\${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}</span>\` : ''}
             </div>
           </td>
           <td><span class="pill cat-pill" style="background:\${catColor(t.cat)}18; color:\${catColor(t.cat)}; border:1px solid \${catColor(t.cat)}35">\${catIcon(t.cat)} \${t.cat}</span></td>
@@ -17122,7 +17214,7 @@ function pageContas(){
       </div>
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
         <div class="row1" style="color:var(--text-dim); font-size:12px; font-weight:600;">Fatura do Mês (\${periodLabel()})</div>
-        <div class="val" style="font-size:22px; font-weight:800; color:var(--violet); margin-top:4px;">\${fmt(summary.spentPeriodGeral)}</div>
+        <div class="val" style="font-size:22px; font-weight:800; color:var(--orange); margin-top:4px;">\${fmt(summary.spentPeriodGeral)}</div>
         <div class="sub" style="font-size:11px; color:var(--text-faint); margin-top:2px;">Gastos no mês selecionado</div>
       </div>
       <div class="kpi" style="background:rgba(255,255,255,0.03); padding:14px; border-radius:14px; border:1px solid var(--card-border);">
@@ -17139,10 +17231,10 @@ function pageContas(){
     <div style="margin-top:14px;">
       <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-dim); margin-bottom:6px;">
         <span>Comprometimento global do limite de crédito</span>
-        <span style="font-weight:700; color:\${summary.usagePctGeral>=90?'var(--red)':summary.usagePctGeral>=70?'var(--violet)':'var(--green)'};">\${summary.usagePctGeral}% comprometido</span>
+        <span style="font-weight:700; color:\${summary.usagePctGeral>=90?'var(--red)':summary.usagePctGeral>=70?'var(--orange)':'var(--green)'};">\${summary.usagePctGeral}% comprometido</span>
       </div>
       <div class="bar-split" style="height:8px; background:var(--card-border); border-radius:6px; overflow:hidden;">
-        <div class="g" style="width:\${summary.usagePctGeral}%; height:100%; background:\${summary.usagePctGeral>=90?'var(--red)':summary.usagePctGeral>=70?'var(--violet)':'var(--green)'}; border-radius:6px; transition:width .3s ease;"></div>
+        <div class="g" style="width:\${summary.usagePctGeral}%; height:100%; background:\${summary.usagePctGeral>=90?'var(--red)':summary.usagePctGeral>=70?'var(--orange)':'var(--green)'}; border-radius:6px; transition:width .3s ease;"></div>
       </div>
     </div>
   </div>
@@ -17195,7 +17287,7 @@ function pageContas(){
               <div class="acc-subgrid">
                 <div class="acc-subgrid-col">
                   <span class="acc-subgrid-label">Fatura do Mês</span>
-                  <span class="acc-subgrid-val" style="color:var(--violet);">\${fmt(stats.spentTotal)}</span>
+                  <span class="acc-subgrid-val" style="color:var(--orange);">\${fmt(stats.spentTotal)}</span>
                 </div>
                 <div class="acc-subgrid-col" style="text-align:right;">
                   <span class="acc-subgrid-label">Limite Total</span>
@@ -17204,11 +17296,11 @@ function pageContas(){
               </div>
               <div style="margin-top:12px;">
                 <div class="bar-split" style="height:7px; background:rgba(0,0,0,0.08); border-radius:5px; overflow:hidden; border:1px solid rgba(255,255,255,0.06);">
-                  <div class="g" style="width:\${stats.usagePct}%; height:100%; background:\${stats.usagePct >= 90 ? 'linear-gradient(90deg, #EF4444, #DC2626)' : stats.usagePct >= 70 ? 'linear-gradient(90deg, #A855F7, #7C3AED)' : 'linear-gradient(90deg, #0284C7, #00E5FF)'}; border-radius:5px; transition:width .4s ease;"></div>
+                  <div class="g" style="width:\${stats.usagePct}%; height:100%; background:\${stats.usagePct >= 90 ? 'linear-gradient(90deg, #EF4444, #DC2626)' : stats.usagePct >= 70 ? 'linear-gradient(90deg, #F59E0B, #D97706)' : 'linear-gradient(90deg, #0284C7, #00E5FF)'}; border-radius:5px; transition:width .4s ease;"></div>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; margin-top:5px;">
                   <span style="color:var(--text-faint); font-weight:600;">Uso do Cartão</span>
-                  <span style="font-weight:800; color:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--violet)' : 'var(--green)'};">\${stats.usagePct}% utilizado</span>
+                  <span style="font-weight:800; color:\${stats.usagePct >= 90 ? 'var(--red)' : stats.usagePct >= 70 ? 'var(--orange)' : 'var(--green)'};">\${stats.usagePct}% utilizado</span>
                 </div>
               </div>
             \` : \`
@@ -17267,7 +17359,7 @@ function pageOrcamentos(){
   </div>
   <div class="cat-cards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;">
     \${list.length ? list.map(b => {
-      const color = b.pct >= 100 ? 'var(--red)' : b.pct >= 80 ? 'var(--violet)' : 'var(--green)';
+      const color = b.pct >= 100 ? 'var(--red)' : b.pct >= 80 ? 'var(--orange)' : 'var(--green)';
       const remaining = b.limit - b.spent;
       const isOver = remaining < 0;
       return \`
@@ -17280,7 +17372,7 @@ function pageOrcamentos(){
               </span>
               <div style="min-width:0;">
                 <h4 style="font-size:15px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${b.category}</h4>
-                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${b.pct>=100?'rgba(239,68,68,0.14)':b.pct>=80?'rgba(0, 229, 255, 0.14)':'rgba(0,229,255,0.14)'}; color:\${color}; font-weight:700; border:1px solid \${b.pct>=100?'rgba(239,68,68,0.3)':b.pct>=80?'rgba(168,85,247,0.3)':'rgba(0,229,255,0.3)'};">
+                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${b.pct>=100?'rgba(239,68,68,0.14)':b.pct>=80?'rgba(245,158,11,0.14)':'rgba(0,229,255,0.14)'}; color:\${color}; font-weight:700; border:1px solid \${b.pct>=100?'rgba(239,68,68,0.3)':b.pct>=80?'rgba(245,158,11,0.3)':'rgba(0,229,255,0.3)'};">
                   \${b.pct>=100 ? '🚨 Excedido' : b.pct>=80 ? '⚠️ Alerta' : '✓ Normal'} (\${b.pct}%)
                 </span>
               </div>
@@ -17646,11 +17738,11 @@ function pageRecorrentes(){
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <span style="font-weight:700;">\${r.desc}</span>
                   \${method ? \`
-                    <span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.18)' : 'rgba(168,85,247,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#C084FC'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.4)' : 'rgba(168,85,247,0.4)'};">
+                    <span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.18)' : 'rgba(245,158,11,0.18)'}; color:\${method === 'Cartão de Crédito' ? '#C084FC' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(168,85,247,0.4)' : 'rgba(245,158,11,0.4)'};">
                       \${method === 'Cartão de Crédito' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>Cartão de Crédito' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>Boleto'}
                     </span>
                   \` : ''}
-                  \${isFixed ? \`<span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${isFullyPaid ? 'rgba(0,229,255,0.14)' : 'rgba(0, 229, 255, 0.14)'}; color:\${isFullyPaid ? 'var(--brand-bright)' : '#C084FC'}; border:1px solid \${isFullyPaid ? 'rgba(0,229,255,0.25)' : 'rgba(0, 229, 255, 0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓ Concluído' : paidWordPlural}</span>\` : ''}
+                  \${isFixed ? \`<span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${isFullyPaid ? 'rgba(0,229,255,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--brand-bright)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(0,229,255,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓ Concluído' : paidWordPlural}</span>\` : ''}
                 </div>
                 \${isFixed ? \`
                   <details style="font-size:10.5px; margin-top:4px;">
@@ -17677,9 +17769,9 @@ function pageRecorrentes(){
                           const isSelectedPeriod = (!isAllDates && curM === m && curY === y);
 
                           items.push(
-                            \`<div style="padding:4px 8px; border-radius:6px; background:\${isSelectedPeriod ? 'rgba(59,130,246,0.18)' : (isPaid ? 'rgba(0,229,255,0.12)' : 'rgba(0, 229, 255, 0.10)')}; border:1px solid \${isSelectedPeriod ? 'var(--blue)' : (isPaid ? 'rgba(0,229,255,0.25)' : 'rgba(0, 229, 255, 0.25)')}; display:flex; justify-content:space-between; align-items:center; gap:4px;">\` +
+                            \`<div style="padding:4px 8px; border-radius:6px; background:\${isSelectedPeriod ? 'rgba(59,130,246,0.18)' : (isPaid ? 'rgba(0,229,255,0.12)' : 'rgba(245,158,11,0.10)')}; border:1px solid \${isSelectedPeriod ? 'var(--blue)' : (isPaid ? 'rgba(0,229,255,0.25)' : 'rgba(245,158,11,0.25)')}; display:flex; justify-content:space-between; align-items:center; gap:4px;">\` +
                               \`<span style="font-size:10px;">\${k}ª: <strong style="color:var(--text);">\${mName}/\${y}</strong></span>\` +
-                              (targetTx ? \`<button data-togglestatus="\${targetTx.id}" title="Clique para alternar status" style="border:none; cursor:pointer; background:transparent; font-weight:800; font-size:9.5px; color:\${isPaid ? 'var(--green)' : '#C084FC'}; padding:2px 4px; border-radius:4px;">\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</button>\` : \`<span style="font-weight:700; font-size:9.5px; color:#C084FC;">⏳ Pendente</span>\`) +
+                              (targetTx ? \`<button data-togglestatus="\${targetTx.id}" title="Clique para alternar status" style="border:none; cursor:pointer; background:transparent; font-weight:800; font-size:9.5px; color:\${isPaid ? 'var(--green)' : '#F59E0B'}; padding:2px 4px; border-radius:4px;">\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</button>\` : \`<span style="font-weight:700; font-size:9.5px; color:#F59E0B;">⏳ Pendente</span>\`) +
                             \`</div>\`
                           );
                         }
@@ -17692,7 +17784,7 @@ function pageRecorrentes(){
             </td>
             <td><span class="pill cat-pill" style="background:\${catColor(r.cat)}18; color:\${catColor(r.cat)}; border:1px solid \${catColor(r.cat)}35;">\${catIcon(r.cat)} \${r.cat}</span></td>
             <td><span class="pill acc-pill">\${getAccountIcon(r.acc)} \${r.acc}</span></td>
-            <td><span class="pill" style="background:rgba(0, 229, 255, 0.14); color:var(--violet); font-weight:700;">Dia \${r.day}</span></td>
+            <td><span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-weight:700;">Dia \${r.day}</span></td>
             <td>
               \${isFixed ? \`
                 <div style="display:flex; flex-direction:column; gap:2px;">
@@ -17712,7 +17804,7 @@ function pageRecorrentes(){
                 monthTx ? \`
                   <div style="display:flex; flex-direction:column; gap:4px;">
                     \${monthTx.installment ? \`<span style="font-size:10px; font-weight:700; color:var(--text-dim);">\${monthTx.installment}</span>\` : ''}
-                    <button data-togglestatus="\${monthTx.id}" title="Clique para alternar o status deste mês" class="pill" style="cursor:pointer; border:1px solid \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(0,229,255,0.3)' : 'rgba(168,85,247,0.3)'}; background:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(0,229,255,0.14)' : 'rgba(0, 229, 255, 0.14)'}; color:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'var(--brand-bright)' : '#C084FC'}; font-weight:800; font-size:11px; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; width:fit-content;">
+                    <button data-togglestatus="\${monthTx.id}" title="Clique para alternar o status deste mês" class="pill" style="cursor:pointer; border:1px solid \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(0,229,255,0.3)' : 'rgba(245,158,11,0.3)'}; background:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(0,229,255,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'var(--brand-bright)' : '#F59E0B'}; font-weight:800; font-size:11px; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; width:fit-content;">
                       \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? ('✓ ' + (r.type === 'in' ? 'Recebido' : 'Pago')) : '⏳ Pendente'}
                     </button>
                   </div>
@@ -17722,7 +17814,7 @@ function pageRecorrentes(){
               ) : \`
                 <div style="display:flex; flex-direction:column; gap:2px;">
                   <span class="pill" style="background:rgba(0,229,255,0.12); color:var(--brand-bright); font-size:10.5px; font-weight:700;">✓ \${paidCount} \${paidWordPlural}</span>
-                  \${remainingToPay > 0 ? \`<span style="font-size:10px; color:#C084FC; font-weight:600;">⏳ \${remainingToPay} a \${isIncome ? 'receber' : 'pagar'}</span>\` : ''}
+                  \${remainingToPay > 0 ? \`<span style="font-size:10px; color:#F59E0B; font-weight:600;">⏳ \${remainingToPay} a \${isIncome ? 'receber' : 'pagar'}</span>\` : ''}
                 </div>
               \`}
             </td>
@@ -17746,7 +17838,7 @@ function pageRecorrentes(){
                   <span class="pill" style="background:rgba(0,229,255,0.12); color:var(--brand-bright); font-size:11px; font-weight:700;">
                     ✓ \${paidCount} \${paidCount === 1 ? paidWord : paidWordPlural}
                   </span>
-                  \${pendingCount > 0 ? \`<span style="font-size:10px; color:#C084FC; font-weight:600;">\${pendingCount} pendente\${pendingCount === 1 ? '' : 's'}</span>\` : ''}
+                  \${pendingCount > 0 ? \`<span style="font-size:10px; color:#F59E0B; font-weight:600;">\${pendingCount} pendente\${pendingCount === 1 ? '' : 's'}</span>\` : ''}
                 </div>
               \`}
             </td>
@@ -17859,13 +17951,13 @@ function getAttachmentCoverHtml(a, t){
   } else if (nameSearch.includes('inter')) {
     bName = 'Banco Inter';
     bSub = 'Fatura / Extrato Conta';
-    bBg = 'linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%)';
+    bBg = 'linear-gradient(135deg, #381005 0%, #ea580c 100%)';
     accentColor = '#ffedd5';
-    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#4f46e5; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">inter</div>\`;
+    logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#f97316; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">inter</div>\`;
   } else if (nameSearch.includes('itau') || nameSearch.includes('itaú')) {
     bName = 'Itaú Unibanco';
     bSub = 'Fatura Cartão / Comprovante';
-    bBg = 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)';
+    bBg = 'linear-gradient(135deg, #381005 0%, #c2410c 100%)';
     accentColor = '#fed7aa';
     logoBadge = \`<div style="width:42px; height:40px; border-radius:10px; background:#ec5c00; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">Itaú</div>\`;
   } else if (nameSearch.includes('bradesco')) {
@@ -17884,8 +17976,8 @@ function getAttachmentCoverHtml(a, t){
     bName = 'Banco do Brasil';
     bSub = 'Comprovante / Extrato';
     bBg = 'linear-gradient(135deg, #101c42 0%, #1d4ed8 100%)';
-    accentColor = '#5eead4';
-    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:#1e3a8a; border:1px solid #60a5fa; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#93c5fd; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">BB</div>\`;
+    accentColor = '#fef08a';
+    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:#1e3a8a; border:1px solid #facc15; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#facc15; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">BB</div>\`;
   } else if (nameSearch.includes('caixa') || nameSearch.includes('cef')) {
     bName = 'CAIXA Econômica';
     bSub = 'Comprovante de Pagamento';
@@ -17895,9 +17987,9 @@ function getAttachmentCoverHtml(a, t){
   } else if (nameSearch.includes('enel') || nameSearch.includes('cemig') || nameSearch.includes('copel') || nameSearch.includes('cpfl') || nameSearch.includes('light') || nameSearch.includes('luz') || nameSearch.includes('energia')) {
     bName = 'Energia Elétrica';
     bSub = 'Conta de Luz';
-    bBg = 'linear-gradient(135deg, #042f2e 0%, #0d9488 100%)';
-    accentColor = '#99f6e4';
-    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(20,184,166,0.25); border:1px solid rgba(20,184,166,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; color:#5eead4;">⚡</div>\`;
+    bBg = 'linear-gradient(135deg, #361502 0%, #ca8a04 100%)';
+    accentColor = '#fef08a';
+    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(234,179,8,0.25); border:1px solid rgba(234,179,8,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; color:#fef08a;">⚡</div>\`;
   } else if (nameSearch.includes('sabesp') || nameSearch.includes('sanepar') || nameSearch.includes('copasa') || nameSearch.includes('agua') || nameSearch.includes('água')) {
     bName = 'Água / Saneamento';
     bSub = 'Conta de Água';
@@ -18385,16 +18477,16 @@ function pageFuncoes(){
   <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:20px;">
     <div>
       <h1 style="display:flex; align-items:center; gap:10px; font-size:22px; font-weight:800; color:var(--text);">
-        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, rgba(168,85,247,0.25), rgba(124,58,237,0.15)); border:1px solid rgba(168,85,247,0.4); color:#C084FC; font-size:18px;">🛡️</span>
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, rgba(232,176,75,0.25), rgba(201,134,42,0.15)); border:1px solid rgba(232,176,75,0.4); color:#fbbf24; font-size:18px;">🛡️</span>
         Central de Funções & Permissões
       </h1>
       <p style="font-size:13.5px; color:var(--text-dim); margin:4px 0 0 0;">Gerencie papéis de usuários, atribuição rápida de funções, matriz de controle de acessos e permissões do sistema em tempo real.</p>
     </div>
     <div style="display:flex; gap:10px; align-items:center;">
-      <span class="tag" style="background:rgba(168,85,247,0.15); color:#C084FC; border:1px solid rgba(168,85,247,0.3); font-weight:700; padding:6px 14px; border-radius:20px; font-size:12px;">
+      <span class="tag" style="background:rgba(232,176,75,0.15); color:#fbbf24; border:1px solid rgba(232,176,75,0.3); font-weight:700; padding:6px 14px; border-radius:20px; font-size:12px;">
         👑 Modo Administrador (Acesso Irrestrito)
       </span>
-      <button onclick="exportPermissionsMatrixCSV()" class="btn-ghost" style="height:36px; padding:0 14px; border-radius:10px; border-color:rgba(168,85,247,0.3); color:#C084FC; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+      <button onclick="exportPermissionsMatrixCSV()" class="btn-ghost" style="height:36px; padding:0 14px; border-radius:10px; border-color:rgba(232,176,75,0.3); color:#fbbf24; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>Exportar CSV</span>
       </button>
@@ -18404,8 +18496,8 @@ function pageFuncoes(){
   <!-- Cards de Resumo Executivo das Funções 4K -->
   <div class="kpis" style="margin-bottom:20px;">
     <div class="kpi" style="border:1px solid rgba(232,176,75,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95)); shadow:0 10px 30px rgba(0,0,0,0.5);">
-      <div class="kpi-head"><span class="lbl">Sua Função Atual</span><span class="ic" style="background:rgba(168,85,247,0.2); color:#C084FC;">👑</span></div>
-      <div class="val" style="color:#C084FC; font-size:22px;">\${userRole}</div>
+      <div class="kpi-head"><span class="lbl">Sua Função Atual</span><span class="ic" style="background:rgba(232,176,75,0.2); color:#fbbf24;">👑</span></div>
+      <div class="val" style="color:#fbbf24; font-size:22px;">\${userRole}</div>
       <div class="sub" style="color:var(--text-dim); margin-top:4px;">Nível de Privilégio: Acesso Total (Nível 1)</div>
     </div>
     <div class="kpi" style="border:1px solid rgba(0,229,255,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95));">
@@ -18437,7 +18529,7 @@ function pageFuncoes(){
             <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">Usuário</th>
             <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">E-mail</th>
             <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase;">Função Atual</th>
-            <th style="padding:14px 16px; color:#C084FC; font-size:12px; text-transform:uppercase;">Alterar Função do Usuário</th>
+            <th style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase;">Alterar Função do Usuário</th>
           </tr>
         </thead>
         <tbody>
@@ -18452,7 +18544,7 @@ function pageFuncoes(){
                   </div>
                   <div>
                     <span>\${u.name}</span>
-                    \${isMe ? ' <span style="font-size:10px; color:#C084FC; background:rgba(168,85,247,0.15); padding:1px 6px; border-radius:6px; font-weight:700;">Você</span>' : ''}
+                    \${isMe ? ' <span style="font-size:10px; color:#fbbf24; background:rgba(232,176,75,0.15); padding:1px 6px; border-radius:6px; font-weight:700;">Você</span>' : ''}
                   </div>
                 </div>
               </td>
@@ -18461,7 +18553,7 @@ function pageFuncoes(){
                 <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:12px; padding:4px 10px;">\${u.role}</span>
               </td>
               <td style="padding:14px 16px;">
-                <select onchange="changeUserRoleFromFuncoes('\${u.email}', this.value)" style="height:36px; padding:0 12px; border-radius:10px; background:var(--input-bg, rgba(0,0,0,0.4)); border:1px solid rgba(168,85,247,0.3); color:#C084FC; font-weight:700; font-size:13px; cursor:pointer;">
+                <select onchange="changeUserRoleFromFuncoes('\${u.email}', this.value)" style="height:36px; padding:0 12px; border-radius:10px; background:var(--input-bg, rgba(0,0,0,0.4)); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; font-weight:700; font-size:13px; cursor:pointer;">
                   <option value="Administrador" \${u.role==='Administrador'?'selected':''}>👑 Administrador (Acesso Irrestrito)</option>
                   <option value="Gerente Financeiro" \${u.role==='Gerente Financeiro'?'selected':''}>💼 Gerente Financeiro</option>
                   <option value="Usuário" \${u.role==='Usuário'?'selected':''}>👤 Usuário / Operador Padrão</option>
@@ -18484,7 +18576,7 @@ function pageFuncoes(){
       </div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
         <button onclick="setFuncoesRoleFilter('all', this)" class="funcoes-filter-btn active" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; cursor:pointer;">Todas</button>
-        <button onclick="setFuncoesRoleFilter('admin', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(168,85,247,0.12); border:1px solid rgba(168,85,247,0.3); color:#C084FC; cursor:pointer;">👑 Administrador</button>
+        <button onclick="setFuncoesRoleFilter('admin', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(232,176,75,0.12); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; cursor:pointer;">👑 Administrador</button>
         <button onclick="setFuncoesRoleFilter('gerente', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(2,132,199,0.12); border:1px solid rgba(2,132,199,0.3); color:#38BDF8; cursor:pointer;">💼 Gerente</button>
         <button onclick="setFuncoesRoleFilter('usuario', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); color:#60a5fa; cursor:pointer;">👤 Usuário</button>
         <button onclick="setFuncoesRoleFilter('auditor', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.3); color:#c084fc; cursor:pointer;">🔍 Auditor</button>
@@ -18496,7 +18588,7 @@ function pageFuncoes(){
         <thead>
           <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.25);">
             <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Módulo do Sistema</th>
-            <th class="perm-matrix-th" data-perm-role="admin" style="padding:14px 16px; color:#C084FC; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👑 Administrador</th>
+            <th class="perm-matrix-th" data-perm-role="admin" style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👑 Administrador</th>
             <th class="perm-matrix-th" data-perm-role="gerente" style="padding:14px 16px; color:#38BDF8; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">💼 Gerente Financeiro</th>
             <th class="perm-matrix-th" data-perm-role="usuario" style="padding:14px 16px; color:#60a5fa; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👤 Usuário / Operador</th>
             <th class="perm-matrix-th" data-perm-role="auditor" style="padding:14px 16px; color:#c084fc; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">🔍 Auditor (Leitura)</th>
@@ -18571,10 +18663,10 @@ function pageFuncoes(){
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
-            <span style="width:10px; height:10px; border-radius:50%; background:#A855F7; box-shadow:0 0 10px #A855F7;"></span>
+            <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b; box-shadow:0 0 10px #f59e0b;"></span>
             <div><strong style="font-size:13.5px; color:var(--text);">Auditoria beacon & API Logs</strong><div style="font-size:11px; color:var(--text-faint);">Rastreamento de ações do sistema</div></div>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#C084FC; background:rgba(168,85,247,0.15); padding:3px 8px; border-radius:6px;">Gravando</span>
+          <span style="font-size:11px; font-weight:700; color:#f59e0b; background:rgba(245,158,11,0.15); padding:3px 8px; border-radius:6px;">Gravando</span>
         </div>
       </div>
     </div>
@@ -18586,7 +18678,7 @@ function pageFuncoes(){
         <button class="btn-primary" onclick="if(typeof recalculateAllBalances==='function') recalculateAllBalances(); showLoginSuccessPopup('Saldos e funções reprocessados com sucesso!');" style="display:flex; align-items:center; justify-content:center; gap:8px;">
           <span>🔄</span> Recalcular Saldos & Projeções
         </button>
-        <button class="btn-ghost" onclick="syncUsersWithServer().then(()=>showLoginSuccessPopup('Funções de usuários atualizadas com o servidor!'));" style="display:flex; align-items:center; justify-content:center; gap:8px; border-color:rgba(168,85,247,0.3); color:#C084FC;">
+        <button class="btn-ghost" onclick="syncUsersWithServer().then(()=>showLoginSuccessPopup('Funções de usuários atualizadas com o servidor!'));" style="display:flex; align-items:center; justify-content:center; gap:8px; border-color:rgba(232,176,75,0.3); color:#fbbf24;">
           <span>⚡</span> Sincronizar Tabela de Funções & Usuários
         </button>
       </div>
@@ -18706,9 +18798,9 @@ function pageUsuarios(){
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
       <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
         <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Administradores</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(168,85,247,0.25), rgba(124,58,237,0.15)); border:1.5px solid rgba(192,132,252,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(168,85,247,0.3); font-size:16px;">👑</div>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(245,158,11,0.3); font-size:16px;">👑</div>
       </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#C084FC; margin-bottom:2px; letter-spacing:-0.02em;">\${adminCount}</div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px; letter-spacing:-0.02em;">\${adminCount}</div>
       <div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Gestão do sistema</div>
     </div>
 
@@ -18830,7 +18922,7 @@ function pageUsuarios(){
                 <span>Excluir</span>
               </button>
             \` : \`
-              <span class="user-stat-chip" style="background:rgba(168,85,247,0.15); color:#C084FC; border:1px solid rgba(168,85,247,0.3); font-weight:800; font-size:12px; padding:6px 14px; border-radius:12px; height:38px;">⭐ Sua Conta (Atual)</span>
+              <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:800; font-size:12px; padding:6px 14px; border-radius:12px; height:38px;">⭐ Sua Conta (Atual)</span>
             \`}
             <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Corrigir dados do cadastro" style="background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(59,130,246,0.35);">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -18920,7 +19012,7 @@ function renderLogsTable(list) {
       actionBadgeClass = 'var(--green)';
       actionBg = 'var(--green-soft)';
     } else if (actLower.includes('ediç') || actLower.includes('alter')) {
-      actionBadgeClass = 'var(--violet)';
+      actionBadgeClass = 'var(--orange)';
       actionBg = 'rgba(232,176,75,0.15)';
     } else if (actLower.includes('excl') || actLower.includes('remov') || actLower.includes('desativ')) {
       actionBadgeClass = 'var(--red)';
@@ -19025,8 +19117,8 @@ function pageLogs(){
       <div class="sub" style="font-size:11px;">Novos dados</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Edições</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--violet);">✎</span></div>
-      <div class="val" style="font-size:22px; color:var(--violet); margin-bottom:2px;">\${countEdicao}</div>
+      <div class="row1" style="margin-bottom:6px;"><span>Edições</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(232,176,75,0.14); color:var(--orange);">✎</span></div>
+      <div class="val" style="font-size:22px; color:var(--orange); margin-bottom:2px;">\${countEdicao}</div>
       <div class="sub" style="font-size:11px;">Registros alterados</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
@@ -19281,7 +19373,7 @@ window.executarConsultaOrdens = async function(e) {
         \`;
 
         list.forEach(o => {
-          let statusBg = 'rgba(168,85,247,0.15)', statusColor = '#C084FC', statusBorder = 'rgba(168,85,247,0.35)', statusLabel = '⏳ Pendente';
+          let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
           const st = (o.status || '').toLowerCase();
           if (st.includes('anda')) {
             statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Em Andamento';
@@ -19501,7 +19593,7 @@ function renderOrdensTable(list) {
   html += '</tr></thead><tbody>';
 
   list.forEach(o => {
-    let statusBg = 'rgba(168,85,247,0.15)', statusColor = '#C084FC', statusBorder = 'rgba(168,85,247,0.35)', statusLabel = '⏳ Pendente';
+    let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
     const st = (o.status || '').toLowerCase();
     if (st.includes('anda')) {
       statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Em Andamento';
@@ -19516,7 +19608,7 @@ function renderOrdensTable(list) {
     if (prio.includes('urg')) {
       prioBg = 'rgba(239,68,68,0.18)'; prioColor = '#F87171'; prioBorder = 'rgba(239,68,68,0.4)';
     } else if (prio.includes('alt')) {
-      prioBg = 'rgba(168,85,247,0.18)'; prioColor = '#C084FC'; prioBorder = 'rgba(168,85,247,0.4)';
+      prioBg = 'rgba(245,158,11,0.18)'; prioColor = '#FBBF24'; prioBorder = 'rgba(245,158,11,0.4)';
     }
 
     const dateFormatted = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Hoje';
@@ -19560,7 +19652,7 @@ function renderOrdensTable(list) {
       html += '<div style="font-weight:800; color:#38BDF8; font-size:12.5px; display:inline-flex; align-items:center; gap:4px;">👷 ' + escapeOsHtml(o.tecnico_responsavel) + '</div>';
       html += '<div style="font-size:10.5px; color:var(--text-dim); margin-top:2px;">' + (o.assumido_em ? ('Assumido ' + new Date(o.assumido_em).toLocaleDateString('pt-BR')) : 'Em atendimento') + '</div>';
     } else {
-      html += '<button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; padding:5px 12px; border-radius:8px; background:rgba(168,85,247,0.15); color:#C084FC; border:1px solid rgba(168,85,247,0.4); font-size:11.5px; font-weight:800; cursor:pointer;" title="Assumir esta Ordem de Serviço">';
+      html += '<button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; padding:5px 12px; border-radius:8px; background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.4); font-size:11.5px; font-weight:800; cursor:pointer;" title="Assumir esta Ordem de Serviço">';
       html += '<span>⚡ Assumir Chamado</span></button>';
     }
     html += '</td>';
@@ -19659,7 +19751,7 @@ function pageOrdens(){
     } else {
       userHtml += '<div style="display:flex; flex-direction:column; gap:14px;">';
       myOrdens.forEach(o => {
-        let statusBg = 'rgba(168,85,247,0.15)', statusColor = '#C084FC', statusBorder = 'rgba(168,85,247,0.35)', statusLabel = '⏳ Pendente em Triagem';
+        let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente em Triagem';
         const st = (o.status || '').toLowerCase();
         if (st.includes('anda')) {
           statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Sendo Atendido';
@@ -19725,9 +19817,9 @@ function pageOrdens(){
   h += '<button onclick="openSuporteNovaOrdemModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #0284C7, #00E5FF); color:#060B18; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(0,229,255,0.5); transition:all 0.25s ease;">';
   h += '<span>➕ Registrar O.S.</span></button>';
   
-  h += '<button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, rgba(168,85,247,0.22), rgba(124,58,237,0.12)); border:1.5px solid rgba(168,85,247,0.5); color:#E9D5FF; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 8px 24px -4px rgba(0, 229, 255, 0.25);">';
+  h += '<button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.12)); border:1.5px solid rgba(245,158,11,0.5); color:#FDE68A; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 8px 24px -4px rgba(245,158,11,0.25);">';
   h += '<span>👷 Técnicos & Especialistas</span>';
-  h += '<span id="tecnicosBadgeCount" style="padding:2px 7px; border-radius:999px; background:#A855F7; color:#FFFFFF; font-size:11px; font-weight:900;">' + ((systemTecnicos || []).filter(t => t.active !== false).length) + '</span>';
+  h += '<span id="tecnicosBadgeCount" style="padding:2px 7px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:11px; font-weight:900;">' + ((systemTecnicos || []).filter(t => t.active !== false).length) + '</span>';
   h += '</button>';
 
   h += '<button onclick="imprimirFilaOrdens()" style="display:inline-flex; align-items:center; gap:6px; height:42px; padding:0 16px; border-radius:14px; background:rgba(56,189,248,0.12); border:1.5px solid rgba(56,189,248,0.35); color:#38BDF8; font-size:13px; font-weight:800; cursor:pointer;" title="Imprimir Relatório da Fila de O.S.">';
@@ -19747,12 +19839,12 @@ function pageOrdens(){
   h += '<div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Todas as solicitações</div>';
   h += '</div>';
 
-  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid ' + (countPendentes > 0 ? 'rgba(168,85,247,0.5)' : 'rgba(255,255,255,0.13)') + '; box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;pendente&quot;)">';
+  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid ' + (countPendentes > 0 ? 'rgba(245,158,11,0.5)' : 'rgba(255,255,255,0.13)') + '; box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;pendente&quot;)">';
   h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
   h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Pendentes</span>';
-  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(168,85,247,0.25), rgba(124,58,237,0.15)); border:1.5px solid rgba(192,132,252,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⏳</div>';
+  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⏳</div>';
   h += '</div>';
-  h += '<div class="val" style="font-size:28px; font-weight:900; color:#C084FC; margin-bottom:2px;">' + countPendentes + '</div>';
+  h += '<div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px;">' + countPendentes + '</div>';
   h += '<div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Aguardando atendimento</div>';
   h += '</div>';
 
@@ -19785,7 +19877,7 @@ function pageOrdens(){
 
   h += '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid var(--card-border); background:' + (currentTab==='todas'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(255,255,255,0.05)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">Todas (' + countTotal + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(168,85,247,0.4); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #A855F7, #7C3AED)':'rgba(168,85,247,0.12)') + '; color:' + (currentTab==='pendente'?'#FFFFFF':'#C084FC') + ';">⏳ Pendentes (' + countPendentes + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.4); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.12)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">⏳ Pendentes (' + countPendentes + ')</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(59,130,246,0.4); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(59,130,246,0.12)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#60A5FA') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(0,229,255,0.4); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #0284C7, #00E5FF)':'rgba(0,229,255,0.12)') + '; color:' + (currentTab==='concluido'?'#060B18':'#00E5FF') + ';">✅ Concluídas (' + countConcluidas + ')</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='cancelado'?'active':'') + '" data-tab="cancelado" onclick="setOsStatusTab(&quot;cancelado&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.4); background:' + (currentTab==='cancelado'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.12)') + '; color:' + (currentTab==='cancelado'?'#FFFFFF':'#F87171') + ';">❌ Canceladas (' + countCanceladas + ')</button>';
@@ -19938,9 +20030,9 @@ window.atualizarEstiloPrioridadeAdmin = function(val) {
     prioSelect.style.color = '#F87171';
     prioSelect.style.background = 'rgba(239,68,68,0.14)';
   } else if (p.includes('alt')) {
-    prioSelect.style.borderColor = 'rgba(168, 85, 247, 0.7)';
-    prioSelect.style.color = '#C084FC';
-    prioSelect.style.background = 'rgba(0, 229, 255, 0.14)';
+    prioSelect.style.borderColor = 'rgba(245,158,11,0.7)';
+    prioSelect.style.color = '#FBBF24';
+    prioSelect.style.background = 'rgba(245,158,11,0.14)';
   } else {
     prioSelect.style.borderColor = 'rgba(0,229,255,0.7)';
     prioSelect.style.color = '#00E5FF';
@@ -20210,7 +20302,7 @@ window.imprimirFilaOrdens = function() {
 
   doc += '<div class="stats">';
   doc += '<div class="stat-card"><span>Total de O.S.:</span><strong>' + total + '</strong></div>';
-  doc += '<div class="stat-card"><span>Pendentes:</span><strong style="color:#C084FC;">' + pend + '</strong></div>';
+  doc += '<div class="stat-card"><span>Pendentes:</span><strong style="color:#D97706;">' + pend + '</strong></div>';
   doc += '<div class="stat-card"><span>Em Atendimento:</span><strong style="color:#2563EB;">' + andam + '</strong></div>';
   doc += '<div class="stat-card"><span>Concluídas:</span><strong style="color:#0284C7;">' + conc + '</strong></div>';
   doc += '</div>';
@@ -20401,7 +20493,7 @@ function renderListaTecnicosModal() {
         <div style="font-size:32px; margin-bottom:6px;">👷</div>
         <h4 style="font-size:15px; color:var(--text); margin:0 0 4px 0; font-weight:800;">Nenhum técnico cadastrado</h4>
         <p style="font-size:12px; margin:0 0 12px 0;">Cadastre os membros da equipe de suporte técnico para distribuir e atender as Ordens de Serviço.</p>
-        <button type="button" onclick="toggleFormTecnico(true)" style="padding:7px 16px; border-radius:10px; background:linear-gradient(135deg, #A855F7, #7C3AED); color:#FFFFFF; font-weight:900; font-size:12px; border:none; cursor:pointer;">
+        <button type="button" onclick="toggleFormTecnico(true)" style="padding:7px 16px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-weight:900; font-size:12px; border:none; cursor:pointer;">
           ➕ Cadastrar Primeiro Técnico
         </button>
       </div>
@@ -20416,7 +20508,7 @@ function renderListaTecnicosModal() {
     html += \`
       <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); gap:12px; flex-wrap:wrap;">
         <div style="display:flex; align-items:center; gap:12px;">
-          <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(168,85,247,0.25), rgba(124,58,237,0.12)); border:1.5px solid rgba(168,85,247,0.4); display:flex; align-items:center; justify-content:center; color:#C084FC; font-weight:900; font-size:13px; flex-shrink:0;">
+          <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.12)); border:1.5px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; color:#FBBF24; font-weight:900; font-size:13px; flex-shrink:0;">
             \${inits}
           </div>
           <div>
@@ -20804,7 +20896,7 @@ function drawDashboardCharts(){
       const hasLimit = (spent + available) > 0;
 
       const cardData = hasLimit ? [spent, available] : [1, 0];
-      const cardColor = cardSummary.usagePctGeral >= 85 ? '#EF4444' : cardSummary.usagePctGeral >= 60 ? '#A855F7' : '#C084FC';
+      const cardColor = cardSummary.usagePctGeral >= 85 ? '#EF4444' : cardSummary.usagePctGeral >= 60 ? '#F59E0B' : '#FBBF24';
       const bgColors = hasLimit 
         ? [cardColor, isLightMode ? 'rgba(0, 229, 255, 0.45)' : 'rgba(0, 229, 255, 0.25)'] 
         : [isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.1)'];
@@ -20862,7 +20954,7 @@ function drawDashboardCharts(){
         : despesas;
       const remaining = Math.max(0, totalLimit - totalSpent);
       const budgetPct = totalLimit > 0 ? Math.round((totalSpent / totalLimit) * 100) : 0;
-      const budgetColor = budgetPct >= 100 ? '#EF4444' : budgetPct >= 80 ? '#A855F7' : '#00E5FF';
+      const budgetColor = budgetPct >= 100 ? '#EF4444' : budgetPct >= 80 ? '#F59E0B' : '#00E5FF';
 
       const bData = (totalSpent > 0 || remaining > 0) ? [totalSpent, remaining] : [1, 0];
       const bColors = (totalSpent > 0 || remaining > 0) 
@@ -21060,7 +21152,7 @@ function updateCardLimitHint() {
     if ((accName || '').toLowerCase().includes('cartão') || (accName || '').toLowerCase().includes('cartao')) {
       hintEl.style.display = 'flex';
       hintEl.style.background = 'rgba(232,176,75,0.15)';
-      hintEl.style.color = 'var(--violet)';
+      hintEl.style.color = 'var(--orange)';
       hintEl.innerHTML = '💳 <span><strong>Cartão de Crédito:</strong> Lançamento como despesa de cartão de crédito</span>';
     } else {
       hintEl.style.display = 'none';
@@ -21864,9 +21956,9 @@ function handleRecDescInput() {
       badgeEl.style.display = 'inline-flex';
       badgeEl.style.alignItems = 'center';
       badgeEl.style.gap = '4px';
-      badgeEl.style.background = 'rgba(168, 85, 247, 0.18)';
-      badgeEl.style.color = '#C084FC';
-      badgeEl.style.border = '1px solid rgba(168, 85, 247, 0.4)';
+      badgeEl.style.background = 'rgba(245, 158, 11, 0.18)';
+      badgeEl.style.color = '#FBBF24';
+      badgeEl.style.border = '1px solid rgba(245, 158, 11, 0.4)';
       badgeEl.innerHTML = '📄 Identificado: Boleto';
     } else {
       badgeEl.style.display = 'none';
@@ -22082,7 +22174,7 @@ function openLaunchRecurringModal(id){
           '<div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">' +
             '<span class="pill cat-pill" style="background:' + catColor(r.cat) + '18; color:' + catColor(r.cat) + '; border:1px solid ' + catColor(r.cat) + '35; font-size:10.5px; padding:2px 8px;">' + catIcon(r.cat) + ' ' + r.cat + '</span>' +
             '<span class="pill acc-pill" style="font-size:10.5px; padding:2px 8px;">' + getAccountIcon(r.acc) + ' ' + r.acc + '</span>' +
-            '<span class="pill" style="background:rgba(0, 229, 255, 0.14); color:var(--violet); font-size:10.5px; padding:2px 8px; font-weight:700;">Dia ' + r.day + '</span>' +
+            '<span class="pill" style="background:rgba(245,158,11,0.14); color:var(--orange); font-size:10.5px; padding:2px 8px; font-weight:700;">Dia ' + r.day + '</span>' +
           '</div>' +
         '</div>' +
         '<div style="text-align:right;">' +
@@ -22096,7 +22188,7 @@ function openLaunchRecurringModal(id){
           '<span style="font-weight:800; color:' + (isCompleted ? 'var(--green)' : 'var(--text-dim)') + ';">' + appliedM + '/' + totalM + ' lançados (' + pct + '%)</span>' +
         '</div>' +
         '<div class="rec-progress-bar" style="height:7px;">' +
-          '<div class="rec-progress-fill" style="width:' + pct + '%; background:' + (isCompleted ? 'var(--green)' : (pct > 50 ? 'var(--blue)' : 'var(--violet)')) + ';"></div>' +
+          '<div class="rec-progress-fill" style="width:' + pct + '%; background:' + (isCompleted ? 'var(--green)' : (pct > 50 ? 'var(--blue)' : 'var(--orange)')) + ';"></div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-dim); margin-top:5px;">' +
           '<span>Início: ' + (MONTHS[startM-1] || startM) + '/' + startY + '</span>' +
@@ -23809,7 +23901,7 @@ function applyDisplayScale(scaleVal) {
     var dpr = window.devicePixelRatio ? window.devicePixelRatio.toFixed(1) + 'x' : '1.0x';
     var orientation = (w >= h) ? 'Paisagem ↔️' : 'Retrato ↕️';
     var devIcon = devType === 'mobile' ? '📱' : devType === 'tablet' ? '📱↔️' : devType === 'laptop' ? '💻' : (devType === '4k' || devType === 'ultrawide') ? '🖥️✨' : '🖥️';
-    var autoText = scaleVal === 'auto' ? '<span style="color:var(--green,#06D6A0); font-weight:700;">(Ajuste Inteligente ao Dispositivo)</span>' : '<span style="color:var(--violet,#A855F7); font-weight:700;">(Definição Manual)</span>';
+    var autoText = scaleVal === 'auto' ? '<span style="color:var(--green,#06D6A0); font-weight:700;">(Ajuste Inteligente ao Dispositivo)</span>' : '<span style="color:var(--amber,#F59E0B); font-weight:700;">(Definição Manual)</span>';
     devInfoEl.innerHTML = '<div style="display:flex; align-items:center; gap:12px; padding:14px; border-radius:14px; background:linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(0,229,255,0.08) 100%); border:1px solid rgba(59,130,246,0.25); font-size:13px; margin-top:8px;">' +
       '<span style="font-size:26px; line-height:1; flex-shrink:0;">' + devIcon + '</span>' +
       '<div style="flex:1; min-width:0;">' +
@@ -24252,7 +24344,7 @@ window.applyPostLoginBg = function(theme) {
     ];
 
     const currencyTokens = ['R$', '$', '€', '₿', '▲', '+24%', '💎', '🪙', '📈', '↗', '£', '¥'];
-    const goldTones = ['#00E5FF', '#38BDF8', '#818CF8', '#A855F7'];
+    const goldTones = ['#F59E0B', '#FBBF24', '#FCD34D', '#EAB308'];
     const emeraldTones = ['#00E5FF', '#38BDF8', '#0284C7', '#7DD3FC'];
 
     // 2. Moedas Douradas e Tokens Financeiros Flutuantes
@@ -24267,9 +24359,9 @@ window.applyPostLoginBg = function(theme) {
         radius: Math.floor(Math.random() * 6) + 16,
         vy: -(Math.random() * 0.32 + 0.15),
         vx: (Math.random() - 0.5) * 0.22,
-        color: isEmerald ? '#00E5FF' : '#38BDF8',
-        borderTone: isEmerald ? 'rgba(0, 229, 255, 0.45)' : 'rgba(56, 189, 248, 0.45)',
-        bgTone: isEmerald ? 'rgba(2, 132, 199, 0.16)' : 'rgba(2, 132, 199, 0.16)',
+        color: isEmerald ? '#00E5FF' : '#FBBF24',
+        borderTone: isEmerald ? 'rgba(0, 229, 255, 0.45)' : 'rgba(245, 158, 11, 0.45)',
+        bgTone: isEmerald ? 'rgba(2, 132, 199, 0.16)' : 'rgba(217, 119, 6, 0.16)',
         alpha: Math.random() * 0.40 + 0.35,
         angle: Math.random() * Math.PI * 2,
         rotSpeed: (Math.random() - 0.5) * 0.015,
@@ -24288,9 +24380,9 @@ window.applyPostLoginBg = function(theme) {
         y: Math.random() * ((height || 800) - 120) + 60,
         text: item.text,
         type: item.type,
-        color: item.type === 'emerald' ? '#00E5FF' : '#38BDF8',
-        border: item.type === 'emerald' ? 'rgba(0, 229, 255, 0.38)' : 'rgba(56, 189, 248, 0.38)',
-        bg: item.type === 'emerald' ? 'rgba(2, 132, 199, 0.18)' : 'rgba(2, 132, 199, 0.18)',
+        color: item.type === 'emerald' ? '#00E5FF' : '#FBBF24',
+        border: item.type === 'emerald' ? 'rgba(0, 229, 255, 0.38)' : 'rgba(245, 158, 11, 0.38)',
+        bg: item.type === 'emerald' ? 'rgba(2, 132, 199, 0.18)' : 'rgba(217, 119, 6, 0.18)',
         vy: -(Math.random() * 0.24 + 0.10),
         vx: (Math.random() - 0.5) * 0.15,
         alpha: Math.random() * 0.35 + 0.40,
@@ -24310,7 +24402,7 @@ window.applyPostLoginBg = function(theme) {
         vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
         radius: Math.random() * 2.0 + 1.2,
-        color: isGreen ? '#00E5FF' : '#38BDF8',
+        color: isGreen ? '#00E5FF' : '#F59E0B',
         alpha: Math.random() * 0.45 + 0.25
       });
     }
@@ -24342,7 +24434,7 @@ window.applyPostLoginBg = function(theme) {
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
         radius: Math.random() * 1.6 + 0.6,
-        color: isGold ? '#38BDF8' : '#00E5FF',
+        color: isGold ? '#FBBF24' : '#00E5FF',
         alpha: Math.random() * 0.55 + 0.25,
         vy: -(Math.random() * 0.28 + 0.08),
         vx: (Math.random() - 0.5) * 0.18,
@@ -24423,7 +24515,7 @@ window.applyPostLoginBg = function(theme) {
         if (x === 0) ctx.moveTo(x, y2);
         else ctx.lineTo(x, y2);
       }
-      ctx.strokeStyle = isLight ? 'rgba(2, 132, 199, 0.28)' : 'rgba(0, 229, 255, 0.40)';
+      ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.28)' : 'rgba(245, 158, 11, 0.40)';
       ctx.lineWidth = 1.2;
       ctx.stroke();
       ctx.restore();
@@ -24471,7 +24563,7 @@ window.applyPostLoginBg = function(theme) {
             ctx.beginPath();
             ctx.moveTo(n1.x, n1.y);
             ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = '#00E5FF';
+            ctx.strokeStyle = '#FBBF24';
             ctx.globalAlpha = (1 - mDist / 140) * 0.35;
             ctx.lineWidth = 1;
             ctx.stroke();
@@ -24514,11 +24606,11 @@ window.applyPostLoginBg = function(theme) {
         }
         const candleColor = candle.isBullish 
           ? (isLight ? '#0284C7' : '#00E5FF') 
-          : (isLight ? '#0284C7' : '#00E5FF');
+          : (isLight ? '#D97706' : '#F59E0B');
 
         ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
         ctx.strokeStyle = candleColor;
-        ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(0, 229, 255, 0.25)');
+        ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(245, 158, 11, 0.25)');
         ctx.lineWidth = 1.2;
         ctx.beginPath();
         ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
