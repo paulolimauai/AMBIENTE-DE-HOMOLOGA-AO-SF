@@ -1705,9 +1705,9 @@ html.light.is-admin #menuOrdensBtn #osBadgeCount {
 
 
 :root{
-  color-scheme: dark;
-  --bg:#000000;
-  --sidebar:#000000;
+  color-scheme: light;
+  --bg:#FFFFFF;
+  --sidebar:#FFFFFF;
   --card:rgba(8, 8, 12, 0.94);
   --card-border:rgba(255, 255, 255, 0.12);
   --card-hover:rgba(16, 16, 22, 0.96);
@@ -1716,51 +1716,51 @@ html.light.is-admin #menuOrdensBtn #osBadgeCount {
   --text:#F8FAFC;
   --text-dim:#94A3B8;
   --text-faint:#64748B;
-  --green:#00E5FF;
-  --green-soft:rgba(0, 229, 255, 0.16);
-  --emerald:#38BDF8;
-  --emerald-soft:rgba(56, 189, 248, 0.16);
-  --primary:#00E5FF;
-  --primary-hover:#38BDF8;
+  --green:#7C3AED;
+  --green-soft:rgba(124, 58, 237, 0.12);
+  --emerald:#8B5CF6;
+  --emerald-soft:rgba(139, 92, 246, 0.12);
+  --primary:#7C3AED;
+  --primary-hover:#6D28D9;
   --red:#F43F5E;
   --red-soft:rgba(244, 63, 94, 0.16);
-  --blue:#38BDF8;
+  --blue:#6366F1;
   --purple:#818CF8;
   --orange:#F59E0B;
-  --teal:#06B6D4;
+  --teal:#8B5CF6;
   --pink:#EC4899;
-  --hover:rgba(0, 229, 255, 0.08);
-  --border-subtle:rgba(56, 189, 248, 0.16);
+  --hover:rgba(124, 58, 237, 0.08);
+  --border-subtle:rgba(124, 58, 237, 0.16);
   --radius:20px;
-  --shadow:0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px -5px rgba(0, 229, 255, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.16);
+  --shadow:0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px -5px rgba(124, 58, 237, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.16);
 }
 body.light, html.light body, html.light {
   color-scheme: light !important;
-  --bg:#F8FAFC;
+  --bg:#FFFFFF;
   --sidebar:rgba(255, 255, 255, 0.96);
   --card:rgba(255, 255, 255, 0.98);
-  --card-border:rgba(2, 132, 199, 0.22);
+  --card-border:#E2E8F0;
   --card-hover:#F1F5F9;
   --input-bg:#FFFFFF;
   --input-border:#CBD5E1;
   --text:#000000;
   --text-dim:#1E293B;
   --text-faint:#334155;
-  --primary:#0284C7;
-  --primary-hover:#0369A1;
-  --green:#0284C7;
-  --green-soft:rgba(2, 132, 199, 0.12);
-  --emerald:#0284C7;
-  --emerald-soft:rgba(2, 132, 199, 0.12);
+  --primary:#7C3AED;
+  --primary-hover:#6D28D9;
+  --green:#7C3AED;
+  --green-soft:rgba(124, 58, 237, 0.10);
+  --emerald:#8B5CF6;
+  --emerald-soft:rgba(139, 92, 246, 0.10);
   --red:#DC2626;
   --red-soft:rgba(220, 38, 38, 0.12);
-  --blue:#2563EB;
+  --blue:#6366F1;
   --purple:#6366F1;
   --orange:#D97706;
   --teal:#0D9488;
   --pink:#DB2777;
-  --hover:rgba(2, 132, 199, 0.08);
-  --border-subtle:rgba(2, 132, 199, 0.20);
+  --hover:rgba(124, 58, 237, 0.06);
+  --border-subtle:rgba(124, 58, 237, 0.16);
   --radius:20px;
   --shadow:0 12px 32px -4px rgba(15, 23, 42, 0.06), 0 4px 8px -2px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
@@ -1833,7 +1833,7 @@ body.light #persistentSystemBg,
 body.light .persistent-system-bg {
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(2, 132, 199, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(124, 58, 237, 0.08) 0%, transparent 55%),
     radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
     linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%) !important;
@@ -1870,7 +1870,7 @@ html[data-app-bg="platinum"],
 body.light, html.light {
   --postlogin-bg: #F8FAFC;
   --postlogin-gradient: 
-    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(2, 132, 199, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(124, 58, 237, 0.08) 0%, transparent 55%),
     radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
     linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%);
@@ -2078,12 +2078,12 @@ html, body {
 
 /* ==================== Tela de Auth Ultra Moderna (Visual Liquid Glass 4K) ==================== */
 .auth-container {
-  --auth-bg: #000000;
+  --auth-bg: #FFFFFF;
   --auth-gold: #F59E0B;
   --auth-gold-dark: #D97706;
-  --auth-blue: #38BDF8;
-  --auth-emerald: #00E5FF;
-  --auth-cyan: #38BDF8;
+  --auth-blue: #8B5CF6;
+  --auth-emerald: #7C3AED;
+  --auth-cyan: #A78BFA;
   --auth-card: linear-gradient(145deg, rgba(12, 14, 20, 0.92) 0%, rgba(6, 7, 12, 0.96) 35%, rgba(0, 0, 0, 0.99) 100%);
   --auth-border: rgba(255, 255, 255, 0.14);
   --auth-input-bg: rgba(10, 10, 14, 0.85);
@@ -2111,7 +2111,7 @@ html, body {
   transform: translate(-50%, -50%);
   width: 750px;
   height: 750px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(56, 189, 248, 0.05) 35%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(139, 92, 246, 0.05) 35%, transparent 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 1;
@@ -2124,7 +2124,7 @@ html, body {
 }
 
 body.light .auth-container {
-  --auth-bg: #F8FAFC;
+  --auth-bg: #FFFFFF;
   --auth-gold: #D97706;
   --auth-gold-dark: #B45309;
   --auth-card: rgba(255, 255, 255, 0.94);
@@ -2244,7 +2244,7 @@ body.light .auth-blob { opacity: 0.14; }
 .glass-shard {
   position: absolute;
   border-radius: 40px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(56, 189, 248, 0.10) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(139, 92, 246, 0.10) 100%);
   border: 1.5px solid rgba(255, 255, 255, 0.26);
   border-top: 2.5px solid rgba(255, 255, 255, 0.75);
   border-left: 2px solid rgba(255, 255, 255, 0.50);
@@ -2264,7 +2264,7 @@ body.light .auth-blob { opacity: 0.14; }
   width: 420px;
   height: 420px;
   transform: rotate(-14deg) translateZ(0);
-  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(56, 189, 248, 0.28), inset 0 2px 5px rgba(255,255,255,0.7);
+  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(139, 92, 246, 0.28), inset 0 2px 5px rgba(255,255,255,0.7);
 }
 
 .glass-shard-2 {
@@ -2273,7 +2273,7 @@ body.light .auth-blob { opacity: 0.14; }
   width: 480px;
   height: 480px;
   transform: rotate(18deg) translateZ(0);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(59, 130, 246, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(124, 58, 237, 0.08) 100%);
   box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
 }
 
@@ -2294,7 +2294,7 @@ body.light .auth-blob { opacity: 0.14; }
   height: 230px;
   border-radius: 32px;
   transform: rotate(-20deg) translateZ(0);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(59, 130, 246, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(124, 58, 237, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
 }
 
 .glass-shard-5 {
@@ -2339,7 +2339,7 @@ body.light .glass-shard {
   max-width: 446px;
   box-shadow: 
     0 35px 85px -15px rgba(0, 0, 0, 0.75),
-    0 0 50px -10px rgba(56, 189, 248, 0.18),
+    0 0 50px -10px rgba(139, 92, 246, 0.18),
     0 0 40px -10px rgba(245, 158, 11, 0.14),
     inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
     inset 0 -1.5px 2px rgba(0, 0, 0, 0.45) !important;
@@ -2378,7 +2378,7 @@ button:active, .auth-tab-btn:active, .btn-quick-admin-login:active {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(circle 420px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.20), rgba(56, 189, 248, 0.08) 40%, transparent 70%);
+  background: radial-gradient(circle 420px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.20), rgba(139, 92, 246, 0.08) 40%, transparent 70%);
   opacity: var(--card-glare-opacity, 0);
   transition: opacity 0.35s ease;
   z-index: 4;
@@ -2437,7 +2437,7 @@ body.light .auth-card-glare {
   padding: 8px 12px;
   border-radius: 12px;
   background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(56, 189, 248, 0.22);
+  border: 1px solid rgba(139, 92, 246, 0.22);
   color: #94A3B8;
   font-size: 11.5px;
   font-weight: 600;
@@ -2449,11 +2449,11 @@ body.light .auth-card-glare {
 }
 .auth-support-bar:hover {
   background: rgba(20, 30, 52, 0.85);
-  border-color: rgba(56, 189, 248, 0.45);
-  box-shadow: 0 6px 18px rgba(0, 229, 255, 0.12);
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.12);
 }
 .auth-support-bar svg {
-  color: #38BDF8;
+  color: #8B5CF6;
   flex-shrink: 0;
 }
 .auth-support-label {
@@ -2462,7 +2462,7 @@ body.light .auth-card-glare {
   white-space: nowrap;
 }
 .auth-support-link {
-  color: #38BDF8;
+  color: #8B5CF6;
   text-decoration: none;
   font-weight: 700;
   word-break: break-all;
@@ -2483,11 +2483,11 @@ html.light .auth-support-bar {
 body.light .auth-support-bar:hover,
 html.light .auth-support-bar:hover {
   background: #FFFFFF !important;
-  border-color: #0284C7 !important;
+  border-color: #7C3AED !important;
 }
 body.light .auth-support-bar svg,
 html.light .auth-support-bar svg {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
 }
 body.light .auth-support-label,
 html.light .auth-support-label {
@@ -2495,11 +2495,11 @@ html.light .auth-support-label {
 }
 body.light .auth-support-link,
 html.light .auth-support-link {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
 }
 body.light .auth-support-link:hover,
 html.light .auth-support-link:hover {
-  color: #0369A1 !important;
+  color: #6D28D9 !important;
 }
 
 .auth-grid-2col {
@@ -2588,7 +2588,7 @@ html.light .auth-support-link:hover {
   gap: 8px;
   padding: 5px 14px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(59, 130, 246, 0.12));
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(124, 58, 237, 0.12));
   border: 1px solid rgba(245, 158, 11, 0.35);
   color: #FCD34D;
   font-size: 11px;
@@ -2668,7 +2668,7 @@ html.light .auth-support-link:hover {
 .metric-sub-blue {
   font-size: 11px;
   font-weight: 700;
-  color: #38BDF8;
+  color: #8B5CF6;
   margin-top: 2px;
 }
 .auth-showcase-footer {
@@ -2723,7 +2723,7 @@ body.light .metric-sub-amber {
   font-weight: 800 !important;
 }
 body.light .metric-sub-blue {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   font-weight: 800 !important;
 }
 body.light .auth-showcase-footer,
@@ -3219,11 +3219,11 @@ body.light .auth-bottom-text a:hover {
   width: 100%;
   height: 40px;
   padding: 0 14px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.18) 0%, rgba(15, 23, 42, 0.65) 100%) !important;
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.18) 0%, rgba(15, 23, 42, 0.65) 100%) !important;
   border: 1px solid rgba(96, 165, 250, 0.30) !important;
   border-top: 1px solid rgba(191, 219, 254, 0.45) !important;
   border-radius: 12px !important;
-  color: #BFDBFE !important;
+  color: #DDD6FE !important;
   font-size: 12px !important;
   font-weight: 800 !important;
   letter-spacing: 0.02em;
@@ -3235,11 +3235,11 @@ body.light .auth-bottom-text a:hover {
   margin-top: 10px;
 }
 .btn-open-os:hover {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.30) 0%, rgba(15, 23, 42, 0.80) 100%) !important;
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.30) 0%, rgba(15, 23, 42, 0.80) 100%) !important;
   border-color: rgba(147, 197, 253, 0.55) !important;
   color: #FFFFFF !important;
   transform: translateY(-1.5px);
-  box-shadow: 0 8px 20px -2px rgba(37, 99, 235, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 8px 20px -2px rgba(109, 40, 217, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
 }
 .btn-open-os svg {
   transition: transform 0.2s ease;
@@ -3272,9 +3272,9 @@ body.light .auth-bottom-text a:hover {
   -webkit-backdrop-filter: blur(14px);
 }
 .btn-consult-os:hover {
-  background: rgba(59, 130, 246, 0.16);
+  background: rgba(124, 58, 237, 0.16);
   border-color: rgba(96, 165, 250, 0.6);
-  color: #93C5FD;
+  color: #C4B5FD;
   transform: translateY(-1px);
 }
 .btn-consult-os svg {
@@ -3312,10 +3312,10 @@ body.light .auth-bottom-text a:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 .os-tab-btn.active {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.15));
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(109, 40, 217, 0.15));
   border-color: rgba(96, 165, 250, 0.55);
   color: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
 }
 
 /* Cards de O.S. Consultada */
@@ -3339,17 +3339,17 @@ body.light .auth-bottom-text a:hover {
 body.light .btn-open-os,
 html.light .btn-open-os {
   background: linear-gradient(135deg, #F0F7FF 0%, #E0EEFE 50%, #CFE2FE 100%) !important;
-  border: 1.5px solid #93C5FD !important;
-  border-top: 1.5px solid #BFDBFE !important;
-  color: #1D4ED8 !important;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12), inset 0 1px 1px #FFFFFF !important;
+  border: 1.5px solid #C4B5FD !important;
+  border-top: 1.5px solid #DDD6FE !important;
+  color: #6D28D9 !important;
+  box-shadow: 0 4px 14px rgba(109, 40, 217, 0.12), inset 0 1px 1px #FFFFFF !important;
 }
 body.light .btn-open-os:hover,
 html.light .btn-open-os:hover {
-  background: linear-gradient(135deg, #E0EEFE 0%, #CFE2FE 50%, #BFDBFE 100%) !important;
-  border-color: #3B82F6 !important;
+  background: linear-gradient(135deg, #E0EEFE 0%, #CFE2FE 50%, #DDD6FE 100%) !important;
+  border-color: #8B5CF6 !important;
   color: #1E3A8A !important;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.22), inset 0 1px 1px #FFFFFF !important;
+  box-shadow: 0 6px 18px rgba(109, 40, 217, 0.22), inset 0 1px 1px #FFFFFF !important;
 }
 
 body.light .btn-consult-os,
@@ -3383,10 +3383,10 @@ html.light .os-tab-btn:hover {
 }
 body.light .os-tab-btn.active,
 html.light .os-tab-btn.active {
-  background: #EFF6FF !important;
-  border-color: #3B82F6 !important;
-  color: #1D4ED8 !important;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15) !important;
+  background: #F5F3FF !important;
+  border-color: #8B5CF6 !important;
+  color: #6D28D9 !important;
+  box-shadow: 0 2px 8px rgba(109, 40, 217, 0.15) !important;
 }
 
 body.light .os-consult-card,
@@ -3398,7 +3398,7 @@ html.light .os-consult-card {
 }
 body.light .os-consult-card:hover,
 html.light .os-consult-card:hover {
-  border-color: #93C5FD !important;
+  border-color: #C4B5FD !important;
   background: #F8FAFC !important;
 }
 
@@ -3406,7 +3406,7 @@ body.light #overlayNovaOrdem .modal,
 html.light #overlayNovaOrdem .modal {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15), 0 0 35px rgba(59, 130, 246, 0.08) !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15), 0 0 35px rgba(124, 58, 237, 0.08) !important;
   color: #0F172A !important;
 }
 body.light #overlayNovaOrdem h2,
@@ -3438,8 +3438,8 @@ html.light #overlayNovaOrdem input:focus,
 html.light #overlayNovaOrdem textarea:focus,
 html.light #overlayNovaOrdem select:focus {
   background: #FFFFFF !important;
-  border-color: #3B82F6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15) !important;
 }
 body.light #overlayNovaOrdem .close-x,
 html.light #overlayNovaOrdem .close-x {
@@ -3546,8 +3546,8 @@ body.light #overlayGerenciarTecnicos .close-x {
   color: #64748B !important;
 }
 body.light #osAdminAssumidoBanner {
-  background: #EFF6FF !important;
-  border-color: #93C5FD !important;
+  background: #F5F3FF !important;
+  border-color: #C4B5FD !important;
   color: #1E3A8A !important;
 }
 
@@ -3577,8 +3577,8 @@ html.light #appMain {
 .app-bg-grid{
   position:absolute; inset:0;
   background-image:
-    linear-gradient(to right, rgba(0, 229, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
   background-size:48px 48px;
   -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 85%);
   mask-image:radial-gradient(circle at 50% 50%, #000 0%, transparent 85%);
@@ -3592,7 +3592,7 @@ html.light #appMain {
 }
 .app-blob.a1{
   width:520px; height:520px;
-  background:radial-gradient(circle, rgba(0, 229, 255, 0.28) 0%, rgba(2, 132, 199, 0.10) 55%, transparent 75%);
+  background:radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, rgba(124, 58, 237, 0.10) 55%, transparent 75%);
   top:-120px; right:-80px;
   animation:wealthBlobFloat1 24s ease-in-out infinite alternate;
 }
@@ -3605,14 +3605,14 @@ html.light #appMain {
 }
 .app-blob.a3{
   width:400px; height:400px;
-  background:radial-gradient(circle, rgba(14, 165, 233, 0.24) 0%, rgba(2, 132, 199, 0.07) 55%, transparent 75%);
+  background:radial-gradient(circle, rgba(14, 165, 233, 0.24) 0%, rgba(124, 58, 237, 0.07) 55%, transparent 75%);
   top:32%; left:-100px;
   animation:wealthBlobFloat3 32s ease-in-out infinite alternate;
   animation-delay:-16s;
 }
 .app-blob.a4{
   width:440px; height:440px;
-  background:radial-gradient(circle, rgba(56, 189, 248, 0.20) 0%, rgba(0, 229, 255, 0.06) 55%, transparent 75%);
+  background:radial-gradient(circle, rgba(139, 92, 246, 0.20) 0%, rgba(124, 58, 237, 0.06) 55%, transparent 75%);
   top:65%; right:8%;
   animation:wealthBlobFloat4 26s ease-in-out infinite alternate;
   animation-delay:-12s;
@@ -3637,12 +3637,12 @@ html.light #appMain {
   50% { transform: translate3d(-40px, 30px, 0) scale(1.14); }
   100% { transform: translate3d(30px, -35px, 0) scale(0.90); }
 }
-body.light .app-bg-grid{opacity:.7; background-image: linear-gradient(to right, rgba(2, 132, 199, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(2, 132, 199, 0.06) 1px, transparent 1px);}
+body.light .app-bg-grid{opacity:.7; background-image: linear-gradient(to right, rgba(124, 58, 237, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(124, 58, 237, 0.06) 1px, transparent 1px);}
 body.light .app-bg-chart{opacity:.12;}
-body.light .app-blob.a1{opacity:.16; background:radial-gradient(circle, rgba(2, 132, 199, 0.18) 0%, transparent 70%);}
+body.light .app-blob.a1{opacity:.16; background:radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 70%);}
 body.light .app-blob.a2{opacity:.14; background:radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);}
 body.light .app-blob.a3{opacity:.14; background:radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, transparent 70%);}
-body.light .app-blob.a4{opacity:.14; background:radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, transparent 70%);}
+body.light .app-blob.a4{opacity:.14; background:radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%);}
 
 /* ==================== Cabeçalho superior (nav horizontal & drawer mobile) ==================== */
 .topheader{
@@ -3662,8 +3662,8 @@ body.light .app-blob.a4{opacity:.14; background:radial-gradient(circle, rgba(56,
 }
 body.light .topheader{
   background:rgba(255, 255, 255, 0.88) !important;
-  border-bottom:1.5px solid rgba(2, 132, 199, 0.25) !important;
-  box-shadow:0 4px 20px rgba(15, 23, 42, 0.05), inset 0 -1px 0 rgba(2, 132, 199, 0.18) !important;
+  border-bottom:1.5px solid rgba(124, 58, 237, 0.25) !important;
+  box-shadow:0 4px 20px rgba(15, 23, 42, 0.05), inset 0 -1px 0 rgba(124, 58, 237, 0.18) !important;
   backdrop-filter:blur(24px) !important;
 }
 .topheader-row{
@@ -3691,17 +3691,17 @@ body.light .topheader{
 }
 .aether-avatar-container .avatar{
   width:38px !important; height:38px !important; border-radius:50% !important;
-  background:linear-gradient(135deg, #0284C7 0%, #00E5FF 100%) !important;
+  background:linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%) !important;
   display:flex !important; align-items:center !important; justify-content:center !important;
   color:#FFFFFF !important; font-size:13px !important; font-weight:800 !important;
   border:2px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow:0 0 16px rgba(0, 229, 255, 0.45) !important;
+  box-shadow:0 0 16px rgba(124, 58, 237, 0.45) !important;
 }
 .aether-avatar-dot{
   position:absolute !important; bottom:0 !important; right:0 !important;
   width:10px !important; height:10px !important; border-radius:50% !important;
-  background:#00E5FF !important; border:2px solid #0C101C !important;
-  box-shadow:0 0 8px #00E5FF !important;
+  background:#7C3AED !important; border:2px solid #0C101C !important;
+  box-shadow:0 0 8px #7C3AED !important;
 }
 .aether-user-meta{
   display:flex !important; flex-direction:column !important; justify-content:center !important; text-align:left !important; line-height:1.2 !important;
@@ -3712,7 +3712,7 @@ body.light .topheader{
 .aether-user-sub{
   font-size:11px !important; font-weight:500 !important; color:#94A3B8 !important; letter-spacing:0.01em !important; white-space:nowrap !important; display:flex !important; align-items:center !important; gap:4px !important;
 }
-.aether-user-sub svg{ width:10px; height:10px; color:#00E5FF; }
+.aether-user-sub svg{ width:10px; height:10px; color:#7C3AED; }
 
 .aether-header-right{
   display:flex !important; align-items:center !important; gap:10px !important; margin-left:auto !important;
@@ -3727,9 +3727,9 @@ body.light .topheader{
 .aether-credit-pill .credit-val{ color:#FFFFFF !important; font-weight:700 !important; letter-spacing:0.02em !important; }
 .aether-credit-pill .credit-badge{
   padding:2px 7px !important; border-radius:999px !important;
-  background:linear-gradient(135deg, #0284C7 0%, #00E5FF 100%) !important;
+  background:linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%) !important;
   color:#060B18 !important; font-size:10px !important; font-weight:900 !important;
-  letter-spacing:0.04em !important; box-shadow:0 0 10px rgba(0, 229, 255, 0.5) !important;
+  letter-spacing:0.04em !important; box-shadow:0 0 10px rgba(124, 58, 237, 0.5) !important;
 }
 .aether-settings-btn{
   display:inline-flex !important; align-items:center !important; gap:6px !important;
@@ -3739,8 +3739,8 @@ body.light .topheader{
   cursor:pointer !important; transition:all 0.2s ease !important; user-select:none !important;
 }
 .aether-settings-btn:hover{
-  background:rgba(255, 255, 255, 0.1) !important; border-color:rgba(0, 229, 255, 0.5) !important;
-  color:#FFFFFF !important; box-shadow:0 0 14px rgba(0, 229, 255, 0.3) !important; transform:translateY(-1px) !important;
+  background:rgba(255, 255, 255, 0.1) !important; border-color:rgba(124, 58, 237, 0.5) !important;
+  color:#FFFFFF !important; box-shadow:0 0 14px rgba(124, 58, 237, 0.3) !important; transform:translateY(-1px) !important;
 }
 
 /* Modo Claro: Perfil de Usuário & Botão Minha Conta (Aether Top Header) */
@@ -3760,7 +3760,7 @@ html.light .aether-user-sub {
 }
 body.light .aether-user-sub svg,
 html.light .aether-user-sub svg {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
 }
 body.light .aether-credit-pill,
 html.light .aether-credit-pill {
@@ -3793,9 +3793,9 @@ html.light .aether-settings-btn:hover,
 body.light .header-user-badge:hover,
 html.light .header-user-badge:hover {
   background: #F1F5F9 !important;
-  border-color: #2563EB !important;
-  color: #2563EB !important;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.18) !important;
+  border-color: #7C3AED !important;
+  color: #7C3AED !important;
+  box-shadow: 0 4px 14px rgba(109, 40, 217, 0.18) !important;
 }
 body.light .aether-settings-btn svg,
 html.light .aether-settings-btn svg {
@@ -3803,7 +3803,7 @@ html.light .aether-settings-btn svg {
 }
 body.light .aether-settings-btn:hover svg,
 html.light .aether-settings-btn:hover svg {
-  stroke: #2563EB !important;
+  stroke: #7C3AED !important;
 }
 .header-user-badge {
   display: inline-flex !important;
@@ -3812,7 +3812,7 @@ html.light .aether-settings-btn:hover svg {
   padding: 5px 14px 5px 6px !important;
   border-radius: 999px !important;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(14, 165, 233, 0.10) 100%) !important;
-  border: 1px solid rgba(56, 189, 248, 0.28) !important;
+  border: 1px solid rgba(139, 92, 246, 0.28) !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
   backdrop-filter: blur(16px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
@@ -3822,7 +3822,7 @@ html.light .aether-settings-btn:hover svg {
 }
 .header-user-badge:hover {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(14, 165, 233, 0.18) 100%) !important;
-  border-color: rgba(56, 189, 248, 0.55) !important;
+  border-color: rgba(139, 92, 246, 0.55) !important;
   transform: translateY(-1.5px) !important;
   box-shadow: 0 6px 20px rgba(14, 165, 233, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
 }
@@ -3832,7 +3832,7 @@ html.light .aether-settings-btn:hover svg {
   font-size: 11.5px !important;
   font-weight: 850 !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 60%, #0369A1 100%) !important;
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 60%, #6D28D9 100%) !important;
   color: #FFFFFF !important;
   display: flex !important;
   align-items: center !important;
@@ -3843,7 +3843,7 @@ html.light .aether-settings-btn:hover svg {
 }
 .header-user-badge .header-user-name {
   font-weight: 700 !important;
-  color: #E0F2FE !important;
+  color: #F5F3FF !important;
   font-size: 13.5px !important;
   max-width: 220px !important;
   white-space: nowrap !important;
@@ -3866,8 +3866,8 @@ html.light .header-user-badge .header-user-name {
   backdrop-filter:blur(12px); user-select:none;
 }
 .header-live-time .time-dot {
-  width:7px; height:7px; border-radius:50%; background:#00E5FF;
-  box-shadow:0 0 8px #00E5FF; animation:pulseDot 2s infinite ease-in-out;
+  width:7px; height:7px; border-radius:50%; background:#7C3AED;
+  box-shadow:0 0 8px #7C3AED; animation:pulseDot 2s infinite ease-in-out;
 }
 body.light .header-live-time {
   background:#F1F5F9 !important; border-color:#CBD5E1 !important; color:#475569 !important;
@@ -3918,7 +3918,7 @@ body.light .header-live-time {
   background:rgba(255,255,255,0.06); color:#F8FAFC; border-color:rgba(255,255,255,0.12);
 }
 .mobile-drawer-nav button.active {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(59, 130, 246, 0.22) 50%, rgba(0, 229, 255, 0.14) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(124, 58, 237, 0.22) 50%, rgba(124, 58, 237, 0.14) 100%) !important;
   color: #FFFFFF !important; font-weight: 800;
   border: 1px solid rgba(255, 255, 255, 0.28) !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
@@ -3929,10 +3929,10 @@ body.light .header-live-time {
   display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s ease;
 }
 .mobile-drawer-nav button.active .ic {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(59, 130, 246, 0.35) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(124, 58, 237, 0.35) 100%) !important;
   color: #FFFFFF !important;
   border: 1px solid rgba(255, 255, 255, 0.45) !important;
-  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
 }
 .mobile-drawer-nav button .ic svg { width:18px; height:18px; display:block; stroke-width:2.2px; }
 .brand {
@@ -3951,8 +3951,8 @@ body.light .header-live-time {
 }
 .brand:hover {
   background: rgba(255, 255, 255, 0.07) !important;
-  border-color: rgba(56, 189, 248, 0.35) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(56, 189, 248, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
+  border-color: rgba(139, 92, 246, 0.35) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(139, 92, 246, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
 }
 .brand .logo {
   width: 38px !important;
@@ -3965,13 +3965,13 @@ body.light .header-live-time {
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25), inset 0 1px 1.5px rgba(255, 255, 255, 0.45), inset 0 -1px 2px rgba(0, 0, 0, 0.4) !important;
-  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25), inset 0 1px 1.5px rgba(255, 255, 255, 0.45), inset 0 -1px 2px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(139, 92, 246, 0.45) !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 .brand:hover .logo {
-  border-color: rgba(56, 189, 248, 0.70) !important;
-  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.40), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(139, 92, 246, 0.70) !important;
+  box-shadow: 0 6px 18px rgba(139, 92, 246, 0.40), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6) !important;
 }
 .brand .name {
   display: flex !important;
@@ -3993,7 +3993,7 @@ body.light .header-live-time {
   font-weight: 800 !important;
   letter-spacing: 0.16em !important;
   text-transform: uppercase !important;
-  color: #38BDF8 !important;
+  color: #8B5CF6 !important;
   margin-top: 2px !important;
 }
 @media (max-width: 900px) {
@@ -4028,7 +4028,7 @@ body.light .header-live-time {
   border-color: rgba(96, 165, 250, 0.5) !important;
   color: #FFFFFF !important;
   transform: translateY(-1.5px) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(59, 130, 246, 0.35) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(124, 58, 237, 0.35) !important;
 }
 
 .user {
@@ -4051,7 +4051,7 @@ body.light .header-live-time {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(20, 27, 43, 0.75) 50%, rgba(9, 13, 22, 0.92) 100%) !important;
   border-color: rgba(96, 165, 250, 0.5) !important;
   transform: translateY(-1.5px) !important;
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), 0 12px 30px rgba(59, 130, 246, 0.35) !important;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.45), 0 12px 30px rgba(124, 58, 237, 0.35) !important;
 }
 
 .user .avatar {
@@ -4085,14 +4085,14 @@ body.light .header-live-time {
   gap: 4px !important;
   padding: 2px 8px !important;
   border-radius: 999px !important;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.22) 0%, rgba(37, 99, 235, 0.12) 100%) !important;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.22) 0%, rgba(109, 40, 217, 0.12) 100%) !important;
   border: 1px solid rgba(147, 197, 253, 0.4) !important;
-  color: #93C5FD !important;
+  color: #C4B5FD !important;
   font-weight: 800 !important;
   font-size: 9.5px !important;
   text-transform: uppercase !important;
   letter-spacing: 0.06em !important;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25) !important;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25) !important;
 }
 
 #logoutBtn,
@@ -4226,7 +4226,7 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button:hover .ic {
-  color: #38BDF8 !important;
+  color: #8B5CF6 !important;
 }
 
 .menu button:active {
@@ -4235,17 +4235,17 @@ nav.menu::-webkit-scrollbar {
 
 /* Estado Ativo Sofisticado: Cápsula Lapidada com Brilho Superior Suave (Sem barra azul pesada embaixo) */
 .menu button.active {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.22) 0%, rgba(2, 132, 199, 0.14) 100%) !important;
-  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.22) 0%, rgba(124, 58, 237, 0.14) 100%) !important;
+  border: 1px solid rgba(139, 92, 246, 0.45) !important;
   border-top: 1.2px solid rgba(255, 255, 255, 0.65) !important;
   border-radius: 10px !important;
-  color: #38BDF8 !important;
+  color: #8B5CF6 !important;
   font-weight: 700 !important;
   box-shadow: 0 4px 14px rgba(14, 165, 233, 0.22), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
 }
 
 .menu button.active .ic {
-  color: #38BDF8 !important;
+  color: #8B5CF6 !important;
 }
 
 .menu button.active::before {
@@ -4438,21 +4438,21 @@ body.light .menu button:hover .ic,
 html.light .menu button:hover .ic {
   background: transparent !important;
   border: none !important;
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   box-shadow: none !important;
 }
 body.light .menu button:hover .ic svg,
 html.light .menu button:hover .ic svg {
-  stroke: #0284C7 !important;
+  stroke: #7C3AED !important;
 }
 body.light .menu button.active,
 html.light .menu button.active {
-  background: #EFF6FF !important;
-  border: 1px solid #BAE6FD !important;
+  background: #F5F3FF !important;
+  border: 1px solid #DDD6FE !important;
   border-radius: 12px !important;
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   font-weight: 700 !important;
-  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.15) !important;
+  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.15) !important;
 }
 body.light .menu button.active::before,
 html.light .menu button.active::before {
@@ -4465,25 +4465,25 @@ html.light .menu button.active::before {
   width: auto !important;
   height: 2.5px !important;
   border-radius: 999px 999px 0 0 !important;
-  background: #0284C7 !important;
-  box-shadow: 0 -1px 8px rgba(2, 132, 199, 0.6) !important;
+  background: #7C3AED !important;
+  box-shadow: 0 -1px 8px rgba(124, 58, 237, 0.6) !important;
 }
 body.light .menu button.active span:not(.ic),
 html.light .menu button.active span:not(.ic) {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   font-weight: 650 !important;
 }
 body.light .menu button.active .ic,
 html.light .menu button.active .ic {
   background: transparent !important;
   border: none !important;
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   box-shadow: none !important;
   filter: none !important;
 }
 body.light .menu button.active .ic svg,
 html.light .menu button.active .ic svg {
-  stroke: #0284C7 !important;
+  stroke: #7C3AED !important;
 }
 body.light .menu button.menu-btn-admin,
 html.light .menu button.menu-btn-admin {
@@ -4579,8 +4579,8 @@ html.light .brand:hover,
 body.light .topheader .brand:hover,
 html.light .topheader .brand:hover {
   background: #F8FAFC !important;
-  border-color: #3B82F6 !important;
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15) !important;
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15) !important;
 }
 
 body.light .brand .name,
@@ -4595,7 +4595,7 @@ body.light .brand .name span,
 html.light .brand .name span,
 body.light .topheader .brand .name span,
 html.light .topheader .brand .name span {
-  background: linear-gradient(90deg, #0284C7 0%, #2563EB 100%) !important;
+  background: linear-gradient(90deg, #7C3AED 0%, #7C3AED 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   text-shadow: none !important;
@@ -4639,9 +4639,9 @@ body.light .mobile-menu-btn:hover,
 html.light .mobile-menu-btn:hover {
   background: #F8FAFC !important;
   background-color: #F8FAFC !important;
-  border-color: #3B82F6 !important;
-  color: #2563EB !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.18) !important;
+  border-color: #8B5CF6 !important;
+  color: #7C3AED !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.18) !important;
 }
 
 body.light .icon-btn svg,
@@ -4667,7 +4667,7 @@ body.light #miniThemeBtn:hover svg,
 html.light #miniThemeBtn:hover svg,
 body.light .mobile-menu-btn:hover svg,
 html.light .mobile-menu-btn:hover svg {
-  stroke: #2563EB !important;
+  stroke: #7C3AED !important;
 }
 
 body.light .topheader .user,
@@ -4780,9 +4780,9 @@ html.light .toggle-type button:hover {
 
 body.light .toggle-type button.sel-in,
 html.light .toggle-type button.sel-in {
-  background: rgba(2, 132, 199, 0.14) !important;
-  color: #0284C7 !important;
-  border-color: #0284C7 !important;
+  background: rgba(124, 58, 237, 0.14) !important;
+  color: #7C3AED !important;
+  border-color: #7C3AED !important;
 }
 
 body.light .toggle-type button.sel-out,
@@ -4838,8 +4838,8 @@ html.light select:focus,
 html.light textarea:focus {
   background: #FFFFFF !important;
   background-color: #FFFFFF !important;
-  border-color: #2563EB !important;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+  border-color: #7C3AED !important;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.15) !important;
   color: #0F172A !important;
 }
 
@@ -4879,7 +4879,7 @@ body.light option:hover,
 html.light option:hover {
   background: #F1F5F9 !important;
   background-color: #F1F5F9 !important;
-  color: #0284C7 !important;
+  color: #7C3AED !important;
 }
 
 /* Campos e Filtros de Tabelas e Modais em Modo Claro */
@@ -5070,9 +5070,9 @@ html.light .kpi .sub span {
 
 body.light .kpi-tag-success,
 html.light .kpi-tag-success {
-  background: #E0F2FE !important;
-  color: #0284C7 !important;
-  border: 1px solid #BAE6FD !important;
+  background: #F5F3FF !important;
+  color: #7C3AED !important;
+  border: 1px solid #DDD6FE !important;
   font-weight: 800 !important;
 }
 
@@ -5179,7 +5179,7 @@ body.light .panel [style*="border-top"] [data-nav],
 body.light .panel [style*="border-top"] [data-nav] span,
 html.light .panel [style*="border-top"] [data-nav],
 html.light .panel [style*="border-top"] [data-nav] span {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   font-weight: 800 !important;
 }
 
@@ -5229,7 +5229,7 @@ body.light .recent-tx-head a,
 body.light .recent-tx-head span[data-nav],
 html.light .recent-tx-head a,
 html.light .recent-tx-head span[data-nav] {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   font-weight: 800 !important;
 }
 
@@ -5299,9 +5299,9 @@ html.light .admin-filter-btn:hover {
 
 body.light .admin-filter-btn.active,
 html.light .admin-filter-btn.active {
-  background: #2563EB !important;
+  background: #7C3AED !important;
   color: #FFFFFF !important;
-  border-color: #1D4ED8 !important;
+  border-color: #6D28D9 !important;
 }
 
 body.light .funcoes-filter-btn,
@@ -5313,9 +5313,9 @@ html.light .funcoes-filter-btn {
 
 body.light .funcoes-filter-btn.active,
 html.light .funcoes-filter-btn.active {
-  background: #2563EB !important;
+  background: #7C3AED !important;
   color: #FFFFFF !important;
-  border-color: #1D4ED8 !important;
+  border-color: #6D28D9 !important;
 }
 
 /* Gaveta Mobile e Notificações em Modo Claro */
@@ -5341,9 +5341,9 @@ html.light .mobile-drawer-nav button:hover {
 
 body.light .mobile-drawer-nav button.active,
 html.light .mobile-drawer-nav button.active {
-  background: #EFF6FF !important;
-  color: #1D4ED8 !important;
-  border-color: #93C5FD !important;
+  background: #F5F3FF !important;
+  color: #6D28D9 !important;
+  border-color: #C4B5FD !important;
 }
 
 body.light .mobile-drawer-nav button .ic,
@@ -5567,7 +5567,7 @@ body.light .app-dev-credit {
   box-shadow:0 8px 24px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.4) !important;
   color:#FFFFFF !important;
 }
-.icon-btn .dot{position:absolute; top:7px; right:7px; width:7px; height:7px; border-radius:50%; background:#00E5FF; box-shadow:0 0 8px #00E5FF;}
+.icon-btn .dot{position:absolute; top:7px; right:7px; width:7px; height:7px; border-radius:50%; background:#7C3AED; box-shadow:0 0 8px #7C3AED;}
 .user{
   display:inline-flex !important; align-items:center !important; gap:10px !important;
   padding:4px 14px 4px 6px !important; border-radius:999px !important;
@@ -5598,8 +5598,8 @@ body.light .app-dev-credit {
 .user .uname{font-size:13px !important; font-weight:700 !important; color:#F8FAFC !important; white-space:nowrap !important; letter-spacing:-0.01em !important;}
 .user .urole{
   display:inline-block !important; padding:2px 8px !important; border-radius:999px !important;
-  background:rgba(59, 130, 246, 0.16) !important; border:1px solid rgba(96, 165, 250, 0.35) !important;
-  color:#93C5FD !important; font-weight:700 !important; font-size:9.5px !important;
+  background:rgba(124, 58, 237, 0.16) !important; border:1px solid rgba(96, 165, 250, 0.35) !important;
+  color:#C4B5FD !important; font-weight:700 !important; font-size:9.5px !important;
   letter-spacing:0.06em !important; text-transform:uppercase !important;
   backdrop-filter:blur(8px) !important; min-height:unset;
 }
@@ -5662,16 +5662,16 @@ body.light .app-dev-credit {
 .btn-action-edit,
 .row-edit,
 [data-edit], [data-editacc], [data-editcat], [data-editorc], [data-editmeta], [data-editrec], [data-editalert], [data-mgedit] {
-  background: rgba(59, 130, 246, 0.16) !important;
-  color: #60A5FA !important;
-  border: 1px solid rgba(59, 130, 246, 0.38) !important;
+  background: rgba(124, 58, 237, 0.16) !important;
+  color: #A78BFA !important;
+  border: 1px solid rgba(124, 58, 237, 0.38) !important;
 }
 .btn-action-edit svg,
 .row-edit svg,
 [data-edit] svg, [data-editacc] svg, [data-editcat] svg, [data-editorc] svg, [data-editmeta] svg, [data-editrec] svg, [data-editalert] svg, [data-mgedit] svg {
   width: 14px !important;
   height: 14px !important;
-  stroke: #60A5FA !important;
+  stroke: #A78BFA !important;
   stroke-width: 2.3px !important;
   display: block !important;
   transition: transform 0.2s ease, stroke 0.2s ease !important;
@@ -5679,11 +5679,11 @@ body.light .app-dev-credit {
 .btn-action-edit:hover,
 .row-edit:hover,
 [data-edit]:hover, [data-editacc]:hover, [data-editcat]:hover, [data-editorc]:hover, [data-editmeta]:hover, [data-editrec]:hover, [data-editalert]:hover, [data-mgedit]:hover {
-  background: rgba(59, 130, 246, 0.35) !important;
+  background: rgba(124, 58, 237, 0.35) !important;
   color: #FFFFFF !important;
   border-color: rgba(96, 165, 250, 0.75) !important;
   transform: translateY(-1px) scale(1.06) !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45) !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.45) !important;
 }
 .btn-action-edit:hover svg,
 .row-edit:hover svg,
@@ -5736,9 +5736,9 @@ body.light .app-dev-credit {
   align-items: center !important;
   justify-content: center !important;
   gap: 5px !important;
-  background: rgba(0, 229, 255, 0.18) !important;
-  color: #38BDF8 !important;
-  border: 1px solid rgba(0, 229, 255, 0.38) !important;
+  background: rgba(124, 58, 237, 0.18) !important;
+  color: #8B5CF6 !important;
+  border: 1px solid rgba(124, 58, 237, 0.38) !important;
   box-shadow: 0 2px 6px rgba(0,0,0,0.25) !important;
   outline: none !important;
   cursor: pointer !important;
@@ -5746,11 +5746,11 @@ body.light .app-dev-credit {
   flex-shrink: 0 !important;
 }
 [data-lancar]:hover {
-  background: rgba(0, 229, 255, 0.35) !important;
+  background: rgba(124, 58, 237, 0.35) !important;
   color: #FFFFFF !important;
-  border-color: rgba(56, 189, 248, 0.75) !important;
+  border-color: rgba(139, 92, 246, 0.75) !important;
   transform: translateY(-1px) scale(1.03) !important;
-  box-shadow: 0 4px 14px rgba(0, 229, 255, 0.40) !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.40) !important;
 }
 
 /* Botões da Lista de Usuários (User Card Actions) */
@@ -5779,16 +5779,16 @@ body.light .app-dev-credit {
   outline: none !important;
 }
 .user-card-btn.btn-espelho {
-  background: rgba(59, 130, 246, 0.15) !important;
-  border: 1px solid rgba(59, 130, 246, 0.4) !important;
-  color: #60A5FA !important;
+  background: rgba(124, 58, 237, 0.15) !important;
+  border: 1px solid rgba(124, 58, 237, 0.4) !important;
+  color: #A78BFA !important;
 }
 .user-card-btn.btn-espelho:hover {
-  background: rgba(59, 130, 246, 0.3) !important;
-  border-color: #60A5FA !important;
+  background: rgba(124, 58, 237, 0.3) !important;
+  border-color: #A78BFA !important;
   color: #FFFFFF !important;
   transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35) !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35) !important;
 }
 .user-card-btn.btn-desativar {
   background: rgba(239, 68, 68, 0.15) !important;
@@ -5803,16 +5803,16 @@ body.light .app-dev-credit {
   box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35) !important;
 }
 .user-card-btn.btn-ativar {
-  background: rgba(0, 229, 255, 0.15) !important;
-  border: 1px solid rgba(0, 229, 255, 0.4) !important;
-  color: #38BDF8 !important;
+  background: rgba(124, 58, 237, 0.15) !important;
+  border: 1px solid rgba(124, 58, 237, 0.4) !important;
+  color: #8B5CF6 !important;
 }
 .user-card-btn.btn-ativar:hover {
-  background: rgba(0, 229, 255, 0.3) !important;
-  border-color: #38BDF8 !important;
+  background: rgba(124, 58, 237, 0.3) !important;
+  border-color: #8B5CF6 !important;
   color: #FFFFFF !important;
   transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 14px rgba(0, 229, 255, 0.35) !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35) !important;
 }
 .user-card-btn.btn-editar {
   background: rgba(255, 255, 255, 0.08) !important;
@@ -5854,9 +5854,9 @@ body.light [data-mgedit], body.light [data-mgdel] {
   box-shadow: 0 2px 4px rgba(15,23,42,0.08) !important;
 }
 body.light .btn-action-edit, body.light .row-edit, body.light [data-edit], body.light [data-editacc], body.light [data-editcat], body.light [data-editorc], body.light [data-editmeta], body.light [data-editrec], body.light [data-editalert], body.light [data-mgedit] {
-  background: rgba(37, 99, 235, 0.10) !important;
-  color: #1D4ED8 !important;
-  border-color: rgba(37, 99, 235, 0.25) !important;
+  background: rgba(109, 40, 217, 0.10) !important;
+  color: #6D28D9 !important;
+  border-color: rgba(109, 40, 217, 0.25) !important;
 }
 body.light .btn-action-del, body.light [data-del], body.light [data-delacc], body.light [data-delcat], body.light [data-delorc], body.light [data-delmeta], body.light [data-delrec], body.light [data-delalert], body.light [data-mgdel] {
   background: rgba(220, 38, 38, 0.10) !important;
@@ -5916,7 +5916,7 @@ body.light .due-bill-row {
   backdrop-filter: blur(36px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
   border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  box-shadow: 0 35px 90px -10px rgba(0, 0, 0, 0.88), 0 0 50px rgba(0, 229, 255, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 35px 90px -10px rgba(0, 0, 0, 0.88), 0 0 50px rgba(124, 58, 237, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.5) !important;
   border-radius: 28px !important;
   padding: 40px 34px 34px !important;
   width: 100% !important;
@@ -5933,7 +5933,7 @@ body.light .due-bill-row {
   left: 20%;
   right: 20%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.8), transparent);
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.8), transparent);
   filter: blur(0.5px);
   pointer-events: none;
 }
@@ -5956,9 +5956,9 @@ body.light .due-bill-row {
   justify-content: center !important;
   font-size: 34px !important;
   margin: 0 auto 22px !important;
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.22) 0%, rgba(2, 132, 199, 0.12) 60%, rgba(0, 0, 0, 0.4) 100%) !important;
-  border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
-  box-shadow: 0 0 30px rgba(0, 229, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.22) 0%, rgba(124, 58, 237, 0.12) 60%, rgba(0, 0, 0, 0.4) 100%) !important;
+  border: 1.5px solid rgba(139, 92, 246, 0.45) !important;
+  box-shadow: 0 0 30px rgba(124, 58, 237, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
 }
@@ -5988,8 +5988,8 @@ body.light .due-bill-row {
   font-weight: 800 !important;
   color: #FFFFFF !important;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  background: linear-gradient(135deg, #0284C7 0%, #00E5FF 100%) !important;
-  box-shadow: 0 12px 28px -4px rgba(0, 229, 255, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+  background: linear-gradient(135deg, #7C3AED 0%, #7C3AED 100%) !important;
+  box-shadow: 0 12px 28px -4px rgba(124, 58, 237, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
   cursor: pointer !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   letter-spacing: 0.03em !important;
@@ -5998,7 +5998,7 @@ body.light .due-bill-row {
 .executive-4k-btn:hover {
   transform: translateY(-2px) scale(1.01) !important;
   filter: brightness(1.06) !important;
-  box-shadow: 0 16px 36px -2px rgba(0, 229, 255, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 16px 36px -2px rgba(124, 58, 237, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.6) !important;
 }
 
 body.light .executive-4k-card {
@@ -6060,8 +6060,8 @@ body.light .executive-4k-message {
 }
 .period:hover{
   background:linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-  border-color:rgba(6, 182, 212, 0.45) !important;
-  box-shadow:0 6px 20px rgba(0,0,0,0.45), 0 0 14px rgba(6, 182, 212, 0.2) !important;
+  border-color:rgba(139, 92, 246, 0.45) !important;
+  box-shadow:0 6px 20px rgba(0,0,0,0.45), 0 0 14px rgba(139, 92, 246, 0.2) !important;
   transform:translateY(-1.5px) !important;
 }
 .period:active{transform:translateY(0) !important;}
@@ -6073,9 +6073,9 @@ body.light .executive-4k-message {
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
-  background:rgba(6, 182, 212, 0.15) !important;
-  border:1px solid rgba(6, 182, 212, 0.35) !important;
-  color:#22D3EE !important;
+  background:rgba(139, 92, 246, 0.15) !important;
+  border:1px solid rgba(139, 92, 246, 0.35) !important;
+  color:#A78BFA !important;
   box-shadow:inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
   transition:transform 0.2s ease !important;
 }
@@ -6084,15 +6084,15 @@ body.light .executive-4k-message {
 .period-text{display:flex; align-items:baseline; gap:5px; font-weight:700; font-size:13px; color:#F1F5F9; letter-spacing:0.01em;}
 .period-text .period-year{font-weight:600; color:#94A3B8;}
 .period-chevron{width:11px; height:11px; color:#94A3B8; flex-shrink:0; transition:transform .25s ease;}
-.period.open .period-chevron{transform:rotate(180deg); color:#22D3EE;}
+.period.open .period-chevron{transform:rotate(180deg); color:#A78BFA;}
 .period-panel{
   display:none; position:absolute; top:calc(100% + 10px); right:0;
   background:linear-gradient(145deg, rgba(14, 22, 38, 0.95) 0%, rgba(8, 12, 24, 0.98) 100%) !important;
   backdrop-filter:blur(28px) saturate(200%) !important;
   -webkit-backdrop-filter:blur(28px) saturate(200%) !important;
-  border:1px solid rgba(0, 229, 255, 0.22);
+  border:1px solid rgba(124, 58, 237, 0.22);
   border-radius:18px; padding:18px; z-index:99999 !important; width:250px;
-  box-shadow:0 20px 50px -10px rgba(0,0,0,0.85), inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 0 30px rgba(0, 229, 255, 0.18);
+  box-shadow:0 20px 50px -10px rgba(0,0,0,0.85), inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 0 30px rgba(124, 58, 237, 0.18);
   transform-origin:top right;
 }
 .period-panel.show{display:block; animation:periodPanelIn .22s cubic-bezier(.16,1,.3,1);}
@@ -6102,14 +6102,14 @@ body.light .executive-4k-message {
 }
 .period-today-btn{
   display:block; width:100%; text-align:center;
-  background:linear-gradient(135deg, rgba(0, 229, 255, 0.22) 0%, rgba(2, 132, 199, 0.15) 100%);
-  border:1px solid rgba(0, 229, 255, 0.5);
-  color:#00E5FF;
+  background:linear-gradient(135deg, rgba(124, 58, 237, 0.22) 0%, rgba(124, 58, 237, 0.15) 100%);
+  border:1px solid rgba(124, 58, 237, 0.5);
+  color:#7C3AED;
   padding:9px; border-radius:11px; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:10px;
-  box-shadow:0 4px 14px rgba(0, 229, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  box-shadow:0 4px 14px rgba(124, 58, 237, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3);
   transition:all .18s ease;
 }
-.period-today-btn:hover{filter:brightness(1.15); transform:translateY(-1px); box-shadow:0 6px 18px rgba(0, 229, 255, 0.4);}
+.period-today-btn:hover{filter:brightness(1.15); transform:translateY(-1px); box-shadow:0 6px 18px rgba(124, 58, 237, 0.4);}
 .period-today-btn:active{transform:scale(.97);}
 
 /* Opções de Período e Seletor em Modo Claro */
@@ -6123,8 +6123,8 @@ html.light .period {
 body.light .period:hover,
 html.light .period:hover {
   background: #F8FAFC !important;
-  border-color: #0284C7 !important;
-  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.15) !important;
+  border-color: #7C3AED !important;
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15) !important;
 }
 body.light .period-text,
 html.light .period-text {
@@ -6162,25 +6162,25 @@ html.light .period-panel select {
 }
 body.light .period-today-btn,
 html.light .period-today-btn {
-  background: rgba(2, 132, 199, 0.12) !important;
-  border: 1px solid rgba(2, 132, 199, 0.3) !important;
-  color: #0284C7 !important;
+  background: rgba(124, 58, 237, 0.12) !important;
+  border: 1px solid rgba(124, 58, 237, 0.3) !important;
+  color: #7C3AED !important;
 }
 body.light .period-today-btn:hover,
 html.light .period-today-btn:hover {
-  background: rgba(2, 132, 199, 0.2) !important;
-  color: #0369A1 !important;
+  background: rgba(124, 58, 237, 0.2) !important;
+  color: #6D28D9 !important;
 }
 body.light #periodAllDatesBtn,
 html.light #periodAllDatesBtn {
-  background: rgba(37, 99, 235, 0.1) !important;
-  border: 1px solid rgba(37, 99, 235, 0.25) !important;
-  color: #2563EB !important;
+  background: rgba(109, 40, 217, 0.1) !important;
+  border: 1px solid rgba(109, 40, 217, 0.25) !important;
+  color: #7C3AED !important;
 }
 body.light #periodAllDatesBtn:hover,
 html.light #periodAllDatesBtn:hover {
-  background: rgba(37, 99, 235, 0.18) !important;
-  color: #1D4ED8 !important;
+  background: rgba(109, 40, 217, 0.18) !important;
+  color: #6D28D9 !important;
 }
 
 .notif-wrap{position:relative;}
@@ -6208,9 +6208,9 @@ html.light #periodAllDatesBtn:hover {
 .notif-empty{padding:32px 16px; text-align:center; color:var(--text-faint); font-size:12.5px;}
 .btn-primary{
   position:relative; overflow:hidden;
-  background:linear-gradient(135deg, #00E5FF 0%, #0EA5E9 50%, #0284C7 100%); color:#060B18; border:1px solid rgba(255,255,255,0.45); padding:10px 18px; border-radius:12px;
+  background:linear-gradient(135deg, #7C3AED 0%, #8B5CF6 50%, #7C3AED 100%); color:#060B18; border:1px solid rgba(255,255,255,0.45); padding:10px 18px; border-radius:12px;
   font-weight:800; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:7px;
-  box-shadow:0 6px 20px rgba(0, 229, 255, 0.40), inset 0 1px 1.5px rgba(255,255,255,0.7);
+  box-shadow:0 6px 20px rgba(124, 58, 237, 0.40), inset 0 1px 1.5px rgba(255,255,255,0.7);
   transition:all .22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-primary::after{
@@ -6218,7 +6218,7 @@ html.light #periodAllDatesBtn:hover {
   background:linear-gradient(120deg, transparent, rgba(255,255,255,.5), transparent);
   transform:skewX(-20deg);
 }
-.btn-primary:hover{filter:brightness(1.12); transform:translateY(-1.5px); box-shadow:0 8px 28px rgba(0, 229, 255, 0.60), inset 0 1px 1.5px rgba(255,255,255,.8);}
+.btn-primary:hover{filter:brightness(1.12); transform:translateY(-1.5px); box-shadow:0 8px 28px rgba(124, 58, 237, 0.60), inset 0 1px 1.5px rgba(255,255,255,.8);}
 .btn-primary:hover::after{animation:shimmer .9s ease;}
 .btn-primary:active{transform:translateY(0) scale(.98);}
 .btn-ghost{
@@ -6229,16 +6229,16 @@ html.light #periodAllDatesBtn:hover {
 
 body.light .btn-primary,
 html.light .btn-primary {
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+  background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
   color: #FFFFFF !important;
-  border: 1px solid rgba(2, 132, 199, 0.5) !important;
-  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  border: 1px solid rgba(124, 58, 237, 0.5) !important;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
 }
 body.light .btn-primary:hover,
 html.light .btn-primary:hover {
-  background: linear-gradient(135deg, #0369A1 0%, #075985 100%) !important;
+  background: linear-gradient(135deg, #6D28D9 0%, #5B21B6 100%) !important;
   color: #FFFFFF !important;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.40) !important;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.40) !important;
 }
 body.light .btn-ghost,
 body.light #logoutBtn {
@@ -6270,10 +6270,10 @@ body.light #logoutBtn:hover {
   content:''; position:absolute; top:0; left:0; right:0; height:2.5px;
   opacity:0.95;
 }
-.kpi.kpi-balance::before { background: linear-gradient(90deg, #06B6D4, #0284C7); }
-.kpi.kpi-income::before { background: linear-gradient(90deg, #00E5FF, #38BDF8); }
+.kpi.kpi-balance::before { background: linear-gradient(90deg, #8B5CF6, #7C3AED); }
+.kpi.kpi-income::before { background: linear-gradient(90deg, #7C3AED, #8B5CF6); }
 .kpi.kpi-expense::before { background: linear-gradient(90deg, #F43F5E, #FB7185); }
-.kpi.kpi-net::before { background: linear-gradient(90deg, #0EA5E9, #38BDF8); }
+.kpi.kpi-net::before { background: linear-gradient(90deg, #8B5CF6, #8B5CF6); }
 .kpi.kpi-tx::before { background: linear-gradient(90deg, #8B5CF6, #C084FC); }
 
 .kpi:hover{
@@ -6318,9 +6318,9 @@ body.light #logoutBtn:hover {
   text-transform:uppercase !important;
 }
 .kpi-tag-success {
-  background:rgba(0, 229, 255, 0.14) !important;
-  color:#00E5FF !important;
-  border:1px solid rgba(0, 229, 255, 0.3) !important;
+  background:rgba(124, 58, 237, 0.14) !important;
+  color:#7C3AED !important;
+  border:1px solid rgba(124, 58, 237, 0.3) !important;
 }
 .kpi-tag-danger {
   background:rgba(239, 68, 68, 0.14) !important;
@@ -6333,9 +6333,9 @@ body.light #logoutBtn:hover {
   border:1px solid rgba(168, 85, 247, 0.3) !important;
 }
 .kpi-tag-cyan {
-  background:rgba(6, 182, 212, 0.14) !important;
-  color:#22D3EE !important;
-  border:1px solid rgba(6, 182, 212, 0.3) !important;
+  background:rgba(139, 92, 246, 0.14) !important;
+  color:#A78BFA !important;
+  border:1px solid rgba(139, 92, 246, 0.3) !important;
 }
 
 body.light .kpi {
@@ -6343,13 +6343,13 @@ body.light .kpi {
   border-color:#cbd5e1 !important;
   box-shadow:0 8px 24px rgba(15,23,42,0.06) !important;
 }
-body.light .kpi.kpi-balance::before { background: linear-gradient(90deg, #0284C7, #00E5FF); }
-body.light .kpi.kpi-income::before { background: linear-gradient(90deg, #0284C7, #00E5FF); }
+body.light .kpi.kpi-balance::before { background: linear-gradient(90deg, #7C3AED, #7C3AED); }
+body.light .kpi.kpi-income::before { background: linear-gradient(90deg, #7C3AED, #7C3AED); }
 body.light .kpi.kpi-expense::before { background: linear-gradient(90deg, #DC2626, #EF4444); }
-body.light .kpi.kpi-net::before { background: linear-gradient(90deg, #0284C7, #00E5FF); }
+body.light .kpi.kpi-net::before { background: linear-gradient(90deg, #7C3AED, #7C3AED); }
 body.light .kpi.kpi-tx::before { background: linear-gradient(90deg, #7C3AED, #8B5CF6); }
 body.light .kpi:hover {
-  border-color:#0284C7 !important;
+  border-color:#7C3AED !important;
   box-shadow:0 14px 32px rgba(15,23,42,0.12) !important;
 }
 body.light .kpi .val { color:#0f172a !important; text-shadow:none; }
@@ -6379,9 +6379,9 @@ body.light .kpi .val { color:#0f172a !important; text-shadow:none; }
 }
 .btn-hero-privacy:hover {
   transform: translateY(-1.5px) !important;
-  border-color: rgba(6, 182, 212, 0.45) !important;
+  border-color: rgba(139, 92, 246, 0.45) !important;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(6, 182, 212, 0.2) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(139, 92, 246, 0.2) !important;
 }
 .btn-hero-privacy:active {
   transform: translateY(0) !important;
@@ -6456,21 +6456,21 @@ body.hide-sensitive-balances .account-balance-num {
 .panel{
   position:relative; overflow:hidden;
   background:linear-gradient(145deg, rgba(12, 19, 36, 0.84) 0%, rgba(8, 13, 25, 0.90) 52%, rgba(6, 10, 20, 0.94) 100%) !important;
-  border:1px solid rgba(0, 229, 255, 0.16) !important; border-radius:24px !important; padding:22px 26px;
-  box-shadow:0 20px 50px -10px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 20px rgba(0, 229, 255, 0.04) !important;
+  border:1px solid rgba(124, 58, 237, 0.16) !important; border-radius:24px !important; padding:22px 26px;
+  box-shadow:0 20px 50px -10px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 20px rgba(124, 58, 237, 0.04) !important;
   backdrop-filter:blur(28px) saturate(200%) !important;
   -webkit-backdrop-filter:blur(28px) saturate(200%) !important;
   transition:all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   display:flex; flex-direction:column; justify-content:space-between; height:100%; box-sizing:border-box;
 }
 .panel:hover{
-  border-color:rgba(0, 229, 255, 0.45) !important;
-  box-shadow:0 24px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 0 28px rgba(0, 229, 255, 0.18) !important;
+  border-color:rgba(124, 58, 237, 0.45) !important;
+  box-shadow:0 24px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 0 28px rgba(124, 58, 237, 0.18) !important;
 }
 .panel-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:10px; flex-wrap:wrap;}
 .panel-head h3{font-size:15px; font-weight:800; color:#ffffff; letter-spacing:-0.01em; display:flex; align-items:center; gap:8px;}
 .panel-head .tag{font-size:12px; font-weight:600; color:var(--text-dim); background:rgba(255,255,255,0.06); padding:6px 12px; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.10); transition:all 0.2s ease;}
-.panel-head .tag:hover{background:rgba(0, 229, 255, 0.15); color:#00E5FF; border-color:rgba(0, 229, 255, 0.45);}
+.panel-head .tag:hover{background:rgba(124, 58, 237, 0.15); color:#7C3AED; border-color:rgba(124, 58, 237, 0.45);}
 
 body.light .panel {
   background:#ffffff !important;
@@ -6520,19 +6520,19 @@ body.light .panel-head h3 { color:#0f172a !important; }
 .accounts-list{display:flex; flex-direction:column; gap:10px; margin-bottom:14px;}
 .acc-row{
   display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:14px;
-  background:rgba(12, 19, 36, 0.78); border:1px solid rgba(0, 229, 255, 0.16);
+  background:rgba(12, 19, 36, 0.78); border:1px solid rgba(124, 58, 237, 0.16);
   transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .acc-row:hover{
-  background:rgba(0, 229, 255, 0.08); border-color:rgba(0, 229, 255, 0.45);
-  transform:translateX(3px); box-shadow:0 4px 16px rgba(0, 229, 255, 0.15);
+  background:rgba(124, 58, 237, 0.08); border-color:rgba(124, 58, 237, 0.45);
+  transform:translateX(3px); box-shadow:0 4px 16px rgba(124, 58, 237, 0.15);
 }
 .acc-row:hover .acc-edit{opacity:1;}
 .acc-ic{width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:#fff; box-shadow:0 4px 12px rgba(0,0,0,.4);}
 .acc-info{flex:1; min-width:0;}
 .acc-info .n{font-size:13px; font-weight:700; color:#ffffff;}
 .acc-info .t{font-size:11px; color:var(--text-faint);}
-.acc-val{font-size:13px; font-weight:800; white-space:nowrap; color:#38BDF8;}
+.acc-val{font-size:13px; font-weight:800; white-space:nowrap; color:#8B5CF6;}
 .acc-val.neg{color:var(--red);}
 .acc-edit{opacity:0; transition:opacity .15s; background:none; border:none; color:var(--text-faint); cursor:pointer; font-size:12px; padding:4px;}
 
@@ -6542,14 +6542,14 @@ body.light .acc-info .n { color:#0f172a !important; }
 .table-panel{
   position:relative;
   background:linear-gradient(145deg, rgba(12, 19, 36, 0.86) 0%, rgba(8, 13, 25, 0.92) 100%);
-  border:1px solid rgba(0, 229, 255, 0.16); border-radius:20px; padding:22px; overflow-x:auto;
-  box-shadow:0 16px 40px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.14), 0 0 24px rgba(0, 229, 255, 0.04);
+  border:1px solid rgba(124, 58, 237, 0.16); border-radius:20px; padding:22px; overflow-x:auto;
+  box-shadow:0 16px 40px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.14), 0 0 24px rgba(124, 58, 237, 0.04);
   backdrop-filter:blur(28px) saturate(200%); -webkit-backdrop-filter:blur(28px) saturate(200%);
 }
 table{width:100%; border-collapse:collapse;}
-th{text-align:left; font-size:11px; color:#38BDF8; font-weight:800; padding:0 12px 14px; text-transform:uppercase; letter-spacing:.08em;}
+th{text-align:left; font-size:11px; color:#8B5CF6; font-weight:800; padding:0 12px 14px; text-transform:uppercase; letter-spacing:.08em;}
 td{padding:13px 12px; font-size:13px; border-top:1px solid rgba(255,255,255,0.06); font-variant-numeric:tabular-nums;}
-tr.trow:hover td{background:rgba(0, 229, 255, 0.04);}
+tr.trow:hover td{background:rgba(124, 58, 237, 0.04);}
 
 body.light .table-panel {
   background:#ffffff !important;
@@ -6557,7 +6557,7 @@ body.light .table-panel {
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 body.light th {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   font-weight: 800 !important;
   border-bottom: 1.5px solid #E2E8F0 !important;
 }
@@ -6580,16 +6580,16 @@ body.light .acc-pill {
   border-color: #CBD5E1 !important;
 }
 body.light .val-in {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
 }
 body.light .val-out {
   color: #DC2626 !important;
 }
 body.light .status-pago,
 body.light .status-recebido {
-  background: rgba(2, 132, 199, 0.12) !important;
-  color: #0284C7 !important;
-  border-color: rgba(2, 132, 199, 0.35) !important;
+  background: rgba(124, 58, 237, 0.12) !important;
+  color: #7C3AED !important;
+  border-color: rgba(124, 58, 237, 0.35) !important;
 }
 body.light .status-pendente {
   background: rgba(217, 119, 6, 0.12) !important;
@@ -6603,15 +6603,15 @@ body.light .status-pendente {
 .cat-pill{font-size:11.5px; font-weight:700;}
 .acc-pill{font-size:11.5px; background:rgba(255,255,255,0.05); color:var(--text-dim); border:1px solid rgba(255,255,255,0.08); font-weight:600;}
 .type-pill{display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:800;}
-.type-pill.in{background:rgba(0,229,255,0.14); color:#00E5FF; border:1px solid rgba(0,229,255,0.30);}
+.type-pill.in{background:rgba(124, 58, 237,0.14); color:#7C3AED; border:1px solid rgba(124, 58, 237,0.30);}
 .type-pill.out{background:rgba(244,63,94,0.14); color:#F43F5E; border:1px solid rgba(244,63,94,0.30);}
 
 .status-toggle-btn{cursor:pointer; user-select:none; transition:transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;}
 .status-toggle-btn:hover{transform:translateY(-1px) scale(1.04); filter:brightness(1.12); box-shadow:0 4px 12px rgba(0,0,0,0.25);}
-.status-pago, .status-recebido{background:rgba(0,229,255,0.16) !important; color:#00E5FF !important; border:1px solid rgba(0,229,255,0.35) !important; box-shadow:0 2px 8px rgba(0,229,255,0.15);}
+.status-pago, .status-recebido{background:rgba(124, 58, 237,0.16) !important; color:#7C3AED !important; border:1px solid rgba(124, 58, 237,0.35) !important; box-shadow:0 2px 8px rgba(124, 58, 237,0.15);}
 .status-pendente{background:rgba(245,158,11,0.16) !important; color:#F59E0B !important; border:1px solid rgba(245,158,11,0.35) !important; box-shadow:0 2px 8px rgba(245,158,11,0.15);}
 
-.val-in{color:#00E5FF; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
+.val-in{color:#7C3AED; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
 .val-out{color:#F43F5E; font-weight:800; font-variant-numeric:tabular-nums; font-size:13.5px;}
 .row-actions{display:flex; gap:6px;}
 
@@ -6621,21 +6621,21 @@ body.light .status-pendente {
 
 /* Executive KPI Footer Cards */
 .tx-footer-summary{margin-top:22px; display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;}
-.tx-summary-card{padding:18px 20px; border-radius:16px; background:linear-gradient(145deg, rgba(12, 19, 36, 0.86) 0%, rgba(8, 13, 25, 0.92) 100%); border:1px solid rgba(0, 229, 255, 0.16); display:flex; align-items:center; gap:14px; box-shadow:0 12px 30px -8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.10); transition:transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;}
-.tx-summary-card:hover{transform:translateY(-2px); border-color:rgba(0, 229, 255, 0.40); box-shadow:0 16px 36px -6px rgba(0,0,0,0.75), 0 0 20px rgba(0, 229, 255, 0.15);}
+.tx-summary-card{padding:18px 20px; border-radius:16px; background:linear-gradient(145deg, rgba(12, 19, 36, 0.86) 0%, rgba(8, 13, 25, 0.92) 100%); border:1px solid rgba(124, 58, 237, 0.16); display:flex; align-items:center; gap:14px; box-shadow:0 12px 30px -8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.10); transition:transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;}
+.tx-summary-card:hover{transform:translateY(-2px); border-color:rgba(124, 58, 237, 0.40); box-shadow:0 16px 36px -6px rgba(0,0,0,0.75), 0 0 20px rgba(124, 58, 237, 0.15);}
 .tx-summary-card.expense{border-color:rgba(244,63,94,0.35);}
-.tx-summary-card.income{border-color:rgba(0,229,255,0.35);}
-.tx-summary-card.balance{border-color:rgba(0, 229, 255, 0.35);}
+.tx-summary-card.income{border-color:rgba(124, 58, 237,0.35);}
+.tx-summary-card.balance{border-color:rgba(124, 58, 237, 0.35);}
 
 .tx-summary-icon{width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; flex-shrink:0;}
 .tx-summary-icon.expense{background:rgba(244,63,94,0.14); color:#F43F5E; border:1px solid rgba(244,63,94,0.3); box-shadow:0 4px 14px rgba(244,63,94,0.20);}
-.tx-summary-icon.income{background:rgba(0,229,255,0.14); color:#00E5FF; border:1px solid rgba(0,229,255,0.3); box-shadow:0 4px 14px rgba(0,229,255,0.20);}
-.tx-summary-icon.balance{background:rgba(0, 229, 255, 0.14); color:#00E5FF; border:1px solid rgba(0, 229, 255, 0.35); box-shadow:0 0 16px rgba(0, 229, 255, 0.25);}
+.tx-summary-icon.income{background:rgba(124, 58, 237,0.14); color:#7C3AED; border:1px solid rgba(124, 58, 237,0.3); box-shadow:0 4px 14px rgba(124, 58, 237,0.20);}
+.tx-summary-icon.balance{background:rgba(124, 58, 237, 0.14); color:#7C3AED; border:1px solid rgba(124, 58, 237, 0.35); box-shadow:0 0 16px rgba(124, 58, 237, 0.25);}
 
 .tx-summary-label{font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:700;}
 .tx-summary-val{font-size:21px; font-weight:800; margin-top:2px; font-variant-numeric:tabular-nums;}
 .tx-summary-val.expense{color:#F43F5E;}
-.tx-summary-val.income{color:#00E5FF;}
+.tx-summary-val.income{color:#7C3AED;}
 .tx-summary-sub{font-size:11.5px; color:var(--text-dim); margin-top:2px;}
 
 .icon-picker{display:flex; gap:6px; flex-wrap:wrap;}
@@ -6644,7 +6644,7 @@ body.light .status-pendente {
 .icon-picker button.sel{border-color:var(--primary); background:var(--hover);}
 .cat-manage-tabs{display:flex; gap:8px;}
 .cat-manage-tabs .cat-tab{flex:1; padding:9.5px; border-radius:10px; border:1px solid var(--card-border); background:var(--bg); color:var(--text-dim); font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s ease;}
-.cat-manage-tabs .cat-tab.active{background:linear-gradient(135deg, rgba(0, 229, 255, 0.22), rgba(14, 165, 233, 0.16)); color:#00E5FF; border-color:rgba(0, 229, 255, 0.6);}
+.cat-manage-tabs .cat-tab.active{background:linear-gradient(135deg, rgba(124, 58, 237, 0.22), rgba(14, 165, 233, 0.16)); color:#7C3AED; border-color:rgba(124, 58, 237, 0.6);}
 .cat-manage-row{display:flex; align-items:center; gap:10px;}
 .cat-manage-row .cat-badge{font-size:16px;}
 .cat-manage-row .info{min-width:0; flex:1;}
@@ -6652,9 +6652,9 @@ body.light .status-pendente {
 .cat-manage-row .u{font-size:11px; color:var(--text-faint);}
 .filters{display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
 .filters input, .filters select{
-  background:rgba(9, 14, 26, 0.85); border:1px solid rgba(0, 229, 255, 0.18); border-radius:10px; padding:9px 14px; font-size:12.5px; outline:none; transition:all 0.2s ease; color:#F8FAFC;
+  background:rgba(9, 14, 26, 0.85); border:1px solid rgba(124, 58, 237, 0.18); border-radius:10px; padding:9px 14px; font-size:12.5px; outline:none; transition:all 0.2s ease; color:#F8FAFC;
 }
-.filters input:focus, .filters select:focus{border-color:#00E5FF; box-shadow:0 0 15px rgba(0, 229, 255, 0.35);}
+.filters input:focus, .filters select:focus{border-color:#7C3AED; box-shadow:0 0 15px rgba(124, 58, 237, 0.35);}
 .filters input{flex:1; min-width:180px;}
 
 .cat-cards .placeholder,
@@ -6682,14 +6682,14 @@ body.light .status-pendente {
   width: 72px !important;
   height: 72px !important;
   border-radius: 50% !important;
-  background: rgba(59, 130, 246, 0.15) !important;
-  border: 1.5px solid rgba(59, 130, 246, 0.35) !important;
-  color: #60A5FA !important;
+  background: rgba(124, 58, 237, 0.15) !important;
+  border: 1.5px solid rgba(124, 58, 237, 0.35) !important;
+  color: #A78BFA !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   margin: 0 auto 16px !important;
-  box-shadow: 0 0 24px rgba(59, 130, 246, 0.25) !important;
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.25) !important;
 }
 
 .placeholder h3 {
@@ -6714,7 +6714,7 @@ body.light .status-pendente {
   padding: 24px 20px !important;
   border-radius: 16px !important;
   background: linear-gradient(145deg, rgba(15,23,42,0.85) 0%, rgba(10,15,29,0.95) 100%) !important;
-  border: 2px dashed rgba(59,130,246,0.45) !important;
+  border: 2px dashed rgba(124, 58, 237,0.45) !important;
   color: var(--text) !important;
   cursor: pointer !important;
   transition: all 0.25s ease !important;
@@ -6723,9 +6723,9 @@ body.light .status-pendente {
 }
 
 #importFile:hover {
-  border-color: #3B82F6 !important;
-  background: rgba(59,130,246,0.12) !important;
-  box-shadow: 0 0 25px rgba(59,130,246,0.3) !important;
+  border-color: #8B5CF6 !important;
+  background: rgba(124, 58, 237,0.12) !important;
+  box-shadow: 0 0 25px rgba(124, 58, 237,0.3) !important;
   transform: translateY(-1px) !important;
 }
 
@@ -6742,8 +6742,8 @@ body.light .status-pendente {
 }
 
 #impConta:focus, #impCategoria:focus {
-  border-color: #3B82F6 !important;
-  box-shadow: 0 0 14px rgba(59,130,246,0.3) !important;
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 0 14px rgba(124, 58, 237,0.3) !important;
 }
 
 .cat-cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; justify-content:center;}
@@ -6794,7 +6794,7 @@ body.light .status-pendente {
 .budget-card:hover, .goal-card:hover, .recurring-card:hover {
   transform:translateY(-3px);
   border-color:rgba(96,165,250,0.45) !important;
-  box-shadow:0 22px 50px -6px rgba(0,0,0,0.85), 0 0 25px rgba(59,130,246,0.25), inset 0 1px 0 rgba(255,255,255,0.35) !important;
+  box-shadow:0 22px 50px -6px rgba(0,0,0,0.85), 0 0 25px rgba(124, 58, 237,0.25), inset 0 1px 0 rgba(255,255,255,0.35) !important;
 }
 body.light .budget-card, body.light .goal-card, body.light .recurring-card, body.light .cat-card {
   background:#ffffff !important; border-color:#cbd5e1 !important;
@@ -6833,7 +6833,7 @@ body.light .rec-progress-bar {
   transition: all 0.2s ease;
 }
 .rec-chip-btn:hover {
-  background: rgba(59,130,246,0.15);
+  background: rgba(124, 58, 237,0.15);
   border-color: var(--blue);
   color: #fff;
 }
@@ -6853,7 +6853,7 @@ body.light .rec-progress-bar {
   border-radius: 22px !important;
   padding: 22px 28px !important;
   margin-bottom: 22px !important;
-  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.75), 0 0 35px rgba(6, 182, 212, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.75), 0 0 35px rgba(139, 92, 246, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
   backdrop-filter: blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
 }
@@ -6864,7 +6864,7 @@ body.light .rec-progress-bar {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #06B6D4 0%, #3B82F6 50%, #8B5CF6 100%);
+  background: linear-gradient(90deg, #8B5CF6 0%, #8B5CF6 50%, #8B5CF6 100%);
   border-radius: 22px 22px 0 0;
 }
 .hero-content {
@@ -6903,16 +6903,16 @@ body.light .rec-progress-bar {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 .hero-badge.live-dot {
-  background: rgba(0, 229, 255, 0.10);
-  border-color: rgba(0, 229, 255, 0.28);
-  color: #38BDF8;
+  background: rgba(124, 58, 237, 0.10);
+  border-color: rgba(124, 58, 237, 0.28);
+  color: #8B5CF6;
 }
 .pulse-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #00E5FF;
-  box-shadow: 0 0 8px #00E5FF;
+  background: #7C3AED;
+  box-shadow: 0 0 8px #7C3AED;
 }
 .hero-greeting {
   font-size: 26px !important;
@@ -6926,11 +6926,11 @@ body.light .rec-progress-bar {
   line-height: 1.2 !important;
 }
 .hero-name-gradient {
-  background: linear-gradient(135deg, #FFFFFF 15%, #38BDF8 60%, #818CF8 100%) !important;
+  background: linear-gradient(135deg, #FFFFFF 15%, #8B5CF6 60%, #818CF8 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   font-weight: 800 !important;
-  filter: drop-shadow(0 2px 10px rgba(56, 189, 248, 0.4)) !important;
+  filter: drop-shadow(0 2px 10px rgba(139, 92, 246, 0.4)) !important;
 }
 .hero-sub {
   font-size: 13px !important;
@@ -6957,21 +6957,21 @@ body.light .rec-progress-bar {
   height: 42px !important;
   padding: 0 18px 0 6px !important;
   border-radius: 12px !important;
-  background: linear-gradient(135deg, #00E5FF 0%, #0EA5E9 55%, #0284C7 100%) !important;
+  background: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 55%, #7C3AED 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.45) !important;
   color: #060B18 !important;
   font-size: 13px !important;
   font-weight: 800 !important;
   letter-spacing: 0.01em !important;
   cursor: pointer !important;
-  box-shadow: 0 4px 18px rgba(0, 229, 255, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
+  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   white-space: nowrap !important;
   user-select: none !important;
 }
 .btn-hero-primary:hover {
   transform: translateY(-1.5px) !important;
-  box-shadow: 0 8px 28px rgba(0, 229, 255, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 8px 28px rgba(124, 58, 237, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
   filter: brightness(1.05) !important;
 }
 .btn-hero-primary:active {
@@ -7025,10 +7025,10 @@ body.light .dashboard-welcome-hero {
 }
 body.light .hero-greeting { color: #0F172A !important; text-shadow: none !important; }
 body.light .hero-name-gradient {
-  background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #D97706 100%) !important;
+  background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 50%, #D97706 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.25)) !important;
+  filter: drop-shadow(0 2px 6px rgba(109, 40, 217, 0.25)) !important;
 }
 body.light .hero-sub { color: #475569 !important; }
 body.light .hero-badge {
@@ -7044,8 +7044,8 @@ body.light .btn-hero-ghost {
 }
 body.light .btn-hero-ghost:hover {
   background: #F1F5F9 !important;
-  border-color: #2563EB !important;
-  color: #2563EB !important;
+  border-color: #7C3AED !important;
+  color: #7C3AED !important;
 }
 
 
@@ -7078,7 +7078,7 @@ body.light .btn-hero-ghost:hover {
 }
 .pulse-chip:hover {
   background: rgba(255, 255, 255, 0.07) !important;
-  border-color: rgba(56, 189, 248, 0.35) !important;
+  border-color: rgba(139, 92, 246, 0.35) !important;
 }
 .pulse-chip-dot {
   width: 7px;
@@ -7086,10 +7086,10 @@ body.light .btn-hero-ghost:hover {
   border-radius: 50%;
   flex-shrink: 0;
 }
-.pulse-chip-dot.green { background: #00E5FF; box-shadow: 0 0 8px #00E5FF; }
+.pulse-chip-dot.green { background: #7C3AED; box-shadow: 0 0 8px #7C3AED; }
 .pulse-chip-dot.amber { background: #F59E0B; box-shadow: 0 0 8px #F59E0B; }
 .pulse-chip-dot.red { background: #EF4444; box-shadow: 0 0 8px #EF4444; }
-.pulse-chip-dot.cyan { background: #06B6D4; box-shadow: 0 0 8px #06B6D4; }
+.pulse-chip-dot.cyan { background: #8B5CF6; box-shadow: 0 0 8px #8B5CF6; }
 .pulse-chip-label { color: #94A3B8; font-weight: 600; }
 .pulse-chip-val { font-weight: 800; }
 
@@ -7138,16 +7138,16 @@ body.light .pulse-chip-label { color: #000000 !important; }
   border-radius: 7px;
 }
 .dash-quick-btn.q-income {
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.18), rgba(2, 132, 199, 0.08));
-  border-color: rgba(0, 229, 255, 0.35);
-  color: #38BDF8;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(124, 58, 237, 0.08));
+  border-color: rgba(124, 58, 237, 0.35);
+  color: #8B5CF6;
 }
 .dash-quick-btn.q-income:hover {
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.32), rgba(2, 132, 199, 0.18));
-  border-color: #00E5FF;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.32), rgba(124, 58, 237, 0.18));
+  border-color: #7C3AED;
   color: #7DD3FC;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 229, 255, 0.35);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
 }
 .dash-quick-btn.q-expense {
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(220, 38, 38, 0.08));
@@ -7162,16 +7162,16 @@ body.light .pulse-chip-label { color: #000000 !important; }
   box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
 }
 .dash-quick-btn.q-transfer {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(14, 165, 233, 0.08));
-  border-color: rgba(6, 182, 212, 0.35);
-  color: #38BDF8;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(14, 165, 233, 0.08));
+  border-color: rgba(139, 92, 246, 0.35);
+  color: #8B5CF6;
 }
 .dash-quick-btn.q-transfer:hover {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.32), rgba(14, 165, 233, 0.18));
-  border-color: #06B6D4;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.32), rgba(14, 165, 233, 0.18));
+  border-color: #8B5CF6;
   color: #7DD3FC;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
 }
 .dash-quick-btn.q-report {
   background: linear-gradient(135deg, rgba(129, 140, 248, 0.18), rgba(99, 102, 241, 0.08));
@@ -7198,17 +7198,17 @@ body.light .pulse-chip-label { color: #000000 !important; }
   box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
 }
 .dash-quick-btn.q-sync {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.18), rgba(0, 229, 255, 0.08));
-  border-color: rgba(6, 182, 212, 0.35);
-  color: #22D3EE;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(124, 58, 237, 0.08));
+  border-color: rgba(139, 92, 246, 0.35);
+  color: #A78BFA;
   margin-left: auto;
 }
 .dash-quick-btn.q-sync:hover {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.32), rgba(0, 229, 255, 0.18));
-  border-color: #06B6D4;
-  color: #67E8F9;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.32), rgba(124, 58, 237, 0.18));
+  border-color: #8B5CF6;
+  color: #C4B5FD;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
 }
 
 body.light .dashboard-quick-actions-bar {
@@ -7216,12 +7216,12 @@ body.light .dashboard-quick-actions-bar {
   border-color: #CBD5E1 !important;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
 }
-body.light .dash-quick-btn.q-income { background: #E0F2FE !important; border-color: #BAE6FD !important; color: #0284C7 !important; }
+body.light .dash-quick-btn.q-income { background: #F5F3FF !important; border-color: #DDD6FE !important; color: #7C3AED !important; }
 body.light .dash-quick-btn.q-expense { background: #FEF2F2 !important; border-color: #FECACA !important; color: #991B1B !important; }
-body.light .dash-quick-btn.q-transfer { background: #F0F9FF !important; border-color: #BAE6FD !important; color: #075985 !important; }
+body.light .dash-quick-btn.q-transfer { background: #F0F9FF !important; border-color: #DDD6FE !important; color: #5B21B6 !important; }
 body.light .dash-quick-btn.q-report { background: #EEF2FF !important; border-color: #C7D2FE !important; color: #3730A3 !important; }
 body.light .dash-quick-btn.q-cards { background: #FFFBEB !important; border-color: #FDE68A !important; color: #92400E !important; }
-body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color: #BAE6FD !important; color: #0284C7 !important; }
+body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color: #DDD6FE !important; color: #7C3AED !important; }
 
 /* Grid de 6 KPIs 4K */
 /* Grid de 6 KPIs 4K Refinados & Polidos */
@@ -7278,21 +7278,21 @@ body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color
 
 /* Cores temáticas por categoria de KPI com brilhos sutis */
 .kpis-grid-6 .kpi.kpi-balance {
-  border-top-color: #06B6D4 !important;
+  border-top-color: #8B5CF6 !important;
 }
 .kpis-grid-6 .kpi.kpi-balance:hover {
-  border-color: rgba(6, 182, 212, 0.45) !important;
-  border-top-color: #22D3EE !important;
-  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(6, 182, 212, 0.2) !important;
+  border-color: rgba(139, 92, 246, 0.45) !important;
+  border-top-color: #A78BFA !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(139, 92, 246, 0.2) !important;
 }
 
 .kpis-grid-6 .kpi.kpi-income {
-  border-top-color: #00E5FF !important;
+  border-top-color: #7C3AED !important;
 }
 .kpis-grid-6 .kpi.kpi-income:hover {
-  border-color: rgba(0, 229, 255, 0.45) !important;
-  border-top-color: #38BDF8 !important;
-  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(0, 229, 255, 0.2) !important;
+  border-color: rgba(124, 58, 237, 0.45) !important;
+  border-top-color: #8B5CF6 !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(124, 58, 237, 0.2) !important;
 }
 
 .kpis-grid-6 .kpi.kpi-expense {
@@ -7305,12 +7305,12 @@ body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color
 }
 
 .kpis-grid-6 .kpi.kpi-net {
-  border-top-color: #3B82F6 !important;
+  border-top-color: #8B5CF6 !important;
 }
 .kpis-grid-6 .kpi.kpi-net:hover {
-  border-color: rgba(59, 130, 246, 0.45) !important;
-  border-top-color: #60A5FA !important;
-  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(59, 130, 246, 0.2) !important;
+  border-color: rgba(124, 58, 237, 0.45) !important;
+  border-top-color: #A78BFA !important;
+  box-shadow: 0 20px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px rgba(124, 58, 237, 0.2) !important;
 }
 
 .kpis-grid-6 .kpi.kpi-card {
@@ -7417,9 +7417,9 @@ body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color
   backdrop-filter: blur(8px) !important;
 }
 .kpi-tag.kpi-tag-success {
-  background: rgba(0, 229, 255, 0.14) !important;
-  color: #00E5FF !important;
-  border-color: rgba(0, 229, 255, 0.28) !important;
+  background: rgba(124, 58, 237, 0.14) !important;
+  color: #7C3AED !important;
+  border-color: rgba(124, 58, 237, 0.28) !important;
 }
 .kpi-tag.kpi-tag-danger {
   background: rgba(239, 68, 68, 0.14) !important;
@@ -7427,9 +7427,9 @@ body.light .dash-quick-btn.q-sync { background: #F0F9FF !important; border-color
   border-color: rgba(239, 68, 68, 0.28) !important;
 }
 .kpi-tag.kpi-tag-cyan {
-  background: rgba(6, 182, 212, 0.14) !important;
-  color: #22D3EE !important;
-  border-color: rgba(6, 182, 212, 0.28) !important;
+  background: rgba(139, 92, 246, 0.14) !important;
+  color: #A78BFA !important;
+  border-color: rgba(139, 92, 246, 0.28) !important;
 }
 .kpi-tag.kpi-tag-purple {
   background: rgba(236, 72, 153, 0.14) !important;
@@ -7481,8 +7481,8 @@ body.light .kpi-mini-bar {
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .dash-card:hover {
-  border-color: rgba(56, 189, 248, 0.3) !important;
-  box-shadow: 0 20px 48px -6px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 0 25px rgba(56, 189, 248, 0.08) !important;
+  border-color: rgba(139, 92, 246, 0.3) !important;
+  box-shadow: 0 20px 48px -6px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 0 25px rgba(139, 92, 246, 0.08) !important;
 }
 
 .dash-card-head {
@@ -7574,8 +7574,8 @@ body.light .kpi-mini-bar {
   transition: all 0.2s ease;
 }
 .dash-filter-pill.active {
-  background: rgba(56, 189, 248, 0.2);
-  color: #38BDF8;
+  background: rgba(139, 92, 246, 0.2);
+  color: #8B5CF6;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -7598,9 +7598,9 @@ body.light .kpi-mini-bar {
   color: #FBBF24;
 }
 .due-bill-badge.soon {
-  background: rgba(56, 189, 248, 0.14);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  color: #38BDF8;
+  background: rgba(139, 92, 246, 0.14);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #8B5CF6;
 }
 
 /* ==================== 4K Executive Dashboard Wheels, Charts & Widgets ==================== */
@@ -7633,9 +7633,9 @@ body.light .kpi-mini-bar {
   background: rgba(255, 255, 255, 0.06);
 }
 .dash-chart-mode-btn.active {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(2, 132, 199, 0.2));
-  color: #38BDF8;
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(124, 58, 237, 0.2));
+  color: #8B5CF6;
+  border: 1px solid rgba(139, 92, 246, 0.35);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 
@@ -7780,9 +7780,9 @@ body.light .kpi-mini-bar {
   background: rgba(255, 255, 255, 0.06);
 }
 .dash-wheel-tab-btn.active {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(2, 132, 199, 0.2));
-  color: #38BDF8;
-  border-color: rgba(56, 189, 248, 0.35);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(124, 58, 237, 0.2));
+  color: #8B5CF6;
+  border-color: rgba(139, 92, 246, 0.35);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 
@@ -7816,7 +7816,7 @@ body.light .kpi-mini-bar {
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 .dash-overview-card:hover {
-  border-color: rgba(56, 189, 248, 0.3);
+  border-color: rgba(139, 92, 246, 0.3);
 }
 
 /* Light mode overrides - REGRA: PRETO SÓLIDO #000000 PARA TEXTOS */
@@ -7858,7 +7858,7 @@ body.light .dash-filter-strip {
 body.light .dash-chart-mode-btn.active,
 body.light .dash-filter-pill.active {
   background: #FFFFFF !important;
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12) !important;
 }
 body.light .dash-metric-item,
@@ -7897,8 +7897,8 @@ body.light .dash-wheel-tab-btn:hover {
 }
 body.light .dash-wheel-tab-btn.active {
   background: #FFFFFF !important;
-  color: #0284C7 !important;
-  border-color: #BAE6FD !important;
+  color: #7C3AED !important;
+  border-color: #DDD6FE !important;
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12) !important;
 }
 body.light .dash-overview-card {
@@ -7916,10 +7916,10 @@ body.light .dash-overview-card {
   max-width: 430px;
   width: calc(100vw - 48px);
   background: linear-gradient(145deg, rgba(17, 24, 39, 0.97) 0%, rgba(10, 15, 29, 0.99) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.35);
+  border: 1px solid rgba(124, 58, 237, 0.35);
   border-radius: 20px;
   padding: 16px 18px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(59, 130, 246, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(124, 58, 237, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   transform: translateX(120%) scale(0.95);
@@ -7940,14 +7940,14 @@ body.light .dash-overview-card {
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.22) 0%, rgba(37, 99, 235, 0.16) 100%);
-  border: 1.5px solid rgba(0, 229, 255, 0.5);
-  color: #00E5FF;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.22) 0%, rgba(109, 40, 217, 0.16) 100%);
+  border: 1.5px solid rgba(124, 58, 237, 0.5);
+  color: #7C3AED;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
 }
 .toast-icon-wrap svg {
   width: 22px;
@@ -7971,9 +7971,9 @@ body.light .dash-overview-card {
   letter-spacing: 0.06em;
   padding: 2px 8px;
   border-radius: 6px;
-  background: rgba(59, 130, 246, 0.18);
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  color: #60A5FA;
+  background: rgba(124, 58, 237, 0.18);
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  color: #A78BFA;
 }
 .toast-time {
   font-size: 10.5px;
@@ -8018,7 +8018,7 @@ body.light .dash-overview-card {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #3B82F6, #00E5FF, #38BDF8);
+  background: linear-gradient(90deg, #8B5CF6, #7C3AED, #8B5CF6);
   border-radius: 0 0 20px 20px;
   animation: toastBarFill 4.5s linear forwards;
 }
@@ -8106,7 +8106,7 @@ body.light .toast-desc strong { color: #0F172A !important; }
 }
 .admin-search-input:focus {
   border-color: var(--blue);
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
 }
 .admin-filter-bar {
   display: flex;
@@ -8135,15 +8135,15 @@ body.light .toast-desc strong { color: #0F172A !important; }
   color: #FFFFFF;
 }
 .admin-filter-btn.active {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.15));
-  border-color: rgba(59, 130, 246, 0.5);
-  color: #60A5FA;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(109, 40, 217, 0.15));
+  border-color: rgba(124, 58, 237, 0.5);
+  color: #A78BFA;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
 }
 body.light .admin-filter-btn.active {
-  background: #EFF6FF;
-  border-color: #3B82F6;
-  color: #1D4ED8;
+  background: #F5F3FF;
+  border-color: #8B5CF6;
+  color: #6D28D9;
 }
 
 .user-admin-list {
@@ -8169,7 +8169,7 @@ body.light .admin-filter-btn.active {
 .user-card-4k:hover {
   border-color: rgba(96, 165, 250, 0.45) !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 18px 45px -4px rgba(0, 0, 0, 0.8), 0 0 24px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 18px 45px -4px rgba(0, 0, 0, 0.8), 0 0 24px rgba(124, 58, 237, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
 }
 .user-card-4k.inactive {
   opacity: 0.75;
@@ -8202,9 +8202,9 @@ body.light .admin-filter-btn.active {
   box-shadow: 0 0 18px rgba(245, 158, 11, 0.35), inset 0 1px 1px rgba(255,255,255,0.5);
 }
 .user-card-avatar.user-av {
-  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 60%, #1D4ED8 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 60%, #6D28D9 100%);
   border: 1.5px solid rgba(96, 165, 250, 0.5);
-  box-shadow: 0 0 18px rgba(59, 130, 246, 0.35), inset 0 1px 1px rgba(255,255,255,0.5);
+  box-shadow: 0 0 18px rgba(124, 58, 237, 0.35), inset 0 1px 1px rgba(255,255,255,0.5);
 }
 .user-status-dot {
   position: absolute;
@@ -8215,7 +8215,7 @@ body.light .admin-filter-btn.active {
   border-radius: 50%;
   border: 2px solid var(--bg);
 }
-.user-status-dot.online { background: #00E5FF; box-shadow: 0 0 6px #00E5FF; }
+.user-status-dot.online { background: #7C3AED; box-shadow: 0 0 6px #7C3AED; }
 .user-status-dot.offline { background: #EF4444; }
 
 .user-card-info {
@@ -8299,9 +8299,9 @@ body.light .admin-filter-btn.active {
   color: #FBBF24;
 }
 .role-badge.user {
-  background: rgba(59, 130, 246, 0.18);
-  border: 1px solid rgba(59, 130, 246, 0.4);
-  color: #60A5FA;
+  background: rgba(124, 58, 237, 0.18);
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  color: #A78BFA;
 }
 .role-badge.inactive {
   background: rgba(239, 68, 68, 0.18);
@@ -8452,7 +8452,7 @@ body.has-view-mode-banner .sidebar {
 
 .acc-card:hover {
   transform: translateY(-4px) !important;
-  box-shadow: 0 22px 50px -10px rgba(0, 0, 0, 0.85), 0 0 28px rgba(59, 130, 246, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 22px 50px -10px rgba(0, 0, 0, 0.85), 0 0 28px rgba(124, 58, 237, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
   border-color: rgba(96, 165, 250, 0.4) !important;
 }
 
@@ -8468,8 +8468,8 @@ html.light .acc-card {
 body.light .acc-card:hover,
 html.light .acc-card:hover {
   background: #FFFFFF !important;
-  border-color: #3B82F6 !important;
-  box-shadow: 0 18px 40px -8px rgba(59, 130, 246, 0.18), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 18px 40px -8px rgba(124, 58, 237, 0.18), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
   transform: translateY(-4px) !important;
 }
 
@@ -8527,16 +8527,16 @@ html.light .acc-card-chip.credit {
 }
 
 .acc-card-chip.bank {
-  background: rgba(0, 229, 255, 0.14) !important;
-  color: #00E5FF !important;
-  border: 1px solid rgba(0, 229, 255, 0.35) !important;
+  background: rgba(124, 58, 237, 0.14) !important;
+  color: #7C3AED !important;
+  border: 1px solid rgba(124, 58, 237, 0.35) !important;
 }
 
 body.light .acc-card-chip.bank,
 html.light .acc-card-chip.bank {
-  background: #E0F2FE !important;
-  color: #0284C7 !important;
-  border-color: #BAE6FD !important;
+  background: #F5F3FF !important;
+  color: #7C3AED !important;
+  border-color: #DDD6FE !important;
 }
 
 /* Painel Interno de Métricas Financeiras */
@@ -8657,9 +8657,9 @@ html.light .acc-subgrid-label {
 }
 
 .acc-view-tx-btn:hover {
-  background: rgba(59, 130, 246, 0.14) !important;
+  background: rgba(124, 58, 237, 0.14) !important;
   border-color: rgba(96, 165, 250, 0.5) !important;
-  color: #60A5FA !important;
+  color: #A78BFA !important;
   transform: translateY(-1px) !important;
 }
 
@@ -8684,10 +8684,10 @@ html.light .acc-view-tx-btn .btn-count-pill {
 
 body.light .acc-view-tx-btn:hover,
 html.light .acc-view-tx-btn:hover {
-  background: #EFF6FF !important;
-  border-color: #3B82F6 !important;
-  color: #1D4ED8 !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+  background: #F5F3FF !important;
+  border-color: #8B5CF6 !important;
+  color: #6D28D9 !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15) !important;
 }
 
 .acc-card .top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; gap:10px;}
@@ -8766,10 +8766,10 @@ html.light .acc-view-tx-btn:hover {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: rgba(0, 229, 255, 0.18);
-  border: 1px solid rgba(0, 229, 255, 0.45);
-  color: #00E5FF;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+  background: rgba(124, 58, 237, 0.18);
+  border: 1px solid rgba(124, 58, 237, 0.45);
+  color: #7C3AED;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.35);
   transition: all 0.25s ease;
 }
 
@@ -8834,10 +8834,10 @@ html.light .toast {
 }
 
 body.light .toast .toast-indicator {
-  background: rgba(2, 132, 199, 0.12);
-  border: 1px solid rgba(2, 132, 199, 0.35);
-  color: #0284C7;
-  box-shadow: 0 0 10px rgba(2, 132, 199, 0.18);
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  color: #7C3AED;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.18);
 }
 
 body.light .toast.toast-danger .toast-indicator {
@@ -8894,7 +8894,7 @@ body.light .toast-close:hover {
   left: 10%;
   right: 10%;
   height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), rgba(56, 189, 248, 0.85), rgba(96, 165, 250, 0.75), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), rgba(139, 92, 246, 0.85), rgba(96, 165, 250, 0.75), transparent);
   filter: blur(0.5px);
   pointer-events: none;
 }
@@ -8918,10 +8918,10 @@ body.light .toast-close:hover {
   opacity: 0.75;
 }
 .auth-ambient-glow.glow-blue {
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.35) 0%, rgba(14, 165, 233, 0.15) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.35) 0%, rgba(14, 165, 233, 0.15) 55%, transparent 75%);
 }
 .auth-ambient-glow.glow-emerald {
-  background: radial-gradient(circle, rgba(0, 229, 255, 0.35) 0%, rgba(14, 165, 233, 0.18) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.35) 0%, rgba(14, 165, 233, 0.18) 55%, transparent 75%);
 }
 .auth-ambient-glow.glow-red {
   background: radial-gradient(circle, rgba(239, 68, 68, 0.35) 0%, rgba(220, 38, 38, 0.15) 55%, transparent 75%);
@@ -8949,24 +8949,24 @@ body.light .toast-close:hover {
   border-radius: 50%;
 }
 .auth-badge-logout {
-  background: rgba(0, 229, 255, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  color: #38BDF8;
-  box-shadow: 0 0 16px rgba(0, 229, 255, 0.15);
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  color: #8B5CF6;
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.15);
 }
 .auth-badge-logout .auth-badge-dot {
-  background: #00E5FF;
-  box-shadow: 0 0 8px #00E5FF;
+  background: #7C3AED;
+  box-shadow: 0 0 8px #7C3AED;
 }
 .auth-badge-success {
-  background: rgba(59, 130, 246, 0.12);
+  background: rgba(124, 58, 237, 0.12);
   border: 1px solid rgba(96, 165, 250, 0.35);
-  color: #60A5FA;
-  box-shadow: 0 0 16px rgba(59, 130, 246, 0.15);
+  color: #A78BFA;
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.15);
 }
 .auth-badge-success .auth-badge-dot {
-  background: #3B82F6;
-  box-shadow: 0 0 8px #3B82F6;
+  background: #8B5CF6;
+  box-shadow: 0 0 8px #8B5CF6;
 }
 .auth-badge-error {
   background: rgba(239, 68, 68, 0.12);
@@ -8985,9 +8985,9 @@ body.light .toast-close:hover {
   height: 80px !important;
   margin: 0 auto 18px !important;
   border-radius: 50% !important;
-  background: radial-gradient(circle at 35% 30%, rgba(0, 229, 255, 0.28) 0%, rgba(59, 130, 246, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
-  border: 1.5px solid rgba(56, 189, 248, 0.55) !important;
-  box-shadow: 0 0 35px rgba(0, 229, 255, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
+  background: radial-gradient(circle at 35% 30%, rgba(124, 58, 237, 0.28) 0%, rgba(124, 58, 237, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
+  border: 1.5px solid rgba(139, 92, 246, 0.55) !important;
+  box-shadow: 0 0 35px rgba(124, 58, 237, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   display: flex !important;
@@ -8997,11 +8997,11 @@ body.light .toast-close:hover {
   z-index: 2;
 }
 .login-success-check svg { width: 38px; height: 38px; }
-.login-success-check circle { stroke: rgba(0, 229, 255, 0.35); stroke-width: 2.5; }
+.login-success-check circle { stroke: rgba(124, 58, 237, 0.35); stroke-width: 2.5; }
 .login-success-check path {
-  stroke: #00E5FF; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
+  stroke: #7C3AED; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
   stroke-dasharray: 40; stroke-dashoffset: 40; animation: loginCheckDraw .45s ease .15s forwards;
-  filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.85));
+  filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.85));
 }
 @keyframes loginCheckDraw{to{stroke-dashoffset:0;}}
 
@@ -9011,12 +9011,12 @@ body.light .toast-close:hover {
   height: 80px !important;
   margin: 0 auto 18px !important;
   border-radius: 50% !important;
-  background: radial-gradient(circle at 35% 30%, rgba(0, 229, 255, 0.28) 0%, rgba(6, 182, 212, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
-  border: 1.5px solid rgba(56, 189, 248, 0.55) !important;
+  background: radial-gradient(circle at 35% 30%, rgba(124, 58, 237, 0.28) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
+  border: 1.5px solid rgba(139, 92, 246, 0.55) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  box-shadow: 0 0 35px rgba(0, 229, 255, 0.38), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 0 35px rgba(124, 58, 237, 0.38), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   position: relative;
@@ -9029,8 +9029,8 @@ body.light .toast-close:hover {
 .logout-success-icon svg {
   width: 36px;
   height: 36px;
-  stroke: #38BDF8;
-  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.85));
+  stroke: #8B5CF6;
+  filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.85));
 }
 
 /* Tipografia Refinada 4K */
@@ -9063,11 +9063,11 @@ body.light .toast-close:hover {
   font-weight: 800 !important;
   font-size: 14.5px !important;
   letter-spacing: 0.01em !important;
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 50%, #075985 100%) !important;
+  background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 50%, #5B21B6 100%) !important;
   color: #FFFFFF !important;
   border: 1px solid rgba(255, 255, 255, 0.28) !important;
   cursor: pointer !important;
-  box-shadow: 0 14px 30px -4px rgba(2, 132, 199, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 14px 30px -4px rgba(124, 58, 237, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.3) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
   display: flex !important;
   align-items: center !important;
@@ -9079,8 +9079,8 @@ body.light .toast-close:hover {
 }
 .logout-btn-action:hover {
   transform: translateY(-2px) scale(1.015) !important;
-  background: linear-gradient(135deg, #38BDF8 0%, #0284C7 50%, #0369A1 100%) !important;
-  box-shadow: 0 18px 36px -4px rgba(2, 132, 199, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%) !important;
+  box-shadow: 0 18px 36px -4px rgba(124, 58, 237, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
   filter: brightness(1.04);
 }
 .logout-btn-action:active {
@@ -9109,9 +9109,9 @@ body.light .toast-close:hover {
 .logout-timer-progress {
   height: 100%;
   width: 100%;
-  background: linear-gradient(90deg, #00E5FF 0%, #0284C7 100%);
+  background: linear-gradient(90deg, #7C3AED 0%, #7C3AED 100%);
   border-radius: 999px;
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.7);
 }
 
 /* Barra de Progresso do Login */
@@ -9128,9 +9128,9 @@ body.light .toast-close:hover {
 .login-success-progress-fill {
   height: 100% !important;
   width: 0;
-  background: linear-gradient(90deg, #00E5FF 0%, #14B8A6 40%, #0284C7 75%, #38BDF8 100%) !important;
+  background: linear-gradient(90deg, #7C3AED 0%, #14B8A6 40%, #7C3AED 75%, #8B5CF6 100%) !important;
   border-radius: 999px !important;
-  box-shadow: 0 0 14px rgba(0, 229, 255, 0.85) !important;
+  box-shadow: 0 0 14px rgba(124, 58, 237, 0.85) !important;
   animation: loginProgressFill 1.35s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
 }
 @keyframes loginProgressFill{
@@ -9401,12 +9401,12 @@ body.light .mobile-drawer-logout-btn .ic svg {
   color: #FFFFFF;
 }
 .mobile-bottom-btn.active {
-  color: #38BDF8 !important;
+  color: #8B5CF6 !important;
   font-weight: 700;
 }
 .mobile-bottom-btn.active .ic svg {
-  stroke: #38BDF8;
-  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.7));
+  stroke: #8B5CF6;
+  filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.7));
 }
 
 body.light .mobile-bottom-bar {
@@ -9418,11 +9418,11 @@ body.light .mobile-bottom-btn {
   color: #64748B;
 }
 body.light .mobile-bottom-btn.active {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
 }
 body.light .mobile-bottom-btn.active .ic svg {
-  stroke: #0284C7;
-  filter: drop-shadow(0 0 4px rgba(2, 132, 199, 0.4));
+  stroke: #7C3AED;
+  filter: drop-shadow(0 0 4px rgba(124, 58, 237, 0.4));
 }
 
 @media (max-width: 860px) {
@@ -9578,7 +9578,7 @@ body.light .mobile-bottom-btn.active .ic svg {
   border: 1px solid var(--card-border, rgba(255, 255, 255, 0.15)) !important;
   border-radius: 14px !important;
   padding: 8px !important;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 20px rgba(59,130,246,0.15) !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 20px rgba(124, 58, 237,0.15) !important;
   z-index: 999999 !important;
   min-width: 200px;
   backdrop-filter: blur(28px) saturate(190%) !important;
@@ -9601,7 +9601,7 @@ body.light .mobile-bottom-btn.active .ic svg {
   user-select: none;
 }
 .scale-dropdown .scale-opt-btn:hover {
-  background: rgba(59, 130, 246, 0.18) !important;
+  background: rgba(124, 58, 237, 0.18) !important;
   color: #FFFFFF !important;
 }
 body.light .scale-dropdown,
@@ -9623,7 +9623,7 @@ html.light .scale-dropdown .scale-opt-btn {
 body.light .scale-dropdown .scale-opt-btn:hover,
 html.light .scale-dropdown .scale-opt-btn:hover {
   background: #f1f5f9 !important;
-  color: #0284c7 !important;
+  color: #7C3AED !important;
 }
 
 @media (max-width: 640px) {
@@ -9684,9 +9684,9 @@ html.light .scale-dropdown .scale-opt-btn:hover {
   user-select: none;
 }
 .pwd-req-pill.valid {
-  background: rgba(0, 229, 255, 0.15) !important;
-  border-color: rgba(0, 229, 255, 0.4) !important;
-  color: #38BDF8 !important;
+  background: rgba(124, 58, 237, 0.15) !important;
+  border-color: rgba(124, 58, 237, 0.4) !important;
+  color: #8B5CF6 !important;
 }
 body.light .pwd-req-pill,
 html.light .pwd-req-pill {
@@ -9696,9 +9696,9 @@ html.light .pwd-req-pill {
 }
 body.light .pwd-req-pill.valid,
 html.light .pwd-req-pill.valid {
-  background: #E0F2FE !important;
-  border-color: #BAE6FD !important;
-  color: #0284C7 !important;
+  background: #F5F3FF !important;
+  border-color: #DDD6FE !important;
+  color: #7C3AED !important;
 }
 
 /* Overlays para Senha Temporária e Troca Obrigatória de Senha */
@@ -9765,13 +9765,13 @@ html.light .mand-input-wrapper input {
   --glass-card-border: rgba(255, 255, 255, 0.12);
   --glass-card-border-top: rgba(255, 255, 255, 0.38);
   --glass-card-border-left: rgba(255, 255, 255, 0.22);
-  --glass-card-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.70), 0 0 35px -5px rgba(0, 229, 255, 0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.28), inset 0 -1px 2px rgba(0, 0, 0, 0.35);
-  --glass-card-hover-shadow: 0 26px 65px -10px rgba(0, 0, 0, 0.85), 0 0 45px -5px rgba(56, 189, 248, 0.22), inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  --glass-card-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.70), 0 0 35px -5px rgba(124, 58, 237, 0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.28), inset 0 -1px 2px rgba(0, 0, 0, 0.35);
+  --glass-card-hover-shadow: 0 26px 65px -10px rgba(0, 0, 0, 0.85), 0 0 45px -5px rgba(139, 92, 246, 0.22), inset 0 1px 2px rgba(255, 255, 255, 0.45);
   --glass-blur: blur(28px) saturate(210%) brightness(104%);
   --glass-blur-heavy: blur(40px) saturate(220%) brightness(106%);
   --glass-input-bg: rgba(18, 18, 18, 0.85);
   --glass-input-border: rgba(255, 255, 255, 0.14);
-  --glass-specular-sheen: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.18) 50%, rgba(0, 229, 255, 0.08) 55%, transparent 70%);
+  --glass-specular-sheen: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.18) 50%, rgba(124, 58, 237, 0.08) 55%, transparent 70%);
 }
 
 /* Modo Claro: Vidro Suíço Crystal Ice Glass (Textos 100% Pretos para Contraste Absoluto) */
@@ -9782,7 +9782,7 @@ body.light, html.light body, html.light {
   --glass-card-border-top: #FFFFFF;
   --glass-card-border-left: #FFFFFF;
   --glass-card-shadow: 0 14px 40px -6px rgba(15, 23, 42, 0.07), 0 2px 8px rgba(15, 23, 42, 0.03), inset 0 1.5px 2px #FFFFFF;
-  --glass-card-hover-shadow: 0 20px 50px -6px rgba(15, 23, 42, 0.13), 0 0 25px rgba(2, 132, 199, 0.12), inset 0 1.5px 2px #FFFFFF;
+  --glass-card-hover-shadow: 0 20px 50px -6px rgba(15, 23, 42, 0.13), 0 0 25px rgba(124, 58, 237, 0.12), inset 0 1.5px 2px #FFFFFF;
   --glass-blur: blur(28px) saturate(180%);
   --glass-blur-heavy: blur(36px) saturate(190%);
   --glass-input-bg: rgba(255, 255, 255, 0.92);
@@ -9795,13 +9795,13 @@ body.light, html.light body, html.light {
   backdrop-filter: var(--glass-blur-heavy) !important;
   -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 10px 35px -8px rgba(0, 0, 0, 0.75), inset 0 -1px 0 rgba(0, 229, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 10px 35px -8px rgba(0, 0, 0, 0.75), inset 0 -1px 0 rgba(124, 58, 237, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
 body.light .topheader, html.light .topheader {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.90) 100%) !important;
   border-bottom: 1.5px solid rgba(203, 213, 225, 0.85) !important;
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06), inset 0 -1px 0 rgba(2, 132, 199, 0.12), inset 0 1px 0 #FFFFFF !important;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06), inset 0 -1px 0 rgba(124, 58, 237, 0.12), inset 0 1px 0 #FFFFFF !important;
 }
 
 /* Perfil do Usuário e Botões em Cápsula de Vidro no Topo */
@@ -9818,8 +9818,8 @@ body.light .topheader, html.light .topheader {
 
 .aether-brand-user:hover {
   background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(0, 229, 255, 0.35) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 18px rgba(0, 229, 255, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(124, 58, 237, 0.35) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 18px rgba(124, 58, 237, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
   transform: translateY(-1px);
 }
 
@@ -9845,9 +9845,9 @@ body.light .topheader, html.light .topheader {
 #miniThemeBtn:hover,
 #notifBtn:hover {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(24, 34, 56, 0.75) 50%, rgba(12, 18, 30, 0.90) 100%) !important;
-  border-color: rgba(56, 189, 248, 0.55) !important;
+  border-color: rgba(139, 92, 246, 0.55) !important;
   border-top-color: rgba(255, 255, 255, 0.55) !important;
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55), 0 0 22px rgba(56, 189, 248, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55), 0 0 22px rgba(139, 92, 246, 0.28), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
   transform: translateY(-1.5px);
 }
 
@@ -9878,9 +9878,9 @@ body.light .scale-selector-wrap #scaleMenuBtn:hover,
 body.light #miniThemeBtn:hover,
 body.light #notifBtn:hover {
   background: #FFFFFF !important;
-  border-color: #0284C7 !important;
-  color: #0284C7 !important;
-  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.18), inset 0 1px 0 #FFFFFF !important;
+  border-color: #7C3AED !important;
+  color: #7C3AED !important;
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.18), inset 0 1px 0 #FFFFFF !important;
 }
 
 /* 3. BARRA DE MENU HORIZONTAL NO TOPO */
@@ -9948,7 +9948,7 @@ body.light .dashboard-welcome-hero {
 
 .kpi:hover {
   background: var(--glass-card-hover-bg) !important;
-  border-color: rgba(56, 189, 248, 0.45) !important;
+  border-color: rgba(139, 92, 246, 0.45) !important;
   border-top-color: rgba(255, 255, 255, 0.75) !important;
   box-shadow: var(--glass-card-hover-shadow) !important;
   transform: translateY(-3px) scale(1.01) !important;
@@ -9973,7 +9973,7 @@ body.light .kpi {
 
 body.light .kpi:hover {
   background: var(--glass-card-hover-bg) !important;
-  border-color: #0284C7 !important;
+  border-color: #7C3AED !important;
   box-shadow: var(--glass-card-hover-shadow) !important;
 }
 
@@ -10009,7 +10009,7 @@ body.light .kpi .ic {
 .tx-summary-card:hover,
 .acc-card:hover {
   background: var(--glass-card-hover-bg) !important;
-  border-color: rgba(56, 189, 248, 0.45) !important;
+  border-color: rgba(139, 92, 246, 0.45) !important;
   border-top-color: rgba(255, 255, 255, 0.70) !important;
   box-shadow: var(--glass-card-hover-shadow) !important;
   transform: translateY(-2.5px) !important;
@@ -10033,7 +10033,7 @@ body.light .chart-card:hover,
 body.light .tx-summary-card:hover,
 body.light .acc-card:hover {
   background: var(--glass-card-hover-bg) !important;
-  border-color: #0284C7 !important;
+  border-color: #7C3AED !important;
   box-shadow: var(--glass-card-hover-shadow) !important;
 }
 
@@ -10053,7 +10053,7 @@ table td {
 }
 
 tr.trow:hover td {
-  background: rgba(0, 229, 255, 0.05) !important;
+  background: rgba(124, 58, 237, 0.05) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
 }
@@ -10070,7 +10070,7 @@ body.light table td {
 }
 
 body.light tr.trow:hover td {
-  background: rgba(2, 132, 199, 0.06) !important;
+  background: rgba(124, 58, 237, 0.06) !important;
 }
 
 /* 8. BADGES E CHIPS COMO GEMAS DE VIDRO LAPIDADO (GEM CHIPS) */
@@ -10092,10 +10092,10 @@ body.light tr.trow:hover td {
 
 .status-pago,
 .status-recebido {
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.22) 0%, rgba(2, 132, 199, 0.12) 100%) !important;
-  border: 1px solid rgba(0, 229, 255, 0.45) !important;
-  color: #00E5FF !important;
-  box-shadow: 0 0 16px rgba(0, 229, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.22) 0%, rgba(124, 58, 237, 0.12) 100%) !important;
+  border: 1px solid rgba(124, 58, 237, 0.45) !important;
+  color: #7C3AED !important;
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
 }
 
 .status-pendente {
@@ -10107,9 +10107,9 @@ body.light tr.trow:hover td {
 
 body.light .status-pago,
 body.light .status-recebido {
-  background: #E0F2FE !important;
-  border: 1.5px solid #38BDF8 !important;
-  color: #0284C7 !important;
+  background: #F5F3FF !important;
+  border: 1.5px solid #8B5CF6 !important;
+  color: #7C3AED !important;
 }
 
 body.light .status-pendente {
@@ -10143,9 +10143,9 @@ select {
 .field textarea:focus,
 input:focus,
 select:focus {
-  border-color: #00E5FF !important;
+  border-color: #7C3AED !important;
   border-top-color: #FFFFFF !important;
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.25), 0 0 20px rgba(0, 229, 255, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25), 0 0 20px rgba(124, 58, 237, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
   outline: none !important;
 }
 
@@ -10162,8 +10162,8 @@ body.light select {
 
 body.light input:focus,
 body.light select:focus {
-  border-color: #0284C7 !important;
-  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.22), 0 0 14px rgba(2, 132, 199, 0.15) !important;
+  border-color: #7C3AED !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.22), 0 0 14px rgba(124, 58, 237, 0.15) !important;
 }
 
 /* 10. MODAIS, DROPDOWNS E POPUPS EM VIDRO ÓPTICO PROFUNDO */
@@ -10177,7 +10177,7 @@ body.light select:focus {
   border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
   border-top: 2px solid rgba(255, 255, 255, 0.50) !important;
   border-radius: 26px !important;
-  box-shadow: 0 35px 90px -15px rgba(0, 0, 0, 0.90), 0 0 45px rgba(0, 229, 255, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.40) !important;
+  box-shadow: 0 35px 90px -15px rgba(0, 0, 0, 0.90), 0 0 45px rgba(124, 58, 237, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.40) !important;
 }
 
 body.light .modal,
@@ -10194,12 +10194,12 @@ body.light .notif-panel {
 .btn-hero-primary,
 .btn-primary,
 .modal-actions .save {
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.95) 0%, rgba(14, 165, 233, 0.92) 50%, rgba(2, 132, 199, 0.95) 100%) !important;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.95) 0%, rgba(14, 165, 233, 0.92) 50%, rgba(124, 58, 237, 0.95) 100%) !important;
   backdrop-filter: blur(18px) !important;
   -webkit-backdrop-filter: blur(18px) !important;
   border: 1px solid rgba(255, 255, 255, 0.45) !important;
   border-top: 1.5px solid #FFFFFF !important;
-  box-shadow: 0 8px 25px rgba(0, 229, 255, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.80), inset 0 -2px 4px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.80), inset 0 -2px 4px rgba(0, 0, 0, 0.25) !important;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
@@ -10207,7 +10207,7 @@ body.light .notif-panel {
 .btn-primary:hover,
 .modal-actions .save:hover {
   transform: translateY(-2px) scale(1.02) !important;
-  box-shadow: 0 12px 32px rgba(0, 229, 255, 0.55), 0 0 30px rgba(0, 229, 255, 0.40), inset 0 1.5px 2px #FFFFFF !important;
+  box-shadow: 0 12px 32px rgba(124, 58, 237, 0.55), 0 0 30px rgba(124, 58, 237, 0.40), inset 0 1.5px 2px #FFFFFF !important;
 }
 
 .btn-hero-privacy {
@@ -10222,8 +10222,8 @@ body.light .notif-panel {
 
 .btn-hero-privacy:hover {
   background: rgba(255, 255, 255, 0.10) !important;
-  border-color: rgba(56, 189, 248, 0.40) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 18px rgba(56, 189, 248, 0.20), inset 0 1px 1.5px rgba(255, 255, 255, 0.30) !important;
+  border-color: rgba(139, 92, 246, 0.40) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 18px rgba(139, 92, 246, 0.20), inset 0 1px 1.5px rgba(255, 255, 255, 0.30) !important;
   transform: translateY(-1px);
 }
 
@@ -10257,7 +10257,7 @@ body.light .mobile-bottom-bar {
   -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
   border: 1.2px solid rgba(255, 255, 255, 0.18) !important;
   border-top: 1.8px solid rgba(255, 255, 255, 0.55) !important;
-  box-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 229, 255, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.85), 0 0 30px rgba(124, 58, 237, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
 }
 
 body.light .toast {
@@ -10336,7 +10336,7 @@ body.light .brand .name .brand-title {
   text-shadow: none !important;
 }
 body.light .brand .name .brand-sub {
-  color: #0284C7 !important;
+  color: #7C3AED !important;
   font-weight: 850 !important;
 }
 
@@ -10354,7 +10354,7 @@ body.light .brand .name .brand-sub {
 
 .aether-brand-user:hover {
   background: rgba(255, 255, 255, 0.09) !important;
-  border-color: rgba(56, 189, 248, 0.4) !important;
+  border-color: rgba(139, 92, 246, 0.4) !important;
   transform: translateY(-1px) !important;
 }
 
@@ -10402,20 +10402,20 @@ body.light .aether-brand-user {
 
 .kpi:hover {
   transform: translateY(-3px) !important;
-  border-color: rgba(56, 189, 248, 0.45) !important;
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(56, 189, 248, 0.15) !important;
+  border-color: rgba(139, 92, 246, 0.45) !important;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(139, 92, 246, 0.15) !important;
 }
 
 body.light .kpi {
   background: #FFFFFF !important;
   border: 1.5px solid #E2E8F0 !important;
-  border-top: 3px solid #0284C7 !important;
+  border-top: 3px solid #7C3AED !important;
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05) !important;
 }
 
 body.light .kpi:hover {
-  border-color: #0284C7 !important;
-  box-shadow: 0 8px 25px rgba(2, 132, 199, 0.12) !important;
+  border-color: #7C3AED !important;
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.12) !important;
 }
 
 .kpi .ic {
@@ -10463,7 +10463,7 @@ table th {
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
-  color: #38BDF8 !important;
+  color: #8B5CF6 !important;
   border-bottom: 1.5px solid rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -10486,11 +10486,11 @@ body.light table td {
 }
 
 tr.trow:hover td {
-  background: rgba(0, 229, 255, 0.04) !important;
+  background: rgba(124, 58, 237, 0.04) !important;
 }
 
 body.light tr.trow:hover td {
-  background: rgba(2, 132, 199, 0.04) !important;
+  background: rgba(124, 58, 237, 0.04) !important;
 }
 
 /* 7. Botões e Ações Rápidas (.btn-primary, .btn-ghost, etc.) */
@@ -10500,17 +10500,17 @@ body.light tr.trow:hover td {
   font-size: 13px !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+  background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
   color: #FFFFFF !important;
   border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35) !important;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35) !important;
   cursor: pointer !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .btn-primary:hover {
   transform: translateY(-1.5px) !important;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.5) !important;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.5) !important;
 }
 
 .btn-primary:active {
@@ -10563,8 +10563,8 @@ select, textarea {
 }
 
 input:focus, select:focus, textarea:focus {
-  border-color: #00E5FF !important;
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.25) !important;
+  border-color: #7C3AED !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25) !important;
   outline: none !important;
 }
 
@@ -10575,8 +10575,8 @@ body.light input, body.light select, body.light textarea {
 }
 
 body.light input:focus, body.light select:focus, body.light textarea:focus {
-  border-color: #0284C7 !important;
-  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2) !important;
+  border-color: #7C3AED !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2) !important;
 }
 
 /* 9. Pílulas e Badges de Status (.pill, .cat-pill, .status-pago, etc.) */
@@ -10607,15 +10607,15 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 :root {
   --fin-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --fin-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --fin-emerald: #00E5FF;
-  --fin-emerald-soft: rgba(0, 229, 255, 0.14);
-  --fin-emerald-border: rgba(0, 229, 255, 0.35);
+  --fin-emerald: #7C3AED;
+  --fin-emerald-soft: rgba(124, 58, 237, 0.14);
+  --fin-emerald-border: rgba(124, 58, 237, 0.35);
   --fin-crimson: #F43F5E;
   --fin-crimson-soft: rgba(244, 63, 94, 0.14);
   --fin-crimson-border: rgba(244, 63, 94, 0.35);
-  --fin-sapphire: #38BDF8;
-  --fin-sapphire-soft: rgba(56, 189, 248, 0.14);
-  --fin-sapphire-border: rgba(56, 189, 248, 0.35);
+  --fin-sapphire: #8B5CF6;
+  --fin-sapphire-soft: rgba(139, 92, 246, 0.14);
+  --fin-sapphire-border: rgba(139, 92, 246, 0.35);
   --fin-amber: #F59E0B;
   --fin-amber-soft: rgba(245, 158, 11, 0.14);
   --fin-amber-border: rgba(245, 158, 11, 0.35);
@@ -10676,14 +10676,14 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.4), transparent);
   pointer-events: none;
 }
 
 .kpi:hover, .dash-card:hover, .dash-overview-card:hover {
   transform: translateY(-2.5px) !important;
-  border-color: rgba(56, 189, 248, 0.35) !important;
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.7), 0 0 25px -4px rgba(56, 189, 248, 0.15) !important;
+  border-color: rgba(139, 92, 246, 0.35) !important;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.7), 0 0 25px -4px rgba(139, 92, 246, 0.15) !important;
 }
 
 /* Títulos e Rótulos de KPIs */
@@ -10729,9 +10729,9 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 }
 
 .due-bill-badge.future {
-  background: rgba(56, 189, 248, 0.14) !important;
-  color: #38BDF8 !important;
-  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  background: rgba(139, 92, 246, 0.14) !important;
+  color: #8B5CF6 !important;
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
 }
 
 /* 7. TABELAS DE TRANSAÇÕES & EXTRATOS (LEDGER FINANCEIRO) */
@@ -10771,9 +10771,9 @@ td:last-child, th:last-child, td.val, td.amount, td.tx-val, th.th-val {
 
 /* Badges de Status das Transações */
 .status-pago, .status-recebido, .status-badge.paid {
-  background: rgba(0, 229, 255, 0.14) !important;
-  color: #00E5FF !important;
-  border: 1px solid rgba(0, 229, 255, 0.32) !important;
+  background: rgba(124, 58, 237, 0.14) !important;
+  color: #7C3AED !important;
+  border: 1px solid rgba(124, 58, 237, 0.32) !important;
   padding: 3px 9px !important;
   border-radius: 999px !important;
   font-size: 11px !important;
@@ -10807,8 +10807,8 @@ td:last-child, th:last-child, td.val, td.amount, td.tx-val, th.th-val {
   border-radius: 20px !important;
   background: linear-gradient(165deg, rgba(14, 22, 38, 0.96) 0%, rgba(8, 12, 22, 0.98) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-top: 2px solid rgba(56, 189, 248, 0.4) !important;
-  box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.12) !important;
+  border-top: 2px solid rgba(139, 92, 246, 0.4) !important;
+  box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.85), 0 0 35px rgba(139, 92, 246, 0.12) !important;
   padding: 26px !important;
 }
 
@@ -10823,31 +10823,31 @@ input[type="text"], input[type="number"], input[type="date"], input[type="email"
 }
 
 input:focus, select:focus, textarea:focus {
-  border-color: #00E5FF !important;
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.25), 0 0 15px rgba(0, 229, 255, 0.15) !important;
+  border-color: #7C3AED !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25), 0 0 15px rgba(124, 58, 237, 0.15) !important;
   outline: none !important;
 }
 
 /* Botão Salvar / Ação Primária */
 .btn-primary, button.save, #saveBtn, #accSaveBtn, #catSaveBtn {
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+  background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
   color: #FFFFFF !important;
   font-weight: 750 !important;
   border-radius: 12px !important;
   padding: 11px 22px !important;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.4) !important;
+  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.4) !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .btn-primary:hover, button.save:hover, #saveBtn:hover, #accSaveBtn:hover, #catSaveBtn:hover {
   transform: translateY(-1.5px) !important;
-  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.55) !important;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.55) !important;
 }
 
 /* 9. MODO CLARO (LIGHT MODE) - ALTO CONTRASTE TOTAL CONFORME REGRA SKILL */
 body.light, html.light body, html.light {
-  background-color: #F8FAFC !important;
+  background-color: #FFFFFF !important;
   color: #000000 !important;
 }
 
@@ -10874,14 +10874,14 @@ body.light nav.menu button:hover, body.light .menu button:hover {
 }
 
 body.light nav.menu button.active, body.light .menu button.active {
-  background: #E0F2FE !important;
-  border-color: #38BDF8 !important;
-  color: #0284C7 !important;
-  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15) !important;
+  background: #F5F3FF !important;
+  border-color: #8B5CF6 !important;
+  color: #7C3AED !important;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15) !important;
 }
 
 body.light nav.menu button.active .ic svg {
-  stroke: #0284C7 !important;
+  stroke: #7C3AED !important;
 }
 
 body.light .kpi, body.light .dash-card, body.light .dash-overview-card, body.light .panel, body.light .table-panel, body.light .modal, body.light .modal-box {
@@ -10891,7 +10891,7 @@ body.light .kpi, body.light .dash-card, body.light .dash-overview-card, body.lig
 }
 
 body.light .kpi::before, body.light .dash-card::before {
-  background: linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.4), transparent) !important;
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.4), transparent) !important;
 }
 
 body.light .kpi .val, body.light .kpi-value, body.light h1, body.light h2, body.light h3, body.light h4, body.light p, body.light span:not(.due-bill-badge):not(.status-pago):not(.status-recebido):not(.status-pendente), body.light strong, body.light label {
@@ -10920,15 +10920,15 @@ body.light input, body.light select, body.light textarea {
 }
 
 body.light input:focus, body.light select:focus, body.light textarea:focus {
-  border-color: #0284C7 !important;
-  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2) !important;
+  border-color: #7C3AED !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2) !important;
 }
 
 /* 10. MICRO-INTERAÇÕES & RESPONSIVIDADE ULTRA 4K */
 
 </style>
 </head>
-<body>
+<body class="light">
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
 <div id="persistentSystemBg" class="persistent-system-bg" aria-hidden="true"></div>
 <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
@@ -11330,17 +11330,17 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
             <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="nexusColLeftHeader" x1="0" y1="0" x2="0" y2="28" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#38BDF8"/>
-                  <stop offset="100%" stop-color="#0284C7"/>
+                  <stop offset="0%" stop-color="#8B5CF6"/>
+                  <stop offset="100%" stop-color="#7C3AED"/>
                 </linearGradient>
                 <linearGradient id="nexusDiagonalHeader" x1="6" y1="5" x2="22" y2="23" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#60A5FA"/>
-                  <stop offset="50%" stop-color="#0284C7"/>
-                  <stop offset="100%" stop-color="#00E5FF"/>
+                  <stop offset="0%" stop-color="#A78BFA"/>
+                  <stop offset="50%" stop-color="#7C3AED"/>
+                  <stop offset="100%" stop-color="#7C3AED"/>
                 </linearGradient>
                 <linearGradient id="nexusColRightHeader" x1="0" y1="0" x2="0" y2="28" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#00E5FF"/>
-                  <stop offset="100%" stop-color="#0284C7"/>
+                  <stop offset="0%" stop-color="#7C3AED"/>
+                  <stop offset="100%" stop-color="#7C3AED"/>
                 </linearGradient>
               </defs>
               <rect x="4.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColLeftHeader)"/>
@@ -11361,8 +11361,8 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       <div class="aether-header-right">
         <!-- 1. Cápsula de Identidade do Usuário (Avatar e Nome Separados de Minha Conta) -->
         <div class="header-user-badge" id="headerUserBadge" data-nav="config" title="Perfil do Usuário Conectado">
-          <div class="avatar" id="headerAvatar" style="width:26px; height:26px; font-size:11px; font-weight:800; border-radius:50%; background:linear-gradient(135deg, #0284C7, #0369A1); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">PL</div>
-          <span class="header-user-name" id="headerName" style="font-weight:800; color:#38BDF8; font-size:13px; max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Paulo Lima</span>
+          <div class="avatar" id="headerAvatar" style="width:26px; height:26px; font-size:11px; font-weight:800; border-radius:50%; background:linear-gradient(135deg, #7C3AED, #6D28D9); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">PL</div>
+          <span class="header-user-name" id="headerName" style="font-weight:800; color:#8B5CF6; font-size:13px; max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Paulo Lima</span>
         </div>
 
         <!-- 2. Botão Independente 'Minha Conta' -->
@@ -11520,17 +11520,17 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
           <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="nexusColLeftDrawer" x1="0" y1="0" x2="0" y2="28" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#38BDF8"/>
-                <stop offset="100%" stop-color="#0284C7"/>
+                <stop offset="0%" stop-color="#8B5CF6"/>
+                <stop offset="100%" stop-color="#7C3AED"/>
               </linearGradient>
               <linearGradient id="nexusDiagonalDrawer" x1="6" y1="5" x2="22" y2="23" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#60A5FA"/>
-                <stop offset="50%" stop-color="#0284C7"/>
-                <stop offset="100%" stop-color="#00E5FF"/>
+                <stop offset="0%" stop-color="#A78BFA"/>
+                <stop offset="50%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#7C3AED"/>
               </linearGradient>
               <linearGradient id="nexusColRightDrawer" x1="0" y1="0" x2="0" y2="28" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#00E5FF"/>
-                <stop offset="100%" stop-color="#0284C7"/>
+                <stop offset="0%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#7C3AED"/>
               </linearGradient>
             </defs>
             <rect x="4.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColLeftDrawer)"/>
@@ -11818,7 +11818,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
   <div class="modal" style="max-width: 480px;">
     <button class="close-x" id="closeLaunchRecModal">✕</button>
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
-      <span style="font-size:22px; background:rgba(0,229,255,0.15); width:42px; height:42px; display:flex; align-items:center; justify-content:center; border-radius:12px; color:var(--brand-bright); flex-shrink:0;">⚡</span>
+      <span style="font-size:22px; background:rgba(124, 58, 237,0.15); width:42px; height:42px; display:flex; align-items:center; justify-content:center; border-radius:12px; color:var(--brand-bright); flex-shrink:0;">⚡</span>
       <div>
         <h2 style="margin:0; font-size:17px; font-weight:800; color:var(--text);">Aplicar Lançamento Recorrente</h2>
         <p style="margin:2px 0 0 0; font-size:12px; color:var(--text-dim);" id="launchRecSubtitle">Selecione como deseja lançar esta conta no sistema</p>
@@ -11835,9 +11835,9 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         <span class="pill" id="launchNextMonthPill" style="background:rgba(0,0,0,0.25); color:#fff; font-size:11px;">Mês 1 de 12</span>
       </button>
 
-      <button class="btn-ghost" id="btnLaunchAllMonths" style="padding:12px 16px; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:space-between; width:100%; border-radius:10px; border:1px solid rgba(59,130,246,0.35); background:rgba(59,130,246,0.08); color:var(--blue);">
+      <button class="btn-ghost" id="btnLaunchAllMonths" style="padding:12px 16px; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:space-between; width:100%; border-radius:10px; border:1px solid rgba(124, 58, 237,0.35); background:rgba(124, 58, 237,0.08); color:var(--blue);">
         <span style="display:flex; align-items:center; gap:8px;">⚡ <span id="btnLaunchAllMonthsLabel">Lançar Todos os Meses Restantes em Lote</span></span>
-        <span class="pill" id="launchAllMonthsPill" style="background:rgba(59,130,246,0.2); color:var(--blue); font-size:11px;">Restam 11 meses</span>
+        <span class="pill" id="launchAllMonthsPill" style="background:rgba(124, 58, 237,0.2); color:var(--blue); font-size:11px;">Restam 11 meses</span>
       </button>
 
       <button class="btn-ghost" id="btnLaunchSelectedPeriod" style="padding:10px 14px; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px; width:100%; border-radius:10px;">
@@ -11871,7 +11871,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 <!-- Modal Usuário (Admin) - Central de Correção Cadastral -->
 <div class="overlay" id="overlayUserAdmin" onclick="if(event.target===this) closeUserAdminModal()">
-  <div class="modal" style="max-width:560px; border-radius:26px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.95) 0%, rgba(10,15,30,0.98) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(59,130,246,0.18); padding:26px;">
+  <div class="modal" style="max-width:560px; border-radius:26px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.95) 0%, rgba(10,15,30,0.98) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(124, 58, 237,0.18); padding:26px;">
     <button class="close-x" id="closeUserAdminModal" type="button" onclick="closeUserAdminModal()">✕</button>
     <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
       <span>🛠️ Auditoria & Correção Cadastral</span>
@@ -11900,7 +11900,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
       <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
         <label style="font-size:12px; font-weight:700; color:var(--text-dim); display:flex; justify-content:space-between; align-items:center;">
           <span>E-mail de Acesso *</span>
-          <span style="font-size:11px; color:#60A5FA; font-weight:600;">(Corrigir caso haja erro de digitação no autocadastro)</span>
+          <span style="font-size:11px; color:#A78BFA; font-weight:600;">(Corrigir caso haja erro de digitação no autocadastro)</span>
         </label>
         <input id="userAdminEmail" placeholder="email@exemplo.com" style="height:42px; border-radius:12px; font-size:13.5px;">
       </div>
@@ -11933,7 +11933,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
     <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px;">
       <button id="userAdminCancelBtn" type="button" onclick="closeUserAdminModal()" style="height:40px; padding:0 18px; border-radius:12px;">Cancelar</button>
-      <button class="save" id="userAdminSaveBtn" type="button" onclick="saveUserAdmin()" style="height:40px; padding:0 22px; border-radius:12px; background:linear-gradient(135deg, #0284C7, #00E5FF); font-weight:800;">
+      <button class="save" id="userAdminSaveBtn" type="button" onclick="saveUserAdmin()" style="height:40px; padding:0 22px; border-radius:12px; background:linear-gradient(135deg, #7C3AED, #7C3AED); font-weight:800;">
         Salvar Correções ✓
       </button>
     </div>
@@ -11942,7 +11942,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 <!-- Modal Abrir Nova Ordem de Serviço (Público / Tela de Login) -->
 <div class="overlay" id="overlayNovaOrdem" onclick="if(event.target===this) closeNovaOrdemModal()">
-  <div class="modal" style="max-width:560px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.68) 0%, rgba(15,23,42,0.86) 45%, rgba(8,12,26,0.96) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(59,130,246,0.22), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
+  <div class="modal" style="max-width:560px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.68) 0%, rgba(15,23,42,0.86) 45%, rgba(8,12,26,0.96) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(124, 58, 237,0.22), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
     <button class="close-x" type="button" onclick="closeNovaOrdemModal()">✕</button>
 
     <!-- Abas de Navegação: Abrir Ordem de Serviço OS vs Consulta de OS -->
@@ -11956,8 +11956,8 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     </div>
 
     <div id="boxNovaOrdemForm">
-      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
-        <span style="width:6px; height:6px; border-radius:50%; background:#3B82F6; box-shadow:0 0 8px #3B82F6;"></span>
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(124, 58, 237,0.15); border:1px solid rgba(124, 58, 237,0.35); color:#C4B5FD; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#8B5CF6; box-shadow:0 0 8px #8B5CF6;"></span>
         <span>Suporte Técnico & Chamados</span>
       </div>
       <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
@@ -12025,7 +12025,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
         <div class="modal-actions" style="margin-top:16px;">
           <button type="button" onclick="closeNovaOrdemModal()">Cancelar</button>
-          <button type="submit" class="save" id="btnSubmitOs" style="background:linear-gradient(135deg, #3B82F6, #1D4ED8); font-weight:800; border:1px solid rgba(255,255,255,0.25);">
+          <button type="submit" class="save" id="btnSubmitOs" style="background:linear-gradient(135deg, #8B5CF6, #6D28D9); font-weight:800; border:1px solid rgba(255,255,255,0.25);">
             Enviar Ordem de Serviço 🚀
           </button>
         </div>
@@ -12034,7 +12034,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
     <!-- Tela de Sucesso após Abertura -->
     <div id="boxNovaOrdemSuccess" style="display:none; text-align:center; padding:12px 6px;">
-      <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, rgba(0,229,255,0.25), rgba(2,132,199,0.35)); border:2px solid #00E5FF; color:#38BDF8; font-size:26px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 0 24px rgba(0,229,255,0.4);">
+      <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, rgba(124, 58, 237,0.25), rgba(124, 58, 237,0.35)); border:2px solid #7C3AED; color:#8B5CF6; font-size:26px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 0 24px rgba(124, 58, 237,0.4);">
         ✓
       </div>
       <h3 style="font-size:20px; font-weight:900; margin-bottom:6px;">Ordem de Serviço Aberta!</h3>
@@ -12042,12 +12042,12 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         Sua solicitação foi registrada no sistema e já está disponível para análise da equipe de administração.
       </p>
 
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(59,130,246,0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
+      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(124, 58, 237,0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
         <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Número do Protocolo</span>
-        <div style="font-size:22px; font-weight:900; color:#60A5FA; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
+        <div style="font-size:22px; font-weight:900; color:#A78BFA; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
         <div style="display:flex; justify-content:center; gap:8px; margin-top:10px; flex-wrap:wrap;">
-          <button type="button" onclick="copyOsProtocol()" style="background:rgba(59,130,246,0.2); border:1px solid rgba(96,165,250,0.4); color:#BFDBFE; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
-          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(0,229,255,0.2); border:1px solid rgba(56,189,248,0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Visualizar Chamado</button>
+          <button type="button" onclick="copyOsProtocol()" style="background:rgba(124, 58, 237,0.2); border:1px solid rgba(96,165,250,0.4); color:#DDD6FE; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
+          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(124, 58, 237,0.2); border:1px solid rgba(139, 92, 246,0.4); color:#DDD6FE; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Visualizar Chamado</button>
         </div>
       </div>
 
@@ -12058,8 +12058,8 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
     <!-- Aba de Consulta de O.S. Aberta por Nome ou E-mail -->
     <div id="boxConsultarOrdem" style="display:none;">
-      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
-        <span style="width:6px; height:6px; border-radius:50%; background:#3B82F6; box-shadow:0 0 8px #3B82F6;"></span>
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(124, 58, 237,0.15); border:1px solid rgba(124, 58, 237,0.35); color:#C4B5FD; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#8B5CF6; box-shadow:0 0 8px #8B5CF6;"></span>
         <span>Acompanhamento de Chamados</span>
       </div>
       <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
@@ -12074,7 +12074,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
           <div style="flex:1; min-width:240px; position:relative;">
             <input id="osConsultarQuery" required placeholder="Digite seu Nome ou E-mail cadastrado..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
           </div>
-          <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#FFFFFF; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(59,130,246,0.35);">
+          <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #8B5CF6, #6D28D9); color:#FFFFFF; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(124, 58, 237,0.35);">
             🔍 Buscar O.S.
           </button>
         </div>
@@ -12095,19 +12095,19 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 <!-- Modal Visualizar e Atender Ordem de Serviço (Administrador / Suporte) -->
 <div class="overlay" id="overlayOrdemAdmin" onclick="if(event.target===this) closeOrdemAdminModal()">
-  <div class="modal" style="max-width:620px; border-radius:26px; border:1px solid rgba(59, 130, 246, 0.35); box-shadow:0 30px 80px rgba(0,0,0,0.9); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%);">
+  <div class="modal" style="max-width:620px; border-radius:26px; border:1px solid rgba(124, 58, 237, 0.35); box-shadow:0 30px 80px rgba(0,0,0,0.9); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%);">
     <button class="close-x" type="button" onclick="closeOrdemAdminModal()">✕</button>
     
     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap;">
       <div>
-        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#93C5FD; font-size:11.5px; font-weight:800; margin-bottom:6px;">
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(124, 58, 237,0.15); border:1px solid rgba(124, 58, 237,0.35); color:#C4B5FD; font-size:11.5px; font-weight:800; margin-bottom:6px;">
           <span id="osAdminProtocolBadge">#OS-000000</span>
         </div>
         <h2 style="font-size:19px; font-weight:900; margin:0;" id="osAdminTitle">Título da Solicitação</h2>
         <span style="font-size:12px; color:var(--text-dim);" id="osAdminDate">Aberta em: --/--/----</span>
       </div>
       <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-        <label style="font-size:10.5px; font-weight:800; text-transform:uppercase; color:#93C5FD; letter-spacing:0.04em;">Prioridade do Chamado:</label>
+        <label style="font-size:10.5px; font-weight:800; text-transform:uppercase; color:#C4B5FD; letter-spacing:0.04em;">Prioridade do Chamado:</label>
         <select id="osAdminPrioritySelect" onchange="atualizarEstiloPrioridadeAdmin(this.value)" style="height:34px; padding:0 12px; border-radius:10px; font-size:12px; font-weight:800; background:rgba(15,23,42,0.85); border:1.5px solid rgba(245,158,11,0.5); color:#FBBF24; cursor:pointer; outline:none; box-shadow:0 4px 14px rgba(0,0,0,0.4); transition:all 0.2s ease;">
           <option value="Normal">🟢 Prioridade Normal</option>
           <option value="Alta">🟡 Prioridade Alta</option>
@@ -12125,7 +12125,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         </div>
         <div>
           <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">E-mail</span>
-          <a href="#" id="osAdminClientEmail" style="font-size:13px; color:#60A5FA; text-decoration:none; font-weight:600;">email@exemplo.com</a>
+          <a href="#" id="osAdminClientEmail" style="font-size:13px; color:#A78BFA; text-decoration:none; font-weight:600;">email@exemplo.com</a>
         </div>
         <div>
           <label style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700; margin-bottom:2px;">Tipo de Demanda</label>
@@ -12147,16 +12147,16 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         </div>
         <div>
           <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Canal de Recepção</span>
-          <span style="font-size:13px; color:#38BDF8; font-weight:700;" id="osAdminCanal">Portal Web</span>
+          <span style="font-size:13px; color:#8B5CF6; font-weight:700;" id="osAdminCanal">Portal Web</span>
         </div>
       </div>
 
       <!-- Atalhos Rápidos de Contato Direto do Suporte -->
       <div style="display:flex; gap:8px; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px; flex-wrap:wrap;">
-        <a id="osAdminWhatsappBtn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:10px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.35); color:#00E5FF; font-size:12px; font-weight:700; text-decoration:none;">
+        <a id="osAdminWhatsappBtn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:10px; background:rgba(124, 58, 237,0.15); border:1px solid rgba(124, 58, 237,0.35); color:#7C3AED; font-size:12px; font-weight:700; text-decoration:none;">
           <span>💬 Falar no WhatsApp</span>
         </a>
-        <a id="osAdminEmailBtn" href="#" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:10px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#60A5FA; font-size:12px; font-weight:700; text-decoration:none;">
+        <a id="osAdminEmailBtn" href="#" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:10px; background:rgba(124, 58, 237,0.15); border:1px solid rgba(124, 58, 237,0.35); color:#A78BFA; font-size:12px; font-weight:700; text-decoration:none;">
           <span>✉️ Responder por E-mail</span>
         </a>
       </div>
@@ -12171,17 +12171,17 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     <!-- Área de Resolução e Status (Suporte) -->
     <div style="border-top:1px solid var(--card-border); padding-top:14px; margin-top:14px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <h3 style="font-size:14px; font-weight:800; margin:0; color:#93C5FD;">🎧 Atendimento do Suporte</h3>
+        <h3 style="font-size:14px; font-weight:800; margin:0; color:#C4B5FD;">🎧 Atendimento do Suporte</h3>
         <span style="font-size:11px; color:var(--text-dim);">Fila oficial de suporte</span>
       </div>
 
       <!-- Atribuição de Técnico Responsável -->
       <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:16px; padding:14px; margin-bottom:14px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
-          <label style="font-size:12px; font-weight:800; color:#93C5FD; display:flex; align-items:center; gap:6px; margin:0;">
+          <label style="font-size:12px; font-weight:800; color:#C4B5FD; display:flex; align-items:center; gap:6px; margin:0;">
             <span>👷 Técnico Responsável:</span>
           </label>
-          <button type="button" onclick="assumirOrdemDiretoNoModal()" style="display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:8px; background:linear-gradient(135deg, #0284C7, #00E5FF); color:#060B18; font-size:11px; font-weight:900; border:none; cursor:pointer; box-shadow:0 0 10px rgba(0,229,255,0.4);" title="Assumir este chamado com meu usuário atual">
+          <button type="button" onclick="assumirOrdemDiretoNoModal()" style="display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:8px; background:linear-gradient(135deg, #7C3AED, #7C3AED); color:#060B18; font-size:11px; font-weight:900; border:none; cursor:pointer; box-shadow:0 0 10px rgba(124, 58, 237,0.4);" title="Assumir este chamado com meu usuário atual">
             <span>⚡ Assumir Chamado Agora</span>
           </button>
         </div>
@@ -12195,9 +12195,9 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
           </button>
         </div>
 
-        <div id="osAdminAssumidoBanner" style="display:none; margin-top:8px; padding:6px 10px; border-radius:8px; background:rgba(0,229,255,0.12); border:1px solid rgba(0,229,255,0.3); font-size:11.5px; color:#38BDF8; font-weight:700; align-items:center; gap:6px;">
+        <div id="osAdminAssumidoBanner" style="display:none; margin-top:8px; padding:6px 10px; border-radius:8px; background:rgba(124, 58, 237,0.12); border:1px solid rgba(124, 58, 237,0.3); font-size:11.5px; color:#8B5CF6; font-weight:700; align-items:center; gap:6px;">
           <span>✓ Responsável atual:</span>
-          <strong id="osAdminAssumidoNome" style="color:#38BDF8;"></strong>
+          <strong id="osAdminAssumidoNome" style="color:#8B5CF6;"></strong>
           <span id="osAdminAssumidoData" style="font-size:10.5px; color:#7DD3FC; margin-left:auto;"></span>
         </div>
       </div>
@@ -12223,11 +12223,11 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; flex-wrap:wrap; gap:10px;">
       <div style="display:flex; gap:8px;">
         <button type="button" class="btn-ghost" onclick="excluirOrdemAdmin()" style="color:#F87171; border-color:rgba(239,68,68,0.3);">🗑️ Excluir O.S.</button>
-        <button type="button" class="btn-ghost" onclick="imprimirFichaOrdem(document.getElementById('osAdminCurrentId').value)" style="color:#38BDF8; border-color:rgba(56,189,248,0.35);">🖨️ Imprimir Ficha O.S.</button>
+        <button type="button" class="btn-ghost" onclick="imprimirFichaOrdem(document.getElementById('osAdminCurrentId').value)" style="color:#8B5CF6; border-color:rgba(139, 92, 246,0.35);">🖨️ Imprimir Ficha O.S.</button>
       </div>
       <div style="display:flex; gap:10px;">
         <button type="button" onclick="closeOrdemAdminModal()">Fechar</button>
-        <button type="button" class="save" onclick="salvarOrdemAdmin()" style="background:linear-gradient(135deg, #0284C7, #00E5FF); font-weight:800;">Salvar Atendimento ✓</button>
+        <button type="button" class="save" onclick="salvarOrdemAdmin()" style="background:linear-gradient(135deg, #7C3AED, #7C3AED); font-weight:800;">Salvar Atendimento ✓</button>
       </div>
     </div>
   </div>
@@ -12235,10 +12235,10 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 <!-- Modal Registrar Nova Ordem de Serviço via Suporte (Administrador) -->
 <div class="overlay" id="overlaySuporteNovaOrdem" onclick="if(event.target===this) closeSuporteNovaOrdemModal()">
-  <div class="modal" style="max-width:580px; border-radius:26px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.95) 0%, rgba(10,15,30,0.98) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(0,229,255,0.18); padding:26px;">
+  <div class="modal" style="max-width:580px; border-radius:26px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.95) 0%, rgba(10,15,30,0.98) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(124, 58, 237,0.18); padding:26px;">
     <button class="close-x" type="button" onclick="closeSuporteNovaOrdemModal()">✕</button>
 
-    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.35); color:#38BDF8; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(124, 58, 237,0.15); border:1px solid rgba(124, 58, 237,0.35); color:#8B5CF6; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
       <span>🎧 Atendimento de Suporte</span>
     </div>
     <h2 style="font-size:20px; font-weight:900; margin:0 0 4px 0; color:var(--text);">Registrar Ordem de Serviço (O.S.)</h2>
@@ -12320,7 +12320,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
       <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px;">
         <button type="button" onclick="closeSuporteNovaOrdemModal()" style="height:40px; padding:0 18px; border-radius:12px;">Cancelar</button>
-        <button class="save" type="submit" id="btnSalvarSuporteOrdem" style="height:40px; padding:0 22px; border-radius:12px; background:linear-gradient(135deg, #0284C7, #00E5FF); font-weight:800;">
+        <button class="save" type="submit" id="btnSalvarSuporteOrdem" style="height:40px; padding:0 22px; border-radius:12px; background:linear-gradient(135deg, #7C3AED, #7C3AED); font-weight:800;">
           Criar Chamado de Suporte 🚀
         </button>
       </div>
@@ -12389,7 +12389,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
         <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:14px;">
           <button type="button" onclick="cancelarEdicaoTecnico()" style="height:38px; padding:0 16px; border-radius:12px; font-size:12.5px;">Cancelar</button>
-          <button type="submit" id="btnSalvarTecnico" class="save" style="height:38px; padding:0 20px; border-radius:12px; background:linear-gradient(135deg, #0284C7, #00E5FF); font-weight:800; font-size:12.5px;">Salvar Técnico ✓</button>
+          <button type="submit" id="btnSalvarTecnico" class="save" style="height:38px; padding:0 20px; border-radius:12px; background:linear-gradient(135deg, #7C3AED, #7C3AED); font-weight:800; font-size:12.5px;">Salvar Técnico ✓</button>
         </div>
       </form>
     </div>
@@ -12418,7 +12418,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 </div>
 
 <div class="login-success-overlay" id="loginSuccessOverlay" role="dialog" aria-modal="true">
-  <div class="login-success-box" style="max-width:440px; padding:38px 30px 32px; border-radius:28px; border:1px solid rgba(0,229,255,0.35); border-top:1.8px solid rgba(255,255,255,0.45); background:linear-gradient(165deg, rgba(17,24,39,0.96) 0%, rgba(10,15,28,0.98) 100%); box-shadow:0 35px 95px rgba(0,0,0,0.95), 0 0 50px rgba(0,229,255,0.22), inset 0 1px 1px rgba(255,255,255,0.25);">
+  <div class="login-success-box" style="max-width:440px; padding:38px 30px 32px; border-radius:28px; border:1px solid rgba(124, 58, 237,0.35); border-top:1.8px solid rgba(255,255,255,0.45); background:linear-gradient(165deg, rgba(17,24,39,0.96) 0%, rgba(10,15,28,0.98) 100%); box-shadow:0 35px 95px rgba(0,0,0,0.95), 0 0 50px rgba(124, 58, 237,0.22), inset 0 1px 1px rgba(255,255,255,0.25);">
     <div class="auth-ambient-glow glow-emerald"></div>
 
     <!-- Badge Executiva de Status de Autenticação -->
@@ -12428,8 +12428,8 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     </div>
 
     <!-- Ícone Dinâmico com Duplo Anel e Checkmark Suave -->
-    <div class="login-success-check" style="width:76px; height:76px; margin:0 auto 20px; border-radius:50%; border:2px solid rgba(56,189,248,0.5); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 35% 30%, rgba(0,229,255,0.28) 0%, rgba(6,182,212,0.12) 55%, rgba(10,15,28,0.9) 100%); box-shadow:0 0 35px rgba(0,229,255,0.45), inset 0 2px 4px rgba(255,255,255,0.5);">
-      <svg viewBox="0 0 52 52" style="width:40px; height:40px; stroke:#00E5FF;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
+    <div class="login-success-check" style="width:76px; height:76px; margin:0 auto 20px; border-radius:50%; border:2px solid rgba(139, 92, 246,0.5); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 35% 30%, rgba(124, 58, 237,0.28) 0%, rgba(139, 92, 246,0.12) 55%, rgba(10,15,28,0.9) 100%); box-shadow:0 0 35px rgba(124, 58, 237,0.45), inset 0 2px 4px rgba(255,255,255,0.5);">
+      <svg viewBox="0 0 52 52" style="width:40px; height:40px; stroke:#7C3AED;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
     </div>
 
     <h3 id="loginSuccessTitle" style="font-size:23px; font-weight:900; color:#ffffff; margin:0 0 8px; letter-spacing:-0.025em; text-shadow:0 2px 10px rgba(0,0,0,0.5);">Login efetuado com sucesso!</h3>
@@ -12437,11 +12437,11 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
     <!-- Barra de Progresso Suave com Glow Dinâmico -->
     <div class="login-success-progress-bar" style="height:5px; background:rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.6);">
-      <div class="login-success-progress-fill" style="height:100%; border-radius:999px; background:linear-gradient(90deg, #00E5FF 0%, #14B8A6 45%, #0284C7 80%, #38BDF8 100%); box-shadow:0 0 16px rgba(0,229,255,0.9);"></div>
+      <div class="login-success-progress-fill" style="height:100%; border-radius:999px; background:linear-gradient(90deg, #7C3AED 0%, #14B8A6 45%, #7C3AED 80%, #8B5CF6 100%); box-shadow:0 0 16px rgba(124, 58, 237,0.9);"></div>
     </div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; font-size:10.5px; color:#64748b; font-weight:600; letter-spacing:0.02em;">
       <span style="display:inline-flex; align-items:center; gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Conexão Criptografada</span>
-      <span style="color:#00E5FF;">Carregando dados...</span>
+      <span style="color:#7C3AED;">Carregando dados...</span>
     </div>
   </div>
 </div>
@@ -12531,7 +12531,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     <h3 style="font-size:20px;">Sua sessão vai expirar</h3>
     <p style="margin-bottom:18px;">Você está sem mexer há mais de 4 minutos. Sua conta será desconectada automaticamente em <span id="inactivityCountdownSecs" style="font-weight:900; font-size:16px; color:#F59E0B; text-decoration:underline;">30</span> segundos por segurança.</p>
     <div style="display:flex; gap:10px; width:100%; position:relative; z-index:2;">
-      <button type="button" class="logout-btn-action" onclick="window.keepSessionAlive()" style="flex:1; padding:13px 18px !important; font-size:13.5px !important; background:linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important; box-shadow:0 8px 20px -3px rgba(2,132,199,0.5) !important;">
+      <button type="button" class="logout-btn-action" onclick="window.keepSessionAlive()" style="flex:1; padding:13px 18px !important; font-size:13.5px !important; background:linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important; box-shadow:0 8px 20px -3px rgba(124, 58, 237,0.5) !important;">
         <span>Continuar Conectado</span>
       </button>
       <button type="button" onclick="window.handleAppLogout()" style="padding:13px 18px; border-radius:16px; font-weight:700; font-size:13.5px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); color:#cbd5e1; cursor:pointer; transition:all 0.2s ease;">
@@ -12546,7 +12546,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     <div style="width:64px; height:64px; margin:0 auto 12px; border-radius:50%; background:radial-gradient(circle, rgba(245,158,11,0.25) 0%, rgba(15,23,42,0.6) 80%); border:2px solid rgba(245,158,11,0.5); display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px rgba(245,158,11,0.35);">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
     </div>
-    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 12px; border-radius:999px; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.35); color:#38BDF8; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 12px; border-radius:999px; background:rgba(124, 58, 237,0.15); border:1px solid rgba(124, 58, 237,0.35); color:#8B5CF6; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
       <span>✓ Dados Confirmados com Sucesso</span>
     </div>
     <h3 style="font-size:20px; font-weight:900; margin:0 0 6px 0;">Senha Temporária Gerada</h3>
@@ -12830,18 +12830,18 @@ window.renderUsuariosLogonServer = function(users) {
     html += \`
       <div style="padding:10px 12px; border-radius:12px; background:var(--card-bg, rgba(255,255,255,0.04)); border:1px solid var(--auth-border); display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-          <div style="width:34px; height:34px; border-radius:50%; background:\${isAdmin ? 'linear-gradient(135deg, #F59E0B, #B45309)' : 'linear-gradient(135deg, #3B82F6, #1D4ED8)'}; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <div style="width:34px; height:34px; border-radius:50%; background:\${isAdmin ? 'linear-gradient(135deg, #F59E0B, #B45309)' : 'linear-gradient(135deg, #8B5CF6, #6D28D9)'}; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
             \${initials}
           </div>
           <div style="min-width:0;">
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <strong style="font-size:13px; color:var(--auth-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${name}</strong>
               <span style="font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.1); color:var(--text, #fff); border:1px solid rgba(255,255,255,0.15);">ID #\${u.id || '-'}</span>
-              <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(59,130,246,0.2)'}; color:\${isAdmin ? '#FBBF24' : '#60A5FA'};">\${role}</span>
-              <span style="font-size:9.5px; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(0,229,255,0.15); color:#38BDF8; border:1px solid rgba(0,229,255,0.3);">\${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
+              <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(124, 58, 237,0.2)'}; color:\${isAdmin ? '#FBBF24' : '#A78BFA'};">\${role}</span>
+              <span style="font-size:9.5px; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(124, 58, 237,0.15); color:#8B5CF6; border:1px solid rgba(124, 58, 237,0.3);">\${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
             </div>
             <div style="font-size:11.5px; color:var(--auth-text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${email}</div>
-            <div style="font-size:10.5px; color:#38BDF8; margin-top:3px; display:flex; align-items:center; gap:4px;">
+            <div style="font-size:10.5px; color:#8B5CF6; margin-top:3px; display:flex; align-items:center; gap:4px;">
               <span>🕒 Último login:</span> <strong style="color:var(--text, #E2E8F0);">\${lastLoginFormatted}</strong>
             </div>
           </div>
@@ -13299,9 +13299,9 @@ window.checkMandatoryPasswordStrength = function(pwd) {
   if (hasSpecial) score++;
 
   if (b1) b1.style.background = score >= 1 ? (score === 1 ? '#f87171' : '#f59e0b') : 'rgba(255,255,255,0.1)';
-  if (b2) b2.style.background = score >= 2 ? (score === 2 ? '#f59e0b' : '#38bdf8') : 'rgba(255,255,255,0.1)';
-  if (b3) b3.style.background = score >= 3 ? (score === 3 ? '#38bdf8' : '#00e5ff') : 'rgba(255,255,255,0.1)';
-  if (b4) b4.style.background = score >= 4 ? '#00e5ff' : 'rgba(255,255,255,0.1)';
+  if (b2) b2.style.background = score >= 2 ? (score === 2 ? '#f59e0b' : '#8B5CF6') : 'rgba(255,255,255,0.1)';
+  if (b3) b3.style.background = score >= 3 ? (score === 3 ? '#8B5CF6' : '#7C3AED') : 'rgba(255,255,255,0.1)';
+  if (b4) b4.style.background = score >= 4 ? '#7C3AED' : 'rgba(255,255,255,0.1)';
 
   if (txt) {
     if (score <= 1) {
@@ -13312,10 +13312,10 @@ window.checkMandatoryPasswordStrength = function(pwd) {
       txt.style.color = '#f59e0b';
     } else if (score === 3) {
       txt.textContent = 'Forte';
-      txt.style.color = '#38bdf8';
+      txt.style.color = '#8B5CF6';
     } else {
       txt.textContent = 'Excelente';
-      txt.style.color = '#00e5ff';
+      txt.style.color = '#7C3AED';
     }
   }
 
@@ -13342,7 +13342,7 @@ window.checkMandatoryPasswordMatch = function() {
     } else if (isMatch) {
       msg.style.display = 'block';
       msg.textContent = '✓ As senhas coincidem perfeitamente';
-      msg.style.color = '#00e5ff';
+      msg.style.color = '#7C3AED';
     } else {
       msg.style.display = 'block';
       msg.textContent = '✕ As senhas não conferem';
@@ -14070,7 +14070,7 @@ window.checkServerRegPasswordMatch = function() {
   msg.style.display = 'flex';
   if (p1 === p2) {
     msg.textContent = '✓ As senhas conferem';
-    msg.style.color = '#00e5ff';
+    msg.style.color = '#7C3AED';
   } else {
     msg.textContent = '✕ As senhas não conferem';
     msg.style.color = '#f87171';
@@ -14115,7 +14115,7 @@ window.handleServerCpfInput = function(input) {
     if (msg) {
       msg.style.display = 'block';
       msg.textContent = '✓ CPF Válido';
-      msg.style.color = '#00e5ff';
+      msg.style.color = '#7C3AED';
     }
   } else {
     if (msg) msg.style.display = 'none';
@@ -15446,9 +15446,9 @@ function txStatsCardsHTML(list){
   const despesas = list.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val),0);
   const saldo = receitas - despesas;
   let html = '';
-  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Receitas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(0,229,255,0.14); color:var(--brand-bright);">↑</span></div><div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">' + fmt(receitas) + '</div><div class="sub" style="font-size:11px;">Entradas no filtro</div></div>';
+  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Receitas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(124, 58, 237,0.14); color:var(--brand-bright);">↑</span></div><div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">' + fmt(receitas) + '</div><div class="sub" style="font-size:11px;">Entradas no filtro</div></div>';
   html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Despesas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">↓</span></div><div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">' + fmt(despesas) + '</div><div class="sub" style="font-size:11px;">Saídas no filtro</div></div>';
-  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Balanço Líquido</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:' + (saldo < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(59,130,246,0.14)') + '; color:' + (saldo < 0 ? 'var(--red)' : 'var(--blue)') + ';">⇄</span></div><div class="val" style="font-size:20px; color:' + (saldo < 0 ? 'var(--red)' : 'var(--green)') + '; margin-bottom:2px;">' + fmt(saldo) + '</div><div class="sub" style="font-size:11px;">Receitas − Despesas</div></div>';
+  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Balanço Líquido</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:' + (saldo < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(124, 58, 237,0.14)') + '; color:' + (saldo < 0 ? 'var(--red)' : 'var(--blue)') + ';">⇄</span></div><div class="val" style="font-size:20px; color:' + (saldo < 0 ? 'var(--red)' : 'var(--green)') + '; margin-bottom:2px;">' + fmt(saldo) + '</div><div class="sub" style="font-size:11px;">Receitas − Despesas</div></div>';
   html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Registros</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(168,85,247,0.14); color:var(--purple);">📋</span></div><div class="val" style="font-size:20px; margin-bottom:2px;">' + list.length + '</div><div class="sub" style="font-size:11px;">Lançamentos no filtro</div></div>';
   return html;
 }
@@ -15479,23 +15479,23 @@ function showCustomAlert(title, message, type = 'success', onConfirm = null) {
   }
 
   let iconHtml = \`
-    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 8px rgba(59,130,246,0.7));">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 8px rgba(124, 58, 237,0.7));">
       <circle cx="12" cy="12" r="10"/>
       <line x1="12" y1="16" x2="12" y2="12"/>
       <line x1="12" y1="8" x2="12.01" y2="8"/>
     </svg>
   \`;
-  let badgeStyle = 'background:linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(37,99,235,0.12) 60%, rgba(0,0,0,0.35) 100%) !important; border:1.5px solid rgba(96,165,250,0.5) !important; box-shadow:0 0 30px rgba(59,130,246,0.4), inset 0 1px 2px rgba(255,255,255,0.6) !important;';
-  let btnStyle = 'background:linear-gradient(135deg, #3B82F6 0%, #2563EB 60%, #1D4ED8 100%) !important; box-shadow:0 12px 28px -4px rgba(59,130,246,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;';
+  let badgeStyle = 'background:linear-gradient(135deg, rgba(124, 58, 237,0.22) 0%, rgba(109, 40, 217,0.12) 60%, rgba(0,0,0,0.35) 100%) !important; border:1.5px solid rgba(96,165,250,0.5) !important; box-shadow:0 0 30px rgba(124, 58, 237,0.4), inset 0 1px 2px rgba(255,255,255,0.6) !important;';
+  let btnStyle = 'background:linear-gradient(135deg, #8B5CF6 0%, #7C3AED 60%, #6D28D9 100%) !important; box-shadow:0 12px 28px -4px rgba(124, 58, 237,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;';
 
   if (type === 'success') {
     iconHtml = \`
-      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 10px rgba(0,229,255,0.8));">
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 10px rgba(124, 58, 237,0.8));">
         <path d="M20 6 9 17l-5-5"/>
       </svg>
     \`;
-    badgeStyle = 'background:linear-gradient(135deg, rgba(0,229,255,0.22) 0%, rgba(2,132,199,0.12) 60%, rgba(0,0,0,0.35) 100%) !important; border:1.5px solid rgba(56,189,248,0.5) !important; box-shadow:0 0 30px rgba(0,229,255,0.4), inset 0 1px 2px rgba(255,255,255,0.6) !important;';
-    btnStyle = 'background:linear-gradient(135deg, #0284C7 0%, #0369A1 60%, #075985 100%) !important; box-shadow:0 12px 28px -4px rgba(2,132,199,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;';
+    badgeStyle = 'background:linear-gradient(135deg, rgba(124, 58, 237,0.22) 0%, rgba(124, 58, 237,0.12) 60%, rgba(0,0,0,0.35) 100%) !important; border:1.5px solid rgba(139, 92, 246,0.5) !important; box-shadow:0 0 30px rgba(124, 58, 237,0.4), inset 0 1px 2px rgba(255,255,255,0.6) !important;';
+    btnStyle = 'background:linear-gradient(135deg, #7C3AED 0%, #6D28D9 60%, #5B21B6 100%) !important; box-shadow:0 12px 28px -4px rgba(124, 58, 237,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;';
   } else if (type === 'error') {
     iconHtml = \`
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 10px rgba(239,68,68,0.8));">
@@ -16138,9 +16138,9 @@ function pageDashboard(){
   healthScore = Math.max(10, Math.min(100, healthScore));
 
   let healthStatus = 'Excelente';
-  let healthColor = '#00E5FF';
-  let healthBadgeBg = 'rgba(0,229,255,0.14)';
-  let healthBadgeBorder = 'rgba(0,229,255,0.3)';
+  let healthColor = '#7C3AED';
+  let healthBadgeBg = 'rgba(124, 58, 237,0.14)';
+  let healthBadgeBorder = 'rgba(124, 58, 237,0.3)';
   if (healthScore < 50) {
     healthStatus = 'Atenção';
     healthColor = '#EF4444';
@@ -16182,9 +16182,9 @@ function pageDashboard(){
   const projectedMonthEnd = daysInPeriod > 0 ? Math.round(dailyAvg * daysInMonthTotal) : 0;
 
   let paceStatus = 'Ritmo Seguro';
-  let paceColor = '#00E5FF';
-  let paceBadgeBg = 'rgba(0,229,255,0.14)';
-  let paceBadgeBorder = 'rgba(0,229,255,0.3)';
+  let paceColor = '#7C3AED';
+  let paceBadgeBg = 'rgba(124, 58, 237,0.14)';
+  let paceBadgeBorder = 'rgba(124, 58, 237,0.3)';
   let paceDesc = 'Gastos crescendo abaixo da velocidade dos dias do mês.';
   if (budgetPct > monthTimePct + 15) {
     paceStatus = 'Ritmo Acelerado';
@@ -16217,9 +16217,9 @@ function pageDashboard(){
     greetingBadgeColor = '#FBBF24';
   } else if (h >= 12 && h < 18) {
     greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
-    greetingBadgeBg = 'linear-gradient(135deg, rgba(14,165,233,0.25), rgba(2,132,199,0.1))';
+    greetingBadgeBg = 'linear-gradient(135deg, rgba(14,165,233,0.25), rgba(124, 58, 237,0.1))';
     greetingBadgeBorder = 'rgba(14,165,233,0.38)';
-    greetingBadgeColor = '#38BDF8';
+    greetingBadgeColor = '#8B5CF6';
   } else {
     greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4"/><path d="M21 5h-4"/></svg>';
     greetingBadgeBg = 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(79,70,229,0.1))';
@@ -16246,7 +16246,7 @@ function pageDashboard(){
         '</div>' +
         '<div style="display:flex; align-items:center; gap:12px;">' +
           '<span style="font-size:14px; font-weight:800; color:#F87171; font-variant-numeric:tabular-nums;">' + fmt(item.val) + '</span>' +
-          '<button type="button" class="btn-primary" data-paytx="' + item.id + '" title="Marcar como Paga Agora" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:8px; cursor:pointer; background:linear-gradient(135deg, #0284C7, #00E5FF); color:#FFFFFF; border:none; display:inline-flex; align-items:center; gap:5px;">' +
+          '<button type="button" class="btn-primary" data-paytx="' + item.id + '" title="Marcar como Paga Agora" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:8px; cursor:pointer; background:linear-gradient(135deg, #7C3AED, #7C3AED); color:#FFFFFF; border:none; display:inline-flex; align-items:center; gap:5px;">' +
             '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
             '<span>Dar Baixa</span>' +
           '</button>' +
@@ -16274,14 +16274,14 @@ function pageDashboard(){
       '<div style="display:flex; flex-direction:column; gap:8px;">' + rows + '</div>' +
     '</div>';
   } else {
-    pendingSectionHtml = '<div class="dash-card" style="padding:14px 18px; margin-bottom:20px; border-color:rgba(0,229,255,0.25) !important; background:rgba(0,229,255,0.04) !important;">' +
+    pendingSectionHtml = '<div class="dash-card" style="padding:14px 18px; margin-bottom:20px; border-color:rgba(124, 58, 237,0.25) !important; background:rgba(124, 58, 237,0.04) !important;">' +
       '<div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">' +
         '<div style="display:flex; align-items:center; gap:10px;">' +
-          '<div style="width:30px; height:30px; border-radius:8px; background:rgba(0,229,255,0.18); color:#00E5FF; display:flex; align-items:center; justify-content:center; flex-shrink:0;">' +
+          '<div style="width:30px; height:30px; border-radius:8px; background:rgba(124, 58, 237,0.18); color:#7C3AED; display:flex; align-items:center; justify-content:center; flex-shrink:0;">' +
             '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
           '</div>' +
           '<div>' +
-            '<strong style="font-size:12.5px; color:#00E5FF;">Contas e Vencimentos em Dia</strong>' +
+            '<strong style="font-size:12.5px; color:#7C3AED;">Contas e Vencimentos em Dia</strong>' +
             '<div style="font-size:11px; color:var(--text-dim); margin-top:1px;">Nenhuma fatura ou boleto pendente para os próximos 3 dias.</div>' +
           '</div>' +
         '</div>' +
@@ -16339,7 +16339,7 @@ function pageDashboard(){
           '<span style="font-size:13px;">' + getAccountIcon(a.name) + '</span>' +
           '<span style="font-size:12px; font-weight:700; color:var(--text);">' + a.name + '</span>' +
         '</div>' +
-        '<strong style="font-size:12.5px; color:' + (stats.currentBalance < 0 ? '#F87171' : '#00E5FF') + '; font-variant-numeric:tabular-nums;">' + fmt(stats.currentBalance) + '</strong>' +
+        '<strong style="font-size:12.5px; color:' + (stats.currentBalance < 0 ? '#F87171' : '#7C3AED') + '; font-variant-numeric:tabular-nums;">' + fmt(stats.currentBalance) + '</strong>' +
       '</div>';
     });
     bankAccountsHtml = '<div style="margin-bottom:12px;">' +
@@ -16359,14 +16359,14 @@ function pageDashboard(){
             '<span style="font-size:13px;">💳</span>' +
             '<span style="font-size:12px; font-weight:700; color:var(--text);">' + c.name + '</span>' +
           '</div>' +
-          '<span style="font-size:11px; font-weight:700; color:' + (stats.usagePct >= 85 ? '#F87171' : '#38BDF8') + ';">' + stats.usagePct + '% uso</span>' +
+          '<span style="font-size:11px; font-weight:700; color:' + (stats.usagePct >= 85 ? '#F87171' : '#8B5CF6') + ';">' + stats.usagePct + '% uso</span>' +
         '</div>' +
         '<div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:2.5px; overflow:hidden;">' +
-          '<div style="width:' + Math.max(stats.usagePct, 0) + '%; height:100%; background:' + (stats.usagePct >= 90 ? '#F87171' : stats.usagePct >= 70 ? '#F59E0B' : '#00E5FF') + '; border-radius:2.5px; transition:width 0.4s ease;"></div>' +
+          '<div style="width:' + Math.max(stats.usagePct, 0) + '%; height:100%; background:' + (stats.usagePct >= 90 ? '#F87171' : stats.usagePct >= 70 ? '#F59E0B' : '#7C3AED') + '; border-radius:2.5px; transition:width 0.4s ease;"></div>' +
         '</div>' +
         '<div style="display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-dim);">' +
           '<span>Fatura: <strong style="color:' + (stats.spentTotal > 0 ? '#FBBF24' : 'var(--text-dim)') + ';">' + fmt(stats.spentTotal) + '</strong></span>' +
-          '<span>Disp: <strong style="color:#00E5FF;">' + fmt(stats.availableLimit) + '</strong></span>' +
+          '<span>Disp: <strong style="color:#7C3AED;">' + fmt(stats.availableLimit) + '</strong></span>' +
         '</div>' +
       '</div>';
     });
@@ -16425,10 +16425,10 @@ function pageDashboard(){
       '</div>' +
       '<div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); margin-top:2px;">' +
         '<span>Fatura: <strong style="color:#FBBF24; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.spentTotalGeral) + '</strong></span>' +
-        '<span>Disponível: <strong style="color:#00E5FF; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.availableLimitGeral) + '</strong></span>' +
+        '<span>Disponível: <strong style="color:#7C3AED; font-variant-numeric:tabular-nums;">' + fmt(cardSummary.availableLimitGeral) + '</strong></span>' +
       '</div>' +
       '<div style="width:100%; height:4.5px; background:rgba(255,255,255,0.06); border-radius:2.5px; overflow:hidden;">' +
-        '<div style="width:' + Math.min(100, cardSummary.usagePctGeral) + '%; height:100%; background:' + (cardSummary.usagePctGeral >= 85 ? '#F87171' : cardSummary.usagePctGeral >= 60 ? '#F59E0B' : '#00E5FF') + '; border-radius:2.5px;"></div>' +
+        '<div style="width:' + Math.min(100, cardSummary.usagePctGeral) + '%; height:100%; background:' + (cardSummary.usagePctGeral >= 85 ? '#F87171' : cardSummary.usagePctGeral >= 60 ? '#F59E0B' : '#7C3AED') + '; border-radius:2.5px;"></div>' +
       '</div>' +
     '</div>' +
 
@@ -16464,7 +16464,7 @@ function pageDashboard(){
         '<span class="kpi-tag ' + (saldo >= 0 ? 'kpi-tag-success' : 'kpi-tag-danger') + '" style="font-variant-numeric:tabular-nums;">' + fmt(saldo) + '</span>' +
       '</div>' +
       '<div style="font-size:11px; color:var(--text-dim); line-height:1.4; margin-top:2px;">' +
-        'Autonomia estimada de <strong style="color:' + (runwayDays >= 60 ? '#38BDF8' : '#00E5FF') + ';">' + (runwayDays > 0 ? runwayDays + ' dias' : 'Alerta') + '</strong> com base no consumo diário de ' + fmt(dailyAvg) + '.' +
+        'Autonomia estimada de <strong style="color:' + (runwayDays >= 60 ? '#8B5CF6' : '#7C3AED') + ';">' + (runwayDays > 0 ? runwayDays + ' dias' : 'Alerta') + '</strong> com base no consumo diário de ' + fmt(dailyAvg) + '.' +
       '</div>' +
     '</div>' +
   '</div>';
@@ -16479,7 +16479,7 @@ function pageDashboard(){
         <div class="hero-left">
           <div class="hero-badge-strip">
             <span class="hero-badge hide-mobile">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               <span>\${formattedToday}</span>
             </span>
           </div>
@@ -16517,16 +16517,16 @@ function pageDashboard(){
               <span class="btnEyeIconCard"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
             </button>
           </div>
-          <span class="ic" style="background:linear-gradient(135deg, rgba(6,182,212,0.18), rgba(6,182,212,0.06)); border:1px solid rgba(6,182,212,0.3); color:#22D3EE;">
+          <span class="ic" style="background:linear-gradient(135deg, rgba(139, 92, 246,0.18), rgba(139, 92, 246,0.06)); border:1px solid rgba(139, 92, 246,0.3); color:#A78BFA;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
           </span>
         </div>
-        <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#00E5FF'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
+        <div class="val" data-anim-val="\${saldo}" style="color:\${saldo < 0 ? '#F87171' : '#7C3AED'}; font-variant-numeric:tabular-nums;">\${fmt(saldo)}</div>
         <div class="kpi-mini-bar">
-          <div class="kpi-mini-fill" style="width:\${saldo > 0 ? (savingsPct > 0 ? Math.max(25, savingsPct) : 70) : 10}%; background:linear-gradient(90deg, #06B6D4, #00E5FF);"></div>
+          <div class="kpi-mini-fill" style="width:\${saldo > 0 ? (savingsPct > 0 ? Math.max(25, savingsPct) : 70) : 10}%; background:linear-gradient(90deg, #8B5CF6, #7C3AED);"></div>
         </div>
         <div class="sub">
-          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${saldo < 0 ? '#F87171' : '#00E5FF'};">
+          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${saldo < 0 ? '#F87171' : '#7C3AED'};">
             <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
             <span>\${accounts.length} conta\${accounts.length === 1 ? '' : 's'} ativa\${accounts.length === 1 ? '' : 's'}</span>
           </span>
@@ -16538,17 +16538,17 @@ function pageDashboard(){
       <div class="kpi kpi-income">
         <div class="row1">
           <span>Receitas</span>
-          <span class="ic" style="background:linear-gradient(135deg, rgba(0,229,255,0.18), rgba(0,229,255,0.06)); border:1px solid rgba(0,229,255,0.3); color:#00E5FF;">
+          <span class="ic" style="background:linear-gradient(135deg, rgba(124, 58, 237,0.18), rgba(124, 58, 237,0.06)); border:1px solid rgba(124, 58, 237,0.3); color:#7C3AED;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           </span>
         </div>
-        <div class="val" data-anim-val="\${receitas}" style="color:#00E5FF; font-variant-numeric:tabular-nums;">\${fmt(receitas)}</div>
+        <div class="val" data-anim-val="\${receitas}" style="color:#7C3AED; font-variant-numeric:tabular-nums;">\${fmt(receitas)}</div>
         <div class="kpi-mini-bar">
-          <div class="kpi-mini-fill" style="width:\${recPct}%; background:linear-gradient(90deg, #0284C7, #00E5FF);"></div>
+          <div class="kpi-mini-fill" style="width:\${recPct}%; background:linear-gradient(90deg, #7C3AED, #7C3AED);"></div>
         </div>
         <div class="sub">
           <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:#94A3B8;">
-            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#00E5FF;"></span>
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#7C3AED;"></span>
             <span>\${inTxs.length} entrada\${inTxs.length === 1 ? '' : 's'}</span>
           </span>
           <span class="kpi-tag kpi-tag-success">Realizado</span>
@@ -16580,16 +16580,16 @@ function pageDashboard(){
       <div class="kpi kpi-net">
         <div class="row1">
           <span>Resultado</span>
-          <span class="ic" style="background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(59,130,246,0.06)); border:1px solid rgba(59,130,246,0.3); color:#60A5FA;">
+          <span class="ic" style="background:linear-gradient(135deg, rgba(124, 58, 237,0.18), rgba(124, 58, 237,0.06)); border:1px solid rgba(124, 58, 237,0.3); color:#A78BFA;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </span>
         </div>
-        <div class="val" data-anim-val="\${resultado}" style="color:\${resultado >= 0 ? '#00E5FF' : '#F87171'}; font-variant-numeric:tabular-nums;">\${resultado >= 0 ? '+' : ''}\${fmt(resultado)}</div>
+        <div class="val" data-anim-val="\${resultado}" style="color:\${resultado >= 0 ? '#7C3AED' : '#F87171'}; font-variant-numeric:tabular-nums;">\${resultado >= 0 ? '+' : ''}\${fmt(resultado)}</div>
         <div class="kpi-mini-bar">
-          <div class="kpi-mini-fill" style="width:\${Math.max(10, Math.min(100, savingsPct > 0 ? savingsPct : 50))}%; background:linear-gradient(90deg, #3B82F6, #60A5FA);"></div>
+          <div class="kpi-mini-fill" style="width:\${Math.max(10, Math.min(100, savingsPct > 0 ? savingsPct : 50))}%; background:linear-gradient(90deg, #8B5CF6, #A78BFA);"></div>
         </div>
         <div class="sub">
-          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${resultado >= 0 ? '#00E5FF' : '#F87171'};">
+          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; color:\${resultado >= 0 ? '#7C3AED' : '#F87171'};">
             <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 6px currentColor;"></span>
             <span>\${resultado >= 0 ? 'Superávit' : 'Déficit'}</span>
           </span>
@@ -16650,7 +16650,7 @@ function pageDashboard(){
         <div class="dash-card">
           <div class="dash-card-head">
             <div class="dash-card-title">
-              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(0,229,255,0.22), rgba(2,132,199,0.08)); border:1px solid rgba(0,229,255,0.35); color:#00E5FF;">
+              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(124, 58, 237,0.22), rgba(124, 58, 237,0.08)); border:1px solid rgba(124, 58, 237,0.35); color:#7C3AED;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
               </div>
               <div>
@@ -16699,7 +16699,7 @@ function pageDashboard(){
             </div>
             <div class="dash-metric-item">
               <span class="dash-metric-label">Maior Entrada</span>
-              <span class="dash-metric-val" style="color:#00E5FF;">\${fmt(maxIncome)}</span>
+              <span class="dash-metric-val" style="color:#7C3AED;">\${fmt(maxIncome)}</span>
             </div>
             <div class="dash-metric-item">
               <span class="dash-metric-label">Maior Despesa</span>
@@ -16707,11 +16707,11 @@ function pageDashboard(){
             </div>
             <div class="dash-metric-item">
               <span class="dash-metric-label">Projeção Fim do Mês</span>
-              <span class="dash-metric-val" style="color:#60A5FA;">\${fmt(projectedMonthEnd)}</span>
+              <span class="dash-metric-val" style="color:#A78BFA;">\${fmt(projectedMonthEnd)}</span>
             </div>
             <div class="dash-metric-item">
               <span class="dash-metric-label">Retenção Líquida</span>
-              <span class="dash-metric-val" style="color:\${resultado >= 0 ? '#00E5FF' : '#F87171'};">\${savingsPct}%</span>
+              <span class="dash-metric-val" style="color:\${resultado >= 0 ? '#7C3AED' : '#F87171'};">\${savingsPct}%</span>
             </div>
           </div>
         </div>
@@ -16738,7 +16738,7 @@ function pageDashboard(){
                 <button type="button" class="dash-filter-pill" onclick="filterDashboardTx('in', this)">Receitas</button>
                 <button type="button" class="dash-filter-pill" onclick="filterDashboardTx('out', this)">Despesas</button>
               </div>
-              <span class="tag" data-nav="transacoes" onclick="navigate('transacoes')" style="cursor:pointer; font-size:11.5px; padding:5px 12px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.25);">
+              <span class="tag" data-nav="transacoes" onclick="navigate('transacoes')" style="cursor:pointer; font-size:11.5px; padding:5px 12px; border-radius:8px; background:rgba(139, 92, 246,0.12); color:#8B5CF6; border:1px solid rgba(139, 92, 246,0.25);">
                 Ver Extrato
               </span>
             </div>
@@ -16758,7 +16758,7 @@ function pageDashboard(){
         <div class="dash-card">
           <div class="dash-card-head">
             <div class="dash-card-title">
-              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(0,229,255,0.22), rgba(2,132,199,0.08)); border:1px solid rgba(0,229,255,0.35); color:#00E5FF;">
+              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(124, 58, 237,0.22), rgba(124, 58, 237,0.08)); border:1px solid rgba(124, 58, 237,0.35); color:#7C3AED;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               </div>
               <div>
@@ -16787,37 +16787,37 @@ function pageDashboard(){
             <div class="dash-pillar-item">
               <div class="dash-pillar-head">
                 <span style="color:var(--text-dim); font-weight:600;">Poupança</span>
-                <strong style="color:\${pilarPoupanca >= 20 ? '#00E5FF' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};">\${pilarPoupanca}%</strong>
+                <strong style="color:\${pilarPoupanca >= 20 ? '#7C3AED' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};">\${pilarPoupanca}%</strong>
               </div>
               <div class="dash-pillar-bar">
-                <div class="dash-pillar-fill" style="width:\${Math.min(100, pilarPoupanca)}%; background:\${pilarPoupanca >= 20 ? '#00E5FF' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};"></div>
+                <div class="dash-pillar-fill" style="width:\${Math.min(100, pilarPoupanca)}%; background:\${pilarPoupanca >= 20 ? '#7C3AED' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};"></div>
               </div>
             </div>
             <div class="dash-pillar-item">
               <div class="dash-pillar-head">
                 <span style="color:var(--text-dim); font-weight:600;">Comprometido</span>
-                <strong style="color:\${pilarComprometimento <= 60 ? '#00E5FF' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};">\${pilarComprometimento}%</strong>
+                <strong style="color:\${pilarComprometimento <= 60 ? '#7C3AED' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};">\${pilarComprometimento}%</strong>
               </div>
               <div class="dash-pillar-bar">
-                <div class="dash-pillar-fill" style="width:\${pilarComprometimento}%; background:\${pilarComprometimento <= 60 ? '#00E5FF' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};"></div>
+                <div class="dash-pillar-fill" style="width:\${pilarComprometimento}%; background:\${pilarComprometimento <= 60 ? '#7C3AED' : pilarComprometimento <= 80 ? '#F59E0B' : '#F87171'};"></div>
               </div>
             </div>
             <div class="dash-pillar-item">
               <div class="dash-pillar-head">
                 <span style="color:var(--text-dim); font-weight:600;">Uso Cartão</span>
-                <strong style="color:\${pilarCartao <= 50 ? '#00E5FF' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};">\${pilarCartao}%</strong>
+                <strong style="color:\${pilarCartao <= 50 ? '#7C3AED' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};">\${pilarCartao}%</strong>
               </div>
               <div class="dash-pillar-bar">
-                <div class="dash-pillar-fill" style="width:\${pilarCartao}%; background:\${pilarCartao <= 50 ? '#00E5FF' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};"></div>
+                <div class="dash-pillar-fill" style="width:\${pilarCartao}%; background:\${pilarCartao <= 50 ? '#7C3AED' : pilarCartao <= 80 ? '#F59E0B' : '#F87171'};"></div>
               </div>
             </div>
             <div class="dash-pillar-item">
               <div class="dash-pillar-head">
                 <span style="color:var(--text-dim); font-weight:600;">Pontualidade</span>
-                <strong style="color:\${pilarPontualidade >= 90 ? '#00E5FF' : '#F87171'};">\${pilarPontualidade}%</strong>
+                <strong style="color:\${pilarPontualidade >= 90 ? '#7C3AED' : '#F87171'};">\${pilarPontualidade}%</strong>
               </div>
               <div class="dash-pillar-bar">
-                <div class="dash-pillar-fill" style="width:\${pilarPontualidade}%; background:\${pilarPontualidade >= 90 ? '#00E5FF' : '#F87171'};"></div>
+                <div class="dash-pillar-fill" style="width:\${pilarPontualidade}%; background:\${pilarPontualidade >= 90 ? '#7C3AED' : '#F87171'};"></div>
               </div>
             </div>
           </div>
@@ -16833,7 +16833,7 @@ function pageDashboard(){
         <div class="dash-card">
           <div class="dash-card-head">
             <div class="dash-card-title">
-              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(6,182,212,0.22), rgba(14,165,233,0.08)); border:1px solid rgba(6,182,212,0.35); color:#22D3EE;">
+              <div class="dash-card-icon" style="background:linear-gradient(135deg, rgba(139, 92, 246,0.22), rgba(14,165,233,0.08)); border:1px solid rgba(139, 92, 246,0.35); color:#A78BFA;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
               <div>
@@ -16898,7 +16898,7 @@ function pageDashboard(){
 
             <div style="display:flex; justify-content:space-between; font-size:11.5px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); margin-bottom:10px;">
               <span>Fatura: <strong style="color:#FBBF24;">\${fmt(cardSummary.spentTotalGeral)}</strong></span>
-              <span>Disp: <strong style="color:#00E5FF;">\${fmt(cardSummary.availableLimitGeral)}</strong></span>
+              <span>Disp: <strong style="color:#7C3AED;">\${fmt(cardSummary.availableLimitGeral)}</strong></span>
             </div>
 
             \${creditCardsHtml}
@@ -16953,7 +16953,7 @@ function pageDashboard(){
           <div class="dash-wheel-pane \${activeDashTab === 'todos' ? 'active' : ''}" data-pane="todos">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
               <span style="font-size:12px; color:var(--text-dim); font-weight:600;">Sumário executivo de todos os pilares</span>
-              <span class="tag" style="font-size:11px; padding:3px 8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.25);">Consolidado</span>
+              <span class="tag" style="font-size:11px; padding:3px 8px; background:rgba(139, 92, 246,0.12); color:#8B5CF6; border:1px solid rgba(139, 92, 246,0.25);">Consolidado</span>
             </div>
             \${overviewSectionHtml}
           </div>
@@ -17135,7 +17135,7 @@ function pageTransacoes(){
 
   <div class="kpis" id="txStatsRow" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:18px;">
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Total de Receitas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(0,229,255,0.14); color:var(--brand-bright);">↑</span></div>
+      <div class="row1" style="margin-bottom:6px;"><span>Total de Receitas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(124, 58, 237,0.14); color:var(--brand-bright);">↑</span></div>
       <div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">\${fmt(totalRec)}</div>
       <div class="sub" style="font-size:11px;">Entradas no período</div>
     </div>
@@ -17145,7 +17145,7 @@ function pageTransacoes(){
       <div class="sub" style="font-size:11px;">Saídas no período</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Balanço Líquido</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:\${saldoPer < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(59,130,246,0.14)'}; color:\${saldoPer < 0 ? 'var(--red)' : 'var(--blue)'};">⇄</span></div>
+      <div class="row1" style="margin-bottom:6px;"><span>Balanço Líquido</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:\${saldoPer < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(124, 58, 237,0.14)'}; color:\${saldoPer < 0 ? 'var(--red)' : 'var(--blue)'};">⇄</span></div>
       <div class="val" style="font-size:20px; color:\${saldoPer < 0 ? 'var(--red)' : 'var(--green)'}; margin-bottom:2px;">\${fmt(saldoPer)}</div>
       <div class="sub" style="font-size:11px;">Receitas − Despesas</div>
     </div>
@@ -17247,11 +17247,11 @@ function pageContas(){
       const initialName = (a.name || '').slice(0,2).toUpperCase();
       const statusColor = isCard ? (stats.availableLimit < 200 ? 'var(--red)' : 'var(--green)') : (stats.currentBalance < 0 ? 'var(--red)' : 'var(--green)');
       const heroVal = isCard ? stats.availableLimit : stats.currentBalance;
-      const cardColor = a.color || (isCard ? '#8B5CF6' : '#00E5FF');
+      const cardColor = a.color || (isCard ? '#8B5CF6' : '#7C3AED');
 
       return \`
       <div class="acc-card">
-        <div class="acc-card-accent-bar" style="background:linear-gradient(90deg, \${cardColor} 0%, rgba(59,130,246,0.6) 100%);"></div>
+        <div class="acc-card-accent-bar" style="background:linear-gradient(90deg, \${cardColor} 0%, rgba(124, 58, 237,0.6) 100%);"></div>
         <div>
           <div class="top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
             <div class="id-group" style="display:flex; align-items:center; gap:12px; min-width:0;">
@@ -17296,7 +17296,7 @@ function pageContas(){
               </div>
               <div style="margin-top:12px;">
                 <div class="bar-split" style="height:7px; background:rgba(0,0,0,0.08); border-radius:5px; overflow:hidden; border:1px solid rgba(255,255,255,0.06);">
-                  <div class="g" style="width:\${stats.usagePct}%; height:100%; background:\${stats.usagePct >= 90 ? 'linear-gradient(90deg, #EF4444, #DC2626)' : stats.usagePct >= 70 ? 'linear-gradient(90deg, #F59E0B, #D97706)' : 'linear-gradient(90deg, #0284C7, #00E5FF)'}; border-radius:5px; transition:width .4s ease;"></div>
+                  <div class="g" style="width:\${stats.usagePct}%; height:100%; background:\${stats.usagePct >= 90 ? 'linear-gradient(90deg, #EF4444, #DC2626)' : stats.usagePct >= 70 ? 'linear-gradient(90deg, #F59E0B, #D97706)' : 'linear-gradient(90deg, #7C3AED, #7C3AED)'}; border-radius:5px; transition:width .4s ease;"></div>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; margin-top:5px;">
                   <span style="color:var(--text-faint); font-weight:600;">Uso do Cartão</span>
@@ -17372,7 +17372,7 @@ function pageOrcamentos(){
               </span>
               <div style="min-width:0;">
                 <h4 style="font-size:15px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${b.category}</h4>
-                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${b.pct>=100?'rgba(239,68,68,0.14)':b.pct>=80?'rgba(245,158,11,0.14)':'rgba(0,229,255,0.14)'}; color:\${color}; font-weight:700; border:1px solid \${b.pct>=100?'rgba(239,68,68,0.3)':b.pct>=80?'rgba(245,158,11,0.3)':'rgba(0,229,255,0.3)'};">
+                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${b.pct>=100?'rgba(239,68,68,0.14)':b.pct>=80?'rgba(245,158,11,0.14)':'rgba(124, 58, 237,0.14)'}; color:\${color}; font-weight:700; border:1px solid \${b.pct>=100?'rgba(239,68,68,0.3)':b.pct>=80?'rgba(245,158,11,0.3)':'rgba(124, 58, 237,0.3)'};">
                   \${b.pct>=100 ? '🚨 Excedido' : b.pct>=80 ? '⚠️ Alerta' : '✓ Normal'} (\${b.pct}%)
                 </span>
               </div>
@@ -17454,12 +17454,12 @@ function pageMetas(){
               <span style="font-size:13px; color:var(--text-faint); font-weight:600;">Alvo: \${fmt(g.target)}</span>
             </div>
             <div class="bar-split" style="height:7px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; margin-top:8px;">
-              <div class="g" style="width:\${pct}%; background:\${isCompleted ? 'linear-gradient(90deg, #0284C7, #00E5FF)' : 'linear-gradient(90deg, #3B82F6, #60A5FA)'}; border-radius:5px; transition:width .4s ease;"></div>
+              <div class="g" style="width:\${pct}%; background:\${isCompleted ? 'linear-gradient(90deg, #7C3AED, #7C3AED)' : 'linear-gradient(90deg, #8B5CF6, #A78BFA)'}; border-radius:5px; transition:width .4s ease;"></div>
             </div>
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; margin-bottom:12px;">
-            <span class="pill" style="font-size:11px; padding:2px 8px; border-radius:6px; background:\${isCompleted ? 'rgba(0,229,255,0.16)' : 'rgba(59,130,246,0.16)'}; color:\${isCompleted ? 'var(--brand-bright)' : 'var(--blue)'}; font-weight:700;">
+            <span class="pill" style="font-size:11px; padding:2px 8px; border-radius:6px; background:\${isCompleted ? 'rgba(124, 58, 237,0.16)' : 'rgba(124, 58, 237,0.16)'}; color:\${isCompleted ? 'var(--brand-bright)' : 'var(--blue)'}; font-weight:700;">
               \${isCompleted ? '🎉 Concluída (100%)' : pct + '% concluído'}
             </span>
             <span style="color:var(--text-faint); font-weight:600;">
@@ -17507,7 +17507,7 @@ function pageRelatorios(){
 
   <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:20px;">
     <div class="kpi kpi-income">
-      <div class="row1"><span>Total de Receitas</span><span class="ic" style="background:rgba(0,229,255,0.14); color:var(--brand-bright);">↑</span></div>
+      <div class="row1"><span>Total de Receitas</span><span class="ic" style="background:rgba(124, 58, 237,0.14); color:var(--brand-bright);">↑</span></div>
       <div class="val" style="color:var(--green);">\${fmt(totalReceitas)}</div>
       <div class="sub">\${isAllDates ? 'Consolidado histórico geral' : periodLabel()}</div>
     </div>
@@ -17517,7 +17517,7 @@ function pageRelatorios(){
       <div class="sub">\${isAllDates ? 'Consolidado histórico geral' : periodLabel()}</div>
     </div>
     <div class="kpi kpi-net">
-      <div class="row1"><span>Balanço do Período</span><span class="ic" style="background:\${resultado < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(59,130,246,0.14)'}; color:\${resultado < 0 ? 'var(--red)' : 'var(--blue)'};">⇄</span></div>
+      <div class="row1"><span>Balanço do Período</span><span class="ic" style="background:\${resultado < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(124, 58, 237,0.14)'}; color:\${resultado < 0 ? 'var(--red)' : 'var(--blue)'};">⇄</span></div>
       <div class="val" style="color:\${resultado < 0 ? 'var(--red)' : 'var(--green)'};">\${fmt(resultado)}</div>
       <div class="sub">\${isAllDates ? 'Resultado acumulado geral' : 'Receitas menos Despesas do mês'}</div>
     </div>
@@ -17667,7 +17667,7 @@ function pageRecorrentes(){
     <div class="kpi" style="padding:14px 16px;">
       <div class="row1" style="margin-bottom:6px;">
         <span>Receitas Recorrentes \${isAllDates ? '(Mensal)' : ('em ' + (curMonthName ? curMonthName.substring(0,3) : 'Mês'))}</span>
-        <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(0,229,255,0.14); color:var(--brand-bright); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span>
+        <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(124, 58, 237,0.14); color:var(--brand-bright); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span>
       </div>
       <div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">\${fmt(totalRecRec)}</div>
       <div class="sub" style="font-size:11px;">\${isAllDates ? 'Total mensal de entradas programadas' : ('Recebimentos em ' + curMonthName + '/' + curY)}</div>
@@ -17683,7 +17683,7 @@ function pageRecorrentes(){
     <div class="kpi" style="padding:14px 16px;">
       <div class="row1" style="margin-bottom:6px;">
         <span>Status dos Contratos</span>
-        <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(59,130,246,0.14); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        <span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(124, 58, 237,0.14); color:var(--blue); display:inline-flex; align-items:center; justify-content:center; border-radius:10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
       </div>
       <div class="val" style="font-size:20px; color:var(--blue); margin-bottom:2px;">\${totalConcluidos} / \${totalComPrazo || totalLctos}</div>
       <div class="sub" style="font-size:11px;">\${totalConcluidos} contratos 100% quitados</div>
@@ -17742,7 +17742,7 @@ function pageRecorrentes(){
                       \${method === 'Cartão de Crédito' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>Cartão de Crédito' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>Boleto'}
                     </span>
                   \` : ''}
-                  \${isFixed ? \`<span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${isFullyPaid ? 'rgba(0,229,255,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--brand-bright)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(0,229,255,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓ Concluído' : paidWordPlural}</span>\` : ''}
+                  \${isFixed ? \`<span class="pill" style="padding:2px 8px; font-size:10px; font-weight:700; border-radius:6px; background:\${isFullyPaid ? 'rgba(124, 58, 237,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${isFullyPaid ? 'var(--brand-bright)' : '#F59E0B'}; border:1px solid \${isFullyPaid ? 'rgba(124, 58, 237,0.25)' : 'rgba(245,158,11,0.25)'};">\${paidCount}/\${totalM} \${isFullyPaid ? '✓ Concluído' : paidWordPlural}</span>\` : ''}
                 </div>
                 \${isFixed ? \`
                   <details style="font-size:10.5px; margin-top:4px;">
@@ -17769,7 +17769,7 @@ function pageRecorrentes(){
                           const isSelectedPeriod = (!isAllDates && curM === m && curY === y);
 
                           items.push(
-                            \`<div style="padding:4px 8px; border-radius:6px; background:\${isSelectedPeriod ? 'rgba(59,130,246,0.18)' : (isPaid ? 'rgba(0,229,255,0.12)' : 'rgba(245,158,11,0.10)')}; border:1px solid \${isSelectedPeriod ? 'var(--blue)' : (isPaid ? 'rgba(0,229,255,0.25)' : 'rgba(245,158,11,0.25)')}; display:flex; justify-content:space-between; align-items:center; gap:4px;">\` +
+                            \`<div style="padding:4px 8px; border-radius:6px; background:\${isSelectedPeriod ? 'rgba(124, 58, 237,0.18)' : (isPaid ? 'rgba(124, 58, 237,0.12)' : 'rgba(245,158,11,0.10)')}; border:1px solid \${isSelectedPeriod ? 'var(--blue)' : (isPaid ? 'rgba(124, 58, 237,0.25)' : 'rgba(245,158,11,0.25)')}; display:flex; justify-content:space-between; align-items:center; gap:4px;">\` +
                               \`<span style="font-size:10px;">\${k}ª: <strong style="color:var(--text);">\${mName}/\${y}</strong></span>\` +
                               (targetTx ? \`<button data-togglestatus="\${targetTx.id}" title="Clique para alternar status" style="border:none; cursor:pointer; background:transparent; font-weight:800; font-size:9.5px; color:\${isPaid ? 'var(--green)' : '#F59E0B'}; padding:2px 4px; border-radius:4px;">\${isPaid ? (isIncome ? '✓ Recebido' : '✓ Pago') : '⏳ Pendente'}</button>\` : \`<span style="font-weight:700; font-size:9.5px; color:#F59E0B;">⏳ Pendente</span>\`) +
                             \`</div>\`
@@ -17788,7 +17788,7 @@ function pageRecorrentes(){
             <td>
               \${isFixed ? \`
                 <div style="display:flex; flex-direction:column; gap:2px;">
-                  <span class="pill" style="background:rgba(59,130,246,0.12); color:var(--blue); font-weight:700; font-size:11px;">
+                  <span class="pill" style="background:rgba(124, 58, 237,0.12); color:var(--blue); font-weight:700; font-size:11px;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:3px;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>\${totalM} \${totalM === 1 ? 'mês' : 'meses'}
                   </span>
                   \${r.startMonth && r.startYear ? \`<span style="font-size:10px; color:var(--text-dim);">Início: \${MONTHS[r.startMonth-1] ? MONTHS[r.startMonth-1].substring(0,3) : r.startMonth}/\${r.startYear}</span>\` : ''}
@@ -17804,7 +17804,7 @@ function pageRecorrentes(){
                 monthTx ? \`
                   <div style="display:flex; flex-direction:column; gap:4px;">
                     \${monthTx.installment ? \`<span style="font-size:10px; font-weight:700; color:var(--text-dim);">\${monthTx.installment}</span>\` : ''}
-                    <button data-togglestatus="\${monthTx.id}" title="Clique para alternar o status deste mês" class="pill" style="cursor:pointer; border:1px solid \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(0,229,255,0.3)' : 'rgba(245,158,11,0.3)'}; background:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(0,229,255,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'var(--brand-bright)' : '#F59E0B'}; font-weight:800; font-size:11px; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; width:fit-content;">
+                    <button data-togglestatus="\${monthTx.id}" title="Clique para alternar o status deste mês" class="pill" style="cursor:pointer; border:1px solid \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(124, 58, 237,0.3)' : 'rgba(245,158,11,0.3)'}; background:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'rgba(124, 58, 237,0.14)' : 'rgba(245,158,11,0.14)'}; color:\${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? 'var(--brand-bright)' : '#F59E0B'}; font-weight:800; font-size:11px; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; width:fit-content;">
                       \${monthTx.status === 'Pago' || monthTx.status === 'Recebido' ? ('✓ ' + (r.type === 'in' ? 'Recebido' : 'Pago')) : '⏳ Pendente'}
                     </button>
                   </div>
@@ -17813,7 +17813,7 @@ function pageRecorrentes(){
                 \`
               ) : \`
                 <div style="display:flex; flex-direction:column; gap:2px;">
-                  <span class="pill" style="background:rgba(0,229,255,0.12); color:var(--brand-bright); font-size:10.5px; font-weight:700;">✓ \${paidCount} \${paidWordPlural}</span>
+                  <span class="pill" style="background:rgba(124, 58, 237,0.12); color:var(--brand-bright); font-size:10.5px; font-weight:700;">✓ \${paidCount} \${paidWordPlural}</span>
                   \${remainingToPay > 0 ? \`<span style="font-size:10px; color:#F59E0B; font-weight:600;">⏳ \${remainingToPay} a \${isIncome ? 'receber' : 'pagar'}</span>\` : ''}
                 </div>
               \`}
@@ -17835,7 +17835,7 @@ function pageRecorrentes(){
                 </div>
               \` : \`
                 <div style="display:flex; flex-direction:column; gap:2px;">
-                  <span class="pill" style="background:rgba(0,229,255,0.12); color:var(--brand-bright); font-size:11px; font-weight:700;">
+                  <span class="pill" style="background:rgba(124, 58, 237,0.12); color:var(--brand-bright); font-size:11px; font-weight:700;">
                     ✓ \${paidCount} \${paidCount === 1 ? paidWord : paidWordPlural}
                   </span>
                   \${pendingCount > 0 ? \`<span style="font-size:10px; color:#F59E0B; font-weight:600;">\${pendingCount} pendente\${pendingCount === 1 ? '' : 's'}</span>\` : ''}
@@ -17873,7 +17873,7 @@ function pageImportar(){
   </div>
 
   <div class="panel" style="margin-bottom:22px; padding:22px;">
-    <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; padding:12px 16px; background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:12px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; padding:12px 16px; background:rgba(124, 58, 237,0.08); border:1px solid rgba(124, 58, 237,0.2); border-radius:12px;">
       <span style="font-size:20px;">💡</span>
       <div style="font-size:12.5px; color:var(--text); line-height:1.4;">
         Formato CSV esperado: <code style="background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; font-size:12px; font-weight:700; color:var(--green);">data,descricao,valor</code>. Arquivos padrão bancário <strong>.OFX</strong> e <strong>.TXT</strong> também são aceitos automaticamente.
@@ -17895,9 +17895,9 @@ function pageImportar(){
       </div>
     </div>
 
-    <div id="importDropZone" onclick="document.getElementById('importFile').click()" style="border: 2px dashed rgba(0, 229, 255, 0.4); border-radius: 18px; padding: 36px 20px; text-align: center; cursor: pointer; background: rgba(0, 229, 255, 0.03); transition: all 0.25s ease; position: relative;">
+    <div id="importDropZone" onclick="document.getElementById('importFile').click()" style="border: 2px dashed rgba(124, 58, 237, 0.4); border-radius: 18px; padding: 36px 20px; text-align: center; cursor: pointer; background: rgba(124, 58, 237, 0.03); transition: all 0.25s ease; position: relative;">
       <input type="file" id="importFile" accept=".csv,.ofx,.txt" style="display:none;">
-      <span style="font-size: 42px; display: block; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(0,229,255,0.3));">☁️</span>
+      <span style="font-size: 42px; display: block; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(124, 58, 237,0.3));">☁️</span>
       <p style="margin:0; font-weight:800; font-size:16px; color:var(--text);">Arraste seus arquivos bancários para cá ou <span style="color:var(--green); text-decoration:underline;">clique para navegar</span></p>
       <div style="display:flex; justify-content:center; gap:8px; margin-top:10px;">
         <span class="pill" style="background:rgba(255,255,255,0.06); font-size:11px; font-weight:700;">.OFX</span>
@@ -17921,14 +17921,14 @@ function getAttachmentCoverHtml(a, t){
   let bName = 'Fatura / Comprovante';
   let bSub = 'Documento Digital';
   let bBg = 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)';
-  let accentColor = '#38bdf8';
-  let logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.35); display:flex; align-items:center; justify-content:center; font-size:20px;">📄</div>\`;
+  let accentColor = '#8B5CF6';
+  let logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(139, 92, 246,0.18); border:1px solid rgba(139, 92, 246,0.35); display:flex; align-items:center; justify-content:center; font-size:20px;">📄</div>\`;
 
   if (nameSearch.includes('tim')) {
     bName = 'TIM Brasil';
     bSub = 'Fatura Telefonia / GSM';
     bBg = 'linear-gradient(135deg, #021b3b 0%, #004691 100%)';
-    accentColor = '#60a5fa';
+    accentColor = '#A78BFA';
     logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#0056b3; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#fff; font-family:sans-serif; letter-spacing:1px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">TIM</div>\`;
   } else if (nameSearch.includes('claro')) {
     bName = 'Claro Telecom';
@@ -17975,14 +17975,14 @@ function getAttachmentCoverHtml(a, t){
   } else if (nameSearch.includes('bb') || nameSearch.includes('banco do brasil')) {
     bName = 'Banco do Brasil';
     bSub = 'Comprovante / Extrato';
-    bBg = 'linear-gradient(135deg, #101c42 0%, #1d4ed8 100%)';
+    bBg = 'linear-gradient(135deg, #101c42 0%, #6D28D9 100%)';
     accentColor = '#fef08a';
     logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:#1e3a8a; border:1px solid #facc15; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:900; color:#facc15; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">BB</div>\`;
   } else if (nameSearch.includes('caixa') || nameSearch.includes('cef')) {
     bName = 'CAIXA Econômica';
     bSub = 'Comprovante de Pagamento';
-    bBg = 'linear-gradient(135deg, #093752 0%, #0284c7 100%)';
-    accentColor = '#bae6fd';
+    bBg = 'linear-gradient(135deg, #093752 0%, #7C3AED 100%)';
+    accentColor = '#DDD6FE';
     logoBadge = \`<div style="width:44px; height:40px; border-radius:10px; background:#005ca9; border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; font-family:sans-serif; box-shadow:0 4px 10px rgba(0,0,0,0.3);">CAIXA</div>\`;
   } else if (nameSearch.includes('enel') || nameSearch.includes('cemig') || nameSearch.includes('copel') || nameSearch.includes('cpfl') || nameSearch.includes('light') || nameSearch.includes('luz') || nameSearch.includes('energia')) {
     bName = 'Energia Elétrica';
@@ -17993,13 +17993,13 @@ function getAttachmentCoverHtml(a, t){
   } else if (nameSearch.includes('sabesp') || nameSearch.includes('sanepar') || nameSearch.includes('copasa') || nameSearch.includes('agua') || nameSearch.includes('água')) {
     bName = 'Água / Saneamento';
     bSub = 'Conta de Água';
-    bBg = 'linear-gradient(135deg, #062337 0%, #0284c7 100%)';
-    accentColor = '#bae6fd';
-    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(2,132,199,0.25); border:1px solid rgba(2,132,199,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; color:#bae6fd;">💧</div>\`;
+    bBg = 'linear-gradient(135deg, #062337 0%, #7C3AED 100%)';
+    accentColor = '#DDD6FE';
+    logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(124, 58, 237,0.25); border:1px solid rgba(124, 58, 237,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; color:#DDD6FE;">💧</div>\`;
   } else if (nameSearch.includes('internet') || nameSearch.includes('fibra') || nameSearch.includes('wifi')) {
     bName = 'Internet & Fibra';
     bSub = 'Fatura Conectividade';
-    bBg = 'linear-gradient(135deg, #052733 0%, #0891b2 100%)';
+    bBg = 'linear-gradient(135deg, #052733 0%, #7C3AED 100%)';
     accentColor = '#cffaff';
     logoBadge = \`<div style="width:40px; height:40px; border-radius:10px; background:rgba(8,145,178,0.25); border:1px solid rgba(8,145,178,0.5); display:flex; align-items:center; justify-content:center; font-size:20px; color:#cffaff;">🌐</div>\`;
   }
@@ -18031,7 +18031,7 @@ function getAttachmentCoverHtml(a, t){
         <span style="font-size:11px; color:rgba(255,255,255,0.8); font-weight:700; display:flex; align-items:center; gap:4px;">
           <span>🧾</span> Recibo / Fatura Digital
         </span>
-        <span style="font-size:10px; color:#38BDF8; font-weight:800; background:rgba(56,189,248,0.15); padding:2px 6px; border-radius:4px;">VERIFICADO</span>
+        <span style="font-size:10px; color:#8B5CF6; font-weight:800; background:rgba(139, 92, 246,0.15); padding:2px 6px; border-radius:4px;">VERIFICADO</span>
       </div>
       <div style="height:3px; background:rgba(255,255,255,0.2); border-radius:2px; width:65%; margin-bottom:4px;"></div>
       <div style="height:3px; background:rgba(255,255,255,0.12); border-radius:2px; width:40%;"></div>
@@ -18071,12 +18071,12 @@ function pageAnexos(){
       </select>
     </div>
 
-    <div id="attDropZone" style="border: 2px dashed rgba(96, 165, 250, 0.4); border-radius: 22px; padding: 42px 20px; text-align: center; cursor: pointer; background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(59, 130, 246, 0.06) 50%, rgba(0, 229, 255, 0.04) 100%); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22), 0 10px 30px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative;">
+    <div id="attDropZone" style="border: 2px dashed rgba(96, 165, 250, 0.4); border-radius: 22px; padding: 42px 20px; text-align: center; cursor: pointer; background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(124, 58, 237, 0.06) 50%, rgba(124, 58, 237, 0.04) 100%); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22), 0 10px 30px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative;">
       <input type="file" id="attFile" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="display:none;">
-      <div style="display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(59,130,246,0.25) 100%); border:1px solid rgba(255,255,255,0.35); box-shadow:0 8px 24px rgba(59,130,246,0.35); margin-bottom:14px;">
+      <div style="display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(124, 58, 237,0.25) 100%); border:1px solid rgba(255,255,255,0.35); box-shadow:0 8px 24px rgba(124, 58, 237,0.35); margin-bottom:14px;">
         <span style="font-size: 32px; display: block; filter: drop-shadow(0 2px 8px rgba(255,255,255,0.5));">☁️</span>
       </div>
-      <p style="margin:0; font-weight:800; font-size:16px; color:#FFFFFF; letter-spacing:-0.01em;">Arraste comprovantes para cá ou <span style="color:#60A5FA; text-decoration:underline;">clique para anexar</span></p>
+      <p style="margin:0; font-weight:800; font-size:16px; color:#FFFFFF; letter-spacing:-0.01em;">Arraste comprovantes para cá ou <span style="color:#A78BFA; text-decoration:underline;">clique para anexar</span></p>
       <div style="display:flex; justify-content:center; gap:8px; margin-top:12px;">
         <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700; backdrop-filter:blur(10px);">PNG / JPG / WEBP</span>
         <span class="pill" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#E2E8F0; padding:4px 12px; border-radius:999px; font-size:11px; font-weight:700; backdrop-filter:blur(10px);">PDF</span>
@@ -18099,7 +18099,7 @@ function pageAnexos(){
       <div class="budget-card" style="min-height:260px;">
         <div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-            <span class="pill" style="font-size:11px; padding:3px 9px; border-radius:8px; background:\${isPdf ? 'rgba(239,68,68,0.14)' : isImage ? 'rgba(59,130,246,0.14)' : 'rgba(168,85,247,0.14)'}; color:\${isPdf ? 'var(--red)' : isImage ? 'var(--blue)' : 'var(--purple)'}; font-weight:700;">
+            <span class="pill" style="font-size:11px; padding:3px 9px; border-radius:8px; background:\${isPdf ? 'rgba(239,68,68,0.14)' : isImage ? 'rgba(124, 58, 237,0.14)' : 'rgba(168,85,247,0.14)'}; color:\${isPdf ? 'var(--red)' : isImage ? 'var(--blue)' : 'var(--purple)'}; font-weight:700;">
               \${isPdf ? '📄 Fatura PDF' : isImage ? '🖼️ Imagem Anexa' : '📎 Documento'}
             </span>
             <button data-delatt="\${a.id}" title="Excluir Anexo" class="btn-action-del">🗑</button>
@@ -18178,7 +18178,7 @@ function pageAlertas(){
               </span>
               <div style="min-width:0;">
                 <h4 style="font-size:15px; font-weight:800; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${al.category}</h4>
-                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${triggered ? 'rgba(239,68,68,0.16)' : 'rgba(0,229,255,0.16)'}; color:\${triggered ? 'var(--red)' : 'var(--brand-bright)'}; font-weight:700; border:1px solid \${triggered ? 'rgba(239,68,68,0.3)' : 'rgba(0,229,255,0.3)'};">
+                <span class="pill" style="font-size:10.5px; padding:2px 8px; border-radius:6px; background:\${triggered ? 'rgba(239,68,68,0.16)' : 'rgba(124, 58, 237,0.16)'}; color:\${triggered ? 'var(--red)' : 'var(--brand-bright)'}; font-weight:700; border:1px solid \${triggered ? 'rgba(239,68,68,0.3)' : 'rgba(124, 58, 237,0.3)'};">
                   \${triggered ? '🚨 Gatilho Acionado' : '✓ Monitoramento OK'}
                 </span>
               </div>
@@ -18247,7 +18247,7 @@ function pageConfig(){
   </div>
 
   \${isViewingOtherUser ? \`
-  <div class="panel" style="margin-bottom:18px; padding:16px 20px; background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.25);">
+  <div class="panel" style="margin-bottom:18px; padding:16px 20px; background:rgba(124, 58, 237,0.08); border:1px solid rgba(124, 58, 237,0.25);">
     <p class="cfg-hint" style="margin:0; font-size:13px; color:var(--text);">
       👁️ Você está em modo de visualização dos dados de <strong style="color:var(--green);">\${currentUser ? currentUser.name : ''}</strong>. As configurações da conta só podem ser editadas pelo próprio titular.
     </p>
@@ -18273,7 +18273,7 @@ function pageConfig(){
         <div class="field" style="margin-bottom:0;">
           <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
             <span>CPF (Receita Federal)</span>
-            <span style="font-size:10.5px; color:#00E5FF; font-weight:800; text-transform:none;">✓ Autenticado</span>
+            <span style="font-size:10.5px; color:#7C3AED; font-weight:800; text-transform:none;">✓ Autenticado</span>
           </label>
           <input id="cfgCpf" value="\${formattedCpf}" placeholder="00000000000" maxlength="11" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
         </div>
@@ -18307,14 +18307,14 @@ function pageConfig(){
       <div style="background:rgba(0,0,0,0.32); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px 16px; font-size:12px; display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px;">
         <div style="display:flex; flex-direction:column; gap:2px;">
           <span style="color:var(--text-dim); font-size:11px;">Termos & Proteção LGPD</span>
-          <span style="color:#00E5FF; font-weight:800; display:inline-flex; align-items:center; gap:5px;">
-            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#00E5FF;"></span>
+          <span style="color:#7C3AED; font-weight:800; display:inline-flex; align-items:center; gap:5px;">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#7C3AED;"></span>
             Aceito & Registrado
           </span>
         </div>
         <div style="display:flex; flex-direction:column; gap:2px;">
           <span style="color:var(--text-dim); font-size:11px;">Perfil de Acesso</span>
-          <span style="color:#60a5fa; font-weight:800;">\${roleName}</span>
+          <span style="color:#A78BFA; font-weight:800;">\${roleName}</span>
         </div>
         <div style="display:flex; flex-direction:column; gap:2px;">
           <span style="color:var(--text-dim); font-size:11px;">Data de Abertura</span>
@@ -18500,14 +18500,14 @@ function pageFuncoes(){
       <div class="val" style="color:#fbbf24; font-size:22px;">\${userRole}</div>
       <div class="sub" style="color:var(--text-dim); margin-top:4px;">Nível de Privilégio: Acesso Total (Nível 1)</div>
     </div>
-    <div class="kpi" style="border:1px solid rgba(0,229,255,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95));">
-      <div class="kpi-head"><span class="lbl">Administradores</span><span class="ic" style="background:rgba(0,229,255,0.2); color:#00E5FF;">👥</span></div>
-      <div class="val" style="color:#00E5FF; font-size:22px;">\${adminCount} Admin\${adminCount===1?'':'s'}</div>
+    <div class="kpi" style="border:1px solid rgba(124, 58, 237,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95));">
+      <div class="kpi-head"><span class="lbl">Administradores</span><span class="ic" style="background:rgba(124, 58, 237,0.2); color:#7C3AED;">👥</span></div>
+      <div class="val" style="color:#7C3AED; font-size:22px;">\${adminCount} Admin\${adminCount===1?'':'s'}</div>
       <div class="sub" style="color:var(--text-dim); margin-top:4px;">Gestores com Acesso Irrestrito</div>
     </div>
-    <div class="kpi" style="border:1px solid rgba(59,130,246,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95));">
-      <div class="kpi-head"><span class="lbl">Operadores & Outras Funções</span><span class="ic" style="background:rgba(59,130,246,0.2); color:#3b82f6;">👤</span></div>
-      <div class="val" style="color:#3b82f6; font-size:22px;">\${totalUsers - adminCount} Usuário\${(totalUsers - adminCount)===1?'':'s'}</div>
+    <div class="kpi" style="border:1px solid rgba(124, 58, 237,0.25); background:linear-gradient(135deg, rgba(20,24,33,0.9), rgba(12,16,24,0.95));">
+      <div class="kpi-head"><span class="lbl">Operadores & Outras Funções</span><span class="ic" style="background:rgba(124, 58, 237,0.2); color:#8B5CF6;">👤</span></div>
+      <div class="val" style="color:#8B5CF6; font-size:22px;">\${totalUsers - adminCount} Usuário\${(totalUsers - adminCount)===1?'':'s'}</div>
       <div class="sub" style="color:var(--text-dim); margin-top:4px;">\${standardCount} Operadores · \${managerCount} Gerentes · \${auditorCount} Auditores</div>
     </div>
   </div>
@@ -18519,7 +18519,7 @@ function pageFuncoes(){
         <h3 style="font-size:16px; font-weight:700; color:var(--text);">⚡ Atribuição Direta de Funções aos Usuários</h3>
         <p class="cfg-hint" style="margin-top:4px;">Altere o perfil e nível de acesso de qualquer usuário cadastrado instantaneamente.</p>
       </div>
-      <span class="tag" style="background:rgba(0,229,255,0.15); color:#00E5FF; border-color:rgba(0,229,255,0.3); font-weight:700;">\${totalUsers} Conta(s) no Sistema</span>
+      <span class="tag" style="background:rgba(124, 58, 237,0.15); color:#7C3AED; border-color:rgba(124, 58, 237,0.3); font-weight:700;">\${totalUsers} Conta(s) no Sistema</span>
     </div>
     
     <div class="table-panel" style="padding:0; border:none; background:transparent; overflow-x:auto;">
@@ -18539,7 +18539,7 @@ function pageFuncoes(){
             <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
               <td style="padding:14px 16px; font-weight:600; color:var(--text);">
                 <div style="display:flex; align-items:center; gap:10px;">
-                  <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #3b82f6, #1d4ed8); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px;">
+                  <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #8B5CF6, #6D28D9); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px;">
                     \${u.name.slice(0,2).toUpperCase()}
                   </div>
                   <div>
@@ -18577,8 +18577,8 @@ function pageFuncoes(){
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
         <button onclick="setFuncoesRoleFilter('all', this)" class="funcoes-filter-btn active" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; cursor:pointer;">Todas</button>
         <button onclick="setFuncoesRoleFilter('admin', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(232,176,75,0.12); border:1px solid rgba(232,176,75,0.3); color:#fbbf24; cursor:pointer;">👑 Administrador</button>
-        <button onclick="setFuncoesRoleFilter('gerente', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(2,132,199,0.12); border:1px solid rgba(2,132,199,0.3); color:#38BDF8; cursor:pointer;">💼 Gerente</button>
-        <button onclick="setFuncoesRoleFilter('usuario', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); color:#60a5fa; cursor:pointer;">👤 Usuário</button>
+        <button onclick="setFuncoesRoleFilter('gerente', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(124, 58, 237,0.12); border:1px solid rgba(124, 58, 237,0.3); color:#8B5CF6; cursor:pointer;">💼 Gerente</button>
+        <button onclick="setFuncoesRoleFilter('usuario', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(124, 58, 237,0.12); border:1px solid rgba(124, 58, 237,0.3); color:#A78BFA; cursor:pointer;">👤 Usuário</button>
         <button onclick="setFuncoesRoleFilter('auditor', this)" class="funcoes-filter-btn" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.3); color:#c084fc; cursor:pointer;">🔍 Auditor</button>
       </div>
     </div>
@@ -18589,8 +18589,8 @@ function pageFuncoes(){
           <tr style="border-bottom:1px solid var(--card-border); background:rgba(0,0,0,0.25);">
             <th style="padding:14px 16px; color:var(--text-dim); font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Módulo do Sistema</th>
             <th class="perm-matrix-th" data-perm-role="admin" style="padding:14px 16px; color:#fbbf24; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👑 Administrador</th>
-            <th class="perm-matrix-th" data-perm-role="gerente" style="padding:14px 16px; color:#38BDF8; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">💼 Gerente Financeiro</th>
-            <th class="perm-matrix-th" data-perm-role="usuario" style="padding:14px 16px; color:#60a5fa; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👤 Usuário / Operador</th>
+            <th class="perm-matrix-th" data-perm-role="gerente" style="padding:14px 16px; color:#8B5CF6; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">💼 Gerente Financeiro</th>
+            <th class="perm-matrix-th" data-perm-role="usuario" style="padding:14px 16px; color:#A78BFA; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">👤 Usuário / Operador</th>
             <th class="perm-matrix-th" data-perm-role="auditor" style="padding:14px 16px; color:#c084fc; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">🔍 Auditor (Leitura)</th>
           </tr>
         </thead>
@@ -18649,17 +18649,17 @@ function pageFuncoes(){
       <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
-            <span style="width:10px; height:10px; border-radius:50%; background:#00E5FF; box-shadow:0 0 10px #00E5FF;"></span>
+            <span style="width:10px; height:10px; border-radius:50%; background:#7C3AED; box-shadow:0 0 10px #7C3AED;"></span>
             <div><strong style="font-size:13.5px; color:var(--text);">Persistência SQL Server / JSON</strong><div style="font-size:11px; color:var(--text-faint);">Sincronização em tempo real</div></div>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#00E5FF; background:rgba(0,229,255,0.15); padding:3px 8px; border-radius:6px;">Online</span>
+          <span style="font-size:11px; font-weight:700; color:#7C3AED; background:rgba(124, 58, 237,0.15); padding:3px 8px; border-radius:6px;">Online</span>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
-            <span style="width:10px; height:10px; border-radius:50%; background:#3b82f6; box-shadow:0 0 10px #3b82f6;"></span>
+            <span style="width:10px; height:10px; border-radius:50%; background:#8B5CF6; box-shadow:0 0 10px #8B5CF6;"></span>
             <div><strong style="font-size:13.5px; color:var(--text);">Engine de Funções & Permissões</strong><div style="font-size:11px; color:var(--text-faint);">Validação de Acesso JWT / Sessão</div></div>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#3b82f6; background:rgba(59,130,246,0.15); padding:3px 8px; border-radius:6px;">Ativo</span>
+          <span style="font-size:11px; font-weight:700; color:#8B5CF6; background:rgba(124, 58, 237,0.15); padding:3px 8px; border-radius:6px;">Ativo</span>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(0,0,0,0.25); border-radius:10px; border:1px solid var(--card-border);">
           <div style="display:flex; align-items:center; gap:10px;">
@@ -18767,7 +18767,7 @@ function pageUsuarios(){
   <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">
     <div>
       <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">
-        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">👥</span>
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(124, 58, 237,0.25), rgba(109, 40, 217,0.12)); border:1px solid rgba(96,165,250,0.35);">👥</span>
         Central de Usuários & Correção Cadastral
       </h1>
       <p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">
@@ -18775,7 +18775,7 @@ function pageUsuarios(){
       </p>
     </div>
     <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-      <button id="btnNovoUsuarioAdmin" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:9px; height:42px; padding:0 20px; border-radius:14px; background:linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%); color:#ffffff; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.25); cursor:pointer; box-shadow:0 8px 24px -4px rgba(59,130,246,0.5); transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+      <button id="btnNovoUsuarioAdmin" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:9px; height:42px; padding:0 20px; border-radius:14px; background:linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%); color:#ffffff; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.25); cursor:pointer; box-shadow:0 8px 24px -4px rgba(124, 58, 237,0.5); transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <span>Cadastrar Manualmente</span>
       </button>
@@ -18789,10 +18789,10 @@ function pageUsuarios(){
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
       <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
         <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Total de Usuários</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(59,130,246,0.3); font-size:16px;">👥</div>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(124, 58, 237,0.25), rgba(109, 40, 217,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(124, 58, 237,0.3); font-size:16px;">👥</div>
       </div>
       <div class="val" style="font-size:28px; font-weight:900; color:var(--text); margin-bottom:2px; letter-spacing:-0.02em;">\${totalUsers}</div>
-      <div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Contas sincronizadas</div>
+      <div class="sub" style="font-size:12px; color:#A78BFA; font-weight:600; margin-top:4px;">Contas sincronizadas</div>
     </div>
 
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
@@ -18807,10 +18807,10 @@ function pageUsuarios(){
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
       <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
         <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Usuários Ativos</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(0,229,255,0.25), rgba(2,132,199,0.15)); border:1.5px solid rgba(56,189,248,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(0,229,255,0.3); font-size:16px;">✅</div>
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(124, 58, 237,0.25), rgba(124, 58, 237,0.15)); border:1.5px solid rgba(139, 92, 246,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(124, 58, 237,0.3); font-size:16px;">✅</div>
       </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#00E5FF; margin-bottom:2px; letter-spacing:-0.02em;">\${activeCount}</div>
-      <div class="sub" style="font-size:12px; color:#BAE6FD; font-weight:600; margin-top:4px;">Acesso liberado</div>
+      <div class="val" style="font-size:28px; font-weight:900; color:#7C3AED; margin-bottom:2px; letter-spacing:-0.02em;">\${activeCount}</div>
+      <div class="sub" style="font-size:12px; color:#DDD6FE; font-weight:600; margin-top:4px;">Acesso liberado</div>
     </div>
 
     <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
@@ -18842,7 +18842,7 @@ function pageUsuarios(){
       <h3 style="font-size:16.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px;">
         <span>📋</span> Lista Geral de Contas & Correção Cadastral
       </h3>
-      <span class="tag" style="cursor:default; font-weight:800; font-size:12px; padding:5px 14px; border-radius:20px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.35); color:#60A5FA;">\${totalUsers} cadastrado(s)</span>
+      <span class="tag" style="cursor:default; font-weight:800; font-size:12px; padding:5px 14px; border-radius:20px; background:rgba(124, 58, 237,0.15); border:1px solid rgba(124, 58, 237,0.35); color:#A78BFA;">\${totalUsers} cadastrado(s)</span>
     </div>
     <p class="cfg-hint" style="margin-bottom:18px; font-size:13px; color:var(--text-dim); line-height:1.5;">
       💡 O autocadastro é feito pelo próprio usuário. Caso precise corrigir nome, CPF, e-mail, telefone/WhatsApp ou redefinir senha, clique em <strong>✏️ Corrigir Dados</strong>.
@@ -18874,13 +18874,13 @@ function pageUsuarios(){
                 <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
                 \${(u.device_type === 'Mobile' || u.device === 'Mobile') 
                   ? '<span class="role-badge" style="background:linear-gradient(135deg, rgba(168,85,247,0.22), rgba(147,51,234,0.12)); border:1px solid rgba(192,132,252,0.4); color:#D8B4FE; display:inline-flex; align-items:center; gap:4px; font-weight:700;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> 📱 Mobile</span>' 
-                  : '<span class="role-badge" style="background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(37,99,235,0.1)); border:1px solid rgba(96,165,250,0.35); color:#93C5FD; display:inline-flex; align-items:center; gap:4px; font-weight:700;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 💻 Computador</span>'}
+                  : '<span class="role-badge" style="background:linear-gradient(135deg, rgba(124, 58, 237,0.18), rgba(109, 40, 217,0.1)); border:1px solid rgba(96,165,250,0.35); color:#C4B5FD; display:inline-flex; align-items:center; gap:4px; font-weight:700;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 💻 Computador</span>'}
                 \${isInactive ? '<span class="role-badge inactive">Desativado</span>' : ''}
               </div>
               <div class="user-card-email" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:3px;">
                 <span>✉️ \${u.email}</span>
                 \${formattedCpf ? \`<span style="font-size:12px; color:var(--text-dim); background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">🪪 CPF: <strong style="color:var(--text);">\${formattedCpf}</strong></span>\` : '<span style="font-size:11.5px; color:#94A3B8; font-style:italic;">(Sem CPF)</span>'}
-                \${formattedPhone ? \`<span style="font-size:12px; color:#00E5FF; background:rgba(0,229,255,0.12); padding:2px 8px; border-radius:6px; border:1px solid rgba(0,229,255,0.3);">📱 <strong style="color:#38BDF8;">\${formattedPhone}</strong></span>\` : ''}
+                \${formattedPhone ? \`<span style="font-size:12px; color:#7C3AED; background:rgba(124, 58, 237,0.12); padding:2px 8px; border-radius:6px; border:1px solid rgba(124, 58, 237,0.3);">📱 <strong style="color:#8B5CF6;">\${formattedPhone}</strong></span>\` : ''}
               </div>
               <div class="user-card-stats-strip" style="margin-top:6px;">
                 \${stats.hasData ? \`
@@ -18890,7 +18890,7 @@ function pageUsuarios(){
                   <span class="user-stat-chip">Metas: <strong>\${stats.goalCount}</strong></span>
                   \${stats.lastDate ? \`<span class="user-stat-chip">Última mov: <strong>\${formatDateBR(stats.lastDate)}</strong></span>\` : ''}
                 \` : '<span class="user-stat-chip">Ainda sem movimentações</span>'}
-                <span class="user-stat-chip user-last-login-chip" style="background:rgba(59,130,246,0.14); border:1px solid rgba(96,165,250,0.35); color:#93C5FD; display:inline-flex; align-items:center; gap:5px;">
+                <span class="user-stat-chip user-last-login-chip" style="background:rgba(124, 58, 237,0.14); border:1px solid rgba(96,165,250,0.35); color:#C4B5FD; display:inline-flex; align-items:center; gap:5px;">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   Último login: <strong style="color:#FFFFFF;">\${formatDateTimeWithSeconds(u.last_login)}</strong>
                 </span>
@@ -18899,7 +18899,7 @@ function pageUsuarios(){
           </div>
           <div class="user-card-right">
             \${rawPhone ? \`
-              <a href="https://wa.me/55\${rawPhone}" target="_blank" class="user-card-btn" style="background:rgba(0,229,255,0.14); border:1px solid rgba(0,229,255,0.35); color:#00E5FF; text-decoration:none; display:inline-flex; align-items:center; gap:5px; padding:0 12px; height:38px; border-radius:10px;" title="Conversar no WhatsApp">
+              <a href="https://wa.me/55\${rawPhone}" target="_blank" class="user-card-btn" style="background:rgba(124, 58, 237,0.14); border:1px solid rgba(124, 58, 237,0.35); color:#7C3AED; text-decoration:none; display:inline-flex; align-items:center; gap:5px; padding:0 12px; height:38px; border-radius:10px;" title="Conversar no WhatsApp">
                 <span>💬 WhatsApp</span>
               </a>
             \` : ''}
@@ -18924,7 +18924,7 @@ function pageUsuarios(){
             \` : \`
               <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:800; font-size:12px; padding:6px 14px; border-radius:12px; height:38px;">⭐ Sua Conta (Atual)</span>
             \`}
-            <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Corrigir dados do cadastro" style="background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(59,130,246,0.35);">
+            <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Corrigir dados do cadastro" style="background:linear-gradient(135deg, #8B5CF6, #6D28D9); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(124, 58, 237,0.35);">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               <span>Corrigir Dados</span>
             </button>
@@ -19112,7 +19112,7 @@ function pageLogs(){
       <div class="sub" style="font-size:11px;">Eventos registrados</div>
     </div>
     <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Criações</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(0,229,255,0.14); color:var(--brand-bright);">➕</span></div>
+      <div class="row1" style="margin-bottom:6px;"><span>Criações</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(124, 58, 237,0.14); color:var(--brand-bright);">➕</span></div>
       <div class="val" style="font-size:22px; color:var(--green); margin-bottom:2px;">\${countCriacao}</div>
       <div class="sub" style="font-size:11px;">Novos dados</div>
     </div>
@@ -19366,7 +19366,7 @@ window.executarConsultaOrdens = async function(e) {
         \`;
       } else {
         let cardsHtml = \`
-          <div style="font-size:12px; font-weight:800; color:#93C5FD; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:12px; font-weight:800; color:#C4B5FD; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
             <span>\${list.length} chamado(s) encontrado(s):</span>
             <span style="font-size:11px; color:#94A3B8;">Atualizado em tempo real</span>
           </div>
@@ -19376,9 +19376,9 @@ window.executarConsultaOrdens = async function(e) {
           let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
           const st = (o.status || '').toLowerCase();
           if (st.includes('anda')) {
-            statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Em Andamento';
+            statusBg = 'rgba(124, 58, 237,0.18)'; statusColor = '#A78BFA'; statusBorder = 'rgba(124, 58, 237,0.4)'; statusLabel = '⚙️ Em Andamento';
           } else if (st.includes('concl') || st.includes('final')) {
-            statusBg = 'rgba(0,229,255,0.18)'; statusColor = '#00E5FF'; statusBorder = 'rgba(0,229,255,0.4)'; statusLabel = '✅ Concluído';
+            statusBg = 'rgba(124, 58, 237,0.18)'; statusColor = '#7C3AED'; statusBorder = 'rgba(124, 58, 237,0.4)'; statusLabel = '✅ Concluído';
           } else if (st.includes('canc') || st.includes('recus')) {
             statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
           }
@@ -19389,7 +19389,7 @@ window.executarConsultaOrdens = async function(e) {
             <div class="os-consult-card">
               <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">
                 <div style="display:flex; align-items:center; gap:8px;">
-                  <span style="font-weight:900; font-size:12.5px; padding:3px 9px; border-radius:6px; background:rgba(59,130,246,0.18); color:#93C5FD; border:1px solid rgba(59,130,246,0.35);">
+                  <span style="font-weight:900; font-size:12.5px; padding:3px 9px; border-radius:6px; background:rgba(124, 58, 237,0.18); color:#C4B5FD; border:1px solid rgba(124, 58, 237,0.35);">
                     #\${o.protocol || o.id}
                   </span>
                   <span style="font-size:11.5px; color:#94A3B8;">\${dateFormatted}</span>
@@ -19407,7 +19407,7 @@ window.executarConsultaOrdens = async function(e) {
                 <span><strong>Solicitante:</strong> \${escapeOsHtml(o.client_name || 'Anônimo')}</span>
                 <span><strong>Tipo:</strong> \${escapeOsHtml(o.service_type || 'Geral')}</span>
                 <span><strong>Prioridade:</strong> \${escapeOsHtml(o.priority || 'Normal')}</span>
-                \${o.tecnico_responsavel ? \`<span style="color:#38BDF8; font-weight:700;"><strong>👷 Técnico Responsável:</strong> \${escapeOsHtml(o.tecnico_responsavel)}</span>\` : '<span style="color:#94A3B8; font-style:italic;">(Aguardando atribuição de técnico)</span>'}
+                \${o.tecnico_responsavel ? \`<span style="color:#8B5CF6; font-weight:700;"><strong>👷 Técnico Responsável:</strong> \${escapeOsHtml(o.tecnico_responsavel)}</span>\` : '<span style="color:#94A3B8; font-style:italic;">(Aguardando atribuição de técnico)</span>'}
               </div>
 
               <div style="background:rgba(0,0,0,0.25); border-radius:10px; padding:10px 12px; font-size:12px; color:#E2E8F0; margin-bottom:10px; line-height:1.45; border:1px solid rgba(255,255,255,0.06);">
@@ -19416,8 +19416,8 @@ window.executarConsultaOrdens = async function(e) {
               </div>
 
               \${o.admin_notes ? \`
-                <div style="background:linear-gradient(135deg, rgba(0,229,255,0.12), rgba(2,132,199,0.08)); border:1.5px solid rgba(56,189,248,0.35); border-radius:12px; padding:12px; margin-top:10px;">
-                  <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:800; color:#00E5FF; margin-bottom:4px; text-transform:uppercase;">
+                <div style="background:linear-gradient(135deg, rgba(124, 58, 237,0.12), rgba(124, 58, 237,0.08)); border:1.5px solid rgba(139, 92, 246,0.35); border-radius:12px; padding:12px; margin-top:10px;">
+                  <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:800; color:#7C3AED; margin-bottom:4px; text-transform:uppercase;">
                     <span>💬 Parecer / Resposta da Equipe Técnica:</span>
                   </div>
                   <div style="font-size:12.5px; color:#F1F5F9; font-weight:600; line-height:1.45;">
@@ -19596,14 +19596,14 @@ function renderOrdensTable(list) {
     let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
     const st = (o.status || '').toLowerCase();
     if (st.includes('anda')) {
-      statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Em Andamento';
+      statusBg = 'rgba(124, 58, 237,0.18)'; statusColor = '#A78BFA'; statusBorder = 'rgba(124, 58, 237,0.4)'; statusLabel = '⚙️ Em Andamento';
     } else if (st.includes('concl') || st.includes('final')) {
-      statusBg = 'rgba(0,229,255,0.18)'; statusColor = '#00E5FF'; statusBorder = 'rgba(0,229,255,0.4)'; statusLabel = '✅ Concluído';
+      statusBg = 'rgba(124, 58, 237,0.18)'; statusColor = '#7C3AED'; statusBorder = 'rgba(124, 58, 237,0.4)'; statusLabel = '✅ Concluído';
     } else if (st.includes('canc') || st.includes('recus')) {
       statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
     }
 
-    let prioBg = 'rgba(0,229,255,0.12)', prioColor = '#00E5FF', prioBorder = 'rgba(0,229,255,0.3)';
+    let prioBg = 'rgba(124, 58, 237,0.12)', prioColor = '#7C3AED', prioBorder = 'rgba(124, 58, 237,0.3)';
     const prio = (o.priority || '').toLowerCase();
     if (prio.includes('urg')) {
       prioBg = 'rgba(239,68,68,0.18)'; prioColor = '#F87171'; prioBorder = 'rgba(239,68,68,0.4)';
@@ -19619,20 +19619,20 @@ function renderOrdensTable(list) {
     
     html += '<td style="padding:13px 14px; white-space:nowrap;">';
     html += '<div style="display:inline-flex; align-items:center; gap:5px;">';
-    html += '<span style="font-weight:800; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.12); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">#' + protoClean + '</span>';
+    html += '<span style="font-weight:800; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(124, 58, 237,0.12); color:#C4B5FD; border:1px solid rgba(124, 58, 237,0.3);">#' + protoClean + '</span>';
     html += '<button type="button" onclick="copyProtocolText(&quot;' + protoClean + '&quot;)" style="background:none; border:none; cursor:pointer; font-size:13px; padding:2px; color:var(--text-dim);" title="Copiar Protocolo">📋</button>';
     html += '</div></td>';
 
     html += '<td style="padding:13px 14px; font-size:12px; color:var(--text-dim); white-space:nowrap;">';
     html += '<div>' + dateFormatted + '</div>';
-    html += '<span style="display:inline-block; margin-top:3px; font-size:10.5px; font-weight:700; color:#38BDF8; padding:1px 6px; border-radius:4px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25);">' + escapeOsHtml(o.canal_atendimento || 'Portal Web') + '</span>';
+    html += '<span style="display:inline-block; margin-top:3px; font-size:10.5px; font-weight:700; color:#8B5CF6; padding:1px 6px; border-radius:4px; background:rgba(139, 92, 246,0.12); border:1px solid rgba(139, 92, 246,0.25);">' + escapeOsHtml(o.canal_atendimento || 'Portal Web') + '</span>';
     html += '</td>';
 
     html += '<td style="padding:13px 14px;">';
     html += '<div style="font-weight:700; color:var(--text); font-size:13px;">' + escapeOsHtml(o.client_name || 'Anônimo') + '</div>';
     html += '<div style="font-size:11.5px; color:var(--text-dim); margin-top:1px;"><a href="mailto:' + escapeOsHtml(o.client_email || '') + '" style="color:var(--text-dim); text-decoration:none;">' + escapeOsHtml(o.client_email || '') + '</a></div>';
     if (cleanPhone) {
-      html += '<div style="font-size:11px; margin-top:2px;"><a href="https://wa.me/55' + cleanPhone + '" target="_blank" style="color:#00E5FF; font-weight:700; text-decoration:none;">📱 ' + escapeOsHtml(o.client_phone) + '</a></div>';
+      html += '<div style="font-size:11px; margin-top:2px;"><a href="https://wa.me/55' + cleanPhone + '" target="_blank" style="color:#7C3AED; font-weight:700; text-decoration:none;">📱 ' + escapeOsHtml(o.client_phone) + '</a></div>';
     }
     if (o.client_cpf) {
       html += '<div style="font-size:10.5px; color:#A78BFA; font-weight:700; margin-top:2px;">🪪 CPF: ' + escapeOsHtml(o.client_cpf) + '</div>';
@@ -19640,7 +19640,7 @@ function renderOrdensTable(list) {
     html += '</td>';
 
     html += '<td style="padding:13px 14px; max-width:280px;">';
-    html += '<div style="display:inline-block; padding:2px 7px; border-radius:4px; font-size:10.5px; font-weight:800; background:rgba(59,130,246,0.12); color:#93C5FD; margin-bottom:3px;">' + escapeOsHtml(o.service_type || 'Melhoria') + '</div>';
+    html += '<div style="display:inline-block; padding:2px 7px; border-radius:4px; font-size:10.5px; font-weight:800; background:rgba(124, 58, 237,0.12); color:#C4B5FD; margin-bottom:3px;">' + escapeOsHtml(o.service_type || 'Melhoria') + '</div>';
     html += '<div style="font-weight:700; color:var(--text); font-size:12.5px;">' + escapeOsHtml(o.title || 'Sem título') + '</div>';
     if (o.description) {
       html += '<div style="font-size:11px; color:var(--text-dim); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + escapeOsHtml(o.description) + '">' + escapeOsHtml(o.description) + '</div>';
@@ -19649,7 +19649,7 @@ function renderOrdensTable(list) {
 
     html += '<td style="padding:13px 14px; white-space:nowrap;">';
     if (o.tecnico_responsavel) {
-      html += '<div style="font-weight:800; color:#38BDF8; font-size:12.5px; display:inline-flex; align-items:center; gap:4px;">👷 ' + escapeOsHtml(o.tecnico_responsavel) + '</div>';
+      html += '<div style="font-weight:800; color:#8B5CF6; font-size:12.5px; display:inline-flex; align-items:center; gap:4px;">👷 ' + escapeOsHtml(o.tecnico_responsavel) + '</div>';
       html += '<div style="font-size:10.5px; color:var(--text-dim); margin-top:2px;">' + (o.assumido_em ? ('Assumido ' + new Date(o.assumido_em).toLocaleDateString('pt-BR')) : 'Em atendimento') + '</div>';
     } else {
       html += '<button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; padding:5px 12px; border-radius:8px; background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.4); font-size:11.5px; font-weight:800; cursor:pointer;" title="Assumir esta Ordem de Serviço">';
@@ -19664,17 +19664,17 @@ function renderOrdensTable(list) {
     html += '<td style="padding:13px 14px; white-space:nowrap;">';
     html += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
     if (o.concluido_em) {
-      html += '<div style="font-size:10px; color:#00E5FF; margin-top:2px;">Finalizado ' + new Date(o.concluido_em).toLocaleDateString('pt-BR') + '</div>';
+      html += '<div style="font-size:10px; color:#7C3AED; margin-top:2px;">Finalizado ' + new Date(o.concluido_em).toLocaleDateString('pt-BR') + '</div>';
     }
     html += '</td>';
 
     html += '<td style="padding:13px 14px; text-align:right; white-space:nowrap;">';
     html += '<div style="display:flex; gap:5px; justify-content:flex-end; align-items:center;">';
-    html += '<button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="padding:6px 11px; border-radius:8px; background:linear-gradient(135deg, #3B82F6, #1D4ED8); color:#ffffff; font-size:11.5px; font-weight:800; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(59,130,246,0.3);" title="Atender Chamado">👁️ Atender</button>';
+    html += '<button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="padding:6px 11px; border-radius:8px; background:linear-gradient(135deg, #8B5CF6, #6D28D9); color:#ffffff; font-size:11.5px; font-weight:800; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(124, 58, 237,0.3);" title="Atender Chamado">👁️ Atender</button>';
     if (!st.includes('concl') && !st.includes('canc')) {
-      html += '<button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 9px; border-radius:8px; background:rgba(0,229,255,0.18); color:#00E5FF; border:1px solid rgba(0,229,255,0.35); font-size:11.5px; font-weight:800; cursor:pointer;" title="Concluir O.S. Agora">✓ Concluir</button>';
+      html += '<button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 9px; border-radius:8px; background:rgba(124, 58, 237,0.18); color:#7C3AED; border:1px solid rgba(124, 58, 237,0.35); font-size:11.5px; font-weight:800; cursor:pointer;" title="Concluir O.S. Agora">✓ Concluir</button>';
     }
-    html += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); font-size:11.5px; cursor:pointer;" title="Imprimir Ficha O.S.">🖨️</button>';
+    html += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(139, 92, 246,0.12); color:#8B5CF6; border:1px solid rgba(139, 92, 246,0.3); font-size:11.5px; cursor:pointer;" title="Imprimir Ficha O.S.">🖨️</button>';
     html += '<button type="button" onclick="excluirOrdemAdmin(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:11.5px; cursor:pointer;" title="Excluir O.S.">🗑️</button>';
     html += '</div></td>';
 
@@ -19732,11 +19732,11 @@ function pageOrdens(){
     let userHtml = '<div id="ordensPage">';
     userHtml += '<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">';
     userHtml += '<div><h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">';
-    userHtml += '<span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">🎧</span>';
+    userHtml += '<span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(124, 58, 237,0.25), rgba(109, 40, 217,0.12)); border:1px solid rgba(96,165,250,0.35);">🎧</span>';
     userHtml += 'Central de Atendimento & Meus Chamados</h1>';
     userHtml += '<p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">Acompanhe o status e as respostas técnicas das suas solicitações em tempo real.</p></div>';
     userHtml += '<div class="head-actions" style="display:flex; gap:10px; align-items:center;">';
-    userHtml += '<button onclick="openNovaOrdemModal(&quot;abrir&quot;)" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #0284C7, #00E5FF); color:#060B18; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(0,229,255,0.5);">';
+    userHtml += '<button onclick="openNovaOrdemModal(&quot;abrir&quot;)" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #7C3AED, #7C3AED); color:#060B18; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(124, 58, 237,0.5);">';
     userHtml += '<span>➕ Abrir Nova Solicitação</span></button>';
     userHtml += '<button class="btn-ghost" onclick="syncOrdensWithServer().then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">🔄 Atualizar</button>';
     userHtml += '</div></div>';
@@ -19754,9 +19754,9 @@ function pageOrdens(){
         let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente em Triagem';
         const st = (o.status || '').toLowerCase();
         if (st.includes('anda')) {
-          statusBg = 'rgba(59,130,246,0.18)'; statusColor = '#60A5FA'; statusBorder = 'rgba(59,130,246,0.4)'; statusLabel = '⚙️ Sendo Atendido';
+          statusBg = 'rgba(124, 58, 237,0.18)'; statusColor = '#A78BFA'; statusBorder = 'rgba(124, 58, 237,0.4)'; statusLabel = '⚙️ Sendo Atendido';
         } else if (st.includes('concl') || st.includes('final')) {
-          statusBg = 'rgba(0,229,255,0.18)'; statusColor = '#00E5FF'; statusBorder = 'rgba(0,229,255,0.4)'; statusLabel = '✅ Concluído';
+          statusBg = 'rgba(124, 58, 237,0.18)'; statusColor = '#7C3AED'; statusBorder = 'rgba(124, 58, 237,0.4)'; statusLabel = '✅ Concluído';
         } else if (st.includes('canc')) {
           statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
         }
@@ -19764,12 +19764,12 @@ function pageOrdens(){
         userHtml += '<div style="border:1px solid var(--card-border); border-radius:14px; padding:16px 18px; background:rgba(255,255,255,0.02);">';
         userHtml += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">';
         userHtml += '<div style="display:flex; align-items:center; gap:8px;">';
-        userHtml += '<span style="font-weight:900; font-size:13px; padding:3px 8px; border-radius:6px; background:rgba(59,130,246,0.14); color:#93C5FD; border:1px solid rgba(59,130,246,0.3);">#' + escapeOsHtml(o.protocol || o.id) + '</span>';
+        userHtml += '<span style="font-weight:900; font-size:13px; padding:3px 8px; border-radius:6px; background:rgba(124, 58, 237,0.14); color:#C4B5FD; border:1px solid rgba(124, 58, 237,0.3);">#' + escapeOsHtml(o.protocol || o.id) + '</span>';
         userHtml += '<span style="font-size:12px; color:var(--text-dim);">' + (o.created_at ? new Date(o.created_at).toLocaleString('pt-BR') : '') + '</span>';
         userHtml += '</div>';
         userHtml += '<div style="display:flex; gap:8px; align-items:center;">';
         userHtml += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
-        userHtml += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:4px 9px; border-radius:8px; background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); font-size:11px; cursor:pointer;" title="Imprimir Comprovante">🖨️ Imprimir</button>';
+        userHtml += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:4px 9px; border-radius:8px; background:rgba(139, 92, 246,0.12); color:#8B5CF6; border:1px solid rgba(139, 92, 246,0.3); font-size:11px; cursor:pointer;" title="Imprimir Comprovante">🖨️ Imprimir</button>';
         userHtml += '</div></div>';
 
         userHtml += '<h4 style="font-size:15px; font-weight:800; color:var(--text); margin:0 0 6px 0;">' + escapeOsHtml(o.title || '') + '</h4>';
@@ -19777,8 +19777,8 @@ function pageOrdens(){
         userHtml += '<div style="background:rgba(0,0,0,0.22); border-radius:10px; padding:10px 12px; font-size:12.5px; color:var(--text); line-height:1.45; border:1px solid var(--card-border); margin-bottom:10px;">' + escapeOsHtml(o.description || '') + '</div>';
 
         if (o.admin_notes) {
-          userHtml += '<div style="background:linear-gradient(135deg, rgba(0,229,255,0.12), rgba(2,132,199,0.08)); border:1.5px solid rgba(56,189,248,0.35); border-radius:12px; padding:12px;">';
-          userHtml += '<div style="font-size:11.5px; font-weight:800; color:#00E5FF; margin-bottom:4px; text-transform:uppercase;">💬 Resposta da Equipe Técnica:</div>';
+          userHtml += '<div style="background:linear-gradient(135deg, rgba(124, 58, 237,0.12), rgba(124, 58, 237,0.08)); border:1.5px solid rgba(139, 92, 246,0.35); border-radius:12px; padding:12px;">';
+          userHtml += '<div style="font-size:11.5px; font-weight:800; color:#7C3AED; margin-bottom:4px; text-transform:uppercase;">💬 Resposta da Equipe Técnica:</div>';
           userHtml += '<div style="font-size:12.5px; color:var(--text); font-weight:600; line-height:1.45;">' + escapeOsHtml(o.admin_notes) + '</div>';
           userHtml += '</div>';
         }
@@ -19808,13 +19808,13 @@ function pageOrdens(){
   h += '<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">';
   h += '<div>';
   h += '<h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">';
-  h += '<span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.12)); border:1px solid rgba(96,165,250,0.35);">📋</span>';
+  h += '<span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(124, 58, 237,0.25), rgba(109, 40, 217,0.12)); border:1px solid rgba(96,165,250,0.35);">📋</span>';
   h += 'Central de Ordens de Serviço & Suporte Técnico</h1>';
   h += '<p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">Recepção, triagem, despacho técnico e sincronização direta no Microsoft SQL Server.</p>';
   h += '</div>';
 
   h += '<div class="head-actions" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">';
-  h += '<button onclick="openSuporteNovaOrdemModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #0284C7, #00E5FF); color:#060B18; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(0,229,255,0.5); transition:all 0.25s ease;">';
+  h += '<button onclick="openSuporteNovaOrdemModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #7C3AED, #7C3AED); color:#060B18; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(124, 58, 237,0.5); transition:all 0.25s ease;">';
   h += '<span>➕ Registrar O.S.</span></button>';
   
   h += '<button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.12)); border:1.5px solid rgba(245,158,11,0.5); color:#FDE68A; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 8px 24px -4px rgba(245,158,11,0.25);">';
@@ -19822,7 +19822,7 @@ function pageOrdens(){
   h += '<span id="tecnicosBadgeCount" style="padding:2px 7px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:11px; font-weight:900;">' + ((systemTecnicos || []).filter(t => t.active !== false).length) + '</span>';
   h += '</button>';
 
-  h += '<button onclick="imprimirFilaOrdens()" style="display:inline-flex; align-items:center; gap:6px; height:42px; padding:0 16px; border-radius:14px; background:rgba(56,189,248,0.12); border:1.5px solid rgba(56,189,248,0.35); color:#38BDF8; font-size:13px; font-weight:800; cursor:pointer;" title="Imprimir Relatório da Fila de O.S.">';
+  h += '<button onclick="imprimirFilaOrdens()" style="display:inline-flex; align-items:center; gap:6px; height:42px; padding:0 16px; border-radius:14px; background:rgba(139, 92, 246,0.12); border:1.5px solid rgba(139, 92, 246,0.35); color:#8B5CF6; font-size:13px; font-weight:800; cursor:pointer;" title="Imprimir Relatório da Fila de O.S.">';
   h += '<span>🖨️ Imprimir Fila O.S.</span></button>';
 
   h += '<button class="btn-ghost" onclick="syncOrdensWithServer().then(() => syncTecnicosWithServer()).then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">🔄 Sincronizar Banco SQL</button>';
@@ -19833,10 +19833,10 @@ function pageOrdens(){
   h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;todas&quot;)">';
   h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
   h += '<span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Total de Chamados</span>';
-  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">📋</div>';
+  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(124, 58, 237,0.25), rgba(109, 40, 217,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">📋</div>';
   h += '</div>';
   h += '<div class="val" style="font-size:28px; font-weight:900; color:var(--text); margin-bottom:2px;">' + countTotal + '</div>';
-  h += '<div class="sub" style="font-size:12px; color:#60A5FA; font-weight:600; margin-top:4px;">Todas as solicitações</div>';
+  h += '<div class="sub" style="font-size:12px; color:#A78BFA; font-weight:600; margin-top:4px;">Todas as solicitações</div>';
   h += '</div>';
 
   h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid ' + (countPendentes > 0 ? 'rgba(245,158,11,0.5)' : 'rgba(255,255,255,0.13)') + '; box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;pendente&quot;)">';
@@ -19851,19 +19851,19 @@ function pageOrdens(){
   h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;andamento&quot;)">';
   h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
   h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Em Andamento</span>';
-  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(59,130,246,0.25), rgba(37,99,235,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⚙️</div>';
+  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(124, 58, 237,0.25), rgba(109, 40, 217,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⚙️</div>';
   h += '</div>';
-  h += '<div class="val" style="font-size:28px; font-weight:900; color:#60A5FA; margin-bottom:2px;">' + countAndamento + '</div>';
-  h += '<div class="sub" style="font-size:12px; color:#BFDBFE; font-weight:600; margin-top:4px;">Sendo atendidos</div>';
+  h += '<div class="val" style="font-size:28px; font-weight:900; color:#A78BFA; margin-bottom:2px;">' + countAndamento + '</div>';
+  h += '<div class="sub" style="font-size:12px; color:#DDD6FE; font-weight:600; margin-top:4px;">Sendo atendidos</div>';
   h += '</div>';
 
   h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;concluido&quot;)">';
   h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
   h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Concluídos</span>';
-  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(0,229,255,0.25), rgba(2,132,199,0.15)); border:1.5px solid rgba(56,189,248,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">✅</div>';
+  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(124, 58, 237,0.25), rgba(124, 58, 237,0.15)); border:1.5px solid rgba(139, 92, 246,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">✅</div>';
   h += '</div>';
-  h += '<div class="val" style="font-size:28px; font-weight:900; color:#00E5FF; margin-bottom:2px;">' + countConcluidas + '</div>';
-  h += '<div class="sub" style="font-size:12px; color:#BAE6FD; font-weight:600; margin-top:4px;">Finalizados com sucesso</div>';
+  h += '<div class="val" style="font-size:28px; font-weight:900; color:#7C3AED; margin-bottom:2px;">' + countConcluidas + '</div>';
+  h += '<div class="sub" style="font-size:12px; color:#DDD6FE; font-weight:600; margin-top:4px;">Finalizados com sucesso</div>';
   h += '</div>';
 
   h += '</div>';
@@ -19876,10 +19876,10 @@ function pageOrdens(){
   h += '</div>';
 
   h += '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid var(--card-border); background:' + (currentTab==='todas'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(255,255,255,0.05)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">Todas (' + countTotal + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid var(--card-border); background:' + (currentTab==='todas'?'linear-gradient(135deg, #8B5CF6, #6D28D9)':'rgba(255,255,255,0.05)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">Todas (' + countTotal + ')</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.4); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.12)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">⏳ Pendentes (' + countPendentes + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(59,130,246,0.4); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #3B82F6, #1D4ED8)':'rgba(59,130,246,0.12)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#60A5FA') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(0,229,255,0.4); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #0284C7, #00E5FF)':'rgba(0,229,255,0.12)') + '; color:' + (currentTab==='concluido'?'#060B18':'#00E5FF') + ';">✅ Concluídas (' + countConcluidas + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(124, 58, 237,0.4); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #8B5CF6, #6D28D9)':'rgba(124, 58, 237,0.12)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#A78BFA') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(124, 58, 237,0.4); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #7C3AED, #7C3AED)':'rgba(124, 58, 237,0.12)') + '; color:' + (currentTab==='concluido'?'#060B18':'#7C3AED') + ';">✅ Concluídas (' + countConcluidas + ')</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='cancelado'?'active':'') + '" data-tab="cancelado" onclick="setOsStatusTab(&quot;cancelado&quot;)" style="padding:8px 16px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.4); background:' + (currentTab==='cancelado'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.12)') + '; color:' + (currentTab==='cancelado'?'#FFFFFF':'#F87171') + ';">❌ Canceladas (' + countCanceladas + ')</button>';
   h += '</div>';
 
@@ -20034,9 +20034,9 @@ window.atualizarEstiloPrioridadeAdmin = function(val) {
     prioSelect.style.color = '#FBBF24';
     prioSelect.style.background = 'rgba(245,158,11,0.14)';
   } else {
-    prioSelect.style.borderColor = 'rgba(0,229,255,0.7)';
-    prioSelect.style.color = '#00E5FF';
-    prioSelect.style.background = 'rgba(0,229,255,0.14)';
+    prioSelect.style.borderColor = 'rgba(124, 58, 237,0.7)';
+    prioSelect.style.color = '#7C3AED';
+    prioSelect.style.background = 'rgba(124, 58, 237,0.14)';
   }
 };
 
@@ -20185,20 +20185,20 @@ window.imprimirFichaOrdem = function(id) {
   doc += '.desc-box { border: 1px solid #CBD5E1; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; background: #FFFFFF; }';
   doc += '.desc-box h4 { margin: 0 0 6px 0; font-size: 12.5px; text-transform: uppercase; color: #0F172A; }';
   doc += '.desc-box p { margin: 0; font-size: 12.5px; line-height: 1.5; white-space: pre-wrap; color: #1E293B; }';
-  doc += '.parecer-box { border: 1.5px solid #0284C7; border-radius: 10px; padding: 12px 14px; margin-bottom: 20px; background: #F0F9FF; }';
-  doc += '.parecer-box h4 { margin: 0 0 5px 0; font-size: 12px; text-transform: uppercase; color: #0369A1; }';
+  doc += '.parecer-box { border: 1.5px solid #7C3AED; border-radius: 10px; padding: 12px 14px; margin-bottom: 20px; background: #F0F9FF; }';
+  doc += '.parecer-box h4 { margin: 0 0 5px 0; font-size: 12px; text-transform: uppercase; color: #6D28D9; }';
   doc += '.parecer-box p { margin: 0; font-size: 12.5px; line-height: 1.45; color: #0C4A6E; }';
   doc += '.signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; text-align: center; }';
   doc += '.sign-line { border-top: 1px solid #0F172A; padding-top: 6px; font-size: 11.5px; font-weight: 700; color: #0F172A; }';
   doc += '.footer { margin-top: 24px; border-top: 1px dashed #CBD5E1; padding-top: 10px; font-size: 10.5px; color: #64748B; display: flex; justify-content: space-between; }';
   doc += '@media print { .no-print { display: none !important; } }';
-  doc += '</style></head><body>';
+  doc += '</style></head><body class="light">';
   
   doc += '<div class="no-print" style="margin-bottom: 16px; text-align: right;">';
-  doc += '<button onclick="window.print()" style="padding: 8px 18px; font-size: 12.5px; font-weight: 800; background: #0284C7; color: #FFFFFF; border: none; border-radius: 8px; cursor: pointer;">🖨️ Imprimir Documento</button>';
+  doc += '<button onclick="window.print()" style="padding: 8px 18px; font-size: 12.5px; font-weight: 800; background: #7C3AED; color: #FFFFFF; border: none; border-radius: 8px; cursor: pointer;">🖨️ Imprimir Documento</button>';
   doc += '</div>';
 
-  doc += '<div class="header"><div><div class="logo">NEXUS <span style="color:#0284C7;">FINANCEIRO</span> HUB</div>';
+  doc += '<div class="header"><div><div class="logo">NEXUS <span style="color:#7C3AED;">FINANCEIRO</span> HUB</div>';
   doc += '<div style="font-size: 12px; color: #475569; margin-top: 3px;">Comprovante Oficial de Ordem de Serviço (O.S.) & Suporte Técnico</div></div>';
   doc += '<div class="proto-badge">#' + escapeOsHtml(o.protocol || o.id) + '</div></div>';
 
@@ -20286,14 +20286,14 @@ window.imprimirFilaOrdens = function() {
   doc += '.logo { font-size: 18px; font-weight: 900; }';
   doc += '.stats { display: flex; gap: 14px; margin-bottom: 18px; }';
   doc += '.stat-card { border: 1px solid #CBD5E1; border-radius: 8px; padding: 10px 14px; flex: 1; background: #F8FAFC; }';
-  doc += '.stat-card strong { display: block; font-size: 18px; color: #0284C7; }';
+  doc += '.stat-card strong { display: block; font-size: 18px; color: #7C3AED; }';
   doc += 'table { width: 100%; border-collapse: collapse; text-align: left; }';
   doc += 'th { background: #0F172A; color: #FFFFFF; padding: 9px 10px; font-size: 11px; text-transform: uppercase; }';
   doc += '@media print { .no-print { display: none !important; } }';
-  doc += '</style></head><body>';
+  doc += '</style></head><body class="light">';
 
   doc += '<div class="no-print" style="margin-bottom: 14px; text-align: right;">';
-  doc += '<button onclick="window.print()" style="padding: 8px 18px; font-size: 12px; font-weight: 800; background: #0284C7; color: #FFFFFF; border: none; border-radius: 6px; cursor: pointer;">🖨️ Imprimir Relatório</button>';
+  doc += '<button onclick="window.print()" style="padding: 8px 18px; font-size: 12px; font-weight: 800; background: #7C3AED; color: #FFFFFF; border: none; border-radius: 6px; cursor: pointer;">🖨️ Imprimir Relatório</button>';
   doc += '</div>';
 
   doc += '<div class="header"><div><div class="logo">NEXUS FINANCEIRO HUB</div>';
@@ -20303,8 +20303,8 @@ window.imprimirFilaOrdens = function() {
   doc += '<div class="stats">';
   doc += '<div class="stat-card"><span>Total de O.S.:</span><strong>' + total + '</strong></div>';
   doc += '<div class="stat-card"><span>Pendentes:</span><strong style="color:#D97706;">' + pend + '</strong></div>';
-  doc += '<div class="stat-card"><span>Em Atendimento:</span><strong style="color:#2563EB;">' + andam + '</strong></div>';
-  doc += '<div class="stat-card"><span>Concluídas:</span><strong style="color:#0284C7;">' + conc + '</strong></div>';
+  doc += '<div class="stat-card"><span>Em Atendimento:</span><strong style="color:#7C3AED;">' + andam + '</strong></div>';
+  doc += '<div class="stat-card"><span>Concluídas:</span><strong style="color:#7C3AED;">' + conc + '</strong></div>';
   doc += '</div>';
 
   doc += '<table><thead><tr><th>Protocolo</th><th>Data</th><th>Solicitante</th><th>Demanda</th><th>Técnico</th><th>Prioridade</th><th>Status</th></tr></thead>';
@@ -20514,14 +20514,14 @@ function renderListaTecnicosModal() {
           <div>
             <div style="font-size:14px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px;">
               <span>\${escapeOsHtml(t.name)}</span>
-              <span style="font-size:10px; font-weight:800; padding:2px 7px; border-radius:999px; \${t.active !== false ? 'background:rgba(0,229,255,0.15); color:#00E5FF; border:1px solid rgba(0,229,255,0.3);' : 'background:rgba(239,68,68,0.15); color:#F87171; border:1px solid rgba(239,68,68,0.3);'}">
+              <span style="font-size:10px; font-weight:800; padding:2px 7px; border-radius:999px; \${t.active !== false ? 'background:rgba(124, 58, 237,0.15); color:#7C3AED; border:1px solid rgba(124, 58, 237,0.3);' : 'background:rgba(239,68,68,0.15); color:#F87171; border:1px solid rgba(239,68,68,0.3);'}">
                 \${t.active !== false ? '🟢 Ativo' : '⚪ Inativo'}
               </span>
             </div>
             <div style="font-size:11.5px; color:var(--text-dim); margin-top:2px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-              <span style="color:#60A5FA; font-weight:700;">🔧 \${escapeOsHtml(t.specialty || 'Suporte')}</span>
+              <span style="color:#A78BFA; font-weight:700;">🔧 \${escapeOsHtml(t.specialty || 'Suporte')}</span>
               <span>✉️ \${escapeOsHtml(t.email)}</span>
-              \${t.phone ? \`<a href="https://wa.me/55\${cleanPhone}" target="_blank" style="color:#00E5FF; text-decoration:none; font-weight:700;">📱 \${escapeOsHtml(t.phone)}</a>\` : ''}
+              \${t.phone ? \`<a href="https://wa.me/55\${cleanPhone}" target="_blank" style="color:#7C3AED; text-decoration:none; font-weight:700;">📱 \${escapeOsHtml(t.phone)}</a>\` : ''}
             </div>
           </div>
         </div>
@@ -20645,7 +20645,7 @@ function drawDashboardCharts(){
           {
             label: 'Receitas (R$)',
             data: dataIn,
-            backgroundColor: '#00E5FF',
+            backgroundColor: '#7C3AED',
             borderRadius: 5,
             barPercentage: 0.7,
             categoryPercentage: 0.8
@@ -20665,14 +20665,14 @@ function drawDashboardCharts(){
           {
             label: 'Saldo Acumulado (R$)',
             data: dataCum,
-            borderColor: '#06B6D4',
-            backgroundColor: isLightMode ? 'rgba(6, 182, 212, 0.15)' : 'rgba(6, 182, 212, 0.10)',
+            borderColor: '#8B5CF6',
+            backgroundColor: isLightMode ? 'rgba(139, 92, 246, 0.15)' : 'rgba(139, 92, 246, 0.10)',
             borderWidth: 2.8,
             tension: 0.38,
             fill: true,
             pointRadius: 2.8,
             pointHoverRadius: 6,
-            pointBackgroundColor: '#06B6D4',
+            pointBackgroundColor: '#8B5CF6',
             pointBorderColor: '#FFFFFF',
             pointBorderWidth: 1.5
           }
@@ -20689,7 +20689,7 @@ function drawDashboardCharts(){
             labels: hasData ? ['Receitas (Entradas)', 'Despesas (Saídas)'] : ['Sem movimentações no período'],
             datasets: [{
               data: hasData ? [totalReceitas, totalDespesas] : [1],
-              backgroundColor: hasData ? ['#00E5FF', '#EF4444'] : [isLightMode ? '#E2E8F0' : 'rgba(255,255,255,0.08)'],
+              backgroundColor: hasData ? ['#7C3AED', '#EF4444'] : [isLightMode ? '#E2E8F0' : 'rgba(255,255,255,0.08)'],
               borderColor: isLightMode ? '#FFFFFF' : 'rgba(15,23,42,0.95)',
               borderWidth: 2.5,
               hoverOffset: 8
@@ -20739,14 +20739,14 @@ function drawDashboardCharts(){
           {
             label: 'Receitas (R$)',
             data: dataIn,
-            borderColor: '#00E5FF',
-            backgroundColor: isLightMode ? 'rgba(0, 229, 255, 0.16)' : 'rgba(0, 229, 255, 0.12)',
+            borderColor: '#7C3AED',
+            backgroundColor: isLightMode ? 'rgba(124, 58, 237, 0.16)' : 'rgba(124, 58, 237, 0.12)',
             borderWidth: 2.6,
             tension: 0.38,
             fill: true,
             pointRadius: 2.5,
             pointHoverRadius: 6,
-            pointBackgroundColor: '#00E5FF',
+            pointBackgroundColor: '#7C3AED',
             pointBorderColor: '#FFFFFF',
             pointBorderWidth: 1.5
           },
@@ -20898,7 +20898,7 @@ function drawDashboardCharts(){
       const cardData = hasLimit ? [spent, available] : [1, 0];
       const cardColor = cardSummary.usagePctGeral >= 85 ? '#EF4444' : cardSummary.usagePctGeral >= 60 ? '#F59E0B' : '#FBBF24';
       const bgColors = hasLimit 
-        ? [cardColor, isLightMode ? 'rgba(0, 229, 255, 0.45)' : 'rgba(0, 229, 255, 0.25)'] 
+        ? [cardColor, isLightMode ? 'rgba(124, 58, 237, 0.45)' : 'rgba(124, 58, 237, 0.25)'] 
         : [isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.1)'];
 
       charts.cartoesWheel = new Chart(ctxCartoes, {
@@ -20954,11 +20954,11 @@ function drawDashboardCharts(){
         : despesas;
       const remaining = Math.max(0, totalLimit - totalSpent);
       const budgetPct = totalLimit > 0 ? Math.round((totalSpent / totalLimit) * 100) : 0;
-      const budgetColor = budgetPct >= 100 ? '#EF4444' : budgetPct >= 80 ? '#F59E0B' : '#00E5FF';
+      const budgetColor = budgetPct >= 100 ? '#EF4444' : budgetPct >= 80 ? '#F59E0B' : '#7C3AED';
 
       const bData = (totalSpent > 0 || remaining > 0) ? [totalSpent, remaining] : [1, 0];
       const bColors = (totalSpent > 0 || remaining > 0) 
-        ? [budgetColor, isLightMode ? 'rgba(6, 182, 212, 0.35)' : 'rgba(6, 182, 212, 0.2)'] 
+        ? [budgetColor, isLightMode ? 'rgba(139, 92, 246, 0.35)' : 'rgba(139, 92, 246, 0.2)'] 
         : [isLightMode ? '#CBD5E1' : 'rgba(255,255,255,0.1)'];
 
       charts.budgetWheel = new Chart(ctxBudget, {
@@ -21482,7 +21482,7 @@ const BANK_COLOR_MAP = [
   { keywords: ['xp', 'xp investimentos'], color: '#111111', type: 'Investimento' },
   { keywords: ['btg', 'btg pactual'], color: '#001e62', type: 'Investimento' },
   { keywords: ['picpay', 'pic pay'], color: '#11c76f', type: 'Conta Corrente' },
-  { keywords: ['neon'], color: '#00e5ff', type: 'Conta Corrente' },
+  { keywords: ['neon'], color: '#7C3AED', type: 'Conta Corrente' },
   { keywords: ['pagbank', 'pagseguro', 'pag bank'], color: '#00b140', type: 'Conta Corrente' },
   { keywords: ['mercadopago', 'mercado pago'], color: '#009ee3', type: 'Conta Corrente' },
   { keywords: ['original', 'banco original'], color: '#00a859', type: 'Conta Corrente' },
@@ -22983,14 +22983,14 @@ function showConfirmModal(opts) {
   const btnBg = confirmDanger ? '#ef4444' : 'var(--green)';
 
   overlay.innerHTML = '<div class="modal" style="max-width:440px; width:90vw; padding:26px 24px; border-radius:20px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.5); border:1px solid var(--card-border); transform:scale(0.92); transition:transform 0.2s ease;">' +
-    '<div style="width:58px; height:58px; border-radius:50%; background:' + (confirmDanger ? 'rgba(239,68,68,0.15)' : 'rgba(0,229,255,0.15)') + '; color:' + (confirmDanger ? '#ef4444' : 'var(--brand-bright)') + '; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px auto; border:1px solid ' + (confirmDanger ? 'rgba(239,68,68,0.3)' : 'rgba(0,229,255,0.3)') + ';">' +
+    '<div style="width:58px; height:58px; border-radius:50%; background:' + (confirmDanger ? 'rgba(239,68,68,0.15)' : 'rgba(124, 58, 237,0.15)') + '; color:' + (confirmDanger ? '#ef4444' : 'var(--brand-bright)') + '; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px auto; border:1px solid ' + (confirmDanger ? 'rgba(239,68,68,0.3)' : 'rgba(124, 58, 237,0.3)') + ';">' +
       (confirmDanger ? '🗑️' : '❓') +
     '</div>' +
     '<h3 style="font-size:20px; font-weight:800; margin:0 0 8px 0; color:var(--text);">' + title + '</h3>' +
     '<p style="font-size:14px; color:var(--text-dim); margin:0 0 24px 0; line-height:1.5;">' + message + '</p>' +
     '<div style="display:flex; gap:12px; justify-content:center;">' +
       '<button class="btn-cancel-modal" style="flex:1; height:44px; font-size:14px; font-weight:700; border-radius:10px; background:rgba(255,255,255,0.08); border:1px solid var(--card-border); color:var(--text); cursor:pointer;">' + cancelText + '</button>' +
-      '<button class="btn-confirm-modal" style="flex:1; height:44px; font-size:14px; font-weight:700; border-radius:10px; background:' + btnBg + '; border:none; color:#ffffff; cursor:pointer; box-shadow:0 4px 12px ' + (confirmDanger ? 'rgba(239,68,68,0.3)' : 'rgba(0,229,255,0.3)') + ';">' + confirmText + '</button>' +
+      '<button class="btn-confirm-modal" style="flex:1; height:44px; font-size:14px; font-weight:700; border-radius:10px; background:' + btnBg + '; border:none; color:#ffffff; cursor:pointer; box-shadow:0 4px 12px ' + (confirmDanger ? 'rgba(239,68,68,0.3)' : 'rgba(124, 58, 237,0.3)') + ';">' + confirmText + '</button>' +
     '</div>' +
   '</div>';
 
@@ -23122,12 +23122,12 @@ function attachPageEvents(){
   const importFile = document.getElementById('importFile'); if(importFile) importFile.onchange = handleImportFile;
   const importDropZone = document.getElementById('importDropZone');
   if(importDropZone) {
-    importDropZone.ondragover = (e) => { e.preventDefault(); importDropZone.style.borderColor = 'var(--brand-bright)'; importDropZone.style.background = 'rgba(0,229,255,0.1)'; };
-    importDropZone.ondragleave = () => { importDropZone.style.borderColor = 'var(--brand-bright)'; importDropZone.style.background = 'rgba(0,229,255,0.04)'; };
+    importDropZone.ondragover = (e) => { e.preventDefault(); importDropZone.style.borderColor = 'var(--brand-bright)'; importDropZone.style.background = 'rgba(124, 58, 237,0.1)'; };
+    importDropZone.ondragleave = () => { importDropZone.style.borderColor = 'var(--brand-bright)'; importDropZone.style.background = 'rgba(124, 58, 237,0.04)'; };
     importDropZone.ondrop = (e) => {
       e.preventDefault();
       importDropZone.style.borderColor = 'var(--green)';
-      importDropZone.style.background = 'rgba(0,229,255,0.04)';
+      importDropZone.style.background = 'rgba(124, 58, 237,0.04)';
       if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
         handleImportFile({ target: { files: e.dataTransfer.files } });
       }
@@ -23740,7 +23740,7 @@ document.getElementById('miniThemeBtn').onclick = toggleTheme;
 (function initThemeState() {
   try {
     const savedTheme = localStorage.getItem('nexus_theme');
-    const isLight = savedTheme === 'light';
+    const isLight = savedTheme !== 'dark';
     document.body.classList.toggle('light', isLight);
     document.documentElement.classList.toggle('light', isLight);
     const btn = document.getElementById('miniThemeBtn');
@@ -23880,8 +23880,8 @@ function applyDisplayScale(scaleVal) {
     var isSel = (bScale === scaleVal);
     var isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
     btn.style.fontWeight = isSel ? '700' : '400';
-    btn.style.color = isSel ? (isLight ? '#0284C7' : 'var(--brand-bright, #00E5FF)') : (isLight ? '#0F172A' : 'var(--text)');
-    btn.style.background = isSel ? (isLight ? 'rgba(2, 132, 199, 0.14)' : 'rgba(0, 229, 255, 0.12)') : 'transparent';
+    btn.style.color = isSel ? (isLight ? '#7C3AED' : 'var(--brand-bright, #7C3AED)') : (isLight ? '#0F172A' : 'var(--text)');
+    btn.style.background = isSel ? (isLight ? 'rgba(124, 58, 237, 0.14)' : 'rgba(124, 58, 237, 0.12)') : 'transparent';
     var iconSpan = btn.querySelector('.scale-check-ic');
     if (!iconSpan) {
       iconSpan = document.createElement('span');
@@ -23902,12 +23902,12 @@ function applyDisplayScale(scaleVal) {
     var orientation = (w >= h) ? 'Paisagem ↔️' : 'Retrato ↕️';
     var devIcon = devType === 'mobile' ? '📱' : devType === 'tablet' ? '📱↔️' : devType === 'laptop' ? '💻' : (devType === '4k' || devType === 'ultrawide') ? '🖥️✨' : '🖥️';
     var autoText = scaleVal === 'auto' ? '<span style="color:var(--green,#06D6A0); font-weight:700;">(Ajuste Inteligente ao Dispositivo)</span>' : '<span style="color:var(--amber,#F59E0B); font-weight:700;">(Definição Manual)</span>';
-    devInfoEl.innerHTML = '<div style="display:flex; align-items:center; gap:12px; padding:14px; border-radius:14px; background:linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(0,229,255,0.08) 100%); border:1px solid rgba(59,130,246,0.25); font-size:13px; margin-top:8px;">' +
+    devInfoEl.innerHTML = '<div style="display:flex; align-items:center; gap:12px; padding:14px; border-radius:14px; background:linear-gradient(135deg, rgba(124, 58, 237,0.1) 0%, rgba(124, 58, 237,0.08) 100%); border:1px solid rgba(124, 58, 237,0.25); font-size:13px; margin-top:8px;">' +
       '<span style="font-size:26px; line-height:1; flex-shrink:0;">' + devIcon + '</span>' +
       '<div style="flex:1; min-width:0;">' +
         '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">' +
           '<strong>Dispositivo Detectado:</strong>' +
-          '<span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:6px; font-weight:700; font-size:11px; color:var(--accent,#3B82F6);">' + getDeviceName(devType) + '</span>' +
+          '<span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:6px; font-weight:700; font-size:11px; color:var(--accent,#8B5CF6);">' + getDeviceName(devType) + '</span>' +
         '</div>' +
         '<div style="color:var(--text-muted); font-size:12px; margin-top:4px; line-height:1.4;">' +
           'Resolução da Tela: <strong>' + w + 'px × ' + h + 'px</strong> (' + orientation + ') | DPR: <strong>' + dpr + '</strong><br>' +
@@ -24345,7 +24345,7 @@ window.applyPostLoginBg = function(theme) {
 
     const currencyTokens = ['R$', '$', '€', '₿', '▲', '+24%', '💎', '🪙', '📈', '↗', '£', '¥'];
     const goldTones = ['#F59E0B', '#FBBF24', '#FCD34D', '#EAB308'];
-    const emeraldTones = ['#00E5FF', '#38BDF8', '#0284C7', '#7DD3FC'];
+    const emeraldTones = ['#7C3AED', '#8B5CF6', '#7C3AED', '#7DD3FC'];
 
     // 2. Moedas Douradas e Tokens Financeiros Flutuantes
     const wealthCoins = [];
@@ -24359,9 +24359,9 @@ window.applyPostLoginBg = function(theme) {
         radius: Math.floor(Math.random() * 6) + 16,
         vy: -(Math.random() * 0.32 + 0.15),
         vx: (Math.random() - 0.5) * 0.22,
-        color: isEmerald ? '#00E5FF' : '#FBBF24',
-        borderTone: isEmerald ? 'rgba(0, 229, 255, 0.45)' : 'rgba(245, 158, 11, 0.45)',
-        bgTone: isEmerald ? 'rgba(2, 132, 199, 0.16)' : 'rgba(217, 119, 6, 0.16)',
+        color: isEmerald ? '#7C3AED' : '#FBBF24',
+        borderTone: isEmerald ? 'rgba(124, 58, 237, 0.45)' : 'rgba(245, 158, 11, 0.45)',
+        bgTone: isEmerald ? 'rgba(124, 58, 237, 0.16)' : 'rgba(217, 119, 6, 0.16)',
         alpha: Math.random() * 0.40 + 0.35,
         angle: Math.random() * Math.PI * 2,
         rotSpeed: (Math.random() - 0.5) * 0.015,
@@ -24380,9 +24380,9 @@ window.applyPostLoginBg = function(theme) {
         y: Math.random() * ((height || 800) - 120) + 60,
         text: item.text,
         type: item.type,
-        color: item.type === 'emerald' ? '#00E5FF' : '#FBBF24',
-        border: item.type === 'emerald' ? 'rgba(0, 229, 255, 0.38)' : 'rgba(245, 158, 11, 0.38)',
-        bg: item.type === 'emerald' ? 'rgba(2, 132, 199, 0.18)' : 'rgba(217, 119, 6, 0.18)',
+        color: item.type === 'emerald' ? '#7C3AED' : '#FBBF24',
+        border: item.type === 'emerald' ? 'rgba(124, 58, 237, 0.38)' : 'rgba(245, 158, 11, 0.38)',
+        bg: item.type === 'emerald' ? 'rgba(124, 58, 237, 0.18)' : 'rgba(217, 119, 6, 0.18)',
         vy: -(Math.random() * 0.24 + 0.10),
         vx: (Math.random() - 0.5) * 0.15,
         alpha: Math.random() * 0.35 + 0.40,
@@ -24402,7 +24402,7 @@ window.applyPostLoginBg = function(theme) {
         vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
         radius: Math.random() * 2.0 + 1.2,
-        color: isGreen ? '#00E5FF' : '#F59E0B',
+        color: isGreen ? '#7C3AED' : '#F59E0B',
         alpha: Math.random() * 0.45 + 0.25
       });
     }
@@ -24434,7 +24434,7 @@ window.applyPostLoginBg = function(theme) {
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
         radius: Math.random() * 1.6 + 0.6,
-        color: isGold ? '#FBBF24' : '#00E5FF',
+        color: isGold ? '#FBBF24' : '#7C3AED',
         alpha: Math.random() * 0.55 + 0.25,
         vy: -(Math.random() * 0.28 + 0.08),
         vx: (Math.random() - 0.5) * 0.18,
@@ -24492,7 +24492,7 @@ window.applyPostLoginBg = function(theme) {
       ctx.lineTo(width, height);
       ctx.closePath();
       const waveGrad1 = ctx.createLinearGradient(0, baseWaveY - 40, 0, height);
-      waveGrad1.addColorStop(0, isLight ? 'rgba(2, 132, 199, 0.07)' : 'rgba(0, 229, 255, 0.10)');
+      waveGrad1.addColorStop(0, isLight ? 'rgba(124, 58, 237, 0.07)' : 'rgba(124, 58, 237, 0.10)');
       waveGrad1.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = waveGrad1;
       ctx.fill();
@@ -24504,7 +24504,7 @@ window.applyPostLoginBg = function(theme) {
         if (x === 0) ctx.moveTo(x, y1);
         else ctx.lineTo(x, y1);
       }
-      ctx.strokeStyle = isLight ? 'rgba(2, 132, 199, 0.35)' : 'rgba(0, 229, 255, 0.45)';
+      ctx.strokeStyle = isLight ? 'rgba(124, 58, 237, 0.35)' : 'rgba(124, 58, 237, 0.45)';
       ctx.lineWidth = 1.6;
       ctx.stroke();
 
@@ -24605,7 +24605,7 @@ window.applyPostLoginBg = function(theme) {
           candle.isBullish = Math.random() > 0.32;
         }
         const candleColor = candle.isBullish 
-          ? (isLight ? '#0284C7' : '#00E5FF') 
+          ? (isLight ? '#7C3AED' : '#7C3AED') 
           : (isLight ? '#D97706' : '#F59E0B');
 
         ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
