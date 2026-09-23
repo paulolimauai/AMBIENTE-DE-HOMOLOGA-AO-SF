@@ -3987,38 +3987,34 @@ body.light .header-live-time {
   border-radius: 14px !important;
   background: rgba(255, 255, 255, 0.04) !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
   user-select: none !important;
   cursor: pointer !important;
 }
 .brand:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(56, 189, 248, 0.40) !important;
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45), 0 0 16px rgba(56, 189, 248, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
-  transform: translateY(-1px) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(56, 189, 248, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
 }
 .brand .logo {
   width: 38px !important;
   height: 38px !important;
   min-width: 38px !important;
   min-height: 38px !important;
-  border-radius: 10px !important;
-  background: linear-gradient(135deg, #0284C7 0%, #0369A1 50%, #075985 100%) !important;
+  border-radius: 11px !important;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.18) 0%, rgba(15, 23, 42, 0.85) 50%, rgba(6, 11, 22, 0.95) 100%) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.65), inset 0 -1.5px 2px rgba(0, 0, 0, 0.4) !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
-  backdrop-filter: blur(10px) !important;
-  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25), inset 0 1px 1.5px rgba(255, 255, 255, 0.45), inset 0 -1px 2px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 .brand:hover .logo {
-  transform: scale(1.05) !important;
-  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.55), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(56, 189, 248, 0.70) !important;
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.40), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6) !important;
 }
 .brand .name {
   display: flex !important;
@@ -4029,24 +4025,24 @@ body.light .header-live-time {
   white-space: nowrap !important;
 }
 .brand .name .brand-title {
-  font-size: 15px !important;
+  font-size: 15.5px !important;
   font-weight: 900 !important;
-  letter-spacing: 0.04em !important;
+  letter-spacing: 0.07em !important;
   color: #FFFFFF !important;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
 }
 .brand .name .brand-sub {
-  font-size: 9px !important;
+  font-size: 8.5px !important;
   font-weight: 800 !important;
-  letter-spacing: 0.12em !important;
+  letter-spacing: 0.16em !important;
   text-transform: uppercase !important;
   color: #38BDF8 !important;
-  margin-top: 1.5px !important;
+  margin-top: 2px !important;
 }
 @media (max-width: 900px) {
   .brand { padding: 4px 10px 4px 6px !important; gap: 8px !important; }
   .brand .logo { width: 32px !important; height: 32px !important; min-width: 32px !important; min-height: 32px !important; }
-  .brand .name .brand-title { font-size: 13px !important; }
+  .brand .name .brand-title { font-size: 13.5px !important; }
   .brand .name .brand-sub { font-size: 8px !important; }
 }
 
@@ -10370,15 +10366,21 @@ body.light .topheader {
 }
 body.light .brand {
   background: #FFFFFF !important;
-  border: 1.5px solid #E2E8F0 !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05) !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05) !important;
+}
+body.light .brand .logo {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%) !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
 }
 body.light .brand .name .brand-title {
-  color: #0F172A !important;
+  color: #000000 !important;
   text-shadow: none !important;
 }
 body.light .brand .name .brand-sub {
   color: #0284C7 !important;
+  font-weight: 850 !important;
 }
 
 /* Cápsula de Usuário Conectado */
@@ -11368,9 +11370,27 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
         
         <div class="brand" data-nav="dashboard" style="cursor:pointer;" title="Nexus Financeiro Hub">
           <div class="logo">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 20L4 4L14 16L14 4" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="19" cy="5" r="2.5" fill="#38BDF8"/>
+            <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="nexusColLeftHeader" x1="0" y1="0" x2="0" y2="28" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#38BDF8"/>
+                  <stop offset="100%" stop-color="#0284C7"/>
+                </linearGradient>
+                <linearGradient id="nexusDiagonalHeader" x1="6" y1="5" x2="22" y2="23" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#60A5FA"/>
+                  <stop offset="50%" stop-color="#0284C7"/>
+                  <stop offset="100%" stop-color="#10B981"/>
+                </linearGradient>
+                <linearGradient id="nexusColRightHeader" x1="0" y1="0" x2="0" y2="28" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#34D399"/>
+                  <stop offset="100%" stop-color="#059669"/>
+                </linearGradient>
+              </defs>
+              <rect x="4.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColLeftHeader)"/>
+              <path d="M7 5.5L18.5 20.5H22.5L11 5.5H7Z" fill="url(#nexusDiagonalHeader)"/>
+              <rect x="19.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColRightHeader)"/>
+              <circle cx="21.5" cy="5.5" r="2.2" fill="#F59E0B"/>
+              <circle cx="21.5" cy="5.5" r="3.2" stroke="#FDE68A" stroke-width="0.8" opacity="0.6"/>
             </svg>
           </div>
           <div class="name">
@@ -11540,11 +11560,33 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     <div class="mobile-drawer-head">
       <div class="brand">
         <div class="logo">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 19.5V4.5L18 19.5V4.5" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));"/>
+          <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="nexusColLeftDrawer" x1="0" y1="0" x2="0" y2="28" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#38BDF8"/>
+                <stop offset="100%" stop-color="#0284C7"/>
+              </linearGradient>
+              <linearGradient id="nexusDiagonalDrawer" x1="6" y1="5" x2="22" y2="23" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#60A5FA"/>
+                <stop offset="50%" stop-color="#0284C7"/>
+                <stop offset="100%" stop-color="#10B981"/>
+              </linearGradient>
+              <linearGradient id="nexusColRightDrawer" x1="0" y1="0" x2="0" y2="28" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#34D399"/>
+                <stop offset="100%" stop-color="#059669"/>
+              </linearGradient>
+            </defs>
+            <rect x="4.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColLeftDrawer)"/>
+            <path d="M7 5.5L18.5 20.5H22.5L11 5.5H7Z" fill="url(#nexusDiagonalDrawer)"/>
+            <rect x="19.5" y="5" width="4" height="18" rx="2" fill="url(#nexusColRightDrawer)"/>
+            <circle cx="21.5" cy="5.5" r="2.2" fill="#F59E0B"/>
+            <circle cx="21.5" cy="5.5" r="3.2" stroke="#FDE68A" stroke-width="0.8" opacity="0.6"/>
           </svg>
         </div>
-        <div class="name">NEXUS<span>FINANCEIRO HUB</span></div>
+        <div class="name">
+          <span class="brand-title">NEXUS</span>
+          <span class="brand-sub">FINANCEIRO HUB</span>
+        </div>
       </div>
       <button class="close-x" id="closeMobileDrawer" style="position:static; padding:4px;">✕</button>
     </div>
