@@ -32,6 +32,16 @@ const LOCAL_ORDENS_PATH = path.join(__dirname, 'local_ordens_servico.json');
 const LOCAL_TECNICOS_PATH = path.join(__dirname, 'local_tecnicos.json');
 const PENDING_LOGINS_PATH = path.join(__dirname, 'pending_logins.json');
 
+// Configuração Centralizada da Chave Pix Oficial (Paulo Lima)
+const PIX_CONFIG = {
+  key: '+5562992345372',
+  phone_raw: '62992345372',
+  phone_formatted: '(62) 99234-5372',
+  name: 'PAULO LIMA',
+  city: 'GOIANIA',
+  type: 'Telefone Celular'
+};
+
 function getPendingLogins() {
   try {
     if (fs.existsSync(PENDING_LOGINS_PATH)) {
@@ -6260,6 +6270,16 @@ body.light .sub-paywall-modal strong,
 body.light .sub-paywall-modal select,
 body.light .sub-paywall-modal option,
 body.light .sub-paywall-modal input {
+  color: #000000 !important;
+}
+
+body.light .pix-info-card {
+  background: #F0FDF4 !important;
+  border: 1.5px solid #10B981 !important;
+}
+body.light .pix-info-card div,
+body.light .pix-info-card span,
+body.light .pix-info-card strong {
   color: #000000 !important;
 }
 
@@ -13512,18 +13532,42 @@ body.light .period button.active {
             Valor a Pagar: <strong id="pixDisplayAmount" style="color:#10B981; font-size:22px;">R$ 10,00</strong>
           </div>
 
+          <!-- Card de Dados da Chave Pix Celular Oficial -->
+          <div class="pix-info-card" style="width:100%; max-width:540px; margin-bottom:16px; padding:14px 18px; border-radius:16px; background:rgba(16,185,129,0.08); border:1.5px solid rgba(16,185,129,0.3); display:flex; flex-direction:column; gap:8px; text-align:left;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#34D399;">Chave Pix Oficial (Celular)</span>
+              <span style="font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#A7F3D0;">Recepção Automática</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div>
+                <div style="font-size:19px; font-weight:900; color:#FFFFFF; letter-spacing:0.04em; font-family:monospace;">
+                  (62) 99234-5372
+                </div>
+                <div style="font-size:12px; color:#94A3B8; margin-top:2px;">
+                  Beneficiário: <strong style="color:#E2E8F0;">Paulo Lima</strong> &bull; Goiânia - GO
+                </div>
+              </div>
+              <button type="button" id="btnCopyPixKeyDirect" onclick="window.copyPixKeyDirect()" style="padding:8px 16px; border-radius:12px; background:rgba(56,189,248,0.15); border:1.5px solid rgba(56,189,248,0.4); color:#38BDF8; font-weight:800; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s ease;">
+                <span>📋</span> <span>Copiar Chave Celular</span>
+              </button>
+            </div>
+          </div>
+
           <!-- QR Code Display -->
-          <div style="background:#FFFFFF; padding:14px; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,0.4); margin-bottom:14px;">
+          <div style="background:#FFFFFF; padding:14px; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,0.4); margin-bottom:10px;">
             <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:190px; height:190px; display:block;" />
+          </div>
+          <div style="font-size:11.5px; color:#94A3B8; margin-bottom:14px;">
+            Aponte a câmera do aplicativo do seu banco para o QR Code acima
           </div>
 
           <!-- Código Pix Copia e Cola -->
           <div style="width:100%; max-width:540px; margin-bottom:12px;">
-            <label class="sub-field-label" style="text-align:left;">Código Pix Copia e Cola</label>
+            <label class="sub-field-label" style="text-align:left;">Código Pix Copia e Cola (Padrão Banco Central)</label>
             <div style="display:flex; gap:8px;">
               <input type="text" id="subPixCodeInput" readonly class="sub-field-input" style="font-size:12px; font-family:monospace;" />
               <button type="button" id="btnCopyPix" onclick="window.copyPixCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(16,185,129,0.2); border:1.5px solid rgba(16,185,129,0.4); color:#34D399; font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap;">
-                📋 Copiar
+                📋 Copiar Código
               </button>
             </div>
           </div>
@@ -13531,13 +13575,13 @@ body.light .period button.active {
           <!-- Passo a Passo -->
           <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; width:100%; max-width:540px; margin-bottom:16px; font-size:11.5px; color:#94A3B8; text-align:left;">
             <div style="background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-              <strong style="color:#10B981;">1.</strong> Abra o app do seu banco
+              <strong style="color:#10B981;">1.</strong> Copie a chave ou código
             </div>
             <div style="background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-              <strong style="color:#10B981;">2.</strong> Pix Copia e Cola ou QR Code
+              <strong style="color:#10B981;">2.</strong> Pague no app do banco
             </div>
             <div style="background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-              <strong style="color:#10B981;">3.</strong> Confirme o pagamento
+              <strong style="color:#10B981;">3.</strong> Confirme abaixo
             </div>
           </div>
 
@@ -15630,10 +15674,71 @@ window.selectPaymentMethod = function(method) {
   }
 };
 
+window.generatePixEMVPayload = function(key, name, city, amount, txid) {
+  txid = txid || '***';
+  function getCrc16(str) {
+    let crc = 0xFFFF;
+    for (let i = 0; i < str.length; i++) {
+      crc ^= (str.charCodeAt(i) << 8);
+      for (let j = 0; j < 8; j++) {
+        if ((crc & 0x8000) !== 0) {
+          crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+        } else {
+          crc = (crc << 1) & 0xFFFF;
+        }
+      }
+    }
+    return crc.toString(16).toUpperCase().padStart(4, '0');
+  }
+
+  const f = (id, val) => id + String(val.length).padStart(2, '0') + val;
+  const merchantAccount = f('00', 'BR.GOV.BCB.PIX') + f('01', key);
+  let payload = f('00', '01') +
+                f('26', merchantAccount) +
+                f('52', '0000') +
+                f('53', '986') +
+                (amount ? f('54', Number(amount).toFixed(2)) : '') +
+                f('58', 'BR') +
+                f('59', name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().slice(0, 25)) +
+                f('60', city.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().slice(0, 15)) +
+                f('62', f('05', txid));
+  payload += '6304';
+  payload += getCrc16(payload);
+  return payload;
+};
+
+window.copyPixKeyDirect = function() {
+  const key = '62992345372';
+  const handleSuccess = () => {
+    const btn = document.getElementById('btnCopyPixKeyDirect');
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<span>✓</span> <span>Chave Celular Copiada!</span>';
+      btn.style.color = '#10B981';
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.color = '#38BDF8';
+      }, 2500);
+    }
+    if (typeof showToast === 'function') showToast('✓ Chave Pix Celular (62) 99234-5372 copiada com sucesso!');
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(key).then(handleSuccess).catch(() => {
+      if (typeof showToast === 'function') showToast('✓ Chave Pix: 62992345372');
+    });
+  } else {
+    handleSuccess();
+  }
+};
+
 window.updatePixPayloadAndQr = function() {
-  const amount = (window.__selectedSubPlan === 'anual') ? '100.00' : '10.00';
-  const rawKey = '04023326100';
-  const pixCode = '00020126580014BR.GOV.BCB.PIX011404023326100520400005303986540' + (amount === '100.00' ? '6100.00' : '510.00') + '5802BR5920NEXUS SOLUCOES FIN6007GOIANIA62070503***6304' + (amount === '100.00' ? 'E8B2' : 'D3F1');
+  const plan = window.__selectedSubPlan || 'mensal';
+  const amount = (plan === 'anual') ? 100.00 : 10.00;
+  const pixKey = '+5562992345372';
+  const beneficiaryName = 'PAULO LIMA';
+  const city = 'GOIANIA';
+  const pixCode = window.generatePixEMVPayload(pixKey, beneficiaryName, city, amount, '***');
 
   const inputEl = document.getElementById('subPixCodeInput');
   const imgEl = document.getElementById('subPixQrImg');
@@ -28595,7 +28700,8 @@ const server = http.createServer(async (req, res) => {
       subscription_expires_at: user.subscription_expires_at || null,
       subscription_method: user.subscription_method || null,
       subscription_payment_id: user.subscription_payment_id || null,
-      is_admin: user.role === 'Administrador'
+      is_admin: user.role === 'Administrador',
+      pix_info: PIX_CONFIG
     };
   }
 
