@@ -1,0 +1,252 @@
+// ==================== ROTAS DE ASSINATURA & TESTE GRÁTIS (5 MINUTOS) ====================
+
+  function getUserSubscriptionInfo(user) {
+    if (!user) return null;
+    const now = Date.now();
+    const TRIAL_DURATION_SECS = 300; // 5 minutos de teste gratuito
+
+    const isSubscribed = user.subscription_status === 'active' && 
+      user.subscription_expires_at && 
+      (new Date(user.subscription_expires_at).getTime() > now);
+
+    let trialStartedAt = user.trial_started_at;
+    let remainingSecs = 0;
+    let isTrialActive = false;
+
+    if (isSubscribed) {
+      remainingSecs = 0;
+      isTrialActive = false;
+    } else {
+      if (!trialStartedAt) {
+        trialStartedAt = getBrasiliaIsoString(new Date());
+        user.trial_started_at = trialStartedAt;
+      }
+      const elapsedSecs = Math.max(0, Math.floor((now - new Date(trialStartedAt).getTime()) / 1000));
+      remainingSecs = Math.max(0, TRIAL_DURATION_SECS - elapsedSecs);
+      isTrialActive = remainingSecs > 0;
+    }
+
+    const status = isSubscribed ? 'active' : (isTrialActive ? 'trial' : 'expired');
+
+    return {
+      success: true,
+      email: user.email,
+      status: status,
+      is_subscribed: isSubscribed,
+      is_trial_active: isTrialActive,
+      remaining_seconds: remainingSecs,
+      trial_duration_seconds: TRIAL_DURATION_SECS,
+      trial_started_at: trialStartedAt,
+      subscription_plan: user.subscription_plan || null,
+      subscription_expires_at: user.subscription_expires_at || null,
+      subscription_method: user.subscription_method || null,
+      subscription_payment_id: user.subscription_payment_id || null,
+      is_admin: user.role === 'Administrador'
+    };
+  }
+
+  // Rota GET para Consultar Status da Assinatura e Tempo Restante do Teste Grátis
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/subscription/status') {
+    const email = (parsedUrl.query.email || '').toLowerCase().trim();
+    if (!email) {
+      res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
+    }
+
+    const localUsers = getLocalUsers();
+    let user = localUsers.find(u => u && u.email && u.email.toLowerCase() === email);
+
+    if (pool) {
+      pool.query(
+        'SELECT id, name, email, role, active, created_at, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios WHERE LOWER(email) = LOWER($1)',
+        [email]
+      ).then(result => {
+        if (result.rows && result.rows.length > 0) {
+          user = { ...user, ...result.rows[0] };
+        }
+
+        if (!user) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado' }));
+        }
+
+        // Se ainda não tem trial_started_at, grava agora
+        if (!user.trial_started_at) {
+          const nowStr = getBrasiliaIsoString(new Date());
+          const nowSql = getBrasiliaSqlString(new Date());
+          user.trial_started_at = nowStr;
+          user.subscription_status = 'trial';
+          pool.query("UPDATE usuarios SET trial_started_at = $1, subscription_status = 'trial' WHERE LOWER(email) = LOWER($2)", [nowSql, email]).catch(()=>{});
+          saveLocalUsers(localUsers);
+        }
+
+        const info = getUserSubscriptionInfo(user);
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(info));
+      }).catch(err => {
+        if (!user) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado' }));
+        }
+        if (!user.trial_started_at) {
+          user.trial_started_at = getBrasiliaIsoString(new Date());
+          user.subscription_status = 'trial';
+          saveLocalUsers(localUsers);
+        }
+        const info = getUserSubscriptionInfo(user);
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(info));
+      });
+    } else {
+      if (!user) {
+        res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado' }));
+      }
+      if (!user.trial_started_at) {
+        user.trial_started_at = getBrasiliaIsoString(new Date());
+        user.subscription_status = 'trial';
+        saveLocalUsers(localUsers);
+      }
+      const info = getUserSubscriptionInfo(user);
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(info));
+    }
+    return;
+  }
+
+  // Rota POST para Processar Pagamento de Assinatura (Mensal R$ 10,00 ou Anual R$ 100,00)
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/pay') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        const parsed = JSON.parse(body);
+        const email = (parsed.email || '').toLowerCase().trim();
+        const plan = (parsed.plan || 'mensal').toLowerCase().trim();
+        const method = (parsed.method || 'pix').toLowerCase().trim();
+
+        if (!email) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
+        }
+
+        const validPlans = ['mensal', 'anual'];
+        if (!validPlans.includes(plan)) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Plano inválido. Escolha mensal (R$ 10,00) ou anual (R$ 100,00).' }));
+        }
+
+        // Duração: Mensal (+30 dias) ou Anual (+365 dias)
+        const now = new Date();
+        const expiresDate = new Date(now.getTime() + (plan === 'anual' ? 365 : 30) * 24 * 60 * 60 * 1000);
+        const expiresIso = getBrasiliaIsoString(expiresDate);
+        const expiresSql = getBrasiliaSqlString(expiresDate);
+        const txId = 'NEXUS-SUB-' + Date.now() + '-' + crypto.randomBytes(3).toString('hex').toUpperCase();
+        const amount = plan === 'anual' ? 100.00 : 10.00;
+
+        // Atualiza no cache local
+        const localUsers = getLocalUsers();
+        let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === email);
+        if (targetUser) {
+          targetUser.subscription_status = 'active';
+          targetUser.subscription_plan = plan;
+          targetUser.subscription_expires_at = expiresIso;
+          targetUser.subscription_method = method;
+          targetUser.subscription_payment_id = txId;
+          saveLocalUsers(localUsers);
+        }
+
+        // Atualiza no SQL Server
+        if (pool) {
+          try {
+            await pool.query(
+              `UPDATE usuarios 
+               SET subscription_status = 'active',
+                   subscription_plan = $1,
+                   subscription_expires_at = $2,
+                   subscription_method = $3,
+                   subscription_payment_id = $4
+               WHERE LOWER(email) = LOWER($5)`,
+              [plan, expiresSql, method, txId, email]
+            );
+            console.log(`✅ [SQL SERVER ASSINATURA] Plano ${plan.toUpperCase()} ativado com sucesso para ${email} até ${expiresSql} (Tx: ${txId})`);
+          } catch(sqlErr) {
+            console.warn('[AVISO BD] Falha ao atualizar assinatura no SQL Server:', sqlErr.message);
+          }
+        }
+
+        const methodNames = { pix: 'Pix', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
+        recordSystemLog(
+          targetUser ? targetUser.name : 'Usuário',
+          email,
+          'Assinatura',
+          'Financeiro',
+          `Ativou plano ${plan.toUpperCase()} (R$ ${amount.toFixed(2)}) via ${methodNames[method] || method} - Tx: ${txId}`
+        );
+
+        broadcastEvent('subscription_activated', {
+          email: email,
+          plan: plan,
+          amount: amount,
+          transaction_id: txId,
+          expires_at: expiresIso
+        });
+
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+          success: true,
+          message: 'Assinatura realizada com sucesso!',
+          transaction_id: txId,
+          plan: plan,
+          amount: amount,
+          method: method,
+          expires_at: expiresIso
+        }));
+      } catch(e) {
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Erro ao processar assinatura: ' + e.message }));
+      }
+    });
+    return;
+  }
+
+  // Rota POST para Resetar o Período Gratuito de 5 Minutos (Para Testes / Homologação)
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/reset-trial') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        const parsed = JSON.parse(body);
+        const email = (parsed.email || '').toLowerCase().trim();
+        if (!email) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
+        }
+
+        const nowIso = getBrasiliaIsoString(new Date());
+        const nowSql = getBrasiliaSqlString(new Date());
+
+        const localUsers = getLocalUsers();
+        const u = localUsers.find(x => x && x.email && x.email.toLowerCase() === email);
+        if (u) {
+          u.trial_started_at = nowIso;
+          u.subscription_status = 'trial';
+          saveLocalUsers(localUsers);
+        }
+
+        if (pool) {
+          await pool.query(
+            "UPDATE usuarios SET trial_started_at = $1, subscription_status = 'trial' WHERE LOWER(email) = LOWER($2)",
+            [nowSql, email]
+          ).catch(()=>{});
+        }
+
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, message: 'Período gratuito de 5 minutos resetado com sucesso!' }));
+      } catch(e) {
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: e.message }));
+      }
+    });
+    return;
+  }
