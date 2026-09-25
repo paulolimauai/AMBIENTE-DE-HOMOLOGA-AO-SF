@@ -10,14 +10,14 @@
     "priority": "Alta",
     "title": "Configuração de Roteador e Equipamento Wi-Fi",
     "description": "Solicito a configuração do equipamento de roteador e teste do link de internet fibra.",
-    "status": "Pendente",
+    "status": "Concluído",
     "admin_notes": "",
     "tecnico_responsavel": null,
     "assumido_em": null,
     "canal_atendimento": "App Mobile",
-    "concluido_em": null,
+    "concluido_em": "2026-09-25T11:56:50.340Z",
     "created_at": "2026-09-16T10:35:39.783Z",
-    "updated_at": "2026-09-16T10:35:39.783Z"
+    "updated_at": "2026-09-25T11:56:50.340Z"
   },
   {
     "id": "4",
@@ -30,14 +30,14 @@
     "priority": "Alta",
     "title": "Configuração de Roteador e Equipamento Wi-Fi",
     "description": "Solicito a configuração do equipamento de roteador e teste do link de internet fibra.",
-    "status": "Pendente",
+    "status": "Concluído",
     "admin_notes": "",
     "tecnico_responsavel": null,
     "assumido_em": null,
     "canal_atendimento": "App Mobile",
-    "concluido_em": null,
+    "concluido_em": "2026-09-25T11:56:52.800Z",
     "created_at": "2026-09-16T10:41:17.335Z",
-    "updated_at": "2026-09-16T10:41:17.335Z"
+    "updated_at": "2026-09-25T11:56:52.800Z"
   },
   {
     "id": "1",

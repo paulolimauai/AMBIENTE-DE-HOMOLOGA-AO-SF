@@ -1,0 +1,326 @@
+<!-- WIDGET FLUTUANTE DE TESTE GRÁTIS (5 MINUTOS) -->
+<div class="trial-dock-widget" id="trialDockWidget" style="display:none;" onclick="window.openSubscriptionPaywall(false)" title="Clique para assinar um plano">
+  <div class="trial-dock-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+  </div>
+  <div class="trial-dock-text">
+    <span class="trial-dock-title">Período Gratuito</span>
+    <span class="trial-dock-time" id="trialDockTime">05:00</span>
+  </div>
+  <button type="button" class="trial-dock-btn" onclick="event.stopPropagation(); window.openSubscriptionPaywall(false);">
+    Assinar Plano
+  </button>
+</div>
+
+<!-- MODAL DE ASSINATURA E PAYWALL MANDATÓRIO -->
+<div class="sub-paywall-overlay" id="nexusSubscriptionModal" role="dialog" aria-modal="true">
+  <div class="sub-paywall-modal">
+    <!-- Cabeçalho do Modal -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.15)); border:1.5px solid rgba(16, 185, 129, 0.5); display:flex; align-items:center; justify-content:center; font-size:24px;">
+          🔒
+        </div>
+        <div>
+          <h2 style="font-size:22px; font-weight:900; margin:0; letter-spacing:-0.02em; color:#FFFFFF;" id="subModalTitle">
+            Assinatura Nexus Financeiro Hub
+          </h2>
+          <p style="font-size:13px; color:#94A3B8; margin:4px 0 0 0;" id="subModalSubtitle">
+            Seu período de 5 minutos grátis encerrou. Escolha seu plano para continuar:
+          </p>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" id="subAdminBypassBtn" onclick="window.closeSubscriptionPaywall(true)" style="display:none; padding:6px 12px; border-radius:8px; background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:11.5px; font-weight:800; cursor:pointer;">
+          Modo Admin: Ignorar
+        </button>
+        <button type="button" id="subModalCloseBtn" onclick="window.closeSubscriptionPaywall(false)" style="display:none; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1; cursor:pointer; align-items:center; justify-content:center; font-size:18px; line-height:1;">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Conteúdo Principal de Checkout -->
+    <div id="subCheckoutView">
+      <!-- Grade dos 2 Planos -->
+      <div class="sub-plans-grid">
+        <!-- Plano Mensal (R$ 10,00) -->
+        <div class="sub-plan-card active" id="subPlanCardMensal" onclick="window.selectSubPlan('mensal')">
+          <div>
+            <div class="sub-plan-title">
+              <span>Plano Mensal</span>
+              <span style="font-size:18px;">📅</span>
+            </div>
+            <p style="font-size:12.5px; color:#94A3B8; margin:0 0 10px 0;">Acesso completo a todas as ferramentas sem fidelidade.</p>
+            <div class="sub-plan-price">
+              R$ 10,00 <span class="sub-plan-period">/ mês</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:#10B981; margin-top:10px;">
+            <span>✓ Cancele quando quiser</span>
+          </div>
+        </div>
+
+        <!-- Plano Anual (R$ 100,00) -->
+        <div class="sub-plan-card" id="subPlanCardAnual" onclick="window.selectSubPlan('anual')">
+          <div class="sub-plan-badge-highlight">★ Economize R$ 20,00</div>
+          <div>
+            <div class="sub-plan-title">
+              <span>Plano Anual</span>
+              <span style="font-size:18px;">👑</span>
+            </div>
+            <p style="font-size:12.5px; color:#94A3B8; margin:0 0 10px 0;">12 meses de acesso (equivale a apenas R$ 8,33/mês).</p>
+            <div class="sub-plan-price">
+              R$ 100,00 <span class="sub-plan-period">/ ano</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:#F59E0B; margin-top:10px;">
+            <span>✓ 2 Meses Grátis + Suporte VIP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Abas de Formas de Pagamento -->
+      <div style="margin-top:18px;">
+        <span style="display:block; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; color:#94A3B8; margin-bottom:10px;">
+          Forma de Pagamento
+        </span>
+        <div class="sub-payment-tabs">
+          <button type="button" class="sub-tab-btn active" id="subTabPix" onclick="window.selectPaymentMethod('pix')">
+            <span>💠</span> <span>Pix (Instantâneo)</span>
+          </button>
+          <button type="button" class="sub-tab-btn" id="subTabCredit" onclick="window.selectPaymentMethod('credit_card')">
+            <span>💳</span> <span>Cartão de Crédito</span>
+          </button>
+          <button type="button" class="sub-tab-btn" id="subTabDebit" onclick="window.selectPaymentMethod('debit_card')">
+            <span>💳</span> <span>Cartão de Débito</span>
+          </button>
+          <button type="button" class="sub-tab-btn" id="subTabBoleto" onclick="window.selectPaymentMethod('boleto')">
+            <span>📄</span> <span>Boleto Bancário</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO: PIX -->
+      <div id="subFormPix" style="display:block;">
+        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:22px; display:flex; flex-direction:column; align-items:center; text-align:center;">
+          <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#10B981; margin-bottom:8px;">
+            ✓ Liberação Imediata via Pix
+          </div>
+          <div style="font-size:14px; font-weight:700; color:#CBD5E1; margin-bottom:16px;">
+            Valor a Pagar: <strong id="pixDisplayAmount" style="color:#10B981; font-size:20px;">R$ 10,00</strong>
+          </div>
+
+          <!-- QR Code Display -->
+          <div style="background:#FFFFFF; padding:14px; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,0.4); margin-bottom:16px;">
+            <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:200px; height:200px; display:block;" />
+          </div>
+
+          <!-- Código Pix Copia e Cola -->
+          <div style="width:100%; max-width:540px; margin-bottom:14px;">
+            <label class="sub-field-label" style="text-align:left;">Código Pix Copia e Cola</label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="subPixCodeInput" readonly class="sub-field-input" style="font-size:12px; font-family:monospace;" />
+              <button type="button" id="btnCopyPix" onclick="window.copyPixCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(16,185,129,0.2); border:1.5px solid rgba(16,185,129,0.4); color:#34D399; font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap;">
+                📋 Copiar
+              </button>
+            </div>
+          </div>
+
+          <p style="font-size:12px; color:#94A3B8; margin:0 0 16px 0;">
+            Abra o app do seu banco, escolha <strong>Pix Copia e Cola</strong> ou aponte a câmera para o QR Code acima.
+          </p>
+
+          <button type="button" class="sub-pay-action-btn" onclick="window.processSubscriptionPayment('pix')">
+            <span>✅</span> <span>Já Realizei o Pagamento Pix / Ativar Agora</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO: CARTÃO DE CRÉDITO -->
+      <div id="subFormCredit" style="display:none;">
+        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:22px;">
+          <!-- Preview Cartão Holográfico -->
+          <div style="max-width:380px; height:180px; margin:0 auto 20px; border-radius:18px; background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border:1.5px solid rgba(255,255,255,0.2); box-shadow:0 14px 35px rgba(0,0,0,0.6); padding:20px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12px; font-weight:800; letter-spacing:0.08em; color:#94A3B8;">CARTÃO DE CRÉDITO</span>
+              <span id="creditCardFlagBadge" style="font-size:14px; font-weight:900; color:#34D399;">VISA / MASTER</span>
+            </div>
+            <div id="creditCardNumberPreview" style="font-size:18px; font-weight:900; letter-spacing:0.12em; color:#FFFFFF; font-family:monospace;">
+              •••• •••• •••• ••••
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+              <div>
+                <span style="font-size:9px; text-transform:uppercase; color:#94A3B8; display:block;">Titular</span>
+                <span id="creditCardHolderPreview" style="font-size:13px; font-weight:800; color:#FFFFFF; text-transform:uppercase;">NOME COMPLETO</span>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:9px; text-transform:uppercase; color:#94A3B8; display:block;">Validade</span>
+                <span id="creditCardExpiryPreview" style="font-size:13px; font-weight:800; color:#FFFFFF; font-family:monospace;">MM/AA</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-field-group">
+            <label class="sub-field-label">Número do Cartão de Crédito</label>
+            <input type="text" id="subCardNumber" maxlength="19" placeholder="0000 0000 0000 0000" class="sub-field-input" oninput="window.formatCardNumberInput(this)" />
+          </div>
+
+          <div class="sub-field-group">
+            <label class="sub-field-label">Nome Impresso no Cartão</label>
+            <input type="text" id="subCardHolder" placeholder="Nome como está no cartão" class="sub-field-input" oninput="document.getElementById('creditCardHolderPreview').textContent = this.value.toUpperCase() || 'NOME COMPLETO'" />
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="sub-field-group">
+              <label class="sub-field-label">Validade (MM/AA)</label>
+              <input type="text" id="subCardExpiry" maxlength="5" placeholder="MM/AA" class="sub-field-input" oninput="window.formatCardExpiryInput(this)" />
+            </div>
+            <div class="sub-field-group">
+              <label class="sub-field-label">CVV (Cód. Segurança)</label>
+              <input type="password" id="subCardCvv" maxlength="4" placeholder="123" class="sub-field-input" />
+            </div>
+          </div>
+
+          <div class="sub-field-group">
+            <label class="sub-field-label">Parcelamento</label>
+            <select id="subCardInstallments" class="sub-field-input" style="height:44px;">
+              <option value="1">1x de R$ 10,00 sem juros</option>
+            </select>
+          </div>
+
+          <button type="button" class="sub-pay-action-btn" onclick="window.processSubscriptionPayment('credit_card')">
+            <span>🔒</span> <span id="creditCardBtnLabel">Pagar R$ 10,00 com Cartão de Crédito</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO: CARTÃO DE DÉBITO -->
+      <div id="subFormDebit" style="display:none;">
+        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:22px;">
+          <div class="sub-field-group">
+            <label class="sub-field-label">Número do Cartão de Débito</label>
+            <input type="text" id="subDebitNumber" maxlength="19" placeholder="0000 0000 0000 0000" class="sub-field-input" oninput="window.formatCardNumberInput(this)" />
+          </div>
+
+          <div class="sub-field-group">
+            <label class="sub-field-label">Nome do Titular da Conta</label>
+            <input type="text" id="subDebitHolder" placeholder="Nome Completo" class="sub-field-input" />
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="sub-field-group">
+              <label class="sub-field-label">Validade (MM/AA)</label>
+              <input type="text" id="subDebitExpiry" maxlength="5" placeholder="MM/AA" class="sub-field-input" oninput="window.formatCardExpiryInput(this)" />
+            </div>
+            <div class="sub-field-group">
+              <label class="sub-field-label">CVV</label>
+              <input type="password" id="subDebitCvv" maxlength="4" placeholder="123" class="sub-field-input" />
+            </div>
+          </div>
+
+          <div class="sub-field-group">
+            <label class="sub-field-label">Banco Emissor do Cartão</label>
+            <select id="subDebitBank" class="sub-field-input" style="height:44px;">
+              <option value="nubank">Nubank</option>
+              <option value="bb">Banco do Brasil</option>
+              <option value="bradesco">Bradesco</option>
+              <option value="itau">Itaú Unibanco</option>
+              <option value="santander">Santander</option>
+              <option value="caixa">Caixa Econômica Federal</option>
+              <option value="inter">Banco Inter</option>
+              <option value="c6">C6 Bank</option>
+            </select>
+          </div>
+
+          <button type="button" class="sub-pay-action-btn" onclick="window.processSubscriptionPayment('debit_card')">
+            <span>🔒</span> <span id="debitCardBtnLabel">Pagar R$ 10,00 com Débito Imediato</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO: BOLETO BANCÁRIO -->
+      <div id="subFormBoleto" style="display:none;">
+        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:22px; text-align:center;">
+          <div style="font-size:32px; margin-bottom:8px;">📄</div>
+          <div style="font-size:14px; font-weight:700; color:#CBD5E1; margin-bottom:12px;">
+            Boleto Bancário - Valor: <strong id="boletoDisplayAmount" style="color:#10B981; font-size:18px;">R$ 10,00</strong>
+          </div>
+
+          <div style="width:100%; max-width:540px; margin:0 auto 16px auto;">
+            <label class="sub-field-label" style="text-align:left;">Linha Digitável do Boleto</label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="subBoletoCodeInput" readonly value="34191.79001 01043.510047 91020.150008 8 98760000001000" class="sub-field-input" style="font-size:12px; font-family:monospace;" />
+              <button type="button" onclick="window.copyBoletoCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(16,185,129,0.2); border:1.5px solid rgba(16,185,129,0.4); color:#34D399; font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap;">
+                📋 Copiar
+              </button>
+            </div>
+          </div>
+
+          <!-- Código de Barras Estilizado -->
+          <div style="display:flex; justify-content:center; gap:2px; height:48px; margin:16px auto; max-width:320px; opacity:0.85;">
+            <span style="background:#fff; width:3px;"></span><span style="background:transparent; width:2px;"></span>
+            <span style="background:#fff; width:4px;"></span><span style="background:transparent; width:1px;"></span>
+            <span style="background:#fff; width:2px;"></span><span style="background:transparent; width:3px;"></span>
+            <span style="background:#fff; width:5px;"></span><span style="background:transparent; width:2px;"></span>
+            <span style="background:#fff; width:3px;"></span><span style="background:transparent; width:1px;"></span>
+            <span style="background:#fff; width:6px;"></span><span style="background:transparent; width:3px;"></span>
+            <span style="background:#fff; width:2px;"></span><span style="background:transparent; width:2px;"></span>
+            <span style="background:#fff; width:4px;"></span><span style="background:transparent; width:1px;"></span>
+            <span style="background:#fff; width:5px;"></span><span style="background:transparent; width:2px;"></span>
+            <span style="background:#fff; width:3px;"></span><span style="background:transparent; width:3px;"></span>
+            <span style="background:#fff; width:6px;"></span><span style="background:transparent; width:1px;"></span>
+            <span style="background:#fff; width:2px;"></span><span style="background:transparent; width:2px;"></span>
+            <span style="background:#fff; width:4px;"></span><span style="background:transparent; width:3px;"></span>
+          </div>
+
+          <p style="font-size:12px; color:#94A3B8; margin:0 0 16px 0;">
+            Vencimento em 3 dias úteis. No ambiente de homologação, você pode confirmar e ativar imediatamente.
+          </p>
+
+          <button type="button" class="sub-pay-action-btn" onclick="window.processSubscriptionPayment('boleto')">
+            <span>✅</span> <span>Confirmar Pagamento do Boleto (Homologação)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELA DE SUCESSO DO PAGAMENTO -->
+    <div id="subSuccessView" style="display:none; text-align:center; padding:30px 10px;">
+      <div style="width:72px; height:72px; margin:0 auto 16px; border-radius:50%; background:radial-gradient(circle, rgba(16,185,129,0.3) 0%, rgba(5,150,105,0.15) 60%, rgba(0,0,0,0.4) 100%); border:2px solid #10B981; display:flex; align-items:center; justify-content:center; font-size:36px; box-shadow:0 0 35px rgba(16,185,129,0.4);">
+        ✓
+      </div>
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 14px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
+        <span>Assinatura Ativa & Aprovada</span>
+      </div>
+      <h3 style="font-size:24px; font-weight:900; margin:0 0 8px 0; color:#FFFFFF;">
+        Pagamento Confirmado com Sucesso!
+      </h3>
+      <p style="font-size:14px; color:#CBD5E1; margin:0 0 20px 0; max-width:500px; margin-left:auto; margin-right:auto; line-height:1.5;">
+        Seu plano <strong id="subSuccessPlanName" style="color:#10B981;">Mensal</strong> foi ativado. O acesso total a todas as ferramentas financeiras do Nexus Hub está liberado!
+      </p>
+
+      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:16px; max-width:420px; margin:0 auto 24px auto; text-align:left;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+          <span style="color:#94A3B8;">Comprovante / ID:</span>
+          <strong id="subSuccessTxId" style="color:#FFFFFF; font-family:monospace;">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+          <span style="color:#94A3B8;">Forma de Pagamento:</span>
+          <strong id="subSuccessMethod" style="color:#FFFFFF;">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:13px;">
+          <span style="color:#94A3B8;">Válido até:</span>
+          <strong id="subSuccessExpires" style="color:#34D399;">-</strong>
+        </div>
+      </div>
+
+      <button type="button" class="sub-pay-action-btn" onclick="window.closeSubscriptionPaywall(true)" style="max-width:320px; margin:0 auto;">
+        <span>🚀</span> <span>Começar a Usar Agora</span>
+      </button>
+    </div>
+  </div>
+</div>

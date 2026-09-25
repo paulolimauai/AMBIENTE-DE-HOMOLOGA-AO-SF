@@ -1,0 +1,31 @@
+  <!-- PAINEL DE ASSINATURA E PLANO -->
+  <div class="panel" style="margin-bottom:20px; padding:22px; background:linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.03) 100%); border:1.5px solid rgba(16,185,129,0.3); border-radius:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+    <div style="display:flex; align-items:center; gap:16px;">
+      <div style="width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.15)); border:1.5px solid rgba(16,185,129,0.5); display:flex; align-items:center; justify-content:center; font-size:26px;">
+        💳
+      </div>
+      <div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <h3 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Plano & Assinatura</h3>
+          \${(currentUser && currentUser.subscription_status === 'active')
+            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + (currentUser.subscription_plan === 'anual' ? 'Anual R$ 100' : 'Mensal R$ 10') + ')</span>'
+            : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (5 Minutos)</span>'}
+        </div>
+        <p style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
+          \${(currentUser && currentUser.subscription_status === 'active')
+            ? 'Válido até ' + (currentUser.subscription_expires_at ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR') : 'Ativo')
+            : 'Após os 5 minutos de teste gratuito, escolha o Plano Mensal (R$ 10,00) ou Anual (R$ 100,00).'}
+        </p>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button type="button" onclick="window.openSubscriptionPaywall(false)" style="padding:10px 20px; border-radius:12px; background:linear-gradient(135deg, #10B981, #059669); color:#fff; font-weight:800; font-size:13px; border:none; cursor:pointer; box-shadow:0 6px 18px rgba(16,185,129,0.35);">
+        Gerenciar / Trocar Plano
+      </button>
+      \${(currentUser && currentUser.role === 'Administrador') ? \`
+        <button type="button" onclick="window.resetTrialForTesting()" style="padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:var(--text); font-weight:700; font-size:12px; cursor:pointer;">
+          ⏱️ Resetar 5m (Teste)
+        </button>
+      \` : ''}
+    </div>
+  </div>

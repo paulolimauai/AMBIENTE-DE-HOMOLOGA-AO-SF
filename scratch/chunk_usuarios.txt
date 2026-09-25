@@ -1,0 +1,4 @@
+<span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
+                \${(u.subscription_status === 'active')
+                  ? \`<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399; font-weight:800;">⭐ Plano \${u.subscription_plan === 'anual' ? 'Anual' : 'Mensal'}</span>\`
+                  : \`<span class="role-badge" style="background:rgba(245,158,11,0.18); border:1px solid #F59E0B; color:#FBBF24; font-weight:800;">⏱️ Teste 5m</span>\`}

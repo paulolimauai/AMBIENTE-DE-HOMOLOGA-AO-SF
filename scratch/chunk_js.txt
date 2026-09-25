@@ -1,0 +1,398 @@
+/* ==================== Motor de Período Gratuito (5 Minutos) e Assinatura Mandatória ==================== */
+window.__trialTimerInterval = null;
+window.__trialRemainingSeconds = 300;
+window.__selectedSubPlan = 'mensal';
+window.__selectedPaymentMethod = 'pix';
+window.__isPaywallLocked = false;
+
+window.initTrialAndSubscription = async function() {
+  if (!currentUser || !currentUser.email) return;
+
+  try {
+    const res = await fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email));
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success) {
+        currentUser.subscription_status = data.status;
+        currentUser.subscription_plan = data.subscription_plan;
+        currentUser.subscription_expires_at = data.subscription_expires_at;
+        currentUser.subscription_method = data.subscription_method;
+        currentUser.trial_started_at = data.trial_started_at;
+        window.__trialRemainingSeconds = data.remaining_seconds;
+
+        try { saveToStorage('nexus_cached_user', currentUser); } catch(e){}
+
+        if (data.is_subscribed) {
+          window.hideTrialDockWidget();
+          window.closeSubscriptionPaywall(true);
+          return;
+        }
+
+        if (data.status === 'expired') {
+          window.hideTrialDockWidget();
+          window.openSubscriptionPaywall(true);
+          return;
+        }
+
+        // Período de teste ativo (até 300s)
+        window.startTrialCountdown(data.remaining_seconds);
+      }
+    }
+  } catch(e) {
+    console.warn('[ASSINATURA] Falha ao consultar status de assinatura:', e);
+    window.startTrialCountdown(window.__trialRemainingSeconds || 300);
+  }
+};
+
+window.startTrialCountdown = function(remainingSecs) {
+  window.__trialRemainingSeconds = (typeof remainingSecs === 'number') ? remainingSecs : 300;
+
+  if (window.__trialTimerInterval) {
+    clearInterval(window.__trialTimerInterval);
+    window.__trialTimerInterval = null;
+  }
+
+  window.showTrialDockWidget();
+  window.updateTrialDisplay();
+
+  window.__trialTimerInterval = setInterval(() => {
+    window.__trialRemainingSeconds--;
+
+    if (window.__trialRemainingSeconds <= 0) {
+      clearInterval(window.__trialTimerInterval);
+      window.__trialTimerInterval = null;
+      window.__trialRemainingSeconds = 0;
+      window.updateTrialDisplay();
+
+      // Tempo esgotado: bloqueio mandatório do sistema
+      window.hideTrialDockWidget();
+      window.openSubscriptionPaywall(true);
+      return;
+    }
+
+    window.updateTrialDisplay();
+  }, 1000);
+};
+
+window.updateTrialDisplay = function() {
+  const mins = Math.floor(Math.max(0, window.__trialRemainingSeconds) / 60);
+  const secs = Math.max(0, window.__trialRemainingSeconds) % 60;
+  const timeFormatted = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+
+  const labelEl = document.getElementById('trialDockTime');
+  const widget = document.getElementById('trialDockWidget');
+  if (labelEl) labelEl.textContent = timeFormatted;
+
+  if (widget) {
+    if (window.__trialRemainingSeconds <= 60) {
+      widget.classList.add('trial-dock-urgent');
+    } else {
+      widget.classList.remove('trial-dock-urgent');
+    }
+  }
+};
+
+window.showTrialDockWidget = function() {
+  const widget = document.getElementById('trialDockWidget');
+  if (widget) widget.style.display = 'flex';
+};
+
+window.hideTrialDockWidget = function() {
+  const widget = document.getElementById('trialDockWidget');
+  if (widget) widget.style.display = 'none';
+};
+
+window.openSubscriptionPaywall = function(isLocked = false) {
+  window.__isPaywallLocked = !!isLocked;
+  const modal = document.getElementById('nexusSubscriptionModal');
+  if (!modal) return;
+
+  const closeBtn = document.getElementById('subModalCloseBtn');
+  const adminBypass = document.getElementById('subAdminBypassBtn');
+  const titleEl = document.getElementById('subModalTitle');
+  const subEl = document.getElementById('subModalSubtitle');
+
+  if (isLocked) {
+    if (titleEl) titleEl.textContent = '🔒 Período Gratuito de 5 Minutos Encerrado!';
+    if (subEl) subEl.textContent = 'Para continuar utilizando o sistema, selecione seu plano mensal ou anual:';
+  } else {
+    if (titleEl) titleEl.textContent = '⭐ Escolha seu Plano de Assinatura';
+    if (subEl) subEl.textContent = 'Aproveite todos os recursos do Nexus Financeiro Hub com total segurança:';
+  }
+
+  if (closeBtn) {
+    closeBtn.style.display = isLocked ? 'none' : 'flex';
+  }
+
+  if (adminBypass) {
+    const isAdmin = currentUser && currentUser.role === 'Administrador';
+    adminBypass.style.display = (isLocked && isAdmin) ? 'inline-block' : 'none';
+  }
+
+  // Reseta para tela de checkout se estava na tela de sucesso
+  const checkoutView = document.getElementById('subCheckoutView');
+  const successView = document.getElementById('subSuccessView');
+  if (checkoutView) checkoutView.style.display = 'block';
+  if (successView) successView.style.display = 'none';
+
+  window.selectSubPlan(window.__selectedSubPlan || 'mensal');
+  window.selectPaymentMethod(window.__selectedPaymentMethod || 'pix');
+
+  modal.style.display = 'flex';
+  modal.classList.add('show');
+};
+
+window.closeSubscriptionPaywall = function(force = false) {
+  if (window.__isPaywallLocked && !force) {
+    if (typeof showToast === 'function') {
+      showToast('⚠️ Seu período de 5 minutos grátis encerrou. É necessário assinar um plano para continuar.');
+    }
+    return;
+  }
+  window.__isPaywallLocked = false;
+  const modal = document.getElementById('nexusSubscriptionModal');
+  if (modal) {
+    modal.classList.remove('show');
+    modal.style.display = 'none';
+  }
+};
+
+window.selectSubPlan = function(plan) {
+  window.__selectedSubPlan = plan;
+  const cardMensal = document.getElementById('subPlanCardMensal');
+  const cardAnual = document.getElementById('subPlanCardAnual');
+  const pixDisplay = document.getElementById('pixDisplayAmount');
+  const boletoDisplay = document.getElementById('boletoDisplayAmount');
+  const creditBtnLabel = document.getElementById('creditCardBtnLabel');
+  const debitBtnLabel = document.getElementById('debitCardBtnLabel');
+  const installmentsSelect = document.getElementById('subCardInstallments');
+
+  if (plan === 'anual') {
+    if (cardAnual) cardAnual.classList.add('active');
+    if (cardMensal) cardMensal.classList.remove('active');
+    if (pixDisplay) pixDisplay.textContent = 'R$ 100,00';
+    if (boletoDisplay) boletoDisplay.textContent = 'R$ 100,00';
+    if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 100,00 com Cartão de Crédito';
+    if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 100,00 com Débito Imediato';
+
+    if (installmentsSelect) {
+      installmentsSelect.innerHTML = '<option value="1">1x de R$ 100,00 sem juros</option>' +
+        '<option value="2">2x de R$ 50,00 sem juros</option>' +
+        '<option value="3">3x de R$ 33,33 sem juros</option>' +
+        '<option value="6">6x de R$ 16,67 sem juros</option>' +
+        '<option value="10">10x de R$ 10,00 sem juros</option>' +
+        '<option value="12">12x de R$ 8,33 sem juros</option>';
+    }
+  } else {
+    if (cardMensal) cardMensal.classList.add('active');
+    if (cardAnual) cardAnual.classList.remove('active');
+    if (pixDisplay) pixDisplay.textContent = 'R$ 10,00';
+    if (boletoDisplay) boletoDisplay.textContent = 'R$ 10,00';
+    if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 10,00 com Cartão de Crédito';
+    if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 10,00 com Débito Imediato';
+
+    if (installmentsSelect) {
+      installmentsSelect.innerHTML = '<option value="1">1x de R$ 10,00 sem juros</option>';
+    }
+  }
+
+  window.updatePixPayloadAndQr();
+};
+
+window.selectPaymentMethod = function(method) {
+  window.__selectedPaymentMethod = method;
+  const tabs = ['pix', 'credit_card', 'debit_card', 'boleto'];
+  tabs.forEach(m => {
+    const tabEl = document.getElementById(m === 'pix' ? 'subTabPix' : (m === 'credit_card' ? 'subTabCredit' : (m === 'debit_card' ? 'subTabDebit' : 'subTabBoleto')));
+    const formEl = document.getElementById(m === 'pix' ? 'subFormPix' : (m === 'credit_card' ? 'subFormCredit' : (m === 'debit_card' ? 'subFormDebit' : 'subFormBoleto')));
+    if (tabEl) {
+      if (m === method) tabEl.classList.add('active');
+      else tabEl.classList.remove('active');
+    }
+    if (formEl) {
+      formEl.style.display = (m === method) ? 'block' : 'none';
+    }
+  });
+
+  if (method === 'pix') {
+    window.updatePixPayloadAndQr();
+  }
+};
+
+window.updatePixPayloadAndQr = function() {
+  const amount = (window.__selectedSubPlan === 'anual') ? '100.00' : '10.00';
+  const rawKey = '04023326100'; // Chave Pix oficial
+  const pixCode = '00020126580014BR.GOV.BCB.PIX011404023326100520400005303986540' + (amount === '100.00' ? '6100.00' : '510.00') + '5802BR5920NEXUS SOLUCOES FIN6007GOIANIA62070503***6304' + (amount === '100.00' ? 'E8B2' : 'D3F1');
+
+  const inputEl = document.getElementById('subPixCodeInput');
+  const imgEl = document.getElementById('subPixQrImg');
+  if (inputEl) inputEl.value = pixCode;
+  if (imgEl) {
+    imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode);
+  }
+};
+
+window.copyPixCodeToClipboard = function() {
+  const inputEl = document.getElementById('subPixCodeInput');
+  if (!inputEl) return;
+  inputEl.select();
+  inputEl.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(inputEl.value).then(() => {
+    const btn = document.getElementById('btnCopyPix');
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copiado!';
+      btn.style.color = '#10B981';
+      setTimeout(() => { btn.innerHTML = orig; btn.style.color = '#34D399'; }, 2500);
+    }
+    if (typeof showToast === 'function') showToast('✓ Código Pix copiado com sucesso! Cole no app do seu banco.');
+  }).catch(() => {
+    document.execCommand('copy');
+    if (typeof showToast === 'function') showToast('✓ Código Pix copiado!');
+  });
+};
+
+window.copyBoletoCodeToClipboard = function() {
+  const inputEl = document.getElementById('subBoletoCodeInput');
+  if (!inputEl) return;
+  inputEl.select();
+  navigator.clipboard.writeText(inputEl.value).then(() => {
+    if (typeof showToast === 'function') showToast('✓ Linha digitável do boleto copiada!');
+  });
+};
+
+window.formatCardNumberInput = function(el) {
+  let val = el.value.replace(/\D/g, '').slice(0, 16);
+  let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+  el.value = formatted;
+
+  const previewEl = document.getElementById('creditCardNumberPreview');
+  const badgeEl = document.getElementById('creditCardFlagBadge');
+  if (previewEl) previewEl.textContent = formatted || '•••• •••• •••• ••••';
+
+  if (badgeEl) {
+    if (val.startsWith('4')) badgeEl.textContent = 'VISA';
+    else if (/^(5[1-5]|2[2-7])/.test(val)) badgeEl.textContent = 'MASTERCARD';
+    else if (/^(4011|4389|5041|6362)/.test(val)) badgeEl.textContent = 'ELO';
+    else if (/^(34|37)/.test(val)) badgeEl.textContent = 'AMEX';
+    else if (/^(6062)/.test(val)) badgeEl.textContent = 'HIPERCARD';
+    else badgeEl.textContent = 'CARTÃO';
+  }
+};
+
+window.formatCardExpiryInput = function(el) {
+  let val = el.value.replace(/\D/g, '').slice(0, 4);
+  if (val.length >= 3) {
+    val = val.slice(0, 2) + '/' + val.slice(2, 4);
+  }
+  el.value = val;
+  const previewEl = document.getElementById('creditCardExpiryPreview');
+  if (previewEl) previewEl.textContent = val || 'MM/AA';
+};
+
+window.processSubscriptionPayment = async function(method) {
+  if (!currentUser || !currentUser.email) {
+    if (typeof showToast === 'function') showToast('Erro: Usuário não identificado.');
+    return;
+  }
+
+  const plan = window.__selectedSubPlan || 'mensal';
+  const payMethod = method || window.__selectedPaymentMethod || 'pix';
+
+  // Validação simples para cartões
+  if (payMethod === 'credit_card') {
+    const num = (document.getElementById('subCardNumber')?.value || '').replace(/\D/g, '');
+    const exp = document.getElementById('subCardExpiry')?.value || '';
+    const cvv = document.getElementById('subCardCvv')?.value || '';
+    if (num.length < 13 || exp.length < 5 || cvv.length < 3) {
+      if (typeof showToast === 'function') showToast('Por favor, preencha os dados do cartão de crédito corretamente.');
+      return;
+    }
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('Processando pagamento seguro com criptografia de ponta a ponta...');
+  }
+
+  try {
+    const res = await fetch('/api/subscription/pay', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: currentUser.email,
+        plan: plan,
+        method: payMethod,
+        amount: plan === 'anual' ? 100.00 : 10.00
+      })
+    });
+
+    const data = await res.json();
+    if (data && data.success) {
+      currentUser.subscription_status = 'active';
+      currentUser.subscription_plan = data.plan;
+      currentUser.subscription_expires_at = data.expires_at;
+      currentUser.subscription_method = data.method;
+      try { saveToStorage('nexus_cached_user', currentUser); } catch(e){}
+
+      // Exibe tela de confirmação
+      const checkoutView = document.getElementById('subCheckoutView');
+      const successView = document.getElementById('subSuccessView');
+      if (checkoutView) checkoutView.style.display = 'none';
+      if (successView) successView.style.display = 'block';
+
+      const planNameEl = document.getElementById('subSuccessPlanName');
+      const txIdEl = document.getElementById('subSuccessTxId');
+      const methodEl = document.getElementById('subSuccessMethod');
+      const expiresEl = document.getElementById('subSuccessExpires');
+
+      if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual (R$ 100,00)' : 'Mensal (R$ 10,00)';
+      if (txIdEl) txIdEl.textContent = data.transaction_id || ('NEXUS-SUB-' + Date.now());
+      if (methodEl) {
+        const methodLabels = { pix: 'Pix Instantâneo', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
+        methodEl.textContent = methodLabels[payMethod] || payMethod.toUpperCase();
+      }
+      if (expiresEl) {
+        expiresEl.textContent = data.expires_at ? new Date(data.expires_at).toLocaleDateString('pt-BR') : '1 ano';
+      }
+
+      window.hideTrialDockWidget();
+      if (window.__trialTimerInterval) {
+        clearInterval(window.__trialTimerInterval);
+        window.__trialTimerInterval = null;
+      }
+
+      if (typeof showToast === 'function') {
+        showToast('🎉 Pagamento aprovado! Sua assinatura está ativa.');
+      }
+
+      if (typeof render === 'function') render();
+    } else {
+      if (typeof showToast === 'function') {
+        showToast('Falha no pagamento: ' + (data?.error || 'Tente novamente.'));
+      }
+    }
+  } catch(err) {
+    console.error('[ERRO PAGAMENTO]', err);
+    if (typeof showToast === 'function') {
+      showToast('Erro ao processar pagamento. Verifique a conexão.');
+    }
+  }
+};
+
+window.resetTrialForTesting = async function(email) {
+  const targetEmail = email || (currentUser && currentUser.email);
+  if (!targetEmail) return;
+  try {
+    const res = await fetch('/api/subscription/reset-trial', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: targetEmail })
+    });
+    const d = await res.json();
+    if (d && d.success) {
+      if (typeof showToast === 'function') showToast('⏱️ Período de 5 minutos grátis reiniciado para ' + targetEmail);
+      window.initTrialAndSubscription();
+      if (typeof render === 'function') render();
+    }
+  } catch(e) {}
+};

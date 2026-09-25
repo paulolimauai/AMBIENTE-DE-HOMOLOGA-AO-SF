@@ -502,5 +502,29 @@
     "last_login": "2026-09-25T08:35:34-03:00",
     "timestamp": "2026-09-25T11:35:34.502Z",
     "ack": false
+  },
+  {
+    "id": "52",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-09-25T08:49:38-03:00",
+    "timestamp": "2026-09-25T11:49:38.064Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-09-25T08:56:31-03:00",
+    "timestamp": "2026-09-25T11:56:31.214Z",
+    "ack": false
+  },
+  {
+    "id": "52",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-09-25T08:58:19-03:00",
+    "timestamp": "2026-09-25T11:58:19.649Z",
+    "ack": false
   }
 ]
