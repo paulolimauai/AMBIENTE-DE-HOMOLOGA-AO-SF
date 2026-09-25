@@ -12778,6 +12778,48 @@ body.light .period button.active {
       </div>
     </div>
 
+    
+    <!-- Seção Executiva de Liberação de Tempo Grátis pelo Administrador -->
+    <div style="margin-bottom:16px; padding:16px; border-radius:18px; background:linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(16,185,129,0.08) 100%); border:1.5px solid rgba(245,158,11,0.4); box-shadow:0 8px 24px rgba(0,0,0,0.25);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:12.5px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:6px;">
+          <span>👑</span> LIBERAR TEMPO GRÁTIS / ACESSO VIP
+        </span>
+        <span id="userAdminCurrentSubBadge" style="font-size:11px; padding:3px 10px; border-radius:8px; background:rgba(255,255,255,0.08); font-weight:800; border:1px solid rgba(255,255,255,0.15);">Carregando status...</span>
+      </div>
+      <p style="font-size:12px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.4;">
+        Como administrador, você pode conceder o tempo que desejar para este usuário sem nenhum custo.
+      </p>
+
+      <!-- Botões de Concessão Rápida -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(105px, 1fr)); gap:7px; margin-bottom:12px;">
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 60)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">⏱️ +1 Hora</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 1440)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">📅 +24 Horas</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 10080)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">📅 +7 Dias</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 43200)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">📅 +30 Dias</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 525600)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">📅 +1 Ano</button>
+        <button type="button" style="font-size:11.5px; padding:7px 12px; border-radius:10px; font-weight:900; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(5,150,105,0.4);" onclick="adminGrantTimeLifetime(editingUserEmail)">♾️ Vitalício Grátis</button>
+      </div>
+
+      <!-- Concessão Personalizada (Qualquer Quantidade de Tempo) -->
+      <div style="display:flex; align-items:center; gap:8px;">
+        <input type="number" id="userAdminCustomTimeVal" placeholder="Ex: 3" min="1" style="width:75px; height:38px; border-radius:10px; font-size:13px; font-weight:700; padding:0 10px; text-align:center;">
+        <select id="userAdminCustomTimeUnit" style="height:38px; border-radius:10px; font-size:12.5px; font-weight:700; flex:1;">
+          <option value="minutes">Minuto(s)</option>
+          <option value="hours" selected>Hora(s)</option>
+          <option value="days">Dia(s)</option>
+          <option value="months">Mês(es) (30d)</option>
+          <option value="years">Ano(s) (365d)</option>
+        </select>
+        <button type="button" onclick="adminGrantCustomTime(editingUserEmail)" style="height:38px; padding:0 16px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:12px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(245,158,11,0.35);">
+          Liberar Tempo ✓
+        </button>
+        <button type="button" class="btn-ghost" onclick="adminResetTrialAction(editingUserEmail)" title="Resetar período de teste para 5 minutos" style="height:38px; padding:0 10px; border-radius:10px; font-size:11px; font-weight:700;">
+          🔄 Reset 5m
+        </button>
+      </div>
+    </div>
+
     <div class="field" style="margin-bottom:18px; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
       <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Redefinir Senha de Acesso</label>
       <p class="cfg-hint" id="userAdminPasswordHint" style="margin:2px 0 8px; font-size:11.5px;">Deixe em branco para manter a senha atual ou digite a nova senha</p>
@@ -13460,6 +13502,26 @@ body.light .period button.active {
     </div>
 
     <!-- Conteúdo Principal de Checkout -->
+    
+    <!-- Barra de Controle Total do Administrador para Liberar Tempo Imediato -->
+    <div id="subAdminFullControlBar" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:16px; background:linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(16,185,129,0.12) 100%); border:1.5px solid rgba(245,158,11,0.45); box-shadow:0 8px 30px rgba(0,0,0,0.35);">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+        <span style="font-size:13px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:6px;">
+          <span>👑</span> PAINEL ADMINISTRADOR: LIBERAR TEMPO GRÁTIS QUANTO QUISER
+        </span>
+        <span style="font-size:11.5px; color:#34D399; font-weight:800; background:rgba(5, 150, 105, 0.2); padding:3px 10px; border-radius:8px; border:1px solid #10B981;">Acesso Total</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(60)" style="font-size:11.5px; padding:6px 12px; border-radius:8px; font-weight:700;">⏱️ +1 Hora</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(1440)" style="font-size:11.5px; padding:6px 12px; border-radius:8px; font-weight:700;">📅 +24 Horas</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(10080)" style="font-size:11.5px; padding:6px 12px; border-radius:8px; font-weight:700;">📅 +7 Dias</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(43200)" style="font-size:11.5px; padding:6px 12px; border-radius:8px; font-weight:700;">📅 +30 Dias</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(525600)" style="font-size:11.5px; padding:6px 12px; border-radius:8px; font-weight:700;">📅 +1 Ano</button>
+        <button type="button" style="font-size:11.5px; padding:6px 14px; border-radius:8px; font-weight:900; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer;" onclick="adminGrantTimeToActiveUser('lifetime')">♾️ Vitalício Grátis</button>
+        <button type="button" class="btn-ghost" onclick="window.closeSubscriptionPaywall(true)" style="font-size:11.5px; padding:6px 12px; border-radius:8px; font-weight:700; color:#FBBF24;">✕ Fechar Paywall</button>
+      </div>
+    </div>
+
     <div id="subCheckoutView">
       <!-- Grade dos 2 Planos -->
       <div class="sub-plans-grid">
@@ -15497,6 +15559,10 @@ window.openSubscriptionPaywall = function(isLocked = false) {
   if (adminReset) {
     adminReset.style.display = isAdmin ? 'inline-block' : 'none';
   }
+  const adminFullBar = document.getElementById('subAdminFullControlBar');
+  if (adminFullBar) {
+    adminFullBar.style.display = isAdmin ? 'block' : 'none';
+  }
 
   // Reseta para tela de checkout se estava na tela de sucesso
   const checkoutView = document.getElementById('subCheckoutView');
@@ -15932,6 +15998,136 @@ window.resetTrialForTesting = async function(email) {
   } catch(e){}
 };
 
+
+
+
+// Funções Executivas de Concessão de Tempo Gratuito pelo Administrador
+window.adminGrantTimeQuick = async function(targetEmail, durationMinutes) {
+  if (!currentUser || currentUser.role !== 'Administrador') {
+    if (typeof showToast === 'function') showToast('Apenas administradores podem conceder tempo');
+    return;
+  }
+  const email = targetEmail || (currentUser ? currentUser.email : '');
+  if (!email) {
+    if (typeof showToast === 'function') showToast('E-mail destinatário inválido');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/subscription/admin-grant-time', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        admin_email: currentUser.email,
+        target_email: email,
+        duration_minutes: durationMinutes
+      })
+    });
+    const d = await res.json();
+    if (d && d.success) {
+      if (typeof showToast === 'function') showToast('🎉 ' + d.message);
+      await syncUsersWithServer();
+      if (typeof window.initTrialAndSubscription === 'function') window.initTrialAndSubscription();
+      if (typeof render === 'function') render();
+      if (typeof updateAdminModalBadge === 'function') updateAdminModalBadge(email);
+    } else {
+      if (typeof showToast === 'function') showToast(d.error || 'Erro ao conceder tempo');
+    }
+  } catch(e) {
+    if (typeof showToast === 'function') showToast('Falha na comunicação com o servidor');
+  }
+};
+
+window.adminGrantTimeLifetime = async function(targetEmail) {
+  if (!currentUser || currentUser.role !== 'Administrador') {
+    if (typeof showToast === 'function') showToast('Apenas administradores podem conceder tempo');
+    return;
+  }
+  const email = targetEmail || (currentUser ? currentUser.email : '');
+  if (!email) return;
+
+  try {
+    const res = await fetch('/api/subscription/admin-grant-time', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        admin_email: currentUser.email,
+        target_email: email,
+        is_lifetime: true
+      })
+    });
+    const d = await res.json();
+    if (d && d.success) {
+      if (typeof showToast === 'function') showToast('♾️ Acesso Vitalício Gratuito concedido com sucesso para ' + email + '!');
+      await syncUsersWithServer();
+      if (typeof window.initTrialAndSubscription === 'function') window.initTrialAndSubscription();
+      if (typeof render === 'function') render();
+      if (typeof updateAdminModalBadge === 'function') updateAdminModalBadge(email);
+    } else {
+      if (typeof showToast === 'function') showToast(d.error || 'Erro ao conceder tempo');
+    }
+  } catch(e) {
+    if (typeof showToast === 'function') showToast('Falha na comunicação com o servidor');
+  }
+};
+
+window.adminGrantCustomTime = async function(targetEmail) {
+  const val = parseInt(document.getElementById('userAdminCustomTimeVal')?.value || '0', 10);
+  const unit = document.getElementById('userAdminCustomTimeUnit')?.value || 'hours';
+  if (!val || val <= 0) {
+    if (typeof showToast === 'function') showToast('Informe uma quantidade válida de tempo');
+    return;
+  }
+  let minutes = val;
+  if (unit === 'hours') minutes = val * 60;
+  else if (unit === 'days') minutes = val * 24 * 60;
+  else if (unit === 'months') minutes = val * 30 * 24 * 60;
+  else if (unit === 'years') minutes = val * 365 * 24 * 60;
+
+  window.adminGrantTimeQuick(targetEmail, minutes);
+};
+
+window.adminGrantTimeToActiveUser = function(param) {
+  const email = currentUser ? currentUser.email : '';
+  if (!email) return;
+  if (param === 'lifetime') {
+    window.adminGrantTimeLifetime(email);
+  } else {
+    window.adminGrantTimeQuick(email, param);
+  }
+  window.closeSubscriptionPaywall(true);
+};
+
+window.adminResetTrialAction = async function(targetEmail) {
+  if (typeof window.resetTrialForTesting === 'function') {
+    await window.resetTrialForTesting(targetEmail);
+    if (typeof updateAdminModalBadge === 'function') updateAdminModalBadge(targetEmail);
+  }
+};
+
+window.updateAdminModalBadge = function(email) {
+  const subBadge = document.getElementById('userAdminCurrentSubBadge');
+  if (!subBadge || !email) return;
+  const u = (registeredUsers || []).find(x => x && x.email && x.email.toLowerCase() === email.toLowerCase());
+  if (!u) return;
+
+  if (u.role === 'Administrador') {
+    subBadge.textContent = '👑 Administrador (Acesso Ilimitado)';
+    subBadge.style.color = '#FBBF24';
+  } else if (u.subscription_status === 'active') {
+    if (u.subscription_plan === 'vitalicio') {
+      subBadge.textContent = '♾️ Vitalício Gratuito';
+      subBadge.style.color = '#34D399';
+    } else {
+      const expStr = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at.split('T')[0]) : 'Ativo';
+      subBadge.textContent = '⭐ Ativo até ' + expStr;
+      subBadge.style.color = '#34D399';
+    }
+  } else {
+    subBadge.textContent = '⏱️ Teste Gratuito';
+    subBadge.style.color = '#F59E0B';
+  }
+};
 
 
 window.checkServerRegPasswordMatch = function() {
@@ -20789,9 +20985,17 @@ function pageUsuarios(){
                 <span class="user-card-name">\${u.name}</span>
                 <span class="role-badge" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); color:var(--text); font-weight:800; padding:2px 8px; border-radius:6px;">ID #\${u.id || '-'}</span>
                 <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
-                \${(u.subscription_status === 'active')
-                  ? \`<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399; font-weight:800;">⭐ Plano \${u.subscription_plan === 'anual' ? 'Anual' : 'Mensal'}</span>\`
-                  : \`<span class="role-badge" style="background:rgba(245,158,11,0.18); border:1px solid #F59E0B; color:#FBBF24; font-weight:800;">⏱️ Teste 5m</span>\`}
+                \${(() => {
+                  if (isAdminUser || u.subscription_plan === 'vitalicio') {
+                    return '<span class="role-badge" style="background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.35)); border:1px solid #10B981; color:#34D399; font-weight:900;">♾️ Vitalício Grátis</span>';
+                  }
+                  if (u.subscription_status === 'active') {
+                    const planLabel = u.subscription_plan === 'anual' ? 'Anual' : (u.subscription_plan === 'vitalicio' ? 'Vitalício' : (u.subscription_plan === 'cortesia_admin' ? 'Liberado Admin' : 'Ativo'));
+                    const expStr = u.subscription_expires_at ? (' até ' + formatDateBR(u.subscription_expires_at.split('T')[0])) : '';
+                    return '<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399; font-weight:800;">⭐ ' + planLabel + expStr + '</span>';
+                  }
+                  return '<span class="role-badge" style="background:rgba(245,158,11,0.18); border:1px solid #F59E0B; color:#FBBF24; font-weight:800;">⏱️ Teste / Expirado</span>';
+                })()}
 
                 \${(u.device_type === 'Mobile' || u.device === 'Mobile') 
                   ? '<span class="role-badge" style="background:linear-gradient(135deg, rgba(5, 150, 105, 0.22), rgba(4, 120, 87, 0.12)); border:1px solid rgba(5, 150, 105, 0.4); color:#059669; display:inline-flex; align-items:center; gap:4px; font-weight:700;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> 📱 Mobile</span>' 
@@ -20845,6 +21049,10 @@ function pageUsuarios(){
             \` : \`
               <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:800; font-size:12px; padding:6px 14px; border-radius:12px; height:38px;">⭐ Sua Conta (Atual)</span>
             \`}
+            <button type="button" class="user-card-btn btn-conceder-tempo" data-granttime="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Liberar tempo gratuito para este usuário" style="background:linear-gradient(135deg, #F59E0B, #B45309); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(245, 158, 11, 0.35);">
+              <span style="font-size:14px;">👑</span>
+              <span>Liberar Tempo</span>
+            </button>
             <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Corrigir dados do cadastro" style="background:linear-gradient(135deg, #10B981, #047857); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(5, 150, 105,0.35);">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               <span>Corrigir Dados</span>
@@ -24394,6 +24602,7 @@ async function openAdminCreateUserModal(){
   document.getElementById('userAdminPassword').value = '';
   document.getElementById('userAdminPassword').type = 'password';
   bindPasswordToggle('userAdminPassword', 'userAdminPasswordToggle');
+  updateAdminModalBadge(email);
   document.getElementById('overlayUserAdmin').classList.add('show');
 }
 
@@ -28663,15 +28872,16 @@ const server = http.createServer(async (req, res) => {
       expiresAtMs = new Date(expIso || user.subscription_expires_at).getTime();
     }
 
-    const isSubscribed = user.subscription_status === 'active' && 
-      expiresAtMs > now;
+    const isAdmin = (user.role === 'Administrador' || user.email === 'suporte.paulolima@outlook.com' || user.email === 'paulolp0101@gmail.com');
+    const isLifetime = (user.subscription_plan === 'vitalicio');
+    const isSubscribed = isAdmin || isLifetime || (user.subscription_status === 'active' && (expiresAtMs === 0 || expiresAtMs > now));
 
     let trialStartedAt = user.trial_started_at;
     let remainingSecs = 0;
     let isTrialActive = false;
 
     if (isSubscribed) {
-      remainingSecs = 0;
+      remainingSecs = (isAdmin || isLifetime) ? 999999999 : Math.max(0, Math.floor((expiresAtMs - now) / 1000));
       isTrialActive = false;
     } else {
       if (!trialStartedAt) {
@@ -28696,11 +28906,11 @@ const server = http.createServer(async (req, res) => {
       remaining_seconds: remainingSecs,
       trial_duration_seconds: TRIAL_DURATION_SECS,
       trial_started_at: trialStartedAt,
-      subscription_plan: user.subscription_plan || null,
-      subscription_expires_at: user.subscription_expires_at || null,
-      subscription_method: user.subscription_method || null,
+      subscription_plan: isLifetime ? 'vitalicio' : (user.subscription_plan || (isAdmin ? 'administrador_ilimitado' : null)),
+      subscription_expires_at: (isLifetime || isAdmin) ? '2099-12-31T23:59:59Z' : (user.subscription_expires_at || null),
+      subscription_method: user.subscription_method || (isAdmin ? 'acesso_admin' : null),
       subscription_payment_id: user.subscription_payment_id || null,
-      is_admin: user.role === 'Administrador',
+      is_admin: isAdmin,
       pix_info: PIX_CONFIG
     };
   }
@@ -28775,6 +28985,125 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Rota POST para Processar Pagamento de Assinatura (Mensal R$ 10,00 ou Anual R$ 100,00)
+  
+  // Rota POST para Administrador Conceder Tempo Grátis (Qualquer duração ou vitalício)
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/admin-grant-time') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        const parsed = JSON.parse(body);
+        const adminEmail = (parsed.admin_email || '').toLowerCase().trim();
+        const targetEmail = (parsed.target_email || '').toLowerCase().trim();
+        const durationMinutes = parsed.duration_minutes !== undefined ? parseInt(parsed.duration_minutes, 10) : null;
+        const isLifetime = !!parsed.is_lifetime || parsed.duration_minutes === 'lifetime';
+        const customDays = parsed.duration_days !== undefined ? parseInt(parsed.duration_days, 10) : null;
+
+        if (!adminEmail || !targetEmail) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'E-mails de admin e destinatário são obrigatórios' }));
+        }
+
+        const localUsers = getLocalUsers();
+        const adminUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === adminEmail);
+        const isAuthorized = adminUser && (adminUser.role === 'Administrador' || adminEmail === 'suporte.paulolima@outlook.com' || adminEmail === 'paulolp0101@gmail.com');
+
+        if (!isAuthorized) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Apenas administradores podem conceder tempo gratuito' }));
+        }
+
+        let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === targetEmail);
+        if (!targetUser) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Usuário destinatário não encontrado' }));
+        }
+
+        const now = new Date();
+        let expiresDate;
+        let planName = 'cortesia_admin';
+        let msgDesc = '';
+
+        if (isLifetime) {
+          expiresDate = new Date('2099-12-31T23:59:59Z');
+          planName = 'vitalicio';
+          msgDesc = 'Acesso Vitalício Ilimitado';
+        } else {
+          let totalMinutes = 0;
+          if (durationMinutes && durationMinutes > 0) totalMinutes += durationMinutes;
+          if (customDays && customDays > 0) totalMinutes += customDays * 24 * 60;
+          if (totalMinutes <= 0) totalMinutes = 60;
+
+          let baseTime = now.getTime();
+          if (targetUser.subscription_expires_at) {
+            const prevExp = new Date(targetUser.subscription_expires_at).getTime();
+            if (prevExp > baseTime) baseTime = prevExp;
+          }
+
+          expiresDate = new Date(baseTime + totalMinutes * 60 * 1000);
+          msgDesc = totalMinutes >= 1440 ? (Math.round(totalMinutes/1440) + ' dia(s) grátis') : (totalMinutes + ' minuto(s) grátis');
+        }
+
+        const expiresIso = getBrasiliaIsoString(expiresDate);
+        const expiresSql = getBrasiliaSqlString(expiresDate);
+        const txId = 'ADMIN-GRANT-' + Date.now();
+
+        targetUser.subscription_status = 'active';
+        targetUser.subscription_plan = planName;
+        targetUser.subscription_expires_at = expiresIso;
+        targetUser.subscription_method = 'admin_cortesia';
+        targetUser.subscription_payment_id = txId;
+        saveLocalUsers(localUsers);
+
+        if (pool) {
+          try {
+            await pool.query(
+              `UPDATE usuarios 
+               SET subscription_status = 'active',
+                   subscription_plan = $1,
+                   subscription_expires_at = $2,
+                   subscription_method = 'admin_cortesia',
+                   subscription_payment_id = $3
+               WHERE LOWER(email) = LOWER($4)`,
+              [planName, expiresSql, txId, targetEmail]
+            );
+            console.log(`👑 [ADMIN CONCESSÃO] ${msgDesc} liberado por ${adminEmail} para ${targetEmail} até ${expiresSql}`);
+          } catch(sqlErr) {
+            console.warn('[AVISO BD] Falha ao gravar concessão de tempo no SQL Server:', sqlErr.message);
+          }
+        }
+
+        recordSystemLog(
+          adminUser.name || 'Administrador',
+          adminEmail,
+          'Assinatura',
+          'Administração',
+          `Administrador concedeu ${msgDesc} para ${targetUser.name || targetEmail} (Expira: ${expiresSql})`
+        );
+
+        broadcastEvent('subscription_activated', {
+          email: targetEmail,
+          plan: planName,
+          expires_at: expiresIso,
+          granted_by: adminEmail
+        });
+
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+          success: true,
+          message: `Tempo grátis liberado com sucesso: ${msgDesc}!`,
+          target_email: targetEmail,
+          plan: planName,
+          expires_at: expiresIso
+        }));
+      } catch(err) {
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Erro ao conceder tempo: ' + err.message }));
+      }
+    });
+    return;
+  }
+
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/pay') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
