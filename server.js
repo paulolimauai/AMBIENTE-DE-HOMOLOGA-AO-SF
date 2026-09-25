@@ -6193,10 +6193,9 @@ body.paywall-locked {
 }
 
 body.paywall-locked #appMain {
-  filter: blur(14px) brightness(0.65) !important;
-  pointer-events: none !important;
+  filter: blur(10px) brightness(0.7) !important;
   user-select: none !important;
-  transition: filter 0.4s ease;
+  transition: filter 0.35s ease;
 }
 
 .sub-paywall-modal {
@@ -13376,6 +13375,7 @@ body.light .period button.active {
       </button>
     </div>
   </div>
+</div>
 <!-- WIDGET FLUTUANTE DE TESTE GRÁTIS (5 MINUTOS) -->
 <div class="trial-dock-widget" id="trialDockWidget" style="display:none;" onclick="window.openSubscriptionPaywall(window.__isPaywallLocked)" title="Clique para assinar um plano">
   <div class="trial-dock-icon">
