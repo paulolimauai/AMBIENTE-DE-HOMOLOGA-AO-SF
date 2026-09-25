@@ -4,11 +4,11 @@
     "nome": "PAULO DE LIMA PEREIRA",
     "data_nascimento": "02/06/1992",
     "phone": "(62) 99234-5372",
-    "email": "paulolp0101@gmail.com",
+    "email": "paulodelima21@gmail.com",
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T13:02:04.454Z"
+    "updated_at": "2026-09-25T13:02:04.794Z"
   },
   "00000000191": {
     "cpf": "00000000191",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T13:01:54.447Z"
+    "updated_at": "2026-09-25T13:02:04.515Z"
   },
   "12345678909": {
     "cpf": "12345678909",
@@ -52,7 +52,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T13:01:54.460Z"
+    "updated_at": "2026-09-25T13:02:04.604Z"
   },
   "33344455566": {
     "cpf": "33344455566",
@@ -63,7 +63,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "5ª Região Fiscal (BA, SE)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T13:01:54.466Z"
+    "updated_at": "2026-09-25T13:02:04.638Z"
   },
   "44455566677": {
     "cpf": "44455566677",
@@ -74,7 +74,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "6ª Região Fiscal (MG)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T13:01:54.486Z"
+    "updated_at": "2026-09-25T13:02:04.689Z"
   },
   "63481090625": {
     "cpf": "63481090625",
@@ -85,7 +85,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "6ª Região Fiscal (MG)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T13:01:54.453Z"
+    "updated_at": "2026-09-25T13:02:04.582Z"
   },
   "11122233344": {
     "cpf": "11122233344",
@@ -96,7 +96,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "3ª Região Fiscal (CE, MA, PI)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T13:01:54.493Z"
+    "updated_at": "2026-09-25T13:02:04.710Z"
   },
   "04023326199": {
     "cpf": "04023326199",
@@ -107,6 +107,6 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T13:01:54.502Z"
+    "updated_at": "2026-09-25T13:02:04.774Z"
   }
 }
