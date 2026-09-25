@@ -1436,7 +1436,7 @@ async function setupDatabaseTablesAndSync() {
 
 // Conteúdo HTML/JS/CSS da aplicação centralizada com isolamento por usuário
 const htmlContent = `<!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
@@ -1451,9 +1451,14 @@ const htmlContent = `<!DOCTYPE html>
 <script>
 (function() {
   try {
-        var t = localStorage.getItem('nexus_theme');
+    var v = localStorage.getItem('nexus_tone_version');
+    if (v !== 'light_v1') {
+      localStorage.setItem('nexus_theme', 'light');
+      localStorage.setItem('nexus_tone_version', 'light_v1');
+    }
+    var t = localStorage.getItem('nexus_theme');
     if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-    var isLight = (t === 'light');
+    var isLight = (t !== 'dark');
     if (isLight) {
       document.documentElement.classList.add('light');
     } else {
@@ -10935,15 +10940,21 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 </style>
 </head>
-<body>
+<body class="light">
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
 <div id="persistentSystemBg" class="persistent-system-bg" aria-hidden="true"></div>
 <script>
 (function(){
   try {
+    var v = localStorage.getItem('nexus_tone_version');
+    if (v !== 'light_v1') {
+      localStorage.setItem('nexus_theme', 'light');
+      localStorage.setItem('nexus_tone_version', 'light_v1');
+    }
     var t = localStorage.getItem('nexus_theme');
     if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-    if (t === 'light') {
+    var isLight = (t !== 'dark');
+    if (isLight) {
       document.body.classList.add('light');
       document.documentElement.classList.add('light');
     } else {
@@ -11495,7 +11506,7 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
     try {
       var savedTheme = localStorage.getItem('nexus_theme');
       if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim().toLowerCase();
-      var isLight = (savedTheme === 'light');
+      var isLight = (savedTheme !== 'dark');
       var miniBtn = document.getElementById('miniThemeBtn');
       if (miniBtn) {
         miniBtn.innerHTML = isLight ?
@@ -23766,9 +23777,14 @@ document.getElementById('miniThemeBtn').onclick = toggleTheme;
 
 (function initThemeState() {
   try {
+    var v = localStorage.getItem('nexus_tone_version');
+    if (v !== 'light_v1') {
+      localStorage.setItem('nexus_theme', 'light');
+      localStorage.setItem('nexus_tone_version', 'light_v1');
+    }
     let savedTheme = localStorage.getItem('nexus_theme');
     if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim().toLowerCase();
-    const isLight = (savedTheme === 'light');
+    const isLight = (savedTheme !== 'dark');
     document.body.classList.toggle('light', isLight);
     document.documentElement.classList.toggle('light', isLight);
     const btn = document.getElementById('miniThemeBtn');

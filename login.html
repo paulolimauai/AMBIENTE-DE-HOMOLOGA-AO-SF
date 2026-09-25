@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full">
+<html lang="pt-BR" class="h-full light">
 <head>
     <script>
         (function() {
             try {
+                var v = localStorage.getItem('nexus_tone_version');
+                if (v !== 'light_v1') {
+                    localStorage.setItem('nexus_theme', 'light');
+                    localStorage.setItem('nexus_tone_version', 'light_v1');
+                }
                 var t = localStorage.getItem('nexus_theme');
-                if (t) t = t.replace(/"/g, '').trim();
-                if (t === 'light') {
+                if (t) t = t.replace(/"/g, '').trim().toLowerCase();
+                var isLight = (t !== 'dark');
+                if (isLight) {
                     document.documentElement.classList.add('light');
                 }
                 var isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
@@ -33,8 +39,8 @@
         (function() {
             try {
                 var t = localStorage.getItem('nexus_theme');
-                if (t) t = t.replace(/"/g, '').trim();
-                var isLight = (t === 'light');
+                if (t) t = t.replace(/"/g, '').trim().toLowerCase();
+                var isLight = (t !== 'dark');
                 if (isLight) {
                     document.documentElement.classList.add('light');
                 } else {
@@ -86,8 +92,8 @@
 
                 function applyBodyTheme() {
                     var themeVal = localStorage.getItem('nexus_theme');
-                    if (themeVal) themeVal = themeVal.replace(/"/g, '').trim();
-                    var light = (themeVal === 'light');
+                    if (themeVal) themeVal = themeVal.replace(/"/g, '').trim().toLowerCase();
+                    var light = (themeVal !== 'dark');
                     if (light) {
                         document.body.classList.add('light');
                         document.documentElement.classList.add('light');
@@ -2149,6 +2155,37 @@ nav.menu button.active, .menu button.active {
 
 nav.menu button.active .ic svg {
   stroke: #10B981 !important;
+}
+
+/* Modo Claro Menu Horizontal */
+body.light nav.menu, html.light nav.menu {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05) !important;
+}
+body.light .menu-track, html.light .menu-track {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  border-top: 1px solid #FFFFFF !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
+body.light nav.menu button, body.light .menu button {
+  color: #475569 !important;
+}
+body.light nav.menu button:hover, body.light .menu button:hover {
+  color: #0F172A !important;
+  background: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
+}
+body.light nav.menu button.active, body.light .menu button.active {
+  color: #059669 !important;
+  background: #ECFDF5 !important;
+  border: 1px solid #A7F3D0 !important;
+  border-top: 1.2px solid #FFFFFF !important;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.15) !important;
+}
+body.light nav.menu button.active .ic svg {
+  stroke: #059669 !important;
 }
 
 /* 5. CARDS DE KPI & DASHBOARD PADRÃO BANCO DIGITAL */
