@@ -1451,11 +1451,13 @@ const htmlContent = `<!DOCTYPE html>
 <script>
 (function() {
   try {
-    var t = localStorage.getItem('nexus_theme');
-    if (t) t = t.replace(/"/g, '').trim();
+        var t = localStorage.getItem('nexus_theme');
+    if (t) t = t.replace(/"/g, '').trim().toLowerCase();
     var isLight = (t === 'light');
     if (isLight) {
       document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
     }
     // Validação estrita: se a página de internet foi fechada e reaberta (sessionStorage vazio), invalida a sessão antiga
     var isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
@@ -1633,26 +1635,26 @@ html.is-admin .menu-admin-badge {
 html.is-admin .menu button.menu-btn-admin {
   position: relative !important;
   width: auto !important;
-  height: 44px !important;
-  min-height: 44px !important;
-  max-height: 44px !important;
-  padding: 0 18px !important;
-  border-radius: 12px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 16px !important;
+  border-radius: 11px !important;
   display: inline-flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 9px !important;
-  font-size: 14.5px !important;
-  font-weight: 650 !important;
+  gap: 8px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
   flex-shrink: 0 !important;
 }
 
 html.is-admin .menu button.menu-btn-admin .ic {
-  width: 22px !important;
-  height: 22px !important;
+  width: 18px !important;
+  height: 18px !important;
   margin: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -1661,8 +1663,8 @@ html.is-admin .menu button.menu-btn-admin .ic {
 }
 
 html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
-  font-size: 14.5px !important;
-  font-weight: 650 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
   display: inline-block !important;
@@ -4123,10 +4125,10 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Barra de Menu Horizontal no Topo (Design Executivo de Alta Fidelidade - Frosted Glass) ==================== */
+/* ==================== Barra de Menu Horizontal no Topo (Design Executivo de Alta Fidelidade 4K - Liquid Glass) ==================== */
 nav.menu {
   position: fixed !important;
-  top: 64px !important;
+  top: 68px !important;
   left: 0 !important;
   right: 0 !important;
   bottom: auto !important;
@@ -4135,19 +4137,19 @@ nav.menu {
   height: 56px !important;
   min-height: 56px !important;
   margin: 0 !important;
-  padding: 0 20px !important;
+  padding: 0 24px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: #000000 !important;
+  background: rgba(0, 0, 0, 0.94) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.75), inset 0 -1px 0 rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
   z-index: 9990 !important;
   contain: layout style;
 }
@@ -4156,17 +4158,17 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 4px !important;
+  gap: 6px !important;
   width: auto !important;
-  max-width: 100% !important;
-  height: 42px !important;
-  padding: 3px 6px !important;
+  max-width: 1760px !important;
+  height: 44px !important;
+  padding: 3px 8px !important;
   margin: 0 auto !important;
-  background: rgba(18, 18, 18, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(18, 18, 18, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
   border-radius: 14px !important;
-  box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.35) !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   scrollbar-width: none !important;
@@ -4195,22 +4197,22 @@ nav.menu::-webkit-scrollbar {
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  gap: 7px !important;
+  gap: 7.5px !important;
   width: auto !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  padding: 0 14px !important;
-  border-radius: 10px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 15px !important;
+  border-radius: 11px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
-  font-size: 13px !important;
+  font-size: 13.5px !important;
   font-weight: 600 !important;
   letter-spacing: -0.01em !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease !important;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select: none !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
@@ -4221,8 +4223,9 @@ nav.menu::-webkit-scrollbar {
 .menu button:hover {
   background: rgba(255, 255, 255, 0.08) !important;
   border-color: rgba(255, 255, 255, 0.14) !important;
-  border-top-color: rgba(255, 255, 255, 0.25) !important;
-  color: #F8FAFC !important;
+  border-top-color: rgba(255, 255, 255, 0.28) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
 }
 
 .menu button:hover .ic {
@@ -4231,17 +4234,18 @@ nav.menu::-webkit-scrollbar {
 
 .menu button:active {
   background: rgba(255, 255, 255, 0.14) !important;
+  transform: translateY(0) !important;
 }
 
-/* Estado Ativo Sofisticado: Cápsula Lapidada com Brilho Superior Suave (Sem barra azul pesada embaixo) */
+/* Estado Ativo Sofisticado 4K: Cápsula Lapidada com Brilho Superior Suave */
 .menu button.active {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.22) 0%, rgba(5, 150, 105, 0.14) 100%) !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(5, 150, 105, 0.12) 100%) !important;
   border: 1px solid rgba(16, 185, 129, 0.45) !important;
   border-top: 1.2px solid rgba(255, 255, 255, 0.65) !important;
-  border-radius: 10px !important;
+  border-radius: 11px !important;
   color: #10B981 !important;
   font-weight: 700 !important;
-  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.22), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.24), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
 }
 
 .menu button.active .ic {
@@ -4277,7 +4281,7 @@ nav.menu::-webkit-scrollbar {
   flex-shrink: 0 !important;
   line-height: 0 !important;
   margin: 0 !important;
-  transition: color 0.1s ease !important;
+  transition: color 0.16s ease !important;
 }
 .menu button .ic svg {
   width: 17px !important;
@@ -4287,7 +4291,7 @@ nav.menu::-webkit-scrollbar {
   display: block !important;
 }
 
-.menu button span:not(.ic) {
+.menu button span:not(.ic):not(#osBadgeCount) {
   font-size: 13.5px !important;
   font-weight: 600 !important;
   line-height: 1 !important;
@@ -4313,27 +4317,28 @@ nav.menu::-webkit-scrollbar {
 .menu button.menu-btn-admin {
   position: relative !important;
   width: auto !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  padding: 0 14px !important;
-  border-radius: 10px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 16px !important;
+  border-radius: 11px !important;
   color: #CBD5E1 !important;
   background: rgba(245, 158, 11, 0.06) !important;
-  border: 1px solid rgba(245, 158, 11, 0.20) !important;
-  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
   touch-action: manipulation !important;
 }
 .menu button.menu-btn-admin .ic {
   background: transparent !important;
   border: none !important;
   color: #FBBF24 !important;
-  transition: color 0.1s ease !important;
+  transition: color 0.16s ease !important;
 }
 .menu button.menu-btn-admin:hover {
   background: rgba(245, 158, 11, 0.16) !important;
   border-color: rgba(245, 158, 11, 0.50) !important;
   color: #FDE68A !important;
+  transform: translateY(-1px) !important;
 }
 .menu button.menu-btn-admin:hover .ic {
   background: transparent !important;
@@ -4342,15 +4347,16 @@ nav.menu::-webkit-scrollbar {
 }
 .menu button.menu-btn-admin:active {
   background: rgba(245, 158, 11, 0.24) !important;
+  transform: translateY(0) !important;
 }
 .menu button.menu-btn-admin.active {
   background: linear-gradient(180deg, rgba(245, 158, 11, 0.24) 0%, rgba(217, 119, 6, 0.12) 100%) !important;
   border: 1px solid rgba(245, 158, 11, 0.60) !important;
   border-top: 1.2px solid rgba(255, 255, 255, 0.60) !important;
-  border-radius: 10px !important;
+  border-radius: 11px !important;
   color: #FBBF24 !important;
   font-weight: 700 !important;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
 }
 .menu button.menu-btn-admin.active::before {
   content: '' !important;
@@ -4368,21 +4374,21 @@ nav.menu::-webkit-scrollbar {
 .menu button.menu-btn-admin.active .ic {
   color: #FBBF24 !important;
   background: transparent !important;
-}  transform: scale(1.06) !important;
+  transform: scale(1.06) !important;
   filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6)) !important;
 }
 
 /* ==================== Modo Claro do Menu ==================== */
 body.light nav.menu,
 html.light nav.menu {
-  background: rgba(255, 255, 255, 0.92) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
   border-bottom: 1px solid #E2E8F0 !important;
   border-right: none !important;
   border-top: none !important;
   border-left: none !important;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
 }
 body.light .menu-track,
 html.light .menu-track {
@@ -4409,8 +4415,8 @@ html.light .menu button {
   font-weight: 550 !important;
   opacity: 1 !important;
 }
-body.light .menu button span:not(.ic),
-html.light .menu button span:not(.ic) {
+body.light .menu button span:not(.ic):not(#osBadgeCount),
+html.light .menu button span:not(.ic):not(#osBadgeCount) {
   color: inherit !important;
   font-weight: 550 !important;
 }
@@ -4426,12 +4432,13 @@ html.light .menu button .ic svg {
 }
 body.light .menu button:hover,
 html.light .menu button:hover {
-  background: #F1F5F9 !important;
+  background: #E2E8F0 !important;
   border-color: #CBD5E1 !important;
   color: #0F172A !important;
+  transform: translateY(-1px) !important;
 }
-body.light .menu button:hover span:not(.ic),
-html.light .menu button:hover span:not(.ic) {
+body.light .menu button:hover span:not(.ic):not(#osBadgeCount),
+html.light .menu button:hover span:not(.ic):not(#osBadgeCount) {
   color: #0F172A !important;
 }
 body.light .menu button:hover .ic,
@@ -4449,7 +4456,7 @@ body.light .menu button.active,
 html.light .menu button.active {
   background: #ECFDF5 !important;
   border: 1px solid #A7F3D0 !important;
-  border-radius: 12px !important;
+  border-radius: 11px !important;
   color: #059669 !important;
   font-weight: 700 !important;
   box-shadow: 0 2px 10px rgba(5, 150, 105, 0.15) !important;
@@ -4468,8 +4475,8 @@ html.light .menu button.active::before {
   background: #059669 !important;
   box-shadow: 0 -1px 8px rgba(5, 150, 105, 0.6) !important;
 }
-body.light .menu button.active span:not(.ic),
-html.light .menu button.active span:not(.ic) {
+body.light .menu button.active span:not(.ic):not(#osBadgeCount),
+html.light .menu button.active span:not(.ic):not(#osBadgeCount) {
   color: #059669 !important;
   font-weight: 650 !important;
 }
@@ -4502,6 +4509,7 @@ html.light .menu button.menu-btn-admin:hover {
   background: #FFFBEB !important;
   border-color: #FDE68A !important;
   color: #92400E !important;
+  transform: translateY(-1px) !important;
 }
 body.light .menu button.menu-btn-admin:hover .ic,
 html.light .menu button.menu-btn-admin:hover .ic {
@@ -10927,10 +10935,24 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
 
 </style>
 </head>
-<body class="light">
+<body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
 <div id="persistentSystemBg" class="persistent-system-bg" aria-hidden="true"></div>
-<script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
+<script>
+(function(){
+  try {
+    var t = localStorage.getItem('nexus_theme');
+    if (t) t = t.replace(/"/g, '').trim().toLowerCase();
+    if (t === 'light') {
+      document.body.classList.add('light');
+      document.documentElement.classList.add('light');
+    } else {
+      document.body.classList.remove('light');
+      document.documentElement.classList.remove('light');
+    }
+  } catch(e){}
+})();
+</script>
 
 <!-- TELA DE LOGIN / CADASTRO ULTRA MODERNA 4K -->
 <div class="auth-container show" id="authPage">
@@ -11472,13 +11494,19 @@ body.light input:focus, body.light select:focus, body.light textarea:focus {
   (function(){
     try {
       var savedTheme = localStorage.getItem('nexus_theme');
-      if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim();
+      if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim().toLowerCase();
       var isLight = (savedTheme === 'light');
       var miniBtn = document.getElementById('miniThemeBtn');
       if (miniBtn) {
         miniBtn.innerHTML = isLight ?
           '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>' :
           '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
+      }
+      var authIcon = document.getElementById('authThemeIcon');
+      if (authIcon) {
+        authIcon.innerHTML = isLight ?
+          '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>' :
+          '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
       }
       var savedScale = localStorage.getItem('nexus_display_scale') || 'auto';
       var scaleLabel = document.getElementById('currentScaleLabel');
@@ -23738,14 +23766,17 @@ document.getElementById('miniThemeBtn').onclick = toggleTheme;
 
 (function initThemeState() {
   try {
-    const savedTheme = localStorage.getItem('nexus_theme');
-    const isLight = savedTheme !== 'dark';
+    let savedTheme = localStorage.getItem('nexus_theme');
+    if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim().toLowerCase();
+    const isLight = (savedTheme === 'light');
     document.body.classList.toggle('light', isLight);
     document.documentElement.classList.toggle('light', isLight);
     const btn = document.getElementById('miniThemeBtn');
     const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
     const sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
     if (btn) btn.innerHTML = isLight ? sunSvg : moonSvg;
+    const authIcon = document.getElementById('authThemeIcon');
+    if (authIcon) authIcon.innerHTML = isLight ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>' : '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
   } catch(e){}
 })();
 
