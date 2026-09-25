@@ -5085,11 +5085,6 @@ html.light .kpi {
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
 }
 
-body.light .kpi .val,
-html.light .kpi .val {
-  color: #000000 !important;
-  text-shadow: none !important;
-}
 
 body.light .kpi .row1,
 body.light .kpi .row1 span,
@@ -11253,85 +11248,330 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 8px 24px rgba(5, 150, 105, 0.55) !important;
 }
 
-/* 9. MODO CLARO (LIGHT MODE) - ALTO CONTRASTE TOTAL CONFORME REGRA SKILL */
+/* 9. MODO CLARO (LIGHT MODE) - CORES FINTECH PREMIUM, ALTO CONTRASTE E HIERARQUIA VISUAL */
 body.light, html.light body, html.light {
-  background-color: #FFFFFF !important;
-  color: #000000 !important;
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+body.light #persistentSystemBg,
+body.light .persistent-system-bg {
+  background-color: #F8FAFC !important;
+  background-image: 
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 35%, #F1F5F9 100%) !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
 }
 
 body.light .topheader {
   background: rgba(255, 255, 255, 0.96) !important;
   border-bottom: 1px solid #E2E8F0 !important;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
 }
-
 
 body.light nav.menu {
   background: rgba(255, 255, 255, 0.95) !important;
   border-bottom: 1px solid #E2E8F0 !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03) !important;
+}
+
+body.light .menu-track {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  border-top: 1px solid #FFFFFF !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
 }
 
 body.light nav.menu button, body.light .menu button {
-  color: #000000 !important;
-  font-weight: 700 !important;
+  color: #475569 !important;
+  font-weight: 650 !important;
 }
 
 body.light nav.menu button:hover, body.light .menu button:hover {
-  background: #F1F5F9 !important;
-  color: #000000 !important;
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
 }
 
 body.light nav.menu button.active, body.light .menu button.active {
   background: #ECFDF5 !important;
-  border-color: #10B981 !important;
+  border: 1px solid #A7F3D0 !important;
+  border-top: 1.2px solid #FFFFFF !important;
   color: #059669 !important;
-  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.15) !important;
 }
 
 body.light nav.menu button.active .ic svg {
   stroke: #059669 !important;
 }
 
-body.light .kpi, body.light .dash-card, body.light .dash-overview-card, body.light .panel, body.light .table-panel, body.light .modal, body.light .modal-box {
+/* Cards, Painéis, KPIs e Modais no Modo Claro */
+body.light .kpi,
+body.light .dash-card,
+body.light .dash-overview-card,
+body.light .panel,
+body.light .table-panel,
+body.light .modal,
+body.light .modal-box,
+body.light .acc-card {
   background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06) !important;
+  border: 1.5px solid #E2E8F0 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04), 0 8px 24px -6px rgba(15, 23, 42, 0.04) !important;
 }
 
-body.light .kpi::before, body.light .dash-card::before {
-  background: linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.4), transparent) !important;
+/* Tipografia Base de Alto Contraste */
+body.light h1, body.light h2, body.light h3, body.light h4, body.light h5, body.light h6,
+body.light strong:not([style*="color"]),
+body.light .brand-title,
+body.light .panel-head h3 {
+  color: #0F172A !important;
 }
 
-body.light .kpi .val, body.light .kpi-value, body.light h1, body.light h2, body.light h3, body.light h4, body.light p, body.light span:not(.due-bill-badge):not(.status-pago):not(.status-recebido):not(.status-pendente), body.light strong, body.light label {
-  color: #000000 !important;
+body.light p,
+body.light label {
+  color: #1E293B !important;
 }
 
+body.light .kpi .row1,
+body.light .kpi .row1 span,
+body.light .kpi .lbl,
+body.light .kpi-label,
+body.light .dash-card-title {
+  color: #475569 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+body.light .kpi .sub,
+body.light .kpi .sub span,
+body.light .cfg-hint,
+body.light .text-dim,
+body.light .tfoot-label {
+  color: #64748B !important;
+  font-weight: 600 !important;
+}
+
+/* Cores Semânticas de KPIs Financeiros (Receitas, Despesas, Balanço) */
+body.light .kpi.kpi-income .val,
+body.light .kpi-income .val {
+  color: #059669 !important;
+}
+
+body.light .kpi.kpi-expense .val,
+body.light .kpi-expense .val {
+  color: #DC2626 !important;
+}
+
+body.light .kpi.kpi-net .val,
+body.light .kpi-net .val {
+  color: #059669 !important;
+}
+
+body.light .kpi.kpi-balance .val,
+body.light .kpi-balance .val {
+  color: #7C3AED !important;
+}
+
+body.light .kpi .val:not(.kpi-income .val):not(.kpi-expense .val):not(.kpi-net .val):not(.kpi-balance .val) {
+  color: #0F172A !important;
+}
+
+/* Ícones de Indicadores */
+body.light .kpi.kpi-income .row1 .ic,
+body.light .kpi-income .row1 .ic {
+  background: #ECFDF5 !important;
+  color: #059669 !important;
+}
+
+body.light .kpi.kpi-expense .row1 .ic,
+body.light .kpi-expense .row1 .ic {
+  background: #FEF2F2 !important;
+  color: #DC2626 !important;
+}
+
+body.light .kpi.kpi-net .row1 .ic,
+body.light .kpi-net .row1 .ic {
+  background: #EFF6FF !important;
+  color: #2563EB !important;
+}
+
+body.light .kpi.kpi-balance .row1 .ic,
+body.light .kpi-balance .row1 .ic {
+  background: #F5F3FF !important;
+  color: #7C3AED !important;
+}
+
+/* Frisos Luminosos Superiores dos KPIs */
+body.light .kpi.kpi-income::before {
+  background: linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.8), transparent) !important;
+}
+body.light .kpi.kpi-expense::before {
+  background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.8), transparent) !important;
+}
+body.light .kpi.kpi-net::before {
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.8), transparent) !important;
+}
+body.light .kpi.kpi-balance::before {
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.8), transparent) !important;
+}
+
+/* Valores Financeiros nas Tabelas (Entradas e Saídas) */
+body.light .val-in,
+body.light td.val-in,
+body.light span.val-in,
+body.light strong.val-in {
+  color: #059669 !important;
+  font-weight: 800 !important;
+}
+
+body.light .val-out,
+body.light td.val-out,
+body.light span.val-out,
+body.light strong.val-out {
+  color: #DC2626 !important;
+  font-weight: 800 !important;
+}
+
+/* Tabelas em Modo Claro */
 body.light table th {
   background: #F8FAFC !important;
-  color: #000000 !important;
-  border-bottom: 2px solid #E2E8F0 !important;
+  color: #334155 !important;
+  font-weight: 750 !important;
+  border-bottom: 1.5px solid #E2E8F0 !important;
 }
 
 body.light table td {
   border-bottom: 1px solid #F1F5F9 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 body.light tr:hover td {
   background: #F8FAFC !important;
 }
 
+body.light .tfoot-row {
+  background: #F8FAFC !important;
+  border-top: 2px solid #E2E8F0 !important;
+}
+
+/* Badges e Status */
+body.light .pill.status-pago,
+body.light .pill.status-recebido,
+body.light .status-pago,
+body.light .status-recebido {
+  background: #ECFDF5 !important;
+  color: #065F46 !important;
+  border: 1px solid #A7F3D0 !important;
+  font-weight: 700 !important;
+}
+
+body.light .pill.status-pendente,
+body.light .status-pendente {
+  background: #FFFBEB !important;
+  color: #92400E !important;
+  border: 1px solid #FDE68A !important;
+  font-weight: 700 !important;
+}
+
+body.light .pill.status-atrasado,
+body.light .pill.status-cancelado,
+body.light .status-atrasado,
+body.light .status-cancelado {
+  background: #FEF2F2 !important;
+  color: #991B1B !important;
+  border: 1px solid #FECACA !important;
+  font-weight: 700 !important;
+}
+
+body.light .tag,
+body.light .panel-head .tag {
+  background: #F1F5F9 !important;
+  color: #334155 !important;
+  border: 1px solid #E2E8F0 !important;
+  font-weight: 600 !important;
+}
+
+body.light .tx-date-badge {
+  background: #F1F5F9 !important;
+  color: #475569 !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+/* Inputs, Selects e Textareas */
 body.light input, body.light select, body.light textarea {
   background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  color: #000000 !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #0F172A !important;
 }
 
 body.light input:focus, body.light select:focus, body.light textarea:focus {
   border-color: #059669 !important;
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2) !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.18) !important;
+  background: #FFFFFF !important;
 }
 
+body.light input::placeholder, body.light textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* Botões Primários e Secundários */
+body.light .btn-primary,
+body.light button.save,
+body.light #saveBtn,
+body.light #accSaveBtn,
+body.light #catSaveBtn {
+  background: #059669 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #059669 !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.28) !important;
+}
+
+body.light .btn-primary:hover,
+body.light button.save:hover,
+body.light #saveBtn:hover {
+  background: #047857 !important;
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.38) !important;
+}
+
+body.light .btn-ghost,
+body.light .btn-secondary,
+body.light button.cancel,
+body.light .view-mode-exit-btn {
+  background: #FFFFFF !important;
+  color: #334155 !important;
+  border: 1.5px solid #CBD5E1 !important;
+}
+
+body.light .btn-ghost:hover,
+body.light .btn-secondary:hover,
+body.light button.cancel:hover {
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #94A3B8 !important;
+}
+
+/* Seletor de Período */
+body.light .period {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+}
+body.light .period button {
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+body.light .period button:hover {
+  color: #0F172A !important;
+}
+body.light .period button.active {
+  background: #FFFFFF !important;
+  color: #059669 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+}
 /* 10. MICRO-INTERAÇÕES & RESPONSIVIDADE ULTRA 4K */
 
 </style>
