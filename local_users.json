@@ -3,7 +3,6 @@
     "id": "1",
     "name": "Paulo Lima",
     "email": "suporte.paulolima@outlook.com",
-    "password": "scrypt:04d6aac00b67c90a1eb2fc1e220c721e:f72597b797d79b45531bf80ad79655b80cbfdd62e7205913ed514266bc29bccadc5cb35551424339ee4617bfbea3c0aacc5ea5289578ee71558b4f2f3b4bdef8",
     "role": "Administrador",
     "active": true,
     "created_at": "2026-09-08T19:52:45-03:00",
@@ -12,13 +11,13 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null
   },
   {
     "id": "38",
     "name": "Carlos Silva",
     "email": "carlos.silva@gmail.com",
-    "password": "scrypt:e7b153d04b5773307061fa47e45d6038:05d5d611b46ce0359efabc41e56923d2cd270a0544bc9ae2620d5dac00e9f8f7d4deb2c64a0d86377d730c35cf35d5e5e35c62f632d3011eab6e508ba3847de9",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
@@ -27,13 +26,13 @@
     "phone": "(62) 99999-8888",
     "birth_date": "10/10/1990",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null
   },
   {
     "id": "39",
     "name": "PAULO DE LIMA PEREIRA",
     "email": "paulolp0101@gmail.com",
-    "password": "scrypt:290d49a69f64d2bf904fd77ba851eac4:4cc63ccbd48a7def32028458838646dd640231fed3814631393917a4f399410c38cb5fffdc0ef1263efcddfd2192d0f11b87312f225b868fa99b3a6f5de177f5",
     "role": "Administrador",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
@@ -42,13 +41,13 @@
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": false
   },
   {
     "id": "40",
     "name": "CICERA DE LIMA PEREIRA",
     "email": "ciceragyn12@hotmail.com",
-    "password": "scrypt:a16fd22ae35f353e1824c04691ca611f:2a4bbb10d765bb137a4fb62103bda8f852e7e38795b4d0adc7cb5ad5ece9ac6e59cf0010b2850b0e353d24650308f6fb8fd7e749a295560d089231e595d42c6b",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
@@ -57,13 +56,13 @@
     "phone": "(62) 99367-6783",
     "birth_date": "27/06/1966",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null
   },
   {
     "id": "41",
     "name": "PAULO ROBERTO PEREIRA",
     "email": "pauloroberto@gmail.com",
-    "password": "scrypt:317c77d94a742a9c9a853fe4403698e3:e77c946d2683dbd416ca7fd015dad3b294cd66331818f17dea5999a3105103c7a84ec3f68961a9f0be20605ac051d1c48c56538ac45e5ac73cddf990916a4501",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
@@ -72,13 +71,13 @@
     "phone": "(62) 99264-7115",
     "birth_date": "27/10/1966",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null
   },
   {
     "id": "42",
     "name": "Carlos Oliveira Teste",
     "email": "carlos.oliveira@teste.com",
-    "password": "scrypt:b9c9c9df88b6201fcb2b4b67fa406566:5730e28ac71262f9c8f7b9012f7fad31ecfc88c40833a996c10714e2c3270b498512fee1d188a4b11dbf9931afe10f4eb7cbd04233787b410f572acd153ba725",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
@@ -87,13 +86,13 @@
     "phone": "(11) 99999-1111",
     "birth_date": "1990-01-01",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null
   },
   {
     "id": "43",
     "name": "Roberto Alcantara Teste",
     "email": "roberto.alcantara@teste.com",
-    "password": "scrypt:5d8d8b7b9e348f65b71f9ac3695465bd:3fd925b3b8d8c98a1dbb6ea03be082b12ac4b12647ec19fe45493034b3db200009738c8b1be665ef829fb386e048ee701fa6d4b0697cbe0eb7e2b4b13d19ac71",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
@@ -102,13 +101,13 @@
     "phone": "(62) 98888-2222",
     "birth_date": "1988-03-20",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null
   },
   {
     "id": "44",
     "name": "Teste Celular 4G",
     "email": "celular4g@teste.com",
-    "password": "scrypt:9b402865026b78ad358cdb434785e8bb:61ae991bb185ff0bf138563268b8ebcf671fc03115f2266c9b373df75f2c30a1bd90410ddeb38a6c2218156c9d1c09f211d3e1c9352d2a5230dc525f63f9f34c",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
@@ -117,13 +116,13 @@
     "phone": "(62) 99999-0000",
     "birth_date": "1992-04-10",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null
   },
   {
     "id": "45",
     "name": "Teste Auditoria Mobile",
     "email": "mobile.auditoria@teste.com",
-    "password": "scrypt:49a9e938b810e45c9f1a2da89f26e924:a2ba549b0601fb5c613bd65a5a887f90ca50b515dbca54c6f136f2831a8d1c76f1cce02239ecc870bfb2a43f8ed75abda22a4f199a194338aad2354a6541b07f",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-09T11:20:49-03:00",
@@ -132,13 +131,13 @@
     "phone": "(62) 98888-7777",
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null
   },
   {
     "id": "47",
     "name": "Novo Usuario Teste",
     "email": "novo.teste.zero@nexus.com",
-    "password": "scrypt:ca7de55d14cf041930bd2dcee764b8fa:0d398fe71a3e596939db7b718c4a8e2b1a361ecf2059d22c30dab6e45f78ae972408af94759d95dc3bec947e1fc021394d7ff81040166ccc87373ccf76bc563d",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-11T09:24:02-03:00",
@@ -147,13 +146,13 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": false
   },
   {
     "id": "51",
     "name": "Cliente Celular iPhone",
     "email": "cliente.celular5g@teste.com",
-    "password": "scrypt:644d7e232162b7dabba3468279045329:ab5149eea517ed1d8436e87954ebd1b7dab0f438d167881c4280243b3a5ef8c4d4ccbd7fb3166849d96a02a6201ea5141b5c70366a9d1817e775eac712004181",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-16T07:41:35-03:00",
@@ -162,21 +161,23 @@
     "phone": "62988880001",
     "birth_date": "10/10/1990",
     "terms_accepted": true,
-    "device_type": "Mobile"
+    "device_type": "Mobile",
+    "must_change_password": false
   },
   {
     "id": "52",
     "name": "PAULO DE LIMA PEREIRA",
     "email": "paulodelima21@gmail.com",
-    "password": "scrypt:fd3aadcdd0e2aa21a883c85eadabab4b:e553deb5df20ad6f6645bf0cc1923c84b71e6df6a3bf222bbe2d50360a14e46d6e2c2044b7aae95339db28a65ff8eb5b6d886b3d840e73df1a47f48d88c7360f",
     "role": "Usuário",
     "active": true,
     "created_at": "2026-09-17T10:46:43-03:00",
-    "last_login": "2026-09-23T08:32:19-03:00",
+    "last_login": "2026-09-25T08:35:34-03:00",
     "cpf": "04023326100",
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": false,
+    "password": "scrypt:fd3aadcdd0e2aa21a883c85eadabab4b:e553deb5df20ad6f6645bf0cc1923c84b71e6df6a3bf222bbe2d50360a14e46d6e2c2044b7aae95339db28a65ff8eb5b6d886b3d840e73df1a47f48d88c7360f"
   }
 ]

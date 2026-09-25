@@ -2081,57 +2081,74 @@
 }
 
 
-/* 4. BARRA DE MENU HORIZONTAL PADRÃO FINTECH */
+/* 4. BARRA DE MENU HORIZONTAL PADRÃO FINTECH 4K */
 nav.menu {
-  background: rgba(10, 15, 28, 0.85) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
-  padding: 6px 16px !important;
+  background: rgba(0, 0, 0, 0.94) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 0 24px !important;
   display: flex !important;
   justify-content: center !important;
+  align-items: center !important;
+  height: 56px !important;
 }
 
 .menu-track {
   display: flex !important;
   align-items: center !important;
   gap: 6px !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
+  max-width: 1760px !important;
+  height: 44px !important;
+  padding: 3px 8px !important;
+  margin: 0 auto !important;
+  background: rgba(18, 18, 18, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.35) !important;
 }
 
 nav.menu button, .menu button {
-  border-radius: 12px !important;
-  padding: 8px 16px !important;
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7.5px !important;
+  width: auto !important;
+  height: 38px !important;
+  padding: 0 15px !important;
+  border-radius: 11px !important;
   font-size: 13.5px !important;
-  font-weight: 650 !important;
+  font-weight: 600 !important;
   color: #94A3B8 !important;
   background: transparent !important;
   border: 1px solid transparent !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 8px !important;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
   cursor: pointer !important;
   white-space: nowrap !important;
 }
 
 nav.menu button:hover, .menu button:hover {
   color: #FFFFFF !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  border-top-color: rgba(255, 255, 255, 0.28) !important;
   transform: translateY(-1px) !important;
 }
 
 nav.menu button.active, .menu button.active {
-  color: #FFFFFF !important;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(56, 189, 248, 0.14) 100%) !important;
-  border: 1px solid rgba(56, 189, 248, 0.35) !important;
-  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  color: #10B981 !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(5, 150, 105, 0.12) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  border-top: 1.2px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 11px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.24), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
 }
 
 nav.menu button.active .ic svg {
-  stroke: #38BDF8 !important;
+  stroke: #10B981 !important;
 }
 
 /* 5. CARDS DE KPI & DASHBOARD PADRÃO BANCO DIGITAL */
