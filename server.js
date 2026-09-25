@@ -1506,7 +1506,8 @@ const htmlContent = `<!DOCTYPE html>
     } else {
       // Se a sessão está ativa na aba atual, valida se não expirou os 5 minutos de inatividade
       var lastAct = parseInt(sessionStorage.getItem('nexus_last_activity') || '0', 10);
-      if (lastAct && (Date.now() - lastAct >= 5 * 60 * 1000)) {
+      // Proteção de inatividade estendida (2 horas), permitindo o uso contínuo do paywall sem desconectar
+      if (lastAct && (Date.now() - lastAct >= 120 * 60 * 1000)) {
         isSessionActive = false;
         try {
           sessionStorage.removeItem('nexus_session_active');
@@ -6164,31 +6165,70 @@ body.light .trial-dock-time {
 .sub-paywall-overlay {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 999999 !important;
-  background: rgba(4, 7, 15, 0.88) !important;
-  backdrop-filter: blur(28px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  z-index: 2147483647 !important;
+  background: rgba(3, 7, 18, 0.94) !important;
+  backdrop-filter: blur(36px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(220%) !important;
   display: none;
   align-items: center !important;
   justify-content: center !important;
   padding: 20px !important;
   overflow-y: auto !important;
-  animation: fadeInModal 0.25s ease forwards;
+  animation: fadeInPaywallOverlay 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+@keyframes fadeInPaywallOverlay {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(36px) saturate(220%); }
+}
+
+.sub-paywall-overlay.show {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+body.paywall-locked {
+  overflow: hidden !important;
+}
+
+body.paywall-locked #appMain {
+  filter: blur(14px) brightness(0.65) !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  transition: filter 0.4s ease;
+}
+
 .sub-paywall-modal {
   position: relative !important;
   width: 100% !important;
-  max-width: 820px !important;
+  max-width: 860px !important;
   max-height: 94vh !important;
   overflow-y: auto !important;
-  background: linear-gradient(145deg, rgba(20, 27, 45, 0.96) 0%, rgba(10, 15, 30, 0.98) 100%) !important;
+  background: linear-gradient(155deg, rgba(15, 23, 42, 0.98) 0%, rgba(3, 7, 18, 0.99) 100%) !important;
   border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: 28px !important;
-  box-shadow: 0 40px 100px -15px rgba(0, 0, 0, 0.9), 0 0 60px rgba(16, 185, 129, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 40px 120px -10px rgba(0, 0, 0, 0.95), 0 0 70px rgba(16, 185, 129, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
   padding: 34px 38px !important;
   box-sizing: border-box !important;
-  animation: popIn4k 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: popInPaywallModal 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+@keyframes popInPaywallModal {
+  from { transform: scale(0.92) translateY(18px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes paywallModalShake {
+  0%, 100% { transform: scale(1) translateX(0); }
+  20%, 60% { transform: scale(1.01) translateX(-9px); }
+  40%, 80% { transform: scale(1.01) translateX(9px); }
+}
+
+.sub-paywall-modal.shake-lock {
+  animation: paywallModalShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) !important;
+}
+
 .sub-paywall-modal::-webkit-scrollbar {
   width: 6px;
 }
@@ -6198,12 +6238,18 @@ body.light .trial-dock-time {
 }
 
 /* Light Mode para Modal */
+body.light .sub-paywall-overlay {
+  background: rgba(241, 245, 249, 0.92) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+}
+
 body.light .sub-paywall-modal {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  box-shadow: 0 35px 80px rgba(15, 23, 42, 0.25), 0 0 40px rgba(16, 185, 129, 0.15) !important;
+  box-shadow: 0 40px 100px -15px rgba(0, 0, 0, 0.25), 0 0 50px rgba(16, 185, 129, 0.15) !important;
   color: #000000 !important;
 }
+
 body.light .sub-paywall-modal h1,
 body.light .sub-paywall-modal h2,
 body.light .sub-paywall-modal h3,
@@ -6211,7 +6257,10 @@ body.light .sub-paywall-modal h4,
 body.light .sub-paywall-modal p,
 body.light .sub-paywall-modal span,
 body.light .sub-paywall-modal label,
-body.light .sub-paywall-modal div {
+body.light .sub-paywall-modal strong,
+body.light .sub-paywall-modal select,
+body.light .sub-paywall-modal option,
+body.light .sub-paywall-modal input {
   color: #000000 !important;
 }
 
@@ -6220,13 +6269,14 @@ body.light .sub-paywall-modal div {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin: 20px 0 24px 0;
+  margin: 18px 0 22px 0;
 }
 @media (max-width: 680px) {
   .sub-plans-grid {
     grid-template-columns: 1fr;
   }
 }
+
 .sub-plan-card {
   position: relative;
   border-radius: 20px;
@@ -6242,21 +6292,22 @@ body.light .sub-paywall-modal div {
 .sub-plan-card:hover {
   border-color: rgba(16, 185, 129, 0.5);
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.07);
 }
 .sub-plan-card.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.08) 100%);
   border-color: #10B981 !important;
-  box-shadow: 0 12px 30px -6px rgba(16, 185, 129, 0.35), inset 0 0 20px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 14px 34px -6px rgba(16, 185, 129, 0.35), inset 0 0 20px rgba(16, 185, 129, 0.1);
 }
 body.light .sub-plan-card {
   background: #F8FAFC !important;
   border: 2px solid #E2E8F0 !important;
+  color: #000000 !important;
 }
 body.light .sub-plan-card.active {
   background: #F0FDF4 !important;
   border-color: #059669 !important;
-  box-shadow: 0 10px 25px rgba(5, 150, 105, 0.15) !important;
+  box-shadow: 0 12px 28px rgba(5, 150, 105, 0.2) !important;
 }
 
 .sub-plan-badge-highlight {
@@ -6306,7 +6357,7 @@ body.light .sub-plan-period {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 12px;
 }
@@ -6409,12 +6460,124 @@ body.light .sub-field-input:focus {
   justify-content: center;
   gap: 10px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  margin-top: 20px;
+  margin-top: 18px;
 }
 .sub-pay-action-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 40px -4px rgba(16, 185, 129, 0.65);
   filter: brightness(1.05);
+}
+
+/* Floating Trial Dock Widget */
+.trial-dock-widget {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 99990 !important;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.25);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.trial-dock-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 35px -5px rgba(0, 0, 0, 0.7), 0 0 25px rgba(16, 185, 129, 0.4);
+  border-color: #10B981;
+}
+.trial-dock-widget.trial-dock-urgent {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.4) !important;
+  animation: pulseDockUrgent 1.2s infinite ease-in-out;
+}
+.trial-dock-widget.trial-dock-locked {
+  display: flex !important;
+  background: rgba(220, 38, 38, 0.25) !important;
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 28px rgba(239, 68, 68, 0.45) !important;
+  animation: pulseDockUrgent 1.2s infinite ease-in-out !important;
+}
+.trial-dock-widget.trial-dock-locked .trial-dock-time {
+  color: #F87171 !important;
+}
+
+@keyframes pulseDockUrgent {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.trial-dock-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10B981;
+}
+.trial-dock-widget.trial-dock-locked .trial-dock-icon {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #EF4444 !important;
+}
+.trial-dock-text {
+  display: flex;
+  flex-direction: column;
+}
+.trial-dock-title {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94A3B8;
+}
+.trial-dock-time {
+  font-size: 15px;
+  font-weight: 900;
+  font-family: monospace;
+  color: #34D399;
+  letter-spacing: 0.05em;
+}
+.trial-dock-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF !important;
+  font-size: 11.5px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.trial-dock-widget.trial-dock-locked .trial-dock-btn {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+}
+
+body.light .trial-dock-widget {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 0 20px rgba(16, 185, 129, 0.15) !important;
+}
+body.light .trial-dock-title {
+  color: #000000 !important;
+}
+body.light .trial-dock-time {
+  color: #047857 !important;
+}
+body.light .trial-dock-widget.trial-dock-locked {
+  background: #FEE2E2 !important;
+  border-color: #DC2626 !important;
+}
+body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
+  color: #DC2626 !important;
 }
 
 
@@ -13214,7 +13377,7 @@ body.light .period button.active {
     </div>
   </div>
 <!-- WIDGET FLUTUANTE DE TESTE GRÁTIS (5 MINUTOS) -->
-<div class="trial-dock-widget" id="trialDockWidget" style="display:none;" onclick="window.openSubscriptionPaywall(false)" title="Clique para assinar um plano">
+<div class="trial-dock-widget" id="trialDockWidget" style="display:none;" onclick="window.openSubscriptionPaywall(window.__isPaywallLocked)" title="Clique para assinar um plano">
   <div class="trial-dock-icon">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"></circle>
@@ -13222,10 +13385,10 @@ body.light .period button.active {
     </svg>
   </div>
   <div class="trial-dock-text">
-    <span class="trial-dock-title">Período Gratuito</span>
+    <span class="trial-dock-title" id="trialDockTitle">Período Gratuito</span>
     <span class="trial-dock-time" id="trialDockTime">05:00</span>
   </div>
-  <button type="button" class="trial-dock-btn" onclick="event.stopPropagation(); window.openSubscriptionPaywall(false);">
+  <button type="button" class="trial-dock-btn" id="trialDockBtn" onclick="event.stopPropagation(); window.openSubscriptionPaywall(window.__isPaywallLocked);">
     Assinar Plano
   </button>
 </div>
@@ -13234,9 +13397,9 @@ body.light .period button.active {
 <div class="sub-paywall-overlay" id="nexusSubscriptionModal" role="dialog" aria-modal="true">
   <div class="sub-paywall-modal">
     <!-- Cabeçalho do Modal -->
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
       <div style="display:flex; align-items:center; gap:14px;">
-        <div style="width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.15)); border:1.5px solid rgba(16, 185, 129, 0.5); display:flex; align-items:center; justify-content:center; font-size:24px;">
+        <div style="width:52px; height:52px; border-radius:16px; background:radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.15) 70%); border:1.5px solid rgba(16, 185, 129, 0.5); display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 0 25px rgba(16, 185, 129, 0.35);">
           🔒
         </div>
         <div>
@@ -13244,18 +13407,36 @@ body.light .period button.active {
             Assinatura Nexus Financeiro Hub
           </h2>
           <p style="font-size:13px; color:#94A3B8; margin:4px 0 0 0;" id="subModalSubtitle">
-            Seu período de 5 minutos grátis encerrou. Escolha seu plano para continuar:
+            Seus dados e relatórios estão 100% salvos. Para continuar utilizando o sistema, selecione seu plano:
           </p>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <button type="button" id="subAdminBypassBtn" onclick="window.closeSubscriptionPaywall(true)" style="display:none; padding:6px 12px; border-radius:8px; background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:11.5px; font-weight:800; cursor:pointer;">
+        <button type="button" id="subAdminBypassBtn" onclick="window.closeSubscriptionPaywall(true)" style="display:none; padding:6px 14px; border-radius:10px; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.5); color:#FBBF24; font-size:11.5px; font-weight:800; cursor:pointer;">
           Modo Admin: Ignorar
+        </button>
+        <button type="button" id="subAdminResetBtn" onclick="window.resetTrialForTesting()" style="display:none; padding:6px 14px; border-radius:10px; background:rgba(59,130,246,0.2); border:1px solid rgba(59,130,246,0.5); color:#60A5FA; font-size:11.5px; font-weight:800; cursor:pointer;">
+          Modo Admin: Reiniciar 5m
         </button>
         <button type="button" id="subModalCloseBtn" onclick="window.closeSubscriptionPaywall(false)" style="display:none; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1; cursor:pointer; align-items:center; justify-content:center; font-size:18px; line-height:1;">
           ✕
         </button>
       </div>
+    </div>
+
+    <!-- Badges de Segurança e Confiança -->
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; padding:8px 14px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);">
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:#10B981;">
+        <span>🛡️</span> <span>SSL 256-Bit Criptografado</span>
+      </span>
+      <span style="color:rgba(255,255,255,0.2);">•</span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:#34D399;">
+        <span>⚡</span> <span>Liberação Instantânea</span>
+      </span>
+      <span style="color:rgba(255,255,255,0.2);">•</span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:#F59E0B;">
+        <span>🔄</span> <span>Sem Fidelidade (Cancele Quando Quiser)</span>
+      </span>
     </div>
 
     <!-- Conteúdo Principal de Checkout -->
@@ -13269,19 +13450,20 @@ body.light .period button.active {
               <span>Plano Mensal</span>
               <span style="font-size:18px;">📅</span>
             </div>
-            <p style="font-size:12.5px; color:#94A3B8; margin:0 0 10px 0;">Acesso completo a todas as ferramentas sem fidelidade.</p>
+            <p style="font-size:12.5px; color:#94A3B8; margin:0 0 10px 0;">Acesso completo e irrestrito com pagamento mês a mês.</p>
             <div class="sub-plan-price">
               R$ 10,00 <span class="sub-plan-period">/ mês</span>
             </div>
           </div>
-          <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:#10B981; margin-top:10px;">
-            <span>✓ Cancele quando quiser</span>
+          <div style="display:flex; flex-direction:column; gap:4px; font-size:11.5px; font-weight:700; color:#10B981; margin-top:10px;">
+            <span>✓ Acesso ilimitado a todas as abas e relatórios</span>
+            <span>✓ Sem carência — cancele a qualquer momento</span>
           </div>
         </div>
 
         <!-- Plano Anual (R$ 100,00) -->
         <div class="sub-plan-card" id="subPlanCardAnual" onclick="window.selectSubPlan('anual')">
-          <div class="sub-plan-badge-highlight">★ Economize R$ 20,00</div>
+          <div class="sub-plan-badge-highlight">★ MAIS ESCOLHIDO • ECONOMIZE R$ 20,00</div>
           <div>
             <div class="sub-plan-title">
               <span>Plano Anual</span>
@@ -13292,14 +13474,15 @@ body.light .period button.active {
               R$ 100,00 <span class="sub-plan-period">/ ano</span>
             </div>
           </div>
-          <div style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:#F59E0B; margin-top:10px;">
-            <span>✓ 2 Meses Grátis + Suporte VIP</span>
+          <div style="display:flex; flex-direction:column; gap:4px; font-size:11.5px; font-weight:700; color:#F59E0B; margin-top:10px;">
+            <span>✓ 2 Meses Grátis + Suporte Prioritário VIP</span>
+            <span>✓ Parcelamento facilitado em até 12x no Cartão</span>
           </div>
         </div>
       </div>
 
       <!-- Abas de Formas de Pagamento -->
-      <div style="margin-top:18px;">
+      <div style="margin-top:16px;">
         <span style="display:block; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; color:#94A3B8; margin-bottom:10px;">
           Forma de Pagamento
         </span>
@@ -13322,20 +13505,20 @@ body.light .period button.active {
       <!-- FORMULÁRIO: PIX -->
       <div id="subFormPix" style="display:block;">
         <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:22px; display:flex; flex-direction:column; align-items:center; text-align:center;">
-          <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#10B981; margin-bottom:8px;">
+          <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#10B981; margin-bottom:6px;">
             ✓ Liberação Imediata via Pix
           </div>
-          <div style="font-size:14px; font-weight:700; color:#CBD5E1; margin-bottom:16px;">
-            Valor a Pagar: <strong id="pixDisplayAmount" style="color:#10B981; font-size:20px;">R$ 10,00</strong>
+          <div style="font-size:14px; font-weight:700; color:#CBD5E1; margin-bottom:14px;">
+            Valor a Pagar: <strong id="pixDisplayAmount" style="color:#10B981; font-size:22px;">R$ 10,00</strong>
           </div>
 
           <!-- QR Code Display -->
-          <div style="background:#FFFFFF; padding:14px; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,0.4); margin-bottom:16px;">
-            <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:200px; height:200px; display:block;" />
+          <div style="background:#FFFFFF; padding:14px; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,0.4); margin-bottom:14px;">
+            <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:190px; height:190px; display:block;" />
           </div>
 
           <!-- Código Pix Copia e Cola -->
-          <div style="width:100%; max-width:540px; margin-bottom:14px;">
+          <div style="width:100%; max-width:540px; margin-bottom:12px;">
             <label class="sub-field-label" style="text-align:left;">Código Pix Copia e Cola</label>
             <div style="display:flex; gap:8px;">
               <input type="text" id="subPixCodeInput" readonly class="sub-field-input" style="font-size:12px; font-family:monospace;" />
@@ -13345,12 +13528,21 @@ body.light .period button.active {
             </div>
           </div>
 
-          <p style="font-size:12px; color:#94A3B8; margin:0 0 16px 0;">
-            Abra o app do seu banco, escolha <strong>Pix Copia e Cola</strong> ou aponte a câmera para o QR Code acima.
-          </p>
+          <!-- Passo a Passo -->
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; width:100%; max-width:540px; margin-bottom:16px; font-size:11.5px; color:#94A3B8; text-align:left;">
+            <div style="background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
+              <strong style="color:#10B981;">1.</strong> Abra o app do seu banco
+            </div>
+            <div style="background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
+              <strong style="color:#10B981;">2.</strong> Pix Copia e Cola ou QR Code
+            </div>
+            <div style="background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
+              <strong style="color:#10B981;">3.</strong> Confirme o pagamento
+            </div>
+          </div>
 
-          <button type="button" class="sub-pay-action-btn" onclick="window.processSubscriptionPayment('pix')">
-            <span>✅</span> <span>Já Realizei o Pagamento Pix / Ativar Agora</span>
+          <button type="button" class="sub-pay-action-btn" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
+            <span>✅</span> <span>Já Realizei o Pagamento Pix / Desbloquear Acesso Agora</span>
           </button>
         </div>
       </div>
@@ -13407,7 +13599,7 @@ body.light .period button.active {
             </select>
           </div>
 
-          <button type="button" class="sub-pay-action-btn" onclick="window.processSubscriptionPayment('credit_card')">
+          <button type="button" class="sub-pay-action-btn" id="subBtnConfirmCredit" onclick="window.processSubscriptionPayment('credit_card')">
             <span>🔒</span> <span id="creditCardBtnLabel">Pagar R$ 10,00 com Cartão de Crédito</span>
           </button>
         </div>
@@ -13451,7 +13643,7 @@ body.light .period button.active {
             </select>
           </div>
 
-          <button type="button" class="sub-pay-action-btn" onclick="window.processSubscriptionPayment('debit_card')">
+          <button type="button" class="sub-pay-action-btn" id="subBtnConfirmDebit" onclick="window.processSubscriptionPayment('debit_card')">
             <span>🔒</span> <span id="debitCardBtnLabel">Pagar R$ 10,00 com Débito Imediato</span>
           </button>
         </div>
@@ -13468,35 +13660,34 @@ body.light .period button.active {
           <div style="width:100%; max-width:540px; margin:0 auto 16px auto;">
             <label class="sub-field-label" style="text-align:left;">Linha Digitável do Boleto</label>
             <div style="display:flex; gap:8px;">
-              <input type="text" id="subBoletoCodeInput" readonly value="34191.79001 01043.510047 91020.150008 8 98760000001000" class="sub-field-input" style="font-size:12px; font-family:monospace;" />
-              <button type="button" onclick="window.copyBoletoCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(16,185,129,0.2); border:1.5px solid rgba(16,185,129,0.4); color:#34D399; font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap;">
+              <input type="text" id="subBoletoCodeInput" readonly value="23793.38128 60047.281921 54000.063304 9 91240000001000" class="sub-field-input" style="font-size:12px; font-family:monospace;" />
+              <button type="button" onclick="window.copyBoletoCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(255,255,255,0.1); border:1.5px solid rgba(255,255,255,0.2); color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap;">
                 📋 Copiar
               </button>
             </div>
           </div>
 
-          <!-- Código de Barras Estilizado -->
-          <div style="display:flex; justify-content:center; gap:2px; height:48px; margin:16px auto; max-width:320px; opacity:0.85;">
-            <span style="background:#fff; width:3px;"></span><span style="background:transparent; width:2px;"></span>
-            <span style="background:#fff; width:4px;"></span><span style="background:transparent; width:1px;"></span>
-            <span style="background:#fff; width:2px;"></span><span style="background:transparent; width:3px;"></span>
-            <span style="background:#fff; width:5px;"></span><span style="background:transparent; width:2px;"></span>
-            <span style="background:#fff; width:3px;"></span><span style="background:transparent; width:1px;"></span>
-            <span style="background:#fff; width:6px;"></span><span style="background:transparent; width:3px;"></span>
-            <span style="background:#fff; width:2px;"></span><span style="background:transparent; width:2px;"></span>
-            <span style="background:#fff; width:4px;"></span><span style="background:transparent; width:1px;"></span>
-            <span style="background:#fff; width:5px;"></span><span style="background:transparent; width:2px;"></span>
-            <span style="background:#fff; width:3px;"></span><span style="background:transparent; width:3px;"></span>
-            <span style="background:#fff; width:6px;"></span><span style="background:transparent; width:1px;"></span>
-            <span style="background:#fff; width:2px;"></span><span style="background:transparent; width:2px;"></span>
-            <span style="background:#fff; width:4px;"></span><span style="background:transparent; width:3px;"></span>
+          <!-- Código de Barras Visual Simulado -->
+          <div style="background:#FFFFFF; border-radius:10px; padding:12px; max-width:340px; margin:0 auto 14px auto; display:flex; justify-content:center; align-items:center; gap:2px; height:48px;">
+            <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:5px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:5px; height:100%; display:inline-block;"></span>
+            <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
           </div>
 
           <p style="font-size:12px; color:#94A3B8; margin:0 0 16px 0;">
             Vencimento em 3 dias úteis. No ambiente de homologação, você pode confirmar e ativar imediatamente.
           </p>
 
-          <button type="button" class="sub-pay-action-btn" onclick="window.processSubscriptionPayment('boleto')">
+          <button type="button" class="sub-pay-action-btn" id="subBtnConfirmBoleto" onclick="window.processSubscriptionPayment('boleto')">
             <span>✅</span> <span>Confirmar Pagamento do Boleto (Homologação)</span>
           </button>
         </div>
@@ -13534,7 +13725,7 @@ body.light .period button.active {
       </div>
 
       <button type="button" class="sub-pay-action-btn" onclick="window.closeSubscriptionPaywall(true)" style="max-width:320px; margin:0 auto;">
-        <span>🚀</span> <span>Começar a Usar Agora</span>
+        <span>🚀</span> <span>Liberar Acesso e Continuar Usando</span>
       </button>
     </div>
   </div>
@@ -14450,6 +14641,7 @@ window.handleMandatoryPasswordSubmit = async function(e) {
       document.getElementById('appMain').classList.add('show');
       document.getElementById('appMain').style.display = 'flex';
       render();
+      if (typeof window.initTrialAndSubscription === 'function') { window.initTrialAndSubscription(); }
     }, 150);
 
   } catch(err) {
@@ -14632,6 +14824,9 @@ window.handleLoginSubmit = async function(e) {
     sessionStorage.removeItem('nexus_session_expired_reason');
     if (typeof window.startInactivityMonitoring === 'function') {
       window.startInactivityMonitoring();
+    }
+    if (typeof window.initTrialAndSubscription === 'function') {
+      window.initTrialAndSubscription();
     }
     
     // Notificação e sincronização imediata de last_login no SQL Server e Nuvem (Fuso Horário de Brasília)
@@ -14892,7 +15087,7 @@ function hideSessionTimeoutPopup() {
 }
 
 /* ==================== Motor de Timeout de Inatividade (5 Minutos) ==================== */
-const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutos (checkout seguro)
+const INACTIVITY_TIMEOUT_MS = 120 * 60 * 1000; // 2 horas (sessão segura e paywall dedicado)
 const INACTIVITY_WARNING_MS = 30 * 1000;      // Aviso nos últimos 30 segundos
 let inactivityCheckInterval = null;
 let inactivityLastEventTime = Date.now();
@@ -15062,8 +15257,33 @@ document.addEventListener('keydown', (e) => {
 window.__trialTimerInterval = null;
 window.__trialRemainingSeconds = 300;
 window.__selectedSubPlan = 'mensal';
+/* ==================== MOTOR DE ASSINATURA & PAYWALL DE TESTE GRÁTIS (5 MINUTOS) ==================== */
+window.__trialRemainingSeconds = 300;
+window.__trialTimerInterval = null;
+window.__selectedSubPlan = 'mensal';
 window.__selectedPaymentMethod = 'pix';
 window.__isPaywallLocked = false;
+window.__paywallSyncPollInterval = null;
+
+// Áudio Sintetizado de Alerta (Web Audio API)
+window.playPaywallAlertSound = function() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.25);
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.45);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.5);
+  } catch(e){}
+};
 
 window.initTrialAndSubscription = async function() {
   if (!currentUser || !currentUser.email) return;
@@ -15078,18 +15298,19 @@ window.initTrialAndSubscription = async function() {
         currentUser.subscription_expires_at = data.subscription_expires_at;
         currentUser.subscription_method = data.subscription_method;
         currentUser.trial_started_at = data.trial_started_at;
-        window.__trialRemainingSeconds = data.remaining_seconds;
+        window.__trialRemainingSeconds = typeof data.remaining_seconds === 'number' ? data.remaining_seconds : 0;
 
         try { saveToStorage('nexus_cached_user', currentUser); } catch(e){}
 
         if (data.is_subscribed) {
+          window.__isPaywallLocked = false;
           window.hideTrialDockWidget();
           window.closeSubscriptionPaywall(true);
           return;
         }
 
-        if (data.status === 'expired') {
-          window.hideTrialDockWidget();
+        if (data.status === 'expired' || window.__trialRemainingSeconds <= 0) {
+          window.showTrialDockExpired();
           window.openSubscriptionPaywall(true);
           return;
         }
@@ -15100,7 +15321,9 @@ window.initTrialAndSubscription = async function() {
     }
   } catch(e) {
     console.warn('[ASSINATURA] Falha ao consultar status de assinatura:', e);
-    window.startTrialCountdown(window.__trialRemainingSeconds || 300);
+    if (!window.__trialRemainingSeconds) {
+      window.startTrialCountdown(300);
+    }
   }
 };
 
@@ -15110,6 +15333,13 @@ window.startTrialCountdown = function(remainingSecs) {
   if (window.__trialTimerInterval) {
     clearInterval(window.__trialTimerInterval);
     window.__trialTimerInterval = null;
+  }
+
+  if (window.__trialRemainingSeconds <= 0) {
+    window.__trialRemainingSeconds = 0;
+    window.showTrialDockExpired();
+    window.openSubscriptionPaywall(true);
+    return;
   }
 
   window.showTrialDockWidget();
@@ -15124,8 +15354,12 @@ window.startTrialCountdown = function(remainingSecs) {
       window.__trialRemainingSeconds = 0;
       window.updateTrialDisplay();
 
-      // Tempo esgotado: bloqueio mandatório do sistema
-      window.hideTrialDockWidget();
+      // Tempo esgotado: bloqueio mandatório do sistema com som e alerta
+      window.showTrialDockExpired();
+      window.playPaywallAlertSound();
+      if (typeof showToast === 'function') {
+        showToast('🔒 Seu período gratuito de 5 minutos encerrou. Escolha um plano para continuar.', 'warning');
+      }
       window.openSubscriptionPaywall(true);
       return;
     }
@@ -15140,11 +15374,17 @@ window.updateTrialDisplay = function() {
   const timeFormatted = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
 
   const labelEl = document.getElementById('trialDockTime');
+  const titleEl = document.getElementById('trialDockTitle');
+  const btnEl = document.getElementById('trialDockBtn');
   const widget = document.getElementById('trialDockWidget');
+
   if (labelEl) labelEl.textContent = timeFormatted;
+  if (titleEl) titleEl.textContent = 'Período Gratuito';
+  if (btnEl) btnEl.textContent = 'Assinar Plano';
 
   if (widget) {
-    if (window.__trialRemainingSeconds <= 60) {
+    widget.classList.remove('trial-dock-locked');
+    if (window.__trialRemainingSeconds <= 60 && window.__trialRemainingSeconds > 0) {
       widget.classList.add('trial-dock-urgent');
     } else {
       widget.classList.remove('trial-dock-urgent');
@@ -15162,6 +15402,22 @@ window.hideTrialDockWidget = function() {
   if (widget) widget.style.display = 'none';
 };
 
+window.showTrialDockExpired = function() {
+  const widget = document.getElementById('trialDockWidget');
+  const labelEl = document.getElementById('trialDockTime');
+  const titleEl = document.getElementById('trialDockTitle');
+  const btnEl = document.getElementById('trialDockBtn');
+
+  if (widget) {
+    widget.style.display = 'flex';
+    widget.classList.remove('trial-dock-urgent');
+    widget.classList.add('trial-dock-locked');
+  }
+  if (titleEl) titleEl.textContent = '🔒 Teste Expirado';
+  if (labelEl) labelEl.textContent = '00:00';
+  if (btnEl) btnEl.textContent = 'Assinar Agora';
+};
+
 window.openSubscriptionPaywall = function(isLocked = false) {
   window.__isPaywallLocked = !!isLocked;
   const modal = document.getElementById('nexusSubscriptionModal');
@@ -15169,15 +15425,22 @@ window.openSubscriptionPaywall = function(isLocked = false) {
 
   const closeBtn = document.getElementById('subModalCloseBtn');
   const adminBypass = document.getElementById('subAdminBypassBtn');
+  const adminReset = document.getElementById('subAdminResetBtn');
   const titleEl = document.getElementById('subModalTitle');
   const subEl = document.getElementById('subModalSubtitle');
 
+  const isAdmin = currentUser && (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
+
   if (isLocked) {
-    if (titleEl) titleEl.textContent = '🔒 Período Gratuito de 5 Minutos Encerrado!';
-    if (subEl) subEl.textContent = 'Para continuar utilizando o sistema, selecione seu plano mensal ou anual:';
+    document.body.classList.add('paywall-locked');
+    document.documentElement.classList.add('paywall-locked');
+    if (titleEl) titleEl.textContent = '🔒 Período Gratuito de 5 Minutos Expirado!';
+    if (subEl) subEl.textContent = 'Seus lançamentos, gráficos e relatórios estão 100% preservados e salvos. Para continuar utilizando o Nexus Financeiro Hub, selecione seu plano:';
   } else {
+    document.body.classList.remove('paywall-locked');
+    document.documentElement.classList.remove('paywall-locked');
     if (titleEl) titleEl.textContent = '⭐ Escolha seu Plano de Assinatura';
-    if (subEl) subEl.textContent = 'Aproveite todos os recursos do Nexus Financeiro Hub com total segurança:';
+    if (subEl) subEl.textContent = 'Aproveite todos os recursos do Nexus Financeiro Hub com total segurança e suporte VIP:';
   }
 
   if (closeBtn) {
@@ -15185,8 +15448,10 @@ window.openSubscriptionPaywall = function(isLocked = false) {
   }
 
   if (adminBypass) {
-    const isAdmin = currentUser && currentUser.role === 'Administrador';
-    adminBypass.style.display = (isLocked && isAdmin) ? 'inline-block' : 'none';
+    adminBypass.style.display = isAdmin ? 'inline-block' : 'none';
+  }
+  if (adminReset) {
+    adminReset.style.display = isAdmin ? 'inline-block' : 'none';
   }
 
   // Reseta para tela de checkout se estava na tela de sucesso
@@ -15204,18 +15469,103 @@ window.openSubscriptionPaywall = function(isLocked = false) {
 
 window.closeSubscriptionPaywall = function(force = false) {
   if (window.__isPaywallLocked && !force) {
+    const modalBox = document.querySelector('.sub-paywall-modal');
+    if (modalBox) {
+      modalBox.classList.remove('shake-lock');
+      void modalBox.offsetWidth;
+      modalBox.classList.add('shake-lock');
+    }
     if (typeof showToast === 'function') {
-      showToast('⚠️ Seu período de 5 minutos grátis encerrou. É necessário assinar um plano para continuar.');
+      showToast('⚠️ Acesso temporariamente bloqueado. É necessário assinar um plano para continuar.', 'warning');
     }
     return;
   }
+
   window.__isPaywallLocked = false;
+  document.body.classList.remove('paywall-locked');
+  document.documentElement.classList.remove('paywall-locked');
   const modal = document.getElementById('nexusSubscriptionModal');
   if (modal) {
     modal.classList.remove('show');
     modal.style.display = 'none';
   }
 };
+
+// Fechamento ao clicar fora bloqueado se estiver travado (shake feedback)
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('nexusSubscriptionModal');
+  if (modal && e.target === modal) {
+    if (window.__isPaywallLocked) {
+      const modalBox = modal.querySelector('.sub-paywall-modal');
+      if (modalBox) {
+        modalBox.classList.remove('shake-lock');
+        void modalBox.offsetWidth;
+        modalBox.classList.add('shake-lock');
+      }
+      if (typeof showToast === 'function') {
+        showToast('⚠️ Acesso ao sistema bloqueado. Escolha um plano para continuar.', 'warning');
+      }
+    } else {
+      window.closeSubscriptionPaywall(false);
+    }
+  }
+});
+
+// Bloqueio da tecla Escape se estiver travado
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && window.__isPaywallLocked) {
+    e.preventDefault();
+    e.stopPropagation();
+    const modalBox = document.querySelector('.sub-paywall-modal');
+    if (modalBox) {
+      modalBox.classList.remove('shake-lock');
+      void modalBox.offsetWidth;
+      modalBox.classList.add('shake-lock');
+    }
+  }
+});
+
+// Watcher permanente anti-bypass para garantir bloqueio mandatório
+setInterval(() => {
+  if (window.__isPaywallLocked) {
+    const modal = document.getElementById('nexusSubscriptionModal');
+    if (modal) {
+      if (modal.style.display !== 'flex' || !modal.classList.contains('show')) {
+        modal.style.display = 'flex';
+        modal.classList.add('show');
+      }
+    }
+    document.body.classList.add('paywall-locked');
+    document.documentElement.classList.add('paywall-locked');
+  }
+}, 1200);
+
+// Sincronização em tempo real entre abas / dispositivos (15 segundos)
+if (!window.__paywallSyncPollInterval) {
+  window.__paywallSyncPollInterval = setInterval(async () => {
+    if (!currentUser || !currentUser.email) return;
+    try {
+      const res = await fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email));
+      if (res.ok) {
+        const d = await res.json();
+        if (d && d.success) {
+          if (d.is_subscribed) {
+            if (window.__isPaywallLocked) {
+              window.closeSubscriptionPaywall(true);
+              window.hideTrialDockWidget();
+              if (typeof showToast === 'function') showToast('⭐ Assinatura ativa identificada! Acesso liberado.');
+              if (typeof render === 'function') render();
+            }
+          } else if (d.status === 'expired') {
+            if (!window.__isPaywallLocked) {
+              window.openSubscriptionPaywall(true);
+            }
+          }
+        }
+      }
+    } catch(e){}
+  }, 15000);
+}
 
 window.selectSubPlan = function(plan) {
   window.__selectedSubPlan = plan;
@@ -15236,12 +15586,11 @@ window.selectSubPlan = function(plan) {
     if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 100,00 com Débito Imediato';
 
     if (installmentsSelect) {
-      installmentsSelect.innerHTML = '<option value="1">1x de R$ 100,00 sem juros</option>' +
-        '<option value="2">2x de R$ 50,00 sem juros</option>' +
-        '<option value="3">3x de R$ 33,33 sem juros</option>' +
-        '<option value="6">6x de R$ 16,67 sem juros</option>' +
-        '<option value="10">10x de R$ 10,00 sem juros</option>' +
-        '<option value="12">12x de R$ 8,33 sem juros</option>';
+      installmentsSelect.innerHTML = '<option value="1">1x de R$ 100,00 sem juros (Total: R$ 100,00)</option>' +
+        '<option value="2">2x de R$ 50,00 sem juros (Total: R$ 100,00)</option>' +
+        '<option value="3">3x de R$ 33,33 sem juros (Total: R$ 100,00)</option>' +
+        '<option value="6">6x de R$ 16,67 sem juros (Total: R$ 100,00)</option>' +
+        '<option value="12">12x de R$ 8,33 sem juros (Total: R$ 100,00)</option>';
     }
   } else {
     if (cardMensal) cardMensal.classList.add('active');
@@ -15252,11 +15601,13 @@ window.selectSubPlan = function(plan) {
     if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 10,00 com Débito Imediato';
 
     if (installmentsSelect) {
-      installmentsSelect.innerHTML = '<option value="1">1x de R$ 10,00 sem juros</option>';
+      installmentsSelect.innerHTML = '<option value="1">1x de R$ 10,00 sem juros (Total: R$ 10,00)</option>';
     }
   }
 
-  window.updatePixPayloadAndQr();
+  if (window.__selectedPaymentMethod === 'pix') {
+    window.updatePixPayloadAndQr();
+  }
 };
 
 window.selectPaymentMethod = function(method) {
@@ -15281,7 +15632,7 @@ window.selectPaymentMethod = function(method) {
 
 window.updatePixPayloadAndQr = function() {
   const amount = (window.__selectedSubPlan === 'anual') ? '100.00' : '10.00';
-  const rawKey = '04023326100'; // Chave Pix oficial
+  const rawKey = '04023326100';
   const pixCode = '00020126580014BR.GOV.BCB.PIX011404023326100520400005303986540' + (amount === '100.00' ? '6100.00' : '510.00') + '5802BR5920NEXUS SOLUCOES FIN6007GOIANIA62070503***6304' + (amount === '100.00' ? 'E8B2' : 'D3F1');
 
   const inputEl = document.getElementById('subPixCodeInput');
@@ -15301,7 +15652,7 @@ window.copyPixCodeToClipboard = function() {
     const btn = document.getElementById('btnCopyPix');
     if (btn) {
       const orig = btn.innerHTML;
-      btn.innerHTML = '✓ Copiado!';
+      btn.innerHTML = '✓ Código Copiado!';
       btn.style.color = '#10B981';
       setTimeout(() => { btn.innerHTML = orig; btn.style.color = '#34D399'; }, 2500);
     }
@@ -15359,12 +15710,22 @@ window.processSubscriptionPayment = async function(method) {
   const plan = window.__selectedSubPlan || 'mensal';
   const payMethod = method || window.__selectedPaymentMethod || 'pix';
 
-  // Validação simples para cartões
+  // Feedback de carregamento no botão acionado
+  const btnId = payMethod === 'pix' ? 'subBtnConfirmPix' : (payMethod === 'credit_card' ? 'subBtnConfirmCredit' : (payMethod === 'debit_card' ? 'subBtnConfirmDebit' : 'subBtnConfirmBoleto'));
+  const btnEl = document.getElementById(btnId);
+  const origBtnContent = btnEl ? btnEl.innerHTML : '';
+  if (btnEl) {
+    btnEl.disabled = true;
+    btnEl.innerHTML = '<span>⏳</span> <span>Validando pagamento com liquidação bancária instantânea...</span>';
+  }
+
+  // Validação simples para cartões de crédito
   if (payMethod === 'credit_card') {
     const num = (document.getElementById('subCardNumber')?.value || '').replace(/\D/g, '');
     const exp = document.getElementById('subCardExpiry')?.value || '';
     const cvv = document.getElementById('subCardCvv')?.value || '';
     if (num.length < 13 || exp.length < 5 || cvv.length < 3) {
+      if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = origBtnContent; }
       if (typeof showToast === 'function') showToast('Por favor, preencha os dados do cartão de crédito corretamente.');
       return;
     }
@@ -15387,6 +15748,8 @@ window.processSubscriptionPayment = async function(method) {
     });
 
     const data = await res.json();
+    if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = origBtnContent; }
+
     if (data && data.success) {
       currentUser.subscription_status = 'active';
       currentUser.subscription_plan = data.plan;
@@ -15394,7 +15757,7 @@ window.processSubscriptionPayment = async function(method) {
       currentUser.subscription_method = data.method;
       try { saveToStorage('nexus_cached_user', currentUser); } catch(e){}
 
-      // Exibe tela de confirmação
+      // Exibe tela de confirmação de alta tecnologia
       const checkoutView = document.getElementById('subCheckoutView');
       const successView = document.getElementById('subSuccessView');
       if (checkoutView) checkoutView.style.display = 'none';
@@ -15421,8 +15784,9 @@ window.processSubscriptionPayment = async function(method) {
         window.__trialTimerInterval = null;
       }
 
+      window.playPaywallAlertSound();
       if (typeof showToast === 'function') {
-        showToast('🎉 Pagamento aprovado! Sua assinatura está ativa.');
+        showToast('🎉 Pagamento aprovado! Assinatura ativada e acesso liberado com sucesso.');
       }
 
       if (typeof render === 'function') render();
@@ -15432,6 +15796,7 @@ window.processSubscriptionPayment = async function(method) {
       }
     }
   } catch(err) {
+    if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = origBtnContent; }
     console.error('[ERRO PAGAMENTO]', err);
     if (typeof showToast === 'function') {
       showToast('Erro ao processar pagamento. Verifique a conexão.');
@@ -15451,11 +15816,17 @@ window.resetTrialForTesting = async function(email) {
     const d = await res.json();
     if (d && d.success) {
       if (typeof showToast === 'function') showToast('⏱️ Período de 5 minutos grátis reiniciado para ' + targetEmail);
+      window.__isPaywallLocked = false;
+      document.body.classList.remove('paywall-locked');
+      document.documentElement.classList.remove('paywall-locked');
+      const modal = document.getElementById('nexusSubscriptionModal');
+      if (modal) { modal.classList.remove('show'); modal.style.display = 'none'; }
       window.initTrialAndSubscription();
       if (typeof render === 'function') render();
     }
-  } catch(e) {}
+  } catch(e){}
 };
+
 
 
 window.checkServerRegPasswordMatch = function() {
@@ -25470,7 +25841,7 @@ window.applyPostLoginBg = function(theme) {
   try {
     const isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
     const lastAct = parseInt(sessionStorage.getItem('nexus_last_activity') || '0', 10);
-    const isTimedOut = lastAct && (Date.now() - lastAct >= 5 * 60 * 1000);
+    const isTimedOut = lastAct && (Date.now() - lastAct >= 120 * 60 * 1000);
 
     if (!isSessionActive || isTimedOut) {
       if (isTimedOut) {
@@ -25533,6 +25904,7 @@ window.applyPostLoginBg = function(theme) {
       }
       if (typeof render === 'function') render();
       window.__initialRenderDone = true;
+      if (typeof window.initTrialAndSubscription === 'function') { window.initTrialAndSubscription(); }
     }
   } catch(e){}
 })();
@@ -25540,7 +25912,7 @@ window.applyPostLoginBg = function(theme) {
 (async function restoreSession(){
   const isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
   const lastAct = parseInt(sessionStorage.getItem('nexus_last_activity') || '0', 10);
-  const isTimedOut = lastAct && (Date.now() - lastAct >= 5 * 60 * 1000);
+  const isTimedOut = lastAct && (Date.now() - lastAct >= 120 * 60 * 1000);
   const expiredReason = isTimedOut ? 'timeout' : sessionStorage.getItem('nexus_session_expired_reason');
 
   if (!isSessionActive || isTimedOut) {
