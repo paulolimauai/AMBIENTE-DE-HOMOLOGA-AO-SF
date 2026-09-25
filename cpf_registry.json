@@ -4,11 +4,11 @@
     "nome": "PAULO DE LIMA PEREIRA",
     "data_nascimento": "02/06/1992",
     "phone": "(62) 99234-5372",
-    "email": "paulodelima21@gmail.com",
+    "email": "paulolp0101@gmail.com",
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T12:14:45.615Z"
+    "updated_at": "2026-09-25T13:02:04.454Z"
   },
   "00000000191": {
     "cpf": "00000000191",
@@ -19,7 +19,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T09:13:40.550Z"
+    "updated_at": "2026-09-25T10:01:21.726Z"
   },
   "99925109191": {
     "cpf": "99925109191",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T12:14:45.511Z"
+    "updated_at": "2026-09-25T13:01:54.447Z"
   },
   "12345678909": {
     "cpf": "12345678909",
@@ -41,7 +41,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Receita Federal do Brasil (Base Cadastral Oficial)",
-    "updated_at": "2026-09-25T09:13:40.600Z"
+    "updated_at": "2026-09-25T10:01:21.746Z"
   },
   "12345678900": {
     "cpf": "12345678900",
@@ -52,7 +52,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T12:14:45.526Z"
+    "updated_at": "2026-09-25T13:01:54.460Z"
   },
   "33344455566": {
     "cpf": "33344455566",
@@ -63,7 +63,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "5ª Região Fiscal (BA, SE)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T12:14:45.558Z"
+    "updated_at": "2026-09-25T13:01:54.466Z"
   },
   "44455566677": {
     "cpf": "44455566677",
@@ -74,7 +74,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "6ª Região Fiscal (MG)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T12:14:45.565Z"
+    "updated_at": "2026-09-25T13:01:54.486Z"
   },
   "63481090625": {
     "cpf": "63481090625",
@@ -85,7 +85,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "6ª Região Fiscal (MG)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T12:14:45.518Z"
+    "updated_at": "2026-09-25T13:01:54.453Z"
   },
   "11122233344": {
     "cpf": "11122233344",
@@ -96,7 +96,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "3ª Região Fiscal (CE, MA, PI)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T12:14:45.572Z"
+    "updated_at": "2026-09-25T13:01:54.493Z"
   },
   "04023326199": {
     "cpf": "04023326199",
@@ -107,6 +107,6 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-09-25T12:14:45.604Z"
+    "updated_at": "2026-09-25T13:01:54.502Z"
   }
 }
