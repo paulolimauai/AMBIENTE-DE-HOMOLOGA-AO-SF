@@ -4247,7 +4247,7 @@ nav.menu::-webkit-scrollbar {
   letter-spacing: -0.01em !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: background-color 0.06s ease, border-color 0.06s ease, color 0.06s ease, box-shadow 0.06s ease !important;
   user-select: none !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
@@ -17013,8 +17013,14 @@ function render(){
     updateAdminMenuVisibility();
     updateActiveMenu();
     if(currentPage==='dashboard') {
-      drawDashboardCharts();
-      animateKpiValues();
+      requestAnimationFrame(() => {
+        try {
+          drawDashboardCharts();
+          animateKpiValues();
+        } catch(eCharts) {
+          console.warn("Erro ao renderizar gráficos do dashboard:", eCharts);
+        }
+      });
     }
   } catch(err) {
     console.error("Erro no pós-render:", err);
@@ -24733,29 +24739,49 @@ if(overlayDrawer) overlayDrawer.onclick = ()=> toggleMobileDrawer(false);
 
 const mobileDrawerMenu = document.getElementById('mobileDrawerMenu');
 if(mobileDrawerMenu){
-  mobileDrawerMenu.addEventListener('click', e=>{
+  const handleDrawerNav = (e) => {
     const targetEl = e.target.nodeType === 3 ? e.target.parentElement : e.target;
     const btn = targetEl ? targetEl.closest('button[data-page]') : null;
     if(btn && btn.dataset.page){
       toggleMobileDrawer(false);
       navigate(btn.dataset.page);
     }
-  });
+  };
+  mobileDrawerMenu.addEventListener('click', handleDrawerNav);
 }
 
-document.getElementById('menu').addEventListener('click', e=>{
-  const targetEl = e.target.nodeType === 3 ? e.target.parentElement : e.target;
-  const btn = targetEl ? targetEl.closest('button[data-page]') : null;
-  if(btn && btn.dataset.page) navigate(btn.dataset.page);
-});
+const menuDesktop = document.getElementById('menu');
+if(menuDesktop){
+  let lastNavTriggerTime = 0;
+  const handleMenuNav = (e) => {
+    const now = Date.now();
+    if (now - lastNavTriggerTime < 80) return;
+    const targetEl = e.target.nodeType === 3 ? e.target.parentElement : e.target;
+    const btn = targetEl ? targetEl.closest('button[data-page]') : null;
+    if(btn && btn.dataset.page) {
+      lastNavTriggerTime = now;
+      navigate(btn.dataset.page);
+    }
+  };
+  menuDesktop.addEventListener('pointerdown', handleMenuNav, { passive: true });
+  menuDesktop.addEventListener('click', handleMenuNav);
+}
 
 const mobileBottomBar = document.getElementById('mobileBottomBar');
 if(mobileBottomBar){
-  mobileBottomBar.addEventListener('click', e=>{
+  let lastBottomNavTime = 0;
+  const handleBottomNav = (e) => {
+    const now = Date.now();
+    if (now - lastBottomNavTime < 80) return;
     const targetEl = e.target.nodeType === 3 ? e.target.parentElement : e.target;
     const btn = targetEl ? targetEl.closest('button[data-page]') : null;
-    if(btn && btn.dataset.page) navigate(btn.dataset.page);
-  });
+    if(btn && btn.dataset.page) {
+      lastBottomNavTime = now;
+      navigate(btn.dataset.page);
+    }
+  };
+  mobileBottomBar.addEventListener('pointerdown', handleBottomNav, { passive: true });
+  mobileBottomBar.addEventListener('click', handleBottomNav);
 }
 const mobileBottomMoreBtn = document.getElementById('mobileBottomMoreBtn');
 if(mobileBottomMoreBtn){
@@ -27913,9 +27939,15 @@ const server = http.createServer(async (req, res) => {
     const now = Date.now();
     const TRIAL_DURATION_SECS = 300; // 5 minutos de teste gratuito
 
+    // Normaliza subscription_expires_at
+    let expiresAtMs = 0;
+    if (user.subscription_expires_at) {
+      const expIso = getBrasiliaIsoString(user.subscription_expires_at);
+      expiresAtMs = new Date(expIso || user.subscription_expires_at).getTime();
+    }
+
     const isSubscribed = user.subscription_status === 'active' && 
-      user.subscription_expires_at && 
-      (new Date(user.subscription_expires_at).getTime() > now);
+      expiresAtMs > now;
 
     let trialStartedAt = user.trial_started_at;
     let remainingSecs = 0;
@@ -27929,7 +27961,9 @@ const server = http.createServer(async (req, res) => {
         trialStartedAt = getBrasiliaIsoString(new Date());
         user.trial_started_at = trialStartedAt;
       }
-      const elapsedSecs = Math.max(0, Math.floor((now - new Date(trialStartedAt).getTime()) / 1000));
+      const normTrialIso = getBrasiliaIsoString(trialStartedAt);
+      const trialMs = new Date(normTrialIso || trialStartedAt).getTime();
+      const elapsedSecs = Math.max(0, Math.floor((now - trialMs) / 1000));
       remainingSecs = Math.max(0, TRIAL_DURATION_SECS - elapsedSecs);
       isTrialActive = remainingSecs > 0;
     }
@@ -28139,12 +28173,15 @@ const server = http.createServer(async (req, res) => {
         if (u) {
           u.trial_started_at = nowIso;
           u.subscription_status = 'trial';
+          u.subscription_plan = null;
+          u.subscription_expires_at = null;
+          u.subscription_method = null;
           saveLocalUsers(localUsers);
         }
 
         if (pool) {
           await pool.query(
-            "UPDATE usuarios SET trial_started_at = $1, subscription_status = 'trial' WHERE LOWER(email) = LOWER($2)",
+            "UPDATE usuarios SET trial_started_at = $1, subscription_status = 'trial', subscription_plan = NULL, subscription_expires_at = NULL, subscription_method = NULL WHERE LOWER(email) = LOWER($2)",
             [nowSql, email]
           ).catch(()=>{});
         }
