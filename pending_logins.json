@@ -622,5 +622,21 @@
     "last_login": "2026-09-27T18:40:54-03:00",
     "timestamp": "2026-09-27T21:40:54.680Z",
     "ack": false
+  },
+  {
+    "id": "1",
+    "email": "suporte.paulolima@outlook.com",
+    "name": "Paulo Lima",
+    "last_login": "2026-09-27T18:58:53-03:00",
+    "timestamp": "2026-09-27T21:58:53.108Z",
+    "ack": false
+  },
+  {
+    "id": "40",
+    "email": "ciceragyn12@hotmail.com",
+    "name": "CICERA DE LIMA PEREIRA",
+    "last_login": "2026-09-27T18:59:43-03:00",
+    "timestamp": "2026-09-27T21:59:43.943Z",
+    "ack": false
   }
 ]

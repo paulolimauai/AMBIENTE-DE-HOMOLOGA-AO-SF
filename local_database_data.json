@@ -610,7 +610,18 @@
         "color": "#4a90e2"
       }
     ],
-    "transactions": [],
+    "transactions": [
+      {
+        "id": 101,
+        "desc": "Farmácia Raia Droga",
+        "val": 19.47,
+        "date": "2026-09-27",
+        "cat": "Saúde",
+        "type": "out",
+        "acc": "Cartão de Crédito",
+        "status": "Efetivado"
+      }
+    ],
     "budgets": [],
     "goals": [],
     "recurringList": [],
@@ -625,21 +636,11 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-17T13:45:56.454Z",
-    "updated_at_ms": 1789652756454
+    "updated_at": "2026-09-27T22:00:27.395Z",
+    "updated_at_ms": 1790546427395
   },
   "homologacao.paulo@nexusfinanceiro.com": {
     "transactions": [
-      {
-        "id": 102,
-        "desc": "iFood Teste Webhook",
-        "val": 48.9,
-        "date": "2026-09-27",
-        "cat": "Alimenta��o",
-        "type": "out",
-        "acc": "Cart�o Nubank",
-        "status": "Efetivado"
-      },
       {
         "id": 101,
         "desc": "Consultoria Contábil",
