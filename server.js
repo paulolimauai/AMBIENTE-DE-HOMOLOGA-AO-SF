@@ -1476,7 +1476,7 @@ async function setupDatabaseTablesAndSync() {
 
 // Conteúdo HTML/JS/CSS da aplicação centralizada com isolamento por usuário
 const htmlContent = `<!DOCTYPE html>
-<html lang="pt-BR" class="light">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
@@ -1491,14 +1491,9 @@ const htmlContent = `<!DOCTYPE html>
 <script>
 (function() {
   try {
-    var v = localStorage.getItem('nexus_tone_version');
-    if (v !== 'light_v1') {
-      localStorage.setItem('nexus_theme', 'light');
-      localStorage.setItem('nexus_tone_version', 'light_v1');
-    }
     var t = localStorage.getItem('nexus_theme');
     if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-    var isLight = (t !== 'dark');
+    var isLight = (t === 'light');
     if (isLight) {
       document.documentElement.classList.add('light');
     } else {
@@ -11758,20 +11753,15 @@ body.light .period button.active {
 
 </style>
 </head>
-<body class="light">
+<body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
 <div id="persistentSystemBg" class="persistent-system-bg" aria-hidden="true"></div>
 <script>
 (function(){
   try {
-    var v = localStorage.getItem('nexus_tone_version');
-    if (v !== 'light_v1') {
-      localStorage.setItem('nexus_theme', 'light');
-      localStorage.setItem('nexus_tone_version', 'light_v1');
-    }
     var t = localStorage.getItem('nexus_theme');
     if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-    var isLight = (t !== 'dark');
+    var isLight = (t === 'light');
     if (isLight) {
       document.body.classList.add('light');
       document.documentElement.classList.add('light');
@@ -12324,7 +12314,7 @@ body.light .period button.active {
     try {
       var savedTheme = localStorage.getItem('nexus_theme');
       if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim().toLowerCase();
-      var isLight = (savedTheme !== 'dark');
+      var isLight = (savedTheme === 'light');
       var miniBtn = document.getElementById('miniThemeBtn');
       if (miniBtn) {
         miniBtn.innerHTML = isLight ?
