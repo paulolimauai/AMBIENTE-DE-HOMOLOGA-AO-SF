@@ -12,7 +12,14 @@
     "phone": "62992345372",
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null,
+    "trial_started_at": "2026-09-25T10:31:56-03:00",
+    "subscription_plan": null,
+    "subscription_status": "trial",
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "38",
@@ -27,7 +34,14 @@
     "phone": "(62) 99999-8888",
     "birth_date": "10/10/1990",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null,
+    "trial_started_at": "2026-09-25T09:10:40-03:00",
+    "subscription_plan": "vitalicio",
+    "subscription_status": "active",
+    "subscription_expires_at": "2099-12-31T20:59:59-03:00",
+    "subscription_method": "admin_cortesia",
+    "subscription_payment_id": "ADMIN-GRANT-1790343139077"
   },
   {
     "id": "39",
@@ -42,7 +56,14 @@
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": false,
+    "trial_started_at": "2026-09-25T10:22:29-03:00",
+    "subscription_plan": null,
+    "subscription_status": "trial",
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "40",
@@ -57,7 +78,14 @@
     "phone": "(62) 99367-6783",
     "birth_date": "27/06/1966",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null,
+    "trial_started_at": null,
+    "subscription_plan": null,
+    "subscription_status": null,
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "41",
@@ -72,7 +100,14 @@
     "phone": "(62) 99264-7115",
     "birth_date": "27/10/1966",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null,
+    "trial_started_at": null,
+    "subscription_plan": null,
+    "subscription_status": null,
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "42",
@@ -87,7 +122,14 @@
     "phone": "(11) 99999-1111",
     "birth_date": "1990-01-01",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null,
+    "trial_started_at": null,
+    "subscription_plan": null,
+    "subscription_status": null,
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "43",
@@ -102,7 +144,14 @@
     "phone": "(62) 98888-2222",
     "birth_date": "1988-03-20",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null,
+    "trial_started_at": null,
+    "subscription_plan": null,
+    "subscription_status": null,
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "44",
@@ -117,7 +166,14 @@
     "phone": "(62) 99999-0000",
     "birth_date": "1992-04-10",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null,
+    "trial_started_at": null,
+    "subscription_plan": null,
+    "subscription_status": null,
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "45",
@@ -132,7 +188,14 @@
     "phone": "(62) 98888-7777",
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": null,
+    "trial_started_at": null,
+    "subscription_plan": null,
+    "subscription_status": null,
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "47",
@@ -147,7 +210,14 @@
     "phone": null,
     "birth_date": null,
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": false,
+    "trial_started_at": null,
+    "subscription_plan": null,
+    "subscription_status": null,
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "51",
@@ -162,7 +232,14 @@
     "phone": "62988880001",
     "birth_date": "10/10/1990",
     "terms_accepted": true,
-    "device_type": "Mobile"
+    "device_type": "Mobile",
+    "must_change_password": false,
+    "trial_started_at": null,
+    "subscription_plan": null,
+    "subscription_status": null,
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   },
   {
     "id": "52",
@@ -177,6 +254,13 @@
     "phone": "(62) 99234-5372",
     "birth_date": "02/06/1992",
     "terms_accepted": true,
-    "device_type": "Computador"
+    "device_type": "Computador",
+    "must_change_password": false,
+    "trial_started_at": "2026-09-25T09:14:39-03:00",
+    "subscription_plan": null,
+    "subscription_status": "trial",
+    "subscription_expires_at": null,
+    "subscription_method": null,
+    "subscription_payment_id": null
   }
 ]
