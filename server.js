@@ -826,6 +826,42 @@ function getLocalAllFinancialData() {
   return {};
 }
 
+// ==================== Autocategorização Inteligente & Parser de Notificações Mobile / Webhook ====================
+function categorizeTransactionSmart(desc) {
+  if (!desc || typeof desc !== 'string') return 'Outros';
+  const d = desc.toLowerCase();
+  if (/uber|99app|99 pop|cabify|posto|gasolina|combustivel|etanol|shell|ipiranga|br distribuidora|estacionamento|pedagio|sem parar|veloe|auto posto/i.test(d)) return 'Transporte';
+  if (/ifood|rappi|ze delivery|restaurante|lanchonete|mcdonald|burger|bobs|subway|habib|pizza|padaria|panificadora|acougue|churrascaria|supermercado|mercado|carrefour|extra|pao de acucar|assai|atacadao|dia|hipermercado|bar|cafeteria|cafe/i.test(d)) return 'Alimentação';
+  if (/farmacia|drogaria|drogasil|pacheco|raia|sao paulo|panvel|hospital|clinica|medico|dentista|odont|consulta|laboratorio|exame|saude|unimed|amil|bradesco saude/i.test(d)) return 'Saúde';
+  if (/netflix|spotify|amazon prime|disney|hbo|globoplay|deezer|cinema|ingresso|show|steam|playstation|psn|xbox|nintendo|game|jogos/i.test(d)) return 'Lazer';
+  if (/enel|equatorial|cpfl|cemig|sabesp|copasa|saneago|caesb|aluguel|condominio|imobiliaria|energia|eletricidade|agua|luz|gas|iptu/i.test(d)) return 'Moradia';
+  if (/claro|vivo|tim|oi|internet|fibra|telecom|provedor/i.test(d)) return 'Serviços';
+  if (/curso|faculdade|universidade|escola|colegio|livro|livraria|udemy|alura|hotmart|eduzz|kiwify/i.test(d)) return 'Educação';
+  if (/salario|pro labore|remuneracao|pagamento recebido|rendimento|dividendos|ted recebida|pix recebido/i.test(d)) return 'Rendimento';
+  return 'Outros';
+}
+
+function parseNotificationMessage(rawText) {
+  if (!rawText || typeof rawText !== 'string') return null;
+  let val = 0;
+  const valMatch = rawText.match(/(?:R\$|R\$\s*|valor de\s*R\$\s*|de\s*R\$\s*)([\d\.,]+)/i) || rawText.match(/([\d]+[,\.][\d]{2})/);
+  if (valMatch) {
+    let cleanNum = valMatch[1].replace(/\./g, '').replace(',', '.');
+    val = parseFloat(cleanNum) || 0;
+  }
+
+  let desc = 'Compra Automática';
+  const descMatch = rawText.match(/(?:em|para|no estabelecimento|na loja)\s+([A-Za-z0-9À-ÿ\s\*\.\-\&]{3,40})(?:\s+no|\s+com|\s+às|\s+as|\s+pelo|\s+via|\.|$)/i);
+  if (descMatch) {
+    desc = descMatch[1].trim();
+  } else {
+    const pixMatch = rawText.match(/para\s+([A-Za-z0-9À-ÿ\s\.\-]{3,35})/i);
+    if (pixMatch) desc = 'Pix: ' + pixMatch[1].trim();
+  }
+
+  return { val, desc };
+}
+
 // ==================== Camada de Persistência Relacional SQL Server (Transações, Contas e Categorias) ====================
 async function syncUserTransactionsToTable(userEmail, transactionsList) {
   if (!pool || !userEmail || !Array.isArray(transactionsList)) return;
@@ -12552,6 +12588,76 @@ body.light .period button.active {
   </div>
 </div>
 
+<!-- Modal Alimentação Automática de Transações & Webhook -->
+<div class="overlay" id="overlayWebhookTransacoes">
+  <div class="modal" style="max-width:680px; width:95%; max-height:90vh; overflow-y:auto;">
+    <button class="close-x" id="closeWebhookModal">✕</button>
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+      <div style="width:42px; height:42px; border-radius:12px; background:rgba(5, 150, 105, 0.2); display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--brand-bright); border:1px solid rgba(5, 150, 105, 0.35);">⚡</div>
+      <div>
+        <h2 style="margin:0; font-size:18px; font-weight:800; letter-spacing:-0.02em;">Alimentação Automática & Webhook</h2>
+        <p style="margin:3px 0 0 0; font-size:12px; color:var(--text-dim); font-weight:500;">Alimente suas compras no Dashboard em tempo real ao passar o cartão ou fazer Pix</p>
+      </div>
+    </div>
+
+    <!-- URL do Webhook -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px; margin-bottom:14px;">
+      <label style="font-size:11px; text-transform:uppercase; font-weight:700; color:var(--text-dim); display:block; margin-bottom:6px;">Endpoint Oficial do seu Webhook (POST)</label>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="webhookUrlInput" readonly style="flex:1; font-family:monospace; font-size:12.5px; background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.15); border-radius:8px; padding:9px 12px; color:var(--brand-bright); font-weight:600;">
+        <button type="button" class="btn-primary" id="btnCopiarWebhookUrl" style="padding:9px 16px; font-size:12.5px; font-weight:700; cursor:pointer;">Copiar</button>
+      </div>
+    </div>
+
+    <!-- Teste Rápido de 1 Clique -->
+    <div style="background:rgba(5, 150, 105, 0.08); border:1px solid rgba(5, 150, 105, 0.3); border-radius:10px; padding:14px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <div style="max-width:380px;">
+        <strong style="font-size:13px; color:var(--green); display:block; margin-bottom:2px;">⚡ Testar Alimentação Automática ao Vivo</strong>
+        <span style="font-size:11.5px; color:var(--text-dim);">Dispara uma compra simulada para o Webhook e reflete instantaneamente na aba de Transações via SSE sem recarregar a tela.</span>
+      </div>
+      <button type="button" class="btn-primary" id="btnTestarWebhookSimulacao" style="padding:10px 18px; font-size:12.5px; font-weight:800; background:var(--green); border:none; cursor:pointer; box-shadow:0 4px 12px rgba(5, 150, 105, 0.3);">⚡ Simular Compra Agora</button>
+    </div>
+
+    <!-- 3 Métodos de Integração Prática -->
+    <h3 style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); margin:0 0 10px 0;">Como conectar suas compras reais:</h3>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:16px;">
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+          <span style="font-size:14px;">🏦</span>
+          <strong style="font-size:12px; color:var(--brand-bright);">1. Open Finance Brasil</strong>
+        </div>
+        <p style="font-size:11px; color:var(--text-dim); margin:0; line-height:1.45;">Conecte via agregadores regulados (ex: Pluggy ou Klavi) para sincronizar cartões de múltiplos bancos com webhooks oficiais.</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+          <span style="font-size:14px;">📲</span>
+          <strong style="font-size:12px; color:var(--blue);">2. Automação Celular</strong>
+        </div>
+        <p style="font-size:11px; color:var(--text-dim); margin:0; line-height:1.45;">100% grátis com MacroDroid (Android) ou Atalhos (iOS) lendo a notificação de compra aprovada do seu banco e disparando o POST.</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px;">
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+          <span style="font-size:14px;">💳</span>
+          <strong style="font-size:12px; color:var(--purple);">3. APIs Bancárias</strong>
+        </div>
+        <p style="font-size:11px; color:var(--text-dim); margin:0; line-height:1.45;">Webhooks diretos de contas no Banco Inter, Asaas ou Mercado Pago com notificação a cada Pix ou compra realizada.</p>
+      </div>
+    </div>
+
+    <!-- Exemplo de cURL -->
+    <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:10px 12px; margin-bottom:14px;">
+      <span style="font-size:10.5px; font-weight:700; color:var(--text-dim); display:block; margin-bottom:4px; font-family:monospace;">EXEMPLO DE PAYLOAD JSON (POST):</span>
+      <pre style="margin:0; font-family:monospace; font-size:11px; color:var(--green); white-space:pre-wrap;">{ "descricao": "Posto Shell Combustivel", "valor": 120.50, "categoria": "Transporte", "tipo": "out" }</pre>
+    </div>
+
+    <div class="modal-actions" style="margin-top:10px;">
+      <button type="button" id="closeWebhookModalBtn" class="btn-ghost" style="padding:9px 18px; font-weight:600;">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Orçamento -->
 <div class="overlay" id="overlayBudget">
   <div class="modal">
@@ -19195,6 +19301,9 @@ function pageTransacoes(){
     </div>
     <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
       \${periodPickerHTML()}
+      <button class="btn-ghost" id="btnWebhookModal" style="display:flex; align-items:center; gap:6px; font-weight:700; color:var(--brand-bright); border-color:rgba(5, 150, 105, 0.45); background:rgba(5, 150, 105, 0.08);" title="Configurar Webhook e Integração Automática de Compras">
+        ⚡ Webhook / Auto-Alimentação
+      </button>
       <button class="btn-ghost" id="btnGerenciarCategorias" style="display:flex; align-items:center; gap:6px;">🏷️ Categorias</button>
       <button class="btn-primary" id="btnNovaTransacao" style="display:flex; align-items:center; gap:6px; font-weight:700;">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -23849,6 +23958,21 @@ function openCatManageModal(){
 }
 function closeCatManageModal(){ document.getElementById('overlayCatManage').classList.remove('show'); }
 
+function openWebhookModal(){
+  const el = document.getElementById('overlayWebhookTransacoes');
+  if (el) {
+    el.classList.add('show');
+    const input = document.getElementById('webhookUrlInput');
+    if (input) {
+      input.value = window.location.origin + '/api/webhook/transacoes';
+    }
+  }
+}
+function closeWebhookModal(){
+  const el = document.getElementById('overlayWebhookTransacoes');
+  if (el) el.classList.remove('show');
+}
+
 function openBudgetModal(id){
   if(categories.length===0){ showToast('Cadastre uma categoria antes de criar um orçamento'); return; }
   editingBudgetId = id || null;
@@ -25156,6 +25280,7 @@ function attachPageEvents(){
   document.querySelectorAll('[data-nav]').forEach(el=>el.onclick = ()=>{ navigate(el.getAttribute('data-nav')); });
 
   const nova = document.getElementById('btnNovaTransacao'); if(nova) nova.onclick = ()=>openModal(null);
+  const btnWebhook = document.getElementById('btnWebhookModal'); if(btnWebhook) btnWebhook.onclick = openWebhookModal;
   const gerCat = document.getElementById('btnGerenciarCategorias'); if(gerCat) gerCat.onclick = openCatManageModal;
   document.querySelectorAll('[data-edit]').forEach(el => {
     el.onclick = (e) => {
@@ -25800,6 +25925,66 @@ document.querySelectorAll('.cat-manage-tabs .cat-tab').forEach(btn=>{
   btn.onclick = ()=>{ catManageType = btn.getAttribute('data-cattab'); renderCatManageList(catManageType); };
 });
 
+const closeWebhookBtn = document.getElementById('closeWebhookModal');
+if (closeWebhookBtn) closeWebhookBtn.onclick = closeWebhookModal;
+const closeWebhookBtn2 = document.getElementById('closeWebhookModalBtn');
+if (closeWebhookBtn2) closeWebhookBtn2.onclick = closeWebhookModal;
+const overlayWebhook = document.getElementById('overlayWebhookTransacoes');
+if (overlayWebhook) overlayWebhook.addEventListener('click', e=>{ if(e.target.id==='overlayWebhookTransacoes') closeWebhookModal(); });
+
+const btnCopiarW = document.getElementById('btnCopiarWebhookUrl');
+if (btnCopiarW) {
+  btnCopiarW.onclick = () => {
+    const input = document.getElementById('webhookUrlInput');
+    if (input) {
+      navigator.clipboard.writeText(input.value).then(() => {
+        showToast('📋 URL do Webhook copiada!');
+      }).catch(() => {
+        input.select();
+        document.execCommand('copy');
+        showToast('📋 URL do Webhook copiada!');
+      });
+    }
+  };
+}
+
+const btnTestW = document.getElementById('btnTestarWebhookSimulacao');
+if (btnTestW) {
+  btnTestW.onclick = async () => {
+    btnTestW.disabled = true;
+    const oldText = btnTestW.textContent;
+    btnTestW.textContent = '⏳ Enviando...';
+    try {
+      const uEmail = currentUser ? currentUser.email : '';
+      const sampleEstabelecimentos = ['iFood Lanche Especial', 'Supermercado Central', 'Posto Shell Combustível', 'Farmácia Raia Droga', 'Uber Viagem'];
+      const randomEstab = sampleEstabelecimentos[Math.floor(Math.random() * sampleEstabelecimentos.length)];
+      const randomVal = (Math.random() * 45 + 15).toFixed(2);
+      
+      const res = await fetch('/api/webhook/compra-automatica', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: uEmail,
+          descricao: randomEstab,
+          valor: parseFloat(randomVal),
+          conta: 'Cartão de Crédito',
+          status: 'Efetivado'
+        })
+      });
+      const resData = await res.json();
+      if (resData.success) {
+        showToast('✅ Compra simulada registrada e visualizada com sucesso!');
+      } else {
+        showToast('Aviso: ' + (resData.message || 'Erro'));
+      }
+    } catch(err) {
+      showToast('Erro ao testar: ' + err.message);
+    } finally {
+      btnTestW.disabled = false;
+      btnTestW.textContent = oldText;
+    }
+  };
+}
 
 document.getElementById('closeOrcModal').onclick = closeBudgetModal;
 document.getElementById('orcCancelBtn').onclick = closeBudgetModal;
@@ -26895,6 +27080,48 @@ window.applyPostLoginBg = function(theme) {
     }
   })();
 
+  // Sincronização em Tempo Real via SSE para Transações Automáticas (Webhook / Open Finance)
+  (function initAutoTransactionSSE() {
+    if (typeof window === 'undefined' || !('EventSource' in window)) return;
+    try {
+      const sseTx = new EventSource('/api/events');
+      sseTx.addEventListener('transacao_automatica', function(event) {
+        try {
+          const payload = JSON.parse(event.data);
+          if (!payload || !payload.transaction) return;
+          const userEmail = (currentUser && currentUser.email ? currentUser.email : '').toLowerCase().trim();
+          const targetEmail = (payload.email || '').toLowerCase().trim();
+          
+          if (!targetEmail || targetEmail === userEmail || (currentUser && currentUser.role === 'Administrador')) {
+            console.log('[SSE] Nova transação detectada via Webhook:', payload.transaction);
+            if (Array.isArray(transactions)) {
+              const alreadyExists = transactions.some(t => t.id === payload.transaction.id);
+              if (!alreadyExists) {
+                transactions.unshift(payload.transaction);
+                if (currentUser) {
+                  const uKey = 'nexus_data_' + userEmail;
+                  saveToStorage(uKey, {
+                    categories, accounts, transactions, budgets, goals, recurringList, alerts, attachments, notifications,
+                    nextAccId, nextTxId, nextBudgetId, nextGoalId, nextRecId, nextAlertId, nextAttId, nextNotifId,
+                    updated_at: new Date().toISOString()
+                  });
+                }
+                if (typeof render === 'function') {
+                  render();
+                }
+                if (typeof showToast === 'function') {
+                  const valFmt = parseFloat(payload.transaction.val || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                  showToast('⚡ Compra detectada: ' + payload.transaction.desc + ' - R$ ' + valFmt);
+                }
+              }
+            }
+          }
+        } catch(err) {
+          console.warn('[SSE] Falha ao processar evento de transação automática:', err);
+        }
+      });
+    } catch(e) {}
+  })();
 
 </script>
 </body>
@@ -28844,6 +29071,190 @@ const server = http.createServer(async (req, res) => {
 
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true }));
+    });
+    return;
+  }
+
+  // ==================== WEBHOOK OFICIAL DE ALIMENTAÇÃO AUTOMÁTICA DE TRANSAÇÕES ====================
+  // Permite integração com Open Finance (Pluggy / Belvo), Notificações Mobile (MacroDroid / Tasker / Atalhos iOS)
+  // ou APIs de Bancos (Banco Inter, Asaas, Mercado Pago)
+  if ((req.method === 'POST' || req.method === 'GET') && (
+    parsedUrl.pathname === '/api/webhook/transacoes' ||
+    parsedUrl.pathname === '/api/webhook/compra-automatica' ||
+    parsedUrl.pathname === '/api/transacoes/automatica'
+  )) {
+    if (req.method === 'GET') {
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({
+        status: 'active',
+        service: 'Nexus Financeiro Hub - Webhook de Transações em Tempo Real',
+        description: 'Endpoint ativo para receber notificações instantâneas de compras, cartões, Pix e Open Finance.',
+        method: 'POST',
+        supported_formats: [
+          {
+            tipo: 'JSON Padrão',
+            exemplo: { email: 'usuario@exemplo.com (opcional)', descricao: 'Supermercado Central', valor: 85.50, categoria: 'Alimentação (opcional)', conta: 'Cartão de Crédito (opcional)', data: 'YYYY-MM-DD (opcional)' }
+          },
+          {
+            tipo: 'Texto de Notificação / SMS de Banco',
+            exemplo: { text: 'Compra de R$ 42,90 aprovada em PADARIA PÃO DE MEL no cartão Nubank' }
+          }
+        ]
+      }));
+    }
+
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      let payload = {};
+      try {
+        if (body && body.trim()) {
+          payload = JSON.parse(body);
+        }
+      } catch(e) {
+        payload = { text: body };
+      }
+
+      // Suporte a eventos aninhados de Open Finance (ex: Pluggy / Belvo: { event, data: { ... } })
+      if (payload.data && typeof payload.data === 'object' && !payload.descricao && !payload.description) {
+        payload = { ...payload, ...payload.data };
+      }
+
+      // Se veio texto cru de SMS ou notificação push do celular (MacroDroid / Tasker)
+      const rawText = payload.text || payload.notificacao || payload.mensagem || payload.notification;
+      let parsedFromText = null;
+      if (rawText && typeof rawText === 'string') {
+        parsedFromText = parseNotificationMessage(rawText);
+      }
+
+      // Extrai e normaliza descrição
+      let rawDesc = payload.descricao || payload.description || payload.estabelecimento || payload.title || payload.memo || (parsedFromText ? parsedFromText.desc : 'Compra Automática');
+      if (typeof rawDesc !== 'string' || !rawDesc.trim()) rawDesc = 'Compra Automática';
+      const cleanDesc = rawDesc.trim();
+
+      // Extrai e normaliza valor
+      let rawVal = payload.valor !== undefined ? payload.valor : (payload.val !== undefined ? payload.val : (payload.amount !== undefined ? payload.amount : (payload.price !== undefined ? payload.price : (parsedFromText ? parsedFromText.val : 0))));
+      if (typeof rawVal === 'string') {
+        rawVal = rawVal.replace('R$', '').replace(/\s+/g, '').replace(/\./g, '').replace(',', '.');
+      }
+      let finalVal = Math.abs(parseFloat(rawVal) || 0);
+
+      // Data no horário de Brasília (UTC-3)
+      let finalDate = payload.data || payload.date || payload.data_transacao;
+      if (!finalDate || typeof finalDate !== 'string' || !/^\d{4}-\d{2}-\d{2}/.test(finalDate)) {
+        try {
+          finalDate = getBrasiliaIsoString(new Date()).slice(0, 10);
+        } catch(e) {
+          finalDate = new Date().toISOString().slice(0, 10);
+        }
+      } else {
+        finalDate = finalDate.slice(0, 10);
+      }
+
+      // Categoria (se não informada, categoriza inteligentemente pelo nome)
+      let finalCat = payload.categoria || payload.category;
+      if (!finalCat || typeof finalCat !== 'string' || !finalCat.trim()) {
+        finalCat = categorizeTransactionSmart(cleanDesc);
+      }
+
+      // Tipo: padrão é 'out' (despesa), a menos que explicitamente indicado como receita/crédito
+      let finalTipo = 'out';
+      if (payload.tipo === 'in' || payload.tipo === 'receita' || payload.type === 'CREDIT' || payload.natureza === 'receita') {
+        finalTipo = 'in';
+      }
+
+      // Identifica o usuário de destino
+      let targetEmail = (payload.email || parsedUrl.query.email || req.headers['x-user-email'] || '').toLowerCase().trim();
+      if (!targetEmail) {
+        const localUsers = getLocalUsers().filter(u => u.active !== false);
+        const primary = localUsers.find(u => u.role === 'Administrador' || (u.email && u.email.includes('paulo'))) || localUsers[0];
+        if (primary && primary.email) {
+          targetEmail = primary.email.toLowerCase().trim();
+        } else {
+          targetEmail = 'homologacao.paulo@nexusfinanceiro.com';
+        }
+      }
+
+      // Carrega dados financeiros do usuário
+      let userData = getLocalData(targetEmail);
+      if (!userData || typeof userData !== 'object') {
+        userData = getEmptyFinancialData();
+      }
+      if (!Array.isArray(userData.transactions)) userData.transactions = [];
+
+      // Próximo ID
+      let maxTxId = 100;
+      userData.transactions.forEach(t => {
+        const tid = parseInt(t.id);
+        if (!isNaN(tid) && tid > maxTxId) maxTxId = tid;
+      });
+      const newTxId = maxTxId + 1;
+
+      // Conta de destino
+      const finalConta = (payload.conta || payload.account || payload.banco || (Array.isArray(userData.accounts) && userData.accounts[0] ? userData.accounts[0].name : 'Principal')).trim();
+      const finalStatus = (payload.status || 'Efetivado').trim();
+
+      const novaTx = {
+        id: newTxId,
+        desc: cleanDesc,
+        val: finalVal,
+        date: finalDate,
+        cat: finalCat,
+        type: finalTipo,
+        acc: finalConta,
+        status: finalStatus
+      };
+
+      // Insere no topo
+      userData.transactions.unshift(novaTx);
+      try {
+        userData.updated_at = getBrasiliaIsoString(new Date());
+      } catch(e) {
+        userData.updated_at = new Date().toISOString();
+      }
+
+      // Salva no cache local
+      saveLocalData(targetEmail, userData);
+
+      // Persiste no SQL Server se conectado
+      if (pool) {
+        const strUserData = JSON.stringify(userData);
+        pool.query(
+          `IF EXISTS (SELECT 1 FROM dados_financeiros WHERE LOWER(email) = LOWER($1))
+           BEGIN
+             UPDATE dados_financeiros SET dados = $2, updated_at = GETDATE() WHERE LOWER(email) = LOWER($1);
+           END
+           ELSE
+           BEGIN
+             INSERT INTO dados_financeiros (email, dados, updated_at) VALUES ($1, $2, GETDATE());
+           END`,
+          [targetEmail, strUserData]
+        ).catch(err => console.warn('[WEBHOOK BD] Erro ao sincronizar dados_financeiros:', err.message));
+
+        syncUserTransactionsToTable(targetEmail, userData.transactions).catch(() => {});
+      }
+
+      // Registra no log do sistema
+      try {
+        recordSystemLog(targetEmail, 'Webhook Externo', 'Transação Automática', 'Alimentação em Tempo Real', `Compra de R$ ${finalVal.toFixed(2)} (${cleanDesc}) registrada via Webhook Automático`);
+      } catch(e) {}
+
+      // Emite SSE para atualizar instantaneamente os dashboards abertos
+      try {
+        broadcastEvent('transacao_automatica', {
+          email: targetEmail,
+          transaction: novaTx,
+          message: `Compra de R$ ${finalVal.toFixed(2)} em ${cleanDesc} adicionada!`
+        });
+      } catch(e) {}
+
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({
+        success: true,
+        message: 'Transação registrada e sincronizada com sucesso no Dashboard!',
+        target_user: targetEmail,
+        transaction: novaTx
+      }));
     });
     return;
   }
