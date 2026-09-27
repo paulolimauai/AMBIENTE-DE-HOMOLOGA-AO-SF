@@ -1195,7 +1195,7 @@ async function setupDatabaseTablesAndSync() {
     try {
       await pool.query("UPDATE usuarios SET name = 'Paulo Lima' WHERE LOWER(RTRIM(LTRIM(name))) IN ('admin', 'administrador') OR (LOWER(email) = 'suporte.paulolima@outlook.com' AND LOWER(RTRIM(LTRIM(name))) IN ('admin', 'administrador'))");
     } catch(autoFixNameErr) {}
-    const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
+    const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
     if (res.rows) {
       saveLocalUsers(res.rows, true);
       console.log(`[BANCO] ${res.rows.length} usuário(s) carregados soberanamente do banco de dados SQL Server.`);
@@ -24592,7 +24592,7 @@ async function openAdminCreateUserModal(){
   document.getElementById('userAdminPassword').value = '';
   document.getElementById('userAdminPassword').type = 'password';
   bindPasswordToggle('userAdminPassword', 'userAdminPasswordToggle');
-  updateAdminModalBadge(email);
+  if (typeof updateAdminModalBadge === 'function') updateAdminModalBadge('');
   document.getElementById('overlayUserAdmin').classList.add('show');
 }
 
@@ -24667,6 +24667,7 @@ async function openUserAdminModal(email){
   bindPasswordToggle('userAdminPassword', 'userAdminPasswordToggle');
 
   document.getElementById('overlayUserAdmin').classList.add('show');
+  if (typeof updateAdminModalBadge === 'function') updateAdminModalBadge(email);
 }
 
 function closeUserAdminModal(){
@@ -24706,6 +24707,9 @@ async function saveUserAdmin(){
       password: newPass,
       role,
       active: active,
+      trial_started_at: new Date().toISOString(),
+      subscription_status: role === 'Administrador' ? 'active' : 'trial',
+      subscription_plan: role === 'Administrador' ? 'administrador_ilimitado' : null,
       created_at: new Date().toISOString()
     };
     try { localStorage.removeItem('nexus_data_' + rawEmail.toLowerCase().trim()); } catch(e) {}
@@ -27978,7 +27982,7 @@ const server = http.createServer(async (req, res) => {
             });
 
             // Atualiza cache local instantaneamente com o espelho do SQL Server
-            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
+            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
             if (allUsersRes.rows) {
               saveLocalUsers(allUsersRes.rows, true);
             }
@@ -27999,6 +28003,7 @@ const server = http.createServer(async (req, res) => {
         }
 
         const localUsers = getLocalUsers().filter(u => u && u.email && u.email.toLowerCase() !== cleanEmail);
+        const regNowIso = getBrasiliaIsoString(new Date());
         const newUserObj = { 
           id: newUserId, 
           name: name.trim(), 
@@ -28011,6 +28016,12 @@ const server = http.createServer(async (req, res) => {
           birth_date: cleanBirthDate,
           terms_accepted: termsAcceptedVal,
           device_type: deviceTypeVal,
+          trial_started_at: regNowIso,
+          subscription_status: 'trial',
+          subscription_plan: null,
+          subscription_expires_at: null,
+          subscription_method: null,
+          subscription_payment_id: null,
           created_at: new Date().toISOString()
         };
         localUsers.push(newUserObj);
@@ -28541,6 +28552,13 @@ const server = http.createServer(async (req, res) => {
               birth_date: (u.birth_date || u.birthDate) !== undefined ? (u.birth_date || u.birthDate) : (existing ? (existing.birth_date || existing.birthDate) : null),
               terms_accepted: u.terms_accepted !== undefined ? u.terms_accepted : (existing ? existing.terms_accepted : true),
               device_type: u.device_type || (existing ? existing.device_type : 'Computador'),
+              must_change_password: u.must_change_password !== undefined ? u.must_change_password : (existing ? existing.must_change_password : false),
+              trial_started_at: u.trial_started_at !== undefined ? u.trial_started_at : (existing ? existing.trial_started_at : null),
+              subscription_plan: u.subscription_plan !== undefined ? u.subscription_plan : (existing ? existing.subscription_plan : null),
+              subscription_status: u.subscription_status !== undefined ? u.subscription_status : (existing ? existing.subscription_status : 'trial'),
+              subscription_expires_at: u.subscription_expires_at !== undefined ? u.subscription_expires_at : (existing ? existing.subscription_expires_at : null),
+              subscription_method: u.subscription_method !== undefined ? u.subscription_method : (existing ? existing.subscription_method : null),
+              subscription_payment_id: u.subscription_payment_id !== undefined ? u.subscription_payment_id : (existing ? existing.subscription_payment_id : null),
               created_at: u.created_at || (existing ? existing.created_at : new Date().toISOString()),
               last_login: finalLastLogin
             });
@@ -28561,6 +28579,8 @@ const server = http.createServer(async (req, res) => {
               if (u && u.email && u.name) {
                 const uEmail = u.email.toLowerCase().trim();
                 const sqlLastLogin = u.last_login ? getBrasiliaSqlString(u.last_login) : null;
+                const sqlTrialStarted = u.trial_started_at ? getBrasiliaSqlString(u.trial_started_at) : null;
+                const sqlSubExpires = u.subscription_expires_at ? getBrasiliaSqlString(u.subscription_expires_at) : null;
                 await pool.query(
                   `IF EXISTS (SELECT 1 FROM usuarios WHERE LOWER(email) = LOWER($1))
                    BEGIN
@@ -28574,15 +28594,19 @@ const server = http.createServer(async (req, res) => {
                        phone = COALESCE($7, phone),
                        birth_date = COALESCE($8, birth_date),
                        terms_accepted = COALESCE($9, terms_accepted),
-                       device_type = COALESCE($10, device_type)
+                       device_type = COALESCE($10, device_type),
+                       subscription_status = COALESCE($11, subscription_status),
+                       subscription_plan = COALESCE($12, subscription_plan),
+                       subscription_expires_at = COALESCE($13, subscription_expires_at),
+                       trial_started_at = COALESCE($14, trial_started_at)
                      WHERE LOWER(email) = LOWER($1);
                    END
                    ELSE
                    BEGIN
-                     INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, device_type)
-                     VALUES ($2, $1, $3, $4, 1, $5, $6, $7, $8, $9, $10);
+                     INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, device_type, subscription_status, subscription_plan, subscription_expires_at, trial_started_at)
+                     VALUES ($2, $1, $3, $4, 1, $5, $6, $7, $8, $9, $10, COALESCE($11, 'trial'), $12, $13, $14);
                    END;`,
-                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador']
+                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador', u.subscription_status || null, u.subscription_plan || null, sqlSubExpires, sqlTrialStarted]
                 );
 
                 // Garante que todo novo usuário cadastrado tenha dados financeiros 100% zerados
@@ -28599,11 +28623,13 @@ const server = http.createServer(async (req, res) => {
               }
             }
             // Espelhar de volta para salvar o que de fato está no SQL Server
-            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
+            const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
             if (allUsersRes.rows) {
               const formattedRows = allUsersRes.rows.map(r => {
                 const c = { ...r };
                 if (c.last_login) c.last_login = getBrasiliaIsoString(c.last_login);
+                if (c.subscription_expires_at) c.subscription_expires_at = getBrasiliaIsoString(c.subscription_expires_at);
+                if (c.trial_started_at) c.trial_started_at = getBrasiliaIsoString(c.trial_started_at);
                 return c;
               });
               saveLocalUsers(formattedRows, true);
@@ -29004,6 +29030,15 @@ const server = http.createServer(async (req, res) => {
         }
 
         let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === targetEmail);
+        if (!targetUser && pool) {
+          try {
+            const dbCheck = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios WHERE LOWER(email) = LOWER($1)', [targetEmail]);
+            if (dbCheck.rows && dbCheck.rows.length > 0) {
+              targetUser = dbCheck.rows[0];
+              localUsers.push(targetUser);
+            }
+          } catch(e) {}
+        }
         if (!targetUser) {
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Usuário destinatário não encontrado' }));
@@ -30145,12 +30180,18 @@ async function syncWithRenderCloud() {
     }
 
     // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS)
-    const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type FROM usuarios ORDER BY id ASC');
+    const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
     if (localUsersRes.rows && localUsersRes.rows.length > 0) {
       const usersToSync = localUsersRes.rows.map(u => {
         const uCopy = { ...u };
         if (uCopy.last_login) {
           uCopy.last_login = getBrasiliaIsoString(uCopy.last_login);
+        }
+        if (uCopy.subscription_expires_at) {
+          uCopy.subscription_expires_at = getBrasiliaIsoString(uCopy.subscription_expires_at);
+        }
+        if (uCopy.trial_started_at) {
+          uCopy.trial_started_at = getBrasiliaIsoString(uCopy.trial_started_at);
         }
         return uCopy;
       });
