@@ -2810,201 +2810,122 @@ body.light .period button.active {
     <!-- Canvas de Fundo Natural (Partículas Suaves e Orgânicas) -->
     <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-    <!-- Ambient Aura Glows Naturais e Difusos -->
+    <!-- Ambient Aura Glows Naturais e Difusos Centralizados -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="absolute top-[15%] left-[10%] w-[420px] h-[420px] bg-amber-500/10 rounded-full blur-[140px]"></div>
-        <div class="absolute bottom-[20%] right-[10%] w-[450px] h-[450px] bg-sky-500/8 rounded-full blur-[160px]"></div>
+        <div class="absolute top-[18%] left-1/2 -translate-x-1/2 w-[540px] h-[540px] bg-amber-500/10 rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-[10%] left-1/2 -translate-x-1/2 w-[480px] h-[480px] bg-sky-500/8 rounded-full blur-[160px]"></div>
     </div>
 
-    <!-- CONTAINER PRINCIPAL EXECUTIVO 2 COLUNAS (FINTECH SHOWCASE + CARD DE AUTENTICAÇÃO) -->
-    <main class="w-full max-w-[1180px] z-10 flex-1 flex flex-col justify-center my-auto py-1 sm:py-2 px-1 sm:px-2">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
+    <!-- CONTAINER PRINCIPAL CENTRALIZADO -->
+    <main class="w-full max-w-[460px] sm:max-w-[480px] z-10 flex-1 flex flex-col justify-center my-auto py-2 px-3 sm:px-4">
+        
+        <!-- CARD PRINCIPAL DE AUTENTICAÇÃO CENTRALIZADO -->
+        <div class="auth-card-nexus w-full p-5 sm:p-7 rounded-2xl sm:rounded-[26px] relative shadow-2xl" id="authNexusCard">
             
-            <!-- COLUNA ESQUERDA: SHOWCASE INSTITUCIONAL LIMPO E NATURAL -->
-            <div class="hidden lg:flex lg:col-span-7 flex-col justify-center space-y-3.5 lg:space-y-4 text-left pr-2 lg:pr-4">
-                
-                <!-- Badge Natural de Boas-Vindas -->
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold w-fit">
-                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                    <span>Gestão Financeira Pessoal • Simples e Segura</span>
+            <!-- HEADER COMPACTO DO CARD -->
+            <div class="flex flex-col items-center text-center mb-4">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span>Acesso Seguro</span>
                 </div>
-
-                <!-- Título e Descrição Humanizados -->
-                <div class="space-y-2">
-                    <h1 class="text-2xl sm:text-3xl lg:text-[34px] font-black text-white leading-[1.2] tracking-tight font-display">
-                        O controle do seu dinheiro de forma <span class="bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 bg-clip-text text-transparent">natural, clara e inteligente.</span>
-                    </h1>
-                    <p class="text-sm text-slate-300 leading-relaxed max-w-[480px] font-normal">
-                        Acompanhe receitas e despesas, planeje suas metas de economia e tenha previsibilidade financeira com total tranquilidade no seu dia a dia.
-                    </p>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium">
-                        <span>⏱️ 5 minutos grátis para experimentar • Planos a partir de R$ 10/mês</span>
-                    </div>
-                </div>
-
-                <!-- 3 Cards Naturais de Recursos Financeiros -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                    
-                    <!-- Card 1: Economia do Mês -->
-                    <div class="p-3 sm:p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-amber-500/30 transition-all hover:-translate-y-0.5 shadow-sm">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Economia do Mês</span>
-                            <span class="text-xs">🎯</span>
-                        </div>
-                        <div class="text-lg sm:text-xl font-bold text-white font-display" id="metricEconomia" data-target="3850" data-prefix="R$ ">R$ 3.850</div>
-                        <div class="text-[10.5px] text-amber-400 font-medium mt-0.5">
-                            <span>+18% guardado este mês</span>
-                        </div>
-                    </div>
-
-                    <!-- Card 2: Orçamento Sob Controle -->
-                    <div class="p-3 sm:p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-amber-500/30 transition-all hover:-translate-y-0.5 shadow-sm">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Orçamento</span>
-                            <span class="text-xs">💡</span>
-                        </div>
-                        <div class="text-lg sm:text-xl font-bold text-white font-display" id="metricOrcamento">Sob Controle</div>
-                        <div class="text-[10.5px] text-emerald-400 font-medium mt-0.5">
-                            <span>Despesas planejadas</span>
-                        </div>
-                    </div>
-
-                    <!-- Card 3: Metas & Sonhos -->
-                    <div class="p-3 sm:p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-amber-500/30 transition-all hover:-translate-y-0.5 shadow-sm">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Metas & Sonhos</span>
-                            <span class="text-xs">🚀</span>
-                        </div>
-                        <div class="text-lg sm:text-xl font-bold text-white font-display" id="metricMetas" data-target="84" data-suffix="% Concluído">84% Concluído</div>
-                        <div class="text-[10.5px] text-sky-400 font-medium mt-0.5">
-                            <span>Próximo da conquista</span>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Garantia de Privacidade e Segurança Natural -->
-                <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 pt-1">
-                    <div class="flex items-center gap-1.5">
-                        <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                        <span class="text-slate-300">Criptografia bancária de ponta a ponta</span>
-                    </div>
-                    <span>•</span>
-                    <div>Privacidade total conforme LGPD</div>
-                </div>
-
+                <h1 class="text-2xl sm:text-[26px] font-black tracking-tight auth-brand-nexus text-white font-display">
+                    Acesse sua Conta
+                </h1>
+                <p id="authSubtitle" class="text-xs auth-subtitle-text text-slate-400 mt-1 font-normal leading-relaxed">
+                    O controle do seu dinheiro de forma natural, clara e inteligente
+                </p>
             </div>
 
-            <!-- COLUNA DIREITA: CARD PRINCIPAL DE AUTENTICAÇÃO -->
-            <div id="authContainerCol" class="w-full lg:col-span-5 flex flex-col items-center justify-center max-w-[420px] sm:max-w-[430px] mx-auto">
-                
-                <!-- CARD PRINCIPAL DE AUTENTICAÇÃO -->
-                <div class="auth-card-nexus w-full p-5 sm:p-6 lg:p-7 rounded-2xl sm:rounded-[24px] relative" id="authNexusCard">
+            <!-- NAVEGAÇÃO SEGMENTADA POR ABAS -->
+            <div class="flex rounded-xl p-1 mb-4 gap-1.5" id="authTabsNav">
+                <button type="button" class="auth-tab-btn active text-xs sm:text-sm" id="tabBtnLogin" onclick="switchAuthTab('login')">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    <span>Entrar</span>
+                </button>
+                <button type="button" class="auth-tab-btn text-xs sm:text-sm" id="tabBtnRegister" onclick="switchAuthTab('register')">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+                    <span>Criar Conta</span>
+                </button>
+            </div>
+
+            <!-- ALERTA INLINE DINÂMICO -->
+            <div id="authAlert" class="hidden"></div>
+
+            <!-- 1. FORMULÁRIO DE LOGIN -->
+            <div id="loginBox" class="form-fade block">
+                <form id="loginForm" class="space-y-3.5" onsubmit="handleLoginSubmit(event); return false;">
                     
-                    <!-- HEADER COMPACTO DO CARD -->
-                    <div class="flex flex-col items-center text-center mb-4">
-                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px] font-semibold mb-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                            <span>Acesso Seguro</span>
+                    <!-- Campo E-mail -->
+                    <div>
+                        <label class="block text-[11px] font-semibold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">E-mail Corporativo ou Pessoal</label>
+                        <div class="auth-input-wrapper">
+                            <span class="auth-input-icon">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            </span>
+                            <input id="loginEmail" name="email" type="email" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none" required 
+                                placeholder="seu.email@exemplo.com">
                         </div>
-                        <h2 class="text-xl sm:text-[22px] font-bold tracking-tight auth-brand-nexus text-white font-display">
-                            Acesse sua Conta
-                        </h2>
-                        <p id="authSubtitle" class="text-xs auth-subtitle-text text-slate-400 mt-0.5 font-normal leading-relaxed">
-                            Digite seus dados para gerenciar suas finanças
-                        </p>
                     </div>
 
-                    <!-- NAVEGAÇÃO SEGMENTADA POR ABAS -->
-                    <div class="flex rounded-xl p-1 mb-4 gap-1.5" id="authTabsNav">
-                        <button type="button" class="auth-tab-btn active text-xs sm:text-sm" id="tabBtnLogin" onclick="switchAuthTab('login')">
-                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                            <span>Entrar</span>
-                        </button>
-                        <button type="button" class="auth-tab-btn text-xs sm:text-sm" id="tabBtnRegister" onclick="switchAuthTab('register')">
-                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-                            <span>Criar Conta</span>
-                        </button>
-                    </div>
-
-                    <!-- ALERTA INLINE DINÂMICO -->
-                    <div id="authAlert" class="hidden"></div>
-
-                    <!-- 1. FORMULÁRIO DE LOGIN -->
-                    <div id="loginBox" class="form-fade block">
-                        <form id="loginForm" class="space-y-3" onsubmit="handleLoginSubmit(event); return false;">
-                            
-                            <!-- Campo E-mail -->
-                            <div>
-                                <label class="block text-[11px] font-semibold uppercase tracking-wider auth-label text-[#94A3B8] mb-1">E-mail Corporativo ou Pessoal</label>
-                                <div class="auth-input-wrapper">
-                                    <span class="auth-input-icon">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                                    </span>
-                                    <input id="loginEmail" name="email" type="email" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none" required 
-                                        placeholder="seu.email@exemplo.com">
-                                </div>
-                            </div>
-
-                            <!-- Campo Senha -->
-                            <div>
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="text-[11px] font-semibold uppercase tracking-wider auth-label text-[#94A3B8]">Senha</label>
-                                    <button type="button" onclick="switchAuthTab('forgot')" class="text-[11px] font-semibold text-amber-500 hover:text-amber-400 transition-colors focus:outline-none">
-                                        Esqueceu a senha?
-                                    </button>
-                                </div>
-                                <div class="auth-input-wrapper">
-                                    <span class="auth-input-icon">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                                    </span>
-                                    <input id="loginPassword" name="password" type="password" autocomplete="current-password" spellcheck="false" required 
-                                        placeholder="••••••••">
-                                    <button type="button" id="btnToggleLoginPass" onclick="togglePasswordVisibility('loginPassword', 'btnToggleLoginPass')" 
-                                        class="auth-pass-toggle-btn" title="Visualizar Senha" aria-label="Visualizar Senha">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                    </button>
-                                </div>
-                                <div id="capsLockWarningLogin" class="hidden mt-1 text-[11px] text-amber-400 font-semibold flex items-center gap-1.5">
-                                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                    <span>Caps Lock está ativado</span>
-                                </div>
-                            </div>
-
-                            <!-- Lembrar de Mim -->
-                            <div class="flex items-center pt-0.5 text-xs text-[#94A3B8] auth-label">
-                                <label class="flex items-center gap-2 cursor-pointer select-none">
-                                    <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer">
-                                    <span>Lembrar meu acesso</span>
-                                </label>
-                            </div>
-
-                            <!-- Botão de Login -->
-                            <div class="pt-1">
-                                <button type="submit" id="btnLoginSubmit" class="btn-auth-gradient w-full py-2.5 sm:py-3 text-sm font-bold flex items-center justify-center gap-2 focus:outline-none">
-                                    <span>Entrar na Conta</span>
-                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                                </button>
-                            </div>
-
-                            <!-- Atalho de Acesso Rápido Administrador Master -->
-                            <div class="pt-2 border-t border-white/10 mt-2">
-                                <button type="button" id="btnQuickAdminLogin" onclick="preencherCredenciaisAdmin()" 
-                                    class="btn-quick-admin-login w-full py-2 px-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
-                                    <span class="text-xs">⚡</span>
-                                    <span>Acesso Rápido Master</span>
-                                    <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold">1-Clique</span>
-                                </button>
-                            </div>
-                        </form>
-
-                        <p class="mt-3.5 text-center text-xs auth-subtitle-text text-[#94A3B8]">
-                            Não possui uma conta? 
-                            <button type="button" onclick="switchAuthTab('register')" class="text-amber-500 hover:text-amber-400 font-bold ml-1 focus:outline-none">
-                                Cadastre-se gratuitamente
+                    <!-- Campo Senha -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="text-[11px] font-semibold uppercase tracking-wider auth-label text-[#94A3B8]">Senha</label>
+                            <button type="button" onclick="switchAuthTab('forgot')" class="text-[11px] font-semibold text-amber-500 hover:text-amber-400 transition-colors focus:outline-none">
+                                Esqueceu a senha?
                             </button>
-                        </p>
+                        </div>
+                        <div class="auth-input-wrapper">
+                            <span class="auth-input-icon">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            </span>
+                            <input id="loginPassword" name="password" type="password" autocomplete="current-password" spellcheck="false" required 
+                                placeholder="••••••••">
+                            <button type="button" id="btnToggleLoginPass" onclick="togglePasswordVisibility('loginPassword', 'btnToggleLoginPass')" 
+                                class="auth-pass-toggle-btn" title="Visualizar Senha" aria-label="Visualizar Senha">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                        <div id="capsLockWarningLogin" class="hidden mt-1 text-[11px] text-amber-400 font-semibold flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <span>Caps Lock está ativado</span>
+                        </div>
                     </div>
+
+                    <!-- Lembrar de Mim -->
+                    <div class="flex items-center pt-0.5 text-xs text-[#94A3B8] auth-label">
+                        <label class="flex items-center gap-2 cursor-pointer select-none">
+                            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer">
+                            <span>Lembrar meu acesso</span>
+                        </label>
+                    </div>
+
+                    <!-- Botão de Login -->
+                    <div class="pt-1">
+                        <button type="submit" id="btnLoginSubmit" class="btn-auth-gradient w-full py-3 text-sm font-bold flex items-center justify-center gap-2 focus:outline-none shadow-md shadow-amber-500/20">
+                            <span>Entrar na Conta</span>
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </button>
+                    </div>
+
+                    <!-- Atalho de Acesso Rápido Administrador Master -->
+                    <div class="pt-2.5 border-t border-white/10 mt-2">
+                        <button type="button" id="btnQuickAdminLogin" onclick="preencherCredenciaisAdmin()" 
+                            class="btn-quick-admin-login w-full py-2 px-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
+                            <span class="text-xs">⚡</span>
+                            <span>Acesso Rápido Administrador Master</span>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold">1-Clique</span>
+                        </button>
+                    </div>
+                </form>
+
+                <p class="mt-3.5 text-center text-xs auth-subtitle-text text-[#94A3B8]">
+                    Não possui uma conta? 
+                    <button type="button" onclick="switchAuthTab('register')" class="text-amber-500 hover:text-amber-400 font-bold ml-1 focus:outline-none">
+                        Cadastre-se gratuitamente
+                    </button>
+                </p>
+            </div>
                     <!-- 2. FORMULÁRIO DE CADASTRO (PADRÃO FINANCEIRO / FINTECH / BANKING) -->
                     <div id="registerBox" class="form-fade hidden">
 
@@ -3359,45 +3280,67 @@ body.light .period button.active {
 
                 </div>
 
-                <!-- Ação de Ordem de Serviço (O.S. / Consulta) e Suporte Técnico -->
-                <div class="mt-3 w-full max-w-[420px] sm:max-w-[430px] flex flex-col items-center gap-2">
-                    <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
-                        <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
-                    </button>
+        </div>
 
-                    <!-- Suporte e Desenvolvedor em Linha Harmoniosa -->
-                    <div class="auth-footer-actions pt-0.5">
-                        <div class="auth-support-bar">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="20" height="16" x="2" y="4" rx="2"/>
-                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                            </svg>
-                            <span class="auth-support-label">Suporte:</span>
-                            <a href="mailto:suporte.paulolima@outlook.com" class="auth-support-link" title="E-mail do Suporte Técnico">suporte.paulolima@outlook.com</a>
-                        </div>
+        <!-- DOCK DE RECURSOS E AÇÕES CENTRALIZADAS -->
+        <div class="mt-3.5 w-full flex flex-col items-center gap-2.5">
+            <!-- Botão de Ordem de Serviço -->
+            <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
+                <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
+            </button>
 
-                        <div class="dev-signature">
-                            <div class="dev-signature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="16 18 22 12 16 6"></polyline>
-                                    <polyline points="8 6 2 12 8 18"></polyline>
-                                </svg>
-                            </div>
-                            <div class="dev-signature-text">
-                                <span class="dev-signature-label">Dev:</span>
-                                <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
-                            </div>
-                        </div>
-                    </div>
+            <!-- 3 Mini Cards de Métricas em Dock Horizontal -->
+            <div class="grid grid-cols-3 gap-2 w-full">
+                <div class="auth-metric-card p-2 sm:p-2.5 rounded-xl text-center">
+                    <div class="text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Economia</div>
+                    <div class="text-xs sm:text-sm font-bold text-white font-display mt-0.5" id="metricEconomia" data-target="3850" data-prefix="R$ ">R$ 3.850</div>
                 </div>
-
+                <div class="auth-metric-card p-2 sm:p-2.5 rounded-xl text-center">
+                    <div class="text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Orçamento</div>
+                    <div class="text-xs sm:text-sm font-bold text-emerald-400 font-display mt-0.5" id="metricOrcamento">Sob Controle</div>
+                </div>
+                <div class="auth-metric-card p-2 sm:p-2.5 rounded-xl text-center">
+                    <div class="text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Metas</div>
+                    <div class="text-xs sm:text-sm font-bold text-sky-400 font-display mt-0.5" id="metricMetas" data-target="84" data-suffix="% Concluído">84% Concluído</div>
+                </div>
             </div>
 
+            <!-- Suporte e Desenvolvedor em Linha Harmoniosa -->
+            <div class="auth-footer-actions pt-0.5">
+                <div class="auth-support-bar">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="20" height="16" x="2" y="4" rx="2"/>
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                    <span class="auth-support-label">Suporte:</span>
+                    <a href="mailto:suporte.paulolima@outlook.com" class="auth-support-link" title="E-mail do Suporte Técnico">suporte.paulolima@outlook.com</a>
+                </div>
+
+                <div class="dev-signature">
+                    <div class="dev-signature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                    </div>
+                    <div class="dev-signature-text">
+                        <span class="dev-signature-label">Dev:</span>
+                        <strong class="dev-signature-name">PAULO LIMA <span class="dev-sparkle">✦</span></strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selo de Criptografia & LGPD -->
+            <div class="flex items-center justify-center gap-2 text-[10.5px] text-slate-400 pt-0.5">
+                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                <span>Criptografia bancária de ponta a ponta • LGPD</span>
+            </div>
         </div>
+
     </main>
 
-    <footer class="w-full max-w-[1180px] text-center text-[11px] text-slate-500 z-10 py-1.5">
+    <footer class="w-full max-w-[1100px] text-center text-[11px] text-slate-500 z-10 py-1.5">
         <span>© 2026 Nexus Financeiro Hub. Todos os direitos reservados.</span>
     </footer>
 
