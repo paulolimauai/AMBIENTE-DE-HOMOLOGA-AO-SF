@@ -647,10 +647,10 @@
             position: relative;
             display: flex;
             align-items: center;
-            height: 42px;
+            height: 38px;
             background: rgba(10, 16, 30, 0.60);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
+            border-radius: 10px;
             transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
         }
 
@@ -672,7 +672,7 @@
         }
 
         .auth-input-icon {
-            width: 38px;
+            width: 36px;
             height: 100%;
             display: flex;
             align-items: center;
@@ -871,29 +871,29 @@
         /* Abas Segmentadas Fluidas e Compactas */
         #authTabsNav,
         .auth-tabs-nav {
-            padding: 3px !important;
-            border-radius: 12px !important;
-            gap: 4px !important;
+            padding: 2.5px !important;
+            border-radius: 10px !important;
+            gap: 3px !important;
             background: rgba(10, 16, 30, 0.6) !important;
             border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            min-height: 38px;
+            min-height: 34px;
         }
 
         .auth-tab-btn {
             flex: 1;
-            height: 32px;
-            padding: 5px 12px;
-            border-radius: 9px;
+            height: 28px;
+            padding: 4px 10px;
+            border-radius: 8px;
             border: 1px solid transparent;
             background: transparent;
             color: var(--auth-text-dim);
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -1032,20 +1032,20 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 7px;
             width: 100%;
-            height: 38px;
-            padding: 0 14px;
+            height: 34px;
+            padding: 0 12px;
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.20) 0%, rgba(30, 58, 138, 0.38) 50%, rgba(15, 23, 42, 0.85) 100%);
             border: 1px solid rgba(96, 165, 250, 0.45);
             border-top: 1px solid rgba(191, 219, 254, 0.65);
-            border-radius: 12px;
+            border-radius: 10px;
             color: #BFDBFE;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
             letter-spacing: 0.01em;
             cursor: pointer;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4), inset 0 1px 1.5px rgba(255, 255, 255, 0.35);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
@@ -2812,37 +2812,36 @@ body.light .period button.active {
 
     <!-- Ambient Aura Glows Naturais e Difusos Centralizados -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="absolute top-[18%] left-1/2 -translate-x-1/2 w-[540px] h-[540px] bg-amber-500/10 rounded-full blur-[150px]"></div>
-        <div class="absolute bottom-[10%] left-1/2 -translate-x-1/2 w-[480px] h-[480px] bg-sky-500/8 rounded-full blur-[160px]"></div>
+        <div class="absolute top-[22%] left-1/2 -translate-x-1/2 w-[380px] h-[380px] bg-amber-500/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[18%] left-1/2 -translate-x-1/2 w-[340px] h-[340px] bg-sky-500/8 rounded-full blur-[130px]"></div>
     </div>
 
-    <!-- CONTAINER PRINCIPAL CENTRALIZADO -->
-    <main class="w-full max-w-[460px] sm:max-w-[480px] z-10 flex-1 flex flex-col justify-center my-auto py-2 px-3 sm:px-4">
+    <!-- CONTAINER PRINCIPAL CENTRALIZADO - TAMANHO PADRÃO -->
+    <main class="w-full max-w-[380px] z-10 flex-1 flex flex-col justify-center my-auto py-3 px-3">
         
-        <!-- CARD PRINCIPAL DE AUTENTICAÇÃO CENTRALIZADO -->
-        <div class="auth-card-nexus w-full p-5 sm:p-7 rounded-2xl sm:rounded-[26px] relative shadow-2xl" id="authNexusCard">
+        <!-- CARD PRINCIPAL DE AUTENTICAÇÃO - TAMANHO PADRÃO -->
+        <div class="auth-card-nexus w-full p-5 sm:p-6 rounded-2xl relative shadow-xl" id="authNexusCard">
             
-            <!-- HEADER COMPACTO DO CARD -->
-            <div class="flex flex-col items-center text-center mb-4">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-                    <span>Acesso Seguro</span>
+            <!-- HEADER COMPACTO PADRÃO -->
+            <div class="flex flex-col items-center text-center mb-3.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-base shadow-sm shadow-amber-500/20 mb-2">
+                    <span>N</span>
                 </div>
-                <h1 class="text-2xl sm:text-[26px] font-black tracking-tight auth-brand-nexus text-white font-display">
+                <h1 class="text-lg font-bold tracking-tight auth-brand-nexus text-white font-display">
                     Acesse sua Conta
                 </h1>
-                <p id="authSubtitle" class="text-xs auth-subtitle-text text-slate-400 mt-1 font-normal leading-relaxed">
-                    O controle do seu dinheiro de forma natural, clara e inteligente
+                <p id="authSubtitle" class="text-xs auth-subtitle-text text-slate-400 mt-0.5 font-normal leading-relaxed">
+                    Entre com suas credenciais para continuar
                 </p>
             </div>
 
             <!-- NAVEGAÇÃO SEGMENTADA POR ABAS -->
-            <div class="flex rounded-xl p-1 mb-4 gap-1.5" id="authTabsNav">
-                <button type="button" class="auth-tab-btn active text-xs sm:text-sm" id="tabBtnLogin" onclick="switchAuthTab('login')">
+            <div class="flex rounded-xl p-0.5 mb-3.5 gap-1" id="authTabsNav">
+                <button type="button" class="auth-tab-btn active text-xs font-semibold" id="tabBtnLogin" onclick="switchAuthTab('login')">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                     <span>Entrar</span>
                 </button>
-                <button type="button" class="auth-tab-btn text-xs sm:text-sm" id="tabBtnRegister" onclick="switchAuthTab('register')">
+                <button type="button" class="auth-tab-btn text-xs font-semibold" id="tabBtnRegister" onclick="switchAuthTab('register')">
                     <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
                     <span>Criar Conta</span>
                 </button>
@@ -2853,7 +2852,7 @@ body.light .period button.active {
 
             <!-- 1. FORMULÁRIO DE LOGIN -->
             <div id="loginBox" class="form-fade block">
-                <form id="loginForm" class="space-y-3.5" onsubmit="handleLoginSubmit(event); return false;">
+                <form id="loginForm" class="space-y-3" onsubmit="handleLoginSubmit(event); return false;">
                     
                     <!-- Campo E-mail -->
                     <div>
@@ -2895,31 +2894,31 @@ body.light .period button.active {
                     <!-- Lembrar de Mim -->
                     <div class="flex items-center pt-0.5 text-xs text-[#94A3B8] auth-label">
                         <label class="flex items-center gap-2 cursor-pointer select-none">
-                            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer">
+                            <input type="checkbox" id="rememberMe" class="w-3.5 h-3.5 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer">
                             <span>Lembrar meu acesso</span>
                         </label>
                     </div>
 
                     <!-- Botão de Login -->
                     <div class="pt-1">
-                        <button type="submit" id="btnLoginSubmit" class="btn-auth-gradient w-full py-3 text-sm font-bold flex items-center justify-center gap-2 focus:outline-none shadow-md shadow-amber-500/20">
+                        <button type="submit" id="btnLoginSubmit" class="btn-auth-gradient w-full py-2.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 focus:outline-none shadow-md shadow-amber-500/20">
                             <span>Entrar na Conta</span>
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                         </button>
                     </div>
 
                     <!-- Atalho de Acesso Rápido Administrador Master -->
-                    <div class="pt-2.5 border-t border-white/10 mt-2">
+                    <div class="pt-2 border-t border-white/10 mt-2">
                         <button type="button" id="btnQuickAdminLogin" onclick="preencherCredenciaisAdmin()" 
-                            class="btn-quick-admin-login w-full py-2 px-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
+                            class="btn-quick-admin-login w-full py-1.5 px-3 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer">
                             <span class="text-xs">⚡</span>
-                            <span>Acesso Rápido Administrador Master</span>
+                            <span>Acesso Rápido Master</span>
                             <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold">1-Clique</span>
                         </button>
                     </div>
                 </form>
 
-                <p class="mt-3.5 text-center text-xs auth-subtitle-text text-[#94A3B8]">
+                <p class="mt-3 text-center text-xs auth-subtitle-text text-[#94A3B8]">
                     Não possui uma conta? 
                     <button type="button" onclick="switchAuthTab('register')" class="text-amber-500 hover:text-amber-400 font-bold ml-1 focus:outline-none">
                         Cadastre-se gratuitamente
@@ -3280,36 +3279,18 @@ body.light .period button.active {
 
                 </div>
 
-        </div>
-
-        <!-- DOCK DE RECURSOS E AÇÕES CENTRALIZADAS -->
-        <div class="mt-3.5 w-full flex flex-col items-center gap-2.5">
-            <!-- Botão de Ordem de Serviço -->
+        <!-- AÇÕES INFERIORES COMPACTAS - TAMANHO PADRÃO -->
+        <div class="mt-3 w-full flex flex-col items-center gap-2">
+            <!-- Botão de Ordem de Serviço Compacto -->
             <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
-                <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
+                <span>Ordem de Serviço (O.S.) / Consulta</span>
             </button>
 
-            <!-- 3 Mini Cards de Métricas em Dock Horizontal -->
-            <div class="grid grid-cols-3 gap-2 w-full">
-                <div class="auth-metric-card p-2 sm:p-2.5 rounded-xl text-center">
-                    <div class="text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Economia</div>
-                    <div class="text-xs sm:text-sm font-bold text-white font-display mt-0.5" id="metricEconomia" data-target="3850" data-prefix="R$ ">R$ 3.850</div>
-                </div>
-                <div class="auth-metric-card p-2 sm:p-2.5 rounded-xl text-center">
-                    <div class="text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Orçamento</div>
-                    <div class="text-xs sm:text-sm font-bold text-emerald-400 font-display mt-0.5" id="metricOrcamento">Sob Controle</div>
-                </div>
-                <div class="auth-metric-card p-2 sm:p-2.5 rounded-xl text-center">
-                    <div class="text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Metas</div>
-                    <div class="text-xs sm:text-sm font-bold text-sky-400 font-display mt-0.5" id="metricMetas" data-target="84" data-suffix="% Concluído">84% Concluído</div>
-                </div>
-            </div>
-
-            <!-- Suporte e Desenvolvedor em Linha Harmoniosa -->
+            <!-- Suporte e Desenvolvedor em Linha Compacta -->
             <div class="auth-footer-actions pt-0.5">
                 <div class="auth-support-bar">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <rect width="20" height="16" x="2" y="4" rx="2"/>
                         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                     </svg>
@@ -3331,16 +3312,17 @@ body.light .period button.active {
                 </div>
             </div>
 
-            <!-- Selo de Criptografia & LGPD -->
-            <div class="flex items-center justify-center gap-2 text-[10.5px] text-slate-400 pt-0.5">
-                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                <span>Criptografia bancária de ponta a ponta • LGPD</span>
+            <!-- Elementos de Métricas Preservados Ocultos (compatibilidade com contadores JS) -->
+            <div style="display:none !important;" aria-hidden="true">
+                <span id="metricEconomia" data-target="3850" data-prefix="R$ ">R$ 3.850</span>
+                <span id="metricOrcamento">Sob Controle</span>
+                <span id="metricMetas" data-target="84" data-suffix="% Concluído">84% Concluído</span>
             </div>
         </div>
 
     </main>
 
-    <footer class="w-full max-w-[1100px] text-center text-[11px] text-slate-500 z-10 py-1.5">
+    <footer class="w-full max-w-[960px] text-center text-[10.5px] text-slate-500 z-10 py-1">
         <span>© 2026 Nexus Financeiro Hub. Todos os direitos reservados.</span>
     </footer>
 
