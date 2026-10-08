@@ -4281,8 +4281,11 @@ nav.menu::-webkit-scrollbar {
   border: 1px solid rgba(16, 185, 129, 0.35) !important;
   border-radius: 9px !important;
   color: #34D399 !important;
-  font-weight: 700 !important;
   box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15) !important;
+}
+.menu button.active span:not(.ic):not(#osBadgeCount) {
+  color: #34D399 !important;
+  font-weight: 600 !important;
 }
 
 .menu button.active .ic {
@@ -4318,13 +4321,18 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button span:not(.ic):not(#osBadgeCount) {
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", Helvetica, Arial, sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.015em !important;
   line-height: 1 !important;
   display: inline-block !important;
   white-space: nowrap !important;
   color: inherit !important;
   vertical-align: middle !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  transition: color 0.15s ease, font-weight 0.15s ease !important;
 }
 
 .menu-admin-divider {
@@ -4437,6 +4445,7 @@ html.light .menu button {
 body.light .menu button span:not(.ic):not(#osBadgeCount),
 html.light .menu button span:not(.ic):not(#osBadgeCount) {
   color: inherit !important;
+  font-weight: 550 !important;
 }
 body.light .menu button .ic,
 html.light .menu button .ic {
