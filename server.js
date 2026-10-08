@@ -7600,7 +7600,7 @@ body.light .rec-progress-bar {
 .hero-left {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   min-width: 280px;
 }
 .hero-badge-strip {
@@ -7613,45 +7613,66 @@ body.light .rec-progress-bar {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 4px 13px;
-  border-radius: 999px;
-  background: rgba(14, 165, 233, 0.07);
-  border: 1px solid rgba(14, 165, 233, 0.24);
-  color: #CBD5E1;
-  font-size: 11.5px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94A3B8;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.01em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
-.hero-badge.live-dot {
-  background: rgba(5, 150, 105, 0.10);
-  border-color: rgba(5, 150, 105, 0.28);
-  color: #10B981;
+.hero-badge svg { color: #10B981; }
+.hero-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
-.pulse-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #059669;
-  box-shadow: 0 0 8px #059669;
+.hero-greeting-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+.hero-greeting-badge:hover { transform: scale(1.05); }
+.hero-greeting-badge.period-morning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.08) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.32);
+  color: #FBBF24;
+}
+.hero-greeting-badge.period-afternoon {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.08) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.32);
+  color: #34D399;
+}
+.hero-greeting-badge.period-night {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.16) 0%, rgba(79, 70, 229, 0.08) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.32);
+  color: #818CF8;
+}
+.hero-heading-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 .hero-greeting {
-  font-size: 26px !important;
+  font-size: 24px !important;
   font-weight: 800 !important;
-  color: #FFFFFF !important;
+  color: #F8FAFC !important;
   margin: 0 !important;
-  letter-spacing: -0.025em !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.15 !important;
 }
-.hero-name-gradient {
-  background: linear-gradient(135deg, #059669 15%, #10B981 60%, #047857 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
+.hero-name-highlight {
+  color: #10B981 !important;
   font-weight: 800 !important;
-  filter: drop-shadow(0 2px 10px rgba(16, 185, 129, 0.4)) !important;
+  letter-spacing: -0.01em;
 }
 .hero-sub {
   font-size: 13px !important;
@@ -7659,7 +7680,6 @@ body.light .rec-progress-bar {
   margin: 0 !important;
   font-weight: 500 !important;
   letter-spacing: 0.01em !important;
-  opacity: 0.92 !important;
 }
 .hero-actions {
   position: relative;
@@ -7745,18 +7765,28 @@ body.light .dashboard-welcome-hero {
   box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08) !important;
 }
 body.light .hero-greeting { color: #0F172A !important; text-shadow: none !important; }
-body.light .hero-name-gradient {
-  background: linear-gradient(135deg, #065F46 0%, #059669 50%, #D97706 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  filter: drop-shadow(0 2px 6px rgba(4, 120, 87, 0.25)) !important;
-}
-body.light .hero-sub { color: #475569 !important; }
+body.light .hero-name-highlight { color: #059669 !important; }
+body.light .hero-sub { color: #64748B !important; }
 body.light .hero-badge {
   background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  color: #334155 !important;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+  border-color: #E2E8F0 !important;
+  color: #475569 !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+}
+body.light .hero-greeting-badge.period-morning {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  color: #D97706 !important;
+}
+body.light .hero-greeting-badge.period-afternoon {
+  background: rgba(5, 150, 105, 0.12) !important;
+  border-color: rgba(5, 150, 105, 0.3) !important;
+  color: #059669 !important;
+}
+body.light .hero-greeting-badge.period-night {
+  background: rgba(99, 102, 241, 0.12) !important;
+  border-color: rgba(99, 102, 241, 0.3) !important;
+  color: #4F46E5 !important;
 }
 body.light .btn-hero-ghost {
   background: #FFFFFF !important;
@@ -18449,24 +18479,16 @@ function pageDashboard(){
 
   const h = new Date().getHours();
   let greetingIconSvg = '';
-  let greetingBadgeBg = '';
-  let greetingBadgeBorder = '';
-  let greetingBadgeColor = '';
+  let greetingBadgeClass = '';
   if (h >= 5 && h < 12) {
-    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
-    greetingBadgeBg = 'linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.1))';
-    greetingBadgeBorder = 'rgba(245,158,11,0.38)';
-    greetingBadgeColor = '#FBBF24';
+    greetingIconSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+    greetingBadgeClass = 'period-morning';
   } else if (h >= 12 && h < 18) {
-    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
-    greetingBadgeBg = 'linear-gradient(135deg, rgba(14,165,233,0.25), rgba(5, 150, 105,0.1))';
-    greetingBadgeBorder = 'rgba(14,165,233,0.38)';
-    greetingBadgeColor = '#10B981';
+    greetingIconSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+    greetingBadgeClass = 'period-afternoon';
   } else {
-    greetingIconSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4"/><path d="M21 5h-4"/></svg>';
-    greetingBadgeBg = 'linear-gradient(135deg, rgba(5, 150, 105, 0.25), rgba(4, 120, 87, 0.1))';
-    greetingBadgeBorder = 'rgba(5, 150, 105, 0.38)';
-    greetingBadgeColor = '#059669';
+    greetingIconSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    greetingBadgeClass = 'period-night';
   }
 
   // Non-credit card accounts & credit cards list
@@ -18721,19 +18743,21 @@ function pageDashboard(){
         <div class="hero-left">
           <div class="hero-badge-strip">
             <span class="hero-badge hide-mobile">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               <span>\${formattedToday}</span>
             </span>
           </div>
-          <h1 class="hero-greeting">
-            <span style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px; background:\${greetingBadgeBg}; border:1px solid \${greetingBadgeBorder}; color:\${greetingBadgeColor}; box-shadow:0 4px 16px rgba(0,0,0,0.4); flex-shrink:0;">
+          <div class="hero-title-group">
+            <div class="hero-greeting-badge \${greetingBadgeClass}" title="\${greeting.text}">
               \${greetingIconSvg}
-            </span>
-            <span>\${greeting.text}, <span class="hero-name-gradient">\${firstName}</span></span>
-          </h1>
-          <p class="hero-sub">
-            Painel Executivo 4K & Gestão Financeira Estratégica
-          </p>
+            </div>
+            <div class="hero-heading-wrapper">
+              <h1 class="hero-greeting">
+                <span>\${greeting.text}, <span class="hero-name-highlight">\${firstName}</span></span>
+              </h1>
+              <p class="hero-sub">Painel Executivo &middot; Gestão Financeira Estratégica</p>
+            </div>
+          </div>
         </div>
 
         <div class="hero-actions">
