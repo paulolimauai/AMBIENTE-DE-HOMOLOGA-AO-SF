@@ -4199,17 +4199,16 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px !important;
+  gap: 4px !important;
   width: auto !important;
   max-width: 1760px !important;
-  height: 44px !important;
-  padding: 3px 8px !important;
+  height: 42px !important;
+  padding: 3px 6px !important;
   margin: 0 auto !important;
-  background: rgba(18, 18, 18, 0.88) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.20) !important;
-  border-radius: 14px !important;
-  box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   scrollbar-width: none !important;
@@ -4238,22 +4237,22 @@ nav.menu::-webkit-scrollbar {
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  gap: 7.5px !important;
+  gap: 7px !important;
   width: auto !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  max-height: 38px !important;
-  padding: 0 15px !important;
-  border-radius: 11px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 0 13px !important;
+  border-radius: 9px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
-  font-size: 13.5px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   letter-spacing: -0.01em !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  transition: background-color 0.06s ease, border-color 0.06s ease, color 0.06s ease, box-shadow 0.06s ease !important;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select: none !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
@@ -4262,50 +4261,36 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  border-top-color: rgba(255, 255, 255, 0.28) !important;
-  color: #FFFFFF !important;
-  transform: translateY(-1px) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #F8FAFC !important;
 }
 
 .menu button:hover .ic {
-  color: #10B981 !important;
+  color: #34D399 !important;
 }
 
 .menu button:active {
-  background: rgba(255, 255, 255, 0.14) !important;
-  transform: translateY(0) !important;
+  background: rgba(255, 255, 255, 0.10) !important;
+  transform: scale(0.98) !important;
 }
 
-/* Estado Ativo Sofisticado 4K: Cápsula Lapidada com Brilho Superior Suave */
+/* Estado Ativo Sofisticado Corporativo: Cápsula Minimalista e Elegante */
 .menu button.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(5, 150, 105, 0.12) 100%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.45) !important;
-  border-top: 1.2px solid rgba(255, 255, 255, 0.65) !important;
-  border-radius: 11px !important;
-  color: #10B981 !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  border-radius: 9px !important;
+  color: #34D399 !important;
   font-weight: 700 !important;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.24), inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15) !important;
 }
 
 .menu button.active .ic {
-  color: #10B981 !important;
+  color: #34D399 !important;
 }
 
 .menu button.active::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 15% !important;
-  right: 15% !important;
-  bottom: auto !important;
-  width: auto !important;
-  height: 1px !important;
-  border-radius: 999px !important;
-  background: linear-gradient(90deg, transparent, #FFFFFF 50%, transparent) !important;
-  opacity: 0.8 !important;
-  box-shadow: 0 0 8px #FFFFFF !important;
+  display: none !important;
 }
 
 .menu button.active::after {
@@ -4313,21 +4298,21 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button .ic {
-  width: 18px !important;
-  height: 18px !important;
+  width: 15px !important;
+  height: 15px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  color: inherit !important;
+  color: #64748B !important;
   flex-shrink: 0 !important;
   line-height: 0 !important;
   margin: 0 !important;
-  transition: color 0.16s ease !important;
+  transition: color 0.15s ease !important;
 }
 .menu button .ic svg {
-  width: 17px !important;
-  height: 17px !important;
-  stroke-width: 2.1px !important;
+  width: 15px !important;
+  height: 15px !important;
+  stroke-width: 2px !important;
   stroke: currentColor !important;
   display: block !important;
 }
@@ -4433,39 +4418,31 @@ html.light nav.menu {
 }
 body.light .menu-track,
 html.light .menu-track {
-  background: #F1F5F9 !important;
+  background: #F8FAFC !important;
   border: 1px solid #E2E8F0 !important;
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
 }
 body.light .menu-admin-divider,
 html.light .menu-admin-divider {
-  background: #E2E8F0 !important;
+  background: #CBD5E1 !important;
   box-shadow: none !important;
-}
-body.light .menu-admin-badge,
-html.light .menu-admin-badge {
-  background: #FEF3C7 !important;
-  border-color: #FDE68A !important;
-  color: #B45309 !important;
 }
 body.light .menu button,
 html.light .menu button {
-  color: #475569 !important;
+  color: #64748B !important;
   background: transparent !important;
   border: 1px solid transparent !important;
-  font-weight: 550 !important;
-  opacity: 1 !important;
+  font-weight: 600 !important;
 }
 body.light .menu button span:not(.ic):not(#osBadgeCount),
 html.light .menu button span:not(.ic):not(#osBadgeCount) {
   color: inherit !important;
-  font-weight: 550 !important;
 }
 body.light .menu button .ic,
 html.light .menu button .ic {
   background: transparent !important;
   border: none !important;
-  color: inherit !important;
+  color: #94A3B8 !important;
 }
 body.light .menu button .ic svg,
 html.light .menu button .ic svg {
@@ -4473,61 +4450,34 @@ html.light .menu button .ic svg {
 }
 body.light .menu button:hover,
 html.light .menu button:hover {
-  background: #E2E8F0 !important;
-  border-color: #CBD5E1 !important;
-  color: #0F172A !important;
-  transform: translateY(-1px) !important;
-}
-body.light .menu button:hover span:not(.ic):not(#osBadgeCount),
-html.light .menu button:hover span:not(.ic):not(#osBadgeCount) {
+  background: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
   color: #0F172A !important;
 }
 body.light .menu button:hover .ic,
 html.light .menu button:hover .ic {
-  background: transparent !important;
-  border: none !important;
   color: #059669 !important;
-  box-shadow: none !important;
-}
-body.light .menu button:hover .ic svg,
-html.light .menu button:hover .ic svg {
-  stroke: #059669 !important;
 }
 body.light .menu button.active,
 html.light .menu button.active {
-  background: #ECFDF5 !important;
-  border: 1px solid #A7F3D0 !important;
-  border-radius: 11px !important;
+  background: rgba(5, 150, 105, 0.1) !important;
+  border: 1px solid rgba(5, 150, 105, 0.28) !important;
+  border-radius: 9px !important;
   color: #059669 !important;
   font-weight: 700 !important;
-  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.15) !important;
+  box-shadow: none !important;
 }
 body.light .menu button.active::before,
 html.light .menu button.active::before {
-  content: '' !important;
-  position: absolute !important;
-  bottom: 0 !important;
-  left: 12px !important;
-  right: 12px !important;
-  top: auto !important;
-  width: auto !important;
-  height: 2.5px !important;
-  border-radius: 999px 999px 0 0 !important;
-  background: #059669 !important;
-  box-shadow: 0 -1px 8px rgba(5, 150, 105, 0.6) !important;
+  display: none !important;
 }
 body.light .menu button.active span:not(.ic):not(#osBadgeCount),
 html.light .menu button.active span:not(.ic):not(#osBadgeCount) {
   color: #059669 !important;
-  font-weight: 650 !important;
 }
 body.light .menu button.active .ic,
 html.light .menu button.active .ic {
-  background: transparent !important;
-  border: none !important;
   color: #059669 !important;
-  box-shadow: none !important;
-  filter: none !important;
 }
 body.light .menu button.active .ic svg,
 html.light .menu button.active .ic svg {
@@ -12438,21 +12388,21 @@ body.light .period button.active {
   <!-- BARRA DE MENU HORIZONTAL NO TOPO ESTILO AETHER 4K -->
   <nav class="menu" id="menu">
     <div class="menu-track" id="menuTrack">
-      <button data-page="dashboard"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><span>Dashboard</span></button>
-      <button data-page="transacoes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span><span>Transações</span></button>
-      <button data-page="cartoes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span><span>Cartões</span></button>
-      <button data-page="orcamentos"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span><span>Orçamentos</span></button>
-      <button data-page="metas"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span><span>Metas</span></button>
-      <button data-page="relatorios"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span><span>Relatórios</span></button>
-      <button data-page="recorrentes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span><span>Recorrentes</span></button>
-      <button data-page="importar"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Importar</span></button>
-      <button data-page="anexos"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span>Anexos</span></button>
-      <button data-page="config" title="Minha Conta"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Minha Conta</span></button>
+      <button data-page="dashboard"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><span>Dashboard</span></button>
+      <button data-page="transacoes"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span><span>Transações</span></button>
+      <button data-page="cartoes"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span>Cartões</span></button>
+      <button data-page="orcamentos"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span><span>Orçamentos</span></button>
+      <button data-page="metas"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></span><span>Metas</span></button>
+      <button data-page="relatorios"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><span>Relatórios</span></button>
+      <button data-page="recorrentes"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span><span>Recorrentes</span></button>
+      <button data-page="importar"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Importar</span></button>
+      <button data-page="anexos"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span>Anexos</span></button>
+      <button data-page="config" title="Minha Conta"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Minha Conta</span></button>
       
       <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
-      <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
-      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="display:none;"></span></button>
-      <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
+      <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
+      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="display:none;"></span></button>
+      <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
     </div>
   </nav>
 
