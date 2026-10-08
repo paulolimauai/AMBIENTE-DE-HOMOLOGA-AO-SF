@@ -4199,16 +4199,16 @@ nav.menu {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 4px !important;
+  gap: 6px !important;
   width: auto !important;
   max-width: 1760px !important;
-  height: 42px !important;
-  padding: 3px 6px !important;
+  height: 46px !important;
+  padding: 4px 8px !important;
   margin: 0 auto !important;
-  background: rgba(15, 23, 42, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  background: rgba(15, 23, 42, 0.90) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 13px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   scrollbar-width: none !important;
@@ -4237,19 +4237,17 @@ nav.menu::-webkit-scrollbar {
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  gap: 7px !important;
+  gap: 8px !important;
   width: auto !important;
-  height: 34px !important;
-  min-height: 34px !important;
-  max-height: 34px !important;
-  padding: 0 13px !important;
-  border-radius: 9px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 15px !important;
+  border-radius: 10px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.01em !important;
+  font-size: 13.5px !important;
   white-space: nowrap !important;
   cursor: pointer !important;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -4262,7 +4260,7 @@ nav.menu::-webkit-scrollbar {
 
 .menu button:hover {
   background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
   color: #F8FAFC !important;
 }
 
@@ -4275,17 +4273,17 @@ nav.menu::-webkit-scrollbar {
   transform: scale(0.98) !important;
 }
 
-/* Estado Ativo Sofisticado Corporativo: Cápsula Minimalista e Elegante */
+/* Estado Ativo: Quadrado Proporcional e Alinhado com Borda Fina Precisa */
 .menu button.active {
-  background: rgba(16, 185, 129, 0.12) !important;
-  border: 1px solid rgba(16, 185, 129, 0.35) !important;
-  border-radius: 9px !important;
+  background: rgba(16, 185, 129, 0.14) !important;
+  border: 1.2px solid rgba(16, 185, 129, 0.45) !important;
+  border-radius: 10px !important;
   color: #34D399 !important;
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15) !important;
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
 }
 .menu button.active span:not(.ic):not(#osBadgeCount) {
   color: #34D399 !important;
-  font-weight: 600 !important;
+  font-weight: 650 !important;
 }
 
 .menu button.active .ic {
@@ -4301,8 +4299,8 @@ nav.menu::-webkit-scrollbar {
 }
 
 .menu button .ic {
-  width: 15px !important;
-  height: 15px !important;
+  width: 17px !important;
+  height: 17px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4313,18 +4311,18 @@ nav.menu::-webkit-scrollbar {
   transition: color 0.15s ease !important;
 }
 .menu button .ic svg {
-  width: 15px !important;
-  height: 15px !important;
-  stroke-width: 2px !important;
+  width: 17px !important;
+  height: 17px !important;
+  stroke-width: 2.1px !important;
   stroke: currentColor !important;
   display: block !important;
 }
 
 .menu button span:not(.ic):not(#osBadgeCount) {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", Helvetica, Arial, sans-serif !important;
-  font-size: 12.5px !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.015em !important;
+  font-size: 13.5px !important;
+  font-weight: 550 !important;
+  letter-spacing: -0.01em !important;
   line-height: 1 !important;
   display: inline-block !important;
   white-space: nowrap !important;
@@ -4470,11 +4468,11 @@ html.light .menu button:hover .ic {
 body.light .menu button.active,
 html.light .menu button.active {
   background: rgba(5, 150, 105, 0.1) !important;
-  border: 1px solid rgba(5, 150, 105, 0.28) !important;
-  border-radius: 9px !important;
+  border: 1.2px solid rgba(5, 150, 105, 0.35) !important;
+  border-radius: 10px !important;
   color: #059669 !important;
-  font-weight: 700 !important;
-  box-shadow: none !important;
+  font-weight: 650 !important;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.12) !important;
 }
 body.light .menu button.active::before,
 html.light .menu button.active::before {
