@@ -426,8 +426,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-27T21:40:47.783Z",
-    "updated_at_ms": 1790545247784
+    "updated_at": "2026-10-08T13:30:08.745Z",
+    "updated_at_ms": 1791466208745
   },
   "ciceragyn12@hotmail.com": {
     "categories": [
@@ -2994,7 +2994,7 @@
         "color": "#e8b04b",
         "type": "receita",
         "icon": "💼",
-        "count": 1
+        "count": 2
       },
       {
         "id": 16,
@@ -3079,12 +3079,23 @@
     ],
     "transactions": [
       {
+        "id": 8,
+        "desc": "Salario",
+        "val": 3350,
+        "date": "2026-10-30",
+        "cat": "Salário",
+        "status": "Pendente",
+        "type": "in",
+        "acc": "Boleto / Pix / Outros",
+        "accId": null
+      },
+      {
         "id": 7,
         "desc": "SEM PARAR",
         "val": 24,
         "date": "2026-09-30",
         "cat": "Outros",
-        "status": "Pendente",
+        "status": "Pago",
         "type": "out",
         "acc": "Boleto / Pix / Outros",
         "accId": null
@@ -3095,7 +3106,7 @@
         "val": 930,
         "date": "2026-09-30",
         "cat": "Contas da Casa",
-        "status": "Pendente",
+        "status": "Pago",
         "type": "out",
         "acc": "Boleto / Pix / Outros",
         "accId": null
@@ -3106,7 +3117,7 @@
         "val": 65,
         "date": "2026-09-30",
         "cat": "Contas da Casa",
-        "status": "Pendente",
+        "status": "Pago",
         "type": "out",
         "acc": "Boleto / Pix / Outros",
         "accId": null
@@ -3117,7 +3128,7 @@
         "val": 300,
         "date": "2026-09-30",
         "cat": "Contas da Casa",
-        "status": "Pendente",
+        "status": "Pago",
         "type": "out",
         "acc": "Boleto / Pix / Outros",
         "accId": null
@@ -3128,7 +3139,7 @@
         "val": 308.27,
         "date": "2026-09-30",
         "cat": "Cartão de Crédito",
-        "status": "Pendente",
+        "status": "Pago",
         "type": "out",
         "acc": "DIGIO",
         "accId": 3
@@ -3139,7 +3150,7 @@
         "val": 1793.91,
         "date": "2026-09-30",
         "cat": "Cartão de Crédito",
-        "status": "Pendente",
+        "status": "Pago",
         "type": "out",
         "acc": "Nubank",
         "accId": 2
@@ -3162,6 +3173,55 @@
     "alerts": [],
     "attachments": [],
     "notifications": [
+      {
+        "id": 17,
+        "text": "Pagamento realizado: Nubank — R$ 1.793,91",
+        "icon": "✅",
+        "time": 1791466773919,
+        "read": false
+      },
+      {
+        "id": 16,
+        "text": "Pagamento realizado: Digio — R$ 308,27",
+        "icon": "✅",
+        "time": 1791466773043,
+        "read": false
+      },
+      {
+        "id": 15,
+        "text": "Pagamento realizado: Mae — R$ 300,00",
+        "icon": "✅",
+        "time": 1791466772127,
+        "read": false
+      },
+      {
+        "id": 14,
+        "text": "Pagamento realizado: INTERNET — R$ 65,00",
+        "icon": "✅",
+        "time": 1791466770527,
+        "read": false
+      },
+      {
+        "id": 13,
+        "text": "Pagamento realizado: MOTO — R$ 930,00",
+        "icon": "✅",
+        "time": 1791466769820,
+        "read": false
+      },
+      {
+        "id": 12,
+        "text": "Pagamento realizado: SEM PARAR — R$ 24,00",
+        "icon": "✅",
+        "time": 1791466769003,
+        "read": false
+      },
+      {
+        "id": 11,
+        "text": "Nova transação cadastrada: Salario — R$ 3.350,00",
+        "icon": "💰",
+        "time": 1791466750377,
+        "read": false
+      },
       {
         "id": 10,
         "text": "Nova transação cadastrada: SEM PARAR — R$ 24,00",
@@ -3234,15 +3294,15 @@
       }
     ],
     "nextAccId": 5,
-    "nextTxId": 8,
+    "nextTxId": 9,
     "nextBudgetId": 1,
     "nextGoalId": 1,
     "nextRecId": 1,
     "nextAlertId": 1,
     "nextAttId": 1,
-    "nextNotifId": 11,
-    "updated_at": "2026-09-25T12:46:15.710Z",
-    "updated_at_ms": 1790340375710
+    "nextNotifId": 18,
+    "updated_at": "2026-10-08T13:39:33.987Z",
+    "updated_at_ms": 1791466773987
   },
   "": {
     "categories": [

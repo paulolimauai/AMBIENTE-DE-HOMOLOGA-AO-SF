@@ -257,10 +257,10 @@
     "device_type": "Computador",
     "must_change_password": false,
     "trial_started_at": "2026-09-25T09:14:39-03:00",
-    "subscription_plan": null,
-    "subscription_status": "trial",
-    "subscription_expires_at": null,
-    "subscription_method": null,
-    "subscription_payment_id": null
+    "subscription_plan": "cortesia_admin",
+    "subscription_status": "active",
+    "subscription_expires_at": "2026-10-15T10:30:02-03:00",
+    "subscription_method": "admin_cortesia",
+    "subscription_payment_id": "ADMIN-GRANT-1791466202500"
   }
 ]
