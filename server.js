@@ -1876,7 +1876,7 @@ body.light #persistentSystemBg,
 body.light .persistent-system-bg {
   background-color: #FFFFFF !important;
   background-image: 
-    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(5, 150, 105, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(14, 165, 233, 0.08) 0%, transparent 55%),
     radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
     linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%) !important;
@@ -1913,7 +1913,7 @@ html[data-app-bg="platinum"],
 body.light, html.light {
   --postlogin-bg: #F8FAFC;
   --postlogin-gradient: 
-    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(5, 150, 105, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(14, 165, 233, 0.08) 0%, transparent 55%),
     radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
     linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%);
@@ -2124,9 +2124,9 @@ html, body {
   --auth-bg: #FFFFFF;
   --auth-gold: #F59E0B;
   --auth-gold-dark: #D97706;
-  --auth-blue: #10B981;
-  --auth-emerald: #059669;
-  --auth-cyan: #34D399;
+  --auth-blue: #3B82F6;
+  --auth-emerald: #0284C7;
+  --auth-cyan: #38BDF8;
   --auth-card: linear-gradient(145deg, rgba(12, 14, 20, 0.92) 0%, rgba(6, 7, 12, 0.96) 35%, rgba(0, 0, 0, 0.99) 100%);
   --auth-border: rgba(255, 255, 255, 0.14);
   --auth-input-bg: rgba(10, 10, 14, 0.85);
@@ -2154,7 +2154,7 @@ html, body {
   transform: translate(-50%, -50%);
   width: 750px;
   height: 750px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(16, 185, 129, 0.05) 35%, transparent 70%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(14, 165, 233, 0.05) 35%, transparent 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 1;
@@ -2287,7 +2287,7 @@ body.light .auth-blob { opacity: 0.14; }
 .glass-shard {
   position: absolute;
   border-radius: 40px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(16, 185, 129, 0.10) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(14, 165, 233, 0.08) 100%);
   border: 1.5px solid rgba(255, 255, 255, 0.26);
   border-top: 2.5px solid rgba(255, 255, 255, 0.75);
   border-left: 2px solid rgba(255, 255, 255, 0.50);
@@ -2307,7 +2307,7 @@ body.light .auth-blob { opacity: 0.14; }
   width: 420px;
   height: 420px;
   transform: rotate(-14deg) translateZ(0);
-  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(16, 185, 129, 0.28), inset 0 2px 5px rgba(255,255,255,0.7);
+  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(14, 165, 233, 0.20), inset 0 2px 5px rgba(255,255,255,0.7);
 }
 
 .glass-shard-2 {
@@ -2316,7 +2316,7 @@ body.light .auth-blob { opacity: 0.14; }
   width: 480px;
   height: 480px;
   transform: rotate(18deg) translateZ(0);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(5, 150, 105, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(14, 165, 233, 0.06) 100%);
   box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
 }
 
@@ -2327,7 +2327,7 @@ body.light .auth-blob { opacity: 0.14; }
   height: 250px;
   border-radius: 32px;
   transform: rotate(25deg) translateZ(0);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(5, 150, 105, 0.20), inset 0 2px 4px rgba(255,255,255,0.6);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(245, 158, 11, 0.18), inset 0 2px 4px rgba(255,255,255,0.6);
 }
 
 .glass-shard-4 {
@@ -2337,7 +2337,7 @@ body.light .auth-blob { opacity: 0.14; }
   height: 230px;
   border-radius: 32px;
   transform: rotate(-20deg) translateZ(0);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(5, 150, 105, 0.26), inset 0 2px 4px rgba(255,255,255,0.6);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(14, 165, 233, 0.20), inset 0 2px 4px rgba(255,255,255,0.6);
 }
 
 .glass-shard-5 {
@@ -2382,7 +2382,7 @@ body.light .glass-shard {
   max-width: 446px;
   box-shadow: 
     0 35px 85px -15px rgba(0, 0, 0, 0.75),
-    0 0 50px -10px rgba(16, 185, 129, 0.18),
+    0 0 50px -10px rgba(14, 165, 233, 0.15),
     0 0 40px -10px rgba(245, 158, 11, 0.14),
     inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
     inset 0 -1.5px 2px rgba(0, 0, 0, 0.45) !important;
@@ -2421,7 +2421,7 @@ button:active, .auth-tab-btn:active, .btn-quick-admin-login:active {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(circle 420px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.20), rgba(16, 185, 129, 0.08) 40%, transparent 70%);
+  background: radial-gradient(circle 420px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.20), rgba(245, 158, 11, 0.08) 40%, transparent 70%);
   opacity: var(--card-glare-opacity, 0);
   transition: opacity 0.35s ease;
   z-index: 4;
@@ -2480,7 +2480,7 @@ body.light .auth-card-glare {
   padding: 8px 12px;
   border-radius: 12px;
   background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(16, 185, 129, 0.22);
+  border: 1px solid rgba(245, 158, 11, 0.25);
   color: #94A3B8;
   font-size: 11.5px;
   font-weight: 600;
@@ -2492,11 +2492,11 @@ body.light .auth-card-glare {
 }
 .auth-support-bar:hover {
   background: rgba(20, 30, 52, 0.85);
-  border-color: rgba(16, 185, 129, 0.45);
-  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.12);
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.15);
 }
 .auth-support-bar svg {
-  color: #10B981;
+  color: #F59E0B;
   flex-shrink: 0;
 }
 .auth-support-label {
@@ -2505,14 +2505,14 @@ body.light .auth-card-glare {
   white-space: nowrap;
 }
 .auth-support-link {
-  color: #10B981;
+  color: #F59E0B;
   text-decoration: none;
   font-weight: 700;
   word-break: break-all;
   transition: color 0.15s ease, text-decoration 0.15s ease;
 }
 .auth-support-link:hover {
-  color: #7DD3FC;
+  color: #FCD34D;
   text-decoration: underline;
 }
 
@@ -2526,11 +2526,11 @@ html.light .auth-support-bar {
 body.light .auth-support-bar:hover,
 html.light .auth-support-bar:hover {
   background: #FFFFFF !important;
-  border-color: #059669 !important;
+  border-color: #D97706 !important;
 }
 body.light .auth-support-bar svg,
 html.light .auth-support-bar svg {
-  color: #059669 !important;
+  color: #D97706 !important;
 }
 body.light .auth-support-label,
 html.light .auth-support-label {
@@ -2538,11 +2538,11 @@ html.light .auth-support-label {
 }
 body.light .auth-support-link,
 html.light .auth-support-link {
-  color: #059669 !important;
+  color: #D97706 !important;
 }
 body.light .auth-support-link:hover,
 html.light .auth-support-link:hover {
-  color: #047857 !important;
+  color: #B45309 !important;
 }
 
 .auth-grid-2col {
@@ -2631,7 +2631,7 @@ html.light .auth-support-link:hover {
   gap: 8px;
   padding: 5px 14px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(5, 150, 105, 0.12));
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.10));
   border: 1px solid rgba(245, 158, 11, 0.35);
   color: #FCD34D;
   font-size: 11px;
@@ -2711,7 +2711,7 @@ html.light .auth-support-link:hover {
 .metric-sub-blue {
   font-size: 11px;
   font-weight: 700;
-  color: #10B981;
+  color: #38BDF8;
   margin-top: 2px;
 }
 .auth-showcase-footer {
@@ -2766,7 +2766,7 @@ body.light .metric-sub-amber {
   font-weight: 800 !important;
 }
 body.light .metric-sub-blue {
-  color: #059669 !important;
+  color: #0284C7 !important;
   font-weight: 800 !important;
 }
 body.light .auth-showcase-footer,
@@ -3262,11 +3262,11 @@ body.light .auth-bottom-text a:hover {
   width: 100%;
   height: 40px;
   padding: 0 14px;
-  background: linear-gradient(135deg, rgba(4, 120, 87, 0.18) 0%, rgba(15, 23, 42, 0.65) 100%) !important;
-  border: 1px solid rgba(96, 165, 250, 0.30) !important;
-  border-top: 1px solid rgba(191, 219, 254, 0.45) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.20) 0%, rgba(30, 58, 138, 0.38) 50%, rgba(15, 23, 42, 0.85) 100%) !important;
+  border: 1px solid rgba(96, 165, 250, 0.45) !important;
+  border-top: 1px solid rgba(191, 219, 254, 0.65) !important;
   border-radius: 12px !important;
-  color: #A7F3D0 !important;
+  color: #BFDBFE !important;
   font-size: 12px !important;
   font-weight: 800 !important;
   letter-spacing: 0.02em;
@@ -3278,11 +3278,11 @@ body.light .auth-bottom-text a:hover {
   margin-top: 10px;
 }
 .btn-open-os:hover {
-  background: linear-gradient(135deg, rgba(4, 120, 87, 0.30) 0%, rgba(15, 23, 42, 0.80) 100%) !important;
-  border-color: rgba(147, 197, 253, 0.55) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.38) 0%, rgba(37, 99, 235, 0.48) 50%, rgba(30, 58, 138, 0.90) 100%) !important;
+  border-color: rgba(147, 197, 253, 0.85) !important;
   color: #FFFFFF !important;
   transform: translateY(-1.5px);
-  box-shadow: 0 8px 20px -2px rgba(4, 120, 87, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 8px 22px rgba(59, 130, 246, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
 }
 .btn-open-os svg {
   transition: transform 0.2s ease;
@@ -3355,10 +3355,10 @@ body.light .auth-bottom-text a:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 .os-tab-btn.active {
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.25), rgba(4, 120, 87, 0.15));
-  border-color: rgba(96, 165, 250, 0.55);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(2, 132, 199, 0.15));
+  border-color: rgba(56, 189, 248, 0.55);
   color: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.25);
 }
 
 /* Cards de O.S. Consultada */
@@ -3382,17 +3382,17 @@ body.light .auth-bottom-text a:hover {
 body.light .btn-open-os,
 html.light .btn-open-os {
   background: linear-gradient(135deg, #F0F7FF 0%, #E0EEFE 50%, #CFE2FE 100%) !important;
-  border: 1.5px solid #6EE7B7 !important;
-  border-top: 1.5px solid #A7F3D0 !important;
-  color: #047857 !important;
-  box-shadow: 0 4px 14px rgba(4, 120, 87, 0.12), inset 0 1px 1px #FFFFFF !important;
+  border: 1.5px solid #38BDF8 !important;
+  border-top: 1.5px solid #7DD3FC !important;
+  color: #0284C7 !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.12), inset 0 1px 1px #FFFFFF !important;
 }
 body.light .btn-open-os:hover,
 html.light .btn-open-os:hover {
-  background: linear-gradient(135deg, #E0EEFE 0%, #CFE2FE 50%, #A7F3D0 100%) !important;
-  border-color: #10B981 !important;
-  color: #1E3A8A !important;
-  box-shadow: 0 6px 18px rgba(4, 120, 87, 0.22), inset 0 1px 1px #FFFFFF !important;
+  background: linear-gradient(135deg, #E0EEFE 0%, #CFE2FE 50%, #BAE6FD 100%) !important;
+  border-color: #0284C7 !important;
+  color: #0369A1 !important;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.22), inset 0 1px 1px #FFFFFF !important;
 }
 
 body.light .btn-consult-os,
@@ -3426,10 +3426,10 @@ html.light .os-tab-btn:hover {
 }
 body.light .os-tab-btn.active,
 html.light .os-tab-btn.active {
-  background: #ECFDF5 !important;
-  border-color: #10B981 !important;
-  color: #047857 !important;
-  box-shadow: 0 2px 8px rgba(4, 120, 87, 0.15) !important;
+  background: #F0F9FF !important;
+  border-color: #38BDF8 !important;
+  color: #0284C7 !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15) !important;
 }
 
 body.light .os-consult-card,
@@ -3441,7 +3441,7 @@ html.light .os-consult-card {
 }
 body.light .os-consult-card:hover,
 html.light .os-consult-card:hover {
-  border-color: #6EE7B7 !important;
+  border-color: #38BDF8 !important;
   background: #F8FAFC !important;
 }
 
@@ -3449,7 +3449,7 @@ body.light #overlayNovaOrdem .modal,
 html.light #overlayNovaOrdem .modal {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15), 0 0 35px rgba(5, 150, 105, 0.08) !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15), 0 0 35px rgba(14, 165, 233, 0.08) !important;
   color: #0F172A !important;
 }
 body.light #overlayNovaOrdem h2,
@@ -3481,8 +3481,8 @@ html.light #overlayNovaOrdem input:focus,
 html.light #overlayNovaOrdem textarea:focus,
 html.light #overlayNovaOrdem select:focus {
   background: #FFFFFF !important;
-  border-color: #10B981 !important;
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
+  border-color: #0284C7 !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15) !important;
 }
 body.light #overlayNovaOrdem .close-x,
 html.light #overlayNovaOrdem .close-x {
@@ -3635,7 +3635,7 @@ html.light #appMain {
 }
 .app-blob.a1{
   width:520px; height:520px;
-  background:radial-gradient(circle, rgba(5, 150, 105, 0.28) 0%, rgba(5, 150, 105, 0.10) 55%, transparent 75%);
+  background:radial-gradient(circle, rgba(14, 165, 233, 0.22) 0%, rgba(14, 165, 233, 0.08) 55%, transparent 75%);
   top:-120px; right:-80px;
   animation:wealthBlobFloat1 24s ease-in-out infinite alternate;
 }
@@ -3648,14 +3648,14 @@ html.light #appMain {
 }
 .app-blob.a3{
   width:400px; height:400px;
-  background:radial-gradient(circle, rgba(14, 165, 233, 0.24) 0%, rgba(5, 150, 105, 0.07) 55%, transparent 75%);
+  background:radial-gradient(circle, rgba(99, 102, 241, 0.20) 0%, rgba(99, 102, 241, 0.06) 55%, transparent 75%);
   top:32%; left:-100px;
   animation:wealthBlobFloat3 32s ease-in-out infinite alternate;
   animation-delay:-16s;
 }
 .app-blob.a4{
   width:440px; height:440px;
-  background:radial-gradient(circle, rgba(16, 185, 129, 0.20) 0%, rgba(5, 150, 105, 0.06) 55%, transparent 75%);
+  background:radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, rgba(217, 119, 6, 0.06) 55%, transparent 75%);
   top:65%; right:8%;
   animation:wealthBlobFloat4 26s ease-in-out infinite alternate;
   animation-delay:-12s;
@@ -3680,12 +3680,12 @@ html.light #appMain {
   50% { transform: translate3d(-40px, 30px, 0) scale(1.14); }
   100% { transform: translate3d(30px, -35px, 0) scale(0.90); }
 }
-body.light .app-bg-grid{opacity:.7; background-image: linear-gradient(to right, rgba(5, 150, 105, 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(5, 150, 105, 0.06) 1px, transparent 1px);}
+body.light .app-bg-grid{opacity:.7; background-image: linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);}
 body.light .app-bg-chart{opacity:.12;}
-body.light .app-blob.a1{opacity:.16; background:radial-gradient(circle, rgba(5, 150, 105, 0.18) 0%, transparent 70%);}
+body.light .app-blob.a1{opacity:.16; background:radial-gradient(circle, rgba(14, 165, 233, 0.14) 0%, transparent 70%);}
 body.light .app-blob.a2{opacity:.14; background:radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);}
-body.light .app-blob.a3{opacity:.14; background:radial-gradient(circle, rgba(14, 165, 233, 0.18) 0%, transparent 70%);}
-body.light .app-blob.a4{opacity:.14; background:radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, transparent 70%);}
+body.light .app-blob.a3{opacity:.14; background:radial-gradient(circle, rgba(99, 102, 241, 0.14) 0%, transparent 70%);}
+body.light .app-blob.a4{opacity:.14; background:radial-gradient(circle, rgba(245, 158, 11, 0.14) 0%, transparent 70%);}
 
 /* ==================== Cabeçalho superior (nav horizontal & drawer mobile) ==================== */
 .topheader{
@@ -9498,10 +9498,10 @@ body.light .toast-close:hover {
   opacity: 0.75;
 }
 .auth-ambient-glow.glow-blue {
-  background: radial-gradient(circle, rgba(5, 150, 105, 0.35) 0%, rgba(14, 165, 233, 0.15) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.30) 0%, rgba(59, 130, 246, 0.15) 55%, transparent 75%);
 }
 .auth-ambient-glow.glow-emerald {
-  background: radial-gradient(circle, rgba(5, 150, 105, 0.35) 0%, rgba(14, 165, 233, 0.18) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.30) 0%, rgba(217, 119, 6, 0.15) 55%, transparent 75%);
 }
 .auth-ambient-glow.glow-red {
   background: radial-gradient(circle, rgba(239, 68, 68, 0.35) 0%, rgba(220, 38, 38, 0.15) 55%, transparent 75%);
@@ -9529,24 +9529,24 @@ body.light .toast-close:hover {
   border-radius: 50%;
 }
 .auth-badge-logout {
-  background: rgba(5, 150, 105, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  color: #10B981;
-  box-shadow: 0 0 16px rgba(5, 150, 105, 0.15);
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.15);
 }
 .auth-badge-logout .auth-badge-dot {
-  background: #059669;
-  box-shadow: 0 0 8px #059669;
+  background: #F59E0B;
+  box-shadow: 0 0 8px #F59E0B;
 }
 .auth-badge-success {
-  background: rgba(5, 150, 105, 0.12);
-  border: 1px solid rgba(96, 165, 250, 0.35);
-  color: #34D399;
-  box-shadow: 0 0 16px rgba(5, 150, 105, 0.15);
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.40);
+  color: #FDE68A;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.20);
 }
 .auth-badge-success .auth-badge-dot {
-  background: #10B981;
-  box-shadow: 0 0 8px #10B981;
+  background: #F59E0B;
+  box-shadow: 0 0 8px #F59E0B;
 }
 .auth-badge-error {
   background: rgba(239, 68, 68, 0.12);
@@ -9565,9 +9565,9 @@ body.light .toast-close:hover {
   height: 80px !important;
   margin: 0 auto 18px !important;
   border-radius: 50% !important;
-  background: radial-gradient(circle at 35% 30%, rgba(5, 150, 105, 0.28) 0%, rgba(5, 150, 105, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
-  border: 1.5px solid rgba(16, 185, 129, 0.55) !important;
-  box-shadow: 0 0 35px rgba(5, 150, 105, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
+  background: radial-gradient(circle at 35% 30%, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.55) !important;
+  box-shadow: 0 0 35px rgba(245, 158, 11, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   display: flex !important;
@@ -9577,11 +9577,11 @@ body.light .toast-close:hover {
   z-index: 2;
 }
 .login-success-check svg { width: 38px; height: 38px; }
-.login-success-check circle { stroke: rgba(5, 150, 105, 0.35); stroke-width: 2.5; }
+.login-success-check circle { stroke: rgba(245, 158, 11, 0.35); stroke-width: 2.5; }
 .login-success-check path {
-  stroke: #059669; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
+  stroke: #F59E0B; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
   stroke-dasharray: 40; stroke-dashoffset: 40; animation: loginCheckDraw .45s ease .15s forwards;
-  filter: drop-shadow(0 0 10px rgba(5, 150, 105, 0.85));
+  filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.85));
 }
 @keyframes loginCheckDraw{to{stroke-dashoffset:0;}}
 
@@ -9591,12 +9591,12 @@ body.light .toast-close:hover {
   height: 80px !important;
   margin: 0 auto 18px !important;
   border-radius: 50% !important;
-  background: radial-gradient(circle at 35% 30%, rgba(5, 150, 105, 0.28) 0%, rgba(16, 185, 129, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
-  border: 1.5px solid rgba(16, 185, 129, 0.55) !important;
+  background: radial-gradient(circle at 35% 30%, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.15) 50%, rgba(8, 14, 28, 0.8) 100%) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.55) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  box-shadow: 0 0 35px rgba(5, 150, 105, 0.38), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 0 35px rgba(245, 158, 11, 0.38), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   position: relative;
@@ -11403,26 +11403,26 @@ input[type="text"], input[type="number"], input[type="date"], input[type="email"
 }
 
 input:focus, select:focus, textarea:focus {
-  border-color: #059669 !important;
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.25), 0 0 15px rgba(5, 150, 105, 0.15) !important;
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25), 0 0 15px rgba(245, 158, 11, 0.15) !important;
   outline: none !important;
 }
 
 /* Botão Salvar / Ação Primária */
 .btn-primary, button.save, #saveBtn, #accSaveBtn, #catSaveBtn {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
   color: #FFFFFF !important;
   font-weight: 750 !important;
   border-radius: 12px !important;
   padding: 11px 22px !important;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 18px rgba(5, 150, 105, 0.4) !important;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.4) !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .btn-primary:hover, button.save:hover, #saveBtn:hover, #accSaveBtn:hover, #catSaveBtn:hover {
   transform: translateY(-1.5px) !important;
-  box-shadow: 0 8px 24px rgba(5, 150, 105, 0.55) !important;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.55) !important;
 }
 
 /* 9. MODO CLARO (LIGHT MODE) - CORES FINTECH PREMIUM, ALTO CONTRASTE E HIERARQUIA VISUAL */
@@ -11435,7 +11435,7 @@ body.light #persistentSystemBg,
 body.light .persistent-system-bg {
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(14, 165, 233, 0.08) 0%, transparent 55%),
     radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
     radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
     linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 35%, #F1F5F9 100%) !important;
@@ -11473,16 +11473,16 @@ body.light nav.menu button:hover, body.light .menu button:hover {
 }
 
 body.light nav.menu button.active, body.light .menu button.active {
-  background: #ECFDF5 !important;
-  border: 1px solid #A7F3D0 !important;
+  background: #FEF3C7 !important;
+  border: 1px solid #FDE68A !important;
   border-top: 1.2px solid #FFFFFF !important;
-  color: #059669 !important;
+  color: #B45309 !important;
   font-weight: 700 !important;
-  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.15) !important;
+  box-shadow: 0 2px 10px rgba(217, 119, 6, 0.15) !important;
 }
 
 body.light nav.menu button.active .ic svg {
-  stroke: #059669 !important;
+  stroke: #B45309 !important;
 }
 
 /* Cards, Painéis, KPIs e Modais no Modo Claro */
@@ -11686,8 +11686,8 @@ body.light input, body.light select, body.light textarea {
 }
 
 body.light input:focus, body.light select:focus, body.light textarea:focus {
-  border-color: #059669 !important;
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.18) !important;
+  border-color: #D97706 !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18) !important;
   background: #FFFFFF !important;
 }
 
@@ -11701,17 +11701,17 @@ body.light button.save,
 body.light #saveBtn,
 body.light #accSaveBtn,
 body.light #catSaveBtn {
-  background: #059669 !important;
+  background: #D97706 !important;
   color: #FFFFFF !important;
-  border: 1px solid #059669 !important;
-  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.28) !important;
+  border: 1px solid #D97706 !important;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.28) !important;
 }
 
 body.light .btn-primary:hover,
 body.light button.save:hover,
 body.light #saveBtn:hover {
-  background: #047857 !important;
-  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.38) !important;
+  background: #B45309 !important;
+  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.38) !important;
 }
 
 body.light .btn-ghost,
@@ -12830,7 +12830,7 @@ body.light .period button.active {
 
 <!-- Modal Abrir Nova Ordem de Serviço (Público / Tela de Login) -->
 <div class="overlay" id="overlayNovaOrdem" onclick="if(event.target===this) closeNovaOrdemModal()">
-  <div class="modal" style="max-width:560px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.68) 0%, rgba(15,23,42,0.86) 45%, rgba(8,12,26,0.96) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(5, 150, 105,0.22), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
+  <div class="modal" style="max-width:560px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.68) 0%, rgba(15,23,42,0.86) 45%, rgba(8,12,26,0.96) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(14, 165, 233, 0.22), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
     <button class="close-x" type="button" onclick="closeNovaOrdemModal()">✕</button>
 
     <!-- Abas de Navegação: Abrir Ordem de Serviço OS vs Consulta de OS -->
@@ -12844,8 +12844,8 @@ body.light .period button.active {
     </div>
 
     <div id="boxNovaOrdemForm">
-      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#6EE7B7; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
-        <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981;"></span>
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(14, 165, 233, 0.15); border:1px solid rgba(14, 165, 233, 0.35); color:#38BDF8; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#38BDF8; box-shadow:0 0 8px #38BDF8;"></span>
         <span>Suporte Técnico & Chamados</span>
       </div>
       <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
@@ -12892,7 +12892,7 @@ body.light .period button.active {
           <div class="field" style="flex:1;">
             <label>Nível de Prioridade</label>
             <select id="osPriority">
-              <option value="Normal">🟢 Normal</option>
+              <option value="Normal">⚪ Normal</option>
               <option value="Alta">🟡 Alta</option>
               <option value="Urgente">🔴 Urgente</option>
             </select>
@@ -12913,7 +12913,7 @@ body.light .period button.active {
 
         <div class="modal-actions" style="margin-top:16px;">
           <button type="button" onclick="closeNovaOrdemModal()">Cancelar</button>
-          <button type="submit" class="save" id="btnSubmitOs" style="background:linear-gradient(135deg, #10B981, #047857); font-weight:800; border:1px solid rgba(255,255,255,0.25);">
+          <button type="submit" class="save" id="btnSubmitOs" style="background:linear-gradient(135deg, #0284C7, #0369A1); font-weight:800; border:1px solid rgba(255,255,255,0.25);">
             Enviar Ordem de Serviço 🚀
           </button>
         </div>
@@ -12922,7 +12922,7 @@ body.light .period button.active {
 
     <!-- Tela de Sucesso após Abertura -->
     <div id="boxNovaOrdemSuccess" style="display:none; text-align:center; padding:12px 6px;">
-      <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, rgba(5, 150, 105,0.25), rgba(5, 150, 105,0.35)); border:2px solid #059669; color:#10B981; font-size:26px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 0 24px rgba(5, 150, 105,0.4);">
+      <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(14, 165, 233, 0.35)); border:2px solid #0284C7; color:#38BDF8; font-size:26px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 0 24px rgba(14, 165, 233, 0.4);">
         ✓
       </div>
       <h3 style="font-size:20px; font-weight:900; margin-bottom:6px;">Ordem de Serviço Aberta!</h3>
@@ -12930,12 +12930,12 @@ body.light .period button.active {
         Sua solicitação foi registrada no sistema e já está disponível para análise da equipe de administração.
       </p>
 
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(5, 150, 105,0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
+      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(14, 165, 233, 0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
         <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Número do Protocolo</span>
-        <div style="font-size:22px; font-weight:900; color:#34D399; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
+        <div style="font-size:22px; font-weight:900; color:#38BDF8; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
         <div style="display:flex; justify-content:center; gap:8px; margin-top:10px; flex-wrap:wrap;">
-          <button type="button" onclick="copyOsProtocol()" style="background:rgba(5, 150, 105,0.2); border:1px solid rgba(96,165,250,0.4); color:#A7F3D0; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
-          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(5, 150, 105,0.2); border:1px solid rgba(16, 185, 129,0.4); color:#A7F3D0; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Visualizar Chamado</button>
+          <button type="button" onclick="copyOsProtocol()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(96,165,250,0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
+          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(56, 189, 248, 0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Visualizar Chamado</button>
         </div>
       </div>
 
@@ -12946,8 +12946,8 @@ body.light .period button.active {
 
     <!-- Aba de Consulta de O.S. Aberta por Nome ou E-mail -->
     <div id="boxConsultarOrdem" style="display:none;">
-      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#6EE7B7; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
-        <span style="width:6px; height:6px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981;"></span>
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(14, 165, 233, 0.15); border:1px solid rgba(14, 165, 233, 0.35); color:#38BDF8; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#38BDF8; box-shadow:0 0 8px #38BDF8;"></span>
         <span>Acompanhamento de Chamados</span>
       </div>
       <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
@@ -12962,7 +12962,7 @@ body.light .period button.active {
           <div style="flex:1; min-width:240px; position:relative;">
             <input id="osConsultarQuery" required placeholder="Digite seu Nome ou E-mail cadastrado..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
           </div>
-          <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #10B981, #047857); color:#FFFFFF; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(5, 150, 105,0.35);">
+          <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #0284C7, #0369A1); color:#FFFFFF; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(14, 165, 233, 0.35);">
             🔍 Buscar O.S.
           </button>
         </div>
@@ -13306,7 +13306,7 @@ body.light .period button.active {
 </div>
 
 <div class="login-success-overlay" id="loginSuccessOverlay" role="dialog" aria-modal="true">
-  <div class="login-success-box" style="max-width:440px; padding:38px 30px 32px; border-radius:28px; border:1px solid rgba(5, 150, 105,0.35); border-top:1.8px solid rgba(255,255,255,0.45); background:linear-gradient(165deg, rgba(17,24,39,0.96) 0%, rgba(10,15,28,0.98) 100%); box-shadow:0 35px 95px rgba(0,0,0,0.95), 0 0 50px rgba(5, 150, 105,0.22), inset 0 1px 1px rgba(255,255,255,0.25);">
+  <div class="login-success-box" style="max-width:440px; padding:38px 30px 32px; border-radius:28px; border:1px solid rgba(245, 158, 11, 0.35); border-top:1.8px solid rgba(255,255,255,0.45); background:linear-gradient(165deg, rgba(17,24,39,0.96) 0%, rgba(10,15,28,0.98) 100%); box-shadow:0 35px 95px rgba(0,0,0,0.95), 0 0 50px rgba(245, 158, 11, 0.22), inset 0 1px 1px rgba(255,255,255,0.25);">
     <div class="auth-ambient-glow glow-emerald"></div>
 
     <!-- Badge Executiva de Status de Autenticação -->
@@ -13316,8 +13316,8 @@ body.light .period button.active {
     </div>
 
     <!-- Ícone Dinâmico com Duplo Anel e Checkmark Suave -->
-    <div class="login-success-check" style="width:76px; height:76px; margin:0 auto 20px; border-radius:50%; border:2px solid rgba(16, 185, 129,0.5); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 35% 30%, rgba(5, 150, 105,0.28) 0%, rgba(16, 185, 129,0.12) 55%, rgba(10,15,28,0.9) 100%); box-shadow:0 0 35px rgba(5, 150, 105,0.45), inset 0 2px 4px rgba(255,255,255,0.5);">
-      <svg viewBox="0 0 52 52" style="width:40px; height:40px; stroke:#059669;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
+    <div class="login-success-check" style="width:76px; height:76px; margin:0 auto 20px; border-radius:50%; border:2px solid rgba(245, 158, 11, 0.5); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 35% 30%, rgba(217, 119, 6, 0.28) 0%, rgba(245, 158, 11, 0.12) 55%, rgba(10,15,28,0.9) 100%); box-shadow:0 0 35px rgba(245, 158, 11, 0.45), inset 0 2px 4px rgba(255,255,255,0.5);">
+      <svg viewBox="0 0 52 52" style="width:40px; height:40px; stroke:#F59E0B;"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M14 27l7 7 17-17"/></svg>
     </div>
 
     <h3 id="loginSuccessTitle" style="font-size:23px; font-weight:900; color:#ffffff; margin:0 0 8px; letter-spacing:-0.025em; text-shadow:0 2px 10px rgba(0,0,0,0.5);">Login efetuado com sucesso!</h3>
@@ -13325,11 +13325,11 @@ body.light .period button.active {
 
     <!-- Barra de Progresso Suave com Glow Dinâmico -->
     <div class="login-success-progress-bar" style="height:5px; background:rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.6);">
-      <div class="login-success-progress-fill" style="height:100%; border-radius:999px; background:linear-gradient(90deg, #059669 0%, #14B8A6 45%, #059669 80%, #10B981 100%); box-shadow:0 0 16px rgba(5, 150, 105,0.9);"></div>
+      <div class="login-success-progress-fill" style="height:100%; border-radius:999px; background:linear-gradient(90deg, #F59E0B 0%, #FBBF24 45%, #D97706 80%, #F59E0B 100%); box-shadow:0 0 16px rgba(245, 158, 11, 0.9);"></div>
     </div>
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; font-size:10.5px; color:#64748b; font-weight:600; letter-spacing:0.02em;">
       <span style="display:inline-flex; align-items:center; gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Conexão Criptografada</span>
-      <span style="color:#059669;">Carregando dados...</span>
+      <span style="color:#F59E0B;">Carregando dados...</span>
     </div>
   </div>
 </div>
@@ -14119,18 +14119,18 @@ window.renderUsuariosLogonServer = function(users) {
     html += \`
       <div style="padding:10px 12px; border-radius:12px; background:var(--card-bg, rgba(255,255,255,0.04)); border:1px solid var(--auth-border); display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-          <div style="width:34px; height:34px; border-radius:50%; background:\${isAdmin ? 'linear-gradient(135deg, #F59E0B, #B45309)' : 'linear-gradient(135deg, #10B981, #047857)'}; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <div style="width:34px; height:34px; border-radius:50%; background:\${isAdmin ? 'linear-gradient(135deg, #F59E0B, #B45309)' : 'linear-gradient(135deg, #0284C7, #0369A1)'}; color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
             \${initials}
           </div>
           <div style="min-width:0;">
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <strong style="font-size:13px; color:var(--auth-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${name}</strong>
               <span style="font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.1); color:var(--text, #fff); border:1px solid rgba(255,255,255,0.15);">ID #\${u.id || '-'}</span>
-              <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(5, 150, 105,0.2)'}; color:\${isAdmin ? '#FBBF24' : '#34D399'};">\${role}</span>
-              <span style="font-size:9.5px; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(5, 150, 105,0.15); color:#10B981; border:1px solid rgba(5, 150, 105,0.3);">\${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
+              <span style="font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; text-transform:uppercase; background:\${isAdmin ? 'rgba(245,158,11,0.2)' : 'rgba(14, 165, 233, 0.2)'}; color:\${isAdmin ? '#FBBF24' : '#38BDF8'};">\${role}</span>
+              <span style="font-size:9.5px; font-weight:700; padding:1px 5px; border-radius:4px; background:rgba(14, 165, 233, 0.15); color:#38BDF8; border:1px solid rgba(14, 165, 233, 0.3);">\${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
             </div>
             <div style="font-size:11.5px; color:var(--auth-text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${email}</div>
-            <div style="font-size:10.5px; color:#10B981; margin-top:3px; display:flex; align-items:center; gap:4px;">
+            <div style="font-size:10.5px; color:#38BDF8; margin-top:3px; display:flex; align-items:center; gap:4px;">
               <span>🕒 Último login:</span> <strong style="color:var(--text, #E2E8F0);">\${lastLoginFormatted}</strong>
             </div>
           </div>
@@ -14588,9 +14588,9 @@ window.checkMandatoryPasswordStrength = function(pwd) {
   if (hasSpecial) score++;
 
   if (b1) b1.style.background = score >= 1 ? (score === 1 ? '#f87171' : '#f59e0b') : 'rgba(255,255,255,0.1)';
-  if (b2) b2.style.background = score >= 2 ? (score === 2 ? '#f59e0b' : '#10B981') : 'rgba(255,255,255,0.1)';
-  if (b3) b3.style.background = score >= 3 ? (score === 3 ? '#10B981' : '#059669') : 'rgba(255,255,255,0.1)';
-  if (b4) b4.style.background = score >= 4 ? '#059669' : 'rgba(255,255,255,0.1)';
+  if (b2) b2.style.background = score >= 2 ? (score === 2 ? '#f59e0b' : '#38BDF8') : 'rgba(255,255,255,0.1)';
+  if (b3) b3.style.background = score >= 3 ? (score === 3 ? '#38BDF8' : '#0284C7') : 'rgba(255,255,255,0.1)';
+  if (b4) b4.style.background = score >= 4 ? '#0284C7' : 'rgba(255,255,255,0.1)';
 
   if (txt) {
     if (score <= 1) {
@@ -14601,10 +14601,10 @@ window.checkMandatoryPasswordStrength = function(pwd) {
       txt.style.color = '#f59e0b';
     } else if (score === 3) {
       txt.textContent = 'Forte';
-      txt.style.color = '#10B981';
+      txt.style.color = '#38BDF8';
     } else {
       txt.textContent = 'Excelente';
-      txt.style.color = '#059669';
+      txt.style.color = '#0284C7';
     }
   }
 
@@ -14631,7 +14631,7 @@ window.checkMandatoryPasswordMatch = function() {
     } else if (isMatch) {
       msg.style.display = 'block';
       msg.textContent = '✓ As senhas coincidem perfeitamente';
-      msg.style.color = '#059669';
+      msg.style.color = '#38BDF8';
     } else {
       msg.style.display = 'block';
       msg.textContent = '✕ As senhas não conferem';
@@ -26486,28 +26486,28 @@ window.applyPostLoginBg = function(theme) {
     // 1. Pílulas de Metas e Conquistas Financeiras Pessoais
     const personalFinanceBadges = [
       { text: '🛡️ Reserva 100% Blindada', type: 'gold' },
-      { text: '💰 Economia +R$ 3.500', type: 'emerald' },
+      { text: '💰 Economia +R$ 3.500', type: 'sapphire' },
       { text: '🎯 Meta 2026: 94%', type: 'gold' },
-      { text: '📈 Rentabilidade +24.8%', type: 'emerald' },
-      { text: '💳 Faturas em Dia ✓', type: 'emerald' },
+      { text: '📈 Rentabilidade +24.8%', type: 'sapphire' },
+      { text: '💳 Faturas em Dia ✓', type: 'sapphire' },
       { text: '📊 Orçamento Sob Controle', type: 'gold' },
       { text: '✨ Dividendos Mensais Ativos', type: 'gold' },
-      { text: '💎 Liberdade Financeira', type: 'emerald' },
-      { text: '🌱 Investimento Automático', type: 'emerald' },
+      { text: '💎 Liberdade Financeira', type: 'sapphire' },
+      { text: '🌱 Investimento Automático', type: 'sapphire' },
       { text: '🚀 Patrimônio em Expansão', type: 'gold' },
-      { text: '▲ Saldo Positivo Mensal', type: 'emerald' },
+      { text: '▲ Saldo Positivo Mensal', type: 'sapphire' },
       { text: '🪙 Fundo de Prosperidade', type: 'gold' }
     ];
 
     const currencyTokens = ['R$', '$', '€', '₿', '▲', '+24%', '💎', '🪙', '📈', '↗', '£', '¥'];
     const goldTones = ['#F59E0B', '#FBBF24', '#FCD34D', '#EAB308'];
-    const emeraldTones = ['#059669', '#10B981', '#059669', '#7DD3FC'];
+    const sapphireTones = ['#38BDF8', '#0284C7', '#0EA5E9', '#60A5FA'];
 
     // 2. Moedas Douradas e Tokens Financeiros Flutuantes
     const wealthCoins = [];
     const coinCount = isMobile ? 12 : 22;
     for (let i = 0; i < coinCount; i++) {
-      const isEmerald = Math.random() > 0.6;
+      const isSapphire = Math.random() > 0.6;
       wealthCoins.push({
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
@@ -26515,9 +26515,9 @@ window.applyPostLoginBg = function(theme) {
         radius: Math.floor(Math.random() * 6) + 16,
         vy: -(Math.random() * 0.32 + 0.15),
         vx: (Math.random() - 0.5) * 0.22,
-        color: isEmerald ? '#059669' : '#FBBF24',
-        borderTone: isEmerald ? 'rgba(5, 150, 105, 0.45)' : 'rgba(245, 158, 11, 0.45)',
-        bgTone: isEmerald ? 'rgba(5, 150, 105, 0.16)' : 'rgba(217, 119, 6, 0.16)',
+        color: isSapphire ? '#38BDF8' : '#FBBF24',
+        borderTone: isSapphire ? 'rgba(56, 189, 248, 0.45)' : 'rgba(245, 158, 11, 0.45)',
+        bgTone: isSapphire ? 'rgba(14, 165, 233, 0.16)' : 'rgba(217, 119, 6, 0.16)',
         alpha: Math.random() * 0.40 + 0.35,
         angle: Math.random() * Math.PI * 2,
         rotSpeed: (Math.random() - 0.5) * 0.015,
@@ -26536,9 +26536,9 @@ window.applyPostLoginBg = function(theme) {
         y: Math.random() * ((height || 800) - 120) + 60,
         text: item.text,
         type: item.type,
-        color: item.type === 'emerald' ? '#059669' : '#FBBF24',
-        border: item.type === 'emerald' ? 'rgba(5, 150, 105, 0.38)' : 'rgba(245, 158, 11, 0.38)',
-        bg: item.type === 'emerald' ? 'rgba(5, 150, 105, 0.18)' : 'rgba(217, 119, 6, 0.18)',
+        color: item.type === 'sapphire' ? '#38BDF8' : '#FBBF24',
+        border: item.type === 'sapphire' ? 'rgba(56, 189, 248, 0.38)' : 'rgba(245, 158, 11, 0.38)',
+        bg: item.type === 'sapphire' ? 'rgba(14, 165, 233, 0.18)' : 'rgba(217, 119, 6, 0.18)',
         vy: -(Math.random() * 0.24 + 0.10),
         vx: (Math.random() - 0.5) * 0.15,
         alpha: Math.random() * 0.35 + 0.40,
@@ -26551,14 +26551,14 @@ window.applyPostLoginBg = function(theme) {
     const wealthNodes = [];
     const nodeCount = isMobile ? 18 : 34;
     for (let n = 0; n < nodeCount; n++) {
-      const isGreen = Math.random() > 0.45;
+      const isSapphire = Math.random() > 0.45;
       wealthNodes.push({
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
         vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
         radius: Math.random() * 2.0 + 1.2,
-        color: isGreen ? '#059669' : '#F59E0B',
+        color: isSapphire ? '#38BDF8' : '#F59E0B',
         alpha: Math.random() * 0.45 + 0.25
       });
     }
@@ -26581,7 +26581,7 @@ window.applyPostLoginBg = function(theme) {
       });
     }
 
-    // 6. Micro-Fagulhas de Ouro e Esmeralda (Gold Dust)
+    // 6. Micro-Fagulhas de Ouro e Safira (Gold Dust)
     const dustParticles = [];
     const dustCount = isMobile ? 22 : 46;
     for (let d = 0; d < dustCount; d++) {
@@ -26590,7 +26590,7 @@ window.applyPostLoginBg = function(theme) {
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
         radius: Math.random() * 1.6 + 0.6,
-        color: isGold ? '#FBBF24' : '#059669',
+        color: isGold ? '#FBBF24' : '#38BDF8',
         alpha: Math.random() * 0.55 + 0.25,
         vy: -(Math.random() * 0.28 + 0.08),
         vx: (Math.random() - 0.5) * 0.18,
@@ -26648,19 +26648,19 @@ window.applyPostLoginBg = function(theme) {
       ctx.lineTo(width, height);
       ctx.closePath();
       const waveGrad1 = ctx.createLinearGradient(0, baseWaveY - 40, 0, height);
-      waveGrad1.addColorStop(0, isLight ? 'rgba(5, 150, 105, 0.07)' : 'rgba(5, 150, 105, 0.10)');
+      waveGrad1.addColorStop(0, isLight ? 'rgba(14, 165, 233, 0.07)' : 'rgba(14, 165, 233, 0.10)');
       waveGrad1.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = waveGrad1;
       ctx.fill();
 
-      // Linha de contorno da onda esmeralda
+      // Linha de contorno da onda safira
       ctx.beginPath();
       for (let x = 0; x <= width; x += 30) {
         const y1 = baseWaveY + Math.sin(x * 0.0035 + waveOffset) * 22 + Math.cos(x * 0.006 + waveOffset * 0.8) * 14;
         if (x === 0) ctx.moveTo(x, y1);
         else ctx.lineTo(x, y1);
       }
-      ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.35)' : 'rgba(5, 150, 105, 0.45)';
+      ctx.strokeStyle = isLight ? 'rgba(14, 165, 233, 0.35)' : 'rgba(56, 189, 248, 0.45)';
       ctx.lineWidth = 1.6;
       ctx.stroke();
 
@@ -26761,7 +26761,7 @@ window.applyPostLoginBg = function(theme) {
           candle.isBullish = Math.random() > 0.32;
         }
         const candleColor = candle.isBullish 
-          ? (isLight ? '#059669' : '#059669') 
+          ? (isLight ? '#0284C7' : '#38BDF8') 
           : (isLight ? '#D97706' : '#F59E0B');
 
         ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
