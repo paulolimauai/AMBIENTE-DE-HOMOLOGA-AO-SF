@@ -6667,30 +6667,130 @@ body.light .trial-dock-widget.trial-dock-locked .trial-dock-time {
 .period.open .period-chevron{transform:rotate(180deg); color:#34D399;}
 .period-panel{
   display:none; position:absolute; top:calc(100% + 10px); right:0;
-  background:linear-gradient(145deg, rgba(14, 22, 38, 0.95) 0%, rgba(8, 12, 24, 0.98) 100%) !important;
-  backdrop-filter:blur(28px) saturate(200%) !important;
-  -webkit-backdrop-filter:blur(28px) saturate(200%) !important;
-  border:1px solid rgba(5, 150, 105, 0.22);
-  border-radius:18px; padding:18px; z-index:99999 !important; width:250px;
-  box-shadow:0 20px 50px -10px rgba(0,0,0,0.85), inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 0 30px rgba(5, 150, 105, 0.18);
+  width:290px;
+  background:linear-gradient(165deg, rgba(15, 23, 42, 0.96) 0%, rgba(8, 14, 26, 0.98) 100%) !important;
+  backdrop-filter:blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter:blur(32px) saturate(200%) !important;
+  border:1px solid rgba(255, 255, 255, 0.12) !important;
+  border-top:1.5px solid rgba(16, 185, 129, 0.45) !important;
+  border-radius:18px; padding:18px; z-index:99999 !important;
+  box-shadow:0 24px 55px -10px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 35px rgba(16, 185, 129, 0.12) !important;
   transform-origin:top right;
 }
 .period-panel.show{display:block; animation:periodPanelIn .22s cubic-bezier(.16,1,.3,1);}
 @keyframes periodPanelIn{
-  from{opacity:0; transform:translateY(-8px) scale(.95);}
+  from{opacity:0; transform:translateY(-8px) scale(.96);}
   to{opacity:1; transform:translateY(0) scale(1);}
 }
-.period-today-btn{
-  display:block; width:100%; text-align:center;
-  background:linear-gradient(135deg, rgba(5, 150, 105, 0.22) 0%, rgba(5, 150, 105, 0.15) 100%);
-  border:1px solid rgba(5, 150, 105, 0.5);
-  color:#059669;
-  padding:9px; border-radius:11px; font-size:12px; font-weight:800; cursor:pointer; margin-bottom:10px;
-  box-shadow:0 4px 14px rgba(5, 150, 105, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-  transition:all .18s ease;
+.period-panel-header{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px; padding-bottom:10px;
+  border-bottom:1px solid rgba(255, 255, 255, 0.08);
 }
-.period-today-btn:hover{filter:brightness(1.15); transform:translateY(-1px); box-shadow:0 6px 18px rgba(5, 150, 105, 0.4);}
-.period-today-btn:active{transform:scale(.97);}
+.period-panel-title{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:12px; font-weight:800; color:#F8FAFC;
+  letter-spacing:0.04em; text-transform:uppercase;
+}
+.period-panel-title svg{color:#10B981;}
+.period-quick-actions{
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  margin-bottom:14px;
+}
+.period-quick-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  background:rgba(255, 255, 255, 0.05);
+  border:1px solid rgba(255, 255, 255, 0.10);
+  color:#E2E8F0;
+  padding:8px 10px; border-radius:10px; font-size:12px; font-weight:700;
+  cursor:pointer; transition:all .2s ease;
+  user-select:none; white-space:nowrap;
+}
+.period-quick-btn:hover{
+  background:rgba(16, 185, 129, 0.14);
+  border-color:rgba(16, 185, 129, 0.4);
+  color:#34D399;
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+}
+.period-quick-btn:active{transform:translateY(0) scale(0.98);}
+.period-quick-btn svg{color:#10B981;}
+.period-quick-btn.period-quick-all{
+  background:rgba(59, 130, 246, 0.08);
+  border-color:rgba(59, 130, 246, 0.22);
+  color:#93C5FD;
+}
+.period-quick-btn.period-quick-all svg{color:#60A5FA;}
+.period-quick-btn.period-quick-all:hover{
+  background:rgba(59, 130, 246, 0.18);
+  border-color:rgba(59, 130, 246, 0.5);
+  color:#BFDBFE;
+}
+.period-grid-selectors{
+  display:grid; grid-template-columns:100px 1fr; gap:10px;
+  margin-bottom:16px;
+}
+.period-select-box{
+  display:flex; flex-direction:column; gap:5px;
+}
+.period-select-box label{
+  font-size:11px; font-weight:700; color:#94A3B8;
+  letter-spacing:0.04em; text-transform:uppercase;
+}
+.period-custom-select-wrap{
+  position:relative; display:flex; align-items:center;
+}
+.period-custom-select-wrap select{
+  width:100%; height:40px;
+  background:rgba(15, 23, 42, 0.85) !important;
+  border:1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius:10px !important;
+  color:#F8FAFC !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  padding:0 30px 0 11px !important;
+  appearance:none; -webkit-appearance:none;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,0.4);
+}
+.period-custom-select-wrap select:focus{
+  outline:none;
+  border-color:#10B981 !important;
+  box-shadow:0 0 0 3px rgba(16, 185, 129, 0.25) !important;
+}
+.period-custom-select-wrap select option{
+  background:#0B1120;
+  color:#F8FAFC;
+  font-weight:600;
+  padding:8px;
+}
+.period-select-caret{
+  position:absolute; right:10px; pointer-events:none;
+  width:13px; height:13px; color:#94A3B8;
+}
+.period-submit-btn{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; height:42px;
+  background:linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
+  border:1px solid rgba(255, 255, 255, 0.28) !important;
+  border-radius:11px !important;
+  color:#FFFFFF !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+  letter-spacing:0.02em;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(5, 150, 105, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+  transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.period-submit-btn:hover{
+  background:linear-gradient(135deg, #047857 0%, #059669 100%) !important;
+  transform:translateY(-1.5px);
+  box-shadow:0 8px 25px rgba(5, 150, 105, 0.50), inset 0 1px 1px rgba(255, 255, 255, 0.7) !important;
+}
+.period-submit-btn:active{
+  transform:translateY(0) scale(0.98);
+}
 
 /* Opções de Período e Seletor em Modo Claro */
 body.light .period,
@@ -6726,41 +6826,82 @@ body.light .period-panel,
 html.light .period-panel {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15) !important;
+  border-top: 2px solid #059669 !important;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18) !important;
   color: #0F172A !important;
 }
-body.light .period-panel .field label,
-html.light .period-panel .field label {
+body.light .period-panel-header,
+html.light .period-panel-header {
+  border-bottom: 1px solid #E2E8F0 !important;
+}
+body.light .period-panel-title,
+html.light .period-panel-title {
+  color: #0F172A !important;
+}
+body.light .period-panel-title svg,
+html.light .period-panel-title svg {
+  color: #059669 !important;
+}
+body.light .period-quick-btn,
+html.light .period-quick-btn {
+  background: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
   color: #334155 !important;
 }
-body.light .period-panel select,
-html.light .period-panel select {
+body.light .period-quick-btn:hover,
+html.light .period-quick-btn:hover {
+  background: rgba(5, 150, 105, 0.1) !important;
+  border-color: #059669 !important;
+  color: #047857 !important;
+}
+body.light .period-quick-btn.period-quick-all,
+html.light .period-quick-btn.period-quick-all {
+  background: rgba(37, 99, 235, 0.08) !important;
+  border-color: rgba(37, 99, 235, 0.25) !important;
+  color: #1D4ED8 !important;
+}
+body.light .period-quick-btn.period-quick-all:hover,
+html.light .period-quick-btn.period-quick-all:hover {
+  background: rgba(37, 99, 235, 0.15) !important;
+  border-color: #2563EB !important;
+  color: #1E40AF !important;
+}
+body.light .period-select-box label,
+html.light .period-select-box label {
+  color: #475569 !important;
+}
+body.light .period-custom-select-wrap select,
+html.light .period-custom-select-wrap select {
   background: #FFFFFF !important;
   background-color: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
   color: #0F172A !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.04) !important;
 }
-body.light .period-today-btn,
-html.light .period-today-btn {
-  background: rgba(5, 150, 105, 0.12) !important;
-  border: 1px solid rgba(5, 150, 105, 0.3) !important;
-  color: #059669 !important;
+body.light .period-custom-select-wrap select:focus,
+html.light .period-custom-select-wrap select:focus {
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.18) !important;
 }
-body.light .period-today-btn:hover,
-html.light .period-today-btn:hover {
-  background: rgba(5, 150, 105, 0.2) !important;
-  color: #047857 !important;
+body.light .period-custom-select-wrap select option,
+html.light .period-custom-select-wrap select option {
+  background: #FFFFFF !important;
+  color: #0F172A !important;
 }
-body.light #periodAllDatesBtn,
-html.light #periodAllDatesBtn {
-  background: rgba(4, 120, 87, 0.1) !important;
-  border: 1px solid rgba(4, 120, 87, 0.25) !important;
-  color: #059669 !important;
+body.light .period-select-caret,
+html.light .period-select-caret {
+  color: #475569 !important;
 }
-body.light #periodAllDatesBtn:hover,
-html.light #periodAllDatesBtn:hover {
-  background: rgba(4, 120, 87, 0.18) !important;
-  color: #047857 !important;
+body.light .period-submit-btn,
+html.light .period-submit-btn {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  border: 1px solid rgba(5, 150, 105, 0.5) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3) !important;
+}
+body.light .period-submit-btn:hover,
+html.light .period-submit-btn:hover {
+  background: linear-gradient(135deg, #047857 0%, #065F46 100%) !important;
 }
 
 .notif-wrap{position:relative;}
@@ -18081,11 +18222,42 @@ function periodPickerHTML(){
       <svg class="period-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
     <div class="period-panel" id="periodPanel">
-      <button type="button" class="period-today-btn" id="periodTodayBtn" style="margin-bottom:6px;">📍 Ir para o mês atual</button>
-      <button type="button" class="period-today-btn" id="periodAllDatesBtn" style="background:rgba(74,144,226,0.15); color:var(--blue); margin-bottom:12px;">🌐 Ver Todas as Datas (Visão Geral)</button>
-      <div class="field"><label>Ano</label><select id="periodYearSel"></select></div>
-      <div class="field"><label>Mês</label><select id="periodMonthSel"></select></div>
-      <button class="btn-primary" id="periodApplyBtn" style="width:100%;justify-content:center">Aplicar</button>
+      <div class="period-panel-header">
+        <div class="period-panel-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Filtrar Competência</span>
+        </div>
+      </div>
+      <div class="period-quick-actions">
+        <button type="button" class="period-quick-btn" id="periodTodayBtn" title="Selecionar mês corrente">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+          <span>Mês Atual</span>
+        </button>
+        <button type="button" class="period-quick-btn period-quick-all" id="periodAllDatesBtn" title="Visualizar todas as movimentações sem corte de data">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span>Visão Geral</span>
+        </button>
+      </div>
+      <div class="period-grid-selectors">
+        <div class="period-select-box">
+          <label for="periodYearSel">Ano</label>
+          <div class="period-custom-select-wrap">
+            <select id="periodYearSel"></select>
+            <svg class="period-select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="period-select-box">
+          <label for="periodMonthSel">Mês</label>
+          <div class="period-custom-select-wrap">
+            <select id="periodMonthSel"></select>
+            <svg class="period-select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="period-submit-btn" id="periodApplyBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Aplicar Período</span>
+      </button>
     </div>
   </div>\`;
 }
