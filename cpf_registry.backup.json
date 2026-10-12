@@ -8,7 +8,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-12T13:54:32.686Z"
+    "updated_at": "2026-10-12T13:54:42.867Z"
   },
   "00000000191": {
     "cpf": "00000000191",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-12T13:54:32.650Z"
+    "updated_at": "2026-10-12T13:54:42.720Z"
   },
   "12345678909": {
     "cpf": "12345678909",
@@ -52,7 +52,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-12T13:54:32.659Z"
+    "updated_at": "2026-10-12T13:54:42.763Z"
   },
   "33344455566": {
     "cpf": "33344455566",
@@ -63,7 +63,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "5ª Região Fiscal (BA, SE)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-12T13:54:32.663Z"
+    "updated_at": "2026-10-12T13:54:42.796Z"
   },
   "44455566677": {
     "cpf": "44455566677",
@@ -74,7 +74,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "6ª Região Fiscal (MG)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-12T13:54:32.667Z"
+    "updated_at": "2026-10-12T13:54:42.810Z"
   },
   "63481090625": {
     "cpf": "63481090625",
@@ -85,7 +85,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "6ª Região Fiscal (MG)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-12T13:54:32.654Z"
+    "updated_at": "2026-10-12T13:54:42.740Z"
   },
   "11122233344": {
     "cpf": "11122233344",
@@ -96,7 +96,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "3ª Região Fiscal (CE, MA, PI)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-12T13:54:32.673Z"
+    "updated_at": "2026-10-12T13:54:42.825Z"
   },
   "04023326199": {
     "cpf": "04023326199",
@@ -107,6 +107,6 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-12T13:54:32.682Z"
+    "updated_at": "2026-10-12T13:54:42.862Z"
   }
 }
