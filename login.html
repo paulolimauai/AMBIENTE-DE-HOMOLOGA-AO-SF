@@ -167,9 +167,9 @@
                         nexus: {
                             dark: '#07090E',
                             card: '#0E1322',
-                            gold: '#E5A93C',
-                            goldHover: '#F59E0B',
-                            goldBorder: '#C89B3C',
+                            gold: '#FFFFFF',
+                            goldHover: '#F1F5F9',
+                            goldBorder: '#FFFFFF',
                             blue: '#10B981',
                             sapphire: '#059669',
                             cyan: '#34D399',
@@ -384,14 +384,14 @@
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: #F59E0B;
-            box-shadow: 0 0 10px #F59E0B;
+            background: #FFFFFF;
+            box-shadow: 0 0 10px #FFFFFF;
             animation: pulseFintechDot 1.8s infinite ease-in-out;
         }
 
         @keyframes pulseFintechDot {
-            0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #F59E0B; }
-            50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #FBBF24; }
+            0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #FFFFFF; }
+            50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #FFFFFF; }
         }
 
         .fintech-ticker-viewport {
@@ -5620,11 +5620,13 @@ body.light .period button.active {
             render();
         })();
 
-        // Tela de login estável e fixa (sem oscilação ou inclinação ao passar o mouse)
+        // Tela de login estável e fixa (sem oscilação ou inclinação ao passar o mouse ou ao atualizar)
         (function initCardStability() {
             const card = document.getElementById('authNexusCard');
             if (card) {
                 card.style.transform = 'none';
+                card.style.animation = 'none';
+                card.style.transition = 'none';
             }
         })();
 
