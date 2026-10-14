@@ -1195,6 +1195,10 @@ async function setupDatabaseTablesAndSync() {
     try {
       await pool.query("UPDATE usuarios SET name = 'Paulo Lima' WHERE LOWER(RTRIM(LTRIM(name))) IN ('admin', 'administrador') OR (LOWER(email) = 'suporte.paulolima@outlook.com' AND LOWER(RTRIM(LTRIM(name))) IN ('admin', 'administrador'))");
     } catch(autoFixNameErr) {}
+    try {
+      const sqlNow = getBrasiliaSqlString(new Date());
+      await pool.query(`UPDATE usuarios SET trial_started_at = '${sqlNow}', subscription_status = 'trial' WHERE (subscription_status IS NULL OR subscription_status = 'trial' OR subscription_status = 'expired') AND (subscription_plan IS NULL OR subscription_plan NOT IN ('vitalicio', 'cortesia_admin', 'mensal', 'anual')) AND role <> 'Administrador' AND (trial_started_at IS NULL OR trial_started_at < '2026-10-14T00:00:00')`);
+    } catch(autoTrialMigrateErr) {}
     const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
     if (res.rows) {
       saveLocalUsers(res.rows, true);
@@ -6015,7 +6019,7 @@ body.light .executive-4k-message {
   color: #475569 !important;
 }
 
-/* ==================== WIDGET FLUTUANTE DE TESTE GRÁTIS (5 MINUTOS) ==================== */
+/* ==================== WIDGET FLUTUANTE DE TESTE GRÁTIS (5 DIAS) ==================== */
 .trial-dock-widget {
   position: fixed;
   bottom: 24px;
@@ -12932,8 +12936,8 @@ body.light .period button.active {
         <button type="button" onclick="adminGrantCustomTime(editingUserEmail)" style="height:38px; padding:0 16px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:12px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(245,158,11,0.35);">
           Liberar Tempo ✓
         </button>
-        <button type="button" class="btn-ghost" onclick="adminResetTrialAction(editingUserEmail)" title="Resetar período de teste para 5 minutos" style="height:38px; padding:0 10px; border-radius:10px; font-size:11px; font-weight:700;">
-          🔄 Reset 5m
+        <button type="button" class="btn-ghost" onclick="adminResetTrialAction(editingUserEmail)" title="Resetar período de teste para 5 dias" style="height:38px; padding:0 10px; border-radius:10px; font-size:11px; font-weight:700;">
+          🔄 Reset 5d
         </button>
       </div>
     </div>
@@ -13556,7 +13560,7 @@ body.light .period button.active {
     </div>
   </div>
 </div>
-<!-- WIDGET FLUTUANTE DE TESTE GRÁTIS (5 MINUTOS) -->
+<!-- WIDGET FLUTUANTE DE TESTE GRÁTIS (5 DIAS) -->
 <div class="trial-dock-widget" id="trialDockWidget" style="display:none;" onclick="window.openSubscriptionPaywall(window.__isPaywallLocked)" title="Clique para assinar um plano">
   <div class="trial-dock-icon">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -13565,8 +13569,8 @@ body.light .period button.active {
     </svg>
   </div>
   <div class="trial-dock-text">
-    <span class="trial-dock-title" id="trialDockTitle">Período Gratuito</span>
-    <span class="trial-dock-time" id="trialDockTime">05:00</span>
+    <span class="trial-dock-title" id="trialDockTitle">Período Gratuito (5 Dias)</span>
+    <span class="trial-dock-time" id="trialDockTime">5d 00:00:00</span>
   </div>
   <button type="button" class="trial-dock-btn" id="trialDockBtn" onclick="event.stopPropagation(); window.openSubscriptionPaywall(window.__isPaywallLocked);">
     Assinar Plano
@@ -13596,7 +13600,7 @@ body.light .period button.active {
           Modo Admin: Ignorar
         </button>
         <button type="button" id="subAdminResetBtn" onclick="window.resetTrialForTesting()" style="display:none; padding:6px 14px; border-radius:10px; background:rgba(59,130,246,0.2); border:1px solid rgba(59,130,246,0.5); color:#60A5FA; font-size:11.5px; font-weight:800; cursor:pointer;">
-          Modo Admin: Reiniciar 5m
+          Modo Admin: Reiniciar 5d
         </button>
         <button type="button" id="subModalCloseBtn" onclick="window.closeSubscriptionPaywall(false)" style="display:none; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1; cursor:pointer; align-items:center; justify-content:center; font-size:18px; line-height:1;">
           ✕
@@ -15477,12 +15481,12 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ==================== Motor de Período Gratuito (5 Minutos) e Assinatura Mandatória ==================== */
+/* ==================== Motor de Período Gratuito (5 Dias) e Assinatura Mandatória ==================== */
 window.__trialTimerInterval = null;
-window.__trialRemainingSeconds = 300;
+window.__trialRemainingSeconds = 432000;
 window.__selectedSubPlan = 'mensal';
-/* ==================== MOTOR DE ASSINATURA & PAYWALL DE TESTE GRÁTIS (5 MINUTOS) ==================== */
-window.__trialRemainingSeconds = 300;
+/* ==================== MOTOR DE ASSINATURA & PAYWALL DE TESTE GRÁTIS (5 DIAS) ==================== */
+window.__trialRemainingSeconds = 432000;
 window.__trialTimerInterval = null;
 window.__selectedSubPlan = 'mensal';
 window.__selectedPaymentMethod = 'pix';
@@ -15507,6 +15511,22 @@ window.playPaywallAlertSound = function() {
     osc.start();
     osc.stop(ctx.currentTime + 0.5);
   } catch(e){}
+};
+
+window.formatTrialTimeDisplay = function(totalSeconds) {
+  const sec = Math.max(0, Math.floor(totalSeconds));
+  const days = Math.floor(sec / 86400);
+  const hours = Math.floor((sec % 86400) / 3600);
+  const mins = Math.floor((sec % 3600) / 60);
+  const secs = sec % 60;
+
+  if (days > 0) {
+    return days + 'd ' + String(hours).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  } else if (hours > 0) {
+    return String(hours).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  } else {
+    return String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  }
 };
 
 window.initTrialAndSubscription = async function() {
@@ -15539,20 +15559,20 @@ window.initTrialAndSubscription = async function() {
           return;
         }
 
-        // Período de teste ativo (até 300s)
+        // Período de teste ativo (até 5 dias / 432000s)
         window.startTrialCountdown(data.remaining_seconds);
       }
     }
   } catch(e) {
     console.warn('[ASSINATURA] Falha ao consultar status de assinatura:', e);
     if (!window.__trialRemainingSeconds) {
-      window.startTrialCountdown(300);
+      window.startTrialCountdown(432000);
     }
   }
 };
 
 window.startTrialCountdown = function(remainingSecs) {
-  window.__trialRemainingSeconds = (typeof remainingSecs === 'number') ? remainingSecs : 300;
+  window.__trialRemainingSeconds = (typeof remainingSecs === 'number') ? remainingSecs : 432000;
 
   if (window.__trialTimerInterval) {
     clearInterval(window.__trialTimerInterval);
@@ -15582,7 +15602,7 @@ window.startTrialCountdown = function(remainingSecs) {
       window.showTrialDockExpired();
       window.playPaywallAlertSound();
       if (typeof showToast === 'function') {
-        showToast('🔒 Seu período gratuito de 5 minutos encerrou. Escolha um plano para continuar.', 'warning');
+        showToast('🔒 Seu período gratuito de 5 dias encerrou. Escolha um plano para continuar.', 'warning');
       }
       window.openSubscriptionPaywall(true);
       return;
@@ -15593,9 +15613,7 @@ window.startTrialCountdown = function(remainingSecs) {
 };
 
 window.updateTrialDisplay = function() {
-  const mins = Math.floor(Math.max(0, window.__trialRemainingSeconds) / 60);
-  const secs = Math.max(0, window.__trialRemainingSeconds) % 60;
-  const timeFormatted = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  const timeFormatted = window.formatTrialTimeDisplay(window.__trialRemainingSeconds);
 
   const labelEl = document.getElementById('trialDockTime');
   const titleEl = document.getElementById('trialDockTitle');
@@ -15603,12 +15621,12 @@ window.updateTrialDisplay = function() {
   const widget = document.getElementById('trialDockWidget');
 
   if (labelEl) labelEl.textContent = timeFormatted;
-  if (titleEl) titleEl.textContent = 'Período Gratuito';
+  if (titleEl) titleEl.textContent = 'Período Gratuito (5 Dias)';
   if (btnEl) btnEl.textContent = 'Assinar Plano';
 
   if (widget) {
     widget.classList.remove('trial-dock-locked');
-    if (window.__trialRemainingSeconds <= 60 && window.__trialRemainingSeconds > 0) {
+    if (window.__trialRemainingSeconds <= 86400 && window.__trialRemainingSeconds > 0) {
       widget.classList.add('trial-dock-urgent');
     } else {
       widget.classList.remove('trial-dock-urgent');
@@ -15637,8 +15655,8 @@ window.showTrialDockExpired = function() {
     widget.classList.remove('trial-dock-urgent');
     widget.classList.add('trial-dock-locked');
   }
-  if (titleEl) titleEl.textContent = '🔒 Teste Expirado';
-  if (labelEl) labelEl.textContent = '00:00';
+  if (titleEl) titleEl.textContent = '🔒 Teste de 5 Dias Expirado';
+  if (labelEl) labelEl.textContent = '00:00:00';
   if (btnEl) btnEl.textContent = 'Assinar Agora';
 };
 
@@ -15658,7 +15676,7 @@ window.openSubscriptionPaywall = function(isLocked = false) {
   if (isLocked) {
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
-    if (titleEl) titleEl.textContent = '🔒 Período Gratuito de 5 Minutos Expirado!';
+    if (titleEl) titleEl.textContent = '🔒 Período Gratuito de 5 Dias Expirado!';
     if (subEl) subEl.textContent = 'Seus lançamentos, gráficos e relatórios estão 100% preservados e salvos. Para continuar utilizando o Nexus Financeiro Hub, selecione seu plano:';
   } else {
     document.body.classList.remove('paywall-locked');
@@ -16104,7 +16122,7 @@ window.resetTrialForTesting = async function(email) {
     });
     const d = await res.json();
     if (d && d.success) {
-      if (typeof showToast === 'function') showToast('⏱️ Período de 5 minutos grátis reiniciado para ' + targetEmail);
+      if (typeof showToast === 'function') showToast('⏱️ Período de 5 dias grátis reiniciado para ' + targetEmail);
       window.__isPaywallLocked = false;
       document.body.classList.remove('paywall-locked');
       document.documentElement.classList.remove('paywall-locked');
@@ -16242,7 +16260,7 @@ window.updateAdminModalBadge = function(email) {
       subBadge.style.color = '#34D399';
     }
   } else {
-    subBadge.textContent = '⏱️ Teste Gratuito';
+    subBadge.textContent = '⏱️ Teste Gratuito (5 Dias)';
     subBadge.style.color = '#F59E0B';
   }
 };
@@ -20486,12 +20504,12 @@ function pageConfig(){
           <h3 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Plano & Assinatura</h3>
           \${(currentUser && currentUser.subscription_status === 'active')
             ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + (currentUser.subscription_plan === 'anual' ? 'Anual R$ 100' : 'Mensal R$ 10') + ')</span>'
-            : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (5 Minutos)</span>'}
+            : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (5 Dias)</span>'}
         </div>
         <p style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
           \${(currentUser && currentUser.subscription_status === 'active')
             ? 'Válido até ' + (currentUser.subscription_expires_at ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR') : 'Ativo')
-            : 'Após os 5 minutos de teste gratuito, escolha o Plano Mensal (R$ 10,00) ou Anual (R$ 100,00).'}
+            : 'Após os 5 dias de teste gratuito, escolha o Plano Mensal (R$ 10,00) ou Anual (R$ 100,00).'}
         </p>
       </div>
     </div>
@@ -20501,7 +20519,7 @@ function pageConfig(){
       </button>
       \${(currentUser && currentUser.role === 'Administrador') ? \`
         <button type="button" onclick="window.resetTrialForTesting()" style="padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:var(--text); font-weight:700; font-size:12px; cursor:pointer;">
-          ⏱️ Resetar 5m (Teste)
+          ⏱️ Resetar 5d (Teste)
         </button>
       \` : ''}
     </div>
@@ -29027,12 +29045,14 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ==================== ROTAS DE ASSINATURA & TESTE GRÁTIS (5 MINUTOS) ====================
+  // ==================== ROTAS DE ASSINATURA & TESTE GRÁTIS (5 DIAS) ====================
+
+  const TRIAL_5_DAYS_ROLLOUT_TIMESTAMP = new Date('2026-10-14T00:00:00-03:00').getTime();
 
   function getUserSubscriptionInfo(user) {
     if (!user) return null;
     const now = Date.now();
-    const TRIAL_DURATION_SECS = 300; // 5 minutos de teste gratuito
+    const TRIAL_DURATION_SECS = 5 * 24 * 60 * 60; // 5 dias de teste gratuito (432.000 segundos)
 
     // Normaliza subscription_expires_at
     let expiresAtMs = 0;
@@ -29053,12 +29073,27 @@ const server = http.createServer(async (req, res) => {
       remainingSecs = (isAdmin || isLifetime) ? 999999999 : Math.max(0, Math.floor((expiresAtMs - now) / 1000));
       isTrialActive = false;
     } else {
-      if (!trialStartedAt) {
+      // Qualquer conta antiga ou nova sem assinatura ativa recebe 5 dias grátis
+      let trialMs = trialStartedAt ? new Date(getBrasiliaIsoString(trialStartedAt) || trialStartedAt).getTime() : 0;
+      if (!trialStartedAt || isNaN(trialMs) || trialMs < TRIAL_5_DAYS_ROLLOUT_TIMESTAMP) {
         trialStartedAt = getBrasiliaIsoString(new Date());
         user.trial_started_at = trialStartedAt;
+        user.subscription_status = 'trial';
+        trialMs = new Date(trialStartedAt).getTime();
+        try {
+          const localUsers = getLocalUsers();
+          const matchU = localUsers.find(x => x && x.email && x.email.toLowerCase() === (user.email || '').toLowerCase());
+          if (matchU) {
+            matchU.trial_started_at = trialStartedAt;
+            matchU.subscription_status = 'trial';
+            saveLocalUsers(localUsers);
+          }
+          if (pool && user.email) {
+            const sqlTrial = getBrasiliaSqlString(new Date());
+            pool.query("UPDATE usuarios SET trial_started_at = $1, subscription_status = 'trial' WHERE LOWER(email) = LOWER($2)", [sqlTrial, user.email.toLowerCase()]).catch(()=>{});
+          }
+        } catch(e){}
       }
-      const normTrialIso = getBrasiliaIsoString(trialStartedAt);
-      const trialMs = new Date(normTrialIso || trialStartedAt).getTime();
       const elapsedSecs = Math.max(0, Math.floor((now - trialMs) / 1000));
       remainingSecs = Math.max(0, TRIAL_DURATION_SECS - elapsedSecs);
       isTrialActive = remainingSecs > 0;
@@ -29377,7 +29412,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota POST para Resetar o Período Gratuito de 5 Minutos (Para Testes / Homologação)
+  // Rota POST para Resetar o Período Gratuito de 5 Dias (Para Testes / Homologação)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/reset-trial') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -29412,7 +29447,7 @@ const server = http.createServer(async (req, res) => {
         }
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: 'Período gratuito de 5 minutos resetado com sucesso!' }));
+        res.end(JSON.stringify({ success: true, message: 'Período gratuito de 5 dias resetado com sucesso!' }));
       } catch(e) {
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: e.message }));
