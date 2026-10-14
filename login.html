@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full light">
+<html lang="pt-BR" class="h-full dark">
 <head>
     <script>
         (function() {
             try {
                 var v = localStorage.getItem('nexus_tone_version');
-                if (v !== 'light_v1') {
-                    localStorage.setItem('nexus_theme', 'light');
-                    localStorage.setItem('nexus_tone_version', 'light_v1');
+                if (v !== 'black_green_white_v1') {
+                    localStorage.setItem('nexus_theme', 'dark');
+                    localStorage.setItem('nexus_tone_version', 'black_green_white_v1');
                 }
-                var t = localStorage.getItem('nexus_theme');
+                var t = localStorage.getItem('nexus_theme') || 'dark';
                 if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-                var isLight = (t !== 'dark');
-                if (isLight) {
+                var isDark = (t !== 'light');
+                if (isDark) {
+                    document.documentElement.classList.remove('light');
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
                     document.documentElement.classList.add('light');
                 }
                 var isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
@@ -38,13 +42,15 @@
     <script>
         (function() {
             try {
-                var t = localStorage.getItem('nexus_theme');
+                var t = localStorage.getItem('nexus_theme') || 'dark';
                 if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-                var isLight = (t !== 'dark');
-                if (isLight) {
-                    document.documentElement.classList.add('light');
-                } else {
+                var isDark = (t !== 'light');
+                if (isDark) {
                     document.documentElement.classList.remove('light');
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
                 }
 
                 function detectDevice() {
@@ -71,9 +77,9 @@
                 if (scale === 'auto') {
                     if (dev === 'mobile' || dev === 'tablet') scaleNum = 1.0;
                     else if (dev === 'laptop') {
-                        var h = window.innerHeight || 768;
-                        var w = window.innerWidth || 1366;
-                        scaleNum = (h < 640 || w < 1180) ? 0.95 : 1.0;
+                        var sw = (window.screen && window.screen.width) ? window.screen.width : (window.innerWidth || 1366);
+                        var sh = (window.screen && window.screen.height) ? window.screen.height : (window.innerHeight || 768);
+                        scaleNum = (sh <= 640 || sw <= 1180) ? 0.95 : 1.0;
                     } else if (dev === '4k') scaleNum = 1.10;
                     else if (dev === 'ultrawide') scaleNum = 1.05;
                     else scaleNum = 1.0;
@@ -88,24 +94,32 @@
                     scaleStyle.id = 'nexus-scale-override';
                     document.head.appendChild(scaleStyle);
                 }
-                scaleStyle.textContent = 'html, body { zoom: ' + scaleNum + ' !important; } :root { --app-zoom: ' + scaleNum + '; }';
+                var isMobileScale = (dev === 'mobile' || dev === 'tablet' || scaleNum === 1.0);
+                var zoomRule = isMobileScale 
+                    ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' 
+                    : ('@media screen { html, body { zoom: ' + scaleNum + ' !important; } }');
+                scaleStyle.textContent = zoomRule + ' :root { --app-zoom: ' + scaleNum + '; }';
 
                 function applyBodyTheme() {
-                    var themeVal = localStorage.getItem('nexus_theme');
+                    var themeVal = localStorage.getItem('nexus_theme') || 'dark';
                     if (themeVal) themeVal = themeVal.replace(/"/g, '').trim().toLowerCase();
-                    var light = (themeVal !== 'dark');
-                    if (light) {
-                        document.body.classList.add('light');
-                        document.documentElement.classList.add('light');
-                    } else {
+                    var isDark = (themeVal !== 'light');
+                    if (isDark) {
                         document.body.classList.remove('light');
+                        document.body.classList.add('dark');
                         document.documentElement.classList.remove('light');
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.body.classList.remove('dark');
+                        document.body.classList.add('light');
+                        document.documentElement.classList.remove('dark');
+                        document.documentElement.classList.add('light');
                     }
                     var btn = document.getElementById('loginThemeBtn');
                     if (btn) {
-                        var moonSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
-                        var sunSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
-                        btn.innerHTML = light ? sunSvg : moonSvg;
+                        var moonSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
+                        var sunSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+                        btn.innerHTML = isDark ? moonSvg : sunSvg;
                     }
                 }
 
@@ -161,19 +175,19 @@
 
     <style>
         :root {
-            --auth-bg: #030712;
-            --auth-card: linear-gradient(165deg, rgba(11, 20, 38, 0.94) 0%, rgba(6, 12, 24, 0.97) 50%, rgba(3, 7, 16, 0.99) 100%);
-            --auth-border: rgba(16, 185, 129, 0.30);
+            --auth-bg: #000000;
+            --auth-card: linear-gradient(168deg, rgba(8, 14, 10, 0.96) 0%, rgba(3, 6, 4, 0.98) 50%, rgba(0, 0, 0, 1.0) 100%);
+            --auth-border: rgba(16, 185, 129, 0.40);
             --auth-border-hover: #10B981;
-            --auth-input-bg: rgba(9, 16, 32, 0.82);
-            --auth-input-border: rgba(255, 255, 255, 0.12);
+            --auth-input-bg: rgba(0, 0, 0, 0.85);
+            --auth-input-border: rgba(255, 255, 255, 0.20);
             --auth-text: #FFFFFF;
-            --auth-text-dim: #94A3B8;
+            --auth-text-dim: #E2E8F0;
             --auth-emerald: #10B981;
-            --auth-emerald-glow: rgba(16, 185, 129, 0.40);
-            --auth-cyan: #06B6D4;
-            --auth-sapphire: #0284C7;
-            --auth-tab-bg: rgba(11, 20, 38, 0.80);
+            --auth-emerald-glow: rgba(16, 185, 129, 0.45);
+            --auth-cyan: #10B981;
+            --auth-sapphire: #059669;
+            --auth-tab-bg: rgba(10, 16, 12, 0.90);
         }
 
         body.light, html.light body, html.light {
@@ -187,18 +201,10 @@
             --auth-text: #000000 !important;
             --auth-text-dim: #334155 !important;
             --auth-emerald: #059669;
-            --auth-cyan: #0284C7;
-            --auth-sapphire: #1D4ED8;
+            --auth-cyan: #059669;
+            --auth-sapphire: #047857;
             --auth-tab-bg: #E2E8F0;
             background-color: #F8FAFC !important;
-            background-image: 
-                radial-gradient(ellipse 75% 55% at 12% 16%, rgba(16, 185, 129, 0.08) 0%, transparent 55%),
-                radial-gradient(ellipse 70% 50% at 88% 20%, rgba(2, 132, 199, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse 80% 60% at 50% 90%, rgba(5, 150, 105, 0.06) 0%, transparent 60%),
-                linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%) !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-attachment: fixed !important;
             color: #000000 !important;
         }
 
@@ -246,22 +252,52 @@
             font-family: var(--font-mono) !important;
         }
 
+        html {
+            scrollbar-gutter: stable;
+            overflow-y: scroll !important;
+        }
+
         body {
             font-family: var(--font-sans);
-            background-color: #030712;
+            background-color: #000000 !important;
             background-image: 
-                radial-gradient(ellipse 85% 60% at 12% 18%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
-                radial-gradient(ellipse 75% 55% at 88% 22%, rgba(2, 132, 199, 0.20) 0%, transparent 55%),
-                radial-gradient(ellipse 90% 70% at 50% 88%, rgba(5, 150, 105, 0.12) 0%, transparent 65%),
-                linear-gradient(165deg, #020611 0%, #060E1D 40%, #09152B 75%, #020611 100%) !important;
+                radial-gradient(ellipse 85% 60% at 15% 15%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 75% 55% at 85% 20%, rgba(5, 150, 105, 0.15) 0%, transparent 55%),
+                radial-gradient(ellipse 90% 70% at 50% 90%, rgba(16, 185, 129, 0.10) 0%, transparent 65%),
+                linear-gradient(175deg, #000000 0%, #030604 40%, #050B07 75%, #000000 100%) !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
-            color: var(--auth-text);
+            color: #FFFFFF !important;
             min-height: 100vh;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        @media print {
+            *, *::before, *::after {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                backdrop-filter: none !important;
+                box-shadow: none !important;
+                animation: none !important;
+                transition: none !important;
+            }
+            html, body {
+                background-color: #FFFFFF !important;
+                background-image: none !important;
+                color: #0F172A !important;
+                zoom: 1 !important;
+            }
+            #authBgCanvas, canvas, .fintech-live-ticker-bar, .auth-top-bar, .auth-blob, button {
+                display: none !important;
+            }
+            .auth-card {
+                background: #FFFFFF !important;
+                color: #0F172A !important;
+                border: 1px solid #CBD5E1 !important;
+                box-shadow: none !important;
         }
 
         /* Fundo Geométrico Sutil em Alta Definição 4K - Malha Cartesiana de Tesouraria */
@@ -285,11 +321,11 @@
             display: flex;
             align-items: center;
             height: 38px;
-            background: linear-gradient(90deg, rgba(6, 12, 24, 0.88) 0%, rgba(12, 24, 48, 0.78) 50%, rgba(6, 12, 24, 0.88) 100%);
-            border: 1px solid rgba(56, 189, 248, 0.35);
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(8, 16, 11, 0.92) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
+            border: 1px solid rgba(16, 185, 129, 0.40) !important;
             border-radius: 999px;
             padding: 2px 6px 2px 4px;
-            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.65), 0 0 20px -2px rgba(14, 165, 233, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.20);
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 20px -2px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(24px) saturate(200%);
             -webkit-backdrop-filter: blur(24px) saturate(200%);
             overflow: hidden;
@@ -298,9 +334,9 @@
         }
 
         body.light .fintech-live-ticker-bar {
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.94) 0%, rgba(240, 249, 255, 0.90) 50%, rgba(255, 255, 255, 0.94) 100%);
-            border-color: rgba(14, 165, 233, 0.35);
-            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08), 0 0 15px rgba(14, 165, 233, 0.12), inset 0 1px 0 #FFFFFF;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 253, 244, 0.92) 50%, rgba(255, 255, 255, 0.96) 100%);
+            border-color: rgba(16, 185, 129, 0.35);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08), 0 0 15px rgba(16, 185, 129, 0.12), inset 0 1px 0 #FFFFFF;
         }
 
         .fintech-ticker-badge {
@@ -308,23 +344,23 @@
             align-items: center;
             gap: 6px;
             padding: 4px 12px;
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.28), rgba(2, 132, 199, 0.18));
-            border: 1px solid rgba(56, 189, 248, 0.45);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.30), rgba(5, 150, 105, 0.20)) !important;
+            border: 1px solid rgba(16, 185, 129, 0.50) !important;
             border-radius: 999px;
             font-size: 10.5px;
             font-weight: 900;
             letter-spacing: 0.04em;
-            color: #38BDF8;
+            color: #10B981 !important;
             text-transform: uppercase;
             flex-shrink: 0;
             z-index: 2;
-            box-shadow: 0 0 14px rgba(14, 165, 233, 0.30);
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.30);
         }
 
         body.light .fintech-ticker-badge {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.18), rgba(2, 132, 199, 0.10));
-            border-color: rgba(2, 132, 199, 0.35);
-            color: #0284C7;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.10));
+            border-color: rgba(5, 150, 105, 0.35);
+            color: #059669;
         }
 
         .fintech-pulse-dot {
@@ -494,13 +530,13 @@
             display: none !important;
         }
 
-        /* Card de Autenticação Executivo - Acabamento Glassmorphism Institucional Financeiro */
+        /* Card de Autenticação Executivo - Acabamento Glassmorphism Institucional Financeiro (Preto com Verde e Branco) */
         .auth-card-nexus {
-            background: linear-gradient(168deg, rgba(11, 20, 38, 0.94) 0%, rgba(6, 12, 25, 0.97) 50%, rgba(2, 6, 15, 0.99) 100%) !important;
-            border: 1px solid rgba(16, 185, 129, 0.28) !important;
-            border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+            background: linear-gradient(168deg, rgba(8, 14, 10, 0.97) 0%, rgba(2, 5, 3, 0.98) 50%, #000000 100%) !important;
+            border: 1.5px solid rgba(16, 185, 129, 0.40) !important;
+            border-top: 2.5px solid #10B981 !important;
             border-radius: 26px !important;
-            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.90), 0 0 50px -10px rgba(16, 185, 129, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 50px -10px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
             backdrop-filter: blur(28px) !important;
             -webkit-backdrop-filter: blur(28px) !important;
             transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, box-shadow 0.2s ease;
@@ -660,14 +696,14 @@
             font-weight: 600 !important;
         }
 
-        /* Wrappers de Input Executivos e Fluidos */
+        /* Wrappers de Input Executivos e Fluidos (Preto com Verde e Branco) */
         .auth-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
             height: 44px;
-            background: rgba(10, 16, 30, 0.70);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(10, 16, 12, 0.85);
+            border: 1px solid rgba(16, 185, 129, 0.28);
             border-radius: 12px;
             transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
         }
@@ -678,15 +714,15 @@
         }
 
         .auth-input-wrapper:focus-within {
-            border-color: #06B6D4 !important;
-            box-shadow: 0 0 0 3.5px rgba(6, 182, 212, 0.22) !important;
-            background: rgba(15, 23, 42, 0.90);
+            border-color: #10B981 !important;
+            box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.28) !important;
+            background: rgba(4, 8, 5, 0.95);
         }
 
         body.light .auth-input-wrapper:focus-within {
             background: #FFFFFF !important;
-            border-color: #0284C7 !important;
-            box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.16) !important;
+            border-color: #059669 !important;
+            box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.18) !important;
         }
 
         .auth-input-wrapper.input-error {
@@ -700,20 +736,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #94A3B8;
+            color: #10B981;
             flex-shrink: 0;
             transition: color 0.2s ease;
         }
 
         .auth-input-wrapper:focus-within .auth-input-icon {
-            color: #38BDF8 !important;
+            color: #34D399 !important;
         }
 
         body.light .auth-input-icon {
             color: #000000 !important;
         }
         body.light .auth-input-wrapper:focus-within .auth-input-icon {
-            color: #0284C7 !important;
+            color: #059669 !important;
         }
 
         .auth-input-wrapper input {
@@ -755,8 +791,8 @@
         .auth-input-wrapper input:-webkit-autofill:focus,
         .auth-input-wrapper input:-webkit-autofill:active {
             -webkit-text-fill-color: #FFFFFF !important;
-            -webkit-box-shadow: 0 0 0px 1000px #060D20 inset !important;
-            box-shadow: 0 0 0px 1000px #060D20 inset !important;
+            -webkit-box-shadow: 0 0 0px 1000px #040805 inset !important;
+            box-shadow: 0 0 0px 1000px #040805 inset !important;
             transition: background-color 5000s ease-in-out 0s !important;
         }
 
@@ -803,8 +839,8 @@
         }
         .auth-pass-toggle:hover,
         .auth-pass-toggle-btn:hover {
-            color: #38BDF8 !important;
-            background: rgba(6, 182, 212, 0.15) !important;
+            color: #10B981 !important;
+            background: rgba(16, 185, 129, 0.15) !important;
             transform: scale(1.08);
         }
         .auth-pass-toggle svg,
@@ -823,20 +859,20 @@
         }
         body.light .auth-pass-toggle:hover,
         body.light .auth-pass-toggle-btn:hover {
-            color: #0284C7 !important;
-            background: rgba(2, 132, 199, 0.10) !important;
+            color: #059669 !important;
+            background: rgba(16, 185, 129, 0.12) !important;
         }
 
-        /* Botão Primário Executivo - Esmeralda Financeiro & Safira Institucional */
+        /* Botão Primário Executivo - Verde Esmeralda & Branco (Preto com Verde e Branco) */
         .btn-auth-gradient {
-            background: linear-gradient(135deg, #059669 0%, #10B981 45%, #0284C7 100%) !important;
+            background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%) !important;
             color: #FFFFFF !important;
             border-radius: 14px !important;
-            border: 1px solid rgba(255, 255, 255, 0.32) !important;
+            border: 1px solid rgba(255, 255, 255, 0.35) !important;
             font-weight: 750 !important;
             font-size: 14px !important;
             letter-spacing: -0.01em;
-            box-shadow: 0 10px 28px -5px rgba(16, 185, 129, 0.45), 0 0 16px rgba(2, 132, 199, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 10px 28px -5px rgba(16, 185, 129, 0.50), 0 0 20px rgba(16, 185, 129, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
             transition: transform 0.06s ease, filter 0.12s ease, box-shadow 0.12s ease !important;
             position: relative;
             overflow: hidden;
@@ -851,9 +887,9 @@
         }
 
         .btn-auth-gradient:hover:not(:disabled) {
-            filter: brightness(1.08);
+            filter: brightness(1.10);
             transform: translateY(-1.5px);
-            box-shadow: 0 14px 34px -5px rgba(16, 185, 129, 0.55), 0 0 24px rgba(2, 132, 199, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.7) !important;
+            box-shadow: 0 14px 34px -5px rgba(16, 185, 129, 0.65), 0 0 28px rgba(16, 185, 129, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.7) !important;
         }
 
         .btn-auth-gradient:active:not(:disabled) {
@@ -877,24 +913,24 @@
             transform: scale(1.01) !important;
         }
 
-        /* Botão de Atalho VIP Master - Esmeralda & Safira Financeiro */
+        /* Botão de Atalho VIP Master - Esmeralda & Preto Puro */
         .btn-quick-admin-login {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(2, 132, 199, 0.10) 100%) !important;
-            border: 1px solid rgba(16, 185, 129, 0.40) !important;
-            color: #10B981 !important;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.08) 100%) !important;
+            border: 1px solid rgba(16, 185, 129, 0.45) !important;
+            color: #34D399 !important;
             border-radius: 12px !important;
-            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 2px 12px rgba(16, 185, 129, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
             transition: transform 0.06s ease, background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease !important;
             height: 40px;
             font-size: 12.5px;
             will-change: transform;
         }
         .btn-quick-admin-login:hover {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(2, 132, 199, 0.18) 100%) !important;
-            border-color: rgba(16, 185, 129, 0.65) !important;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.18) 100%) !important;
+            border-color: rgba(16, 185, 129, 0.75) !important;
             color: #FFFFFF !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35) !important;
+            box-shadow: 0 4px 18px rgba(16, 185, 129, 0.40) !important;
         }
         .btn-quick-admin-login:active {
             transform: scale(0.975) translateY(1px) !important;
@@ -913,14 +949,14 @@
             box-shadow: 0 4px 14px rgba(16, 185, 129, 0.22) !important;
         }
 
-        /* Abas Segmentadas Fluidas e Modernas */
+        /* Abas Segmentadas Fluidas e Modernas (Preto com Verde) */
         #authTabsNav,
         .auth-tabs-nav {
             padding: 3.5px !important;
             border-radius: 14px !important;
             gap: 4px !important;
-            background: rgba(10, 16, 32, 0.70) !important;
-            border: 1px solid rgba(56, 189, 248, 0.18) !important;
+            background: rgba(10, 16, 12, 0.85) !important;
+            border: 1px solid rgba(16, 185, 129, 0.25) !important;
             min-height: 40px;
         }
 
@@ -955,10 +991,10 @@
         }
 
         .auth-tab-btn.active {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.22) 0%, rgba(59, 130, 246, 0.16) 100%) !important;
-            color: #38BDF8 !important;
-            border: 1px solid rgba(56, 189, 248, 0.40) !important;
-            box-shadow: 0 2px 10px rgba(6, 182, 212, 0.25) !important;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.20) 100%) !important;
+            color: #34D399 !important;
+            border: 1px solid rgba(16, 185, 129, 0.55) !important;
+            box-shadow: 0 2px 12px rgba(16, 185, 129, 0.30) !important;
             font-weight: 700 !important;
         }
 
@@ -978,9 +1014,9 @@
 
         body.light .auth-tab-btn.active {
             background: #FFFFFF !important;
-            color: #0284C7 !important;
-            border: 1.5px solid #0284C7 !important;
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.16), inset 0 1px 1px #FFFFFF !important;
+            color: #059669 !important;
+            border: 1.5px solid #059669 !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.16), inset 0 1px 1px #FFFFFF !important;
             font-weight: 800 !important;
         }
 
@@ -995,7 +1031,7 @@
 
         /* SVG Checkmark Animations */
         .check-circle {
-            stroke: #06B6D4;
+            stroke: #10B981;
             stroke-width: 2.5;
             stroke-miterlimit: 10;
             stroke-dasharray: 160;
@@ -1036,7 +1072,7 @@
 
         @keyframes twinkle {
             0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1.25) rotate(45deg); filter: drop-shadow(0 0 6px #06B6D4); }
+            50% { opacity: 1; transform: scale(1.25) rotate(45deg); filter: drop-shadow(0 0 6px #10B981); }
         }
 
         /* Checklist de Segurança da Senha */
@@ -1054,9 +1090,9 @@
             transition: all 0.2s ease;
         }
         .pwd-req-pill.valid {
-            background: rgba(14, 165, 233, 0.18);
-            border-color: rgba(56, 189, 248, 0.40);
-            color: #38BDF8;
+            background: rgba(16, 185, 129, 0.18);
+            border-color: rgba(16, 185, 129, 0.40);
+            color: #34D399;
         }
         body.light .pwd-req-pill {
             background: #F1F5F9;
@@ -1078,11 +1114,11 @@
             width: 100%;
             height: 34px;
             padding: 0 12px;
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.20) 0%, rgba(2, 132, 199, 0.38) 50%, rgba(10, 16, 32, 0.88) 100%);
-            border: 1px solid rgba(6, 182, 212, 0.45);
-            border-top: 1px solid rgba(165, 243, 252, 0.65);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(5, 150, 105, 0.30) 50%, rgba(0, 0, 0, 0.90) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.45);
+            border-top: 1px solid rgba(167, 243, 208, 0.65);
             border-radius: 10px;
-            color: #A5F3FC;
+            color: #A7F3D0;
             font-size: 11.5px;
             font-weight: 700;
             letter-spacing: 0.01em;
@@ -1093,11 +1129,11 @@
             -webkit-backdrop-filter: blur(16px);
         }
         .btn-open-os:hover {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.38) 0%, rgba(2, 132, 199, 0.52) 50%, rgba(14, 116, 144, 0.90) 100%);
-            border-color: rgba(165, 243, 252, 0.85);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.35) 0%, rgba(5, 150, 105, 0.45) 50%, rgba(4, 120, 87, 0.90) 100%);
+            border-color: rgba(167, 243, 208, 0.85);
             color: #FFFFFF;
             transform: translateY(-1px);
-            box-shadow: 0 8px 22px rgba(6, 182, 212, 0.45);
+            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.45);
         }
         .btn-open-os svg {
             transition: transform 0.2s ease;
@@ -1105,8 +1141,6 @@
         .btn-open-os:hover svg {
             transform: scale(1.15);
         }
-
-
 
         /* Botão 4K Glass para Consultar / Acompanhar O.S. */
         .btn-consult-os {
@@ -1130,9 +1164,9 @@
             -webkit-backdrop-filter: blur(14px);
         }
         .btn-consult-os:hover {
-            background: rgba(59, 130, 246, 0.16);
-            border-color: rgba(96, 165, 250, 0.6);
-            color: #93C5FD;
+            background: rgba(16, 185, 129, 0.16);
+            border-color: rgba(52, 211, 153, 0.6);
+            color: #6EE7B7;
             transform: translateY(-1px);
         }
         .btn-consult-os svg {
@@ -1170,10 +1204,10 @@
             background: rgba(255, 255, 255, 0.08);
         }
         .os-tab-btn.active {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.15));
-            border-color: rgba(96, 165, 250, 0.55);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.15));
+            border-color: rgba(52, 211, 153, 0.55);
             color: #FFFFFF;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
         }
 
         /* Cards de O.S. Consultada */
@@ -1424,15 +1458,15 @@
             gap: 5px !important;
             height: 32px !important;
             box-sizing: border-box !important;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(14, 23, 42, 0.85) 40%, rgba(6, 10, 20, 0.96) 100%) !important;
-            border: 1px solid rgba(6, 182, 212, 0.45) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.70) !important;
-            border-bottom: 1px solid rgba(2, 132, 199, 0.55) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(8, 14, 10, 0.90) 40%, rgba(0, 0, 0, 0.98) 100%) !important;
+            border: 1px solid rgba(16, 185, 129, 0.45) !important;
+            border-top: 1px solid rgba(167, 243, 208, 0.70) !important;
+            border-bottom: 1px solid rgba(5, 150, 105, 0.55) !important;
             border-radius: 999px !important;
             padding: 3px 10px 3px 5px !important;
             backdrop-filter: blur(28px) saturate(220%) !important;
             -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
-            box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.6) !important;
+            box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.7) !important;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
             text-decoration: none !important;
             cursor: pointer !important;
@@ -1448,32 +1482,32 @@
             left: 0 !important;
             width: 100% !important;
             height: 100% !important;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(6, 182, 212, 0.10) 35%, transparent 65%) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(16, 185, 129, 0.10) 35%, transparent 65%) !important;
             pointer-events: none !important;
             z-index: 1 !important;
         }
 
         .dev-signature:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(15, 28, 52, 0.90) 40%, rgba(10, 16, 32, 0.98) 100%) !important;
-            border-color: rgba(103, 232, 249, 0.85) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(10, 18, 12, 0.94) 40%, rgba(0, 0, 0, 1.0) 100%) !important;
+            border-color: rgba(52, 211, 153, 0.85) !important;
             border-top-color: #FFFFFF !important;
-            box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.95), 0 0 36px rgba(6, 182, 212, 0.50), inset 0 2px 3px rgba(255, 255, 255, 0.50) !important;
+            box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.95), 0 0 36px rgba(16, 185, 129, 0.50), inset 0 2px 3px rgba(255, 255, 255, 0.50) !important;
             transform: translateY(-2.5px) scale(1.02) !important;
         }
 
-        /* Ícone 3D de Vidro Holográfico Cyber Cyan */
+        /* Ícone 3D de Vidro Holográfico Esmeralda Financeiro */
         .dev-signature-icon {
             width: 22px !important;
             height: 22px !important;
             border-radius: 50% !important;
             flex-shrink: 0 !important;
-            background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #CFFAFE 24%, #67E8F9 48%, #06B6D4 72%, #0E7490 100%) !important;
+            background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #D1FAE5 24%, #6EE7B7 48%, #10B981 72%, #047857 100%) !important;
             color: #FFFFFF !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
-            box-shadow: 0 0 18px rgba(6, 182, 212, 0.75), 0 3px 10px rgba(0, 0, 0, 0.6), inset 0 2px 2px rgba(255, 255, 255, 0.85) !important;
+            box-shadow: 0 0 18px rgba(16, 185, 129, 0.75), 0 3px 10px rgba(0, 0, 0, 0.6), inset 0 2px 2px rgba(255, 255, 255, 0.85) !important;
             position: relative !important;
             z-index: 2 !important;
             transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease !important;
@@ -1482,7 +1516,7 @@
 
         .dev-signature:hover .dev-signature-icon {
             transform: scale(1.14) rotate(-6deg) !important;
-            box-shadow: 0 0 26px rgba(34, 211, 238, 1), 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 2px #FFFFFF !important;
+            box-shadow: 0 0 26px rgba(52, 211, 153, 1), 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 2px #FFFFFF !important;
         }
 
         .dev-signature-icon svg {
@@ -1511,16 +1545,16 @@
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
         }
 
-        /* Nome Executivo em Branco Puro com Realce Cyan Safira */
+        /* Nome Executivo em Branco Puro com Realce Esmeralda */
         .dev-signature-name {
             font-size: 11.5px !important;
             font-weight: 900 !important;
             color: #FFFFFF !important;
             letter-spacing: 0.05em !important;
-            background: linear-gradient(135deg, #FFFFFF 0%, #ECFEFF 30%, #A5F3FC 65%, #06B6D4 100%) !important;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F0FDF4 30%, #A7F3D0 65%, #10B981 100%) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
-            filter: drop-shadow(0 0 14px rgba(6, 182, 212, 0.70)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) !important;
+            filter: drop-shadow(0 0 14px rgba(16, 185, 129, 0.70)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) !important;
             display: inline-flex !important;
             align-items: center !important;
             gap: 5px !important;
@@ -1530,23 +1564,23 @@
         .dev-sparkle {
             display: inline-block !important;
             font-size: 13px !important;
-            color: #22D3EE !important;
-            filter: drop-shadow(0 0 8px #06B6D4) drop-shadow(0 0 16px #0284C7) !important;
+            color: #34D399 !important;
+            filter: drop-shadow(0 0 8px #10B981) drop-shadow(0 0 16px #059669) !important;
             animation: none !important;
         }
 
         /* Suporte de Alto Contraste para Tema Claro */
         body.light .dev-signature {
             background: rgba(255, 255, 255, 0.94) !important;
-            border-color: rgba(2, 132, 199, 0.45) !important;
-            border-top-color: rgba(6, 182, 212, 0.80) !important;
-            border-bottom-color: rgba(3, 105, 161, 0.60) !important;
-            box-shadow: 0 8px 24px rgba(2, 132, 199, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
+            border-color: rgba(5, 150, 105, 0.45) !important;
+            border-top-color: rgba(16, 185, 129, 0.80) !important;
+            border-bottom-color: rgba(4, 120, 87, 0.60) !important;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
         }
         body.light .dev-signature:hover {
-            background: #F0F9FF !important;
-            border-color: #0284C7 !important;
-            box-shadow: 0 12px 28px rgba(2, 132, 199, 0.28), 0 0 20px rgba(6, 182, 212, 0.25) !important;
+            background: #F0FDF4 !important;
+            border-color: #059669 !important;
+            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.28), 0 0 20px rgba(16, 185, 129, 0.25) !important;
         }
         body.light .dev-signature-label {
             color: #09090B !important;
@@ -1554,14 +1588,14 @@
             text-shadow: none !important;
         }
         body.light .dev-signature-name {
-            background: linear-gradient(135deg, #09090B 0%, #082F49 45%, #0369A1 75%, #0284C7 100%) !important;
+            background: linear-gradient(135deg, #09090B 0%, #064E3B 45%, #047857 75%, #059669 100%) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
-            filter: drop-shadow(0 1px 3px rgba(2, 132, 199, 0.35)) !important;
+            filter: drop-shadow(0 1px 3px rgba(16, 185, 129, 0.35)) !important;
         }
         body.light .dev-sparkle {
-            color: #0284C7 !important;
-            filter: drop-shadow(0 0 6px rgba(6, 182, 212, 0.5)) !important;
+            color: #059669 !important;
+            filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5)) !important;
         }
 
         /* Barra de Suporte Abaixo da Abertura de O.S. (Alinhado Perfeito, Zero Cortes) */
@@ -1574,15 +1608,15 @@
             height: 32px;
             padding: 4px 10px;
             border-radius: 999px;
-            background: rgba(15, 23, 42, 0.65);
-            border: 1px solid rgba(56, 189, 248, 0.25);
+            background: rgba(10, 16, 12, 0.85);
+            border: 1px solid rgba(16, 185, 129, 0.30);
             color: #94A3B8;
             font-size: 11px;
             font-weight: 600;
             text-align: center;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             transition: all 0.2s ease;
             white-space: nowrap;
         }
@@ -1604,12 +1638,12 @@
             }
         }
         .auth-support-bar:hover {
-            background: rgba(20, 30, 52, 0.85);
-            border-color: rgba(56, 189, 248, 0.45);
-            box-shadow: 0 6px 18px rgba(0, 229, 255, 0.12);
+            background: rgba(14, 22, 16, 0.95);
+            border-color: rgba(52, 211, 153, 0.55);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25);
         }
         .auth-support-bar svg {
-            color: #38BDF8;
+            color: #10B981;
             flex-shrink: 0;
         }
         .auth-support-label {
@@ -1618,14 +1652,14 @@
             white-space: nowrap;
         }
         .auth-support-link {
-            color: #38BDF8;
+            color: #34D399;
             text-decoration: none;
             font-weight: 700;
             word-break: break-all;
             transition: color 0.15s ease, text-decoration 0.15s ease;
         }
         .auth-support-link:hover {
-            color: #7DD3FC;
+            color: #6EE7B7;
             text-decoration: underline;
         }
         body.light .auth-support-bar,
@@ -1764,9 +1798,9 @@
            ========================================================================== */
 
         :root {
-            --auth-card-bg: linear-gradient(168deg, rgba(11, 20, 38, 0.94) 0%, rgba(6, 12, 25, 0.97) 50%, rgba(2, 6, 15, 0.99) 100%);
-            --auth-card-border: rgba(16, 185, 129, 0.28);
-            --auth-card-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.90), 0 0 50px -10px rgba(16, 185, 129, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+            --auth-card-bg: linear-gradient(168deg, rgba(8, 14, 10, 0.97) 0%, rgba(2, 5, 3, 0.98) 50%, #000000 100%);
+            --auth-card-border: rgba(16, 185, 129, 0.40);
+            --auth-card-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 50px -10px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.20);
         }
 
         body.light, html.light body, html.light {
@@ -1775,21 +1809,22 @@
             --auth-card-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.09), 0 2px 6px rgba(15, 23, 42, 0.03), inset 0 1px 0 #FFFFFF;
         }
 
-        /* Metric Cards Financeiros Institucionais */
+        /* Metric Cards Financeiros Institucionais (Preto com Verde e Branco) */
         .auth-metric-card {
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.85) 0%, rgba(10, 16, 32, 0.92) 100%) !important;
-            border: 1px solid rgba(16, 185, 129, 0.22) !important;
+            background: linear-gradient(145deg, rgba(8, 14, 10, 0.92) 0%, rgba(2, 5, 3, 0.96) 100%) !important;
+            border: 1px solid rgba(16, 185, 129, 0.30) !important;
+            border-top: 2px solid rgba(16, 185, 129, 0.50) !important;
             border-radius: 18px !important;
             backdrop-filter: blur(16px) !important;
             -webkit-backdrop-filter: blur(16px) !important;
-            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
 
         .auth-metric-card:hover {
             transform: translateY(-2px) !important;
-            border-color: rgba(16, 185, 129, 0.45) !important;
-            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.7), 0 0 24px rgba(16, 185, 129, 0.2) !important;
+            border-color: rgba(52, 211, 153, 0.60) !important;
+            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.9), 0 0 24px rgba(16, 185, 129, 0.30) !important;
         }
 
         body.light .auth-metric-card {
@@ -2528,20 +2563,20 @@ body.light .period button.active {
 
     <!-- 4K ULTRA SUCCESS MODAL OVERLAY (ENTRADA / PÓS-LOGIN BANCÁRIO) -->
     <!-- MODAL DINÂMICO & PROFISSIONAL (LOGIN EFETUADO COM SUCESSO) -->
-    <div class="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[99999] p-4 sm:p-6 opacity-0 transition-all duration-300 pointer-events-none" id="loginSuccessOverlay" style="display:none;">
-        <div class="absolute w-[360px] h-[360px] rounded-full bg-cyan-500/15 blur-[100px] pointer-events-none animate-pulse"></div>
+    <div class="fixed inset-0 bg-black/85 backdrop-blur-xl flex items-center justify-center z-[99999] p-4 sm:p-6 opacity-0 transition-all duration-300 pointer-events-none" id="loginSuccessOverlay" style="display:none;">
+        <div class="absolute w-[360px] h-[360px] rounded-full bg-emerald-500/15 blur-[100px] pointer-events-none animate-pulse"></div>
 
-        <div id="successModalBox" class="bg-gradient-to-b from-[#0f172a]/95 via-[#0b1324]/98 to-[#060a14]/99 border border-cyan-500/40 border-t-white/40 rounded-[32px] p-8 sm:p-10 w-full max-w-[480px] text-center shadow-[0_30px_90px_rgba(0,0,0,0.95),0_0_55px_rgba(6,182,212,0.28),inset_0_1.5px_2px_rgba(255,255,255,0.25)] transform translate-y-4 scale-95 transition-all duration-400 relative overflow-hidden pointer-events-auto">
+        <div id="successModalBox" class="bg-gradient-to-b from-[#0a140d]/95 via-[#040805]/98 to-[#000000]/99 border border-emerald-500/40 border-t-white/40 rounded-[32px] p-8 sm:p-10 w-full max-w-[480px] text-center shadow-[0_30px_90px_rgba(0,0,0,0.98),0_0_55px_rgba(16,185,129,0.28),inset_0_1.5px_2px_rgba(255,255,255,0.25)] transform translate-y-4 scale-95 transition-all duration-400 relative overflow-hidden pointer-events-auto">
             <!-- Linha de Brilho Superior -->
-            <div class="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/80 to-transparent pointer-events-none"></div>
+            <div class="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent pointer-events-none"></div>
 
             <!-- Ícone Dinâmico com Ondas de Pulso (Sucesso Ampliado) -->
             <div class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                <div class="absolute inset-0 rounded-full bg-cyan-500/20 animate-ping" style="animation-duration: 2s;"></div>
-                <div class="absolute inset-1 rounded-full border border-cyan-400/35"></div>
-                <div class="relative w-20 h-20 rounded-full bg-gradient-to-tr from-cyan-600 to-sky-400 p-[2.5px] shadow-[0_0_30px_rgba(6,182,212,0.6)]">
-                    <div class="w-full h-full rounded-full bg-[#0b1324] flex items-center justify-center">
-                        <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <div class="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping" style="animation-duration: 2s;"></div>
+                <div class="absolute inset-1 rounded-full border border-emerald-400/35"></div>
+                <div class="relative w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 p-[2.5px] shadow-[0_0_30px_rgba(16,185,129,0.6)]">
+                    <div class="w-full h-full rounded-full bg-[#040805] flex items-center justify-center">
+                        <svg class="w-10 h-10 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </div>
@@ -2558,25 +2593,25 @@ body.light .period button.active {
 
             <!-- Barra de Progresso Dinâmica com Gradiente Suave -->
             <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden p-[1px]">
-                <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-cyan-500 via-sky-400 to-blue-500 rounded-full w-0 shadow-[0_0_12px_rgba(6,182,212,0.9)]"></div>
+                <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 rounded-full w-0 shadow-[0_0_12px_rgba(16,185,129,0.9)]"></div>
             </div>
         </div>
     </div>
 
     <!-- 4K ULTRA LOGOUT MODAL OVERLAY (SAÍDA) -->
-    <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="logoutSuccessOverlay" style="display:none;" onclick="if(event.target===this) hideLogoutModal()">
-        <div class="absolute w-[380px] h-[380px] rounded-full bg-cyan-500/20 blur-[100px] pointer-events-none animate-pulse"></div>
+    <div class="fixed inset-0 bg-black/90 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="logoutSuccessOverlay" style="display:none;" onclick="if(event.target===this) hideLogoutModal()">
+        <div class="absolute w-[380px] h-[380px] rounded-full bg-emerald-500/20 blur-[100px] pointer-events-none animate-pulse"></div>
 
-        <div id="logoutModalBox" class="bg-gradient-to-br from-[#111827]/95 via-[#0F172A]/96 to-[#0A0F1D]/98 border border-white/15 border-t-white/35 rounded-[28px] p-8 sm:p-9 w-full max-w-[440px] text-center shadow-[0_35px_90px_rgba(0,0,0,0.88),0_0_45px_rgba(6,182,212,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto">
+        <div id="logoutModalBox" class="bg-gradient-to-br from-[#0c1610]/95 via-[#060c08]/96 to-[#000000]/98 border border-white/15 border-t-white/35 rounded-[28px] p-8 sm:p-9 w-full max-w-[440px] text-center shadow-[0_35px_90px_rgba(0,0,0,0.98),0_0_45px_rgba(16,185,129,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto">
             
             <div class="absolute top-0 left-[10%] right-[10%] h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none"></div>
 
-            <!-- Multi-Ring Cyan Badge Orb -->
+            <!-- Multi-Ring Emerald Badge Orb -->
             <div class="relative w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <div class="absolute inset-0 rounded-full border border-dashed border-cyan-500/35 animate-spin-slow"></div>
-                <div class="absolute inset-2 rounded-full border border-cyan-400/50 shadow-[0_0_30px_rgba(6,182,212,0.35)]"></div>
-                <div class="absolute inset-2.5 rounded-full bg-gradient-to-br from-cyan-500/25 via-[#111827] to-[#0A0F1D] border border-cyan-400/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] flex items-center justify-center">
-                    <svg class="w-8 h-8 text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.85)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="absolute inset-0 rounded-full border border-dashed border-emerald-500/35 animate-spin-slow"></div>
+                <div class="absolute inset-2 rounded-full border border-emerald-400/50 shadow-[0_0_30px_rgba(16,185,129,0.35)]"></div>
+                <div class="absolute inset-2.5 rounded-full bg-gradient-to-br from-emerald-500/25 via-[#0a140d] to-[#000000] border border-emerald-400/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] flex items-center justify-center">
+                    <svg class="w-8 h-8 text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.85)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
                         <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -2585,8 +2620,8 @@ body.light .period button.active {
             </div>
 
             <!-- Pill Badge -->
-            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 mb-2.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-[10.5px] font-extrabold uppercase tracking-wider text-cyan-400">
-                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 mb-2.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10.5px] font-extrabold uppercase tracking-wider text-emerald-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span>Sessão Finalizada com Sucesso</span>
             </div>
 
@@ -2599,7 +2634,7 @@ body.light .period button.active {
             </p>
 
             <!-- Botão de Ação -->
-            <button type="button" onclick="hideLogoutModal()" class="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm text-white bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 border border-white/25 shadow-[0_12px_28px_rgba(6,182,212,0.45),inset_0_1px_2px_rgba(255,255,255,0.6)] hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group cursor-pointer">
+            <button type="button" onclick="hideLogoutModal()" class="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 border border-white/25 shadow-[0_12px_28px_rgba(16,185,129,0.45),inset_0_1px_2px_rgba(255,255,255,0.6)] hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group cursor-pointer">
                 <span>Fazer Login Novamente</span>
                 <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -2608,18 +2643,18 @@ body.light .period button.active {
 
             <!-- Barra de Progresso Inteligente -->
             <div class="w-full bg-white/10 h-1 rounded-full overflow-hidden mt-4">
-                <div id="logoutRedirectProgress" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full w-full"></div>
+                <div id="logoutRedirectProgress" class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full w-full"></div>
             </div>
         </div>
     </div>
 
     <!-- MODAL TERMOS DE ABERTURA DE CONTA & POLÍTICA DE PRIVACIDADE LGPD -->
     <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-4 sm:p-6 opacity-0 transition-opacity duration-300 pointer-events-none" id="overlayFinancialTerms" style="display:none;" onclick="if(event.target===this) closeFinancialTermsModal()">
-        <div id="boxFinancialTermsModal" style="background: linear-gradient(145deg, rgba(20, 27, 45, 0.92) 0%, rgba(13, 19, 33, 0.96) 50%, rgba(7, 10, 18, 0.98) 100%); border: 1.5px solid rgba(255, 255, 255, 0.16); border-top: 1.5px solid rgba(255, 255, 255, 0.35); backdrop-filter: blur(40px); box-shadow: 0 35px 90px rgba(0,0,0,0.95), 0 0 50px rgba(6, 182, 212, 0.22);" class="rounded-[28px] p-6 sm:p-8 w-full max-w-[620px] text-left transform translate-y-6 scale-90 transition-all duration-300 relative overflow-hidden pointer-events-auto max-h-[88vh] flex flex-col">
+        <div id="boxFinancialTermsModal" style="background: linear-gradient(145deg, rgba(8, 14, 10, 0.96) 0%, rgba(3, 6, 4, 0.98) 50%, #000000 100%); border: 1.5px solid rgba(16, 185, 129, 0.35); border-top: 1.5px solid rgba(167, 243, 208, 0.50); backdrop-filter: blur(40px); box-shadow: 0 35px 90px rgba(0,0,0,0.98), 0 0 50px rgba(16, 185, 129, 0.25);" class="rounded-[28px] p-6 sm:p-8 w-full max-w-[620px] text-left transform translate-y-6 scale-90 transition-all duration-300 relative overflow-hidden pointer-events-auto max-h-[88vh] flex flex-col">
             
             <div class="flex items-center justify-between pb-4 border-b border-white/10 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
                         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
                     <div>
@@ -2632,22 +2667,22 @@ body.light .period button.active {
 
             <div class="overflow-y-auto pr-1 my-4 space-y-4 text-xs leading-relaxed text-slate-300">
                 <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <h4 class="font-extrabold text-cyan-400 uppercase tracking-wider text-[11px] mb-1">1. Titularidade e Abertura de Conta</h4>
+                    <h4 class="font-extrabold text-emerald-400 uppercase tracking-wider text-[11px] mb-1">1. Titularidade e Abertura de Conta</h4>
                     <p>Ao solicitar a abertura de conta no Nexus Financeiro Hub, o usuário declara ter idade igual ou superior a 18 anos completos, capacidade civil plena e ser o titular legítimo do CPF informado, sob as penas da legislação brasileira vigente (Artigo 299 do Código Penal).</p>
                 </div>
 
                 <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <h4 class="font-extrabold text-cyan-400 uppercase tracking-wider text-[11px] mb-1">2. Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018)</h4>
+                    <h4 class="font-extrabold text-emerald-400 uppercase tracking-wider text-[11px] mb-1">2. Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018)</h4>
                     <p>Seus dados cadastrais (Nome, CPF, Data de Nascimento, Telefone e E-mail) são coletados para fins estritos de identificação (KYC - Know Your Customer), autenticação em dois fatores, prevenção a fraudes e cumprimento de normas de auditoria. Garantimos sigilo absoluto, sem comercialização ou compartilhamento indevido com terceiros.</p>
                 </div>
 
                 <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <h4 class="font-extrabold text-cyan-400 uppercase tracking-wider text-[11px] mb-1">3. Segurança Criptográfica & Credenciais</h4>
+                    <h4 class="font-extrabold text-emerald-400 uppercase tracking-wider text-[11px] mb-1">3. Segurança Criptográfica & Credenciais</h4>
                     <p>A senha cadastrada é protegida através de algoritmos criptográficos robustos de derivação de chave (scrypt com salt individual). É dever do usuário manter suas credenciais confidenciais, não as compartilhando com terceiros.</p>
                 </div>
 
                 <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <h4 class="font-extrabold text-cyan-400 uppercase tracking-wider text-[11px] mb-1">4. Direitos do Titular</h4>
+                    <h4 class="font-extrabold text-emerald-400 uppercase tracking-wider text-[11px] mb-1">4. Direitos do Titular</h4>
                     <p>O titular poderá, a qualquer momento, requerer a confirmação da existência de tratamento, correção de dados incompletos ou inexatos, ou a anonimização e exclusão de sua conta através dos canais de suporte oficiais.</p>
                 </div>
             </div>
@@ -2662,7 +2697,7 @@ body.light .period button.active {
 
     <!-- MODAL ABRIR E CONSULTAR ORDEM DE SERVIÇO (PÚBLICO) -->
     <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="overlayNovaOrdem" style="display:none;" onclick="if(event.target===this) closeNovaOrdemModal()">
-        <div id="boxNovaOrdemModal" style="background: linear-gradient(145deg, rgba(30, 41, 65, 0.68) 0%, rgba(15, 23, 42, 0.86) 45%, rgba(8, 12, 26, 0.96) 100%); border: 1.5px solid rgba(255, 255, 255, 0.16); border-top: 1.5px solid rgba(255, 255, 255, 0.42); border-left: 1.5px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(40px) saturate(210%); -webkit-backdrop-filter: blur(40px) saturate(210%); box-shadow: 0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(59,130,246,0.22), inset 0 1.5px 2px rgba(255,255,255,0.38);" class="rounded-[30px] p-7 sm:p-8 w-full max-w-[560px] text-left transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto max-h-[90vh] overflow-y-auto">
+        <div id="boxNovaOrdemModal" style="background: linear-gradient(145deg, rgba(8, 14, 10, 0.95) 0%, rgba(4, 7, 5, 0.98) 45%, #000000 100%); border: 1.5px solid rgba(16, 185, 129, 0.35); border-top: 1.5px solid rgba(167, 243, 208, 0.60); border-left: 1.5px solid rgba(16, 185, 129, 0.35); backdrop-filter: blur(40px) saturate(210%); -webkit-backdrop-filter: blur(40px) saturate(210%); box-shadow: 0 35px 90px rgba(0,0,0,0.98), 0 0 55px rgba(16,185,129,0.22), inset 0 1.5px 2px rgba(255,255,255,0.25);" class="rounded-[30px] p-7 sm:p-8 w-full max-w-[560px] text-left transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto max-h-[90vh] overflow-y-auto">
             <button class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg font-bold focus:outline-none z-10" type="button" onclick="closeNovaOrdemModal()">✕</button>
             
             <!-- Abas de Navegação: Abrir Ordem de Serviço OS vs Consulta de OS -->
@@ -2676,8 +2711,8 @@ body.light .period button.active {
             </div>
 
             <div id="boxNovaOrdemForm">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-500/35 text-blue-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/35 text-emerald-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Suporte Técnico & Chamados</span>
                 </div>
                 <h2 class="text-xl font-black text-white mb-1.5 flex items-center gap-2">
@@ -2692,13 +2727,13 @@ body.light .period button.active {
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Seu Nome Completo *</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientName" required placeholder="Ex: Paulo Lima" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                                <input id="osClientName" required placeholder="Ex: Paulo Lima" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Seu E-mail de Contato *</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                                <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
                     </div>
@@ -2707,13 +2742,13 @@ body.light .period button.active {
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">WhatsApp / Celular (Opcional)</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="handlePhoneInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                                <input id="osClientPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="handlePhoneInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">CPF do Titular (Opcional)</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientCpf" placeholder="00000000000" maxlength="11" oninput="handleCpfInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                                <input id="osClientCpf" placeholder="00000000000" maxlength="11" oninput="handleCpfInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
                     </div>
@@ -2721,7 +2756,7 @@ body.light .period button.active {
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Tipo de Serviço *</label>
-                            <select id="osServiceType" required class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+                            <select id="osServiceType" required class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none">
                                 <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
                                 <option value="Reset de Senha">🔑 Reset / Recuperação de Senha</option>
                                 <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais/Financeiros</option>
@@ -2731,7 +2766,7 @@ body.light .period button.active {
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Prioridade</label>
-                            <select id="osPriority" class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none">
+                            <select id="osPriority" class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none">
                                 <option value="Normal">⚪ Normal</option>
                                 <option value="Alta">🟡 Alta</option>
                                 <option value="Urgente">🔴 Urgente</option>
@@ -2741,19 +2776,19 @@ body.light .period button.active {
 
                     <div>
                         <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Assunto Resumido *</label>
-                        <input id="osTitle" required placeholder="Ex: Solicito reset de senha para meu e-mail" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
+                        <input id="osTitle" required placeholder="Ex: Solicito reset de senha para meu e-mail" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                     </div>
 
                     <div>
                         <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Descrição Detalhada do Pedido *</label>
-                        <textarea id="osDescription" rows="4" required placeholder="Explique com detalhes o que precisa ser feito..." class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none resize-none"></textarea>
+                        <textarea id="osDescription" rows="4" required placeholder="Explique com detalhes o que precisa ser feito..." class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none resize-none"></textarea>
                     </div>
 
                     <div id="osFormFeedback" class="hidden p-3 rounded-xl text-xs font-semibold border bg-rose-950/90 border-rose-500/60 text-rose-200"></div>
 
                     <div class="flex items-center justify-end gap-3 pt-2">
                         <button type="button" onclick="closeNovaOrdemModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white border border-white/10 transition-colors">Cancelar</button>
-                        <button type="submit" id="btnSubmitOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-white/20 shadow-lg shadow-blue-500/30 transition-all">
+                        <button type="submit" id="btnSubmitOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 border border-white/20 shadow-lg shadow-emerald-500/30 transition-all">
                             Enviar Ordem de Serviço 🚀
                         </button>
                     </div>
@@ -2762,32 +2797,32 @@ body.light .period button.active {
 
             <!-- Box Sucesso -->
             <div id="boxNovaOrdemSuccess" class="hidden text-center py-4">
-                <div class="w-14 h-14 rounded-full bg-cyan-500/20 border-2 border-cyan-500 text-cyan-400 text-2xl flex items-center justify-center mx-auto mb-3 shadow-[0_0_24px_rgba(6,182,212,0.4)]">
+                <div class="w-14 h-14 rounded-full bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 text-2xl flex items-center justify-center mx-auto mb-3 shadow-[0_0_24px_rgba(16,185,129,0.4)]">
                     ✓
                 </div>
                 <h3 class="text-lg font-black text-white mb-1">Ordem de Serviço Aberta!</h3>
                 <p class="text-xs text-slate-400 mb-5">Sua solicitação foi registrada no sistema e já está disponível para análise da equipe de administração.</p>
-                <div class="bg-white/5 border border-cyan-500/30 rounded-2xl p-4 mb-5">
+                <div class="bg-white/5 border border-emerald-500/30 rounded-2xl p-4 mb-5">
                     <span class="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">Número do Protocolo</span>
-                    <div class="text-2xl font-black text-cyan-400 tracking-wider" id="osSuccessProtocol">OS-000000</div>
+                    <div class="text-2xl font-black text-emerald-400 tracking-wider" id="osSuccessProtocol">OS-000000</div>
                     <div class="flex items-center justify-center gap-2 mt-3 flex-wrap">
-                        <button type="button" onclick="copyOsProtocol()" class="px-3 py-1.5 rounded-lg bg-blue-500/20 border border-blue-500/40 text-blue-300 text-xs font-bold hover:bg-blue-500/30 transition-colors">
+                        <button type="button" onclick="copyOsProtocol()" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold hover:bg-emerald-500/30 transition-colors">
                             📋 Copiar Protocolo
                         </button>
-                        <button type="button" onclick="consultarProtocoloRecente()" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-xs font-bold hover:bg-cyan-500/30 transition-colors">
+                        <button type="button" onclick="consultarProtocoloRecente()" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold hover:bg-emerald-500/30 transition-colors">
                             🔍 Visualizar Chamado
                         </button>
                     </div>
                 </div>
-                <button type="button" onclick="closeNovaOrdemModal()" class="w-full py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 transition-all">
+                <button type="button" onclick="closeNovaOrdemModal()" class="w-full py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 transition-all">
                     Concluir e Voltar
                 </button>
             </div>
 
             <!-- Aba de Consulta de O.S. Aberta por Nome ou E-mail -->
             <div id="boxConsultarOrdem" class="hidden">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-500/35 text-blue-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/35 text-emerald-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Acompanhamento de Chamados</span>
                 </div>
                 <h2 class="text-xl font-black text-white mb-1.5 flex items-center gap-2">
@@ -2799,8 +2834,8 @@ body.light .period button.active {
 
                 <form id="formConsultarOrdem" onsubmit="executarConsultaOrdens(event)" class="mb-4">
                     <div class="flex gap-2.5 flex-wrap sm:flex-nowrap">
-                        <input id="osConsultarQuery" required placeholder="Digite seu Nome ou E-mail cadastrado..." class="flex-1 bg-black/40 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none">
-                        <button type="submit" id="btnExecutarConsultaOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 border border-white/20 shadow-md shadow-blue-500/30 transition-all shrink-0">
+                        <input id="osConsultarQuery" required placeholder="Digite seu Nome ou E-mail cadastrado..." class="flex-1 bg-black/40 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
+                        <button type="submit" id="btnExecutarConsultaOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 border border-white/20 shadow-md shadow-emerald-500/30 transition-all shrink-0">
                             🔍 Buscar O.S.
                         </button>
                     </div>
