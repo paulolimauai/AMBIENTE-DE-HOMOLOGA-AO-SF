@@ -1661,35 +1661,29 @@ html.is-admin #mobileDrawerMenu button[data-page="config"] {
   display: none !important;
 }
 
-/* ==================== Layout Executivo e Posicionamento Perfeito do Menu Administrador (Horizontal e Alinhado) ==================== */
-html.is-admin nav.menu {
-  padding: 0 !important;
-}
-
-html.is-admin .menu-track {
+/* ==================== Layout Executivo e Posicionamento Perfeito do Menu Administrador na Sidebar ==================== */
+html.is-admin .menu-section-admin {
   display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
 }
-
-html.is-admin .menu-admin-badge {
+html.is-admin .menu-section-header:not(.menu-section-admin) {
   display: none !important;
 }
 
-html.is-admin .menu button.menu-btn-admin {
+html.is-admin .menu button.menu-btn-admin,
+html.is-admin aside.menu button.menu-btn-admin,
+html.is-admin .sidebar-menu button.menu-btn-admin {
   position: relative !important;
-  width: auto !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  max-height: 38px !important;
-  padding: 0 16px !important;
+  width: 100% !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 12px !important;
   border-radius: 11px !important;
-  display: inline-flex !important;
+  display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
+  justify-content: flex-start !important;
+  gap: 11px !important;
   font-size: 13.5px !important;
   font-weight: 600 !important;
   line-height: 1 !important;
@@ -1697,9 +1691,14 @@ html.is-admin .menu button.menu-btn-admin {
   flex-shrink: 0 !important;
 }
 
-html.is-admin .menu button.menu-btn-admin .ic {
-  width: 18px !important;
-  height: 18px !important;
+html.is-admin .menu button.menu-btn-admin .ic,
+html.is-admin aside.menu button.menu-btn-admin .ic,
+html.is-admin .sidebar-menu button.menu-btn-admin .ic {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  border-radius: 8px !important;
   margin: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -1707,7 +1706,9 @@ html.is-admin .menu button.menu-btn-admin .ic {
   flex-shrink: 0 !important;
 }
 
-html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
+html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount),
+html.is-admin aside.menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount),
+html.is-admin .sidebar-menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
   font-size: 13.5px !important;
   font-weight: 600 !important;
   line-height: 1 !important;
@@ -4170,91 +4171,117 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Barra de Menu Horizontal no Topo (Design Executivo de Alta Fidelidade 4K - Liquid Glass) ==================== */
-nav.menu {
+/* ==================== Barra de Menu Lateral Executiva (Sidebar Design 4K - Liquid Glass) ==================== */
+nav.menu, aside.menu, .sidebar-menu {
   position: fixed !important;
   top: 68px !important;
   left: 0 !important;
-  right: 0 !important;
-  bottom: auto !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  height: 56px !important;
-  min-height: 56px !important;
+  bottom: 0 !important;
+  width: 250px !important;
+  height: calc(100vh - 68px) !important;
+  max-height: calc(100vh - 68px) !important;
   margin: 0 !important;
-  padding: 0 24px !important;
+  padding: 14px 10px 12px 10px !important;
   display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: rgba(0, 0, 0, 0.94) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-right: none !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  background: rgba(6, 10, 18, 0.94) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.75), inset 0 -1px 0 rgba(255, 255, 255, 0.04) !important;
-  backdrop-filter: blur(24px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
-  z-index: 9990 !important;
-  contain: layout style;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.55), inset -1px 0 0 rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  z-index: 9980 !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-.menu-track {
+.menu-track, .sidebar-scroll {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 3px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  flex: 1 1 auto !important;
+  padding: 2px 2px 8px 2px !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent !important;
+}
+
+.menu-track::-webkit-scrollbar,
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px !important;
+}
+.menu-track::-webkit-scrollbar-thumb,
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 999px !important;
+}
+
+/* Divisores de Seção com Título */
+.menu-section-header {
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  width: auto !important;
-  max-width: 1760px !important;
-  height: 46px !important;
-  padding: 4px 8px !important;
-  margin: 0 auto !important;
-  background: rgba(15, 23, 42, 0.90) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
-  border-radius: 13px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+  gap: 8px !important;
+  padding: 12px 8px 4px 8px !important;
+  user-select: none !important;
+  flex-shrink: 0 !important;
 }
-.menu-track::-webkit-scrollbar,
-nav.menu::-webkit-scrollbar {
-  display: none !important;
+.menu-section-header:first-child {
+  padding-top: 2px !important;
 }
-
-@media (max-width: 1350px) {
-  nav.menu {
-    justify-content: flex-start !important;
-    padding: 0 12px !important;
-  }
-  .menu-track {
-    justify-content: flex-start !important;
-    width: 100% !important;
-  }
+.menu-section-title {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.10em !important;
+  color: #64748B !important;
+  white-space: nowrap !important;
+}
+.menu-section-line {
+  flex: 1 !important;
+  height: 1px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 1px !important;
 }
 
-.menu button {
+/* Botões do Menu Lateral */
+.menu button, aside.menu button, .sidebar-menu button {
   position: relative !important;
-  display: inline-flex !important;
+  display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  gap: 8px !important;
-  width: auto !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  max-height: 38px !important;
-  padding: 0 15px !important;
-  border-radius: 10px !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  gap: 11px !important;
+  width: 100% !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 12px !important;
+  border-radius: 11px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
   font-size: 13.5px !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select: none !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
@@ -4262,293 +4289,494 @@ nav.menu::-webkit-scrollbar {
   touch-action: manipulation !important;
 }
 
-.menu button:hover {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.10) !important;
-  color: #F8FAFC !important;
-}
-
-.menu button:hover .ic {
-  color: #34D399 !important;
-}
-
-.menu button:active {
-  background: rgba(255, 255, 255, 0.10) !important;
-  transform: scale(0.98) !important;
-}
-
-/* Estado Ativo: Quadrado Proporcional e Alinhado com Borda Fina Precisa */
-.menu button.active {
-  background: rgba(16, 185, 129, 0.14) !important;
-  border: 1.2px solid rgba(16, 185, 129, 0.45) !important;
-  border-radius: 10px !important;
-  color: #34D399 !important;
-  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
-}
-.menu button.active span:not(.ic):not(#osBadgeCount) {
-  color: #34D399 !important;
-  font-weight: 650 !important;
-}
-
-.menu button.active .ic {
-  color: #34D399 !important;
-}
-
-.menu button.active::before {
-  display: none !important;
-}
-
-.menu button.active::after {
-  display: none !important;
-}
-
-.menu button .ic {
-  width: 17px !important;
-  height: 17px !important;
+.menu button .ic, aside.menu button .ic, .sidebar-menu button .ic {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  color: #64748B !important;
+  color: #94A3B8 !important;
   flex-shrink: 0 !important;
   line-height: 0 !important;
   margin: 0 !important;
-  transition: color 0.15s ease !important;
+  transition: all 0.16s ease !important;
 }
-.menu button .ic svg {
-  width: 17px !important;
-  height: 17px !important;
+
+.menu button .ic svg, aside.menu button .ic svg, .sidebar-menu button .ic svg {
+  width: 16px !important;
+  height: 16px !important;
   stroke-width: 2.1px !important;
   stroke: currentColor !important;
   display: block !important;
 }
 
-.menu button span:not(.ic):not(#osBadgeCount) {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", Helvetica, Arial, sans-serif !important;
+.menu button span.label,
+.menu button span:not(.ic):not(#osBadgeCount),
+aside.menu button span.label,
+aside.menu button span:not(.ic):not(#osBadgeCount),
+.sidebar-menu button span.label,
+.sidebar-menu button span:not(.ic):not(#osBadgeCount) {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
   font-size: 13.5px !important;
-  font-weight: 550 !important;
+  font-weight: 600 !important;
   letter-spacing: -0.01em !important;
   line-height: 1 !important;
   display: inline-block !important;
   white-space: nowrap !important;
   color: inherit !important;
   vertical-align: middle !important;
-  -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important;
   transition: color 0.15s ease, font-weight 0.15s ease !important;
 }
 
-.menu-admin-divider {
-  width: 1px !important;
-  height: 20px !important;
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.45) 50%, rgba(245, 158, 11, 0.1) 100%) !important;
+/* Hover no botão */
+.menu button:hover, aside.menu button:hover, .sidebar-menu button:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
+  color: #F8FAFC !important;
+  transform: translateX(3px) !important;
+}
+.menu button:hover .ic, aside.menu button:hover .ic, .sidebar-menu button:hover .ic {
+  background: rgba(16, 185, 129, 0.14) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  color: #34D399 !important;
+}
+
+/* Botão Ativo */
+.menu button.active, aside.menu button.active, .sidebar-menu button.active {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.08) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  border-left: 3.5px solid #10B981 !important;
+  color: #34D399 !important;
+  box-shadow: 0 2px 14px rgba(16, 185, 129, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+.menu button.active .ic, aside.menu button.active .ic, .sidebar-menu button.active .ic {
+  background: rgba(16, 185, 129, 0.22) !important;
+  border-color: rgba(16, 185, 129, 0.50) !important;
+  color: #34D399 !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.35) !important;
+}
+.menu button.active span.label,
+.menu button.active span:not(.ic):not(#osBadgeCount),
+aside.menu button.active span.label,
+aside.menu button.active span:not(.ic):not(#osBadgeCount),
+.sidebar-menu button.active span.label,
+.sidebar-menu button.active span:not(.ic):not(#osBadgeCount) {
+  color: #34D399 !important;
+  font-weight: 700 !important;
+}
+
+/* Botão Administrativo */
+.menu button.menu-btn-admin, aside.menu button.menu-btn-admin, .sidebar-menu button.menu-btn-admin {
+  color: #CBD5E1 !important;
+  background: rgba(245, 158, 11, 0.05) !important;
+  border: 1px solid rgba(245, 158, 11, 0.18) !important;
+}
+.menu button.menu-btn-admin .ic, aside.menu button.menu-btn-admin .ic, .sidebar-menu button.menu-btn-admin .ic {
+  color: #FBBF24 !important;
+  background: rgba(245, 158, 11, 0.10) !important;
+  border-color: rgba(245, 158, 11, 0.25) !important;
+}
+.menu button.menu-btn-admin:hover, aside.menu button.menu-btn-admin:hover, .sidebar-menu button.menu-btn-admin:hover {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border-color: rgba(245, 158, 11, 0.40) !important;
+  color: #FDE68A !important;
+  transform: translateX(3px) !important;
+}
+.menu button.menu-btn-admin.active, aside.menu button.menu-btn-admin.active, .sidebar-menu button.menu-btn-admin.active {
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.60) !important;
+  border-left: 3.5px solid #F59E0B !important;
+  color: #FBBF24 !important;
+  box-shadow: 0 2px 14px rgba(245, 158, 11, 0.25) !important;
+}
+.menu button.menu-btn-admin.active .ic, aside.menu button.menu-btn-admin.active .ic, .sidebar-menu button.menu-btn-admin.active .ic {
+  background: rgba(245, 158, 11, 0.25) !important;
+  border-color: rgba(245, 158, 11, 0.60) !important;
+  color: #FDE68A !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4) !important;
+}
+
+/* Badge de Notificação de O.S. */
+.menu #osBadgeCount, aside.menu #osBadgeCount, .sidebar-menu #osBadgeCount {
+  margin-left: auto !important;
+  padding: 0 6px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
   border-radius: 999px !important;
-  margin: 0 4px !important;
+  font-size: 9.5px !important;
+  font-weight: 900 !important;
+  background: #EF4444 !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.7) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+}
+
+/* Rodapé da Sidebar */
+.sidebar-footer {
+  margin-top: auto !important;
+  padding-top: 10px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
   flex-shrink: 0 !important;
 }
 
-.menu-admin-badge {
+.sidebar-finance-shield {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 8px !important;
+  border-radius: 9px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+}
+.sidebar-finance-shield .shield-icon {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 6px !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #10B981 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+.sidebar-finance-shield .shield-text {
+  display: flex !important;
+  flex-direction: column !important;
+  line-height: 1.15 !important;
+  overflow: hidden !important;
+}
+.sidebar-finance-shield .shield-title {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #F8FAFC !important;
+  white-space: nowrap !important;
+}
+.sidebar-finance-shield .shield-sub {
+  font-size: 9px !important;
+  color: #64748B !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  white-space: nowrap !important;
+}
+.pulse-dot-green {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #10B981 !important;
+  box-shadow: 0 0 6px #10B981 !important;
+  display: inline-block !important;
+}
+
+/* Botão de Toggle da Sidebar (Recolher / Expandir) */
+.sidebar-toggle-btn {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  color: #94A3B8 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 0.18s ease !important;
+}
+.sidebar-toggle-btn:hover {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  color: #34D399 !important;
+}
+
+/* Modo Recolhido (Collapsed) */
+body.sidebar-collapsed nav.menu,
+body.sidebar-collapsed aside.menu,
+body.sidebar-collapsed .sidebar-menu {
+  width: 68px !important;
+  padding: 14px 6px 12px 6px !important;
+}
+body.sidebar-collapsed .menu button span.label,
+body.sidebar-collapsed aside.menu button span.label,
+body.sidebar-collapsed .sidebar-menu button span.label,
+body.sidebar-collapsed .menu-section-title,
+body.sidebar-collapsed .menu-section-line,
+body.sidebar-collapsed .sidebar-finance-shield,
+body.sidebar-collapsed #osBadgeCount {
   display: none !important;
 }
-
-.menu button.menu-btn-admin {
-  position: relative !important;
-  width: auto !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  max-height: 38px !important;
-  padding: 0 16px !important;
-  border-radius: 11px !important;
-  color: #CBD5E1 !important;
-  background: rgba(245, 158, 11, 0.06) !important;
-  border: 1px solid rgba(245, 158, 11, 0.22) !important;
-  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  touch-action: manipulation !important;
+body.sidebar-collapsed .menu-section-header {
+  padding: 8px 0 4px 0 !important;
+  justify-content: center !important;
 }
-.menu button.menu-btn-admin .ic {
-  background: transparent !important;
-  border: none !important;
-  color: #FBBF24 !important;
-  transition: color 0.16s ease !important;
+body.sidebar-collapsed .menu button,
+body.sidebar-collapsed aside.menu button,
+body.sidebar-collapsed .sidebar-menu button {
+  justify-content: center !important;
+  padding: 0 !important;
+  width: 100% !important;
 }
-.menu button.menu-btn-admin:hover {
-  background: rgba(245, 158, 11, 0.16) !important;
-  border-color: rgba(245, 158, 11, 0.50) !important;
-  color: #FDE68A !important;
-  transform: translateY(-1px) !important;
+body.sidebar-collapsed .sidebar-footer {
+  justify-content: center !important;
 }
-.menu button.menu-btn-admin:hover .ic {
-  background: transparent !important;
-  border: none !important;
-  color: #FDE68A !important;
-}
-.menu button.menu-btn-admin:active {
-  background: rgba(245, 158, 11, 0.24) !important;
-  transform: translateY(0) !important;
-}
-.menu button.menu-btn-admin.active {
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.24) 0%, rgba(217, 119, 6, 0.12) 100%) !important;
-  border: 1px solid rgba(245, 158, 11, 0.60) !important;
-  border-top: 1.2px solid rgba(255, 255, 255, 0.60) !important;
-  border-radius: 11px !important;
-  color: #FBBF24 !important;
-  font-weight: 700 !important;
-  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
-}
-.menu button.menu-btn-admin.active::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 15% !important;
-  right: 15% !important;
-  bottom: auto !important;
-  width: auto !important;
-  height: 1px !important;
-  border-radius: 999px !important;
-  background: linear-gradient(90deg, transparent, #FDE68A 50%, transparent) !important;
-  box-shadow: 0 0 8px #F59E0B !important;
-}
-.menu button.menu-btn-admin.active .ic {
-  color: #FBBF24 !important;
-  background: transparent !important;
-  transform: scale(1.06) !important;
-  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6)) !important;
+body.sidebar-collapsed .toggle-icon-collapse {
+  transform: rotate(180deg) !important;
 }
 
-/* ==================== Modo Claro do Menu ==================== */
-body.light nav.menu,
-html.light nav.menu {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border-bottom: 1px solid #E2E8F0 !important;
-  border-right: none !important;
-  border-top: none !important;
-  border-left: none !important;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05) !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+/* Modo Claro da Sidebar */
+body.light nav.menu, html.light nav.menu,
+body.light aside.menu, html.light aside.menu,
+body.light .sidebar-menu, html.light .sidebar-menu {
+  background: #FFFFFF !important;
+  border-right: 1px solid #CBD5E1 !important;
+  box-shadow: 4px 0 20px rgba(15, 23, 42, 0.04) !important;
 }
-body.light .menu-track,
-html.light .menu-track {
-  background: #F8FAFC !important;
-  border: 1px solid #E2E8F0 !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+body.light .menu-section-title, html.light .menu-section-title {
+  color: #475569 !important;
 }
-body.light .menu-admin-divider,
-html.light .menu-admin-divider {
-  background: #CBD5E1 !important;
-  box-shadow: none !important;
+body.light .menu-section-line, html.light .menu-section-line {
+  background: #E2E8F0 !important;
 }
-body.light .menu button,
-html.light .menu button {
-  color: #64748B !important;
-  background: transparent !important;
-  border: 1px solid transparent !important;
+body.light .menu button, html.light .menu button,
+body.light aside.menu button, html.light aside.menu button,
+body.light .sidebar-menu button, html.light .sidebar-menu button {
+  color: #000000 !important;
+}
+body.light .menu button span.label,
+body.light .menu button span:not(.ic):not(#osBadgeCount),
+html.light .menu button span.label,
+html.light .menu button span:not(.ic):not(#osBadgeCount),
+body.light aside.menu button span.label,
+body.light aside.menu button span:not(.ic):not(#osBadgeCount),
+html.light aside.menu button span.label,
+html.light aside.menu button span:not(.ic):not(#osBadgeCount),
+body.light .sidebar-menu button span.label,
+body.light .sidebar-menu button span:not(.ic):not(#osBadgeCount),
+html.light .sidebar-menu button span.label,
+html.light .sidebar-menu button span:not(.ic):not(#osBadgeCount) {
+  color: #000000 !important;
   font-weight: 600 !important;
 }
-body.light .menu button span:not(.ic):not(#osBadgeCount),
-html.light .menu button span:not(.ic):not(#osBadgeCount) {
-  color: inherit !important;
-  font-weight: 550 !important;
-}
-body.light .menu button .ic,
-html.light .menu button .ic {
-  background: transparent !important;
-  border: none !important;
-  color: #94A3B8 !important;
-}
-body.light .menu button .ic svg,
-html.light .menu button .ic svg {
-  stroke: currentColor !important;
-}
-body.light .menu button:hover,
-html.light .menu button:hover {
+body.light .menu button .ic, html.light .menu button .ic,
+body.light aside.menu button .ic, html.light aside.menu button .ic,
+body.light .sidebar-menu button .ic, html.light .sidebar-menu button .ic {
   background: #F1F5F9 !important;
   border-color: #E2E8F0 !important;
-  color: #0F172A !important;
+  color: #334155 !important;
 }
-body.light .menu button:hover .ic,
-html.light .menu button:hover .ic {
+body.light .menu button:hover, html.light .menu button:hover,
+body.light aside.menu button:hover, html.light aside.menu button:hover,
+body.light .sidebar-menu button:hover, html.light .sidebar-menu button:hover {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
+body.light .menu button:hover .ic, html.light .menu button:hover .ic,
+body.light aside.menu button:hover .ic, html.light aside.menu button:hover .ic,
+body.light .sidebar-menu button:hover .ic, html.light .sidebar-menu button:hover .ic {
+  background: #ECFDF5 !important;
+  border-color: #A7F3D0 !important;
   color: #059669 !important;
 }
-body.light .menu button.active,
-html.light .menu button.active {
-  background: rgba(5, 150, 105, 0.1) !important;
-  border: 1.2px solid rgba(5, 150, 105, 0.35) !important;
-  border-radius: 10px !important;
-  color: #059669 !important;
-  font-weight: 650 !important;
+body.light .menu button.active, html.light .menu button.active,
+body.light aside.menu button.active, html.light aside.menu button.active,
+body.light .sidebar-menu button.active, html.light .sidebar-menu button.active {
+  background: #ECFDF5 !important;
+  border: 1px solid #A7F3D0 !important;
+  border-left: 3.5px solid #059669 !important;
   box-shadow: 0 2px 10px rgba(5, 150, 105, 0.12) !important;
 }
-body.light .menu button.active::before,
-html.light .menu button.active::before {
-  display: none !important;
-}
+body.light .menu button.active span.label,
 body.light .menu button.active span:not(.ic):not(#osBadgeCount),
-html.light .menu button.active span:not(.ic):not(#osBadgeCount) {
+html.light .menu button.active span.label,
+html.light .menu button.active span:not(.ic):not(#osBadgeCount),
+body.light aside.menu button.active span.label,
+body.light aside.menu button.active span:not(.ic):not(#osBadgeCount),
+html.light aside.menu button.active span.label,
+html.light aside.menu button.active span:not(.ic):not(#osBadgeCount),
+body.light .sidebar-menu button.active span.label,
+body.light .sidebar-menu button.active span:not(.ic):not(#osBadgeCount),
+html.light .sidebar-menu button.active span.label,
+html.light .sidebar-menu button.active span:not(.ic):not(#osBadgeCount) {
+  color: #059669 !important;
+  font-weight: 800 !important;
+}
+body.light .menu button.active .ic, html.light .menu button.active .ic,
+body.light aside.menu button.active .ic, html.light aside.menu button.active .ic,
+body.light .sidebar-menu button.active .ic, html.light .sidebar-menu button.active .ic {
+  background: #D1FAE5 !important;
+  border-color: #6EE7B7 !important;
   color: #059669 !important;
 }
-body.light .menu button.active .ic,
-html.light .menu button.active .ic {
-  color: #059669 !important;
+body.light .sidebar-footer {
+  border-top-color: #E2E8F0 !important;
 }
-body.light .menu button.active .ic svg,
-html.light .menu button.active .ic svg {
-  stroke: #059669 !important;
+body.light .sidebar-finance-shield {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
 }
-body.light .menu button.menu-btn-admin,
-html.light .menu button.menu-btn-admin {
-  color: #475569 !important;
-  background: rgba(245, 158, 11, 0.06) !important;
-  border: 1px solid rgba(245, 158, 11, 0.20) !important;
+body.light .sidebar-finance-shield .shield-title {
+  color: #000000 !important;
 }
-body.light .menu button.menu-btn-admin .ic,
-html.light .menu button.menu-btn-admin .ic {
-  background: transparent !important;
-  border: none !important;
-  color: #D97706 !important;
+body.light .sidebar-toggle-btn {
+  background: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+  color: #334155 !important;
 }
-body.light .menu button.menu-btn-admin:hover,
-html.light .menu button.menu-btn-admin:hover {
-  background: #FFFBEB !important;
-  border-color: #FDE68A !important;
-  color: #92400E !important;
-  transform: translateY(-1px) !important;
+body.light .sidebar-toggle-btn:hover {
+  background: #E2E8F0 !important;
+  color: #000000 !important;
 }
-body.light .menu button.menu-btn-admin:hover .ic,
-html.light .menu button.menu-btn-admin:hover .ic {
-  background: transparent !important;
-  border: none !important;
-  color: #B45309 !important;
-}
-body.light .menu button.menu-btn-admin.active,
-html.light .menu button.menu-btn-admin.active {
-  background: #FEF3C7 !important;
-  border: 1px solid #FCD34D !important;
-  border-radius: 11px !important;
-  color: #92400E !important;
-  font-weight: 650 !important;
-  box-shadow: 0 2px 10px rgba(217, 119, 6, 0.18) !important;
-}
-body.light .menu button.menu-btn-admin.active::before,
-html.light .menu button.menu-btn-admin.active::before {
-  content: '' !important;
-  position: absolute !important;
+
+/* ==================== Elementos Financeiros no Fundo do Site (FinTech Background Elements) ==================== */
+.fintech-market-ticker-banner {
+  position: fixed !important;
   bottom: 0 !important;
-  left: 14px !important;
-  right: 14px !important;
-  top: auto !important;
-  width: auto !important;
-  height: 2.5px !important;
-  border-radius: 3px 3px 0 0 !important;
-  background: #D97706 !important;
-  box-shadow: 0 -1px 8px rgba(217, 119, 6, 0.6) !important;
+  left: 250px !important;
+  right: 0 !important;
+  height: 28px !important;
+  background: rgba(4, 7, 13, 0.90) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  z-index: 9950 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: left 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-body.light .menu button.menu-btn-admin.active .ic,
-html.light .menu button.menu-btn-admin.active .ic {
-  background: transparent !important;
-  border: none !important;
-  color: #B45309 !important;
-  filter: none !important;
+body.sidebar-collapsed .fintech-market-ticker-banner {
+  left: 68px !important;
 }
+@media (max-width: 860px) {
+  .fintech-market-ticker-banner {
+    display: none !important;
+  }
+}
+.fintech-ticker-content {
+  display: flex !important;
+  align-items: center !important;
+  gap: 32px !important;
+  white-space: nowrap !important;
+  animation: fintechTickerScroll 42s linear infinite !important;
+  will-change: transform !important;
+}
+.fintech-ticker-content span {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #94A3B8 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  letter-spacing: 0.02em !important;
+}
+.fintech-ticker-content strong {
+  color: #F8FAFC !important;
+  font-weight: 700 !important;
+}
+.fintech-ticker-content em.positive {
+  color: #10B981 !important;
+  font-style: normal !important;
+  font-weight: 800 !important;
+}
+.fintech-ticker-content em.negative {
+  color: #EF4444 !important;
+  font-style: normal !important;
+  font-weight: 800 !important;
+}
+.ticker-dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+}
+.ticker-dot.green { background: #10B981 !important; box-shadow: 0 0 6px #10B981 !important; }
+.ticker-dot.red { background: #EF4444 !important; box-shadow: 0 0 6px #EF4444 !important; }
+.ticker-dot.blue { background: #38BDF8 !important; box-shadow: 0 0 6px #38BDF8 !important; }
+.ticker-dot.gold { background: #F59E0B !important; box-shadow: 0 0 6px #F59E0B !important; }
+.ticker-dot.purple { background: #A855F7 !important; box-shadow: 0 0 6px #A855F7 !important; }
+
+@keyframes fintechTickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+body.light .fintech-market-ticker-banner {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-top-color: #CBD5E1 !important;
+}
+body.light .fintech-ticker-content span {
+  color: #334155 !important;
+}
+body.light .fintech-ticker-content strong {
+  color: #000000 !important;
+}
+
+/* Candlesticks e Silhuetas Financeiras no Fundo */
+.fintech-bg-candles {
+  position: absolute !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  opacity: 0.28 !important;
+  transition: opacity 0.3s ease !important;
+}
+.fintech-bg-candles-left {
+  top: 90px !important;
+  left: 270px !important;
+  width: 260px !important;
+  height: 360px !important;
+}
+.fintech-bg-candles-right {
+  bottom: 40px !important;
+  right: 20px !important;
+  width: 320px !important;
+  height: 400px !important;
+}
+body.light .fintech-bg-candles {
+  opacity: 0.16 !important;
+}
+
+/* Watermarks Financeiras Flutuantes */
+.fintech-bg-watermarks {
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  overflow: hidden !important;
+}
+.fintech-watermark-item {
+  position: absolute !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 900 !important;
+  color: rgba(16, 185, 129, 0.05) !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  line-height: 1 !important;
+}
+body.light .fintech-watermark-item {
+  color: rgba(5, 150, 105, 0.04) !important;
+}
+.fintech-wm-1 { top: 12%; right: 6%; font-size: 130px; }
+.fintech-wm-2 { bottom: 15%; left: 280px; font-size: 110px; }
+.fintech-wm-3 { top: 48%; right: 18%; font-size: 85px; }
 
 /* ==================== Correção Completa de Contraste do Modo Claro (Light Mode Contrast Fix) ==================== */
 body.light h1, body.light h2, body.light h3, body.light h4, body.light h5, body.light h6,
@@ -5546,11 +5774,22 @@ body.light .app-dev-credit {
 .cfg-divider span{font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint); white-space:nowrap;}
 .cfg-divider::before, .cfg-divider::after{content:''; flex:1; height:1px; background:var(--card-border);}
 
-/* Centralização do conteúdo principal */
-.main{
-  flex:1 !important; min-width:0 !important; padding:16px 28px 40px !important;
-  margin-top:138px !important; margin-left:auto !important; margin-right:auto !important;
-  width:100% !important; max-width:1760px !important;
+/* Centralização e Posicionamento do Conteúdo Principal com Menu Lateral (Sidebar) */
+.main {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  padding: 20px 32px 56px !important;
+  margin-top: 76px !important;
+  margin-left: 250px !important;
+  margin-right: auto !important;
+  width: calc(100% - 250px) !important;
+  max-width: 1760px !important;
+  box-sizing: border-box !important;
+  transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+body.sidebar-collapsed .main {
+  margin-left: 68px !important;
+  width: calc(100% - 68px) !important;
 }
 .right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
 .icon-btn{
@@ -9953,7 +10192,8 @@ body.light .login-success-box.warning-box p {
   .brand .name { font-size: 20px !important; }
   .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }
   .topheader-row { max-width: 100% !important; padding: 0 36px !important; height: 68px !important; }
-  .main { max-width: 2400px !important; padding: 16px 36px 40px !important; margin-top: 140px !important; margin-left: auto !important; margin-right: auto !important; width: 100% !important; }
+  .main { max-width: 2400px !important; padding: 20px 36px 56px !important; margin-top: 76px !important; margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; }
+  body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
   .kpis-grid-6 { grid-template-columns: repeat(6, 1fr) !important; gap: 20px !important; margin-bottom: 26px !important; }
   .kpi .val { font-size: 28px !important; }
@@ -9974,7 +10214,8 @@ body.light .login-success-box.warning-box p {
 @media (min-width: 1700px) and (max-width: 2559px) {
   .brand .name { font-size: 18px; }
   .topheader-row { max-width: 100% !important; padding: 0 28px !important; height: 68px !important; }
-  .main { max-width: 1920px !important; padding: 16px 28px 36px !important; margin-top: 136px !important; margin-left: auto !important; margin-right: auto !important; width: 100% !important; }
+  .main { max-width: 1920px !important; padding: 18px 30px 48px !important; margin-top: 76px !important; margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; }
+  body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; }
 }
 
@@ -9982,13 +10223,12 @@ body.light .login-success-box.warning-box p {
   .kpis { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important; }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1024px) and (min-width: 861px) {
   .kpis { grid-template-columns: repeat(3, 1fr) !important; }
   .grid3 { grid-template-columns: 1fr 1fr !important; }
   .grid-2-1 { grid-template-columns: 1fr !important; }
-  nav.menu { width: 100% !important; height: 52px !important; justify-content: flex-start !important; }
-  .menu button { width: auto !important; height: 38px !important; min-height: 38px !important; }
-  .main { margin-left: auto !important; margin-right: auto !important; width: 100% !important; margin-top: 136px !important; padding: 16px 18px 36px !important; }
+  .main { margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; margin-top: 76px !important; padding: 16px 18px 36px !important; }
+  body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
 }
 
 /* Botão de Sair no Drawer Mobile */
@@ -10595,21 +10835,21 @@ body.light #notifBtn:hover {
   box-shadow: 0 6px 18px rgba(5, 150, 105, 0.18), inset 0 1px 0 #FFFFFF !important;
 }
 
-/* 3. BARRA DE MENU HORIZONTAL NO TOPO */
-nav.menu {
-  background: #000000 !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-right: none !important;
-  border-top: none !important;
-  border-left: none !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7) !important;
+/* 3. BARRA DE MENU LATERAL EXECUTIVA */
+nav.menu, aside.menu, .sidebar-menu {
+  background: rgba(6, 10, 18, 0.94) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: none !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.55) !important;
 }
 
-body.light nav.menu, html.light nav.menu {
-  background: rgba(255, 255, 255, 0.97) !important;
-  border-bottom: 1px solid #E2E8F0 !important;
-  border-right: none !important;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
+body.light nav.menu, html.light nav.menu,
+body.light aside.menu, html.light aside.menu,
+body.light .sidebar-menu, html.light .sidebar-menu {
+  background: #FFFFFF !important;
+  border-right: 1px solid #CBD5E1 !important;
+  border-bottom: none !important;
+  box-shadow: 4px 0 20px rgba(15, 23, 42, 0.04) !important;
 }
 
 /* 4. DASHBOARD WELCOME HERO EM PLACA DE VIDRO PANORÂMICA 4K */
@@ -11581,40 +11821,41 @@ body.light .topheader {
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
 }
 
-body.light nav.menu {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-bottom: 1px solid #E2E8F0 !important;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03) !important;
+body.light nav.menu, body.light aside.menu, body.light .sidebar-menu {
+  background: #FFFFFF !important;
+  border-right: 1px solid #CBD5E1 !important;
+  border-bottom: none !important;
+  box-shadow: 4px 0 20px rgba(15, 23, 42, 0.04) !important;
 }
 
-body.light .menu-track {
-  background: #F1F5F9 !important;
-  border: 1px solid #E2E8F0 !important;
-  border-top: 1px solid #FFFFFF !important;
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+body.light .menu-track, body.light .sidebar-scroll {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-body.light nav.menu button, body.light .menu button {
-  color: #475569 !important;
-  font-weight: 650 !important;
+body.light nav.menu button, body.light .menu button, body.light .sidebar-menu button {
+  color: #000000 !important;
+  font-weight: 600 !important;
 }
 
-body.light nav.menu button:hover, body.light .menu button:hover {
-  background: #E2E8F0 !important;
-  color: #0F172A !important;
+body.light nav.menu button:hover, body.light .menu button:hover, body.light .sidebar-menu button:hover {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
 }
 
-body.light nav.menu button.active, body.light .menu button.active {
-  background: #FEF3C7 !important;
-  border: 1px solid #FDE68A !important;
-  border-top: 1.2px solid #FFFFFF !important;
-  color: #B45309 !important;
-  font-weight: 700 !important;
-  box-shadow: 0 2px 10px rgba(217, 119, 6, 0.15) !important;
+body.light nav.menu button.active, body.light .menu button.active, body.light .sidebar-menu button.active {
+  background: #ECFDF5 !important;
+  border: 1px solid #A7F3D0 !important;
+  border-left: 3.5px solid #059669 !important;
+  color: #059669 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.12) !important;
 }
 
-body.light nav.menu button.active .ic svg {
-  stroke: #B45309 !important;
+body.light nav.menu button.active .ic svg, body.light .sidebar-menu button.active .ic svg {
+  stroke: #059669 !important;
 }
 
 /* Cards, Painéis, KPIs e Modais no Modo Claro */
@@ -12283,10 +12524,88 @@ body.light .period button.active {
     <svg class="app-bg-chart" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
       <path d="M 0.0,380 L 32.7,355.4 L 65.3,329.5 L 98.0,306.5 L 130.6,323.9 L 163.3,315.9 L 195.9,316.3 L 228.6,311.4 L 261.2,326.5 L 293.9,338.5 L 326.5,337.9 L 359.2,348.4 L 391.8,347.3 L 424.5,367.6 L 457.1,385.0 L 489.8,371.1 L 522.4,371.6 L 555.1,367.6 L 587.8,352.5 L 620.4,356.1 L 653.1,374.8 L 685.7,357.3 L 718.4,349.4 L 751.0,338.1 L 783.7,328.7 L 816.3,301.7 L 849.0,305.2 L 881.6,288.8 L 914.3,292.0 L 946.9,285.0 L 979.6,273.5 L 1012.2,279.4 L 1044.9,296.7 L 1077.6,294.6 L 1110.2,280.3 L 1142.9,272.4 L 1175.5,271.6 L 1208.2,261.1 L 1240.8,273.6 L 1273.5,286.3 L 1306.1,291.7 L 1338.8,272.5 L 1371.4,284.3 L 1404.1,300.2 L 1436.7,316.9 L 1469.4,336.5 L 1502.0,344.4 L 1534.7,337.3 L 1567.3,317.9 L 1600.0,323.0" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
+
+    <!-- 1. Candlesticks Financeiros de Alta & Baixa no Fundo (Lateral Esquerda e Direita) -->
+    <svg class="fintech-bg-candles fintech-bg-candles-left" viewBox="0 0 260 360" fill="none" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="candleBullGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#10B981" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#059669" stop-opacity="0.45"/>
+        </linearGradient>
+        <linearGradient id="candleBearGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#D97706" stop-opacity="0.45"/>
+        </linearGradient>
+      </defs>
+      <line x1="25" y1="220" x2="25" y2="300" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="18" y="235" width="14" height="48" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="60" y1="180" x2="60" y2="270" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="53" y="195" width="14" height="55" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="95" y1="170" x2="95" y2="245" stroke="#F59E0B" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="88" y="185" width="14" height="35" rx="2" fill="url(#candleBearGrad)"/>
+      <line x1="130" y1="130" x2="130" y2="215" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="123" y="145" width="14" height="52" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="165" y1="110" x2="165" y2="190" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="158" y="125" width="14" height="46" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="200" y1="80" x2="200" y2="160" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.6"/>
+      <rect x="193" y="95" width="14" height="50" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="235" y1="60" x2="235" y2="135" stroke="#34D399" stroke-width="1.5" stroke-opacity="0.7"/>
+      <rect x="228" y="70" width="14" height="42" rx="2" fill="url(#candleBullGrad)"/>
+    </svg>
+
+    <svg class="fintech-bg-candles fintech-bg-candles-right" viewBox="0 0 320 400" fill="none" preserveAspectRatio="none">
+      <line x1="30" y1="260" x2="30" y2="340" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="23" y="275" width="14" height="50" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="70" y1="220" x2="70" y2="300" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="63" y="235" width="14" height="52" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="110" y1="230" x2="110" y2="310" stroke="#F59E0B" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="103" y="245" width="14" height="40" rx="2" fill="url(#candleBearGrad)"/>
+      <line x1="150" y1="170" x2="150" y2="260" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="143" y="185" width="14" height="58" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="190" y1="140" x2="190" y2="225" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.5"/>
+      <rect x="183" y="155" width="14" height="54" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="230" y1="100" x2="230" y2="185" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.6"/>
+      <rect x="223" y="115" width="14" height="52" rx="2" fill="url(#candleBullGrad)"/>
+      <line x1="270" y1="65" x2="270" y2="145" stroke="#34D399" stroke-width="1.5" stroke-opacity="0.7"/>
+      <rect x="263" y="78" width="14" height="48" rx="2" fill="url(#candleBullGrad)"/>
+    </svg>
+
+    <!-- 2. Marcas D'Água Financeiras Flutuantes -->
+    <div class="fintech-bg-watermarks">
+      <span class="fintech-watermark-item fintech-wm-1">R$</span>
+      <span class="fintech-watermark-item fintech-wm-2">▲ +24.8%</span>
+      <span class="fintech-watermark-item fintech-wm-3">$</span>
+    </div>
+
     <div class="app-blob a1"></div>
     <div class="app-blob a2"></div>
     <div class="app-blob a3"></div>
     <div class="app-blob a4"></div>
+  </div>
+
+  <!-- FITA DE COTAÇÕES DO MERCADO FINANCEIRO EM TEMPO REAL NO FUNDO -->
+  <div class="fintech-market-ticker-banner" aria-hidden="true">
+    <div class="fintech-ticker-content">
+      <span><span class="ticker-dot green"></span><strong>IBOVESPA</strong> 131.840 pts <em class="positive">+1.25%</em></span>
+      <span><span class="ticker-dot green"></span><strong>S&P 500</strong> 5.860 pts <em class="positive">+0.82%</em></span>
+      <span><span class="ticker-dot blue"></span><strong>SELIC</strong> 10.75% a.a.</span>
+      <span><span class="ticker-dot blue"></span><strong>CDI</strong> 10.65% a.a.</span>
+      <span><span class="ticker-dot red"></span><strong>DÓLAR</strong> R$ 5,42 <em class="negative">-0.38%</em></span>
+      <span><span class="ticker-dot green"></span><strong>EURO</strong> R$ 5,88 <em class="positive">+0.15%</em></span>
+      <span><span class="ticker-dot gold"></span><strong>BITCOIN</strong> $ 68.450 <em class="positive">+4.85%</em></span>
+      <span><span class="ticker-dot purple"></span><strong>IPCA</strong> 3.92% (12m)</span>
+      <span><span class="ticker-dot gold"></span><strong>OURO</strong> $ 2.650/oz <em class="positive">+1.10%</em></span>
+      <!-- Loop Contínuo -->
+      <span><span class="ticker-dot green"></span><strong>IBOVESPA</strong> 131.840 pts <em class="positive">+1.25%</em></span>
+      <span><span class="ticker-dot green"></span><strong>S&P 500</strong> 5.860 pts <em class="positive">+0.82%</em></span>
+      <span><span class="ticker-dot blue"></span><strong>SELIC</strong> 10.75% a.a.</span>
+      <span><span class="ticker-dot blue"></span><strong>CDI</strong> 10.65% a.a.</span>
+      <span><span class="ticker-dot red"></span><strong>DÓLAR</strong> R$ 5,42 <em class="negative">-0.38%</em></span>
+      <span><span class="ticker-dot green"></span><strong>EURO</strong> R$ 5,88 <em class="positive">+0.15%</em></span>
+      <span><span class="ticker-dot gold"></span><strong>BITCOIN</strong> $ 68.450 <em class="positive">+4.85%</em></span>
+      <span><span class="ticker-dot purple"></span><strong>IPCA</strong> 3.92% (12m)</span>
+      <span><span class="ticker-dot gold"></span><strong>OURO</strong> $ 2.650/oz <em class="positive">+1.10%</em></span>
+    </div>
   </div>
   
   <!-- CABEÇALHO SUPERIOR ESTILO AETHER 4K -->
@@ -12396,26 +12715,109 @@ body.light .period button.active {
     </div>
   </div>
 
-  <!-- BARRA DE MENU HORIZONTAL NO TOPO ESTILO AETHER 4K -->
-  <nav class="menu" id="menu">
-    <div class="menu-track" id="menuTrack">
-      <button data-page="dashboard"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><span>Dashboard</span></button>
-      <button data-page="transacoes"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span><span>Transações</span></button>
-      <button data-page="cartoes"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span>Cartões</span></button>
-      <button data-page="orcamentos"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span><span>Orçamentos</span></button>
-      <button data-page="metas"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></span><span>Metas</span></button>
-      <button data-page="relatorios"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><span>Relatórios</span></button>
-      <button data-page="recorrentes"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span><span>Recorrentes</span></button>
-      <button data-page="importar"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Importar</span></button>
-      <button data-page="anexos"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span>Anexos</span></button>
-      <button data-page="config" title="Minha Conta"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Minha Conta</span></button>
+  <!-- BARRA LATERAL EXECUTIVA (SIDEBAR DESIGN 4K - LIQUID GLASS) -->
+  <aside class="menu sidebar-menu" id="menu">
+    <div class="sidebar-scroll" id="menuTrack">
+      <!-- Seção: Visão Geral -->
+      <div class="menu-section-header">
+        <span class="menu-section-title">Visão Geral</span>
+        <span class="menu-section-line"></span>
+      </div>
+      <button data-page="dashboard" title="Dashboard Financeiro Geral">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span>
+        <span class="label">Dashboard</span>
+      </button>
+      <button data-page="transacoes" title="Extrato de Transações & Movimentações">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>
+        <span class="label">Transações</span>
+      </button>
+      <button data-page="cartoes" title="Cartões de Crédito & Débito">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+        <span class="label">Cartões</span>
+      </button>
+
+      <!-- Seção: Planejamento Financeiro -->
+      <div class="menu-section-header">
+        <span class="menu-section-title">Planejamento</span>
+        <span class="menu-section-line"></span>
+      </div>
+      <button data-page="orcamentos" title="Planejamento de Orçamentos">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span>
+        <span class="label">Orçamentos</span>
+      </button>
+      <button data-page="metas" title="Metas & Objetivos Financeiros">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></span>
+        <span class="label">Metas</span>
+      </button>
+      <button data-page="relatorios" title="Relatórios Analíticos & Gráficos">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        <span class="label">Relatórios</span>
+      </button>
+
+      <!-- Seção: Ferramentas & Fluxos -->
+      <div class="menu-section-header">
+        <span class="menu-section-title">Ferramentas</span>
+        <span class="menu-section-line"></span>
+      </div>
+      <button data-page="recorrentes" title="Despesas & Assinaturas Recorrentes">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
+        <span class="label">Recorrentes</span>
+      </button>
+      <button data-page="importar" title="Importação de Extratos OFX e CSV">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+        <span class="label">Importar</span>
+      </button>
+      <button data-page="anexos" title="Comprovantes & Documentos Anexados">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
+        <span class="label">Anexos</span>
+      </button>
+
+      <!-- Seção: Perfil & Preferências -->
+      <div class="menu-section-header">
+        <span class="menu-section-title">Minha Conta</span>
+        <span class="menu-section-line"></span>
+      </div>
+      <button data-page="config" title="Minha Conta & Preferências do Usuário">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <span class="label">Minha Conta</span>
+      </button>
       
       <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
-      <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Usuários</span></button>
-      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span>Suporte O.S.</span> <span id="osBadgeCount" style="display:none;"></span></button>
-      <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span>Logs</span></button>
+      <div class="menu-section-header menu-section-admin" style="display:none;">
+        <span class="menu-section-title">Administração</span>
+        <span class="menu-section-line"></span>
+      </div>
+      <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;" title="Gestão de Usuários Cadastrados">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <span class="label">Usuários</span>
+      </button>
+      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;" title="Central de Suporte & Ordens de Serviço">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span>
+        <span class="label">Suporte O.S.</span>
+        <span id="osBadgeCount" style="display:none;"></span>
+      </button>
+      <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;" title="Logs do Sistema & Auditoria">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+        <span class="label">Logs</span>
+      </button>
     </div>
-  </nav>
+
+    <!-- Rodapé da Sidebar: Indicador de Segurança Fintech e Botão de Colapsar -->
+    <div class="sidebar-footer">
+      <div class="sidebar-finance-shield">
+        <div class="shield-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="shield-text">
+          <span class="shield-title">Nexus Fintech</span>
+          <span class="shield-sub"><span class="pulse-dot-green"></span> AES-256 Protegido</span>
+        </div>
+      </div>
+      <button type="button" class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Recolher / Expandir Menu Lateral">
+        <svg class="toggle-icon-collapse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+      </button>
+    </div>
+  </aside>
 
   <!-- BARRA INFERIOR MOBILE MODERNA (BOTTOM TAB BAR DE ALTO PADRÃO) -->
   <nav class="mobile-bottom-bar" id="mobileBottomBar">
@@ -25857,6 +26259,23 @@ if(menuDesktop){
   menuDesktop.addEventListener('click', handleMenuNav);
 }
 
+// Controle de Recolhimento e Expansão da Sidebar
+const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
+if (sidebarCollapseBtn) {
+  sidebarCollapseBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+    try {
+      localStorage.setItem('nexus_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+    } catch(err) {}
+  });
+}
+try {
+  if (localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
+    document.body.classList.add('sidebar-collapsed');
+  }
+} catch(err) {}
+
 const mobileBottomBar = document.getElementById('mobileBottomBar');
 if(mobileBottomBar){
   let lastBottomNavTime = 0;
@@ -26734,21 +27153,23 @@ window.applyPostLoginBg = function(theme) {
       });
     }
 
-    // 5. Candlesticks de Prosperidade
+    // 5. Candlesticks Financeiros de Mercado & Trading
     const candlestickBars = [];
-    const candleCount = isMobile ? 14 : 28;
+    const candleCount = isMobile ? 18 : 38;
     for (let c = 0; c < candleCount; c++) {
-      const isBullish = Math.random() > 0.32;
+      const isBullish = Math.random() > 0.35;
+      const band = (c % 2 === 0) ? 0.32 : 0.78;
       candlestickBars.push({
         x: Math.random() * (width || 1200),
-        y: (height || 800) * 0.76 + (Math.random() * 60 - 30),
-        height: Math.floor(Math.random() * 24) + 10,
-        wickTop: Math.floor(Math.random() * 10) + 4,
-        wickBottom: Math.floor(Math.random() * 10) + 4,
-        width: 7,
+        y: (height || 800) * band + (Math.random() * 80 - 40),
+        band: band,
+        height: Math.floor(Math.random() * 26) + 12,
+        wickTop: Math.floor(Math.random() * 12) + 5,
+        wickBottom: Math.floor(Math.random() * 12) + 5,
+        width: 8,
         isBullish: isBullish,
-        alpha: Math.random() * 0.30 + 0.22,
-        vx: -(Math.random() * 0.24 + 0.10)
+        alpha: Math.random() * 0.35 + 0.30,
+        vx: -(Math.random() * 0.28 + 0.12)
       });
     }
 
@@ -26922,23 +27343,23 @@ window.applyPostLoginBg = function(theme) {
       });
       ctx.restore();
 
-      // E. Candlesticks de Prosperidade (Mercado & Alta)
+      // E. Candlesticks Financeiros de Mercado & Trading (Alta e Baixa)
       ctx.save();
       candlestickBars.forEach(candle => {
         candle.x += candle.vx;
         if (candle.x < -30) {
           candle.x = width + 30;
-          candle.y = height * 0.76 + (Math.random() * 60 - 30);
-          candle.isBullish = Math.random() > 0.32;
+          candle.y = (height || 800) * (candle.band || 0.78) + (Math.random() * 80 - 40);
+          candle.isBullish = Math.random() > 0.35;
         }
         const candleColor = candle.isBullish 
-          ? (isLight ? '#0284C7' : '#38BDF8') 
-          : (isLight ? '#D97706' : '#F59E0B');
+          ? (isLight ? '#059669' : '#10B981') 
+          : (isLight ? '#DC2626' : '#F43F5E');
 
         ctx.globalAlpha = isLight ? candle.alpha * 0.55 : candle.alpha;
         ctx.strokeStyle = candleColor;
-        ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? '#FFFFFF' : 'rgba(245, 158, 11, 0.25)');
-        ctx.lineWidth = 1.2;
+        ctx.fillStyle = candle.isBullish ? candleColor : (isLight ? 'rgba(220, 38, 38, 0.22)' : 'rgba(244, 63, 94, 0.28)');
+        ctx.lineWidth = 1.3;
         ctx.beginPath();
         ctx.moveTo(candle.x, candle.y - candle.height / 2 - candle.wickTop);
         ctx.lineTo(candle.x, candle.y + candle.height / 2 + candle.wickBottom);
