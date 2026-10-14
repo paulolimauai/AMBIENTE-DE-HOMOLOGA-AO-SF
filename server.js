@@ -2727,6 +2727,13 @@ body.light .auth-card-nexus {
   box-shadow: 0 12px 28px -2px rgba(255, 255, 255, 0.50) !important;
 }
 
+body.light .auth-logo-badge {
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #0F172A !important;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.20) !important;
+}
+
 .auth-title {
   font-family: var(--font-sans);
   font-size: 21px;
@@ -12135,6 +12142,16 @@ body.light .period button.active {
       document.body.classList.remove('light');
       document.documentElement.classList.remove('light');
     }
+    document.addEventListener('DOMContentLoaded', function() {
+      var icon = document.getElementById('authThemeIcon');
+      if (icon) {
+        if (isLight) {
+          icon.innerHTML = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>';
+        } else {
+          icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
+        }
+      }
+    });
   } catch(e){}
 })();
 </script>
