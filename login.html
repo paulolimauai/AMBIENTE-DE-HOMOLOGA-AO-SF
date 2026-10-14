@@ -117,8 +117,8 @@
                     }
                     var btn = document.getElementById('loginThemeBtn');
                     if (btn) {
-                        var moonSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
-                        var sunSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+                        var moonSvg = '<svg id="themeIconSvg" class="w-4 h-4 text-current" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
+                        var sunSvg = '<svg id="themeIconSvg" class="w-4 h-4 text-current" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
                         btn.innerHTML = isDark ? moonSvg : sunSvg;
                     }
                 }
@@ -274,19 +274,36 @@
             overflow-y: scroll !important;
         }
 
-        body {
+        body, body.dark {
             font-family: var(--font-sans);
-            background-color: #000000 !important;
+            background-color: #030712 !important;
             background-image: 
-                radial-gradient(ellipse 85% 60% at 15% 15%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
-                radial-gradient(ellipse 75% 55% at 85% 20%, rgba(255, 255, 255, 0.06) 0%, transparent 55%),
-                radial-gradient(ellipse 90% 70% at 50% 90%, rgba(255, 255, 255, 0.04) 0%, transparent 65%),
-                linear-gradient(175deg, #000000 0%, #050505 40%, #0A0A0A 75%, #000000 100%) !important;
+                radial-gradient(ellipse 85% 60% at 15% 15%, rgba(255, 255, 255, 0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 75% 55% at 85% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 55%),
+                radial-gradient(ellipse 90% 70% at 50% 90%, rgba(255, 255, 255, 0.03) 0%, transparent 65%),
+                linear-gradient(175deg, #030712 0%, #070D1A 40%, #091024 75%, #030712 100%) !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
             color: #FFFFFF !important;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.light, html.light body, html.light {
+            color-scheme: light !important;
+            background-color: #F8FAFC !important;
+            background-image: 
+                radial-gradient(ellipse 85% 60% at 15% 15%, rgba(15, 23, 42, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 75% 55% at 85% 20%, rgba(15, 23, 42, 0.03) 0%, transparent 55%),
+                linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            background-repeat: no-repeat !important;
+            color: #000000 !important;
             min-height: 100vh;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
@@ -315,20 +332,21 @@
                 color: #0F172A !important;
                 border: 1px solid #CBD5E1 !important;
                 box-shadow: none !important;
+            }
         }
 
-        /* Fundo Geométrico Sutil em Alta Definição 4K - Malha Cartesiana Dourada */
+        /* Fundo Geométrico Sutil em Alta Definição 4K */
         .auth-bg-cyber-grid {
             background-size: 36px 36px;
             background-image: 
-                radial-gradient(circle, rgba(245, 158, 11, 0.14) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
                 linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
         }
 
         body.light .auth-bg-cyber-grid {
             background-image: 
-                radial-gradient(circle, rgba(217, 119, 6, 0.15) 1px, transparent 1px),
+                radial-gradient(circle, rgba(15, 23, 42, 0.06) 1px, transparent 1px),
                 linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
         }
@@ -595,19 +613,20 @@
         }
 
         body.light .auth-brand-nexus,
-        html.light .auth-brand-nexus {
+        html.light .auth-brand-nexus,
+        body.light .auth-brand-title {
             color: #000000 !important;
         }
         body.light .auth-label,
         html.light .auth-label,
         body.light label {
             color: #000000 !important;
-            font-weight: 700 !important;
+            font-weight: 750 !important;
         }
         body.light .auth-subtitle-text,
         html.light .auth-subtitle-text,
         body.light #authSubtitle {
-            color: #000000 !important;
+            color: #334155 !important;
             font-weight: 600 !important;
         }
 
@@ -638,14 +657,14 @@
         }
         body.light h1 span,
         body.light .auth-showcase-title span {
-            background: linear-gradient(90deg, #0284C7 0%, #0369A1 60%, #075985 100%) !important;
+            background: linear-gradient(90deg, #0F172A 0%, #334155 60%, #1E293B 100%) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
-            filter: drop-shadow(0 1px 1px rgba(2, 132, 199, 0.20)) !important;
+            filter: none !important;
         }
         body.light p,
         html.light p {
-            color: #000000 !important;
+            color: #334155 !important;
             font-weight: 500 !important;
         }
         body.light .text-white:not(.btn-auth-gradient *):not(.btn-open-os *):not(.btn-consult-os *):not(.bg-gradient-to-r *):not(.bg-gradient-to-br *) {
@@ -658,7 +677,7 @@
         body.light .text-slate-500,
         body.light .text-\[\#94A3B8\],
         body.light .text-\[\#64748B\] {
-            color: #000000 !important;
+            color: #334155 !important;
             font-weight: 600 !important;
         }
         body.light .bg-white\/\[0\.04\],
@@ -675,6 +694,19 @@
             font-weight: 900 !important;
         }
 
+        /* Logo Badge Quadrada (N) em Modo Claro */
+        body.light header .w-10.h-10,
+        body.light .auth-card-nexus .w-12.h-12 {
+            background: #0F172A !important;
+            color: #FFFFFF !important;
+            border: 1.5px solid #0F172A !important;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.20) !important;
+        }
+        body.light header .w-10.h-10 span,
+        body.light .auth-card-nexus .w-12.h-12 span {
+            color: #FFFFFF !important;
+        }
+
         /* Abas em Modo Claro */
         body.light #authTabsNav,
         body.light .auth-tabs-nav {
@@ -682,18 +714,22 @@
             border-color: #CBD5E1 !important;
         }
         body.light .auth-tab-btn {
-            color: #000000 !important;
+            color: #475569 !important;
             font-weight: 700 !important;
         }
         body.light .auth-tab-btn:hover {
-            color: #000000 !important;
+            color: #0F172A !important;
+            background: rgba(0, 0, 0, 0.04) !important;
         }
         body.light .auth-tab-btn.active {
-            background: #FFFFFF !important;
-            color: #0F172A !important;
+            background: #0F172A !important;
+            color: #FFFFFF !important;
             border: 1.5px solid #0F172A !important;
-            font-weight: 800 !important;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), inset 0 1px 1px #FFFFFF !important;
+            font-weight: 850 !important;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22) !important;
+        }
+        body.light .auth-tab-btn.active svg {
+            color: #FFFFFF !important;
         }
 
         /* Selo de Segurança Bancária e Conformidade em Modo Claro */
@@ -704,7 +740,7 @@
         }
         body.light .bg-black\/30 strong,
         body.light .bg-black\/30 span {
-            color: #000000 !important;
+            color: #0F172A !important;
         }
         body.light .border-b.border-white\/10 span {
             color: #000000 !important;
@@ -715,7 +751,35 @@
             font-weight: 600 !important;
         }
 
-        /* Wrappers de Input Executivos e Fluidos (Preto com Branco) */
+        /* Botão de Alternar Tema e Botão Ajuda em Modo Claro */
+        body.light #loginThemeBtn {
+            background: #FFFFFF !important;
+            border: 1.5px solid #CBD5E1 !important;
+            color: #0F172A !important;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+        }
+        body.light #loginThemeBtn:hover {
+            background: #F8FAFC !important;
+            border-color: #0F172A !important;
+        }
+        body.light #themeIconSvg {
+            color: #0F172A !important;
+        }
+        body.light header button[onclick*="openNovaOrdemModal"] {
+            background: #FFFFFF !important;
+            border: 1.5px solid #CBD5E1 !important;
+            color: #0F172A !important;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+        }
+        body.light header button[onclick*="openNovaOrdemModal"]:hover {
+            background: #F8FAFC !important;
+            border-color: #0F172A !important;
+        }
+        body.light header button[onclick*="openNovaOrdemModal"] svg {
+            color: #0F172A !important;
+        }
+
+        /* Wrappers de Input Executivos e Fluidos */
         .auth-input-wrapper {
             position: relative;
             display: flex;
@@ -728,8 +792,9 @@
         }
 
         body.light .auth-input-wrapper {
-            background: #F8FAFC !important;
-            border-color: #CBD5E1 !important;
+            background: #FFFFFF !important;
+            border: 1.5px solid #CBD5E1 !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
         }
 
         .auth-input-wrapper:focus-within {
@@ -933,6 +998,22 @@
             transform: scale(1.01) !important;
         }
 
+        body.light .btn-auth-gradient {
+            background: #0F172A !important;
+            color: #FFFFFF !important;
+            border: 1px solid #0F172A !important;
+            font-weight: 850 !important;
+            box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.30) !important;
+        }
+        body.light .btn-auth-gradient:hover:not(:disabled) {
+            background: #1E293B !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 14px 30px -4px rgba(15, 23, 42, 0.40) !important;
+        }
+        body.light .btn-auth-gradient * {
+            color: #FFFFFF !important;
+        }
+
         /* Botão de Atalho VIP Master - Vidro Escuro & Borda Branca com Texto Branco */
         .btn-quick-admin-login {
             background: rgba(255, 255, 255, 0.06) !important;
@@ -957,16 +1038,16 @@
             transition: transform 0.03s ease !important;
         }
         body.light .btn-quick-admin-login {
-            background: #F1F5F9 !important;
-            border: 1px solid #CBD5E1 !important;
+            background: #FFFFFF !important;
+            border: 1.5px solid #CBD5E1 !important;
             color: #0F172A !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05) !important;
         }
         body.light .btn-quick-admin-login:hover {
-            background: #E2E8F0 !important;
-            border-color: #94A3B8 !important;
+            background: #F8FAFC !important;
+            border-color: #0F172A !important;
             color: #0F172A !important;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10) !important;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.10) !important;
         }
 
         /* Abas Segmentadas Fluidas e Modernas (Preto com Amarelo Dourado) */
@@ -3690,8 +3771,8 @@ body.light .period button.active {
             localStorage.setItem('nexus_theme', nextIsLight ? 'light' : 'dark');
 
             const btn = document.getElementById('loginThemeBtn');
-            const moonSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
-            const sunSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+            const moonSvg = '<svg id="themeIconSvg" class="w-4 h-4 text-current" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
+            const sunSvg = '<svg id="themeIconSvg" class="w-4 h-4 text-current" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
             if (btn) btn.innerHTML = nextIsLight ? sunSvg : moonSvg;
         };
 
