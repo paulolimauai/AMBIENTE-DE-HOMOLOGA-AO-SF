@@ -1628,26 +1628,42 @@ html.is-admin #menuFuncoesBtn,
 html.is-admin #mobileDrawerFuncoesBtn {
   display: none !important;
 }
-html.is-admin #menuUsuariosBtn,
-html.is-admin #menuOrdensBtn,
-html.is-admin #menuLogsBtn,
-html.is-admin #mobileDrawerUsuariosBtn,
-html.is-admin #mobileDrawerOrdensBtn,
-html.is-admin #mobileDrawerLogsBtn {
+/* ==================== Controle Executivo de Abas por Papel (Perfil) ==================== */
+/* Perfil de Administrador: Permanece APENAS a aba e módulos de Administração */
+html.is-admin #menu .menu-btn-user,
+html.is-admin #mobileDrawerMenu .menu-btn-user,
+html.is-admin .menu-section-visao,
+html.is-admin .menu-section-planejamento,
+html.is-admin .menu-section-ferramentas,
+html.is-admin .menu-section-minha-conta,
+html.is-admin #mobileBottomBar .mobile-btn-user,
+html.is-admin .header-minha-conta-btn {
+  display: none !important;
+}
+
+html.is-admin #menu .menu-btn-admin,
+html.is-admin #mobileDrawerMenu .menu-btn-admin,
+html.is-admin .menu-section-admin,
+html.is-admin #mobileBottomBar .mobile-btn-admin {
   display: flex !important;
 }
 
-/* Perfil de Administrador: Acesso Total e Completo a Todas as Funcionalidades (Financeiro + Administrativo) */
-html.is-admin #menu button[data-page],
-html.is-admin #mobileDrawerMenu button[data-page] {
-  display: flex !important;
+/* Perfil de Usuário Comum: Aparecem APENAS Visão, Planejamento, Ferramentas e Minha Conta */
+html:not(.is-admin) #menu .menu-btn-admin,
+html:not(.is-admin) #mobileDrawerMenu .menu-btn-admin,
+html:not(.is-admin) .menu-section-admin,
+html:not(.is-admin) #mobileBottomBar .mobile-btn-admin {
+  display: none !important;
 }
 
-/* ==================== Layout Executivo e Posicionamento Perfeito do Menu Administrador na Sidebar ==================== */
-html.is-admin .menu-section-admin {
-  display: flex !important;
-}
-html.is-admin .menu-section-header {
+html:not(.is-admin) #menu .menu-btn-user,
+html:not(.is-admin) #mobileDrawerMenu .menu-btn-user,
+html:not(.is-admin) .menu-section-visao,
+html:not(.is-admin) .menu-section-planejamento,
+html:not(.is-admin) .menu-section-ferramentas,
+html:not(.is-admin) .menu-section-minha-conta,
+html:not(.is-admin) #mobileBottomBar .mobile-btn-user,
+html:not(.is-admin) .header-minha-conta-btn {
   display: flex !important;
 }
 
@@ -12699,66 +12715,66 @@ body.light .period button.active {
   <!-- BARRA LATERAL EXECUTIVA (SIDEBAR DESIGN 4K - LIQUID GLASS) -->
   <aside class="menu sidebar-menu" id="menu">
     <div class="sidebar-scroll" id="menuTrack">
-      <!-- Seção: Visão Geral -->
-      <div class="menu-section-header">
-        <span class="menu-section-title">Visão Geral</span>
+      <!-- Seção: Visão -->
+      <div class="menu-section-header menu-section-visao">
+        <span class="menu-section-title">Visão</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="dashboard" title="Dashboard Financeiro Geral">
+      <button data-page="dashboard" class="menu-btn-user" title="Dashboard Financeiro Geral">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span>
         <span class="label">Dashboard</span>
       </button>
-      <button data-page="transacoes" title="Extrato de Transações & Movimentações">
+      <button data-page="transacoes" class="menu-btn-user" title="Extrato de Transações & Movimentações">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>
         <span class="label">Transações</span>
       </button>
-      <button data-page="cartoes" title="Cartões de Crédito & Débito">
+      <button data-page="cartoes" class="menu-btn-user" title="Cartões de Crédito & Débito">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
         <span class="label">Cartões</span>
       </button>
 
       <!-- Seção: Planejamento Financeiro -->
-      <div class="menu-section-header">
+      <div class="menu-section-header menu-section-planejamento">
         <span class="menu-section-title">Planejamento</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="orcamentos" title="Planejamento de Orçamentos">
+      <button data-page="orcamentos" class="menu-btn-user" title="Planejamento de Orçamentos">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span>
         <span class="label">Orçamentos</span>
       </button>
-      <button data-page="metas" title="Metas & Objetivos Financeiros">
+      <button data-page="metas" class="menu-btn-user" title="Metas & Objetivos Financeiros">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></span>
         <span class="label">Metas</span>
       </button>
-      <button data-page="relatorios" title="Relatórios Analíticos & Gráficos">
+      <button data-page="relatorios" class="menu-btn-user" title="Relatórios Analíticos & Gráficos">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
         <span class="label">Relatórios</span>
       </button>
 
       <!-- Seção: Ferramentas & Fluxos -->
-      <div class="menu-section-header">
+      <div class="menu-section-header menu-section-ferramentas">
         <span class="menu-section-title">Ferramentas</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="recorrentes" title="Despesas & Assinaturas Recorrentes">
+      <button data-page="recorrentes" class="menu-btn-user" title="Despesas & Assinaturas Recorrentes">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
         <span class="label">Recorrentes</span>
       </button>
-      <button data-page="importar" title="Importação de Extratos OFX e CSV">
+      <button data-page="importar" class="menu-btn-user" title="Importação de Extratos OFX e CSV">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
         <span class="label">Importar</span>
       </button>
-      <button data-page="anexos" title="Comprovantes & Documentos Anexados">
+      <button data-page="anexos" class="menu-btn-user" title="Comprovantes & Documentos Anexados">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
         <span class="label">Anexos</span>
       </button>
 
       <!-- Seção: Perfil & Preferências -->
-      <div class="menu-section-header">
+      <div class="menu-section-header menu-section-minha-conta">
         <span class="menu-section-title">Minha Conta</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="config" title="Minha Conta & Preferências do Usuário">
+      <button data-page="config" class="menu-btn-user" title="Minha Conta & Preferências do Usuário">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
         <span class="label">Minha Conta</span>
       </button>
@@ -12802,22 +12818,38 @@ body.light .period button.active {
 
   <!-- BARRA INFERIOR MOBILE MODERNA (BOTTOM TAB BAR DE ALTO PADRÃO) -->
   <nav class="mobile-bottom-bar" id="mobileBottomBar">
-    <button type="button" data-page="dashboard" class="mobile-bottom-btn" title="Dashboard">
+    <!-- Abas para Usuário Comum -->
+    <button type="button" data-page="dashboard" class="mobile-bottom-btn mobile-btn-user" title="Dashboard">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span>
       <span>Início</span>
     </button>
-    <button type="button" data-page="transacoes" class="mobile-bottom-btn" title="Transações">
+    <button type="button" data-page="transacoes" class="mobile-bottom-btn mobile-btn-user" title="Transações">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span>
       <span>Extrato</span>
     </button>
-    <button type="button" data-page="cartoes" class="mobile-bottom-btn" title="Cartões">
+    <button type="button" data-page="cartoes" class="mobile-bottom-btn mobile-btn-user" title="Cartões">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span>
       <span>Cartões</span>
     </button>
-    <button type="button" data-page="metas" class="mobile-bottom-btn" title="Metas">
+    <button type="button" data-page="metas" class="mobile-bottom-btn mobile-btn-user" title="Metas">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span>
       <span>Metas</span>
     </button>
+
+    <!-- Abas para Administrador (Exclusivas) -->
+    <button type="button" data-page="usuarios" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Usuários">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      <span>Usuários</span>
+    </button>
+    <button type="button" data-page="ordens" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Ordens de Serviço">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span>
+      <span>Ordens</span>
+    </button>
+    <button type="button" data-page="logs" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Logs do Sistema">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+      <span>Logs</span>
+    </button>
+
     <button type="button" class="mobile-bottom-btn" id="mobileBottomMoreBtn" title="Todas as Opções">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></span>
       <span>Mais</span>
@@ -12909,18 +12941,30 @@ body.light .period button.active {
       <button class="close-x" id="closeMobileDrawer" style="position:static; padding:4px;">✕</button>
     </div>
     <nav class="mobile-drawer-nav" id="mobileDrawerMenu">
-      <button data-page="dashboard"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span> Dashboard</button>
-      <button data-page="transacoes"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span> Transações</button>
-      <button data-page="cartoes"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span> Cartões</button>
-      <button data-page="orcamentos"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span> Orçamentos</button>
-      <button data-page="metas"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span> Metas</button>
-      <button data-page="relatorios"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span> Relatórios</button>
-      <button data-page="recorrentes"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span> Recorrentes</button>
-      <button data-page="importar"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Importar</button>
-      <button data-page="anexos"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span> Anexos</button>
-      <button data-page="config"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Minha Conta</button>
+      <!-- Seção: Visão -->
+      <div class="mobile-drawer-section-title menu-section-visao">Visão</div>
+      <button data-page="dashboard" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span> Dashboard</button>
+      <button data-page="transacoes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span> Transações</button>
+      <button data-page="cartoes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span> Cartões</button>
+      
+      <!-- Seção: Planejamento -->
+      <div class="mobile-drawer-section-title menu-section-planejamento">Planejamento</div>
+      <button data-page="orcamentos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span> Orçamentos</button>
+      <button data-page="metas" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span> Metas</button>
+      <button data-page="relatorios" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span> Relatórios</button>
+      
+      <!-- Seção: Ferramentas -->
+      <div class="mobile-drawer-section-title menu-section-ferramentas">Ferramentas</div>
+      <button data-page="recorrentes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span> Recorrentes</button>
+      <button data-page="importar" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Importar</button>
+      <button data-page="anexos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span> Anexos</button>
+      
+      <!-- Seção: Minha Conta -->
+      <div class="mobile-drawer-section-title menu-section-minha-conta">Minha Conta</div>
+      <button data-page="config" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Minha Conta</button>
       
       <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
+      <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Administração</div>
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
       <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço</button>
       <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
@@ -17666,18 +17710,20 @@ let currentPage = (function getInitialPage() {
     const cu = localStorage.getItem('nexus_cached_user');
     const u = cu ? JSON.parse(cu) : null;
     const isAdmin = u && u.role === 'Administrador';
-    const validPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config', 'usuarios', 'ordens', 'logs', 'funcoes'];
+    const adminPages = ['usuarios', 'ordens', 'logs'];
+    const commonPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
     const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
     const savedPage = localStorage.getItem('nexus_current_page');
-    if (hashPage && validPages.includes(hashPage)) {
-      if (!isAdmin && ['usuarios', 'logs'].includes(hashPage)) return 'dashboard';
-      return hashPage;
+
+    if (isAdmin) {
+      if (hashPage && adminPages.includes(hashPage)) return hashPage;
+      if (savedPage && adminPages.includes(savedPage)) return savedPage;
+      return 'usuarios';
+    } else {
+      if (hashPage && commonPages.includes(hashPage)) return hashPage;
+      if (savedPage && commonPages.includes(savedPage)) return savedPage;
+      return 'dashboard';
     }
-    if (savedPage && validPages.includes(savedPage)) {
-      if (!isAdmin && ['usuarios', 'logs'].includes(savedPage)) return 'dashboard';
-      return savedPage;
-    }
-    return 'dashboard';
   } catch(e){}
   return 'dashboard';
 })();
@@ -18462,8 +18508,15 @@ function render(){
 
 function updateActiveMenu(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
-  if (!isAdmin) {
-    if (['usuarios', 'logs'].includes(currentPage)) {
+  const adminPages = ['usuarios', 'ordens', 'logs'];
+  const commonPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
+
+  if (isAdmin) {
+    if (!adminPages.includes(currentPage)) {
+      currentPage = 'usuarios';
+    }
+  } else {
+    if (!commonPages.includes(currentPage)) {
       currentPage = 'dashboard';
     }
   }
@@ -18490,15 +18543,25 @@ function updateAdminMenuVisibility(force = false){
     document.documentElement.classList.remove('is-admin');
   }
 
-  // Módulos financeiros: SEMPRE visíveis e acessíveis para o Administrador e todos os usuários
-  const financialPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
-  financialPages.forEach(function(pg) {
-    document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
-      btn.style.display = 'flex';
+  // Seções e Botões do Usuário Comum: Visão, Planejamento, Ferramentas e Minha Conta
+  const userSections = document.querySelectorAll('.menu-section-visao, .menu-section-planejamento, .menu-section-ferramentas, .menu-section-minha-conta');
+  userSections.forEach(function(el) {
+    el.style.display = isAdmin ? 'none' : 'flex';
+  });
+
+  const userPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
+  userPages.forEach(function(pg) {
+    document.querySelectorAll('#menu button[data-page="' + pg + '"], #mobileDrawerMenu button[data-page="' + pg + '"]').forEach(function(btn) {
+      btn.style.display = isAdmin ? 'none' : 'flex';
     });
   });
 
-  // Módulos de gestão administrativa aparecem para o perfil de Administrador
+  // Seção e Botões de Administração: Exclusiva para o Administrador
+  const adminSections = document.querySelectorAll('.menu-section-admin');
+  adminSections.forEach(function(el) {
+    el.style.display = isAdmin ? 'flex' : 'none';
+  });
+
   const adminPages = ['usuarios', 'ordens', 'logs'];
   adminPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
@@ -18506,9 +18569,12 @@ function updateAdminMenuVisibility(force = false){
     });
   });
 
-  // Seção administrativa na sidebar
-  document.querySelectorAll('.menu-section-admin').forEach(function(el) {
-    el.style.display = isAdmin ? 'flex' : 'none';
+  // Barra inferior mobile: alternar abas de usuário e administrador
+  document.querySelectorAll('#mobileBottomBar .mobile-btn-user').forEach(function(b) {
+    b.style.display = isAdmin ? 'none' : 'flex';
+  });
+  document.querySelectorAll('#mobileBottomBar .mobile-btn-admin').forEach(function(b) {
+    b.style.display = isAdmin ? 'flex' : 'none';
   });
 
   // Divisores e badges administrativas
@@ -18519,9 +18585,9 @@ function updateAdminMenuVisibility(force = false){
     el.style.display = 'none';
   });
 
-  // Atalho Minha Conta no header: sempre visível
-  document.querySelectorAll('.aether-settings-btn').forEach(function(el) {
-    el.style.display = 'inline-flex';
+  // Atalho Minha Conta no header: visível apenas para usuário comum
+  document.querySelectorAll('.header-minha-conta-btn').forEach(function(el) {
+    el.style.display = isAdmin ? 'none' : 'inline-flex';
   });
 }
 
@@ -26461,12 +26527,19 @@ function attachPageEvents(){
 
 function navigate(page){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
-  if (!isAdmin) {
-    if (['usuarios', 'logs'].includes(page)) {
+  const adminPages = ['usuarios', 'ordens', 'logs'];
+  const commonPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
+
+  if (isAdmin) {
+    if (!adminPages.includes(page)) {
+      page = 'usuarios';
+    }
+  } else {
+    if (!commonPages.includes(page)) {
       page = 'dashboard';
     }
   }
-  if(!page) page = 'dashboard';
+  if(!page) page = isAdmin ? 'usuarios' : 'dashboard';
   const isSamePage = (currentPage === page);
   currentPage = page;
   try {
