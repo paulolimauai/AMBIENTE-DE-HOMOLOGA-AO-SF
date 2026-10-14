@@ -117,8 +117,8 @@
                     }
                     var btn = document.getElementById('loginThemeBtn');
                     if (btn) {
-                        var moonSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-amber-400"' fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
-                        var sunSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-amber-400"' fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+                        var moonSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
+                        var sunSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
                         btn.innerHTML = isDark ? moonSvg : sunSvg;
                     }
                 }
@@ -166,13 +166,13 @@
                     colors: {
                         nexus: {
                             dark: '#000000',
-                            card: '#0A0802',
-                            gold: '#FACC15',
-                            goldHover: '#FDE047',
-                            goldBorder: '#F59E0B',
-                            blue: '#EAB308',
-                            sapphire: '#D97706',
-                            cyan: '#FBBF24',
+                            card: '#080808',
+                            gold: '#FFFFFF',
+                            goldHover: '#F8FAFC',
+                            goldBorder: '#FFFFFF',
+                            blue: '#FFFFFF',
+                            sapphire: '#E2E8F0',
+                            cyan: '#FFFFFF',
                         }
                     },
                     animation: {
@@ -193,33 +193,33 @@
     <style>
         :root {
             --auth-bg: #000000;
-            --auth-card: linear-gradient(168deg, rgba(16, 13, 4, 0.96) 0%, rgba(8, 6, 2, 0.98) 50%, rgba(0, 0, 0, 1.0) 100%);
-            --auth-border: rgba(245, 158, 11, 0.40);
-            --auth-border-hover: #F59E0B;
-            --auth-input-bg: rgba(0, 0, 0, 0.88);
-            --auth-input-border: rgba(245, 158, 11, 0.28);
-            --auth-text: #FEF9C3;
-            --auth-text-dim: #FDE68A;
-            --auth-gold: #F59E0B;
-            --auth-gold-glow: rgba(245, 158, 11, 0.45);
-            --auth-cyan: #FBBF24;
-            --auth-sapphire: #D97706;
-            --auth-tab-bg: rgba(18, 15, 6, 0.90);
+            --auth-card: linear-gradient(168deg, rgba(14, 14, 14, 0.96) 0%, rgba(6, 6, 6, 0.98) 50%, rgba(0, 0, 0, 1.0) 100%);
+            --auth-border: rgba(255, 255, 255, 0.25);
+            --auth-border-hover: #FFFFFF;
+            --auth-input-bg: rgba(12, 12, 12, 0.92);
+            --auth-input-border: rgba(255, 255, 255, 0.22);
+            --auth-text: #FFFFFF;
+            --auth-text-dim: #E2E8F0;
+            --auth-gold: #FFFFFF;
+            --auth-gold-glow: rgba(255, 255, 255, 0.35);
+            --auth-cyan: #FFFFFF;
+            --auth-sapphire: #E2E8F0;
+            --auth-tab-bg: rgba(18, 18, 18, 0.90);
         }
 
         body.light, html.light body, html.light {
             color-scheme: light !important;
             --auth-bg: #F8FAFC;
             --auth-card: #FFFFFF;
-            --auth-border: rgba(245, 158, 11, 0.35);
-            --auth-border-hover: #D97706;
+            --auth-border: rgba(0, 0, 0, 0.15);
+            --auth-border-hover: #0F172A;
             --auth-input-bg: #FFFFFF;
             --auth-input-border: #CBD5E1;
             --auth-text: #000000 !important;
             --auth-text-dim: #334155 !important;
-            --auth-gold: #D97706;
-            --auth-cyan: #D97706;
-            --auth-sapphire: #B45309;
+            --auth-gold: #0F172A;
+            --auth-cyan: #0F172A;
+            --auth-sapphire: #334155;
             --auth-tab-bg: #E2E8F0;
             background-color: #F8FAFC !important;
             color: #000000 !important;
@@ -278,15 +278,15 @@
             font-family: var(--font-sans);
             background-color: #000000 !important;
             background-image: 
-                radial-gradient(ellipse 85% 60% at 15% 15%, rgba(245, 158, 11, 0.16) 0%, transparent 60%),
-                radial-gradient(ellipse 75% 55% at 85% 20%, rgba(234, 179, 8, 0.14) 0%, transparent 55%),
-                radial-gradient(ellipse 90% 70% at 50% 90%, rgba(217, 119, 6, 0.10) 0%, transparent 65%),
-                linear-gradient(175deg, #000000 0%, #080602 40%, #0F0D04 75%, #000000 100%) !important;
+                radial-gradient(ellipse 85% 60% at 15% 15%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 75% 55% at 85% 20%, rgba(255, 255, 255, 0.06) 0%, transparent 55%),
+                radial-gradient(ellipse 90% 70% at 50% 90%, rgba(255, 255, 255, 0.04) 0%, transparent 65%),
+                linear-gradient(175deg, #000000 0%, #050505 40%, #0A0A0A 75%, #000000 100%) !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
-            color: #FEF9C3 !important;
+            color: #FFFFFF !important;
             min-height: 100vh;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
@@ -338,11 +338,11 @@
             display: flex;
             align-items: center;
             height: 38px;
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(16, 13, 4, 0.92) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
-            border: 1px solid rgba(245, 158, 11, 0.40) !important;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(14, 14, 14, 0.92) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.22) !important;
             border-radius: 999px;
             padding: 2px 6px 2px 4px;
-            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 20px -2px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(254, 240, 138, 0.20);
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 20px -2px rgba(255, 255, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(24px) saturate(200%);
             -webkit-backdrop-filter: blur(24px) saturate(200%);
             overflow: hidden;
@@ -351,9 +351,9 @@
         }
 
         body.light .fintech-live-ticker-bar {
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0%, rgba(254, 243, 199, 0.92) 50%, rgba(255, 255, 255, 0.96) 100%);
-            border-color: rgba(245, 158, 11, 0.35);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08), 0 0 15px rgba(245, 158, 11, 0.12), inset 0 1px 0 #FFFFFF;
+            background: #FFFFFF !important;
+            border-color: #CBD5E1 !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06), inset 0 1px 0 #FFFFFF;
         }
 
         .fintech-ticker-badge {
@@ -361,37 +361,37 @@
             align-items: center;
             gap: 6px;
             padding: 4px 12px;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.30), rgba(217, 119, 6, 0.20)) !important;
-            border: 1px solid rgba(245, 158, 11, 0.50) !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            border: 1px solid rgba(255, 255, 255, 0.28) !important;
             border-radius: 999px;
             font-size: 10.5px;
             font-weight: 900;
             letter-spacing: 0.04em;
-            color: #FBBF24 !important;
+            color: #FFFFFF !important;
             text-transform: uppercase;
             flex-shrink: 0;
             z-index: 2;
-            box-shadow: 0 0 14px rgba(245, 158, 11, 0.30);
+            box-shadow: 0 0 14px rgba(255, 255, 255, 0.15);
         }
 
         body.light .fintech-ticker-badge {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.10));
-            border-color: rgba(217, 119, 6, 0.35);
-            color: #B45309;
+            background: #F1F5F9 !important;
+            border-color: #CBD5E1 !important;
+            color: #0F172A !important;
         }
 
         .fintech-pulse-dot {
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: #F59E0B;
-            box-shadow: 0 0 10px #F59E0B;
+            background: #FFFFFF;
+            box-shadow: 0 0 10px #FFFFFF;
             animation: pulseFintechDot 1.8s infinite ease-in-out;
         }
 
         @keyframes pulseFintechDot {
-            0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #F59E0B; }
-            50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #FACC15; }
+            0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #FFFFFF; }
+            50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px rgba(255, 255, 255, 0.85); }
         }
 
         .fintech-ticker-viewport {
@@ -547,13 +547,13 @@
             display: none !important;
         }
 
-        /* Card de Autenticação Executivo - Acabamento Glassmorphism Institucional Financeiro (Preto com Amarelo e Dourado) */
+        /* Card de Autenticação Executivo - Acabamento Glassmorphism Institucional Financeiro (Preto com Branco) */
         .auth-card-nexus {
-            background: linear-gradient(168deg, rgba(14, 12, 5, 0.97) 0%, rgba(5, 4, 1, 0.98) 50%, #000000 100%) !important;
-            border: 1.5px solid rgba(245, 158, 11, 0.40) !important;
-            border-top: 2.5px solid #F59E0B !important;
+            background: linear-gradient(168deg, rgba(14, 14, 14, 0.97) 0%, rgba(6, 6, 6, 0.98) 50%, #000000 100%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+            border-top: 2.5px solid #FFFFFF !important;
             border-radius: 26px !important;
-            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 50px -10px rgba(245, 158, 11, 0.25), inset 0 1px 1px rgba(254, 240, 138, 0.25) !important;
+            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 50px -10px rgba(255, 255, 255, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
             backdrop-filter: blur(28px) !important;
             -webkit-backdrop-filter: blur(28px) !important;
             transition: none !important;
@@ -571,7 +571,7 @@
         body.light .auth-card-nexus {
             background: #FFFFFF !important;
             border: 1.5px solid #E2E8F0 !important;
-            border-top: 2.5px solid #D97706 !important;
+            border-top: 2.5px solid #0F172A !important;
             box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.09), 0 2px 6px rgba(15, 23, 42, 0.03), inset 0 1px 0 #FFFFFF !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
@@ -621,7 +621,7 @@
         body.light .text-yellow-400,
         html.light .text-yellow-400,
         body.light .text-yellow-300 {
-            color: #D97706 !important;
+            color: #0F172A !important;
             font-weight: 700 !important;
         }
 
@@ -690,10 +690,10 @@
         }
         body.light .auth-tab-btn.active {
             background: #FFFFFF !important;
-            color: #92400E !important;
-            border: 1.5px solid #D97706 !important;
+            color: #0F172A !important;
+            border: 1.5px solid #0F172A !important;
             font-weight: 800 !important;
-            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.18), inset 0 1px 1px #FFFFFF !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), inset 0 1px 1px #FFFFFF !important;
         }
 
         /* Selo de Segurança Bancária e Conformidade em Modo Claro */
@@ -715,14 +715,14 @@
             font-weight: 600 !important;
         }
 
-        /* Wrappers de Input Executivos e Fluidos (Preto com Amarelo e Dourado) */
+        /* Wrappers de Input Executivos e Fluidos (Preto com Branco) */
         .auth-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
             height: 44px;
-            background: rgba(16, 14, 6, 0.85);
-            border: 1px solid rgba(245, 158, 11, 0.28);
+            background: rgba(14, 14, 14, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.22);
             border-radius: 12px;
             transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
         }
@@ -733,15 +733,15 @@
         }
 
         .auth-input-wrapper:focus-within {
-            border-color: #F59E0B !important;
-            box-shadow: 0 0 0 3.5px rgba(245, 158, 11, 0.28) !important;
-            background: rgba(8, 7, 2, 0.95);
+            border-color: #FFFFFF !important;
+            box-shadow: 0 0 0 3.5px rgba(255, 255, 255, 0.22) !important;
+            background: rgba(8, 8, 8, 0.95);
         }
 
         body.light .auth-input-wrapper:focus-within {
             background: #FFFFFF !important;
-            border-color: #D97706 !important;
-            box-shadow: 0 0 0 3.5px rgba(245, 158, 11, 0.18) !important;
+            border-color: #0F172A !important;
+            box-shadow: 0 0 0 3.5px rgba(15, 23, 42, 0.15) !important;
         }
 
         .auth-input-wrapper.input-error {
@@ -755,20 +755,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #F59E0B;
+            color: #FFFFFF;
             flex-shrink: 0;
             transition: color 0.2s ease;
         }
 
         .auth-input-wrapper:focus-within .auth-input-icon {
-            color: #FBBF24 !important;
+            color: #FFFFFF !important;
         }
 
         body.light .auth-input-icon {
             color: #000000 !important;
         }
         body.light .auth-input-wrapper:focus-within .auth-input-icon {
-            color: #D97706 !important;
+            color: #0F172A !important;
         }
 
         .auth-input-wrapper input {
@@ -858,8 +858,8 @@
         }
         .auth-pass-toggle:hover,
         .auth-pass-toggle-btn:hover {
-            color: #F59E0B !important;
-            background: rgba(245, 158, 11, 0.15) !important;
+            color: #FFFFFF !important;
+            background: rgba(255, 255, 255, 0.15) !important;
             transform: scale(1.08);
         }
         .auth-pass-toggle svg,
@@ -878,20 +878,20 @@
         }
         body.light .auth-pass-toggle:hover,
         body.light .auth-pass-toggle-btn:hover {
-            color: #D97706 !important;
-            background: rgba(245, 158, 11, 0.12) !important;
+            color: #0F172A !important;
+            background: rgba(0, 0, 0, 0.08) !important;
         }
 
-        /* Botão Primário Executivo - Amarelo Dourado & Preto (Texto Nítido #000000) */
+        /* Botão Primário Executivo - Branco Puro de Alto Contraste (#FFFFFF) & Texto Preto (#000000) */
         .btn-auth-gradient {
-            background: linear-gradient(135deg, #FACC15 0%, #EAB308 50%, #D97706 100%) !important;
+            background: #FFFFFF !important;
             color: #000000 !important;
             border-radius: 14px !important;
-            border: 1px solid rgba(254, 240, 138, 0.80) !important;
+            border: 1px solid rgba(255, 255, 255, 0.95) !important;
             font-weight: 850 !important;
             font-size: 14.5px !important;
             letter-spacing: -0.01em;
-            box-shadow: 0 10px 28px -5px rgba(234, 179, 8, 0.50), 0 0 20px rgba(245, 158, 11, 0.35), inset 0 1px 1.5px rgba(254, 240, 138, 0.60) !important;
+            box-shadow: 0 10px 28px -5px rgba(255, 255, 255, 0.35), 0 0 20px rgba(255, 255, 255, 0.20), inset 0 1px 1.5px #FFFFFF !important;
             transition: transform 0.06s ease, filter 0.12s ease, box-shadow 0.12s ease !important;
             position: relative;
             overflow: hidden;
@@ -906,16 +906,16 @@
         }
 
         .btn-auth-gradient:hover:not(:disabled) {
-            filter: brightness(1.10);
+            filter: brightness(0.95);
             color: #000000 !important;
             transform: translateY(-1.5px);
-            box-shadow: 0 14px 34px -5px rgba(234, 179, 8, 0.65), 0 0 28px rgba(245, 158, 11, 0.5), inset 0 1px 1.5px rgba(254, 240, 138, 0.80) !important;
+            box-shadow: 0 14px 34px -5px rgba(255, 255, 255, 0.45), 0 0 28px rgba(255, 255, 255, 0.30), inset 0 1px 1.5px #FFFFFF !important;
         }
 
         .btn-auth-gradient:active:not(:disabled) {
             transform: scale(0.975) translateY(1px) !important;
             transition: transform 0.03s ease !important;
-            box-shadow: 0 4px 14px -2px rgba(234, 179, 8, 0.4) !important;
+            box-shadow: 0 4px 14px -2px rgba(255, 255, 255, 0.30) !important;
         }
 
         .btn-auth-gradient:disabled {
@@ -926,47 +926,47 @@
         }
 
         .btn-auth-gradient.btn-login-success {
-            background: linear-gradient(135deg, #FACC15 0%, #EAB308 100%) !important;
+            background: #FFFFFF !important;
             color: #000000 !important;
-            border-color: rgba(254, 240, 138, 0.9) !important;
-            box-shadow: 0 10px 28px -4px rgba(234, 179, 8, 0.55), 0 0 20px rgba(245, 158, 11, 0.3) !important;
+            border-color: #FFFFFF !important;
+            box-shadow: 0 10px 28px -4px rgba(255, 255, 255, 0.45), 0 0 20px rgba(255, 255, 255, 0.25) !important;
             transform: scale(1.01) !important;
         }
 
-        /* Botão de Atalho VIP Master - Amarelo Dourado & Preto Puro */
+        /* Botão de Atalho VIP Master - Vidro Escuro & Borda Branca com Texto Branco */
         .btn-quick-admin-login {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
-            border: 1px solid rgba(245, 158, 11, 0.45) !important;
-            color: #FBBF24 !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+            border: 1px solid rgba(255, 255, 255, 0.35) !important;
+            color: #FFFFFF !important;
             border-radius: 12px !important;
-            box-shadow: 0 2px 12px rgba(245, 158, 11, 0.20), inset 0 1px 0 rgba(254, 240, 138, 0.15) !important;
+            box-shadow: 0 2px 12px rgba(255, 255, 255, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
             transition: transform 0.06s ease, background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease !important;
             height: 40px;
             font-size: 12.5px;
             will-change: transform;
         }
         .btn-quick-admin-login:hover {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.18) 100%) !important;
-            border-color: rgba(245, 158, 11, 0.75) !important;
-            color: #FEF9C3 !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: rgba(255, 255, 255, 0.70) !important;
+            color: #FFFFFF !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.40) !important;
+            box-shadow: 0 4px 18px rgba(255, 255, 255, 0.25) !important;
         }
         .btn-quick-admin-login:active {
             transform: scale(0.975) translateY(1px) !important;
             transition: transform 0.03s ease !important;
         }
         body.light .btn-quick-admin-login {
-            background: #FEF3C7 !important;
-            border: 1px solid #FCD34D !important;
-            color: #92400E !important;
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12) !important;
+            background: #F1F5F9 !important;
+            border: 1px solid #CBD5E1 !important;
+            color: #0F172A !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
         }
         body.light .btn-quick-admin-login:hover {
-            background: #FDE68A !important;
-            border-color: #F59E0B !important;
-            color: #78350F !important;
-            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.22) !important;
+            background: #E2E8F0 !important;
+            border-color: #94A3B8 !important;
+            color: #0F172A !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10) !important;
         }
 
         /* Abas Segmentadas Fluidas e Modernas (Preto com Amarelo Dourado) */
@@ -975,8 +975,8 @@
             padding: 3.5px !important;
             border-radius: 14px !important;
             gap: 4px !important;
-            background: rgba(18, 15, 6, 0.85) !important;
-            border: 1px solid rgba(245, 158, 11, 0.25) !important;
+            background: rgba(18, 18, 18, 0.85) !important;
+            border: 1px solid rgba(255, 255, 255, 0.20) !important;
             min-height: 40px;
         }
 
@@ -1006,16 +1006,16 @@
         }
 
         .auth-tab-btn:hover {
-            color: #FBBF24;
-            background: rgba(245, 158, 11, 0.12);
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.10);
         }
 
         .auth-tab-btn.active {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.20) 100%) !important;
-            color: #FBBF24 !important;
-            border: 1px solid rgba(245, 158, 11, 0.55) !important;
-            box-shadow: 0 2px 12px rgba(245, 158, 11, 0.30) !important;
-            font-weight: 700 !important;
+            background: #FFFFFF !important;
+            color: #000000 !important;
+            border: 1px solid rgba(255, 255, 255, 0.90) !important;
+            box-shadow: 0 2px 12px rgba(255, 255, 255, 0.25) !important;
+            font-weight: 800 !important;
         }
 
         body.light #authTabsNav, body.light .auth-tabs-nav {
@@ -1034,9 +1034,9 @@
 
         body.light .auth-tab-btn.active {
             background: #FFFFFF !important;
-            color: #92400E !important;
-            border: 1.5px solid #D97706 !important;
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.16), inset 0 1px 1px #FFFFFF !important;
+            color: #0F172A !important;
+            border: 1.5px solid #0F172A !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), inset 0 1px 1px #FFFFFF !important;
             font-weight: 800 !important;
         }
 
@@ -1052,7 +1052,7 @@
 
         /* SVG Checkmark Animations */
         .check-circle {
-            stroke: #F59E0B;
+            stroke: #FFFFFF;
             stroke-width: 2.5;
             stroke-miterlimit: 10;
             stroke-dasharray: 160;
@@ -1061,7 +1061,7 @@
         }
 
         .check-tick {
-            stroke: #FACC15;
+            stroke: #FFFFFF;
             stroke-width: 3.5;
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -1093,7 +1093,7 @@
 
         @keyframes twinkle {
             0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1.25) rotate(45deg); filter: drop-shadow(0 0 6px #F59E0B); }
+            50% { opacity: 1; transform: scale(1.25) rotate(45deg); filter: drop-shadow(0 0 6px #FFFFFF); }
         }
 
         /* Checklist de Segurança da Senha */
@@ -1479,10 +1479,10 @@
             gap: 5px !important;
             height: 32px !important;
             box-sizing: border-box !important;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 15, 6, 0.90) 40%, rgba(0, 0, 0, 0.98) 100%) !important;
-            border: 1px solid rgba(245, 158, 11, 0.45) !important;
-            border-top: 1px solid rgba(254, 240, 138, 0.70) !important;
-            border-bottom: 1px solid rgba(217, 119, 6, 0.55) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(8, 14, 10, 0.90) 40%, rgba(0, 0, 0, 0.98) 100%) !important;
+            border: 1px solid rgba(16, 185, 129, 0.45) !important;
+            border-top: 1px solid rgba(167, 243, 208, 0.70) !important;
+            border-bottom: 1px solid rgba(5, 150, 105, 0.55) !important;
             border-radius: 999px !important;
             padding: 3px 10px 3px 5px !important;
             backdrop-filter: blur(28px) saturate(220%) !important;
@@ -1503,16 +1503,16 @@
             left: 0 !important;
             width: 100% !important;
             height: 100% !important;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(245, 158, 11, 0.10) 35%, transparent 65%) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(16, 185, 129, 0.10) 35%, transparent 65%) !important;
             pointer-events: none !important;
             z-index: 1 !important;
         }
 
         .dev-signature:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(24, 19, 6, 0.94) 40%, rgba(0, 0, 0, 1.0) 100%) !important;
-            border-color: rgba(250, 204, 21, 0.85) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(10, 18, 12, 0.94) 40%, rgba(0, 0, 0, 1.0) 100%) !important;
+            border-color: rgba(52, 211, 153, 0.85) !important;
             border-top-color: #FFFFFF !important;
-            box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.95), 0 0 36px rgba(245, 158, 11, 0.50), inset 0 2px 3px rgba(255, 255, 255, 0.50) !important;
+            box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.95), 0 0 36px rgba(16, 185, 129, 0.50), inset 0 2px 3px rgba(255, 255, 255, 0.50) !important;
             transform: translateY(-2.5px) scale(1.02) !important;
         }
 
@@ -1522,13 +1522,13 @@
             height: 22px !important;
             border-radius: 50% !important;
             flex-shrink: 0 !important;
-            background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #FEF08A 24%, #FDE047 48%, #F59E0B 72%, #B45309 100%) !important;
+            background: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #D1FAE5 24%, #6EE7B7 48%, #10B981 72%, #047857 100%) !important;
             color: #FFFFFF !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
-            box-shadow: 0 0 18px rgba(245, 158, 11, 0.75), 0 3px 10px rgba(0, 0, 0, 0.6), inset 0 2px 2px rgba(255, 255, 255, 0.85) !important;
+            box-shadow: 0 0 18px rgba(16, 185, 129, 0.75), 0 3px 10px rgba(0, 0, 0, 0.6), inset 0 2px 2px rgba(255, 255, 255, 0.85) !important;
             position: relative !important;
             z-index: 2 !important;
             transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease !important;
@@ -1537,7 +1537,7 @@
 
         .dev-signature:hover .dev-signature-icon {
             transform: scale(1.14) rotate(-6deg) !important;
-            box-shadow: 0 0 26px rgba(250, 204, 21, 1), 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 2px #FFFFFF !important;
+            box-shadow: 0 0 26px rgba(52, 211, 153, 1), 0 4px 14px rgba(0, 0, 0, 0.7), inset 0 2px 2px #FFFFFF !important;
         }
 
         .dev-signature-icon svg {
@@ -1572,10 +1572,10 @@
             font-weight: 900 !important;
             color: #FFFFFF !important;
             letter-spacing: 0.05em !important;
-            background: linear-gradient(135deg, #FFFFFF 0%, #FEF9C3 30%, #FDE68A 65%, #F59E0B 100%) !important;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F0FDF4 30%, #A7F3D0 65%, #10B981 100%) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
-            filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.70)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) !important;
+            filter: drop-shadow(0 0 14px rgba(16, 185, 129, 0.70)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) !important;
             display: inline-flex !important;
             align-items: center !important;
             gap: 5px !important;
@@ -1585,23 +1585,23 @@
         .dev-sparkle {
             display: inline-block !important;
             font-size: 13px !important;
-            color: #FACC15 !important;
-            filter: drop-shadow(0 0 8px #F59E0B) drop-shadow(0 0 16px #D97706) !important;
+            color: #34D399 !important;
+            filter: drop-shadow(0 0 8px #10B981) drop-shadow(0 0 16px #059669) !important;
             animation: none !important;
         }
 
         /* Suporte de Alto Contraste para Tema Claro */
         body.light .dev-signature {
             background: rgba(255, 255, 255, 0.94) !important;
-            border-color: rgba(217, 119, 6, 0.45) !important;
-            border-top-color: rgba(245, 158, 11, 0.80) !important;
-            border-bottom-color: rgba(180, 83, 9, 0.60) !important;
-            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
+            border-color: rgba(5, 150, 105, 0.45) !important;
+            border-top-color: rgba(16, 185, 129, 0.80) !important;
+            border-bottom-color: rgba(4, 120, 87, 0.60) !important;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
         }
         body.light .dev-signature:hover {
-            background: #FFFBEB !important;
-            border-color: #D97706 !important;
-            box-shadow: 0 12px 28px rgba(245, 158, 11, 0.28), 0 0 20px rgba(245, 158, 11, 0.25) !important;
+            background: #F0FDF4 !important;
+            border-color: #059669 !important;
+            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.28), 0 0 20px rgba(16, 185, 129, 0.25) !important;
         }
         body.light .dev-signature-label {
             color: #09090B !important;
@@ -1609,14 +1609,14 @@
             text-shadow: none !important;
         }
         body.light .dev-signature-name {
-            background: linear-gradient(135deg, #09090B 0%, #78350F 45%, #B45309 75%, #D97706 100%) !important;
+            background: linear-gradient(135deg, #09090B 0%, #064E3B 45%, #047857 75%, #059669 100%) !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
-            filter: drop-shadow(0 1px 3px rgba(245, 158, 11, 0.35)) !important;
+            filter: drop-shadow(0 1px 3px rgba(16, 185, 129, 0.35)) !important;
         }
         body.light .dev-sparkle {
-            color: #D97706 !important;
-            filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5)) !important;
+            color: #059669 !important;
+            filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5)) !important;
         }
 
         /* Barra de Suporte Abaixo da Abertura de O.S. (Alinhado Perfeito, Zero Cortes) */
@@ -1629,8 +1629,8 @@
             height: 32px;
             padding: 4px 10px;
             border-radius: 999px;
-            background: rgba(14, 11, 4, 0.85);
-            border: 1px solid rgba(245, 158, 11, 0.35);
+            background: rgba(10, 16, 12, 0.85);
+            border: 1px solid rgba(16, 185, 129, 0.30);
             color: #94A3B8;
             font-size: 11px;
             font-weight: 600;
@@ -1659,12 +1659,12 @@
             }
         }
         .auth-support-bar:hover {
-            background: rgba(22, 17, 6, 0.95);
-            border-color: rgba(250, 204, 21, 0.60);
-            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.30);
+            background: rgba(14, 22, 16, 0.95);
+            border-color: rgba(52, 211, 153, 0.55);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25);
         }
         .auth-support-bar svg {
-            color: #F59E0B;
+            color: #10B981;
             flex-shrink: 0;
         }
         .auth-support-label {
@@ -1673,14 +1673,14 @@
             white-space: nowrap;
         }
         .auth-support-link {
-            color: #FBBF24;
+            color: #34D399;
             text-decoration: none;
             font-weight: 700;
             word-break: break-all;
             transition: color 0.15s ease, text-decoration 0.15s ease;
         }
         .auth-support-link:hover {
-            color: #FDE047;
+            color: #6EE7B7;
             text-decoration: underline;
         }
         body.light .auth-support-bar,
@@ -1819,9 +1819,9 @@
            ========================================================================== */
 
         :root {
-            --auth-card-bg: linear-gradient(168deg, rgba(14, 11, 4, 0.97) 0%, rgba(6, 4, 1, 0.98) 50%, #000000 100%);
-            --auth-card-border: rgba(245, 158, 11, 0.40);
-            --auth-card-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 50px -10px rgba(245, 158, 11, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.20);
+            --auth-card-bg: linear-gradient(168deg, rgba(8, 14, 10, 0.97) 0%, rgba(2, 5, 3, 0.98) 50%, #000000 100%);
+            --auth-card-border: rgba(16, 185, 129, 0.40);
+            --auth-card-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 50px -10px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.20);
         }
 
         body.light, html.light body, html.light {
@@ -1832,9 +1832,9 @@
 
         /* Metric Cards Financeiros Institucionais (Preto com Verde e Branco) */
         .auth-metric-card {
-            background: linear-gradient(145deg, rgba(14, 11, 4, 0.92) 0%, rgba(6, 4, 1, 0.96) 100%) !important;
-            border: 1px solid rgba(245, 158, 11, 0.30) !important;
-            border-top: 2px solid rgba(245, 158, 11, 0.50) !important;
+            background: linear-gradient(145deg, rgba(8, 14, 10, 0.92) 0%, rgba(2, 5, 3, 0.96) 100%) !important;
+            border: 1px solid rgba(16, 185, 129, 0.30) !important;
+            border-top: 2px solid rgba(16, 185, 129, 0.50) !important;
             border-radius: 18px !important;
             backdrop-filter: blur(16px) !important;
             -webkit-backdrop-filter: blur(16px) !important;
@@ -1844,8 +1844,8 @@
 
         .auth-metric-card:hover {
             transform: translateY(-2px) !important;
-            border-color: rgba(250, 204, 21, 0.60) !important;
-            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.9), 0 0 24px rgba(245, 158, 11, 0.30) !important;
+            border-color: rgba(52, 211, 153, 0.60) !important;
+            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.9), 0 0 24px rgba(16, 185, 129, 0.30) !important;
         }
 
         body.light .auth-metric-card {
@@ -1875,20 +1875,20 @@
 :root {
   --fin-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --fin-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --fin-emerald: #F59E0B;
-  --fin-emerald-soft: rgba(245, 158, 11, 0.14);
-  --fin-emerald-border: rgba(245, 158, 11, 0.35);
+  --fin-emerald: #10B981;
+  --fin-emerald-soft: rgba(16, 185, 129, 0.14);
+  --fin-emerald-border: rgba(16, 185, 129, 0.35);
   --fin-crimson: #F43F5E;
   --fin-crimson-soft: rgba(244, 63, 94, 0.14);
   --fin-crimson-border: rgba(244, 63, 94, 0.35);
-  --fin-sapphire: #FACC15;
-  --fin-sapphire-soft: rgba(250, 204, 21, 0.14);
-  --fin-sapphire-border: rgba(250, 204, 21, 0.35);
+  --fin-sapphire: #10B981;
+  --fin-sapphire-soft: rgba(16, 185, 129, 0.14);
+  --fin-sapphire-border: rgba(16, 185, 129, 0.35);
   --fin-amber: #F59E0B;
   --fin-amber-soft: rgba(245, 158, 11, 0.14);
   --fin-amber-border: rgba(245, 158, 11, 0.35);
-  --fin-card-bg: linear-gradient(165deg, rgba(14, 11, 4, 0.94) 0%, rgba(0, 0, 0, 0.98) 100%);
-  --fin-card-border: 1px solid rgba(245, 158, 11, 0.25);
+  --fin-card-bg: linear-gradient(165deg, rgba(8, 14, 10, 0.94) 0%, rgba(0, 0, 0, 0.98) 100%);
+  --fin-card-border: 1px solid rgba(16, 185, 129, 0.25);
   --fin-card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
@@ -1973,10 +1973,10 @@ nav.menu button, .menu button {
 }
 
 nav.menu button:hover, .menu button:hover {
-  color: #FBBF24 !important;
-  background: rgba(245, 158, 11, 0.12) !important;
-  border-color: rgba(245, 158, 11, 0.25) !important;
-  border-top-color: rgba(250, 204, 21, 0.40) !important;
+  color: #34D399 !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+  border-top-color: rgba(52, 211, 153, 0.40) !important;
   transform: translateY(-1px) !important;
 }
 
@@ -2138,9 +2138,9 @@ td:last-child, th:last-child, td.val, td.amount, td.tx-val, th.th-val {
 
 /* Badges de Status das Transações */
 .status-pago, .status-recebido, .status-badge.paid {
-  background: rgba(245, 158, 11, 0.14) !important;
-  color: #FBBF24 !important;
-  border: 1px solid rgba(245, 158, 11, 0.32) !important;
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #34D399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.32) !important;
   padding: 3px 9px !important;
   border-radius: 999px !important;
   font-size: 11px !important;
@@ -2585,19 +2585,19 @@ body.light .period button.active {
     <!-- 4K ULTRA SUCCESS MODAL OVERLAY (ENTRADA / PÓS-LOGIN BANCÁRIO) -->
     <!-- MODAL DINÂMICO & PROFISSIONAL (LOGIN EFETUADO COM SUCESSO) -->
     <div class="fixed inset-0 bg-black/85 backdrop-blur-xl flex items-center justify-center z-[99999] p-4 sm:p-6 opacity-0 transition-all duration-300 pointer-events-none" id="loginSuccessOverlay" style="display:none;">
-        <div class="absolute w-[360px] h-[360px] rounded-full bg-amber-500/15 blur-[100px] pointer-events-none animate-pulse"></div>
+        <div class="absolute w-[360px] h-[360px] rounded-full bg-emerald-500/15 blur-[100px] pointer-events-none animate-pulse"></div>
 
-        <div id="successModalBox" class="bg-gradient-to-b from-[#141004]/95 via-[#0a0802]/98 to-[#000000]/99 border border-amber-500/40 border-t-white/40 rounded-[32px] p-8 sm:p-10 w-full max-w-[480px] text-center shadow-[0_30px_90px_rgba(0,0,0,0.98),0_0_55px_rgba(245,158,11,0.28),inset_0_1.5px_2px_rgba(255,255,255,0.25)] transform translate-y-4 scale-95 transition-all duration-400 relative overflow-hidden pointer-events-auto">
+        <div id="successModalBox" class="bg-gradient-to-b from-[#0a140d]/95 via-[#040805]/98 to-[#000000]/99 border border-emerald-500/40 border-t-white/40 rounded-[32px] p-8 sm:p-10 w-full max-w-[480px] text-center shadow-[0_30px_90px_rgba(0,0,0,0.98),0_0_55px_rgba(16,185,129,0.28),inset_0_1.5px_2px_rgba(255,255,255,0.25)] transform translate-y-4 scale-95 transition-all duration-400 relative overflow-hidden pointer-events-auto">
             <!-- Linha de Brilho Superior -->
-            <div class="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-yellow-400/80 to-transparent pointer-events-none"></div>
+            <div class="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent pointer-events-none"></div>
 
             <!-- Ícone Dinâmico com Ondas de Pulso (Sucesso Ampliado) -->
             <div class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                <div class="absolute inset-0 rounded-full bg-amber-500/20 animate-ping" style="animation-duration: 2s;"></div>
-                <div class="absolute inset-1 rounded-full border border-yellow-400/35"></div>
-                <div class="relative w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-yellow-300 p-[2.5px] shadow-[0_0_30px_rgba(245,158,11,0.6)]">
+                <div class="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping" style="animation-duration: 2s;"></div>
+                <div class="absolute inset-1 rounded-full border border-emerald-400/35"></div>
+                <div class="relative w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 p-[2.5px] shadow-[0_0_30px_rgba(16,185,129,0.6)]">
                     <div class="w-full h-full rounded-full bg-[#040805] flex items-center justify-center">
-                        <svg class="w-10 h-10 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-10 h-10 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </div>
@@ -2614,25 +2614,25 @@ body.light .period button.active {
 
             <!-- Barra de Progresso Dinâmica com Gradiente Suave -->
             <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden p-[1px]">
-                <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-amber-500 via-yellow-400 to-yellow-300 rounded-full w-0 shadow-[0_0_12px_rgba(245,158,11,0.9)]"></div>
+                <div id="successRedirectProgress" class="h-full bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-300 rounded-full w-0 shadow-[0_0_12px_rgba(16,185,129,0.9)]"></div>
             </div>
         </div>
     </div>
 
     <!-- 4K ULTRA LOGOUT MODAL OVERLAY (SAÍDA) -->
     <div class="fixed inset-0 bg-black/90 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="logoutSuccessOverlay" style="display:none;" onclick="if(event.target===this) hideLogoutModal()">
-        <div class="absolute w-[380px] h-[380px] rounded-full bg-amber-500/20 blur-[100px] pointer-events-none animate-pulse"></div>
+        <div class="absolute w-[380px] h-[380px] rounded-full bg-emerald-500/20 blur-[100px] pointer-events-none animate-pulse"></div>
 
-        <div id="logoutModalBox" class="bg-gradient-to-br from-[#141004]/95 via-[#080602]/96 to-[#000000]/98 border border-amber-500/30 border-t-white/35 rounded-[28px] p-8 sm:p-9 w-full max-w-[440px] text-center shadow-[0_35px_90px_rgba(0,0,0,0.98),0_0_45px_rgba(245,158,11,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto">
+        <div id="logoutModalBox" class="bg-gradient-to-br from-[#0c1610]/95 via-[#060c08]/96 to-[#000000]/98 border border-white/15 border-t-white/35 rounded-[28px] p-8 sm:p-9 w-full max-w-[440px] text-center shadow-[0_35px_90px_rgba(0,0,0,0.98),0_0_45px_rgba(16,185,129,0.25),inset_0_1px_1px_rgba(255,255,255,0.4)] transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto">
             
             <div class="absolute top-0 left-[10%] right-[10%] h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none"></div>
 
-            <!-- Multi-Ring Gold Badge Orb -->
+            <!-- Multi-Ring Emerald Badge Orb -->
             <div class="relative w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <div class="absolute inset-0 rounded-full border border-dashed border-amber-500/35 animate-spin-slow"></div>
-                <div class="absolute inset-2 rounded-full border border-yellow-400/50 shadow-[0_0_30px_rgba(245,158,11,0.35)]"></div>
-                <div class="absolute inset-2.5 rounded-full bg-gradient-to-br from-amber-500/25 via-[#141004] to-[#000000] border border-yellow-400/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] flex items-center justify-center">
-                    <svg class="w-8 h-8 text-yellow-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.85)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="absolute inset-0 rounded-full border border-dashed border-emerald-500/35 animate-spin-slow"></div>
+                <div class="absolute inset-2 rounded-full border border-emerald-400/50 shadow-[0_0_30px_rgba(16,185,129,0.35)]"></div>
+                <div class="absolute inset-2.5 rounded-full bg-gradient-to-br from-emerald-500/25 via-[#0a140d] to-[#000000] border border-emerald-400/60 shadow-[inset_0_2px_4px_rgba(255,255,255,0.5)] flex items-center justify-center">
+                    <svg class="w-8 h-8 text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.85)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
                         <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -2641,8 +2641,8 @@ body.light .period button.active {
             </div>
 
             <!-- Pill Badge -->
-            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 mb-2.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-[10.5px] font-extrabold uppercase tracking-wider text-yellow-400">
-                <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span>
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 mb-2.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10.5px] font-extrabold uppercase tracking-wider text-emerald-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span>Sessão Finalizada com Sucesso</span>
             </div>
 
@@ -2655,7 +2655,7 @@ body.light .period button.active {
             </p>
 
             <!-- Botão de Ação -->
-            <button type="button" onclick="hideLogoutModal()" class="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm text-black font-black bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 border border-white/40 shadow-[0_12px_28px_rgba(245,158,11,0.45),inset_0_1px_2px_rgba(255,255,255,0.6)] hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group cursor-pointer">
+            <button type="button" onclick="hideLogoutModal()" class="w-full py-3.5 px-6 rounded-2xl font-extrabold text-sm text-white bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 border border-white/25 shadow-[0_12px_28px_rgba(16,185,129,0.45),inset_0_1px_2px_rgba(255,255,255,0.6)] hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group cursor-pointer">
                 <span>Fazer Login Novamente</span>
                 <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -2664,18 +2664,18 @@ body.light .period button.active {
 
             <!-- Barra de Progresso Inteligente -->
             <div class="w-full bg-white/10 h-1 rounded-full overflow-hidden mt-4">
-                <div id="logoutRedirectProgress" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full w-full"></div>
+                <div id="logoutRedirectProgress" class="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full w-full"></div>
             </div>
         </div>
     </div>
 
     <!-- MODAL TERMOS DE ABERTURA DE CONTA & POLÍTICA DE PRIVACIDADE LGPD -->
     <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-4 sm:p-6 opacity-0 transition-opacity duration-300 pointer-events-none" id="overlayFinancialTerms" style="display:none;" onclick="if(event.target===this) closeFinancialTermsModal()">
-        <div id="boxFinancialTermsModal" style="background: linear-gradient(145deg, rgba(14, 11, 4, 0.96) 0%, rgba(6, 4, 1, 0.98) 50%, #000000 100%); border: 1.5px solid rgba(245, 158, 11, 0.35); border-top: 1.5px solid rgba(254, 240, 138, 0.50); backdrop-filter: blur(40px); box-shadow: 0 35px 90px rgba(0,0,0,0.98), 0 0 50px rgba(245, 158, 11, 0.25);" class="rounded-[28px] p-6 sm:p-8 w-full max-w-[620px] text-left transform translate-y-6 scale-90 transition-all duration-300 relative overflow-hidden pointer-events-auto max-h-[88vh] flex flex-col">
+        <div id="boxFinancialTermsModal" style="background: linear-gradient(145deg, rgba(8, 14, 10, 0.96) 0%, rgba(3, 6, 4, 0.98) 50%, #000000 100%); border: 1.5px solid rgba(16, 185, 129, 0.35); border-top: 1.5px solid rgba(167, 243, 208, 0.50); backdrop-filter: blur(40px); box-shadow: 0 35px 90px rgba(0,0,0,0.98), 0 0 50px rgba(16, 185, 129, 0.25);" class="rounded-[28px] p-6 sm:p-8 w-full max-w-[620px] text-left transform translate-y-6 scale-90 transition-all duration-300 relative overflow-hidden pointer-events-auto max-h-[88vh] flex flex-col">
             
             <div class="flex items-center justify-between pb-4 border-b border-white/10 shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 text-yellow-400 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
                         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
                     <div>
@@ -2688,22 +2688,22 @@ body.light .period button.active {
 
             <div class="overflow-y-auto pr-1 my-4 space-y-4 text-xs leading-relaxed text-slate-300">
                 <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <h4 class="font-extrabold text-yellow-400 uppercase tracking-wider text-[11px] mb-1">1. Titularidade e Abertura de Conta</h4>
+                    <h4 class="font-extrabold text-emerald-400 uppercase tracking-wider text-[11px] mb-1">1. Titularidade e Abertura de Conta</h4>
                     <p>Ao solicitar a abertura de conta no Nexus Financeiro Hub, o usuário declara ter idade igual ou superior a 18 anos completos, capacidade civil plena e ser o titular legítimo do CPF informado, sob as penas da legislação brasileira vigente (Artigo 299 do Código Penal).</p>
                 </div>
 
                 <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <h4 class="font-extrabold text-yellow-400 uppercase tracking-wider text-[11px] mb-1">2. Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018)</h4>
+                    <h4 class="font-extrabold text-emerald-400 uppercase tracking-wider text-[11px] mb-1">2. Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018)</h4>
                     <p>Seus dados cadastrais (Nome, CPF, Data de Nascimento, Telefone e E-mail) são coletados para fins estritos de identificação (KYC - Know Your Customer), autenticação em dois fatores, prevenção a fraudes e cumprimento de normas de auditoria. Garantimos sigilo absoluto, sem comercialização ou compartilhamento indevido com terceiros.</p>
                 </div>
 
                 <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <h4 class="font-extrabold text-yellow-400 uppercase tracking-wider text-[11px] mb-1">3. Segurança Criptográfica & Credenciais</h4>
+                    <h4 class="font-extrabold text-emerald-400 uppercase tracking-wider text-[11px] mb-1">3. Segurança Criptográfica & Credenciais</h4>
                     <p>A senha cadastrada é protegida através de algoritmos criptográficos robustos de derivação de chave (scrypt com salt individual). É dever do usuário manter suas credenciais confidenciais, não as compartilhando com terceiros.</p>
                 </div>
 
                 <div class="terms-card-inner p-3.5 rounded-xl bg-white/5 border border-white/10">
-                    <h4 class="font-extrabold text-yellow-400 uppercase tracking-wider text-[11px] mb-1">4. Direitos do Titular</h4>
+                    <h4 class="font-extrabold text-emerald-400 uppercase tracking-wider text-[11px] mb-1">4. Direitos do Titular</h4>
                     <p>O titular poderá, a qualquer momento, requerer a confirmação da existência de tratamento, correção de dados incompletos ou inexatos, ou a anonimização e exclusão de sua conta através dos canais de suporte oficiais.</p>
                 </div>
             </div>
@@ -2718,7 +2718,7 @@ body.light .period button.active {
 
     <!-- MODAL ABRIR E CONSULTAR ORDEM DE SERVIÇO (PÚBLICO) -->
     <div class="fixed inset-0 bg-black/85 backdrop-blur-2xl flex items-center justify-center z-[99999] p-5 opacity-0 transition-opacity duration-300 pointer-events-none" id="overlayNovaOrdem" style="display:none;" onclick="if(event.target===this) closeNovaOrdemModal()">
-        <div id="boxNovaOrdemModal" style="background: linear-gradient(145deg, rgba(14, 11, 4, 0.95) 0%, rgba(6, 4, 1, 0.98) 45%, #000000 100%); border: 1.5px solid rgba(245, 158, 11, 0.35); border-top: 1.5px solid rgba(254, 240, 138, 0.60); border-left: 1.5px solid rgba(245, 158, 11, 0.35); backdrop-filter: blur(40px) saturate(210%); -webkit-backdrop-filter: blur(40px) saturate(210%); box-shadow: 0 35px 90px rgba(0,0,0,0.98), 0 0 55px rgba(245, 158, 11, 0.22), inset 0 1.5px 2px rgba(255,255,255,0.25);" class="rounded-[30px] p-7 sm:p-8 w-full max-w-[560px] text-left transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto max-h-[90vh] overflow-y-auto">
+        <div id="boxNovaOrdemModal" style="background: linear-gradient(145deg, rgba(8, 14, 10, 0.95) 0%, rgba(4, 7, 5, 0.98) 45%, #000000 100%); border: 1.5px solid rgba(16, 185, 129, 0.35); border-top: 1.5px solid rgba(167, 243, 208, 0.60); border-left: 1.5px solid rgba(16, 185, 129, 0.35); backdrop-filter: blur(40px) saturate(210%); -webkit-backdrop-filter: blur(40px) saturate(210%); box-shadow: 0 35px 90px rgba(0,0,0,0.98), 0 0 55px rgba(16,185,129,0.22), inset 0 1.5px 2px rgba(255,255,255,0.25);" class="rounded-[30px] p-7 sm:p-8 w-full max-w-[560px] text-left transform translate-y-6 scale-90 transition-all duration-400 relative overflow-hidden pointer-events-auto max-h-[90vh] overflow-y-auto">
             <button class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg font-bold focus:outline-none z-10" type="button" onclick="closeNovaOrdemModal()">✕</button>
             
             <!-- Abas de Navegação: Abrir Ordem de Serviço OS vs Consulta de OS -->
@@ -2732,8 +2732,8 @@ body.light .period button.active {
             </div>
 
             <div id="boxNovaOrdemForm">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/35 text-yellow-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/35 text-emerald-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Suporte Técnico & Chamados</span>
                 </div>
                 <h2 class="text-xl font-black text-white mb-1.5 flex items-center gap-2">
@@ -2748,13 +2748,13 @@ body.light .period button.active {
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Seu Nome Completo *</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientName" required placeholder="Ex: Paulo Lima" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                                <input id="osClientName" required placeholder="Ex: Paulo Lima" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Seu E-mail de Contato *</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                                <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
                     </div>
@@ -2763,13 +2763,13 @@ body.light .period button.active {
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">WhatsApp / Celular (Opcional)</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="handlePhoneInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                                <input id="osClientPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="handlePhoneInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">CPF do Titular (Opcional)</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientCpf" placeholder="00000000000" maxlength="11" oninput="handleCpfInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                                <input id="osClientCpf" placeholder="00000000000" maxlength="11" oninput="handleCpfInput(this)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
                     </div>
@@ -2777,7 +2777,7 @@ body.light .period button.active {
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Tipo de Serviço *</label>
-                            <select id="osServiceType" required class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-amber-500 focus:outline-none">
+                            <select id="osServiceType" required class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none">
                                 <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
                                 <option value="Reset de Senha">🔑 Reset / Recuperação de Senha</option>
                                 <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais/Financeiros</option>
@@ -2787,7 +2787,7 @@ body.light .period button.active {
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Prioridade</label>
-                            <select id="osPriority" class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-amber-500 focus:outline-none">
+                            <select id="osPriority" class="w-full bg-slate-900 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none">
                                 <option value="Normal">⚪ Normal</option>
                                 <option value="Alta">🟡 Alta</option>
                                 <option value="Urgente">🔴 Urgente</option>
@@ -2797,19 +2797,19 @@ body.light .period button.active {
 
                     <div>
                         <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Assunto Resumido *</label>
-                        <input id="osTitle" required placeholder="Ex: Solicito reset de senha para meu e-mail" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
+                        <input id="osTitle" required placeholder="Ex: Solicito reset de senha para meu e-mail" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
                     </div>
 
                     <div>
                         <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Descrição Detalhada do Pedido *</label>
-                        <textarea id="osDescription" rows="4" required placeholder="Explique com detalhes o que precisa ser feito..." class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none resize-none"></textarea>
+                        <textarea id="osDescription" rows="4" required placeholder="Explique com detalhes o que precisa ser feito..." class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none resize-none"></textarea>
                     </div>
 
                     <div id="osFormFeedback" class="hidden p-3 rounded-xl text-xs font-semibold border bg-rose-950/90 border-rose-500/60 text-rose-200"></div>
 
                     <div class="flex items-center justify-end gap-3 pt-2">
                         <button type="button" onclick="closeNovaOrdemModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white border border-white/10 transition-colors">Cancelar</button>
-                        <button type="submit" id="btnSubmitOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 hover:brightness-110 text-black font-extrabold border border-white/30 shadow-lg shadow-amber-500/30 transition-all">
+                        <button type="submit" id="btnSubmitOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 border border-white/20 shadow-lg shadow-emerald-500/30 transition-all">
                             Enviar Ordem de Serviço 🚀
                         </button>
                     </div>
@@ -2818,32 +2818,32 @@ body.light .period button.active {
 
             <!-- Box Sucesso -->
             <div id="boxNovaOrdemSuccess" class="hidden text-center py-4">
-                <div class="w-14 h-14 rounded-full bg-amber-500/20 border-2 border-amber-500 text-yellow-400 text-2xl flex items-center justify-center mx-auto mb-3 shadow-[0_0_24px_rgba(245,158,11,0.4)]">
+                <div class="w-14 h-14 rounded-full bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 text-2xl flex items-center justify-center mx-auto mb-3 shadow-[0_0_24px_rgba(16,185,129,0.4)]">
                     ✓
                 </div>
                 <h3 class="text-lg font-black text-white mb-1">Ordem de Serviço Aberta!</h3>
                 <p class="text-xs text-slate-400 mb-5">Sua solicitação foi registrada no sistema e já está disponível para análise da equipe de administração.</p>
-                <div class="bg-white/5 border border-amber-500/30 rounded-2xl p-4 mb-5">
+                <div class="bg-white/5 border border-emerald-500/30 rounded-2xl p-4 mb-5">
                     <span class="block text-[10px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">Número do Protocolo</span>
-                    <div class="text-2xl font-black text-yellow-400 tracking-wider" id="osSuccessProtocol">OS-000000</div>
+                    <div class="text-2xl font-black text-emerald-400 tracking-wider" id="osSuccessProtocol">OS-000000</div>
                     <div class="flex items-center justify-center gap-2 mt-3 flex-wrap">
-                        <button type="button" onclick="copyOsProtocol()" class="px-3 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/40 text-yellow-300 text-xs font-bold hover:bg-amber-500/30 transition-colors">
+                        <button type="button" onclick="copyOsProtocol()" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold hover:bg-emerald-500/30 transition-colors">
                             📋 Copiar Protocolo
                         </button>
-                        <button type="button" onclick="consultarProtocoloRecente()" class="px-3 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/40 text-yellow-300 text-xs font-bold hover:bg-amber-500/30 transition-colors">
+                        <button type="button" onclick="consultarProtocoloRecente()" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold hover:bg-emerald-500/30 transition-colors">
                             🔍 Visualizar Chamado
                         </button>
                     </div>
                 </div>
-                <button type="button" onclick="closeNovaOrdemModal()" class="w-full py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 hover:brightness-110 text-black font-extrabold transition-all">
+                <button type="button" onclick="closeNovaOrdemModal()" class="w-full py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 transition-all">
                     Concluir e Voltar
                 </button>
             </div>
 
             <!-- Aba de Consulta de O.S. Aberta por Nome ou E-mail -->
             <div id="boxConsultarOrdem" class="hidden">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/35 text-yellow-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/35 text-emerald-400 text-[11px] font-extrabold uppercase tracking-wider mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Acompanhamento de Chamados</span>
                 </div>
                 <h2 class="text-xl font-black text-white mb-1.5 flex items-center gap-2">
@@ -2855,8 +2855,8 @@ body.light .period button.active {
 
                 <form id="formConsultarOrdem" onsubmit="executarConsultaOrdens(event)" class="mb-4">
                     <div class="flex gap-2.5 flex-wrap sm:flex-nowrap">
-                        <input id="osConsultarQuery" required placeholder="Digite seu Nome ou E-mail cadastrado..." class="flex-1 bg-black/40 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none">
-                        <button type="submit" id="btnExecutarConsultaOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 hover:brightness-110 text-black font-extrabold border border-white/30 shadow-md shadow-amber-500/30 transition-all shrink-0">
+                        <input id="osConsultarQuery" required placeholder="Digite seu Nome ou E-mail cadastrado..." class="flex-1 bg-black/40 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
+                        <button type="submit" id="btnExecutarConsultaOs" class="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 border border-white/20 shadow-md shadow-emerald-500/30 transition-all shrink-0">
                             🔍 Buscar O.S.
                         </button>
                     </div>
@@ -2878,13 +2878,13 @@ body.light .period button.active {
     <header class="w-full max-w-[1240px] flex items-center justify-between gap-4 z-30 mb-2 sm:mb-4 px-2 sm:px-4">
         <!-- Logotipo e Marca Institucional -->
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-amber-600 flex items-center justify-center text-black font-black text-lg shadow-lg shadow-amber-500/25 border border-white/30">
+            <div class="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-black font-black text-lg shadow-lg shadow-white/20 border border-white/40">
                 <span>N</span>
             </div>
             <div class="flex flex-col">
                 <span class="text-base sm:text-lg font-black tracking-tight text-white auth-brand-title font-display flex items-center gap-2">
                     Nexus Financeiro
-                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-yellow-400">HUB BANCÁRIO</span>
+                    <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-white">HUB BANCÁRIO</span>
                 </span>
                 <span class="text-[11px] text-slate-400 font-medium">Plataforma Institucional de Gestão & Conciliação</span>
             </div>
@@ -2893,12 +2893,12 @@ body.light .period button.active {
         <div class="flex items-center gap-2.5">
             <button type="button" onclick="openNovaOrdemModal('suporte')" 
                 class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer shadow-sm" title="Central de Ajuda e Suporte">
-                <svg class="w-3.5 h-3.5 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <span>Ajuda / Suporte</span>
             </button>
             <button type="button" id="loginThemeBtn" onclick="toggleLoginTheme()" title="Alternar Tema Claro / Escuro"
-                class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-yellow-400 shadow-sm transition-all focus:outline-none cursor-pointer">
-                <svg id="themeIconSvg" class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
+                class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white shadow-sm transition-all focus:outline-none cursor-pointer">
+                <svg id="themeIconSvg" class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
             </button>
         </div>
     </header>
@@ -2906,10 +2906,10 @@ body.light .period button.active {
     <!-- Canvas de Fundo Natural (Splines de Rendimento & Rede de Ledger) -->
     <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-    <!-- Ambient Aura Glows Financeiros (Esmeralda & Verde Noturno) -->
+    <!-- Ambient Aura Glows Financeiros (Branco Puro Sutil) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="absolute top-[18%] left-[25%] -translate-x-1/2 w-[480px] h-[480px] bg-amber-500/10 rounded-full blur-[140px]"></div>
-        <div class="absolute bottom-[16%] right-[20%] w-[420px] h-[420px] bg-yellow-500/10 rounded-full blur-[150px]"></div>
+        <div class="absolute top-[18%] left-[25%] -translate-x-1/2 w-[480px] h-[480px] bg-white/5 rounded-full blur-[140px]"></div>
+        <div class="absolute bottom-[16%] right-[20%] w-[420px] h-[420px] bg-white/5 rounded-full blur-[150px]"></div>
     </div>
 
     <!-- CONTAINER PRINCIPAL - LAYOUT EXECUTIVO DUAL-COLUMN -->
@@ -2920,14 +2920,14 @@ body.light .period button.active {
             <div class="hidden lg:flex lg:col-span-7 flex-col justify-center space-y-5 text-left pr-3">
                 
                 <!-- Selo de Padrão Institucional -->
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-yellow-400 text-xs font-bold w-fit shadow-sm shadow-amber-500/10">
-                    <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold w-fit shadow-sm shadow-white/10">
+                    <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
                     <span class="tracking-wide uppercase text-[10.5px]">Sistema Financeiro & Tesouraria Institucional</span>
                 </div>
 
                 <!-- Título e Subtítulo de Impacto Executivo -->
                 <h1 class="text-3xl xl:text-4xl font-black text-white tracking-tight leading-tight font-display">
-                    Gestão patrimonial de alta precisão com <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500">segurança bancária</span>.
+                    Gestão patrimonial de alta precisão com <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">segurança bancária</span>.
                 </h1>
                 <p class="text-xs xl:text-sm text-slate-400 font-medium leading-relaxed max-w-[580px]">
                     Controle em tempo real de fluxos de caixa, conciliação automatizada de transações e relatórios de auditoria contábil com proteção de dados LGPD.
@@ -2951,32 +2951,32 @@ body.light .period button.active {
                     <div class="auth-metric-card p-4">
                         <div class="flex items-center justify-between text-xs text-slate-400 font-bold mb-1.5">
                             <span class="flex items-center gap-1.5">
-                                <svg class="w-3.5 h-3.5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                                 Economia Gerada
                             </span>
-                            <span class="text-yellow-400 text-[10px] font-extrabold bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">+14.8%</span>
+                            <span class="text-white text-[10px] font-extrabold bg-white/10 border border-white/20 px-2 py-0.5 rounded-full">+14.8%</span>
                         </div>
                         <div class="text-2xl font-black text-white tracking-tight" id="metricEconomia" data-target="3850" data-prefix="R$ ">
                             R$ 3.850
                         </div>
                         <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
-                            <span class="text-yellow-400 font-bold">▲</span> Média mensal poupada por titular
+                            <span class="text-white font-bold">▲</span> Média mensal poupada por titular
                         </div>
                     </div>
 
                     <div class="auth-metric-card p-4">
                         <div class="flex items-center justify-between text-xs text-slate-400 font-bold mb-1.5">
                             <span class="flex items-center gap-1.5">
-                                <svg class="w-3.5 h-3.5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
                                 Metas de Liquidez
                             </span>
-                            <span class="text-yellow-400 text-[10px] font-extrabold bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full" id="metricOrcamento">Sob Controle</span>
+                            <span class="text-white text-[10px] font-extrabold bg-white/10 border border-white/20 px-2 py-0.5 rounded-full" id="metricOrcamento">Sob Controle</span>
                         </div>
                         <div class="text-2xl font-black text-white tracking-tight" id="metricMetas" data-target="84" data-suffix="% Concluído">
                             84% Concluído
                         </div>
                         <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
-                            <span class="text-yellow-400 font-bold">●</span> Projeção positiva no fechamento
+                            <span class="text-white font-bold">●</span> Projeção positiva no fechamento
                         </div>
                     </div>
                 </div>
@@ -2984,7 +2984,7 @@ body.light .period button.active {
                 <!-- Linha de Conformidade & Auditoria Criptográfica -->
                 <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-4 text-xs">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 text-yellow-400 flex items-center justify-center shrink-0">
+                        <div class="w-8 h-8 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center shrink-0">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         </div>
                         <div>
@@ -2993,8 +2993,8 @@ body.light .period button.active {
                         </div>
                     </div>
                     <div class="flex items-center gap-2 shrink-0">
-                        <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-lg bg-amber-500/15 text-yellow-400 border border-amber-500/30">ISO 27001</span>
-                        <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-lg bg-amber-500/15 text-yellow-400 border border-amber-500/30">MSSQL ATIVO</span>
+                        <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-lg bg-white/10 text-white border border-white/20">ISO 27001</span>
+                        <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-lg bg-white/10 text-white border border-white/20">MSSQL ATIVO</span>
                     </div>
                 </div>
 
@@ -3008,9 +3008,9 @@ body.light .period button.active {
                     
                     <!-- HEADER MODERNO & REFINADO INSTITUCIONAL -->
                     <div class="flex flex-col items-center text-center mb-4">
-                        <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-amber-600 flex items-center justify-center text-black font-black text-xl shadow-lg shadow-amber-500/30 mb-3 border border-white/30">
+                        <div class="relative w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-black font-black text-xl shadow-lg shadow-white/30 mb-3 border border-white/40">
                             <span class="tracking-tighter">N</span>
-                            <div class="absolute inset-0 rounded-2xl bg-white/20 opacity-0 hover:opacity-100 transition-opacity pointer-events-none"></div>
+                            <div class="absolute inset-0 rounded-2xl bg-black/10 opacity-0 hover:opacity-100 transition-opacity pointer-events-none"></div>
                         </div>
                         <h1 class="text-xl sm:text-2xl font-black tracking-tight auth-brand-nexus text-white font-display">
                             Acesse sua Conta
@@ -3055,7 +3055,7 @@ body.light .period button.active {
                     <div>
                         <div class="flex items-center justify-between mb-1.5">
                             <label class="text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200">Senha</label>
-                            <button type="button" onclick="switchAuthTab('forgot')" class="text-[11px] font-bold text-yellow-400 hover:text-yellow-300 transition-colors focus:outline-none">
+                            <button type="button" onclick="switchAuthTab('forgot')" class="text-[11px] font-bold text-white hover:text-slate-200 underline transition-colors focus:outline-none">
                                 Esqueceu a senha?
                             </button>
                         </div>
@@ -3070,7 +3070,7 @@ body.light .period button.active {
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
                         </div>
-                        <div id="capsLockWarningLogin" class="hidden mt-1.5 text-[11px] text-yellow-400 font-bold flex items-center gap-1.5">
+                        <div id="capsLockWarningLogin" class="hidden mt-1.5 text-[11px] text-white font-bold flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                             <span>Caps Lock está ativado</span>
                         </div>
@@ -3079,14 +3079,14 @@ body.light .period button.active {
                     <!-- Lembrar de Mim -->
                     <div class="flex items-center pt-0.5 text-xs text-slate-200 auth-label">
                         <label class="flex items-center gap-2 cursor-pointer select-none">
-                            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer">
+                            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-white cursor-pointer">
                             <span class="font-medium">Lembrar meu acesso neste dispositivo</span>
                         </label>
                     </div>
 
                     <!-- Botão de Login Instantâneo -->
                     <div class="pt-1.5">
-                        <button type="submit" id="btnLoginSubmit" class="btn-auth-gradient w-full py-3 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 focus:outline-none shadow-lg shadow-amber-500/25">
+                        <button type="submit" id="btnLoginSubmit" class="btn-auth-gradient w-full py-3 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 focus:outline-none shadow-lg shadow-white/20">
                             <span>Entrar na Conta</span>
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                         </button>
@@ -3096,22 +3096,22 @@ body.light .period button.active {
                     <div class="pt-3 border-t border-white/10 mt-3">
                         <button type="button" id="btnQuickAdminLogin" onclick="preencherCredenciaisAdmin()" 
                             class="btn-quick-admin-login w-full py-2.5 px-3.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
-                            <span class="text-yellow-400 text-sm">⚡</span>
+                            <span class="text-white text-sm">⚡</span>
                             <span>Acesso Rápido Master</span>
-                            <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-amber-500/20 text-yellow-300 font-extrabold border border-amber-500/30">1-Clique VIP</span>
+                            <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-white/20 text-white font-extrabold border border-white/30">1-Clique VIP</span>
                         </button>
                     </div>
 
                     <!-- Selo de Criptografia Bancária -->
                     <div class="pt-2 flex items-center justify-center gap-2 text-[10.5px] text-slate-400 font-medium">
-                        <svg class="w-3.5 h-3.5 text-yellow-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"/></svg>
+                        <svg class="w-3.5 h-3.5 text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"/></svg>
                         <span>Ambiente Seguro • Criptografia Bancária TLS 1.3</span>
                     </div>
                 </form>
 
                 <p class="mt-3.5 text-center text-xs auth-subtitle-text text-slate-300">
                     Não possui uma conta? 
-                    <button type="button" onclick="switchAuthTab('register')" class="text-yellow-400 hover:text-yellow-300 font-bold ml-1 focus:outline-none">
+                    <button type="button" onclick="switchAuthTab('register')" class="text-white hover:text-slate-200 underline font-bold ml-1 focus:outline-none">
                         Cadastre-se gratuitamente
                     </button>
                 </p>
@@ -3124,7 +3124,7 @@ body.light .period button.active {
                             <!-- SEÇÃO 1: DADOS DO TITULAR (KYC) -->
                             <div class="space-y-2.5">
                                 <div class="pb-1 border-b border-white/10">
-                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-yellow-400 font-display">1. Identificação do Titular (KYC)</span>
+                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-white font-display">1. Identificação do Titular (KYC)</span>
                                 </div>
 
                                 <!-- CPF -->
@@ -3166,7 +3166,7 @@ body.light .period button.active {
                             <!-- SEÇÃO 2: CONTATO & NOTIFICAÇÕES FINANCEIRAS -->
                             <div class="space-y-2.5 pt-1">
                                 <div class="flex items-center gap-2 pb-1 border-b border-white/10">
-                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-yellow-400 font-display">2. Contato & Notificações</span>
+                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-white font-display">2. Contato & Notificações</span>
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -3197,7 +3197,7 @@ body.light .period button.active {
                             <!-- SEÇÃO 3: SENHA DE ACESSO FINANCEIRO -->
                             <div class="space-y-2.5 pt-1">
                                 <div class="flex items-center gap-2 pb-1 border-b border-white/10">
-                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-yellow-400 font-display">3. Senha de Acesso Financeiro</span>
+                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-white font-display">3. Senha de Acesso Financeiro</span>
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -3254,13 +3254,13 @@ body.light .period button.active {
                             <!-- SEÇÃO 4: CONFORMIDADE LEGAL & LGPD -->
                             <div class="pt-1.5 space-y-2 text-[11px] text-slate-200 auth-label">
                                 <label class="flex items-start gap-2.5 cursor-pointer select-none">
-                                    <input type="checkbox" id="regTerms" required class="w-4 h-4 mt-0.5 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer shrink-0">
+                                    <input type="checkbox" id="regTerms" required class="w-4 h-4 mt-0.5 rounded border-gray-700 bg-black/40 accent-white cursor-pointer shrink-0">
                                     <span class="leading-snug">
-                                        Li e aceito os <a href="javascript:void(0)" onclick="openFinancialTermsModal()" class="text-yellow-400 hover:text-yellow-300 underline font-bold">Termos de Abertura de Conta</a> e a <a href="javascript:void(0)" onclick="openFinancialTermsModal()" class="text-yellow-400 hover:text-yellow-300 underline font-bold">Política de Privacidade (LGPD - Lei 13.709/18)</a>.
+                                        Li e aceito os <a href="javascript:void(0)" onclick="openFinancialTermsModal()" class="text-white hover:text-slate-200 underline font-bold">Termos de Abertura de Conta</a> e a <a href="javascript:void(0)" onclick="openFinancialTermsModal()" class="text-white hover:text-slate-200 underline font-bold">Política de Privacidade (LGPD - Lei 13.709/18)</a>.
                                     </span>
                                 </div>
                                 <label class="flex items-start gap-2.5 cursor-pointer select-none">
-                                    <input type="checkbox" id="regTruthful" required class="w-4 h-4 mt-0.5 rounded border-gray-700 bg-black/40 accent-amber-500 cursor-pointer shrink-0">
+                                    <input type="checkbox" id="regTruthful" required class="w-4 h-4 mt-0.5 rounded border-gray-700 bg-black/40 accent-white cursor-pointer shrink-0">
                                     <span class="leading-snug">
                                         Declaro sob as penas da lei que todas as informações cadastrais prestadas são verídicas e de minha titularidade.
                                     </span>
@@ -3268,8 +3268,8 @@ body.light .period button.active {
                             </div>
 
                             <!-- SELO DE SEGURANÇA BANCÁRIA -->
-                            <div class="p-3 rounded-2xl bg-gradient-to-r from-amber-500/12 via-black/80 to-amber-500/12 border border-amber-500/30 flex items-center gap-3 text-[10.5px] text-slate-300 shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
-                                <div class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 text-yellow-400 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(245,158,11,0.35)]">
+                            <div class="p-3 rounded-2xl bg-gradient-to-r from-white/10 via-black/80 to-white/10 border border-white/20 flex items-center gap-3 text-[10.5px] text-slate-300 shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
+                                <div class="w-8 h-8 rounded-xl bg-white/15 border border-white/30 text-white flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(255,255,255,0.20)]">
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                                 </div>
                                 <div class="leading-tight">
@@ -3280,7 +3280,7 @@ body.light .period button.active {
 
                             <!-- BOTÃO DE CRIAÇÃO DE CONTA -->
                             <div class="pt-1.5">
-                                <button type="submit" id="btnRegisterSubmit" class="btn-auth-gradient w-full py-3.5 text-sm font-black flex items-center justify-center gap-2 focus:outline-none shadow-lg shadow-amber-500/20">
+                                <button type="submit" id="btnRegisterSubmit" class="btn-auth-gradient w-full py-3.5 text-sm font-black flex items-center justify-center gap-2 focus:outline-none shadow-lg shadow-white/20">
                                     <span>Concluir Abertura de Conta</span>
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                                 </button>
@@ -3289,7 +3289,7 @@ body.light .period button.active {
 
                         <p class="mt-4 text-center text-xs auth-subtitle-text text-slate-300">
                             Já possui uma conta ativa? 
-                            <button type="button" onclick="switchAuthTab('login')" class="text-yellow-400 hover:text-yellow-300 font-extrabold ml-1 focus:outline-none">
+                            <button type="button" onclick="switchAuthTab('login')" class="text-white hover:text-slate-200 underline font-extrabold ml-1 focus:outline-none">
                                 Fazer Login
                             </button>
                         </p>
@@ -3298,7 +3298,7 @@ body.light .period button.active {
                     <!-- 3. FORMULÁRIO DE RECUPERAÇÃO DE SENHA COM CONFIRMAÇÃO DE DADOS -->
                     <div id="forgotBox" class="form-fade hidden">
                         <div class="mb-3 pb-2 border-b border-white/10 flex items-center justify-between">
-                            <span class="text-yellow-400 font-extrabold text-[10.5px] tracking-wider uppercase">Confirmação de Dados Cadastrais</span>
+                            <span class="text-white font-extrabold text-[10.5px] tracking-wider uppercase">Confirmação de Dados Cadastrais</span>
                             <span class="text-[10px] text-slate-400">Verificação Segura</span>
                         </div>
                         <p class="text-xs auth-subtitle-text text-slate-300 mb-4 leading-relaxed">
@@ -3345,7 +3345,7 @@ body.light .period button.active {
                         </form>
 
                         <div class="mt-5 text-center">
-                            <button type="button" onclick="switchAuthTab('login')" class="text-xs font-bold text-yellow-400 hover:text-yellow-300 transition-colors focus:outline-none flex items-center justify-center gap-1.5 mx-auto">
+                            <button type="button" onclick="switchAuthTab('login')" class="text-xs font-bold text-white hover:text-slate-200 underline transition-colors focus:outline-none flex items-center justify-center gap-1.5 mx-auto">
                                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                                 <span>Voltar para o Login</span>
                             </button>
@@ -3354,11 +3354,11 @@ body.light .period button.active {
 
                     <!-- MODAL 4K: EXIBIÇÃO DA SENHA TEMPORÁRIA EM TELA -->
                     <div id="tempPasswordModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden transition-all duration-300">
-                        <div class="relative w-full max-w-md p-6 sm:p-8 rounded-3xl border border-amber-500/40 bg-[#0a0802]/98 shadow-[0_25px_80px_rgba(0,0,0,0.98),0_0_50px_rgba(245,158,11,0.25)] text-center text-white">
-                            <div class="w-14 h-14 mx-auto mb-3.5 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-yellow-400 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                        <div class="relative w-full max-w-md p-6 sm:p-8 rounded-3xl border border-white/20 bg-[#080808]/98 shadow-[0_25px_80px_rgba(0,0,0,0.98),0_0_50px_rgba(255,255,255,0.15)] text-center text-white">
+                            <div class="w-14 h-14 mx-auto mb-3.5 rounded-2xl bg-white/10 border border-white/30 flex items-center justify-center text-white shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                                 <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
                             </div>
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-yellow-300 text-[10.5px] font-extrabold uppercase tracking-wider mb-2">
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-[10.5px] font-extrabold uppercase tracking-wider mb-2">
                                 <span>✓ Dados Confirmados com Sucesso</span>
                             </div>
                             <h3 class="text-xl font-black mb-1.5 text-white">Senha Temporária Gerada</h3>
@@ -3366,19 +3366,19 @@ body.light .period button.active {
                                 Seus dados foram confirmados. Utilize a credencial provisória abaixo para realizar seu login no sistema:
                             </p>
 
-                            <div class="my-4 p-3.5 rounded-2xl bg-black/60 border border-amber-500/40 flex items-center justify-between gap-3 shadow-inner">
+                            <div class="my-4 p-3.5 rounded-2xl bg-black/60 border border-white/20 flex items-center justify-between gap-3 shadow-inner">
                                 <div class="text-left">
-                                    <span class="text-[10px] font-bold text-yellow-400/80 uppercase tracking-widest block">Senha Temporária</span>
-                                    <span id="tempPasswordDisplayValue" class="text-xl sm:text-2xl font-black font-mono tracking-wider text-yellow-300 select-all"></span>
+                                    <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest block">Senha Temporária</span>
+                                    <span id="tempPasswordDisplayValue" class="text-xl sm:text-2xl font-black font-mono tracking-wider text-white select-all"></span>
                                 </div>
-                                <button type="button" id="btnCopyTempPassword" onclick="copyTempPasswordToClipboard()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-yellow-200 text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
+                                <button type="button" id="btnCopyTempPassword" onclick="copyTempPasswordToClipboard()" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/30 text-white text-xs font-bold transition-all flex items-center gap-1.5 shrink-0">
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                                     <span id="copyTempBtnText">Copiar</span>
                                 </button>
                             </div>
 
-                            <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-left flex items-start gap-2.5 text-[11px] text-yellow-200/90 mb-5">
-                                <span class="text-yellow-400 font-bold text-sm leading-none">⚠️</span>
+                            <div class="p-3 rounded-xl bg-white/10 border border-white/20 text-left flex items-start gap-2.5 text-[11px] text-slate-200 mb-5">
+                                <span class="text-white font-bold text-sm leading-none">⚠️</span>
                                 <span><strong>Aviso Obrigatório:</strong> No primeiro login com esta senha temporária, será <strong>obrigatório</strong> definir sua nova senha definitiva dentro dos critérios de segurança.</span>
                             </div>
 
@@ -3391,13 +3391,13 @@ body.light .period button.active {
 
                     <!-- MODAL 4K: TROCA OBRIGATÓRIA DE SENHA NO PRIMEIRO LOGIN -->
                     <div id="mandatoryPasswordModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden transition-all duration-300">
-                        <div class="relative w-full max-w-lg p-6 sm:p-8 rounded-3xl border border-amber-500/40 bg-[#0a0802]/98 shadow-[0_25px_80px_rgba(0,0,0,0.98),0_0_50px_rgba(245,158,11,0.25)] text-left text-white">
+                        <div class="relative w-full max-w-lg p-6 sm:p-8 rounded-3xl border border-white/20 bg-[#080808]/98 shadow-[0_25px_80px_rgba(0,0,0,0.98),0_0_50px_rgba(255,255,255,0.15)] text-left text-white">
                             <div class="flex items-center gap-3 mb-4">
-                                <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-yellow-400 shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.25)]">
+                                <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/30 flex items-center justify-center text-white shrink-0 shadow-[0_0_15px_rgba(255,255,255,0.2)]">
                                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
                                 </div>
                                 <div>
-                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-yellow-400 text-[10px] font-extrabold uppercase tracking-wider mb-1">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 border border-white/20 text-white text-[10px] font-extrabold uppercase tracking-wider mb-1">
                                         <span>Primeiro Acesso • Troca Obrigatória</span>
                                     </div>
                                     <h3 class="text-lg sm:text-xl font-black text-white">Definir Nova Senha Pessoal</h3>
@@ -3541,11 +3541,11 @@ body.light .period button.active {
             let bgClass = 'bg-rose-950/90 border-rose-500/60 text-rose-200 shadow-rose-950/50';
             
             if (type === 'success') {
-                icon = '<svg class="w-4 h-4 shrink-0 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
-                bgClass = 'bg-amber-950/90 border-amber-500/60 text-amber-200 shadow-amber-950/50';
+                icon = '<svg class="w-4 h-4 shrink-0 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+                bgClass = 'bg-emerald-950/90 border-emerald-500/60 text-emerald-200 shadow-emerald-950/50';
             } else if (type === 'info') {
-                icon = '<svg class="w-4 h-4 shrink-0 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
-                bgClass = 'bg-amber-950/90 border-amber-500/60 text-amber-200 shadow-amber-950/50';
+                icon = '<svg class="w-4 h-4 shrink-0 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+                bgClass = 'bg-emerald-950/90 border-emerald-500/60 text-emerald-200 shadow-emerald-950/50';
             } else if (type === 'warning') {
                 icon = '<svg class="w-4 h-4 shrink-0 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
                 bgClass = 'bg-amber-950/90 border-amber-500/60 text-amber-200 shadow-amber-950/50';
@@ -3690,8 +3690,8 @@ body.light .period button.active {
             localStorage.setItem('nexus_theme', nextIsLight ? 'light' : 'dark');
 
             const btn = document.getElementById('loginThemeBtn');
-            const moonSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-yellow-400"' fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
-            const sunSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-amber-500"' fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
+            const moonSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>';
+            const sunSvg = '<svg id="themeIconSvg" class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
             if (btn) btn.innerHTML = nextIsLight ? sunSvg : moonSvg;
         };
 
@@ -3739,9 +3739,9 @@ body.light .period button.active {
             if (hasSpecial) score++;
 
             b1.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 1 ? (score === 1 ? 'bg-rose-500' : 'bg-amber-500') : 'bg-white/10');
-            b2.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 2 ? (score === 2 ? 'bg-amber-500' : 'bg-yellow-500') : 'bg-white/10');
-            b3.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 3 ? (score === 3 ? 'bg-yellow-500' : 'bg-amber-400') : 'bg-white/10');
-            b4.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 4 ? 'bg-yellow-400' : 'bg-white/10');
+            b2.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 2 ? (score === 2 ? 'bg-amber-500' : 'bg-emerald-600') : 'bg-white/10');
+            b3.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 3 ? (score === 3 ? 'bg-emerald-600' : 'bg-emerald-500') : 'bg-white/10');
+            b4.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 4 ? 'bg-emerald-400' : 'bg-white/10');
 
             if (score <= 1) {
                 txt.textContent = 'Muito Fraca';
@@ -3751,10 +3751,10 @@ body.light .period button.active {
                 txt.className = 'text-amber-400 font-bold';
             } else if (score === 3) {
                 txt.textContent = 'Forte';
-                txt.className = 'text-amber-400 font-bold';
+                txt.className = 'text-emerald-500 font-bold';
             } else {
                 txt.textContent = 'Excelente';
-                txt.className = 'text-yellow-400 font-bold';
+                txt.className = 'text-emerald-400 font-bold';
             }
             checkPasswordMatch();
         };
@@ -4073,7 +4073,7 @@ body.light .period button.active {
                         `;
                     } else {
                         let cardsHtml = `
-                            <div class="text-xs font-bold text-yellow-400 mb-3 flex justify-between items-center">
+                            <div class="text-xs font-bold text-emerald-400 mb-3 flex justify-between items-center">
                                 <span>${list.length} chamado(s) encontrado(s):</span>
                                 <span class="text-[11px] text-slate-400 font-normal">Atualizado em tempo real</span>
                             </div>
@@ -4083,9 +4083,9 @@ body.light .period button.active {
                             let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
                             const st = (o.status || '').toLowerCase();
                             if (st.includes('anda')) {
-                                statusBg = 'rgba(234,179,8,0.18)'; statusColor = '#FDE047'; statusBorder = 'rgba(234,179,8,0.4)'; statusLabel = '⚙️ Em Andamento';
+                                statusBg = 'rgba(16,185,129,0.18)'; statusColor = '#6EE7B7'; statusBorder = 'rgba(16,185,129,0.4)'; statusLabel = '⚙️ Em Andamento';
                             } else if (st.includes('concl') || st.includes('final')) {
-                                statusBg = 'rgba(245,158,11,0.22)'; statusColor = '#FBBF24'; statusBorder = 'rgba(245,158,11,0.45)'; statusLabel = '✅ Concluído';
+                                statusBg = 'rgba(16,185,129,0.22)'; statusColor = '#34D399'; statusBorder = 'rgba(16,185,129,0.45)'; statusLabel = '✅ Concluído';
                             } else if (st.includes('canc') || st.includes('recus')) {
                                 statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
                             }
@@ -4096,7 +4096,7 @@ body.light .period button.active {
                                 <div class="os-consult-card">
                                     <div class="flex justify-between items-start mb-2.5 gap-2 flex-wrap">
                                         <div class="flex items-center gap-2">
-                                            <span class="font-mono font-bold text-xs px-2.5 py-0.5 rounded-md bg-amber-500/20 text-yellow-300 border border-amber-500/35">
+                                            <span class="font-mono font-bold text-xs px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/35">
                                                 #${o.protocol || o.id}
                                             </span>
                                             <span class="text-[11px] text-slate-400">${dateFormatted}</span>
@@ -4114,8 +4114,8 @@ body.light .period button.active {
                                         <span><strong>Solicitante:</strong> ${escapeOsHtml(o.client_name || 'Anônimo')}</span>
                                         <span><strong>Tipo:</strong> ${escapeOsHtml(o.service_type || 'Geral')}</span>
                                         <span><strong>Prioridade:</strong> ${escapeOsHtml(o.priority || 'Normal')}</span>
-                                        ${o.client_phone ? `<span class="text-yellow-400">📱 <strong>WhatsApp:</strong> ${escapeOsHtml(o.client_phone)}</span>` : ''}
-                                        ${o.tecnico_responsavel ? `<span class="text-yellow-400">👷 <strong>Técnico:</strong> ${escapeOsHtml(o.tecnico_responsavel)}</span>` : ''}
+                                        ${o.client_phone ? `<span class="text-emerald-400">📱 <strong>WhatsApp:</strong> ${escapeOsHtml(o.client_phone)}</span>` : ''}
+                                        ${o.tecnico_responsavel ? `<span class="text-emerald-400">👷 <strong>Técnico:</strong> ${escapeOsHtml(o.tecnico_responsavel)}</span>` : ''}
                                     </div>
 
                                     <div class="bg-black/30 rounded-xl p-2.5 text-xs text-slate-200 mb-2 border border-white/5 leading-relaxed">
@@ -4342,7 +4342,7 @@ body.light .period button.active {
                     }
                     const quickBtn = document.getElementById('btnQuickAdminLogin');
                     if (quickBtn) {
-                        quickBtn.innerHTML = '<span class="text-yellow-400 text-sm">⚡</span><span>Acesso Rápido Master</span><span class="text-[10.5px] px-2 py-0.5 rounded-md bg-amber-500/20 text-yellow-300 font-extrabold border border-amber-500/30">1-Clique VIP</span>';
+                        quickBtn.innerHTML = '<span class="text-emerald-400 text-sm">⚡</span><span>Acesso Rápido Master</span><span class="text-[10.5px] px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-extrabold border border-emerald-500/30">1-Clique VIP</span>';
                     }
                     return false;
                 }
@@ -4409,7 +4409,7 @@ body.light .period button.active {
                 }
                 const quickBtn = document.getElementById('btnQuickAdminLogin');
                 if (quickBtn) {
-                    quickBtn.innerHTML = '<span class="text-yellow-400 text-sm">⚡</span><span>Acesso Rápido Master</span><span class="text-[10.5px] px-2 py-0.5 rounded-md bg-amber-500/20 text-yellow-300 font-extrabold border border-amber-500/30">1-Clique VIP</span>';
+                    quickBtn.innerHTML = '<span class="text-emerald-400 text-sm">⚡</span><span>Acesso Rápido Master</span><span class="text-[10.5px] px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-extrabold border border-emerald-500/30">1-Clique VIP</span>';
                 }
             }
             return false;
@@ -4515,24 +4515,24 @@ body.light .period button.active {
                 html += `
                 <div class="p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all flex items-center justify-between gap-3 group">
                     <div class="flex items-center gap-2.5 min-w-0">
-                        <div class="w-8 h-8 rounded-full ${isAdmin ? 'bg-gradient-to-br from-yellow-400 via-amber-500 to-amber-600 text-black font-black border border-white/30' : 'bg-gradient-to-br from-amber-600 to-yellow-600 text-black border border-amber-400/40'} flex items-center justify-center font-black text-xs shrink-0 shadow-sm">
+                        <div class="w-8 h-8 rounded-full ${isAdmin ? 'bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-700 text-white border border-emerald-300' : 'bg-gradient-to-br from-emerald-600 to-emerald-900 text-white border border-emerald-400/40'} flex items-center justify-center font-black text-xs shrink-0 shadow-sm">
                             ${initials}
                         </div>
                         <div class="min-w-0">
                             <div class="flex items-center gap-1.5 flex-wrap">
                                 <span class="text-xs font-bold text-white truncate">${escapeOsHtml(name)}</span>
                                 <span class="text-[9px] font-black px-1.5 py-0.2 rounded bg-white/10 text-slate-200 border border-white/15">ID #${u.id || '-'}</span>
-                                <span class="text-[9px] font-black px-1.5 py-0.2 rounded ${isAdmin ? 'bg-amber-500/20 text-yellow-300 border border-amber-500/30' : 'bg-white/10 text-slate-200 border border-white/20'} uppercase">${role}</span>
-                                <span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-yellow-300 border border-amber-500/30">${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
+                                <span class="text-[9px] font-black px-1.5 py-0.2 rounded ${isAdmin ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-white/10 text-slate-200 border border-white/20'} uppercase">${role}</span>
+                                <span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">${u.device_type === 'Mobile' ? '📱 Celular' : '💻 Computador'}</span>
                             </div>
                             <span class="text-[11px] text-slate-400 block truncate">${escapeOsHtml(email)}</span>
-                            <div class="text-[10px] text-yellow-400 mt-0.5 flex items-center gap-1">
+                            <div class="text-[10px] text-emerald-400 mt-0.5 flex items-center gap-1">
                                 <span>🕒 Último login:</span> <strong class="text-slate-200">${lastLoginFormatted}</strong>
                             </div>
                         </div>
                     </div>
                     <button type="button" onclick="selecionarUsuarioParaLogon('${escapeOsHtml(email)}', '${passSafe}', '${escapeOsHtml(name)}')" 
-                        class="px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold text-yellow-300 bg-amber-500/15 hover:bg-amber-500/30 border border-amber-500/40 shrink-0 transition-all active:scale-95 flex items-center gap-1">
+                        class="px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold text-emerald-300 bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-500/40 shrink-0 transition-all active:scale-95 flex items-center gap-1">
                         <span>⚡ Logon</span>
                     </button>
                 </div>
@@ -4579,7 +4579,7 @@ body.light .period button.active {
             const quickBtn = document.getElementById('btnQuickAdminLogin');
 
             if (quickBtn) {
-                quickBtn.innerHTML = '<svg class="w-3.5 h-3.5 animate-spin text-yellow-400 inline mr-1.5 shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Autenticando Master...</span>';
+                quickBtn.innerHTML = '<svg class="w-3.5 h-3.5 animate-spin text-emerald-400 inline mr-1.5 shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Autenticando Master...</span>';
             }
 
             if (emailInput) emailInput.value = 'paulolp0101@gmail.com';
@@ -4657,7 +4657,7 @@ body.light .period button.active {
                 if (feedback) {
                     feedback.classList.remove('hidden');
                     feedback.textContent = '✓ CPF Válido';
-                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-yellow-400';
+                    feedback.className = 'mt-1 text-[10.5px] font-semibold text-emerald-400';
                 }
             } else {
                 if (feedback) feedback.classList.add('hidden');
@@ -5102,9 +5102,9 @@ body.light .period button.active {
             if (hasSpecial) score++;
 
             if (b1) b1.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 1 ? (score === 1 ? 'bg-rose-500' : 'bg-amber-500') : 'bg-white/10');
-            if (b2) b2.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 2 ? (score === 2 ? 'bg-amber-500' : 'bg-yellow-500') : 'bg-white/10');
-            if (b3) b3.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 3 ? (score === 3 ? 'bg-yellow-500' : 'bg-amber-400') : 'bg-white/10');
-            if (b4) b4.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 4 ? 'bg-yellow-400' : 'bg-white/10');
+            if (b2) b2.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 2 ? (score === 2 ? 'bg-amber-500' : 'bg-emerald-600') : 'bg-white/10');
+            if (b3) b3.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 3 ? (score === 3 ? 'bg-emerald-600' : 'bg-emerald-500') : 'bg-white/10');
+            if (b4) b4.className = 'h-full rounded-full transition-all duration-300 ' + (score >= 4 ? 'bg-emerald-400' : 'bg-white/10');
 
             if (txt) {
                 if (score <= 1) {
@@ -5115,10 +5115,10 @@ body.light .period button.active {
                     txt.className = 'text-amber-400 font-bold';
                 } else if (score === 3) {
                     txt.textContent = 'Forte';
-                    txt.className = 'text-amber-400 font-bold';
+                    txt.className = 'text-emerald-500 font-bold';
                 } else {
                     txt.textContent = 'Excelente';
-                    txt.className = 'text-yellow-400 font-bold';
+                    txt.className = 'text-emerald-400 font-bold';
                 }
             }
 
@@ -5145,7 +5145,7 @@ body.light .period button.active {
                 } else if (isMatch) {
                     msg.classList.remove('hidden');
                     msg.textContent = '✓ As senhas coincidem perfeitamente';
-                    msg.className = 'mt-1.5 text-[11px] font-bold text-yellow-400';
+                    msg.className = 'mt-1.5 text-[11px] font-bold text-emerald-400';
                 } else {
                     msg.classList.remove('hidden');
                     msg.textContent = '✕ As senhas não conferem';
@@ -5260,7 +5260,7 @@ body.light .period button.active {
             const countBadge = document.getElementById('usersCountBadge');
             if (!listEl) return;
 
-            listEl.innerHTML = '<div class="text-center py-5 text-xs text-yellow-300 font-semibold"><span class="animate-pulse">🔄 Consultando usuários cadastrados...</span></div>';
+            listEl.innerHTML = '<div class="text-center py-5 text-xs text-white font-semibold"><span class="animate-pulse">🔄 Consultando usuários cadastrados...</span></div>';
 
             try {
                 const apiUrl = targetOrigin.endsWith('/') ? targetOrigin + 'api/users' : targetOrigin + '/api/users';
@@ -5284,7 +5284,7 @@ body.light .period button.active {
             if (!listEl) return;
 
             if (!usuarios || usuarios.length === 0) {
-                listEl.innerHTML = '<div class="text-center py-6 text-xs text-slate-400">Nenhum usuário cadastrado ainda.<br><span class="text-yellow-400 font-bold">Crie a primeira conta na aba "Criar Conta".</span></div>';
+                listEl.innerHTML = '<div class="text-center py-6 text-xs text-slate-400">Nenhum usuário cadastrado ainda.<br><span class="text-white font-bold">Crie a primeira conta na aba "Criar Conta".</span></div>';
                 return;
             }
 
@@ -5295,17 +5295,17 @@ body.light .period button.active {
                 const initials = (u.name || u.email).substring(0, 2).toUpperCase();
 
                 html += `
-                    <div onclick="selecionarUsuarioParaLogon('${safeEmail}')" class="p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-amber-500/50 hover:bg-amber-500/[0.08] transition-all cursor-pointer flex items-center justify-between gap-3 group">
+                    <div onclick="selecionarUsuarioParaLogon('${safeEmail}')" class="p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-white/50 hover:bg-white/[0.08] transition-all cursor-pointer flex items-center justify-between gap-3 group">
                         <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-yellow-400 via-amber-500 to-amber-600 text-black font-black text-xs flex items-center justify-center shrink-0 shadow-md">
+                            <div class="w-9 h-9 rounded-xl bg-white text-black font-black text-xs flex items-center justify-center shrink-0 shadow-md">
                                 ${initials}
                             </div>
                             <div class="min-w-0">
-                                <div class="text-xs font-bold text-white truncate group-hover:text-yellow-300 transition-colors">${safeName}</div>
+                                <div class="text-xs font-bold text-white truncate group-hover:text-white transition-colors">${safeName}</div>
                                 <div class="text-[11px] text-slate-400 truncate">${safeEmail}</div>
                             </div>
                         </div>
-                        <button type="button" class="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-yellow-300 hover:text-black font-extrabold text-[11px] transition-all shrink-0">
+                        <button type="button" class="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white text-white hover:text-black font-extrabold text-[11px] transition-all shrink-0">
                             Logon ➔
                         </button>
                     </div>
@@ -5450,16 +5450,16 @@ body.light .period button.active {
             const particleCount = isMobile ? 16 : 38;
             const particles = [];
             const paletteDark = [
-                'rgba(245, 158, 11, ', // Âmbar dourado
-                'rgba(250, 204, 21, ', // Amarelo luminoso
-                'rgba(217, 119, 6, ',  // Ouro escuro
-                'rgba(254, 240, 138, ' // Amarelo suave
+                'rgba(255, 255, 255, ', // Branco puro
+                'rgba(241, 245, 249, ', // Slate 100
+                'rgba(203, 213, 225, ', // Slate 300
+                'rgba(255, 255, 255, '  // Branco luminoso
             ];
             const paletteLight = [
-                'rgba(217, 119, 6, ',  // Âmbar
-                'rgba(245, 158, 11, ', // Ouro
-                'rgba(250, 204, 21, ', // Amarelo
-                'rgba(180, 83, 9, '    // Âmbar escuro
+                'rgba(15, 23, 42, ',    // Slate escuro
+                'rgba(51, 65, 85, ',    // Slate 700
+                'rgba(100, 116, 139, ', // Slate 500
+                'rgba(15, 23, 42, '     // Slate 900
             ];
 
             for (let i = 0; i < particleCount; i++) {
@@ -5497,24 +5497,24 @@ body.light .period button.active {
 
                 glowPhase += 0.005;
 
-                // 1. Orbe ambiente superior esquerdo (Esmeralda Financeiro)
+                // 1. Orbe ambiente superior esquerdo (Branco Puro Sutil)
                 const orb1X = width * 0.20 + Math.cos(glowPhase * 0.7) * 40;
                 const orb1Y = height * 0.24 + Math.sin(glowPhase * 0.5) * 30;
                 const orb1Grad = ctx.createRadialGradient(orb1X, orb1Y, 10, orb1X, orb1Y, width * 0.40);
-                const orb1Alpha = isLight ? 0.035 : 0.07;
-                orb1Grad.addColorStop(0, isLight ? `rgba(217, 119, 6, ${orb1Alpha})` : `rgba(245, 158, 11, ${orb1Alpha})`);
+                const orb1Alpha = isLight ? 0.025 : 0.05;
+                orb1Grad.addColorStop(0, isLight ? `rgba(15, 23, 42, ${orb1Alpha})` : `rgba(255, 255, 255, ${orb1Alpha})`);
                 orb1Grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
                 ctx.save();
                 ctx.fillStyle = orb1Grad;
                 ctx.fillRect(0, 0, width, height);
                 ctx.restore();
 
-                // 2. Orbe ambiente inferior direito (Verde Esmeralda Profundo)
+                // 2. Orbe ambiente inferior direito (Branco Puro Sutil)
                 const orb2X = width * 0.82 + Math.sin(glowPhase * 0.6) * 45;
                 const orb2Y = height * 0.76 + Math.cos(glowPhase * 0.8) * 35;
                 const orb2Grad = ctx.createRadialGradient(orb2X, orb2Y, 10, orb2X, orb2Y, width * 0.35);
-                const orb2Alpha = isLight ? 0.03 : 0.06;
-                orb2Grad.addColorStop(0, isLight ? `rgba(217, 119, 6, ${orb2Alpha})` : `rgba(234, 179, 8, ${orb2Alpha})`);
+                const orb2Alpha = isLight ? 0.02 : 0.04;
+                orb2Grad.addColorStop(0, isLight ? `rgba(15, 23, 42, ${orb2Alpha})` : `rgba(255, 255, 255, ${orb2Alpha})`);
                 orb2Grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
                 ctx.save();
                 ctx.fillStyle = orb2Grad;
@@ -5531,7 +5531,7 @@ body.light .period button.active {
                 const c2x = width * 0.68 + Math.cos(glowPhase) * 35;
                 const c2y = waveY1 + 35 + Math.sin(glowPhase * 0.7) * 22;
                 ctx.bezierCurveTo(c1x, c1y, c2x, c2y, width, waveY1 - 20);
-                ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.15)' : 'rgba(245, 158, 11, 0.16)';
+                ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.12)' : 'rgba(255, 255, 255, 0.15)';
                 ctx.lineWidth = 1.6;
                 ctx.stroke();
 
@@ -5544,7 +5544,7 @@ body.light .period button.active {
                 const c4x = width * 0.72 + Math.sin(glowPhase * 0.8) * 30;
                 const c4y = waveY2 - 38 + Math.cos(glowPhase * 0.5) * 18;
                 ctx.bezierCurveTo(c3x, c3y, c4x, c4y, width, waveY2 + 10);
-                ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.12)' : 'rgba(250, 204, 21, 0.14)';
+                ctx.strokeStyle = isLight ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.10)';
                 ctx.lineWidth = 1.3;
                 ctx.stroke();
                 ctx.restore();
@@ -5564,7 +5564,7 @@ body.light .period button.active {
                             ctx.beginPath();
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = isLight ? `rgba(2, 132, 199, ${lineAlpha})` : `rgba(245, 158, 11, ${lineAlpha})`;
+                            ctx.strokeStyle = isLight ? `rgba(15, 23, 42, ${lineAlpha})` : `rgba(255, 255, 255, ${lineAlpha})`;
                             ctx.lineWidth = 0.8;
                             ctx.stroke();
                         }
