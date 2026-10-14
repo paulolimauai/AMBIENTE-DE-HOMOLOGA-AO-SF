@@ -1566,7 +1566,7 @@ const htmlContent = `<!DOCTYPE html>
     }
     document.documentElement.style.setProperty('--app-zoom', sn);
     var bgCol = isLight ? '#F8FAFC' : '#000000';
-    document.write('<style id="critical-fouc-shield">html:not(.user-logged-in), html:not(.user-logged-in) body { scroll-behavior: auto !important; } background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + ' #serverAuthNexusCard, .auth-card-nexus, #authNexusCard, .auth-container, #authPage, #loginBox, #registerBox, #forgotBox { animation: none !important; transform: none !important; transition: none !important; }</style>');
+    document.write('<style id="critical-fouc-shield">background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + '</style>');
     var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || sn === 1.0);
     var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('@media screen { html, body { zoom: ' + sn + ' !important; } }');
     document.write('<style id="nexus-scale-override">' + zoomRule + ' :root { --app-zoom: ' + sn + '; }</style>');
@@ -2155,20 +2155,19 @@ html, body {
   }
 }
 
-/* ==================== TELA DE AUTENTICAÇÃO EXECUTIVA NEXUS 4K (FINTECH GLASS SYSTEM) ==================== */
+/* ==================== Tela de Auth Ultra Moderna (Visual Liquid Glass 4K) ==================== */
 .auth-container {
-  --auth-bg: #07090E;
-  --auth-gold: #FFFFFF;
-  --auth-gold-dark: #F1F5F9;
-  --auth-gold-light: #FFFFFF;
+  --auth-bg: #FFFFFF;
+  --auth-gold: #F59E0B;
+  --auth-gold-dark: #D97706;
   --auth-blue: #3B82F6;
-  --auth-emerald: #10B981;
+  --auth-emerald: #0284C7;
   --auth-cyan: #38BDF8;
-  --auth-card: linear-gradient(165deg, rgba(17, 24, 39, 0.90) 0%, rgba(11, 16, 28, 0.95) 50%, rgba(7, 10, 18, 0.98) 100%);
-  --auth-border: rgba(255, 255, 255, 0.20);
-  --auth-input-bg: rgba(11, 18, 34, 0.65);
+  --auth-card: linear-gradient(145deg, rgba(12, 14, 20, 0.92) 0%, rgba(6, 7, 12, 0.96) 35%, rgba(0, 0, 0, 0.99) 100%);
+  --auth-border: rgba(255, 255, 255, 0.14);
+  --auth-input-bg: rgba(10, 10, 14, 0.85);
   --auth-text: #FFFFFF;
-  --auth-text-dim: #FFFFFF;
+  --auth-text-dim: #94A3B8;
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
@@ -2177,85 +2176,87 @@ html, body {
   justify-content: center;
   flex-direction: column;
   min-height: 100vh;
-  width: 100%;
-  padding: clamp(24px, 4vh, 48px) 16px;
-  background-color: #07090E !important;
-  background-image: 
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 85% 85%, rgba(14, 165, 233, 0.07) 0%, transparent 55%),
-    linear-gradient(180deg, #07090E 0%, #0A0F1D 50%, #05070B 100%) !important;
-  background-attachment: fixed !important;
+  padding: 0 0 clamp(8px, 1.5vh, 18px) 0;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 .auth-container.show { display: flex; }
 
+.auth-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 750px;
+  height: 750px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(14, 165, 233, 0.05) 35%, transparent 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 50%;
+  animation: authAuraPulse 6s ease-in-out infinite alternate;
+}
+@keyframes authAuraPulse {
+  0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.75; }
+  100% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+}
+
 body.light .auth-container {
-  --auth-bg: #F8FAFC;
-  --auth-gold: #0F172A;
-  --auth-gold-dark: #1E293B;
-  --auth-gold-light: #334155;
-  --auth-card: #FFFFFF;
+  --auth-bg: #FFFFFF;
+  --auth-gold: #D97706;
+  --auth-gold-dark: #B45309;
+  --auth-card: rgba(255, 255, 255, 0.94);
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
   --auth-text: #0F172A;
-  --auth-text-dim: #334155;
-  background-color: #F8FAFC !important;
-  background-image: 
-    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(15, 23, 42, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.05) 0%, transparent 50%),
-    linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 100%) !important;
+  --auth-text-dim: #475569;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
-/* Barra Superior de Utilitários (Tema Claro/Escuro) */
 .auth-top-bar {
   position: absolute;
   top: 20px;
-  right: 24px;
+  right: 20px;
   display: flex;
   align-items: center;
   gap: 12px;
-  z-index: 30;
+  z-index: 20;
 }
 
 .auth-theme-btn {
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.30);
-  color: #FFFFFF;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: var(--auth-gold);
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .auth-theme-btn svg {
-  width: 20px !important;
-  height: 20px !important;
+  width: 24px !important;
+  height: 24px !important;
   stroke-width: 2.2px;
 }
 .auth-theme-btn:hover {
-  transform: scale(1.06) translateY(-1px);
-  background: rgba(255, 255, 255, 0.20);
-  border-color: #FFFFFF;
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(245, 158, 11, 0.70);
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.40);
 }
 body.light .auth-theme-btn {
   background: #FFFFFF;
   border-color: #CBD5E1;
-  color: #0F172A;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
-}
-body.light .auth-theme-btn:hover {
-  background: #F8FAFC;
-  border-color: #0F172A;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
-/* Grid Sutil de Fundo */
 .auth-grid {
   position: absolute;
   inset: 0;
@@ -2263,771 +2264,323 @@ body.light .auth-theme-btn:hover {
   pointer-events: none;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 56px 56px;
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 80%);
-  mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 80%);
-}
-body.light .auth-grid {
-  background-image:
-    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(245, 158, 11, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(circle at 50% 45%, #000 0%, transparent 75%);
 }
 
-/* Layout Executivo em Grid Perfeito (2 Colunas Harmonizadas) */
+.auth-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(85px);
+  opacity: 0.32;
+  pointer-events: none;
+  will-change: transform;
+}
+.auth-blob.b1 {
+  width: 460px;
+  height: 460px;
+  background: #F59E0B;
+  top: -110px;
+  left: -110px;
+  animation: blobFloat 22s ease-in-out infinite;
+}
+.auth-blob.b2 { width: 440px; height: 440px; background: transparent; display: none !important; }
+.auth-blob.b3 {
+  width: 420px;
+  height: 420px;
+  background: #F59E0B;
+  top: 28%;
+  right: 12%;
+  opacity: 0.24;
+  animation: blobFloat 28s ease-in-out infinite;
+  animation-delay: -14s;
+}
+body.light .auth-blob { opacity: 0.14; }
+
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -45px) scale(1.08); }
+  66% { transform: translate(-35px, 30px) scale(0.94); }
+}
+
+@keyframes authCardEntrance {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==================== EFEITO TELA DE VIDRO PANORÂMICA (4K LIQUID GLASS SCREEN) ==================== */
+.glass-viewport-screen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Placas de Vidro Líquido Flutuantes em Profundidade 4K (Otimizadas para Resposta Instantânea) */
+.glass-shard {
+  position: absolute;
+  border-radius: 40px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(14, 165, 233, 0.08) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.26);
+  border-top: 2.5px solid rgba(255, 255, 255, 0.75);
+  border-left: 2px solid rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 
+    0 30px 70px rgba(0, 0, 0, 0.65),
+    inset 0 2px 5px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.40);
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.glass-shard-1 {
+  top: 2%;
+  left: -4%;
+  width: 420px;
+  height: 420px;
+  transform: rotate(-14deg) translateZ(0);
+  box-shadow: 0 35px 90px rgba(0,0,0,0.75), 0 0 60px rgba(14, 165, 233, 0.20), inset 0 2px 5px rgba(255,255,255,0.7);
+}
+
+.glass-shard-2 {
+  bottom: -6%;
+  right: -3%;
+  width: 480px;
+  height: 480px;
+  transform: rotate(18deg) translateZ(0);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(245, 158, 11, 0.10) 50%, rgba(14, 165, 233, 0.06) 100%);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 70px rgba(245, 158, 11, 0.25), inset 0 2px 5px rgba(255,255,255,0.7);
+}
+
+.glass-shard-3 {
+  top: 22%;
+  right: 6%;
+  width: 250px;
+  height: 250px;
+  border-radius: 32px;
+  transform: rotate(25deg) translateZ(0);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(245, 158, 11, 0.18), inset 0 2px 4px rgba(255,255,255,0.6);
+}
+
+.glass-shard-4 {
+  bottom: 16%;
+  left: 5%;
+  width: 230px;
+  height: 230px;
+  border-radius: 32px;
+  transform: rotate(-20deg) translateZ(0);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.55), 0 0 50px rgba(14, 165, 233, 0.20), inset 0 2px 4px rgba(255,255,255,0.6);
+}
+
+.glass-shard-5 {
+  top: 60%;
+  right: 28%;
+  width: 140px;
+  height: 140px;
+  border-radius: 26px;
+  transform: rotate(12deg) translateZ(0);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(236, 72, 153, 0.08) 100%);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.45), 0 0 35px rgba(236, 72, 153, 0.20), inset 0 2px 4px rgba(255,255,255,0.5);
+}
+
+/* Feixe de Luz Prismática e Refrativo de Vidro 4K */
+.glass-screen-reflection {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 15%, rgba(255, 255, 255, 0.03) 38%, rgba(255, 255, 255, 0.08) 46%, rgba(253, 230, 138, 0.05) 50%, rgba(255, 255, 255, 0.03) 54%, transparent 75%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+body.light .glass-shard {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.55) 60%, rgba(219, 234, 254, 0.60) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10), inset 0 2px 5px #FFFFFF !important;
+}
+
+/* Card de Autenticação Ultra 4K Executive Frosted Glass (Efeito Fundo de Vidro Puro & Luxo) */
+.auth-card-nexus {
+  position: relative;
+  z-index: 10;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(16, 26, 48, 0.52) 42%, rgba(6, 12, 24, 0.72) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-top: 1.8px solid rgba(255, 255, 255, 0.65) !important;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.38) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 28px;
+  padding: clamp(20px, 2.6vh, 28px) clamp(20px, 2.4vw, 30px);
+  width: 100%;
+  max-width: 446px;
+  box-shadow: 
+    0 35px 85px -15px rgba(0, 0, 0, 0.75),
+    0 0 50px -10px rgba(14, 165, 233, 0.15),
+    0 0 40px -10px rgba(245, 158, 11, 0.14),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(28px) saturate(210%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%);
+  animation: authCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  overflow: hidden;
+  transform: none !important;
+}
+
+/* Otimização Global de Cliques Ultra-Rápidos */
+button, input, select, textarea, a, [role="button"], .auth-tab-btn, .btn-quick-admin-login {
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+button:active, .auth-tab-btn:active, .btn-quick-admin-login:active {
+  transform: scale(0.98) !important;
+  transition: transform 0.05s ease !important;
+}
+
+.auth-card-nexus::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), #FFFFFF 50%, rgba(251, 191, 36, 0.85) 65%, transparent);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.auth-card-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle 420px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(255, 255, 255, 0.20), rgba(245, 158, 11, 0.08) 40%, transparent 70%);
+  opacity: var(--card-glare-opacity, 0);
+  transition: opacity 0.35s ease;
+  z-index: 4;
+}
+
+body.light .auth-card-nexus {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(248, 250, 252, 0.78) 100%) !important;
+  border: 1.5px solid rgba(203, 213, 225, 0.80) !important;
+  border-top: 2px solid #FFFFFF !important;
+  border-left: 1.8px solid #FFFFFF !important;
+  box-shadow: 0 25px 65px -10px rgba(15, 23, 42, 0.12), 0 0 35px -5px rgba(245, 158, 11, 0.10), inset 0 2px 3px #FFFFFF !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+}
+
+body.light .auth-card-glare {
+  background: radial-gradient(circle 380px at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(245, 158, 11, 0.10), transparent 70%) !important;
+}
+
+/* Layout Executivo 2 Colunas para o Login no server.js (Split Harmonizado) */
 .auth-exec-layout {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 1140px;
+  max-width: 1180px;
   margin: auto;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: clamp(28px, 4vw, 56px);
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(20px, 3vw, 44px);
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  padding: clamp(6px, 1.2vh, 16px) 12px;
+  flex: 1;
 }
 
-/* ==================== COLUNA ESQUERDA: SHOWCASE EXECUTIVO ==================== */
-.auth-showcase-panel {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(14px, 2vh, 22px);
-  text-align: left;
-  justify-content: center;
-}
-
-.auth-showcase-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  color: #FFFFFF !important;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  width: fit-content;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.10);
-}
-.auth-showcase-badge .badge-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  display: inline-block;
-  box-shadow: 0 0 10px #FFFFFF;
-  animation: authPulseDot 2s infinite ease-in-out;
-}
-@keyframes authPulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.85); }
-}
-
-.auth-showcase-title {
-  font-size: clamp(28px, 3.2vw, 42px);
-  font-weight: 900;
-  line-height: 1.16;
-  color: #FFFFFF !important;
-  letter-spacing: -0.025em;
-}
-.auth-showcase-title span {
-  background: linear-gradient(90deg, #FFFFFF 0%, #F1F5F9 50%, #FFFFFF 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.25));
-}
-
-.auth-showcase-desc {
-  font-size: clamp(13.5px, 1.25vw, 15px);
-  color: #FFFFFF !important;
-  line-height: 1.6;
-  max-width: 520px;
-  font-weight: 500;
-}
-
-/* 3 Cards de Métricas Estilo Widget Bloomberg/Fintech */
-.auth-showcase-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-top: 4px;
-}
-
-.auth-metric-card {
-  padding: 14px 14px;
-  border-radius: 16px;
-  background: rgba(15, 23, 42, 0.70);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-top: 1px solid rgba(255, 255, 255, 0.30);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.45);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.auth-metric-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255, 255, 255, 0.60);
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(255, 255, 255, 0.20);
-}
-
-.metric-card-head {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
-}
-.metric-card-head svg {
-  color: #FFFFFF !important;
-  flex-shrink: 0;
-}
-
-.metric-card-label {
-  font-size: 10.5px;
-  font-weight: 800;
-  color: #FFFFFF !important;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.metric-val {
-  font-size: 19px;
-  font-weight: 900;
-  color: #FFFFFF !important;
-  letter-spacing: -0.01em;
-  margin: 2px 0 4px;
-}
-.metric-pill-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10.5px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 6px;
-  width: fit-content;
-}
-.metric-pill-tag.green {
-  background: rgba(16, 185, 129, 0.18);
-  color: #34D399;
-  border: 1px solid rgba(16, 185, 129, 0.35);
-}
-.metric-pill-tag.amber,
-.metric-pill-tag.white {
-  background: rgba(255, 255, 255, 0.16);
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.40);
-}
-.metric-pill-tag.blue {
-  background: rgba(56, 189, 248, 0.18);
-  color: #38BDF8;
-  border: 1px solid rgba(56, 189, 248, 0.35);
-}
-
-/* Barra de Confiança e Segurança */
-.auth-showcase-footer {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: clamp(10px, 1.8vw, 18px);
-  font-size: 12px;
-  font-weight: 700;
-  color: #FFFFFF !important;
-  margin-top: 6px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-.auth-trust-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.auth-trust-item svg {
-  color: #FFFFFF !important;
-  flex-shrink: 0;
-}
-
-/* Estilos de Modo Claro para o Showcase */
-body.light .auth-showcase-badge {
-  background: rgba(15, 23, 42, 0.06) !important;
-  border-color: rgba(15, 23, 42, 0.20) !important;
-  color: #0F172A !important;
-}
-body.light .auth-showcase-badge .badge-dot {
-  background: #0F172A !important;
-  box-shadow: 0 0 8px rgba(15, 23, 42, 0.3) !important;
-}
-body.light .auth-showcase-title {
-  color: #0F172A !important;
-}
-body.light .auth-showcase-title span {
-  background: linear-gradient(90deg, #0F172A 0%, #334155 60%, #1E293B 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  filter: none !important;
-}
-body.light .auth-showcase-desc {
-  color: #334155 !important;
-  font-weight: 500 !important;
-}
-body.light .auth-metric-card {
-  background: #FFFFFF !important;
-  border: 1.5px solid #E2E8F0 !important;
-  border-top: 1.5px solid #FFFFFF !important;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05) !important;
-}
-body.light .auth-metric-card:hover {
-  border-color: #0F172A !important;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12) !important;
-}
-body.light .metric-card-label {
-  color: #334155 !important;
-}
-body.light .metric-val {
-  color: #0F172A !important;
-}
-body.light .metric-pill-tag.green {
-  background: #ECFDF5 !important;
-  color: #059669 !important;
-  border-color: #A7F3D0 !important;
-}
-body.light .metric-pill-tag.amber,
-body.light .metric-pill-tag.white {
-  background: #F1F5F9 !important;
-  color: #0F172A !important;
-  border-color: #CBD5E1 !important;
-}
-body.light .metric-pill-tag.blue {
-  background: #EFF6FF !important;
-  color: #1D4ED8 !important;
-  border-color: #BFDBFE !important;
-}
-body.light .auth-showcase-footer {
-  border-top-color: #E2E8F0 !important;
-  color: #334155 !important;
-}
-
-/* ==================== COLUNA DIREITA: CARD DE AUTENTICAÇÃO ==================== */
-.auth-card-nexus {
+.auth-global-footer {
   position: relative;
   z-index: 10;
-  background: linear-gradient(165deg, rgba(17, 24, 39, 0.88) 0%, rgba(11, 16, 28, 0.94) 50%, rgba(7, 10, 18, 0.98) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
-  border-radius: 26px;
-  padding: clamp(24px, 3.2vh, 32px) clamp(22px, 2.6vw, 32px);
   width: 100%;
-  max-width: 440px;
-  margin: 0 auto;
-  box-shadow: 
-    0 30px 70px -15px rgba(0, 0, 0, 0.80),
-    0 0 45px -10px rgba(255, 255, 255, 0.12),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.25) !important;
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  animation: none !important;
-  transform: none !important;
-  transition: none !important;
-  overflow: hidden;
-}
-
-@keyframes authCardEntrance {
-  0%, 100% { opacity: 1; transform: none; }
-}
-
-/* Fixação Estática Permanente da Tela de Autenticação (Zero Tremor / Zero Oscilação ao Atualizar) */
-#serverAuthNexusCard,
-.auth-card-nexus,
-.auth-container,
-#authPage,
-.auth-exec-layout,
-.auth-showcase-panel,
-#loginBox,
-#registerBox,
-#forgotBox {
-  animation: none !important;
-  transform: none !important;
-  transition: none !important;
-}
-
-html:not(.user-logged-in),
-html:not(.user-logged-in) body {
-  scroll-behavior: auto !important;
-}
-
-body.light .auth-card-nexus {
-  background: #FFFFFF !important;
-  border: 1.5px solid #CBD5E1 !important;
-  border-top: 2px solid #FFFFFF !important;
-  box-shadow: 0 24px 60px -10px rgba(15, 23, 42, 0.10) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* Brand Header */
-.auth-brand {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.auth-logo-badge {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  background: #FFFFFF !important;
-  color: #0F172A !important;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  font-weight: 900;
-  font-size: 24px;
-  font-family: var(--font-sans);
-  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
-  box-shadow: 
-    0 8px 20px -3px rgba(255, 255, 255, 0.35),
-    0 2px 6px rgba(0, 0, 0, 0.25),
-    inset 0 1.5px 2px #FFFFFF !important;
-  margin-bottom: 12px;
-  position: relative;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.auth-logo-badge:hover {
-  transform: scale(1.06) translateY(-2px);
-}
-
-.auth-title {
-  font-family: var(--font-sans);
-  font-size: 21px;
-  font-weight: 800;
-  color: #FFFFFF !important;
-  letter-spacing: -0.015em;
-  display: flex;
   align-items: center;
-  gap: 8px;
-}
-.auth-title span {
-  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 50%, #FFFFFF 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 0.10em;
+  padding: 6px 14px 10px;
 }
 
-.auth-subtitle {
-  font-size: 12.5px;
-  color: #FFFFFF !important;
-  margin-top: 4px;
-  font-weight: 600;
-}
-
-body.light .auth-title {
-  color: #0F172A !important;
-}
-body.light .auth-title span {
-  color: #0F172A !important;
-  font-weight: 900 !important;
-}
-body.light .auth-subtitle {
-  color: #334155 !important;
-  font-weight: 600 !important;
-}
-
-/* Navegação por Abas Segmentadas (iOS / Linear Style) */
-.auth-tabs-nav {
-  display: flex;
-  background: rgba(11, 17, 33, 0.70) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 14px !important;
-  padding: 4px !important;
-  margin-bottom: 20px;
-  gap: 4px;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-}
-body.light .auth-tabs-nav {
-  background: #F1F5F9 !important;
-  border-color: #CBD5E1 !important;
-}
-
-.auth-tab-btn {
-  flex: 1;
-  height: 42px;
-  padding: 8px 14px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #FFFFFF !important;
-  font-size: 13.5px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.auth-tab-btn svg {
-  width: 16px !important;
-  height: 16px !important;
-  stroke-width: 2.2 !important;
-  flex-shrink: 0;
-}
-.auth-tab-btn:hover {
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.10);
-}
-.auth-tab-btn.active {
-  background: #FFFFFF !important;
-  color: #0F172A !important;
-  border: 1px solid #FFFFFF !important;
-  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
-  font-weight: 900 !important;
-}
-body.light .auth-tab-btn {
-  color: #334155 !important;
-}
-body.light .auth-tab-btn:hover {
-  color: #0F172A !important;
-}
-body.light .auth-tab-btn.active {
-  background: #0F172A !important;
-  color: #FFFFFF !important;
-  border-color: #0F172A !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15) !important;
-  font-weight: 800 !important;
-}
-
-/* Campos de Formulário Modernos */
-.auth-field {
-  margin-bottom: 14px;
-}
-.auth-field label {
-  display: block;
-  font-size: 11px;
-  font-weight: 800;
-  color: #FFFFFF !important;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-body.light .auth-field label {
-  color: #0F172A !important;
-}
-
-.auth-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: rgba(11, 18, 34, 0.65) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-radius: 12px !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  box-sizing: border-box;
-}
-body.light .auth-input-wrapper {
-  background: #FFFFFF !important;
-  border: 1.5px solid #CBD5E1 !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
-}
-
-.auth-input-wrapper:focus-within {
-  border-color: #FFFFFF !important;
-  background: rgba(15, 23, 42, 0.95) !important;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25), 0 8px 20px -4px rgba(0, 0, 0, 0.5) !important;
-  transform: translateY(-1px);
-}
-body.light .auth-input-wrapper:focus-within {
-  background: #FFFFFF !important;
-  border-color: #0F172A !important;
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
-}
-
-.auth-input-icon {
-  width: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF !important;
-  flex-shrink: 0;
-}
-body.light .auth-input-icon {
-  color: #334155 !important;
-}
-body.light .auth-input-wrapper:focus-within .auth-input-icon {
-  color: #0F172A !important;
-}
-
-.auth-input-wrapper input {
-  flex: 1;
-  min-width: 0;
-  background: transparent !important;
-  border: none !important;
-  padding: 13px 12px 13px 0;
-  color: #FFFFFF !important;
-  font-size: 14px;
-  font-weight: 600;
-  outline: none !important;
-  box-shadow: none !important;
-  width: 100%;
-}
-body.light .auth-input-wrapper input {
-  color: #0F172A !important;
-}
-.auth-input-wrapper input::placeholder {
-  color: rgba(255, 255, 255, 0.70) !important;
-}
-body.light .auth-input-wrapper input::placeholder {
-  color: #64748B !important;
-}
-
-/* Autofill Override */
-.auth-input-wrapper input:-webkit-autofill,
-.auth-input-wrapper input:-webkit-autofill:hover,
-.auth-input-wrapper input:-webkit-autofill:focus,
-.auth-input-wrapper input:-webkit-autofill:active {
-  -webkit-text-fill-color: #FFFFFF !important;
-  -webkit-box-shadow: 0 0 0px 1000px #090E1C inset !important;
-  box-shadow: 0 0 0px 1000px #090E1C inset !important;
-  transition: background-color 5000s ease-in-out 0s !important;
-  border-radius: 0 12px 12px 0 !important;
-}
-body.light .auth-input-wrapper input:-webkit-autofill,
-body.light .auth-input-wrapper input:-webkit-autofill:hover,
-body.light .auth-input-wrapper input:-webkit-autofill:focus,
-body.light .auth-input-wrapper input:-webkit-autofill:active {
-  -webkit-text-fill-color: #0F172A !important;
-  -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
-  box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
-}
-
-/* Botão de Olho para Senha */
-.auth-pass-toggle,
-.auth-pass-toggle-btn {
-  background: transparent !important;
-  border: none !important;
-  outline: none !important;
-  color: #FFFFFF !important;
-  width: 38px !important;
-  height: 38px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  flex-shrink: 0 !important;
-  padding: 0 !important;
-  margin: 0 4px 0 0 !important;
-  border-radius: 8px !important;
-  transition: all 0.2s ease !important;
-}
-.auth-pass-toggle:hover,
-.auth-pass-toggle-btn:hover {
-  color: #0F172A !important;
-  background: #FFFFFF !important;
-}
-body.light .auth-pass-toggle,
-body.light .auth-pass-toggle-btn {
-  color: #334155 !important;
-}
-body.light .auth-pass-toggle:hover,
-body.light .auth-pass-toggle-btn:hover {
-  color: #0F172A !important;
-  background: #E2E8F0 !important;
-}
-
-/* Botão Primário Branco de Alto Contraste */
-.btn-auth-primary {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 48px;
-  padding: 0 20px;
-  background: #FFFFFF !important;
-  color: #0F172A !important;
-  border: 1px solid #FFFFFF !important;
-  border-radius: 12px !important;
-  font-weight: 900 !important;
-  font-size: 15px !important;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  margin-top: 10px;
-  box-shadow: 
-    0 10px 24px -4px rgba(255, 255, 255, 0.35),
-    0 2px 6px rgba(0, 0, 0, 0.25),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.50) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.btn-auth-primary:hover {
-  background: #F1F5F9 !important;
-  color: #0F172A !important;
-  transform: translateY(-2px);
-  box-shadow: 
-    0 14px 30px -4px rgba(255, 255, 255, 0.50),
-    0 4px 10px rgba(0, 0, 0, 0.30) !important;
-}
-.btn-auth-primary:active {
-  transform: translateY(0) scale(0.98);
-}
-
-body.light .btn-auth-primary {
-  background: #0F172A !important;
-  color: #FFFFFF !important;
-  border: 1px solid #0F172A !important;
-  box-shadow: 0 8px 20px -3px rgba(15, 23, 42, 0.25) !important;
-}
-body.light .btn-auth-primary:hover {
-  background: #1E293B !important;
-  color: #FFFFFF !important;
-}
-
-.auth-forgot-link {
-  font-size: 12px;
-  color: #FFFFFF !important;
-  font-weight: 700;
-  cursor: pointer;
-  transition: color 0.15s;
-  text-decoration: underline;
-}
-.auth-forgot-link:hover {
-  color: #E2E8F0 !important;
-}
-body.light .auth-forgot-link {
-  color: #0F172A !important;
-}
-
-/* Feedback Banners */
-.auth-feedback-banner {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin: 12px 0;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-size: 12.5px;
-  line-height: 1.45;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  animation: authShake 0.35s ease;
-}
-@keyframes authShake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
-}
-.auth-feedback-banner.error {
-  background: rgba(239, 68, 68, 0.12) !important;
-  border: 1px solid rgba(248, 113, 113, 0.35) !important;
-  border-left: 3.5px solid #EF4444 !important;
-  color: #FEE2E2 !important;
-}
-.auth-feedback-banner.success {
-  background: rgba(16, 185, 129, 0.12) !important;
-  border: 1px solid rgba(52, 211, 153, 0.35) !important;
-  border-left: 3.5px solid #10B981 !important;
-  color: #D1FAE5 !important;
-}
-
-/* Botão Secundário Executivo: Ordem de Serviço */
-.btn-open-os {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  height: 42px;
-  padding: 0 16px;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.20) !important;
-  border-radius: 12px !important;
-  color: #FFFFFF !important;
-  font-size: 12.5px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.015em;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  margin-top: 10px;
-}
-.btn-open-os svg {
-  color: #FFFFFF;
-  transition: transform 0.2s ease;
-}
-.btn-open-os:hover {
-  background: rgba(255, 255, 255, 0.16) !important;
-  border-color: #FFFFFF !important;
-  color: #FFFFFF !important;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.15) !important;
-}
-.btn-open-os:hover svg {
-  transform: scale(1.12);
-}
-body.light .btn-open-os {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  color: #0F172A !important;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
-}
-body.light .btn-open-os:hover {
-  background: #F8FAFC !important;
-  border-color: #0F172A !important;
-  color: #0F172A !important;
-}
-
-/* Suporte Técnico Alinhado */
+/* Barra de Suporte Abaixo da Abertura de O.S. (Alinhado Perfeito, Zero Cortes) */
 .auth-support-bar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  font-size: 12px;
-  color: #FFFFFF !important;
-  margin-top: 12px;
-  padding: 4px 8px;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: #94A3B8;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s ease;
+}
+.auth-support-bar:hover {
+  background: rgba(20, 30, 52, 0.85);
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.15);
 }
 .auth-support-bar svg {
-  color: #FFFFFF;
+  color: #F59E0B;
   flex-shrink: 0;
 }
+.auth-support-label {
+  font-weight: 600;
+  color: #94A3B8;
+  white-space: nowrap;
+}
 .auth-support-link {
-  color: #FFFFFF !important;
-  text-decoration: underline;
+  color: #F59E0B;
+  text-decoration: none;
   font-weight: 700;
-  transition: color 0.15s ease;
+  word-break: break-all;
+  transition: color 0.15s ease, text-decoration 0.15s ease;
 }
 .auth-support-link:hover {
-  color: #E2E8F0 !important;
-}
-body.light .auth-support-bar {
-  color: #334155 !important;
-}
-body.light .auth-support-bar svg,
-body.light .auth-support-link {
-  color: #0F172A !important;
+  color: #FCD34D;
+  text-decoration: underline;
 }
 
-/* Grid de 2 colunas para Cadastro/Recuperação */
+body.light .auth-support-bar,
+html.light .auth-support-bar {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
+}
+body.light .auth-support-bar:hover,
+html.light .auth-support-bar:hover {
+  background: #FFFFFF !important;
+  border-color: #D97706 !important;
+}
+body.light .auth-support-bar svg,
+html.light .auth-support-bar svg {
+  color: #D97706 !important;
+}
+body.light .auth-support-label,
+html.light .auth-support-label {
+  color: #475569 !important;
+}
+body.light .auth-support-link,
+html.light .auth-support-link {
+  color: #D97706 !important;
+}
+body.light .auth-support-link:hover,
+html.light .auth-support-link:hover {
+  color: #B45309 !important;
+}
+
 .auth-grid-2col {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3040,81 +2593,738 @@ body.light .auth-support-link {
   }
 }
 
-/* Rodapé Global do Dev */
-.auth-global-footer {
-  position: relative;
-  z-index: 10;
-  width: 100%;
+.auth-showcase-panel {
   display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.8vh, 20px);
+  text-align: left;
   justify-content: center;
-  align-items: center;
-  padding: 16px 14px 10px;
-}
-.dev-signature {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11.5px;
-  color: #FFFFFF !important;
-}
-.dev-signature-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #FFFFFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.dev-signature-icon svg {
-  width: 12px;
-  height: 12px;
-}
-.dev-signature-name {
-  color: #FFFFFF !important;
-  font-weight: 700;
-}
-.dev-sparkle {
-  color: #FFFFFF;
-}
-body.light .dev-signature-name {
-  color: #334155 !important;
 }
 
-/* Responsividade Mobile e Telas Médias */
-@media (max-width: 1024px) {
+@media (max-width: 1024px), (hover: none) {
   .auth-exec-layout {
     grid-template-columns: 1fr !important;
-    max-width: 440px !important;
-    gap: 20px !important;
-    padding: 0 10px !important;
+    max-width: 460px !important;
+    gap: 16px !important;
+    padding: 8px 10px !important;
   }
   .auth-showcase-panel {
     display: none !important;
   }
+  .glass-viewport-screen,
+  .glass-shard,
+  .glass-screen-reflection,
+  .auth-blob,
+  .auth-container::before,
+  #authBgCanvas {
+    display: none !important;
+  }
   .auth-card-nexus {
-    max-width: 100% !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
   }
 }
 
 @media (max-width: 768px) {
   .auth-container {
-    padding: 16px 10px 32px !important;
+    justify-content: flex-start !important;
+    padding: 12px 10px 48px !important;
+    height: auto !important;
     min-height: 100vh !important;
+    overflow-y: auto !important;
   }
   .auth-top-bar {
-    top: 14px !important;
-    right: 14px !important;
+    position: static !important;
+    max-width: 440px !important;
+    padding: 0 4px !important;
+    margin: 0 auto 10px auto !important;
   }
   .auth-card-nexus {
-    padding: 22px 18px !important;
+    padding: 18px 14px !important;
     border-radius: 20px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
   }
-  .auth-input-wrapper input {
-    font-size: 16px !important; /* Evita zoom automático no iOS Safari */
+  .auth-input-wrapper input,
+  .auth-input-wrapper select,
+  .auth-input-wrapper textarea {
+    font-size: 16px !important;
+    min-height: 46px !important;
   }
+  .auth-pass-toggle,
+  .auth-pass-toggle-btn {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+  .btn-auth-primary {
+    min-height: 46px !important;
+    font-size: 15px !important;
+  }
+}
+
+.auth-showcase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.10));
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FCD34D;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  width: fit-content;
+  backdrop-filter: blur(12px);
+}
+
+.auth-showcase-title {
+  font-size: clamp(26px, 2.8vw, 36px);
+  font-weight: 900;
+  line-height: 1.15;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+}
+
+.auth-showcase-title span {
+  background: linear-gradient(90deg, #FCD34D 0%, #F59E0B 50%, #FBBF24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-showcase-desc {
+  font-size: clamp(13px, 1.3vw, 14.5px);
+  color: #CBD5E1;
+  line-height: 1.55;
+  max-width: 500px;
+}
+
+.auth-showcase-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.auth-metric-card {
+  padding: clamp(10px, 1.4vh, 14px) 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(20px);
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.auth-metric-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.6);
+}
+
+.metric-card-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-dim, #94A3B8);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.metric-val {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text, #FFFFFF);
+}
+.metric-sub-green {
+  font-size: 11px;
+  font-weight: 700;
+  color: #F59E0B;
+  margin-top: 2px;
+}
+.metric-sub-amber {
+  font-size: 11px;
+  font-weight: 700;
+  color: #F59E0B;
+  margin-top: 2px;
+}
+.metric-sub-blue {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38BDF8;
+  margin-top: 2px;
+}
+.auth-showcase-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94A3B8;
+  margin-top: 4px;
+}
+
+body.light .auth-showcase-badge {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border: 1.5px solid rgba(180, 83, 9, 0.35) !important;
+  color: #92400E !important;
+  font-weight: 800 !important;
+}
+body.light .auth-showcase-badge span:first-child {
+  background: #D97706 !important;
+}
+body.light .auth-showcase-title {
+  color: #0F172A !important;
+}
+body.light .auth-showcase-title span {
+  background: linear-gradient(90deg, #D97706 0%, #B45309 60%, #92400E 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 1px 1px rgba(180, 83, 9, 0.20)) !important;
+}
+body.light .auth-showcase-desc {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+body.light .auth-metric-card {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
+}
+body.light .auth-metric-card .metric-card-label {
+  color: #475569 !important;
+}
+body.light .auth-metric-card .metric-val {
+  color: #0F172A !important;
+}
+body.light .metric-sub-green {
+  color: #D97706 !important;
+  font-weight: 800 !important;
+}
+body.light .metric-sub-amber {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+body.light .metric-sub-blue {
+  color: #0284C7 !important;
+  font-weight: 800 !important;
+}
+body.light .auth-showcase-footer,
+body.light .auth-showcase-footer span {
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.auth-logo-badge {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 25%, #F59E0B 60%, #B45309 100%) !important;
+  color: #451A03 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 25px;
+  font-family: var(--font-sans);
+  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+  box-shadow: 
+    0 10px 24px -4px rgba(245, 158, 11, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.35),
+    inset 0 2px 3px #FFFFFF,
+    inset 0 -2px 3px rgba(180, 83, 9, 0.45) !important;
+  margin-bottom: 12px;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+.auth-logo-badge:hover {
+  transform: scale(1.06) translateY(-2px);
+  box-shadow: 
+    0 14px 30px -4px rgba(245, 158, 11, 0.70),
+    0 4px 10px rgba(0, 0, 0, 0.40),
+    inset 0 2px 3px #FFFFFF !important;
+}
+.auth-logo-badge::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 22px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.30) 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.auth-title {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.auth-title span {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FCD34D 35%, #F59E0B 75%, #D97706 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-size: 13.5px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+}
+
+.auth-subtitle {
+  font-size: 12.5px;
+  color: #94A3B8;
+  margin-top: 5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+body.light .auth-title {
+  color: #0F172A !important;
+  text-shadow: none !important;
+}
+body.light .auth-title span {
+  color: #D97706 !important;
+  text-shadow: none !important;
+  font-weight: 900 !important;
+}
+body.light .auth-subtitle {
+  color: #475569 !important;
+  text-shadow: none !important;
+  font-weight: 700 !important;
+}
+
+/* Abas de Navegação Segmentada (Entrar / Criar Conta - Menu Executivo Ampliado) */
+.auth-tabs-nav {
+  display: flex;
+  background: rgba(8, 14, 28, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 16px !important;
+  padding: 6px !important;
+  margin-bottom: 22px;
+  gap: 6px;
+  min-height: 56px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(22px) !important;
+  -webkit-backdrop-filter: blur(22px) !important;
+}
+
+body.light .auth-tabs-nav {
+  background: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  height: 48px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94A3B8;
+  font-size: 14.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  letter-spacing: 0.015em;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.auth-tab-btn svg {
+  width: 19px !important;
+  height: 19px !important;
+  stroke-width: 2.3 !important;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.auth-tab-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.07);
+}
+.auth-tab-btn:hover svg {
+  transform: scale(1.12);
+}
+.auth-tab-btn.active {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.20) 100%) !important;
+  color: #FDE68A !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.70) !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.32), inset 0 1px 1.5px rgba(255, 255, 255, 0.40) !important;
+  font-weight: 900 !important;
+}
+body.light .auth-tab-btn {
+  color: #1E293B !important;
+  font-weight: 800 !important;
+}
+body.light .auth-tab-btn:hover {
+  color: #0F172A !important;
+}
+body.light .auth-tab-btn.active {
+  background: #FFFFFF !important;
+  color: #B45309 !important;
+  border: 1.8px solid #D97706 !important;
+  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.22), inset 0 1px 1.5px #FFFFFF !important;
+  font-weight: 900 !important;
+}
+
+/* Campos de Formulário Modernos com Ícones */
+.auth-field {
+  margin-bottom: 16px;
+}
+.auth-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #94A3B8;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+body.light .auth-field label {
+  color: #334155 !important;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(10, 18, 34, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.38) !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.10) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.light .auth-input-wrapper {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05) !important;
+}
+
+.auth-input-wrapper:focus-within {
+  border-color: rgba(245, 158, 11, 0.80) !important;
+  background: rgba(15, 23, 42, 0.75) !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.16), 0 8px 20px -4px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-1px);
+}
+body.light .auth-input-wrapper:focus-within {
+  background: #FFFFFF !important;
+  border-color: #D97706 !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15), 0 6px 16px -2px rgba(15, 23, 42, 0.08) !important;
+}
+
+.auth-input-wrapper.highlight-glow {
+  border-color: var(--auth-gold) !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important;
+}
+
+@keyframes authShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.auth-input-wrapper.input-error {
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.20), 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+  animation: authShake 0.35s ease;
+}
+
+.auth-feedback-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 14px 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: authShake 0.35s ease;
+  transition: all 0.25s ease;
+}
+.auth-feedback-banner.error {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(153, 27, 27, 0.06) 100%) !important;
+  border: 1px solid rgba(248, 113, 113, 0.35) !important;
+  border-left: 3.5px solid #EF4444 !important;
+  color: #FEE2E2 !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+.auth-feedback-banner.warning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(180, 83, 9, 0.06) 100%) !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+  border-left: 3.5px solid #F59E0B !important;
+  color: #FEF3C7 !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+.auth-feedback-banner.success {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
+  border: 1px solid rgba(251, 191, 36, 0.35) !important;
+  border-left: 3.5px solid #F59E0B !important;
+  color: #FEF3C7 !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+.auth-input-icon {
+  width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+body.light .auth-input-icon {
+  color: #64748B !important;
+}
+body.light .auth-input-wrapper:focus-within .auth-input-icon {
+  color: #D97706 !important;
+}
+
+.auth-input-wrapper input {
+  flex: 1;
+  min-width: 0;
+  background: transparent !important;
+  border: none;
+  padding: 14px 12px 14px 0;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  width: 100%;
+}
+.auth-input-wrapper input::placeholder {
+  color: #64748B;
+}
+
+/* Override Nativo de Autofill do Navegador (Elimina Caixas Brancas/Azuis) */
+.auth-input-wrapper input:-webkit-autofill,
+.auth-input-wrapper input:-webkit-autofill:hover,
+.auth-input-wrapper input:-webkit-autofill:focus,
+.auth-input-wrapper input:-webkit-autofill:active {
+  -webkit-text-fill-color: #FFFFFF !important;
+  -webkit-box-shadow: 0 0 0px 1000px #050811 inset !important;
+  box-shadow: 0 0 0px 1000px #050811 inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  border-radius: 0 14px 14px 0 !important;
+}
+
+body.light .auth-input-wrapper input:-webkit-autofill,
+body.light .auth-input-wrapper input:-webkit-autofill:hover,
+body.light .auth-input-wrapper input:-webkit-autofill:focus,
+body.light .auth-input-wrapper input:-webkit-autofill:active {
+  -webkit-text-fill-color: #0F172A !important;
+  -webkit-box-shadow: 0 0 0px 1000px #F8FAFC inset !important;
+  box-shadow: 0 0 0px 1000px #F8FAFC inset !important;
+}
+
+/* Botão de Olho para Visualizar/Ocultar Senha (Sem caixas brancas, 100% integrado) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="text"]::-ms-reveal,
+input[type="text"]::-ms-clear {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.auth-pass-toggle,
+.auth-pass-toggle-btn {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: #94A3B8 !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  margin: 0 4px 0 0 !important;
+  border-radius: 10px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+.auth-pass-toggle:hover,
+.auth-pass-toggle-btn:hover {
+  color: #F59E0B !important;
+  background: rgba(245, 158, 11, 0.15) !important;
+  transform: scale(1.08);
+}
+.auth-pass-toggle svg,
+.auth-pass-toggle-btn svg {
+  width: 18px !important;
+  height: 18px !important;
+  stroke: currentColor !important;
+  stroke-width: 2.2px !important;
+  fill: none !important;
+  pointer-events: none !important;
+  display: block !important;
+}
+body.light .auth-pass-toggle,
+body.light .auth-pass-toggle-btn {
+  color: #64748B !important;
+}
+body.light .auth-pass-toggle:hover,
+body.light .auth-pass-toggle-btn:hover {
+  color: #D97706 !important;
+  background: rgba(217, 119, 6, 0.10) !important;
+}
+
+/* Botão Primário 4K Liquid Amber / Royal Gold */
+.btn-auth-primary {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 46px;
+  padding: 0 20px;
+  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 28%, #D97706 65%, #B45309 100%) !important;
+  color: #1A0D00 !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  border-top: 1.5px solid #FFFFFF !important;
+  border-radius: 14px !important;
+  font-weight: 900 !important;
+  font-size: 14.5px !important;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 
+    0 10px 24px -4px rgba(245, 158, 11, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.30),
+    inset 0 1.5px 2px #FFFFFF,
+    inset 0 -1.5px 2px rgba(180, 83, 9, 0.40) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-auth-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.40), transparent);
+  transition: left 0.5s ease;
+}
+.btn-auth-primary:hover {
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 14px 30px -4px rgba(245, 158, 11, 0.70),
+    0 4px 10px rgba(0, 0, 0, 0.35),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+.btn-auth-primary:hover::before {
+  left: 100%;
+}
+.btn-auth-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+.btn-auth-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-forgot-link {
+  font-size: 12.5px;
+  color: var(--auth-gold);
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.15s;
+  text-decoration: none;
+}
+.auth-forgot-link:hover {
+  text-decoration: underline;
+  color: #FCD34D;
+}
+
+body.light .btn-auth-primary {
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 35%, #D97706 70%, #B45309 100%) !important;
+  color: #1A0D00 !important;
+  border: 1.5px solid rgba(180, 83, 9, 0.5) !important;
+  box-shadow: 0 10px 24px -4px rgba(245, 158, 11, 0.45), inset 0 1.5px 2px #FFFFFF !important;
+}
+body.light .btn-auth-primary:hover {
+  filter: brightness(1.06) !important;
+  box-shadow: 0 14px 32px -4px rgba(245, 158, 11, 0.60), inset 0 1.5px 2px #FFFFFF !important;
+}
+
+body.light .auth-forgot-link {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+body.light .auth-forgot-link:hover {
+  color: #92400E !important;
+}
+
+body.light .auth-bottom-text {
+  color: #475569 !important;
+}
+body.light .auth-bottom-text a {
+  color: #B45309 !important;
+  font-weight: 800 !important;
+}
+body.light .auth-bottom-text a:hover {
+  color: #92400E !important;
+}
+
+/* Botão 4K Glass para Abertura e Consulta de Ordem de Serviço */
+.btn-open-os {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 40px;
+  padding: 0 14px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.20) 0%, rgba(30, 58, 138, 0.38) 50%, rgba(15, 23, 42, 0.85) 100%) !important;
+  border: 1px solid rgba(96, 165, 250, 0.45) !important;
+  border-top: 1px solid rgba(191, 219, 254, 0.65) !important;
+  border-radius: 12px !important;
+  color: #BFDBFE !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  margin-top: 10px;
+}
+.btn-open-os:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.38) 0%, rgba(37, 99, 235, 0.48) 50%, rgba(30, 58, 138, 0.90) 100%) !important;
+  border-color: rgba(147, 197, 253, 0.85) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 22px rgba(59, 130, 246, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+}
+.btn-open-os svg {
+  transition: transform 0.2s ease;
+}
+.btn-open-os:hover svg {
+  transform: scale(1.12);
 }
 
 
@@ -11982,87 +12192,86 @@ body.light .period button.active {
 
   <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
 
+  <!-- Camada de Tela de Vidro Panorâmica (4K Liquid Glass Screen Effect) -->
+  <div class="glass-viewport-screen pointer-events-none">
+    <div class="glass-shard glass-shard-1"></div>
+    <div class="glass-shard glass-shard-2"></div>
+    <div class="glass-shard glass-shard-3"></div>
+    <div class="glass-shard glass-shard-4"></div>
+    <div class="glass-shard glass-shard-5"></div>
+  </div>
+  <div class="glass-screen-reflection pointer-events-none"></div>
+
   <div class="auth-grid" aria-hidden="true"></div>
+  <div class="auth-blob b1"></div>
+  <div class="auth-blob b2"></div>
+  <div class="auth-blob b3"></div>
 
   <div class="auth-exec-layout">
     <!-- Showcase Institucional Executivo -->
     <div class="auth-showcase-panel">
       <div class="auth-showcase-badge">
-        <span class="badge-dot"></span>
-        <span>SISTEMA DE GESTÃO FINANCEIRA PESSOAL • CONTROLE TOTAL</span>
+        <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
+        <span>CONTROLE FINANCEIRO PESSOAL • PRIVACIDADE TOTAL</span>
       </div>
 
       <div class="auth-showcase-title">
-        Controle Total das suas Finanças Pessoais e <span>Nunca Mais Saia do Orçamento Mensal</span>
+        Controle Total do seu Dinheiro & <span>Planejamento Inteligente</span>
       </div>
 
       <div class="auth-showcase-desc">
-        O Nexus Financeiro é a sua plataforma inteligente para organizar gastos, gerenciar contas e faturas de cartão de crédito, eliminar despesas invisíveis e planejar metas. Tenha previsibilidade absoluta e garanta que suas despesas fiquem 100% dentro do limite estabelecido todo mês.
+        Organize suas contas, acompanhe despesas e receitas, gerencie seus cartões e conquiste suas metas de economia com facilidade e clareza no dia a dia.
       </div>
 
       <div class="auth-showcase-metrics">
         <div class="auth-metric-card">
-          <div class="metric-card-head">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
-            <span class="metric-card-label">Orçamento Mensal</span>
-          </div>
-          <div class="metric-val">100% no Limite</div>
-          <div class="metric-pill-tag white">✓ Zero Estouro de Gastos</div>
+          <div class="metric-card-label">Economia do Mês</div>
+          <div class="metric-val">R$ 3.850</div>
+          <div class="metric-sub-green">+18% guardado 🎯</div>
         </div>
 
         <div class="auth-metric-card">
-          <div class="metric-card-head">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
-            <span class="metric-card-label">Economia do Mês</span>
-          </div>
-          <div class="metric-val">R$ 3.850,00</div>
-          <div class="metric-pill-tag green">▲ +24% Guardado</div>
+          <div class="metric-card-label">Orçamento & Gastos</div>
+          <div class="metric-val">Sob Controle</div>
+          <div class="metric-sub-amber">Sem sustos no fim do mês 💡</div>
         </div>
 
         <div class="auth-metric-card">
-          <div class="metric-card-head">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
-            <span class="metric-card-label">Metas & Reserva</span>
-          </div>
-          <div class="metric-val">94% Atingido</div>
-          <div class="metric-pill-tag blue">🎯 Liberdade Financeira</div>
+          <div class="metric-card-label">Metas & Sonhos</div>
+          <div class="metric-val">84% Concluído</div>
+          <div class="metric-sub-blue">Rumo à sua conquista 🚀</div>
         </div>
       </div>
 
       <div class="auth-showcase-footer">
-        <span class="auth-trust-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span>Controle de Gastos & Cartões</span>
+        <span style="display:flex; align-items:center; gap:6px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block; box-shadow:0 0 8px rgba(245,158,11,0.6);"></span>
+          Seus dados 100% seguros e confidenciais
         </span>
-        <span class="auth-trust-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>Alertas de Limite de Orçamento</span>
-        </span>
-        <span class="auth-trust-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          <span>Blindagem e Segurança Total</span>
-        </span>
+        <span>•</span>
+        <span>Acesso Rápido e Descomplicado</span>
       </div>
     </div>
 
     <!-- Card Principal de Autenticação -->
     <div class="auth-card-nexus" id="serverAuthNexusCard">
+      <div class="auth-card-glare" id="serverAuthCardGlare"></div>
       <!-- Brand Header -->
       <div class="auth-brand">
         <div class="auth-logo-badge">N</div>
-        <div class="auth-title">NEXUS <span>FINANCEIRO</span></div>
-        <div class="auth-subtitle" id="authBoxSubtitle">Gestão Financeira Pessoal & Controle Inteligente de Gastos</div>
+        <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
+        <div class="auth-subtitle" id="authBoxSubtitle">Sua Gestão Financeira Pessoal Inteligente</div>
       </div>
 
       <!-- Navegação por Abas Segmentadas -->
       <div class="auth-tabs-nav" id="authTabsNav">
         <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="window.switchAuthTab('login')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Entrar na Conta
         </button>
         <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="window.switchAuthTab('register')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-          Criar Conta Grátis
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          Criar Conta
         </button>
       </div>
 
@@ -12070,7 +12279,7 @@ body.light .period button.active {
       <div id="loginBox">
         <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
-            <label>E-mail Cadastrado</label>
+            <label>E-mail Corporativo ou Pessoal</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -12081,7 +12290,7 @@ body.light .period button.active {
 
           <div class="auth-field">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <label style="margin-bottom:0;">Senha de Acesso</label>
+              <label style="margin-bottom:0;">Senha</label>
               <a class="auth-forgot-link" id="goForgotFromLogin" href="javascript:void(0)" onclick="window.switchAuthTab('forgot'); return false;" style="cursor:pointer;">Esqueceu a senha?</a>
             </div>
             <div class="auth-input-wrapper">
@@ -12096,22 +12305,22 @@ body.light .period button.active {
           </div>
 
           <!-- Lembrar de Mim -->
-          <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#FFFFFF;">
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; color:#FFFFFF; font-weight:600;">
-              <input type="checkbox" id="rememberMe" style="accent-color:#FFFFFF; width:15px; height:15px; cursor:pointer;">
-              <span>Lembrar meu acesso neste dispositivo</span>
+          <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#94A3B8;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none;">
+              <input type="checkbox" id="rememberMe" style="accent-color:#F59E0B; width:15px; height:15px; cursor:pointer;">
+              <span>Lembrar meu acesso</span>
             </label>
           </div>
 
           <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
-            Acessar Minhas Finanças →
+            Entrar na Conta →
           </button>
         </form>
 
-        <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:#FFFFFF;">
-          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#FFFFFF; font-weight:800; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
+        <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
+          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:var(--auth-gold); font-weight:700; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
         </p>
       </div>
 
@@ -12119,8 +12328,8 @@ body.light .period button.active {
       <div id="registerBox" style="display:none;">
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.20); padding-bottom:4px;">
-            <span>1. Identificação do Titular</span>
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+            <span>1. Identificação do Titular (KYC)</span>
           </div>
 
           <div class="auth-field">
@@ -12155,13 +12364,13 @@ body.light .period button.active {
             <div id="regBirthFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
           </div>
 
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.20); padding-bottom:4px;">
-            <span>2. Contato & Notificações de Orçamento</span>
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+            2. Contato & Notificações
           </div>
 
           <div class="auth-grid-2col">
             <div class="auth-field">
-              <label>Celular / WhatsApp</label>
+              <label>Celular / 2FA</label>
               <div class="auth-input-wrapper">
                 <span class="auth-input-icon">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
@@ -12181,8 +12390,8 @@ body.light .period button.active {
             </div>
           </div>
 
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.20); padding-bottom:4px;">
-            <span>3. Senha de Acesso Financeiro</span>
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+            3. Senha de Acesso Financeiro
           </div>
 
           <div class="auth-grid-2col">
@@ -12211,41 +12420,41 @@ body.light .period button.active {
           </div>
           <div id="regPwdMatchMsg" style="display:none; font-size:10.5px; font-weight:600; margin-top:4px;"></div>
 
-          <div style="margin:12px 0 6px; font-size:11px; color:#FFFFFF; display:flex; flex-direction:column; gap:6px;">
-            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#FFFFFF;">
-              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#FFFFFF; cursor:pointer;">
+          <div style="margin:12px 0 6px; font-size:11px; color:#94a3b8; display:flex; flex-direction:column; gap:6px;">
+            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#f59e0b; cursor:pointer;">
               <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade (LGPD - Lei 13.709/18).</span>
             </label>
-            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#FFFFFF;">
-              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#FFFFFF; cursor:pointer;">
+            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#f59e0b; cursor:pointer;">
               <span>Declaro que as informações e dados cadastrais informados são verídicos e de minha titularidade.</span>
             </label>
           </div>
 
-          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#FFFFFF;">
-            <span style="color:#FFFFFF; font-weight:800; font-size:14px;">🔒</span>
-            <span>Ambiente seguro com criptografia de ponta a ponta e proteção integral das suas finanças.</span>
+          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px; font-size:10px; color:#cbd5e1;">
+            <span style="color:#f59e0b; font-weight:800; font-size:14px;">🔒</span>
+            <span>Ambiente seguro com criptografia de ponta a ponta e monitoramento antifraude 24/7.</span>
           </div>
 
           <div id="registerFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="regSubmitBtn">
-            Concluir Cadastro & Iniciar Controle Financeiro →
+            Concluir Abertura de Conta →
           </button>
         </form>
 
-        <p style="margin-top:16px; text-align:center; font-size:12.5px; color:#FFFFFF;">
-          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#FFFFFF; font-weight:800; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
+        <p style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
+          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#f59e0b; font-weight:700; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
         </p>
       </div>
 
       <!-- Box 3: Recuperação de Senha com Confirmação Cadastral -->
       <div id="forgotBox" style="display:none;">
-        <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.20); padding-bottom:4px;">
-          <span>Confirmação Cadastral para Recuperação</span>
+        <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+          <span>Confirmação de Dados Cadastrais (KYC)</span>
         </div>
-        <p style="font-size:12.5px; color:#FFFFFF; margin-bottom:16px; line-height:1.5;">
-          Para gerar sua nova senha com máxima segurança e retomar o controle do seu orçamento financeiro, confirme seus dados:
+        <p style="font-size:12.5px; color:var(--auth-text-dim); margin-bottom:16px; line-height:1.5;">
+          Para emitir sua senha temporária com máxima segurança, confirme seus dados cadastrados de titularidade da conta:
         </p>
 
         <form id="forgotStep1" onsubmit="window.handleServerForgotSubmit(event); return false;">
@@ -12287,7 +12496,7 @@ body.light .period button.active {
         </form>
 
         <div style="text-align:center; margin-top:18px;">
-          <a class="auth-forgot-link" id="goLoginFromForgot" href="javascript:void(0)" onclick="window.switchAuthTab('login'); return false;" style="cursor:pointer; color:#FFFFFF; text-decoration:underline;">← Voltar para o Login</a>
+          <a class="auth-forgot-link" id="goLoginFromForgot" href="javascript:void(0)" onclick="window.switchAuthTab('login'); return false;" style="cursor:pointer;">← Voltar para o Login</a>
         </div>
       </div>
 
@@ -27345,13 +27554,11 @@ window.applyPostLoginBg = function(theme) {
   setupCanvas('appBgOrbitalCanvas');
 })();
 
-  // Tela de login estável e fixa (sem oscilação ou inclinação ao passar o mouse ou ao atualizar)
+  // Tela de login estável e fixa (sem oscilação ou inclinação ao passar o mouse)
   (function initServerCardStability() {
     const card = document.getElementById('serverAuthNexusCard');
     if (card) {
       card.style.transform = 'none';
-      card.style.animation = 'none';
-      card.style.transition = 'none';
     }
   })();
 
