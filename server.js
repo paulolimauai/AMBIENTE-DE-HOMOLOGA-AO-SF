@@ -2282,17 +2282,17 @@ html, body {
 
 /* ==================== TELA DE AUTENTICAÇÃO EXECUTIVA NEXUS 4K (FINTECH GLASS SYSTEM) ==================== */
 .auth-container {
-  --auth-bg: #030705;
-  --auth-gold: #10B981;
-  --auth-gold-dark: #059669;
-  --auth-gold-light: #34D399;
-  --auth-blue: #3B82F6;
-  --auth-emerald: #10B981;
-  --auth-cyan: #34D399;
-  --auth-card: linear-gradient(168deg, rgba(8, 14, 10, 0.96) 0%, rgba(2, 6, 4, 0.98) 50%, #000000 100%);
-  --auth-border: rgba(16, 185, 129, 0.30);
-  --auth-input-bg: rgba(6, 12, 8, 0.85);
-  --auth-text: #ECFDF5;
+  --auth-bg: #000000;
+  --auth-gold: #FFFFFF;
+  --auth-gold-dark: #E2E8F0;
+  --auth-gold-light: #FFFFFF;
+  --auth-blue: #FFFFFF;
+  --auth-emerald: #FFFFFF;
+  --auth-cyan: #FFFFFF;
+  --auth-card: linear-gradient(168deg, rgba(10, 10, 10, 0.98) 0%, rgba(4, 4, 4, 0.99) 50%, #000000 100%);
+  --auth-border: rgba(255, 255, 255, 0.25);
+  --auth-input-bg: rgba(12, 12, 12, 0.85);
+  --auth-text: #FFFFFF;
   --auth-text-dim: #94A3B8;
   position: relative;
   overflow-x: hidden;
@@ -2304,20 +2304,20 @@ html, body {
   min-height: 100vh;
   width: 100%;
   padding: clamp(24px, 4vh, 48px) 16px;
-  background-color: #030705 !important;
+  background-color: #000000 !important;
   background-image: 
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(16, 185, 129, 0.16) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 85% 85%, rgba(5, 150, 105, 0.12) 0%, transparent 55%),
-    linear-gradient(180deg, #030705 0%, #050E09 50%, #010402 100%) !important;
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 85% 85%, rgba(255, 255, 255, 0.05) 0%, transparent 55%),
+    linear-gradient(180deg, #000000 0%, #050505 50%, #000000 100%) !important;
   background-attachment: fixed !important;
 }
 .auth-container.show { display: flex; }
 
 body.light .auth-container {
   --auth-bg: #F8FAFC;
-  --auth-gold: #059669;
-  --auth-gold-dark: #047857;
-  --auth-gold-light: #10B981;
+  --auth-gold: #0F172A;
+  --auth-gold-dark: #1E293B;
+  --auth-gold-light: #000000;
   --auth-card: #FFFFFF;
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
@@ -2325,8 +2325,8 @@ body.light .auth-container {
   --auth-text-dim: #475569;
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(15, 23, 42, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(15, 23, 42, 0.04) 0%, transparent 50%),
     linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 100%) !important;
 }
 
@@ -2342,9 +2342,9 @@ body.light .auth-container {
 }
 
 .auth-theme-btn {
-  background: rgba(16, 185, 129, 0.10);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  color: #34D399;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
   width: 44px;
   height: 44px;
   border-radius: 14px;
@@ -2364,10 +2364,10 @@ body.light .auth-container {
 }
 .auth-theme-btn:hover {
   transform: scale(1.06) translateY(-1px);
-  background: rgba(16, 185, 129, 0.22);
-  border-color: #34D399;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #FFFFFF;
   color: #FFFFFF;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.30);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.20);
 }
 body.light .auth-theme-btn {
   background: #FFFFFF;
@@ -2430,29 +2430,29 @@ body.light .auth-grid {
   gap: 8px;
   padding: 6px 14px;
   border-radius: 999px;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.40);
-  color: #34D399 !important;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  color: #FFFFFF !important;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.06em;
   width: fit-content;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.20);
+  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.15);
 }
 .auth-showcase-badge .badge-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #10B981;
+  background: #FFFFFF;
   display: inline-block;
-  box-shadow: 0 0 10px #10B981;
+  box-shadow: 0 0 10px #FFFFFF;
   animation: authPulseDot 2s infinite ease-in-out;
 }
 @keyframes authPulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px #10B981; }
-  50% { opacity: 0.6; transform: scale(0.85); box-shadow: 0 0 14px #34D399; }
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px #FFFFFF; }
+  50% { opacity: 0.6; transform: scale(0.85); box-shadow: 0 0 14px #FFFFFF; }
 }
 
 .auth-showcase-title {
@@ -2463,10 +2463,10 @@ body.light .auth-grid {
   letter-spacing: -0.025em;
 }
 .auth-showcase-title span {
-  background: linear-gradient(90deg, #FFFFFF 0%, #A7F3D0 40%, #34D399 100%);
+  background: linear-gradient(90deg, #FFFFFF 0%, #E2E8F0 50%, #FFFFFF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px rgba(16, 185, 129, 0.30));
+  filter: drop-shadow(0 2px 10px rgba(255, 255, 255, 0.25));
 }
 
 .auth-showcase-desc {
@@ -2488,9 +2488,9 @@ body.light .auth-grid {
 .auth-metric-card {
   padding: 14px 14px;
   border-radius: 16px;
-  background: rgba(6, 12, 8, 0.85);
-  border: 1px solid rgba(16, 185, 129, 0.22);
-  border-top: 1px solid rgba(52, 211, 153, 0.45);
+  background: rgba(10, 10, 10, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-top: 1px solid rgba(255, 255, 255, 0.60);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2501,7 +2501,7 @@ body.light .auth-grid {
 }
 .auth-metric-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(255, 255, 255, 0.60);
+  border-color: rgba(255, 255, 255, 0.70);
   box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(255, 255, 255, 0.20);
 }
 
@@ -2512,7 +2512,7 @@ body.light .auth-grid {
   margin-bottom: 6px;
 }
 .metric-card-head svg {
-  color: #34D399 !important;
+  color: #FFFFFF !important;
   flex-shrink: 0;
 }
 
@@ -2529,7 +2529,7 @@ body.light .auth-grid {
 .metric-val {
   font-size: 19px;
   font-weight: 900;
-  color: #ECFDF5 !important;
+  color: #FFFFFF !important;
   letter-spacing: -0.01em;
   margin: 2px 0 4px;
 }
@@ -2543,21 +2543,13 @@ body.light .auth-grid {
   border-radius: 6px;
   width: fit-content;
 }
-.metric-pill-tag.green {
-  background: rgba(16, 185, 129, 0.18);
-  color: #34D399;
-  border: 1px solid rgba(16, 185, 129, 0.35);
-}
+.metric-pill-tag.green,
 .metric-pill-tag.amber,
-.metric-pill-tag.white {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6EE7B7 !important;
-  border: 1px solid rgba(52, 211, 153, 0.35);
-}
+.metric-pill-tag.white,
 .metric-pill-tag.blue {
-  background: rgba(56, 189, 248, 0.18);
-  color: #38BDF8;
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.30);
 }
 
 /* Barra de Confiança e Segurança */
@@ -2571,7 +2563,7 @@ body.light .auth-grid {
   color: #94A3B8 !important;
   margin-top: 6px;
   padding-top: 12px;
-  border-top: 1px solid rgba(16, 185, 129, 0.20);
+  border-top: 1px solid rgba(255, 255, 255, 0.20);
 }
 .auth-trust-item {
   display: inline-flex;
@@ -2579,7 +2571,7 @@ body.light .auth-grid {
   gap: 6px;
 }
 .auth-trust-item svg {
-  color: #34D399 !important;
+  color: #FFFFFF !important;
   flex-shrink: 0;
 }
 
@@ -2647,9 +2639,9 @@ body.light .auth-showcase-footer {
 .auth-card-nexus {
   position: relative;
   z-index: 10;
-  background: linear-gradient(168deg, rgba(8, 14, 10, 0.96) 0%, rgba(2, 6, 4, 0.98) 50%, #000000 100%) !important;
-  border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
-  border-top: 2.5px solid #10B981 !important;
+  background: linear-gradient(168deg, rgba(10, 10, 10, 0.96) 0%, rgba(4, 4, 4, 0.98) 50%, #000000 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+  border-top: 2.5px solid #FFFFFF !important;
   border-radius: 26px;
   padding: clamp(24px, 3.2vh, 32px) clamp(22px, 2.6vw, 32px);
   width: 100%;
@@ -2657,8 +2649,8 @@ body.light .auth-showcase-footer {
   margin: 0 auto;
   box-shadow: 
     0 30px 80px -15px rgba(0, 0, 0, 0.95),
-    0 0 50px -10px rgba(16, 185, 129, 0.25),
-    inset 0 1px 1.5px rgba(167, 243, 208, 0.20) !important;
+    0 0 50px -10px rgba(255, 255, 255, 0.18),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.20) !important;
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
   animation: none !important;
@@ -2694,7 +2686,7 @@ html:not(.user-logged-in) body {
 body.light .auth-card-nexus {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  border-top: 2.5px solid #059669 !important;
+  border-top: 2.5px solid #0F172A !important;
   box-shadow: 0 24px 60px -10px rgba(15, 23, 42, 0.10) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -2713,27 +2705,26 @@ body.light .auth-card-nexus {
   width: 52px;
   height: 52px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.35) 100%) !important;
-  color: #34D399 !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   font-size: 24px;
   font-family: var(--font-sans);
-  border: 1.5px solid rgba(52, 211, 153, 0.60) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
   box-shadow: 
-    0 8px 24px -3px rgba(16, 185, 129, 0.40),
-    0 2px 6px rgba(0, 0, 0, 0.40),
-    inset 0 1.5px 2px rgba(167, 243, 208, 0.45) !important;
+    0 8px 24px -3px rgba(255, 255, 255, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.40) !important;
   margin-bottom: 12px;
   position: relative;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .auth-logo-badge:hover {
   transform: scale(1.06) translateY(-2px);
-  border-color: #34D399 !important;
-  box-shadow: 0 12px 28px -2px rgba(16, 185, 129, 0.60) !important;
+  border-color: #FFFFFF !important;
+  box-shadow: 0 12px 28px -2px rgba(255, 255, 255, 0.50) !important;
 }
 
 .auth-title {
@@ -2747,7 +2738,7 @@ body.light .auth-card-nexus {
   gap: 8px;
 }
 .auth-title span {
-  background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%) !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 50%, #FFFFFF 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   font-size: 13px;
@@ -2766,7 +2757,7 @@ body.light .auth-title {
   color: #0F172A !important;
 }
 body.light .auth-title span {
-  color: #059669 !important;
+  color: #0F172A !important;
   font-weight: 900 !important;
 }
 body.light .auth-subtitle {
@@ -2777,8 +2768,8 @@ body.light .auth-subtitle {
 /* Navegação por Abas Segmentadas (iOS / Linear Style) */
 .auth-tabs-nav {
   display: flex;
-  background: rgba(4, 10, 6, 0.75) !important;
-  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+  background: rgba(8, 8, 8, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.20) !important;
   border-radius: 14px !important;
   padding: 4px !important;
   margin-bottom: 20px;
@@ -2815,15 +2806,15 @@ body.light .auth-tabs-nav {
   flex-shrink: 0;
 }
 .auth-tab-btn:hover {
-  color: #34D399;
-  background: rgba(16, 185, 129, 0.12);
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.10);
 }
 .auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.20) 100%) !important;
-  color: #34D399 !important;
-  border: 1.5px solid rgba(16, 185, 129, 0.65) !important;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.30), inset 0 1px 1px rgba(52, 211, 153, 0.25) !important;
-  font-weight: 800 !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 1px solid #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.25) !important;
+  font-weight: 850 !important;
 }
 body.light .auth-tab-btn {
   color: #475569 !important;
@@ -2832,10 +2823,10 @@ body.light .auth-tab-btn:hover {
   color: #0F172A !important;
 }
 body.light .auth-tab-btn.active {
-  background: #ECFDF5 !important;
-  color: #047857 !important;
-  border-color: #10B981 !important;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.20) !important;
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  border-color: #0F172A !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.20) !important;
   font-weight: 800 !important;
 }
 
@@ -2860,8 +2851,8 @@ body.light .auth-field label {
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(4, 8, 5, 0.85) !important;
-  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+  background: rgba(8, 8, 8, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.20) !important;
   border-radius: 12px !important;
   backdrop-filter: blur(14px) !important;
   -webkit-backdrop-filter: blur(14px) !important;
@@ -2875,15 +2866,15 @@ body.light .auth-input-wrapper {
 }
 
 .auth-input-wrapper:focus-within {
-  border-color: #10B981 !important;
-  background: rgba(2, 6, 3, 0.95) !important;
-  box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.28), 0 8px 20px -4px rgba(0, 0, 0, 0.6) !important;
+  border-color: #FFFFFF !important;
+  background: rgba(14, 14, 14, 0.95) !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25), 0 8px 20px -4px rgba(0, 0, 0, 0.6) !important;
   transform: translateY(-1px);
 }
 body.light .auth-input-wrapper:focus-within {
   background: #FFFFFF !important;
-  border-color: #059669 !important;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.20), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+  border-color: #0F172A !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
 }
 
 .auth-input-icon {
@@ -2891,14 +2882,14 @@ body.light .auth-input-wrapper:focus-within {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #34D399 !important;
+  color: #FFFFFF !important;
   flex-shrink: 0;
 }
 body.light .auth-input-icon {
-  color: #059669 !important;
+  color: #0F172A !important;
 }
 body.light .auth-input-wrapper:focus-within .auth-input-icon {
-  color: #047857 !important;
+  color: #0F172A !important;
 }
 
 .auth-input-wrapper input {
@@ -2907,7 +2898,7 @@ body.light .auth-input-wrapper:focus-within .auth-input-icon {
   background: transparent !important;
   border: none !important;
   padding: 13px 12px 13px 0;
-  color: #ECFDF5 !important;
+  color: #FFFFFF !important;
   font-size: 14px;
   font-weight: 600;
   outline: none !important;
@@ -2929,9 +2920,9 @@ body.light .auth-input-wrapper input::placeholder {
 .auth-input-wrapper input:-webkit-autofill:hover,
 .auth-input-wrapper input:-webkit-autofill:focus,
 .auth-input-wrapper input:-webkit-autofill:active {
-  -webkit-text-fill-color: #ECFDF5 !important;
-  -webkit-box-shadow: 0 0 0px 1000px #040805 inset !important;
-  box-shadow: 0 0 0px 1000px #040805 inset !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  -webkit-box-shadow: 0 0 0px 1000px #040404 inset !important;
+  box-shadow: 0 0 0px 1000px #040404 inset !important;
   transition: background-color 5000s ease-in-out 0s !important;
   border-radius: 0 12px 12px 0 !important;
 }
@@ -2950,7 +2941,7 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
   background: transparent !important;
   border: none !important;
   outline: none !important;
-  color: #34D399 !important;
+  color: #FFFFFF !important;
   width: 38px !important;
   height: 38px !important;
   display: flex !important;
@@ -2965,29 +2956,29 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
 }
 .auth-pass-toggle:hover,
 .auth-pass-toggle-btn:hover {
-  color: #ECFDF5 !important;
-  background: rgba(16, 185, 129, 0.20) !important;
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.15) !important;
 }
 body.light .auth-pass-toggle,
 body.light .auth-pass-toggle-btn {
-  color: #059669 !important;
+  color: #0F172A !important;
 }
 body.light .auth-pass-toggle:hover,
 body.light .auth-pass-toggle-btn:hover {
-  color: #047857 !important;
-  background: #ECFDF5 !important;
+  color: #0F172A !important;
+  background: #F1F5F9 !important;
 }
 
-/* Botão Primário Executivo - Verde Esmeralda & Menta */
+/* Botão Primário Executivo - Branco Puro com Texto Preto */
 .btn-auth-primary {
   position: relative;
   overflow: hidden;
   width: 100%;
   height: 48px;
   padding: 0 20px;
-  background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%) !important;
-  color: #030712 !important;
-  border: 1px solid rgba(52, 211, 153, 0.70) !important;
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
   border-radius: 12px !important;
   font-weight: 900 !important;
   font-size: 15px !important;
@@ -2995,9 +2986,8 @@ body.light .auth-pass-toggle-btn:hover {
   cursor: pointer;
   margin-top: 10px;
   box-shadow: 
-    0 10px 28px -5px rgba(16, 185, 129, 0.50),
-    0 0 20px rgba(16, 185, 129, 0.30),
-    inset 0 1px 1.5px rgba(167, 243, 208, 0.50) !important;
+    0 10px 28px -5px rgba(255, 255, 255, 0.35),
+    0 0 20px rgba(255, 255, 255, 0.20) !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
@@ -3005,39 +2995,39 @@ body.light .auth-pass-toggle-btn:hover {
   gap: 8px;
 }
 .btn-auth-primary:hover {
-  filter: brightness(1.10);
-  color: #030712 !important;
+  filter: brightness(1.05);
+  color: #000000 !important;
+  background: #FFFFFF !important;
   transform: translateY(-2px);
   box-shadow: 
-    0 14px 34px -5px rgba(16, 185, 129, 0.65),
-    0 0 28px rgba(16, 185, 129, 0.45),
-    inset 0 1px 1.5px rgba(167, 243, 208, 0.70) !important;
+    0 14px 34px -5px rgba(255, 255, 255, 0.45),
+    0 0 28px rgba(255, 255, 255, 0.30) !important;
 }
 .btn-auth-primary:active {
   transform: translateY(0) scale(0.98);
 }
 
 body.light .btn-auth-primary {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  background: #0F172A !important;
   color: #FFFFFF !important;
-  border: 1px solid #059669 !important;
-  box-shadow: 0 8px 20px -3px rgba(5, 150, 105, 0.35) !important;
+  border: 1px solid #0F172A !important;
+  box-shadow: 0 8px 20px -3px rgba(15, 23, 42, 0.25) !important;
 }
 body.light .btn-auth-primary:hover {
-  background: #047857 !important;
+  background: #1E293B !important;
   color: #FFFFFF !important;
 }
 
 .auth-forgot-link {
   font-size: 12px;
-  color: #34D399 !important;
+  color: #FFFFFF !important;
   font-weight: 700;
   cursor: pointer;
   transition: color 0.15s;
   text-decoration: underline;
 }
 .auth-forgot-link:hover {
-  color: #6EE7B7 !important;
+  color: #CBD5E1 !important;
 }
 body.light .auth-forgot-link {
   color: #0F172A !important;
@@ -3069,10 +3059,10 @@ body.light .auth-forgot-link {
   color: #FEE2E2 !important;
 }
 .auth-feedback-banner.success {
-  background: rgba(16, 185, 129, 0.12) !important;
-  border: 1px solid rgba(52, 211, 153, 0.35) !important;
-  border-left: 3.5px solid #10B981 !important;
-  color: #D1FAE5 !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
+  border-left: 3.5px solid #FFFFFF !important;
+  color: #FFFFFF !important;
 }
 
 /* Botão Secundário Executivo: Ordem de Serviço */
@@ -3084,10 +3074,10 @@ body.light .auth-forgot-link {
   width: 100%;
   height: 42px;
   padding: 0 16px;
-  background: rgba(16, 185, 129, 0.08) !important;
-  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
   border-radius: 12px !important;
-  color: #34D399 !important;
+  color: #FFFFFF !important;
   font-size: 12.5px !important;
   font-weight: 700 !important;
   letter-spacing: 0.015em;
@@ -3099,15 +3089,15 @@ body.light .auth-forgot-link {
   margin-top: 10px;
 }
 .btn-open-os svg {
-  color: #34D399;
+  color: #FFFFFF;
   transition: transform 0.2s ease;
 }
 .btn-open-os:hover {
-  background: rgba(16, 185, 129, 0.18) !important;
-  border-color: #34D399 !important;
-  color: #ECFDF5 !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: #FFFFFF !important;
+  color: #FFFFFF !important;
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25) !important;
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.20) !important;
 }
 .btn-open-os:hover svg {
   transform: scale(1.12);
@@ -3120,8 +3110,8 @@ body.light .btn-open-os {
 }
 body.light .btn-open-os:hover {
   background: #F8FAFC !important;
-  border-color: #059669 !important;
-  color: #059669 !important;
+  border-color: #0F172A !important;
+  color: #0F172A !important;
 }
 
 /* Suporte Técnico Alinhado */
@@ -3136,17 +3126,17 @@ body.light .btn-open-os:hover {
   padding: 4px 8px;
 }
 .auth-support-bar svg {
-  color: #34D399;
+  color: #FFFFFF;
   flex-shrink: 0;
 }
 .auth-support-link {
-  color: #34D399 !important;
+  color: #FFFFFF !important;
   text-decoration: underline;
   font-weight: 700;
   transition: color 0.15s ease;
 }
 .auth-support-link:hover {
-  color: #6EE7B7 !important;
+  color: #CBD5E1 !important;
 }
 body.light .auth-support-bar {
   color: #334155 !important;
@@ -12280,7 +12270,7 @@ body.light .period button.active {
           <!-- Lembrar de Mim -->
           <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#94A3B8;">
             <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; color:#E2E8F0; font-weight:600;">
-              <input type="checkbox" id="rememberMe" style="accent-color:#10B981; width:15px; height:15px; cursor:pointer;">
+              <input type="checkbox" id="rememberMe" style="accent-color:#FFFFFF; width:15px; height:15px; cursor:pointer;">
               <span>Lembrar meu acesso neste dispositivo</span>
             </label>
           </div>
@@ -12293,7 +12283,7 @@ body.light .period button.active {
         </form>
 
         <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:#94A3B8;">
-          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#34D399; font-weight:800; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
+          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#FFFFFF; font-weight:800; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
         </p>
       </div>
 
@@ -12301,7 +12291,7 @@ body.light .period button.active {
       <div id="registerBox" style="display:none;">
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; margin-bottom:8px; border-bottom:1px solid rgba(16,185,129,0.30); padding-bottom:4px;">
+          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:4px;">
             <span>1. Identificação do Titular</span>
           </div>
 
@@ -12337,7 +12327,7 @@ body.light .period button.active {
             <div id="regBirthFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
           </div>
 
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; margin:12px 0 8px; border-bottom:1px solid rgba(16,185,129,0.30); padding-bottom:4px;">
+          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:4px;">
             <span>2. Contato & Notificações de Orçamento</span>
           </div>
 
@@ -12363,7 +12353,7 @@ body.light .period button.active {
             </div>
           </div>
 
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; margin:12px 0 8px; border-bottom:1px solid rgba(16,185,129,0.30); padding-bottom:4px;">
+          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:4px;">
             <span>3. Senha de Acesso Financeiro</span>
           </div>
 
@@ -12395,17 +12385,17 @@ body.light .period button.active {
 
           <div style="margin:12px 0 6px; font-size:11px; color:#CBD5E1; display:flex; flex-direction:column; gap:6px;">
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#CBD5E1;">
-              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#10B981; cursor:pointer;">
+              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#FFFFFF; cursor:pointer;">
               <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade (LGPD - Lei 13.709/18).</span>
             </label>
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#CBD5E1;">
-              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#10B981; cursor:pointer;">
+              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#FFFFFF; cursor:pointer;">
               <span>Declaro que as informações e dados cadastrais informados são verídicos e de minha titularidade.</span>
             </label>
           </div>
 
-          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#D1FAE5;">
-            <span style="color:#34D399; font-weight:800; font-size:14px;">🔒</span>
+          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.20); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#FFFFFF;">
+            <span style="color:#FFFFFF; font-weight:800; font-size:14px;">🔒</span>
             <span>Ambiente seguro com criptografia de ponta a ponta e proteção integral das suas finanças.</span>
           </div>
 
@@ -12417,13 +12407,13 @@ body.light .period button.active {
         </form>
 
         <p style="margin-top:16px; text-align:center; font-size:12.5px; color:#94A3B8;">
-          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#34D399; font-weight:800; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
+          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#FFFFFF; font-weight:800; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
         </p>
       </div>
 
       <!-- Box 3: Recuperação de Senha com Confirmação Cadastral -->
       <div id="forgotBox" style="display:none;">
-        <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; margin-bottom:8px; border-bottom:1px solid rgba(16,185,129,0.30); padding-bottom:4px;">
+        <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:4px;">
           <span>Confirmação Cadastral para Recuperação</span>
         </div>
         <p style="font-size:12.5px; color:#CBD5E1; margin-bottom:16px; line-height:1.5;">
@@ -12469,7 +12459,7 @@ body.light .period button.active {
         </form>
 
         <div style="text-align:center; margin-top:18px;">
-          <a class="auth-forgot-link" id="goLoginFromForgot" href="javascript:void(0)" onclick="window.switchAuthTab('login'); return false;" style="cursor:pointer; color:#34D399; text-decoration:underline;">← Voltar para o Login</a>
+          <a class="auth-forgot-link" id="goLoginFromForgot" href="javascript:void(0)" onclick="window.switchAuthTab('login'); return false;" style="cursor:pointer; color:#FFFFFF; text-decoration:underline;">← Voltar para o Login</a>
         </div>
       </div>
 
@@ -27518,11 +27508,16 @@ window.applyPostLoginBg = function(theme) {
     const goldTones = ['#F59E0B', '#FBBF24', '#FCD34D', '#EAB308'];
     const sapphireTones = ['#38BDF8', '#0284C7', '#0EA5E9', '#60A5FA'];
 
+    const isAuthCanvas = (canvasId === 'authBgCanvas');
+
     // 2. Moedas Douradas e Tokens Financeiros Flutuantes
     const wealthCoins = [];
     const coinCount = isMobile ? 12 : 22;
     for (let i = 0; i < coinCount; i++) {
       const isSapphire = Math.random() > 0.6;
+      const coinColor = isAuthCanvas ? '#FFFFFF' : (isSapphire ? '#38BDF8' : '#FBBF24');
+      const coinBorder = isAuthCanvas ? 'rgba(255, 255, 255, 0.40)' : (isSapphire ? 'rgba(56, 189, 248, 0.45)' : 'rgba(245, 158, 11, 0.45)');
+      const coinBg = isAuthCanvas ? 'rgba(255, 255, 255, 0.08)' : (isSapphire ? 'rgba(14, 165, 233, 0.16)' : 'rgba(217, 119, 6, 0.16)');
       wealthCoins.push({
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
@@ -27530,9 +27525,9 @@ window.applyPostLoginBg = function(theme) {
         radius: Math.floor(Math.random() * 6) + 16,
         vy: -(Math.random() * 0.32 + 0.15),
         vx: (Math.random() - 0.5) * 0.22,
-        color: isSapphire ? '#38BDF8' : '#FBBF24',
-        borderTone: isSapphire ? 'rgba(56, 189, 248, 0.45)' : 'rgba(245, 158, 11, 0.45)',
-        bgTone: isSapphire ? 'rgba(14, 165, 233, 0.16)' : 'rgba(217, 119, 6, 0.16)',
+        color: coinColor,
+        borderTone: coinBorder,
+        bgTone: coinBg,
         alpha: Math.random() * 0.40 + 0.35,
         angle: Math.random() * Math.PI * 2,
         rotSpeed: (Math.random() - 0.5) * 0.015,
@@ -27546,14 +27541,17 @@ window.applyPostLoginBg = function(theme) {
     const badgeCount = isMobile ? 5 : 9;
     for (let b = 0; b < badgeCount; b++) {
       const item = personalFinanceBadges[b % personalFinanceBadges.length];
+      const badgeColor = isAuthCanvas ? '#FFFFFF' : (item.type === 'sapphire' ? '#38BDF8' : '#FBBF24');
+      const badgeBorder = isAuthCanvas ? 'rgba(255, 255, 255, 0.35)' : (item.type === 'sapphire' ? 'rgba(56, 189, 248, 0.38)' : 'rgba(245, 158, 11, 0.38)');
+      const badgeBg = isAuthCanvas ? 'rgba(255, 255, 255, 0.10)' : (item.type === 'sapphire' ? 'rgba(14, 165, 233, 0.18)' : 'rgba(217, 119, 6, 0.18)');
       floatingBadges.push({
         x: Math.random() * ((width || 1200) - 180) + 90,
         y: Math.random() * ((height || 800) - 120) + 60,
         text: item.text,
         type: item.type,
-        color: item.type === 'sapphire' ? '#38BDF8' : '#FBBF24',
-        border: item.type === 'sapphire' ? 'rgba(56, 189, 248, 0.38)' : 'rgba(245, 158, 11, 0.38)',
-        bg: item.type === 'sapphire' ? 'rgba(14, 165, 233, 0.18)' : 'rgba(217, 119, 6, 0.18)',
+        color: badgeColor,
+        border: badgeBorder,
+        bg: badgeBg,
         vy: -(Math.random() * 0.24 + 0.10),
         vx: (Math.random() - 0.5) * 0.15,
         alpha: Math.random() * 0.35 + 0.40,
@@ -27573,7 +27571,7 @@ window.applyPostLoginBg = function(theme) {
         vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
         radius: Math.random() * 2.0 + 1.2,
-        color: isSapphire ? '#38BDF8' : '#F59E0B',
+        color: isAuthCanvas ? '#FFFFFF' : (isSapphire ? '#38BDF8' : '#F59E0B'),
         alpha: Math.random() * 0.45 + 0.25
       });
     }
@@ -27607,7 +27605,7 @@ window.applyPostLoginBg = function(theme) {
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
         radius: Math.random() * 1.6 + 0.6,
-        color: isGold ? '#FBBF24' : '#38BDF8',
+        color: isAuthCanvas ? '#FFFFFF' : (isGold ? '#FBBF24' : '#38BDF8'),
         alpha: Math.random() * 0.55 + 0.25,
         vy: -(Math.random() * 0.28 + 0.08),
         vx: (Math.random() - 0.5) * 0.18,
