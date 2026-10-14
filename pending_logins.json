@@ -726,5 +726,37 @@
     "last_login": "2026-10-14T08:46:02-03:00",
     "timestamp": "2026-10-14T11:46:02.855Z",
     "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-14T09:20:37-03:00",
+    "timestamp": "2026-10-14T12:20:37.488Z",
+    "ack": false
+  },
+  {
+    "id": "52",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-14T09:20:49-03:00",
+    "timestamp": "2026-10-14T12:20:50.080Z",
+    "ack": false
+  },
+  {
+    "id": "52",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-14T09:21:04-03:00",
+    "timestamp": "2026-10-14T12:21:04.839Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-14T09:21:13-03:00",
+    "timestamp": "2026-10-14T12:21:13.173Z",
+    "ack": false
   }
 ]

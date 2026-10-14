@@ -165,14 +165,14 @@
                     },
                     colors: {
                         nexus: {
-                            dark: '#07090E',
-                            card: '#0E1322',
-                            gold: '#FFFFFF',
-                            goldHover: '#F1F5F9',
-                            goldBorder: '#FFFFFF',
-                            blue: '#10B981',
-                            sapphire: '#059669',
-                            cyan: '#34D399',
+                            dark: '#000000',
+                            card: '#0A0802',
+                            gold: '#FACC15',
+                            goldHover: '#FDE047',
+                            goldBorder: '#F59E0B',
+                            blue: '#EAB308',
+                            sapphire: '#D97706',
+                            cyan: '#FBBF24',
                         }
                     },
                     animation: {
@@ -193,33 +193,33 @@
     <style>
         :root {
             --auth-bg: #000000;
-            --auth-card: linear-gradient(168deg, rgba(8, 14, 10, 0.96) 0%, rgba(3, 6, 4, 0.98) 50%, rgba(0, 0, 0, 1.0) 100%);
-            --auth-border: rgba(16, 185, 129, 0.40);
-            --auth-border-hover: #10B981;
-            --auth-input-bg: rgba(0, 0, 0, 0.85);
-            --auth-input-border: rgba(255, 255, 255, 0.20);
-            --auth-text: #FFFFFF;
-            --auth-text-dim: #E2E8F0;
-            --auth-emerald: #10B981;
-            --auth-emerald-glow: rgba(16, 185, 129, 0.45);
-            --auth-cyan: #10B981;
-            --auth-sapphire: #059669;
-            --auth-tab-bg: rgba(10, 16, 12, 0.90);
+            --auth-card: linear-gradient(168deg, rgba(16, 13, 4, 0.96) 0%, rgba(8, 6, 2, 0.98) 50%, rgba(0, 0, 0, 1.0) 100%);
+            --auth-border: rgba(245, 158, 11, 0.40);
+            --auth-border-hover: #F59E0B;
+            --auth-input-bg: rgba(0, 0, 0, 0.88);
+            --auth-input-border: rgba(245, 158, 11, 0.28);
+            --auth-text: #FEF9C3;
+            --auth-text-dim: #FDE68A;
+            --auth-gold: #F59E0B;
+            --auth-gold-glow: rgba(245, 158, 11, 0.45);
+            --auth-cyan: #FBBF24;
+            --auth-sapphire: #D97706;
+            --auth-tab-bg: rgba(18, 15, 6, 0.90);
         }
 
         body.light, html.light body, html.light {
             color-scheme: light !important;
             --auth-bg: #F8FAFC;
             --auth-card: #FFFFFF;
-            --auth-border: rgba(16, 185, 129, 0.35);
-            --auth-border-hover: #059669;
+            --auth-border: rgba(245, 158, 11, 0.35);
+            --auth-border-hover: #D97706;
             --auth-input-bg: #FFFFFF;
             --auth-input-border: #CBD5E1;
             --auth-text: #000000 !important;
             --auth-text-dim: #334155 !important;
-            --auth-emerald: #059669;
-            --auth-cyan: #059669;
-            --auth-sapphire: #047857;
+            --auth-gold: #D97706;
+            --auth-cyan: #D97706;
+            --auth-sapphire: #B45309;
             --auth-tab-bg: #E2E8F0;
             background-color: #F8FAFC !important;
             color: #000000 !important;
@@ -278,15 +278,15 @@
             font-family: var(--font-sans);
             background-color: #000000 !important;
             background-image: 
-                radial-gradient(ellipse 85% 60% at 15% 15%, rgba(16, 185, 129, 0.18) 0%, transparent 60%),
-                radial-gradient(ellipse 75% 55% at 85% 20%, rgba(5, 150, 105, 0.15) 0%, transparent 55%),
-                radial-gradient(ellipse 90% 70% at 50% 90%, rgba(16, 185, 129, 0.10) 0%, transparent 65%),
-                linear-gradient(175deg, #000000 0%, #030604 40%, #050B07 75%, #000000 100%) !important;
+                radial-gradient(ellipse 85% 60% at 15% 15%, rgba(245, 158, 11, 0.16) 0%, transparent 60%),
+                radial-gradient(ellipse 75% 55% at 85% 20%, rgba(234, 179, 8, 0.14) 0%, transparent 55%),
+                radial-gradient(ellipse 90% 70% at 50% 90%, rgba(217, 119, 6, 0.10) 0%, transparent 65%),
+                linear-gradient(175deg, #000000 0%, #080602 40%, #0F0D04 75%, #000000 100%) !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
-            color: #ECFDF5 !important;
+            color: #FEF9C3 !important;
             min-height: 100vh;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
@@ -317,18 +317,18 @@
                 box-shadow: none !important;
         }
 
-        /* Fundo Geométrico Sutil em Alta Definição 4K - Malha Cartesiana de Tesouraria */
+        /* Fundo Geométrico Sutil em Alta Definição 4K - Malha Cartesiana Dourada */
         .auth-bg-cyber-grid {
             background-size: 36px 36px;
             background-image: 
-                radial-gradient(circle, rgba(16, 185, 129, 0.12) 1px, transparent 1px),
+                radial-gradient(circle, rgba(245, 158, 11, 0.14) 1px, transparent 1px),
                 linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
         }
 
         body.light .auth-bg-cyber-grid {
             background-image: 
-                radial-gradient(circle, rgba(16, 185, 129, 0.15) 1px, transparent 1px),
+                radial-gradient(circle, rgba(217, 119, 6, 0.15) 1px, transparent 1px),
                 linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
         }
@@ -338,11 +338,11 @@
             display: flex;
             align-items: center;
             height: 38px;
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(8, 16, 11, 0.92) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
-            border: 1px solid rgba(16, 185, 129, 0.40) !important;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, rgba(16, 13, 4, 0.92) 50%, rgba(0, 0, 0, 0.95) 100%) !important;
+            border: 1px solid rgba(245, 158, 11, 0.40) !important;
             border-radius: 999px;
             padding: 2px 6px 2px 4px;
-            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 20px -2px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.85), 0 0 20px -2px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(254, 240, 138, 0.20);
             backdrop-filter: blur(24px) saturate(200%);
             -webkit-backdrop-filter: blur(24px) saturate(200%);
             overflow: hidden;
@@ -351,9 +351,9 @@
         }
 
         body.light .fintech-live-ticker-bar {
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 253, 244, 0.92) 50%, rgba(255, 255, 255, 0.96) 100%);
-            border-color: rgba(16, 185, 129, 0.35);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08), 0 0 15px rgba(16, 185, 129, 0.12), inset 0 1px 0 #FFFFFF;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0%, rgba(254, 243, 199, 0.92) 50%, rgba(255, 255, 255, 0.96) 100%);
+            border-color: rgba(245, 158, 11, 0.35);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08), 0 0 15px rgba(245, 158, 11, 0.12), inset 0 1px 0 #FFFFFF;
         }
 
         .fintech-ticker-badge {
@@ -361,37 +361,37 @@
             align-items: center;
             gap: 6px;
             padding: 4px 12px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.30), rgba(5, 150, 105, 0.20)) !important;
-            border: 1px solid rgba(16, 185, 129, 0.50) !important;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.30), rgba(217, 119, 6, 0.20)) !important;
+            border: 1px solid rgba(245, 158, 11, 0.50) !important;
             border-radius: 999px;
             font-size: 10.5px;
             font-weight: 900;
             letter-spacing: 0.04em;
-            color: #10B981 !important;
+            color: #FBBF24 !important;
             text-transform: uppercase;
             flex-shrink: 0;
             z-index: 2;
-            box-shadow: 0 0 14px rgba(16, 185, 129, 0.30);
+            box-shadow: 0 0 14px rgba(245, 158, 11, 0.30);
         }
 
         body.light .fintech-ticker-badge {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.10));
-            border-color: rgba(5, 150, 105, 0.35);
-            color: #059669;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.10));
+            border-color: rgba(217, 119, 6, 0.35);
+            color: #B45309;
         }
 
         .fintech-pulse-dot {
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: #10B981;
-            box-shadow: 0 0 10px #10B981;
+            background: #F59E0B;
+            box-shadow: 0 0 10px #F59E0B;
             animation: pulseFintechDot 1.8s infinite ease-in-out;
         }
 
         @keyframes pulseFintechDot {
-            0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #10B981; }
-            50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #34D399; }
+            0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #F59E0B; }
+            50% { transform: scale(1.35); opacity: 0.75; box-shadow: 0 0 14px #FACC15; }
         }
 
         .fintech-ticker-viewport {
@@ -547,13 +547,13 @@
             display: none !important;
         }
 
-        /* Card de Autenticação Executivo - Acabamento Glassmorphism Institucional Financeiro (Preto com Verde e Branco) */
+        /* Card de Autenticação Executivo - Acabamento Glassmorphism Institucional Financeiro (Preto com Amarelo e Dourado) */
         .auth-card-nexus {
-            background: linear-gradient(168deg, rgba(8, 14, 10, 0.97) 0%, rgba(2, 5, 3, 0.98) 50%, #000000 100%) !important;
-            border: 1.5px solid rgba(16, 185, 129, 0.40) !important;
-            border-top: 2.5px solid #10B981 !important;
+            background: linear-gradient(168deg, rgba(14, 12, 5, 0.97) 0%, rgba(5, 4, 1, 0.98) 50%, #000000 100%) !important;
+            border: 1.5px solid rgba(245, 158, 11, 0.40) !important;
+            border-top: 2.5px solid #F59E0B !important;
             border-radius: 26px !important;
-            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 50px -10px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
+            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 50px -10px rgba(245, 158, 11, 0.25), inset 0 1px 1px rgba(254, 240, 138, 0.25) !important;
             backdrop-filter: blur(28px) !important;
             -webkit-backdrop-filter: blur(28px) !important;
             transition: none !important;
@@ -571,7 +571,7 @@
         body.light .auth-card-nexus {
             background: #FFFFFF !important;
             border: 1.5px solid #E2E8F0 !important;
-            border-top: 2.5px solid #059669 !important;
+            border-top: 2.5px solid #D97706 !important;
             box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.09), 0 2px 6px rgba(15, 23, 42, 0.03), inset 0 1px 0 #FFFFFF !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
@@ -611,17 +611,17 @@
             font-weight: 600 !important;
         }
 
-        body.light .text-emerald-500,
-        html.light .text-emerald-500,
-        body.light .text-emerald-400,
-        html.light .text-emerald-400,
-        body.light .text-emerald-300,
-        body.light .text-cyan-500,
-        html.light .text-cyan-500,
-        body.light .text-cyan-400,
-        html.light .text-cyan-400,
-        body.light .text-cyan-300 {
-            color: #059669 !important;
+        body.light .text-amber-500,
+        html.light .text-amber-500,
+        body.light .text-amber-400,
+        html.light .text-amber-400,
+        body.light .text-amber-300,
+        body.light .text-yellow-500,
+        html.light .text-yellow-500,
+        body.light .text-yellow-400,
+        html.light .text-yellow-400,
+        body.light .text-yellow-300 {
+            color: #D97706 !important;
             font-weight: 700 !important;
         }
 
@@ -715,14 +715,14 @@
             font-weight: 600 !important;
         }
 
-        /* Wrappers de Input Executivos e Fluidos (Preto com Verde e Branco) */
+        /* Wrappers de Input Executivos e Fluidos (Preto com Amarelo e Dourado) */
         .auth-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
             height: 44px;
-            background: rgba(10, 16, 12, 0.85);
-            border: 1px solid rgba(16, 185, 129, 0.28);
+            background: rgba(16, 14, 6, 0.85);
+            border: 1px solid rgba(245, 158, 11, 0.28);
             border-radius: 12px;
             transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
         }
@@ -733,15 +733,15 @@
         }
 
         .auth-input-wrapper:focus-within {
-            border-color: #10B981 !important;
-            box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.28) !important;
-            background: rgba(4, 8, 5, 0.95);
+            border-color: #F59E0B !important;
+            box-shadow: 0 0 0 3.5px rgba(245, 158, 11, 0.28) !important;
+            background: rgba(8, 7, 2, 0.95);
         }
 
         body.light .auth-input-wrapper:focus-within {
             background: #FFFFFF !important;
-            border-color: #059669 !important;
-            box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.18) !important;
+            border-color: #D97706 !important;
+            box-shadow: 0 0 0 3.5px rgba(245, 158, 11, 0.18) !important;
         }
 
         .auth-input-wrapper.input-error {
@@ -755,20 +755,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #10B981;
+            color: #F59E0B;
             flex-shrink: 0;
             transition: color 0.2s ease;
         }
 
         .auth-input-wrapper:focus-within .auth-input-icon {
-            color: #34D399 !important;
+            color: #FBBF24 !important;
         }
 
         body.light .auth-input-icon {
             color: #000000 !important;
         }
         body.light .auth-input-wrapper:focus-within .auth-input-icon {
-            color: #059669 !important;
+            color: #D97706 !important;
         }
 
         .auth-input-wrapper input {
@@ -858,8 +858,8 @@
         }
         .auth-pass-toggle:hover,
         .auth-pass-toggle-btn:hover {
-            color: #10B981 !important;
-            background: rgba(16, 185, 129, 0.15) !important;
+            color: #F59E0B !important;
+            background: rgba(245, 158, 11, 0.15) !important;
             transform: scale(1.08);
         }
         .auth-pass-toggle svg,
@@ -878,20 +878,20 @@
         }
         body.light .auth-pass-toggle:hover,
         body.light .auth-pass-toggle-btn:hover {
-            color: #059669 !important;
-            background: rgba(16, 185, 129, 0.12) !important;
+            color: #D97706 !important;
+            background: rgba(245, 158, 11, 0.12) !important;
         }
 
-        /* Botão Primário Executivo - Verde Esmeralda & Menta (Texto Nítido #030712) */
+        /* Botão Primário Executivo - Amarelo Dourado & Preto (Texto Nítido #000000) */
         .btn-auth-gradient {
-            background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%) !important;
-            color: #030712 !important;
+            background: linear-gradient(135deg, #FACC15 0%, #EAB308 50%, #D97706 100%) !important;
+            color: #000000 !important;
             border-radius: 14px !important;
-            border: 1px solid rgba(52, 211, 153, 0.70) !important;
+            border: 1px solid rgba(254, 240, 138, 0.80) !important;
             font-weight: 850 !important;
             font-size: 14.5px !important;
             letter-spacing: -0.01em;
-            box-shadow: 0 10px 28px -5px rgba(16, 185, 129, 0.50), 0 0 20px rgba(16, 185, 129, 0.35), inset 0 1px 1.5px rgba(167, 243, 208, 0.50) !important;
+            box-shadow: 0 10px 28px -5px rgba(234, 179, 8, 0.50), 0 0 20px rgba(245, 158, 11, 0.35), inset 0 1px 1.5px rgba(254, 240, 138, 0.60) !important;
             transition: transform 0.06s ease, filter 0.12s ease, box-shadow 0.12s ease !important;
             position: relative;
             overflow: hidden;
@@ -907,15 +907,15 @@
 
         .btn-auth-gradient:hover:not(:disabled) {
             filter: brightness(1.10);
-            color: #030712 !important;
+            color: #000000 !important;
             transform: translateY(-1.5px);
-            box-shadow: 0 14px 34px -5px rgba(16, 185, 129, 0.65), 0 0 28px rgba(16, 185, 129, 0.5), inset 0 1px 1.5px rgba(167, 243, 208, 0.70) !important;
+            box-shadow: 0 14px 34px -5px rgba(234, 179, 8, 0.65), 0 0 28px rgba(245, 158, 11, 0.5), inset 0 1px 1.5px rgba(254, 240, 138, 0.80) !important;
         }
 
         .btn-auth-gradient:active:not(:disabled) {
             transform: scale(0.975) translateY(1px) !important;
             transition: transform 0.03s ease !important;
-            box-shadow: 0 4px 14px -2px rgba(16, 185, 129, 0.4) !important;
+            box-shadow: 0 4px 14px -2px rgba(234, 179, 8, 0.4) !important;
         }
 
         .btn-auth-gradient:disabled {
@@ -926,57 +926,57 @@
         }
 
         .btn-auth-gradient.btn-login-success {
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-            color: #030712 !important;
-            border-color: rgba(52, 211, 153, 0.8) !important;
-            box-shadow: 0 10px 28px -4px rgba(16, 185, 129, 0.55), 0 0 20px rgba(16, 185, 129, 0.3) !important;
+            background: linear-gradient(135deg, #FACC15 0%, #EAB308 100%) !important;
+            color: #000000 !important;
+            border-color: rgba(254, 240, 138, 0.9) !important;
+            box-shadow: 0 10px 28px -4px rgba(234, 179, 8, 0.55), 0 0 20px rgba(245, 158, 11, 0.3) !important;
             transform: scale(1.01) !important;
         }
 
-        /* Botão de Atalho VIP Master - Esmeralda & Preto Puro */
+        /* Botão de Atalho VIP Master - Amarelo Dourado & Preto Puro */
         .btn-quick-admin-login {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.08) 100%) !important;
-            border: 1px solid rgba(16, 185, 129, 0.45) !important;
-            color: #34D399 !important;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
+            border: 1px solid rgba(245, 158, 11, 0.45) !important;
+            color: #FBBF24 !important;
             border-radius: 12px !important;
-            box-shadow: 0 2px 12px rgba(16, 185, 129, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+            box-shadow: 0 2px 12px rgba(245, 158, 11, 0.20), inset 0 1px 0 rgba(254, 240, 138, 0.15) !important;
             transition: transform 0.06s ease, background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease !important;
             height: 40px;
             font-size: 12.5px;
             will-change: transform;
         }
         .btn-quick-admin-login:hover {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.18) 100%) !important;
-            border-color: rgba(16, 185, 129, 0.75) !important;
-            color: #ECFDF5 !important;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.18) 100%) !important;
+            border-color: rgba(245, 158, 11, 0.75) !important;
+            color: #FEF9C3 !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 18px rgba(16, 185, 129, 0.40) !important;
+            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.40) !important;
         }
         .btn-quick-admin-login:active {
             transform: scale(0.975) translateY(1px) !important;
             transition: transform 0.03s ease !important;
         }
         body.light .btn-quick-admin-login {
-            background: #ECFDF5 !important;
-            border: 1px solid #6EE7B7 !important;
-            color: #047857 !important;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12) !important;
+            background: #FEF3C7 !important;
+            border: 1px solid #FCD34D !important;
+            color: #92400E !important;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12) !important;
         }
         body.light .btn-quick-admin-login:hover {
-            background: #D1FAE5 !important;
-            border-color: #10B981 !important;
-            color: #065F46 !important;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.22) !important;
+            background: #FDE68A !important;
+            border-color: #F59E0B !important;
+            color: #78350F !important;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.22) !important;
         }
 
-        /* Abas Segmentadas Fluidas e Modernas (Preto com Verde) */
+        /* Abas Segmentadas Fluidas e Modernas (Preto com Amarelo Dourado) */
         #authTabsNav,
         .auth-tabs-nav {
             padding: 3.5px !important;
             border-radius: 14px !important;
             gap: 4px !important;
-            background: rgba(10, 16, 12, 0.85) !important;
-            border: 1px solid rgba(16, 185, 129, 0.25) !important;
+            background: rgba(18, 15, 6, 0.85) !important;
+            border: 1px solid rgba(245, 158, 11, 0.25) !important;
             min-height: 40px;
         }
 
@@ -1006,15 +1006,15 @@
         }
 
         .auth-tab-btn:hover {
-            color: #FFFFFF;
-            background: rgba(255, 255, 255, 0.06);
+            color: #FBBF24;
+            background: rgba(245, 158, 11, 0.12);
         }
 
         .auth-tab-btn.active {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.20) 100%) !important;
-            color: #34D399 !important;
-            border: 1px solid rgba(16, 185, 129, 0.55) !important;
-            box-shadow: 0 2px 12px rgba(16, 185, 129, 0.30) !important;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.20) 100%) !important;
+            color: #FBBF24 !important;
+            border: 1px solid rgba(245, 158, 11, 0.55) !important;
+            box-shadow: 0 2px 12px rgba(245, 158, 11, 0.30) !important;
             font-weight: 700 !important;
         }
 
@@ -1034,9 +1034,9 @@
 
         body.light .auth-tab-btn.active {
             background: #FFFFFF !important;
-            color: #059669 !important;
-            border: 1.5px solid #059669 !important;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.16), inset 0 1px 1px #FFFFFF !important;
+            color: #92400E !important;
+            border: 1.5px solid #D97706 !important;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.16), inset 0 1px 1px #FFFFFF !important;
             font-weight: 800 !important;
         }
 
@@ -1052,7 +1052,7 @@
 
         /* SVG Checkmark Animations */
         .check-circle {
-            stroke: #10B981;
+            stroke: #F59E0B;
             stroke-width: 2.5;
             stroke-miterlimit: 10;
             stroke-dasharray: 160;
@@ -1061,7 +1061,7 @@
         }
 
         .check-tick {
-            stroke: #FFFFFF;
+            stroke: #FACC15;
             stroke-width: 3.5;
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -1093,7 +1093,7 @@
 
         @keyframes twinkle {
             0%, 100% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1.25) rotate(45deg); filter: drop-shadow(0 0 6px #10B981); }
+            50% { opacity: 1; transform: scale(1.25) rotate(45deg); filter: drop-shadow(0 0 6px #F59E0B); }
         }
 
         /* Checklist de Segurança da Senha */
@@ -1111,9 +1111,9 @@
             transition: all 0.2s ease;
         }
         .pwd-req-pill.valid {
-            background: rgba(16, 185, 129, 0.18);
-            border-color: rgba(16, 185, 129, 0.40);
-            color: #34D399;
+            background: rgba(245, 158, 11, 0.18);
+            border-color: rgba(245, 158, 11, 0.40);
+            color: #FBBF24;
         }
         body.light .pwd-req-pill {
             background: #F1F5F9;
@@ -1121,9 +1121,9 @@
             color: #64748B;
         }
         body.light .pwd-req-pill.valid {
-            background: #E0F2FE;
-            border-color: #7DD3FC;
-            color: #0284C7;
+            background: #FEF3C7;
+            border-color: #FCD34D;
+            color: #B45309;
         }
 
         /* Botão 4K Glass para Abertura e Consulta de Ordem de Serviço */
@@ -1135,11 +1135,11 @@
             width: 100%;
             height: 34px;
             padding: 0 12px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(5, 150, 105, 0.30) 50%, rgba(0, 0, 0, 0.90) 100%);
-            border: 1px solid rgba(16, 185, 129, 0.45);
-            border-top: 1px solid rgba(167, 243, 208, 0.65);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.20) 0%, rgba(217, 119, 6, 0.30) 50%, rgba(0, 0, 0, 0.90) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.45);
+            border-top: 1px solid rgba(254, 240, 138, 0.65);
             border-radius: 10px;
-            color: #A7F3D0;
+            color: #FDE68A;
             font-size: 11.5px;
             font-weight: 700;
             letter-spacing: 0.01em;
@@ -1150,11 +1150,11 @@
             -webkit-backdrop-filter: blur(16px);
         }
         .btn-open-os:hover {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.35) 0%, rgba(5, 150, 105, 0.45) 50%, rgba(4, 120, 87, 0.90) 100%);
-            border-color: rgba(167, 243, 208, 0.85);
-            color: #FFFFFF;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.35) 0%, rgba(217, 119, 6, 0.45) 50%, rgba(180, 83, 9, 0.90) 100%);
+            border-color: rgba(254, 240, 138, 0.85);
+            color: #FEF9C3;
             transform: translateY(-1px);
-            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.45);
+            box-shadow: 0 8px 22px rgba(245, 158, 11, 0.45);
         }
         .btn-open-os svg {
             transition: transform 0.2s ease;
@@ -1185,9 +1185,9 @@
             -webkit-backdrop-filter: blur(14px);
         }
         .btn-consult-os:hover {
-            background: rgba(16, 185, 129, 0.16);
-            border-color: rgba(52, 211, 153, 0.6);
-            color: #6EE7B7;
+            background: rgba(245, 158, 11, 0.16);
+            border-color: rgba(245, 158, 11, 0.6);
+            color: #FBBF24;
             transform: translateY(-1px);
         }
         .btn-consult-os svg {
@@ -1221,14 +1221,14 @@
             font-family: inherit;
         }
         .os-tab-btn:hover {
-            color: #FFFFFF;
+            color: #FEF9C3;
             background: rgba(255, 255, 255, 0.08);
         }
         .os-tab-btn.active {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.15));
-            border-color: rgba(52, 211, 153, 0.55);
-            color: #FFFFFF;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.15));
+            border-color: rgba(245, 158, 11, 0.55);
+            color: #FEF9C3;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
         }
 
         /* Cards de O.S. Consultada */
