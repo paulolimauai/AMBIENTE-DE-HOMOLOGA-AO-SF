@@ -1566,7 +1566,7 @@ const htmlContent = `<!DOCTYPE html>
     }
     document.documentElement.style.setProperty('--app-zoom', sn);
     var bgCol = isLight ? '#F8FAFC' : '#000000';
-    document.write('<style id="critical-fouc-shield">background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + '</style>');
+    document.write('<style id="critical-fouc-shield">html:not(.user-logged-in), html:not(.user-logged-in) body { scroll-behavior: auto !important; } background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + ' #serverAuthNexusCard, .auth-card-nexus, #authNexusCard, .auth-container, #authPage, #loginBox, #registerBox, #forgotBox { animation: none !important; transform: none !important; transition: none !important; }</style>');
     var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || sn === 1.0);
     var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('@media screen { html, body { zoom: ' + sn + ' !important; } }');
     document.write('<style id="nexus-scale-override">' + zoomRule + ' :root { --app-zoom: ' + sn + '; }</style>');
@@ -2158,17 +2158,17 @@ html, body {
 /* ==================== TELA DE AUTENTICAÇÃO EXECUTIVA NEXUS 4K (FINTECH GLASS SYSTEM) ==================== */
 .auth-container {
   --auth-bg: #07090E;
-  --auth-gold: #F59E0B;
-  --auth-gold-dark: #D97706;
-  --auth-gold-light: #FDE68A;
+  --auth-gold: #FFFFFF;
+  --auth-gold-dark: #F1F5F9;
+  --auth-gold-light: #FFFFFF;
   --auth-blue: #3B82F6;
   --auth-emerald: #10B981;
   --auth-cyan: #38BDF8;
   --auth-card: linear-gradient(165deg, rgba(17, 24, 39, 0.90) 0%, rgba(11, 16, 28, 0.95) 50%, rgba(7, 10, 18, 0.98) 100%);
-  --auth-border: rgba(255, 255, 255, 0.12);
+  --auth-border: rgba(255, 255, 255, 0.20);
   --auth-input-bg: rgba(11, 18, 34, 0.65);
   --auth-text: #FFFFFF;
-  --auth-text-dim: #94A3B8;
+  --auth-text-dim: #FFFFFF;
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
@@ -2181,7 +2181,7 @@ html, body {
   padding: clamp(24px, 4vh, 48px) 16px;
   background-color: #07090E !important;
   background-image: 
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(245, 158, 11, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
     radial-gradient(ellipse 70% 50% at 85% 85%, rgba(14, 165, 233, 0.07) 0%, transparent 55%),
     linear-gradient(180deg, #07090E 0%, #0A0F1D 50%, #05070B 100%) !important;
   background-attachment: fixed !important;
@@ -2190,17 +2190,17 @@ html, body {
 
 body.light .auth-container {
   --auth-bg: #F8FAFC;
-  --auth-gold: #D97706;
-  --auth-gold-dark: #B45309;
-  --auth-gold-light: #FEF3C7;
+  --auth-gold: #0F172A;
+  --auth-gold-dark: #1E293B;
+  --auth-gold-light: #334155;
   --auth-card: #FFFFFF;
-  --auth-border: #E2E8F0;
+  --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
   --auth-text: #0F172A;
-  --auth-text-dim: #475569;
+  --auth-text-dim: #334155;
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(245, 158, 11, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(15, 23, 42, 0.05) 0%, transparent 50%),
     radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.05) 0%, transparent 50%),
     linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 100%) !important;
 }
@@ -2217,9 +2217,9 @@ body.light .auth-container {
 }
 
 .auth-theme-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--auth-gold);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  color: #FFFFFF;
   width: 44px;
   height: 44px;
   border-radius: 14px;
@@ -2239,20 +2239,20 @@ body.light .auth-container {
 }
 .auth-theme-btn:hover {
   transform: scale(1.06) translateY(-1px);
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(245, 158, 11, 0.60);
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.30);
+  background: rgba(255, 255, 255, 0.20);
+  border-color: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
 }
 body.light .auth-theme-btn {
   background: #FFFFFF;
   border-color: #CBD5E1;
-  color: #D97706;
+  color: #0F172A;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
 }
 body.light .auth-theme-btn:hover {
   background: #F8FAFC;
-  border-color: #D97706;
-  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.20);
+  border-color: #0F172A;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.15);
 }
 
 /* Grid Sutil de Fundo */
@@ -2262,8 +2262,8 @@ body.light .auth-theme-btn:hover {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245, 158, 11, 0.035) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 56px 56px;
   -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 80%);
   mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 80%);
@@ -2271,7 +2271,7 @@ body.light .auth-theme-btn:hover {
 body.light .auth-grid {
   background-image:
     linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(217, 119, 6, 0.035) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
 }
 
 /* Layout Executivo em Grid Perfeito (2 Colunas Harmonizadas) */
@@ -2304,24 +2304,24 @@ body.light .auth-grid {
   gap: 8px;
   padding: 6px 14px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(217, 119, 6, 0.06) 100%);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  color: #FCD34D;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #FFFFFF !important;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.06em;
   width: fit-content;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.10);
 }
 .auth-showcase-badge .badge-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #F59E0B;
+  background: #FFFFFF;
   display: inline-block;
-  box-shadow: 0 0 10px #F59E0B;
+  box-shadow: 0 0 10px #FFFFFF;
   animation: authPulseDot 2s infinite ease-in-out;
 }
 @keyframes authPulseDot {
@@ -2333,21 +2333,22 @@ body.light .auth-grid {
   font-size: clamp(28px, 3.2vw, 42px);
   font-weight: 900;
   line-height: 1.16;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   letter-spacing: -0.025em;
 }
 .auth-showcase-title span {
-  background: linear-gradient(90deg, #FDE68A 0%, #F59E0B 45%, #FBBF24 100%);
+  background: linear-gradient(90deg, #FFFFFF 0%, #F1F5F9 50%, #FFFFFF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.25));
+  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.25));
 }
 
 .auth-showcase-desc {
   font-size: clamp(13.5px, 1.25vw, 15px);
-  color: #94A3B8;
+  color: #FFFFFF !important;
   line-height: 1.6;
   max-width: 520px;
+  font-weight: 500;
 }
 
 /* 3 Cards de Métricas Estilo Widget Bloomberg/Fintech */
@@ -2361,9 +2362,9 @@ body.light .auth-grid {
 .auth-metric-card {
   padding: 14px 14px;
   border-radius: 16px;
-  background: rgba(15, 23, 42, 0.60);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(15, 23, 42, 0.70);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(255, 255, 255, 0.30);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2374,8 +2375,8 @@ body.light .auth-grid {
 }
 .auth-metric-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(245, 158, 11, 0.45);
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(245, 158, 11, 0.15);
+  border-color: rgba(255, 255, 255, 0.60);
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(255, 255, 255, 0.20);
 }
 
 .metric-card-head {
@@ -2385,14 +2386,14 @@ body.light .auth-grid {
   margin-bottom: 6px;
 }
 .metric-card-head svg {
-  color: #F59E0B;
+  color: #FFFFFF !important;
   flex-shrink: 0;
 }
 
 .metric-card-label {
   font-size: 10.5px;
   font-weight: 800;
-  color: #94A3B8;
+  color: #FFFFFF !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
@@ -2402,7 +2403,7 @@ body.light .auth-grid {
 .metric-val {
   font-size: 19px;
   font-weight: 900;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   letter-spacing: -0.01em;
   margin: 2px 0 4px;
 }
@@ -2417,19 +2418,20 @@ body.light .auth-grid {
   width: fit-content;
 }
 .metric-pill-tag.green {
-  background: rgba(16, 185, 129, 0.14);
+  background: rgba(16, 185, 129, 0.18);
   color: #34D399;
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(16, 185, 129, 0.35);
 }
-.metric-pill-tag.amber {
-  background: rgba(245, 158, 11, 0.14);
-  color: #FBBF24;
-  border: 1px solid rgba(245, 158, 11, 0.25);
+.metric-pill-tag.amber,
+.metric-pill-tag.white {
+  background: rgba(255, 255, 255, 0.16);
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.40);
 }
 .metric-pill-tag.blue {
-  background: rgba(56, 189, 248, 0.14);
+  background: rgba(56, 189, 248, 0.18);
   color: #38BDF8;
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(56, 189, 248, 0.35);
 }
 
 /* Barra de Confiança e Segurança */
@@ -2439,11 +2441,11 @@ body.light .auth-grid {
   flex-wrap: wrap;
   gap: clamp(10px, 1.8vw, 18px);
   font-size: 12px;
-  font-weight: 600;
-  color: #94A3B8;
+  font-weight: 700;
+  color: #FFFFFF !important;
   margin-top: 6px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 .auth-trust-item {
   display: inline-flex;
@@ -2451,31 +2453,31 @@ body.light .auth-grid {
   gap: 6px;
 }
 .auth-trust-item svg {
-  color: #F59E0B;
+  color: #FFFFFF !important;
   flex-shrink: 0;
 }
 
 /* Estilos de Modo Claro para o Showcase */
 body.light .auth-showcase-badge {
-  background: rgba(245, 158, 11, 0.12) !important;
-  border-color: rgba(217, 119, 6, 0.35) !important;
-  color: #B45309 !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+  border-color: rgba(15, 23, 42, 0.20) !important;
+  color: #0F172A !important;
 }
 body.light .auth-showcase-badge .badge-dot {
-  background: #D97706 !important;
-  box-shadow: 0 0 8px rgba(217, 119, 6, 0.5) !important;
+  background: #0F172A !important;
+  box-shadow: 0 0 8px rgba(15, 23, 42, 0.3) !important;
 }
 body.light .auth-showcase-title {
   color: #0F172A !important;
 }
 body.light .auth-showcase-title span {
-  background: linear-gradient(90deg, #D97706 0%, #B45309 60%, #92400E 100%) !important;
+  background: linear-gradient(90deg, #0F172A 0%, #334155 60%, #1E293B 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   filter: none !important;
 }
 body.light .auth-showcase-desc {
-  color: #475569 !important;
+  color: #334155 !important;
   font-weight: 500 !important;
 }
 body.light .auth-metric-card {
@@ -2485,11 +2487,11 @@ body.light .auth-metric-card {
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05) !important;
 }
 body.light .auth-metric-card:hover {
-  border-color: #D97706 !important;
-  box-shadow: 0 12px 28px rgba(217, 119, 6, 0.12) !important;
+  border-color: #0F172A !important;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12) !important;
 }
 body.light .metric-card-label {
-  color: #475569 !important;
+  color: #334155 !important;
 }
 body.light .metric-val {
   color: #0F172A !important;
@@ -2499,10 +2501,11 @@ body.light .metric-pill-tag.green {
   color: #059669 !important;
   border-color: #A7F3D0 !important;
 }
-body.light .metric-pill-tag.amber {
-  background: #FFFBEB !important;
-  color: #B45309 !important;
-  border-color: #FDE68A !important;
+body.light .metric-pill-tag.amber,
+body.light .metric-pill-tag.white {
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
 }
 body.light .metric-pill-tag.blue {
   background: #EFF6FF !important;
@@ -2511,7 +2514,7 @@ body.light .metric-pill-tag.blue {
 }
 body.light .auth-showcase-footer {
   border-top-color: #E2E8F0 !important;
-  color: #475569 !important;
+  color: #334155 !important;
 }
 
 /* ==================== COLUNA DIREITA: CARD DE AUTENTICAÇÃO ==================== */
@@ -2519,8 +2522,8 @@ body.light .auth-showcase-footer {
   position: relative;
   z-index: 10;
   background: linear-gradient(165deg, rgba(17, 24, 39, 0.88) 0%, rgba(11, 16, 28, 0.94) 50%, rgba(7, 10, 18, 0.98) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
   border-radius: 26px;
   padding: clamp(24px, 3.2vh, 32px) clamp(22px, 2.6vw, 32px);
   width: 100%;
@@ -2528,25 +2531,45 @@ body.light .auth-showcase-footer {
   margin: 0 auto;
   box-shadow: 
     0 30px 70px -15px rgba(0, 0, 0, 0.80),
-    0 0 45px -10px rgba(245, 158, 11, 0.14),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.20) !important;
+    0 0 45px -10px rgba(255, 255, 255, 0.12),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.25) !important;
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  animation: authCardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  animation: none !important;
+  transform: none !important;
+  transition: none !important;
   overflow: hidden;
 }
 
 @keyframes authCardEntrance {
-  from { opacity: 0; transform: translateY(20px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  0%, 100% { opacity: 1; transform: none; }
+}
+
+/* Fixação Estática Permanente da Tela de Autenticação (Zero Tremor / Zero Oscilação ao Atualizar) */
+#serverAuthNexusCard,
+.auth-card-nexus,
+.auth-container,
+#authPage,
+.auth-exec-layout,
+.auth-showcase-panel,
+#loginBox,
+#registerBox,
+#forgotBox {
+  animation: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+html:not(.user-logged-in),
+html:not(.user-logged-in) body {
+  scroll-behavior: auto !important;
 }
 
 body.light .auth-card-nexus {
   background: #FFFFFF !important;
-  border: 1.5px solid #E2E8F0 !important;
+  border: 1.5px solid #CBD5E1 !important;
   border-top: 2px solid #FFFFFF !important;
-  box-shadow: 0 24px 60px -10px rgba(15, 23, 42, 0.10), 0 0 30px -5px rgba(217, 119, 6, 0.08) !important;
+  box-shadow: 0 24px 60px -10px rgba(15, 23, 42, 0.10) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
@@ -2564,8 +2587,8 @@ body.light .auth-card-nexus {
   width: 52px;
   height: 52px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 25%, #F59E0B 60%, #B45309 100%) !important;
-  color: #1A0D00 !important;
+  background: #FFFFFF !important;
+  color: #0F172A !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2574,7 +2597,7 @@ body.light .auth-card-nexus {
   font-family: var(--font-sans);
   border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
   box-shadow: 
-    0 8px 20px -3px rgba(245, 158, 11, 0.55),
+    0 8px 20px -3px rgba(255, 255, 255, 0.35),
     0 2px 6px rgba(0, 0, 0, 0.25),
     inset 0 1.5px 2px #FFFFFF !important;
   margin-bottom: 12px;
@@ -2589,14 +2612,14 @@ body.light .auth-card-nexus {
   font-family: var(--font-sans);
   font-size: 21px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   letter-spacing: -0.015em;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .auth-title span {
-  background: linear-gradient(135deg, #FEF3C7 0%, #FCD34D 35%, #F59E0B 75%, #D97706 100%) !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 50%, #FFFFFF 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   font-size: 13px;
@@ -2606,20 +2629,20 @@ body.light .auth-card-nexus {
 
 .auth-subtitle {
   font-size: 12.5px;
-  color: #94A3B8;
+  color: #FFFFFF !important;
   margin-top: 4px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 body.light .auth-title {
   color: #0F172A !important;
 }
 body.light .auth-title span {
-  color: #D97706 !important;
+  color: #0F172A !important;
   font-weight: 900 !important;
 }
 body.light .auth-subtitle {
-  color: #475569 !important;
+  color: #334155 !important;
   font-weight: 600 !important;
 }
 
@@ -2627,7 +2650,7 @@ body.light .auth-subtitle {
 .auth-tabs-nav {
   display: flex;
   background: rgba(11, 17, 33, 0.70) !important;
-  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 14px !important;
   padding: 4px !important;
   margin-bottom: 20px;
@@ -2637,7 +2660,7 @@ body.light .auth-subtitle {
 }
 body.light .auth-tabs-nav {
   background: #F1F5F9 !important;
-  border-color: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
 }
 
 .auth-tab-btn {
@@ -2647,7 +2670,7 @@ body.light .auth-tabs-nav {
   border-radius: 10px;
   border: 1px solid transparent;
   background: transparent;
-  color: #94A3B8;
+  color: #FFFFFF !important;
   font-size: 13.5px;
   font-weight: 700;
   cursor: pointer;
@@ -2665,26 +2688,26 @@ body.light .auth-tabs-nav {
 }
 .auth-tab-btn:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.10);
 }
 .auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.16) 100%) !important;
-  color: #FDE68A !important;
-  border: 1px solid rgba(245, 158, 11, 0.55) !important;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
-  font-weight: 800 !important;
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+  border: 1px solid #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
+  font-weight: 900 !important;
 }
 body.light .auth-tab-btn {
-  color: #475569 !important;
+  color: #334155 !important;
 }
 body.light .auth-tab-btn:hover {
   color: #0F172A !important;
 }
 body.light .auth-tab-btn.active {
-  background: #FFFFFF !important;
-  color: #B45309 !important;
-  border-color: #D97706 !important;
-  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15) !important;
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  border-color: #0F172A !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15) !important;
   font-weight: 800 !important;
 }
 
@@ -2696,13 +2719,13 @@ body.light .auth-tab-btn.active {
   display: block;
   font-size: 11px;
   font-weight: 800;
-  color: #94A3B8;
+  color: #FFFFFF !important;
   margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 body.light .auth-field label {
-  color: #334155 !important;
+  color: #0F172A !important;
 }
 
 .auth-input-wrapper {
@@ -2710,7 +2733,7 @@ body.light .auth-field label {
   display: flex;
   align-items: center;
   background: rgba(11, 18, 34, 0.65) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   border-radius: 12px !important;
   backdrop-filter: blur(14px) !important;
   -webkit-backdrop-filter: blur(14px) !important;
@@ -2724,15 +2747,15 @@ body.light .auth-input-wrapper {
 }
 
 .auth-input-wrapper:focus-within {
-  border-color: #F59E0B !important;
-  background: rgba(15, 23, 42, 0.85) !important;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18), 0 8px 20px -4px rgba(0, 0, 0, 0.5) !important;
+  border-color: #FFFFFF !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25), 0 8px 20px -4px rgba(0, 0, 0, 0.5) !important;
   transform: translateY(-1px);
 }
 body.light .auth-input-wrapper:focus-within {
   background: #FFFFFF !important;
-  border-color: #D97706 !important;
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+  border-color: #0F172A !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
 }
 
 .auth-input-icon {
@@ -2740,14 +2763,14 @@ body.light .auth-input-wrapper:focus-within {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94A3B8;
+  color: #FFFFFF !important;
   flex-shrink: 0;
 }
 body.light .auth-input-icon {
-  color: #64748B !important;
+  color: #334155 !important;
 }
 body.light .auth-input-wrapper:focus-within .auth-input-icon {
-  color: #D97706 !important;
+  color: #0F172A !important;
 }
 
 .auth-input-wrapper input {
@@ -2767,6 +2790,9 @@ body.light .auth-input-wrapper input {
   color: #0F172A !important;
 }
 .auth-input-wrapper input::placeholder {
+  color: rgba(255, 255, 255, 0.70) !important;
+}
+body.light .auth-input-wrapper input::placeholder {
   color: #64748B !important;
 }
 
@@ -2796,7 +2822,7 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
   background: transparent !important;
   border: none !important;
   outline: none !important;
-  color: #94A3B8 !important;
+  color: #FFFFFF !important;
   width: 38px !important;
   height: 38px !important;
   display: flex !important;
@@ -2811,40 +2837,39 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
 }
 .auth-pass-toggle:hover,
 .auth-pass-toggle-btn:hover {
-  color: #F59E0B !important;
-  background: rgba(245, 158, 11, 0.12) !important;
+  color: #0F172A !important;
+  background: #FFFFFF !important;
 }
 body.light .auth-pass-toggle,
 body.light .auth-pass-toggle-btn {
-  color: #64748B !important;
+  color: #334155 !important;
 }
 body.light .auth-pass-toggle:hover,
 body.light .auth-pass-toggle-btn:hover {
-  color: #D97706 !important;
-  background: rgba(217, 119, 6, 0.10) !important;
+  color: #0F172A !important;
+  background: #E2E8F0 !important;
 }
 
-/* Botão Primário Dourado / Âmbar */
+/* Botão Primário Branco de Alto Contraste */
 .btn-auth-primary {
   position: relative;
   overflow: hidden;
   width: 100%;
   height: 48px;
   padding: 0 20px;
-  background: linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #B45309 100%) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+  border: 1px solid #FFFFFF !important;
   border-radius: 12px !important;
-  font-weight: 800 !important;
+  font-weight: 900 !important;
   font-size: 15px !important;
   letter-spacing: 0.02em;
   cursor: pointer;
   margin-top: 10px;
   box-shadow: 
-    0 10px 24px -4px rgba(245, 158, 11, 0.50),
+    0 10px 24px -4px rgba(255, 255, 255, 0.35),
     0 2px 6px rgba(0, 0, 0, 0.25),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.40) !important;
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.50) !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
@@ -2852,38 +2877,41 @@ body.light .auth-pass-toggle-btn:hover {
   gap: 8px;
 }
 .btn-auth-primary:hover {
-  filter: brightness(1.08);
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
   transform: translateY(-2px);
   box-shadow: 
-    0 14px 30px -4px rgba(245, 158, 11, 0.65),
-    0 4px 10px rgba(0, 0, 0, 0.30),
-    inset 0 1.5px 2px #FFFFFF !important;
+    0 14px 30px -4px rgba(255, 255, 255, 0.50),
+    0 4px 10px rgba(0, 0, 0, 0.30) !important;
 }
 .btn-auth-primary:active {
   transform: translateY(0) scale(0.98);
 }
 
 body.light .btn-auth-primary {
-  background: linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #B45309 100%) !important;
+  background: #0F172A !important;
   color: #FFFFFF !important;
-  border: 1.5px solid rgba(180, 83, 9, 0.4) !important;
-  box-shadow: 0 8px 20px -3px rgba(217, 119, 6, 0.40) !important;
+  border: 1px solid #0F172A !important;
+  box-shadow: 0 8px 20px -3px rgba(15, 23, 42, 0.25) !important;
+}
+body.light .btn-auth-primary:hover {
+  background: #1E293B !important;
+  color: #FFFFFF !important;
 }
 
 .auth-forgot-link {
   font-size: 12px;
-  color: #F59E0B;
+  color: #FFFFFF !important;
   font-weight: 700;
   cursor: pointer;
   transition: color 0.15s;
-  text-decoration: none;
+  text-decoration: underline;
 }
 .auth-forgot-link:hover {
-  text-decoration: underline;
-  color: #FCD34D;
+  color: #E2E8F0 !important;
 }
 body.light .auth-forgot-link {
-  color: #D97706 !important;
+  color: #0F172A !important;
 }
 
 /* Feedback Banners */
@@ -2927,10 +2955,10 @@ body.light .auth-forgot-link {
   width: 100%;
   height: 42px;
   padding: 0 16px;
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.20) !important;
   border-radius: 12px !important;
-  color: #CBD5E1 !important;
+  color: #FFFFFF !important;
   font-size: 12.5px !important;
   font-weight: 700 !important;
   letter-spacing: 0.015em;
@@ -2942,29 +2970,29 @@ body.light .auth-forgot-link {
   margin-top: 10px;
 }
 .btn-open-os svg {
-  color: #F59E0B;
+  color: #FFFFFF;
   transition: transform 0.2s ease;
 }
 .btn-open-os:hover {
-  background: rgba(245, 158, 11, 0.08) !important;
-  border-color: rgba(245, 158, 11, 0.40) !important;
-  color: #FDE68A !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: #FFFFFF !important;
+  color: #FFFFFF !important;
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.15) !important;
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.15) !important;
 }
 .btn-open-os:hover svg {
   transform: scale(1.12);
 }
 body.light .btn-open-os {
   background: #FFFFFF !important;
-  border-color: #E2E8F0 !important;
-  color: #334155 !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
 }
 body.light .btn-open-os:hover {
   background: #F8FAFC !important;
-  border-color: #D97706 !important;
-  color: #B45309 !important;
+  border-color: #0F172A !important;
+  color: #0F172A !important;
 }
 
 /* Suporte Técnico Alinhado */
@@ -2974,30 +3002,29 @@ body.light .btn-open-os:hover {
   justify-content: center;
   gap: 7px;
   font-size: 12px;
-  color: #94A3B8;
+  color: #FFFFFF !important;
   margin-top: 12px;
   padding: 4px 8px;
 }
 .auth-support-bar svg {
-  color: #F59E0B;
+  color: #FFFFFF;
   flex-shrink: 0;
 }
 .auth-support-link {
-  color: #F59E0B;
-  text-decoration: none;
+  color: #FFFFFF !important;
+  text-decoration: underline;
   font-weight: 700;
   transition: color 0.15s ease;
 }
 .auth-support-link:hover {
-  color: #FCD34D;
-  text-decoration: underline;
+  color: #E2E8F0 !important;
 }
 body.light .auth-support-bar {
-  color: #475569 !important;
+  color: #334155 !important;
 }
 body.light .auth-support-bar svg,
 body.light .auth-support-link {
-  color: #D97706 !important;
+  color: #0F172A !important;
 }
 
 /* Grid de 2 colunas para Cadastro/Recuperação */
@@ -3028,15 +3055,15 @@ body.light .auth-support-link {
   align-items: center;
   gap: 8px;
   font-size: 11.5px;
-  color: #64748B;
+  color: #FFFFFF !important;
 }
 .dev-signature-icon {
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  color: #F59E0B;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3046,11 +3073,11 @@ body.light .auth-support-link {
   height: 12px;
 }
 .dev-signature-name {
-  color: #94A3B8;
+  color: #FFFFFF !important;
   font-weight: 700;
 }
 .dev-sparkle {
-  color: #F59E0B;
+  color: #FFFFFF;
 }
 body.light .dev-signature-name {
   color: #334155 !important;
@@ -11955,86 +11982,87 @@ body.light .period button.active {
 
   <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
 
-  <!-- Camada de Tela de Vidro Panorâmica (4K Liquid Glass Screen Effect) -->
-  <div class="glass-viewport-screen pointer-events-none">
-    <div class="glass-shard glass-shard-1"></div>
-    <div class="glass-shard glass-shard-2"></div>
-    <div class="glass-shard glass-shard-3"></div>
-    <div class="glass-shard glass-shard-4"></div>
-    <div class="glass-shard glass-shard-5"></div>
-  </div>
-  <div class="glass-screen-reflection pointer-events-none"></div>
-
   <div class="auth-grid" aria-hidden="true"></div>
-  <div class="auth-blob b1"></div>
-  <div class="auth-blob b2"></div>
-  <div class="auth-blob b3"></div>
 
   <div class="auth-exec-layout">
     <!-- Showcase Institucional Executivo -->
     <div class="auth-showcase-panel">
       <div class="auth-showcase-badge">
-        <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B; display:inline-block;"></span>
-        <span>CONTROLE FINANCEIRO PESSOAL • PRIVACIDADE TOTAL</span>
+        <span class="badge-dot"></span>
+        <span>SISTEMA DE GESTÃO FINANCEIRA PESSOAL • CONTROLE TOTAL</span>
       </div>
 
       <div class="auth-showcase-title">
-        Controle Total do seu Dinheiro & <span>Planejamento Inteligente</span>
+        Controle Total das suas Finanças Pessoais e <span>Nunca Mais Saia do Orçamento Mensal</span>
       </div>
 
       <div class="auth-showcase-desc">
-        Organize suas contas, acompanhe despesas e receitas, gerencie seus cartões e conquiste suas metas de economia com facilidade e clareza no dia a dia.
+        O Nexus Financeiro é a sua plataforma inteligente para organizar gastos, gerenciar contas e faturas de cartão de crédito, eliminar despesas invisíveis e planejar metas. Tenha previsibilidade absoluta e garanta que suas despesas fiquem 100% dentro do limite estabelecido todo mês.
       </div>
 
       <div class="auth-showcase-metrics">
         <div class="auth-metric-card">
-          <div class="metric-card-label">Economia do Mês</div>
-          <div class="metric-val">R$ 3.850</div>
-          <div class="metric-sub-green">+18% guardado 🎯</div>
+          <div class="metric-card-head">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
+            <span class="metric-card-label">Orçamento Mensal</span>
+          </div>
+          <div class="metric-val">100% no Limite</div>
+          <div class="metric-pill-tag white">✓ Zero Estouro de Gastos</div>
         </div>
 
         <div class="auth-metric-card">
-          <div class="metric-card-label">Orçamento & Gastos</div>
-          <div class="metric-val">Sob Controle</div>
-          <div class="metric-sub-amber">Sem sustos no fim do mês 💡</div>
+          <div class="metric-card-head">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+            <span class="metric-card-label">Economia do Mês</span>
+          </div>
+          <div class="metric-val">R$ 3.850,00</div>
+          <div class="metric-pill-tag green">▲ +24% Guardado</div>
         </div>
 
         <div class="auth-metric-card">
-          <div class="metric-card-label">Metas & Sonhos</div>
-          <div class="metric-val">84% Concluído</div>
-          <div class="metric-sub-blue">Rumo à sua conquista 🚀</div>
+          <div class="metric-card-head">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+            <span class="metric-card-label">Metas & Reserva</span>
+          </div>
+          <div class="metric-val">94% Atingido</div>
+          <div class="metric-pill-tag blue">🎯 Liberdade Financeira</div>
         </div>
       </div>
 
       <div class="auth-showcase-footer">
-        <span style="display:flex; align-items:center; gap:6px;">
-          <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B; display:inline-block; box-shadow:0 0 8px rgba(245,158,11,0.6);"></span>
-          Seus dados 100% seguros e confidenciais
+        <span class="auth-trust-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Controle de Gastos & Cartões</span>
         </span>
-        <span>•</span>
-        <span>Acesso Rápido e Descomplicado</span>
+        <span class="auth-trust-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Alertas de Limite de Orçamento</span>
+        </span>
+        <span class="auth-trust-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span>Blindagem e Segurança Total</span>
+        </span>
       </div>
     </div>
 
     <!-- Card Principal de Autenticação -->
     <div class="auth-card-nexus" id="serverAuthNexusCard">
-      <div class="auth-card-glare" id="serverAuthCardGlare"></div>
       <!-- Brand Header -->
       <div class="auth-brand">
         <div class="auth-logo-badge">N</div>
-        <div class="auth-title">NEXUS <span>FINANCEIRO HUB</span></div>
-        <div class="auth-subtitle" id="authBoxSubtitle">Sua Gestão Financeira Pessoal Inteligente</div>
+        <div class="auth-title">NEXUS <span>FINANCEIRO</span></div>
+        <div class="auth-subtitle" id="authBoxSubtitle">Gestão Financeira Pessoal & Controle Inteligente de Gastos</div>
       </div>
 
       <!-- Navegação por Abas Segmentadas -->
       <div class="auth-tabs-nav" id="authTabsNav">
         <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="window.switchAuthTab('login')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Entrar na Conta
         </button>
         <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="window.switchAuthTab('register')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-          Criar Conta
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          Criar Conta Grátis
         </button>
       </div>
 
@@ -12042,7 +12070,7 @@ body.light .period button.active {
       <div id="loginBox">
         <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
-            <label>E-mail Corporativo ou Pessoal</label>
+            <label>E-mail Cadastrado</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -12053,7 +12081,7 @@ body.light .period button.active {
 
           <div class="auth-field">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <label style="margin-bottom:0;">Senha</label>
+              <label style="margin-bottom:0;">Senha de Acesso</label>
               <a class="auth-forgot-link" id="goForgotFromLogin" href="javascript:void(0)" onclick="window.switchAuthTab('forgot'); return false;" style="cursor:pointer;">Esqueceu a senha?</a>
             </div>
             <div class="auth-input-wrapper">
@@ -12068,22 +12096,22 @@ body.light .period button.active {
           </div>
 
           <!-- Lembrar de Mim -->
-          <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#94A3B8;">
-            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none;">
-              <input type="checkbox" id="rememberMe" style="accent-color:#F59E0B; width:15px; height:15px; cursor:pointer;">
-              <span>Lembrar meu acesso</span>
+          <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#FFFFFF;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; color:#FFFFFF; font-weight:600;">
+              <input type="checkbox" id="rememberMe" style="accent-color:#FFFFFF; width:15px; height:15px; cursor:pointer;">
+              <span>Lembrar meu acesso neste dispositivo</span>
             </label>
           </div>
 
           <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
-            Entrar na Conta →
+            Acessar Minhas Finanças →
           </button>
         </form>
 
-        <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
-          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:var(--auth-gold); font-weight:700; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
+        <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:#FFFFFF;">
+          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#FFFFFF; font-weight:800; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
         </p>
       </div>
 
@@ -12091,8 +12119,8 @@ body.light .period button.active {
       <div id="registerBox" style="display:none;">
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
-          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
-            <span>1. Identificação do Titular (KYC)</span>
+          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.20); padding-bottom:4px;">
+            <span>1. Identificação do Titular</span>
           </div>
 
           <div class="auth-field">
@@ -12127,13 +12155,13 @@ body.light .period button.active {
             <div id="regBirthFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
           </div>
 
-          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
-            2. Contato & Notificações
+          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.20); padding-bottom:4px;">
+            <span>2. Contato & Notificações de Orçamento</span>
           </div>
 
           <div class="auth-grid-2col">
             <div class="auth-field">
-              <label>Celular / 2FA</label>
+              <label>Celular / WhatsApp</label>
               <div class="auth-input-wrapper">
                 <span class="auth-input-icon">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
@@ -12153,8 +12181,8 @@ body.light .period button.active {
             </div>
           </div>
 
-          <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
-            3. Senha de Acesso Financeiro
+          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.20); padding-bottom:4px;">
+            <span>3. Senha de Acesso Financeiro</span>
           </div>
 
           <div class="auth-grid-2col">
@@ -12183,41 +12211,41 @@ body.light .period button.active {
           </div>
           <div id="regPwdMatchMsg" style="display:none; font-size:10.5px; font-weight:600; margin-top:4px;"></div>
 
-          <div style="margin:12px 0 6px; font-size:11px; color:#94a3b8; display:flex; flex-direction:column; gap:6px;">
-            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
-              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#f59e0b; cursor:pointer;">
+          <div style="margin:12px 0 6px; font-size:11px; color:#FFFFFF; display:flex; flex-direction:column; gap:6px;">
+            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#FFFFFF;">
+              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#FFFFFF; cursor:pointer;">
               <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade (LGPD - Lei 13.709/18).</span>
             </label>
-            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
-              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#f59e0b; cursor:pointer;">
+            <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#FFFFFF;">
+              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#FFFFFF; cursor:pointer;">
               <span>Declaro que as informações e dados cadastrais informados são verídicos e de minha titularidade.</span>
             </label>
           </div>
 
-          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px; font-size:10px; color:#cbd5e1;">
-            <span style="color:#f59e0b; font-weight:800; font-size:14px;">🔒</span>
-            <span>Ambiente seguro com criptografia de ponta a ponta e monitoramento antifraude 24/7.</span>
+          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#FFFFFF;">
+            <span style="color:#FFFFFF; font-weight:800; font-size:14px;">🔒</span>
+            <span>Ambiente seguro com criptografia de ponta a ponta e proteção integral das suas finanças.</span>
           </div>
 
           <div id="registerFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="regSubmitBtn">
-            Concluir Abertura de Conta →
+            Concluir Cadastro & Iniciar Controle Financeiro →
           </button>
         </form>
 
-        <p style="margin-top:16px; text-align:center; font-size:12.5px; color:var(--auth-text-dim);">
-          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#f59e0b; font-weight:700; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
+        <p style="margin-top:16px; text-align:center; font-size:12.5px; color:#FFFFFF;">
+          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#FFFFFF; font-weight:800; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
         </p>
       </div>
 
       <!-- Box 3: Recuperação de Senha com Confirmação Cadastral -->
       <div id="forgotBox" style="display:none;">
-        <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#f59e0b; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
-          <span>Confirmação de Dados Cadastrais (KYC)</span>
+        <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.20); padding-bottom:4px;">
+          <span>Confirmação Cadastral para Recuperação</span>
         </div>
-        <p style="font-size:12.5px; color:var(--auth-text-dim); margin-bottom:16px; line-height:1.5;">
-          Para emitir sua senha temporária com máxima segurança, confirme seus dados cadastrados de titularidade da conta:
+        <p style="font-size:12.5px; color:#FFFFFF; margin-bottom:16px; line-height:1.5;">
+          Para gerar sua nova senha com máxima segurança e retomar o controle do seu orçamento financeiro, confirme seus dados:
         </p>
 
         <form id="forgotStep1" onsubmit="window.handleServerForgotSubmit(event); return false;">
@@ -12259,7 +12287,7 @@ body.light .period button.active {
         </form>
 
         <div style="text-align:center; margin-top:18px;">
-          <a class="auth-forgot-link" id="goLoginFromForgot" href="javascript:void(0)" onclick="window.switchAuthTab('login'); return false;" style="cursor:pointer;">← Voltar para o Login</a>
+          <a class="auth-forgot-link" id="goLoginFromForgot" href="javascript:void(0)" onclick="window.switchAuthTab('login'); return false;" style="cursor:pointer; color:#FFFFFF; text-decoration:underline;">← Voltar para o Login</a>
         </div>
       </div>
 
@@ -27317,11 +27345,13 @@ window.applyPostLoginBg = function(theme) {
   setupCanvas('appBgOrbitalCanvas');
 })();
 
-  // Tela de login estável e fixa (sem oscilação ou inclinação ao passar o mouse)
+  // Tela de login estável e fixa (sem oscilação ou inclinação ao passar o mouse ou ao atualizar)
   (function initServerCardStability() {
     const card = document.getElementById('serverAuthNexusCard');
     if (card) {
       card.style.transform = 'none';
+      card.style.animation = 'none';
+      card.style.transition = 'none';
     }
   })();
 

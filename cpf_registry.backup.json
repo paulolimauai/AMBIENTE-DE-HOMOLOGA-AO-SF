@@ -8,7 +8,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-14T10:42:16.586Z"
+    "updated_at": "2026-10-14T10:57:49.088Z"
   },
   "00000000191": {
     "cpf": "00000000191",
@@ -19,7 +19,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-14T07:40:41.270Z"
+    "updated_at": "2026-10-14T07:57:30.566Z"
   },
   "99925109191": {
     "cpf": "99925109191",
@@ -30,7 +30,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-14T10:42:16.385Z"
+    "updated_at": "2026-10-14T10:57:48.782Z"
   },
   "12345678909": {
     "cpf": "12345678909",
@@ -41,7 +41,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Receita Federal do Brasil (Base Cadastral Oficial)",
-    "updated_at": "2026-10-14T07:40:41.320Z"
+    "updated_at": "2026-10-14T07:57:30.696Z"
   },
   "12345678900": {
     "cpf": "12345678900",
@@ -52,7 +52,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-14T10:42:16.420Z"
+    "updated_at": "2026-10-14T10:57:48.875Z"
   },
   "33344455566": {
     "cpf": "33344455566",
@@ -63,7 +63,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "5ª Região Fiscal (BA, SE)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-14T10:42:16.442Z"
+    "updated_at": "2026-10-14T10:57:48.957Z"
   },
   "44455566677": {
     "cpf": "44455566677",
@@ -74,7 +74,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "6ª Região Fiscal (MG)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-14T10:42:16.452Z"
+    "updated_at": "2026-10-14T10:57:49.004Z"
   },
   "63481090625": {
     "cpf": "63481090625",
@@ -85,7 +85,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "6ª Região Fiscal (MG)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-14T10:42:16.412Z"
+    "updated_at": "2026-10-14T10:57:48.838Z"
   },
   "11122233344": {
     "cpf": "11122233344",
@@ -96,7 +96,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "3ª Região Fiscal (CE, MA, PI)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-14T10:42:16.477Z"
+    "updated_at": "2026-10-14T10:57:49.036Z"
   },
   "04023326199": {
     "cpf": "04023326199",
@@ -107,6 +107,6 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-14T10:42:16.548Z"
+    "updated_at": "2026-10-14T10:57:49.065Z"
   }
 }
