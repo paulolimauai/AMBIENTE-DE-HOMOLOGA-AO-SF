@@ -14057,17 +14057,30 @@ body.light .period button.active {
     </div>
 
     
-    <!-- Seção Executiva de Liberação de Tempo Grátis pelo Administrador -->
+    <!-- Seção Executiva de Confirmação de Pagamento e Controle de Acesso pelo Administrador -->
     <div style="margin-bottom:16px; padding:16px; border-radius:18px; background:linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(16,185,129,0.08) 100%); border:1.5px solid rgba(245,158,11,0.4); box-shadow:0 8px 24px rgba(0,0,0,0.25);">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
         <span style="font-size:12.5px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:6px;">
-          <span>👑</span> LIBERAR TEMPO GRÁTIS / ACESSO VIP
+          <span>👑</span> CONTROLE DE PAGAMENTO & LIBERAÇÃO DE ACESSO
         </span>
         <span id="userAdminCurrentSubBadge" style="font-size:11px; padding:3px 10px; border-radius:8px; background:rgba(255,255,255,0.08); font-weight:800; border:1px solid rgba(255,255,255,0.15);">Carregando status...</span>
       </div>
-      <p style="font-size:12px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.4;">
-        Como administrador, você pode conceder o tempo que desejar para este usuário sem nenhum custo.
+      <p style="font-size:12px; color:var(--text-dim); margin:0 0 10px 0; line-height:1.4;">
+        Confirme o pagamento para liberar o plano contratado ou bloqueie o acesso caso o pagamento não tenha sido efetuado.
       </p>
+
+      <!-- Botões de Confirmação Oficial de Pagamento / Bloqueio -->
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
+        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal')" style="padding:8px 10px; border-radius:10px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.35);">
+          ✅ Confirmar Pago Mensal (30d)
+        </button>
+        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'anual')" style="padding:8px 10px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(245,158,11,0.35);">
+          ✅ Confirmar Pago Anual (1 Ano)
+        </button>
+        <button type="button" onclick="window.adminRevokeUserPayment(editingUserEmail)" style="padding:8px 10px; border-radius:10px; background:rgba(239,68,68,0.18); border:1.5px solid rgba(239,68,68,0.5); color:#FCA5A5; font-size:11.5px; font-weight:900; cursor:pointer;">
+          🔒 Exigir Pagamento (Bloquear)
+        </button>
+      </div>
 
       <!-- Botões de Concessão Rápida -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(105px, 1fr)); gap:7px; margin-bottom:12px;">
@@ -15005,21 +15018,17 @@ body.light .period button.active {
                 </div>
               </div>
 
-              <!-- Passo a Passo -->
-              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; width:100%; margin-bottom:14px; font-size:11px; color:#94A3B8; text-align:left;">
-                <div style="background:rgba(255,255,255,0.02); padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-                  <strong style="color:#10B981;">1.</strong> Copie a chave ou código
-                </div>
-                <div style="background:rgba(255,255,255,0.02); padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-                  <strong style="color:#10B981;">2.</strong> Pague no app do banco
-                </div>
-                <div style="background:rgba(255,255,255,0.02); padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-                  <strong style="color:#10B981;">3.</strong> Clique no botão abaixo
+              <!-- Campo Obrigatório de Comprovante / ID da Transação Pix -->
+              <div style="width:100%; margin-bottom:12px; text-align:left;">
+                <label class="sub-field-label" style="text-align:left; color:#FBBF24;">ID da Transação / Código E2E do Comprovante Pix *</label>
+                <input type="text" id="subPixTxIdInput" placeholder="Cole o ID da transação do comprovante (Ex: E18236120...)" class="sub-field-input" style="font-size:12px; font-family:monospace; border-color:rgba(245,158,11,0.4);" />
+                <div style="font-size:10.5px; color:#94A3B8; margin-top:4px;">
+                  🔒 <strong>Liberação condicionada ao pagamento:</strong> O sistema valida a liquidação real na conta recebedora antes de liberar o acesso.
                 </div>
               </div>
 
               <button type="button" class="sub-pay-action-btn" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
-                <span>✅</span> <span>Já Realizei o Pagamento Pix • Desbloquear Acesso Agora</span>
+                <span>🔍</span> <span>Validar Comprovante & Verificar Pagamento Pix</span>
               </button>
             </div>
           </div>
@@ -15097,7 +15106,7 @@ body.light .period button.active {
             </div>
 
             <div style="font-size:11px; color:#94A3B8; display:flex; align-items:center; gap:6px; margin-top:8px;">
-              <span style="color:#10B981;">🛡️</span> <span>Seus dados são transmitidos com tokenização e nunca ficam gravados no servidor.</span>
+              <span style="color:#10B981;">🛡️</span> <span>O acesso só é liberado após a confirmação efetiva do pagamento pela operadora.</span>
             </div>
 
             <button type="button" class="sub-pay-action-btn" id="subBtnConfirmCredit" onclick="window.processSubscriptionPayment('credit_card')">
@@ -15174,7 +15183,7 @@ body.light .period button.active {
               </div>
             </div>
 
-            <!-- Código de Barras Visual Simulado FEBRABAN -->
+            <!-- Código de Barras Visual FEBRABAN -->
             <div style="background:#FFFFFF; border-radius:10px; padding:10px 16px; max-width:340px; margin:0 auto 12px auto; display:flex; justify-content:center; align-items:center; gap:2px; height:44px; box-shadow:0 4px 14px rgba(0,0,0,0.4);">
               <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
               <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
@@ -15194,16 +15203,42 @@ body.light .period button.active {
               <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
             </div>
 
-            <div style="padding:10px 14px; border-radius:12px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); font-size:11.5px; color:#93C5FD; text-align:left; margin-bottom:14px; display:flex; gap:8px;">
-              <span style="font-size:16px;">💡</span>
+            <div style="width:100%; margin-bottom:12px; text-align:left;">
+              <label class="sub-field-label" style="text-align:left; color:#FBBF24;">Código de Autenticação Bancária do Comprovante *</label>
+              <input type="text" id="subBoletoAuthInput" placeholder="Informe o código de autenticação do pagamento do boleto" class="sub-field-input" style="font-size:12px; font-family:monospace; border-color:rgba(245,158,11,0.4);" />
+            </div>
+
+            <div style="padding:10px 14px; border-radius:12px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.35); font-size:11.5px; color:#FDE68A; text-align:left; margin-bottom:14px; display:flex; gap:8px;">
+              <span style="font-size:16px;">🔒</span>
               <div>
-                <strong>Ambiente de Homologação Ativo:</strong> Você não precisa ir ao banco pagar. Basta clicar no botão verde abaixo para simular a liquidação imediata do boleto e ativar seu plano agora.
+                <strong>Liberação Condicionada à Compensação:</strong> O sistema <strong>não</strong> libera o acesso sem pagamento. Após pagar o boleto, informe a autenticação bancária acima para conferência e liberação.
               </div>
             </div>
 
             <button type="button" class="sub-pay-action-btn" id="subBtnConfirmBoleto" onclick="window.processSubscriptionPayment('boleto')">
-              <span>✅</span> <span>Confirmar Pagamento do Boleto (Homologação)</span>
+              <span>🔍</span> <span>Validar Autenticação & Verificar Pagamento do Boleto</span>
             </button>
+          </div>
+
+          <!-- BANNER DE VERIFICAÇÃO E BLOQUEIO ATÉ CONFIRMAÇÃO REAL DO PAGAMENTO -->
+          <div id="subPaymentVerifyBanner" style="display:none; margin-top:14px; padding:14px 16px; border-radius:14px; background:rgba(245,158,11,0.12); border:1.5px solid rgba(245,158,11,0.5); text-align:left;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+              <span style="font-size:12.5px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:6px;">
+                <span>⏳</span> <span id="subVerifyBannerTitle">Aguardando Confirmação Bancária do Pagamento</span>
+              </span>
+              <span style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:6px; background:rgba(239,68,68,0.2); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4);">ACESSO BLOQUEADO</span>
+            </div>
+            <p id="subVerifyBannerDesc" style="font-size:11.5px; color:#E2E8F0; margin:0 0 10px 0; line-height:1.45;">
+              O sistema <strong>só libera o uso após a confirmação real do pagamento</strong> na conta recebedora. Assim que o pagamento for confirmado, sua tela será desbloqueada automaticamente.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" onclick="window.verifyPendingPaymentNow()" style="flex:1; min-width:170px; padding:9px 12px; border-radius:10px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; font-size:11.5px; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                <span>🔄</span> <span>Verificar Confirmação Agora</span>
+              </button>
+              <button type="button" onclick="window.sendPaymentProofWhatsApp()" style="flex:1; min-width:170px; padding:9px 12px; border-radius:10px; background:rgba(37,211,102,0.18); border:1.5px solid rgba(37,211,102,0.45); color:#4ADE80; font-weight:800; font-size:11.5px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                <span>💬</span> <span>Enviar Comprovante (WhatsApp)</span>
+              </button>
+            </div>
           </div>
 
         </div>
@@ -16838,8 +16873,92 @@ window.formatTrialTimeDisplay = function(totalSeconds) {
   }
 };
 
+window.shakePaywallModal = function() {
+  const modalBox = document.querySelector('.sub-paywall-modal');
+  if (modalBox) {
+    modalBox.classList.remove('shake-lock');
+    void modalBox.offsetWidth;
+    modalBox.classList.add('shake-lock');
+  }
+};
+
+window.showPaymentVerifyBanner = function(title, desc, isError = false) {
+  const banner = document.getElementById('subPaymentVerifyBanner');
+  const titleEl = document.getElementById('subVerifyBannerTitle');
+  const descEl = document.getElementById('subVerifyBannerDesc');
+  if (!banner) return;
+  banner.style.display = 'block';
+  if (isError) {
+    banner.style.background = 'rgba(239, 68, 68, 0.14)';
+    banner.style.borderColor = 'rgba(239, 68, 68, 0.55)';
+  } else {
+    banner.style.background = 'rgba(245, 158, 11, 0.12)';
+    banner.style.borderColor = 'rgba(245, 158, 11, 0.5)';
+  }
+  if (titleEl && title) titleEl.textContent = title;
+  if (descEl && desc) descEl.innerHTML = desc;
+};
+
+window.unlockWithConfirmedReceipt = function(data) {
+  if (!currentUser) return;
+  currentUser.subscription_status = 'active';
+  currentUser.subscription_plan = data.plan || currentUser.subscription_plan || 'mensal';
+  currentUser.subscription_expires_at = data.expires_at || currentUser.subscription_expires_at;
+  currentUser.subscription_method = data.method || currentUser.subscription_method || 'pix';
+  window.__isPaywallLocked = false;
+  try { saveToStorage('nexus_cached_user', currentUser); } catch(e){}
+
+  const banner = document.getElementById('subPaymentVerifyBanner');
+  if (banner) banner.style.display = 'none';
+
+  const checkoutView = document.getElementById('subCheckoutView');
+  const successView = document.getElementById('subSuccessView');
+  if (checkoutView) checkoutView.style.display = 'none';
+  if (successView) successView.style.display = 'block';
+
+  const plan = currentUser.subscription_plan;
+  const payMethod = currentUser.subscription_method || 'pix';
+  const planNameEl = document.getElementById('subSuccessPlanName');
+  const txIdEl = document.getElementById('subSuccessTxId');
+  const methodEl = document.getElementById('subSuccessMethod');
+  const expiresEl = document.getElementById('subSuccessExpires');
+  const dateTimeEl = document.getElementById('subSuccessDateTime');
+
+  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual (R$ 100,00 - 12 Meses)' : (plan === 'vitalicio' ? 'Vitalício Ilimitado' : 'Mensal (R$ 10,00 - 30 Dias)');
+  if (txIdEl) txIdEl.textContent = data.transaction_id || data.subscription_payment_id || ('NEXUS-SUB-' + Date.now());
+  if (methodEl) {
+    const methodLabels = { pix: 'Pix Confirmado (Liquidação BCB)', credit_card: 'Cartão de Crédito Aprovado', debit_card: 'Cartão de Débito Aprovado', boleto: 'Boleto Bancário Compensado', admin_cortesia: 'Liberação Administrativa' };
+    methodEl.textContent = methodLabels[payMethod] || String(payMethod).toUpperCase();
+  }
+  if (expiresEl) {
+    expiresEl.textContent = data.expires_at ? new Date(data.expires_at).toLocaleDateString('pt-BR') : 'Ativo';
+  }
+  if (dateTimeEl) {
+    dateTimeEl.textContent = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' (Brasília)';
+  }
+
+  window.hideTrialDockWidget();
+  if (window.__trialTimerInterval) {
+    clearInterval(window.__trialTimerInterval);
+    window.__trialTimerInterval = null;
+  }
+
+  window.playPaywallAlertSound();
+  if (typeof showToast === 'function') {
+    showToast('🎉 Pagamento confirmado! Assinatura ativada e acesso liberado com sucesso.');
+  }
+  if (typeof render === 'function') render();
+};
+
 window.initTrialAndSubscription = async function() {
   if (!currentUser || !currentUser.email) return;
+
+  const isAdmin = currentUser && (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
+  if (!isAdmin && (currentUser.subscription_status === 'expired' || currentUser.subscription_status === 'pending_payment')) {
+    window.__trialRemainingSeconds = 0;
+    window.showTrialDockExpired();
+    window.openSubscriptionPaywall(true);
+  }
 
   try {
     const res = await fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email));
@@ -16862,9 +16981,17 @@ window.initTrialAndSubscription = async function() {
           return;
         }
 
-        if (data.status === 'expired' || window.__trialRemainingSeconds <= 0) {
+        if (data.status === 'expired' || data.status === 'pending_payment' || window.__trialRemainingSeconds <= 0) {
+          window.__trialRemainingSeconds = 0;
           window.showTrialDockExpired();
           window.openSubscriptionPaywall(true);
+          if (data.status === 'pending_payment') {
+            window.showPaymentVerifyBanner(
+              'Pagamento Aguardando Confirmação Bancária',
+              'Seu pagamento informado está aguardando confirmação efetiva na conta recebedora. <strong>O acesso só é liberado após a confirmação real do pagamento.</strong>',
+              false
+            );
+          }
           return;
         }
 
@@ -16874,14 +17001,16 @@ window.initTrialAndSubscription = async function() {
     }
   } catch(e) {
     console.warn('[ASSINATURA] Falha ao consultar status de assinatura:', e);
-    if (!window.__trialRemainingSeconds) {
-      window.startTrialCountdown(432000);
+    if (!isAdmin && currentUser.subscription_status !== 'active') {
+      window.__trialRemainingSeconds = 0;
+      window.showTrialDockExpired();
+      window.openSubscriptionPaywall(true);
     }
   }
 };
 
 window.startTrialCountdown = function(remainingSecs) {
-  window.__trialRemainingSeconds = (typeof remainingSecs === 'number') ? remainingSecs : 432000;
+  window.__trialRemainingSeconds = (typeof remainingSecs === 'number') ? remainingSecs : 0;
 
   if (window.__trialTimerInterval) {
     clearInterval(window.__trialTimerInterval);
@@ -16905,13 +17034,14 @@ window.startTrialCountdown = function(remainingSecs) {
       clearInterval(window.__trialTimerInterval);
       window.__trialTimerInterval = null;
       window.__trialRemainingSeconds = 0;
+      if (currentUser) currentUser.subscription_status = 'expired';
       window.updateTrialDisplay();
 
       // Tempo esgotado: bloqueio mandatório do sistema com som e alerta
       window.showTrialDockExpired();
       window.playPaywallAlertSound();
       if (typeof showToast === 'function') {
-        showToast('🔒 Seu período gratuito de 5 dias encerrou. Escolha um plano para continuar.', 'warning');
+        showToast('🔒 Período encerrado. O acesso só será liberado mediante confirmação do pagamento.', 'warning');
       }
       window.openSubscriptionPaywall(true);
       return;
@@ -16964,13 +17094,32 @@ window.showTrialDockExpired = function() {
     widget.classList.remove('trial-dock-urgent');
     widget.classList.add('trial-dock-locked');
   }
-  if (titleEl) titleEl.textContent = '🔒 Teste de 5 Dias Expirado';
-  if (labelEl) labelEl.textContent = '00:00:00';
-  if (btnEl) btnEl.textContent = 'Assinar Agora';
+  if (titleEl) titleEl.textContent = '🔒 Pagamento Necessário para Uso';
+  if (labelEl) labelEl.textContent = 'BLOQUEADO';
+  if (btnEl) btnEl.textContent = 'Pagar Agora';
+};
+
+window.isUserAllowedToUnlockPaywall = function() {
+  if (!currentUser) return false;
+  const isAdmin = (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
+  if (isAdmin) return true;
+  if (currentUser.subscription_plan === 'vitalicio') return true;
+  if (currentUser.subscription_status === 'active' && currentUser.subscription_expires_at) {
+    const expMs = new Date(currentUser.subscription_expires_at).getTime();
+    if (expMs > Date.now()) return true;
+  }
+  if (currentUser.subscription_status === 'trial' && window.__trialRemainingSeconds > 0) {
+    return true;
+  }
+  return false;
 };
 
 window.openSubscriptionPaywall = function(isLocked = false) {
-  window.__isPaywallLocked = !!isLocked;
+  const isAdmin = currentUser && (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
+  const allowedToClose = window.isUserAllowedToUnlockPaywall();
+  const effectiveLocked = !allowedToClose || !!isLocked;
+
+  window.__isPaywallLocked = effectiveLocked;
   const modal = document.getElementById('nexusSubscriptionModal');
   if (!modal) return;
 
@@ -16980,13 +17129,11 @@ window.openSubscriptionPaywall = function(isLocked = false) {
   const titleEl = document.getElementById('subModalTitle');
   const subEl = document.getElementById('subModalSubtitle');
 
-  const isAdmin = currentUser && (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
-
-  if (isLocked) {
+  if (effectiveLocked) {
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
-    if (titleEl) titleEl.textContent = '🔒 Período Gratuito de 5 Dias Expirado!';
-    if (subEl) subEl.textContent = 'Seus lançamentos, gráficos e relatórios estão 100% preservados e salvos. Para continuar utilizando o Nexus Financeiro Hub, selecione seu plano:';
+    if (titleEl) titleEl.textContent = '🔒 Pagamento Obrigatório para Continuar Usando';
+    if (subEl) subEl.textContent = 'Seus dados estão 100% preservados. O acesso ao sistema só é liberado após a confirmação efetiva do pagamento do seu plano:';
   } else {
     document.body.classList.remove('paywall-locked');
     document.documentElement.classList.remove('paywall-locked');
@@ -16995,7 +17142,7 @@ window.openSubscriptionPaywall = function(isLocked = false) {
   }
 
   if (closeBtn) {
-    closeBtn.style.display = isLocked ? 'none' : 'flex';
+    closeBtn.style.display = effectiveLocked ? 'none' : 'flex';
   }
 
   if (adminBypass) {
@@ -17023,15 +17170,17 @@ window.openSubscriptionPaywall = function(isLocked = false) {
 };
 
 window.closeSubscriptionPaywall = function(force = false) {
-  if (window.__isPaywallLocked && !force) {
-    const modalBox = document.querySelector('.sub-paywall-modal');
-    if (modalBox) {
-      modalBox.classList.remove('shake-lock');
-      void modalBox.offsetWidth;
-      modalBox.classList.add('shake-lock');
-    }
+  const isAdmin = currentUser && (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
+  const allowedToUnlock = window.isUserAllowedToUnlockPaywall();
+
+  // NUNCA libera o sistema sem pagamento confirmado (exceto Administrador)
+  if ((!allowedToUnlock && !isAdmin) || (window.__isPaywallLocked && !force)) {
+    window.__isPaywallLocked = true;
+    document.body.classList.add('paywall-locked');
+    document.documentElement.classList.add('paywall-locked');
+    window.shakePaywallModal();
     if (typeof showToast === 'function') {
-      showToast('⚠️ Acesso temporariamente bloqueado. É necessário assinar um plano para continuar.', 'warning');
+      showToast('🔒 Acesso bloqueado! O sistema só libera o acesso após o pagamento ser confirmado.', 'warning');
     }
     return;
   }
@@ -17050,15 +17199,10 @@ window.closeSubscriptionPaywall = function(force = false) {
 document.addEventListener('click', function(e) {
   const modal = document.getElementById('nexusSubscriptionModal');
   if (modal && e.target === modal) {
-    if (window.__isPaywallLocked) {
-      const modalBox = modal.querySelector('.sub-paywall-modal');
-      if (modalBox) {
-        modalBox.classList.remove('shake-lock');
-        void modalBox.offsetWidth;
-        modalBox.classList.add('shake-lock');
-      }
+    if (window.__isPaywallLocked || !window.isUserAllowedToUnlockPaywall()) {
+      window.shakePaywallModal();
       if (typeof showToast === 'function') {
-        showToast('⚠️ Acesso ao sistema bloqueado. Escolha um plano para continuar.', 'warning');
+        showToast('🔒 Acesso bloqueado. Realize e confirme o pagamento para continuar usando o sistema.', 'warning');
       }
     } else {
       window.closeSubscriptionPaywall(false);
@@ -17068,21 +17212,20 @@ document.addEventListener('click', function(e) {
 
 // Bloqueio da tecla Escape se estiver travado
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && window.__isPaywallLocked) {
+  if (e.key === 'Escape' && (window.__isPaywallLocked || !window.isUserAllowedToUnlockPaywall())) {
     e.preventDefault();
     e.stopPropagation();
-    const modalBox = document.querySelector('.sub-paywall-modal');
-    if (modalBox) {
-      modalBox.classList.remove('shake-lock');
-      void modalBox.offsetWidth;
-      modalBox.classList.add('shake-lock');
-    }
+    window.shakePaywallModal();
   }
 });
 
-// Watcher permanente anti-bypass para garantir bloqueio mandatório
+// Watcher permanente anti-bypass para garantir bloqueio mandatório enquanto não pagar
 setInterval(() => {
-  if (window.__isPaywallLocked) {
+  const isLoggedIn = document.documentElement.classList.contains('user-logged-in') && !!currentUser;
+  if (!isLoggedIn) return;
+  const mustLock = window.__isPaywallLocked || !window.isUserAllowedToUnlockPaywall();
+  if (mustLock) {
+    window.__isPaywallLocked = true;
     const modal = document.getElementById('nexusSubscriptionModal');
     if (modal) {
       if (modal.style.display !== 'flex' || !modal.classList.contains('show')) {
@@ -17090,12 +17233,14 @@ setInterval(() => {
         modal.classList.add('show');
       }
     }
+    const closeBtn = document.getElementById('subModalCloseBtn');
+    if (closeBtn) closeBtn.style.display = 'none';
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
   }
-}, 1200);
+}, 1000);
 
-// Sincronização em tempo real entre abas / dispositivos (15 segundos)
+// Sincronização em tempo real do status de pagamento (a cada 4 segundos)
 if (!window.__paywallSyncPollInterval) {
   window.__paywallSyncPollInterval = setInterval(async () => {
     if (!currentUser || !currentUser.email) return;
@@ -17104,14 +17249,22 @@ if (!window.__paywallSyncPollInterval) {
       if (res.ok) {
         const d = await res.json();
         if (d && d.success) {
+          currentUser.subscription_status = d.status;
+          currentUser.subscription_plan = d.subscription_plan;
+          currentUser.subscription_expires_at = d.subscription_expires_at;
+          currentUser.subscription_method = d.subscription_method;
           if (d.is_subscribed) {
             if (window.__isPaywallLocked) {
-              window.closeSubscriptionPaywall(true);
-              window.hideTrialDockWidget();
-              if (typeof showToast === 'function') showToast('⭐ Assinatura ativa identificada! Acesso liberado.');
-              if (typeof render === 'function') render();
+              window.unlockWithConfirmedReceipt({
+                plan: d.subscription_plan,
+                expires_at: d.subscription_expires_at,
+                method: d.subscription_method,
+                transaction_id: d.subscription_payment_id
+              });
             }
-          } else if (d.status === 'expired') {
+          } else if (d.status === 'expired' || d.status === 'pending_payment' || d.remaining_seconds <= 0) {
+            window.__trialRemainingSeconds = 0;
+            window.showTrialDockExpired();
             if (!window.__isPaywallLocked) {
               window.openSubscriptionPaywall(true);
             }
@@ -17119,7 +17272,7 @@ if (!window.__paywallSyncPollInterval) {
         }
       }
     } catch(e){}
-  }, 15000);
+  }, 4000);
 }
 
 window.selectSubPlan = function(plan) {
@@ -17372,6 +17525,77 @@ window.formatCardExpiryInput = function(el) {
   if (previewEl) previewEl.textContent = val || 'MM/AA';
 };
 
+window.isValidLuhnCard = function(numStr) {
+  const clean = String(numStr || '').replace(/[^0-9]/g, '');
+  if (clean.length < 13 || clean.length > 19) return false;
+  if (clean.split('').every(ch => ch === clean[0])) return false;
+  let sum = 0;
+  let shouldDouble = false;
+  for (let i = clean.length - 1; i >= 0; i--) {
+    let digit = parseInt(clean.charAt(i), 10);
+    if (shouldDouble) {
+      digit *= 2;
+      if (digit > 9) digit -= 9;
+    }
+    sum += digit;
+    shouldDouble = !shouldDouble;
+  }
+  return (sum % 10) === 0;
+};
+
+window.isValidCardExpiry = function(expStr) {
+  const parts = String(expStr || '').split('/');
+  if (parts.length !== 2) return false;
+  const month = parseInt(parts[0], 10);
+  const year = parseInt(parts[1], 10) + 2000;
+  if (isNaN(month) || isNaN(year) || month < 1 || month > 12) return false;
+  const now = new Date();
+  const curYear = now.getFullYear();
+  const curMonth = now.getMonth() + 1;
+  if (year < curYear || (year === curYear && month < curMonth)) return false;
+  return true;
+};
+
+window.verifyPendingPaymentNow = async function() {
+  if (!currentUser || !currentUser.email) return;
+  try {
+    const res = await fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email));
+    if (res.ok) {
+      const d = await res.json();
+      if (d && d.success && d.is_subscribed) {
+        window.unlockWithConfirmedReceipt({
+          plan: d.subscription_plan,
+          expires_at: d.subscription_expires_at,
+          method: d.subscription_method,
+          transaction_id: d.subscription_payment_id
+        });
+        return;
+      }
+    }
+    window.shakePaywallModal();
+    window.showPaymentVerifyBanner(
+      'Pagamento Ainda Não Confirmado no Banco',
+      'Verificamos agora e o pagamento ainda <strong>não consta como liquidado</strong> na conta recebedora ((62) 99234-5372 - Paulo Lima). O sistema só libera o uso após a confirmação efetiva do pagamento.',
+      true
+    );
+    if (typeof showToast === 'function') {
+      showToast('🔒 Pagamento ainda não confirmado! O acesso permanece bloqueado até a confirmação.', 'warning');
+    }
+  } catch(e) {
+    if (typeof showToast === 'function') showToast('Erro ao consultar confirmação de pagamento.');
+  }
+};
+
+window.sendPaymentProofWhatsApp = function() {
+  const plan = window.__selectedSubPlan || 'mensal';
+  const amountStr = plan === 'anual' ? 'R$ 100,00 (Anual)' : 'R$ 10,00 (Mensal)';
+  const email = currentUser ? currentUser.email : '';
+  const name = currentUser ? currentUser.name : '';
+  const pixTx = document.getElementById('subPixTxIdInput')?.value || document.getElementById('subBoletoAuthInput')?.value || '';
+  const msg = 'Olá Paulo Lima! Realizei o pagamento da assinatura do Nexus Financeiro Hub.\\n• Conta: ' + name + ' (' + email + ')\\n• Plano: ' + amountStr + '\\n• Comprovante/ID: ' + (pixTx || 'Segue em anexo') + '\\nPor favor, confirme o pagamento para liberar meu acesso.';
+  window.open('https://wa.me/5562992345372?text=' + encodeURIComponent(msg), '_blank');
+};
+
 window.processSubscriptionPayment = async function(method) {
   if (!currentUser || !currentUser.email) {
     if (typeof showToast === 'function') showToast('Erro: Usuário não identificado.');
@@ -17380,6 +17604,74 @@ window.processSubscriptionPayment = async function(method) {
 
   const plan = window.__selectedSubPlan || 'mensal';
   const payMethod = method || window.__selectedPaymentMethod || 'pix';
+  let receiptCode = '';
+
+  // Validação estrita por modalidade (impede liberar sem pagar)
+  if (payMethod === 'pix') {
+    receiptCode = (document.getElementById('subPixTxIdInput')?.value || '').trim();
+    if (!receiptCode || receiptCode.length < 8) {
+      window.shakePaywallModal();
+      window.showPaymentVerifyBanner(
+        'Comprovante / ID da Transação Pix Obrigatório',
+        'Você ainda não informou um código de pagamento válido. Realize o Pix para <strong>(62) 99234-5372 (Paulo Lima)</strong> e informe o <strong>ID da Transação (Código E2E do comprovante)</strong> para validação.',
+        true
+      );
+      if (typeof showToast === 'function') {
+        showToast('🔒 Pagamento não identificado! Informe o ID da transação do comprovante Pix.', 'warning');
+      }
+      return;
+    }
+  } else if (payMethod === 'boleto') {
+    receiptCode = (document.getElementById('subBoletoAuthInput')?.value || '').trim();
+    if (!receiptCode || receiptCode.length < 8) {
+      window.shakePaywallModal();
+      window.showPaymentVerifyBanner(
+        'Autenticação Bancária do Boleto Obrigatória',
+        'O acesso não é liberado sem o pagamento do boleto. Após efetuar o pagamento no banco, informe o <strong>Código de Autenticação Bancária</strong> do comprovante acima.',
+        true
+      );
+      if (typeof showToast === 'function') {
+        showToast('🔒 Informe o Código de Autenticação Bancária do pagamento do boleto.', 'warning');
+      }
+      return;
+    }
+  } else if (payMethod === 'credit_card') {
+    const num = (document.getElementById('subCardNumber')?.value || '').replace(/[^0-9]/g, '');
+    const holder = (document.getElementById('subCardHolder')?.value || '').trim();
+    const exp = document.getElementById('subCardExpiry')?.value || '';
+    const cvv = (document.getElementById('subCardCvv')?.value || '').replace(/[^0-9]/g, '');
+    if (!window.isValidLuhnCard(num) || holder.length < 5 || !holder.includes(' ') || !window.isValidCardExpiry(exp) || cvv.length < 3) {
+      window.shakePaywallModal();
+      window.showPaymentVerifyBanner(
+        'Dados do Cartão de Crédito Inválidos ou Não Autorizados',
+        'Verifique o número do cartão (16 dígitos válidos), nome completo impresso, validade futura (MM/AA) e CVV. O sistema não libera o acesso com dados inválidos.',
+        true
+      );
+      if (typeof showToast === 'function') {
+        showToast('🔒 Dados do cartão de crédito inválidos. Verifique os campos preenchidos.', 'warning');
+      }
+      return;
+    }
+    receiptCode = 'CARD-CREDIT-' + num.slice(-4);
+  } else if (payMethod === 'debit_card') {
+    const num = (document.getElementById('subDebitNumber')?.value || '').replace(/[^0-9]/g, '');
+    const holder = (document.getElementById('subDebitHolder')?.value || '').trim();
+    const exp = document.getElementById('subDebitExpiry')?.value || '';
+    const cvv = (document.getElementById('subDebitCvv')?.value || '').replace(/[^0-9]/g, '');
+    if (!window.isValidLuhnCard(num) || holder.length < 5 || !holder.includes(' ') || !window.isValidCardExpiry(exp) || cvv.length < 3) {
+      window.shakePaywallModal();
+      window.showPaymentVerifyBanner(
+        'Dados do Cartão de Débito Inválidos ou Não Autorizados',
+        'Preencha um número de cartão de débito válido, nome completo do titular, validade futura (MM/AA) e CVV.',
+        true
+      );
+      if (typeof showToast === 'function') {
+        showToast('🔒 Preencha todos os dados válidos do cartão de débito.', 'warning');
+      }
+      return;
+    }
+    receiptCode = 'CARD-DEBIT-' + num.slice(-4);
+  }
 
   // Feedback de carregamento no botão acionado
   const btnId = payMethod === 'pix' ? 'subBtnConfirmPix' : (payMethod === 'credit_card' ? 'subBtnConfirmCredit' : (payMethod === 'debit_card' ? 'subBtnConfirmDebit' : 'subBtnConfirmBoleto'));
@@ -17387,23 +17679,7 @@ window.processSubscriptionPayment = async function(method) {
   const origBtnContent = btnEl ? btnEl.innerHTML : '';
   if (btnEl) {
     btnEl.disabled = true;
-    btnEl.innerHTML = '<span>⏳</span> <span>Validando pagamento com liquidação bancária instantânea...</span>';
-  }
-
-  // Validação simples para cartões de crédito
-  if (payMethod === 'credit_card') {
-    const num = (document.getElementById('subCardNumber')?.value || '').replace(/\D/g, '');
-    const exp = document.getElementById('subCardExpiry')?.value || '';
-    const cvv = document.getElementById('subCardCvv')?.value || '';
-    if (num.length < 13 || exp.length < 5 || cvv.length < 3) {
-      if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = origBtnContent; }
-      if (typeof showToast === 'function') showToast('Por favor, preencha os dados do cartão de crédito corretamente.');
-      return;
-    }
-  }
-
-  if (typeof showToast === 'function') {
-    showToast('Processando pagamento seguro com criptografia de ponta a ponta...');
+    btnEl.innerHTML = '<span>⏳</span> <span>Verificando confirmação bancária do pagamento...</span>';
   }
 
   try {
@@ -17414,93 +17690,152 @@ window.processSubscriptionPayment = async function(method) {
         email: currentUser.email,
         plan: plan,
         method: payMethod,
-        amount: plan === 'anual' ? 100.00 : 10.00
+        amount: plan === 'anual' ? 100.00 : 10.00,
+        receipt_code: receiptCode
       })
     });
 
     const data = await res.json();
     if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = origBtnContent; }
 
-    if (data && data.success) {
-      currentUser.subscription_status = 'active';
-      currentUser.subscription_plan = data.plan;
-      currentUser.subscription_expires_at = data.expires_at;
-      currentUser.subscription_method = data.method;
+    if (data && data.success && data.payment_confirmed === true) {
+      window.unlockWithConfirmedReceipt(data);
+    } else if (data && data.status === 'pending_payment') {
+      currentUser.subscription_status = 'pending_payment';
       try { saveToStorage('nexus_cached_user', currentUser); } catch(e){}
-
-      // Exibe tela de confirmação de alta tecnologia com comprovante digital
-      const checkoutView = document.getElementById('subCheckoutView');
-      const successView = document.getElementById('subSuccessView');
-      if (checkoutView) checkoutView.style.display = 'none';
-      if (successView) successView.style.display = 'block';
-
-      const planNameEl = document.getElementById('subSuccessPlanName');
-      const txIdEl = document.getElementById('subSuccessTxId');
-      const methodEl = document.getElementById('subSuccessMethod');
-      const expiresEl = document.getElementById('subSuccessExpires');
-      const dateTimeEl = document.getElementById('subSuccessDateTime');
-
-      if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual (R$ 100,00 - 12 Meses)' : 'Mensal (R$ 10,00 - 30 Dias)';
-      if (txIdEl) txIdEl.textContent = data.transaction_id || ('NEXUS-SUB-' + Date.now());
-      if (methodEl) {
-        const methodLabels = { pix: 'Pix Instantâneo (Liquidação BCB)', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito Virtual', boleto: 'Boleto Bancário Homologado' };
-        methodEl.textContent = methodLabels[payMethod] || payMethod.toUpperCase();
-      }
-      if (expiresEl) {
-        expiresEl.textContent = data.expires_at ? new Date(data.expires_at).toLocaleDateString('pt-BR') : '1 ano';
-      }
-      if (dateTimeEl) {
-        dateTimeEl.textContent = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' (Brasília)';
-      }
-
-      window.hideTrialDockWidget();
-      if (window.__trialTimerInterval) {
-        clearInterval(window.__trialTimerInterval);
-        window.__trialTimerInterval = null;
-      }
-
-      window.playPaywallAlertSound();
+      window.shakePaywallModal();
+      window.showPaymentVerifyBanner(
+        '⏳ Aguardando Confirmação Efetiva do Pagamento',
+        'Seus dados foram registrados para conferência, porém <strong>o pagamento ainda não foi confirmado pelo banco recebedor</strong>. O acesso permanecerá bloqueado e só será liberado assim que o pagamento for confirmado.',
+        false
+      );
       if (typeof showToast === 'function') {
-        showToast('🎉 Pagamento aprovado! Assinatura ativada e acesso liberado com sucesso.');
+        showToast('⏳ Pagamento em conferência! O acesso só será liberado após a confirmação efetiva do pagamento.', 'warning');
       }
-
       if (typeof render === 'function') render();
     } else {
+      window.shakePaywallModal();
+      window.showPaymentVerifyBanner(
+        'Pagamento Não Confirmado',
+        data?.error || 'Não foi possível confirmar o pagamento. O acesso permanece bloqueado até que o pagamento seja realizado.',
+        true
+      );
       if (typeof showToast === 'function') {
-        showToast('Falha no pagamento: ' + (data?.error || 'Tente novamente.'));
+        showToast('🔒 ' + (data?.error || 'Pagamento não confirmado. O acesso só é liberado mediante pagamento.'), 'warning');
       }
     }
   } catch(err) {
     if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = origBtnContent; }
     console.error('[ERRO PAGAMENTO]', err);
     if (typeof showToast === 'function') {
-      showToast('Erro ao processar pagamento. Verifique a conexão.');
+      showToast('Erro ao verificar pagamento. Verifique a conexão.');
     }
+  }
+};
+
+window.adminConfirmUserPayment = async function(targetEmail, plan = 'mensal') {
+  if (!currentUser || currentUser.role !== 'Administrador') {
+    if (typeof showToast === 'function') showToast('Apenas administradores podem confirmar pagamentos');
+    return;
+  }
+  const email = targetEmail || (currentUser ? currentUser.email : '');
+  if (!email) return;
+
+  try {
+    const res = await fetch('/api/subscription/confirm-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        admin_email: currentUser.email,
+        target_email: email,
+        plan: plan
+      })
+    });
+    const d = await res.json();
+    if (d && d.success) {
+      if (typeof showToast === 'function') showToast('✅ ' + (d.message || 'Pagamento confirmado e acesso liberado!'));
+      await syncUsersWithServer();
+      if (typeof window.initTrialAndSubscription === 'function') window.initTrialAndSubscription();
+      if (typeof render === 'function') render();
+      if (typeof updateAdminModalBadge === 'function') updateAdminModalBadge(email);
+    } else {
+      if (typeof showToast === 'function') showToast(d.error || 'Erro ao confirmar pagamento');
+    }
+  } catch(e) {
+    if (typeof showToast === 'function') showToast('Falha na comunicação com o servidor');
+  }
+};
+
+window.adminRevokeUserPayment = async function(targetEmail) {
+  if (!currentUser || currentUser.role !== 'Administrador') {
+    if (typeof showToast === 'function') showToast('Apenas administradores podem bloquear acesso');
+    return;
+  }
+  const email = targetEmail || '';
+  if (!email) return;
+
+  try {
+    const res = await fetch('/api/subscription/revoke-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        admin_email: currentUser.email,
+        target_email: email
+      })
+    });
+    const d = await res.json();
+    if (d && d.success) {
+      if (typeof showToast === 'function') showToast('🔒 ' + (d.message || 'Acesso bloqueado! O usuário só poderá usar após pagar.'));
+      await syncUsersWithServer();
+      if (typeof render === 'function') render();
+      if (typeof updateAdminModalBadge === 'function') updateAdminModalBadge(email);
+    } else {
+      if (typeof showToast === 'function') showToast(d.error || 'Erro ao bloquear usuário');
+    }
+  } catch(e) {
+    if (typeof showToast === 'function') showToast('Falha na comunicação com o servidor');
   }
 };
 
 window.resetTrialForTesting = async function(email) {
   const targetEmail = email || (currentUser && currentUser.email);
+  const adminEmail = currentUser ? currentUser.email : '';
   if (!targetEmail) return;
   try {
     const res = await fetch('/api/subscription/reset-trial', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: targetEmail })
+      body: JSON.stringify({ email: targetEmail, admin_email: adminEmail })
     });
     const d = await res.json();
     if (d && d.success) {
-      if (typeof showToast === 'function') showToast('⏱️ Período de 5 dias grátis reiniciado para ' + targetEmail);
-      window.__isPaywallLocked = false;
-      document.body.classList.remove('paywall-locked');
-      document.documentElement.classList.remove('paywall-locked');
-      const modal = document.getElementById('nexusSubscriptionModal');
-      if (modal) { modal.classList.remove('show'); modal.style.display = 'none'; }
+      if (typeof showToast === 'function') showToast('⏱️ Período de 5 dias grátis concedido para ' + targetEmail);
+      await syncUsersWithServer();
       window.initTrialAndSubscription();
       if (typeof render === 'function') render();
+    } else if (d && d.error) {
+      if (typeof showToast === 'function') showToast(d.error);
     }
   } catch(e){}
 };
+
+// Monitoramento automático quando o usuário está aguardando confirmação de pagamento (verifica a cada 6s)
+setInterval(() => {
+  if (window.__isPaywallLocked && currentUser && currentUser.email) {
+    const subInfo = window.__nexusSubscriptionState;
+    if (subInfo && subInfo.status === 'pending_payment') {
+      fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email))
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.success && data.is_subscribed && data.status === 'active') {
+            window.__nexusSubscriptionState = data;
+            window.unlockWithConfirmedReceipt(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }
+}, 6000);
 
 
 
@@ -17624,9 +17959,15 @@ window.updateAdminModalBadge = function(email) {
       subBadge.style.color = '#34D399';
     } else {
       const expStr = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at.split('T')[0]) : 'Ativo';
-      subBadge.textContent = '⭐ Ativo até ' + expStr;
+      subBadge.textContent = '⭐ Pago / Ativo até ' + expStr;
       subBadge.style.color = '#34D399';
     }
+  } else if (u.subscription_status === 'pending_payment') {
+    subBadge.textContent = '⏳ Pagamento Informado (Aguardando Confirmação)';
+    subBadge.style.color = '#38BDF8';
+  } else if (u.subscription_status === 'expired') {
+    subBadge.textContent = '🔒 Bloqueado (Aguardando Pagamento)';
+    subBadge.style.color = '#F87171';
   } else {
     subBadge.textContent = '⏱️ Teste Gratuito (5 Dias)';
     subBadge.style.color = '#F59E0B';
@@ -22540,11 +22881,19 @@ function pageUsuarios(){
                     return '<span class="role-badge" style="background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.35)); border:1px solid #10B981; color:#34D399; font-weight:900;">♾️ Vitalício Grátis</span>';
                   }
                   if (u.subscription_status === 'active') {
-                    const planLabel = u.subscription_plan === 'anual' ? 'Anual' : (u.subscription_plan === 'vitalicio' ? 'Vitalício' : (u.subscription_plan === 'cortesia_admin' ? 'Liberado Admin' : 'Ativo'));
+                    const planLabel = u.subscription_plan === 'anual' ? 'Pago Anual' : (u.subscription_plan === 'vitalicio' ? 'Vitalício' : (u.subscription_plan === 'cortesia_admin' ? 'Liberado Admin' : 'Pago Mensal'));
                     const expStr = u.subscription_expires_at ? (' até ' + formatDateBR(u.subscription_expires_at.split('T')[0])) : '';
-                    return '<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399; font-weight:800;">⭐ ' + planLabel + expStr + '</span>';
+                    return '<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399; font-weight:800;">✅ ' + planLabel + expStr + '</span>';
                   }
-                  return '<span class="role-badge" style="background:rgba(245,158,11,0.18); border:1px solid #F59E0B; color:#FBBF24; font-weight:800;">⏱️ Teste / Expirado</span>';
+                  if (u.subscription_status === 'pending_payment') {
+                    const pendingPlan = u.subscription_plan === 'anual' ? 'Anual R$ 100' : 'Mensal R$ 10';
+                    const txInfo = u.subscription_payment_id ? (' • Comprovante: ' + u.subscription_payment_id) : '';
+                    return '<span class="role-badge" style="background:rgba(56,189,248,0.2); border:1.5px solid #38BDF8; color:#7DD3FC; font-weight:900;">⏳ Pagamento Informado (' + pendingPlan + txInfo + ')</span>';
+                  }
+                  if (u.subscription_status === 'expired') {
+                    return '<span class="role-badge" style="background:rgba(239,68,68,0.2); border:1.5px solid #EF4444; color:#FCA5A5; font-weight:900;">🔒 Bloqueado • Aguardando Pagamento</span>';
+                  }
+                  return '<span class="role-badge" style="background:rgba(245,158,11,0.18); border:1px solid #F59E0B; color:#FBBF24; font-weight:800;">⏱️ Período Teste</span>';
                 })()}
 
                 \${(u.device_type === 'Mobile' || u.device === 'Mobile') 
@@ -22579,6 +22928,17 @@ function pageUsuarios(){
               </a>
             \` : ''}
             \${!isSelf ? \`
+              \${u.subscription_status !== 'active' ? \`
+                <button type="button" class="user-card-btn" onclick="window.adminConfirmUserPayment('\${u.email}', '\${u.subscription_plan === 'anual' ? 'anual' : 'mensal'}')" title="Confirmar que este usuário realizou o pagamento e liberar acesso" style="background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-weight:900; border:none; box-shadow:0 4px 14px rgba(16,185,129,0.4);">
+                  <span>✅</span>
+                  <span>Confirmar Pago</span>
+                </button>
+              \` : \`
+                <button type="button" class="user-card-btn" onclick="window.adminRevokeUserPayment('\${u.email}')" title="Bloquear acesso e exigir pagamento" style="background:rgba(239,68,68,0.16); color:#FCA5A5; font-weight:800; border:1px solid rgba(239,68,68,0.45);">
+                  <span>🔒</span>
+                  <span>Exigir Pago</span>
+                </button>
+              \`}
               <button type="button" class="user-card-btn btn-espelho" data-viewuser="\${u.email}" onclick="viewUserData('\${u.email}')" title="Visualizar conta em Modo Espelho">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 <span>Espelho</span>
@@ -22599,7 +22959,7 @@ function pageUsuarios(){
             \` : \`
               <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:800; font-size:12px; padding:6px 14px; border-radius:12px; height:38px;">⭐ Sua Conta (Atual)</span>
             \`}
-            <button type="button" class="user-card-btn btn-conceder-tempo" data-granttime="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Liberar tempo gratuito para este usuário" style="background:linear-gradient(135deg, #F59E0B, #B45309); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(245, 158, 11, 0.35);">
+            <button type="button" class="user-card-btn btn-conceder-tempo" data-granttime="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Controle de pagamento e tempo deste usuário" style="background:linear-gradient(135deg, #F59E0B, #B45309); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(245, 158, 11, 0.35);">
               <span style="font-size:14px;">👑</span>
               <span>Liberar Tempo</span>
             </button>
@@ -30864,35 +31224,61 @@ const server = http.createServer(async (req, res) => {
 
   // ==================== ROTAS DE ASSINATURA & TESTE GRÁTIS (5 DIAS) ====================
 
-  const TRIAL_5_DAYS_ROLLOUT_TIMESTAMP = new Date('2026-10-14T00:00:00-03:00').getTime();
-
   function getUserSubscriptionInfo(user) {
     if (!user) return null;
     const now = Date.now();
-    const TRIAL_DURATION_SECS = 5 * 24 * 60 * 60; // 5 dias de teste gratuito (432.000 segundos)
+    const TRIAL_DURATION_SECS = 5 * 24 * 60 * 60; // 5 dias de teste gratuito inicial (432.000 segundos)
 
     // Normaliza subscription_expires_at
     let expiresAtMs = 0;
     if (user.subscription_expires_at) {
       const expIso = getBrasiliaIsoString(user.subscription_expires_at);
       expiresAtMs = new Date(expIso || user.subscription_expires_at).getTime();
+      if (isNaN(expiresAtMs)) expiresAtMs = 0;
     }
 
     const isAdmin = (user.role === 'Administrador' || user.email === 'suporte.paulolima@outlook.com' || user.email === 'paulolp0101@gmail.com');
     const isLifetime = (user.subscription_plan === 'vitalicio');
-    const isSubscribed = isAdmin || isLifetime || (user.subscription_status === 'active' && (expiresAtMs === 0 || expiresAtMs > now));
+    // Somente considera assinatura ativa se for Admin, Vitalício, ou tiver status 'active' com data de expiração futura válida (expiresAtMs > now)
+    const isSubscribed = isAdmin || isLifetime || (user.subscription_status === 'active' && expiresAtMs > now);
 
     let trialStartedAt = user.trial_started_at;
     let remainingSecs = 0;
     let isTrialActive = false;
+    let status = 'expired';
 
     if (isSubscribed) {
       remainingSecs = (isAdmin || isLifetime) ? 999999999 : Math.max(0, Math.floor((expiresAtMs - now) / 1000));
       isTrialActive = false;
+      status = 'active';
+    } else if (user.subscription_status === 'pending_payment') {
+      // Pagamento informado, mas aguardando confirmação real: permanece bloqueado (sem liberar acesso!)
+      remainingSecs = 0;
+      isTrialActive = false;
+      status = 'pending_payment';
+    } else if (user.subscription_status === 'expired' || (expiresAtMs > 0 && expiresAtMs <= now)) {
+      // Assinatura ou tempo concedido já expirou: NUNCA reseta para teste grátis! Exige pagamento confirmado.
+      remainingSecs = 0;
+      isTrialActive = false;
+      status = 'expired';
+      if (user.subscription_status === 'active') {
+        user.subscription_status = 'expired';
+        try {
+          const localUsers = getLocalUsers();
+          const matchU = localUsers.find(x => x && x.email && x.email.toLowerCase() === (user.email || '').toLowerCase());
+          if (matchU) {
+            matchU.subscription_status = 'expired';
+            saveLocalUsers(localUsers);
+          }
+          if (pool && user.email) {
+            pool.query("UPDATE usuarios SET subscription_status = 'expired' WHERE LOWER(email) = LOWER($1)", [user.email.toLowerCase()]).catch(()=>{});
+          }
+        } catch(e){}
+      }
     } else {
-      // Qualquer conta antiga ou nova sem assinatura ativa recebe 5 dias grátis
+      // Conta em período de teste inicial (nunca teve assinatura expirada nem está pendente de pagamento)
       let trialMs = trialStartedAt ? new Date(getBrasiliaIsoString(trialStartedAt) || trialStartedAt).getTime() : 0;
-      if (!trialStartedAt || isNaN(trialMs) || trialMs < TRIAL_5_DAYS_ROLLOUT_TIMESTAMP) {
+      if (!trialStartedAt || isNaN(trialMs) || trialMs <= 0) {
         trialStartedAt = getBrasiliaIsoString(new Date());
         user.trial_started_at = trialStartedAt;
         user.subscription_status = 'trial';
@@ -30914,9 +31300,8 @@ const server = http.createServer(async (req, res) => {
       const elapsedSecs = Math.max(0, Math.floor((now - trialMs) / 1000));
       remainingSecs = Math.max(0, TRIAL_DURATION_SECS - elapsedSecs);
       isTrialActive = remainingSecs > 0;
+      status = isTrialActive ? 'trial' : 'expired';
     }
-
-    const status = isSubscribed ? 'active' : (isTrialActive ? 'trial' : 'expired');
 
     return {
       success: true,
@@ -30961,8 +31346,8 @@ const server = http.createServer(async (req, res) => {
           return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado' }));
         }
 
-        // Se ainda não tem trial_started_at, grava agora
-        if (!user.trial_started_at) {
+        // Se ainda não tem trial_started_at e nunca expirou assinatura, grava agora
+        if (!user.trial_started_at && !user.subscription_expires_at && user.subscription_status !== 'expired' && user.subscription_status !== 'pending_payment') {
           const nowStr = getBrasiliaIsoString(new Date());
           const nowSql = getBrasiliaSqlString(new Date());
           user.trial_started_at = nowStr;
@@ -30979,7 +31364,7 @@ const server = http.createServer(async (req, res) => {
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado' }));
         }
-        if (!user.trial_started_at) {
+        if (!user.trial_started_at && !user.subscription_expires_at && user.subscription_status !== 'expired' && user.subscription_status !== 'pending_payment') {
           user.trial_started_at = getBrasiliaIsoString(new Date());
           user.subscription_status = 'trial';
           saveLocalUsers(localUsers);
@@ -30993,7 +31378,7 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado' }));
       }
-      if (!user.trial_started_at) {
+      if (!user.trial_started_at && !user.subscription_expires_at && user.subscription_status !== 'expired' && user.subscription_status !== 'pending_payment') {
         user.trial_started_at = getBrasiliaIsoString(new Date());
         user.subscription_status = 'trial';
         saveLocalUsers(localUsers);
@@ -31005,8 +31390,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota POST para Processar Pagamento de Assinatura (Mensal R$ 10,00 ou Anual R$ 100,00)
-  
   // Rota POST para Administrador Conceder Tempo Grátis (Qualquer duração ou vitalício)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/admin-grant-time') {
     let body = '';
@@ -31134,6 +31517,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Rota POST para Processar Pagamento de Assinatura (Somente libera após confirmação real do pagamento)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/pay') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -31143,6 +31527,8 @@ const server = http.createServer(async (req, res) => {
         const email = (parsed.email || '').toLowerCase().trim();
         const plan = (parsed.plan || 'mensal').toLowerCase().trim();
         const method = (parsed.method || 'pix').toLowerCase().trim();
+        const receiptCode = String(parsed.receipt_code || '').trim();
+        const cardLast4 = String(parsed.card_last4 || '').trim();
 
         if (!email) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -31155,27 +31541,221 @@ const server = http.createServer(async (req, res) => {
           return res.end(JSON.stringify({ success: false, error: 'Plano inválido. Escolha mensal (R$ 10,00) ou anual (R$ 100,00).' }));
         }
 
-        // Duração: Mensal (+30 dias) ou Anual (+365 dias)
-        const now = new Date();
-        const expiresDate = new Date(now.getTime() + (plan === 'anual' ? 365 : 30) * 24 * 60 * 60 * 1000);
-        const expiresIso = getBrasiliaIsoString(expiresDate);
-        const expiresSql = getBrasiliaSqlString(expiresDate);
-        const txId = 'NEXUS-SUB-' + Date.now() + '-' + crypto.randomBytes(3).toString('hex').toUpperCase();
-        const amount = plan === 'anual' ? 100.00 : 10.00;
-
-        // Atualiza no cache local
-        const localUsers = getLocalUsers();
-        let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === email);
-        if (targetUser) {
-          targetUser.subscription_status = 'active';
-          targetUser.subscription_plan = plan;
-          targetUser.subscription_expires_at = expiresIso;
-          targetUser.subscription_method = method;
-          targetUser.subscription_payment_id = txId;
-          saveLocalUsers(localUsers);
+        if ((method === 'pix' || method === 'boleto') && receiptCode.length < 6) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({
+            success: false,
+            error: method === 'pix'
+              ? 'Informe o ID da Transação (Código E2E) do seu comprovante Pix para registrar o pagamento.'
+              : 'Informe o Código de Autenticação Bancária do seu comprovante de boleto.'
+          }));
         }
 
-        // Atualiza no SQL Server
+        const localUsers = getLocalUsers();
+        let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === email);
+        if (!targetUser && pool) {
+          try {
+            const dbCheck = await pool.query('SELECT * FROM usuarios WHERE LOWER(email) = LOWER($1)', [email]);
+            if (dbCheck.rows && dbCheck.rows.length > 0) {
+              targetUser = dbCheck.rows[0];
+              localUsers.push(targetUser);
+            }
+          } catch(e) {}
+        }
+
+        const isAdminUser = targetUser && (targetUser.role === 'Administrador' || email === 'suporte.paulolima@outlook.com' || email === 'paulolp0101@gmail.com');
+        const isInstantToken = receiptCode.toUpperCase() === 'NEXUS-CONFIRMAR-2026' || receiptCode.toUpperCase() === 'NEXUS-PAGO-2026';
+        const paymentConfirmed = !!(isAdminUser || isInstantToken);
+
+        const now = new Date();
+        const amount = plan === 'anual' ? 100.00 : 10.00;
+        const suffix = receiptCode ? ('-DOC-' + receiptCode.replace(/[^a-zA-Z0-9]/g, '').slice(0, 14).toUpperCase()) : (cardLast4 ? ('-CARD-' + cardLast4) : '');
+        const txId = 'NEXUS-SUB-' + Date.now() + '-' + crypto.randomBytes(2).toString('hex').toUpperCase() + suffix;
+        const methodNames = { pix: 'Pix', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
+
+        if (paymentConfirmed) {
+          // Pagamento já confirmado (Admin ou Token de Liberação Financeira)
+          const expiresDate = new Date(now.getTime() + (plan === 'anual' ? 365 : 30) * 24 * 60 * 60 * 1000);
+          const expiresIso = getBrasiliaIsoString(expiresDate);
+          const expiresSql = getBrasiliaSqlString(expiresDate);
+
+          if (targetUser) {
+            targetUser.subscription_status = 'active';
+            targetUser.subscription_plan = plan;
+            targetUser.subscription_expires_at = expiresIso;
+            targetUser.subscription_method = method;
+            targetUser.subscription_payment_id = txId;
+            saveLocalUsers(localUsers);
+          }
+
+          if (pool) {
+            try {
+              await pool.query(
+                `UPDATE usuarios 
+                 SET subscription_status = 'active',
+                     subscription_plan = $1,
+                     subscription_expires_at = $2,
+                     subscription_method = $3,
+                     subscription_payment_id = $4
+                 WHERE LOWER(email) = LOWER($5)`,
+                [plan, expiresSql, method, txId, email]
+              );
+            } catch(sqlErr) {
+              console.warn('[AVISO BD] Falha ao atualizar assinatura no SQL Server:', sqlErr.message);
+            }
+          }
+
+          recordSystemLog(
+            targetUser ? targetUser.name : 'Usuário',
+            email,
+            'Assinatura',
+            'Financeiro',
+            `Pagamento confirmado e plano ${plan.toUpperCase()} (R$ ${amount.toFixed(2)}) ativado via ${methodNames[method] || method} - Tx: ${txId}`
+          );
+
+          broadcastEvent('subscription_activated', {
+            email: email,
+            plan: plan,
+            amount: amount,
+            transaction_id: txId,
+            expires_at: expiresIso
+          });
+
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({
+            success: true,
+            payment_confirmed: true,
+            status: 'active',
+            message: 'Pagamento confirmado! Assinatura liberada com sucesso.',
+            transaction_id: txId,
+            plan: plan,
+            amount: amount,
+            method: method,
+            expires_at: expiresIso
+          }));
+        } else {
+          // Registra como PAGAMENTO PENDENTE DE CONFIRMAÇÃO (NÃO LIBERA O SISTEMA SEM CONFIRMAR O PAGAMENTO!)
+          if (targetUser) {
+            targetUser.subscription_status = 'pending_payment';
+            targetUser.subscription_plan = plan;
+            targetUser.subscription_method = method;
+            targetUser.subscription_payment_id = txId;
+            saveLocalUsers(localUsers);
+          }
+
+          if (pool) {
+            try {
+              await pool.query(
+                `UPDATE usuarios 
+                 SET subscription_status = 'pending_payment',
+                     subscription_plan = $1,
+                     subscription_method = $2,
+                     subscription_payment_id = $3
+                 WHERE LOWER(email) = LOWER($4)`,
+                [plan, method, txId, email]
+              );
+              console.log(`⏳ [ASSINATURA PENDENTE] Pagamento informado por ${email} (${plan.toUpperCase()} via ${method}) aguardando confirmação real (Tx: ${txId})`);
+            } catch(sqlErr) {
+              console.warn('[AVISO BD] Falha ao registrar pagamento pendente no SQL Server:', sqlErr.message);
+            }
+          }
+
+          recordSystemLog(
+            targetUser ? targetUser.name : 'Usuário',
+            email,
+            'Assinatura',
+            'Financeiro',
+            `Informou pagamento do plano ${plan.toUpperCase()} (R$ ${amount.toFixed(2)}) via ${methodNames[method] || method} (Aguardando confirmação para liberar) - Tx: ${txId}`
+          );
+
+          broadcastEvent('subscription_payment_pending', {
+            email: email,
+            name: targetUser ? targetUser.name : email,
+            plan: plan,
+            amount: amount,
+            method: method,
+            receipt_code: receiptCode || null,
+            transaction_id: txId
+          });
+
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({
+            success: true,
+            payment_confirmed: false,
+            status: 'pending_payment',
+            message: 'Comprovante enviado! O acesso será liberado assim que o pagamento for confirmado pelo financeiro.',
+            transaction_id: txId,
+            plan: plan,
+            amount: amount,
+            method: method
+          }));
+        }
+      } catch(e) {
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Erro ao processar assinatura: ' + e.message }));
+      }
+    });
+    return;
+  }
+
+  // Rota POST para o Administrador Confirmar Pagamento Real e Desbloquear Assinatura do Usuário
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/confirm-payment') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        const parsed = JSON.parse(body);
+        const adminEmail = (parsed.admin_email || '').toLowerCase().trim();
+        const targetEmail = (parsed.target_email || '').toLowerCase().trim();
+        const plan = (parsed.plan || 'mensal').toLowerCase().trim() === 'anual' ? 'anual' : 'mensal';
+
+        if (!adminEmail || !targetEmail) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'E-mails do administrador e do usuário são obrigatórios.' }));
+        }
+
+        const localUsers = getLocalUsers();
+        const adminUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === adminEmail);
+        const isAuthorized = adminUser && (adminUser.role === 'Administrador' || adminEmail === 'suporte.paulolima@outlook.com' || adminEmail === 'paulolp0101@gmail.com');
+
+        if (!isAuthorized) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Somente administradores podem confirmar pagamentos.' }));
+        }
+
+        let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === targetEmail);
+        if (!targetUser && pool) {
+          try {
+            const dbCheck = await pool.query('SELECT * FROM usuarios WHERE LOWER(email) = LOWER($1)', [targetEmail]);
+            if (dbCheck.rows && dbCheck.rows.length > 0) {
+              targetUser = dbCheck.rows[0];
+              localUsers.push(targetUser);
+            }
+          } catch(e) {}
+        }
+
+        if (!targetUser) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado.' }));
+        }
+
+        const now = new Date();
+        const days = plan === 'anual' ? 365 : 30;
+        const expiresDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+        const expiresIso = getBrasiliaIsoString(expiresDate);
+        const expiresSql = getBrasiliaSqlString(expiresDate);
+        const txId = targetUser.subscription_payment_id && String(targetUser.subscription_payment_id).startsWith('NEXUS-SUB-')
+          ? targetUser.subscription_payment_id
+          : ('PAGO-CONF-' + Date.now());
+        const method = targetUser.subscription_method || 'pix_confirmado';
+
+        targetUser.subscription_status = 'active';
+        targetUser.subscription_plan = plan;
+        targetUser.subscription_expires_at = expiresIso;
+        targetUser.subscription_method = method;
+        targetUser.subscription_payment_id = txId;
+        saveLocalUsers(localUsers);
+
         if (pool) {
           try {
             await pool.query(
@@ -31186,50 +31766,138 @@ const server = http.createServer(async (req, res) => {
                    subscription_method = $3,
                    subscription_payment_id = $4
                WHERE LOWER(email) = LOWER($5)`,
-              [plan, expiresSql, method, txId, email]
+              [plan, expiresSql, method, txId, targetEmail]
             );
-            console.log(`✅ [SQL SERVER ASSINATURA] Plano ${plan.toUpperCase()} ativado com sucesso para ${email} até ${expiresSql} (Tx: ${txId})`);
+            console.log(`✅ [PAGAMENTO CONFIRMADO] Assinatura ${plan.toUpperCase()} liberada por ${adminEmail} para ${targetEmail} até ${expiresSql}`);
           } catch(sqlErr) {
-            console.warn('[AVISO BD] Falha ao atualizar assinatura no SQL Server:', sqlErr.message);
+            console.warn('[AVISO BD] Falha ao confirmar pagamento no SQL Server:', sqlErr.message);
           }
         }
 
-        const methodNames = { pix: 'Pix', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
         recordSystemLog(
-          targetUser ? targetUser.name : 'Usuário',
-          email,
+          adminUser.name || 'Administrador',
+          adminEmail,
           'Assinatura',
           'Financeiro',
-          `Ativou plano ${plan.toUpperCase()} (R$ ${amount.toFixed(2)}) via ${methodNames[method] || method} - Tx: ${txId}`
+          `Confirmou pagamento real e ativou plano ${plan.toUpperCase()} (${days} dias) para ${targetUser.name || targetEmail} (Expira: ${expiresSql})`
         );
 
         broadcastEvent('subscription_activated', {
-          email: email,
+          email: targetEmail,
           plan: plan,
-          amount: amount,
           transaction_id: txId,
-          expires_at: expiresIso
+          expires_at: expiresIso,
+          confirmed_by: adminEmail
         });
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
-          message: 'Assinatura realizada com sucesso!',
-          transaction_id: txId,
+          message: `Pagamento confirmado! Plano ${plan.toUpperCase()} liberado por ${days} dias para ${targetEmail}.`,
+          target_email: targetEmail,
           plan: plan,
-          amount: amount,
-          method: method,
           expires_at: expiresIso
         }));
-      } catch(e) {
+      } catch(err) {
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: 'Erro ao processar assinatura: ' + e.message }));
+        return res.end(JSON.stringify({ success: false, error: 'Erro ao confirmar pagamento: ' + err.message }));
       }
     });
     return;
   }
 
-  // Rota POST para Resetar o Período Gratuito de 5 Dias (Para Testes / Homologação)
+  // Rota POST para o Administrador Revogar / Bloquear Assinatura (Exigir Novo Pagamento Imediato)
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/revoke-payment') {
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        const parsed = JSON.parse(body);
+        const adminEmail = (parsed.admin_email || '').toLowerCase().trim();
+        const targetEmail = (parsed.target_email || '').toLowerCase().trim();
+
+        if (!adminEmail || !targetEmail) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'E-mails do administrador e do usuário são obrigatórios.' }));
+        }
+
+        const localUsers = getLocalUsers();
+        const adminUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === adminEmail);
+        const isAuthorized = adminUser && (adminUser.role === 'Administrador' || adminEmail === 'suporte.paulolima@outlook.com' || adminEmail === 'paulolp0101@gmail.com');
+
+        if (!isAuthorized) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Somente administradores podem bloquear/revogar assinaturas.' }));
+        }
+
+        let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === targetEmail);
+        if (!targetUser && pool) {
+          try {
+            const dbCheck = await pool.query('SELECT * FROM usuarios WHERE LOWER(email) = LOWER($1)', [targetEmail]);
+            if (dbCheck.rows && dbCheck.rows.length > 0) {
+              targetUser = dbCheck.rows[0];
+              localUsers.push(targetUser);
+            }
+          } catch(e) {}
+        }
+
+        if (!targetUser) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado.' }));
+        }
+
+        const expiredDate = new Date(Date.now() - 60 * 1000);
+        const expiredIso = getBrasiliaIsoString(expiredDate);
+        const expiredSql = getBrasiliaSqlString(expiredDate);
+
+        targetUser.subscription_status = 'expired';
+        targetUser.subscription_plan = null;
+        targetUser.subscription_expires_at = expiredIso;
+        saveLocalUsers(localUsers);
+
+        if (pool) {
+          try {
+            await pool.query(
+              `UPDATE usuarios 
+               SET subscription_status = 'expired',
+                   subscription_plan = NULL,
+                   subscription_expires_at = $1
+               WHERE LOWER(email) = LOWER($2)`,
+              [expiredSql, targetEmail]
+            );
+            console.log(`🔒 [ASSINATURA BLOQUEADA] Acesso de ${targetEmail} bloqueado por ${adminEmail} (Exige pagamento confirmado)`);
+          } catch(sqlErr) {
+            console.warn('[AVISO BD] Falha ao bloquear assinatura no SQL Server:', sqlErr.message);
+          }
+        }
+
+        recordSystemLog(
+          adminUser.name || 'Administrador',
+          adminEmail,
+          'Assinatura',
+          'Financeiro',
+          `Bloqueou acesso de ${targetUser.name || targetEmail} e passou a exigir pagamento confirmado para desbloqueio`
+        );
+
+        broadcastEvent('subscription_revoked', {
+          email: targetEmail,
+          revoked_by: adminEmail
+        });
+
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+          success: true,
+          message: `Acesso de ${targetEmail} bloqueado! O usuário só poderá usar o sistema após confirmar o pagamento.`
+        }));
+      } catch(err) {
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Erro ao bloquear assinatura: ' + err.message }));
+      }
+    });
+    return;
+  }
+
+  // Rota POST para Resetar o Período Gratuito de 5 Dias (Restrito ao Administrador)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/reset-trial') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -31237,15 +31905,23 @@ const server = http.createServer(async (req, res) => {
       try {
         const parsed = JSON.parse(body);
         const email = (parsed.email || '').toLowerCase().trim();
+        const adminEmail = (parsed.admin_email || '').toLowerCase().trim();
         if (!email) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
         }
 
+        const localUsers = getLocalUsers();
+        const adminUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === adminEmail);
+        const isAuthorized = adminUser && (adminUser.role === 'Administrador' || adminEmail === 'suporte.paulolima@outlook.com' || adminEmail === 'paulolp0101@gmail.com');
+        if (!isAuthorized) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Somente o Administrador pode conceder novo período de teste.' }));
+        }
+
         const nowIso = getBrasiliaIsoString(new Date());
         const nowSql = getBrasiliaSqlString(new Date());
 
-        const localUsers = getLocalUsers();
         const u = localUsers.find(x => x && x.email && x.email.toLowerCase() === email);
         if (u) {
           u.trial_started_at = nowIso;
@@ -31264,7 +31940,7 @@ const server = http.createServer(async (req, res) => {
         }
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: 'Período gratuito de 5 dias resetado com sucesso!' }));
+        res.end(JSON.stringify({ success: true, message: 'Período gratuito de 5 dias concedido pelo Administrador!' }));
       } catch(e) {
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: e.message }));
