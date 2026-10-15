@@ -6811,20 +6811,20 @@ body.paywall-locked #appMain {
 .sub-paywall-modal {
   position: relative !important;
   width: 100% !important;
-  max-width: 860px !important;
+  max-width: 1040px !important;
   max-height: 94vh !important;
   overflow-y: auto !important;
   background: linear-gradient(155deg, rgba(15, 23, 42, 0.98) 0%, rgba(3, 7, 18, 0.99) 100%) !important;
   border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: 28px !important;
-  box-shadow: 0 40px 120px -10px rgba(0, 0, 0, 0.95), 0 0 70px rgba(16, 185, 129, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
-  padding: 34px 38px !important;
+  box-shadow: 0 40px 120px -10px rgba(0, 0, 0, 0.95), 0 0 70px rgba(16, 185, 129, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  padding: 30px 34px !important;
   box-sizing: border-box !important;
   animation: popInPaywallModal 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes popInPaywallModal {
-  from { transform: scale(0.92) translateY(18px); opacity: 0; }
+  from { transform: scale(0.94) translateY(16px); opacity: 0; }
   to { transform: scale(1) translateY(0); opacity: 1; }
 }
 
@@ -6864,7 +6864,7 @@ body.light .sub-paywall-modal h2,
 body.light .sub-paywall-modal h3,
 body.light .sub-paywall-modal h4,
 body.light .sub-paywall-modal p,
-body.light .sub-paywall-modal span,
+body.light .sub-paywall-modal span:not(.badge-retain-color),
 body.light .sub-paywall-modal label,
 body.light .sub-paywall-modal strong,
 body.light .sub-paywall-modal select,
@@ -6883,30 +6883,55 @@ body.light .pix-info-card strong {
   color: #000000 !important;
 }
 
-/* Plan Selection Cards */
-.sub-plans-grid {
+/* 2-Column Split Checkout Grid */
+.sub-checkout-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin: 18px 0 22px 0;
+  grid-template-columns: 380px minmax(0, 1fr);
+  gap: 26px;
+  align-items: stretch;
 }
-@media (max-width: 680px) {
-  .sub-plans-grid {
+@media (max-width: 880px) {
+  .sub-checkout-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
+}
+
+/* Coluna Esquerda: Resumo & Seleção de Planos */
+.sub-summary-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+}
+body.light .sub-summary-card {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* Stack de Planos */
+.sub-plan-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .sub-plan-card {
   position: relative;
-  border-radius: 20px;
-  padding: 22px;
+  border-radius: 18px;
+  padding: 16px 18px;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.04);
   border: 2px solid rgba(255, 255, 255, 0.12);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 .sub-plan-card:hover {
   border-color: rgba(16, 185, 129, 0.5);
@@ -6914,53 +6939,79 @@ body.light .pix-info-card strong {
   background: rgba(255, 255, 255, 0.07);
 }
 .sub-plan-card.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.08) 100%);
   border-color: #10B981 !important;
-  box-shadow: 0 14px 34px -6px rgba(16, 185, 129, 0.35), inset 0 0 20px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 10px 28px -4px rgba(16, 185, 129, 0.35), inset 0 0 18px rgba(16, 185, 129, 0.1);
 }
 body.light .sub-plan-card {
-  background: #F8FAFC !important;
+  background: #FFFFFF !important;
   border: 2px solid #E2E8F0 !important;
   color: #000000 !important;
 }
 body.light .sub-plan-card.active {
   background: #F0FDF4 !important;
   border-color: #059669 !important;
-  box-shadow: 0 12px 28px rgba(5, 150, 105, 0.2) !important;
+  box-shadow: 0 10px 24px rgba(5, 150, 105, 0.18) !important;
+}
+
+.sub-plan-radio-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.sub-plan-card.active .sub-plan-radio-circle {
+  border-color: #10B981;
+  background: #10B981;
+}
+.sub-plan-card.active .sub-plan-radio-circle::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFFFFF;
+}
+body.light .sub-plan-radio-circle {
+  border-color: #CBD5E1;
 }
 
 .sub-plan-badge-highlight {
   position: absolute;
-  top: -12px;
-  right: 18px;
+  top: -10px;
+  right: 14px;
   background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
   color: #FFFFFF !important;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: 999px;
   box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
 }
 
 .sub-plan-title {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 800;
-  margin: 0 0 6px 0;
+  margin: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
 }
 .sub-plan-price {
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 900;
   color: #10B981;
   letter-spacing: -0.02em;
-  margin: 8px 0;
+  margin: 2px 0 0 0;
 }
 .sub-plan-period {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #94A3B8;
 }
@@ -6968,44 +7019,138 @@ body.light .sub-plan-price {
   color: #047857 !important;
 }
 body.light .sub-plan-period {
-  color: #000000 !important;
+  color: #475569 !important;
 }
 
-/* Payment Method Tabs */
-.sub-payment-tabs {
+/* Tabela de Discriminação de Preço */
+.sub-order-breakdown {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 14px 16px;
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 12px;
+  flex-direction: column;
+  gap: 8px;
 }
-body.light .sub-payment-tabs {
-  border-bottom-color: #E2E8F0 !important;
+body.light .sub-order-breakdown {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
 }
-.sub-tab-btn {
-  display: inline-flex;
+.sub-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  color: #94A3B8;
+}
+body.light .sub-breakdown-row {
+  color: #475569 !important;
+}
+.sub-breakdown-row.total-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+body.light .sub-breakdown-row.total-row {
+  border-top-color: #CBD5E1 !important;
+}
+.sub-breakdown-total-val {
+  font-size: 24px;
+  font-weight: 900;
+  color: #10B981;
+  letter-spacing: -0.02em;
+}
+body.light .sub-breakdown-total-val {
+  color: #047857 !important;
+}
+
+/* Lista de Benefícios */
+.sub-benefits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.sub-benefit-item {
+  display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #CBD5E1;
+}
+body.light .sub-benefit-item {
+  color: #000000 !important;
+}
+.sub-benefit-check {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10B981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+body.light .sub-benefit-check {
+  background: #DCFCE7 !important;
+  color: #059669 !important;
+}
+
+/* Coluna Direita: Métodos de Pagamento */
+.sub-payment-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  padding: 22px;
+}
+body.light .sub-payment-card {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* Payment Method Tabs Segmented */
+.sub-payment-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+@media (max-width: 580px) {
+  .sub-payment-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sub-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 12px 8px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.05);
   border: 1.5px solid rgba(255, 255, 255, 0.1);
   color: #CBD5E1;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 .sub-tab-btn:hover {
   background: rgba(255, 255, 255, 0.09);
   color: #FFFFFF;
+  transform: translateY(-1px);
 }
 .sub-tab-btn.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.15) 100%);
-  border-color: #10B981;
-  color: #34D399;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 100%);
+  border-color: #10B981 !important;
+  color: #34D399 !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25);
 }
 body.light .sub-tab-btn {
   background: #F1F5F9 !important;
@@ -7018,18 +7163,87 @@ body.light .sub-tab-btn.active {
   color: #047857 !important;
 }
 
+.sub-tab-pill-badge {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #94A3B8;
+}
+.sub-tab-btn.active .sub-tab-pill-badge {
+  background: #10B981;
+  color: #FFFFFF !important;
+}
+body.light .sub-tab-pill-badge {
+  background: #E2E8F0;
+  color: #475569;
+}
+body.light .sub-tab-btn.active .sub-tab-pill-badge {
+  background: #059669;
+  color: #FFFFFF !important;
+}
+
+/* Card 3D Preview */
+.sub-card-3d-wrapper {
+  max-width: 360px;
+  height: 190px;
+  margin: 0 auto 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #022c22 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 30px rgba(16, 185, 129, 0.15);
+  padding: 18px 22px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.sub-card-3d-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 140%;
+  height: 80%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+  transform: rotate(-25deg);
+  pointer-events: none;
+}
+.sub-card-chip {
+  width: 38px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #FBBF24 100%);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 2px 6px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.sub-card-chip::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+}
+
 /* Input Fields inside Modal */
 .sub-field-group {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .sub-field-label {
   display: block;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   color: #94A3B8;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 body.light .sub-field-label {
   color: #000000 !important;
@@ -7042,7 +7256,7 @@ body.light .sub-field-label {
   background: rgba(255, 255, 255, 0.06);
   border: 1.5px solid rgba(255, 255, 255, 0.12);
   color: #FFFFFF;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
   box-sizing: border-box;
   transition: all 0.2s ease;
@@ -7061,14 +7275,14 @@ body.light .sub-field-input:focus {
   border-color: #059669 !important;
 }
 
-/* Primary Pay Button */
+/* Primary Pay Action Button */
 .sub-pay-action-btn {
   width: 100%;
   height: 52px;
   border-radius: 16px;
   background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%);
   color: #FFFFFF !important;
-  font-size: 15.5px;
+  font-size: 15px;
   font-weight: 900;
   letter-spacing: -0.01em;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -7079,13 +7293,93 @@ body.light .sub-field-input:focus {
   justify-content: center;
   gap: 10px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  margin-top: 18px;
+  margin-top: 16px;
+  position: relative;
+  overflow: hidden;
 }
 .sub-pay-action-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 40px -4px rgba(16, 185, 129, 0.65);
-  filter: brightness(1.05);
+  filter: brightness(1.06);
 }
+.sub-pay-action-btn:active {
+  transform: translateY(0);
+}
+.sub-pay-action-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: skewX(-25deg);
+  animation: btnShineEffect 3.5s infinite;
+}
+@keyframes btnShineEffect {
+  0% { left: -100%; }
+  30%, 100% { left: 200%; }
+}
+
+/* Bank badges for Debit */
+.sub-bank-badge {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #CBD5E1;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.sub-bank-badge:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+.sub-bank-badge.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10B981;
+  color: #34D399;
+}
+body.light .sub-bank-badge {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  color: #000000 !important;
+}
+body.light .sub-bank-badge.active {
+  background: #DCFCE7;
+  border-color: #059669;
+  color: #047857 !important;
+}
+
+/* Digital Bank Receipt (Success View) */
+.sub-receipt-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.35);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 520px;
+  margin: 0 auto 20px auto;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+body.light .sub-receipt-card {
+  background: #FFFFFF !important;
+  border-color: #10B981 !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08) !important;
+}
+.sub-receipt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.18);
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+body.light .sub-receipt-header {
+  border-bottom-color: #CBD5E1 !important;
+}
+
 
 /* Floating Trial Dock Widget */
 .trial-dock-widget {
@@ -14443,17 +14737,21 @@ body.light .period button.active {
 <div class="sub-paywall-overlay" id="nexusSubscriptionModal" role="dialog" aria-modal="true">
   <div class="sub-paywall-modal">
     <!-- Cabeçalho do Modal -->
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
       <div style="display:flex; align-items:center; gap:14px;">
-        <div style="width:52px; height:52px; border-radius:16px; background:radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.15) 70%); border:1.5px solid rgba(16, 185, 129, 0.5); display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 0 25px rgba(16, 185, 129, 0.35);">
-          🔒
+        <div style="width:52px; height:52px; border-radius:16px; background:radial-gradient(circle, rgba(16, 185, 129, 0.35) 0%, rgba(5, 150, 105, 0.15) 70%); border:1.5px solid rgba(16, 185, 129, 0.5); display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 0 25px rgba(16, 185, 129, 0.35); flex-shrink:0;">
+          🛡️
         </div>
         <div>
+          <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(16, 185, 129, 0.15); border:1px solid rgba(16, 185, 129, 0.35); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#10B981; margin-bottom:4px;">
+            <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
+            <span class="badge-retain-color">Nexus Pay • Gateway 100% Criptografado</span>
+          </div>
           <h2 style="font-size:22px; font-weight:900; margin:0; letter-spacing:-0.02em; color:#FFFFFF;" id="subModalTitle">
             Assinatura Nexus Financeiro Hub
           </h2>
-          <p style="font-size:13px; color:#94A3B8; margin:4px 0 0 0;" id="subModalSubtitle">
-            Seus dados e relatórios estão 100% salvos. Para continuar utilizando o sistema, selecione seu plano:
+          <p style="font-size:12.5px; color:#94A3B8; margin:3px 0 0 0;" id="subModalSubtitle">
+            Seus lançamentos e relatórios estão 100% preservados. Selecione seu plano para acesso irrestrito:
           </p>
         </div>
       </div>
@@ -14464,31 +14762,33 @@ body.light .period button.active {
         <button type="button" id="subAdminResetBtn" onclick="window.resetTrialForTesting()" style="display:none; padding:6px 14px; border-radius:10px; background:rgba(59,130,246,0.2); border:1px solid rgba(59,130,246,0.5); color:#60A5FA; font-size:11.5px; font-weight:800; cursor:pointer;">
           Modo Admin: Reiniciar 5d
         </button>
-        <button type="button" id="subModalCloseBtn" onclick="window.closeSubscriptionPaywall(false)" style="display:none; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1; cursor:pointer; align-items:center; justify-content:center; font-size:18px; line-height:1;">
+        <button type="button" id="subModalCloseBtn" onclick="window.closeSubscriptionPaywall(false)" style="display:none; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1; cursor:pointer; align-items:center; justify-content:center; font-size:18px; line-height:1;" title="Fechar">
           ✕
         </button>
       </div>
     </div>
 
     <!-- Badges de Segurança e Confiança -->
-    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; padding:8px 14px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:18px; padding:8px 14px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);">
       <span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:#10B981;">
-        <span>🛡️</span> <span>SSL 256-Bit Criptografado</span>
+        <span>🔒</span> <span class="badge-retain-color">Criptografia SSL 256-Bit</span>
       </span>
       <span style="color:rgba(255,255,255,0.2);">•</span>
       <span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:#34D399;">
-        <span>⚡</span> <span>Liberação Instantânea</span>
+        <span>⚡</span> <span class="badge-retain-color">Liquidação Instantânea</span>
       </span>
       <span style="color:rgba(255,255,255,0.2);">•</span>
       <span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:#F59E0B;">
-        <span>🔄</span> <span>Sem Fidelidade (Cancele Quando Quiser)</span>
+        <span>🛡️</span> <span class="badge-retain-color">Garantia Incondicional 7 Dias</span>
+      </span>
+      <span style="color:rgba(255,255,255,0.2);">•</span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:#38BDF8;">
+        <span>🔄</span> <span class="badge-retain-color">Sem Fidelidade (Cancele a Qualquer Momento)</span>
       </span>
     </div>
 
-    <!-- Conteúdo Principal de Checkout -->
-    
     <!-- Barra de Controle Total do Administrador para Liberar Tempo Imediato -->
-    <div id="subAdminFullControlBar" style="display:none; margin-bottom:16px; padding:14px 18px; border-radius:16px; background:linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(16,185,129,0.12) 100%); border:1.5px solid rgba(245,158,11,0.45); box-shadow:0 8px 30px rgba(0,0,0,0.35);">
+    <div id="subAdminFullControlBar" style="display:none; margin-bottom:18px; padding:14px 18px; border-radius:16px; background:linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(16,185,129,0.12) 100%); border:1.5px solid rgba(245,158,11,0.45); box-shadow:0 8px 30px rgba(0,0,0,0.35);">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
         <span style="font-size:13px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:6px;">
           <span>👑</span> PAINEL ADMINISTRADOR: LIBERAR TEMPO GRÁTIS QUANTO QUISER
@@ -14506,317 +14806,464 @@ body.light .period button.active {
       </div>
     </div>
 
+    <!-- CONTEÚDO PRINCIPAL DE CHECKOUT (SPLIT 2 COLUNAS) -->
     <div id="subCheckoutView">
-      <!-- Grade dos 2 Planos -->
-      <div class="sub-plans-grid">
-        <!-- Plano Mensal (R$ 10,00) -->
-        <div class="sub-plan-card active" id="subPlanCardMensal" onclick="window.selectSubPlan('mensal')">
+      <div class="sub-checkout-grid">
+        
+        <!-- COLUNA DA ESQUERDA: RESUMO DO PEDIDO E SELEÇÃO DE PLANO -->
+        <div class="sub-summary-card">
           <div>
-            <div class="sub-plan-title">
-              <span>Plano Mensal</span>
-              <span style="font-size:18px;">📅</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <span style="font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#94A3B8;">
+                1. Escolha seu Plano
+              </span>
+              <span style="font-size:11px; font-weight:700; color:#10B981;">Acesso Imediato</span>
             </div>
-            <p style="font-size:12.5px; color:#94A3B8; margin:0 0 10px 0;">Acesso completo e irrestrito com pagamento mês a mês.</p>
-            <div class="sub-plan-price">
-              R$ 10,00 <span class="sub-plan-period">/ mês</span>
-            </div>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:4px; font-size:11.5px; font-weight:700; color:#10B981; margin-top:10px;">
-            <span>✓ Acesso ilimitado a todas as abas e relatórios</span>
-            <span>✓ Sem carência — cancele a qualquer momento</span>
-          </div>
-        </div>
 
-        <!-- Plano Anual (R$ 100,00) -->
-        <div class="sub-plan-card" id="subPlanCardAnual" onclick="window.selectSubPlan('anual')">
-          <div class="sub-plan-badge-highlight">★ MAIS ESCOLHIDO • ECONOMIZE R$ 20,00</div>
-          <div>
-            <div class="sub-plan-title">
-              <span>Plano Anual</span>
-              <span style="font-size:18px;">👑</span>
-            </div>
-            <p style="font-size:12.5px; color:#94A3B8; margin:0 0 10px 0;">12 meses de acesso (equivale a apenas R$ 8,33/mês).</p>
-            <div class="sub-plan-price">
-              R$ 100,00 <span class="sub-plan-period">/ ano</span>
-            </div>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:4px; font-size:11.5px; font-weight:700; color:#F59E0B; margin-top:10px;">
-            <span>✓ 2 Meses Grátis + Suporte Prioritário VIP</span>
-            <span>✓ Parcelamento facilitado em até 12x no Cartão</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Abas de Formas de Pagamento -->
-      <div style="margin-top:16px;">
-        <span style="display:block; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; color:#94A3B8; margin-bottom:10px;">
-          Forma de Pagamento
-        </span>
-        <div class="sub-payment-tabs">
-          <button type="button" class="sub-tab-btn active" id="subTabPix" onclick="window.selectPaymentMethod('pix')">
-            <span>💠</span> <span>Pix (Instantâneo)</span>
-          </button>
-          <button type="button" class="sub-tab-btn" id="subTabCredit" onclick="window.selectPaymentMethod('credit_card')">
-            <span>💳</span> <span>Cartão de Crédito</span>
-          </button>
-          <button type="button" class="sub-tab-btn" id="subTabDebit" onclick="window.selectPaymentMethod('debit_card')">
-            <span>💳</span> <span>Cartão de Débito</span>
-          </button>
-          <button type="button" class="sub-tab-btn" id="subTabBoleto" onclick="window.selectPaymentMethod('boleto')">
-            <span>📄</span> <span>Boleto Bancário</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- FORMULÁRIO: PIX -->
-      <div id="subFormPix" style="display:block;">
-        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:22px; display:flex; flex-direction:column; align-items:center; text-align:center;">
-          <div style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#10B981; margin-bottom:6px;">
-            ✓ Liberação Imediata via Pix
-          </div>
-          <div style="font-size:14px; font-weight:700; color:#CBD5E1; margin-bottom:14px;">
-            Valor a Pagar: <strong id="pixDisplayAmount" style="color:#10B981; font-size:22px;">R$ 10,00</strong>
-          </div>
-
-          <!-- Card de Dados da Chave Pix Celular Oficial -->
-          <div class="pix-info-card" style="width:100%; max-width:540px; margin-bottom:16px; padding:14px 18px; border-radius:16px; background:rgba(16,185,129,0.08); border:1.5px solid rgba(16,185,129,0.3); display:flex; flex-direction:column; gap:8px; text-align:left;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#34D399;">Chave Pix Oficial (Celular)</span>
-              <span style="font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#A7F3D0;">Recepção Automática</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-              <div>
-                <div style="font-size:19px; font-weight:900; color:#FFFFFF; letter-spacing:0.04em; font-family:monospace;">
-                  (62) 99234-5372
+            <!-- Stack dos Planos Mensal e Anual -->
+            <div class="sub-plan-cards-stack">
+              <!-- Plano Mensal (R$ 10,00) -->
+              <div class="sub-plan-card active" id="subPlanCardMensal" onclick="window.selectSubPlan('mensal')">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div class="sub-plan-radio-circle"></div>
+                  <div>
+                    <div class="sub-plan-title">Plano Mensal 📅</div>
+                    <div style="font-size:11.5px; color:#94A3B8; margin-top:2px;">Cobrança mês a mês, sem fidelidade</div>
+                  </div>
                 </div>
-                <div style="font-size:12px; color:#94A3B8; margin-top:2px;">
-                  Beneficiário: <strong style="color:#E2E8F0;">Paulo Lima</strong> &bull; Goiânia - GO
+                <div style="text-align:right;">
+                  <div class="sub-plan-price">R$ 10,00</div>
+                  <div class="sub-plan-period">por mês</div>
                 </div>
               </div>
-              <button type="button" id="btnCopyPixKeyDirect" onclick="window.copyPixKeyDirect()" style="padding:8px 16px; border-radius:12px; background:rgba(56,189,248,0.15); border:1.5px solid rgba(56,189,248,0.4); color:#38BDF8; font-weight:800; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s ease;">
-                <span>📋</span> <span>Copiar Chave Celular</span>
-              </button>
+
+              <!-- Plano Anual (R$ 100,00) -->
+              <div class="sub-plan-card" id="subPlanCardAnual" onclick="window.selectSubPlan('anual')">
+                <div class="sub-plan-badge-highlight">★ 2 MESES GRÁTIS • 17% OFF</div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div class="sub-plan-radio-circle"></div>
+                  <div>
+                    <div class="sub-plan-title">Plano Anual 👑</div>
+                    <div style="font-size:11.5px; color:#94A3B8; margin-top:2px;">12 meses (equivale a R$ 8,33/mês)</div>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="sub-plan-price" style="color:#F59E0B;">R$ 100,00</div>
+                  <div class="sub-plan-period">por ano</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabela de Discriminação de Preço -->
+            <div class="sub-order-breakdown" style="margin-top:14px;">
+              <div class="sub-breakdown-row">
+                <span id="subSummaryPlanName">Plano Mensal (1 Mês)</span>
+                <strong id="subSummaryPlanPrice" style="color:#FFFFFF;">R$ 10,00</strong>
+              </div>
+              <div class="sub-breakdown-row" id="subSummaryDiscountRow" style="display:none;">
+                <span style="color:#10B981;">Desconto Fidelidade Anual:</span>
+                <strong style="color:#10B981;">- R$ 20,00</strong>
+              </div>
+              <div class="sub-breakdown-row total-row">
+                <div style="display:flex; flex-direction:column;">
+                  <strong style="font-size:14px; color:#FFFFFF;">Total a Pagar</strong>
+                  <span style="font-size:10.5px; color:#94A3B8;" id="subSummaryPaymentFrequency">Cobrança única / sem pegadinhas</span>
+                </div>
+                <span class="sub-breakdown-total-val" id="subSummaryTotalPrice">R$ 10,00</span>
+              </div>
             </div>
           </div>
 
-          <!-- QR Code Display -->
-          <div style="background:#FFFFFF; padding:14px; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,0.4); margin-bottom:10px;">
-            <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:190px; height:190px; display:block;" />
-          </div>
-          <div style="font-size:11.5px; color:#94A3B8; margin-bottom:14px;">
-            Aponte a câmera do aplicativo do seu banco para o QR Code acima
-          </div>
+          <!-- Benefícios Inclusos -->
+          <div>
+            <span style="display:block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#94A3B8; margin-bottom:8px;">
+              ✓ O que está incluso no seu acesso:
+            </span>
+            <div class="sub-benefits-list">
+              <div class="sub-benefit-item">
+                <span class="sub-benefit-check">✓</span>
+                <span>Gestão Financeira Completa (Contas, Caixas e Fluxo)</span>
+              </div>
+              <div class="sub-benefit-item">
+                <span class="sub-benefit-check">✓</span>
+                <span>Conciliação Bancária & Múltiplos Cartões</span>
+              </div>
+              <div class="sub-benefit-item">
+                <span class="sub-benefit-check">✓</span>
+                <span>Módulo de Ordens de Serviço & Equipe de Técnicos</span>
+              </div>
+              <div class="sub-benefit-item">
+                <span class="sub-benefit-check">✓</span>
+                <span>Relatórios e Gráficos Interativos em Tempo Real</span>
+              </div>
+              <div class="sub-benefit-item">
+                <span class="sub-benefit-check">✓</span>
+                <span>Sincronização Contínua em Nuvem & Suporte VIP</span>
+              </div>
+            </div>
 
-          <!-- Código Pix Copia e Cola -->
-          <div style="width:100%; max-width:540px; margin-bottom:12px;">
-            <label class="sub-field-label" style="text-align:left;">Código Pix Copia e Cola (Padrão Banco Central)</label>
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="subPixCodeInput" readonly class="sub-field-input" style="font-size:12px; font-family:monospace;" />
-              <button type="button" id="btnCopyPix" onclick="window.copyPixCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(16,185,129,0.2); border:1.5px solid rgba(16,185,129,0.4); color:#34D399; font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap;">
-                📋 Copiar Código
-              </button>
+            <!-- Garantia incondicional -->
+            <div style="margin-top:14px; padding:10px 12px; border-radius:12px; background:rgba(16, 185, 129, 0.08); border:1px solid rgba(16, 185, 129, 0.25); display:flex; align-items:center; gap:10px;">
+              <span style="font-size:22px;">🛡️</span>
+              <div style="font-size:11px; line-height:1.35; color:#CBD5E1;">
+                <strong style="color:#10B981;">Garantia de Satisfação de 7 Dias:</strong><br>
+                Se você não ficar 100% satisfeito, solicite o reembolso sem perguntas.
+              </div>
             </div>
           </div>
-
-          <!-- Passo a Passo -->
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; width:100%; max-width:540px; margin-bottom:16px; font-size:11.5px; color:#94A3B8; text-align:left;">
-            <div style="background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-              <strong style="color:#10B981;">1.</strong> Copie a chave ou código
-            </div>
-            <div style="background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-              <strong style="color:#10B981;">2.</strong> Pague no app do banco
-            </div>
-            <div style="background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-              <strong style="color:#10B981;">3.</strong> Confirme abaixo
-            </div>
-          </div>
-
-          <button type="button" class="sub-pay-action-btn" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
-            <span>✅</span> <span>Já Realizei o Pagamento Pix / Desbloquear Acesso Agora</span>
-          </button>
         </div>
-      </div>
 
-      <!-- FORMULÁRIO: CARTÃO DE CRÉDITO -->
-      <div id="subFormCredit" style="display:none;">
-        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:22px;">
-          <!-- Preview Cartão Holográfico -->
-          <div style="max-width:380px; height:180px; margin:0 auto 20px; border-radius:18px; background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border:1.5px solid rgba(255,255,255,0.2); box-shadow:0 14px 35px rgba(0,0,0,0.6); padding:20px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:12px; font-weight:800; letter-spacing:0.08em; color:#94A3B8;">CARTÃO DE CRÉDITO</span>
-              <span id="creditCardFlagBadge" style="font-size:14px; font-weight:900; color:#34D399;">VISA / MASTER</span>
+        <!-- COLUNA DA DIREITA: MÉTODOS DE PAGAMENTO E FORMULÁRIOS -->
+        <div class="sub-payment-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span style="font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#94A3B8;">
+              2. Forma de Pagamento
+            </span>
+            <span style="font-size:11px; font-weight:700; color:#38BDF8; display:flex; align-items:center; gap:4px;">
+              <span>🔒</span> Criptografia SSL Ativa
+            </span>
+          </div>
+
+          <!-- Segmented Tabs -->
+          <div class="sub-payment-tabs">
+            <button type="button" class="sub-tab-btn active" id="subTabPix" onclick="window.selectPaymentMethod('pix')">
+              <span style="font-size:16px;">💠</span>
+              <span>Pix</span>
+              <span class="sub-tab-pill-badge">⚡ 2 seg</span>
+            </button>
+            <button type="button" class="sub-tab-btn" id="subTabCredit" onclick="window.selectPaymentMethod('credit_card')">
+              <span style="font-size:16px;">💳</span>
+              <span>Crédito</span>
+              <span class="sub-tab-pill-badge">Até 12x</span>
+            </button>
+            <button type="button" class="sub-tab-btn" id="subTabDebit" onclick="window.selectPaymentMethod('debit_card')">
+              <span style="font-size:16px;">💳</span>
+              <span>Débito</span>
+              <span class="sub-tab-pill-badge">Online</span>
+            </button>
+            <button type="button" class="sub-tab-btn" id="subTabBoleto" onclick="window.selectPaymentMethod('boleto')">
+              <span style="font-size:16px;">📄</span>
+              <span>Boleto</span>
+              <span class="sub-tab-pill-badge">D+3</span>
+            </button>
+          </div>
+
+          <!-- FORMULÁRIO 1: PIX (INSTANTÂNEO) -->
+          <div id="subFormPix" style="display:block;">
+            <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+              
+              <!-- Timer de Expiração e Valor -->
+              <div style="width:100%; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 14px; border-radius:12px; background:rgba(16, 185, 129, 0.08); border:1px solid rgba(16, 185, 129, 0.25); margin-bottom:14px;">
+                <div style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:#34D399;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#10B981; display:inline-block; animation:pulseDockUrgent 1.2s infinite;"></span>
+                  <span>QR Code válido por: <strong id="subPixTimerDisplay" style="color:#FFFFFF; font-family:monospace; font-size:13px;">14:59</strong></span>
+                </div>
+                <div style="font-size:12px; font-weight:700; color:#CBD5E1;">
+                  Valor a Pagar: <strong id="pixDisplayAmount" style="color:#10B981; font-size:17px;">R$ 10,00</strong>
+                </div>
+              </div>
+
+              <!-- Card de Dados da Chave Pix Celular Oficial -->
+              <div class="pix-info-card" style="width:100%; margin-bottom:14px; padding:12px 16px; border-radius:16px; background:rgba(16,185,129,0.08); border:1.5px solid rgba(16,185,129,0.35); display:flex; flex-direction:column; gap:6px; text-align:left;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:10.5px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#34D399; display:flex; align-items:center; gap:5px;">
+                    <span>💠</span> Chave Pix Oficial (Celular)
+                  </span>
+                  <span style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#A7F3D0;">Recepção Instantânea</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                  <div>
+                    <div style="font-size:18px; font-weight:900; color:#FFFFFF; letter-spacing:0.05em; font-family:monospace;">
+                      (62) 99234-5372
+                    </div>
+                    <div style="font-size:11.5px; color:#94A3B8; margin-top:2px;">
+                      Beneficiário: <strong style="color:#E2E8F0;">Paulo Lima</strong> &bull; Goiânia - GO
+                    </div>
+                  </div>
+                  <button type="button" id="btnCopyPixKeyDirect" onclick="window.copyPixKeyDirect()" style="padding:8px 14px; border-radius:10px; background:rgba(56,189,248,0.15); border:1.5px solid rgba(56,189,248,0.4); color:#38BDF8; font-weight:800; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s ease;">
+                    <span>📋</span> <span>Copiar Chave Celular</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- QR Code Display -->
+              <div style="background:#FFFFFF; padding:12px; border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,0.5); margin-bottom:10px; border:2px solid #E2E8F0;">
+                <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:180px; height:180px; display:block;" />
+              </div>
+              <div style="font-size:11.5px; color:#94A3B8; margin-bottom:14px;">
+                Abra o app do seu banco &gt; Pix &gt; <strong>Pagar com QR Code</strong> e aponte a câmera
+              </div>
+
+              <!-- Código Pix Copia e Cola -->
+              <div style="width:100%; margin-bottom:12px;">
+                <label class="sub-field-label" style="text-align:left;">Código Pix Copia e Cola (Padrão Banco Central)</label>
+                <div style="display:flex; gap:8px;">
+                  <input type="text" id="subPixCodeInput" readonly class="sub-field-input" style="font-size:11.5px; font-family:monospace;" />
+                  <button type="button" id="btnCopyPix" onclick="window.copyPixCodeToClipboard()" style="padding:0 16px; border-radius:12px; background:rgba(16,185,129,0.2); border:1.5px solid rgba(16,185,129,0.4); color:#34D399; font-weight:800; font-size:12px; cursor:pointer; white-space:nowrap; transition:all 0.2s ease;">
+                    📋 Copiar Código
+                  </button>
+                </div>
+              </div>
+
+              <!-- Passo a Passo -->
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; width:100%; margin-bottom:14px; font-size:11px; color:#94A3B8; text-align:left;">
+                <div style="background:rgba(255,255,255,0.02); padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
+                  <strong style="color:#10B981;">1.</strong> Copie a chave ou código
+                </div>
+                <div style="background:rgba(255,255,255,0.02); padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
+                  <strong style="color:#10B981;">2.</strong> Pague no app do banco
+                </div>
+                <div style="background:rgba(255,255,255,0.02); padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
+                  <strong style="color:#10B981;">3.</strong> Clique no botão abaixo
+                </div>
+              </div>
+
+              <button type="button" class="sub-pay-action-btn" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
+                <span>✅</span> <span>Já Realizei o Pagamento Pix • Desbloquear Acesso Agora</span>
+              </button>
             </div>
-            <div id="creditCardNumberPreview" style="font-size:18px; font-weight:900; letter-spacing:0.12em; color:#FFFFFF; font-family:monospace;">
-              •••• •••• •••• ••••
+          </div>
+
+          <!-- FORMULÁRIO 2: CARTÃO DE CRÉDITO -->
+          <div id="subFormCredit" style="display:none;">
+            <!-- Preview Cartão Fintech Holográfico -->
+            <div class="sub-card-3d-wrapper">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; font-weight:900; letter-spacing:0.1em; color:#94A3B8;">NEXUS PLATINUM</span>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:14px; color:#94A3B8;" title="Pagamento por Aproximação">📶</span>
+                  <span id="creditCardFlagBadge" style="font-size:12px; font-weight:900; color:#34D399; background:rgba(0,0,0,0.4); padding:2px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.15);">VISA / MASTER</span>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:12px; margin:4px 0;">
+                <div class="sub-card-chip"></div>
+                <div id="creditCardNumberPreview" style="font-size:17px; font-weight:900; letter-spacing:0.14em; color:#FFFFFF; font-family:monospace;">
+                  •••• •••• •••• ••••
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                <div>
+                  <span style="font-size:8.5px; text-transform:uppercase; color:#94A3B8; display:block; letter-spacing:0.04em;">Titular do Cartão</span>
+                  <span id="creditCardHolderPreview" style="font-size:12px; font-weight:800; color:#FFFFFF; text-transform:uppercase; letter-spacing:0.04em;">NOME COMPLETO</span>
+                </div>
+                <div style="text-align:right;">
+                  <span style="font-size:8.5px; text-transform:uppercase; color:#94A3B8; display:block; letter-spacing:0.04em;">Validade</span>
+                  <span id="creditCardExpiryPreview" style="font-size:12px; font-weight:800; color:#FFFFFF; font-family:monospace;">MM/AA</span>
+                </div>
+              </div>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+
+            <!-- Campos do Cartão -->
+            <div class="sub-field-group">
+              <label class="sub-field-label">Número do Cartão de Crédito</label>
+              <div style="position:relative;">
+                <input type="text" id="subCardNumber" maxlength="19" placeholder="0000 0000 0000 0000" class="sub-field-input" oninput="window.formatCardNumberInput(this)" style="padding-left:38px; font-family:monospace; font-size:14px;" />
+                <span style="position:absolute; left:12px; top:12px; color:#94A3B8; font-size:15px;">💳</span>
+              </div>
+            </div>
+
+            <div class="sub-field-group">
+              <label class="sub-field-label">Nome Impresso no Cartão</label>
+              <div style="position:relative;">
+                <input type="text" id="subCardHolder" placeholder="Nome exatamente como está no cartão" class="sub-field-input" oninput="document.getElementById('creditCardHolderPreview').textContent = this.value.toUpperCase() || 'NOME COMPLETO'" style="padding-left:38px;" />
+                <span style="position:absolute; left:12px; top:12px; color:#94A3B8; font-size:15px;">👤</span>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="sub-field-group">
+                <label class="sub-field-label">Validade (MM/AA)</label>
+                <div style="position:relative;">
+                  <input type="text" id="subCardExpiry" maxlength="5" placeholder="MM/AA" class="sub-field-input" oninput="window.formatCardExpiryInput(this)" style="padding-left:38px; font-family:monospace;" />
+                  <span style="position:absolute; left:12px; top:12px; color:#94A3B8; font-size:14px;">📅</span>
+                </div>
+              </div>
+              <div class="sub-field-group">
+                <label class="sub-field-label">CVV (Cód. Segurança)</label>
+                <div style="position:relative;">
+                  <input type="password" id="subCardCvv" maxlength="4" placeholder="123" class="sub-field-input" style="padding-left:38px; font-family:monospace;" />
+                  <span style="position:absolute; left:12px; top:12px; color:#94A3B8; font-size:14px;">🔒</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sub-field-group">
+              <label class="sub-field-label">Opções de Parcelamento</label>
+              <select id="subCardInstallments" class="sub-field-input" style="height:44px; cursor:pointer;">
+                <option value="1">1x de R$ 10,00 sem juros (Total: R$ 10,00)</option>
+              </select>
+            </div>
+
+            <div style="font-size:11px; color:#94A3B8; display:flex; align-items:center; gap:6px; margin-top:8px;">
+              <span style="color:#10B981;">🛡️</span> <span>Seus dados são transmitidos com tokenização e nunca ficam gravados no servidor.</span>
+            </div>
+
+            <button type="button" class="sub-pay-action-btn" id="subBtnConfirmCredit" onclick="window.processSubscriptionPayment('credit_card')">
+              <span>🔒</span> <span id="creditCardBtnLabel">Pagar R$ 10,00 com Cartão de Crédito</span>
+            </button>
+          </div>
+
+          <!-- FORMULÁRIO 3: CARTÃO DE DÉBITO -->
+          <div id="subFormDebit" style="display:none;">
+            <div style="margin-bottom:12px;">
+              <label class="sub-field-label">Selecione o seu Banco Emissor</label>
+              <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:8px;">
+                <div class="sub-bank-badge active" onclick="window.selectDebitBankBadge('nubank', this)">Nubank</div>
+                <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('itau', this)">Itaú</div>
+                <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('bradesco', this)">Bradesco</div>
+                <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('bb', this)">Banco do Brasil</div>
+                <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('santander', this)">Santander</div>
+                <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('caixa', this)">Caixa</div>
+                <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('inter', this)">Inter</div>
+                <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('c6', this)">C6 Bank</div>
+              </div>
+              <select id="subDebitBank" class="sub-field-input" style="display:none;">
+                <option value="nubank">Nubank</option>
+                <option value="itau">Itaú Unibanco</option>
+                <option value="bradesco">Bradesco</option>
+                <option value="bb">Banco do Brasil</option>
+                <option value="santander">Santander</option>
+                <option value="caixa">Caixa Econômica</option>
+                <option value="inter">Banco Inter</option>
+                <option value="c6">C6 Bank</option>
+              </select>
+            </div>
+
+            <div class="sub-field-group">
+              <label class="sub-field-label">Número do Cartão de Débito Virtual</label>
+              <input type="text" id="subDebitNumber" maxlength="19" placeholder="0000 0000 0000 0000" class="sub-field-input" oninput="window.formatCardNumberInput(this)" style="font-family:monospace;" />
+            </div>
+
+            <div class="sub-field-group">
+              <label class="sub-field-label">Nome do Titular da Conta</label>
+              <input type="text" id="subDebitHolder" placeholder="Nome Completo do Titular" class="sub-field-input" />
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="sub-field-group">
+                <label class="sub-field-label">Validade (MM/AA)</label>
+                <input type="text" id="subDebitExpiry" maxlength="5" placeholder="MM/AA" class="sub-field-input" oninput="window.formatCardExpiryInput(this)" style="font-family:monospace;" />
+              </div>
+              <div class="sub-field-group">
+                <label class="sub-field-label">CVV</label>
+                <input type="password" id="subDebitCvv" maxlength="4" placeholder="123" class="sub-field-input" style="font-family:monospace;" />
+              </div>
+            </div>
+
+            <button type="button" class="sub-pay-action-btn" id="subBtnConfirmDebit" onclick="window.processSubscriptionPayment('debit_card')">
+              <span>🔒</span> <span id="debitCardBtnLabel">Pagar R$ 10,00 com Débito Imediato</span>
+            </button>
+          </div>
+
+          <!-- FORMULÁRIO 4: BOLETO BANCÁRIO -->
+          <div id="subFormBoleto" style="display:none; text-align:center;">
+            <div style="font-size:36px; margin-bottom:6px;">📄</div>
+            <div style="font-size:13.5px; font-weight:700; color:#CBD5E1; margin-bottom:12px;">
+              Boleto Bancário Registrado &bull; Valor: <strong id="boletoDisplayAmount" style="color:#10B981; font-size:18px;">R$ 10,00</strong>
+            </div>
+
+            <div style="width:100%; margin:0 auto 14px auto;">
+              <label class="sub-field-label" style="text-align:left;">Linha Digitável do Boleto</label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="subBoletoCodeInput" readonly value="23793.38128 60047.281921 54000.063304 9 91240000001000" class="sub-field-input" style="font-size:12px; font-family:monospace;" />
+                <button type="button" onclick="window.copyBoletoCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(255,255,255,0.1); border:1.5px solid rgba(255,255,255,0.2); color:#FFFFFF; font-weight:800; font-size:12.5px; cursor:pointer; white-space:nowrap;">
+                  📋 Copiar
+                </button>
+              </div>
+            </div>
+
+            <!-- Código de Barras Visual Simulado FEBRABAN -->
+            <div style="background:#FFFFFF; border-radius:10px; padding:10px 16px; max-width:340px; margin:0 auto 12px auto; display:flex; justify-content:center; align-items:center; gap:2px; height:44px; box-shadow:0 4px 14px rgba(0,0,0,0.4);">
+              <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:5px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:5px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
+            </div>
+
+            <div style="padding:10px 14px; border-radius:12px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); font-size:11.5px; color:#93C5FD; text-align:left; margin-bottom:14px; display:flex; gap:8px;">
+              <span style="font-size:16px;">💡</span>
               <div>
-                <span style="font-size:9px; text-transform:uppercase; color:#94A3B8; display:block;">Titular</span>
-                <span id="creditCardHolderPreview" style="font-size:13px; font-weight:800; color:#FFFFFF; text-transform:uppercase;">NOME COMPLETO</span>
-              </div>
-              <div style="text-align:right;">
-                <span style="font-size:9px; text-transform:uppercase; color:#94A3B8; display:block;">Validade</span>
-                <span id="creditCardExpiryPreview" style="font-size:13px; font-weight:800; color:#FFFFFF; font-family:monospace;">MM/AA</span>
+                <strong>Ambiente de Homologação Ativo:</strong> Você não precisa ir ao banco pagar. Basta clicar no botão verde abaixo para simular a liquidação imediata do boleto e ativar seu plano agora.
               </div>
             </div>
+
+            <button type="button" class="sub-pay-action-btn" id="subBtnConfirmBoleto" onclick="window.processSubscriptionPayment('boleto')">
+              <span>✅</span> <span>Confirmar Pagamento do Boleto (Homologação)</span>
+            </button>
           </div>
 
-          <div class="sub-field-group">
-            <label class="sub-field-label">Número do Cartão de Crédito</label>
-            <input type="text" id="subCardNumber" maxlength="19" placeholder="0000 0000 0000 0000" class="sub-field-input" oninput="window.formatCardNumberInput(this)" />
-          </div>
-
-          <div class="sub-field-group">
-            <label class="sub-field-label">Nome Impresso no Cartão</label>
-            <input type="text" id="subCardHolder" placeholder="Nome como está no cartão" class="sub-field-input" oninput="document.getElementById('creditCardHolderPreview').textContent = this.value.toUpperCase() || 'NOME COMPLETO'" />
-          </div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div class="sub-field-group">
-              <label class="sub-field-label">Validade (MM/AA)</label>
-              <input type="text" id="subCardExpiry" maxlength="5" placeholder="MM/AA" class="sub-field-input" oninput="window.formatCardExpiryInput(this)" />
-            </div>
-            <div class="sub-field-group">
-              <label class="sub-field-label">CVV (Cód. Segurança)</label>
-              <input type="password" id="subCardCvv" maxlength="4" placeholder="123" class="sub-field-input" />
-            </div>
-          </div>
-
-          <div class="sub-field-group">
-            <label class="sub-field-label">Parcelamento</label>
-            <select id="subCardInstallments" class="sub-field-input" style="height:44px;">
-              <option value="1">1x de R$ 10,00 sem juros</option>
-            </select>
-          </div>
-
-          <button type="button" class="sub-pay-action-btn" id="subBtnConfirmCredit" onclick="window.processSubscriptionPayment('credit_card')">
-            <span>🔒</span> <span id="creditCardBtnLabel">Pagar R$ 10,00 com Cartão de Crédito</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- FORMULÁRIO: CARTÃO DE DÉBITO -->
-      <div id="subFormDebit" style="display:none;">
-        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:22px;">
-          <div class="sub-field-group">
-            <label class="sub-field-label">Número do Cartão de Débito</label>
-            <input type="text" id="subDebitNumber" maxlength="19" placeholder="0000 0000 0000 0000" class="sub-field-input" oninput="window.formatCardNumberInput(this)" />
-          </div>
-
-          <div class="sub-field-group">
-            <label class="sub-field-label">Nome do Titular da Conta</label>
-            <input type="text" id="subDebitHolder" placeholder="Nome Completo" class="sub-field-input" />
-          </div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div class="sub-field-group">
-              <label class="sub-field-label">Validade (MM/AA)</label>
-              <input type="text" id="subDebitExpiry" maxlength="5" placeholder="MM/AA" class="sub-field-input" oninput="window.formatCardExpiryInput(this)" />
-            </div>
-            <div class="sub-field-group">
-              <label class="sub-field-label">CVV</label>
-              <input type="password" id="subDebitCvv" maxlength="4" placeholder="123" class="sub-field-input" />
-            </div>
-          </div>
-
-          <div class="sub-field-group">
-            <label class="sub-field-label">Banco Emissor do Cartão</label>
-            <select id="subDebitBank" class="sub-field-input" style="height:44px;">
-              <option value="nubank">Nubank</option>
-              <option value="bb">Banco do Brasil</option>
-              <option value="bradesco">Bradesco</option>
-              <option value="itau">Itaú Unibanco</option>
-              <option value="santander">Santander</option>
-              <option value="caixa">Caixa Econômica Federal</option>
-              <option value="inter">Banco Inter</option>
-              <option value="c6">C6 Bank</option>
-            </select>
-          </div>
-
-          <button type="button" class="sub-pay-action-btn" id="subBtnConfirmDebit" onclick="window.processSubscriptionPayment('debit_card')">
-            <span>🔒</span> <span id="debitCardBtnLabel">Pagar R$ 10,00 com Débito Imediato</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- FORMULÁRIO: BOLETO BANCÁRIO -->
-      <div id="subFormBoleto" style="display:none;">
-        <div style="background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:22px; text-align:center;">
-          <div style="font-size:32px; margin-bottom:8px;">📄</div>
-          <div style="font-size:14px; font-weight:700; color:#CBD5E1; margin-bottom:12px;">
-            Boleto Bancário - Valor: <strong id="boletoDisplayAmount" style="color:#10B981; font-size:18px;">R$ 10,00</strong>
-          </div>
-
-          <div style="width:100%; max-width:540px; margin:0 auto 16px auto;">
-            <label class="sub-field-label" style="text-align:left;">Linha Digitável do Boleto</label>
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="subBoletoCodeInput" readonly value="23793.38128 60047.281921 54000.063304 9 91240000001000" class="sub-field-input" style="font-size:12px; font-family:monospace;" />
-              <button type="button" onclick="window.copyBoletoCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(255,255,255,0.1); border:1.5px solid rgba(255,255,255,0.2); color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap;">
-                📋 Copiar
-              </button>
-            </div>
-          </div>
-
-          <!-- Código de Barras Visual Simulado -->
-          <div style="background:#FFFFFF; border-radius:10px; padding:12px; max-width:340px; margin:0 auto 14px auto; display:flex; justify-content:center; align-items:center; gap:2px; height:48px;">
-            <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:5px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:5px; height:100%; display:inline-block;"></span>
-            <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
-          </div>
-
-          <p style="font-size:12px; color:#94A3B8; margin:0 0 16px 0;">
-            Vencimento em 3 dias úteis. No ambiente de homologação, você pode confirmar e ativar imediatamente.
-          </p>
-
-          <button type="button" class="sub-pay-action-btn" id="subBtnConfirmBoleto" onclick="window.processSubscriptionPayment('boleto')">
-            <span>✅</span> <span>Confirmar Pagamento do Boleto (Homologação)</span>
-          </button>
         </div>
       </div>
     </div>
 
-    <!-- TELA DE SUCESSO DO PAGAMENTO -->
-    <div id="subSuccessView" style="display:none; text-align:center; padding:30px 10px;">
-      <div style="width:72px; height:72px; margin:0 auto 16px; border-radius:50%; background:radial-gradient(circle, rgba(16,185,129,0.3) 0%, rgba(5,150,105,0.15) 60%, rgba(0,0,0,0.4) 100%); border:2px solid #10B981; display:flex; align-items:center; justify-content:center; font-size:36px; box-shadow:0 0 35px rgba(16,185,129,0.4);">
+    <!-- TELA DE SUCESSO: RECIBO BANCÁRIO DIGITAL OFICIAL -->
+    <div id="subSuccessView" style="display:none; text-align:center; padding:14px 10px;">
+      <div style="width:76px; height:76px; margin:0 auto 16px; border-radius:50%; background:radial-gradient(circle, rgba(16,185,129,0.3) 0%, rgba(5,150,105,0.15) 60%, rgba(0,0,0,0.4) 100%); border:2px solid #10B981; display:flex; align-items:center; justify-content:center; font-size:36px; box-shadow:0 0 35px rgba(16,185,129,0.45); animation:pulseDockUrgent 2s infinite ease-in-out;">
         ✓
       </div>
-      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 14px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
-        <span>Assinatura Ativa & Aprovada</span>
+      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 14px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">
+        <span class="badge-retain-color">Assinatura Ativa & Aprovada</span>
       </div>
-      <h3 style="font-size:24px; font-weight:900; margin:0 0 8px 0; color:#FFFFFF;">
+      <h3 style="font-size:24px; font-weight:900; margin:0 0 6px 0; color:#FFFFFF;">
         Pagamento Confirmado com Sucesso!
       </h3>
-      <p style="font-size:14px; color:#CBD5E1; margin:0 0 20px 0; max-width:500px; margin-left:auto; margin-right:auto; line-height:1.5;">
-        Seu plano <strong id="subSuccessPlanName" style="color:#10B981;">Mensal</strong> foi ativado. O acesso total a todas as ferramentas financeiras do Nexus Hub está liberado!
+      <p style="font-size:13.5px; color:#CBD5E1; margin:0 0 20px 0; max-width:540px; margin-left:auto; margin-right:auto; line-height:1.45;">
+        Seu plano <strong id="subSuccessPlanName" style="color:#10B981;">Mensal</strong> foi liquidado e ativado. Seu acesso irrestrito ao Nexus Financeiro Hub está liberado em todos os seus dispositivos.
       </p>
 
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:16px; max-width:420px; margin:0 auto 24px auto; text-align:left;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-          <span style="color:#94A3B8;">Comprovante / ID:</span>
+      <!-- Recibo Digital Formatado -->
+      <div class="sub-receipt-card">
+        <div class="sub-receipt-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:20px;">🏛️</span>
+            <div style="text-align:left;">
+              <strong style="font-size:13px; color:#FFFFFF; display:block;">NEXUS PAY &bull; COMPROVANTE OFICIAL</strong>
+              <span style="font-size:10.5px; color:#94A3B8;">Autenticação Eletrônica Bancária</span>
+            </div>
+          </div>
+          <span style="font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#10B981;">LIQUIDADO</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12.5px;">
+          <span style="color:#94A3B8;">Código da Transação:</span>
           <strong id="subSuccessTxId" style="color:#FFFFFF; font-family:monospace;">-</strong>
         </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12.5px;">
           <span style="color:#94A3B8;">Forma de Pagamento:</span>
           <strong id="subSuccessMethod" style="color:#FFFFFF;">-</strong>
         </div>
-        <div style="display:flex; justify-content:space-between; font-size:13px;">
-          <span style="color:#94A3B8;">Válido até:</span>
-          <strong id="subSuccessExpires" style="color:#34D399;">-</strong>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12.5px;">
+          <span style="color:#94A3B8;">Data / Horário (Brasília):</span>
+          <strong id="subSuccessDateTime" style="color:#FFFFFF;">-</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12.5px; border-top:1px dashed rgba(255,255,255,0.15); padding-top:8px; margin-top:8px;">
+          <span style="color:#94A3B8;">Assinatura Válida até:</span>
+          <strong id="subSuccessExpires" style="color:#34D399; font-size:14px;">-</strong>
         </div>
       </div>
 
-      <button type="button" class="sub-pay-action-btn" onclick="window.closeSubscriptionPaywall(true)" style="max-width:320px; margin:0 auto;">
-        <span>🚀</span> <span>Liberar Acesso e Continuar Usando</span>
-      </button>
+      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; max-width:480px; margin:0 auto;">
+        <button type="button" class="btn-ghost" onclick="window.printSubscriptionReceipt()" style="padding:12px 20px; border-radius:14px; font-size:13px; font-weight:800; display:inline-flex; align-items:center; gap:8px;">
+          <span>🖨️</span> <span>Imprimir Comprovante</span>
+        </button>
+        <button type="button" class="sub-pay-action-btn" onclick="window.closeSubscriptionPaywall(true)" style="max-width:280px; margin:0;">
+          <span>🚀</span> <span>Acessar o Sistema Agora</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -16684,6 +17131,11 @@ window.selectSubPlan = function(plan) {
   const creditBtnLabel = document.getElementById('creditCardBtnLabel');
   const debitBtnLabel = document.getElementById('debitCardBtnLabel');
   const installmentsSelect = document.getElementById('subCardInstallments');
+  const summaryPlanName = document.getElementById('subSummaryPlanName');
+  const summaryPlanPrice = document.getElementById('subSummaryPlanPrice');
+  const summaryDiscountRow = document.getElementById('subSummaryDiscountRow');
+  const summaryTotalPrice = document.getElementById('subSummaryTotalPrice');
+  const summaryPaymentFrequency = document.getElementById('subSummaryPaymentFrequency');
 
   if (plan === 'anual') {
     if (cardAnual) cardAnual.classList.add('active');
@@ -16692,6 +17144,12 @@ window.selectSubPlan = function(plan) {
     if (boletoDisplay) boletoDisplay.textContent = 'R$ 100,00';
     if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 100,00 com Cartão de Crédito';
     if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 100,00 com Débito Imediato';
+
+    if (summaryPlanName) summaryPlanName.textContent = 'Plano Anual Nexus (12 Meses)';
+    if (summaryPlanPrice) summaryPlanPrice.textContent = 'R$ 120,00';
+    if (summaryDiscountRow) summaryDiscountRow.style.display = 'flex';
+    if (summaryTotalPrice) summaryTotalPrice.textContent = 'R$ 100,00';
+    if (summaryPaymentFrequency) summaryPaymentFrequency.textContent = 'Cobrança única de R$ 100,00 (apenas R$ 8,33/mês)';
 
     if (installmentsSelect) {
       installmentsSelect.innerHTML = '<option value="1">1x de R$ 100,00 sem juros (Total: R$ 100,00)</option>' +
@@ -16707,6 +17165,12 @@ window.selectSubPlan = function(plan) {
     if (boletoDisplay) boletoDisplay.textContent = 'R$ 10,00';
     if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 10,00 com Cartão de Crédito';
     if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 10,00 com Débito Imediato';
+
+    if (summaryPlanName) summaryPlanName.textContent = 'Plano Mensal Nexus (1 Mês)';
+    if (summaryPlanPrice) summaryPlanPrice.textContent = 'R$ 10,00';
+    if (summaryDiscountRow) summaryDiscountRow.style.display = 'none';
+    if (summaryTotalPrice) summaryTotalPrice.textContent = 'R$ 10,00';
+    if (summaryPaymentFrequency) summaryPaymentFrequency.textContent = 'Cobrança mês a mês sem fidelidade';
 
     if (installmentsSelect) {
       installmentsSelect.innerHTML = '<option value="1">1x de R$ 10,00 sem juros (Total: R$ 10,00)</option>';
@@ -16735,7 +17199,45 @@ window.selectPaymentMethod = function(method) {
 
   if (method === 'pix') {
     window.updatePixPayloadAndQr();
+    window.startPixCountdownTimer();
   }
+};
+
+window.startPixCountdownTimer = function() {
+  if (window.__pixCountdownInterval) return;
+  let remainingSeconds = 15 * 60; // 15 minutos de tolerância bancária
+  const timerDisplay = document.getElementById('subPixTimerDisplay');
+  const updateDisplay = () => {
+    if (!timerDisplay) return;
+    const mins = Math.floor(remainingSeconds / 60);
+    const secs = remainingSeconds % 60;
+    timerDisplay.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  };
+  updateDisplay();
+  window.__pixCountdownInterval = setInterval(() => {
+    remainingSeconds--;
+    if (remainingSeconds <= 0) {
+      clearInterval(window.__pixCountdownInterval);
+      window.__pixCountdownInterval = null;
+      window.updatePixPayloadAndQr();
+      remainingSeconds = 15 * 60;
+    }
+    updateDisplay();
+  }, 1000);
+};
+
+window.selectDebitBankBadge = function(bankVal, el) {
+  const sel = document.getElementById('subDebitBank');
+  if (sel) sel.value = bankVal;
+  document.querySelectorAll('.sub-bank-badge').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+};
+
+window.printSubscriptionReceipt = function() {
+  const origTitle = document.title;
+  document.title = 'Comprovante_Nexus_Pay_' + (document.getElementById('subSuccessTxId')?.textContent || Date.now());
+  window.print();
+  document.title = origTitle;
 };
 
 window.generatePixEMVPayload = function(key, name, city, amount, txid) {
@@ -16926,7 +17428,7 @@ window.processSubscriptionPayment = async function(method) {
       currentUser.subscription_method = data.method;
       try { saveToStorage('nexus_cached_user', currentUser); } catch(e){}
 
-      // Exibe tela de confirmação de alta tecnologia
+      // Exibe tela de confirmação de alta tecnologia com comprovante digital
       const checkoutView = document.getElementById('subCheckoutView');
       const successView = document.getElementById('subSuccessView');
       if (checkoutView) checkoutView.style.display = 'none';
@@ -16936,15 +17438,19 @@ window.processSubscriptionPayment = async function(method) {
       const txIdEl = document.getElementById('subSuccessTxId');
       const methodEl = document.getElementById('subSuccessMethod');
       const expiresEl = document.getElementById('subSuccessExpires');
+      const dateTimeEl = document.getElementById('subSuccessDateTime');
 
-      if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual (R$ 100,00)' : 'Mensal (R$ 10,00)';
+      if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual (R$ 100,00 - 12 Meses)' : 'Mensal (R$ 10,00 - 30 Dias)';
       if (txIdEl) txIdEl.textContent = data.transaction_id || ('NEXUS-SUB-' + Date.now());
       if (methodEl) {
-        const methodLabels = { pix: 'Pix Instantâneo', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
+        const methodLabels = { pix: 'Pix Instantâneo (Liquidação BCB)', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito Virtual', boleto: 'Boleto Bancário Homologado' };
         methodEl.textContent = methodLabels[payMethod] || payMethod.toUpperCase();
       }
       if (expiresEl) {
         expiresEl.textContent = data.expires_at ? new Date(data.expires_at).toLocaleDateString('pt-BR') : '1 ano';
+      }
+      if (dateTimeEl) {
+        dateTimeEl.textContent = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' (Brasília)';
       }
 
       window.hideTrialDockWidget();
