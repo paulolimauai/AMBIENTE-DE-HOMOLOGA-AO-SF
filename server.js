@@ -2304,20 +2304,23 @@ html, body {
   min-height: 100vh;
   width: 100%;
   padding: clamp(24px, 4vh, 48px) 16px;
-  background-color: #000000 !important;
+  background-color: #060D17 !important;
   background-image: 
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 85% 85%, rgba(255, 255, 255, 0.05) 0%, transparent 55%),
-    linear-gradient(180deg, #000000 0%, #050505 50%, #000000 100%) !important;
+    radial-gradient(ellipse 95% 70% at 15% 15%, rgba(16, 185, 129, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 85% 65% at 85% 18%, rgba(14, 165, 233, 0.24) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 90% 70% at 80% 85%, rgba(245, 158, 11, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 85% 65% at 20% 85%, rgba(16, 185, 129, 0.18) 0%, transparent 62%),
+    linear-gradient(175deg, #060D17 0%, #0A1C30 35%, #07212C 70%, #05101E 100%) !important;
   background-attachment: fixed !important;
 }
 .auth-container.show { display: flex; }
 
 body.light .auth-container {
   --auth-bg: #F8FAFC;
-  --auth-gold: #0F172A;
-  --auth-gold-dark: #1E293B;
-  --auth-gold-light: #000000;
+  --auth-gold: #059669;
+  --auth-gold-dark: #047857;
+  --auth-gold-light: #10B981;
   --auth-card: #FFFFFF;
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
@@ -2325,8 +2328,8 @@ body.light .auth-container {
   --auth-text-dim: #475569;
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(15, 23, 42, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(15, 23, 42, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(5, 150, 105, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.04) 0%, transparent 50%),
     linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 100%) !important;
 }
 
@@ -4181,7 +4184,7 @@ nav.menu, aside.menu, .sidebar-menu {
   height: calc(100vh - 68px) !important;
   max-height: calc(100vh - 68px) !important;
   margin: 0 !important;
-  padding: 14px 10px 12px 10px !important;
+  padding: 14px 10px 14px 10px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: stretch !important;
@@ -4211,6 +4214,7 @@ nav.menu, aside.menu, .sidebar-menu {
   max-width: 100% !important;
   height: auto !important;
   flex: 1 1 auto !important;
+  min-height: 0 !important;
   padding: 2px 2px 8px 2px !important;
   margin: 0 !important;
   background: transparent !important;
@@ -4261,7 +4265,7 @@ nav.menu, aside.menu, .sidebar-menu {
 }
 
 /* Botões do Menu Lateral */
-.menu button, aside.menu button, .sidebar-menu button {
+.menu button:not(.sidebar-toggle-btn), aside.menu button:not(.sidebar-toggle-btn), .sidebar-menu button:not(.sidebar-toggle-btn) {
   position: relative !important;
   display: flex !important;
   flex-direction: row !important;
@@ -4334,7 +4338,7 @@ aside.menu button span:not(.ic):not(#osBadgeCount),
 }
 
 /* Hover no botão */
-.menu button:hover, aside.menu button:hover, .sidebar-menu button:hover {
+.menu button:not(.sidebar-toggle-btn):hover, aside.menu button:not(.sidebar-toggle-btn):hover, .sidebar-menu button:not(.sidebar-toggle-btn):hover {
   background: rgba(255, 255, 255, 0.06) !important;
   border-color: rgba(255, 255, 255, 0.10) !important;
   color: #F8FAFC !important;
@@ -4347,7 +4351,7 @@ aside.menu button span:not(.ic):not(#osBadgeCount),
 }
 
 /* Botão Ativo */
-.menu button.active, aside.menu button.active, .sidebar-menu button.active {
+.menu button:not(.sidebar-toggle-btn).active, aside.menu button:not(.sidebar-toggle-btn).active, .sidebar-menu button:not(.sidebar-toggle-btn).active {
   background: linear-gradient(90deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.08) 100%) !important;
   border: 1px solid rgba(16, 185, 129, 0.45) !important;
   border-left: 3.5px solid #10B981 !important;
@@ -4424,41 +4428,61 @@ aside.menu button.active span:not(.ic):not(#osBadgeCount),
 /* Rodapé da Sidebar */
 .sidebar-footer {
   margin-top: auto !important;
-  padding-top: 10px !important;
+  padding: 10px 4px 6px 4px !important;
   border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
   display: flex !important;
+  flex-direction: row !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 8px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
   flex-shrink: 0 !important;
 }
 
 .sidebar-finance-shield {
-  display: flex !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
   align-items: center !important;
   gap: 8px !important;
-  padding: 6px 8px !important;
-  border-radius: 9px !important;
+  padding: 6px 10px !important;
+  border-radius: 10px !important;
   background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  flex: 1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  height: 38px !important;
+  box-sizing: border-box !important;
   overflow: hidden !important;
 }
 .sidebar-finance-shield .shield-icon {
-  width: 24px !important;
-  height: 24px !important;
+  width: 22px !important;
+  min-width: 22px !important;
+  max-width: 22px !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  max-height: 22px !important;
   border-radius: 6px !important;
   background: rgba(16, 185, 129, 0.15) !important;
   color: #10B981 !important;
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.sidebar-finance-shield .shield-icon svg {
+  width: 13px !important;
+  height: 13px !important;
+  display: block !important;
 }
 .sidebar-finance-shield .shield-text {
   display: flex !important;
   flex-direction: column !important;
+  justify-content: center !important;
   line-height: 1.15 !important;
+  min-width: 0 !important;
   overflow: hidden !important;
 }
 .sidebar-finance-shield .shield-title {
@@ -4466,10 +4490,12 @@ aside.menu button.active span:not(.ic):not(#osBadgeCount),
   font-weight: 700 !important;
   color: #F8FAFC !important;
   white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 .sidebar-finance-shield .shield-sub {
   font-size: 9px !important;
-  color: #64748B !important;
+  color: #94A3B8 !important;
   display: flex !important;
   align-items: center !important;
   gap: 4px !important;
@@ -4477,32 +4503,59 @@ aside.menu button.active span:not(.ic):not(#osBadgeCount),
 }
 .pulse-dot-green {
   width: 6px !important;
+  min-width: 6px !important;
   height: 6px !important;
   border-radius: 50% !important;
   background: #10B981 !important;
   box-shadow: 0 0 6px #10B981 !important;
   display: inline-block !important;
+  flex-shrink: 0 !important;
 }
 
-/* Botão de Toggle da Sidebar (Recolher / Expandir) */
+/* Botão de Toggle da Sidebar (Recolher / Expandir) - Alta especificidade para prevalecer sobre aside.menu button */
+.sidebar-footer .sidebar-toggle-btn,
+.sidebar-footer #sidebarCollapseBtn,
+aside.menu .sidebar-footer .sidebar-toggle-btn,
+aside.menu .sidebar-footer #sidebarCollapseBtn,
+.sidebar-menu .sidebar-footer .sidebar-toggle-btn,
 .sidebar-toggle-btn {
-  width: 32px !important;
-  height: 32px !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  padding: 0 !important;
+  margin: 0 !important;
   border-radius: 8px !important;
   background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
   color: #94A3B8 !important;
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer !important;
+  flex: 0 0 34px !important;
   flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  transform: none !important;
   transition: all 0.18s ease !important;
 }
+.sidebar-footer .sidebar-toggle-btn:hover,
+.sidebar-footer #sidebarCollapseBtn:hover,
+aside.menu .sidebar-footer .sidebar-toggle-btn:hover,
+aside.menu .sidebar-footer #sidebarCollapseBtn:hover,
 .sidebar-toggle-btn:hover {
   background: rgba(16, 185, 129, 0.15) !important;
   border-color: rgba(16, 185, 129, 0.35) !important;
   color: #34D399 !important;
+  transform: none !important;
+}
+.sidebar-footer .toggle-icon-collapse {
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 /* Modo Recolhido (Collapsed) */
@@ -4510,7 +4563,7 @@ body.sidebar-collapsed nav.menu,
 body.sidebar-collapsed aside.menu,
 body.sidebar-collapsed .sidebar-menu {
   width: 68px !important;
-  padding: 14px 6px 12px 6px !important;
+  padding: 14px 6px 14px 6px !important;
 }
 body.sidebar-collapsed .menu button span.label,
 body.sidebar-collapsed aside.menu button span.label,
@@ -4525,15 +4578,21 @@ body.sidebar-collapsed .menu-section-header {
   padding: 8px 0 4px 0 !important;
   justify-content: center !important;
 }
-body.sidebar-collapsed .menu button,
-body.sidebar-collapsed aside.menu button,
-body.sidebar-collapsed .sidebar-menu button {
+body.sidebar-collapsed .menu button:not(.sidebar-toggle-btn),
+body.sidebar-collapsed aside.menu button:not(.sidebar-toggle-btn),
+body.sidebar-collapsed .sidebar-menu button:not(.sidebar-toggle-btn) {
   justify-content: center !important;
   padding: 0 !important;
   width: 100% !important;
 }
 body.sidebar-collapsed .sidebar-footer {
   justify-content: center !important;
+  padding: 8px 0 2px 0 !important;
+}
+body.sidebar-collapsed .sidebar-footer .sidebar-toggle-btn,
+body.sidebar-collapsed .sidebar-footer #sidebarCollapseBtn,
+body.sidebar-collapsed aside.menu .sidebar-footer .sidebar-toggle-btn {
+  margin: 0 auto !important;
 }
 body.sidebar-collapsed .toggle-icon-collapse {
   transform: rotate(180deg) !important;
@@ -4632,16 +4691,25 @@ body.light .sidebar-finance-shield {
   border-color: #E2E8F0 !important;
 }
 body.light .sidebar-finance-shield .shield-title {
-  color: #000000 !important;
+  color: #0F172A !important;
 }
+body.light .sidebar-finance-shield .shield-sub {
+  color: #64748B !important;
+}
+body.light .sidebar-footer .sidebar-toggle-btn,
+body.light .sidebar-footer #sidebarCollapseBtn,
+body.light aside.menu .sidebar-footer .sidebar-toggle-btn,
 body.light .sidebar-toggle-btn {
   background: #F1F5F9 !important;
   border-color: #E2E8F0 !important;
   color: #334155 !important;
 }
+body.light .sidebar-footer .sidebar-toggle-btn:hover,
+body.light .sidebar-footer #sidebarCollapseBtn:hover,
+body.light aside.menu .sidebar-footer .sidebar-toggle-btn:hover,
 body.light .sidebar-toggle-btn:hover {
   background: #E2E8F0 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
 
 /* ==================== Elementos Financeiros no Fundo do Site (FinTech Background Elements) ==================== */
@@ -12808,16 +12876,16 @@ body.light .period button.active {
 
     <!-- Rodapé da Sidebar: Indicador de Segurança Fintech e Botão de Colapsar -->
     <div class="sidebar-footer">
-      <div class="sidebar-finance-shield">
+      <div class="sidebar-finance-shield" title="Sistema Seguro Nexus Fintech - Conexão Criptografada AES-256">
         <div class="shield-icon">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
         <div class="shield-text">
           <span class="shield-title">Nexus Fintech</span>
           <span class="shield-sub"><span class="pulse-dot-green"></span> AES-256 Protegido</span>
         </div>
       </div>
-      <button type="button" class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Recolher / Expandir Menu Lateral">
+      <button type="button" class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Recolher / Expandir Menu Lateral" aria-label="Recolher / Expandir Menu Lateral">
         <svg class="toggle-icon-collapse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
       </button>
     </div>
