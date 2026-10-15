@@ -1565,7 +1565,7 @@ const htmlContent = `<!DOCTYPE html>
       sn = parseFloat(sc) / 100 || 1.0;
     }
     document.documentElement.style.setProperty('--app-zoom', sn);
-    var bgCol = '#D1FAE5';
+    var bgCol = isLight ? '#F8FAFC' : '#000000';
     document.write('<style id="critical-fouc-shield">html:not(.user-logged-in), html:not(.user-logged-in) body { scroll-behavior: auto !important; } background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + ' #serverAuthNexusCard, .auth-card-nexus, #authNexusCard, .auth-container, #authPage, #loginBox, #registerBox, #forgotBox { animation: none !important; transform: none !important; transition: none !important; }</style>');
     var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || sn === 1.0);
     var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('@media screen { html, body { zoom: ' + sn + ' !important; } }');
@@ -2282,17 +2282,17 @@ html, body {
 
 /* ==================== TELA DE AUTENTICAÇÃO EXECUTIVA NEXUS 4K (FINTECH GLASS SYSTEM) ==================== */
 .auth-container {
-  --auth-bg: #D1FAE5;
-  --auth-gold: #10B981;
-  --auth-gold-dark: #059669;
-  --auth-gold-light: #34D399;
-  --auth-blue: #06B6D4;
-  --auth-emerald: #10B981;
-  --auth-cyan: #34D399;
-  --auth-card: linear-gradient(168deg, rgba(8, 16, 12, 0.96) 0%, rgba(4, 9, 6, 0.98) 50%, #000000 100%);
-  --auth-border: #10B981;
-  --auth-input-bg: rgba(0, 0, 0, 0.75);
-  --auth-text: #ECFDF5;
+  --auth-bg: #000000;
+  --auth-gold: #FFFFFF;
+  --auth-gold-dark: #E2E8F0;
+  --auth-gold-light: #FFFFFF;
+  --auth-blue: #FFFFFF;
+  --auth-emerald: #FFFFFF;
+  --auth-cyan: #FFFFFF;
+  --auth-card: linear-gradient(168deg, rgba(10, 10, 10, 0.98) 0%, rgba(4, 4, 4, 0.99) 50%, #000000 100%);
+  --auth-border: rgba(255, 255, 255, 0.25);
+  --auth-input-bg: rgba(12, 12, 12, 0.85);
+  --auth-text: #FFFFFF;
   --auth-text-dim: #94A3B8;
   position: relative;
   overflow-x: hidden;
@@ -2304,36 +2304,33 @@ html, body {
   min-height: 100vh;
   width: 100%;
   padding: clamp(24px, 4vh, 48px) 16px;
-  background-color: #D1FAE5 !important;
+  background-color: #060D17 !important;
   background-image: 
-    radial-gradient(ellipse 95% 70% at 15% 15%, rgba(52, 211, 153, 0.50) 0%, transparent 60%),
-    radial-gradient(ellipse 85% 65% at 85% 18%, rgba(16, 185, 129, 0.42) 0%, transparent 58%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(110, 231, 183, 0.38) 0%, transparent 65%),
-    radial-gradient(ellipse 90% 70% at 80% 85%, rgba(16, 185, 129, 0.40) 0%, transparent 60%),
-    radial-gradient(ellipse 85% 65% at 20% 85%, rgba(52, 211, 153, 0.45) 0%, transparent 62%),
-    linear-gradient(165deg, #ECFDF5 0%, #D1FAE5 35%, #A7F3D0 70%, #6EE7B7 100%) !important;
+    radial-gradient(ellipse 95% 70% at 15% 15%, rgba(16, 185, 129, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 85% 65% at 85% 18%, rgba(14, 165, 233, 0.24) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 90% 70% at 80% 85%, rgba(245, 158, 11, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 85% 65% at 20% 85%, rgba(16, 185, 129, 0.18) 0%, transparent 62%),
+    linear-gradient(175deg, #060D17 0%, #0A1C30 35%, #07212C 70%, #05101E 100%) !important;
   background-attachment: fixed !important;
 }
 .auth-container.show { display: flex; }
 
 body.light .auth-container {
-  --auth-bg: #D1FAE5;
-  --auth-gold: #10B981;
-  --auth-gold-dark: #059669;
-  --auth-gold-light: #34D399;
-  --auth-card: linear-gradient(168deg, rgba(8, 16, 12, 0.96) 0%, rgba(4, 9, 6, 0.98) 50%, #000000 100%);
-  --auth-border: #10B981;
-  --auth-input-bg: rgba(0, 0, 0, 0.75);
-  --auth-text: #ECFDF5;
-  --auth-text-dim: #94A3B8;
-  background-color: #D1FAE5 !important;
+  --auth-bg: #F8FAFC;
+  --auth-gold: #059669;
+  --auth-gold-dark: #047857;
+  --auth-gold-light: #10B981;
+  --auth-card: #FFFFFF;
+  --auth-border: #CBD5E1;
+  --auth-input-bg: #FFFFFF;
+  --auth-text: #0F172A;
+  --auth-text-dim: #475569;
+  background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse 95% 70% at 15% 15%, rgba(52, 211, 153, 0.50) 0%, transparent 60%),
-    radial-gradient(ellipse 85% 65% at 85% 18%, rgba(16, 185, 129, 0.42) 0%, transparent 58%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(110, 231, 183, 0.38) 0%, transparent 65%),
-    radial-gradient(ellipse 90% 70% at 80% 85%, rgba(16, 185, 129, 0.40) 0%, transparent 60%),
-    radial-gradient(ellipse 85% 65% at 20% 85%, rgba(52, 211, 153, 0.45) 0%, transparent 62%),
-    linear-gradient(165deg, #ECFDF5 0%, #D1FAE5 35%, #A7F3D0 70%, #6EE7B7 100%) !important;
+    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(5, 150, 105, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 100%) !important;
 }
 
 /* Barra Superior de Utilitários (Tema Claro/Escuro) */
@@ -2982,16 +2979,16 @@ body.light .auth-pass-toggle-btn:hover {
   background: #F1F5F9 !important;
 }
 
-/* Botão Primário Executivo - Verde Claro com Preto */
+/* Botão Primário Executivo - Branco Puro com Texto Preto */
 .btn-auth-primary {
   position: relative;
   overflow: hidden;
   width: 100%;
   height: 48px;
   padding: 0 20px;
-  background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #00E599 100%) !important;
+  background: #FFFFFF !important;
   color: #000000 !important;
-  border: 1.5px solid #6EE7B7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
   border-radius: 12px !important;
   font-weight: 900 !important;
   font-size: 15px !important;
@@ -2999,43 +2996,36 @@ body.light .auth-pass-toggle-btn:hover {
   cursor: pointer;
   margin-top: 10px;
   box-shadow: 
-    0 10px 28px -5px rgba(16, 185, 129, 0.55),
-    0 0 25px rgba(52, 211, 153, 0.45),
-    inset 0 1px 1px #FFFFFF !important;
+    0 10px 28px -5px rgba(255, 255, 255, 0.35),
+    0 0 20px rgba(255, 255, 255, 0.20) !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
-.btn-auth-primary * {
-  color: #000000 !important;
-  font-weight: 900 !important;
-}
 .btn-auth-primary:hover {
-  filter: brightness(1.08) !important;
+  filter: brightness(1.05);
+  color: #000000 !important;
+  background: #FFFFFF !important;
   transform: translateY(-2px);
   box-shadow: 
-    0 14px 34px -5px rgba(16, 185, 129, 0.70),
-    0 0 32px rgba(52, 211, 153, 0.55) !important;
+    0 14px 34px -5px rgba(255, 255, 255, 0.45),
+    0 0 28px rgba(255, 255, 255, 0.30) !important;
 }
 .btn-auth-primary:active {
   transform: translateY(0) scale(0.98);
 }
 
 body.light .btn-auth-primary {
-  background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #00E599 100%) !important;
-  color: #000000 !important;
-  border: 1.5px solid #6EE7B7 !important;
-  box-shadow: 0 10px 28px -5px rgba(16, 185, 129, 0.55), 0 0 25px rgba(52, 211, 153, 0.45), inset 0 1px 1px #FFFFFF !important;
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  border: 1px solid #0F172A !important;
+  box-shadow: 0 8px 20px -3px rgba(15, 23, 42, 0.25) !important;
 }
 body.light .btn-auth-primary:hover {
-  filter: brightness(1.08) !important;
-  box-shadow: 0 14px 34px -5px rgba(16, 185, 129, 0.70), 0 0 32px rgba(52, 211, 153, 0.55) !important;
-}
-body.light .btn-auth-primary * {
-  color: #000000 !important;
-  font-weight: 900 !important;
+  background: #1E293B !important;
+  color: #FFFFFF !important;
 }
 
 .auth-forgot-link {
