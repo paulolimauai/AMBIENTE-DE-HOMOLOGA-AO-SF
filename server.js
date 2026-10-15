@@ -2491,21 +2491,21 @@ body.light .auth-grid {
 .auth-metric-card {
   padding: 14px 14px;
   border-radius: 16px;
-  background: rgba(10, 10, 10, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.20);
-  border-top: 1px solid rgba(255, 255, 255, 0.60);
+  background: linear-gradient(145deg, rgba(14, 35, 58, 0.88) 0%, rgba(9, 24, 42, 0.94) 100%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.25) !important;
+  border-top: 2.5px solid #10B981 !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.60);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.65), 0 0 18px rgba(16, 185, 129, 0.18) !important;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 .auth-metric-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(255, 255, 255, 0.70);
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(255, 255, 255, 0.20);
+  border-color: rgba(56, 189, 248, 0.60) !important;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.75), 0 0 24px rgba(14, 165, 233, 0.30) !important;
 }
 
 .metric-card-head {
@@ -2515,7 +2515,7 @@ body.light .auth-grid {
   margin-bottom: 6px;
 }
 .metric-card-head svg {
-  color: #FFFFFF !important;
+  color: #10B981 !important;
   flex-shrink: 0;
 }
 
@@ -2546,13 +2546,21 @@ body.light .auth-grid {
   border-radius: 6px;
   width: fit-content;
 }
-.metric-pill-tag.green,
-.metric-pill-tag.amber,
+.metric-pill-tag.green {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34D399 !important;
+  border: 1px solid rgba(52, 211, 153, 0.40) !important;
+}
+.metric-pill-tag.amber {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #FBBF24 !important;
+  border: 1px solid rgba(251, 191, 36, 0.40) !important;
+}
 .metric-pill-tag.white,
 .metric-pill-tag.blue {
-  background: rgba(255, 255, 255, 0.12);
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.30);
+  background: rgba(14, 165, 233, 0.18) !important;
+  color: #38BDF8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.40) !important;
 }
 
 /* Barra de Confiança e Segurança */
@@ -2574,7 +2582,7 @@ body.light .auth-grid {
   gap: 6px;
 }
 .auth-trust-item svg {
-  color: #FFFFFF !important;
+  color: #10B981 !important;
   flex-shrink: 0;
 }
 
@@ -2642,18 +2650,19 @@ body.light .auth-showcase-footer {
 .auth-card-nexus {
   position: relative;
   z-index: 10;
-  background: linear-gradient(168deg, rgba(10, 10, 10, 0.96) 0%, rgba(4, 4, 4, 0.98) 50%, #000000 100%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
-  border-top: 2.5px solid #FFFFFF !important;
+  background: linear-gradient(165deg, rgba(14, 34, 56, 0.92) 0%, rgba(10, 25, 44, 0.96) 50%, rgba(7, 18, 33, 0.98) 100%) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.38) !important;
+  border-top: 2.5px solid #00E599 !important;
   border-radius: 26px;
   padding: clamp(24px, 3.2vh, 32px) clamp(22px, 2.6vw, 32px);
   width: 100%;
   max-width: 440px;
   margin: 0 auto;
   box-shadow: 
-    0 30px 80px -15px rgba(0, 0, 0, 0.95),
-    0 0 50px -10px rgba(255, 255, 255, 0.18),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.20) !important;
+    0 30px 80px -15px rgba(0, 0, 0, 0.92),
+    0 0 45px -8px rgba(16, 185, 129, 0.30),
+    0 0 25px -4px rgba(14, 165, 233, 0.20),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.15) !important;
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
   animation: none !important;
@@ -2689,7 +2698,7 @@ html:not(.user-logged-in) body {
 body.light .auth-card-nexus {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
-  border-top: 2.5px solid #0F172A !important;
+  border-top: 2.5px solid #059669 !important;
   box-shadow: 0 24px 60px -10px rgba(15, 23, 42, 0.10) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -2708,17 +2717,17 @@ body.light .auth-card-nexus {
   width: 52px;
   height: 52px;
   border-radius: 16px;
-  background: #FFFFFF !important;
-  color: #000000 !important;
+  background: linear-gradient(135deg, #059669 0%, #10B981 50%, #0284C7 100%) !important;
+  color: #FFFFFF !important;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   font-size: 24px;
   font-family: var(--font-sans);
-  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.40) !important;
   box-shadow: 
-    0 8px 24px -3px rgba(255, 255, 255, 0.35),
+    0 10px 25px -4px rgba(16, 185, 129, 0.50),
     0 2px 6px rgba(0, 0, 0, 0.40) !important;
   margin-bottom: 12px;
   position: relative;
@@ -2726,15 +2735,15 @@ body.light .auth-card-nexus {
 }
 .auth-logo-badge:hover {
   transform: scale(1.06) translateY(-2px);
-  border-color: #FFFFFF !important;
-  box-shadow: 0 12px 28px -2px rgba(255, 255, 255, 0.50) !important;
+  border-color: #38BDF8 !important;
+  box-shadow: 0 12px 28px -2px rgba(14, 165, 233, 0.60) !important;
 }
 
 body.light .auth-logo-badge {
-  background: #0F172A !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
   color: #FFFFFF !important;
-  border: 1.5px solid #0F172A !important;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.20) !important;
+  border: 1.5px solid #047857 !important;
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.25) !important;
 }
 
 .auth-title {
@@ -2748,7 +2757,7 @@ body.light .auth-logo-badge {
   gap: 8px;
 }
 .auth-title span {
-  background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 50%, #FFFFFF 100%) !important;
+  background: linear-gradient(135deg, #10B981 0%, #38BDF8 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   font-size: 13px;
@@ -2767,7 +2776,7 @@ body.light .auth-title {
   color: #0F172A !important;
 }
 body.light .auth-title span {
-  color: #0F172A !important;
+  color: #059669 !important;
   font-weight: 900 !important;
 }
 body.light .auth-subtitle {
@@ -2778,8 +2787,8 @@ body.light .auth-subtitle {
 /* Navegação por Abas Segmentadas (iOS / Linear Style) */
 .auth-tabs-nav {
   display: flex;
-  background: rgba(8, 8, 8, 0.75) !important;
-  border: 1px solid rgba(255, 255, 255, 0.20) !important;
+  background: rgba(9, 24, 43, 0.85) !important;
+  border: 1px solid rgba(16, 185, 129, 0.28) !important;
   border-radius: 14px !important;
   padding: 4px !important;
   margin-bottom: 20px;
@@ -2816,27 +2825,27 @@ body.light .auth-tabs-nav {
   flex-shrink: 0;
 }
 .auth-tab-btn:hover {
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.10);
+  color: #38BDF8 !important;
+  background: rgba(56, 189, 248, 0.10);
 }
 .auth-tab-btn.active {
-  background: #FFFFFF !important;
-  color: #000000 !important;
-  border: 1px solid #FFFFFF !important;
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.25) !important;
+  background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid #34D399 !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35) !important;
   font-weight: 850 !important;
 }
 body.light .auth-tab-btn {
   color: #475569 !important;
 }
 body.light .auth-tab-btn:hover {
-  color: #0F172A !important;
+  color: #059669 !important;
 }
 body.light .auth-tab-btn.active {
-  background: #0F172A !important;
+  background: #059669 !important;
   color: #FFFFFF !important;
-  border-color: #0F172A !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.20) !important;
+  border-color: #047857 !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.20) !important;
   font-weight: 800 !important;
 }
 
@@ -2861,8 +2870,8 @@ body.light .auth-field label {
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(8, 8, 8, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.20) !important;
+  background: rgba(10, 26, 46, 0.82) !important;
+  border: 1px solid rgba(16, 185, 129, 0.30) !important;
   border-radius: 12px !important;
   backdrop-filter: blur(14px) !important;
   -webkit-backdrop-filter: blur(14px) !important;
@@ -2876,15 +2885,15 @@ body.light .auth-input-wrapper {
 }
 
 .auth-input-wrapper:focus-within {
-  border-color: #FFFFFF !important;
-  background: rgba(14, 14, 14, 0.95) !important;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25), 0 8px 20px -4px rgba(0, 0, 0, 0.6) !important;
+  border-color: #00E599 !important;
+  background: rgba(14, 34, 58, 0.95) !important;
+  box-shadow: 0 0 0 3.5px rgba(0, 229, 153, 0.22), 0 0 16px rgba(16, 185, 129, 0.30) !important;
   transform: translateY(-1px);
 }
 body.light .auth-input-wrapper:focus-within {
   background: #FFFFFF !important;
-  border-color: #0F172A !important;
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.15), 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15), 0 4px 12px rgba(5, 150, 105, 0.06) !important;
 }
 
 .auth-input-icon {
@@ -2892,14 +2901,18 @@ body.light .auth-input-wrapper:focus-within {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF !important;
+  color: #10B981 !important;
   flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+.auth-input-wrapper:focus-within .auth-input-icon {
+  color: #38BDF8 !important;
 }
 body.light .auth-input-icon {
-  color: #0F172A !important;
+  color: #059669 !important;
 }
 body.light .auth-input-wrapper:focus-within .auth-input-icon {
-  color: #0F172A !important;
+  color: #0284C7 !important;
 }
 
 .auth-input-wrapper input {
@@ -2931,8 +2944,8 @@ body.light .auth-input-wrapper input::placeholder {
 .auth-input-wrapper input:-webkit-autofill:focus,
 .auth-input-wrapper input:-webkit-autofill:active {
   -webkit-text-fill-color: #FFFFFF !important;
-  -webkit-box-shadow: 0 0 0px 1000px #040404 inset !important;
-  box-shadow: 0 0 0px 1000px #040404 inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #0a1a2e inset !important;
+  box-shadow: 0 0 0px 1000px #0a1a2e inset !important;
   transition: background-color 5000s ease-in-out 0s !important;
   border-radius: 0 12px 12px 0 !important;
 }
@@ -2951,7 +2964,7 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
   background: transparent !important;
   border: none !important;
   outline: none !important;
-  color: #FFFFFF !important;
+  color: #10B981 !important;
   width: 38px !important;
   height: 38px !important;
   display: flex !important;
@@ -2966,38 +2979,39 @@ body.light .auth-input-wrapper input:-webkit-autofill:active {
 }
 .auth-pass-toggle:hover,
 .auth-pass-toggle-btn:hover {
-  color: #FFFFFF !important;
-  background: rgba(255, 255, 255, 0.15) !important;
+  color: #38BDF8 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
 }
 body.light .auth-pass-toggle,
 body.light .auth-pass-toggle-btn {
-  color: #0F172A !important;
+  color: #059669 !important;
 }
 body.light .auth-pass-toggle:hover,
 body.light .auth-pass-toggle-btn:hover {
-  color: #0F172A !important;
+  color: #047857 !important;
   background: #F1F5F9 !important;
 }
 
-/* Botão Primário Executivo - Branco Puro com Texto Preto */
+/* Botão Primário Executivo - Verde Esmeralda & Ciano Fintech Bancário */
 .btn-auth-primary {
   position: relative;
   overflow: hidden;
   width: 100%;
   height: 48px;
   padding: 0 20px;
-  background: #FFFFFF !important;
-  color: #000000 !important;
-  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  background: linear-gradient(135deg, #059669 0%, #10B981 45%, #0284C7 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.40) !important;
   border-radius: 12px !important;
-  font-weight: 900 !important;
+  font-weight: 850 !important;
   font-size: 15px !important;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
   cursor: pointer;
   margin-top: 10px;
   box-shadow: 
-    0 10px 28px -5px rgba(255, 255, 255, 0.35),
-    0 0 20px rgba(255, 255, 255, 0.20) !important;
+    0 10px 28px -5px rgba(16, 185, 129, 0.55),
+    0 0 24px rgba(14, 165, 233, 0.35),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.40) !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   align-items: center;
@@ -3005,42 +3019,41 @@ body.light .auth-pass-toggle-btn:hover {
   gap: 8px;
 }
 .btn-auth-primary:hover {
-  filter: brightness(1.05);
-  color: #000000 !important;
-  background: #FFFFFF !important;
+  filter: brightness(1.12);
+  color: #FFFFFF !important;
   transform: translateY(-2px);
   box-shadow: 
-    0 14px 34px -5px rgba(255, 255, 255, 0.45),
-    0 0 28px rgba(255, 255, 255, 0.30) !important;
+    0 14px 34px -5px rgba(16, 185, 129, 0.70),
+    0 0 32px rgba(14, 165, 233, 0.45) !important;
 }
 .btn-auth-primary:active {
   transform: translateY(0) scale(0.98);
 }
 
 body.light .btn-auth-primary {
-  background: #0F172A !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
   color: #FFFFFF !important;
-  border: 1px solid #0F172A !important;
-  box-shadow: 0 8px 20px -3px rgba(15, 23, 42, 0.25) !important;
+  border: 1px solid #047857 !important;
+  box-shadow: 0 8px 20px -3px rgba(5, 150, 105, 0.35) !important;
 }
 body.light .btn-auth-primary:hover {
-  background: #1E293B !important;
+  background: #047857 !important;
   color: #FFFFFF !important;
 }
 
 .auth-forgot-link {
   font-size: 12px;
-  color: #FFFFFF !important;
+  color: #38BDF8 !important;
   font-weight: 700;
   cursor: pointer;
   transition: color 0.15s;
   text-decoration: underline;
 }
 .auth-forgot-link:hover {
-  color: #CBD5E1 !important;
+  color: #00E599 !important;
 }
 body.light .auth-forgot-link {
-  color: #0F172A !important;
+  color: #059669 !important;
 }
 
 /* Feedback Banners */
@@ -3069,10 +3082,10 @@ body.light .auth-forgot-link {
   color: #FEE2E2 !important;
 }
 .auth-feedback-banner.success {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border: 1px solid rgba(255, 255, 255, 0.30) !important;
-  border-left: 3.5px solid #FFFFFF !important;
-  color: #FFFFFF !important;
+  background: rgba(16, 185, 129, 0.14) !important;
+  border: 1px solid rgba(52, 211, 153, 0.35) !important;
+  border-left: 3.5px solid #10B981 !important;
+  color: #D1FAE5 !important;
 }
 
 /* Botão Secundário Executivo: Ordem de Serviço */
@@ -3084,33 +3097,34 @@ body.light .auth-forgot-link {
   width: 100%;
   height: 42px;
   padding: 0 16px;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  background: rgba(14, 38, 64, 0.65) !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
   border-radius: 12px !important;
-  color: #FFFFFF !important;
+  color: #38BDF8 !important;
   font-size: 12.5px !important;
   font-weight: 700 !important;
   letter-spacing: 0.015em;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
   backdrop-filter: blur(14px) !important;
   -webkit-backdrop-filter: blur(14px) !important;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
   margin-top: 10px;
 }
 .btn-open-os svg {
-  color: #FFFFFF;
+  color: #38BDF8;
   transition: transform 0.2s ease;
 }
 .btn-open-os:hover {
-  background: rgba(255, 255, 255, 0.14) !important;
-  border-color: #FFFFFF !important;
+  background: rgba(14, 38, 64, 0.90) !important;
+  border-color: #38BDF8 !important;
   color: #FFFFFF !important;
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.20) !important;
+  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.25) !important;
 }
 .btn-open-os:hover svg {
   transform: scale(1.12);
+  color: #FFFFFF;
 }
 body.light .btn-open-os {
   background: #FFFFFF !important;
@@ -3136,17 +3150,17 @@ body.light .btn-open-os:hover {
   padding: 4px 8px;
 }
 .auth-support-bar svg {
-  color: #FFFFFF;
+  color: #10B981;
   flex-shrink: 0;
 }
 .auth-support-link {
-  color: #FFFFFF !important;
+  color: #38BDF8 !important;
   text-decoration: underline;
   font-weight: 700;
   transition: color 0.15s ease;
 }
 .auth-support-link:hover {
-  color: #CBD5E1 !important;
+  color: #00E599 !important;
 }
 body.light .auth-support-bar {
   color: #334155 !important;
@@ -12355,7 +12369,7 @@ body.light .period button.active {
           <!-- Lembrar de Mim -->
           <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#94A3B8;">
             <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; color:#E2E8F0; font-weight:600;">
-              <input type="checkbox" id="rememberMe" style="accent-color:#FFFFFF; width:15px; height:15px; cursor:pointer;">
+              <input type="checkbox" id="rememberMe" style="accent-color:#10B981; width:15px; height:15px; cursor:pointer;">
               <span>Lembrar meu acesso neste dispositivo</span>
             </label>
           </div>
@@ -12368,7 +12382,7 @@ body.light .period button.active {
         </form>
 
         <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:#94A3B8;">
-          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#FFFFFF; font-weight:800; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
+          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#38BDF8; font-weight:800; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
         </p>
       </div>
 
@@ -12376,7 +12390,7 @@ body.light .period button.active {
       <div id="registerBox" style="display:none;">
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:4px;">
+          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; margin-bottom:8px; border-bottom:1px solid rgba(16,185,129,0.30); padding-bottom:4px;">
             <span>1. Identificação do Titular</span>
           </div>
 
@@ -12412,7 +12426,7 @@ body.light .period button.active {
             <div id="regBirthFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
           </div>
 
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:4px;">
+          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; margin:12px 0 8px; border-bottom:1px solid rgba(16,185,129,0.30); padding-bottom:4px;">
             <span>2. Contato & Notificações de Orçamento</span>
           </div>
 
@@ -12438,7 +12452,7 @@ body.light .period button.active {
             </div>
           </div>
 
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin:12px 0 8px; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:4px;">
+          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; margin:12px 0 8px; border-bottom:1px solid rgba(16,185,129,0.30); padding-bottom:4px;">
             <span>3. Senha de Acesso Financeiro</span>
           </div>
 
@@ -12470,17 +12484,17 @@ body.light .period button.active {
 
           <div style="margin:12px 0 6px; font-size:11px; color:#CBD5E1; display:flex; flex-direction:column; gap:6px;">
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#CBD5E1;">
-              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#FFFFFF; cursor:pointer;">
+              <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#10B981; cursor:pointer;">
               <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade (LGPD - Lei 13.709/18).</span>
             </label>
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#CBD5E1;">
-              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#FFFFFF; cursor:pointer;">
+              <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#10B981; cursor:pointer;">
               <span>Declaro que as informações e dados cadastrais informados são verídicos e de minha titularidade.</span>
             </label>
           </div>
 
-          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.20); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#FFFFFF;">
-            <span style="color:#FFFFFF; font-weight:800; font-size:14px;">🔒</span>
+          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(16,185,129,0.12); border:1px solid rgba(52,211,153,0.30); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#D1FAE5;">
+            <span style="color:#10B981; font-weight:800; font-size:14px;">🔒</span>
             <span>Ambiente seguro com criptografia de ponta a ponta e proteção integral das suas finanças.</span>
           </div>
 
@@ -12492,13 +12506,13 @@ body.light .period button.active {
         </form>
 
         <p style="margin-top:16px; text-align:center; font-size:12.5px; color:#94A3B8;">
-          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#FFFFFF; font-weight:800; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
+          Já possui cadastro? <a onclick="window.switchAuthTab('login')" style="color:#38BDF8; font-weight:800; cursor:pointer; text-decoration:underline;">Fazer Logon</a>
         </p>
       </div>
 
       <!-- Box 3: Recuperação de Senha com Confirmação Cadastral -->
       <div id="forgotBox" style="display:none;">
-        <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#FFFFFF; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.25); padding-bottom:4px;">
+        <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34D399; margin-bottom:8px; border-bottom:1px solid rgba(16,185,129,0.30); padding-bottom:4px;">
           <span>Confirmação Cadastral para Recuperação</span>
         </div>
         <p style="font-size:12.5px; color:#CBD5E1; margin-bottom:16px; line-height:1.5;">
@@ -12544,7 +12558,7 @@ body.light .period button.active {
         </form>
 
         <div style="text-align:center; margin-top:18px;">
-          <a class="auth-forgot-link" id="goLoginFromForgot" href="javascript:void(0)" onclick="window.switchAuthTab('login'); return false;" style="cursor:pointer; color:#FFFFFF; text-decoration:underline;">← Voltar para o Login</a>
+          <a class="auth-forgot-link" id="goLoginFromForgot" href="javascript:void(0)" onclick="window.switchAuthTab('login'); return false;" style="cursor:pointer; color:#38BDF8; text-decoration:underline;">← Voltar para o Login</a>
         </div>
       </div>
 
