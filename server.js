@@ -4339,20 +4339,21 @@ nav.menu, aside.menu, .sidebar-menu {
   flex-direction: row !important;
   align-items: center !important;
   gap: 10px !important;
-  padding: 4px 6px 10px 6px !important;
+  padding: 6px 8px 10px 8px !important;
   margin-bottom: 2px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
   user-select: none !important;
   flex-shrink: 0 !important;
 }
 .sidebar-workspace-header .workspace-avatar {
   position: relative !important;
-  width: 32px !important;
-  height: 32px !important;
-  min-width: 32px !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
   border-radius: 9px !important;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 100%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.15) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.40) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.20) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4360,17 +4361,17 @@ nav.menu, aside.menu, .sidebar-menu {
 }
 .sidebar-workspace-header .workspace-avatar-text {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
-  font-size: 11.5px !important;
+  font-size: 12px !important;
   font-weight: 800 !important;
-  letter-spacing: 0.04em !important;
+  letter-spacing: 0.05em !important;
   color: #34D399 !important;
 }
 .sidebar-workspace-header .workspace-status-dot {
   position: absolute !important;
   bottom: -1px !important;
   right: -1px !important;
-  width: 6.5px !important;
-  height: 6.5px !important;
+  width: 7px !important;
+  height: 7px !important;
   border-radius: 50% !important;
   background: #10B981 !important;
   border: 1.5px solid #060A12 !important;
@@ -4390,7 +4391,7 @@ nav.menu, aside.menu, .sidebar-menu {
 }
 .sidebar-workspace-header .workspace-name {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
-  font-size: 13px !important;
+  font-size: 13.5px !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   color: #F8FAFC !important;
@@ -4398,20 +4399,9 @@ nav.menu, aside.menu, .sidebar-menu {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
-.sidebar-workspace-header .workspace-tag {
-  font-size: 8.5px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.06em !important;
-  text-transform: uppercase !important;
-  color: #10B981 !important;
-  background: rgba(16, 185, 129, 0.16) !important;
-  border: 1px solid rgba(16, 185, 129, 0.30) !important;
-  padding: 0.5px 4.5px !important;
-  border-radius: 4px !important;
-}
 .sidebar-workspace-header .workspace-subtitle {
   font-size: 10.5px !important;
-  color: #64748B !important;
+  color: #94A3B8 !important;
   font-weight: 500 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -4435,16 +4425,16 @@ aside.menu .sidebar-quick-action-btn,
   justify-content: flex-start !important;
   gap: 9px !important;
   width: 100% !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  max-height: 38px !important;
-  padding: 0 11px !important;
-  border-radius: 10px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 10px !important;
+  border-radius: 9px !important;
   background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.22) !important;
   color: #FFFFFF !important;
   cursor: pointer !important;
-  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.32), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select: none !important;
   box-sizing: border-box !important;
@@ -4455,7 +4445,7 @@ aside.menu .sidebar-quick-action-btn,
 aside.menu .sidebar-quick-action-btn:hover,
 .sidebar-menu .sidebar-quick-action-btn:hover {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-  box-shadow: 0 5px 18px rgba(16, 185, 129, 0.48), inset 0 1px 1.5px rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.55) !important;
   transform: translateY(-1px) !important;
   color: #FFFFFF !important;
 }
@@ -4509,15 +4499,15 @@ aside.menu .sidebar-quick-action-btn:active,
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  padding: 11px 6px 3px 6px !important;
+  padding: 9px 6px 3px 6px !important;
   user-select: none !important;
   flex-shrink: 0 !important;
 }
 .menu-section-title {
-  font-size: 9px !important;
+  font-size: 9.5px !important;
   font-weight: 800 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.12em !important;
+  letter-spacing: 0.10em !important;
   color: #64748B !important;
   white-space: nowrap !important;
 }
@@ -4684,228 +4674,116 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
   pointer-events: none !important;
 }
 
-/* Card Executivo Nexus Vault (Espaço Inferior Inteligente) */
-.sidebar-vault-widget {
-  margin-top: 14px !important;
-  margin-bottom: 6px !important;
-  padding: 10px 10px !important;
-  border-radius: 11px !important;
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.07) 0%, rgba(15, 23, 42, 0.45) 100%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.20) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 5px !important;
-  flex-shrink: 0 !important;
-  user-select: none !important;
-  transition: all 0.2s ease !important;
-}
-.sidebar-vault-widget:hover {
-  border-color: rgba(16, 185, 129, 0.38) !important;
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.11) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
-}
-.vault-widget-top {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 6px !important;
-}
-.vault-live-indicator {
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-}
-.vault-live-dot {
-  width: 6.5px !important;
-  min-width: 6.5px !important;
-  height: 6.5px !important;
-  border-radius: 50% !important;
-  background: #10B981 !important;
-  box-shadow: 0 0 7px #10B981 !important;
-  display: inline-block !important;
-  animation: pulseVault 2.2s infinite ease-in-out !important;
-}
-@keyframes pulseVault {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(0.85); }
-}
-.vault-live-label {
-  font-size: 10.5px !important;
-  font-weight: 700 !important;
-  color: #F8FAFC !important;
-  letter-spacing: -0.01em !important;
-}
-.vault-sec-badge {
-  font-size: 8.5px !important;
-  font-weight: 800 !important;
+/* ==================== Acentos Visuais nos Ícones por Categoria ==================== */
+[data-page="dashboard"]:hover .ic, [data-page="transacoes"]:hover .ic, [data-page="cartoes"]:hover .ic {
+  background: rgba(16, 185, 129, 0.16) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
   color: #34D399 !important;
-  background: rgba(16, 185, 129, 0.18) !important;
-  border: 1px solid rgba(16, 185, 129, 0.35) !important;
-  padding: 1px 5px !important;
-  border-radius: 5px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
 }
-.vault-widget-title {
-  font-size: 10.5px !important;
-  font-weight: 600 !important;
-  color: #CBD5E1 !important;
-  line-height: 1.25 !important;
+[data-page="orcamentos"]:hover .ic, [data-page="metas"]:hover .ic, [data-page="relatorios"]:hover .ic {
+  background: rgba(14, 165, 233, 0.16) !important;
+  border-color: rgba(14, 165, 233, 0.35) !important;
+  color: #38BDF8 !important;
 }
-.vault-widget-chips {
-  display: flex !important;
-  align-items: center !important;
-  gap: 5px !important;
-  margin-top: 2px !important;
+[data-page="recorrentes"]:hover .ic, [data-page="importar"]:hover .ic, [data-page="anexos"]:hover .ic {
+  background: rgba(139, 92, 246, 0.16) !important;
+  border-color: rgba(139, 92, 246, 0.35) !important;
+  color: #A78BFA !important;
 }
-.vault-chip {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  font-size: 9px !important;
-  font-weight: 600 !important;
-  color: #94A3B8 !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  padding: 1.5px 6px !important;
-  border-radius: 4px !important;
-  white-space: nowrap !important;
-}
-.vault-chip svg {
-  color: #10B981 !important;
+[data-page="config"]:hover .ic {
+  background: rgba(244, 114, 182, 0.16) !important;
+  border-color: rgba(244, 114, 182, 0.35) !important;
+  color: #F472B6 !important;
 }
 
-/* Rodapé da Sidebar */
+/* ==================== Rodapé da Sidebar & Ação de Colapso Visual ==================== */
 .sidebar-footer {
   margin-top: auto !important;
-  padding: 10px 8px 6px 8px !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 8px 8px 6px 8px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 8px !important;
+  justify-content: stretch !important;
   width: 100% !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
 }
 
-.sidebar-finance-shield {
-  display: inline-flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 8px !important;
-  padding: 6px 10px !important;
-  border-radius: 10px !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-  flex: 1 1 0% !important;
-  min-width: 0 !important;
-  height: 38px !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-}
-.sidebar-finance-shield .shield-icon {
-  width: 22px !important;
-  min-width: 22px !important;
-  max-width: 22px !important;
-  height: 22px !important;
-  min-height: 22px !important;
-  max-height: 22px !important;
-  border-radius: 6px !important;
-  background: rgba(16, 185, 129, 0.15) !important;
-  color: #10B981 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-.sidebar-finance-shield .shield-icon svg {
-  width: 13px !important;
-  height: 13px !important;
-  display: block !important;
-}
-.sidebar-finance-shield .shield-text {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  line-height: 1.15 !important;
-  min-width: 0 !important;
-  overflow: hidden !important;
-}
-.sidebar-finance-shield .shield-title {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: #F8FAFC !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-.sidebar-finance-shield .shield-sub {
-  font-size: 9px !important;
-  color: #94A3B8 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  white-space: nowrap !important;
-}
-.pulse-dot-green {
-  width: 6px !important;
-  min-width: 6px !important;
-  height: 6px !important;
-  border-radius: 50% !important;
-  background: #10B981 !important;
-  box-shadow: 0 0 6px #10B981 !important;
-  display: inline-block !important;
-  flex-shrink: 0 !important;
-}
-
-/* Botão de Toggle da Sidebar (Recolher / Expandir) - Alta especificidade para prevalecer sobre aside.menu button */
 .sidebar-footer .sidebar-toggle-btn,
 .sidebar-footer #sidebarCollapseBtn,
 aside.menu .sidebar-footer .sidebar-toggle-btn,
 aside.menu .sidebar-footer #sidebarCollapseBtn,
 .sidebar-menu .sidebar-footer .sidebar-toggle-btn,
 .sidebar-toggle-btn {
-  width: 34px !important;
-  min-width: 34px !important;
-  max-width: 34px !important;
-  height: 34px !important;
-  min-height: 34px !important;
-  max-height: 34px !important;
-  padding: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  padding: 0 10px !important;
   margin: 0 !important;
   border-radius: 8px !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   color: #94A3B8 !important;
-  display: inline-flex !important;
+  display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
   cursor: pointer !important;
-  flex: 0 0 34px !important;
-  flex-shrink: 0 !important;
   box-sizing: border-box !important;
-  transform: none !important;
-  transition: all 0.18s ease !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  user-select: none !important;
 }
+
 .sidebar-footer .sidebar-toggle-btn:hover,
 .sidebar-footer #sidebarCollapseBtn:hover,
 aside.menu .sidebar-footer .sidebar-toggle-btn:hover,
 aside.menu .sidebar-footer #sidebarCollapseBtn:hover,
 .sidebar-toggle-btn:hover {
-  background: rgba(16, 185, 129, 0.15) !important;
+  background: rgba(16, 185, 129, 0.12) !important;
   border-color: rgba(16, 185, 129, 0.35) !important;
   color: #34D399 !important;
-  transform: none !important;
 }
+
+.sidebar-footer .toggle-icon-wrap {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: inherit !important;
+  flex-shrink: 0 !important;
+  transition: all 0.18s ease !important;
+}
+
+.sidebar-footer .sidebar-toggle-btn:hover .toggle-icon-wrap {
+  background: rgba(16, 185, 129, 0.20) !important;
+  color: #34D399 !important;
+}
+
 .sidebar-footer .toggle-icon-collapse {
-  width: 16px !important;
-  height: 16px !important;
+  width: 14px !important;
+  height: 14px !important;
   display: block !important;
+  stroke: currentColor !important;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.sidebar-footer .toggle-label {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
 /* Modo Recolhido (Collapsed) */
@@ -4931,11 +4809,10 @@ body.sidebar-collapsed aside.menu button span.label,
 body.sidebar-collapsed .sidebar-menu button span.label,
 body.sidebar-collapsed .menu-section-title,
 body.sidebar-collapsed .menu-section-line,
-body.sidebar-collapsed .sidebar-finance-shield,
-body.sidebar-collapsed .sidebar-vault-widget,
 body.sidebar-collapsed #osBadgeCount,
 body.sidebar-collapsed .sidebar-quick-action-btn .label,
-body.sidebar-collapsed .sidebar-quick-action-btn .quick-action-badge {
+body.sidebar-collapsed .sidebar-quick-action-btn .quick-action-badge,
+body.sidebar-collapsed .sidebar-footer .toggle-label {
   display: none !important;
 }
 body.sidebar-collapsed .sidebar-action-wrap {
@@ -4973,11 +4850,16 @@ body.sidebar-collapsed .sidebar-menu button:not(.sidebar-toggle-btn):not(.sideba
 }
 body.sidebar-collapsed .sidebar-footer {
   justify-content: center !important;
-  padding: 8px 0 2px 0 !important;
+  padding: 8px 0 4px 0 !important;
 }
 body.sidebar-collapsed .sidebar-footer .sidebar-toggle-btn,
 body.sidebar-collapsed .sidebar-footer #sidebarCollapseBtn,
 body.sidebar-collapsed aside.menu .sidebar-footer .sidebar-toggle-btn {
+  width: 38px !important;
+  min-width: 38px !important;
+  max-width: 38px !important;
+  padding: 0 !important;
+  justify-content: center !important;
   margin: 0 auto !important;
 }
 body.sidebar-collapsed .toggle-icon-collapse {
@@ -5044,29 +4926,6 @@ html.light .sidebar-quick-action-btn span.label,
 body.light aside.menu .sidebar-quick-action-btn span.label,
 html.light aside.menu .sidebar-quick-action-btn span.label {
   color: #FFFFFF !important;
-}
-
-/* Nexus Vault no Modo Claro */
-body.light .sidebar-vault-widget, html.light .sidebar-vault-widget {
-  background: linear-gradient(180deg, #F0FDF4 0%, #F8FAFC 100%) !important;
-  border: 1px solid #BBF7D0 !important;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08) !important;
-}
-body.light .vault-live-label, html.light .vault-live-label {
-  color: #0F172A !important;
-}
-body.light .vault-sec-badge, html.light .vault-sec-badge {
-  color: #059669 !important;
-  background: #DCFCE7 !important;
-  border-color: #86EFAC !important;
-}
-body.light .vault-widget-title, html.light .vault-widget-title {
-  color: #1E293B !important;
-}
-body.light .vault-chip, html.light .vault-chip {
-  background: #F1F5F9 !important;
-  border-color: #E2E8F0 !important;
-  color: #475569 !important;
 }
 
 /* Botões do Menu Lateral no Modo Claro */
@@ -5141,33 +5000,53 @@ body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-acti
   border-color: #6EE7B7 !important;
   color: #059669 !important;
 }
+/* Acentos Visuais nos Ícones por Categoria no Modo Claro */
+body.light [data-page="dashboard"]:hover .ic, body.light [data-page="transacoes"]:hover .ic, body.light [data-page="cartoes"]:hover .ic {
+  background: #D1FAE5 !important;
+  border-color: #6EE7B7 !important;
+  color: #059669 !important;
+}
+body.light [data-page="orcamentos"]:hover .ic, body.light [data-page="metas"]:hover .ic, body.light [data-page="relatorios"]:hover .ic {
+  background: #E0F2FE !important;
+  border-color: #7DD3FC !important;
+  color: #0284C7 !important;
+}
+body.light [data-page="recorrentes"]:hover .ic, body.light [data-page="importar"]:hover .ic, body.light [data-page="anexos"]:hover .ic {
+  background: #EDE9FE !important;
+  border-color: #C4B5FD !important;
+  color: #7C3AED !important;
+}
+body.light [data-page="config"]:hover .ic {
+  background: #FCE7F3 !important;
+  border-color: #FBCFE8 !important;
+  color: #DB2777 !important;
+}
+
 body.light .sidebar-footer {
   border-top-color: #E2E8F0 !important;
-}
-body.light .sidebar-finance-shield {
-  background: #F8FAFC !important;
-  border-color: #E2E8F0 !important;
-}
-body.light .sidebar-finance-shield .shield-title {
-  color: #0F172A !important;
-}
-body.light .sidebar-finance-shield .shield-sub {
-  color: #64748B !important;
 }
 body.light .sidebar-footer .sidebar-toggle-btn,
 body.light .sidebar-footer #sidebarCollapseBtn,
 body.light aside.menu .sidebar-footer .sidebar-toggle-btn,
 body.light .sidebar-toggle-btn {
-  background: #F1F5F9 !important;
+  background: #F8FAFC !important;
   border-color: #E2E8F0 !important;
-  color: #334155 !important;
+  color: #475569 !important;
 }
 body.light .sidebar-footer .sidebar-toggle-btn:hover,
 body.light .sidebar-footer #sidebarCollapseBtn:hover,
 body.light aside.menu .sidebar-footer .sidebar-toggle-btn:hover,
 body.light .sidebar-toggle-btn:hover {
-  background: #E2E8F0 !important;
-  color: #0F172A !important;
+  background: #ECFDF5 !important;
+  border-color: #A7F3D0 !important;
+  color: #059669 !important;
+}
+body.light .sidebar-footer .toggle-icon-wrap {
+  background: #EDF2F7 !important;
+}
+body.light .sidebar-footer .sidebar-toggle-btn:hover .toggle-icon-wrap {
+  background: #D1FAE5 !important;
+  color: #059669 !important;
 }
 
 /* ==================== Elementos Financeiros no Fundo do Site (FinTech Background Elements) ==================== */
@@ -13364,7 +13243,10 @@ body.light .period button.active {
     <!-- Rodapé da Sidebar: Botão de Colapsar -->
     <div class="sidebar-footer">
       <button type="button" class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Recolher / Expandir Menu Lateral" aria-label="Recolher / Expandir Menu Lateral">
-        <svg class="toggle-icon-collapse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        <span class="toggle-icon-wrap">
+          <svg class="toggle-icon-collapse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </span>
+        <span class="toggle-label">Recolher Menu</span>
       </button>
     </div>
   </aside>
