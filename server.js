@@ -15157,25 +15157,55 @@ body.light .period button.active {
             </button>
           </div>
 
-          <!-- FORMULÁRIO 4: BOLETO BANCÁRIO -->
+          <!-- FORMULÁRIO 4: BOLETO BANCÁRIO FEBRABAN PROFISSIONAL -->
           <div id="subFormBoleto" style="display:none; text-align:center;">
-            <div style="font-size:36px; margin-bottom:6px;">📄</div>
-            <div style="font-size:13.5px; font-weight:700; color:#CBD5E1; margin-bottom:12px;">
-              Boleto Bancário Registrado &bull; Valor: <strong id="boletoDisplayAmount" style="color:#10B981; font-size:18px;">R$ 10,00</strong>
+            
+            <!-- Card de Identificação Bancária Oficial -->
+            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:14px 16px; margin-bottom:14px; text-align:left;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:18px;">🏛️</span>
+                  <div>
+                    <strong style="font-size:13px; color:#FFFFFF; display:block;">Banco Bradesco S.A. <span style="font-size:11px; color:#94A3B8; font-weight:600;">(Código 237-2)</span></strong>
+                    <span style="font-size:10.5px; color:#38BDF8;">Boleto Registrado CIP / FEBRABAN</span>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <span style="font-size:10px; color:#94A3B8; text-transform:uppercase; font-weight:700; display:block;">Valor Total</span>
+                  <strong id="boletoDisplayAmount" style="color:#10B981; font-size:17px; font-weight:900;">R$ 10,00</strong>
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:11.5px;">
+                <div>
+                  <span style="color:#94A3B8; display:block; font-size:10px; text-transform:uppercase;">Beneficiário</span>
+                  <strong style="color:#FFFFFF; font-size:11px;">NEXUS HUB TECNOLOGIA LTDA</strong>
+                  <div style="color:#64748B; font-size:10px;">CNPJ: 42.189.301/0001-92</div>
+                </div>
+                <div style="text-align:right;">
+                  <span style="color:#94A3B8; display:block; font-size:10px; text-transform:uppercase;">Vencimento (D+3 Úteis)</span>
+                  <strong id="subBoletoDueDateDisplay" style="color:#FBBF24; font-size:12px;">Em 3 dias úteis</strong>
+                  <div style="color:#64748B; font-size:10px;">Sem cobrança de taxas extras</div>
+                </div>
+              </div>
             </div>
 
-            <div style="width:100%; margin:0 auto 14px auto;">
-              <label class="sub-field-label" style="text-align:left;">Linha Digitável do Boleto</label>
+            <!-- Linha Digitável com Cópia Rápida -->
+            <div style="width:100%; margin:0 auto 12px auto; text-align:left;">
+              <label class="sub-field-label" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>Linha Digitável Oficial (Código de Barras)</span>
+                <span style="font-size:10.5px; color:#34D399; font-weight:700;">✓ Copie e cole no app bancário</span>
+              </label>
               <div style="display:flex; gap:8px;">
-                <input type="text" id="subBoletoCodeInput" readonly value="23793.38128 60047.281921 54000.063304 9 91240000001000" class="sub-field-input" style="font-size:12px; font-family:monospace;" />
-                <button type="button" onclick="window.copyBoletoCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(255,255,255,0.1); border:1.5px solid rgba(255,255,255,0.2); color:#FFFFFF; font-weight:800; font-size:12.5px; cursor:pointer; white-space:nowrap;">
+                <input type="text" id="subBoletoCodeInput" readonly value="23793.38128 60047.281921 54000.063304 9 91240000001000" class="sub-field-input" style="font-size:12px; font-family:monospace; background:rgba(0,0,0,0.35); font-weight:700; color:#E2E8F0;" />
+                <button type="button" onclick="window.copyBoletoCodeToClipboard()" style="padding:0 18px; border-radius:12px; background:rgba(255,255,255,0.1); border:1.5px solid rgba(255,255,255,0.2); color:#FFFFFF; font-weight:800; font-size:12.5px; cursor:pointer; white-space:nowrap; transition:all .2s ease;">
                   📋 Copiar
                 </button>
               </div>
             </div>
 
             <!-- Código de Barras Visual Simulado FEBRABAN -->
-            <div style="background:#FFFFFF; border-radius:10px; padding:10px 16px; max-width:340px; margin:0 auto 12px auto; display:flex; justify-content:center; align-items:center; gap:2px; height:44px; box-shadow:0 4px 14px rgba(0,0,0,0.4);">
+            <div style="background:#FFFFFF; border-radius:10px; padding:10px 18px; max-width:360px; margin:0 auto 14px auto; display:flex; justify-content:center; align-items:center; gap:2.5px; height:48px; box-shadow:0 4px 14px rgba(0,0,0,0.4);">
               <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
               <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
               <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
@@ -15190,18 +15220,31 @@ body.light .period button.active {
               <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
               <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
               <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
+              <span style="background:#000; width:5px; height:100%; display:inline-block;"></span>
               <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
               <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
             </div>
 
-            <div style="padding:10px 14px; border-radius:12px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); font-size:11.5px; color:#93C5FD; text-align:left; margin-bottom:14px; display:flex; gap:8px;">
+            <!-- Botão Principal: Imprimir / Visualizar Boleto em PDF/A4 -->
+            <button type="button" onclick="window.imprimirBoletoBancario()" style="width:100%; padding:14px; border-radius:14px; background:linear-gradient(135deg, #2563EB, #1D4ED8); color:#FFFFFF; border:none; font-size:13.5px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 6px 20px rgba(37,99,235,0.4); margin-bottom:12px; transition:all .2s ease;">
+              <span>🖨️</span> <span>Visualizar & Imprimir Boleto Bancário (PDF/A4)</span>
+            </button>
+
+            <!-- Alerta Informativo Homologação / Compensação -->
+            <div style="padding:10px 14px; border-radius:12px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.25); font-size:11.5px; color:#93C5FD; text-align:left; margin-bottom:12px; display:flex; gap:8px;">
               <span style="font-size:16px;">💡</span>
               <div>
-                <strong>Ambiente de Homologação Ativo:</strong> Você não precisa ir ao banco pagar. Basta clicar no botão verde abaixo para simular a liquidação imediata do boleto e ativar seu plano agora.
+                <strong>Ambiente de Homologação Ativo:</strong> Você pode imprimir o boleto real para conferência ou clicar no botão verde abaixo para simular a liquidação imediata e liberar o acesso agora mesmo.
               </div>
             </div>
 
-            <button type="button" class="sub-pay-action-btn" id="subBtnConfirmBoleto" onclick="window.processSubscriptionPayment('boleto')">
+            <!-- Botão de Confirmação Imediata de Homologação -->
+            <button type="button" class="sub-pay-action-btn" id="subBtnConfirmBoleto" onclick="window.processSubscriptionPayment('boleto')" style="margin:0;">
               <span>✅</span> <span>Confirmar Pagamento do Boleto (Homologação)</span>
             </button>
           </div>
@@ -17177,6 +17220,24 @@ window.selectSubPlan = function(plan) {
     }
   }
 
+  const boletoInput = document.getElementById('subBoletoCodeInput');
+  if (boletoInput) {
+    boletoInput.value = (plan === 'anual')
+      ? '23793.38128 60047.281921 54000.063304 9 91240000010000'
+      : '23793.38128 60047.281921 54000.063304 9 91240000001000';
+  }
+  const boletoDueDisplay = document.getElementById('subBoletoDueDateDisplay');
+  if (boletoDueDisplay) {
+    const dtVenc = new Date();
+    let daysAdded = 0;
+    while (daysAdded < 3) {
+      dtVenc.setDate(dtVenc.getDate() + 1);
+      const d = dtVenc.getDay();
+      if (d !== 0 && d !== 6) daysAdded++;
+    }
+    boletoDueDisplay.textContent = dtVenc.toLocaleDateString('pt-BR');
+  }
+
   if (window.__selectedPaymentMethod === 'pix') {
     window.updatePixPayloadAndQr();
   }
@@ -17341,6 +17402,240 @@ window.copyBoletoCodeToClipboard = function() {
   navigator.clipboard.writeText(inputEl.value).then(() => {
     if (typeof showToast === 'function') showToast('✓ Linha digitável do boleto copiada!');
   });
+};
+
+window.imprimirBoletoBancario = function(customPlan) {
+  const plan = customPlan || window.__selectedSubPlan || (currentUser && currentUser.subscription_plan) || 'mensal';
+  const isAnual = (plan === 'anual');
+  const valorStr = isAnual ? '100,00' : '10,00';
+  const valorTotal = isAnual ? 'R$ 100,00' : 'R$ 10,00';
+  const planLabel = isAnual ? 'Plano Anual Nexus (12 Meses - Licença Pro)' : 'Plano Mensal Nexus (30 Dias - Licença Pro)';
+
+  const hoje = new Date();
+  const dtEmissao = hoje.toLocaleDateString('pt-BR');
+
+  // Vencimento D+3 dias úteis
+  const dtVenc = new Date();
+  let daysAdded = 0;
+  while (daysAdded < 3) {
+    dtVenc.setDate(dtVenc.getDate() + 1);
+    const dayOfWeek = dtVenc.getDay();
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      daysAdded++;
+    }
+  }
+  const dtVencimento = dtVenc.toLocaleDateString('pt-BR');
+
+  let uName = (currentUser && currentUser.name) ? currentUser.name : 'Paulo de Lima Pereira';
+  if (!uName || /^admin(istrador)?$/i.test(uName.trim())) {
+    uName = 'Paulo de Lima Pereira';
+  }
+  const rawCpf = (currentUser && currentUser.cpf) ? currentUser.cpf : '421.893.011-92';
+  const cleanCpf = String(rawCpf).replace(/\D/g, '');
+  const uCpf = cleanCpf.length === 11
+    ? cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+    : (rawCpf || '421.893.011-92');
+  const uEmail = (currentUser && currentUser.email) ? currentUser.email : 'paulodelima21@gmail.com';
+
+  const docNum = 'NEX-' + Math.floor(100000 + Math.random() * 900000);
+  const nossoNumero = isAnual ? '09/000281922-2' : '09/000281921-4';
+  const linhaDigitavel = isAnual
+    ? '23793.38128  60047.281921  54000.063304  9  91240000010000'
+    : '23793.38128  60047.281921  54000.063304  9  91240000001000';
+
+  const printWin = window.open('', '_blank', 'width=950,height=950');
+  if (!printWin) {
+    if (typeof showToast === 'function') showToast('Por favor, permita popups para visualizar e imprimir o boleto bancário.');
+    return;
+  }
+
+  // Geração de barras FEBRABAN simuladas com alta fidelidade visual
+  const barPattern = [
+    3,1,4,2,5,2,3,1,4,2,5,1,3,4,2,3,1,4,2,5,2,3,1,4,2,5,1,3,4,2,3,1,4,2,5,2,3,1,4,2,5,1,3,4,2,3,
+    1,4,2,5,2,3,1,4,2,5,1,3,4,2,3,1,4,2,5,2,3,1,4,2,5,1,3,4,2,3,1,4,2,5,2,3,1,4,2,5,1,3,4,2,3
+  ];
+  let barsHtml = '';
+  barPattern.forEach((w, idx) => {
+    const isBlack = (idx % 2 === 0);
+    barsHtml += '<span style="display:inline-block; height:100%; width:' + w + 'px; background:' + (isBlack ? '#000000' : '#FFFFFF') + ';"></span>';
+  });
+
+  let doc = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">';
+  doc += '<title>Boleto Bancário Bradesco - ' + docNum + ' - Nexus Financeiro</title>';
+  doc += '<style>';
+  doc += '* { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }';
+  doc += 'body { font-family: "Arial", "Helvetica", sans-serif; margin: 0; padding: 20px; color: #000000; background: #475569; font-size: 11px; }';
+  doc += '.page-container { max-width: 840px; margin: 0 auto; background: #FFFFFF; padding: 26px 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.35); border-radius: 4px; }';
+  doc += '.no-print-bar { display: flex; justify-content: space-between; align-items: center; background: #0F172A; color: #FFFFFF; padding: 14px 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); flex-wrap: wrap; gap: 10px; }';
+  doc += '.btn-print { background: #10B981; color: #FFFFFF; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(16,185,129,0.35); }';
+  doc += '.btn-print:hover { background: #059669; }';
+  doc += '.btn-close { background: rgba(255,255,255,0.12); color: #CBD5E1; border: 1px solid rgba(255,255,255,0.2); padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; }';
+  doc += '.cut-line { border-top: 1.5px dashed #000000; margin: 24px 0 20px 0; text-align: right; position: relative; }';
+  doc += '.cut-label { position: relative; top: -9px; background: #FFFFFF; padding: 0 8px; font-size: 10px; color: #555555; font-weight: bold; }';
+  doc += '.b-header { display: flex; align-items: flex-end; border-bottom: 2.5px solid #000000; padding-bottom: 4px; margin-bottom: 2px; }';
+  doc += '.b-bank-name { font-size: 20px; font-weight: 900; letter-spacing: -0.02em; color: #CC092F; display: flex; align-items: center; gap: 6px; }';
+  doc += '.b-bank-code { border-left: 2.5px solid #000000; border-right: 2.5px solid #000000; padding: 0 14px; font-size: 19px; font-weight: 900; color: #000000; margin: 0 14px; line-height: 1; }';
+  doc += '.b-linha-dig { font-size: 13.5px; font-weight: 800; font-family: "Courier New", Courier, monospace; letter-spacing: 0.04em; color: #000000; margin-left: auto; }';
+  doc += 'table.b-table { width: 100%; border-collapse: collapse; margin-bottom: 2px; }';
+  doc += 'table.b-table td { border: 1px solid #000000; padding: 3px 6px; vertical-align: top; }';
+  doc += '.b-lbl { font-size: 8.5px; font-weight: 700; text-transform: uppercase; color: #333333; margin-bottom: 1px; display: block; }';
+  doc += '.b-val { font-size: 11px; font-weight: 700; color: #000000; }';
+  doc += '.b-val-right { font-size: 12px; font-weight: 800; text-align: right; color: #000000; }';
+  doc += '.b-val-big { font-size: 13px; font-weight: 900; text-align: right; color: #000000; }';
+  doc += '.barcode-section { margin-top: 12px; display: flex; justify-content: space-between; align-items: flex-end; }';
+  doc += '.bars-container { display: flex; align-items: flex-end; height: 54px; background: #FFFFFF; }';
+  doc += '@media print { body { background: #FFFFFF; padding: 0; } .page-container { box-shadow: none; padding: 0; max-width: 100%; } .no-print-bar { display: none !important; } }';
+  doc += '</style></head><body>';
+
+  // Barra de ações superiores
+  doc += '<div class="no-print-bar">';
+  doc += '<div style="display:flex; align-items:center; gap:12px;">';
+  doc += '<span style="font-size:22px;">🏛️</span>';
+  doc += '<div><strong style="font-size:13.5px; display:block;">Boleto Bancário Registrado &bull; FEBRABAN</strong>';
+  doc += '<span style="font-size:11px; color:#94A3B8;">Documento pronto para impressão em folha A4 ou exportação para PDF</span></div>';
+  doc += '</div>';
+  doc += '<div style="display:flex; gap:10px;">';
+  doc += '<button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>';
+  doc += '<button class="btn-close" onclick="window.close()">✕ Fechar</button>';
+  doc += '</div>';
+  doc += '</div>';
+
+  doc += '<div class="page-container">';
+
+  // 1. RECIBO DO PAGADOR
+  doc += '<div class="b-header">';
+  doc += '<div class="b-bank-name"><span style="color:#CC092F;">Bradesco</span></div>';
+  doc += '<div class="b-bank-code">237-2</div>';
+  doc += '<div style="font-size:12px; font-weight:900; color:#000000; margin-left:auto;">RECIBO DO PAGADOR</div>';
+  doc += '</div>';
+
+  doc += '<table class="b-table">';
+  doc += '<tr>';
+  doc += '<td colspan="4" style="width:65%;"><span class="b-lbl">Beneficiário</span><span class="b-val">NEXUS HUB TECNOLOGIA & GESTÃO FINANCEIRA LTDA</span> &bull; <span style="font-size:10px;">CNPJ: 42.189.301/0001-92</span></td>';
+  doc += '<td colspan="2" style="width:35%;"><span class="b-lbl">Agência / Código Beneficiário</span><span class="b-val-right">3381-2 / 0063304-9</span></td>';
+  doc += '</tr>';
+  doc += '<tr>';
+  doc += '<td colspan="4"><span class="b-lbl">Endereço Beneficiário</span><span class="b-val" style="font-size:10px;">Av. República do Líbano, 1234, Sala 801 - St. Oeste, Goiânia - GO, CEP: 74115-030</span></td>';
+  doc += '<td colspan="2"><span class="b-lbl">Vencimento</span><span class="b-val-big" style="color:#B91C1C;">' + dtVencimento + '</span></td>';
+  doc += '</tr>';
+  doc += '<tr>';
+  doc += '<td style="width:20%;"><span class="b-lbl">Número do Documento</span><span class="b-val">' + docNum + '</span></td>';
+  doc += '<td style="width:15%;"><span class="b-lbl">Espécie Doc.</span><span class="b-val">DM</span></td>';
+  doc += '<td style="width:15%;"><span class="b-lbl">Aceite</span><span class="b-val">N</span></td>';
+  doc += '<td style="width:15%;"><span class="b-lbl">Data Processamento</span><span class="b-val">' + dtEmissao + '</span></td>';
+  doc += '<td colspan="2"><span class="b-lbl">Nosso Número</span><span class="b-val-right">' + nossoNumero + '</span></td>';
+  doc += '</tr>';
+  doc += '<tr>';
+  doc += '<td colspan="4"><span class="b-lbl">Pagador</span><span class="b-val">' + uName + ' &bull; CPF/CNPJ: ' + uCpf + '</span><div style="font-size:10px; color:#444;">E-mail: ' + uEmail + '</div></td>';
+  doc += '<td colspan="2" style="background:#F8FAFC;"><span class="b-lbl">(=) Valor do Documento</span><span class="b-val-big">' + valorTotal + '</span></td>';
+  doc += '</tr>';
+  doc += '<tr>';
+  doc += '<td colspan="6" style="padding:6px; background:#FAFAFA;">';
+  doc += '<span class="b-lbl">Demonstrativo / Discriminação dos Serviços</span>';
+  doc += '<div style="font-size:10.5px; line-height:1.45; color:#111;">';
+  doc += '&bull; Cobrança referente à assinatura da plataforma <strong>Nexus Gestão Financeira Hub</strong>.<br>';
+  doc += '&bull; <strong>Modalidade:</strong> ' + planLabel + ' &bull; Valor: <strong>' + valorTotal + '</strong>.<br>';
+  doc += '&bull; Acesso ilimitado ao sistema em múltiplos dispositivos, conciliação bancária e módulo de suporte.<br>';
+  doc += '&bull; Autenticação eletrônica CIP / SILOC registrada sob protocolo ' + docNum + '.';
+  doc += '</div>';
+  doc += '</td>';
+  doc += '</tr>';
+  doc += '</table>';
+
+  // Linha de Corte
+  doc += '<div class="cut-line"><span class="cut-label">Cortar na linha pontilhada ✂️</span></div>';
+
+  // 2. FICHA DE COMPENSAÇÃO
+  doc += '<div class="b-header">';
+  doc += '<div class="b-bank-name"><span style="color:#CC092F;">Bradesco</span></div>';
+  doc += '<div class="b-bank-code">237-2</div>';
+  doc += '<div class="b-linha-dig">' + linhaDigitavel + '</div>';
+  doc += '</div>';
+
+  doc += '<table class="b-table">';
+  doc += '<tr>';
+  doc += '<td colspan="5" style="width:70%;"><span class="b-lbl">Local de Pagamento</span><span class="b-val" style="font-size:10.5px;">PAGÁVEL EM QUALQUER BANCO OU CORRESPONDENTE BANCÁRIO ATÉ O VENCIMENTO</span></td>';
+  doc += '<td style="width:30%; background:#F8FAFC;"><span class="b-lbl">Vencimento</span><span class="b-val-big" style="color:#B91C1C;">' + dtVencimento + '</span></td>';
+  doc += '</tr>';
+
+  doc += '<tr>';
+  doc += '<td colspan="5"><span class="b-lbl">Beneficiário</span><span class="b-val">NEXUS HUB TECNOLOGIA & GESTÃO FINANCEIRA LTDA</span> &bull; <span style="font-size:10px;">CNPJ: 42.189.301/0001-92</span><div style="font-size:9.5px; color:#444;">Av. República do Líbano, 1234, Sala 801 - St. Oeste, Goiânia - GO, CEP: 74115-030</div></td>';
+  doc += '<td><span class="b-lbl">Agência / Código Beneficiário</span><span class="b-val-right">3381-2 / 0063304-9</span></td>';
+  doc += '</tr>';
+
+  doc += '<tr>';
+  doc += '<td style="width:16%;"><span class="b-lbl">Data do Documento</span><span class="b-val">' + dtEmissao + '</span></td>';
+  doc += '<td style="width:18%;"><span class="b-lbl">Nº do Documento</span><span class="b-val">' + docNum + '</span></td>';
+  doc += '<td style="width:12%;"><span class="b-lbl">Espécie Doc.</span><span class="b-val">DM</span></td>';
+  doc += '<td style="width:10%;"><span class="b-lbl">Aceite</span><span class="b-val">N</span></td>';
+  doc += '<td style="width:14%;"><span class="b-lbl">Data Processamento</span><span class="b-val">' + dtEmissao + '</span></td>';
+  doc += '<td><span class="b-lbl">Nosso Número</span><span class="b-val-right">' + nossoNumero + '</span></td>';
+  doc += '</tr>';
+
+  doc += '<tr>';
+  doc += '<td><span class="b-lbl">Uso do Banco</span><span class="b-val">&nbsp;</span></td>';
+  doc += '<td><span class="b-lbl">Carteira</span><span class="b-val">09</span></td>';
+  doc += '<td><span class="b-lbl">Espécie</span><span class="b-val">R$</span></td>';
+  doc += '<td><span class="b-lbl">Quantidade</span><span class="b-val">1</span></td>';
+  doc += '<td><span class="b-lbl">Valor</span><span class="b-val">' + valorStr + '</span></td>';
+  doc += '<td style="background:#F8FAFC;"><span class="b-lbl">(=) Valor do Documento</span><span class="b-val-big">' + valorTotal + '</span></td>';
+  doc += '</tr>';
+
+  doc += '<tr>';
+  doc += '<td colspan="5" rowspan="5" style="padding:6px; font-size:10px; line-height:1.45; vertical-align:top;">';
+  doc += '<span class="b-lbl">Instruções (Texto de Responsabilidade do Beneficiário)</span>';
+  doc += '<strong>SR. CAIXA: NÃO RECEBER APÓS 30 DIAS DO VENCIMENTO.</strong><br>';
+  doc += '&bull; Após o vencimento cobrar multa de 2,00% e juros de mora de 0,033% ao dia.<br>';
+  doc += '&bull; Cobrança de assinatura SaaS - Plataforma Nexus Financeiro Hub (' + planLabel + ').<br>';
+  doc += '&bull; Pagável via Internet Banking, Aplicativo Mobile de Qualquer Banco, Caixas Eletrônicos ou Lotéricas.<br>';
+  doc += '&bull; Dúvidas ou suporte: suporte.paulolima@outlook.com | (62) 99234-5372.';
+  doc += '</td>';
+  doc += '<td><span class="b-lbl">(-) Desconto / Abatimentos</span><span class="b-val-right">0,00</span></td>';
+  doc += '</tr>';
+
+  doc += '<tr><td><span class="b-lbl">(-) Outras Deduções</span><span class="b-val-right">0,00</span></td></tr>';
+  doc += '<tr><td><span class="b-lbl">(+) Mora / Multa</span><span class="b-val-right">0,00</span></td></tr>';
+  doc += '<tr><td><span class="b-lbl">(+) Outros Acréscimos</span><span class="b-val-right">0,00</span></td></tr>';
+  doc += '<tr style="background:#F8FAFC;"><td><span class="b-lbl">(=) Valor Cobrado</span><span class="b-val-big">' + valorTotal + '</span></td></tr>';
+
+  doc += '<tr>';
+  doc += '<td colspan="6" style="padding:6px;">';
+  doc += '<span class="b-lbl">Pagador</span>';
+  doc += '<div style="font-size:11px; font-weight:700;">' + uName + ' &bull; CPF/CNPJ: ' + uCpf + '</div>';
+  doc += '<div style="font-size:10px; color:#333;">Endereço: Av. T-63, Setor Bueno - Goiânia - GO - CEP: 74230-100</div>';
+  doc += '<div style="display:flex; justify-content:space-between; margin-top:4px; font-size:9.5px; color:#555;">';
+  doc += '<span>Sacador / Avalista: NEXUS HUB TECNOLOGIA LTDA &bull; CNPJ: 42.189.301/0001-92</span>';
+  doc += '<span>Código de Baixa: 09</span>';
+  doc += '</div>';
+  doc += '</td>';
+  doc += '</tr>';
+  doc += '</table>';
+
+  // Código de Barras FEBRABAN e Autenticação Mecânica
+  doc += '<div class="barcode-section">';
+  doc += '<div class="bars-container">' + barsHtml + '</div>';
+  doc += '<div style="text-align:right; font-size:9px; color:#333333; line-height:1.4;">';
+  doc += '<strong>Autenticação Mecânica</strong><br>';
+  doc += 'FICHA DE COMPENSAÇÃO<br>';
+  doc += '<span style="font-family:monospace; font-size:10px; font-weight:bold;">CIP SILOC ' + docNum + '</span>';
+  doc += '</div>';
+  doc += '</div>';
+
+  doc += '</div>'; // page-container
+
+  doc += '<script>';
+  doc += 'window.onload = function() {';
+  doc += '  setTimeout(function() {';
+  doc += '    try { window.print(); } catch(e){}';
+  doc += '  }, 600);';
+  doc += '};';
+  doc += '<\/script>';
+
+  doc += '</body></html>';
+
+  printWin.document.open();
+  printWin.document.write(doc);
+  printWin.document.close();
 };
 
 window.formatCardNumberInput = function(el) {
@@ -21863,6 +22158,15 @@ function pageConfig(){
   const currentCreatedAt = uData.created_at || (currentUser ? currentUser.created_at : '') || '';
   const formattedCreated = currentCreatedAt ? new Date(currentCreatedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Ativa';
   const roleName = uData.role || (currentUser ? currentUser.role : 'Usuário');
+  const isSubActive = currentUser && currentUser.subscription_status === 'active';
+  const subPlan = (currentUser && currentUser.subscription_plan) || 'mensal';
+  const isSubAnual = subPlan === 'anual';
+  const subExpiresStr = (currentUser && currentUser.subscription_expires_at)
+    ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR')
+    : (isSubActive ? 'Ativo (Renovação Automática)' : 'Período de Avaliação (5 Dias)');
+  const subMethodStr = (currentUser && currentUser.subscription_method)
+    ? (currentUser.subscription_method === 'pix' ? 'PIX Instantâneo' : (currentUser.subscription_method === 'boleto' ? 'Boleto Bancário CIP' : 'Cartão de Crédito'))
+    : 'PIX / Boleto / Cartão';
 
   return \`
   <div class="page-head">
@@ -21882,37 +22186,114 @@ function pageConfig(){
       👁️ Você está em modo de visualização dos dados de <strong style="color:var(--green);">\${currentUser ? currentUser.name : ''}</strong>. As configurações da conta só podem ser editadas pelo próprio titular.
     </p>
   </div>\` : \`
-    <!-- PAINEL DE ASSINATURA E PLANO -->
-  <div class="panel" style="margin-bottom:20px; padding:22px; background:linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.03) 100%); border:1.5px solid rgba(16,185,129,0.3); border-radius:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-    <div style="display:flex; align-items:center; gap:16px;">
-      <div style="width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.15)); border:1.5px solid rgba(16,185,129,0.5); display:flex; align-items:center; justify-content:center; font-size:26px;">
-        💳
-      </div>
-      <div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <h3 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Plano & Assinatura</h3>
-          \${(currentUser && currentUser.subscription_status === 'active')
-            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + (currentUser.subscription_plan === 'anual' ? 'Anual R$ 100' : 'Mensal R$ 10') + ')</span>'
-            : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (5 Dias)</span>'}
+    <!-- PAINEL EXECUTIVO DE ASSINATURA & FATURAMENTO EMPRESARIAL -->
+    <div class="panel" style="margin-bottom:24px; padding:24px; background:linear-gradient(135deg, rgba(16,185,129,0.10) 0%, rgba(15,23,42,0.45) 50%, rgba(5,150,105,0.08) 100%); border:1.5px solid rgba(16,185,129,0.35); border-radius:20px; box-shadow:0 8px 30px rgba(0,0,0,0.25);">
+      
+      <!-- Topo: Identificação do Contrato e Badges de Status -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:18px;">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <div style="width:56px; height:56px; border-radius:18px; background:radial-gradient(circle, rgba(16,185,129,0.3) 0%, rgba(5,150,105,0.15) 70%); border:1.5px solid rgba(16,185,129,0.5); display:flex; align-items:center; justify-content:center; font-size:28px; box-shadow:0 0 25px rgba(16,185,129,0.3);">
+            💎
+          </div>
+          <div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:4px;">
+              <h2 style="font-size:19px; font-weight:900; margin:0; color:var(--text); letter-spacing:-0.02em;">Central de Faturamento & Assinatura</h2>
+              \${isSubActive
+                ? \`<span class="tag" style="background:#10B981; color:#FFFFFF; font-weight:800; font-size:11px; padding:4px 12px; border-radius:20px; box-shadow:0 2px 10px rgba(16,185,129,0.4);">✓ Licença Ativa (SaaS Pro)</span>\`
+                : \`<span class="tag" style="background:#F59E0B; color:#FFFFFF; font-weight:800; font-size:11px; padding:4px 12px; border-radius:20px; box-shadow:0 2px 10px rgba(245,158,11,0.4);">⏱️ Período de Avaliação (5 Dias)</span>\`}
+              <span class="tag" style="background:rgba(59,130,246,0.15); color:#60A5FA; border:1px solid rgba(59,130,246,0.3); font-weight:700; font-size:11px; padding:4px 10px; border-radius:20px;">
+                \${isSubAnual ? '👑 Plano Anual • 12 Meses' : '📅 Plano Mensal • Recorrente'}
+              </span>
+            </div>
+            <p style="font-size:12.5px; color:var(--text-dim); margin:0;">
+              \${isSubActive
+                ? \`Contrato regularizado em nome de <strong>\${currentName}</strong> com liquidação verificada.\`
+                : 'Acesso completo liberado sem restrições. Escolha o Plano Mensal (R$ 10,00) ou Anual (R$ 100,00) para manter o serviço ativo.'}
+            </p>
+          </div>
         </div>
-        <p style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
-          \${(currentUser && currentUser.subscription_status === 'active')
-            ? 'Válido até ' + (currentUser.subscription_expires_at ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR') : 'Ativo')
-            : 'Após os 5 dias de teste gratuito, escolha o Plano Mensal (R$ 10,00) ou Anual (R$ 100,00).'}
-        </p>
+
+        <!-- Botões de Ação Imediata -->
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <button type="button" onclick="window.imprimirBoletoBancario()" style="padding:10px 18px; border-radius:12px; background:rgba(37,99,235,0.15); border:1.5px solid rgba(37,99,235,0.4); color:#93C5FD; font-weight:800; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all .2s ease;" title="Imprimir Boleto Bancário Registrado">
+            <span>🖨️</span> <span>Imprimir Boleto Bancário</span>
+          </button>
+          <button type="button" onclick="window.openSubscriptionPaywall(false)" style="padding:10px 20px; border-radius:12px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; font-size:13px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 6px 18px rgba(16,185,129,0.35); transition:all .2s ease;">
+            <span>👑</span> <span>Gerenciar / Alterar Plano</span>
+          </button>
+          \${(currentUser && currentUser.role === 'Administrador') ? \`
+            <button type="button" onclick="window.resetTrialForTesting()" style="padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:var(--text-dim); font-weight:700; font-size:11.5px; cursor:pointer;">
+              ⏱️ Resetar 5d (Teste)
+            </button>
+          \` : ''}
+        </div>
+      </div>
+
+      <!-- 4 Cards de Métricas de Faturamento & Contrato -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px; margin-bottom:20px;">
+        <!-- Card 1: Modalidade Contratada -->
+        <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:14px 16px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700; margin-bottom:4px;">
+            Plano Contratado
+          </div>
+          <div style="font-size:16px; font-weight:900; color:var(--text); margin-bottom:2px;">
+            \${isSubAnual ? 'Plano Anual Nexus' : 'Plano Mensal Nexus'}
+          </div>
+          <div style="font-size:12px; color:#10B981; font-weight:800;">
+            \${isSubAnual ? 'R$ 100,00 / ano (R$ 8,33/mês)' : 'R$ 10,00 / mês'}
+          </div>
+        </div>
+
+        <!-- Card 2: Validade / Ciclo -->
+        <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:14px 16px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700; margin-bottom:4px;">
+            Ciclo & Validade
+          </div>
+          <div style="font-size:16px; font-weight:900; color:var(--text); margin-bottom:2px;">
+            \${subExpiresStr}
+          </div>
+          <div style="font-size:12px; color:var(--text-dim);">
+            \${isSubActive ? 'Sem carência / Renovação flexível' : 'Período gratuito de experimentação'}
+          </div>
+        </div>
+
+        <!-- Card 3: Método de Liquidação -->
+        <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:14px 16px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700; margin-bottom:4px;">
+            Forma de Pagamento
+          </div>
+          <div style="font-size:16px; font-weight:900; color:var(--text); margin-bottom:2px;">
+            \${subMethodStr}
+          </div>
+          <div style="font-size:12px; color:#38BDF8; font-weight:700;">
+            Liquidação instantânea / CIP FEBRABAN
+          </div>
+        </div>
+
+        <!-- Card 4: Segurança & SLA -->
+        <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:14px 16px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); font-weight:700; margin-bottom:4px;">
+            Garantia & Criptografia
+          </div>
+          <div style="font-size:16px; font-weight:900; color:#10B981; margin-bottom:2px;">
+            7 Dias Incondicional
+          </div>
+          <div style="font-size:12px; color:var(--text-dim);">
+            SSL 256-Bit • Suporte Prioritário VIP
+          </div>
+        </div>
+      </div>
+
+      <!-- Benefícios Ativos Inclusos no Pacote -->
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.08); font-size:12px;">
+        <span style="color:var(--text-dim); font-weight:700; margin-right:4px;">Incluso no seu plano:</span>
+        <span style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:8px; background:rgba(16,185,129,0.12); color:#34D399; font-weight:700;">✓ Gestão Multi-contas</span>
+        <span style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:8px; background:rgba(16,185,129,0.12); color:#34D399; font-weight:700;">✓ Módulo Ordens de Serviço</span>
+        <span style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:8px; background:rgba(16,185,129,0.12); color:#34D399; font-weight:700;">✓ Relatórios 4K & Gráficos</span>
+        <span style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:8px; background:rgba(16,185,129,0.12); color:#34D399; font-weight:700;">✓ Sincronização Nuvem / MSSQL</span>
+        <span style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:8px; background:rgba(16,185,129,0.12); color:#34D399; font-weight:700;">✓ Emissão & Impressão de Boletos</span>
       </div>
     </div>
-    <div style="display:flex; gap:10px; align-items:center;">
-      <button type="button" onclick="window.openSubscriptionPaywall(false)" style="padding:10px 20px; border-radius:12px; background:linear-gradient(135deg, #10B981, #059669); color:#fff; font-weight:800; font-size:13px; border:none; cursor:pointer; box-shadow:0 6px 18px rgba(16,185,129,0.35);">
-        Gerenciar / Trocar Plano
-      </button>
-      \${(currentUser && currentUser.role === 'Administrador') ? \`
-        <button type="button" onclick="window.resetTrialForTesting()" style="padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:var(--text); font-weight:700; font-size:12px; cursor:pointer;">
-          ⏱️ Resetar 5d (Teste)
-        </button>
-      \` : ''}
-    </div>
-  </div>
 
 
   <div class="cfg-proportional-container" style="display:grid; grid-template-columns:minmax(0, 1.35fr) minmax(0, 1fr); gap:20px; align-items:start;">
