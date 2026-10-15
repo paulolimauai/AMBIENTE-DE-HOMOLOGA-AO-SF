@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full dark">
+<html lang="pt-BR" class="h-full light">
 <head>
     <script>
         (function() {
             try {
                 var v = localStorage.getItem('nexus_tone_version');
-                if (v !== 'emerald_fintech_v2') {
-                    localStorage.setItem('nexus_theme', 'dark');
-                    localStorage.setItem('nexus_tone_version', 'emerald_fintech_v2');
+                if (v !== 'verde_claro_preto_v2') {
+                    localStorage.setItem('nexus_theme', 'lightgreen');
+                    localStorage.setItem('nexus_tone_version', 'verde_claro_preto_v2');
                 }
-                var t = localStorage.getItem('nexus_theme') || 'dark';
+                var t = localStorage.getItem('nexus_theme') || 'lightgreen';
                 if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-                var isDark = (t !== 'light');
+                var isDark = (t === 'dark');
                 if (isDark) {
                     document.documentElement.classList.remove('light');
                     document.documentElement.classList.add('dark');
@@ -36,15 +36,15 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#07090E" id="metaThemeColor">
+    <meta name="theme-color" content="#A7F3D0" id="metaThemeColor">
     <title>Nexus Financeiro Hub | Autenticação Segura 4K</title>
 
     <script>
         (function() {
             try {
-                var t = localStorage.getItem('nexus_theme') || 'dark';
+                var t = localStorage.getItem('nexus_theme') || 'lightgreen';
                 if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-                var isDark = (t !== 'light');
+                var isDark = (t === 'dark');
                 if (isDark) {
                     document.documentElement.classList.remove('light');
                     document.documentElement.classList.add('dark');
@@ -101,9 +101,9 @@
                 scaleStyle.textContent = zoomRule + ' :root { --app-zoom: ' + scaleNum + '; }';
 
                 function applyBodyTheme() {
-                    var themeVal = localStorage.getItem('nexus_theme') || 'dark';
+                    var themeVal = localStorage.getItem('nexus_theme') || 'lightgreen';
                     if (themeVal) themeVal = themeVal.replace(/"/g, '').trim().toLowerCase();
-                    var isDark = (themeVal !== 'light');
+                    var isDark = (themeVal === 'dark');
                     if (isDark) {
                         document.body.classList.remove('light');
                         document.body.classList.add('dark');
@@ -198,12 +198,12 @@
 
     <style>
         :root {
-            --auth-bg: #060D17;
-            --auth-card: linear-gradient(165deg, rgba(11, 24, 42, 0.92) 0%, rgba(8, 19, 35, 0.96) 50%, #050E1A 100%);
-            --auth-border: rgba(16, 185, 129, 0.38);
+            --auth-bg: #D1FAE5;
+            --auth-card: linear-gradient(165deg, rgba(8, 16, 12, 0.96) 0%, rgba(4, 9, 6, 0.98) 50%, #000000 100%);
+            --auth-border: #10B981;
             --auth-border-hover: #00E599;
-            --auth-input-bg: rgba(9, 23, 40, 0.85);
-            --auth-input-border: rgba(16, 185, 129, 0.30);
+            --auth-input-bg: rgba(0, 0, 0, 0.70);
+            --auth-input-border: rgba(16, 185, 129, 0.45);
             --auth-text: #ECFDF5;
             --auth-text-dim: #94A3B8;
             --auth-gold: #F59E0B;
@@ -211,25 +211,25 @@
             --auth-cyan: #06B6D4;
             --auth-sapphire: #3B82F6;
             --auth-emerald: #10B981;
-            --auth-tab-bg: rgba(7, 18, 32, 0.92);
+            --auth-tab-bg: rgba(0, 0, 0, 0.75);
         }
 
         body.light, html.light body, html.light {
             color-scheme: light !important;
-            --auth-bg: #F0FDF4;
-            --auth-card: #FFFFFF;
-            --auth-border: rgba(16, 185, 129, 0.30);
+            --auth-bg: #D1FAE5;
+            --auth-card: linear-gradient(165deg, rgba(8, 16, 12, 0.96) 0%, rgba(4, 9, 6, 0.98) 50%, #000000 100%);
+            --auth-border: #10B981;
             --auth-border-hover: #059669;
-            --auth-input-bg: #FFFFFF;
-            --auth-input-border: #CBD5E1;
-            --auth-text: #0F172A !important;
-            --auth-text-dim: #475569 !important;
+            --auth-input-bg: rgba(0, 0, 0, 0.70);
+            --auth-input-border: rgba(16, 185, 129, 0.45);
+            --auth-text: #ECFDF5 !important;
+            --auth-text-dim: #94A3B8 !important;
             --auth-gold: #D97706;
             --auth-cyan: #0284C7;
             --auth-sapphire: #2563EB;
-            --auth-tab-bg: #E2E8F0;
-            background-color: #F8FAFC !important;
-            color: #0F172A !important;
+            --auth-tab-bg: rgba(0, 0, 0, 0.75);
+            background-color: #D1FAE5 !important;
+            color: #000000 !important;
         }
 
         /* ==================== Tipografia Padrão de Site (Standard Web Typography) ==================== */
@@ -281,39 +281,21 @@
             overflow-y: scroll !important;
         }
 
-        body, body.dark {
+        body, body.dark, body.light, html.dark body, html.light body {
             font-family: var(--font-sans);
-            background-color: #060D17 !important;
+            background-color: #D1FAE5 !important;
             background-image: 
-                radial-gradient(ellipse 95% 70% at 15% 15%, rgba(16, 185, 129, 0.22) 0%, transparent 60%),
-                radial-gradient(ellipse 85% 65% at 85% 18%, rgba(14, 165, 233, 0.24) 0%, transparent 58%),
-                radial-gradient(ellipse 70% 55% at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
-                radial-gradient(ellipse 90% 70% at 80% 85%, rgba(245, 158, 11, 0.15) 0%, transparent 60%),
-                radial-gradient(ellipse 85% 65% at 20% 85%, rgba(16, 185, 129, 0.18) 0%, transparent 62%),
-                linear-gradient(175deg, #060D17 0%, #0A1C30 35%, #07212C 70%, #05101E 100%) !important;
+                radial-gradient(ellipse 95% 70% at 15% 15%, rgba(52, 211, 153, 0.50) 0%, transparent 60%),
+                radial-gradient(ellipse 85% 65% at 85% 18%, rgba(16, 185, 129, 0.42) 0%, transparent 58%),
+                radial-gradient(ellipse 70% 55% at 50% 50%, rgba(110, 231, 183, 0.38) 0%, transparent 65%),
+                radial-gradient(ellipse 90% 70% at 80% 85%, rgba(16, 185, 129, 0.40) 0%, transparent 60%),
+                radial-gradient(ellipse 85% 65% at 20% 85%, rgba(52, 211, 153, 0.45) 0%, transparent 62%),
+                linear-gradient(165deg, #ECFDF5 0%, #D1FAE5 35%, #A7F3D0 70%, #6EE7B7 100%) !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
             background-repeat: no-repeat !important;
-            color: #ECFDF5 !important;
-            min-height: 100vh;
-            overflow-x: hidden;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        body.light, html.light body, html.light {
-            color-scheme: light !important;
-            background-color: #F8FAFC !important;
-            background-image: 
-                radial-gradient(ellipse 85% 60% at 15% 15%, rgba(16, 185, 129, 0.12) 0%, transparent 60%),
-                radial-gradient(ellipse 75% 55% at 85% 20%, rgba(14, 165, 233, 0.14) 0%, transparent 55%),
-                radial-gradient(ellipse 70% 50% at 50% 90%, rgba(245, 158, 11, 0.08) 0%, transparent 60%),
-                linear-gradient(180deg, #F0FDF4 0%, #F8FAFC 45%, #F0F9FF 100%) !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-attachment: fixed !important;
-            background-repeat: no-repeat !important;
-            color: #0F172A !important;
+            color: #000000 !important;
             min-height: 100vh;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
@@ -349,16 +331,16 @@
         .auth-bg-cyber-grid {
             background-size: 38px 38px;
             background-image: 
-                radial-gradient(circle, rgba(56, 189, 248, 0.16) 1.2px, transparent 1.2px),
-                linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(14, 165, 233, 0.04) 1px, transparent 1px);
+                radial-gradient(circle, rgba(6, 78, 59, 0.18) 1.2px, transparent 1.2px),
+                linear-gradient(to right, rgba(5, 150, 105, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(5, 150, 105, 0.08) 1px, transparent 1px);
         }
 
         body.light .auth-bg-cyber-grid {
             background-image: 
-                radial-gradient(circle, rgba(14, 165, 233, 0.14) 1.2px, transparent 1.2px),
-                linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(14, 165, 233, 0.04) 1px, transparent 1px);
+                radial-gradient(circle, rgba(6, 78, 59, 0.18) 1.2px, transparent 1.2px),
+                linear-gradient(to right, rgba(5, 150, 105, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(5, 150, 105, 0.08) 1px, transparent 1px);
         }
 
         /* ==================== TICKER DE COTAÇÕES FINANCEIRAS AO VIVO 4K ==================== */
@@ -366,12 +348,12 @@
             display: flex;
             align-items: center;
             height: 40px;
-            background: linear-gradient(90deg, rgba(7, 19, 34, 0.94) 0%, rgba(10, 27, 48, 0.92) 50%, rgba(7, 19, 34, 0.94) 100%) !important;
-            border: 1px solid rgba(56, 189, 248, 0.32) !important;
-            border-top: 1px solid rgba(52, 211, 153, 0.50) !important;
+            background: linear-gradient(90deg, rgba(4, 10, 7, 0.96) 0%, rgba(8, 18, 13, 0.94) 50%, rgba(4, 10, 7, 0.96) 100%) !important;
+            border: 1.5px solid rgba(16, 185, 129, 0.55) !important;
+            border-top: 2px solid #34D399 !important;
             border-radius: 999px;
             padding: 2px 6px 2px 4px;
-            box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.85), 0 0 24px -2px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.20);
+            box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.35), 0 0 24px -2px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(167, 243, 208, 0.30);
             backdrop-filter: blur(24px) saturate(200%);
             -webkit-backdrop-filter: blur(24px) saturate(200%);
             overflow: hidden;
@@ -380,10 +362,10 @@
         }
 
         body.light .fintech-live-ticker-bar {
-            background: rgba(255, 255, 255, 0.96) !important;
-            border-color: rgba(16, 185, 129, 0.35) !important;
-            border-top-color: #10B981 !important;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06), 0 0 16px rgba(16, 185, 129, 0.12), inset 0 1px 0 #FFFFFF;
+            background: linear-gradient(90deg, rgba(4, 10, 7, 0.96) 0%, rgba(8, 18, 13, 0.94) 50%, rgba(4, 10, 7, 0.96) 100%) !important;
+            border: 1.5px solid rgba(16, 185, 129, 0.55) !important;
+            border-top: 2px solid #34D399 !important;
+            box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.35), 0 0 24px -2px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(167, 243, 208, 0.30);
         }
 
         .fintech-ticker-badge {
@@ -391,23 +373,23 @@
             align-items: center;
             gap: 6px;
             padding: 4px 12px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(14, 165, 233, 0.22) 100%) !important;
-            border: 1px solid rgba(52, 211, 153, 0.50) !important;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%) !important;
+            border: 1px solid #6EE7B7 !important;
             border-radius: 999px;
             font-size: 10.5px;
             font-weight: 900;
             letter-spacing: 0.04em;
-            color: #34D399 !important;
+            color: #000000 !important;
             text-transform: uppercase;
             flex-shrink: 0;
             z-index: 2;
-            box-shadow: 0 0 18px rgba(16, 185, 129, 0.30);
+            box-shadow: 0 0 18px rgba(16, 185, 129, 0.40);
         }
 
         body.light .fintech-ticker-badge {
-            background: #ECFDF5 !important;
-            border-color: #A7F3D0 !important;
-            color: #047857 !important;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%) !important;
+            border-color: #6EE7B7 !important;
+            color: #000000 !important;
         }
 
         .fintech-pulse-dot {
@@ -577,13 +559,13 @@
             display: none !important;
         }
 
-        /* Card de Autenticação Executivo - Acabamento Glassmorphism Institucional Financeiro (Vibrante Fintech Hub) */
+        /* Card de Autenticação Executivo - Acabamento Glassmorphism Preto com Verde Claro */
         .auth-card-nexus {
-            background: linear-gradient(165deg, rgba(11, 24, 42, 0.92) 0%, rgba(8, 19, 35, 0.96) 50%, rgba(5, 13, 24, 0.98) 100%) !important;
-            border: 1.5px solid rgba(16, 185, 129, 0.38) !important;
-            border-top: 2.5px solid #00E599 !important;
+            background: linear-gradient(165deg, rgba(8, 16, 12, 0.96) 0%, rgba(4, 9, 6, 0.98) 50%, #000000 100%) !important;
+            border: 2px solid #10B981 !important;
+            border-top: 2.5px solid #34D399 !important;
             border-radius: 26px !important;
-            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.92), 0 0 45px -8px rgba(16, 185, 129, 0.30), 0 0 25px -4px rgba(14, 165, 233, 0.20), inset 0 1.5px 2px rgba(255, 255, 255, 0.20) !important;
+            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.40), 0 0 35px rgba(16, 185, 129, 0.35), inset 0 1.5px 2px rgba(167, 243, 208, 0.30) !important;
             backdrop-filter: blur(28px) !important;
             -webkit-backdrop-filter: blur(28px) !important;
             transition: none !important;
@@ -599,12 +581,12 @@
         }
 
         body.light .auth-card-nexus {
-            background: rgba(255, 255, 255, 0.96) !important;
-            border: 1.5px solid rgba(16, 185, 129, 0.30) !important;
-            border-top: 2.5px solid #059669 !important;
-            box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.08), 0 0 30px -5px rgba(16, 185, 129, 0.15), inset 0 1px 0 #FFFFFF !important;
-            backdrop-filter: blur(16px) !important;
-            -webkit-backdrop-filter: blur(16px) !important;
+            background: linear-gradient(165deg, rgba(8, 16, 12, 0.96) 0%, rgba(4, 9, 6, 0.98) 50%, #000000 100%) !important;
+            border: 2px solid #10B981 !important;
+            border-top: 2.5px solid #34D399 !important;
+            box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.40), 0 0 35px rgba(16, 185, 129, 0.35), inset 0 1.5px 2px rgba(167, 243, 208, 0.30) !important;
+            backdrop-filter: blur(28px) !important;
+            -webkit-backdrop-filter: blur(28px) !important;
         }
 
         /* Micro-Animação de Feedback de Erro Instantâneo (Shake) */
@@ -791,34 +773,34 @@
             color: #0F172A !important;
         }
 
-        /* Wrappers de Input Executivos e Fluidos */
+        /* Wrappers de Input Executivos e Fluidos (Preto com Verde Claro) */
         .auth-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
             height: 44px;
-            background: rgba(9, 21, 37, 0.82);
-            border: 1px solid rgba(16, 185, 129, 0.30);
+            background: rgba(0, 0, 0, 0.75) !important;
+            border: 1.5px solid rgba(16, 185, 129, 0.45) !important;
             border-radius: 12px;
             transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
         }
 
         body.light .auth-input-wrapper {
-            background: #FFFFFF !important;
-            border: 1.5px solid #CBD5E1 !important;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+            background: rgba(0, 0, 0, 0.75) !important;
+            border: 1.5px solid rgba(16, 185, 129, 0.45) !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
         }
 
         .auth-input-wrapper:focus-within {
-            border-color: #00E599 !important;
-            box-shadow: 0 0 0 3.5px rgba(0, 229, 153, 0.22), 0 0 16px rgba(16, 185, 129, 0.30) !important;
-            background: rgba(12, 28, 48, 0.95);
+            border-color: #34D399 !important;
+            box-shadow: 0 0 0 3.5px rgba(52, 211, 153, 0.25), 0 0 16px rgba(16, 185, 129, 0.35) !important;
+            background: rgba(0, 0, 0, 0.90) !important;
         }
 
         body.light .auth-input-wrapper:focus-within {
-            background: #FFFFFF !important;
-            border-color: #059669 !important;
-            box-shadow: 0 0 0 3.5px rgba(5, 150, 105, 0.18), 0 0 12px rgba(5, 150, 105, 0.15) !important;
+            background: rgba(0, 0, 0, 0.90) !important;
+            border-color: #34D399 !important;
+            box-shadow: 0 0 0 3.5px rgba(52, 211, 153, 0.25), 0 0 16px rgba(16, 185, 129, 0.35) !important;
         }
 
         .auth-input-wrapper.input-error {
@@ -838,14 +820,14 @@
         }
 
         .auth-input-wrapper:focus-within .auth-input-icon {
-            color: #38BDF8 !important;
+            color: #34D399 !important;
         }
 
         body.light .auth-input-icon {
-            color: #059669 !important;
+            color: #10B981 !important;
         }
         body.light .auth-input-wrapper:focus-within .auth-input-icon {
-            color: #0284C7 !important;
+            color: #34D399 !important;
         }
 
         .auth-input-wrapper input {
@@ -959,16 +941,16 @@
             background: rgba(16, 185, 129, 0.10) !important;
         }
 
-        /* Botão Primário Executivo - Verde Esmeralda & Ciano Fintech Bancário */
+        /* Botão Primário Executivo - Verde Claro com Preto */
         .btn-auth-gradient {
-            background: linear-gradient(135deg, #059669 0%, #10B981 45%, #0284C7 100%) !important;
-            color: #FFFFFF !important;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #00E599 100%) !important;
+            color: #000000 !important;
             border-radius: 14px !important;
-            border: 1px solid rgba(255, 255, 255, 0.40) !important;
-            font-weight: 850 !important;
+            border: 1.5px solid #6EE7B7 !important;
+            font-weight: 900 !important;
             font-size: 14.5px !important;
             letter-spacing: -0.01em;
-            box-shadow: 0 10px 28px -5px rgba(16, 185, 129, 0.55), 0 0 24px rgba(14, 165, 233, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
+            box-shadow: 0 10px 28px -5px rgba(16, 185, 129, 0.55), 0 0 25px rgba(52, 211, 153, 0.45), inset 0 1px 1px #FFFFFF !important;
             transition: transform 0.06s ease, filter 0.12s ease, box-shadow 0.12s ease !important;
             position: relative;
             overflow: hidden;
@@ -982,11 +964,15 @@
             will-change: transform;
         }
 
+        .btn-auth-gradient * {
+            color: #000000 !important;
+            font-weight: 900 !important;
+        }
+
         .btn-auth-gradient:hover:not(:disabled) {
-            filter: brightness(1.12);
-            color: #FFFFFF !important;
+            filter: brightness(1.08) !important;
             transform: translateY(-1.5px);
-            box-shadow: 0 14px 34px -5px rgba(16, 185, 129, 0.70), 0 0 32px rgba(14, 165, 233, 0.45) !important;
+            box-shadow: 0 14px 34px -5px rgba(16, 185, 129, 0.70), 0 0 32px rgba(52, 211, 153, 0.55) !important;
         }
 
         .btn-auth-gradient:active:not(:disabled) {
@@ -1011,55 +997,55 @@
         }
 
         body.light .btn-auth-gradient {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-            color: #FFFFFF !important;
-            border: 1px solid #047857 !important;
-            font-weight: 850 !important;
-            box-shadow: 0 10px 25px -4px rgba(5, 150, 105, 0.40) !important;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #00E599 100%) !important;
+            color: #000000 !important;
+            border: 1.5px solid #6EE7B7 !important;
+            font-weight: 900 !important;
+            box-shadow: 0 10px 28px -5px rgba(16, 185, 129, 0.55), 0 0 25px rgba(52, 211, 153, 0.45), inset 0 1px 1px #FFFFFF !important;
         }
         body.light .btn-auth-gradient:hover:not(:disabled) {
-            background: #047857 !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 14px 30px -4px rgba(5, 150, 105, 0.50) !important;
+            filter: brightness(1.08) !important;
+            box-shadow: 0 14px 30px -4px rgba(16, 185, 129, 0.65) !important;
         }
         body.light .btn-auth-gradient * {
-            color: #FFFFFF !important;
+            color: #000000 !important;
+            font-weight: 900 !important;
         }
 
         /* Botão de Atalho VIP Master */
         .btn-quick-admin-login {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.14) 0%, rgba(16, 185, 129, 0.14) 100%) !important;
-            border: 1px solid rgba(56, 189, 248, 0.40) !important;
-            color: #38BDF8 !important;
+            background: rgba(0, 0, 0, 0.75) !important;
+            border: 1.5px solid rgba(52, 211, 153, 0.55) !important;
+            color: #34D399 !important;
             border-radius: 12px !important;
-            box-shadow: 0 2px 14px rgba(14, 165, 233, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
             transition: transform 0.06s ease, background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease !important;
             height: 40px;
             font-size: 12.5px;
             will-change: transform;
         }
         .btn-quick-admin-login:hover {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.25) 0%, rgba(16, 185, 129, 0.25) 100%) !important;
-            border-color: #38BDF8 !important;
+            background: rgba(16, 185, 129, 0.20) !important;
+            border-color: #34D399 !important;
             color: #FFFFFF !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.35) !important;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35) !important;
         }
         .btn-quick-admin-login:active {
             transform: scale(0.975) translateY(1px) !important;
             transition: transform 0.03s ease !important;
         }
         body.light .btn-quick-admin-login {
-            background: #F0FDF4 !important;
-            border: 1.5px solid #BBF7D0 !important;
-            color: #047857 !important;
-            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.10) !important;
+            background: rgba(0, 0, 0, 0.75) !important;
+            border: 1.5px solid rgba(52, 211, 153, 0.55) !important;
+            color: #34D399 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
         }
         body.light .btn-quick-admin-login:hover {
-            background: #DCFCE7 !important;
-            border-color: #059669 !important;
-            color: #047857 !important;
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.18) !important;
+            background: rgba(16, 185, 129, 0.20) !important;
+            border-color: #34D399 !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
         }
 
         /* Abas Segmentadas Fluidas e Modernas (Fintech Emerald / Sapphire) */
@@ -1068,8 +1054,8 @@
             padding: 3.5px !important;
             border-radius: 14px !important;
             gap: 4px !important;
-            background: rgba(7, 18, 32, 0.90) !important;
-            border: 1px solid rgba(16, 185, 129, 0.30) !important;
+            background: rgba(0, 0, 0, 0.75) !important;
+            border: 1.5px solid rgba(16, 185, 129, 0.40) !important;
             min-height: 40px;
         }
 
@@ -1082,7 +1068,7 @@
             background: transparent;
             color: #94A3B8;
             font-size: 12.5px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1099,39 +1085,47 @@
         }
 
         .auth-tab-btn:hover {
-            color: #38BDF8;
-            background: rgba(14, 165, 233, 0.12);
+            color: #34D399;
+            background: rgba(16, 185, 129, 0.15);
         }
 
         .auth-tab-btn.active {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.32) 0%, rgba(14, 165, 233, 0.28) 100%) !important;
-            color: #34D399 !important;
-            border: 1px solid rgba(52, 211, 153, 0.60) !important;
-            box-shadow: 0 2px 14px rgba(16, 185, 129, 0.35) !important;
-            font-weight: 850 !important;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%) !important;
+            color: #000000 !important;
+            border: 1px solid #6EE7B7 !important;
+            box-shadow: 0 2px 14px rgba(16, 185, 129, 0.40) !important;
+            font-weight: 900 !important;
+        }
+        .auth-tab-btn.active * {
+            color: #000000 !important;
+            font-weight: 900 !important;
         }
 
         body.light #authTabsNav, body.light .auth-tabs-nav {
-            background: #F1F5F9 !important;
-            border-color: #CBD5E1 !important;
+            background: rgba(0, 0, 0, 0.75) !important;
+            border: 1.5px solid rgba(16, 185, 129, 0.40) !important;
         }
 
         body.light .auth-tab-btn {
-            color: #475569 !important;
+            color: #94A3B8 !important;
             font-weight: 700 !important;
         }
 
         body.light .auth-tab-btn:hover {
-            color: #059669 !important;
-            background: rgba(16, 185, 129, 0.08) !important;
+            color: #34D399 !important;
+            background: rgba(16, 185, 129, 0.15) !important;
         }
 
         body.light .auth-tab-btn.active {
-            background: #059669 !important;
-            color: #FFFFFF !important;
-            border: 1.5px solid #047857 !important;
-            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25) !important;
-            font-weight: 850 !important;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%) !important;
+            color: #000000 !important;
+            border: 1px solid #6EE7B7 !important;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.40) !important;
+            font-weight: 900 !important;
+        }
+        body.light .auth-tab-btn.active * {
+            color: #000000 !important;
+            font-weight: 900 !important;
         }
 
         .form-fade {
@@ -1924,29 +1918,29 @@
             --auth-card-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.08), 0 0 30px -5px rgba(16, 185, 129, 0.15), inset 0 1px 0 #FFFFFF;
         }
 
-        /* Metric Cards Financeiros Institucionais (Fintech Emerald & Sapphire) */
+        /* Metric Cards Financeiros Institucionais (Preto com Verde Claro) */
         .auth-metric-card {
-            background: linear-gradient(145deg, rgba(10, 24, 42, 0.88) 0%, rgba(6, 17, 30, 0.94) 100%) !important;
-            border: 1px solid rgba(56, 189, 248, 0.25) !important;
-            border-top: 2px solid #10B981 !important;
+            background: linear-gradient(145deg, rgba(8, 16, 12, 0.94) 0%, rgba(4, 9, 6, 0.98) 100%) !important;
+            border: 1.5px solid rgba(16, 185, 129, 0.50) !important;
+            border-top: 2.5px solid #10B981 !important;
             border-radius: 18px !important;
             backdrop-filter: blur(16px) !important;
             -webkit-backdrop-filter: blur(16px) !important;
-            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.8), 0 0 20px -5px rgba(16, 185, 129, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.14) !important;
+            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.35), 0 0 20px -5px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(167, 243, 208, 0.30) !important;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
 
         .auth-metric-card:hover {
             transform: translateY(-2px) !important;
-            border-color: rgba(56, 189, 248, 0.60) !important;
-            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.9), 0 0 28px rgba(14, 165, 233, 0.30) !important;
+            border-color: #34D399 !important;
+            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.45), 0 0 28px rgba(16, 185, 129, 0.35) !important;
         }
 
         body.light .auth-metric-card {
-            background: #FFFFFF !important;
-            border: 1px solid #E2E8F0 !important;
-            border-top: 2px solid #059669 !important;
-            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05), 0 0 15px rgba(16, 185, 129, 0.08), inset 0 1px 0 #FFFFFF !important;
+            background: linear-gradient(145deg, rgba(8, 16, 12, 0.94) 0%, rgba(4, 9, 6, 0.98) 100%) !important;
+            border: 1.5px solid rgba(16, 185, 129, 0.50) !important;
+            border-top: 2.5px solid #10B981 !important;
+            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.35), 0 0 20px -5px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(167, 243, 208, 0.30) !important;
         }
 
 /* ==========================================================================
@@ -2960,26 +2954,26 @@ body.light .period button.active {
     <header class="w-full max-w-[1240px] flex items-center justify-between gap-4 z-30 mb-2 sm:mb-4 px-2 sm:px-4">
         <!-- Logotipo e Marca Institucional -->
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 border border-emerald-300/60 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-emerald-500/35">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-black border-2 border-emerald-400 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-emerald-700/25">
                 <span>N</span>
             </div>
             <div class="flex flex-col">
-                <span class="text-base sm:text-lg font-black tracking-tight text-white auth-brand-title font-display flex items-center gap-2">
+                <span class="text-base sm:text-lg font-black tracking-tight text-black auth-brand-title font-display flex items-center gap-2">
                     Nexus Financeiro
-                    <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-500/25 to-cyan-500/25 border border-emerald-400/40 text-emerald-300 shadow-sm">HUB BANCÁRIO</span>
+                    <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-black text-emerald-300 border border-emerald-500/50 shadow-sm">HUB BANCÁRIO</span>
                 </span>
-                <span class="text-[11px] text-slate-300 font-medium">Plataforma Institucional de Gestão & Conciliação</span>
+                <span class="text-[11px] text-slate-800 font-semibold">Plataforma Institucional de Gestão & Conciliação</span>
             </div>
         </div>
 
         <div class="flex items-center gap-2.5">
             <button type="button" onclick="openNovaOrdemModal('suporte')" 
-                class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-200 hover:text-emerald-300 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 transition-all cursor-pointer shadow-sm" title="Central de Ajuda e Suporte">
-                <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-black hover:text-emerald-950 bg-emerald-400/30 hover:bg-emerald-400/40 border border-emerald-600/40 transition-all cursor-pointer shadow-sm" title="Central de Ajuda e Suporte">
+                <svg class="w-3.5 h-3.5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 <span>Ajuda / Suporte</span>
             </button>
             <button type="button" id="loginThemeBtn" onclick="toggleLoginTheme()" title="Alternar Tema Claro / Escuro"
-                class="w-9 h-9 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 flex items-center justify-center text-emerald-400 shadow-sm transition-all focus:outline-none cursor-pointer">
+                class="w-9 h-9 rounded-xl bg-black/85 hover:bg-black border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-sm transition-all focus:outline-none cursor-pointer">
                 <svg id="themeIconSvg" class="w-4 h-4 text-current" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
             </button>
         </div>
@@ -2988,12 +2982,12 @@ body.light .period button.active {
     <!-- Canvas de Fundo Natural (Splines de Rendimento & Rede de Ledger) -->
     <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
 
-    <!-- Ambient Aura Glows Financeiros (Esmeralda, Safira, Índigo & Ouro) -->
+    <!-- Ambient Aura Glows Financeiros (Verde Claro Menta & Esmeralda) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="absolute top-[10%] left-[15%] -translate-x-1/2 w-[520px] h-[520px] bg-emerald-500/22 rounded-full blur-[130px]"></div>
-        <div class="absolute top-[25%] right-[12%] w-[480px] h-[480px] bg-sky-500/20 rounded-full blur-[140px]"></div>
-        <div class="absolute bottom-[8%] left-[28%] w-[420px] h-[420px] bg-indigo-500/16 rounded-full blur-[150px]"></div>
-        <div class="absolute bottom-[12%] right-[20%] w-[380px] h-[380px] bg-amber-500/15 rounded-full blur-[140px]"></div>
+        <div class="absolute top-[10%] left-[15%] -translate-x-1/2 w-[520px] h-[520px] bg-emerald-400/35 rounded-full blur-[130px]"></div>
+        <div class="absolute top-[25%] right-[12%] w-[480px] h-[480px] bg-teal-300/35 rounded-full blur-[140px]"></div>
+        <div class="absolute bottom-[8%] left-[28%] w-[420px] h-[420px] bg-green-400/30 rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-[12%] right-[20%] w-[380px] h-[380px] bg-emerald-300/30 rounded-full blur-[140px]"></div>
     </div>
 
     <!-- CONTAINER PRINCIPAL - LAYOUT EXECUTIVO DUAL-COLUMN -->
@@ -3004,16 +2998,16 @@ body.light .period button.active {
             <div class="hidden lg:flex lg:col-span-7 flex-col justify-center space-y-5 text-left pr-3">
                 
                 <!-- Selo de Padrão Institucional -->
-                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/15 border border-emerald-400/35 text-emerald-300 text-xs font-bold w-fit shadow-sm shadow-emerald-500/20">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/90 border border-emerald-500/60 text-emerald-300 text-xs font-bold w-fit shadow-md">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span class="tracking-wide uppercase text-[10.5px]">Sistema Financeiro & Tesouraria Institucional</span>
                 </div>
 
                 <!-- Título e Subtítulo de Impacto Executivo -->
-                <h1 class="text-3xl xl:text-4xl font-black text-white tracking-tight leading-tight font-display">
-                    Gestão patrimonial de alta precisão com <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300 font-extrabold">segurança bancária</span>.
+                <h1 class="text-3xl xl:text-4xl font-black text-black tracking-tight leading-tight font-display">
+                    Gestão patrimonial de alta precisão com <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 font-extrabold">segurança bancária</span>.
                 </h1>
-                <p class="text-xs xl:text-sm text-slate-300 font-medium leading-relaxed max-w-[580px]">
+                <p class="text-xs xl:text-sm text-slate-800 font-medium leading-relaxed max-w-[580px]">
                     Controle em tempo real de fluxos de caixa, conciliação automatizada de transações e relatórios de auditoria contábil com proteção de dados LGPD.
                 </p>
 
