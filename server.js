@@ -4778,12 +4778,12 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
 /* Rodapé da Sidebar */
 .sidebar-footer {
   margin-top: auto !important;
-  padding: 10px 4px 6px 4px !important;
+  padding: 10px 8px 6px 8px !important;
   border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  justify-content: space-between !important;
+  justify-content: flex-end !important;
   gap: 8px !important;
   width: 100% !important;
   box-sizing: border-box !important;
@@ -13254,13 +13254,12 @@ body.light .period button.active {
       <!-- Identidade do Workspace / Sistema -->
       <div class="sidebar-workspace-header">
         <div class="workspace-avatar">
-          <span class="workspace-avatar-text">SF</span>
+          <span class="workspace-avatar-text">NX</span>
           <span class="workspace-status-dot"></span>
         </div>
         <div class="workspace-meta">
           <div class="workspace-title-row">
-            <span class="workspace-name">Nexus SF Hub</span>
-            <span class="workspace-tag">CORP</span>
+            <span class="workspace-name">Nexus</span>
           </div>
           <span class="workspace-subtitle">Gestão Financeira</span>
         </div>
@@ -13360,34 +13359,10 @@ body.light .period button.active {
         <span class="label">Logs</span>
       </button>
 
-      <!-- Widget Executivo Nexus Vault (Espaço Inferior Inteligente) -->
-      <div class="sidebar-vault-widget">
-        <div class="vault-widget-top">
-          <div class="vault-live-indicator">
-            <span class="vault-live-dot"></span>
-            <span class="vault-live-label">Nexus Vault</span>
-          </div>
-          <span class="vault-sec-badge">PRO</span>
-        </div>
-        <div class="vault-widget-title">Ambiente Seguro & Criptografado</div>
-        <div class="vault-widget-chips">
-          <span class="vault-chip"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> AES-256</span>
-          <span class="vault-chip"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg> Sync SF</span>
-        </div>
-      </div>
     </div>
 
-    <!-- Rodapé da Sidebar: Indicador de Segurança Fintech e Botão de Colapsar -->
+    <!-- Rodapé da Sidebar: Botão de Colapsar -->
     <div class="sidebar-footer">
-      <div class="sidebar-finance-shield" title="Sistema Seguro Nexus Fintech - Conexão Criptografada AES-256">
-        <div class="shield-icon">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="shield-text">
-          <span class="shield-title">Nexus Fintech</span>
-          <span class="shield-sub"><span class="pulse-dot-green"></span> AES-256 Protegido</span>
-        </div>
-      </div>
       <button type="button" class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Recolher / Expandir Menu Lateral" aria-label="Recolher / Expandir Menu Lateral">
         <svg class="toggle-icon-collapse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
       </button>
