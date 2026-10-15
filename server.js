@@ -4333,9 +4333,94 @@ nav.menu, aside.menu, .sidebar-menu {
   border-radius: 999px !important;
 }
 
+/* Header de Workspace no Topo da Sidebar */
+.sidebar-workspace-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 4px 6px 10px 6px !important;
+  margin-bottom: 2px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  user-select: none !important;
+  flex-shrink: 0 !important;
+}
+.sidebar-workspace-header .workspace-avatar {
+  position: relative !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  border-radius: 9px !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.12) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+.sidebar-workspace-header .workspace-avatar-text {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  color: #34D399 !important;
+}
+.sidebar-workspace-header .workspace-status-dot {
+  position: absolute !important;
+  bottom: -1px !important;
+  right: -1px !important;
+  width: 6.5px !important;
+  height: 6.5px !important;
+  border-radius: 50% !important;
+  background: #10B981 !important;
+  border: 1.5px solid #060A12 !important;
+  box-shadow: 0 0 6px #10B981 !important;
+}
+.sidebar-workspace-header .workspace-meta {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.sidebar-workspace-header .workspace-title-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+.sidebar-workspace-header .workspace-name {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  color: #F8FAFC !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.sidebar-workspace-header .workspace-tag {
+  font-size: 8.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: #10B981 !important;
+  background: rgba(16, 185, 129, 0.16) !important;
+  border: 1px solid rgba(16, 185, 129, 0.30) !important;
+  padding: 0.5px 4.5px !important;
+  border-radius: 4px !important;
+}
+.sidebar-workspace-header .workspace-subtitle {
+  font-size: 10.5px !important;
+  color: #64748B !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
 /* Botão de Ação Rápida no Topo da Sidebar (Nova Transação) */
 .sidebar-action-wrap {
-  padding: 2px 2px 8px 2px !important;
+  padding: 6px 2px 8px 2px !important;
   width: 100% !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
@@ -4348,18 +4433,18 @@ aside.menu .sidebar-quick-action-btn,
   flex-direction: row !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 10px !important;
+  gap: 9px !important;
   width: 100% !important;
-  height: 40px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
-  padding: 0 12px !important;
-  border-radius: 11px !important;
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 11px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
   color: #FFFFFF !important;
   cursor: pointer !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.32), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
   user-select: none !important;
   box-sizing: border-box !important;
@@ -4369,8 +4454,8 @@ aside.menu .sidebar-quick-action-btn,
 .sidebar-quick-action-btn:hover,
 aside.menu .sidebar-quick-action-btn:hover,
 .sidebar-menu .sidebar-quick-action-btn:hover {
-  background: linear-gradient(135deg, #34D399 0%, #059669 100%) !important;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.6) !important;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  box-shadow: 0 5px 18px rgba(16, 185, 129, 0.48), inset 0 1px 1.5px rgba(255, 255, 255, 0.55) !important;
   transform: translateY(-1px) !important;
   color: #FFFFFF !important;
 }
@@ -4378,13 +4463,13 @@ aside.menu .sidebar-quick-action-btn:hover,
 aside.menu .sidebar-quick-action-btn:active,
 .sidebar-menu .sidebar-quick-action-btn:active {
   transform: translateY(0.5px) !important;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25) !important;
 }
 .sidebar-quick-action-btn .quick-action-ic {
-  width: 24px !important;
-  height: 24px !important;
-  min-width: 24px !important;
-  border-radius: 7px !important;
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  border-radius: 6px !important;
   background: rgba(255, 255, 255, 0.22) !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -4393,14 +4478,14 @@ aside.menu .sidebar-quick-action-btn:active,
   flex-shrink: 0 !important;
 }
 .sidebar-quick-action-btn .quick-action-ic svg {
-  width: 14px !important;
-  height: 14px !important;
+  width: 13px !important;
+  height: 13px !important;
   stroke: #FFFFFF !important;
   display: block !important;
 }
 .sidebar-quick-action-btn .label {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
-  font-size: 13.5px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   color: #FFFFFF !important;
@@ -4414,9 +4499,9 @@ aside.menu .sidebar-quick-action-btn:active,
   font-weight: 800 !important;
   background: rgba(255, 255, 255, 0.22) !important;
   color: #FFFFFF !important;
-  padding: 1px 7px !important;
-  border-radius: 6px !important;
-  letter-spacing: 0.05em !important;
+  padding: 1px 6px !important;
+  border-radius: 5px !important;
+  letter-spacing: 0.04em !important;
 }
 
 /* Divisores de Seção com Título */
@@ -4424,12 +4509,12 @@ aside.menu .sidebar-quick-action-btn:active,
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  padding: 10px 8px 4px 8px !important;
+  padding: 11px 6px 3px 6px !important;
   user-select: none !important;
   flex-shrink: 0 !important;
 }
 .menu-section-title {
-  font-size: 9.5px !important;
+  font-size: 9px !important;
   font-weight: 800 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.12em !important;
@@ -4439,7 +4524,7 @@ aside.menu .sidebar-quick-action-btn:active,
 .menu-section-line {
   flex: 1 !important;
   height: 1px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
   border-radius: 1px !important;
 }
 
@@ -4451,17 +4536,18 @@ aside.menu .sidebar-quick-action-btn:active,
   align-items: center !important;
   justify-content: flex-start !important;
   text-align: left !important;
-  gap: 11px !important;
+  gap: 10px !important;
   width: 100% !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  max-height: 38px !important;
+  height: 37px !important;
+  min-height: 37px !important;
+  max-height: 37px !important;
   padding: 0 10px !important;
-  border-radius: 10px !important;
+  margin: 1px 0 !important;
+  border-radius: 9px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
-  font-size: 13.5px !important;
+  font-size: 13px !important;
   white-space: nowrap !important;
   cursor: pointer !important;
   transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -4473,13 +4559,13 @@ aside.menu .sidebar-quick-action-btn:active,
 }
 
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  border-radius: 8px !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  border-radius: 7px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4491,9 +4577,9 @@ aside.menu .sidebar-quick-action-btn:active,
 }
 
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg {
-  width: 15px !important;
-  height: 15px !important;
-  stroke-width: 2.1px !important;
+  width: 14.5px !important;
+  height: 14.5px !important;
+  stroke-width: 2px !important;
   stroke: currentColor !important;
   display: block !important;
 }
@@ -4502,7 +4588,7 @@ aside.menu .sidebar-quick-action-btn:active,
 aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
 .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
-  font-size: 13.5px !important;
+  font-size: 13px !important;
   font-weight: 550 !important;
   letter-spacing: -0.01em !important;
   line-height: 1 !important;
@@ -4515,30 +4601,30 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.l
 
 /* Hover no botão */
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.10) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
   color: #F8FAFC !important;
-  transform: translateX(3px) !important;
+  transform: translateX(2px) !important;
 }
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic {
-  background: rgba(16, 185, 129, 0.14) !important;
-  border-color: rgba(16, 185, 129, 0.35) !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.30) !important;
   color: #34D399 !important;
 }
 
 /* Botão Ativo */
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.08) 100%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.45) !important;
-  border-left: 3.5px solid #10B981 !important;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.16) 0%, rgba(16, 185, 129, 0.03) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.40) !important;
+  border-left: 3px solid #10B981 !important;
   color: #34D399 !important;
-  box-shadow: 0 2px 14px rgba(16, 185, 129, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
 }
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic {
   background: rgba(16, 185, 129, 0.22) !important;
   border-color: rgba(16, 185, 129, 0.50) !important;
   color: #34D399 !important;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.30) !important;
 }
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
 aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
@@ -4562,12 +4648,12 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
   background: rgba(245, 158, 11, 0.14) !important;
   border-color: rgba(245, 158, 11, 0.40) !important;
   color: #FDE68A !important;
-  transform: translateX(3px) !important;
+  transform: translateX(2px) !important;
 }
 .menu button.menu-btn-admin.active, aside.menu button.menu-btn-admin.active, .sidebar-menu button.menu-btn-admin.active {
   background: linear-gradient(90deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
   border: 1px solid rgba(245, 158, 11, 0.60) !important;
-  border-left: 3.5px solid #F59E0B !important;
+  border-left: 3px solid #F59E0B !important;
   color: #FBBF24 !important;
   box-shadow: 0 2px 14px rgba(245, 158, 11, 0.25) !important;
 }
@@ -4575,7 +4661,7 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
   background: rgba(245, 158, 11, 0.25) !important;
   border-color: rgba(245, 158, 11, 0.60) !important;
   color: #FDE68A !important;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4) !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.40) !important;
 }
 
 /* Badge de Notificação de O.S. */
@@ -4604,7 +4690,7 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
   margin-bottom: 6px !important;
   padding: 10px 10px !important;
   border-radius: 11px !important;
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0.45) 100%) !important;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.07) 0%, rgba(15, 23, 42, 0.45) 100%) !important;
   border: 1px solid rgba(16, 185, 129, 0.20) !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
   display: flex !important;
@@ -4616,7 +4702,7 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
 }
 .sidebar-vault-widget:hover {
   border-color: rgba(16, 185, 129, 0.38) !important;
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.11) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
 }
 .vault-widget-top {
   display: flex !important;
@@ -4661,16 +4747,32 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
   letter-spacing: 0.05em !important;
 }
 .vault-widget-title {
-  font-size: 11px !important;
+  font-size: 10.5px !important;
   font-weight: 600 !important;
   color: #CBD5E1 !important;
-  line-height: 1.2 !important;
+  line-height: 1.25 !important;
 }
-.vault-widget-desc {
-  font-size: 9.5px !important;
-  font-weight: 400 !important;
-  color: #64748B !important;
-  line-height: 1.3 !important;
+.vault-widget-chips {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  margin-top: 2px !important;
+}
+.vault-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  color: #94A3B8 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding: 1.5px 6px !important;
+  border-radius: 4px !important;
+  white-space: nowrap !important;
+}
+.vault-chip svg {
+  color: #10B981 !important;
 }
 
 /* Rodapé da Sidebar */
@@ -4813,6 +4915,17 @@ body.sidebar-collapsed .sidebar-menu {
   width: 68px !important;
   padding: 14px 6px 14px 6px !important;
 }
+body.sidebar-collapsed .sidebar-workspace-header {
+  padding: 2px 0 8px 0 !important;
+  justify-content: center !important;
+  border-bottom: none !important;
+}
+body.sidebar-collapsed .sidebar-workspace-header .workspace-meta {
+  display: none !important;
+}
+body.sidebar-collapsed .sidebar-workspace-header .workspace-avatar {
+  margin: 0 auto !important;
+}
 body.sidebar-collapsed .menu button span.label,
 body.sidebar-collapsed aside.menu button span.label,
 body.sidebar-collapsed .sidebar-menu button span.label,
@@ -4883,7 +4996,33 @@ body.light .menu-section-title, html.light .menu-section-title {
   color: #475569 !important;
 }
 body.light .menu-section-line, html.light .menu-section-line {
-  background: #E2E8F0 !important;
+  background: linear-gradient(90deg, #E2E8F0 0%, rgba(226, 232, 240, 0.2) 100%) !important;
+}
+
+/* Workspace Header no Modo Claro */
+body.light .sidebar-workspace-header, html.light .sidebar-workspace-header {
+  border-bottom-color: #E2E8F0 !important;
+}
+body.light .workspace-avatar, html.light .workspace-avatar {
+  background: #ECFDF5 !important;
+  border-color: #A7F3D0 !important;
+}
+body.light .workspace-avatar-text, html.light .workspace-avatar-text {
+  color: #059669 !important;
+}
+body.light .workspace-status-dot, html.light .workspace-status-dot {
+  border-color: #FFFFFF !important;
+}
+body.light .workspace-name, html.light .workspace-name {
+  color: #0F172A !important;
+}
+body.light .workspace-tag, html.light .workspace-tag {
+  color: #059669 !important;
+  background: #DCFCE7 !important;
+  border-color: #86EFAC !important;
+}
+body.light .workspace-subtitle, html.light .workspace-subtitle {
+  color: #64748B !important;
 }
 
 /* Ação rápida no Modo Claro */
@@ -4924,8 +5063,10 @@ body.light .vault-sec-badge, html.light .vault-sec-badge {
 body.light .vault-widget-title, html.light .vault-widget-title {
   color: #1E293B !important;
 }
-body.light .vault-widget-desc, html.light .vault-widget-desc {
-  color: #64748B !important;
+body.light .vault-chip, html.light .vault-chip {
+  background: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+  color: #475569 !important;
 }
 
 /* Botões do Menu Lateral no Modo Claro */
@@ -13110,11 +13251,26 @@ body.light .period button.active {
   <!-- BARRA LATERAL EXECUTIVA (SIDEBAR DESIGN 4K - LIQUID GLASS) -->
   <aside class="menu sidebar-menu" id="menu">
     <div class="sidebar-scroll" id="menuTrack">
+      <!-- Identidade do Workspace / Sistema -->
+      <div class="sidebar-workspace-header">
+        <div class="workspace-avatar">
+          <span class="workspace-avatar-text">SF</span>
+          <span class="workspace-status-dot"></span>
+        </div>
+        <div class="workspace-meta">
+          <div class="workspace-title-row">
+            <span class="workspace-name">Nexus SF Hub</span>
+            <span class="workspace-tag">CORP</span>
+          </div>
+          <span class="workspace-subtitle">Gestão Financeira</span>
+        </div>
+      </div>
+
       <!-- Botão de Ação Rápida: Nova Transação -->
       <div class="sidebar-action-wrap">
-        <button type="button" class="sidebar-quick-action-btn" id="sidebarNovaTransacaoBtn" onclick="openModal(null)" title="Nova Transação (Clique para registrar receita ou despesa)">
+        <button type="button" class="sidebar-quick-action-btn" id="sidebarNovaTransacaoBtn" onclick="openModal(null)" title="Nova Transação (Registrar receita ou despesa)">
           <span class="quick-action-ic">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </span>
           <span class="label">Nova Transação</span>
           <span class="quick-action-badge">+</span>
@@ -13209,12 +13365,15 @@ body.light .period button.active {
         <div class="vault-widget-top">
           <div class="vault-live-indicator">
             <span class="vault-live-dot"></span>
-            <span class="vault-live-label">Nexus Vault Ativo</span>
+            <span class="vault-live-label">Nexus Vault</span>
           </div>
           <span class="vault-sec-badge">PRO</span>
         </div>
-        <div class="vault-widget-title">Ambiente Seguro</div>
-        <div class="vault-widget-desc">Criptografia AES-256 e sincronização contínua.</div>
+        <div class="vault-widget-title">Ambiente Seguro & Criptografado</div>
+        <div class="vault-widget-chips">
+          <span class="vault-chip"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> AES-256</span>
+          <span class="vault-chip"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg> Sync SF</span>
+        </div>
       </div>
     </div>
 
