@@ -4333,23 +4333,106 @@ nav.menu, aside.menu, .sidebar-menu {
   border-radius: 999px !important;
 }
 
+/* Botão de Ação Rápida no Topo da Sidebar (Nova Transação) */
+.sidebar-action-wrap {
+  padding: 2px 2px 8px 2px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
+.sidebar-quick-action-btn,
+aside.menu .sidebar-quick-action-btn,
+.sidebar-menu .sidebar-quick-action-btn {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  width: 100% !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 12px !important;
+  border-radius: 11px !important;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  user-select: none !important;
+  box-sizing: border-box !important;
+  text-align: left !important;
+  overflow: hidden !important;
+}
+.sidebar-quick-action-btn:hover,
+aside.menu .sidebar-quick-action-btn:hover,
+.sidebar-menu .sidebar-quick-action-btn:hover {
+  background: linear-gradient(135deg, #34D399 0%, #059669 100%) !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.6) !important;
+  transform: translateY(-1px) !important;
+  color: #FFFFFF !important;
+}
+.sidebar-quick-action-btn:active,
+aside.menu .sidebar-quick-action-btn:active,
+.sidebar-menu .sidebar-quick-action-btn:active {
+  transform: translateY(0.5px) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
+}
+.sidebar-quick-action-btn .quick-action-ic {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  border-radius: 7px !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #FFFFFF !important;
+  flex-shrink: 0 !important;
+}
+.sidebar-quick-action-btn .quick-action-ic svg {
+  width: 14px !important;
+  height: 14px !important;
+  stroke: #FFFFFF !important;
+  display: block !important;
+}
+.sidebar-quick-action-btn .label {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  color: #FFFFFF !important;
+  flex: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.sidebar-quick-action-btn .quick-action-badge {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #FFFFFF !important;
+  padding: 1px 7px !important;
+  border-radius: 6px !important;
+  letter-spacing: 0.05em !important;
+}
+
 /* Divisores de Seção com Título */
 .menu-section-header {
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  padding: 12px 8px 4px 8px !important;
+  padding: 10px 8px 4px 8px !important;
   user-select: none !important;
   flex-shrink: 0 !important;
 }
-.menu-section-header:first-child {
-  padding-top: 2px !important;
-}
 .menu-section-title {
-  font-size: 10px !important;
+  font-size: 9.5px !important;
   font-weight: 800 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.10em !important;
+  letter-spacing: 0.12em !important;
   color: #64748B !important;
   white-space: nowrap !important;
 }
@@ -4361,7 +4444,7 @@ nav.menu, aside.menu, .sidebar-menu {
 }
 
 /* Botões do Menu Lateral */
-.menu button:not(.sidebar-toggle-btn), aside.menu button:not(.sidebar-toggle-btn), .sidebar-menu button:not(.sidebar-toggle-btn) {
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
   position: relative !important;
   display: flex !important;
   flex-direction: row !important;
@@ -4370,11 +4453,11 @@ nav.menu, aside.menu, .sidebar-menu {
   text-align: left !important;
   gap: 11px !important;
   width: 100% !important;
-  height: 40px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
-  padding: 0 12px !important;
-  border-radius: 11px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 10px !important;
+  border-radius: 10px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
@@ -4389,7 +4472,7 @@ nav.menu, aside.menu, .sidebar-menu {
   touch-action: manipulation !important;
 }
 
-.menu button .ic, aside.menu button .ic, .sidebar-menu button .ic {
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic {
   width: 28px !important;
   height: 28px !important;
   min-width: 28px !important;
@@ -4407,23 +4490,20 @@ nav.menu, aside.menu, .sidebar-menu {
   transition: all 0.16s ease !important;
 }
 
-.menu button .ic svg, aside.menu button .ic svg, .sidebar-menu button .ic svg {
-  width: 16px !important;
-  height: 16px !important;
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg {
+  width: 15px !important;
+  height: 15px !important;
   stroke-width: 2.1px !important;
   stroke: currentColor !important;
   display: block !important;
 }
 
-.menu button span.label,
-.menu button span:not(.ic):not(#osBadgeCount),
-aside.menu button span.label,
-aside.menu button span:not(.ic):not(#osBadgeCount),
-.sidebar-menu button span.label,
-.sidebar-menu button span:not(.ic):not(#osBadgeCount) {
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
   font-size: 13.5px !important;
-  font-weight: 600 !important;
+  font-weight: 550 !important;
   letter-spacing: -0.01em !important;
   line-height: 1 !important;
   display: inline-block !important;
@@ -4434,38 +4514,35 @@ aside.menu button span:not(.ic):not(#osBadgeCount),
 }
 
 /* Hover no botão */
-.menu button:not(.sidebar-toggle-btn):hover, aside.menu button:not(.sidebar-toggle-btn):hover, .sidebar-menu button:not(.sidebar-toggle-btn):hover {
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover {
   background: rgba(255, 255, 255, 0.06) !important;
   border-color: rgba(255, 255, 255, 0.10) !important;
   color: #F8FAFC !important;
   transform: translateX(3px) !important;
 }
-.menu button:hover .ic, aside.menu button:hover .ic, .sidebar-menu button:hover .ic {
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic {
   background: rgba(16, 185, 129, 0.14) !important;
   border-color: rgba(16, 185, 129, 0.35) !important;
   color: #34D399 !important;
 }
 
 /* Botão Ativo */
-.menu button:not(.sidebar-toggle-btn).active, aside.menu button:not(.sidebar-toggle-btn).active, .sidebar-menu button:not(.sidebar-toggle-btn).active {
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
   background: linear-gradient(90deg, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.08) 100%) !important;
   border: 1px solid rgba(16, 185, 129, 0.45) !important;
   border-left: 3.5px solid #10B981 !important;
   color: #34D399 !important;
   box-shadow: 0 2px 14px rgba(16, 185, 129, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
-.menu button.active .ic, aside.menu button.active .ic, .sidebar-menu button.active .ic {
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic {
   background: rgba(16, 185, 129, 0.22) !important;
   border-color: rgba(16, 185, 129, 0.50) !important;
   color: #34D399 !important;
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.35) !important;
 }
-.menu button.active span.label,
-.menu button.active span:not(.ic):not(#osBadgeCount),
-aside.menu button.active span.label,
-aside.menu button.active span:not(.ic):not(#osBadgeCount),
-.sidebar-menu button.active span.label,
-.sidebar-menu button.active span:not(.ic):not(#osBadgeCount) {
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label {
   color: #34D399 !important;
   font-weight: 700 !important;
 }
@@ -4519,6 +4596,81 @@ aside.menu button.active span:not(.ic):not(#osBadgeCount),
   align-items: center !important;
   justify-content: center !important;
   pointer-events: none !important;
+}
+
+/* Card Executivo Nexus Vault (Espaço Inferior Inteligente) */
+.sidebar-vault-widget {
+  margin-top: 14px !important;
+  margin-bottom: 6px !important;
+  padding: 10px 10px !important;
+  border-radius: 11px !important;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0.45) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.20) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  flex-shrink: 0 !important;
+  user-select: none !important;
+  transition: all 0.2s ease !important;
+}
+.sidebar-vault-widget:hover {
+  border-color: rgba(16, 185, 129, 0.38) !important;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.55) 100%) !important;
+}
+.vault-widget-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+}
+.vault-live-indicator {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+.vault-live-dot {
+  width: 6.5px !important;
+  min-width: 6.5px !important;
+  height: 6.5px !important;
+  border-radius: 50% !important;
+  background: #10B981 !important;
+  box-shadow: 0 0 7px #10B981 !important;
+  display: inline-block !important;
+  animation: pulseVault 2.2s infinite ease-in-out !important;
+}
+@keyframes pulseVault {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.85); }
+}
+.vault-live-label {
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  color: #F8FAFC !important;
+  letter-spacing: -0.01em !important;
+}
+.vault-sec-badge {
+  font-size: 8.5px !important;
+  font-weight: 800 !important;
+  color: #34D399 !important;
+  background: rgba(16, 185, 129, 0.18) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  padding: 1px 5px !important;
+  border-radius: 5px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+.vault-widget-title {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #CBD5E1 !important;
+  line-height: 1.2 !important;
+}
+.vault-widget-desc {
+  font-size: 9.5px !important;
+  font-weight: 400 !important;
+  color: #64748B !important;
+  line-height: 1.3 !important;
 }
 
 /* Rodapé da Sidebar */
@@ -4667,16 +4819,41 @@ body.sidebar-collapsed .sidebar-menu button span.label,
 body.sidebar-collapsed .menu-section-title,
 body.sidebar-collapsed .menu-section-line,
 body.sidebar-collapsed .sidebar-finance-shield,
-body.sidebar-collapsed #osBadgeCount {
+body.sidebar-collapsed .sidebar-vault-widget,
+body.sidebar-collapsed #osBadgeCount,
+body.sidebar-collapsed .sidebar-quick-action-btn .label,
+body.sidebar-collapsed .sidebar-quick-action-btn .quick-action-badge {
   display: none !important;
+}
+body.sidebar-collapsed .sidebar-action-wrap {
+  padding: 2px 0 8px 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+body.sidebar-collapsed .sidebar-quick-action-btn,
+body.sidebar-collapsed aside.menu .sidebar-quick-action-btn,
+body.sidebar-collapsed .sidebar-menu .sidebar-quick-action-btn {
+  width: 38px !important;
+  min-width: 38px !important;
+  max-width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 !important;
+  justify-content: center !important;
+  border-radius: 10px !important;
+  margin: 0 auto !important;
+}
+body.sidebar-collapsed .sidebar-quick-action-btn .quick-action-ic {
+  margin: 0 !important;
 }
 body.sidebar-collapsed .menu-section-header {
   padding: 8px 0 4px 0 !important;
   justify-content: center !important;
 }
-body.sidebar-collapsed .menu button:not(.sidebar-toggle-btn),
-body.sidebar-collapsed aside.menu button:not(.sidebar-toggle-btn),
-body.sidebar-collapsed .sidebar-menu button:not(.sidebar-toggle-btn) {
+body.sidebar-collapsed .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+body.sidebar-collapsed aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+body.sidebar-collapsed .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
   justify-content: center !important;
   padding: 0 !important;
   width: 100% !important;
@@ -4708,73 +4885,117 @@ body.light .menu-section-title, html.light .menu-section-title {
 body.light .menu-section-line, html.light .menu-section-line {
   background: #E2E8F0 !important;
 }
-body.light .menu button, html.light .menu button,
-body.light aside.menu button, html.light aside.menu button,
-body.light .sidebar-menu button, html.light .sidebar-menu button {
-  color: #000000 !important;
+
+/* Ação rápida no Modo Claro */
+body.light .sidebar-quick-action-btn, html.light .sidebar-quick-action-btn,
+body.light aside.menu .sidebar-quick-action-btn, html.light aside.menu .sidebar-quick-action-btn {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+  color: #FFFFFF !important;
 }
-body.light .menu button span.label,
-body.light .menu button span:not(.ic):not(#osBadgeCount),
-html.light .menu button span.label,
-html.light .menu button span:not(.ic):not(#osBadgeCount),
-body.light aside.menu button span.label,
-body.light aside.menu button span:not(.ic):not(#osBadgeCount),
-html.light aside.menu button span.label,
-html.light aside.menu button span:not(.ic):not(#osBadgeCount),
-body.light .sidebar-menu button span.label,
-body.light .sidebar-menu button span:not(.ic):not(#osBadgeCount),
-html.light .sidebar-menu button span.label,
-html.light .sidebar-menu button span:not(.ic):not(#osBadgeCount) {
-  color: #000000 !important;
+body.light .sidebar-quick-action-btn:hover, html.light .sidebar-quick-action-btn:hover,
+body.light aside.menu .sidebar-quick-action-btn:hover, html.light aside.menu .sidebar-quick-action-btn:hover {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.45) !important;
+  color: #FFFFFF !important;
+}
+body.light .sidebar-quick-action-btn span.label,
+html.light .sidebar-quick-action-btn span.label,
+body.light aside.menu .sidebar-quick-action-btn span.label,
+html.light aside.menu .sidebar-quick-action-btn span.label {
+  color: #FFFFFF !important;
+}
+
+/* Nexus Vault no Modo Claro */
+body.light .sidebar-vault-widget, html.light .sidebar-vault-widget {
+  background: linear-gradient(180deg, #F0FDF4 0%, #F8FAFC 100%) !important;
+  border: 1px solid #BBF7D0 !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08) !important;
+}
+body.light .vault-live-label, html.light .vault-live-label {
+  color: #0F172A !important;
+}
+body.light .vault-sec-badge, html.light .vault-sec-badge {
+  color: #059669 !important;
+  background: #DCFCE7 !important;
+  border-color: #86EFAC !important;
+}
+body.light .vault-widget-title, html.light .vault-widget-title {
+  color: #1E293B !important;
+}
+body.light .vault-widget-desc, html.light .vault-widget-desc {
+  color: #64748B !important;
+}
+
+/* Botões do Menu Lateral no Modo Claro */
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
+  color: #1E293B !important;
+}
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span:not(.ic):not(#osBadgeCount),
+html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
+html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span:not(.ic):not(#osBadgeCount),
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span:not(.ic):not(#osBadgeCount),
+html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
+html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span:not(.ic):not(#osBadgeCount),
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span:not(.ic):not(#osBadgeCount),
+html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
+html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span:not(.ic):not(#osBadgeCount) {
+  color: #1E293B !important;
   font-weight: 600 !important;
 }
-body.light .menu button .ic, html.light .menu button .ic,
-body.light aside.menu button .ic, html.light aside.menu button .ic,
-body.light .sidebar-menu button .ic, html.light .sidebar-menu button .ic {
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic,
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic,
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic {
   background: #F1F5F9 !important;
   border-color: #E2E8F0 !important;
   color: #334155 !important;
 }
-body.light .menu button:hover, html.light .menu button:hover,
-body.light aside.menu button:hover, html.light aside.menu button:hover,
-body.light .sidebar-menu button:hover, html.light .sidebar-menu button:hover {
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover,
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover,
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover {
   background: #F8FAFC !important;
   border-color: #CBD5E1 !important;
-  color: #000000 !important;
+  color: #0F172A !important;
 }
-body.light .menu button:hover .ic, html.light .menu button:hover .ic,
-body.light aside.menu button:hover .ic, html.light aside.menu button:hover .ic,
-body.light .sidebar-menu button:hover .ic, html.light .sidebar-menu button:hover .ic {
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic,
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic,
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic {
   background: #ECFDF5 !important;
   border-color: #A7F3D0 !important;
   color: #059669 !important;
 }
-body.light .menu button.active, html.light .menu button.active,
-body.light aside.menu button.active, html.light aside.menu button.active,
-body.light .sidebar-menu button.active, html.light .sidebar-menu button.active {
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active,
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active,
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
   background: #ECFDF5 !important;
   border: 1px solid #A7F3D0 !important;
   border-left: 3.5px solid #059669 !important;
   box-shadow: 0 2px 10px rgba(5, 150, 105, 0.12) !important;
 }
-body.light .menu button.active span.label,
-body.light .menu button.active span:not(.ic):not(#osBadgeCount),
-html.light .menu button.active span.label,
-html.light .menu button.active span:not(.ic):not(#osBadgeCount),
-body.light aside.menu button.active span.label,
-body.light aside.menu button.active span:not(.ic):not(#osBadgeCount),
-html.light aside.menu button.active span.label,
-html.light aside.menu button.active span:not(.ic):not(#osBadgeCount),
-body.light .sidebar-menu button.active span.label,
-body.light .sidebar-menu button.active span:not(.ic):not(#osBadgeCount),
-html.light .sidebar-menu button.active span.label,
-html.light .sidebar-menu button.active span:not(.ic):not(#osBadgeCount) {
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span:not(.ic):not(#osBadgeCount),
+html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
+html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span:not(.ic):not(#osBadgeCount),
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span:not(.ic):not(#osBadgeCount),
+html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
+html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span:not(.ic):not(#osBadgeCount),
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span:not(.ic):not(#osBadgeCount),
+html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
+html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span:not(.ic):not(#osBadgeCount) {
   color: #059669 !important;
   font-weight: 800 !important;
 }
-body.light .menu button.active .ic, html.light .menu button.active .ic,
-body.light aside.menu button.active .ic, html.light aside.menu button.active .ic,
-body.light .sidebar-menu button.active .ic, html.light .sidebar-menu button.active .ic {
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic, html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic,
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic, html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic,
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic, html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic {
   background: #D1FAE5 !important;
   border-color: #6EE7B7 !important;
   color: #059669 !important;
@@ -11998,18 +12219,18 @@ body.light .menu-track, body.light .sidebar-scroll {
   box-shadow: none !important;
 }
 
-body.light nav.menu button, body.light .menu button, body.light .sidebar-menu button {
+body.light nav.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
   color: #000000 !important;
   font-weight: 600 !important;
 }
 
-body.light nav.menu button:hover, body.light .menu button:hover, body.light .sidebar-menu button:hover {
+body.light nav.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover {
   background: #F8FAFC !important;
   border-color: #CBD5E1 !important;
   color: #000000 !important;
 }
 
-body.light nav.menu button.active, body.light .menu button.active, body.light .sidebar-menu button.active {
+body.light nav.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
   background: #ECFDF5 !important;
   border: 1px solid #A7F3D0 !important;
   border-left: 3.5px solid #059669 !important;
@@ -12018,7 +12239,7 @@ body.light nav.menu button.active, body.light .menu button.active, body.light .s
   box-shadow: 0 2px 10px rgba(5, 150, 105, 0.12) !important;
 }
 
-body.light nav.menu button.active .ic svg, body.light .sidebar-menu button.active .ic svg {
+body.light nav.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic svg, body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic svg {
   stroke: #059669 !important;
 }
 
@@ -12889,9 +13110,20 @@ body.light .period button.active {
   <!-- BARRA LATERAL EXECUTIVA (SIDEBAR DESIGN 4K - LIQUID GLASS) -->
   <aside class="menu sidebar-menu" id="menu">
     <div class="sidebar-scroll" id="menuTrack">
-      <!-- Seção: Visão -->
+      <!-- Botão de Ação Rápida: Nova Transação -->
+      <div class="sidebar-action-wrap">
+        <button type="button" class="sidebar-quick-action-btn" id="sidebarNovaTransacaoBtn" onclick="openModal(null)" title="Nova Transação (Clique para registrar receita ou despesa)">
+          <span class="quick-action-ic">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </span>
+          <span class="label">Nova Transação</span>
+          <span class="quick-action-badge">+</span>
+        </button>
+      </div>
+
+      <!-- Seção: Visão Geral -->
       <div class="menu-section-header menu-section-visao">
-        <span class="menu-section-title">Visão</span>
+        <span class="menu-section-title">Visão Geral</span>
         <span class="menu-section-line"></span>
       </div>
       <button data-page="dashboard" class="menu-btn-user" title="Dashboard Financeiro Geral">
@@ -12945,12 +13177,12 @@ body.light .period button.active {
 
       <!-- Seção: Perfil & Preferências -->
       <div class="menu-section-header menu-section-minha-conta">
-        <span class="menu-section-title">Minha Conta</span>
+        <span class="menu-section-title">Preferências</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="config" class="menu-btn-user" title="Minha Conta & Preferências do Usuário">
+      <button data-page="config" class="menu-btn-user" title="Configurações & Preferências da Conta">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-        <span class="label">Minha Conta</span>
+        <span class="label">Configurações</span>
       </button>
       
       <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
@@ -12971,6 +13203,19 @@ body.light .period button.active {
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
         <span class="label">Logs</span>
       </button>
+
+      <!-- Widget Executivo Nexus Vault (Espaço Inferior Inteligente) -->
+      <div class="sidebar-vault-widget">
+        <div class="vault-widget-top">
+          <div class="vault-live-indicator">
+            <span class="vault-live-dot"></span>
+            <span class="vault-live-label">Nexus Vault Ativo</span>
+          </div>
+          <span class="vault-sec-badge">PRO</span>
+        </div>
+        <div class="vault-widget-title">Ambiente Seguro</div>
+        <div class="vault-widget-desc">Criptografia AES-256 e sincronização contínua.</div>
+      </div>
     </div>
 
     <!-- Rodapé da Sidebar: Indicador de Segurança Fintech e Botão de Colapsar -->
@@ -26290,6 +26535,7 @@ function attachPageEvents(){
   document.querySelectorAll('[data-nav]').forEach(el=>el.onclick = ()=>{ navigate(el.getAttribute('data-nav')); });
 
   const nova = document.getElementById('btnNovaTransacao'); if(nova) nova.onclick = ()=>openModal(null);
+  const sidebarNova = document.getElementById('sidebarNovaTransacaoBtn'); if(sidebarNova) sidebarNova.onclick = ()=>openModal(null);
   const gerCat = document.getElementById('btnGerenciarCategorias'); if(gerCat) gerCat.onclick = openCatManageModal;
   document.querySelectorAll('[data-edit]').forEach(el => {
     el.onclick = (e) => {
