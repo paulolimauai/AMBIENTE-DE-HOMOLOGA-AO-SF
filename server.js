@@ -2282,16 +2282,14 @@ html, body {
 
 /* ==================== TELA DE AUTENTICAÇÃO EXECUTIVA NEXUS 4K (FINTECH GLASS SYSTEM) ==================== */
 .auth-container {
-  --auth-bg: #000000;
-  --auth-gold: #FFFFFF;
-  --auth-gold-dark: #E2E8F0;
-  --auth-gold-light: #FFFFFF;
-  --auth-blue: #FFFFFF;
-  --auth-emerald: #FFFFFF;
-  --auth-cyan: #FFFFFF;
-  --auth-card: linear-gradient(168deg, rgba(10, 10, 10, 0.98) 0%, rgba(4, 4, 4, 0.99) 50%, #000000 100%);
-  --auth-border: rgba(255, 255, 255, 0.25);
-  --auth-input-bg: rgba(12, 12, 12, 0.85);
+  --auth-bg: #030712;
+  --auth-emerald: #10B981;
+  --auth-cyan: #06B6D4;
+  --auth-blue: #38BDF8;
+  --auth-gold: #F59E0B;
+  --auth-card: linear-gradient(165deg, rgba(14, 34, 56, 0.92) 0%, rgba(10, 25, 44, 0.96) 50%, rgba(7, 18, 33, 0.98) 100%);
+  --auth-border: rgba(16, 185, 129, 0.38);
+  --auth-input-bg: rgba(10, 26, 46, 0.82);
   --auth-text: #FFFFFF;
   --auth-text-dim: #94A3B8;
   position: relative;
@@ -2304,23 +2302,24 @@ html, body {
   min-height: 100vh;
   width: 100%;
   padding: clamp(24px, 4vh, 48px) 16px;
-  background-color: #060D17 !important;
+  background-color: #030712 !important;
   background-image: 
-    radial-gradient(ellipse 95% 70% at 15% 15%, rgba(16, 185, 129, 0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 85% 65% at 85% 18%, rgba(14, 165, 233, 0.24) 0%, transparent 58%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
-    radial-gradient(ellipse 90% 70% at 80% 85%, rgba(245, 158, 11, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 85% 65% at 20% 85%, rgba(16, 185, 129, 0.18) 0%, transparent 62%),
-    linear-gradient(175deg, #060D17 0%, #0A1C30 35%, #07212C 70%, #05101E 100%) !important;
+    radial-gradient(ellipse 95% 70% at 12% 10%, rgba(16, 185, 129, 0.32) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 65% at 88% 12%, rgba(14, 165, 233, 0.30) 0%, transparent 58%),
+    radial-gradient(ellipse 75% 55% at 50% 50%, rgba(99, 102, 241, 0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 95% 75% at 85% 90%, rgba(245, 158, 11, 0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 85% 70% at 12% 92%, rgba(16, 185, 129, 0.24) 0%, transparent 62%),
+    linear-gradient(175deg, #030712 0%, #071728 35%, #051A24 70%, #020914 100%) !important;
   background-attachment: fixed !important;
 }
 .auth-container.show { display: flex; }
 
 body.light .auth-container {
   --auth-bg: #F8FAFC;
-  --auth-gold: #059669;
-  --auth-gold-dark: #047857;
-  --auth-gold-light: #10B981;
+  --auth-emerald: #059669;
+  --auth-cyan: #0284C7;
+  --auth-blue: #2563EB;
+  --auth-gold: #D97706;
   --auth-card: #FFFFFF;
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
@@ -2328,12 +2327,65 @@ body.light .auth-container {
   --auth-text-dim: #475569;
   background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(5, 150, 105, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.05) 0%, transparent 50%),
     linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 100%) !important;
 }
 
-/* Barra Superior de Utilitários (Tema Claro/Escuro) */
+/* Orbes de Luz Ambiente 4K (Fintech Volumetric Aurora) */
+.auth-ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(100px);
+  -webkit-filter: blur(100px);
+  z-index: 0;
+  opacity: 0.65;
+  transition: opacity 0.5s ease;
+}
+.auth-glow-1 {
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.35) 0%, rgba(5, 150, 105, 0.10) 55%, transparent 75%);
+  top: -120px;
+  left: 2%;
+  animation: authGlowFloat1 18s ease-in-out infinite alternate;
+}
+.auth-glow-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.32) 0%, rgba(2, 132, 199, 0.10) 55%, transparent 75%);
+  top: 10%;
+  right: 2%;
+  animation: authGlowFloat2 22s ease-in-out infinite alternate;
+}
+.auth-glow-3 {
+  width: 620px;
+  height: 620px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.20) 0%, rgba(16, 185, 129, 0.12) 50%, transparent 75%);
+  bottom: -180px;
+  left: 30%;
+  animation: authGlowFloat3 26s ease-in-out infinite alternate;
+}
+
+@keyframes authGlowFloat1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 30px) scale(1.08); }
+}
+@keyframes authGlowFloat2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-35px, 25px) scale(1.06); }
+}
+@keyframes authGlowFloat3 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(25px, -35px) scale(1.10); }
+}
+
+body.light .auth-ambient-glow {
+  opacity: 0.25;
+}
+
+/* Barra Superior de Utilitários */
 .auth-top-bar {
   position: absolute;
   top: 20px;
@@ -2345,9 +2397,9 @@ body.light .auth-container {
 }
 
 .auth-theme-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #FFFFFF;
+  background: rgba(14, 34, 56, 0.70);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38BDF8;
   width: 44px;
   height: 44px;
   border-radius: 14px;
@@ -2357,7 +2409,7 @@ body.light .auth-container {
   cursor: pointer;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 16px rgba(56, 189, 248, 0.18);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .auth-theme-btn svg {
@@ -2367,10 +2419,10 @@ body.light .auth-container {
 }
 .auth-theme-btn:hover {
   transform: scale(1.06) translateY(-1px);
-  background: rgba(255, 255, 255, 0.16);
-  border-color: #FFFFFF;
-  color: #FFFFFF;
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.20);
+  background: rgba(14, 34, 58, 0.95);
+  border-color: #00E599;
+  color: #00E599;
+  box-shadow: 0 6px 20px rgba(0, 229, 153, 0.25);
 }
 body.light .auth-theme-btn {
   background: #FFFFFF;
@@ -2384,23 +2436,25 @@ body.light .auth-theme-btn:hover {
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.15);
 }
 
-/* Grid Sutil de Fundo */
+/* Grid Sutil de Fundo 4K */
 .auth-grid {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 56px 56px;
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 80%);
-  mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 80%);
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.10) 1.2px, transparent 1.2px);
+  background-size: 56px 56px, 56px 56px, 28px 28px;
+  -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, #000 35%, transparent 95%);
+  mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, #000 35%, transparent 95%);
 }
 body.light .auth-grid {
   background-image:
-    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+    linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
 }
 
 /* Layout Executivo em Grid Perfeito (2 Colunas Harmonizadas) */
@@ -2431,45 +2485,46 @@ body.light .auth-grid {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
+  padding: 7px 16px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.30);
-  color: #FFFFFF !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(14, 165, 233, 0.12) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #6EE7B7 !important;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   width: fit-content;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.20);
 }
 .auth-showcase-badge .badge-dot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #FFFFFF;
+  background: #00E599;
   display: inline-block;
-  box-shadow: 0 0 10px #FFFFFF;
+  box-shadow: 0 0 12px #00E599;
   animation: authPulseDot 2s infinite ease-in-out;
 }
 @keyframes authPulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px #FFFFFF; }
-  50% { opacity: 0.6; transform: scale(0.85); box-shadow: 0 0 14px #FFFFFF; }
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px #00E599; }
+  50% { opacity: 0.55; transform: scale(0.85); box-shadow: 0 0 18px #00E599; }
 }
 
 .auth-showcase-title {
-  font-size: clamp(28px, 3.2vw, 42px);
+  font-size: clamp(28px, 3.4vw, 44px);
   font-weight: 900;
-  line-height: 1.16;
+  line-height: 1.15;
   color: #FFFFFF !important;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
 }
 .auth-showcase-title span {
-  background: linear-gradient(90deg, #FFFFFF 0%, #E2E8F0 50%, #FFFFFF 100%);
+  background: linear-gradient(135deg, #00E599 0%, #38BDF8 50%, #60A5FA 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px rgba(255, 255, 255, 0.25));
+  filter: drop-shadow(0 0 24px rgba(0, 229, 153, 0.40));
 }
 
 .auth-showcase-desc {
@@ -2478,6 +2533,7 @@ body.light .auth-grid {
   line-height: 1.6;
   max-width: 520px;
   font-weight: 500;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* 3 Cards de Métricas Estilo Widget Bloomberg/Fintech */
@@ -2493,7 +2549,6 @@ body.light .auth-grid {
   border-radius: 16px;
   background: linear-gradient(145deg, rgba(14, 35, 58, 0.88) 0%, rgba(9, 24, 42, 0.94) 100%) !important;
   border: 1px solid rgba(56, 189, 248, 0.25) !important;
-  border-top: 2.5px solid #10B981 !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2502,6 +2557,25 @@ body.light .auth-grid {
   flex-direction: column;
   justify-content: space-between;
 }
+.auth-metric-card.metric-card-budget {
+  border-top: 2.5px solid #10B981 !important;
+}
+.auth-metric-card.metric-card-budget .metric-card-head svg {
+  color: #10B981 !important;
+}
+.auth-metric-card.metric-card-savings {
+  border-top: 2.5px solid #06B6D4 !important;
+}
+.auth-metric-card.metric-card-savings .metric-card-head svg {
+  color: #06B6D4 !important;
+}
+.auth-metric-card.metric-card-goals {
+  border-top: 2.5px solid #38BDF8 !important;
+}
+.auth-metric-card.metric-card-goals .metric-card-head svg {
+  color: #38BDF8 !important;
+}
+
 .auth-metric-card:hover {
   transform: translateY(-3px);
   border-color: rgba(56, 189, 248, 0.60) !important;
@@ -2515,7 +2589,6 @@ body.light .auth-grid {
   margin-bottom: 6px;
 }
 .metric-card-head svg {
-  color: #10B981 !important;
   flex-shrink: 0;
 }
 
@@ -2551,6 +2624,11 @@ body.light .auth-grid {
   color: #34D399 !important;
   border: 1px solid rgba(52, 211, 153, 0.40) !important;
 }
+.metric-pill-tag.cyan {
+  background: rgba(6, 182, 212, 0.18) !important;
+  color: #22D3EE !important;
+  border: 1px solid rgba(34, 211, 238, 0.40) !important;
+}
 .metric-pill-tag.amber {
   background: rgba(245, 158, 11, 0.18) !important;
   color: #FBBF24 !important;
@@ -2571,15 +2649,19 @@ body.light .auth-grid {
   gap: clamp(10px, 1.8vw, 18px);
   font-size: 12px;
   font-weight: 700;
-  color: #94A3B8 !important;
+  color: #CBD5E1 !important;
   margin-top: 6px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.20);
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 .auth-trust-item {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  background: rgba(14, 34, 56, 0.50);
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(56, 189, 248, 0.18);
 }
 .auth-trust-item svg {
   color: #10B981 !important;
@@ -12254,6 +12336,9 @@ body.light .period button.active {
   <canvas id="authBgCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.85;"></canvas>
 
   <div class="auth-grid" aria-hidden="true"></div>
+  <div class="auth-ambient-glow auth-glow-1" aria-hidden="true"></div>
+  <div class="auth-ambient-glow auth-glow-2" aria-hidden="true"></div>
+  <div class="auth-ambient-glow auth-glow-3" aria-hidden="true"></div>
 
   <div class="auth-exec-layout">
     <!-- Showcase Institucional Executivo -->
@@ -12272,25 +12357,25 @@ body.light .period button.active {
       </div>
 
       <div class="auth-showcase-metrics">
-        <div class="auth-metric-card">
+        <div class="auth-metric-card metric-card-budget">
           <div class="metric-card-head">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
             <span class="metric-card-label">Orçamento Mensal</span>
           </div>
           <div class="metric-val">100% no Limite</div>
-          <div class="metric-pill-tag white">✓ Zero Estouro de Gastos</div>
+          <div class="metric-pill-tag green">✓ Zero Estouro de Gastos</div>
         </div>
 
-        <div class="auth-metric-card">
+        <div class="auth-metric-card metric-card-savings">
           <div class="metric-card-head">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
             <span class="metric-card-label">Economia do Mês</span>
           </div>
           <div class="metric-val">R$ 3.850,00</div>
-          <div class="metric-pill-tag green">▲ +24% Guardado</div>
+          <div class="metric-pill-tag cyan">▲ +24% Guardado</div>
         </div>
 
-        <div class="auth-metric-card">
+        <div class="auth-metric-card metric-card-goals">
           <div class="metric-card-head">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
             <span class="metric-card-label">Metas & Reserva</span>
@@ -27563,8 +27648,9 @@ window.applyPostLoginBg = function(theme) {
     function resize() {
       var nw = window.innerWidth;
       var nh = window.innerHeight;
-      if (width === nw && height === nh && canvas.width > 0) return;
-      dpr = 1;
+      var targetDpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (width === nw && height === nh && canvas.width > 0 && dpr === targetDpr) return;
+      dpr = targetDpr;
       width = nw;
       height = nh;
       canvas.width = Math.floor(width * dpr);
@@ -27611,12 +27697,27 @@ window.applyPostLoginBg = function(theme) {
 
     // 2. Moedas Douradas e Tokens Financeiros Flutuantes
     const wealthCoins = [];
-    const coinCount = isMobile ? 12 : 22;
+    const coinCount = isMobile ? 14 : 26;
     for (let i = 0; i < coinCount; i++) {
-      const isSapphire = Math.random() > 0.6;
-      const coinColor = isAuthCanvas ? '#FFFFFF' : (isSapphire ? '#38BDF8' : '#FBBF24');
-      const coinBorder = isAuthCanvas ? 'rgba(255, 255, 255, 0.40)' : (isSapphire ? 'rgba(56, 189, 248, 0.45)' : 'rgba(245, 158, 11, 0.45)');
-      const coinBg = isAuthCanvas ? 'rgba(255, 255, 255, 0.08)' : (isSapphire ? 'rgba(14, 165, 233, 0.16)' : 'rgba(217, 119, 6, 0.16)');
+      const tokenType = i % 4; // 0: Esmeralda, 1: Safira, 2: Ouro, 3: Menta/Ciano
+      let coinColor, coinBorder, coinBg;
+      if (tokenType === 0) {
+        coinColor = '#10B981';
+        coinBorder = 'rgba(16, 185, 129, 0.45)';
+        coinBg = 'rgba(16, 185, 129, 0.12)';
+      } else if (tokenType === 1) {
+        coinColor = '#38BDF8';
+        coinBorder = 'rgba(56, 189, 248, 0.45)';
+        coinBg = 'rgba(14, 165, 233, 0.12)';
+      } else if (tokenType === 2) {
+        coinColor = '#FBBF24';
+        coinBorder = 'rgba(245, 158, 11, 0.45)';
+        coinBg = 'rgba(217, 119, 6, 0.12)';
+      } else {
+        coinColor = '#00E599';
+        coinBorder = 'rgba(0, 229, 153, 0.45)';
+        coinBg = 'rgba(0, 229, 153, 0.12)';
+      }
       wealthCoins.push({
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
@@ -27637,12 +27738,13 @@ window.applyPostLoginBg = function(theme) {
 
     // 3. Pílulas de Metas Flutuantes
     const floatingBadges = [];
-    const badgeCount = isMobile ? 5 : 9;
+    const badgeCount = isMobile ? 6 : 10;
     for (let b = 0; b < badgeCount; b++) {
       const item = personalFinanceBadges[b % personalFinanceBadges.length];
-      const badgeColor = isAuthCanvas ? '#FFFFFF' : (item.type === 'sapphire' ? '#38BDF8' : '#FBBF24');
-      const badgeBorder = isAuthCanvas ? 'rgba(255, 255, 255, 0.35)' : (item.type === 'sapphire' ? 'rgba(56, 189, 248, 0.38)' : 'rgba(245, 158, 11, 0.38)');
-      const badgeBg = isAuthCanvas ? 'rgba(255, 255, 255, 0.10)' : (item.type === 'sapphire' ? 'rgba(14, 165, 233, 0.18)' : 'rgba(217, 119, 6, 0.18)');
+      const isEmerald = (b % 3 === 0);
+      const badgeColor = isEmerald ? '#34D399' : (item.type === 'sapphire' ? '#38BDF8' : '#FBBF24');
+      const badgeBorder = isEmerald ? 'rgba(52, 211, 153, 0.40)' : (item.type === 'sapphire' ? 'rgba(56, 189, 248, 0.38)' : 'rgba(245, 158, 11, 0.38)');
+      const badgeBg = isEmerald ? 'rgba(16, 185, 129, 0.14)' : (item.type === 'sapphire' ? 'rgba(14, 165, 233, 0.14)' : 'rgba(217, 119, 6, 0.14)');
       floatingBadges.push({
         x: Math.random() * ((width || 1200) - 180) + 90,
         y: Math.random() * ((height || 800) - 120) + 60,
@@ -27661,23 +27763,24 @@ window.applyPostLoginBg = function(theme) {
 
     // 4. Rede / Constelação de Patrimônio Pessoal
     const wealthNodes = [];
-    const nodeCount = isMobile ? 18 : 34;
+    const nodeCount = isMobile ? 20 : 38;
     for (let n = 0; n < nodeCount; n++) {
-      const isSapphire = Math.random() > 0.45;
+      const nodeChoice = Math.random();
+      const nodeColor = nodeChoice > 0.6 ? '#10B981' : (nodeChoice > 0.3 ? '#38BDF8' : '#F59E0B');
       wealthNodes.push({
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
         vx: (Math.random() - 0.5) * 0.35,
         vy: (Math.random() - 0.5) * 0.35,
         radius: Math.random() * 2.0 + 1.2,
-        color: isAuthCanvas ? '#FFFFFF' : (isSapphire ? '#38BDF8' : '#F59E0B'),
+        color: nodeColor,
         alpha: Math.random() * 0.45 + 0.25
       });
     }
 
     // 5. Candlesticks Financeiros de Mercado & Trading
     const candlestickBars = [];
-    const candleCount = isMobile ? 18 : 38;
+    const candleCount = isMobile ? 20 : 42;
     for (let c = 0; c < candleCount; c++) {
       const isBullish = Math.random() > 0.35;
       const band = (c % 2 === 0) ? 0.32 : 0.78;
@@ -27697,14 +27800,15 @@ window.applyPostLoginBg = function(theme) {
 
     // 6. Micro-Fagulhas de Ouro e Safira (Gold Dust)
     const dustParticles = [];
-    const dustCount = isMobile ? 22 : 46;
+    const dustCount = isMobile ? 24 : 52;
     for (let d = 0; d < dustCount; d++) {
-      const isGold = Math.random() > 0.4;
+      const dustChoice = Math.random();
+      const dustColor = dustChoice > 0.65 ? '#10B981' : (dustChoice > 0.35 ? '#38BDF8' : '#FBBF24');
       dustParticles.push({
         x: Math.random() * (width || 1200),
         y: Math.random() * (height || 800),
         radius: Math.random() * 1.6 + 0.6,
-        color: isAuthCanvas ? '#FFFFFF' : (isGold ? '#FBBF24' : '#38BDF8'),
+        color: dustColor,
         alpha: Math.random() * 0.55 + 0.25,
         vy: -(Math.random() * 0.28 + 0.08),
         vx: (Math.random() - 0.5) * 0.18,
@@ -27715,7 +27819,7 @@ window.applyPostLoginBg = function(theme) {
 
     let waveOffset = 0;
     let lastRenderTime = 0;
-    const targetFpsInterval = 1000 / 30;
+    const targetFpsInterval = 1000 / 60;
 
     function render(nowTime) {
       requestAnimationFrame(render);
@@ -27762,31 +27866,31 @@ window.applyPostLoginBg = function(theme) {
       ctx.lineTo(width, height);
       ctx.closePath();
       const waveGrad1 = ctx.createLinearGradient(0, baseWaveY - 40, 0, height);
-      waveGrad1.addColorStop(0, isLight ? 'rgba(14, 165, 233, 0.07)' : 'rgba(14, 165, 233, 0.10)');
+      waveGrad1.addColorStop(0, isLight ? 'rgba(16, 185, 129, 0.08)' : 'rgba(16, 185, 129, 0.14)');
       waveGrad1.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = waveGrad1;
       ctx.fill();
 
-      // Linha de contorno da onda safira
+      // Linha de contorno da onda esmeralda
       ctx.beginPath();
       for (let x = 0; x <= width; x += 30) {
         const y1 = baseWaveY + Math.sin(x * 0.0035 + waveOffset) * 22 + Math.cos(x * 0.006 + waveOffset * 0.8) * 14;
         if (x === 0) ctx.moveTo(x, y1);
         else ctx.lineTo(x, y1);
       }
-      ctx.strokeStyle = isLight ? 'rgba(14, 165, 233, 0.35)' : 'rgba(56, 189, 248, 0.45)';
-      ctx.lineWidth = 1.6;
+      ctx.strokeStyle = isLight ? 'rgba(5, 150, 105, 0.40)' : 'rgba(0, 229, 153, 0.55)';
+      ctx.lineWidth = 1.8;
       ctx.stroke();
 
-      // Segunda onda dourada harmônica
+      // Segunda onda ciano/safira harmônica
       ctx.beginPath();
       for (let x = 0; x <= width; x += 30) {
         const y2 = (baseWaveY + 16) + Math.sin(x * 0.0042 - waveOffset * 0.9) * 18 + Math.cos(x * 0.005 + waveOffset) * 10;
         if (x === 0) ctx.moveTo(x, y2);
         else ctx.lineTo(x, y2);
       }
-      ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.28)' : 'rgba(245, 158, 11, 0.40)';
-      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = isLight ? 'rgba(2, 132, 199, 0.35)' : 'rgba(56, 189, 248, 0.45)';
+      ctx.lineWidth = 1.4;
       ctx.stroke();
       ctx.restore();
 
