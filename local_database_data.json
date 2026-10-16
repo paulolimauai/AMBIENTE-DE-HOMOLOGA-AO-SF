@@ -3204,7 +3204,7 @@
       {
         "id": 13,
         "text": "Pagamento realizado: MOTO — R$ 930,00",
-        "icon": "✅",
+        "icon": "��",
         "time": 1791466769820,
         "read": false
       },
@@ -3301,8 +3301,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 18,
-    "updated_at": "2026-10-15T14:15:59.475Z",
-    "updated_at_ms": 1792073759475
+    "updated_at": "2026-10-16T07:02:27.416Z",
+    "updated_at_ms": 1792134147416
   },
   "": {
     "categories": [
