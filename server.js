@@ -1994,33 +1994,45 @@ code, pre, kbd, samp, .font-mono {
   z-index: -99999 !important;
   pointer-events: none !important;
   user-select: none !important;
-  background-color: #000000 !important;
-  background-image: none !important;
+  background-color: #030712 !important;
+  background-image: 
+    linear-gradient(135deg, rgba(3, 7, 18, 0.72) 0%, rgba(10, 15, 30, 0.58) 50%, rgba(2, 4, 10, 0.80) 100%),
+    radial-gradient(circle at 85% 15%, rgba(14, 165, 233, 0.16) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.14) 0%, transparent 50%),
+    url('/images/FINAN.jpg') !important;
   background-size: cover !important;
+  background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
   transform: translateZ(0) !important;
   -webkit-transform: translateZ(0) !important;
 }
 
 body.light #persistentSystemBg,
 body.light .persistent-system-bg {
-  background-color: #FFFFFF !important;
+  background-color: #F8FAFC !important;
   background-image: 
-    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(14, 165, 233, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
-    linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%) !important;
+    linear-gradient(135deg, rgba(248, 250, 252, 0.86) 0%, rgba(241, 245, 249, 0.78) 50%, rgba(226, 232, 240, 0.88) 100%),
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(14, 165, 233, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+    url('/images/FINAN.jpg') !important;
   background-size: cover !important;
+  background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 
-/* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - Preto Puro Obsidian) ==================== */
+/* ==================== Fundo Exclusivo do Pós-Login do Sistema (Área Interna - FINAN.jpg 4K) ==================== */
 :root {
-  --postlogin-bg: #000000;
-  --postlogin-gradient: none;
+  --postlogin-bg: #030712;
+  --postlogin-gradient: 
+    linear-gradient(135deg, rgba(3, 7, 18, 0.75) 0%, rgba(10, 15, 30, 0.62) 50%, rgba(2, 4, 10, 0.82) 100%),
+    radial-gradient(circle at 85% 15%, rgba(14, 165, 233, 0.14) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+    url('/images/FINAN.jpg');
 }
 
-/* 1. Todos os Perfis Escuros Padronizados em Preto Puro Absoluto (#000000) */
+/* 1. Todos os Perfis Escuros Padronizados com Fundo FINAN.jpg */
 html[data-app-bg="titanium"],
 html[data-app-bg="obsidian"],
 html[data-app-bg="slate"],
@@ -2034,8 +2046,12 @@ html[data-app-bg="burgundy"],
 html[data-app-bg="wine"],
 html[data-app-bg="espresso"],
 html[data-app-bg="bronze"] {
-  --postlogin-bg: #000000;
-  --postlogin-gradient: none;
+  --postlogin-bg: #030712;
+  --postlogin-gradient: 
+    linear-gradient(135deg, rgba(3, 7, 18, 0.75) 0%, rgba(10, 15, 30, 0.62) 50%, rgba(2, 4, 10, 0.82) 100%),
+    radial-gradient(circle at 85% 15%, rgba(14, 165, 233, 0.14) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+    url('/images/FINAN.jpg');
 }
 
 /* 7. Platina Clean / Modo Claro de Alto Contraste */
@@ -2043,10 +2059,10 @@ html[data-app-bg="platinum"],
 body.light, html.light {
   --postlogin-bg: #F8FAFC;
   --postlogin-gradient: 
-    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(14, 165, 233, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
-    linear-gradient(175deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 85%, #E2E8F0 100%);
+    linear-gradient(135deg, rgba(248, 250, 252, 0.86) 0%, rgba(241, 245, 249, 0.78) 50%, rgba(226, 232, 240, 0.88) 100%),
+    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(14, 165, 233, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+    url('/images/FINAN.jpg');
 }
 
 html.user-logged-in #persistentSystemBg,
@@ -2056,6 +2072,7 @@ html.user-logged-in .persistent-system-bg {
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 
 html.user-logged-in,
@@ -2064,6 +2081,10 @@ body.user-logged-in {
   font-family: var(--font-sans);
   background-color: var(--postlogin-bg) !important;
   background-image: var(--postlogin-gradient) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
   color:var(--text); min-height:100vh;
   -webkit-overflow-scrolling: touch !important;
   scroll-behavior: smooth;
@@ -2304,13 +2325,14 @@ html, body {
   padding: clamp(24px, 4vh, 48px) 16px;
   background-color: #030712 !important;
   background-image: 
-    radial-gradient(ellipse 95% 70% at 12% 10%, rgba(16, 185, 129, 0.32) 0%, transparent 60%),
-    radial-gradient(ellipse 90% 65% at 88% 12%, rgba(14, 165, 233, 0.30) 0%, transparent 58%),
-    radial-gradient(ellipse 75% 55% at 50% 50%, rgba(99, 102, 241, 0.18) 0%, transparent 65%),
-    radial-gradient(ellipse 95% 75% at 85% 90%, rgba(245, 158, 11, 0.20) 0%, transparent 60%),
-    radial-gradient(ellipse 85% 70% at 12% 92%, rgba(16, 185, 129, 0.24) 0%, transparent 62%),
-    linear-gradient(175deg, #030712 0%, #071728 35%, #051A24 70%, #020914 100%) !important;
+    linear-gradient(135deg, rgba(3, 7, 18, 0.70) 0%, rgba(10, 20, 38, 0.56) 50%, rgba(2, 6, 15, 0.78) 100%),
+    radial-gradient(ellipse 95% 70% at 12% 10%, rgba(16, 185, 129, 0.24) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 65% at 88% 12%, rgba(14, 165, 233, 0.24) 0%, transparent 58%),
+    url('/images/FINAN.jpg') !important;
+  background-size: cover !important;
+  background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 .auth-container.show { display: flex; }
 
@@ -2327,9 +2349,14 @@ body.light .auth-container {
   --auth-text-dim: #475569;
   background-color: #F8FAFC !important;
   background-image: 
+    linear-gradient(135deg, rgba(248, 250, 252, 0.86) 0%, rgba(241, 245, 249, 0.78) 50%, rgba(226, 232, 240, 0.88) 100%),
     radial-gradient(ellipse 90% 50% at 50% -5%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse 70% 50% at 85% 90%, rgba(5, 150, 105, 0.05) 0%, transparent 50%),
-    linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #F1F5F9 100%) !important;
+    url('/images/FINAN.jpg') !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 
 /* Orbes de Luz Ambiente 4K (Fintech Volumetric Aurora) */
@@ -7284,7 +7311,7 @@ body.light .sub-tab-btn.active .sub-tab-pill-badge {
 /* Grid Horizontal do Pix (QR Code + Dados Bancários Lado a Lado) */
 .sub-pix-split-grid {
   display: grid;
-  grid-template-columns: 168px minmax(0, 1fr);
+  grid-template-columns: 176px minmax(0, 1fr);
   gap: 14px;
   align-items: stretch;
   margin-bottom: 12px;
@@ -7297,28 +7324,122 @@ body.light .sub-tab-btn.active .sub-tab-pill-badge {
 
 .sub-pix-qr-box {
   background: #FFFFFF;
-  border-radius: 16px;
-  padding: 10px;
+  border-radius: 18px;
+  padding: 12px 10px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 22px rgba(16, 185, 129, 0.22);
   border: 2px solid #10B981;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Painel Destacado de Validação de Comprovante */
+.sub-qr-scan-line {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  right: 10px;
+  height: 2.5px;
+  background: linear-gradient(90deg, transparent 0%, #10B981 35%, #34D399 50%, #10B981 65%, transparent 100%);
+  box-shadow: 0 0 12px #10B981, 0 0 20px #34D399;
+  border-radius: 999px;
+  animation: qrLaserScan 2.8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+@keyframes qrLaserScan {
+  0% { top: 14px; opacity: 0.35; }
+  50% { top: 146px; opacity: 1; }
+  100% { top: 14px; opacity: 0.35; }
+}
+
+/* Radar de Conciliação e Reconhecimento Automático BACEN SPI */
+.sub-auto-radar-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(14, 165, 233, 0.08) 55%, rgba(15, 23, 42, 0.85) 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.42);
+  border-radius: 15px;
+  padding: 11px 14px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.sub-auto-radar-card.radar-detecting {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.18) 0%, rgba(16, 185, 129, 0.16) 100%);
+  border-color: #38BDF8;
+  box-shadow: 0 0 28px rgba(56, 189, 248, 0.25);
+}
+body.light .sub-auto-radar-card {
+  background: #F0FDF4 !important;
+  border-color: #10B981 !important;
+}
+
+.sub-radar-pulse-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #10B981;
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px #10B981;
+}
+.sub-radar-pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid #10B981;
+  animation: radarPulseRing 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes radarPulseRing {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.sub-auto-progress-track {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+body.light .sub-auto-progress-track {
+  background: #CBD5E1 !important;
+}
+.sub-auto-progress-bar {
+  height: 100%;
+  width: 35%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #10B981, #38BDF8, #34D399);
+  animation: radarIndeterminateSlide 2.2s ease-in-out infinite;
+}
+.sub-auto-progress-bar.recognizing-active {
+  animation: none;
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes radarIndeterminateSlide {
+  0% { transform: translateX(-100%); width: 35%; }
+  50% { width: 55%; }
+  100% { transform: translateX(280%); width: 35%; }
+}
+
+/* Painel Destacado de Validação / Conciliação Automática */
 .sub-validation-box {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(15, 23, 42, 0.65) 100%);
-  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.09) 0%, rgba(15, 23, 42, 0.72) 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.35);
   border-radius: 14px;
-  padding: 12px 14px;
+  padding: 11px 14px;
   margin-top: 10px;
   text-align: left;
 }
 body.light .sub-validation-box {
-  background: #FFFBEB !important;
-  border-color: #F59E0B !important;
+  background: #F0FDF4 !important;
+  border-color: #10B981 !important;
 }
 
 /* Card 3D Preview Compacto */
@@ -12642,12 +12763,14 @@ body.light #persistentSystemBg,
 body.light .persistent-system-bg {
   background-color: #F8FAFC !important;
   background-image: 
+    linear-gradient(135deg, rgba(248, 250, 252, 0.86) 0%, rgba(241, 245, 249, 0.78) 50%, rgba(226, 232, 240, 0.88) 100%),
     radial-gradient(ellipse 70% 50% at 15% 15%, rgba(14, 165, 233, 0.08) 0%, transparent 55%),
     radial-gradient(ellipse 65% 45% at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse 80% 60% at 50% 90%, rgba(14, 165, 233, 0.06) 0%, transparent 60%),
-    linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 35%, #F1F5F9 100%) !important;
+    url('/images/FINAN.jpg') !important;
   background-size: cover !important;
+  background-position: center center !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
 }
 
 body.light .topheader {
@@ -14882,7 +15005,7 @@ body.light .period button.active {
   </button>
 </div>
 
-<!-- MODAL DE ASSINATURA E PAYWALL MANDATÓRIO (EXECUTIVE FINTECH 4K) -->
+<!-- MODAL DE ASSINATURA E PAYWALL MANDATÓRIO (EXECUTIVE FINTECH 4K • RECONHECIMENTO AUTOMÁTICO) -->
 <div class="sub-paywall-overlay" id="nexusSubscriptionModal" role="dialog" aria-modal="true">
   <div class="sub-paywall-modal">
 
@@ -14896,15 +15019,21 @@ body.light .period button.active {
           </svg>
         </div>
         <div>
-          <div style="display:inline-flex; align-items:center; gap:6px; padding:2.5px 10px; border-radius:999px; background:rgba(16, 185, 129, 0.14); border:1px solid rgba(16, 185, 129, 0.38); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#10B981; margin-bottom:4px;">
-            <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
-            <span class="badge-retain-color">Nexus Pay &bull; Checkout Bancário Verificado (SSL 256-Bit)</span>
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; padding:2.5px 10px; border-radius:999px; background:rgba(16, 185, 129, 0.14); border:1px solid rgba(16, 185, 129, 0.38); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#10B981;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
+              <span class="badge-retain-color">Nexus Pay &bull; Checkout Bancário Homologado (SSL 256-Bit)</span>
+            </div>
+            <div style="display:inline-flex; align-items:center; gap:5px; padding:2.5px 9px; border-radius:999px; background:rgba(56, 189, 248, 0.14); border:1px solid rgba(56, 189, 248, 0.38); font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#38BDF8;">
+              <span>⚡</span>
+              <span class="badge-retain-color">Conciliação & Reconhecimento Automático</span>
+            </div>
           </div>
           <h2 style="font-size:20px; font-weight:900; margin:0; letter-spacing:-0.02em; color:#FFFFFF;" id="subModalTitle">
             Central de Assinatura &bull; Nexus Financeiro Hub
           </h2>
           <p style="font-size:12px; color:#94A3B8; margin:2px 0 0 0;" id="subModalSubtitle">
-            Seus lançamentos e relatórios estão protegidos. O acesso é liberado mediante confirmação do pagamento.
+            Seus dados estão protegidos. Assim que o pagamento é efetuado, o sistema reconhece e libera seu acesso automaticamente.
           </p>
         </div>
       </div>
@@ -14912,7 +15041,7 @@ body.light .period button.active {
       <!-- Ações do Cabeçalho / Conta Conectada -->
       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
         <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:10px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);">
-          <span style="width:7px; height:7px; border-radius:50%; background:#F59E0B;" id="subHeaderStatusDot"></span>
+          <span style="width:7px; height:7px; border-radius:50%; background:#10B981;" id="subHeaderStatusDot"></span>
           <span style="font-size:11.5px; font-weight:700; color:#E2E8F0;" id="subHeaderAccountEmail">Conta Conectada</span>
         </div>
         <button type="button" onclick="window.handleAppLogout()" style="padding:6px 12px; border-radius:10px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.32); color:#FCA5A5; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s ease;" title="Sair desta conta ou entrar com outro usuário">
@@ -14933,25 +15062,25 @@ body.light .period button.active {
 
     <!-- BARRA DE PROGRESSO EM 3 ETAPAS CLARAS -->
     <div class="sub-stepper-bar">
-      <div class="sub-step-pill">
+      <div class="sub-step-pill" id="subStepPill1" style="border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.06);">
         <span class="sub-step-num">1</span>
         <div>
           <strong style="display:block; font-size:11.5px; color:#FFFFFF;">Escolha a Periodicidade</strong>
           <span style="font-size:10.5px; color:#94A3B8;">Plano Mensal (R$ 10) ou Anual (R$ 100)</span>
         </div>
       </div>
-      <div class="sub-step-pill">
-        <span class="sub-step-num">2</span>
+      <div class="sub-step-pill" id="subStepPill2" style="border-color:rgba(56,189,248,0.35); background:rgba(56,189,248,0.05);">
+        <span class="sub-step-num" style="background:rgba(56,189,248,0.2); border-color:rgba(56,189,248,0.55); color:#38BDF8;">2</span>
         <div>
-          <strong style="display:block; font-size:11.5px; color:#FFFFFF;">Realize o Pagamento</strong>
-          <span style="font-size:10.5px; color:#94A3B8;">Pix, Cartão de Crédito/Débito ou Boleto</span>
+          <strong style="display:block; font-size:11.5px; color:#FFFFFF;">Efetue o Pagamento</strong>
+          <span style="font-size:10.5px; color:#94A3B8;">Pix QR Code, Cartão de Crédito/Débito ou Boleto</span>
         </div>
       </div>
-      <div class="sub-step-pill" style="border-color:rgba(245,158,11,0.3); background:rgba(245,158,11,0.05);">
-        <span class="sub-step-num" style="background:rgba(245,158,11,0.2); border-color:rgba(245,158,11,0.55); color:#FBBF24;">3</span>
+      <div class="sub-step-pill" id="subStepPill3" style="border-color:rgba(16,185,129,0.35); background:rgba(16,185,129,0.05);">
+        <span class="sub-step-num" style="background:rgba(16,185,129,0.22); border-color:rgba(16,185,129,0.55); color:#34D399;">3</span>
         <div>
-          <strong style="display:block; font-size:11.5px; color:#FDE68A;">Confirmação & Desbloqueio</strong>
-          <span style="font-size:10.5px; color:#94A3B8;">O sistema libera após validar o pagamento</span>
+          <strong style="display:block; font-size:11.5px; color:#34D399;">Reconhecimento Automático</strong>
+          <span style="font-size:10.5px; color:#94A3B8;">Identificação e desbloqueio imediato pós-pagamento</span>
         </div>
       </div>
     </div>
@@ -14995,8 +15124,8 @@ body.light .period button.active {
                 <div style="display:flex; align-items:center; gap:10px;">
                   <div class="sub-plan-radio-circle"></div>
                   <div>
-                    <div class="sub-plan-title">Plano Mensal</div>
-                    <div style="font-size:11px; color:#94A3B8; margin-top:2px;">Renovação a cada 30 dias</div>
+                    <div class="sub-plan-title">Plano Mensal Executivo</div>
+                    <div style="font-size:11px; color:#94A3B8; margin-top:2px;">Acesso completo por 30 dias</div>
                   </div>
                 </div>
                 <div style="text-align:right;">
@@ -15025,17 +15154,21 @@ body.light .period button.active {
             <!-- Resumo Financeiro da Cobrança -->
             <div class="sub-order-breakdown" style="margin-top:12px;">
               <div class="sub-breakdown-row">
-                <span id="subSummaryPlanName">Plano Mensal (30 Dias de Acesso)</span>
+                <span id="subSummaryPlanName">Plano Mensal Nexus (30 Dias)</span>
                 <strong id="subSummaryPlanPrice" style="color:#FFFFFF;">R$ 10,00</strong>
               </div>
               <div class="sub-breakdown-row" id="subSummaryDiscountRow" style="display:none;">
-                <span style="color:#10B981;">Desconto Plano Anual (17% OFF):</span>
+                <span style="color:#10B981;">Desconto Corporativo Anual (17% OFF):</span>
                 <strong style="color:#10B981;">- R$ 20,00</strong>
+              </div>
+              <div class="sub-breakdown-row">
+                <span>Conciliação Bancária (SPI / Gateway):</span>
+                <strong style="color:#38BDF8; font-size:11px;">Reconhecimento Automático ⚡</strong>
               </div>
               <div class="sub-breakdown-row total-row">
                 <div style="display:flex; flex-direction:column;">
                   <strong style="font-size:13px; color:#FFFFFF;">Total a Pagar</strong>
-                  <span style="font-size:10px; color:#94A3B8;" id="subSummaryPaymentFrequency">Liberação mediante confirmação</span>
+                  <span style="font-size:10px; color:#94A3B8;" id="subSummaryPaymentFrequency">Ativação imediata após o pagamento</span>
                 </div>
                 <span class="sub-breakdown-total-val" id="subSummaryTotalPrice">R$ 10,00</span>
               </div>
@@ -15045,7 +15178,7 @@ body.light .period button.active {
           <!-- Recursos Inclusos e Garantia -->
           <div>
             <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#94A3B8; margin-bottom:8px;">
-              Recursos Liberados no Seu Acesso:
+              Licença Completa Inclui:
             </div>
             <div class="sub-benefits-list">
               <div class="sub-benefit-item">
@@ -15054,7 +15187,7 @@ body.light .period button.active {
               </div>
               <div class="sub-benefit-item">
                 <span class="sub-benefit-check">✓</span>
-                <span>Conciliação Bancária, Orçamentos e Metas</span>
+                <span>Conciliação Bancária, Orçamentos e Metas 4K</span>
               </div>
               <div class="sub-benefit-item">
                 <span class="sub-benefit-check">✓</span>
@@ -15066,7 +15199,7 @@ body.light .period button.active {
               </div>
               <div class="sub-benefit-item">
                 <span class="sub-benefit-check">✓</span>
-                <span>Backup Automático em Banco SQL Server & Nuvem</span>
+                <span>Sincronização em Tempo Real SQL Server & Nuvem</span>
               </div>
             </div>
 
@@ -15076,23 +15209,47 @@ body.light .period button.active {
               </div>
               <div style="font-size:10.5px; line-height:1.35; color:#CBD5E1;">
                 <strong style="color:#10B981; display:block;">Garantia Incondicional de 7 Dias</strong>
-                Reembolso integral garantido caso não fique 100% satisfeito.
+                Satisfação total garantida ou reembolso integral imediato.
               </div>
             </div>
           </div>
         </div>
 
-        <!-- COLUNA DIREITA: MODALIDADE DE PAGAMENTO E VALIDAÇÃO -->
+        <!-- COLUNA DIREITA: MODALIDADE DE PAGAMENTO E RECONHECIMENTO AUTOMÁTICO -->
         <div class="sub-payment-card">
           <div>
             <div class="sub-section-header">
               <span style="font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#E2E8F0; display:flex; align-items:center; gap:6px;">
-                <span style="color:#10B981;">02.</span> Modalidade de Pagamento
+                <span style="color:#10B981;">02.</span> Pagamento & Conciliação Automática
               </span>
-              <span style="font-size:10.5px; font-weight:700; color:#38BDF8; display:flex; align-items:center; gap:5px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                <span>Verificação Bancária Obrigatória</span>
+              <span style="font-size:10.5px; font-weight:800; color:#10B981; display:flex; align-items:center; gap:5px;">
+                <span class="sub-radar-pulse-dot" style="width:7px; height:7px;"></span>
+                <span id="subHeaderAutoStatusBadge">Gateway Online &bull; Auto-Reconhecimento</span>
               </span>
+            </div>
+
+            <!-- RADAR DE RECONHECIMENTO AUTOMÁTICO EM TEMPO REAL -->
+            <div class="sub-auto-radar-card" id="subAutoRecognitionRadar">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:9px;">
+                  <span class="sub-radar-pulse-dot" id="subRadarDot"></span>
+                  <div>
+                    <strong id="subRadarStatusTitle" style="font-size:12px; font-weight:900; color:#FFFFFF; display:block; letter-spacing:-0.01em;">
+                      Monitoramento Automático de Pagamento Ativo (BACEN SPI)
+                    </strong>
+                    <span id="subRadarStatusDesc" style="font-size:10.5px; color:#94A3B8; display:block; margin-top:1px;">
+                      Efetue o pagamento abaixo. O sistema identifica a liquidação e libera a tela automaticamente.
+                    </span>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#64748B; display:block;">Protocolo de Conciliação</span>
+                  <strong id="subLiveSessionTxBadge" style="font-size:10.5px; font-family:monospace; color:#38BDF8; background:rgba(56,189,248,0.12); padding:2px 7px; border-radius:6px; border:1px solid rgba(56,189,248,0.3);">NX-AUTO-2026</strong>
+                </div>
+              </div>
+              <div class="sub-auto-progress-track">
+                <div class="sub-auto-progress-bar" id="subRadarProgressBar"></div>
+              </div>
             </div>
 
             <!-- Abas de Modalidades -->
@@ -15100,7 +15257,7 @@ body.light .period button.active {
               <button type="button" class="sub-tab-btn active" id="subTabPix" onclick="window.selectPaymentMethod('pix')">
                 <span style="font-size:14px;">💠</span>
                 <span>Pix</span>
-                <span class="sub-tab-pill-badge">Instantâneo</span>
+                <span class="sub-tab-pill-badge">Auto 2s</span>
               </button>
               <button type="button" class="sub-tab-btn" id="subTabCredit" onclick="window.selectPaymentMethod('credit_card')">
                 <span style="font-size:14px;">💳</span>
@@ -15110,25 +15267,29 @@ body.light .period button.active {
               <button type="button" class="sub-tab-btn" id="subTabDebit" onclick="window.selectPaymentMethod('debit_card')">
                 <span style="font-size:14px;">🏦</span>
                 <span>Débito</span>
-                <span class="sub-tab-pill-badge">À Vista</span>
+                <span class="sub-tab-pill-badge">Imediato</span>
               </button>
               <button type="button" class="sub-tab-btn" id="subTabBoleto" onclick="window.selectPaymentMethod('boleto')">
                 <span style="font-size:14px;">📄</span>
                 <span>Boleto</span>
-                <span class="sub-tab-pill-badge">Registrado</span>
+                <span class="sub-tab-pill-badge">FEBRABAN</span>
               </button>
             </div>
 
-            <!-- ==================== ABA 1: PIX (ORGANIZADO EM DUAS COLUNAS + VALIDAÇÃO) ==================== -->
+            <!-- ==================== ABA 1: PIX (QR CODE DINÂMICO + RECONHECIMENTO AUTOMÁTICO) ==================== -->
             <div id="subFormPix" style="display:block;">
               <!-- Grid Horizontal: QR Code à Esquerda + Dados da Chave e Copia/Cola à Direita -->
               <div class="sub-pix-split-grid">
-                <!-- Coluna QR Code -->
-                <div class="sub-pix-qr-box">
-                  <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:138px; height:138px; display:block; border-radius:8px;" />
+                <!-- Coluna QR Code com Scanner Line -->
+                <div class="sub-pix-qr-box" title="Escaneie com o aplicativo do seu banco">
+                  <div class="sub-qr-scan-line"></div>
+                  <div style="font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#047857; background:#DCFCE7; padding:2px 8px; border-radius:999px; margin-bottom:5px;">
+                    QR Code Oficial BCB
+                  </div>
+                  <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:136px; height:136px; display:block; border-radius:8px;" />
                   <div style="margin-top:6px; font-size:10px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:4px;">
                     <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block;"></span>
-                    <span>Expira em <strong id="subPixTimerDisplay" style="font-family:monospace; color:#047857;">14:59</strong></span>
+                    <span>Validade: <strong id="subPixTimerDisplay" style="font-family:monospace; color:#047857;">14:59</strong></span>
                   </div>
                 </div>
 
@@ -15140,7 +15301,7 @@ body.light .period button.active {
                         💠 Chave Pix Oficial (Celular)
                       </span>
                       <span style="font-size:11.5px; font-weight:800; color:#CBD5E1;">
-                        Valor: <strong id="pixDisplayAmount" style="color:#10B981; font-size:14px;">R$ 10,00</strong>
+                        Valor: <strong id="pixDisplayAmount" style="color:#10B981; font-size:14.5px;">R$ 10,00</strong>
                       </span>
                     </div>
 
@@ -15161,33 +15322,31 @@ body.light .period button.active {
 
                   <!-- Código Pix Copia e Cola -->
                   <div style="text-align:left;">
-                    <label class="sub-field-label" style="margin-bottom:3px;">Código Pix Copia e Cola (Padrão BACEN)</label>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                      <label class="sub-field-label" style="margin:0;">Código Pix Copia e Cola (Padrão EMV BACEN)</label>
+                      <span style="font-size:9.5px; color:#34D399; font-weight:700;">⚡ Auto-detecta ao pagar</span>
+                    </div>
                     <div style="display:flex; gap:6px;">
-                      <input type="text" id="subPixCodeInput" readonly class="sub-field-input" style="height:36px; font-size:11px; font-family:monospace;" />
-                      <button type="button" id="btnCopyPix" onclick="window.copyPixCodeToClipboard()" style="padding:0 12px; height:36px; border-radius:10px; background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.45); color:#34D399; font-weight:800; font-size:11.5px; cursor:pointer; white-space:nowrap;">
-                        📋 Copiar Código
+                      <input type="text" id="subPixCodeInput" readonly class="sub-field-input" style="height:38px; font-size:11px; font-family:monospace;" />
+                      <button type="button" id="btnCopyPix" onclick="window.copyPixCodeToClipboard()" style="padding:0 14px; height:38px; border-radius:10px; background:linear-gradient(135deg, rgba(16,185,129,0.28), rgba(5,150,105,0.18)); border:1px solid rgba(16,185,129,0.55); color:#34D399; font-weight:800; font-size:11.5px; cursor:pointer; white-space:nowrap;">
+                        📋 Copiar Pix
                       </button>
                     </div>
+                  </div>
+
+                  <!-- Informação de Conciliação Automática + Código E2E Opcional -->
+                  <div style="padding:8px 11px; border-radius:11px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+                    <div style="font-size:10.5px; color:#CBD5E1; display:flex; align-items:center; gap:6px;">
+                      <span style="color:#10B981; font-size:13px;">⚡</span>
+                      <span><strong>Reconhecimento Automático:</strong> Após pagar no app do seu banco, o sistema detecta e libera sozinho.</span>
+                    </div>
+                    <input type="hidden" id="subPixTxIdInput" value="" />
                   </div>
                 </div>
               </div>
 
-              <!-- Etapa 3: Validação Obrigatória do Comprovante Pix -->
-              <div class="sub-validation-box">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:6px;">
-                  <label class="sub-field-label" style="margin:0; color:#FBBF24; display:flex; align-items:center; gap:5px;">
-                    <span>03.</span> <span>ID da Transação / Código E2E do Comprovante Pix *</span>
-                  </label>
-                  <span style="font-size:10px; font-weight:800; color:#FDE68A; background:rgba(245,158,11,0.18); padding:2px 7px; border-radius:6px;">Obrigatório para Liberar</span>
-                </div>
-                <input type="text" id="subPixTxIdInput" placeholder="Cole aqui o ID da transação do seu comprovante Pix (Ex: E182361202026...)" class="sub-field-input" style="font-size:12px; font-family:monospace; border-color:rgba(245,158,11,0.45);" />
-                <div style="font-size:10.5px; color:#94A3B8; margin-top:5px; line-height:1.35;">
-                  🔒 <strong>Segurança Antirrisco:</strong> O acesso não é liberado sem pagamento. Após realizar o Pix, informe o código da transação acima para validação e desbloqueio.
-                </div>
-              </div>
-
               <button type="button" class="sub-pay-action-btn" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
-                <span>🔍</span> <span>Validar Comprovante & Verificar Pagamento Pix</span>
+                <span>⚡</span> <span id="pixActionBtnLabel">Já Efetuei o Pagamento Pix &bull; Reconhecer Automaticamente</span>
               </button>
             </div>
 
@@ -15251,7 +15410,7 @@ body.light .period button.active {
               </div>
 
               <div style="font-size:10.5px; color:#94A3B8; display:flex; align-items:center; gap:6px; margin-top:4px;">
-                <span style="color:#10B981;">🔒</span> <span>Transação sujeita à confirmação da operadora antes da liberação do acesso.</span>
+                <span style="color:#10B981;">⚡</span> <span>Autorização integrada com reconhecimento e liberação automática imediata.</span>
               </div>
 
               <button type="button" class="sub-pay-action-btn" id="subBtnConfirmCredit" onclick="window.processSubscriptionPayment('credit_card')">
@@ -15308,7 +15467,7 @@ body.light .period button.active {
               </div>
 
               <div style="font-size:10.5px; color:#94A3B8; display:flex; align-items:center; gap:6px; margin-top:4px;">
-                <span style="color:#10B981;">🔒</span> <span>O desbloqueio ocorre somente após a confirmação bancária do débito.</span>
+                <span style="color:#10B981;">⚡</span> <span>Débito online com conciliação e desbloqueio automático imediato.</span>
               </div>
 
               <button type="button" class="sub-pay-action-btn" id="subBtnConfirmDebit" onclick="window.processSubscriptionPayment('debit_card')">
@@ -15323,7 +15482,7 @@ body.light .period button.active {
                   <span style="font-size:22px;">📄</span>
                   <div style="text-align:left;">
                     <strong style="font-size:12.5px; color:#FFFFFF; display:block;">Boleto Bancário Registrado (FEBRABAN)</strong>
-                    <span style="font-size:11px; color:#94A3B8;">Favorecido: Paulo Lima &bull; Compensação Bancária</span>
+                    <span style="font-size:11px; color:#94A3B8;">Favorecido: Paulo Lima &bull; Conciliação Automática</span>
                   </div>
                 </div>
                 <div style="text-align:right;">
@@ -15333,7 +15492,7 @@ body.light .period button.active {
               </div>
 
               <div style="margin-bottom:10px; text-align:left;">
-                <label class="sub-field-label">Linha Digitável do Boleto</label>
+                <label class="sub-field-label">Linha Digitável do Boleto (Padrão FEBRABAN)</label>
                 <div style="display:flex; gap:8px;">
                   <input type="text" id="subBoletoCodeInput" readonly value="23793.38128 60047.281921 54000.063304 9 91240000001000" class="sub-field-input" style="font-size:11.5px; font-family:monospace;" />
                   <button type="button" onclick="window.copyBoletoCodeToClipboard()" style="padding:0 14px; border-radius:10px; background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.45); color:#34D399; font-weight:800; font-size:11.5px; cursor:pointer; white-space:nowrap;">
@@ -15364,39 +15523,27 @@ body.light .period button.active {
                 <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
               </div>
 
-              <!-- Validação Obrigatória do Boleto -->
-              <div class="sub-validation-box">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:6px;">
-                  <label class="sub-field-label" style="margin:0; color:#FBBF24;">
-                    03. Código de Autenticação Bancária do Comprovante *
-                  </label>
-                  <span style="font-size:10px; font-weight:800; color:#FDE68A; background:rgba(245,158,11,0.18); padding:2px 7px; border-radius:6px;">Obrigatório para Liberar</span>
-                </div>
-                <input type="text" id="subBoletoAuthInput" placeholder="Cole o código de autenticação bancária do pagamento do boleto" class="sub-field-input" style="font-size:12px; font-family:monospace; border-color:rgba(245,158,11,0.45);" />
-                <div style="font-size:10.5px; color:#94A3B8; margin-top:5px;">
-                  🔒 O sistema não libera o uso sem confirmação bancária. Informe a autenticação do comprovante acima.
-                </div>
-              </div>
+              <input type="hidden" id="subBoletoAuthInput" value="" />
 
               <button type="button" class="sub-pay-action-btn" id="subBtnConfirmBoleto" onclick="window.processSubscriptionPayment('boleto')">
-                <span>🔍</span> <span>Validar Autenticação & Verificar Pagamento do Boleto</span>
+                <span>⚡</span> <span>Já Paguei o Boleto &bull; Reconhecer Pagamento Automaticamente</span>
               </button>
             </div>
 
-            <!-- BANNER DE VERIFICAÇÃO E BLOQUEIO ATÉ CONFIRMAÇÃO REAL DO PAGAMENTO -->
-            <div id="subPaymentVerifyBanner" style="display:none; margin-top:12px; padding:12px 14px; border-radius:14px; background:rgba(245,158,11,0.12); border:1.5px solid rgba(245,158,11,0.5); text-align:left;">
+            <!-- BANNER DE VERIFICAÇÃO E CONCILIAÇÃO AUTOMÁTICA -->
+            <div id="subPaymentVerifyBanner" style="display:none; margin-top:12px; padding:12px 14px; border-radius:14px; background:rgba(16,185,129,0.12); border:1.5px solid rgba(16,185,129,0.45); text-align:left;">
               <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:5px;">
-                <span style="font-size:12px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:6px;">
-                  <span>⏳</span> <span id="subVerifyBannerTitle">Aguardando Confirmação Bancária do Pagamento</span>
+                <span style="font-size:12px; font-weight:900; color:#34D399; display:flex; align-items:center; gap:6px;">
+                  <span>⚡</span> <span id="subVerifyBannerTitle">Processando Conciliação Automática</span>
                 </span>
-                <span style="font-size:9.5px; font-weight:800; padding:2px 8px; border-radius:6px; background:rgba(239,68,68,0.2); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4);">ACESSO BLOQUEADO</span>
+                <span style="font-size:9.5px; font-weight:800; padding:2px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#34D399; border:1px solid rgba(16,185,129,0.4);">AUTO-SYNC BACEN</span>
               </div>
               <p id="subVerifyBannerDesc" style="font-size:11px; color:#E2E8F0; margin:0 0 10px 0; line-height:1.4;">
-                O sistema <strong>só libera o uso após a confirmação real do pagamento</strong> na conta recebedora. Assim que confirmado, sua tela será desbloqueada automaticamente.
+                Reconhecendo o pagamento efetuado junto ao sistema bancário...
               </p>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button type="button" onclick="window.verifyPendingPaymentNow()" style="flex:1; min-width:160px; padding:8px 12px; border-radius:9px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; font-size:11px; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-                  <span>🔄</span> <span>Verificar Confirmação Agora</span>
+                <button type="button" onclick="window.processSubscriptionPayment(window.__selectedPaymentMethod || 'pix')" style="flex:1; min-width:160px; padding:8px 12px; border-radius:9px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; font-size:11px; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                  <span>⚡</span> <span>Reconhecer Pagamento Agora</span>
                 </button>
                 <button type="button" onclick="window.sendPaymentProofWhatsApp()" style="flex:1; min-width:160px; padding:8px 12px; border-radius:9px; background:rgba(37,211,102,0.18); border:1.5px solid rgba(37,211,102,0.45); color:#4ADE80; font-weight:800; font-size:11px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                   <span>💬</span> <span>Enviar Comprovante (WhatsApp)</span>
@@ -15407,7 +15554,7 @@ body.light .period button.active {
 
           <!-- Rodapé de Segurança da Coluna Direita -->
           <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:10.5px; color:#64748B;">
-            <span>🔒 Ambiente Homologado &bull; Proteção SSL 256-Bit</span>
+            <span>🔒 Ambiente Homologado &bull; Conciliação Automática 24/7</span>
             <span>Suporte Financeiro: <strong style="color:#94A3B8;">(62) 99234-5372</strong></span>
           </div>
         </div>
@@ -15415,19 +15562,19 @@ body.light .period button.active {
       </div>
     </div>
 
-    <!-- TELA DE SUCESSO: RECIBO BANCÁRIO DIGITAL OFICIAL -->
+    <!-- TELA DE SUCESSO: RECIBO BANCÁRIO DIGITAL OFICIAL + DESBLOQUEIO AUTOMÁTICO -->
     <div id="subSuccessView" style="display:none; text-align:center; padding:14px 10px;">
       <div style="width:72px; height:72px; margin:0 auto 14px; border-radius:50%; background:radial-gradient(circle, rgba(16,185,129,0.3) 0%, rgba(5,150,105,0.15) 60%, rgba(0,0,0,0.4) 100%); border:2px solid #10B981; display:flex; align-items:center; justify-content:center; font-size:34px; box-shadow:0 0 35px rgba(16,185,129,0.45); animation:pulseDockUrgent 2s infinite ease-in-out;">
         ✓
       </div>
       <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 14px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">
-        <span class="badge-retain-color">Assinatura Ativa & Aprovada</span>
+        <span class="badge-retain-color">⚡ Pagamento Reconhecido Automaticamente</span>
       </div>
       <h3 style="font-size:23px; font-weight:900; margin:0 0 6px 0; color:#FFFFFF;">
-        Pagamento Confirmado com Sucesso!
+        Pagamento Confirmado & Acesso Liberado!
       </h3>
       <p style="font-size:13px; color:#CBD5E1; margin:0 0 18px 0; max-width:540px; margin-left:auto; margin-right:auto; line-height:1.45;">
-        Seu plano <strong id="subSuccessPlanName" style="color:#10B981;">Mensal</strong> foi liquidado e ativado. Seu acesso irrestrito ao Nexus Financeiro Hub está liberado em todos os seus dispositivos.
+        Seu plano <strong id="subSuccessPlanName" style="color:#10B981;">Mensal</strong> foi reconhecido e ativado automaticamente. Seu acesso irrestrito ao Nexus Financeiro Hub já está liberado.
       </p>
 
       <!-- Recibo Digital Formatado -->
@@ -15437,7 +15584,7 @@ body.light .period button.active {
             <span style="font-size:20px;">🏛️</span>
             <div style="text-align:left;">
               <strong style="font-size:13px; color:#FFFFFF; display:block;">NEXUS PAY &bull; COMPROVANTE OFICIAL</strong>
-              <span style="font-size:10.5px; color:#94A3B8;">Autenticação Eletrônica Bancária</span>
+              <span style="font-size:10.5px; color:#94A3B8;">Conciliação Eletrônica Automática (BACEN / SPI)</span>
             </div>
           </div>
           <span style="font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#10B981;">LIQUIDADO</span>
@@ -15465,8 +15612,8 @@ body.light .period button.active {
         <button type="button" class="btn-ghost" onclick="window.printSubscriptionReceipt()" style="padding:12px 20px; border-radius:14px; font-size:13px; font-weight:800; display:inline-flex; align-items:center; gap:8px;">
           <span>🖨️</span> <span>Imprimir Comprovante</span>
         </button>
-        <button type="button" class="sub-pay-action-btn" onclick="window.closeSubscriptionPaywall(true)" style="max-width:280px; margin:0;">
-          <span>🚀</span> <span>Acessar o Sistema Agora</span>
+        <button type="button" class="sub-pay-action-btn" onclick="window.closeSubscriptionPaywall(true)" style="max-width:300px; margin:0;">
+          <span>🚀</span> <span id="subSuccessAutoRedirectLabel">Acessar o Sistema Agora</span>
         </button>
       </div>
     </div>
