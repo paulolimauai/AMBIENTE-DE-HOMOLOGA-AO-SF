@@ -179,7 +179,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:30.789Z"
+    "updated_at": "2026-10-17T21:07:58.800Z",
+    "updated_at_ms": 1792271278801
   },
   "admin@nexusfinanceirohub.com.br": {
     "test": 123,
@@ -188,7 +189,8 @@
     "accounts": [],
     "goals": [],
     "budgets": [],
-    "updated_at": "2026-09-12T14:10:31.001Z"
+    "updated_at": "2026-10-17T21:07:58.801Z",
+    "updated_at_ms": 1792271278801
   },
   "pauloteste.real@nexusfinanceiro.com": {
     "transactions": [
@@ -213,7 +215,8 @@
       {
         "id": 1,
         "name": "Conta Corrente Santander",
-        "balance": 8049.5
+        "balance": 0,
+        "saldo": 0
       }
     ],
     "categories": [
@@ -228,7 +231,8 @@
     ],
     "goals": [],
     "budgets": [],
-    "updated_at": "2026-09-12T14:10:31.216Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "paulolp0101@gmail.com": {
     "categories": [
@@ -426,8 +430,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-10-14T13:11:19.826Z",
-    "updated_at_ms": 1791983479826
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "ciceragyn12@hotmail.com": {
     "categories": [
@@ -636,8 +640,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-10-08T14:02:18.068Z",
-    "updated_at_ms": 1791468138068
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "homologacao.paulo@nexusfinanceiro.com": {
     "transactions": [
@@ -657,7 +661,8 @@
         "id": 1,
         "name": "Conta Corrente",
         "type": "checking",
-        "balance": 4500
+        "balance": 0,
+        "saldo": 0
       }
     ],
     "categories": [
@@ -669,8 +674,9 @@
     ],
     "goals": [],
     "budgets": [],
-    "updated_at": "2026-09-27T18:53:12-03:00",
-    "recurringList": []
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "recurringList": [],
+    "updated_at_ms": 1792271278810
   },
   "paulol@gmail.com": {
     "categories": [
@@ -866,7 +872,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:32.084Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "joao@gmail.com": {
     "categories": [
@@ -1055,7 +1062,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:32.293Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "gabriel@gmail.com": {
     "categories": [
@@ -1237,7 +1245,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-12T14:10:32.504Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "carlos.silva@gmail.com": {
     "categories": [
@@ -1435,7 +1444,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-13T12:04:01.555Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "celular4g@teste.com": {
     "categories": [
@@ -1633,7 +1643,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-13T12:04:05.949Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "pauloroberto@gmail.com": {
     "categories": [
@@ -1831,7 +1842,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-13T12:04:04.367Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "mobile.auditoria@teste.com": {
     "categories": [
@@ -2029,7 +2041,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-13T12:04:06.262Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "carlos.oliveira@teste.com": {
     "categories": [
@@ -2227,7 +2240,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-13T12:04:05.132Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "roberto.alcantara@teste.com": {
     "categories": [
@@ -2425,7 +2439,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-13T12:04:05.555Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "novo.teste.zero@nexus.com": {
     "categories": [
@@ -2623,7 +2638,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-13T12:04:06.670Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "cliente.celular5g@teste.com": {
     "accounts": [
@@ -2631,8 +2647,9 @@
         "id": 1,
         "name": "Conta Corrente",
         "type": "Conta Corrente",
-        "balance": 5000,
-        "color": "#4a90e2"
+        "balance": 0,
+        "color": "#4a90e2",
+        "saldo": 0
       }
     ],
     "categories": [
@@ -2673,7 +2690,8 @@
         "status": "Efetivado"
       }
     ],
-    "updated_at": "2026-09-16T10:41:17.248Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "suporte.paulolima@outlook.com": {
     "categories": [
@@ -2871,8 +2889,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-25T11:58:13.167Z",
-    "updated_at_ms": 1790337493167
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "paulodelima21@gmail.com": {
     "categories": [
@@ -3070,11 +3088,12 @@
         "id": 4,
         "name": "Amazon",
         "type": "Conta Corrente",
-        "balance": 2000,
+        "balance": 0,
         "limit": 0,
         "color": "#e8b04b",
         "isCard": false,
-        "isCreditCard": false
+        "isCreditCard": false,
+        "saldo": 0
       }
     ],
     "transactions": [
@@ -3301,8 +3320,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 18,
-    "updated_at": "2026-10-16T07:02:27.416Z",
-    "updated_at_ms": 1792134147416
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   },
   "": {
     "categories": [
@@ -3500,6 +3519,7 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-09-22T13:00:14.738Z"
+    "updated_at": "2026-10-17T21:07:58.810Z",
+    "updated_at_ms": 1792271278810
   }
 }
