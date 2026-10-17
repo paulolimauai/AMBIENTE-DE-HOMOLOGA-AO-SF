@@ -822,5 +822,61 @@
     "last_login": "2026-10-16T04:05:36-03:00",
     "timestamp": "2026-10-16T07:05:37.014Z",
     "ack": false
+  },
+  {
+    "id": "52",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-17T17:54:03-03:00",
+    "timestamp": "2026-10-17T20:54:03.289Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-17T17:54:13-03:00",
+    "timestamp": "2026-10-17T20:54:13.709Z",
+    "ack": false
+  },
+  {
+    "id": "52",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-17T17:54:45-03:00",
+    "timestamp": "2026-10-17T20:54:45.660Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-17T17:55:33-03:00",
+    "timestamp": "2026-10-17T20:55:33.330Z",
+    "ack": false
+  },
+  {
+    "id": "39",
+    "email": "paulolp0101@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-17T17:57:05-03:00",
+    "timestamp": "2026-10-17T20:57:05.818Z",
+    "ack": false
+  },
+  {
+    "id": "41",
+    "email": "pauloroberto@gmail.com",
+    "name": "PAULO ROBERTO PEREIRA",
+    "last_login": "2026-10-17T17:57:47-03:00",
+    "timestamp": "2026-10-17T20:57:47.200Z",
+    "ack": false
+  },
+  {
+    "id": "41",
+    "email": "pauloroberto@gmail.com",
+    "name": "PAULO ROBERTO PEREIRA",
+    "last_login": "2026-10-17T18:01:50-03:00",
+    "timestamp": "2026-10-17T21:01:50.215Z",
+    "ack": false
   }
 ]

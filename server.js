@@ -1495,13 +1495,21 @@ const htmlContent = `<!DOCTYPE html>
 <script>
 (function() {
   try {
+    var v = localStorage.getItem('nexus_tone_version');
+    if (v !== 'light_v1') {
+      localStorage.setItem('nexus_theme', 'light');
+      localStorage.setItem('nexus_tone_version', 'light_v1');
+    }
     var t = localStorage.getItem('nexus_theme');
     if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-    var isLight = (t === 'light');
+    var isLight = (t !== 'dark');
     if (isLight) {
       document.documentElement.classList.add('light');
     } else {
       document.documentElement.classList.remove('light');
+    }
+    if (localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
+      document.documentElement.classList.add('sidebar-collapsed');
     }
     // Validação estrita: se a página de internet foi fechada e reaberta (sessionStorage vazio), invalida a sessão antiga
     var isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
@@ -1513,9 +1521,8 @@ const htmlContent = `<!DOCTYPE html>
         localStorage.removeItem('nexus_viewing_user');
       } catch(e){}
     } else {
-      // Se a sessão está ativa na aba atual, valida se não expirou os 5 minutos de inatividade
+      // Se a sessão está ativa na aba atual, valida se não expirou as 2 horas de inatividade
       var lastAct = parseInt(sessionStorage.getItem('nexus_last_activity') || '0', 10);
-      // Proteção de inatividade estendida (2 horas), permitindo o uso contínuo do paywall sem desconectar
       if (lastAct && (Date.now() - lastAct >= 120 * 60 * 1000)) {
         isSessionActive = false;
         try {
@@ -1538,10 +1545,16 @@ const htmlContent = `<!DOCTYPE html>
       if (uObj && uObj.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
       }
+      var vu = localStorage.getItem('nexus_viewing_user');
+      if (vu && uObj && uObj.role === 'Administrador') {
+        document.documentElement.classList.add('has-view-mode-banner');
+      }
     }
     var sc = localStorage.getItem('nexus_display_scale') || 'auto';
     var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || screen.width || 1366;
     var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || screen.height || 768;
+    var sw = (window.screen && window.screen.width) ? window.screen.width : w;
+    var sh = (window.screen && window.screen.height) ? window.screen.height : h;
     var dev = 'desktop';
     var ua = navigator.userAgent || '';
     var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
@@ -1557,8 +1570,8 @@ const htmlContent = `<!DOCTYPE html>
     var sn = 1.0;
     if (sc === 'auto') {
       if (dev === 'mobile' || dev === 'tablet') sn = 1.0;
-      else if (dev === 'laptop') sn = (h < 640 || w < 1180) ? 0.95 : 1.0;
-      else if (dev === '4k') sn = (w >= 3400) ? 1.20 : 1.10;
+      else if (dev === 'laptop') sn = (sh <= 640 || sw <= 1180) ? 0.95 : 1.0;
+      else if (dev === '4k') sn = (sw >= 3400) ? 1.20 : 1.10;
       else if (dev === 'ultrawide') sn = 1.05;
       else sn = 1.0;
     } else {
@@ -1566,9 +1579,9 @@ const htmlContent = `<!DOCTYPE html>
     }
     document.documentElement.style.setProperty('--app-zoom', sn);
     var bgCol = isLight ? '#F8FAFC' : '#000000';
-    document.write('<style id="critical-fouc-shield">html:not(.user-logged-in), html:not(.user-logged-in) body { scroll-behavior: auto !important; } background-color:' + bgCol + ' !important; background:' + bgCol + ' !important; transition:none !important;' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + ' #serverAuthNexusCard, .auth-card-nexus, #authNexusCard, .auth-container, #authPage, #loginBox, #registerBox, #forgotBox { animation: none !important; transform: none !important; transition: none !important; }</style>');
-    var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || sn === 1.0);
-    var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('@media screen { html, body { zoom: ' + sn + ' !important; } }');
+    document.write('<style id="critical-fouc-shield">html, body { scroll-behavior: auto !important; background-color:' + bgCol + ' !important; transition:none !important; }' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + ' #serverAuthNexusCard, .auth-card-nexus, #authNexusCard, .auth-container, #authPage, #loginBox, #registerBox, #forgotBox { animation: none !important; transform: none !important; transition: none !important; }</style>');
+    var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || isTouch || w <= 1024 || sn === 1.0);
+    var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('@media screen { body { zoom: ' + sn + ' !important; } }');
     document.write('<style id="nexus-scale-override">' + zoomRule + ' :root { --app-zoom: ' + sn + '; }</style>');
   } catch(e){}
 })();
@@ -1581,13 +1594,13 @@ html:not(.app-ready) *::after {
   transition: none !important;
   animation: none !important;
 }
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
 button, a, input[type="button"], input[type="submit"], [role="button"], .card, .btn {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-}
-button:active:not(:disabled), .btn:active:not(:disabled) {
-  transform: scale(0.97) !important;
-  transition: transform 0.05s ease !important;
 }
 html.user-logged-in #authPage { display: none !important; }
 html.user-logged-in #appMain { display: flex !important; flex-direction: column !important; min-height: 100vh !important; width: 100% !important; }
@@ -14046,7 +14059,7 @@ body.light .period button.active {
       </select>
     </div>
     <div class="field-row">
-      <div class="field"><label id="accBalanceLabel">Saldo (R$)</label><input id="accBalance" type="number" step="0.01" placeholder="0,00"></div>
+      <div class="field"><label id="accBalanceLabel">Saldo Inicial (R$)</label><input id="accBalance" type="number" step="0.01" value="0" placeholder="0,00"></div>
       <div class="field"><label>Cor</label><input id="accColor" type="color" value="#e8b04b"></div>
     </div>
     <div class="modal-actions">
@@ -19823,7 +19836,9 @@ function getCardStats(account) {
   const periodDespesas = periodCardTx.filter(t => t.type === 'out').reduce((s, t) => s + parseInputValue(t.val), 0);
   const periodPagamentos = periodCardTx.filter(t => t.type === 'in').reduce((s, t) => s + parseInputValue(t.val), 0);
 
-  const initialBalance = parseInputValue(account.balance) || parseInputValue(account.limit) || parseInputValue(account.initialBalance) || 0;
+  const rawBalanceVal = parseInputValue(account.balance) || parseInputValue(account.limit) || parseInputValue(account.initialBalance) || 0;
+  // Saldo inicial de contas bancárias puxa sempre 0 se não cadastrado manualmente; para cartões de crédito usa o limite informado (ou 0)
+  const initialBalance = isCreditCard ? rawBalanceVal : (parseInputValue(account.balance) || 0);
 
   if (isCreditCard) {
     // Para Cartões de Crédito: initialBalance representa o Limite Total Aprovado
@@ -19848,7 +19863,7 @@ function getCardStats(account) {
       periodOut: periodDespesas
     };
   } else {
-    // Para Contas Bancárias (Conta Corrente, Poupança, Investimentos, etc.)
+    // Para Contas Bancárias (Conta Corrente, Poupança, Investimentos, etc.): puxa sempre base 0 + saldo manual + entradas - saídas
     const spentTotal = totalDespesas;
     const spentPeriod = periodDespesas;
     const currentBalance = initialBalance + totalPagamentos - totalDespesas;
@@ -19871,6 +19886,19 @@ function getCardStats(account) {
     };
   }
 }
+
+function recalculateAllBalances() {
+  if (typeof autoMigrateTransactionsAndAccounts === 'function') {
+    autoMigrateTransactionsAndAccounts();
+  }
+  if (typeof render === 'function') {
+    render();
+  }
+  if (typeof saveUserData === 'function') {
+    saveUserData().catch(() => {});
+  }
+}
+window.recalculateAllBalances = recalculateAllBalances;
 
 function computeCardSummary() {
   const creditCards = accounts.filter(a => isAccountCreditCard(a));
@@ -19897,6 +19925,8 @@ function computeTotals(list=transactions){
   const receitas = list.filter(t=>t.type==='in').reduce((s,t)=>s+parseInputValue(t.val),0);
   const despesas = list.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val),0);
   
+  // Saldo puxa sempre 0 por padrão e reflete os cadastros manuais (receitas - despesas + saldos manuais de contas)
+  let saldoInicialManualContas = 0;
   let saldoContasBancarias = 0;
   let faturasCartoesCredito = 0;
 
@@ -19906,10 +19936,12 @@ function computeTotals(list=transactions){
       faturasCartoesCredito += stats.spentTotal;
     } else {
       saldoContasBancarias += stats.currentBalance;
+      saldoInicialManualContas += (parseInputValue(a.balance) || 0);
     }
   });
 
-  const saldo = saldoContasBancarias - faturasCartoesCredito;
+  // Se não houver transações nem saldo manual cadastrado, o saldo é estritamente 0
+  const saldo = (receitas - despesas) + saldoInicialManualContas;
   return { receitas, despesas, saldo, saldoContasBancarias, faturasCartoesCredito };
 }
 function txStatsCardsHTML(list){
@@ -26131,11 +26163,14 @@ function updateAccBalanceLabel() {
   const inp = document.getElementById('accBalance');
   if(!typeEl || !lbl || !inp) return;
   if(typeEl.value === 'Cartão de Crédito') {
-    lbl.textContent = 'Limite Total Aprovado do Cartão (R$)';
-    inp.placeholder = 'Ex: 5000,00';
-  } else {
-    lbl.textContent = 'Saldo Atual da Conta (R$)';
+    lbl.textContent = 'Limite do Cartão (R$) — Manual';
     inp.placeholder = '0,00';
+  } else {
+    lbl.textContent = 'Saldo Inicial da Conta (R$) — Manual';
+    inp.placeholder = '0,00';
+  }
+  if (!editingAccId && (inp.value === '' || inp.value === null || inp.value === undefined)) {
+    inp.value = '0';
   }
 }
 
@@ -26149,7 +26184,7 @@ function openModal(id, initialType){
     const t = transactions.find(x=>x.id===id);
     document.getElementById('modalTitle').textContent = 'Editar Transação';
     document.getElementById('fDesc').value = t.desc;
-    document.getElementById('fValor').value = t.val;
+    document.getElementById('fValor').value = t.val !== undefined && t.val !== null ? t.val : 0;
     document.getElementById('fData').value = t.date;
     setType(t.type);
     document.getElementById('fCategoria').value = t.cat;
@@ -26159,7 +26194,7 @@ function openModal(id, initialType){
     const tType = (initialType === 'in' || initialType === 'out') ? initialType : 'out';
     document.getElementById('modalTitle').textContent = tType === 'in' ? 'Nova Receita' : 'Nova Despesa';
     document.getElementById('fDesc').value = '';
-    document.getElementById('fValor').value = '';
+    document.getElementById('fValor').value = '0';
     
     const now = new Date();
     const defaultDate = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
@@ -26287,7 +26322,7 @@ async function saveTransaction(){
     if(descEl) descEl.focus();
     return;
   }
-  if(isNaN(val) || (currentType === 'out' ? val < 0 : val <= 0)) {
+  if(isNaN(val) || val < 0) {
     showToast('⚠️ Por favor, informe um valor válido (Ex: 0,00 ou 100,50).');
     if(valorEl) valorEl.focus();
     return;
@@ -26441,13 +26476,13 @@ function openAccountModal(id){
     document.getElementById('accModalTitle').textContent = 'Editar Conta';
     document.getElementById('accName').value = a.name;
     document.getElementById('accType').value = a.type;
-    document.getElementById('accBalance').value = a.balance;
+    document.getElementById('accBalance').value = (a.balance !== undefined && a.balance !== null) ? a.balance : 0;
     document.getElementById('accColor').value = a.color;
   } else {
-    document.getElementById('accModalTitle').textContent = 'Nova Conta';
+    document.getElementById('accModalTitle').textContent = 'Nova Conta / Cartão (Cadastro Manual)';
     document.getElementById('accName').value = '';
     document.getElementById('accType').value = 'Conta Corrente';
-    document.getElementById('accBalance').value = '';
+    document.getElementById('accBalance').value = '0';
     document.getElementById('accColor').value = '#e8b04b';
   }
   updateAccBalanceLabel();
@@ -26663,17 +26698,17 @@ function openBudgetModal(id){
     const b = budgets.find(x=>x.id===id);
     document.getElementById('orcModalTitle').textContent = 'Editar Orçamento';
     sel.value = b.category;
-    document.getElementById('orcLimite').value = b.limit;
+    document.getElementById('orcLimite').value = b.limit !== undefined && b.limit !== null ? b.limit : 0;
   } else {
     document.getElementById('orcModalTitle').textContent = 'Novo Orçamento';
-    document.getElementById('orcLimite').value = '';
+    document.getElementById('orcLimite').value = '0';
   }
 }
 function closeBudgetModal(){ document.getElementById('overlayBudget').classList.remove('show'); }
 async function saveBudget(){
   const category = document.getElementById('orcCategoria').value;
   const limit = parseInputValue(document.getElementById('orcLimite').value);
-  if(!category || isNaN(limit) || limit<=0){ showToast('Informe categoria e limite válidos'); return; }
+  if(!category || isNaN(limit) || limit<0){ showToast('Informe categoria e limite válidos'); return; }
   if(editingBudgetId){
     Object.assign(budgets.find(b=>b.id===editingBudgetId), {category, limit});
     showToast('Orçamento atualizado!');
@@ -26706,13 +26741,13 @@ function openGoalModal(id){
     const g = goals.find(x=>x.id===id);
     document.getElementById('goalModalTitle').textContent = 'Editar Meta';
     document.getElementById('goalName').value = g.name;
-    document.getElementById('goalTarget').value = g.target;
-    document.getElementById('goalCurrent').value = g.current;
+    document.getElementById('goalTarget').value = g.target !== undefined && g.target !== null ? g.target : 0;
+    document.getElementById('goalCurrent').value = g.current !== undefined && g.current !== null ? g.current : 0;
     document.getElementById('goalDeadline').value = g.deadline;
   } else {
     document.getElementById('goalModalTitle').textContent = 'Nova Meta';
     document.getElementById('goalName').value = '';
-    document.getElementById('goalTarget').value = '';
+    document.getElementById('goalTarget').value = '0';
     document.getElementById('goalCurrent').value = '0';
     document.getElementById('goalDeadline').value = '2026-12-31';
   }
@@ -26723,7 +26758,7 @@ async function saveGoal(){
   const target = parseInputValue(document.getElementById('goalTarget').value);
   const current = parseInputValue(document.getElementById('goalCurrent').value) || 0;
   const deadline = document.getElementById('goalDeadline').value;
-  if(!name || isNaN(target) || target<=0 || !deadline){ showToast('Preencha os campos da meta corretamente'); return; }
+  if(!name || isNaN(target) || target<0 || !deadline){ showToast('Preencha os campos da meta corretamente'); return; }
   if(editingGoalId){
     Object.assign(goals.find(g=>g.id===editingGoalId), {name,target,current,deadline});
     showToast('Meta atualizada!');
@@ -26941,7 +26976,7 @@ function openRecurringModal(id){
     const r = recurringList.find(x=>x.id===id);
     document.getElementById('recModalTitle').textContent = 'Editar Recorrente';
     document.getElementById('recDesc').value = r.desc;
-    document.getElementById('recVal').value = r.val;
+    document.getElementById('recVal').value = r.val !== undefined && r.val !== null ? r.val : 0;
     document.getElementById('recDay').value = r.day;
     document.getElementById('recFreq').value = r.freq || 'Mensal';
     if(r.acc) selectedAcc = r.acc;
@@ -26963,7 +26998,7 @@ function openRecurringModal(id){
 
     document.getElementById('recModalTitle').textContent = 'Novo Lançamento Recorrente';
     document.getElementById('recDesc').value = '';
-    document.getElementById('recVal').value = '';
+    document.getElementById('recVal').value = '0';
     document.getElementById('recDay').value = '5';
     document.getElementById('recFreq').value = 'Mensal';
     document.getElementById('recDurationMode').value = 'custom';
@@ -27028,8 +27063,8 @@ async function saveRecurring(){
     startYear = parseInt(document.getElementById('recStartYear').value) || startYear;
   }
 
-  if(!desc || isNaN(val) || (currentRecType === 'out' ? val < 0 : val <= 0) || isNaN(day) || day < 1 || day > 31){
-    showToast('Preencha os campos corretamente. Valores a partir de R$ 0,00 são permitidos em despesas.');
+  if(!desc || isNaN(val) || val < 0 || isNaN(day) || day < 1 || day > 31){
+    showToast('Preencha os campos corretamente.');
     return;
   }
 
@@ -30006,14 +30041,12 @@ const SYSTEM_BASE_CATEGORIES = [
   { name: 'Outras Receitas', color: '#8a93a3', type: 'receita', icon: '💰' }
 ];
 
-const SYSTEM_DEFAULT_ACCOUNTS = [
-  { id: 1, name: 'Conta Principal', type: 'Conta Corrente', balance: 0, saldo: 0, color: '#4a90e2' }
-];
+const SYSTEM_DEFAULT_ACCOUNTS = [];
 
 function getDefaultConfiguredFinancialData() {
   return {
     categories: SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 })),
-    accounts: SYSTEM_DEFAULT_ACCOUNTS.map(a => ({ ...a })),
+    accounts: [],
     transactions: [],
     budgets: [],
     goals: [],
@@ -30021,7 +30054,7 @@ function getDefaultConfiguredFinancialData() {
     alerts: [],
     attachments: [],
     notifications: [],
-    nextAccId: 2,
+    nextAccId: 1,
     nextTxId: 1,
     nextBudgetId: 1,
     nextGoalId: 1,
@@ -30042,7 +30075,7 @@ async function ensureUserIsConfiguredInDatabase(cleanEmail, userMeta = {}) {
   const email = cleanEmail.toLowerCase().trim();
   try {
     let currentData = getLocalData(email);
-    if (!currentData || typeof currentData !== 'object' || !Array.isArray(currentData.categories) || currentData.categories.length === 0 || !Array.isArray(currentData.accounts) || currentData.accounts.length === 0) {
+    if (!currentData || typeof currentData !== 'object' || !Array.isArray(currentData.categories) || currentData.categories.length === 0) {
       currentData = getDefaultConfiguredFinancialData();
       saveLocalData(email, currentData);
     }
@@ -31659,9 +31692,8 @@ const server = http.createServer(async (req, res) => {
             finalData = getEmptyFinancialData();
           }
           if (!Array.isArray(finalData.transactions)) finalData.transactions = [];
-          if (!Array.isArray(finalData.accounts) || finalData.accounts.length === 0) {
-            finalData.accounts = SYSTEM_DEFAULT_ACCOUNTS.map(a => ({ ...a }));
-            syncUserAccountsToTable(email, finalData.accounts).catch(()=>{});
+          if (!Array.isArray(finalData.accounts)) {
+            finalData.accounts = [];
           }
           if (!Array.isArray(finalData.categories) || finalData.categories.length === 0) {
             finalData.categories = SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 }));
@@ -31682,8 +31714,8 @@ const server = http.createServer(async (req, res) => {
           if (typeof fallbackData === 'string') {
             try { fallbackData = JSON.parse(fallbackData); } catch(e){ fallbackData = getEmptyFinancialData(); }
           }
-          if (!Array.isArray(fallbackData.accounts) || fallbackData.accounts.length === 0) {
-            fallbackData.accounts = SYSTEM_DEFAULT_ACCOUNTS.map(a => ({ ...a }));
+          if (!Array.isArray(fallbackData.accounts)) {
+            fallbackData.accounts = [];
           }
           if (!Array.isArray(fallbackData.categories) || fallbackData.categories.length === 0) {
             fallbackData.categories = SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 }));
@@ -31696,8 +31728,8 @@ const server = http.createServer(async (req, res) => {
       if (typeof fallbackData === 'string') {
         try { fallbackData = JSON.parse(fallbackData); } catch(e){ fallbackData = getEmptyFinancialData(); }
       }
-      if (!Array.isArray(fallbackData.accounts) || fallbackData.accounts.length === 0) {
-        fallbackData.accounts = SYSTEM_DEFAULT_ACCOUNTS.map(a => ({ ...a }));
+      if (!Array.isArray(fallbackData.accounts)) {
+        fallbackData.accounts = [];
       }
       if (!Array.isArray(fallbackData.categories) || fallbackData.categories.length === 0) {
         fallbackData.categories = SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 }));
