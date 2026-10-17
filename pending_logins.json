@@ -814,5 +814,13 @@
     "last_login": "2026-10-15T10:51:54-03:00",
     "timestamp": "2026-10-15T13:51:54.473Z",
     "ack": false
+  },
+  {
+    "id": "52",
+    "email": "paulodelima21@gmail.com",
+    "name": "PAULO DE LIMA PEREIRA",
+    "last_login": "2026-10-16T04:05:36-03:00",
+    "timestamp": "2026-10-16T07:05:37.014Z",
+    "ack": false
   }
 ]
