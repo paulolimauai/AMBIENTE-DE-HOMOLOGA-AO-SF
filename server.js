@@ -4305,34 +4305,34 @@ body.light .header-live-time {
   box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.45), 0 8px 24px rgba(239, 68, 68, 0.45) !important;
 }
 
-/* ==================== Barra de Menu Lateral Executiva (Sidebar Design 4K - Liquid Glass) ==================== */
+/* ==================== Barra de Menu Lateral Executiva (Sidebar Design 4K - Executive FinTech) ==================== */
 nav.menu, aside.menu, .sidebar-menu {
   position: fixed !important;
-  top: 68px !important;
+  top: 66px !important;
   left: 0 !important;
   bottom: 0 !important;
   width: 250px !important;
-  height: calc(100vh - 68px) !important;
-  max-height: calc(100vh - 68px) !important;
+  height: calc(100vh - 66px) !important;
+  max-height: calc(100vh - 66px) !important;
   margin: 0 !important;
-  padding: 14px 10px 14px 10px !important;
+  padding: 12px 12px 12px 12px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: stretch !important;
   justify-content: flex-start !important;
-  background: rgba(6, 10, 18, 0.94) !important;
+  background: linear-gradient(180deg, rgba(7, 11, 20, 0.97) 0%, rgba(4, 7, 14, 0.99) 100%) !important;
   border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-bottom: none !important;
   border-top: none !important;
   border-left: none !important;
   border-radius: 0 !important;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.55), inset -1px 0 0 rgba(255, 255, 255, 0.04) !important;
-  backdrop-filter: blur(28px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  box-shadow: 6px 0 28px rgba(0, 0, 0, 0.55), inset -1px 0 0 rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   z-index: 9980 !important;
   overflow: hidden !important;
   box-sizing: border-box !important;
-  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), padding 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .menu-track, .sidebar-scroll {
@@ -4340,13 +4340,13 @@ nav.menu, aside.menu, .sidebar-menu {
   flex-direction: column !important;
   align-items: stretch !important;
   justify-content: flex-start !important;
-  gap: 3px !important;
+  gap: 2px !important;
   width: 100% !important;
   max-width: 100% !important;
   height: auto !important;
   flex: 1 1 auto !important;
   min-height: 0 !important;
-  padding: 2px 2px 8px 2px !important;
+  padding: 2px 2px 10px 2px !important;
   margin: 0 !important;
   background: transparent !important;
   border: none !important;
@@ -4364,7 +4364,7 @@ nav.menu, aside.menu, .sidebar-menu {
 }
 .menu-track::-webkit-scrollbar-thumb,
 .sidebar-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 255, 255, 0.14) !important;
   border-radius: 999px !important;
 }
 
@@ -4373,10 +4373,13 @@ nav.menu, aside.menu, .sidebar-menu {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  gap: 10px !important;
-  padding: 6px 8px 10px 8px !important;
-  margin-bottom: 2px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  gap: 11px !important;
+  padding: 9px 10px !important;
+  margin-bottom: 6px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   user-select: none !important;
   flex-shrink: 0 !important;
 }
@@ -4386,27 +4389,27 @@ nav.menu, aside.menu, .sidebar-menu {
   height: 34px !important;
   min-width: 34px !important;
   border-radius: 9px !important;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.15) 100%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.40) !important;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.20) !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.24) 0%, rgba(5, 150, 105, 0.12) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.42) !important;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.18) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
 }
 .sidebar-workspace-header .workspace-avatar-text {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
+  font-family: var(--font-sans) !important;
   font-size: 12px !important;
   font-weight: 800 !important;
-  letter-spacing: 0.05em !important;
+  letter-spacing: 0.04em !important;
   color: #34D399 !important;
 }
 .sidebar-workspace-header .workspace-status-dot {
   position: absolute !important;
   bottom: -1px !important;
   right: -1px !important;
-  width: 7px !important;
-  height: 7px !important;
+  width: 8px !important;
+  height: 8px !important;
   border-radius: 50% !important;
   background: #10B981 !important;
   border: 1.5px solid #060A12 !important;
@@ -4417,18 +4420,20 @@ nav.menu, aside.menu, .sidebar-menu {
   flex-direction: column !important;
   justify-content: center !important;
   min-width: 0 !important;
+  flex: 1 !important;
   overflow: hidden !important;
 }
 .sidebar-workspace-header .workspace-title-row {
   display: flex !important;
   align-items: center !important;
+  justify-content: space-between !important;
   gap: 6px !important;
 }
 .sidebar-workspace-header .workspace-name {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
-  font-size: 13.5px !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.015em !important;
   color: #F8FAFC !important;
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -4438,14 +4443,16 @@ nav.menu, aside.menu, .sidebar-menu {
   font-size: 10.5px !important;
   color: #94A3B8 !important;
   font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  margin-top: 1px !important;
 }
 
 /* Botão de Ação Rápida no Topo da Sidebar (Nova Transação) */
 .sidebar-action-wrap {
-  padding: 6px 2px 8px 2px !important;
+  padding: 2px 0 8px 0 !important;
   width: 100% !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
@@ -4458,19 +4465,19 @@ aside.menu .sidebar-quick-action-btn,
   flex-direction: row !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 9px !important;
+  gap: 10px !important;
   width: 100% !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  padding: 0 10px !important;
-  border-radius: 9px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 11px !important;
+  border-radius: 10px !important;
   background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
   color: #FFFFFF !important;
   cursor: pointer !important;
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  transition: background 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
   user-select: none !important;
   box-sizing: border-box !important;
   text-align: left !important;
@@ -4480,22 +4487,15 @@ aside.menu .sidebar-quick-action-btn,
 aside.menu .sidebar-quick-action-btn:hover,
 .sidebar-menu .sidebar-quick-action-btn:hover {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.55) !important;
-  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
   color: #FFFFFF !important;
 }
-.sidebar-quick-action-btn:active,
-aside.menu .sidebar-quick-action-btn:active,
-.sidebar-menu .sidebar-quick-action-btn:active {
-  transform: translateY(0.5px) !important;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25) !important;
-}
 .sidebar-quick-action-btn .quick-action-ic {
-  width: 22px !important;
-  height: 22px !important;
-  min-width: 22px !important;
-  border-radius: 6px !important;
-  background: rgba(255, 255, 255, 0.22) !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  border-radius: 7px !important;
+  background: rgba(255, 255, 255, 0.20) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4503,14 +4503,14 @@ aside.menu .sidebar-quick-action-btn:active,
   flex-shrink: 0 !important;
 }
 .sidebar-quick-action-btn .quick-action-ic svg {
-  width: 13px !important;
-  height: 13px !important;
+  width: 13.5px !important;
+  height: 13.5px !important;
   stroke: #FFFFFF !important;
   display: block !important;
 }
 .sidebar-quick-action-btn .label {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
-  font-size: 13px !important;
+  font-family: var(--font-sans) !important;
+  font-size: 12.5px !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   color: #FFFFFF !important;
@@ -4522,11 +4522,12 @@ aside.menu .sidebar-quick-action-btn:active,
 .sidebar-quick-action-btn .quick-action-badge {
   font-size: 11px !important;
   font-weight: 800 !important;
-  background: rgba(255, 255, 255, 0.22) !important;
+  background: rgba(0, 0, 0, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
   color: #FFFFFF !important;
   padding: 1px 6px !important;
-  border-radius: 5px !important;
-  letter-spacing: 0.04em !important;
+  border-radius: 6px !important;
+  letter-spacing: 0.02em !important;
 }
 
 /* Divisores de Seção com Título */
@@ -4534,48 +4535,50 @@ aside.menu .sidebar-quick-action-btn:active,
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  padding: 9px 6px 3px 6px !important;
+  padding: 10px 8px 4px 8px !important;
   user-select: none !important;
   flex-shrink: 0 !important;
 }
 .menu-section-title {
-  font-size: 9.5px !important;
-  font-weight: 800 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.10em !important;
+  letter-spacing: 0.08em !important;
   color: #64748B !important;
   white-space: nowrap !important;
 }
 .menu-section-line {
   flex: 1 !important;
   height: 1px !important;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
   border-radius: 1px !important;
 }
 
-/* Botões do Menu Lateral */
-.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
+/* Botões do Menu Lateral - Padrão Executivo Linear/Stripe */
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
   position: relative !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: flex-start !important;
   text-align: left !important;
-  gap: 10px !important;
+  gap: 11px !important;
   width: 100% !important;
-  height: 37px !important;
-  min-height: 37px !important;
-  max-height: 37px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
   padding: 0 10px !important;
   margin: 1px 0 !important;
-  border-radius: 9px !important;
+  border-radius: 10px !important;
   background: transparent !important;
   border: 1px solid transparent !important;
   color: #94A3B8 !important;
   font-size: 13px !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
   user-select: none !important;
   box-sizing: border-box !important;
   flex-shrink: 0 !important;
@@ -4583,14 +4586,31 @@ aside.menu .sidebar-quick-action-btn:active,
   touch-action: manipulation !important;
 }
 
-.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic {
-  width: 26px !important;
-  height: 26px !important;
-  min-width: 26px !important;
-  min-height: 26px !important;
-  border-radius: 7px !important;
-  background: rgba(255, 255, 255, 0.035) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+/* Indicador Lateral Esquerdo nos Itens Ativos */
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn)::before,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn)::before,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn)::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 8px !important;
+  bottom: 8px !important;
+  width: 3px !important;
+  border-radius: 0 4px 4px 0 !important;
+  background: transparent !important;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4598,12 +4618,14 @@ aside.menu .sidebar-quick-action-btn:active,
   flex-shrink: 0 !important;
   line-height: 0 !important;
   margin: 0 !important;
-  transition: all 0.16s ease !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
 }
 
-.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg {
-  width: 14.5px !important;
-  height: 14.5px !important;
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg {
+  width: 15px !important;
+  height: 15px !important;
   stroke-width: 2px !important;
   stroke: currentColor !important;
   display: block !important;
@@ -4612,81 +4634,100 @@ aside.menu .sidebar-quick-action-btn:active,
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
 aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
 .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
+  font-family: var(--font-sans) !important;
   font-size: 13px !important;
-  font-weight: 550 !important;
+  font-weight: 500 !important;
   letter-spacing: -0.01em !important;
-  line-height: 1 !important;
+  line-height: 1.2 !important;
   display: inline-block !important;
   white-space: nowrap !important;
   color: inherit !important;
   vertical-align: middle !important;
-  transition: color 0.15s ease, font-weight 0.15s ease !important;
+  transition: color 0.15s ease !important;
 }
 
-/* Hover no botão */
-.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+/* Hover no botão (Estável, sem deslocamento horizontal) */
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover {
+  background: rgba(255, 255, 255, 0.055) !important;
+  border-color: rgba(255, 255, 255, 0.09) !important;
   color: #F8FAFC !important;
-  transform: translateX(2px) !important;
+  transform: none !important;
 }
-.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic {
-  background: rgba(16, 185, 129, 0.12) !important;
-  border-color: rgba(16, 185, 129, 0.30) !important;
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic {
+  background: rgba(16, 185, 129, 0.14) !important;
+  border-color: rgba(16, 185, 129, 0.32) !important;
   color: #34D399 !important;
 }
 
 /* Botão Ativo */
-.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.16) 0%, rgba(16, 185, 129, 0.03) 100%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.40) !important;
-  border-left: 3px solid #10B981 !important;
-  color: #34D399 !important;
-  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.16) 0%, rgba(16, 185, 129, 0.04) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  transform: none !important;
 }
-.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic, aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic, .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic {
-  background: rgba(16, 185, 129, 0.22) !important;
-  border-color: rgba(16, 185, 129, 0.50) !important;
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before {
+  background: #10B981 !important;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.65) !important;
+}
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.18) 100%) !important;
+  border-color: rgba(16, 185, 129, 0.55) !important;
   color: #34D399 !important;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.30) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25) !important;
 }
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
 aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
 .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label {
-  color: #34D399 !important;
+  color: #FFFFFF !important;
   font-weight: 700 !important;
 }
 
 /* Botão Administrativo */
 .menu button.menu-btn-admin, aside.menu button.menu-btn-admin, .sidebar-menu button.menu-btn-admin {
   color: #CBD5E1 !important;
-  background: rgba(245, 158, 11, 0.05) !important;
-  border: 1px solid rgba(245, 158, 11, 0.18) !important;
+  background: rgba(245, 158, 11, 0.04) !important;
+  border: 1px solid rgba(245, 158, 11, 0.14) !important;
 }
 .menu button.menu-btn-admin .ic, aside.menu button.menu-btn-admin .ic, .sidebar-menu button.menu-btn-admin .ic {
   color: #FBBF24 !important;
   background: rgba(245, 158, 11, 0.10) !important;
-  border-color: rgba(245, 158, 11, 0.25) !important;
+  border-color: rgba(245, 158, 11, 0.24) !important;
 }
 .menu button.menu-btn-admin:hover, aside.menu button.menu-btn-admin:hover, .sidebar-menu button.menu-btn-admin:hover {
-  background: rgba(245, 158, 11, 0.14) !important;
-  border-color: rgba(245, 158, 11, 0.40) !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
   color: #FDE68A !important;
-  transform: translateX(2px) !important;
+  transform: none !important;
 }
 .menu button.menu-btn-admin.active, aside.menu button.menu-btn-admin.active, .sidebar-menu button.menu-btn-admin.active {
-  background: linear-gradient(90deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.08) 100%) !important;
-  border: 1px solid rgba(245, 158, 11, 0.60) !important;
-  border-left: 3px solid #F59E0B !important;
-  color: #FBBF24 !important;
-  box-shadow: 0 2px 14px rgba(245, 158, 11, 0.25) !important;
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.20) 0%, rgba(217, 119, 6, 0.06) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.50) !important;
+  color: #FDE68A !important;
+  box-shadow: 0 2px 12px rgba(245, 158, 11, 0.20) !important;
+}
+.menu button.menu-btn-admin.active::before,
+aside.menu button.menu-btn-admin.active::before,
+.sidebar-menu button.menu-btn-admin.active::before {
+  background: #F59E0B !important;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.65) !important;
 }
 .menu button.menu-btn-admin.active .ic, aside.menu button.menu-btn-admin.active .ic, .sidebar-menu button.menu-btn-admin.active .ic {
-  background: rgba(245, 158, 11, 0.25) !important;
-  border-color: rgba(245, 158, 11, 0.60) !important;
+  background: rgba(245, 158, 11, 0.24) !important;
+  border-color: rgba(245, 158, 11, 0.55) !important;
   color: #FDE68A !important;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.40) !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.30) !important;
 }
 
 /* Badge de Notificação de O.S. */
@@ -4698,11 +4739,11 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
   line-height: 18px !important;
   border-radius: 999px !important;
   font-size: 9.5px !important;
-  font-weight: 900 !important;
+  font-weight: 800 !important;
   background: #EF4444 !important;
   color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  box-shadow: 0 0 8px rgba(239, 68, 68, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4711,22 +4752,22 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
 
 /* ==================== Acentos Visuais nos Ícones por Categoria ==================== */
 [data-page="dashboard"]:hover .ic, [data-page="transacoes"]:hover .ic, [data-page="cartoes"]:hover .ic {
-  background: rgba(16, 185, 129, 0.16) !important;
+  background: rgba(16, 185, 129, 0.15) !important;
   border-color: rgba(16, 185, 129, 0.35) !important;
   color: #34D399 !important;
 }
 [data-page="orcamentos"]:hover .ic, [data-page="metas"]:hover .ic, [data-page="relatorios"]:hover .ic {
-  background: rgba(14, 165, 233, 0.16) !important;
+  background: rgba(14, 165, 233, 0.15) !important;
   border-color: rgba(14, 165, 233, 0.35) !important;
   color: #38BDF8 !important;
 }
 [data-page="recorrentes"]:hover .ic, [data-page="importar"]:hover .ic, [data-page="anexos"]:hover .ic {
-  background: rgba(139, 92, 246, 0.16) !important;
+  background: rgba(139, 92, 246, 0.15) !important;
   border-color: rgba(139, 92, 246, 0.35) !important;
   color: #A78BFA !important;
 }
 [data-page="config"]:hover .ic {
-  background: rgba(244, 114, 182, 0.16) !important;
+  background: rgba(244, 114, 182, 0.15) !important;
   border-color: rgba(244, 114, 182, 0.35) !important;
   color: #F472B6 !important;
 }
@@ -4734,7 +4775,7 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
 /* ==================== Rodapé da Sidebar & Ação de Colapso Visual ==================== */
 .sidebar-footer {
   margin-top: auto !important;
-  padding: 8px 8px 6px 8px !important;
+  padding: 8px 2px 4px 2px !important;
   border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
   display: flex !important;
   flex-direction: row !important;
@@ -4754,14 +4795,14 @@ aside.menu .sidebar-footer #sidebarCollapseBtn,
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100% !important;
-  height: 35px !important;
-  min-height: 35px !important;
-  max-height: 35px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
   padding: 0 10px !important;
   margin: 0 !important;
-  border-radius: 8px !important;
-  background: rgba(255, 255, 255, 0.035) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
   color: #94A3B8 !important;
   display: flex !important;
   align-items: center !important;
@@ -4769,7 +4810,7 @@ aside.menu .sidebar-footer #sidebarCollapseBtn,
   gap: 10px !important;
   cursor: pointer !important;
   box-sizing: border-box !important;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
   user-select: none !important;
 }
 
@@ -4778,27 +4819,27 @@ aside.menu .sidebar-footer #sidebarCollapseBtn,
 aside.menu .sidebar-footer .sidebar-toggle-btn:hover,
 aside.menu .sidebar-footer #sidebarCollapseBtn:hover,
 .sidebar-toggle-btn:hover {
-  background: rgba(16, 185, 129, 0.12) !important;
-  border-color: rgba(16, 185, 129, 0.35) !important;
+  background: rgba(16, 185, 129, 0.10) !important;
+  border-color: rgba(16, 185, 129, 0.30) !important;
   color: #34D399 !important;
 }
 
 .sidebar-footer .toggle-icon-wrap {
-  width: 22px !important;
-  height: 22px !important;
-  min-width: 22px !important;
-  border-radius: 6px !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  border-radius: 7px !important;
   background: rgba(255, 255, 255, 0.04) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   color: inherit !important;
   flex-shrink: 0 !important;
-  transition: all 0.18s ease !important;
+  transition: background-color 0.15s ease, color 0.15s ease !important;
 }
 
 .sidebar-footer .sidebar-toggle-btn:hover .toggle-icon-wrap {
-  background: rgba(16, 185, 129, 0.20) !important;
+  background: rgba(16, 185, 129, 0.18) !important;
   color: #34D399 !important;
 }
 
@@ -4807,11 +4848,11 @@ aside.menu .sidebar-footer #sidebarCollapseBtn:hover,
   height: 14px !important;
   display: block !important;
   stroke: currentColor !important;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .sidebar-footer .toggle-label {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif !important;
+  font-family: var(--font-sans) !important;
   font-size: 12px !important;
   font-weight: 600 !important;
   letter-spacing: -0.01em !important;
@@ -4821,93 +4862,108 @@ aside.menu .sidebar-footer #sidebarCollapseBtn:hover,
   text-overflow: ellipsis !important;
 }
 
-/* Modo Recolhido (Collapsed) */
-body.sidebar-collapsed nav.menu,
-body.sidebar-collapsed aside.menu,
-body.sidebar-collapsed .sidebar-menu {
+/* Modo Recolhido (Collapsed) - Suporte simultâneo em html e body para Zero-Shake no F5 */
+html.sidebar-collapsed nav.menu, body.sidebar-collapsed nav.menu,
+html.sidebar-collapsed aside.menu, body.sidebar-collapsed aside.menu,
+html.sidebar-collapsed .sidebar-menu, body.sidebar-collapsed .sidebar-menu {
   width: 68px !important;
-  padding: 14px 6px 14px 6px !important;
+  padding: 12px 6px !important;
 }
+html.sidebar-collapsed .sidebar-workspace-header,
 body.sidebar-collapsed .sidebar-workspace-header {
-  padding: 2px 0 8px 0 !important;
+  padding: 6px 0 !important;
   justify-content: center !important;
-  border-bottom: none !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
+html.sidebar-collapsed .sidebar-workspace-header .workspace-meta,
 body.sidebar-collapsed .sidebar-workspace-header .workspace-meta {
   display: none !important;
 }
+html.sidebar-collapsed .sidebar-workspace-header .workspace-avatar,
 body.sidebar-collapsed .sidebar-workspace-header .workspace-avatar {
   margin: 0 auto !important;
 }
-body.sidebar-collapsed .menu button span.label,
-body.sidebar-collapsed aside.menu button span.label,
-body.sidebar-collapsed .sidebar-menu button span.label,
-body.sidebar-collapsed .menu-section-title,
-body.sidebar-collapsed .menu-section-line,
-body.sidebar-collapsed #osBadgeCount,
-body.sidebar-collapsed .sidebar-quick-action-btn .label,
-body.sidebar-collapsed .sidebar-quick-action-btn .quick-action-badge,
-body.sidebar-collapsed .sidebar-footer .toggle-label {
+html.sidebar-collapsed .menu button span.label, body.sidebar-collapsed .menu button span.label,
+html.sidebar-collapsed aside.menu button span.label, body.sidebar-collapsed aside.menu button span.label,
+html.sidebar-collapsed .sidebar-menu button span.label, body.sidebar-collapsed .sidebar-menu button span.label,
+html.sidebar-collapsed .menu-section-title, body.sidebar-collapsed .menu-section-title,
+html.sidebar-collapsed .menu-section-line, body.sidebar-collapsed .menu-section-line,
+html.sidebar-collapsed #osBadgeCount, body.sidebar-collapsed #osBadgeCount,
+html.sidebar-collapsed .sidebar-quick-action-btn .label, body.sidebar-collapsed .sidebar-quick-action-btn .label,
+html.sidebar-collapsed .sidebar-quick-action-btn .quick-action-badge, body.sidebar-collapsed .sidebar-quick-action-btn .quick-action-badge,
+html.sidebar-collapsed .sidebar-footer .toggle-label, body.sidebar-collapsed .sidebar-footer .toggle-label {
   display: none !important;
 }
+html.sidebar-collapsed .sidebar-action-wrap,
 body.sidebar-collapsed .sidebar-action-wrap {
   padding: 2px 0 8px 0 !important;
   display: flex !important;
   justify-content: center !important;
 }
-body.sidebar-collapsed .sidebar-quick-action-btn,
-body.sidebar-collapsed aside.menu .sidebar-quick-action-btn,
-body.sidebar-collapsed .sidebar-menu .sidebar-quick-action-btn {
-  width: 38px !important;
-  min-width: 38px !important;
-  max-width: 38px !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  max-height: 38px !important;
+html.sidebar-collapsed .sidebar-quick-action-btn, body.sidebar-collapsed .sidebar-quick-action-btn,
+html.sidebar-collapsed aside.menu .sidebar-quick-action-btn, body.sidebar-collapsed aside.menu .sidebar-quick-action-btn,
+html.sidebar-collapsed .sidebar-menu .sidebar-quick-action-btn, body.sidebar-collapsed .sidebar-menu .sidebar-quick-action-btn {
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
   padding: 0 !important;
   justify-content: center !important;
   border-radius: 10px !important;
   margin: 0 auto !important;
 }
+html.sidebar-collapsed .sidebar-quick-action-btn .quick-action-ic,
 body.sidebar-collapsed .sidebar-quick-action-btn .quick-action-ic {
   margin: 0 !important;
+  background: transparent !important;
 }
+html.sidebar-collapsed .menu-section-header,
 body.sidebar-collapsed .menu-section-header {
-  padding: 8px 0 4px 0 !important;
+  padding: 6px 0 2px 0 !important;
   justify-content: center !important;
 }
+html.sidebar-collapsed .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
 body.sidebar-collapsed .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+html.sidebar-collapsed aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
 body.sidebar-collapsed aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+html.sidebar-collapsed .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
 body.sidebar-collapsed .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
   justify-content: center !important;
   padding: 0 !important;
-  width: 100% !important;
+  width: 42px !important;
+  margin: 2px auto !important;
 }
+html.sidebar-collapsed .sidebar-footer,
 body.sidebar-collapsed .sidebar-footer {
   justify-content: center !important;
   padding: 8px 0 4px 0 !important;
 }
-body.sidebar-collapsed .sidebar-footer .sidebar-toggle-btn,
-body.sidebar-collapsed .sidebar-footer #sidebarCollapseBtn,
-body.sidebar-collapsed aside.menu .sidebar-footer .sidebar-toggle-btn {
-  width: 38px !important;
-  min-width: 38px !important;
-  max-width: 38px !important;
+html.sidebar-collapsed .sidebar-footer .sidebar-toggle-btn, body.sidebar-collapsed .sidebar-footer .sidebar-toggle-btn,
+html.sidebar-collapsed .sidebar-footer #sidebarCollapseBtn, body.sidebar-collapsed .sidebar-footer #sidebarCollapseBtn,
+html.sidebar-collapsed aside.menu .sidebar-footer .sidebar-toggle-btn, body.sidebar-collapsed aside.menu .sidebar-footer .sidebar-toggle-btn {
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
   padding: 0 !important;
   justify-content: center !important;
   margin: 0 auto !important;
 }
+html.sidebar-collapsed .toggle-icon-collapse,
 body.sidebar-collapsed .toggle-icon-collapse {
   transform: rotate(180deg) !important;
 }
 
-/* Modo Claro da Sidebar */
+/* Modo Claro da Sidebar Executiva */
 body.light nav.menu, html.light nav.menu,
 body.light aside.menu, html.light aside.menu,
 body.light .sidebar-menu, html.light .sidebar-menu {
   background: #FFFFFF !important;
-  border-right: 1px solid #CBD5E1 !important;
-  box-shadow: 4px 0 20px rgba(15, 23, 42, 0.04) !important;
+  border-right: 1px solid #E2E8F0 !important;
+  box-shadow: 4px 0 24px rgba(15, 23, 42, 0.04) !important;
 }
 body.light .menu-section-title, html.light .menu-section-title {
   color: #475569 !important;
@@ -4918,11 +4974,14 @@ body.light .menu-section-line, html.light .menu-section-line {
 
 /* Workspace Header no Modo Claro */
 body.light .sidebar-workspace-header, html.light .sidebar-workspace-header {
-  border-bottom-color: #E2E8F0 !important;
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03) !important;
 }
 body.light .workspace-avatar, html.light .workspace-avatar {
   background: #ECFDF5 !important;
   border-color: #A7F3D0 !important;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.12) !important;
 }
 body.light .workspace-avatar-text, html.light .workspace-avatar-text {
   color: #059669 !important;
@@ -4931,15 +4990,10 @@ body.light .workspace-status-dot, html.light .workspace-status-dot {
   border-color: #FFFFFF !important;
 }
 body.light .workspace-name, html.light .workspace-name {
-  color: #0F172A !important;
-}
-body.light .workspace-tag, html.light .workspace-tag {
-  color: #059669 !important;
-  background: #DCFCE7 !important;
-  border-color: #86EFAC !important;
+  color: #000000 !important;
 }
 body.light .workspace-subtitle, html.light .workspace-subtitle {
-  color: #64748B !important;
+  color: #475569 !important;
 }
 
 /* Ação rápida no Modo Claro */
@@ -4947,13 +5001,13 @@ body.light .sidebar-quick-action-btn, html.light .sidebar-quick-action-btn,
 body.light aside.menu .sidebar-quick-action-btn, html.light aside.menu .sidebar-quick-action-btn {
   background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
   color: #FFFFFF !important;
 }
 body.light .sidebar-quick-action-btn:hover, html.light .sidebar-quick-action-btn:hover,
 body.light aside.menu .sidebar-quick-action-btn:hover, html.light aside.menu .sidebar-quick-action-btn:hover {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.45) !important;
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35) !important;
   color: #FFFFFF !important;
 }
 body.light .sidebar-quick-action-btn span.label,
@@ -4967,7 +5021,7 @@ html.light aside.menu .sidebar-quick-action-btn span.label {
 body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
 body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
 body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn), html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
-  color: #1E293B !important;
+  color: #000000 !important;
 }
 body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
 body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span:not(.ic):not(#osBadgeCount),
@@ -4981,7 +5035,7 @@ body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-acti
 body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span:not(.ic):not(#osBadgeCount),
 html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span.label,
 html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) span:not(.ic):not(#osBadgeCount) {
-  color: #1E293B !important;
+  color: #000000 !important;
   font-weight: 600 !important;
 }
 body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic, html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic,
@@ -4996,7 +5050,7 @@ body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-
 body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover, html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover {
   background: #F8FAFC !important;
   border-color: #CBD5E1 !important;
-  color: #0F172A !important;
+  color: #000000 !important;
 }
 body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic,
 body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic, html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover .ic,
@@ -5008,10 +5062,18 @@ body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-acti
 body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active,
 body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active,
 body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
-  background: #ECFDF5 !important;
+  background: linear-gradient(90deg, #ECFDF5 0%, #F0FDF4 100%) !important;
   border: 1px solid #A7F3D0 !important;
-  border-left: 3.5px solid #059669 !important;
-  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.12) !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.08) !important;
+}
+body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before,
+html.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before,
+body.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before,
+html.light aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before,
+body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before,
+html.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before {
+  background: #059669 !important;
+  box-shadow: none !important;
 }
 body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span.label,
 body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active span:not(.ic):not(#osBadgeCount),
@@ -5034,6 +5096,7 @@ body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-acti
   background: #D1FAE5 !important;
   border-color: #6EE7B7 !important;
   color: #059669 !important;
+  box-shadow: none !important;
 }
 /* Acentos Visuais nos Ícones por Categoria no Modo Claro */
 body.light [data-page="dashboard"]:hover .ic, body.light [data-page="transacoes"]:hover .ic, body.light [data-page="cartoes"]:hover .ic {
@@ -5057,29 +5120,29 @@ body.light [data-page="config"]:hover .ic {
   color: #DB2777 !important;
 }
 
-body.light .sidebar-footer {
+body.light .sidebar-footer, html.light .sidebar-footer {
   border-top-color: #E2E8F0 !important;
 }
-body.light .sidebar-footer .sidebar-toggle-btn,
-body.light .sidebar-footer #sidebarCollapseBtn,
-body.light aside.menu .sidebar-footer .sidebar-toggle-btn,
-body.light .sidebar-toggle-btn {
+body.light .sidebar-footer .sidebar-toggle-btn, html.light .sidebar-footer .sidebar-toggle-btn,
+body.light .sidebar-footer #sidebarCollapseBtn, html.light .sidebar-footer #sidebarCollapseBtn,
+body.light aside.menu .sidebar-footer .sidebar-toggle-btn, html.light aside.menu .sidebar-footer .sidebar-toggle-btn,
+body.light .sidebar-toggle-btn, html.light .sidebar-toggle-btn {
   background: #F8FAFC !important;
   border-color: #E2E8F0 !important;
-  color: #475569 !important;
+  color: #334155 !important;
 }
-body.light .sidebar-footer .sidebar-toggle-btn:hover,
-body.light .sidebar-footer #sidebarCollapseBtn:hover,
-body.light aside.menu .sidebar-footer .sidebar-toggle-btn:hover,
-body.light .sidebar-toggle-btn:hover {
+body.light .sidebar-footer .sidebar-toggle-btn:hover, html.light .sidebar-footer .sidebar-toggle-btn:hover,
+body.light .sidebar-footer #sidebarCollapseBtn:hover, html.light .sidebar-footer #sidebarCollapseBtn:hover,
+body.light aside.menu .sidebar-footer .sidebar-toggle-btn:hover, html.light aside.menu .sidebar-footer .sidebar-toggle-btn:hover,
+body.light .sidebar-toggle-btn:hover, html.light .sidebar-toggle-btn:hover {
   background: #ECFDF5 !important;
   border-color: #A7F3D0 !important;
   color: #059669 !important;
 }
-body.light .sidebar-footer .toggle-icon-wrap {
+body.light .sidebar-footer .toggle-icon-wrap, html.light .sidebar-footer .toggle-icon-wrap {
   background: #EDF2F7 !important;
 }
-body.light .sidebar-footer .sidebar-toggle-btn:hover .toggle-icon-wrap {
+body.light .sidebar-footer .sidebar-toggle-btn:hover .toggle-icon-wrap, html.light .sidebar-footer .sidebar-toggle-btn:hover .toggle-icon-wrap {
   background: #D1FAE5 !important;
   color: #059669 !important;
 }
@@ -5103,6 +5166,7 @@ body.light .sidebar-footer .sidebar-toggle-btn:hover .toggle-icon-wrap {
   align-items: center !important;
   transition: left 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
+html.sidebar-collapsed .fintech-market-ticker-banner,
 body.sidebar-collapsed .fintech-market-ticker-banner {
   left: 68px !important;
 }
@@ -6225,8 +6289,9 @@ body.light .app-dev-credit {
   width: calc(100% - 250px) !important;
   max-width: 1760px !important;
   box-sizing: border-box !important;
-  transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: margin-left 0.22s cubic-bezier(0.16, 1, 0.3, 1), width 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
+html.sidebar-collapsed .main,
 body.sidebar-collapsed .main {
   margin-left: 68px !important;
   width: calc(100% - 68px) !important;
@@ -10304,14 +10369,23 @@ body.light .user-stat-chip strong { color: #0F172A !important; }
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
 }
 
+html.has-view-mode-banner .topheader,
 body.has-view-mode-banner .topheader {
   top: 50px !important;
 }
+html.has-view-mode-banner .main,
 body.has-view-mode-banner .main {
-  margin-top: 230px !important;
+  margin-top: 126px !important;
 }
-body.has-view-mode-banner .sidebar {
-  top: 125px !important;
+html.has-view-mode-banner nav.menu,
+html.has-view-mode-banner aside.menu,
+html.has-view-mode-banner .sidebar-menu,
+body.has-view-mode-banner nav.menu,
+body.has-view-mode-banner aside.menu,
+body.has-view-mode-banner .sidebar-menu {
+  top: 116px !important;
+  height: calc(100vh - 116px) !important;
+  max-height: calc(100vh - 116px) !important;
 }
 
 /* Floating FAB Button para Sair do Espelho */
@@ -11157,7 +11231,7 @@ body.light .login-success-box.warning-box p {
   .brand .logo { width: 50px !important; height: 50px !important; font-size: 17px !important; }
   .topheader-row { max-width: 100% !important; padding: 0 36px !important; height: 68px !important; }
   .main { max-width: 2400px !important; padding: 20px 36px 56px !important; margin-top: 76px !important; margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; }
-  body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
+  html.sidebar-collapsed .main, body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; gap: 20px !important; }
   .kpis-grid-6 { grid-template-columns: repeat(6, 1fr) !important; gap: 20px !important; margin-bottom: 26px !important; }
   .kpi .val { font-size: 28px !important; }
@@ -11179,7 +11253,7 @@ body.light .login-success-box.warning-box p {
   .brand .name { font-size: 18px; }
   .topheader-row { max-width: 100% !important; padding: 0 28px !important; height: 68px !important; }
   .main { max-width: 1920px !important; padding: 18px 30px 48px !important; margin-top: 76px !important; margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; }
-  body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
+  html.sidebar-collapsed .main, body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
   .kpis { grid-template-columns: repeat(5, 1fr) !important; }
 }
 
@@ -11192,7 +11266,7 @@ body.light .login-success-box.warning-box p {
   .grid3 { grid-template-columns: 1fr 1fr !important; }
   .grid-2-1 { grid-template-columns: 1fr !important; }
   .main { margin-left: 250px !important; margin-right: auto !important; width: calc(100% - 250px) !important; margin-top: 76px !important; padding: 16px 18px 36px !important; }
-  body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
+  html.sidebar-collapsed .main, body.sidebar-collapsed .main { margin-left: 68px !important; width: calc(100% - 68px) !important; }
 }
 
 /* Botão de Sair no Drawer Mobile */
@@ -11928,7 +12002,6 @@ body.light .kpi .ic {
   border-color: rgba(16, 185, 129, 0.45) !important;
   border-top-color: rgba(255, 255, 255, 0.70) !important;
   box-shadow: var(--glass-card-hover-shadow) !important;
-  transform: translateY(-2.5px) !important;
 }
 
 body.light .panel,
@@ -12812,12 +12885,11 @@ body.light nav.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-bt
 }
 
 body.light nav.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, body.light .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active, body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
-  background: #ECFDF5 !important;
+  background: linear-gradient(90deg, #ECFDF5 0%, #F0FDF4 100%) !important;
   border: 1px solid #A7F3D0 !important;
-  border-left: 3.5px solid #059669 !important;
   color: #059669 !important;
   font-weight: 800 !important;
-  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.12) !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.08) !important;
 }
 
 body.light nav.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic svg, body.light .sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active .ic svg {
@@ -13857,7 +13929,11 @@ body.light .period button.active {
     try {
       var savedTheme = localStorage.getItem('nexus_theme');
       if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim().toLowerCase();
-      var isLight = (savedTheme === 'light');
+      var isLight = (savedTheme !== 'dark');
+      document.body.classList.toggle('light', isLight);
+      if (localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
+        document.body.classList.add('sidebar-collapsed');
+      }
       var miniBtn = document.getElementById('miniThemeBtn');
       if (miniBtn) {
         miniBtn.innerHTML = isLight ?
@@ -13873,7 +13949,7 @@ body.light .period button.active {
       var savedScale = localStorage.getItem('nexus_display_scale') || 'auto';
       var scaleLabel = document.getElementById('currentScaleLabel');
       if (scaleLabel) {
-        scaleLabel.textContent = (savedScale === 'auto') ? 'Auto' : savedScale;
+        scaleLabel.textContent = (savedScale === 'auto') ? 'Auto (100%)' : savedScale;
       }
 
       var cu = localStorage.getItem('nexus_cached_user');
@@ -13893,9 +13969,6 @@ body.light .period button.active {
           }
         }
       }
-      setTimeout(function(){
-        document.documentElement.classList.add('app-ready');
-      }, 50);
     } catch(e){}
   })();
   </script>
@@ -19228,6 +19301,24 @@ function applyDataPayload(data) {
 
 let isDataLoading = false;
 
+function getDataStateSignature() {
+  try {
+    return JSON.stringify({
+      c: categories,
+      a: accounts,
+      t: transactions,
+      b: budgets,
+      g: goals,
+      r: recurringList,
+      al: alerts,
+      at: attachments,
+      n: notifications
+    });
+  } catch (e) {
+    return '';
+  }
+}
+
 async function loadUserData() {
   if (!currentUser) {
     resetUserDataState();
@@ -19245,6 +19336,7 @@ async function loadUserData() {
   } else {
     resetUserDataState();
   }
+  const prevSig = getDataStateSignature();
   isDataLoading = false;
 
   // 2. Sincroniza em tempo real com o servidor SQL Server / API especificamente para este e-mail
@@ -19259,7 +19351,8 @@ async function loadUserData() {
       if (serverData && typeof serverData === 'object') {
         applyDataPayload(serverData);
         saveToStorage(userKey, serverData);
-        hasServerChanges = true;
+        const nextSig = getDataStateSignature();
+        hasServerChanges = (nextSig !== prevSig);
       }
     }
   } catch(e) {
@@ -20224,31 +20317,28 @@ let _lastUsersSyncTime = 0;
 let _lastLogsSyncTime = 0;
 let _lastOrdensSyncTime = 0;
 
-function updateMainHeaderSpacing(force = false) {
+function updateMainHeaderSpacing() {
   const mainEl = document.querySelector('.main');
   if (!mainEl) return;
-  if (window.innerWidth <= 900) {
+  // O espaçamento superior (.main margin-top: 76px / 126px no modo espelho) é controlado via CSS fixo para evitar qualquer salto de layout (CLS = 0)
+  if (mainEl.style.marginTop) {
     mainEl.style.marginTop = '';
-    return;
-  }
-  const banner = document.querySelector('.view-mode-banner');
-  const bannerH = (banner && document.body.classList.contains('has-view-mode-banner')) ? 38 : 0;
-  if (!_cachedHeaderHeight || force) {
-    const th = document.querySelector('.topheader');
-    _cachedHeaderHeight = Math.round((th ? th.offsetHeight : 0) || 120);
-  }
-  const targetMarginNum = _cachedHeaderHeight + bannerH + 4;
-  const currentMarginNum = parseInt(mainEl.style.marginTop || '0', 10);
-  if (Math.abs(currentMarginNum - targetMarginNum) > 2) {
-    mainEl.style.marginTop = targetMarginNum + 'px';
   }
 }
-window.addEventListener('resize', () => updateMainHeaderSpacing(true));
+
+function isUserTypingInPageContent() {
+  const active = document.activeElement;
+  if (!active) return false;
+  const tag = (active.tagName || '').toUpperCase();
+  if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT' && !active.isContentEditable) return false;
+  const pageEl = document.getElementById('pageContent');
+  return !!(pageEl && pageEl.contains(active));
+}
 
 function render(){
   const el = document.getElementById('pageContent');
   if (!el) return;
-  updateMainHeaderSpacing(false);
+  updateMainHeaderSpacing();
 
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   const isAdminView = isAdmin && !isViewingOtherUser;
@@ -20261,6 +20351,8 @@ function render(){
   }
 
   let newHTML = '';
+  let pageChanged = false;
+  let htmlChanged = false;
   try {
     const now = Date.now();
     if(currentPage==='usuarios') {
@@ -20269,7 +20361,7 @@ function render(){
         window._lastUsersSyncTime = now;
         syncUsersWithServer().then(() => {
           const uEl = document.getElementById('pageContent');
-          if (uEl && currentPage === 'usuarios') {
+          if (uEl && currentPage === 'usuarios' && !isUserTypingInPageContent()) {
             const freshHTML = pageUsuarios();
             if (_lastRenderedHtml !== freshHTML) {
               _lastRenderedHtml = freshHTML;
@@ -20286,7 +20378,7 @@ function render(){
         window._lastLogsSyncTime = now;
         loadSystemLogs().then(() => {
           const lEl = document.getElementById('pageContent');
-          if (lEl && currentPage === 'logs') {
+          if (lEl && currentPage === 'logs' && !isUserTypingInPageContent()) {
             const freshHTML = pageLogs();
             if (_lastRenderedHtml !== freshHTML) {
               _lastRenderedHtml = freshHTML;
@@ -20303,7 +20395,7 @@ function render(){
         window._lastOrdensSyncTime = now;
         syncOrdensWithServer().then(() => {
           const oEl = document.getElementById('pageContent');
-          if (oEl && currentPage === 'ordens') {
+          if (oEl && currentPage === 'ordens' && !isUserTypingInPageContent()) {
             const freshHTML = pageOrdens();
             if (_lastRenderedHtml !== freshHTML) {
               _lastRenderedHtml = freshHTML;
@@ -20328,8 +20420,8 @@ function render(){
     else if(currentPage==='funcoes') newHTML = pageFuncoes();
     else newHTML = pageDashboard();
 
-    const pageChanged = el.getAttribute('data-current-rendered-page') !== currentPage;
-    const htmlChanged = (_lastRenderedHtml !== newHTML);
+    pageChanged = el.getAttribute('data-current-rendered-page') !== currentPage;
+    htmlChanged = (_lastRenderedHtml !== newHTML);
 
     if (pageChanged || htmlChanged) {
       el.innerHTML = newHTML;
@@ -20349,7 +20441,7 @@ function render(){
     updateViewModeBanner();
     updateAdminMenuVisibility();
     updateActiveMenu();
-    if(currentPage==='dashboard') {
+    if(currentPage==='dashboard' && (pageChanged || htmlChanged || !charts.cashFlow)) {
       requestAnimationFrame(() => {
         try {
           drawDashboardCharts();
@@ -25652,7 +25744,7 @@ function drawDashboardCharts(){
             responsive: true,
             maintainAspectRatio: false,
             cutout: mode === 'doughnut' ? '68%' : '0%',
-            animation: { duration: 450 },
+            animation: false,
             plugins: {
               legend: {
                 display: true,
@@ -25726,7 +25818,7 @@ function drawDashboardCharts(){
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: { duration: 450 },
+          animation: false,
           interaction: { mode: 'index', intersect: false },
           plugins: {
             legend: {
@@ -25813,7 +25905,7 @@ function drawDashboardCharts(){
           responsive: true,
           maintainAspectRatio: false,
           cutout: '72%',
-          animation: { duration: 450 },
+          animation: false,
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -25870,7 +25962,7 @@ function drawDashboardCharts(){
           responsive: true,
           maintainAspectRatio: false,
           cutout: '72%',
-          animation: { duration: 450 },
+          animation: false,
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -25930,7 +26022,7 @@ function drawDashboardCharts(){
           responsive: true,
           maintainAspectRatio: false,
           cutout: '72%',
-          animation: { duration: 450 },
+          animation: false,
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -26253,22 +26345,6 @@ window.syncDashboardData = async function() {
 };
 
 function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
-function parseInputValue(valStr) {
-  if (typeof valStr === 'number') return isNaN(valStr) ? 0 : valStr;
-  if (!valStr) return 0;
-  let cleaned = String(valStr).replace(/[^0-9.,-]/g, '').trim();
-  if (cleaned.includes(',') && cleaned.includes('.')) {
-    if (cleaned.indexOf('.') < cleaned.indexOf(',')) {
-      cleaned = cleaned.replace(/\./g, '').replace(',', '.');
-    } else {
-      cleaned = cleaned.replace(/,/g, '');
-    }
-  } else if (cleaned.includes(',')) {
-    cleaned = cleaned.replace(',', '.');
-  }
-  const num = parseFloat(cleaned);
-  return isNaN(num) ? 0 : num;
-}
 
 function populateCategoriaOptions(type){
   const fCat = document.getElementById('fCategoria');
@@ -28531,16 +28607,18 @@ const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
 if (sidebarCollapseBtn) {
   sidebarCollapseBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+    const isCollapsed = !document.body.classList.contains('sidebar-collapsed');
+    document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+    document.documentElement.classList.toggle('sidebar-collapsed', isCollapsed);
     try {
       localStorage.setItem('nexus_sidebar_collapsed', isCollapsed ? 'true' : 'false');
     } catch(err) {}
   });
 }
 try {
-  if (localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
-    document.body.classList.add('sidebar-collapsed');
-  }
+  const savedCollapsed = localStorage.getItem('nexus_sidebar_collapsed') === 'true';
+  document.body.classList.toggle('sidebar-collapsed', savedCollapsed);
+  document.documentElement.classList.toggle('sidebar-collapsed', savedCollapsed);
 } catch(err) {}
 
 const mobileBottomBar = document.getElementById('mobileBottomBar');
@@ -28642,11 +28720,6 @@ if (fContaAddBtn) {
     }
   };
 }
-
-document.getElementById('closeAccModal').onclick = closeAccountModal;
-document.getElementById('accCancelBtn').onclick = closeAccountModal;
-document.getElementById('accSaveBtn').onclick = saveAccount;
-document.getElementById('overlayAccount').addEventListener('click', e=>{ if(e.target.id==='overlayAccount') closeAccountModal(); });
 
 document.getElementById('closeCatModal').onclick = closeCategoryModal;
 document.getElementById('catCancelBtn').onclick = closeCategoryModal;
@@ -28873,7 +28946,7 @@ function applyDisplayScale(scaleVal) {
   var isMobileScale = (devType === 'mobile' || devType === 'tablet' || isTouchScreen || scaleNum === 1.0);
   var zoomRule = isMobileScale 
     ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' 
-    : ('@media screen { html, body { zoom: ' + scaleNum + ' !important; } }');
+    : ('@media screen { body { zoom: ' + scaleNum + ' !important; } }');
   scaleStyle.textContent = zoomRule + ' :root { --app-zoom: ' + scaleNum + '; }';
 
   document.documentElement.style.setProperty('--app-zoom', scaleNum);
@@ -29108,7 +29181,13 @@ window.applyPostLoginBg = function(theme) {
       window.__initialRenderDone = true;
       if (typeof window.initTrialAndSubscription === 'function') { window.initTrialAndSubscription(); }
     }
-  } catch(e){}
+  } catch(e){} finally {
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        document.documentElement.classList.add('app-ready');
+      });
+    });
+  }
 })();
 
 (async function restoreSession(){
