@@ -1650,22 +1650,34 @@ html.is-admin .menu-section-planejamento,
 html.is-admin .menu-section-ferramentas,
 html.is-admin .menu-section-minha-conta,
 html.is-admin #mobileBottomBar .mobile-btn-user,
-html.is-admin .header-minha-conta-btn {
+html.is-admin .header-minha-conta-btn,
+html.is-admin #sidebarNovaTransacaoBtn {
   display: none !important;
 }
 
 html.is-admin #menu .menu-btn-admin,
 html.is-admin #mobileDrawerMenu .menu-btn-admin,
 html.is-admin .menu-section-admin,
-html.is-admin #mobileBottomBar .mobile-btn-admin {
+html.is-admin #mobileBottomBar .mobile-btn-admin,
+html.is-admin #sidebarAdminQuickCreateBtn {
   display: flex !important;
+}
+
+html.is-admin .admin-sidebar-summary-card {
+  display: flex !important;
+}
+html.is-admin.sidebar-collapsed .admin-sidebar-summary-card,
+body.sidebar-collapsed .admin-sidebar-summary-card {
+  display: none !important;
 }
 
 /* Perfil de Usuário Comum: Aparecem APENAS Visão, Planejamento, Ferramentas e Minha Conta */
 html:not(.is-admin) #menu .menu-btn-admin,
 html:not(.is-admin) #mobileDrawerMenu .menu-btn-admin,
 html:not(.is-admin) .menu-section-admin,
-html:not(.is-admin) #mobileBottomBar .mobile-btn-admin {
+html:not(.is-admin) #mobileBottomBar .mobile-btn-admin,
+html:not(.is-admin) #sidebarAdminQuickCreateBtn,
+html:not(.is-admin) .admin-sidebar-summary-card {
   display: none !important;
 }
 
@@ -1676,16 +1688,17 @@ html:not(.is-admin) .menu-section-planejamento,
 html:not(.is-admin) .menu-section-ferramentas,
 html:not(.is-admin) .menu-section-minha-conta,
 html:not(.is-admin) #mobileBottomBar .mobile-btn-user,
-html:not(.is-admin) .header-minha-conta-btn {
+html:not(.is-admin) .header-minha-conta-btn,
+html:not(.is-admin) #sidebarNovaTransacaoBtn {
   display: flex !important;
 }
 
-/* ==================== Balcão Executivo de Recepção de O.S. (Entrada Direta) ==================== */
+/* ==================== Balcão Executivo de Recepção de O.S. (Compacto e Alinhado) ==================== */
 .reception-grid {
   display: grid;
-  grid-template-columns: minmax(360px, 1.25fr) minmax(320px, 1fr);
-  gap: 20px;
-  align-items: start;
+  grid-template-columns: minmax(340px, 1.15fr) minmax(320px, 1fr);
+  gap: 14px;
+  align-items: stretch;
 }
 @media (max-width: 992px) {
   .reception-grid {
@@ -1695,17 +1708,19 @@ html:not(.is-admin) .header-minha-conta-btn {
 .reception-card {
   background: var(--card);
   border: 1px solid var(--card-border);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+  display: flex;
+  flex-direction: column;
 }
 .reception-form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-  margin-top: 14px;
+  gap: 10px 12px;
+  margin-top: 10px;
 }
 @media (max-width: 640px) {
   .reception-form-grid {
@@ -1718,38 +1733,38 @@ html:not(.is-admin) .header-minha-conta-btn {
 .reception-form-grid label {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
+  gap: 5px;
+  font-size: 10.5px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--text-dim);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 .reception-form-grid input,
 .reception-form-grid select {
-  height: 42px !important;
-  border-radius: 12px !important;
-  font-size: 13.5px !important;
+  height: 36px !important;
+  border-radius: 9px !important;
+  font-size: 12.5px !important;
   border: 1px solid var(--card-border) !important;
   background: var(--input-bg) !important;
   color: var(--text) !important;
-  padding: 0 14px !important;
+  padding: 0 11px !important;
   width: 100% !important;
   font-family: inherit !important;
   transition: all 0.2s ease !important;
 }
 .reception-form-grid textarea {
-  border-radius: 12px !important;
-  font-size: 13.5px !important;
+  border-radius: 9px !important;
+  font-size: 12.5px !important;
   border: 1px solid var(--card-border) !important;
   background: var(--input-bg) !important;
   color: var(--text) !important;
-  padding: 12px 14px !important;
+  padding: 8px 11px !important;
   width: 100% !important;
   font-family: inherit !important;
   resize: vertical !important;
-  min-height: 90px !important;
+  min-height: 66px !important;
   transition: all 0.2s ease !important;
 }
 .reception-form-grid input:focus,
@@ -1757,37 +1772,37 @@ html:not(.is-admin) .header-minha-conta-btn {
 .reception-form-grid textarea:focus {
   outline: none !important;
   border-color: #10B981 !important;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22) !important;
 }
 .reception-queue-item {
   border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 16px;
-  background: rgba(255,255,255,0.02);
-  margin-bottom: 12px;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  border-radius: 11px;
+  padding: 11px 13px;
+  background: rgba(255,255,255,0.025);
+  margin-bottom: 8px;
+  transition: transform 0.18s ease, border-color 0.18s ease;
 }
 .reception-queue-item:hover {
-  transform: translateY(-2px);
-  border-color: rgba(16, 185, 129, 0.4);
+  transform: translateY(-1px);
+  border-color: rgba(16, 185, 129, 0.45);
 }
 .os-tab-pill-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 7px;
+  padding: 1px 6px;
   border-radius: 999px;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 900;
   background: #EF4444;
   color: #FFFFFF;
-  margin-left: 6px;
+  margin-left: 5px;
   box-shadow: 0 2px 6px rgba(239,68,68,0.5);
 }
 body.light .reception-card {
   background: #FFFFFF !important;
   border-color: #CBD5E1 !important;
-  box-shadow: 0 10px 30px rgba(15,23,42,0.06) !important;
+  box-shadow: 0 6px 20px rgba(15,23,42,0.05) !important;
 }
 body.light .reception-form-grid label {
   color: #000000 !important;
@@ -1807,69 +1822,271 @@ body.light .reception-queue-item:hover {
   border-color: #10B981 !important;
 }
 
+/* ==================== Menu Exclusivo do Perfil Administrador (Campos Mais Visuais) ==================== */
+html.is-admin .menu-section-admin {
+  padding: 8px 6px 6px 6px !important;
+  margin-bottom: 2px !important;
+}
+html.is-admin .menu-section-admin .menu-section-title {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.09em !important;
+  color: #FBBF24 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+body.light html.is-admin .menu-section-admin .menu-section-title,
+html.light.is-admin .menu-section-admin .menu-section-title {
+  color: #000000 !important;
+}
+
 html.is-admin .menu button.menu-btn-admin,
 html.is-admin aside.menu button.menu-btn-admin,
 html.is-admin .sidebar-menu button.menu-btn-admin {
   position: relative !important;
   width: 100% !important;
-  height: 40px !important;
-  min-height: 40px !important;
-  max-height: 40px !important;
-  padding: 0 12px !important;
-  border-radius: 11px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  max-height: 50px !important;
+  padding: 0 10px !important;
+  margin: 0 0 6px 0 !important;
+  border-radius: 12px !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 11px !important;
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
+  gap: 10px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.045) 0%, rgba(15, 23, 42, 0.65) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
   flex-shrink: 0 !important;
+}
+
+html.is-admin .menu button.menu-btn-admin:hover,
+html.is-admin aside.menu button.menu-btn-admin:hover,
+html.is-admin .sidebar-menu button.menu-btn-admin:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(30, 41, 59, 0.8) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.38) !important;
+}
+
+html.is-admin .menu button.menu-btn-admin.active,
+html.is-admin aside.menu button.menu-btn-admin.active,
+html.is-admin .sidebar-menu button.menu-btn-admin.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.20) 0%, rgba(5, 150, 105, 0.08) 100%) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.55) !important;
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
 }
 
 html.is-admin .menu button.menu-btn-admin .ic,
 html.is-admin aside.menu button.menu-btn-admin .ic,
 html.is-admin .sidebar-menu button.menu-btn-admin .ic {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  border-radius: 8px !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  border-radius: 9px !important;
   margin: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
+  transition: all 0.18s ease !important;
 }
 
-html.is-admin .menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount),
-html.is-admin aside.menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount),
-html.is-admin .sidebar-menu button.menu-btn-admin span:not(.ic):not(#osBadgeCount) {
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
-  line-height: 1 !important;
+/* Cores Visuais Distintas para Cada Campo do Menu Admin */
+html.is-admin #menuUsuariosBtn .ic,
+html.is-admin #mobileDrawerUsuariosBtn .ic {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(5, 150, 105, 0.12)) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #34D399 !important;
+}
+html.is-admin #menuOrdensBtn .ic,
+html.is-admin #mobileDrawerOrdensBtn .ic {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(217, 119, 6, 0.12)) !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  color: #FBBF24 !important;
+}
+html.is-admin #menuLogsBtn .ic,
+html.is-admin #mobileDrawerLogsBtn .ic {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(2, 132, 199, 0.12)) !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  color: #38BDF8 !important;
+}
+
+.admin-menu-field-body {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  flex: 1 !important;
+  gap: 2px !important;
+}
+.admin-menu-field-body .label {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+  color: #F8FAFC !important;
   white-space: nowrap !important;
-  display: inline-block !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.admin-menu-field-body .sub-label {
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  line-height: 1.1 !important;
+  color: #94A3B8 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.admin-menu-count-pill {
+  margin-left: auto !important;
+  padding: 0 7px !important;
+  min-width: 20px !important;
+  height: 19px !important;
+  line-height: 19px !important;
+  border-radius: 6px !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #E2E8F0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+html.is-admin .menu button.menu-btn-admin.active .admin-menu-count-pill {
+  background: rgba(16, 185, 129, 0.25) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  color: #6EE7B7 !important;
+}
+
+/* Card de Status Operacional no Menu Lateral do Admin */
+.admin-sidebar-summary-card {
+  margin-top: 8px !important;
+  padding: 10px 11px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.78) 0%, rgba(8, 12, 24, 0.90) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+.admin-sidebar-summary-title {
+  font-size: 9.5px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+  color: #94A3B8 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+.admin-sidebar-summary-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  font-size: 11px !important;
+  color: #CBD5E1 !important;
+  padding: 4px 7px !important;
+  border-radius: 7px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Colapso Limpo da Sidebar no Perfil Admin */
+html.sidebar-collapsed.is-admin .admin-menu-field-body,
+body.sidebar-collapsed .admin-menu-field-body,
+html.sidebar-collapsed.is-admin .admin-menu-count-pill,
+body.sidebar-collapsed .admin-menu-count-pill {
+  display: none !important;
+}
+html.sidebar-collapsed.is-admin .menu button.menu-btn-admin,
+body.sidebar-collapsed .menu button.menu-btn-admin {
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  padding: 0 !important;
+  justify-content: center !important;
+  margin: 0 auto 6px auto !important;
+}
+
+/* Modo Claro para os Campos Visuais do Menu Admin */
+body.light html.is-admin .menu button.menu-btn-admin,
+html.light.is-admin .menu button.menu-btn-admin,
+body.light .menu button.menu-btn-admin {
+  background: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+}
+body.light html.is-admin .menu button.menu-btn-admin:hover,
+html.light.is-admin .menu button.menu-btn-admin:hover,
+body.light .menu button.menu-btn-admin:hover {
+  background: #F1F5F9 !important;
+  border-color: #94A3B8 !important;
+}
+body.light html.is-admin .menu button.menu-btn-admin.active,
+html.light.is-admin .menu button.menu-btn-admin.active,
+body.light .menu button.menu-btn-admin.active {
+  background: #ECFDF5 !important;
+  border: 1.5px solid #10B981 !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.12) !important;
+}
+body.light .admin-menu-field-body .label,
+html.light .admin-menu-field-body .label {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+body.light .admin-menu-field-body .sub-label,
+html.light .admin-menu-field-body .sub-label {
+  color: #000000 !important;
+  opacity: 0.75 !important;
+  font-weight: 600 !important;
+}
+body.light .admin-menu-count-pill,
+html.light .admin-menu-count-pill {
+  background: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
+body.light .admin-sidebar-summary-card,
+html.light .admin-sidebar-summary-card {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+body.light .admin-sidebar-summary-title,
+body.light .admin-sidebar-summary-row,
+html.light .admin-sidebar-summary-title,
+html.light .admin-sidebar-summary-row {
+  color: #000000 !important;
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
 }
 
 /* Badge de Notificação de O.S. Inline Perfeitamente Alinhado */
 html.is-admin #menuOrdensBtn #osBadgeCount,
 .menu #osBadgeCount {
   position: static !important;
-  margin: 0 0 0 4px !important;
+  margin: 0 0 0 auto !important;
   padding: 0 6px !important;
-  min-width: 17px !important;
-  height: 17px !important;
-  line-height: 17px !important;
-  border-radius: 999px !important;
-  font-size: 9.5px !important;
+  min-width: 19px !important;
+  height: 19px !important;
+  line-height: 19px !important;
+  border-radius: 6px !important;
+  font-size: 10px !important;
   font-weight: 900 !important;
   background: #EF4444 !important;
   color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  box-shadow: 0 0 8px rgba(239, 68, 68, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6) !important;
   align-items: center !important;
   justify-content: center !important;
   pointer-events: none !important;
@@ -4694,56 +4911,121 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active
   font-weight: 700 !important;
 }
 
-/* Botão Administrativo */
+/* Botão Administrativo (Card Visual Exclusivo em html.is-admin) */
 .menu button.menu-btn-admin, aside.menu button.menu-btn-admin, .sidebar-menu button.menu-btn-admin {
-  color: #CBD5E1 !important;
-  background: rgba(245, 158, 11, 0.04) !important;
-  border: 1px solid rgba(245, 158, 11, 0.14) !important;
+  color: #E2E8F0 !important;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.78) 0%, rgba(15, 23, 42, 0.48) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  max-height: 52px !important;
+  padding: 6px 10px !important;
+  border-radius: 12px !important;
+  margin-bottom: 5px !important;
+  gap: 10px !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22) !important;
 }
 .menu button.menu-btn-admin .ic, aside.menu button.menu-btn-admin .ic, .sidebar-menu button.menu-btn-admin .ic {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  border-radius: 9px !important;
+  color: #34D399 !important;
+  background: rgba(16, 185, 129, 0.14) !important;
+  border: 1px solid rgba(16, 185, 129, 0.30) !important;
+}
+.menu button#menuOrdensBtn.menu-btn-admin .ic, aside.menu button#menuOrdensBtn.menu-btn-admin .ic {
   color: #FBBF24 !important;
-  background: rgba(245, 158, 11, 0.10) !important;
-  border-color: rgba(245, 158, 11, 0.24) !important;
+  background: rgba(245, 158, 11, 0.14) !important;
+  border-color: rgba(245, 158, 11, 0.30) !important;
+}
+.menu button#menuLogsBtn.menu-btn-admin .ic, aside.menu button#menuLogsBtn.menu-btn-admin .ic {
+  color: #38BDF8 !important;
+  background: rgba(56, 189, 248, 0.14) !important;
+  border-color: rgba(56, 189, 248, 0.30) !important;
 }
 .menu button.menu-btn-admin:hover, aside.menu button.menu-btn-admin:hover, .sidebar-menu button.menu-btn-admin:hover {
-  background: rgba(245, 158, 11, 0.12) !important;
-  border-color: rgba(245, 158, 11, 0.35) !important;
-  color: #FDE68A !important;
-  transform: none !important;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.78) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.38) !important;
+  color: #FFFFFF !important;
+  transform: translateX(2px) !important;
 }
 .menu button.menu-btn-admin.active, aside.menu button.menu-btn-admin.active, .sidebar-menu button.menu-btn-admin.active {
-  background: linear-gradient(90deg, rgba(245, 158, 11, 0.20) 0%, rgba(217, 119, 6, 0.06) 100%) !important;
-  border: 1px solid rgba(245, 158, 11, 0.50) !important;
-  color: #FDE68A !important;
-  box-shadow: 0 2px 12px rgba(245, 158, 11, 0.20) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.20) 0%, rgba(16, 185, 129, 0.10) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.52) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.32), 0 0 12px rgba(245, 158, 11, 0.16) !important;
 }
 .menu button.menu-btn-admin.active::before,
 aside.menu button.menu-btn-admin.active::before,
 .sidebar-menu button.menu-btn-admin.active::before {
-  background: #F59E0B !important;
+  background: linear-gradient(180deg, #F59E0B 0%, #10B981 100%) !important;
   box-shadow: 0 0 8px rgba(245, 158, 11, 0.65) !important;
+  height: 22px !important;
 }
 .menu button.menu-btn-admin.active .ic, aside.menu button.menu-btn-admin.active .ic, .sidebar-menu button.menu-btn-admin.active .ic {
-  background: rgba(245, 158, 11, 0.24) !important;
-  border-color: rgba(245, 158, 11, 0.55) !important;
-  color: #FDE68A !important;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.30) !important;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+  border-color: rgba(254, 243, 199, 0.5) !important;
+  color: #060B18 !important;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.35) !important;
+}
+html[data-theme="light"] .menu button.menu-btn-admin,
+html[data-theme="light"] aside.menu button.menu-btn-admin {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #000000 !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05) !important;
+}
+html[data-theme="light"] .menu button.menu-btn-admin:hover,
+html[data-theme="light"] aside.menu button.menu-btn-admin:hover {
+  background: #F8FAFC !important;
+  border-color: #F59E0B !important;
+  color: #000000 !important;
+}
+html[data-theme="light"] .menu button.menu-btn-admin.active,
+html[data-theme="light"] aside.menu button.menu-btn-admin.active {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(16, 185, 129, 0.08) 100%) !important;
+  border: 1.5px solid #D97706 !important;
+  color: #000000 !important;
 }
 
-/* Badge de Notificação de O.S. */
+/* Badge de Notificação de O.S. e Contadores do Menu Admin */
+.menu .admin-menu-count-pill, aside.menu .admin-menu-count-pill {
+  margin-left: auto !important;
+  padding: 0 7px !important;
+  min-width: 22px !important;
+  height: 20px !important;
+  line-height: 20px !important;
+  border-radius: 6px !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #E2E8F0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+}
+html[data-theme="light"] .menu .admin-menu-count-pill,
+html[data-theme="light"] aside.menu .admin-menu-count-pill {
+  background: #F1F5F9 !important;
+  color: #000000 !important;
+  border-color: #94A3B8 !important;
+}
 .menu #osBadgeCount, aside.menu #osBadgeCount, .sidebar-menu #osBadgeCount {
   margin-left: auto !important;
-  padding: 0 6px !important;
-  min-width: 18px !important;
-  height: 18px !important;
-  line-height: 18px !important;
-  border-radius: 999px !important;
-  font-size: 9.5px !important;
+  padding: 0 7px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  line-height: 20px !important;
+  border-radius: 6px !important;
+  font-size: 10px !important;
   font-weight: 800 !important;
   background: #EF4444 !important;
   color: #FFFFFF !important;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5) !important;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.45) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -6501,30 +6783,39 @@ body.sidebar-collapsed .main {
   box-shadow: 0 4px 14px rgba(5, 150, 105, 0.40) !important;
 }
 
-/* Botões da Lista de Usuários (User Card Actions) */
+/* Botões da Lista de Usuários (User Card Actions - Compactos e Alinhados) */
 .user-card-right {
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  gap: 10px !important;
+  gap: 5px !important;
   flex-shrink: 0 !important;
+  flex-wrap: nowrap !important;
 }
 .user-card-btn {
-  height: 38px !important;
-  padding: 0 16px !important;
-  font-size: 13px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 9px !important;
+  font-size: 11px !important;
   font-weight: 700 !important;
-  border-radius: 10px !important;
+  border-radius: 7px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
+  gap: 4px !important;
   cursor: pointer !important;
-  transition: all 0.2s ease-in-out !important;
+  transition: all 0.16s ease-in-out !important;
   white-space: nowrap !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22) !important;
   width: auto !important;
   outline: none !important;
+  line-height: 1 !important;
+}
+.user-card-btn svg {
+  width: 12px !important;
+  height: 12px !important;
+  flex-shrink: 0 !important;
 }
 .user-card-btn.btn-espelho {
   background: rgba(5, 150, 105, 0.15) !important;
@@ -6535,20 +6826,19 @@ body.sidebar-collapsed .main {
   background: rgba(5, 150, 105, 0.3) !important;
   border-color: #34D399 !important;
   color: #FFFFFF !important;
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 10px rgba(5, 150, 105, 0.3) !important;
 }
 .user-card-btn.btn-desativar {
-  background: rgba(239, 68, 68, 0.15) !important;
-  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  background: rgba(239, 68, 68, 0.14) !important;
+  border: 1px solid rgba(239, 68, 68, 0.38) !important;
   color: #F87171 !important;
 }
 .user-card-btn.btn-desativar:hover {
-  background: rgba(239, 68, 68, 0.3) !important;
+  background: rgba(239, 68, 68, 0.28) !important;
   border-color: #F87171 !important;
   color: #FFFFFF !important;
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35) !important;
+  transform: translateY(-1px) !important;
 }
 .user-card-btn.btn-ativar {
   background: rgba(5, 150, 105, 0.15) !important;
@@ -6559,32 +6849,30 @@ body.sidebar-collapsed .main {
   background: rgba(5, 150, 105, 0.3) !important;
   border-color: #10B981 !important;
   color: #FFFFFF !important;
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35) !important;
+  transform: translateY(-1px) !important;
 }
 .user-card-btn.btn-editar {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: #F8FAFC !important;
+  background: rgba(16, 185, 129, 0.18) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #6EE7B7 !important;
 }
 .user-card-btn.btn-editar:hover {
-  background: rgba(255, 255, 255, 0.18) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
+  background: rgba(16, 185, 129, 0.32) !important;
+  border-color: #10B981 !important;
   color: #FFFFFF !important;
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-1px) !important;
 }
 .user-card-btn.btn-excluir {
   background: rgba(239, 68, 68, 0.14) !important;
-  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  border: 1px solid rgba(239, 68, 68, 0.38) !important;
   color: #F87171 !important;
+  padding: 0 7px !important;
 }
 .user-card-btn.btn-excluir:hover {
   background: rgba(239, 68, 68, 0.3) !important;
   border-color: #EF4444 !important;
   color: #FFFFFF !important;
-  transform: translateY(-1.5px) !important;
-  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35) !important;
+  transform: translateY(-1px) !important;
 }
 
 /* Modo Claro / Light Theme Overrides */
@@ -10045,38 +10333,144 @@ body.light .toast-desc strong { color: #0F172A !important; }
   letter-spacing: 0.01em;
   backdrop-filter: blur(8px);
 }
+/* ==================== Padronização e Alinhamento das Telas do Administrador ==================== */
+.admin-page-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-bottom: 14px !important;
+  padding: 12px 16px !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(15, 23, 42, 0.72) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+.admin-page-head h1 {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  color: var(--text) !important;
+  line-height: 1.2 !important;
+}
+.admin-page-head p {
+  font-size: 12px !important;
+  color: var(--text-dim) !important;
+  margin: 2px 0 0 0 !important;
+  font-weight: 500 !important;
+}
+.admin-head-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 9px !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.24), rgba(5, 150, 105, 0.12)) !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  font-size: 15px !important;
+  flex-shrink: 0 !important;
+}
+.admin-head-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+.admin-head-actions button {
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 13px !important;
+  border-radius: 9px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.admin-kpis-row {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(160px, 1fr)) !important;
+  gap: 10px !important;
+  margin-bottom: 14px !important;
+}
+@media (max-width: 960px) {
+  .admin-kpis-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 520px) {
+  .admin-kpis-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+.admin-kpis-row .kpi {
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+  min-height: 76px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+.admin-kpis-row .kpi .row1 {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 4px !important;
+}
+.admin-kpis-row .kpi .val {
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  margin: 0 !important;
+}
+.admin-kpis-row .kpi .sub {
+  font-size: 11px !important;
+  margin-top: 2px !important;
+}
+
 .admin-toolbar-panel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 12px !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
 }
 .admin-search-wrap {
   position: relative;
   flex: 1;
-  min-width: 280px;
+  min-width: 240px;
 }
 .admin-search-wrap svg {
   position: absolute;
-  left: 14px;
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
   color: #94A3B8;
   pointer-events: none;
 }
 .admin-search-input {
   width: 100%;
-  height: 40px;
+  height: 34px !important;
   background: var(--card);
   border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: 0 16px 0 42px;
+  border-radius: 8px !important;
+  padding: 0 12px 0 36px !important;
   color: #FFFFFF;
-  font-size: 13.5px;
+  font-size: 12.5px !important;
   font-weight: 500;
   outline: none;
   transition: all 0.2s ease;
@@ -10086,25 +10480,25 @@ body.light .toast-desc strong { color: #0F172A !important; }
 }
 .admin-search-input:focus {
   border-color: var(--blue);
-  box-shadow: 0 0 15px rgba(5, 150, 105, 0.3);
+  box-shadow: 0 0 12px rgba(5, 150, 105, 0.28);
 }
 .admin-filter-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 .admin-filter-btn {
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 10px;
+  height: 34px !important;
+  padding: 0 12px !important;
+  border-radius: 8px !important;
   border: 1px solid var(--card-border);
   background: rgba(255, 255, 255, 0.04);
   color: #94A3B8;
-  font-size: 12.5px;
+  font-size: 11.5px !important;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
@@ -10118,7 +10512,12 @@ body.light .toast-desc strong { color: #0F172A !important; }
   background: linear-gradient(135deg, rgba(5, 150, 105, 0.25), rgba(4, 120, 87, 0.15));
   border-color: rgba(5, 150, 105, 0.5);
   color: #34D399;
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+  box-shadow: 0 3px 10px rgba(5, 150, 105, 0.22);
+}
+body.light .admin-page-head {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05) !important;
 }
 body.light .admin-filter-btn.active {
   background: #ECFDF5;
@@ -10126,76 +10525,111 @@ body.light .admin-filter-btn.active {
   color: #047857;
 }
 
+/* ==================== Lista de Cadastros Compacta e Alinhada em Colunas ==================== */
+.user-admin-grid-header {
+  display: grid;
+  grid-template-columns: minmax(210px, 1.35fr) minmax(205px, 1.3fr) minmax(150px, 0.95fr) minmax(155px, 1fr) minmax(305px, auto);
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94A3B8;
+}
+.user-admin-grid-header > div:last-child {
+  text-align: right;
+}
 .user-admin-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 .user-card-4k {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(210px, 1.35fr) minmax(205px, 1.3fr) minmax(150px, 0.95fr) minmax(155px, 1fr) minmax(305px, auto);
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  min-height: 80px;
-  padding: 16px 22px;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 18px !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(10, 15, 29, 0.78) 100%) !important;
-  backdrop-filter: blur(24px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.20) !important;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  gap: 10px;
+  min-height: 52px;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 11px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(10, 15, 29, 0.80) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow: 0 4px 14px -3px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+@media (max-width: 1180px) {
+  .user-admin-grid-header {
+    display: none;
+  }
+  .user-card-4k {
+    grid-template-columns: 1fr auto;
+    gap: 8px 12px;
+  }
+}
+@media (max-width: 768px) {
+  .user-card-4k {
+    grid-template-columns: 1fr;
+  }
+  .user-card-right {
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+  }
 }
 .user-card-4k:hover {
-  border-color: rgba(96, 165, 250, 0.45) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 18px 45px -4px rgba(0, 0, 0, 0.8), 0 0 24px rgba(5, 150, 105, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 22px -4px rgba(0, 0, 0, 0.65), 0 0 14px rgba(5, 150, 105, 0.15) !important;
 }
 .user-card-4k.inactive {
-  opacity: 0.75;
+  opacity: 0.72;
   border-color: rgba(239, 68, 68, 0.35) !important;
 }
 .user-card-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   min-width: 0;
-  flex: 1;
 }
 .user-card-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 15.5px;
+  font-size: 12px;
   color: #FFFFFF;
   position: relative;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255,255,255,0.35);
 }
 .user-card-avatar.admin-av {
   background: linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #B45309 100%);
-  border: 1.5px solid rgba(251, 191, 36, 0.5);
-  box-shadow: 0 0 18px rgba(245, 158, 11, 0.35), inset 0 1px 1px rgba(255,255,255,0.5);
+  border: 1px solid rgba(251, 191, 36, 0.5);
 }
 .user-card-avatar.user-av {
   background: linear-gradient(135deg, #10B981 0%, #059669 60%, #047857 100%);
-  border: 1.5px solid rgba(96, 165, 250, 0.5);
-  box-shadow: 0 0 18px rgba(5, 150, 105, 0.35), inset 0 1px 1px rgba(255,255,255,0.5);
+  border: 1px solid rgba(52, 211, 153, 0.5);
 }
 .user-status-dot {
   position: absolute;
   bottom: -2px;
   right: -2px;
-  width: 11px;
-  height: 11px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  border: 2px solid var(--bg);
+  border: 1.5px solid var(--bg);
 }
-.user-status-dot.online { background: #059669; box-shadow: 0 0 6px #059669; }
+.user-status-dot.online { background: #059669; box-shadow: 0 0 5px #059669; }
 .user-status-dot.offline { background: #EF4444; }
 
 .user-card-info {
@@ -10209,11 +10643,12 @@ body.light .admin-filter-btn.active {
 .user-card-name-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 5px;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 .user-card-name {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   color: #FFFFFF;
   white-space: nowrap;
@@ -10221,57 +10656,60 @@ body.light .admin-filter-btn.active {
   text-overflow: ellipsis;
   line-height: 1.2;
 }
+.user-col-contact,
+.user-col-plan,
+.user-col-activity {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+}
 .user-card-email {
-  font-size: 13px;
-  color: #94A3B8;
-  font-weight: 500;
-  margin-top: 1px;
+  font-size: 11.5px;
+  color: #CBD5E1;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
 }
 .user-card-stats-strip {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 5px;
+  gap: 4px;
   flex-wrap: wrap;
 }
 .user-stat-chip {
-  font-size: 11.5px;
+  font-size: 10.5px;
   font-weight: 600;
-  padding: 2.5px 8px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5px 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   color: #94A3B8;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
+  white-space: nowrap;
+  line-height: 1.25;
 }
 .user-stat-chip strong {
   color: #FFFFFF;
   font-weight: 700;
 }
 
-.user-card-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-shrink: 0;
-  min-width: 290px;
-}
 .role-badge {
-  font-size: 11.5px;
+  font-size: 10px;
   font-weight: 800;
-  padding: 3.5px 11px;
-  border-radius: 20px;
+  padding: 2px 7px;
+  border-radius: 6px;
   flex-shrink: 0;
   white-space: nowrap;
   letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
+  line-height: 1.2;
 }
 .role-badge.admin {
   background: rgba(245, 158, 11, 0.18);
@@ -10289,19 +10727,24 @@ body.light .admin-filter-btn.active {
   color: #F87171;
 }
 
+body.light .user-admin-grid-header {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
 body.light .user-card-4k {
   background: #FFFFFF !important;
   border-color: #CBD5E1 !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
 }
-body.light .user-card-name { color: #0F172A !important; }
-body.light .user-card-email { color: #475569 !important; }
+body.light .user-card-name { color: #000000 !important; }
+body.light .user-card-email { color: #000000 !important; }
 body.light .user-stat-chip {
-  background: #F1F5F9 !important;
+  background: #F8FAFC !important;
   border-color: #CBD5E1 !important;
-  color: #475569 !important;
+  color: #000000 !important;
 }
-body.light .user-stat-chip strong { color: #0F172A !important; }
+body.light .user-stat-chip strong { color: #000000 !important; }
 
 /* ==================== Banner: Modo Visualização (Admin) ==================== */
 .view-mode-banner {
@@ -13521,12 +13964,16 @@ body.light .period button.active {
         </div>
       </div>
 
-      <!-- Ação de Ordem de Serviço (O.S. / Consulta) e Suporte Técnico -->
-      <div style="margin-top:14px; width:100%; display:flex; flex-direction:column; align-items:center;">
-        <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
-          <span>Abrir Ordem de Serviço OS / Consulta de OS</span>
+      <!-- Ação Visual de Ordem de Serviço (O.S. / Pagamentos / 2ª Via de Boleto) na Tela de Login -->
+      <div style="margin-top:14px; width:100%; display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()" style="width:100%; justify-content:center; padding:11px 16px; border-radius:14px; background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(6,182,212,0.14)); border:1.5px solid rgba(16,185,129,0.45); color:#6EE7B7; font-weight:800; font-size:12.5px; box-shadow:0 8px 20px rgba(0,0,0,0.35);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
+          <span>📋 Abrir Ordem de Serviço (O.S.) / Consultar Protocolo</span>
         </button>
+        <div style="display:flex; gap:6px; width:100%; justify-content:center; flex-wrap:wrap;">
+          <button type="button" onclick="openNovaOrdemModal('Pagamento Não Reconhecido')" style="flex:1; min-width:130px; padding:6px 10px; border-radius:10px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.38); color:#FDE68A; font-size:11px; font-weight:800; cursor:pointer;">💳 Pagamento Não Reconhecido</button>
+          <button type="button" onclick="openNovaOrdemModal('2ª Via de Boleto')" style="flex:1; min-width:130px; padding:6px 10px; border-radius:10px; background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.38); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer;">📄 Solicitar 2ª Via de Boleto</button>
+        </div>
 
         <!-- E-mail de Suporte Diretamente Abaixo da Abertura de O.S. -->
         <div class="auth-support-bar">
@@ -13777,7 +14224,7 @@ body.light .period button.active {
         </div>
       </div>
 
-      <!-- Botão de Ação Rápida: Nova Transação -->
+      <!-- Botão de Ação Rápida: Nova Transação (Usuário) / Novo Cadastro (Admin) -->
       <div class="sidebar-action-wrap">
         <button type="button" class="sidebar-quick-action-btn" id="sidebarNovaTransacaoBtn" onclick="openModal(null)" title="Nova Transação (Registrar receita ou despesa)">
           <span class="quick-action-ic">
@@ -13785,6 +14232,13 @@ body.light .period button.active {
           </span>
           <span class="label">Nova Transação</span>
           <span class="quick-action-badge">+</span>
+        </button>
+        <button type="button" class="sidebar-quick-action-btn" id="sidebarAdminQuickCreateBtn" onclick="openAdminCreateUserModal()" style="display:none;" title="Novo Cadastro Administrativo">
+          <span class="quick-action-ic">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </span>
+          <span class="label">Novo Cadastro</span>
+          <span class="quick-action-badge">ADM</span>
         </button>
       </div>
 
@@ -13854,22 +14308,61 @@ body.light .period button.active {
       
       <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
       <div class="menu-section-header menu-section-admin" style="display:none;">
-        <span class="menu-section-title">Administração</span>
+        <span class="menu-section-title">Painel Administrativo</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;" title="Gestão de Usuários Cadastrados">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-        <span class="label">Usuários</span>
+      <button data-page="usuarios" id="menuUsuariosBtn" class="menu-btn-admin" style="display:none;" title="Gestão de Cadastros & Assinaturas">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Cadastros & Contas</span>
+          <span class="sub-label">Usuários, Planos e Acessos</span>
+        </span>
+        <span class="admin-menu-count-pill" id="menuUsersCountBadge">0</span>
       </button>
       <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;" title="Recepção & Gestão de Ordens de Serviço">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span>
-        <span class="label">Ordens de Serviço</span>
-        <span id="osBadgeCount" style="display:none;"></span>
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Ordens de Serviço</span>
+          <span class="sub-label">Recepção O.S. Login & Fila</span>
+        </span>
+        <span id="osBadgeCount" style="display:none;">0</span>
+      </button>
+      <button data-page="pagamentos" id="menuPagamentosBtn" class="menu-btn-admin" style="display:none;" title="Pagamentos (Pix, Cartão, Boleto), Liberação & 2ª Via de Boleto">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/><path d="M14 15h4"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Pagamentos & Boletos</span>
+          <span class="sub-label">Pix, Cartão, 2ª Via e Liberação</span>
+        </span>
       </button>
       <button data-page="logs" id="menuLogsBtn" class="menu-btn-admin" style="display:none;" title="Logs do Sistema & Auditoria">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-        <span class="label">Logs</span>
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+        <span class="admin-menu-field-body">
+          <span class="label">Auditoria & Logs</span>
+          <span class="sub-label">Eventos e Segurança</span>
+        </span>
+        <span class="admin-menu-count-pill" id="menuLogsCountBadge">0</span>
       </button>
+
+      <div class="admin-sidebar-summary-card" id="adminSidebarSummaryCard" style="display:none;">
+        <div class="admin-sidebar-summary-head">
+          <span class="admin-sidebar-summary-title">GOVERNANÇA ATIVA</span>
+          <span class="admin-sidebar-summary-dot"></span>
+        </div>
+        <div class="admin-sidebar-summary-metrics">
+          <div class="admin-sidebar-metric">
+            <span class="m-lbl">Contas</span>
+            <strong class="m-val" id="adminSideStatUsers">0</strong>
+          </div>
+          <div class="admin-sidebar-metric">
+            <span class="m-lbl">O.S. Fila</span>
+            <strong class="m-val" id="adminSideStatOs">0</strong>
+          </div>
+          <div class="admin-sidebar-metric">
+            <span class="m-lbl">Técnicos</span>
+            <strong class="m-val" id="adminSideStatTechs">0</strong>
+          </div>
+        </div>
+      </div>
 
     </div>
 
@@ -13912,6 +14405,10 @@ body.light .period button.active {
     <button type="button" data-page="ordens" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Ordens de Serviço">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span>
       <span>Ordens</span>
+    </button>
+    <button type="button" data-page="pagamentos" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Pagamentos & 2ª Via de Boleto">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+      <span>Pagamentos</span>
     </button>
     <button type="button" data-page="logs" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Logs do Sistema">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
@@ -14036,6 +14533,7 @@ body.light .period button.active {
       <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Administração</div>
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
       <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço</button>
+      <button data-page="pagamentos" id="mobileDrawerPagamentosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Pagamentos & 2ª Via Boleto</button>
       <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
     </nav>
 
@@ -14345,156 +14843,189 @@ body.light .period button.active {
 
 <!-- Modal Usuário (Admin) - Central de Correção Cadastral -->
 <div class="overlay" id="overlayUserAdmin" onclick="if(event.target===this) closeUserAdminModal()">
-  <div class="modal" style="max-width:560px; border-radius:26px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.95) 0%, rgba(10,15,30,0.98) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(5, 150, 105,0.18); padding:26px;">
+  <div class="modal" style="max-width:490px; border-radius:20px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 24px 60px rgba(0,0,0,0.9), 0 0 32px rgba(5, 150, 105,0.16); padding:18px 20px;">
     <button class="close-x" id="closeUserAdminModal" type="button" onclick="closeUserAdminModal()">✕</button>
-    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
-      <span>🛠️ Auditoria & Correção Cadastral</span>
+    <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
+      <span>🛠️ Gestão & Correção Cadastral</span>
     </div>
-    <h2 style="font-size:20px; font-weight:900; margin:0 0 4px 0; color:var(--text);">Corrigir Cadastro do Usuário</h2>
-    <p style="font-size:12.5px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.4;">
-      Os usuários realizam o próprio autocadastro. Como administrador, corrija dados informados com erro, restaure o acesso ou ajuste privilégios.
+    <h2 style="font-size:17px; font-weight:900; margin:0 0 3px 0; color:var(--text);">Cadastro do Usuário</h2>
+    <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.35;">
+      Cadastre uma nova conta ou corrija dados cadastrais, restaure acessos e gerencie privilégios.
     </p>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:10px;">
       <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Nome Completo *</label>
-        <input id="userAdminName" placeholder="Ex: Paulo Lima" style="height:42px; border-radius:12px; font-size:13.5px;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome Completo *</label>
+        <input id="userAdminName" placeholder="Ex: Paulo Lima" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
       </div>
 
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">CPF (Titular)</label>
-        <input id="userAdminCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">CPF (Titular)</label>
+        <input id="userAdminCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
       </div>
 
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Telefone / WhatsApp</label>
-        <input id="userAdminPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
+        <input id="userAdminPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
       </div>
 
       <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-        <label style="font-size:12px; font-weight:700; color:var(--text-dim); display:flex; justify-content:space-between; align-items:center;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:flex; justify-content:space-between; align-items:center;">
           <span>E-mail de Acesso *</span>
-          <span style="font-size:11px; color:#34D399; font-weight:600;">(Corrigir caso haja erro de digitação no autocadastro)</span>
+          <span style="font-size:10px; color:#34D399; font-weight:600;">Login oficial da conta</span>
         </label>
-        <input id="userAdminEmail" placeholder="email@exemplo.com" style="height:42px; border-radius:12px; font-size:13.5px;">
+        <input id="userAdminEmail" placeholder="email@exemplo.com" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
       </div>
 
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Perfil / Nível de Acesso</label>
-        <select id="userAdminRole" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Perfil / Nível</label>
+        <select id="userAdminRole" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
           <option value="Usuário">Usuário (Padrão)</option>
           <option value="Administrador">Administrador (Total)</option>
         </select>
       </div>
 
       <div class="field" style="margin-bottom:0;">
-        <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Status da Conta</label>
-        <select id="userAdminActive" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
-          <option value="true">✅ Ativa (Acesso Liberado)</option>
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Status da Conta</label>
+        <select id="userAdminActive" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
+          <option value="true">✅ Ativa (Liberada)</option>
           <option value="false">🚫 Desativada (Bloqueada)</option>
         </select>
       </div>
     </div>
 
-    
-    <!-- Seção Executiva de Confirmação de Pagamento e Controle de Acesso pelo Administrador -->
-    <div style="margin-bottom:16px; padding:16px; border-radius:18px; background:linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(16,185,129,0.08) 100%); border:1.5px solid rgba(245,158,11,0.4); box-shadow:0 8px 24px rgba(0,0,0,0.25);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:12.5px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:6px;">
-          <span>👑</span> CONTROLE DE PAGAMENTO & LIBERAÇÃO DE ACESSO
+    <!-- Seção Executiva de Confirmação de Pagamento Não Reconhecido, Modalidades e 2ª Via de Boleto -->
+    <div style="margin-bottom:12px; padding:11px 12px; border-radius:13px; background:linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(16,185,129,0.06) 100%); border:1px solid rgba(245,158,11,0.35);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap:6px;">
+        <span style="font-size:11px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:5px;">
+          <span>👑</span> LIBERAR PAGAMENTO NÃO RECONHECIDO & 2ª VIA BOLETO
         </span>
-        <span id="userAdminCurrentSubBadge" style="font-size:11px; padding:3px 10px; border-radius:8px; background:rgba(255,255,255,0.08); font-weight:800; border:1px solid rgba(255,255,255,0.15);">Carregando status...</span>
+        <span id="userAdminCurrentSubBadge" style="font-size:10px; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.08); font-weight:800; border:1px solid rgba(255,255,255,0.15);">Carregando...</span>
       </div>
-      <p style="font-size:12px; color:var(--text-dim); margin:0 0 10px 0; line-height:1.4;">
-        Confirme o pagamento para liberar o plano contratado ou bloqueie o acesso caso o pagamento não tenha sido efetuado.
-      </p>
+
+      <div style="display:grid; grid-template-columns:1fr auto; gap:6px; margin-bottom:8px; align-items:center;">
+        <select id="userAdminPaymentMethod" style="height:30px; border-radius:8px; font-size:11px; font-weight:800; padding:0 8px; background:rgba(0,0,0,0.35); border:1px solid rgba(16,185,129,0.4); color:#6EE7B7;" title="Modalidade do pagamento não reconhecido a liberar">
+          <option value="pix">💠 Modalidade: Pix (SPI Instantâneo)</option>
+          <option value="credit_card">💳 Modalidade: Cartão de Crédito</option>
+          <option value="debit_card">🏧 Modalidade: Cartão de Débito</option>
+          <option value="boleto">📄 Modalidade: Boleto Bancário</option>
+        </select>
+        <button type="button" onclick="window.abrirSegundaViaBoletoParaUsuario(editingUserEmail)" style="height:30px; padding:0 10px; border-radius:8px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.45); color:#BAE6FD; font-size:10.5px; font-weight:800; cursor:pointer; white-space:nowrap;">
+          📄 Imprimir 2ª Via Boleto
+        </button>
+      </div>
 
       <!-- Botões de Confirmação Oficial de Pagamento / Bloqueio -->
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
-        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal')" style="padding:8px 10px; border-radius:10px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.35);">
-          ✅ Confirmar Pago Mensal (30d)
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
+        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Mensal (30 dias)">
+          🔓 Liberar Mensal (R$ 10)
         </button>
-        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'anual')" style="padding:8px 10px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(245,158,11,0.35);">
-          ✅ Confirmar Pago Anual (1 Ano)
+        <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'anual', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Anual (1 ano)">
+          🔓 Liberar Anual (R$ 100)
         </button>
-        <button type="button" onclick="window.adminRevokeUserPayment(editingUserEmail)" style="padding:8px 10px; border-radius:10px; background:rgba(239,68,68,0.18); border:1.5px solid rgba(239,68,68,0.5); color:#FCA5A5; font-size:11.5px; font-weight:900; cursor:pointer;">
-          🔒 Exigir Pagamento (Bloquear)
+        <button type="button" onclick="window.adminRevokeUserPayment(editingUserEmail)" style="height:30px; padding:0 6px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.45); color:#FCA5A5; font-size:10.5px; font-weight:800; cursor:pointer;">
+          🔒 Bloquear
         </button>
       </div>
 
       <!-- Botões de Concessão Rápida -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(105px, 1fr)); gap:7px; margin-bottom:12px;">
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 60)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">⏱️ +1 Hora</button>
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 1440)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">📅 +24 Horas</button>
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 10080)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">📅 +7 Dias</button>
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 43200)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">📅 +30 Dias</button>
-        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 525600)" style="font-size:11.5px; padding:7px 10px; border-radius:10px; font-weight:700;">📅 +1 Ano</button>
-        <button type="button" style="font-size:11.5px; padding:7px 12px; border-radius:10px; font-weight:900; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(5,150,105,0.4);" onclick="adminGrantTimeLifetime(editingUserEmail)">♾️ Vitalício Grátis</button>
+      <div style="display:grid; grid-template-columns:repeat(6, 1fr); gap:5px; margin-bottom:8px;">
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 60)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+1h</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 1440)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+24h</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 10080)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+7d</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 43200)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+30d</button>
+        <button type="button" class="btn-ghost" onclick="adminGrantTimeQuick(editingUserEmail, 525600)" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:700;">+1 Ano</button>
+        <button type="button" style="font-size:10px; height:26px; padding:0 4px; border-radius:7px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer;" onclick="adminGrantTimeLifetime(editingUserEmail)">♾️ Vital</button>
       </div>
 
-      <!-- Concessão Personalizada (Qualquer Quantidade de Tempo) -->
-      <div style="display:flex; align-items:center; gap:8px;">
-        <input type="number" id="userAdminCustomTimeVal" placeholder="Ex: 3" min="1" style="width:75px; height:38px; border-radius:10px; font-size:13px; font-weight:700; padding:0 10px; text-align:center;">
-        <select id="userAdminCustomTimeUnit" style="height:38px; border-radius:10px; font-size:12.5px; font-weight:700; flex:1;">
+      <!-- Concessão Personalizada -->
+      <div style="display:flex; align-items:center; gap:6px;">
+        <input type="number" id="userAdminCustomTimeVal" placeholder="Qtd" min="1" style="width:60px; height:30px; border-radius:8px; font-size:12px; font-weight:700; padding:0 6px; text-align:center;">
+        <select id="userAdminCustomTimeUnit" style="height:30px; border-radius:8px; font-size:11.5px; font-weight:700; flex:1; padding:0 6px;">
           <option value="minutes">Minuto(s)</option>
           <option value="hours" selected>Hora(s)</option>
           <option value="days">Dia(s)</option>
-          <option value="months">Mês(es) (30d)</option>
-          <option value="years">Ano(s) (365d)</option>
+          <option value="months">Mês(es)</option>
+          <option value="years">Ano(s)</option>
         </select>
-        <button type="button" onclick="adminGrantCustomTime(editingUserEmail)" style="height:38px; padding:0 16px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:12px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(245,158,11,0.35);">
-          Liberar Tempo ✓
+        <button type="button" onclick="adminGrantCustomTime(editingUserEmail)" style="height:30px; padding:0 12px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:11px; font-weight:900; border:none; cursor:pointer;">
+          Liberar ✓
         </button>
-        <button type="button" class="btn-ghost" onclick="adminResetTrialAction(editingUserEmail)" title="Resetar período de teste para 5 dias" style="height:38px; padding:0 10px; border-radius:10px; font-size:11px; font-weight:700;">
-          🔄 Reset 5d
+        <button type="button" class="btn-ghost" onclick="adminResetTrialAction(editingUserEmail)" title="Resetar período de teste para 5 dias" style="height:30px; padding:0 8px; border-radius:8px; font-size:10.5px; font-weight:700;">
+          🔄 5d
         </button>
       </div>
     </div>
 
-    <div class="field" style="margin-bottom:18px; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
-      <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Redefinir Senha de Acesso</label>
-      <p class="cfg-hint" id="userAdminPasswordHint" style="margin:2px 0 8px; font-size:11.5px;">Deixe em branco para manter a senha atual ou digite a nova senha</p>
+    <div class="field" style="margin-bottom:12px; border-top:1px solid rgba(255,255,255,0.08); padding-top:9px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin:0;">Senha de Acesso</label>
+        <span class="cfg-hint" id="userAdminPasswordHint" style="margin:0; font-size:10px;">Em branco mantém a atual</span>
+      </div>
       <div class="pass-field">
-        <input id="userAdminPassword" type="password" placeholder="Nova senha (mínimo 6 dígitos)" style="height:42px; border-radius:12px; font-size:13.5px;">
+        <input id="userAdminPassword" type="password" placeholder="Nova senha (mín. 6 dígitos)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
         <button type="button" class="pass-toggle" id="userAdminPasswordToggle" tabindex="-1" aria-label="Mostrar senha"></button>
       </div>
     </div>
 
-    <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px;">
-      <button id="userAdminCancelBtn" type="button" onclick="closeUserAdminModal()" style="height:40px; padding:0 18px; border-radius:12px;">Cancelar</button>
-      <button class="save" id="userAdminSaveBtn" type="button" onclick="saveUserAdmin()" style="height:40px; padding:0 22px; border-radius:12px; background:linear-gradient(135deg, #059669, #059669); font-weight:800;">
-        Salvar Correções ✓
+    <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px;">
+      <button id="userAdminCancelBtn" type="button" onclick="closeUserAdminModal()" style="height:34px; padding:0 14px; border-radius:9px; font-size:12px;">Cancelar</button>
+      <button class="save" id="userAdminSaveBtn" type="button" onclick="saveUserAdmin()" style="height:34px; padding:0 18px; border-radius:9px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:12px;">
+        Salvar Cadastro ✓
       </button>
     </div>
   </div>
 </div>
 
-<!-- Modal Abrir Nova Ordem de Serviço (Público / Tela de Login) -->
+<!-- Modal Abrir Nova Ordem de Serviço (Público / Tela de Login -> Recebido Diretamente pelo Admin) -->
 <div class="overlay" id="overlayNovaOrdem" onclick="if(event.target===this) closeNovaOrdemModal()">
-  <div class="modal" style="max-width:560px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.68) 0%, rgba(15,23,42,0.86) 45%, rgba(8,12,26,0.96) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(14, 165, 233, 0.22), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
+  <div class="modal" style="max-width:590px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.68) 0%, rgba(15,23,42,0.86) 45%, rgba(8,12,26,0.96) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(14, 165, 233, 0.22), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
     <button class="close-x" type="button" onclick="closeNovaOrdemModal()">✕</button>
 
     <!-- Abas de Navegação: Abrir Ordem de Serviço OS vs Consulta de OS -->
     <div class="os-tabs-nav">
       <button type="button" id="tabBtnNovaOrdem" class="os-tab-btn active" onclick="switchOsModalTab('abrir')">
-        ⚡ Abrir Ordem de Serviço OS
+        ⚡ Abrir Ordem de Serviço (O.S.)
       </button>
       <button type="button" id="tabBtnConsultarOrdem" class="os-tab-btn" onclick="switchOsModalTab('consultar')">
-        🔍 Consulta de OS
+        🔍 Consultar Minha O.S.
       </button>
     </div>
 
     <div id="boxNovaOrdemForm">
-      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(14, 165, 233, 0.15); border:1px solid rgba(14, 165, 233, 0.35); color:#38BDF8; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
-        <span style="width:6px; height:6px; border-radius:50%; background:#38BDF8; box-shadow:0 0 8px #38BDF8;"></span>
-        <span>Suporte Técnico & Chamados</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+        <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(16, 185, 129, 0.16); border:1px solid rgba(16, 185, 129, 0.4); color:#6EE7B7; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em;">
+          <span style="width:7px; height:7px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981;"></span>
+          <span>Recepção Direta na Central do Administrador</span>
+        </div>
+        <span style="font-size:11px; color:#94A3B8; font-weight:700;">📡 Envio Instantâneo</span>
       </div>
-      <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
-        Abrir Ordem de Serviço (O.S.)
+      <h2 style="font-size:19px; font-weight:900; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+        Central de Abertura de Ordem de Serviço (O.S.)
       </h2>
-      <p style="font-size:13px; color:var(--text-dim); margin:0 0 18px 0; line-height:1.45;">
-        Envie sua solicitação para a equipe técnica. Você receberá um protocolo único para acompanhamento.
+      <p style="font-size:12.5px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.4;">
+        Selecione abaixo o motivo rápido ou preencha os dados. Sua O.S. cairá <strong>imediatamente na Caixa de Recepção do Administrador</strong>.
       </p>
+
+      <!-- Seleção Rápida Visual de Motivo da O.S. na Tela de Login -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(125px, 1fr)); gap:7px; margin-bottom:14px;">
+        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Pagamento Não Reconhecido', 'Urgente', 'Liberação de Pagamento Não Reconhecido')" style="padding:8px 10px; border-radius:12px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.4); color:#FDE68A; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>💳 Pagamento</span>
+          <span style="font-size:10px; color:#FBBF24; font-weight:600;">Não Reconhecido</span>
+        </button>
+        <button type="button" onclick="window.selecionarCategoriaRapidaOs('2ª Via de Boleto', 'Alta', 'Solicitação de 2ª Via de Boleto Bancário')" style="padding:8px 10px; border-radius:12px; background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.4); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>📄 2ª Via Boleto</span>
+          <span style="font-size:10px; color:#38BDF8; font-weight:600;">Receber / Imprimir</span>
+        </button>
+        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Reset de Senha', 'Alta', 'Recuperação / Reset de Senha de Acesso')" style="padding:8px 10px; border-radius:12px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#A7F3D0; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>🔑 Senha / Login</span>
+          <span style="font-size:10px; color:#34D399; font-weight:600;">Recuperar Acesso</span>
+        </button>
+        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Correção de Dados', 'Normal', 'Correção de Dados Cadastrais')" style="padding:8px 10px; border-radius:12px; background:rgba(168,85,247,0.14); border:1px solid rgba(168,85,247,0.4); color:#E9D5FF; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>🛠️ Cadastro</span>
+          <span style="font-size:10px; color:#C084FC; font-weight:600;">Corrigir Dados</span>
+        </button>
+      </div>
 
       <form id="formNovaOrdem" onsubmit="enviarNovaOrdem(event)">
         <div class="field-row" style="display:flex; gap:12px;">
@@ -14503,29 +15034,31 @@ body.light .period button.active {
             <input id="osClientName" required placeholder="Ex: Paulo Lima">
           </div>
           <div class="field" style="flex:1;">
-            <label>Seu E-mail de Contato *</label>
+            <label>Seu E-mail Cadastrado *</label>
             <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com">
           </div>
         </div>
 
         <div class="field-row" style="display:flex; gap:12px;">
           <div class="field" style="flex:1;">
-            <label>WhatsApp / Celular (Opcional)</label>
+            <label>WhatsApp / Celular (Para receber retorno / boleto)</label>
             <input id="osClientPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)">
           </div>
           <div class="field" style="flex:1;">
-            <label>CPF do Solicitante (Opcional)</label>
+            <label>CPF do Titular (Opcional)</label>
             <input id="osClientCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)">
           </div>
         </div>
 
         <div class="field-row" style="display:flex; gap:12px;">
           <div class="field" style="flex:1;">
-            <label>Tipo de Serviço *</label>
+            <label>Categoria da O.S. *</label>
             <select id="osServiceType" required>
-              <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
+              <option value="Pagamento Não Reconhecido">💳 Pagamento Efetuado Não Reconhecido (Pix/Cartão/Boleto)</option>
+              <option value="2ª Via de Boleto">📄 Solicitação de 2ª Via de Boleto</option>
               <option value="Reset de Senha">🔑 Reset / Recuperação de Senha</option>
               <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais/Financeiros</option>
+              <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
               <option value="Relato de Bug">🐛 Relato de Bug ou Erro</option>
               <option value="Outro Suporte">💬 Outro Chamado Técnico</option>
             </select>
@@ -14533,7 +15066,7 @@ body.light .period button.active {
           <div class="field" style="flex:1;">
             <label>Nível de Prioridade</label>
             <select id="osPriority">
-              <option value="Normal">⚪ Normal</option>
+              <option value="Normal">🟢 Normal</option>
               <option value="Alta">🟡 Alta</option>
               <option value="Urgente">🔴 Urgente</option>
             </select>
@@ -14542,20 +15075,20 @@ body.light .period button.active {
 
         <div class="field">
           <label>Assunto Resumido *</label>
-          <input id="osTitle" required placeholder="Ex: Solicito ajuste no cálculo do gráfico ou reset de senha">
+          <input id="osTitle" required placeholder="Ex: Paguei via Pix/Boleto e meu acesso ainda não liberou">
         </div>
 
         <div class="field">
           <label>Descrição Detalhada do Pedido *</label>
-          <textarea id="osDescription" rows="4" required style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;" placeholder="Explique com detalhes o que precisa ser feito ou corrigido..."></textarea>
+          <textarea id="osDescription" rows="3" required style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;" placeholder="Informe os detalhes (ex: forma de pagamento Pix, Cartão ou Boleto, valor pago ou solicitação de 2ª via)..."></textarea>
         </div>
 
         <div id="osFormFeedback" style="display:none; padding:10px 14px; border-radius:10px; font-size:12px; font-weight:700; margin-bottom:14px;"></div>
 
-        <div class="modal-actions" style="margin-top:16px;">
+        <div class="modal-actions" style="margin-top:14px;">
           <button type="button" onclick="closeNovaOrdemModal()">Cancelar</button>
-          <button type="submit" class="save" id="btnSubmitOs" style="background:linear-gradient(135deg, #0284C7, #0369A1); font-weight:800; border:1px solid rgba(255,255,255,0.25);">
-            Enviar Ordem de Serviço 🚀
+          <button type="submit" class="save" id="btnSubmitOs" style="background:linear-gradient(135deg, #10B981, #059669); font-weight:800; border:1px solid rgba(255,255,255,0.25);">
+            📡 Enviar O.S. para o Administrador 🚀
           </button>
         </div>
       </form>
@@ -14563,25 +15096,25 @@ body.light .period button.active {
 
     <!-- Tela de Sucesso após Abertura -->
     <div id="boxNovaOrdemSuccess" style="display:none; text-align:center; padding:12px 6px;">
-      <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(14, 165, 233, 0.35)); border:2px solid #0284C7; color:#38BDF8; font-size:26px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 0 24px rgba(14, 165, 233, 0.4);">
+      <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.35)); border:2px solid #10B981; color:#34D399; font-size:26px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 0 24px rgba(16, 185, 129, 0.4);">
         ✓
       </div>
-      <h3 style="font-size:20px; font-weight:900; margin-bottom:6px;">Ordem de Serviço Aberta!</h3>
+      <h3 style="font-size:20px; font-weight:900; margin-bottom:6px;">Ordem de Serviço Recebida pelo Admin!</h3>
       <p style="font-size:13px; color:var(--text-dim); margin-bottom:18px;">
-        Sua solicitação foi registrada no sistema e já está disponível para análise da equipe de administração.
+        Sua O.S. já foi entregue diretamente na Caixa de Recepção Exclusiva do Administrador e está em atendimento.
       </p>
 
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(14, 165, 233, 0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
+      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(16, 185, 129, 0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
         <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Número do Protocolo</span>
-        <div style="font-size:22px; font-weight:900; color:#38BDF8; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
+        <div style="font-size:22px; font-weight:900; color:#34D399; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
         <div style="display:flex; justify-content:center; gap:8px; margin-top:10px; flex-wrap:wrap;">
-          <button type="button" onclick="copyOsProtocol()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(96,165,250,0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
-          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(56, 189, 248, 0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Visualizar Chamado</button>
+          <button type="button" onclick="copyOsProtocol()" style="background:rgba(16, 185, 129, 0.2); border:1px solid rgba(52,211,153,0.4); color:#A7F3D0; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
+          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(56, 189, 248, 0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Acompanhar Status</button>
         </div>
       </div>
 
       <button type="button" class="btn-auth-primary" onclick="closeNovaOrdemModal()" style="width:100%; height:42px;">
-        Concluir e Voltar
+        Concluir e Voltar para o Login
       </button>
     </div>
 
@@ -14595,13 +15128,13 @@ body.light .period button.active {
         Consulta de OS
       </h2>
       <p style="font-size:13px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.45;">
-        Consulte suas solicitações informando seu <strong>Nome Completo</strong> ou seu <strong>E-mail</strong> cadastrado.
+        Consulte suas solicitações informando seu <strong>Nome Completo</strong>, <strong>E-mail</strong> ou <strong>Protocolo</strong>.
       </p>
 
       <form id="formConsultarOrdem" onsubmit="executarConsultaOrdens(event)" style="margin-bottom:16px;">
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <div style="flex:1; min-width:240px; position:relative;">
-            <input id="osConsultarQuery" required placeholder="Digite seu Nome ou E-mail cadastrado..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
+            <input id="osConsultarQuery" required placeholder="Digite seu Nome, E-mail ou Protocolo..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
           </div>
           <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #0284C7, #0369A1); color:#FFFFFF; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(14, 165, 233, 0.35);">
             🔍 Buscar O.S.
@@ -14624,7 +15157,7 @@ body.light .period button.active {
 
 <!-- Modal Visualizar e Atender Ordem de Serviço (Administrador / Suporte) -->
 <div class="overlay" id="overlayOrdemAdmin" onclick="if(event.target===this) closeOrdemAdminModal()">
-  <div class="modal" style="max-width:620px; border-radius:26px; border:1px solid rgba(5, 150, 105, 0.35); box-shadow:0 30px 80px rgba(0,0,0,0.9); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%);">
+  <div class="modal" style="max-width:640px; border-radius:26px; border:1px solid rgba(5, 150, 105, 0.35); box-shadow:0 30px 80px rgba(0,0,0,0.9); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%);">
     <button class="close-x" type="button" onclick="closeOrdemAdminModal()">✕</button>
     
     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap;">
@@ -14645,7 +15178,7 @@ body.light .period button.active {
       </div>
     </div>
 
-    <!-- Informações do Solicitante & Ações Rápidas de Contato -->
+    <!-- Informações do Solicitante & Ações Rápidas de Contato + Pagamento / 2ª Via Boleto -->
     <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:16px; padding:14px; margin-bottom:14px;">
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
         <div>
@@ -14659,11 +15192,13 @@ body.light .period button.active {
         <div>
           <label style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700; margin-bottom:2px;">Tipo de Demanda</label>
           <select id="osAdminServiceTypeSelect" style="height:32px; padding:0 8px; border-radius:8px; font-size:12px; font-weight:700; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#E2E8F0; width:100%;">
-            <option value="Correção de Dados">Correção de Dados Cadastrais</option>
-            <option value="Reset de Senha">Reset de Senha / Recuperação</option>
-            <option value="Atendimento Geral">Atendimento / Dúvida Operacional</option>
-            <option value="Relato de Bug">Relato de Bug / Erro no Sistema</option>
-            <option value="Melhoria no Sistema">Melhoria / Sugestão de Recurso</option>
+            <option value="Pagamento Não Reconhecido">💳 Pagamento Não Reconhecido</option>
+            <option value="2ª Via de Boleto">📄 Solicitação de 2ª Via de Boleto</option>
+            <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais</option>
+            <option value="Reset de Senha">🔑 Reset de Senha / Recuperação</option>
+            <option value="Atendimento Geral">💬 Atendimento / Dúvida Operacional</option>
+            <option value="Relato de Bug">🐛 Relato de Bug / Erro no Sistema</option>
+            <option value="Melhoria no Sistema">⚡ Melhoria / Sugestão de Recurso</option>
           </select>
         </div>
         <div>
@@ -14680,14 +15215,20 @@ body.light .period button.active {
         </div>
       </div>
 
-      <!-- Atalhos Rápidos de Contato Direto do Suporte -->
+      <!-- Atalhos Rápidos de Contato Direto e Liberação Financeira do Suporte -->
       <div style="display:flex; gap:8px; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px; flex-wrap:wrap;">
-        <a id="osAdminWhatsappBtn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:10px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#059669; font-size:12px; font-weight:700; text-decoration:none;">
-          <span>💬 Falar no WhatsApp</span>
+        <a id="osAdminWhatsappBtn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:10px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:11.5px; font-weight:800; text-decoration:none;">
+          <span>💬 WhatsApp</span>
         </a>
-        <a id="osAdminEmailBtn" href="#" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:10px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#34D399; font-size:12px; font-weight:700; text-decoration:none;">
-          <span>✉️ Responder por E-mail</span>
+        <a id="osAdminEmailBtn" href="#" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:10px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#34D399; font-size:11.5px; font-weight:800; text-decoration:none;">
+          <span>✉️ E-mail</span>
         </a>
+        <button type="button" onclick="window.liberarPagamentoPelaOsModal()" style="display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(245,158,11,0.3);">
+          <span>🔓 Liberar Pagamento Não Reconhecido</span>
+        </button>
+        <button type="button" onclick="window.abrirSegundaViaBoletoPelaOsModal()" style="display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:10px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.45); color:#BAE6FD; font-size:11.5px; font-weight:800; cursor:pointer;">
+          <span>📄 Imprimir 2ª Via de Boleto</span>
+        </button>
       </div>
     </div>
 
@@ -14764,65 +15305,65 @@ body.light .period button.active {
 
 <!-- Modal Registrar Nova Ordem de Serviço via Suporte (Administrador) -->
 <div class="overlay" id="overlaySuporteNovaOrdem" onclick="if(event.target===this) closeSuporteNovaOrdemModal()">
-  <div class="modal" style="max-width:580px; border-radius:26px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.95) 0%, rgba(10,15,30,0.98) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(5, 150, 105,0.18); padding:26px;">
+  <div class="modal" style="max-width:500px; border-radius:20px; border:1px solid rgba(255,255,255,0.18); border-top:1.5px solid rgba(255,255,255,0.45); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%); backdrop-filter:blur(36px); -webkit-backdrop-filter:blur(36px); box-shadow:0 24px 60px rgba(0,0,0,0.9), 0 0 32px rgba(5, 150, 105,0.16); padding:18px 20px;">
     <button class="close-x" type="button" onclick="closeSuporteNovaOrdemModal()">✕</button>
 
-    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">
+    <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
       <span>🎧 Atendimento de Suporte</span>
     </div>
-    <h2 style="font-size:20px; font-weight:900; margin:0 0 4px 0; color:var(--text);">Registrar Ordem de Serviço (O.S.)</h2>
-    <p style="font-size:12.5px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.4;">
-      Cadastre uma solicitação recebida por telefone, WhatsApp ou canal direto de suporte para triagem na fila.
+    <h2 style="font-size:17px; font-weight:900; margin:0 0 3px 0; color:var(--text);">Registrar Ordem de Serviço (O.S.)</h2>
+    <p style="font-size:11.5px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.35;">
+      Cadastre uma solicitação recebida por telefone, WhatsApp ou suporte direto para triagem.
     </p>
 
     <form id="formSuporteNovaOrdem" onsubmit="enviarSuporteNovaOrdem(event)">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:10px;">
         <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Nome do Solicitante / Cliente *</label>
-          <input id="suporteOsClientName" required placeholder="Ex: Paulo Lima" style="height:42px; border-radius:12px; font-size:13.5px;">
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome do Solicitante / Cliente *</label>
+          <input id="suporteOsClientName" required placeholder="Ex: Paulo Lima" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">E-mail do Solicitante *</label>
-          <input id="suporteOsClientEmail" type="email" required placeholder="email@exemplo.com" style="height:42px; border-radius:12px; font-size:13.5px;">
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">E-mail do Solicitante *</label>
+          <input id="suporteOsClientEmail" type="email" required placeholder="email@exemplo.com" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Telefone / WhatsApp</label>
-          <input id="suporteOsClientPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
+          <input id="suporteOsClientPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">CPF do Solicitante (Opcional)</label>
-          <input id="suporteOsClientCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:42px; border-radius:12px; font-size:13.5px;">
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">CPF do Solicitante</label>
+          <input id="suporteOsClientCpf" placeholder="00000000000" maxlength="11" oninput="maskCpfInput(this)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Canal de Recepção *</label>
-          <select id="suporteOsCanal" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Canal de Recepção *</label>
+          <select id="suporteOsCanal" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
             <option value="WhatsApp Suporte">💬 WhatsApp Suporte Oficial</option>
-            <option value="Telefone Direto / 0800">📞 Telefone / Atendimento de Voz</option>
-            <option value="Portal Web / Chamado">🌐 Portal Web / Chamado Direto</option>
-            <option value="Atendimento Presencial">🏢 Atendimento Presencial / Balcão</option>
-            <option value="E-mail Suporte">📧 E-mail Oficial de Suporte</option>
-            <option value="Chat Interno">💬 Chat Interno da Equipe</option>
+            <option value="Telefone Direto / 0800">📞 Telefone / Voz</option>
+            <option value="Portal Web / Chamado">🌐 Portal Web / Chamado</option>
+            <option value="Atendimento Presencial">🏢 Atendimento Presencial</option>
+            <option value="E-mail Suporte">📧 E-mail Suporte</option>
+            <option value="Chat Interno">💬 Chat Interno</option>
           </select>
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Tipo de Demanda *</label>
-          <select id="suporteOsServiceType" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Tipo de Demanda *</label>
+          <select id="suporteOsServiceType" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
             <option value="Correção de Dados">Correção de Dados Cadastrais</option>
             <option value="Reset de Senha">Reset de Senha / Recuperação</option>
-            <option value="Atendimento Geral">Atendimento / Dúvida Operacional</option>
-            <option value="Relato de Bug">Relato de Bug / Erro no Sistema</option>
-            <option value="Melhoria no Sistema">Melhoria / Sugestão de Recurso</option>
+            <option value="Atendimento Geral">Atendimento Operacional</option>
+            <option value="Relato de Bug">Relato de Bug / Erro</option>
+            <option value="Melhoria no Sistema">Melhoria / Sugestão</option>
           </select>
         </div>
 
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Prioridade</label>
-          <select id="suporteOsPriority" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Prioridade</label>
+          <select id="suporteOsPriority" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
             <option value="Normal">🟢 Normal</option>
             <option value="Alta">🟡 Alta</option>
             <option value="Urgente">🔴 Urgente / Crítica</option>
@@ -14830,27 +15371,27 @@ body.light .period button.active {
         </div>
 
         <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Atribuir Técnico Inicial (Opcional)</label>
-          <select id="suporteOsTecnico" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Atribuir Técnico Inicial (Opcional)</label>
+          <select id="suporteOsTecnico" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
             <option value="">(Deixar na fila de triagem / Sem atribuição inicial)</option>
           </select>
         </div>
 
         <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Assunto / Título Resumido *</label>
-          <input id="suporteOsTitle" required placeholder="Ex: Correção de CPF na conta de João" style="height:42px; border-radius:12px; font-size:13.5px;">
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Assunto / Título Resumido *</label>
+          <input id="suporteOsTitle" required placeholder="Ex: Correção de CPF na conta de João" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
         </div>
 
         <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Descrição do Chamado / Mensagem do Solicitante *</label>
-          <textarea id="suporteOsDescription" required rows="3" placeholder="Descreva os detalhes da demanda relatada pelo solicitante..." style="border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;"></textarea>
+          <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Descrição do Chamado *</label>
+          <textarea id="suporteOsDescription" required rows="2" placeholder="Descreva os detalhes da demanda relatada..." style="border-radius:9px; padding:8px 10px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:12px; resize:vertical;"></textarea>
         </div>
       </div>
 
-      <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px;">
-        <button type="button" onclick="closeSuporteNovaOrdemModal()" style="height:40px; padding:0 18px; border-radius:12px;">Cancelar</button>
-        <button class="save" type="submit" id="btnSalvarSuporteOrdem" style="height:40px; padding:0 22px; border-radius:12px; background:linear-gradient(135deg, #059669, #059669); font-weight:800;">
-          Criar Chamado de Suporte 🚀
+      <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px;">
+        <button type="button" onclick="closeSuporteNovaOrdemModal()" style="height:34px; padding:0 14px; border-radius:9px; font-size:12px;">Cancelar</button>
+        <button class="save" type="submit" id="btnSalvarSuporteOrdem" style="height:34px; padding:0 18px; border-radius:9px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:12px;">
+          Criar Chamado 🚀
         </button>
       </div>
     </form>
@@ -14859,80 +15400,80 @@ body.light .period button.active {
 
 <!-- Modal Gerenciar Técnicos de Suporte (Administrador) -->
 <div class="overlay" id="overlayGerenciarTecnicos" onclick="if(event.target===this) closeGerenciarTecnicosModal()">
-  <div class="modal" style="max-width:700px; border-radius:26px; border:1px solid rgba(245,158,11,0.35); box-shadow:0 30px 80px rgba(0,0,0,0.95), 0 0 35px rgba(245,158,11,0.2); background:linear-gradient(145deg, rgba(20,28,48,0.97) 0%, rgba(10,15,30,0.99) 100%);">
+  <div class="modal" style="max-width:580px; border-radius:20px; border:1px solid rgba(245,158,11,0.35); box-shadow:0 24px 60px rgba(0,0,0,0.95), 0 0 28px rgba(245,158,11,0.18); background:linear-gradient(145deg, rgba(20,28,48,0.97) 0%, rgba(10,15,30,0.99) 100%); padding:18px 20px;">
     <button class="close-x" type="button" onclick="closeGerenciarTecnicosModal()">✕</button>
 
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:10px; flex-wrap:wrap;">
       <div>
-        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">
+        <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">
           <span>👷 Equipe Técnica & Especialistas</span>
         </div>
-        <h2 style="font-size:20px; font-weight:900; margin:0; color:var(--text);">Credenciamento de Técnicos</h2>
-        <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0;">
-          Cadastre os técnicos habilitados a assumir e solucionar Ordens de Serviço.
+        <h2 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Credenciamento de Técnicos</h2>
+        <p style="font-size:11.5px; color:var(--text-dim); margin:2px 0 0 0;">
+          Cadastre e alinhe os especialistas habilitados para assumir Ordens de Serviço.
         </p>
       </div>
 
-      <button type="button" onclick="toggleFormTecnico()" style="display:inline-flex; align-items:center; gap:6px; height:38px; padding:0 16px; border-radius:12px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:12.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(245,158,11,0.35);">
-        <span>➕ Cadastrar Técnico</span>
+      <button type="button" onclick="toggleFormTecnico()" style="display:inline-flex; align-items:center; gap:5px; height:32px; padding:0 12px; border-radius:9px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 3px 10px rgba(245,158,11,0.3);">
+        <span>➕ Novo Técnico</span>
       </button>
     </div>
 
     <!-- Formulário Cadastro / Edição de Técnico (Alternável) -->
-    <div id="boxFormTecnico" style="display:none; background:rgba(255,255,255,0.035); border:1.5px solid rgba(245,158,11,0.3); border-radius:18px; padding:18px; margin-bottom:18px;">
-      <h3 id="formTecnicoTitle" style="font-size:15px; font-weight:800; color:#FBBF24; margin:0 0 12px 0;">➕ Novo Cadastro de Técnico</h3>
+    <div id="boxFormTecnico" style="display:none; background:rgba(255,255,255,0.03); border:1px solid rgba(245,158,11,0.3); border-radius:14px; padding:12px 14px; margin-bottom:12px;">
+      <h3 id="formTecnicoTitle" style="font-size:13px; font-weight:800; color:#FBBF24; margin:0 0 9px 0;">➕ Novo Cadastro de Técnico</h3>
       <form id="formTecnico" onsubmit="salvarTecnico(event)">
         <input type="hidden" id="tecnicoEditId">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:9px;">
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Nome Completo do Técnico *</label>
-            <input id="tecnicoNome" required placeholder="Digite o nome completo do técnico" style="height:42px; border-radius:12px; font-size:13px;">
+            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Nome Completo *</label>
+            <input id="tecnicoNome" required placeholder="Nome do técnico" style="height:34px; border-radius:8px; font-size:12px; padding:0 10px;">
           </div>
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">E-mail Corporativo / Suporte *</label>
-            <input id="tecnicoEmail" type="email" required placeholder="tecnico.suporte@nexus.com" style="height:42px; border-radius:12px; font-size:13px;">
+            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">E-mail Corporativo *</label>
+            <input id="tecnicoEmail" type="email" required placeholder="tecnico@nexus.com" style="height:34px; border-radius:8px; font-size:12px; padding:0 10px;">
           </div>
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Telefone / WhatsApp</label>
-            <input id="tecnicoPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="maskPhoneInput(this)" style="height:42px; border-radius:12px; font-size:13px;">
+            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Telefone / WhatsApp</label>
+            <input id="tecnicoPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="maskPhoneInput(this)" style="height:34px; border-radius:8px; font-size:12px; padding:0 10px;">
           </div>
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Especialidade / Nível *</label>
-            <select id="tecnicoEspecialidade" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
-              <option value="Suporte Técnico N1">Suporte Técnico N1 (Triagem & Cadastro)</option>
+            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Especialidade / Nível *</label>
+            <select id="tecnicoEspecialidade" style="height:34px; border-radius:8px; font-size:11.5px; font-weight:700; padding:0 8px;">
+              <option value="Suporte Técnico N1">Suporte Técnico N1 (Triagem)</option>
               <option value="Suporte Técnico N2" selected>Suporte Técnico N2 (Avançado)</option>
               <option value="Infraestrutura & Redes">Infraestrutura & Redes</option>
               <option value="Especialista em Banco & Dados">Especialista em Banco & Dados</option>
-              <option value="Desenvolvedor / Correção de Bugs">Desenvolvedor / Correção de Bugs</option>
+              <option value="Desenvolvedor / Correção de Bugs">Desenvolvedor / Bugs</option>
               <option value="Segurança & Compliance">Segurança & Compliance</option>
             </select>
           </div>
-          <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; color:var(--text-dim);">Status Operacional</label>
-            <select id="tecnicoAtivo" style="height:42px; border-radius:12px; font-size:13px; font-weight:700;">
-              <option value="true">🟢 Ativo (Habilitado para Assumir Chamados)</option>
+          <div class="field" style="grid-column:1 / -1; margin-bottom:0;">
+            <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Status Operacional</label>
+            <select id="tecnicoAtivo" style="height:34px; border-radius:8px; font-size:11.5px; font-weight:700; padding:0 8px;">
+              <option value="true">🟢 Ativo (Habilitado para Chamados)</option>
               <option value="false">⚪ Inativo (Suspenso)</option>
             </select>
           </div>
         </div>
 
-        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:14px;">
-          <button type="button" onclick="cancelarEdicaoTecnico()" style="height:38px; padding:0 16px; border-radius:12px; font-size:12.5px;">Cancelar</button>
-          <button type="submit" id="btnSalvarTecnico" class="save" style="height:38px; padding:0 20px; border-radius:12px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:12.5px;">Salvar Técnico ✓</button>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+          <button type="button" onclick="cancelarEdicaoTecnico()" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px;">Cancelar</button>
+          <button type="submit" id="btnSalvarTecnico" class="save" style="height:32px; padding:0 16px; border-radius:8px; background:linear-gradient(135deg, #059669, #059669); font-weight:800; font-size:11.5px;">Salvar Técnico ✓</button>
         </div>
       </form>
     </div>
 
     <!-- Lista dos Técnicos Credenciados -->
-    <div style="margin-top:8px;">
-      <h4 style="font-size:13px; font-weight:800; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin:0 0 10px 0;">Técnicos Habilitados</h4>
-      <div id="listaTecnicosContent" style="max-height:360px; overflow-y:auto; padding-right:4px;">
+    <div style="margin-top:4px;">
+      <h4 style="font-size:11px; font-weight:800; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 8px 0;">Técnicos Habilitados</h4>
+      <div id="listaTecnicosContent" style="max-height:300px; overflow-y:auto; padding-right:4px;">
         <!-- Preenchido via renderListaTecnicosModal() -->
       </div>
     </div>
 
-    <div class="modal-actions" style="margin-top:18px; display:flex; justify-content:flex-end;">
-      <button type="button" onclick="closeGerenciarTecnicosModal()" style="height:38px; padding:0 22px; border-radius:12px; font-weight:700;">Fechar</button>
+    <div class="modal-actions" style="margin-top:12px; display:flex; justify-content:flex-end;">
+      <button type="button" onclick="closeGerenciarTecnicosModal()" style="height:32px; padding:0 18px; border-radius:8px; font-weight:700; font-size:12px;">Fechar</button>
     </div>
   </div>
 </div>
@@ -18332,13 +18873,16 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   }
 };
 
-window.adminConfirmUserPayment = async function(targetEmail, plan = 'mensal') {
+window.adminConfirmUserPayment = async function(targetEmail, plan = 'mensal', method = '', receiptCode = '', osId = null) {
   if (!currentUser || currentUser.role !== 'Administrador') {
-    if (typeof showToast === 'function') showToast('Apenas administradores podem confirmar pagamentos');
+    if (typeof showToast === 'function') showToast('Apenas administradores podem confirmar e liberar pagamentos');
     return;
   }
-  const email = targetEmail || (currentUser ? currentUser.email : '');
-  if (!email) return;
+  const email = (targetEmail || (currentUser ? currentUser.email : '')).trim();
+  if (!email) {
+    if (typeof showToast === 'function') showToast('Informe o e-mail do usuário para liberar o pagamento.');
+    return;
+  }
 
   try {
     const res = await fetch('/api/subscription/confirm-payment', {
@@ -18347,13 +18891,18 @@ window.adminConfirmUserPayment = async function(targetEmail, plan = 'mensal') {
       body: JSON.stringify({
         admin_email: currentUser.email,
         target_email: email,
-        plan: plan
+        plan: plan,
+        method: method || undefined,
+        receipt_code: receiptCode || undefined,
+        os_id: osId || undefined,
+        conclude_os: true
       })
     });
     const d = await res.json();
     if (d && d.success) {
-      if (typeof showToast === 'function') showToast('✅ ' + (d.message || 'Pagamento confirmado e acesso liberado!'));
+      if (typeof showToast === 'function') showToast('✅ ' + (d.message || 'Pagamento reconhecido e acesso liberado!'));
       await syncUsersWithServer();
+      if (typeof syncOrdensWithServer === 'function') await syncOrdensWithServer();
       if (typeof window.initTrialAndSubscription === 'function') window.initTrialAndSubscription();
       if (typeof render === 'function') render();
       if (typeof updateAdminModalBadge === 'function') updateAdminModalBadge(email);
@@ -18363,6 +18912,42 @@ window.adminConfirmUserPayment = async function(targetEmail, plan = 'mensal') {
   } catch(e) {
     if (typeof showToast === 'function') showToast('Falha na comunicação com o servidor');
   }
+};
+
+window.liberarPagamentoPelaOsModal = async function() {
+  const osId = document.getElementById('osAdminCurrentId')?.value;
+  const ordem = (systemOrdens || []).find(o => String(o.id) === String(osId));
+  const email = ordem ? ordem.client_email : (document.getElementById('osAdminClientEmail')?.textContent || '');
+  if (!email || email === 'Não informado') {
+    if (typeof showToast === 'function') showToast('E-mail do solicitante não identificado nesta O.S.');
+    return;
+  }
+  await window.adminConfirmUserPayment(email, 'mensal', 'pix', 'OS-' + (ordem?.protocol || osId), osId);
+  closeOrdemAdminModal();
+};
+
+window.abrirSegundaViaBoletoPelaOsModal = function() {
+  const osId = document.getElementById('osAdminCurrentId')?.value;
+  const ordem = (systemOrdens || []).find(o => String(o.id) === String(osId));
+  closeOrdemAdminModal();
+  window.abrirSegundaViaBoletoParaUsuario(
+    ordem ? ordem.client_email : '',
+    ordem ? ordem.client_name : '',
+    ordem ? ordem.client_cpf : '',
+    ordem ? ordem.client_phone : ''
+  );
+};
+
+window.abrirSegundaViaBoletoParaUsuario = function(email, name, cpf, phone) {
+  try { closeUserAdminModal(); } catch(e) {}
+  window.__pagamentosActiveTab = 'segunda_via_boleto';
+  window.__boletoPreselectedUser = {
+    email: email || '',
+    name: name || '',
+    cpf: cpf || '',
+    phone: phone || ''
+  };
+  navigate('pagamentos');
 };
 
 window.adminRevokeUserPayment = async function(targetEmail) {
@@ -19643,7 +20228,7 @@ let currentPage = (function getInitialPage() {
     const cu = localStorage.getItem('nexus_cached_user');
     const u = cu ? JSON.parse(cu) : null;
     const isAdmin = u && u.role === 'Administrador';
-    const adminPages = ['usuarios', 'ordens', 'logs'];
+    const adminPages = ['usuarios', 'ordens', 'pagamentos', 'logs'];
     const commonPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
     const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
     const savedPage = localStorage.getItem('nexus_current_page');
@@ -20345,7 +20930,7 @@ function render(){
 
   if (!isAdmin) {
     // Usuários comuns não podem acessar páginas administrativas restritas
-    if (['usuarios', 'logs'].includes(currentPage)) {
+    if (['usuarios', 'pagamentos', 'logs'].includes(currentPage)) {
       currentPage = 'dashboard';
     }
   }
@@ -20366,6 +20951,23 @@ function render(){
             if (_lastRenderedHtml !== freshHTML) {
               _lastRenderedHtml = freshHTML;
               uEl.innerHTML = freshHTML;
+              attachPageEvents();
+            }
+          }
+        }).catch(() => {});
+      }
+    }
+    else if(currentPage==='pagamentos') {
+      newHTML = pagePagamentos();
+      if (!window._lastUsersSyncTime || now - window._lastUsersSyncTime > 15000) {
+        window._lastUsersSyncTime = now;
+        Promise.all([syncUsersWithServer(), syncOrdensWithServer()]).then(() => {
+          const pEl = document.getElementById('pageContent');
+          if (pEl && currentPage === 'pagamentos' && !isUserTypingInPageContent()) {
+            const freshHTML = pagePagamentos();
+            if (_lastRenderedHtml !== freshHTML) {
+              _lastRenderedHtml = freshHTML;
+              pEl.innerHTML = freshHTML;
               attachPageEvents();
             }
           }
@@ -20459,7 +21061,7 @@ function render(){
 
 function updateActiveMenu(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
-  const adminPages = ['usuarios', 'ordens', 'logs'];
+  const adminPages = ['usuarios', 'ordens', 'pagamentos', 'logs'];
   const commonPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 
   if (isAdmin) {
@@ -20482,8 +21084,40 @@ function updateActiveMenu(){
   }
 }
 
+function updateAdminSidebarBadges(){
+  const usersCount = Array.isArray(registeredUsers) ? registeredUsers.length : 0;
+  const logsCount = Array.isArray(systemLogs) ? systemLogs.length : 0;
+  const osPendingCount = Array.isArray(systemOrdens) ? systemOrdens.filter(function(o){ return (o.status || '').toLowerCase() === 'pendente'; }).length : 0;
+  const osTotalCount = Array.isArray(systemOrdens) ? systemOrdens.length : 0;
+  const techsCount = Array.isArray(systemTecnicos) ? systemTecnicos.filter(function(t){ return t.active !== false; }).length : 0;
+  const pendingPayCount = Array.isArray(registeredUsers) ? registeredUsers.filter(function(u){ return u && u.role !== 'Administrador' && (u.subscription_status === 'pending_payment' || u.subscription_status === 'expired'); }).length : 0;
+
+  const uBadge = document.getElementById('menuUsersCountBadge');
+  if (uBadge) uBadge.textContent = usersCount;
+
+  const pBadge = document.getElementById('menuPagamentosCountBadge');
+  if (pBadge) {
+    pBadge.textContent = pendingPayCount > 0 ? (pendingPayCount + ' pend.') : 'Pix/Boleto';
+    pBadge.style.background = pendingPayCount > 0 ? 'rgba(245, 158, 11, 0.25)' : 'rgba(16, 185, 129, 0.2)';
+    pBadge.style.color = pendingPayCount > 0 ? '#FBBF24' : '#34D399';
+  }
+
+  const lBadge = document.getElementById('menuLogsCountBadge');
+  if (lBadge) lBadge.textContent = logsCount;
+
+  const sUsers = document.getElementById('adminSideStatUsers');
+  if (sUsers) sUsers.textContent = usersCount;
+
+  const sOs = document.getElementById('adminSideStatOs');
+  if (sOs) sOs.textContent = osPendingCount > 0 ? (osPendingCount + ' pend.') : osTotalCount;
+
+  const sTechs = document.getElementById('adminSideStatTechs');
+  if (sTechs) sTechs.textContent = techsCount;
+}
+
 function updateAdminMenuVisibility(force = false){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
+  updateAdminSidebarBadges();
   const currentKey = String(isAdmin);
   if (!force && _lastAdminVisibilityKey === currentKey) return;
   _lastAdminVisibilityKey = currentKey;
@@ -20493,6 +21127,15 @@ function updateAdminMenuVisibility(force = false){
   } else {
     document.documentElement.classList.remove('is-admin');
   }
+
+  const btnNovaTx = document.getElementById('sidebarNovaTransacaoBtn');
+  if (btnNovaTx) btnNovaTx.style.display = isAdmin ? 'none' : 'flex';
+
+  const btnQuickAdmin = document.getElementById('sidebarAdminQuickCreateBtn');
+  if (btnQuickAdmin) btnQuickAdmin.style.display = isAdmin ? 'flex' : 'none';
+
+  const summaryCardAdmin = document.getElementById('adminSidebarSummaryCard');
+  if (summaryCardAdmin) summaryCardAdmin.style.display = isAdmin ? 'block' : 'none';
 
   // Seções e Botões do Usuário Comum: Visão, Planejamento, Ferramentas e Minha Conta
   const userSections = document.querySelectorAll('.menu-section-visao, .menu-section-planejamento, .menu-section-ferramentas, .menu-section-minha-conta');
@@ -20513,7 +21156,7 @@ function updateAdminMenuVisibility(force = false){
     el.style.display = isAdmin ? 'flex' : 'none';
   });
 
-  const adminPages = ['usuarios', 'ordens', 'logs'];
+  const adminPages = ['usuarios', 'ordens', 'pagamentos', 'logs'];
   adminPages.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdmin ? 'flex' : 'none';
@@ -23414,7 +24057,7 @@ function applyAdminUserFiltering() {
       matchesSearch = email.includes(q) || name.includes(q) || (qDigits && (cpf.includes(qDigits) || phone.includes(qDigits))) || cpf.includes(q) || phone.includes(q);
     }
 
-    card.style.display = (matchesFilter && matchesSearch) ? 'flex' : 'none';
+    card.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
   });
 }
 
@@ -23436,105 +24079,135 @@ function pageUsuarios(){
   const activeCount = users.filter(u => u.active !== false).length;
   const inactiveCount = totalUsers - activeCount;
 
+  if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
+
   return \`
-  <div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">
+  <div class="page-head admin-page-head">
     <div>
-      <h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">
-        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(5, 150, 105,0.25), rgba(4, 120, 87,0.12)); border:1px solid rgba(96,165,250,0.35);">👥</span>
-        Central de Usuários & Correção Cadastral
+      <h1>
+        <span class="admin-head-icon">👥</span>
+        Central de Cadastros & Contas de Usuários
       </h1>
-      <p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">
-        Autocadastro ativo. O próprio usuário cria a conta; utilize este painel para auditar ou corrigir eventuais dados necessários.
+      <p>
+        Gestão alinhada de cadastros, auditoria de dados, liberação de assinatura e controle de acesso em tempo real.
       </p>
     </div>
-    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-      <button id="btnNovoUsuarioAdmin" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:9px; height:42px; padding:0 20px; border-radius:14px; background:linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%); color:#ffffff; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.25); cursor:pointer; box-shadow:0 8px 24px -4px rgba(5, 150, 105,0.5); transition:all 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        <span>Cadastrar Manualmente</span>
+    <div class="admin-head-actions">
+      <button id="btnNovoUsuarioAdmin" onclick="openAdminCreateUserModal()" style="display:inline-flex; align-items:center; gap:6px; padding:0 14px; background:linear-gradient(135deg, #10B981 0%, #059669 100%); color:#ffffff; font-weight:800; border:1px solid rgba(255,255,255,0.22); cursor:pointer; box-shadow:0 4px 14px rgba(5, 150, 105,0.38);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Novo Cadastro</span>
       </button>
-      <button class="btn-ghost" onclick="syncUsersWithServer().then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">
-        🔄 Atualizar Lista
+      <button class="btn-ghost" onclick="syncUsersWithServer().then(render)" style="display:inline-flex; align-items:center; gap:5px; font-weight:700;">
+        🔄 Sincronizar
       </button>
     </div>
   </div>
 
-  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:16px; margin-bottom:22px;">
-    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
-      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Total de Usuários</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(5, 150, 105,0.25), rgba(4, 120, 87,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(5, 150, 105,0.3); font-size:16px;">👥</div>
+  <div class="kpis admin-kpis-row">
+    <div class="kpi">
+      <div class="row1">
+        <span>Total de Cadastros</span>
+        <div class="ic" style="background:rgba(16, 185, 129, 0.14); border:1px solid rgba(16, 185, 129, 0.32); color:#34D399;">👥</div>
       </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:var(--text); margin-bottom:2px; letter-spacing:-0.02em;">\${totalUsers}</div>
-      <div class="sub" style="font-size:12px; color:#34D399; font-weight:600; margin-top:4px;">Contas sincronizadas</div>
+      <div class="val" style="color:var(--text);">\${totalUsers}</div>
+      <div class="sub" style="color:#34D399;">Contas sincronizadas</div>
     </div>
 
-    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
-      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Administradores</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(245,158,11,0.3); font-size:16px;">👑</div>
+    <div class="kpi">
+      <div class="row1">
+        <span>Administradores</span>
+        <div class="ic" style="background:rgba(245, 158, 11, 0.14); border:1px solid rgba(245, 158, 11, 0.35); color:#FBBF24;">👑</div>
       </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px; letter-spacing:-0.02em;">\${adminCount}</div>
-      <div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Gestão do sistema</div>
+      <div class="val" style="color:#FBBF24;">\${adminCount}</div>
+      <div class="sub" style="color:#FDE68A;">Gestão executiva</div>
     </div>
 
-    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
-      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Usuários Ativos</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(5, 150, 105,0.25), rgba(5, 150, 105,0.15)); border:1.5px solid rgba(16, 185, 129,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(5, 150, 105,0.3); font-size:16px;">✅</div>
+    <div class="kpi">
+      <div class="row1">
+        <span>Contas Ativas</span>
+        <div class="ic" style="background:rgba(16, 185, 129, 0.14); border:1px solid rgba(16, 185, 129, 0.32); color:#10B981;">✅</div>
       </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#059669; margin-bottom:2px; letter-spacing:-0.02em;">\${activeCount}</div>
-      <div class="sub" style="font-size:12px; color:#A7F3D0; font-weight:600; margin-top:4px;">Acesso liberado</div>
+      <div class="val" style="color:#10B981;">\${activeCount}</div>
+      <div class="sub" style="color:#A7F3D0;">Acesso liberado</div>
     </div>
 
-    <div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22);">
-      <div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Desativados</span>
-        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(239,68,68,0.25), rgba(185,28,28,0.15)); border:1.5px solid rgba(248,113,113,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(239,68,68,0.3); font-size:16px;">🚫</div>
+    <div class="kpi">
+      <div class="row1">
+        <span>Bloqueados / Inativos</span>
+        <div class="ic" style="background:rgba(239, 68, 68, 0.14); border:1px solid rgba(239, 68, 68, 0.35); color:#F87171;">🚫</div>
       </div>
-      <div class="val" style="font-size:28px; font-weight:900; color:#F87171; margin-bottom:2px; letter-spacing:-0.02em;">\${inactiveCount}</div>
-      <div class="sub" style="font-size:12px; color:#FECACA; font-weight:600; margin-top:4px;">Acesso bloqueado</div>
+      <div class="val" style="color:#F87171;">\${inactiveCount}</div>
+      <div class="sub" style="color:#FECACA;">Acesso suspenso</div>
     </div>
   </div>
 
-  <div class="admin-toolbar-panel" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); border-radius:18px; padding:12px 16px; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 8px 30px rgba(0,0,0,0.35); margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-    <div class="admin-search-wrap" style="position:relative; flex:1; min-width:260px;">
-      <svg style="position:absolute; left:14px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#94A3B8; pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="adminUserSearchInput" class="admin-search-input" placeholder="Buscar por nome, e-mail, CPF ou WhatsApp..." oninput="handleAdminUserSearch(this.value)" autocomplete="off" spellcheck="false" value="\${currentAdminUserSearch}" style="width:100%; height:42px; padding:0 14px 0 40px; border-radius:12px; background:var(--input-bg, rgba(255,255,255,0.05)); border:1px solid rgba(255,255,255,0.14); color:var(--text); font-size:13.5px; font-weight:600; outline:none; transition:all 0.2s ease;">
+  <div class="admin-toolbar-panel">
+    <div class="admin-search-wrap" style="position:relative; flex:1; min-width:240px;">
+      <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#94A3B8; pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="adminUserSearchInput" class="admin-search-input" placeholder="Filtrar cadastro por nome, e-mail, CPF ou WhatsApp..." oninput="handleAdminUserSearch(this.value)" autocomplete="off" spellcheck="false" value="\${currentAdminUserSearch}">
     </div>
-    <div class="admin-filter-bar" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+    <div class="admin-filter-bar" style="display:flex; align-items:center; gap:5px; flex-wrap:wrap;">
       <button class="admin-filter-btn \${currentAdminUserFilter==='all'?'active':''}" onclick="setAdminUserFilter('all', this)">Todos (\${totalUsers})</button>
       <button class="admin-filter-btn \${currentAdminUserFilter==='admin'?'active':''}" onclick="setAdminUserFilter('admin', this)">Admins (\${adminCount})</button>
       <button class="admin-filter-btn \${currentAdminUserFilter==='user'?'active':''}" onclick="setAdminUserFilter('user', this)">Usuários (\${totalUsers - adminCount})</button>
       <button class="admin-filter-btn \${currentAdminUserFilter==='active'?'active':''}" onclick="setAdminUserFilter('active', this)">Ativos (\${activeCount})</button>
-      <button class="admin-filter-btn \${currentAdminUserFilter==='inactive'?'active':''}" onclick="setAdminUserFilter('inactive', this)">Desativados (\${inactiveCount})</button>
+      <button class="admin-filter-btn \${currentAdminUserFilter==='inactive'?'active':''}" onclick="setAdminUserFilter('inactive', this)">Inativos (\${inactiveCount})</button>
     </div>
   </div>
 
-  <div class="panel" style="margin-bottom:0; padding:24px 26px;">
-    <div class="panel-head" style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
-      <h3 style="font-size:16.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px;">
-        <span>📋</span> Lista Geral de Contas & Correção Cadastral
+  <div class="panel" style="margin-bottom:0; padding:14px 16px; border-radius:14px;">
+    <div class="panel-head" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="font-size:13.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px; margin:0;">
+        <span>📋</span> Grade Alinhada de Cadastros
       </h3>
-      <span class="tag" style="cursor:default; font-weight:800; font-size:12px; padding:5px 14px; border-radius:20px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#34D399;">\${totalUsers} cadastrado(s)</span>
+      <span class="tag" style="cursor:default; font-weight:800; font-size:10.5px; padding:3px 10px; border-radius:999px; background:rgba(5, 150, 105,0.14); border:1px solid rgba(5, 150, 105,0.32); color:#34D399;">\${totalUsers} registro(s)</span>
     </div>
-    <p class="cfg-hint" style="margin-bottom:18px; font-size:13px; color:var(--text-dim); line-height:1.5;">
-      💡 O autocadastro é feito pelo próprio usuário. Caso precise corrigir nome, CPF, e-mail, telefone/WhatsApp ou redefinir senha, clique em <strong>✏️ Corrigir Dados</strong>.
-    </p>
+
+    <div class="user-admin-grid-header">
+      <span>Titular / Conta</span>
+      <span>E-mail & Documento</span>
+      <span>Assinatura & Perfil</span>
+      <span>Atividade & Login</span>
+      <span style="text-align:right;">Ações Rápidas</span>
+    </div>
+
     <div class="user-admin-list">
       \${users.map(u=>{
         const stats = getUserActivitySummary(u.email);
         const isAdminUser = u.role === 'Administrador';
         const isInactive = u.active === false;
         const isSelf = currentUser && currentUser.email && u.email && (currentUser.email.toLowerCase() === u.email.toLowerCase());
-        const initials = (u.name || 'U').trim().split(/\\\\s+/).map(w => w[0]).filter(Boolean).slice(0,2).join('').toUpperCase() || 'US';
+        const initials = (u.name || 'U').trim().split(/\\s+/).map(w => w[0]).filter(Boolean).slice(0,2).join('').toUpperCase() || 'US';
 
-        const rawCpf = String(u.cpf || '').replace(/\\\\D/g, '');
-        const rawPhone = String(u.phone || '').replace(/\\\\D/g, '');
-        const formattedCpf = rawCpf.length === 11 ? rawCpf.replace(/(\\\\d{3})(\\\\d{3})(\\\\d{3})(\\\\d{2})/, '$1.$2.$3-$4') : (u.cpf || '');
-        const formattedPhone = rawPhone.length === 11 ? rawPhone.replace(/(\\\\d{2})(\\\\d{5})(\\\\d{4})/, '($1) $2-$3') : (rawPhone.length === 10 ? rawPhone.replace(/(\\\\d{2})(\\\\d{4})(\\\\d{4})/, '($1) $2-$3') : (u.phone || ''));
+        const rawCpf = String(u.cpf || '').replace(/\\D/g, '');
+        const rawPhone = String(u.phone || '').replace(/\\D/g, '');
+        const formattedCpf = rawCpf.length === 11 ? rawCpf.replace(/(\\d{3})(\\d{3})(\\d{3})(\\d{2})/, '$1.$2.$3-$4') : (u.cpf || '');
+        const formattedPhone = rawPhone.length === 11 ? rawPhone.replace(/(\\d{2})(\\d{5})(\\d{4})/, '($1) $2-$3') : (rawPhone.length === 10 ? rawPhone.replace(/(\\d{2})(\\d{4})(\\d{4})/, '($1) $2-$3') : (u.phone || ''));
+
+        const subBadgeHtml = (() => {
+          if (isAdminUser || u.subscription_plan === 'vitalicio') {
+            return '<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399;">♾️ Vitalício</span>';
+          }
+          if (u.subscription_status === 'active') {
+            const planLabel = u.subscription_plan === 'anual' ? 'Anual' : (u.subscription_plan === 'cortesia_admin' ? 'Liberado' : 'Mensal');
+            const expStr = u.subscription_expires_at ? (' • ' + formatDateBR(u.subscription_expires_at.split('T')[0])) : '';
+            return '<span class="role-badge" style="background:rgba(16,185,129,0.16); border:1px solid #10B981; color:#34D399;">✅ ' + planLabel + expStr + '</span>';
+          }
+          if (u.subscription_status === 'pending_payment') {
+            const pendingPlan = u.subscription_plan === 'anual' ? 'Anual' : 'Mensal';
+            return '<span class="role-badge" style="background:rgba(56,189,248,0.18); border:1px solid #38BDF8; color:#7DD3FC;">⏳ Pgto (' + pendingPlan + ')</span>';
+          }
+          if (u.subscription_status === 'expired') {
+            return '<span class="role-badge" style="background:rgba(239,68,68,0.18); border:1px solid #EF4444; color:#FCA5A5;">🔒 Expirado</span>';
+          }
+          return '<span class="role-badge" style="background:rgba(245,158,11,0.16); border:1px solid #F59E0B; color:#FBBF24;">⏱️ Teste</span>';
+        })();
+
+        const devLabel = (u.device_type === 'Mobile' || u.device === 'Mobile') ? '📱 Mobile' : '💻 Desktop';
 
         return \`
         <div class="user-card-4k \${isInactive ? 'inactive' : ''}" data-user-email="\${(u.email||'').toLowerCase()}" data-user-cpf="\${rawCpf}" data-user-phone="\${rawPhone}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isInactive ? 'inactive' : 'active'}">
+          <!-- Coluna 1: Titular / Conta -->
           <div class="user-card-left">
             <div class="user-card-avatar \${isAdminUser ? 'admin-av' : 'user-av'}">
               \${initials}
@@ -23542,99 +24215,81 @@ function pageUsuarios(){
             </div>
             <div class="user-card-info">
               <div class="user-card-name-row">
-                <span class="user-card-name">\${u.name}</span>
-                <span class="role-badge" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); color:var(--text); font-weight:800; padding:2px 8px; border-radius:6px;">ID #\${u.id || '-'}</span>
-                <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${u.role}</span>
-                \${(() => {
-                  if (isAdminUser || u.subscription_plan === 'vitalicio') {
-                    return '<span class="role-badge" style="background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.35)); border:1px solid #10B981; color:#34D399; font-weight:900;">♾️ Vitalício Grátis</span>';
-                  }
-                  if (u.subscription_status === 'active') {
-                    const planLabel = u.subscription_plan === 'anual' ? 'Pago Anual' : (u.subscription_plan === 'vitalicio' ? 'Vitalício' : (u.subscription_plan === 'cortesia_admin' ? 'Liberado Admin' : 'Pago Mensal'));
-                    const expStr = u.subscription_expires_at ? (' até ' + formatDateBR(u.subscription_expires_at.split('T')[0])) : '';
-                    return '<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399; font-weight:800;">✅ ' + planLabel + expStr + '</span>';
-                  }
-                  if (u.subscription_status === 'pending_payment') {
-                    const pendingPlan = u.subscription_plan === 'anual' ? 'Anual R$ 100' : 'Mensal R$ 10';
-                    const txInfo = u.subscription_payment_id ? (' • Comprovante: ' + u.subscription_payment_id) : '';
-                    return '<span class="role-badge" style="background:rgba(56,189,248,0.2); border:1.5px solid #38BDF8; color:#7DD3FC; font-weight:900;">⏳ Pagamento Informado (' + pendingPlan + txInfo + ')</span>';
-                  }
-                  if (u.subscription_status === 'expired') {
-                    return '<span class="role-badge" style="background:rgba(239,68,68,0.2); border:1.5px solid #EF4444; color:#FCA5A5; font-weight:900;">🔒 Bloqueado • Aguardando Pagamento</span>';
-                  }
-                  return '<span class="role-badge" style="background:rgba(245,158,11,0.18); border:1px solid #F59E0B; color:#FBBF24; font-weight:800;">⏱️ Período Teste</span>';
-                })()}
-
-                \${(u.device_type === 'Mobile' || u.device === 'Mobile') 
-                  ? '<span class="role-badge" style="background:linear-gradient(135deg, rgba(5, 150, 105, 0.22), rgba(4, 120, 87, 0.12)); border:1px solid rgba(5, 150, 105, 0.4); color:#059669; display:inline-flex; align-items:center; gap:4px; font-weight:700;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> 📱 Mobile</span>' 
-                  : '<span class="role-badge" style="background:linear-gradient(135deg, rgba(5, 150, 105,0.18), rgba(4, 120, 87,0.1)); border:1px solid rgba(96,165,250,0.35); color:#6EE7B7; display:inline-flex; align-items:center; gap:4px; font-weight:700;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 💻 Computador</span>'}
-                \${isInactive ? '<span class="role-badge inactive">Desativado</span>' : ''}
+                <span class="user-card-name" title="\${u.name}">\${u.name}</span>
               </div>
-              <div class="user-card-email" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:3px;">
-                <span>✉️ \${u.email}</span>
-                \${formattedCpf ? \`<span style="font-size:12px; color:var(--text-dim); background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">🪪 CPF: <strong style="color:var(--text);">\${formattedCpf}</strong></span>\` : '<span style="font-size:11.5px; color:#94A3B8; font-style:italic;">(Sem CPF)</span>'}
-                \${formattedPhone ? \`<span style="font-size:12px; color:#059669; background:rgba(5, 150, 105,0.12); padding:2px 8px; border-radius:6px; border:1px solid rgba(5, 150, 105,0.3);">📱 <strong style="color:#10B981;">\${formattedPhone}</strong></span>\` : ''}
-              </div>
-              <div class="user-card-stats-strip" style="margin-top:6px;">
-                \${stats.hasData ? \`
-                  <span class="user-stat-chip">Transações: <strong>\${stats.txCount}</strong></span>
-                  <span class="user-stat-chip">Contas: <strong>\${stats.accCount}</strong></span>
-                  <span class="user-stat-chip">Orçamentos: <strong>\${stats.budCount}</strong></span>
-                  <span class="user-stat-chip">Metas: <strong>\${stats.goalCount}</strong></span>
-                  \${stats.lastDate ? \`<span class="user-stat-chip">Última mov: <strong>\${formatDateBR(stats.lastDate)}</strong></span>\` : ''}
-                \` : '<span class="user-stat-chip">Ainda sem movimentações</span>'}
-                <span class="user-stat-chip user-last-login-chip" style="background:rgba(5, 150, 105,0.14); border:1px solid rgba(96,165,250,0.35); color:#6EE7B7; display:inline-flex; align-items:center; gap:5px;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  Último login: <strong style="color:#FFFFFF;">\${formatDateTimeWithSeconds(u.last_login)}</strong>
-                </span>
+              <div style="display:flex; align-items:center; gap:4px; margin-top:2px;">
+                <span class="role-badge" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); color:var(--text-dim);">#\${u.id || '-'}</span>
+                <span class="role-badge" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text-dim);">\${devLabel}</span>
+                \${isInactive ? '<span class="role-badge inactive">Inativo</span>' : ''}
               </div>
             </div>
           </div>
+
+          <!-- Coluna 2: E-mail & Documento -->
+          <div class="user-col-contact">
+            <span class="user-email-line" title="\${u.email}">✉️ \${u.email}</span>
+            <div class="user-doc-line">
+              \${formattedCpf ? \`<span class="doc-pill">🪪 \${formattedCpf}</span>\` : '<span class="doc-pill" style="opacity:0.55;">Sem CPF</span>'}
+              \${formattedPhone ? \`<span class="doc-pill" style="color:#10B981; border-color:rgba(16,185,129,0.28);">📱 \${formattedPhone}</span>\` : ''}
+            </div>
+          </div>
+
+          <!-- Coluna 3: Assinatura & Perfil -->
+          <div class="user-col-plan">
+            <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
+              <span class="role-badge \${isAdminUser ? 'admin' : 'user'}">\${isAdminUser ? '👑 Admin' : '👤 Usuário'}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
+              \${subBadgeHtml}
+            </div>
+          </div>
+
+          <!-- Coluna 4: Atividade & Último Login -->
+          <div class="user-col-activity">
+            <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
+              <span class="user-stat-chip">Mov: <strong>\${stats.txCount}</strong></span>
+              <span class="user-stat-chip">Cts: <strong>\${stats.accCount}</strong></span>
+            </div>
+            <span class="user-stat-chip user-last-login-chip" style="background:rgba(5, 150, 105,0.12); border:1px solid rgba(16, 185, 129,0.28); color:#6EE7B7;" title="Último acesso registrado">
+              🕒 <strong style="color:#FFFFFF;">\${formatDateTimeWithSeconds(u.last_login)}</strong>
+            </span>
+          </div>
+
+          <!-- Coluna 5: Ações Rápidas Compactas -->
           <div class="user-card-right">
             \${rawPhone ? \`
-              <a href="https://wa.me/55\${rawPhone}" target="_blank" class="user-card-btn" style="background:rgba(5, 150, 105,0.14); border:1px solid rgba(5, 150, 105,0.35); color:#059669; text-decoration:none; display:inline-flex; align-items:center; gap:5px; padding:0 12px; height:38px; border-radius:10px;" title="Conversar no WhatsApp">
-                <span>💬 WhatsApp</span>
+              <a href="https://wa.me/55\${rawPhone}" target="_blank" class="user-card-btn" style="background:rgba(5, 150, 105,0.14); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; text-decoration:none;" title="Conversar no WhatsApp">
+                <span>💬</span>
               </a>
             \` : ''}
             \${!isSelf ? \`
               \${u.subscription_status !== 'active' ? \`
-                <button type="button" class="user-card-btn" onclick="window.adminConfirmUserPayment('\${u.email}', '\${u.subscription_plan === 'anual' ? 'anual' : 'mensal'}')" title="Confirmar que este usuário realizou o pagamento e liberar acesso" style="background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; font-weight:900; border:none; box-shadow:0 4px 14px rgba(16,185,129,0.4);">
-                  <span>✅</span>
-                  <span>Confirmar Pago</span>
+                <button type="button" class="user-card-btn" onclick="window.adminConfirmUserPayment('\${u.email}', '\${u.subscription_plan === 'anual' ? 'anual' : 'mensal'}')" title="Confirmar pagamento e liberar acesso" style="background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; border:none;">
+                  <span>✅ Pago</span>
                 </button>
               \` : \`
-                <button type="button" class="user-card-btn" onclick="window.adminRevokeUserPayment('\${u.email}')" title="Bloquear acesso e exigir pagamento" style="background:rgba(239,68,68,0.16); color:#FCA5A5; font-weight:800; border:1px solid rgba(239,68,68,0.45);">
+                <button type="button" class="user-card-btn" onclick="window.adminRevokeUserPayment('\${u.email}')" title="Bloquear acesso / exigir pagamento" style="background:rgba(239,68,68,0.15); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4);">
                   <span>🔒</span>
-                  <span>Exigir Pago</span>
                 </button>
               \`}
               <button type="button" class="user-card-btn btn-espelho" data-viewuser="\${u.email}" onclick="viewUserData('\${u.email}')" title="Visualizar conta em Modo Espelho">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 <span>Espelho</span>
               </button>
               <button type="button" class="user-card-btn \${isInactive ? 'btn-ativar' : 'btn-desativar'}" data-toggleuser="\${u.email}" onclick="toggleUserActive('\${u.email}')" title="\${isInactive ? 'Ativar usuário' : 'Desativar usuário'}">
-                \${isInactive ? \`
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Ativar</span>
-                \` : \`
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-                  <span>Desativar</span>
-                \`}
+                <span>\${isInactive ? '✓' : '⊘'}</span>
               </button>
               <button type="button" class="user-card-btn btn-excluir" data-deluser="\${u.email}" onclick="deleteUserAdmin('\${u.email}')" title="Excluir usuário permanentemente">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                <span>Excluir</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
               </button>
             \` : \`
-              <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:800; font-size:12px; padding:6px 14px; border-radius:12px; height:38px;">⭐ Sua Conta (Atual)</span>
+              <span class="user-stat-chip" style="background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); font-weight:800; height:28px; padding:0 8px;">⭐ Você</span>
             \`}
-            <button type="button" class="user-card-btn btn-conceder-tempo" data-granttime="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Controle de pagamento e tempo deste usuário" style="background:linear-gradient(135deg, #F59E0B, #B45309); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(245, 158, 11, 0.35);">
-              <span style="font-size:14px;">👑</span>
-              <span>Liberar Tempo</span>
+            <button type="button" class="user-card-btn btn-conceder-tempo" data-granttime="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Liberar tempo / controlar assinatura" style="background:linear-gradient(135deg, #F59E0B, #B45309); color:#ffffff; border:none;">
+              <span>👑 Tempo</span>
             </button>
-            <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Corrigir dados do cadastro" style="background:linear-gradient(135deg, #10B981, #047857); color:#ffffff; font-weight:800; border:none; box-shadow:0 4px 14px rgba(5, 150, 105,0.35);">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              <span>Corrigir Dados</span>
+            <button type="button" class="user-card-btn btn-editar" data-edituser="\${u.email}" onclick="openUserAdminModal('\${u.email}')" title="Editar / Corrigir cadastro" style="background:linear-gradient(135deg, #10B981, #047857); color:#ffffff; border:none;">
+              <span>✏️ Editar</span>
             </button>
           </div>
         </div>\`;
@@ -23798,62 +24453,62 @@ function pageLogs(){
   const countEdicao = logs.filter(l => (l.action||'').toLowerCase().includes('ediç') || (l.action||'').toLowerCase().includes('altera')).length;
   const countExclusao = logs.filter(l => (l.action||'').toLowerCase().includes('excl') || (l.action||'').toLowerCase().includes('remov')).length;
 
+  if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
+
   return \`
-  <div class="page-head">
+  <div class="page-head admin-page-head">
     <div>
-      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
-        Logs & Auditoria do Sistema
+      <h1>
+        <span class="admin-head-icon">🛡️</span>
+        Auditoria & Logs do Sistema
       </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
-        Histórico completo de auditoria com rastreabilidade de acessos, logins e alterações de dados
+      <p>
+        Histórico completo de auditoria com rastreabilidade de acessos, logins e alterações de cadastros.
       </p>
     </div>
-    <div class="head-actions">
-      <button class="btn-ghost" onclick="loadSystemLogs().then(render)" style="display:flex; align-items:center; gap:6px; font-weight:700;">🔄 Atualizar Logs</button>
+    <div class="admin-head-actions">
+      <button class="btn-ghost" onclick="loadSystemLogs().then(render)" style="display:inline-flex; align-items:center; gap:5px; font-weight:700;">🔄 Atualizar Logs</button>
     </div>
   </div>
 
-  <div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:20px;">
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Total de Registros</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(74,144,226,.14); color:var(--blue);">📋</span></div>
-      <div class="val" style="font-size:22px; color:var(--blue); margin-bottom:2px;">\${countTotal}</div>
-      <div class="sub" style="font-size:11px;">Eventos registrados</div>
+  <div class="kpis admin-kpis-row">
+    <div class="kpi">
+      <div class="row1"><span>Total de Registros</span><span class="ic" style="background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.32); color:#38BDF8;">📋</span></div>
+      <div class="val" style="color:var(--text);">\${countTotal}</div>
+      <div class="sub" style="color:#38BDF8;">Eventos registrados</div>
     </div>
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Criações</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(5, 150, 105,0.14); color:var(--brand-bright);">➕</span></div>
-      <div class="val" style="font-size:22px; color:var(--green); margin-bottom:2px;">\${countCriacao}</div>
-      <div class="sub" style="font-size:11px;">Novos dados</div>
+    <div class="kpi">
+      <div class="row1"><span>Criações / Cadastros</span><span class="ic" style="background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.32); color:#10B981;">➕</span></div>
+      <div class="val" style="color:#10B981;">\${countCriacao}</div>
+      <div class="sub" style="color:#34D399;">Novos registros</div>
     </div>
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Edições</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(232,176,75,0.14); color:var(--orange);">✎</span></div>
-      <div class="val" style="font-size:22px; color:var(--orange); margin-bottom:2px;">\${countEdicao}</div>
-      <div class="sub" style="font-size:11px;">Registros alterados</div>
+    <div class="kpi">
+      <div class="row1"><span>Edições / Ajustes</span><span class="ic" style="background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.32); color:#FBBF24;">✎</span></div>
+      <div class="val" style="color:#FBBF24;">\${countEdicao}</div>
+      <div class="sub" style="color:#FDE68A;">Registros alterados</div>
     </div>
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Exclusões</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">🗑</span></div>
-      <div class="val" style="font-size:22px; color:var(--red); margin-bottom:2px;">\${countExclusao}</div>
-      <div class="sub" style="font-size:11px;">Registros removidos</div>
+    <div class="kpi">
+      <div class="row1"><span>Exclusões</span><span class="ic" style="background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.32); color:#F87171;">🗑</span></div>
+      <div class="val" style="color:#F87171;">\${countExclusao}</div>
+      <div class="sub" style="color:#FCA5A5;">Registros removidos</div>
     </div>
   </div>
 
-  <div class="table-panel">
-    <div class="panel-head" style="margin-bottom:14px;">
-      <h3>Trilha de Auditoria Detalhada</h3>
-      <span class="tag" style="font-weight:700;">\${logs.length} evento(s)</span>
+  <div class="admin-toolbar-panel">
+    <div style="position:relative; flex:1.5; min-width:220px;">
+      <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#94A3B8; pointer-events:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="logSearch" class="admin-search-input" placeholder="Buscar por usuário, e-mail, ação ou detalhe..." onkeyup="filterLogsTable()">
     </div>
-    <div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
-      <div style="position:relative; flex:1.5; min-width:200px;">
-        <input id="logSearch" placeholder="🔍 Buscar por usuário, e-mail, ação ou detalhe..." onkeyup="filterLogsTable()" style="width:100%; font-size:13px;">
-      </div>
-      <select id="logFilterAction" onchange="filterLogsTable()" style="flex:1; min-width:140px;">
-        <option value="">Todas as ações</option>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+      <select id="logFilterAction" onchange="filterLogsTable()" style="height:34px; min-width:135px; border-radius:9px; font-size:12px; font-weight:700; padding:0 10px;">
+        <option value="">Ação: Todas</option>
         <option value="cria">Criação</option>
         <option value="ediç">Edição</option>
         <option value="excl">Exclusão</option>
         <option value="login">Login / Acesso</option>
       </select>
-      <select id="logFilterEntity" onchange="filterLogsTable()" style="flex:1; min-width:140px;">
-        <option value="">Todas as entidades</option>
+      <select id="logFilterEntity" onchange="filterLogsTable()" style="height:34px; min-width:145px; border-radius:9px; font-size:12px; font-weight:700; padding:0 10px;">
+        <option value="">Módulo: Todos</option>
         <option value="transa">Transação</option>
         <option value="conta">Conta / Cartão</option>
         <option value="categor">Categoria</option>
@@ -23861,6 +24516,13 @@ function pageLogs(){
         <option value="meta">Meta</option>
         <option value="usuár">Usuário</option>
       </select>
+    </div>
+  </div>
+
+  <div class="table-panel" style="padding:14px 16px; border-radius:14px;">
+    <div class="panel-head" style="margin-bottom:10px;">
+      <h3 style="font-size:13.5px; font-weight:800; margin:0; display:flex; align-items:center; gap:6px;"><span>🛡️</span> Trilha de Auditoria Detalhada</h3>
+      <span class="tag" style="font-weight:800; font-size:10.5px; padding:3px 10px;">\${logs.length} evento(s)</span>
     </div>
 
     <div id="logTableWrap">
@@ -24588,90 +25250,85 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
   let h = '';
   h += '<div class="reception-grid">';
   
-  // Coluna 1: Formulário Executivo de Entrada de Chamado
+  // Coluna 1: Formulário Compacto e Alinhado de Entrada de Chamado
   h += '<div class="reception-card">';
-  h += '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:10px; flex-wrap:wrap;">';
+  h += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px; flex-wrap:wrap;">';
   h += '  <div>';
-  h += '    <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(16, 185, 129,0.15); border:1px solid rgba(16, 185, 129,0.35); color:#10B981; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">';
+  h += '    <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.35); color:#10B981; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">';
   h += '      <span>📥 BALCÃO DE RECEPÇÃO</span>';
   h += '    </div>';
-  h += '    <h2 style="font-size:18px; font-weight:900; margin:0 0 4px 0; color:var(--text);">Dar Entrada em Ordem de Serviço</h2>';
-  h += '    <p style="font-size:12px; color:var(--text-dim); margin:0; line-height:1.4;">Preencha os dados do cliente e da demanda para protocolar em tempo real no banco SQL.</p>';
+  h += '    <h2 style="font-size:15px; font-weight:900; margin:0; color:var(--text);">Cadastro Rápido de Ordem de Serviço</h2>';
   h += '  </div>';
-  h += '  <span style="font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text-dim);">Campos com (*) são obrigatórios</span>';
+  h += '  <span style="font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.05); border:1px solid var(--card-border); color:var(--text-dim);">(*) Obrigatórios</span>';
   h += '</div>';
 
   h += '<form id="formRecepcaoOs" onsubmit="event.preventDefault(); submeterRecepcaoOrdem(false);">';
   h += '  <div class="reception-form-grid">';
   
-  // Solicitante Nome
-  h += '    <div class="full-col">';
-  h += '      <label><span>👤</span> Nome Completo do Solicitante / Cliente *</label>';
-  h += '      <input id="receptionClientName" required placeholder="Ex: Paulo Lima ou Empresa Parceira" autocomplete="name">';
+  // Solicitante Nome + E-mail na mesma linha ou alinhados
+  h += '    <div>';
+  h += '      <label><span>👤</span> Solicitante / Cliente *</label>';
+  h += '      <input id="receptionClientName" required placeholder="Nome completo ou empresa" autocomplete="name">';
   h += '    </div>';
 
-  // CPF / CNPJ
   h += '    <div>';
-  h += '      <label><span>🪪</span> CPF ou CNPJ do Cliente</label>';
+  h += '      <label><span>✉️</span> E-mail de Contato *</label>';
+  h += '      <input id="receptionClientEmail" type="email" required placeholder="cliente@exemplo.com" autocomplete="email">';
+  h += '    </div>';
+
+  // CPF / CNPJ + Telefone
+  h += '    <div>';
+  h += '      <label><span>🪪</span> CPF ou CNPJ</label>';
   h += '      <input id="receptionClientCpf" placeholder="000.000.000-00" maxlength="18" oninput="maskCpfInput(this)">';
   h += '    </div>';
 
-  // Telefone / WhatsApp
   h += '    <div>';
   h += '      <label><span>📱</span> Telefone / WhatsApp *</label>';
   h += '      <input id="receptionClientPhone" required placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)">';
   h += '    </div>';
 
-  // E-mail
-  h += '    <div class="full-col">';
-  h += '      <label><span>✉️</span> E-mail para Notificação & Comprovante *</label>';
-  h += '      <input id="receptionClientEmail" type="email" required placeholder="cliente@exemplo.com" autocomplete="email">';
-  h += '    </div>';
-
-  // Canal de Entrada
+  // Canal de Entrada + Tipo de Demanda
   h += '    <div>';
   h += '      <label><span>📡</span> Canal de Recepção</label>';
   h += '      <select id="receptionCanal">';
-  h += '        <option value="WhatsApp Suporte" selected>🟢 WhatsApp Suporte (Online)</option>';
-  h += '        <option value="Telefone">📞 Telefone / Chamada Telefônica</option>';
+  h += '        <option value="WhatsApp Suporte" selected>🟢 WhatsApp Suporte</option>';
+  h += '        <option value="Telefone">📞 Telefone / Voz</option>';
   h += '        <option value="Atendimento Presencial">🏢 Presencial / Balcão</option>';
-  h += '        <option value="Portal Web">🌐 Portal Web / Autoatendimento</option>';
-  h += '        <option value="App Mobile">📱 Aplicativo Mobile</option>';
+  h += '        <option value="Portal Web">🌐 Portal Web</option>';
+  h += '        <option value="App Mobile">📱 App Mobile</option>';
   h += '        <option value="E-mail">✉️ E-mail Suporte</option>';
   h += '      </select>';
   h += '    </div>';
 
-  // Tipo de Demanda
   h += '    <div>';
   h += '      <label><span>🏷️</span> Tipo de Demanda</label>';
   h += '      <select id="receptionServiceType">';
-  h += '        <option value="Correção de Dados">📝 Correção de Dados Cadastrais</option>';
-  h += '        <option value="Reset de Senha">🔑 Reset / Recuperação de Senha</option>';
-  h += '        <option value="Suporte Técnico">🔧 Suporte Técnico Especializado</option>';
-  h += '        <option value="Relato de Bug">🐛 Relato de Bug / Erro de Sistema</option>';
-  h += '        <option value="Instalação / Configuração">⚙️ Instalação / Configuração</option>';
+  h += '        <option value="Correção de Dados">📝 Correção Cadastral</option>';
+  h += '        <option value="Reset de Senha">🔑 Reset de Senha</option>';
+  h += '        <option value="Suporte Técnico">🔧 Suporte Técnico</option>';
+  h += '        <option value="Relato de Bug">🐛 Relato de Bug</option>';
+  h += '        <option value="Instalação / Configuração">⚙️ Configuração</option>';
   h += '        <option value="Melhoria no Sistema">💡 Sugestão / Melhoria</option>';
-  h += '        <option value="Atendimento Geral">🎧 Atendimento Operacional Geral</option>';
+  h += '        <option value="Atendimento Geral">🎧 Atendimento Geral</option>';
   h += '      </select>';
   h += '    </div>';
 
-  // Prioridade
+  // Prioridade + Técnico
   h += '    <div>';
-  h += '      <label><span>🚨</span> Prioridade do Chamado</label>';
+  h += '      <label><span>🚨</span> Prioridade</label>';
   h += '      <select id="receptionPriority">';
-  h += '        <option value="Normal" selected>🟢 Normal (Atendimento Padrão)</option>';
+  h += '        <option value="Normal" selected>🟢 Normal (Padrão)</option>';
   h += '        <option value="Alta">🟡 Alta (Prioritário)</option>';
-  h += '        <option value="Urgente">🔴 Urgente (Crítico / Imediato)</option>';
+  h += '        <option value="Urgente">🔴 Urgente (Crítico)</option>';
   h += '      </select>';
   h += '    </div>';
 
-  // Técnico
   h += '    <div>';
-  h += '      <label><span>👷</span> Despachar Técnico (Opcional)</label>';
+  h += '      <label><span>👷</span> Despachar Técnico</label>';
   h += '      <select id="receptionTecnico">';
-  h += '        <option value="">(Deixar para triagem na fila)</option>';
+  h += '        <option value="">(Triagem na fila)</option>';
   (systemTecnicos || []).filter(t => t.active !== false).forEach(t => {
-    h += '      <option value="' + escapeOsHtml(t.name) + '">👷 ' + escapeOsHtml(t.name) + ' (' + escapeOsHtml(t.specialty || 'Suporte') + ')</option>';
+    h += '      <option value="' + escapeOsHtml(t.name) + '">👷 ' + escapeOsHtml(t.name) + '</option>';
   });
   h += '      </select>';
   h += '    </div>';
@@ -24679,23 +25336,23 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
   // Assunto / Título
   h += '    <div class="full-col">';
   h += '      <label><span>📌</span> Assunto / Título da Demanda *</label>';
-  h += '      <input id="receptionTitle" required placeholder="Ex: Ajuste de CPF cadastrado ou Configuração de Roteador">';
+  h += '      <input id="receptionTitle" required placeholder="Resumo objetivo da solicitação">';
   h += '    </div>';
 
   // Descrição
   h += '    <div class="full-col">';
-  h += '      <label><span>💬</span> Descrição Detalhada da Solicitação *</label>';
-  h += '      <textarea id="receptionDescription" rows="3" required placeholder="Relate com precisão o que o cliente informou para permitir resolução rápida pela equipe técnica..."></textarea>';
+  h += '      <label><span>💬</span> Descrição Detalhada *</label>';
+  h += '      <textarea id="receptionDescription" rows="2" required placeholder="Relate os detalhes informados pelo solicitante..."></textarea>';
   h += '    </div>';
 
   h += '  </div>'; // fim reception-form-grid
 
-  // Barra de ações alinhada
-  h += '  <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:20px; flex-wrap:wrap;">';
-  h += '    <button type="button" onclick="limparFormularioRecepcaoOs()" class="btn-ghost" style="height:44px; padding:0 16px; border-radius:12px; font-weight:700; font-size:12.5px;">🧹 Limpar</button>';
-  h += '    <div style="display:flex; gap:10px; flex-wrap:wrap;">';
-  h += '      <button type="button" onclick="submeterRecepcaoOrdem(true)" style="height:44px; padding:0 18px; border-radius:12px; font-size:12.5px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.14)); border:1.5px solid rgba(245,158,11,0.5); color:#FBBF24; cursor:pointer;">⚡ Receber & Atender Agora</button>';
-  h += '      <button type="submit" id="btnSubmitRecepcaoOs" style="height:44px; padding:0 22px; border-radius:12px; font-size:13px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer; box-shadow:0 6px 20px -2px rgba(16, 185, 129,0.45); display:inline-flex; align-items:center; gap:8px;">📥 Receber e Gerar Protocolo O.S.</button>';
+  // Barra de ações compacta e alinhada
+  h += '  <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:12px; flex-wrap:wrap;">';
+  h += '    <button type="button" onclick="limparFormularioRecepcaoOs()" class="btn-ghost" style="height:34px; padding:0 12px; border-radius:9px; font-weight:700; font-size:11.5px;">🧹 Limpar</button>';
+  h += '    <div style="display:flex; gap:8px; flex-wrap:wrap;">';
+  h += '      <button type="button" onclick="submeterRecepcaoOrdem(true)" style="height:34px; padding:0 13px; border-radius:9px; font-size:11.5px; font-weight:800; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.14)); border:1px solid rgba(245,158,11,0.5); color:#FBBF24; cursor:pointer;">⚡ Receber & Atender</button>';
+  h += '      <button type="submit" id="btnSubmitRecepcaoOs" style="height:34px; padding:0 16px; border-radius:9px; font-size:12px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(16, 185, 129,0.35); display:inline-flex; align-items:center; gap:6px;">📥 Protocolar O.S.</button>';
   h += '    </div>';
   h += '  </div>';
   h += '</form>';
@@ -24703,29 +25360,28 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
 
   // Coluna 2: Fila de Entrada / Chamados Pendentes de Triagem
   h += '<div class="reception-card">';
-  h += '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">';
+  h += '  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">';
   h += '    <div>';
-  h += '      <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">';
-  h += '        <span>⏳ FILA DE ENTRADA</span>';
+  h += '      <div style="display:inline-flex; align-items:center; gap:5px; padding:2px 8px; border-radius:999px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">';
+  h += '        <span>⏳ FILA DE TRIAGEM</span>';
   h += '      </div>';
-  h += '      <h3 style="font-size:17px; font-weight:900; margin:0 0 2px 0; color:var(--text);">Aguardando Atendimento</h3>';
-  h += '      <p style="font-size:12px; color:var(--text-dim); margin:0;">Chamados recém-recebidos pendentes de resolução.</p>';
+  h += '      <h3 style="font-size:15px; font-weight:900; margin:0; color:var(--text);">Aguardando Atendimento</h3>';
   h += '    </div>';
-  h += '    <span class="os-tab-pill-badge" style="font-size:12px; padding:4px 10px;">' + countPend + ' pendente(s)</span>';
+  h += '    <span class="os-tab-pill-badge" style="font-size:11px; padding:3px 9px;">' + countPend + ' pendente(s)</span>';
   h += '  </div>';
 
-  h += '  <div style="margin-bottom:14px;">';
-  h += '    <input id="receptionSearchQueue" onkeyup="filterReceptionQueue()" placeholder="🔍 Filtrar por protocolo, solicitante ou telefone..." style="width:100%; height:38px; border-radius:10px; font-size:12.5px; padding:0 12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
+  h += '  <div style="margin-bottom:10px;">';
+  h += '    <input id="receptionSearchQueue" onkeyup="filterReceptionQueue()" placeholder="🔍 Filtrar fila por protocolo, cliente ou telefone..." style="width:100%; height:34px; border-radius:9px; font-size:12px; padding:0 11px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
   h += '  </div>';
 
   if (countPend === 0) {
-    h += '  <div class="placeholder" style="padding:32px 16px; text-align:center;">';
-    h += '    <div style="font-size:36px; margin-bottom:8px;">🎉</div>';
-    h += '    <h4 style="font-size:15px; font-weight:800; color:var(--text); margin:0 0 4px 0;">Balcão em Dia!</h4>';
-    h += '    <p style="font-size:12px; color:var(--text-dim); margin:0;">Não há chamados pendentes de triagem no momento. Use o formulário ao lado para protocolar um novo chamado.</p>';
+    h += '  <div class="placeholder" style="padding:28px 14px; text-align:center;">';
+    h += '    <div style="font-size:28px; margin-bottom:6px;">🎉</div>';
+    h += '    <h4 style="font-size:14px; font-weight:800; color:var(--text); margin:0 0 3px 0;">Fila em Dia!</h4>';
+    h += '    <p style="font-size:11.5px; color:var(--text-dim); margin:0;">Nenhum chamado pendente de triagem no momento.</p>';
     h += '  </div>';
   } else {
-    h += '  <div id="receptionQueueList" style="max-height:560px; overflow-y:auto; padding-right:4px;">';
+    h += '  <div id="receptionQueueList" style="max-height:430px; overflow-y:auto; padding-right:4px;">';
     pendentes.forEach(o => {
       const cleanPhone = String(o.client_phone || '').replace(/\D/g, '');
       const proto = escapeOsHtml(o.protocol || o.id);
@@ -24737,36 +25393,32 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
       else if (pr.includes('alt')) { pBg = 'rgba(245, 158, 11, 0.2)'; pCol = '#FBBF24'; pLabel = 'Alta'; }
 
       h += '  <div class="reception-queue-item" data-search="' + escapeOsHtml(searchData) + '">';
-      h += '    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap;">';
+      h += '    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; gap:6px; flex-wrap:wrap;">';
       h += '      <div style="display:flex; align-items:center; gap:6px;">';
-      h += '        <span style="font-weight:900; font-size:12px; padding:2px 7px; border-radius:6px; background:rgba(5, 150, 105, 0.14); color:#6EE7B7; border:1px solid rgba(5, 150, 105, 0.3);">#' + proto + '</span>';
-      h += '        <span style="font-size:11px; color:var(--text-dim);">' + (o.created_at ? new Date(o.created_at).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : '') + '</span>';
+      h += '        <span style="font-weight:900; font-size:11px; padding:1px 6px; border-radius:5px; background:rgba(5, 150, 105, 0.14); color:#6EE7B7; border:1px solid rgba(5, 150, 105, 0.3);">#' + proto + '</span>';
+      h += '        <span style="font-size:10.5px; color:var(--text-dim);">' + (o.created_at ? new Date(o.created_at).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) : '') + '</span>';
       h += '      </div>';
-      h += '      <div style="display:flex; align-items:center; gap:6px;">';
-      h += '        <span style="font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:999px; background:' + pBg + '; color:' + pCol + ';">' + pLabel + '</span>';
-      h += '        <span style="font-size:10.5px; font-weight:700; color:var(--text-dim); padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.06);">' + escapeOsHtml(o.canal_atendimento || 'Balcão') + '</span>';
+      h += '      <div style="display:flex; align-items:center; gap:5px;">';
+      h += '        <span style="font-size:10px; font-weight:800; padding:1px 7px; border-radius:999px; background:' + pBg + '; color:' + pCol + ';">' + pLabel + '</span>';
+      h += '        <span style="font-size:10px; font-weight:700; color:var(--text-dim); padding:1px 6px; border-radius:4px; background:rgba(255,255,255,0.05);">' + escapeOsHtml(o.canal_atendimento || 'Balcão') + '</span>';
       h += '      </div>';
       h += '    </div>';
 
-      h += '    <div style="font-size:13.5px; font-weight:800; color:var(--text); margin-bottom:4px;">' + escapeOsHtml(o.title || 'Sem título') + '</div>';
-      h += '    <div style="font-size:12px; color:var(--text-dim); margin-bottom:6px;">';
+      h += '    <div style="font-size:12.5px; font-weight:800; color:var(--text); margin-bottom:2px;">' + escapeOsHtml(o.title || 'Sem título') + '</div>';
+      h += '    <div style="font-size:11px; color:var(--text-dim); margin-bottom:6px;">';
       h += '      <strong>' + escapeOsHtml(o.client_name || 'Cliente') + '</strong>';
-      if (o.client_phone) h += ' • 📞 ' + escapeOsHtml(o.client_phone);
+      if (o.client_phone) h += ' • 📱 ' + escapeOsHtml(o.client_phone);
       h += '    </div>';
 
-      if (o.description) {
-        h += '  <div style="font-size:12px; color:var(--text-dim); line-height:1.4; background:rgba(0,0,0,0.2); padding:8px 10px; border-radius:8px; margin-bottom:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">' + escapeOsHtml(o.description) + '</div>';
-      }
-
-      h += '    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:8px;">';
-      h += '      <button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="padding:4px 10px; border-radius:8px; font-size:11.5px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer;" title="Abrir ficha completa de atendimento">🎧 Atender</button>';
+      h += '    <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">';
+      h += '      <button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 9px; border-radius:6px; font-size:10.5px; font-weight:800; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer;">🎧 Atender</button>';
       if (cleanPhone) {
         const msg = encodeURIComponent('Olá ' + (o.client_name || '') + ', tudo bem? Aqui é do Suporte do Nexus Hub sobre o seu protocolo #' + proto + '.');
-        h += '    <a href="https://wa.me/55' + cleanPhone + '?text=' + msg + '" target="_blank" style="padding:4px 9px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(5, 150, 105, 0.15); color:#34D399; border:1px solid rgba(5, 150, 105, 0.3); text-decoration:none;" title="Conversar no WhatsApp">💬 WhatsApp</a>';
+        h += '    <a href="https://wa.me/55' + cleanPhone + '?text=' + msg + '" target="_blank" style="height:26px; padding:0 8px; border-radius:6px; font-size:10.5px; font-weight:700; background:rgba(5, 150, 105, 0.14); color:#34D399; border:1px solid rgba(5, 150, 105, 0.3); text-decoration:none; display:inline-flex; align-items:center;">💬 WhatsApp</a>';
       }
-      h += '      <button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="padding:4px 9px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); cursor:pointer;" title="Assumir este chamado para você">⚡ Assumir</button>';
-      h += '      <button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:4px 9px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(255,255,255,0.06); color:var(--text); border:1px solid var(--card-border); cursor:pointer;" title="Imprimir Comprovante">🖨️</button>';
-      h += '      <button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="padding:4px 9px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(16, 185, 129, 0.12); color:#10B981; border:1px solid rgba(16, 185, 129, 0.3); cursor:pointer; margin-left:auto;" title="Dar baixa direta no chamado">✓ Baixa</button>';
+      h += '      <button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 8px; border-radius:6px; font-size:10.5px; font-weight:700; background:rgba(245,158,11,0.14); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); cursor:pointer;">⚡ Assumir</button>';
+      h += '      <button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 7px; border-radius:6px; font-size:10.5px; font-weight:700; background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--card-border); cursor:pointer;">🖨️</button>';
+      h += '      <button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="height:26px; padding:0 8px; border-radius:6px; font-size:10.5px; font-weight:700; background:rgba(16, 185, 129, 0.12); color:#10B981; border:1px solid rgba(16, 185, 129, 0.3); cursor:pointer; margin-left:auto;">✓ Baixa</button>';
       h += '    </div>';
 
       h += '  </div>'; // fim reception-queue-item
@@ -24782,34 +25434,34 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
 function renderEquipeTecnicaOs() {
   const tecnicos = systemTecnicos || [];
   let h = '';
-  h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:20px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,0.5);">';
-  h += '  <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">';
+  h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:14px 16px;">';
+  h += '  <div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">';
   h += '    <div>';
-  h += '      <h3 style="font-size:17px; font-weight:900; margin:0 0 4px 0; color:var(--text);">👷 Equipe Técnica & Especialistas de Suporte</h3>';
-  h += '      <p style="font-size:12.5px; color:var(--text-dim); margin:0;">Profissionais cadastrados para atribuição e atendimento de chamados.</p>';
+  h += '      <h3 style="font-size:14px; font-weight:900; margin:0 0 2px 0; color:var(--text);">👷 Equipe Técnica & Especialistas Credenciados</h3>';
+  h += '      <p style="font-size:11.5px; color:var(--text-dim); margin:0;">Cadastros compactos e alinhados da equipe técnica de suporte.</p>';
   h += '    </div>';
-  h += '    <button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:12.5px; font-weight:800; border:none; cursor:pointer;">➕ Cadastrar Novo Técnico</button>';
+  h += '    <button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 14px; border-radius:9px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:11.5px; font-weight:800; border:none; cursor:pointer;">➕ Novo Técnico</button>';
   h += '  </div>';
 
   if (tecnicos.length === 0) {
     h += '  <div class="placeholder"><div class="big">👷</div><h3>Nenhum técnico cadastrado</h3><p>Cadastre técnicos para atribuir chamados de suporte.</p></div>';
   } else {
-    h += '  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px;">';
+    h += '  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:10px;">';
     tecnicos.forEach(t => {
       const active = t.active !== false;
-      h += '    <div style="border:1px solid var(--card-border); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02); display:flex; flex-direction:column; justify-content:space-between;">';
+      h += '    <div style="border:1px solid var(--card-border); border-radius:12px; padding:11px 13px; background:rgba(255,255,255,0.02); display:flex; flex-direction:column; justify-content:space-between; gap:8px;">';
       h += '      <div>';
-      h += '        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
-      h += '          <span style="font-weight:900; font-size:14px; color:var(--text);">👷 ' + escapeOsHtml(t.name) + '</span>';
-      h += '          <span style="font-size:11px; font-weight:800; padding:2px 8px; border-radius:999px; background:' + (active ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)') + '; color:' + (active ? '#10B981' : '#F87171') + ';">' + (active ? 'Ativo' : 'Inativo') + '</span>';
+      h += '        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; gap:6px;">';
+      h += '          <span style="font-weight:800; font-size:12.5px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">👷 ' + escapeOsHtml(t.name) + '</span>';
+      h += '          <span style="font-size:10px; font-weight:800; padding:1px 7px; border-radius:999px; background:' + (active ? 'rgba(16, 185, 129, 0.14)' : 'rgba(239, 68, 68, 0.14)') + '; color:' + (active ? '#10B981' : '#F87171') + ';">' + (active ? 'Ativo' : 'Inativo') + '</span>';
       h += '        </div>';
-      h += '        <div style="font-size:12px; color:var(--text-dim); margin-bottom:4px;"><strong>Especialidade:</strong> ' + escapeOsHtml(t.specialty || 'Suporte Geral') + '</div>';
-      h += '        <div style="font-size:12px; color:var(--text-dim); margin-bottom:4px;"><strong>E-mail:</strong> ' + escapeOsHtml(t.email || 'Não informado') + '</div>';
-      h += '        <div style="font-size:12px; color:var(--text-dim);"><strong>Telefone:</strong> ' + escapeOsHtml(t.phone || 'Não informado') + '</div>';
+      h += '        <div style="font-size:11px; color:#34D399; font-weight:700; margin-bottom:2px;">🔧 ' + escapeOsHtml(t.specialty || 'Suporte Geral') + '</div>';
+      h += '        <div style="font-size:11px; color:var(--text-dim); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">✉️ ' + escapeOsHtml(t.email || 'Não informado') + '</div>';
+      h += '        <div style="font-size:11px; color:var(--text-dim);">📱 ' + escapeOsHtml(t.phone || 'Não informado') + '</div>';
       h += '      </div>';
-      h += '      <div style="margin-top:12px; display:flex; gap:8px;">';
-      h += '        <button type="button" onclick="openGerenciarTecnicosModal()" class="btn-ghost" style="flex:1; height:34px; border-radius:8px; font-size:11.5px; font-weight:700;">⚙️ Editar</button>';
-      h += '        <button type="button" onclick="excluirTecnico(&quot;' + escapeOsHtml(t.id) + '&quot;)" style="flex:1; height:34px; border-radius:8px; font-size:11.5px; font-weight:700; background:rgba(239, 68, 68, 0.12); color:#F87171; border:1px solid rgba(239, 68, 68, 0.3); cursor:pointer;">🗑️ Excluir</button>';
+      h += '      <div style="display:flex; gap:6px; border-top:1px solid rgba(255,255,255,0.05); padding-top:7px;">';
+      h += '        <button type="button" onclick="openGerenciarTecnicosModal()" class="btn-ghost" style="flex:1; height:28px; border-radius:7px; font-size:11px; font-weight:700; padding:0 8px;">✏️ Editar</button>';
+      h += '        <button type="button" onclick="excluirTecnico(&quot;' + escapeOsHtml(t.id) + '&quot;)" style="height:28px; padding:0 10px; border-radius:7px; font-size:11px; font-weight:700; background:rgba(239, 68, 68, 0.12); color:#F87171; border:1px solid rgba(239, 68, 68, 0.28); cursor:pointer;">🗑️</button>';
       h += '      </div>';
       h += '    </div>';
     });
@@ -24827,85 +25479,75 @@ function renderEquipeTecnicaOs() {
   const countCanceladas = ordens.filter(o => (o.status||'').toLowerCase().includes('canc') || (o.status||'').toLowerCase().includes('recus')).length;
   const currentTab = window.currentOsTabFilter || 'receber';
 
-  let tecOpts = '<option value="">Todos os Técnicos</option><option value="__none__">(Sem técnico atribuído)</option>';
+  if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
+
+  let tecOpts = '<option value="">Técnico: Todos</option><option value="__none__">(Sem técnico)</option>';
   (systemTecnicos || []).filter(t => t.active !== false).forEach(t => {
     tecOpts += '<option value="' + escapeOsHtml(t.name.toLowerCase()) + '">👷 ' + escapeOsHtml(t.name) + '</option>';
   });
 
   let h = '<div id="ordensPage">';
   
-  h += '<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:22px;">';
+  h += '<div class="page-head admin-page-head">';
   h += '<div>';
-  h += '<h1 style="font-size:23px; font-weight:900; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:10px; color:var(--text);">';
-  h += '<span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:linear-gradient(135deg, rgba(5, 150, 105,0.25), rgba(4, 120, 87,0.12)); border:1px solid rgba(96,165,250,0.35);">📋</span>';
-  h += 'Central de Ordens de Serviço & Suporte Técnico</h1>';
-  h += '<p style="font-size:13.5px; color:var(--text-dim); margin:5px 0 0 0; font-weight:500;">Recepção, triagem, despacho técnico e sincronização direta no Microsoft SQL Server.</p>';
+  h += '<h1>';
+  h += '<span class="admin-head-icon">📋</span>';
+  h += 'Central de Ordens de Serviço & Recepção</h1>';
+  h += '<p>Recepção compacta, triagem técnica, credenciamento de especialistas e sincronização SQL Server.</p>';
   h += '</div>';
 
-  h += '<div class="head-actions" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">';
-  h += '<button onclick="setOsStatusTab(&quot;receber&quot;)" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:13px; font-weight:800; border:none; cursor:pointer; box-shadow:0 8px 24px -4px rgba(5, 150, 105,0.5); transition:all 0.25s ease;">';
-  h += '<span>📥 Receber Nova O.S.</span></button>';
+  h += '<div class="admin-head-actions">';
+  h += '<button onclick="setOsStatusTab(&quot;receber&quot;)" style="display:inline-flex; align-items:center; gap:6px; padding:0 14px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(5, 150, 105,0.38);">';
+  h += '<span>📥 Receber O.S.</span></button>';
   
-  h += '<button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:8px; height:42px; padding:0 18px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.12)); border:1.5px solid rgba(245,158,11,0.5); color:#FDE68A; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 8px 24px -4px rgba(245,158,11,0.25);">';
-  h += '<span>👷 Técnicos & Especialistas</span>';
-  h += '<span id="tecnicosBadgeCount" style="padding:2px 7px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:11px; font-weight:900;">' + ((systemTecnicos || []).filter(t => t.active !== false).length) + '</span>';
+  h += '<button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:6px; padding:0 13px; background:linear-gradient(135deg, rgba(245,158,11,0.20), rgba(217,119,6,0.12)); border:1px solid rgba(245,158,11,0.45); color:#FDE68A; font-weight:800; cursor:pointer;">';
+  h += '<span>👷 Técnicos</span>';
+  h += '<span id="tecnicosBadgeCount" style="padding:1px 6px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:10px; font-weight:900;">' + ((systemTecnicos || []).filter(t => t.active !== false).length) + '</span>';
   h += '</button>';
 
-  h += '<button onclick="imprimirFilaOrdens()" style="display:inline-flex; align-items:center; gap:6px; height:42px; padding:0 16px; border-radius:14px; background:rgba(16, 185, 129,0.12); border:1.5px solid rgba(16, 185, 129,0.35); color:#10B981; font-size:13px; font-weight:800; cursor:pointer;" title="Imprimir Relatório da Fila de O.S.">';
-  h += '<span>🖨️ Imprimir Fila O.S.</span></button>';
+  h += '<button onclick="imprimirFilaOrdens()" style="display:inline-flex; align-items:center; gap:5px; padding:0 12px; background:rgba(16, 185, 129,0.12); border:1px solid rgba(16, 185, 129,0.32); color:#10B981; font-weight:800; cursor:pointer;" title="Imprimir Relatório da Fila de O.S.">';
+  h += '<span>🖨️ Imprimir</span></button>';
 
-  h += '<button class="btn-ghost" onclick="syncOrdensWithServer().then(() => syncTecnicosWithServer()).then(render)" style="display:inline-flex; align-items:center; gap:6px; font-weight:700; height:42px; border-radius:14px;">🔄 Sincronizar Banco SQL</button>';
+  h += '<button class="btn-ghost" onclick="syncOrdensWithServer().then(() => syncTecnicosWithServer()).then(render)" style="display:inline-flex; align-items:center; gap:5px; font-weight:700;">🔄 Sincronizar</button>';
   h += '</div></div>';
 
-  h += '<div class="kpis" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:22px;">';
+  h += '<div class="kpis admin-kpis-row">';
   
-  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;todas&quot;)">';
-  h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
-  h += '<span style="font-size:13px; font-weight:700; color:var(--text-dim); letter-spacing:0.02em;">Total de Chamados</span>';
-  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(5, 150, 105,0.25), rgba(4, 120, 87,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">📋</div>';
-  h += '</div>';
-  h += '<div class="val" style="font-size:28px; font-weight:900; color:var(--text); margin-bottom:2px;">' + countTotal + '</div>';
-  h += '<div class="sub" style="font-size:12px; color:#34D399; font-weight:600; margin-top:4px;">Todas as solicitações</div>';
+  h += '<div class="kpi" style="cursor:pointer;" onclick="setOsStatusTab(&quot;todas&quot;)">';
+  h += '<div class="row1"><span>Total de Chamados</span><div class="ic" style="background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.32); color:#34D399;">📋</div></div>';
+  h += '<div class="val" style="color:var(--text);">' + countTotal + '</div>';
+  h += '<div class="sub" style="color:#34D399;">Todas as solicitações</div>';
   h += '</div>';
 
-  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid ' + (countPendentes > 0 ? 'rgba(245,158,11,0.5)' : 'rgba(255,255,255,0.13)') + '; box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;receber&quot;)">';
-  h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
-  h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Pendentes (Balcão)</span>';
-  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.15)); border:1.5px solid rgba(251,191,36,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⏳</div>';
-  h += '</div>';
-  h += '<div class="val" style="font-size:28px; font-weight:900; color:#FBBF24; margin-bottom:2px;">' + countPendentes + '</div>';
-  h += '<div class="sub" style="font-size:12px; color:#FDE68A; font-weight:600; margin-top:4px;">Aguardando atendimento</div>';
+  h += '<div class="kpi" style="cursor:pointer;" onclick="setOsStatusTab(&quot;receber&quot;)">';
+  h += '<div class="row1"><span>Pendentes (Fila)</span><div class="ic" style="background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24;">⏳</div></div>';
+  h += '<div class="val" style="color:#FBBF24;">' + countPendentes + '</div>';
+  h += '<div class="sub" style="color:#FDE68A;">Aguardando triagem</div>';
   h += '</div>';
 
-  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;andamento&quot;)">';
-  h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
-  h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Em Andamento</span>';
-  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(5, 150, 105,0.25), rgba(4, 120, 87,0.15)); border:1.5px solid rgba(96,165,250,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">⚙️</div>';
-  h += '</div>';
-  h += '<div class="val" style="font-size:28px; font-weight:900; color:#34D399; margin-bottom:2px;">' + countAndamento + '</div>';
-  h += '<div class="sub" style="font-size:12px; color:#A7F3D0; font-weight:600; margin-top:4px;">Sendo atendidos</div>';
+  h += '<div class="kpi" style="cursor:pointer;" onclick="setOsStatusTab(&quot;andamento&quot;)">';
+  h += '<div class="row1"><span>Em Atendimento</span><div class="ic" style="background:rgba(56, 189, 248,0.14); border:1px solid rgba(56, 189, 248,0.32); color:#38BDF8;">⚙️</div></div>';
+  h += '<div class="val" style="color:#38BDF8;">' + countAndamento + '</div>';
+  h += '<div class="sub" style="color:#7DD3FC;">Com equipe técnica</div>';
   h += '</div>';
 
-  h += '<div class="kpi" style="position:relative; overflow:hidden; padding:20px 22px; border-radius:20px; background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(15,23,42,0.68) 50%, rgba(10,15,29,0.80) 100%); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.13); box-shadow:0 16px 40px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.22); cursor:pointer;" onclick="setOsStatusTab(&quot;concluido&quot;)">';
-  h += '<div class="row1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
-  h += '<span style="font-size:13px; font-weight:700; color:#94A3B8; letter-spacing:0.02em;">Concluídos</span>';
-  h += '<div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, rgba(5, 150, 105,0.25), rgba(5, 150, 105,0.15)); border:1.5px solid rgba(16, 185, 129,0.4); display:flex; align-items:center; justify-content:center; font-size:16px;">✅</div>';
-  h += '</div>';
-  h += '<div class="val" style="font-size:28px; font-weight:900; color:#059669; margin-bottom:2px;">' + countConcluidas + '</div>';
-  h += '<div class="sub" style="font-size:12px; color:#A7F3D0; font-weight:600; margin-top:4px;">Finalizados com sucesso</div>';
+  h += '<div class="kpi" style="cursor:pointer;" onclick="setOsStatusTab(&quot;concluido&quot;)">';
+  h += '<div class="row1"><span>Concluídos</span><div class="ic" style="background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.32); color:#10B981;">✅</div></div>';
+  h += '<div class="val" style="color:#10B981;">' + countConcluidas + '</div>';
+  h += '<div class="sub" style="color:#A7F3D0;">Finalizados</div>';
   h += '</div>';
 
   h += '</div>';
 
-  // Barra de Abas Superiores das Ordens de Serviço
-  h += '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; align-items:center;">';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='receber'?'active':'') + '" data-tab="receber" onclick="setOsStatusTab(&quot;receber&quot;)" style="padding:9px 18px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='receber'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='receber'?'linear-gradient(135deg, #10B981, #059669)':'rgba(255,255,255,0.05)') + '; color:' + (currentTab==='receber'?'#FFFFFF':'var(--text)') + '; display:inline-flex; align-items:center; gap:6px;"><span>📥 Receber O.S. (Balcão de Entrada)</span>' + (countPendentes > 0 ? '<span class="os-tab-pill-badge">' + countPendentes + '</span>' : '') + '</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="padding:9px 18px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='todas'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='todas'?'linear-gradient(135deg, #10B981, #047857)':'rgba(255,255,255,0.05)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">Todas (' + countTotal + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="padding:9px 18px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.4); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.12)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">⏳ Pendentes (' + countPendentes + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="padding:9px 18px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.4); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #10B981, #047857)':'rgba(5, 150, 105,0.12)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#34D399') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="padding:9px 18px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.4); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #059669, #059669)':'rgba(5, 150, 105,0.12)') + '; color:' + (currentTab==='concluido'?'#060B18':'#059669') + ';">✅ Concluídas (' + countConcluidas + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='cancelado'?'active':'') + '" data-tab="cancelado" onclick="setOsStatusTab(&quot;cancelado&quot;)" style="padding:9px 18px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.4); background:' + (currentTab==='cancelado'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.12)') + '; color:' + (currentTab==='cancelado'?'#FFFFFF':'#F87171') + ';">❌ Canceladas (' + countCanceladas + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='tecnicos'?'active':'') + '" data-tab="tecnicos" onclick="setOsStatusTab(&quot;tecnicos&quot;)" style="padding:9px 18px; border-radius:12px; font-size:12.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.4); background:' + (currentTab==='tecnicos'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.12)') + '; color:' + (currentTab==='tecnicos'?'#060B18':'#FDE68A') + ';">👷 Equipe Técnica (' + ((systemTecnicos || []).filter(t => t.active !== false).length) + ')</button>';
+  // Barra de Abas Superiores Compacta e Alinhada
+  h += '<div class="admin-toolbar-panel" style="padding:7px 10px; gap:6px; justify-content:flex-start;">';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='receber'?'active':'') + '" data-tab="receber" onclick="setOsStatusTab(&quot;receber&quot;)" style="height:32px; padding:0 13px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='receber'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='receber'?'linear-gradient(135deg, #10B981, #059669)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='receber'?'#FFFFFF':'var(--text)') + '; display:inline-flex; align-items:center; gap:6px;"><span>📥 Balcão de Recepção</span>' + (countPendentes > 0 ? '<span class="os-tab-pill-badge">' + countPendentes + '</span>' : '') + '</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='todas'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='todas'?'linear-gradient(135deg, #10B981, #047857)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">Todas (' + countTotal + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">⏳ Pendentes (' + countPendentes + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #10B981, #047857)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#34D399') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #059669, #059669)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='concluido'?'#060B18':'#059669') + ';">✅ Concluídas (' + countConcluidas + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='cancelado'?'active':'') + '" data-tab="cancelado" onclick="setOsStatusTab(&quot;cancelado&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.35); background:' + (currentTab==='cancelado'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.10)') + '; color:' + (currentTab==='cancelado'?'#FFFFFF':'#F87171') + ';">❌ Canceladas (' + countCanceladas + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='tecnicos'?'active':'') + '" data-tab="tecnicos" onclick="setOsStatusTab(&quot;tecnicos&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='tecnicos'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='tecnicos'?'#060B18':'#FDE68A') + '; margin-left:auto;">👷 Equipe Técnica (' + ((systemTecnicos || []).filter(t => t.active !== false).length) + ')</button>';
   h += '</div>';
 
   if (currentTab === 'receber') {
@@ -24913,38 +25555,37 @@ function renderEquipeTecnicaOs() {
   } else if (currentTab === 'tecnicos') {
     h += renderEquipeTecnicaOs();
   } else {
-    // Tabela completa com filtros horizontais alinhados
     let filteredList = ordens;
     if (currentTab === 'pendente') filteredList = ordens.filter(o => (o.status||'').toLowerCase() === 'pendente');
     else if (currentTab === 'andamento') filteredList = ordens.filter(o => (o.status||'').toLowerCase().includes('anda'));
     else if (currentTab === 'concluido') filteredList = ordens.filter(o => (o.status||'').toLowerCase().includes('concl') || (o.status||'').toLowerCase().includes('final'));
     else if (currentTab === 'cancelado') filteredList = ordens.filter(o => (o.status||'').toLowerCase().includes('canc') || (o.status||'').toLowerCase().includes('recus'));
 
-    h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:20px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,0.5);">';
+    h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:14px 16px;">';
     
-    h += '<div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">';
-    h += '<h3 style="font-size:16px; font-weight:800; margin:0;">Fila de Solicitações</h3>';
-    h += '<span class="tag" style="font-weight:700;">' + filteredList.length + ' de ' + countTotal + ' O.S. filtrada(s)</span>';
+    h += '<div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">';
+    h += '<h3 style="font-size:13.5px; font-weight:800; margin:0;">📋 Fila Geral de Solicitações</h3>';
+    h += '<span class="tag" style="font-weight:800; font-size:10.5px; padding:3px 10px;">' + filteredList.length + ' de ' + countTotal + ' O.S.</span>';
     h += '</div>';
 
-    h += '<div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; align-items:center;">';
-    h += '<div style="position:relative; flex:1.6; min-width:220px;">';
-    h += '<input id="osSearchInput" placeholder="🔍 Buscar por protocolo, solicitante, e-mail, telefone, CPF ou assunto..." onkeyup="filterOrdensTable()" style="width:100%; height:42px; font-size:13px; padding:0 14px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
+    h += '<div class="filters" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center;">';
+    h += '<div style="position:relative; flex:1.6; min-width:210px;">';
+    h += '<input id="osSearchInput" placeholder="🔍 Filtrar por protocolo, solicitante, CPF ou assunto..." onkeyup="filterOrdensTable()" style="width:100%; height:34px; font-size:12px; padding:0 11px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
     h += '</div>';
     
-    h += '<select id="osFilterStatus" onchange="filterOrdensTable()" style="flex:1; min-width:130px; height:42px; padding:0 12px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:12.5px; font-weight:700;">';
+    h += '<select id="osFilterStatus" onchange="filterOrdensTable()" style="flex:1; min-width:125px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
     h += '<option value="">Status: Todos</option><option value="pendente"' + (currentTab==='pendente'?' selected':'') + '>⏳ Pendentes</option><option value="andamento"' + (currentTab==='andamento'?' selected':'') + '>⚙️ Em Andamento</option><option value="concl"' + (currentTab==='concluido'?' selected':'') + '>✅ Concluídos</option><option value="canc"' + (currentTab==='cancelado'?' selected':'') + '>❌ Cancelados</option>';
     h += '</select>';
 
-    h += '<select id="osFilterTecnico" onchange="filterOrdensTable()" style="flex:1.2; min-width:150px; height:42px; padding:0 12px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:12.5px; font-weight:700;">';
+    h += '<select id="osFilterTecnico" onchange="filterOrdensTable()" style="flex:1.1; min-width:140px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
     h += tecOpts;
     h += '</select>';
 
-    h += '<select id="osFilterType" onchange="filterOrdensTable()" style="flex:1.1; min-width:140px; height:42px; padding:0 12px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:12.5px; font-weight:700;">';
+    h += '<select id="osFilterType" onchange="filterOrdensTable()" style="flex:1; min-width:130px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
     h += '<option value="">Tipo: Todos</option><option value="melhoria">Melhoria</option><option value="senha">Reset de Senha</option><option value="correção">Correção</option><option value="bug">Relato de Bug</option><option value="geral">Atendimento</option>';
     h += '</select>';
 
-    h += '<select id="osFilterPriority" onchange="filterOrdensTable()" style="flex:1; min-width:120px; height:42px; padding:0 12px; border-radius:12px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:12.5px; font-weight:700;">';
+    h += '<select id="osFilterPriority" onchange="filterOrdensTable()" style="flex:1; min-width:115px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
     h += '<option value="">Prioridade: Todas</option><option value="normal">🟢 Normal</option><option value="alta">🟡 Alta</option><option value="urgente">🔴 Urgente</option>';
     h += '</select>';
     h += '</div>';
@@ -25534,11 +26175,11 @@ function renderListaTecnicosModal() {
   const list = systemTecnicos || [];
   if (list.length === 0) {
     wrap.innerHTML = \`
-      <div style="text-align:center; padding:30px 14px; color:var(--text-dim); background:rgba(255,255,255,0.02); border-radius:16px; border:1px dashed var(--card-border);">
-        <div style="font-size:32px; margin-bottom:6px;">👷</div>
-        <h4 style="font-size:15px; color:var(--text); margin:0 0 4px 0; font-weight:800;">Nenhum técnico cadastrado</h4>
-        <p style="font-size:12px; margin:0 0 12px 0;">Cadastre os membros da equipe de suporte técnico para distribuir e atender as Ordens de Serviço.</p>
-        <button type="button" onclick="toggleFormTecnico(true)" style="padding:7px 16px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-weight:900; font-size:12px; border:none; cursor:pointer;">
+      <div style="text-align:center; padding:20px 12px; color:var(--text-dim); background:rgba(255,255,255,0.02); border-radius:12px; border:1px dashed var(--card-border);">
+        <div style="font-size:24px; margin-bottom:4px;">👷</div>
+        <h4 style="font-size:13.5px; color:var(--text); margin:0 0 3px 0; font-weight:800;">Nenhum técnico cadastrado</h4>
+        <p style="font-size:11.5px; margin:0 0 10px 0;">Cadastre os membros da equipe técnica para distribuir Ordens de Serviço.</p>
+        <button type="button" onclick="toggleFormTecnico(true)" style="height:30px; padding:0 14px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-weight:900; font-size:11.5px; border:none; cursor:pointer;">
           ➕ Cadastrar Primeiro Técnico
         </button>
       </div>
@@ -25546,36 +26187,36 @@ function renderListaTecnicosModal() {
     return;
   }
 
-  let html = '<div style="display:flex; flex-direction:column; gap:8px;">';
+  let html = '<div style="display:flex; flex-direction:column; gap:6px;">';
   list.forEach(t => {
     const inits = (t.name || 'TC').trim().split(/\\s+/).map(p => p[0]).slice(0,2).join('').toUpperCase();
     const cleanPhone = (t.phone || '').replace(/\\D/g, '');
     html += \`
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); gap:12px; flex-wrap:wrap;">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, rgba(245,158,11,0.25), rgba(217,119,6,0.12)); border:1.5px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; color:#FBBF24; font-weight:900; font-size:13px; flex-shrink:0;">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 11px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); gap:10px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:9px; min-width:0;">
+          <div style="width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(217,119,6,0.10)); border:1px solid rgba(245,158,11,0.38); display:flex; align-items:center; justify-content:center; color:#FBBF24; font-weight:900; font-size:11.5px; flex-shrink:0;">
             \${inits}
           </div>
-          <div>
-            <div style="font-size:14px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px;">
-              <span>\${escapeOsHtml(t.name)}</span>
-              <span style="font-size:10px; font-weight:800; padding:2px 7px; border-radius:999px; \${t.active !== false ? 'background:rgba(5, 150, 105,0.15); color:#059669; border:1px solid rgba(5, 150, 105,0.3);' : 'background:rgba(239,68,68,0.15); color:#F87171; border:1px solid rgba(239,68,68,0.3);'}">
+          <div style="min-width:0;">
+            <div style="font-size:12.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px;">
+              <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${escapeOsHtml(t.name)}</span>
+              <span style="font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:999px; \${t.active !== false ? 'background:rgba(5, 150, 105,0.15); color:#10B981; border:1px solid rgba(5, 150, 105,0.3);' : 'background:rgba(239,68,68,0.15); color:#F87171; border:1px solid rgba(239,68,68,0.3);'}">
                 \${t.active !== false ? '🟢 Ativo' : '⚪ Inativo'}
               </span>
             </div>
-            <div style="font-size:11.5px; color:var(--text-dim); margin-top:2px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <div style="font-size:11px; color:var(--text-dim); margin-top:1px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
               <span style="color:#34D399; font-weight:700;">🔧 \${escapeOsHtml(t.specialty || 'Suporte')}</span>
               <span>✉️ \${escapeOsHtml(t.email)}</span>
-              \${t.phone ? \`<a href="https://wa.me/55\${cleanPhone}" target="_blank" style="color:#059669; text-decoration:none; font-weight:700;">📱 \${escapeOsHtml(t.phone)}</a>\` : ''}
+              \${t.phone ? \`<a href="https://wa.me/55\${cleanPhone}" target="_blank" style="color:#10B981; text-decoration:none; font-weight:700;">📱 \${escapeOsHtml(t.phone)}</a>\` : ''}
             </div>
           </div>
         </div>
 
-        <div style="display:flex; gap:6px; margin-left:auto;">
-          <button type="button" onclick="editarTecnico('\${t.id}')" style="padding:6px 12px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700; cursor:pointer;" title="Editar dados do técnico">
+        <div style="display:flex; gap:5px; margin-left:auto;">
+          <button type="button" onclick="editarTecnico('\${t.id}')" style="height:28px; padding:0 10px; border-radius:7px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:11px; font-weight:700; cursor:pointer;" title="Editar dados do técnico">
             ✏️ Editar
           </button>
-          <button type="button" onclick="excluirTecnico('\${t.id}')" style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); color:#F87171; font-size:11.5px; cursor:pointer;" title="Excluir técnico">
+          <button type="button" onclick="excluirTecnico('\${t.id}')" style="height:28px; padding:0 8px; border-radius:7px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); color:#F87171; font-size:11px; cursor:pointer;" title="Excluir técnico">
             🗑️
           </button>
         </div>
@@ -28485,7 +29126,7 @@ function attachPageEvents(){
 
 function navigate(page){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
-  const adminPages = ['usuarios', 'ordens', 'logs'];
+  const adminPages = ['usuarios', 'ordens', 'pagamentos', 'logs'];
   const commonPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 
   if (isAdmin) {
@@ -28544,7 +29185,7 @@ function navigate(page){
 }
 
 window.addEventListener('hashchange', ()=>{
-  const validPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'funcoes', 'usuarios', 'logs', 'ordens', 'config'];
+  const validPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'funcoes', 'usuarios', 'logs', 'ordens', 'pagamentos', 'config'];
   const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
   if(hashPage && validPages.includes(hashPage) && hashPage !== currentPage){
     navigate(hashPage);
@@ -29154,7 +29795,7 @@ window.applyPostLoginBg = function(theme) {
 
       if (currentUser.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
-        const validAdminTargets = ['usuarios', 'ordens', 'logs'];
+        const validAdminTargets = ['usuarios', 'ordens', 'pagamentos', 'logs'];
         if (validAdminTargets.includes(pageTarget)) {
           currentPage = pageTarget;
         } else {
@@ -29320,7 +29961,7 @@ window.applyPostLoginBg = function(theme) {
   const pageTarget = hashPage || savedPage || currentPage;
 
   if (currentUser.role === 'Administrador') {
-    const validAdminTargets = ['usuarios', 'ordens', 'logs'];
+    const validAdminTargets = ['usuarios', 'ordens', 'pagamentos', 'logs'];
     if (validAdminTargets.includes(pageTarget)) {
       currentPage = pageTarget;
     } else {
@@ -32344,7 +32985,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota POST para o Administrador Confirmar Pagamento Real e Desbloquear Assinatura do Usuário
+  // Rota POST para o Administrador Confirmar / Reconhecer Pagamento Não Reconhecido e Desbloquear Assinatura do Usuário
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/confirm-payment') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -32353,7 +32994,12 @@ const server = http.createServer(async (req, res) => {
         const parsed = JSON.parse(body);
         const adminEmail = (parsed.admin_email || '').toLowerCase().trim();
         const targetEmail = (parsed.target_email || '').toLowerCase().trim();
-        const plan = (parsed.plan || 'mensal').toLowerCase().trim() === 'anual' ? 'anual' : 'mensal';
+        const rawPlan = (parsed.plan || 'mensal').toLowerCase().trim();
+        const plan = (rawPlan === 'anual' || rawPlan === 'vitalicio') ? rawPlan : 'mensal';
+        const rawMethod = (parsed.method || '').toLowerCase().trim();
+        const receiptNote = String(parsed.receipt_code || '').trim();
+        const osId = parsed.os_id || null;
+        const concludeOs = parsed.conclude_os !== false;
 
         if (!adminEmail || !targetEmail) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -32366,7 +33012,7 @@ const server = http.createServer(async (req, res) => {
 
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Somente administradores podem confirmar pagamentos.' }));
+          return res.end(JSON.stringify({ success: false, error: 'Somente administradores podem liberar pagamentos não reconhecidos.' }));
         }
 
         let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === targetEmail);
@@ -32382,18 +33028,26 @@ const server = http.createServer(async (req, res) => {
 
         if (!targetUser) {
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado.' }));
+          return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado para o e-mail informado.' }));
         }
 
         const now = new Date();
-        const days = plan === 'anual' ? 365 : 30;
-        const expiresDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+        const days = plan === 'vitalicio' ? 36500 : (plan === 'anual' ? 365 : 30);
+        const expiresDate = plan === 'vitalicio' ? new Date('2099-12-31T23:59:59Z') : new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
         const expiresIso = getBrasiliaIsoString(expiresDate);
         const expiresSql = getBrasiliaSqlString(expiresDate);
-        const txId = targetUser.subscription_payment_id && String(targetUser.subscription_payment_id).startsWith('NEXUS-SUB-')
+        const validMethods = ['pix', 'credit_card', 'debit_card', 'boleto'];
+        const method = validMethods.includes(rawMethod) ? rawMethod : (targetUser.subscription_method || 'pix');
+        const methodLabels = {
+          pix: 'Pix (SPI / BACEN)',
+          credit_card: 'Cartão de Crédito',
+          debit_card: 'Cartão de Débito',
+          boleto: 'Boleto Bancário FEBRABAN'
+        };
+        const suffix = receiptNote ? ('-' + receiptNote.replace(/[^a-zA-Z0-9]/g, '').slice(0, 12).toUpperCase()) : '';
+        const txId = (targetUser.subscription_payment_id && String(targetUser.subscription_payment_id).startsWith('NEXUS-SUB-') && !receiptNote)
           ? targetUser.subscription_payment_id
-          : ('PAGO-CONF-' + Date.now());
-        const method = targetUser.subscription_method || 'pix_confirmado';
+          : ('LIB-ADMIN-' + method.toUpperCase() + '-' + Date.now() + suffix);
 
         targetUser.subscription_status = 'active';
         targetUser.subscription_plan = plan;
@@ -32414,10 +33068,47 @@ const server = http.createServer(async (req, res) => {
                WHERE LOWER(email) = LOWER($5)`,
               [plan, expiresSql, method, txId, targetEmail]
             );
-            console.log(`✅ [PAGAMENTO CONFIRMADO] Assinatura ${plan.toUpperCase()} liberada por ${adminEmail} para ${targetEmail} até ${expiresSql}`);
+            console.log(`✅ [PAGAMENTO LIBERADO PELO ADMIN] Assinatura ${plan.toUpperCase()} (${method}) liberada por ${adminEmail} para ${targetEmail} até ${expiresSql}`);
           } catch(sqlErr) {
             console.warn('[AVISO BD] Falha ao confirmar pagamento no SQL Server:', sqlErr.message);
           }
+        }
+
+        // Se houver O.S. vinculada ou pendente de pagamento para este usuário, atualiza automaticamente
+        if (concludeOs) {
+          try {
+            const localOrdens = getLocalOrdens();
+            let updatedAnyOs = false;
+            const nowIsoOs = new Date().toISOString();
+            const parecerMsg = `✅ Pagamento reconhecido e liberado pelo Administrador (${adminUser.name || adminEmail}) na modalidade ${methodLabels[method] || method} - Plano ${plan.toUpperCase()}. Protocolo de Conciliação: ${txId}.`;
+
+            localOrdens.forEach(o => {
+              const matchById = osId && String(o.id) === String(osId);
+              const matchByEmailPayment = !osId && o.client_email && o.client_email.toLowerCase() === targetEmail && (o.status || '').toLowerCase() !== 'concluído' && (
+                (o.service_type || '').toLowerCase().includes('pag') ||
+                (o.service_type || '').toLowerCase().includes('boleto') ||
+                (o.title || '').toLowerCase().includes('pag') ||
+                (o.title || '').toLowerCase().includes('pix') ||
+                (o.title || '').toLowerCase().includes('boleto')
+              );
+              if (matchById || matchByEmailPayment) {
+                o.status = 'Concluído';
+                o.tecnico_responsavel = o.tecnico_responsavel || (adminUser.name || 'Administrador');
+                o.concluido_em = nowIsoOs;
+                o.updated_at = nowIsoOs;
+                o.admin_notes = o.admin_notes ? (o.admin_notes + '\n' + parecerMsg) : parecerMsg;
+                updatedAnyOs = true;
+                if (pool) {
+                  pool.query(
+                    `UPDATE ordens_servico SET status = 'Concluído', tecnico_responsavel = $1, admin_notes = $2, concluido_em = GETDATE(), updated_at = GETDATE() WHERE id = $3`,
+                    [o.tecnico_responsavel, o.admin_notes, o.id]
+                  ).catch(()=>{});
+                }
+                broadcastEvent('order_updated', o);
+              }
+            });
+            if (updatedAnyOs) saveLocalOrdens(localOrdens);
+          } catch(osErr) {}
         }
 
         recordSystemLog(
@@ -32425,12 +33116,13 @@ const server = http.createServer(async (req, res) => {
           adminEmail,
           'Assinatura',
           'Financeiro',
-          `Confirmou pagamento real e ativou plano ${plan.toUpperCase()} (${days} dias) para ${targetUser.name || targetEmail} (Expira: ${expiresSql})`
+          `Liberou pagamento não reconhecido via ${methodLabels[method] || method} e ativou plano ${plan.toUpperCase()} para ${targetUser.name || targetEmail} (Tx: ${txId} | Expira: ${expiresSql})`
         );
 
         broadcastEvent('subscription_activated', {
           email: targetEmail,
           plan: plan,
+          method: method,
           transaction_id: txId,
           expires_at: expiresIso,
           confirmed_by: adminEmail
@@ -32439,9 +33131,11 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
-          message: `Pagamento confirmado! Plano ${plan.toUpperCase()} liberado por ${days} dias para ${targetEmail}.`,
+          message: `Pagamento via ${methodLabels[method] || method} reconhecido! Plano ${plan.toUpperCase()} liberado com sucesso para ${targetEmail}.`,
           target_email: targetEmail,
           plan: plan,
+          method: method,
+          transaction_id: txId,
           expires_at: expiresIso
         }));
       } catch(err) {
