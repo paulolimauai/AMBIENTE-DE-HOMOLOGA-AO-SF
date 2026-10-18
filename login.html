@@ -809,15 +809,59 @@
             color: #2563EB !important;
         }
 
+        /* Estrutura de Alinhamento Simétrico de Campos (Entrar & Criar Conta) */
+        .auth-field-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .auth-field-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            min-height: 18px;
+            margin-bottom: 6px;
+            width: 100%;
+        }
+
+        .auth-field-header .auth-label,
+        .auth-field-group > label.auth-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            line-height: 1.25;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+        }
+
+        .auth-field-group > label.auth-label {
+            min-height: 18px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+
         /* Wrappers de Input Executivos e Fluidos (Preto, Azul & Branco) */
         .auth-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
             height: 44px;
-            background: rgba(3, 8, 18, 0.88);
-            border: 1px solid rgba(56, 189, 248, 0.35);
-            border-radius: 12px;
+            min-height: 44px;
+            max-height: 44px;
+            box-sizing: border-box;
+            background: rgba(3, 8, 18, 0.88) !important;
+            border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+            border-radius: 12px !important;
+            overflow: hidden;
             transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
         }
 
@@ -829,29 +873,31 @@
 
         .auth-input-wrapper:focus-within {
             border-color: #38BDF8 !important;
-            box-shadow: 0 0 0 3.5px rgba(56, 189, 248, 0.24), 0 0 18px rgba(37, 99, 235, 0.35) !important;
-            background: rgba(5, 13, 28, 0.96);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.24), 0 0 16px rgba(37, 99, 235, 0.30) !important;
+            background: rgba(5, 13, 28, 0.96) !important;
         }
 
         body.light .auth-input-wrapper:focus-within {
             background: #FFFFFF !important;
             border-color: #2563EB !important;
-            box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.18), 0 0 12px rgba(37, 99, 235, 0.15) !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18), 0 0 12px rgba(37, 99, 235, 0.15) !important;
         }
 
         .auth-input-wrapper.input-error {
             border-color: #EF4444 !important;
-            box-shadow: 0 0 0 3.5px rgba(239, 68, 68, 0.25) !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
         }
 
         .auth-input-icon {
-            width: 36px;
+            width: 38px;
+            min-width: 38px;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #38BDF8;
             flex-shrink: 0;
+            pointer-events: none;
             transition: color 0.2s ease;
         }
 
@@ -866,18 +912,40 @@
             color: #1D4ED8 !important;
         }
 
-        .auth-input-wrapper input {
-            flex: 1;
-            min-width: 0;
-            height: 100%;
+        .auth-input-wrapper input,
+        body.light .auth-input-wrapper input,
+        html.light .auth-input-wrapper input {
+            flex: 1 1 0% !important;
+            min-width: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
             background: transparent !important;
-            border: none;
-            padding: 0 12px 0 0;
-            color: #FFFFFF;
-            font-size: 14px;
-            font-weight: 600;
-            outline: none;
-            width: 100%;
+            background-color: transparent !important;
+            border: none !important;
+            border-width: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            outline: none !important;
+            padding: 0 12px 0 0 !important;
+            margin: 0 !important;
+            color: #FFFFFF !important;
+            font-size: 13.5px !important;
+            font-weight: 600 !important;
+            line-height: normal !important;
+        }
+
+        .auth-input-wrapper:not(:has(.auth-input-icon)) input,
+        body.light .auth-input-wrapper:not(:has(.auth-input-icon)) input {
+            padding: 0 14px !important;
+        }
+
+        .auth-input-wrapper input:focus,
+        body.light .auth-input-wrapper input:focus,
+        html.light .auth-input-wrapper input:focus {
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            background: transparent !important;
         }
 
         .auth-input-wrapper button svg {
@@ -890,11 +958,13 @@
             font-weight: 500;
         }
 
-        body.light .auth-input-wrapper input {
+        body.light .auth-input-wrapper input,
+        html.light .auth-input-wrapper input {
             color: #000000 !important;
             font-weight: 600 !important;
         }
-        body.light .auth-input-wrapper input::placeholder {
+        body.light .auth-input-wrapper input::placeholder,
+        html.light .auth-input-wrapper input::placeholder {
             color: #64748B !important;
             font-weight: 500 !important;
         }
@@ -937,8 +1007,8 @@
             outline: none !important;
             box-shadow: none !important;
             color: #38BDF8 !important;
-            width: 38px !important;
-            height: 38px !important;
+            width: 34px !important;
+            height: 34px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -946,7 +1016,7 @@
             flex-shrink: 0 !important;
             padding: 0 !important;
             margin: 0 4px 0 0 !important;
-            border-radius: 10px !important;
+            border-radius: 9px !important;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
             -webkit-appearance: none !important;
             appearance: none !important;
@@ -955,12 +1025,12 @@
         .auth-pass-toggle-btn:hover {
             color: #FFFFFF !important;
             background: rgba(37, 99, 235, 0.22) !important;
-            transform: scale(1.08);
+            transform: scale(1.06);
         }
         .auth-pass-toggle svg,
         .auth-pass-toggle-btn svg {
-            width: 18px !important;
-            height: 18px !important;
+            width: 17px !important;
+            height: 17px !important;
             stroke: currentColor !important;
             stroke-width: 2.2px !important;
             fill: none !important;
@@ -975,6 +1045,19 @@
         body.light .auth-pass-toggle-btn:hover {
             color: #1D4ED8 !important;
             background: rgba(37, 99, 235, 0.10) !important;
+        }
+
+        /* Checkboxes de Autenticação Alinhados */
+        #authNexusCard input[type="checkbox"] {
+            width: 16px !important;
+            height: 16px !important;
+            min-width: 16px !important;
+            min-height: 16px !important;
+            padding: 0 !important;
+            border-radius: 4px !important;
+            flex-shrink: 0 !important;
+            cursor: pointer !important;
+            box-shadow: none !important;
         }
 
         /* Botão Primário Executivo - Azul Safira Real & Branco Puro */
@@ -2279,7 +2362,7 @@ td:last-child, th:last-child, td.val, td.amount, td.tx-val, th.th-val {
   padding: 26px !important;
 }
 
-input[type="text"], input[type="number"], input[type="date"], input[type="email"], input[type="password"], select, textarea {
+input:not(.auth-input-wrapper input):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select, textarea {
   border-radius: 12px !important;
   padding: 11px 15px !important;
   font-size: 13.5px !important;
@@ -2289,7 +2372,7 @@ input[type="text"], input[type="number"], input[type="date"], input[type="email"
   transition: all 0.2s ease !important;
 }
 
-input:focus, select:focus, textarea:focus {
+input:not(.auth-input-wrapper input):not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
   border-color: #F59E0B !important;
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25), 0 0 15px rgba(245, 158, 11, 0.15) !important;
   outline: none !important;
@@ -2607,13 +2690,13 @@ body.light .tx-date-badge {
 }
 
 /* Inputs, Selects e Textareas */
-body.light input, body.light select, body.light textarea {
+body.light input:not(.auth-input-wrapper input):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), body.light select, body.light textarea {
   background: #FFFFFF !important;
   border: 1.5px solid #CBD5E1 !important;
   color: #0F172A !important;
 }
 
-body.light input:focus, body.light select:focus, body.light textarea:focus {
+body.light input:not(.auth-input-wrapper input):not([type="checkbox"]):not([type="radio"]):focus, body.light select:focus, body.light textarea:focus {
   border-color: #D97706 !important;
   box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18) !important;
   background: #FFFFFF !important;
@@ -2846,32 +2929,32 @@ body.light .period button.active {
                 </p>
 
                 <form id="formNovaOrdem" onsubmit="enviarNovaOrdem(event)" class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                        <div>
-                            <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Seu Nome Completo *</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-start">
+                        <div class="auth-field-group">
+                            <label for="osClientName" class="auth-label text-[#94A3B8]">Seu Nome Completo *</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientName" required placeholder="Ex: Paulo Lima" class="w-full bg-black/40 border border-emerald-500/25 rounded-xl px-3.5 py-2.5 text-xs text-emerald-100 placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
+                                <input id="osClientName" type="text" required placeholder="Ex: Paulo Lima">
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">Seu E-mail de Contato *</label>
+                        <div class="auth-field-group">
+                            <label for="osClientEmail" class="auth-label text-[#94A3B8]">Seu E-mail de Contato *</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com" class="w-full bg-black/40 border border-emerald-500/25 rounded-xl px-3.5 py-2.5 text-xs text-emerald-100 placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
+                                <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com">
                             </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                        <div>
-                            <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">WhatsApp / Celular (Opcional)</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-start">
+                        <div class="auth-field-group">
+                            <label for="osClientPhone" class="auth-label text-[#94A3B8]">WhatsApp / Celular (Opcional)</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientPhone" placeholder="(62) 99999-9999" maxlength="15" oninput="handlePhoneInput(this)" class="w-full bg-black/40 border border-emerald-500/25 rounded-xl px-3.5 py-2.5 text-xs text-emerald-100 placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
+                                <input id="osClientPhone" type="tel" placeholder="(62) 99999-9999" maxlength="15" oninput="handlePhoneInput(this)">
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-[11px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1.5">CPF do Titular (Opcional)</label>
+                        <div class="auth-field-group">
+                            <label for="osClientCpf" class="auth-label text-[#94A3B8]">CPF do Titular (Opcional)</label>
                             <div class="auth-input-wrapper">
-                                <input id="osClientCpf" placeholder="00000000000" maxlength="11" oninput="handleCpfInput(this)" class="w-full bg-black/40 border border-emerald-500/25 rounded-xl px-3.5 py-2.5 text-xs text-emerald-100 placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
+                                <input id="osClientCpf" type="text" inputmode="numeric" placeholder="00000000000" maxlength="11" oninput="handleCpfInput(this)">
                             </div>
                         </div>
                     </div>
@@ -3105,7 +3188,7 @@ body.light .period button.active {
             </div>
 
             <!-- COLUNA DIREITA: CARD PRINCIPAL DE AUTENTICAÇÃO (5 COLUNAS EM TELAS LARGAS, CENTRALIZADO NO MOBILE) -->
-            <div class="col-span-1 lg:col-span-5 flex flex-col items-center w-full max-w-[430px] mx-auto">
+            <div class="col-span-1 lg:col-span-5 flex flex-col items-center w-full max-w-[460px] mx-auto">
                 
                 <!-- CARD PRINCIPAL DE AUTENTICAÇÃO -->
                 <div class="auth-card-nexus w-full p-6 sm:p-7 rounded-3xl relative" id="authNexusCard">
@@ -3123,102 +3206,105 @@ body.light .period button.active {
                         </p>
                     </div>
 
-            <!-- NAVEGAÇÃO SEGMENTADA POR ABAS -->
-            <div class="flex rounded-xl p-1 mb-4 gap-1.5" id="authTabsNav">
-                <button type="button" class="auth-tab-btn active text-xs font-bold" id="tabBtnLogin" onclick="switchAuthTab('login')">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                    <span>Entrar</span>
-                </button>
-                <button type="button" class="auth-tab-btn text-xs font-bold" id="tabBtnRegister" onclick="switchAuthTab('register')">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-                    <span>Criar Conta</span>
-                </button>
-            </div>
-
-            <!-- ALERTA INLINE DINÂMICO -->
-            <div id="authAlert" class="hidden"></div>
-
-            <!-- 1. FORMULÁRIO DE LOGIN -->
-            <div id="loginBox" class="form-fade block">
-                <form id="loginForm" class="space-y-3.5" onsubmit="handleLoginSubmit(event); return false;">
-                    
-                    <!-- Campo E-mail -->
-                    <div>
-                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1.5">E-mail Corporativo ou Pessoal</label>
-                        <div class="auth-input-wrapper" id="loginEmailWrapper">
-                            <span class="auth-input-icon">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                            </span>
-                            <input id="loginEmail" name="email" type="email" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none" required 
-                                placeholder="seu.email@exemplo.com">
-                        </div>
-                    </div>
-
-                    <!-- Campo Senha -->
-                    <div>
-                        <div class="flex items-center justify-between mb-1.5">
-                            <label class="text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200">Senha</label>
-                            <button type="button" onclick="switchAuthTab('forgot')" class="text-[11px] font-bold text-emerald-400 hover:text-emerald-300 underline transition-colors focus:outline-none">
-                                Esqueceu a senha?
-                            </button>
-                        </div>
-                        <div class="auth-input-wrapper" id="loginPasswordWrapper">
-                            <span class="auth-input-icon">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            </span>
-                            <input id="loginPassword" name="password" type="password" autocomplete="current-password" spellcheck="false" required 
-                                placeholder="••••••••">
-                            <button type="button" id="btnToggleLoginPass" onclick="togglePasswordVisibility('loginPassword', 'btnToggleLoginPass')" 
-                                class="auth-pass-toggle-btn" title="Visualizar Senha" aria-label="Visualizar Senha">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                            </button>
-                        </div>
-                        <div id="capsLockWarningLogin" class="hidden mt-1.5 text-[11px] text-amber-400 font-bold flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                            <span>Caps Lock está ativado</span>
-                        </div>
-                    </div>
-
-                    <!-- Lembrar de Mim -->
-                    <div class="flex items-center pt-0.5 text-xs text-slate-200 auth-label">
-                        <label class="flex items-center gap-2 cursor-pointer select-none">
-                            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-emerald-500 cursor-pointer">
-                            <span class="font-medium">Lembrar meu acesso neste dispositivo</span>
-                        </label>
-                    </div>
-
-                    <!-- Botão de Login Instantâneo -->
-                    <div class="pt-1.5">
-                        <button type="submit" id="btnLoginSubmit" class="btn-auth-gradient w-full py-3 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 focus:outline-none shadow-lg shadow-emerald-500/25">
-                            <span>Entrar na Conta</span>
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    <!-- NAVEGAÇÃO SEGMENTADA POR ABAS -->
+                    <div class="flex rounded-xl p-1 mb-4 gap-1.5" id="authTabsNav">
+                        <button type="button" class="auth-tab-btn active text-xs font-bold" id="tabBtnLogin" onclick="switchAuthTab('login')">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            <span>Entrar</span>
+                        </button>
+                        <button type="button" class="auth-tab-btn text-xs font-bold" id="tabBtnRegister" onclick="switchAuthTab('register')">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+                            <span>Criar Conta</span>
                         </button>
                     </div>
 
-                    <!-- Atalho de Acesso Rápido Administrador Master -->
-                    <div class="pt-3 border-t border-emerald-500/20 mt-3">
-                        <button type="button" id="btnQuickAdminLogin" onclick="preencherCredenciaisAdmin()" 
-                            class="btn-quick-admin-login w-full py-2.5 px-3.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
-                            <span class="text-emerald-400 text-sm">⚡</span>
-                            <span>Acesso Rápido Master</span>
-                            <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-extrabold border border-emerald-500/35">1-Clique VIP</span>
-                        </button>
+                    <!-- ALERTA INLINE DINÂMICO -->
+                    <div id="authAlert" class="hidden"></div>
+
+                    <!-- 1. FORMULÁRIO DE LOGIN -->
+                    <div id="loginBox" class="form-fade block">
+                        <form id="loginForm" class="space-y-3.5" onsubmit="handleLoginSubmit(event); return false;">
+                            
+                            <!-- Campo E-mail -->
+                            <div class="auth-field-group">
+                                <div class="auth-field-header">
+                                    <label for="loginEmail" class="auth-label text-slate-200">E-mail Corporativo ou Pessoal</label>
+                                </div>
+                                <div class="auth-input-wrapper" id="loginEmailWrapper">
+                                    <span class="auth-input-icon">
+                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                                    </span>
+                                    <input id="loginEmail" name="email" type="email" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none" required 
+                                        placeholder="seu.email@exemplo.com">
+                                </div>
+                            </div>
+
+                            <!-- Campo Senha -->
+                            <div class="auth-field-group">
+                                <div class="auth-field-header">
+                                    <label for="loginPassword" class="auth-label text-slate-200">Senha</label>
+                                    <button type="button" onclick="switchAuthTab('forgot')" class="text-[11px] font-bold text-emerald-400 hover:text-emerald-300 underline transition-colors focus:outline-none leading-none shrink-0">
+                                        Esqueceu a senha?
+                                    </button>
+                                </div>
+                                <div class="auth-input-wrapper" id="loginPasswordWrapper">
+                                    <span class="auth-input-icon">
+                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    </span>
+                                    <input id="loginPassword" name="password" type="password" autocomplete="current-password" spellcheck="false" required 
+                                        placeholder="••••••••">
+                                    <button type="button" id="btnToggleLoginPass" onclick="togglePasswordVisibility('loginPassword', 'btnToggleLoginPass')" 
+                                        class="auth-pass-toggle-btn" title="Visualizar Senha" aria-label="Visualizar Senha">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </button>
+                                </div>
+                                <div id="capsLockWarningLogin" class="hidden mt-1.5 text-[11px] text-amber-400 font-bold flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    <span>Caps Lock está ativado</span>
+                                </div>
+                            </div>
+
+                            <!-- Lembrar de Mim -->
+                            <div class="flex items-center pt-0.5 text-xs text-slate-200 auth-label">
+                                <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+                                    <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-700 bg-black/40 accent-emerald-500 cursor-pointer shrink-0">
+                                    <span class="font-medium leading-snug">Lembrar meu acesso neste dispositivo</span>
+                                </label>
+                            </div>
+
+                            <!-- Botão de Login Instantâneo -->
+                            <div class="pt-1">
+                                <button type="submit" id="btnLoginSubmit" class="btn-auth-gradient w-full py-3 px-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 focus:outline-none shadow-lg shadow-emerald-500/25">
+                                    <span>Entrar na Conta</span>
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                                </button>
+                            </div>
+
+                            <!-- Atalho de Acesso Rápido Administrador Master -->
+                            <div class="pt-3 border-t border-emerald-500/20 mt-3">
+                                <button type="button" id="btnQuickAdminLogin" onclick="preencherCredenciaisAdmin()" 
+                                    class="btn-quick-admin-login w-full py-2.5 px-3.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
+                                    <span class="text-emerald-400 text-sm">⚡</span>
+                                    <span>Acesso Rápido Master</span>
+                                    <span class="text-[10.5px] px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-extrabold border border-emerald-500/35">1-Clique VIP</span>
+                                </button>
+                            </div>
+
+                            <!-- Selo de Criptografia Bancária -->
+                            <div class="pt-2 flex items-center justify-center gap-2 text-[10.5px] text-slate-400 font-medium">
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"/></svg>
+                                <span>Ambiente Seguro • Criptografia Bancária TLS 1.3</span>
+                            </div>
+                        </form>
+
+                        <p class="mt-3.5 text-center text-xs auth-subtitle-text text-slate-300">
+                            Não possui uma conta? 
+                            <button type="button" onclick="switchAuthTab('register')" class="text-emerald-400 hover:text-emerald-300 underline font-bold ml-1 focus:outline-none">
+                                Cadastre-se gratuitamente
+                            </button>
+                        </p>
                     </div>
 
-                    <!-- Selo de Criptografia Bancária -->
-                    <div class="pt-2 flex items-center justify-center gap-2 text-[10.5px] text-slate-400 font-medium">
-                        <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"/></svg>
-                        <span>Ambiente Seguro • Criptografia Bancária TLS 1.3</span>
-                    </div>
-                </form>
-
-                <p class="mt-3.5 text-center text-xs auth-subtitle-text text-slate-300">
-                    Não possui uma conta? 
-                    <button type="button" onclick="switchAuthTab('register')" class="text-emerald-400 hover:text-emerald-300 underline font-bold ml-1 focus:outline-none">
-                        Cadastre-se gratuitamente
-                    </button>
-                </p>
-            </div>
                     <!-- 2. FORMULÁRIO DE CADASTRO (PADRÃO FINANCEIRO / FINTECH / BANKING) -->
                     <div id="registerBox" class="form-fade hidden">
 
@@ -3230,21 +3316,9 @@ body.light .period button.active {
                                     <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 font-display">1. Identificação do Titular (KYC)</span>
                                 </div>
 
-                                <!-- CPF -->
-                                <div>
-                                    <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1">CPF do Titular</label>
-                                    <div class="auth-input-wrapper">
-                                        <span class="auth-input-icon">
-                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                                        </span>
-                                        <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="11" autocomplete="off" spellcheck="false" required placeholder="00000000000" oninput="handleCpfInput(this)" onchange="handleCpfInput(this)" onblur="handleCpfInput(this)" onpaste="setTimeout(() => handleCpfInput(this), 60)">
-                                    </div>
-                                    <div id="cpfFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
-                                </div>
-
-                                <!-- Nome Completo -->
-                                <div>
-                                    <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1">Nome Completo</label>
+                                <!-- Nome Completo (Largura Total para Perfeita Leitura) -->
+                                <div class="auth-field-group">
+                                    <label for="regName" class="auth-label text-slate-200">Nome Completo</label>
                                     <div class="auth-input-wrapper">
                                         <span class="auth-input-icon">
                                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -3253,16 +3327,31 @@ body.light .period button.active {
                                     </div>
                                 </div>
 
-                                <!-- Data de Nascimento -->
-                                <div>
-                                    <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1">Data de Nascimento</label>
-                                    <div class="auth-input-wrapper">
-                                        <span class="auth-input-icon">
-                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                                        </span>
-                                        <input id="regBirthDate" name="birth_date" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" spellcheck="false" required placeholder="DD/MM/AAAA" oninput="handleBirthDateInput(this)">
+                                <!-- CPF e Data de Nascimento Alinhados Lado a Lado -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+                                    <!-- CPF -->
+                                    <div class="auth-field-group">
+                                        <label for="regCpf" class="auth-label text-slate-200">CPF do Titular</label>
+                                        <div class="auth-input-wrapper">
+                                            <span class="auth-input-icon">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                                            </span>
+                                            <input id="regCpf" name="cpf" type="text" inputmode="numeric" maxlength="11" autocomplete="off" spellcheck="false" required placeholder="00000000000" oninput="handleCpfInput(this)" onchange="handleCpfInput(this)" onblur="handleCpfInput(this)" onpaste="setTimeout(() => handleCpfInput(this), 60)">
+                                        </div>
+                                        <div id="cpfFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
                                     </div>
-                                    <div id="birthFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
+
+                                    <!-- Data de Nascimento -->
+                                    <div class="auth-field-group">
+                                        <label for="regBirthDate" class="auth-label text-slate-200">Data de Nascimento</label>
+                                        <div class="auth-input-wrapper">
+                                            <span class="auth-input-icon">
+                                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                                            </span>
+                                            <input id="regBirthDate" name="birth_date" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" spellcheck="false" required placeholder="DD/MM/AAAA" oninput="handleBirthDateInput(this)">
+                                        </div>
+                                        <div id="birthFeedbackMsg" class="hidden mt-1 text-[10.5px] font-semibold"></div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -3272,10 +3361,10 @@ body.light .period button.active {
                                     <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 font-display">2. Contato & Notificações</span>
                                 </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
                                     <!-- Celular / WhatsApp -->
-                                    <div>
-                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1">Celular / WhatsApp (2FA)</label>
+                                    <div class="auth-field-group">
+                                        <label for="regPhone" class="auth-label text-slate-200">Celular / WhatsApp</label>
                                         <div class="auth-input-wrapper">
                                             <span class="auth-input-icon">
                                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
@@ -3285,8 +3374,8 @@ body.light .period button.active {
                                     </div>
 
                                     <!-- E-mail Principal -->
-                                    <div>
-                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1">E-mail Principal</label>
+                                    <div class="auth-field-group">
+                                        <label for="regEmail" class="auth-label text-slate-200">E-mail Principal</label>
                                         <div class="auth-input-wrapper">
                                             <span class="auth-input-icon">
                                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -3303,10 +3392,10 @@ body.light .period button.active {
                                     <span class="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 font-display">3. Senha de Acesso Financeiro</span>
                                 </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
                                     <!-- Criar Senha -->
-                                    <div>
-                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1">Senha (Mín. 8 caracteres)</label>
+                                    <div class="auth-field-group">
+                                        <label for="regPassword" class="auth-label text-slate-200">Senha de Acesso</label>
                                         <div class="auth-input-wrapper">
                                             <span class="auth-input-icon">
                                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -3320,8 +3409,8 @@ body.light .period button.active {
                                     </div>
 
                                     <!-- Confirmar Senha -->
-                                    <div>
-                                        <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1">Confirmar Senha</label>
+                                    <div class="auth-field-group">
+                                        <label for="regConfirmPassword" class="auth-label text-slate-200">Confirmar Senha</label>
                                         <div class="auth-input-wrapper">
                                             <span class="auth-input-icon">
                                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -3361,7 +3450,7 @@ body.light .period button.active {
                                     <span class="leading-snug">
                                         Li e aceito os <a href="javascript:void(0)" onclick="openFinancialTermsModal()" class="text-emerald-400 hover:text-emerald-300 underline font-bold">Termos de Abertura de Conta</a> e a <a href="javascript:void(0)" onclick="openFinancialTermsModal()" class="text-emerald-400 hover:text-emerald-300 underline font-bold">Política de Privacidade (LGPD - Lei 13.709/18)</a>.
                                     </span>
-                                </div>
+                                </label>
                                 <label class="flex items-start gap-2.5 cursor-pointer select-none">
                                     <input type="checkbox" id="regTruthful" required class="w-4 h-4 mt-0.5 rounded border-gray-700 bg-black/40 accent-emerald-500 cursor-pointer shrink-0">
                                     <span class="leading-snug">
@@ -3409,8 +3498,8 @@ body.light .period button.active {
                         </p>
 
                         <form id="forgotForm" class="space-y-3.5" onsubmit="handleForgotSubmit(event); return false;">
-                            <div>
-                                <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1.5">E-mail Cadastrado</label>
+                            <div class="auth-field-group">
+                                <label for="forgotEmail" class="auth-label text-slate-200">E-mail Cadastrado</label>
                                 <div class="auth-input-wrapper">
                                     <span class="auth-input-icon">
                                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -3419,23 +3508,25 @@ body.light .period button.active {
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1.5">CPF do Titular</label>
-                                <div class="auth-input-wrapper">
-                                    <span class="auth-input-icon">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                                    </span>
-                                    <input id="forgotCpf" name="forgotCpf" type="text" inputmode="numeric" maxlength="11" required autocomplete="off" placeholder="00000000000" oninput="handleCpfInput(this)">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+                                <div class="auth-field-group">
+                                    <label for="forgotCpf" class="auth-label text-slate-200">CPF do Titular</label>
+                                    <div class="auth-input-wrapper">
+                                        <span class="auth-input-icon">
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                                        </span>
+                                        <input id="forgotCpf" name="forgotCpf" type="text" inputmode="numeric" maxlength="11" required autocomplete="off" placeholder="00000000000" oninput="handleCpfInput(this)">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <label class="block text-[11px] font-bold uppercase tracking-wider auth-label text-slate-200 mb-1.5">Data de Nascimento</label>
-                                <div class="auth-input-wrapper">
-                                    <span class="auth-input-icon">
-                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                                    </span>
-                                    <input id="forgotBirthDate" name="forgotBirthDate" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" placeholder="DD/MM/AAAA" oninput="handleBirthDateInput(this)">
+                                <div class="auth-field-group">
+                                    <label for="forgotBirthDate" class="auth-label text-slate-200">Data de Nascimento</label>
+                                    <div class="auth-input-wrapper">
+                                        <span class="auth-input-icon">
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                                        </span>
+                                        <input id="forgotBirthDate" name="forgotBirthDate" type="text" inputmode="numeric" maxlength="10" autocomplete="bday" placeholder="DD/MM/AAAA" oninput="handleBirthDateInput(this)">
+                                    </div>
                                 </div>
                             </div>
 
