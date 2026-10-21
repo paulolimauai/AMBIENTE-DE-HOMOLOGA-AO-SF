@@ -2761,6 +2761,92 @@ body.light .period button.active {
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
 }
     </style>
+    <style id="nexus-login-polish">
+        /* Acabamento visual da autenticação: menos brilho, hierarquia clara e foco acessível. */
+        body {
+            background-color: #070B13 !important;
+            background-image: radial-gradient(ellipse at 16% 18%, rgba(37, 99, 235, .13), transparent 38%),
+                              radial-gradient(ellipse at 82% 76%, rgba(14, 165, 233, .10), transparent 36%) !important;
+        }
+        body.light {
+            background-color: #F3F6FB !important;
+            background-image: radial-gradient(ellipse at 16% 18%, rgba(37, 99, 235, .08), transparent 38%),
+                              radial-gradient(ellipse at 82% 76%, rgba(14, 165, 233, .06), transparent 36%) !important;
+        }
+        #bgOrbitalCanvas { opacity: .12 !important; }
+        .auth-card-nexus {
+            background: rgba(12, 19, 32, .96) !important;
+            border: 1px solid rgba(148, 163, 184, .22) !important;
+            border-top: 1px solid rgba(148, 163, 184, .22) !important;
+            border-radius: 22px !important;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .32) !important;
+            backdrop-filter: blur(18px) !important;
+        }
+        body.light .auth-card-nexus {
+            background: rgba(255, 255, 255, .97) !important;
+            border-color: #D8E0EC !important;
+            border-top-color: #D8E0EC !important;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, .10) !important;
+        }
+        .auth-card-nexus .w-12.h-12 {
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 14px !important;
+            margin-bottom: 14px !important;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, .22) !important;
+        }
+        #authNexusCard h1 { letter-spacing: -.035em !important; }
+        #authTabsNav {
+            padding: 4px !important;
+            gap: 4px !important;
+            background: rgba(148, 163, 184, .08) !important;
+            border: 1px solid rgba(148, 163, 184, .14) !important;
+            border-radius: 12px !important;
+        }
+        .auth-tab-btn { border-radius: 9px !important; }
+        .auth-input-wrapper {
+            height: 48px !important;
+            min-height: 48px !important;
+            max-height: 48px !important;
+            border-radius: 10px !important;
+            border-color: rgba(148, 163, 184, .28) !important;
+            background: rgba(2, 6, 15, .48) !important;
+        }
+        body.light .auth-input-wrapper {
+            border-color: #CBD5E1 !important;
+            background: #FFFFFF !important;
+        }
+        .auth-input-wrapper:focus-within {
+            border-color: #60A5FA !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, .16) !important;
+        }
+        .auth-input-wrapper:focus-within .auth-input-icon { color: #60A5FA !important; }
+        .auth-field-header .auth-label, .auth-field-group > label.auth-label {
+            font-size: 11.5px !important;
+            letter-spacing: .015em !important;
+            text-transform: none !important;
+        }
+        #btnLoginSubmit {
+            min-height: 48px;
+            border-radius: 11px !important;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, .20) !important;
+        }
+        .btn-quick-admin-login {
+            border-color: rgba(148, 163, 184, .20) !important;
+            background: rgba(148, 163, 184, .06) !important;
+        }
+        :where(button, a, input):focus-visible {
+            outline: 3px solid rgba(96, 165, 250, .75) !important;
+            outline-offset: 2px !important;
+        }
+        @media (max-width: 640px) {
+            .auth-card-nexus { border-radius: 18px !important; }
+            header { margin-bottom: 1rem !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; }
+        }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center py-2 sm:py-3.5 px-3 sm:px-6 relative select-none auth-bg-cyber-grid">
     <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
