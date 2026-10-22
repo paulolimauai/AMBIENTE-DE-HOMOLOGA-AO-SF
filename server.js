@@ -13689,6 +13689,84 @@ body.light .period button.active {
 #authPage .auth-showcase-desc { max-width: 540px; font-size: 15px; line-height: 1.65; }
 #authPage .auth-showcase-metrics { gap: 10px; }
 #authPage .metric-val { font-size: clamp(16px, 1.45vw, 19px); }
+#monthlyRealMetrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 18px;
+}
+#monthlyRealMetrics::before {
+  content: "Resumo financeiro deste mês";
+  grid-column: 1 / -1;
+  color: var(--text, #F8FAFC);
+  font-size: 15px;
+  font-weight: 800;
+}
+.monthly-real-card {
+  min-width: 0;
+  padding: 15px 16px;
+  border: 1px solid var(--card-border, rgba(148, 163, 184, 0.16));
+  border-radius: 16px;
+  background: var(--card-bg, rgba(15, 23, 42, 0.56));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+.monthly-real-card .metric-heading {
+  color: var(--text-dim, #94A3B8);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+.monthly-real-card .metric-percentage {
+  display: block;
+  margin-top: 8px;
+  color: var(--text, #F8FAFC);
+  font-size: clamp(22px, 2vw, 28px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 900;
+  line-height: 1.1;
+}
+.monthly-real-card .metric-description {
+  margin-top: 6px;
+  color: var(--text-dim, #94A3B8);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.monthly-real-card .metric-track {
+  height: 5px;
+  margin-top: 11px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(148, 163, 184, 0.14);
+}
+.monthly-real-card .metric-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #059669, #34D399);
+}
+body.light .monthly-real-card {
+  background: #FFFFFF;
+  border-color: #E2E8E0;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+body.light .monthly-real-card .metric-percentage { color: #0F172A; }
+#authPage .auth-metric-card .metric-pill-tag { display: none !important; }
+#authPage .auth-metric-card::after {
+  display: block;
+  margin-top: 8px;
+  color: #A7B4AA;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+#authPage .metric-card-budget::after { content: "Entre para consultar o percentual real do seu orçamento."; }
+#authPage .metric-card-savings::after { content: "Calculado com as receitas e despesas deste mês."; }
+#authPage .metric-card-goals::after { content: "Progresso calculado com as metas da sua conta."; }
+@media (max-width: 760px) {
+  #monthlyRealMetrics { grid-template-columns: 1fr; gap: 9px; }
+  .monthly-real-card { padding: 13px 14px; }
+}
 #authPage .auth-card-nexus {
   width: 100%;
   max-width: 480px;
@@ -13894,7 +13972,7 @@ body.light #authPage .auth-trust-item {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
             <span class="metric-card-label">Orçamento Mensal</span>
           </div>
-          <div class="metric-val">100% no Limite</div>
+          <div class="metric-val">Personalizado</div>
           <div class="metric-pill-tag green">✓ Zero Estouro de Gastos</div>
         </div>
 
@@ -13903,7 +13981,7 @@ body.light #authPage .auth-trust-item {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
             <span class="metric-card-label">Economia do Mês</span>
           </div>
-          <div class="metric-val">R$ 3.850,00</div>
+          <div class="metric-val">Calculado no mês</div>
           <div class="metric-pill-tag cyan">▲ +24% Guardado</div>
         </div>
 
@@ -13912,7 +13990,7 @@ body.light #authPage .auth-trust-item {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
             <span class="metric-card-label">Metas & Reserva</span>
           </div>
-          <div class="metric-val">94% Atingido</div>
+          <div class="metric-val">Suas metas</div>
           <div class="metric-pill-tag blue">🎯 Liberdade Financeira</div>
         </div>
       </div>
@@ -21598,7 +21676,42 @@ function pageDashboard(){
   const recPct = totalFluxo > 0 ? Math.round((receitas / totalFluxo) * 100) : 0;
   const despPct = totalFluxo > 0 ? (100 - recPct) : 0;
   const resultado = receitas - despesas;
-  const savingsPct = receitas > 0 ? Math.max(0, Math.round((resultado / receitas) * 100)) : 0;
+  const savingsPct = receitas > 0 ? Math.round((resultado / receitas) * 100) : 0;
+  const brasiliaNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+  const monthTransactions = (Array.isArray(transactions) ? transactions : []).filter(t => {
+    const txDate = t && t.date ? parseDateParts(t.date) : null;
+    return txDate && txDate.month === brasiliaNow.getMonth() + 1 && txDate.year === brasiliaNow.getFullYear();
+  });
+  const monthIncome = monthTransactions.filter(t => t.type === 'in').reduce((sum, t) => sum + parseInputValue(t.val), 0);
+  const monthExpenses = monthTransactions.filter(t => t.type === 'out').reduce((sum, t) => sum + parseInputValue(t.val), 0);
+  const monthNet = monthIncome - monthExpenses;
+  const monthSavingsPct = monthIncome > 0 ? Math.round((monthNet / monthIncome) * 100) : null;
+  const configuredBudgets = (Array.isArray(budgets) ? budgets : []).filter(b => parseInputValue(b.limit) > 0);
+  const monthBudgetLimit = configuredBudgets.reduce((sum, b) => sum + parseInputValue(b.limit), 0);
+  const monthBudgetSpent = configuredBudgets.reduce((sum, b) => sum + monthTransactions
+    .filter(t => t.type === 'out' && t.cat === b.category)
+    .reduce((spent, t) => spent + parseInputValue(t.val), 0), 0);
+  const monthBudgetPct = monthBudgetLimit > 0 ? Math.round((monthBudgetSpent / monthBudgetLimit) * 100) : null;
+  const activeGoals = (Array.isArray(goals) ? goals : []).filter(g => parseInputValue(g.target) > 0);
+  const goalTotal = activeGoals.reduce((sum, g) => sum + parseInputValue(g.target), 0);
+  const goalCurrent = activeGoals.reduce((sum, g) => sum + parseInputValue(g.current), 0);
+  const goalProgressPct = goalTotal > 0 ? Math.round((goalCurrent / goalTotal) * 100) : null;
+  const monthBudgetCaption = monthBudgetPct === null
+    ? 'Cadastre limites para acompanhar este indicador.'
+    : monthBudgetPct > 100
+      ? (monthBudgetPct - 100) + '% acima do total definido.'
+      : fmt(Math.max(0, monthBudgetLimit - monthBudgetSpent)) + ' restantes no orçamento.';
+  const monthSavingsCaption = monthSavingsPct === null
+    ? 'Sem receitas registradas neste mês.'
+    : monthNet >= 0 ? fmt(monthNet) + ' de saldo positivo no mês.' : fmt(Math.abs(monthNet)) + ' em despesas acima das receitas.';
+  const goalCaption = goalProgressPct === null
+    ? 'Cadastre uma meta para acompanhar sua reserva.'
+    : fmt(goalCurrent) + ' acumulados de ' + fmt(goalTotal) + ' nas metas.';
+  const monthlyMetricsHtml = '<section id="monthlyRealMetrics" aria-label="Indicadores financeiros reais do mês">' +
+    '<article class="monthly-real-card"><span class="metric-heading">Limite do orçamento</span><strong class="metric-percentage">' + (monthBudgetPct === null ? '—' : monthBudgetPct + '%') + '</strong><div class="metric-description">' + monthBudgetCaption + '</div><div class="metric-track"><span style="width:' + (monthBudgetPct === null ? 0 : Math.max(0, Math.min(100, monthBudgetPct))) + '%; background:' + (monthBudgetPct !== null && monthBudgetPct > 100 ? '#EF4444' : '#10B981') + '"></span></div></article>' +
+    '<article class="monthly-real-card"><span class="metric-heading">Economia deste mês</span><strong class="metric-percentage">' + (monthSavingsPct === null ? '—' : monthSavingsPct + '%') + '</strong><div class="metric-description">' + monthSavingsCaption + '</div><div class="metric-track"><span style="width:' + (monthSavingsPct === null ? 0 : Math.max(0, Math.min(100, monthSavingsPct))) + '%; background:' + (monthSavingsPct !== null && monthSavingsPct < 0 ? '#EF4444' : '#10B981') + '"></span></div></article>' +
+    '<article class="monthly-real-card"><span class="metric-heading">Meta & reserva</span><strong class="metric-percentage">' + (goalProgressPct === null ? '—' : goalProgressPct + '%') + '</strong><div class="metric-description">' + goalCaption + '</div><div class="metric-track"><span style="width:' + (goalProgressPct === null ? 0 : Math.max(0, Math.min(100, goalProgressPct))) + '%"></span></div></article>' +
+    '</section>';
   const commitPct = receitas > 0 ? Math.min(100, Math.round((despesas / receitas) * 100)) : (despesas > 0 ? 100 : 0);
   const now = new Date();
   const daysInPeriod = now.getDate() || 1;
@@ -21672,7 +21785,7 @@ function pageDashboard(){
   const totalBudgetSpent = hasCustomBudgets
     ? budgetList.reduce((s, b) => s + (b.spent || 0), 0)
     : despesas;
-  const budgetPct = totalBudgetLimit > 0 ? Math.min(150, Math.round((totalBudgetSpent / totalBudgetLimit) * 100)) : (totalBudgetSpent > 0 ? 100 : 0);
+  const budgetPct = totalBudgetLimit > 0 ? Math.round((totalBudgetSpent / totalBudgetLimit) * 100) : (totalBudgetSpent > 0 ? 100 : 0);
   const monthTimePct = Math.round((daysInPeriod / daysInMonthTotal) * 100);
   const projectedMonthEnd = daysInPeriod > 0 ? Math.round(dailyAvg * daysInMonthTotal) : 0;
 
@@ -21995,6 +22108,8 @@ function pageDashboard(){
       </div>
     </div>
 
+    \${monthlyMetricsHtml}
+
     <!-- 3. EXECUTIVE 6-CARD KPI BENTO GRID -->
     <div class="kpis-grid-6">
       <!-- 1. Saldo Geral -->
@@ -22279,7 +22394,7 @@ function pageDashboard(){
                 <strong style="color:\${pilarPoupanca >= 20 ? '#059669' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};">\${pilarPoupanca}%</strong>
               </div>
               <div class="dash-pillar-bar">
-                <div class="dash-pillar-fill" style="width:\${Math.min(100, pilarPoupanca)}%; background:\${pilarPoupanca >= 20 ? '#059669' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};"></div>
+                <div class="dash-pillar-fill" style="width:\${Math.max(0, Math.min(100, pilarPoupanca))}%; background:\${pilarPoupanca >= 20 ? '#059669' : pilarPoupanca >= 10 ? '#F59E0B' : '#F87171'};"></div>
               </div>
             </div>
             <div class="dash-pillar-item">
