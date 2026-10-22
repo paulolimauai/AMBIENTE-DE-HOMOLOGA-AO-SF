@@ -2591,12 +2591,12 @@ html, body {
 /* ==================== TELA DE AUTENTICAÇÃO EXECUTIVA NEXUS 4K (PRETO, AZUL SAFIRA & BRANCO PURO) ==================== */
 .auth-container {
   --auth-bg: #020617;
-  --auth-emerald: #38BDF8;
-  --auth-cyan: #60A5FA;
-  --auth-blue: #2563EB;
-  --auth-gold: #FFFFFF;
+  --auth-emerald: #10B981;
+  --auth-cyan: #F59E0B;
+  --auth-blue: #059669;
+  --auth-gold: #FBBF24;
   --auth-card: linear-gradient(165deg, rgba(4, 9, 20, 0.90) 0%, rgba(2, 6, 14, 0.95) 55%, rgba(0, 0, 0, 0.98) 100%);
-  --auth-border: rgba(56, 189, 248, 0.42);
+  --auth-border: rgba(16, 185, 129, 0.42);
   --auth-input-bg: rgba(3, 8, 18, 0.88);
   --auth-text: #FFFFFF;
   --auth-text-dim: #CBD5E1;
@@ -2613,8 +2613,8 @@ html, body {
   background-color: #000000 !important;
   background-image: 
     linear-gradient(135deg, rgba(0, 0, 0, 0.72) 0%, rgba(4, 12, 28, 0.58) 50%, rgba(0, 0, 0, 0.82) 100%),
-    radial-gradient(ellipse 95% 70% at 12% 10%, rgba(37, 99, 235, 0.28) 0%, transparent 60%),
-    radial-gradient(ellipse 90% 65% at 88% 12%, rgba(56, 189, 248, 0.24) 0%, transparent 58%),
+    radial-gradient(ellipse 95% 70% at 12% 10%, rgba(16, 185, 129, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 65% at 88% 12%, rgba(245, 158, 11, 0.16) 0%, transparent 58%),
     url('/images/login-financial-dashboard.svg') !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -2625,10 +2625,10 @@ html, body {
 
 body.light .auth-container {
   --auth-bg: #FFFFFF;
-  --auth-emerald: #1D4ED8;
-  --auth-cyan: #0284C7;
-  --auth-blue: #2563EB;
-  --auth-gold: #0F172A;
+  --auth-emerald: #059669;
+  --auth-cyan: #B45309;
+  --auth-blue: #047857;
+  --auth-gold: #92400E;
   --auth-card: #FFFFFF;
   --auth-border: #CBD5E1;
   --auth-input-bg: #FFFFFF;
@@ -2637,8 +2637,8 @@ body.light .auth-container {
   background-color: #F8FAFC !important;
   background-image: 
     linear-gradient(135deg, rgba(255, 255, 255, 0.76) 0%, rgba(241, 245, 249, 0.70) 50%, rgba(226, 232, 240, 0.80) 100%),
-    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(37, 99, 235, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(5, 150, 105, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 85% 90%, rgba(217, 119, 6, 0.08) 0%, transparent 50%),
     url('/images/login-financial-dashboard.svg') !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -2660,7 +2660,7 @@ body.light .auth-container {
 .auth-glow-1 {
   width: 560px;
   height: 560px;
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.38) 0%, rgba(29, 78, 216, 0.12) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.30) 0%, rgba(5, 150, 105, 0.10) 55%, transparent 75%);
   top: -120px;
   left: 2%;
   animation: authGlowFloat1 18s ease-in-out infinite alternate;
@@ -2668,7 +2668,7 @@ body.light .auth-container {
 .auth-glow-2 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.34) 0%, rgba(14, 165, 233, 0.12) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.24) 0%, rgba(217, 119, 6, 0.10) 55%, transparent 75%);
   top: 10%;
   right: 2%;
   animation: authGlowFloat2 22s ease-in-out infinite alternate;
@@ -2676,7 +2676,7 @@ body.light .auth-container {
 .auth-glow-3 {
   width: 620px;
   height: 620px;
-  background: radial-gradient(circle, rgba(96, 165, 250, 0.24) 0%, rgba(255, 255, 255, 0.08) 50%, transparent 75%);
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.18) 0%, rgba(245, 158, 11, 0.06) 50%, transparent 75%);
   bottom: -180px;
   left: 30%;
   animation: authGlowFloat3 26s ease-in-out infinite alternate;
@@ -2712,7 +2712,7 @@ body.light .auth-ambient-glow {
 
 .auth-theme-btn {
   background: rgba(4, 10, 22, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.45);
+  border: 1px solid rgba(16, 185, 129, 0.42);
   color: #FFFFFF;
   width: 44px;
   height: 44px;
@@ -2723,7 +2723,7 @@ body.light .auth-ambient-glow {
   cursor: pointer;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55), 0 0 16px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55), 0 0 16px rgba(16, 185, 129, 0.20);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .auth-theme-btn svg {
@@ -2733,10 +2733,10 @@ body.light .auth-ambient-glow {
 }
 .auth-theme-btn:hover {
   transform: scale(1.06) translateY(-1px);
-  background: #2563EB;
+  background: #047857;
   border-color: #FFFFFF;
   color: #FFFFFF;
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.35);
 }
 body.light .auth-theme-btn {
   background: #FFFFFF;
@@ -2745,10 +2745,10 @@ body.light .auth-theme-btn {
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
 }
 body.light .auth-theme-btn:hover {
-  background: #2563EB;
-  border-color: #1D4ED8;
+  background: #059669;
+  border-color: #047857;
   color: #FFFFFF;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.22);
 }
 
 /* Grid Sutil de Fundo 4K */
@@ -2758,8 +2758,8 @@ body.light .auth-theme-btn:hover {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(245, 158, 11, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.045) 1px, transparent 1px),
     radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.10) 1.2px, transparent 1.2px);
   background-size: 56px 56px, 56px 56px, 28px 28px;
   -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, #000 35%, transparent 95%);
