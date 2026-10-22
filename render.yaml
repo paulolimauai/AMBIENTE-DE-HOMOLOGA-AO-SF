@@ -2,12 +2,18 @@ services:
   - type: web
     name: sistema-financeiro
     runtime: node
-    plan: free
+    plan: 0.5c-512mb
     buildCommand: npm install --no-audit --omit=optional || npm install --no-audit
     startCommand: npm start
     autoDeploy: true
+    disk:
+      name: nexus-cadastro-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
+      - key: NEXUS_DATA_DIR
+        value: /var/data

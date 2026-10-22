@@ -21,11 +21,30 @@ try {
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
 const JWT_SECRET = process.env.JWT_SECRET || 'nexus_financeiro_secret_key_2026_4k_secure';
+const RUNTIME_DATA_DIR = process.env.NEXUS_DATA_DIR || __dirname;
+
+if (process.env.NEXUS_DATA_DIR) {
+  fs.mkdirSync(RUNTIME_DATA_DIR, { recursive: true });
+  const runtimeJsonFiles = [
+    'local_users.json', 'local_users.backup.json',
+    'local_database_data.json', 'local_database_data.backup.json',
+    'cpf_registry.json', 'cpf_registry.backup.json',
+    'deleted_accounts.json', 'local_ordens_servico.json', 'local_tecnicos.json',
+    'pending_logins.json', 'system_logs.json'
+  ];
+  for (const fileName of runtimeJsonFiles) {
+    const sourcePath = path.join(__dirname, fileName);
+    const persistentPath = path.join(RUNTIME_DATA_DIR, fileName);
+    if (!fs.existsSync(persistentPath) && fs.existsSync(sourcePath)) {
+      fs.copyFileSync(sourcePath, persistentPath);
+    }
+  }
+}
 
 function clearDeletedEmailTombstone(email) {
   const cleanEmail = String(email || '').toLowerCase().trim();
   if (!cleanEmail || !cleanEmail.includes('@')) return;
-  const tombstonePath = path.join(__dirname, 'deleted_accounts.json');
+  const tombstonePath = path.join(RUNTIME_DATA_DIR, 'deleted_accounts.json');
   let entries = [];
   try {
     if (fs.existsSync(tombstonePath)) entries = JSON.parse(fs.readFileSync(tombstonePath, 'utf8')) || [];
@@ -38,14 +57,14 @@ function clearDeletedEmailTombstone(email) {
 }
 
 // Caminhos Centrais de Persistência e Cache Resiliente
-const LOGS_FILE_PATH = path.join(__dirname, 'system_logs.json');
-const LOCAL_DATA_PATH = path.join(__dirname, 'local_database_data.json');
-const LOCAL_DATA_BACKUP_PATH = path.join(__dirname, 'local_database_data.backup.json');
-const LOCAL_USERS_PATH = path.join(__dirname, 'local_users.json');
-const LOCAL_USERS_BACKUP_PATH = path.join(__dirname, 'local_users.backup.json');
-const LOCAL_ORDENS_PATH = path.join(__dirname, 'local_ordens_servico.json');
-const LOCAL_TECNICOS_PATH = path.join(__dirname, 'local_tecnicos.json');
-const PENDING_LOGINS_PATH = path.join(__dirname, 'pending_logins.json');
+const LOGS_FILE_PATH = path.join(RUNTIME_DATA_DIR, 'system_logs.json');
+const LOCAL_DATA_PATH = path.join(RUNTIME_DATA_DIR, 'local_database_data.json');
+const LOCAL_DATA_BACKUP_PATH = path.join(RUNTIME_DATA_DIR, 'local_database_data.backup.json');
+const LOCAL_USERS_PATH = path.join(RUNTIME_DATA_DIR, 'local_users.json');
+const LOCAL_USERS_BACKUP_PATH = path.join(RUNTIME_DATA_DIR, 'local_users.backup.json');
+const LOCAL_ORDENS_PATH = path.join(RUNTIME_DATA_DIR, 'local_ordens_servico.json');
+const LOCAL_TECNICOS_PATH = path.join(RUNTIME_DATA_DIR, 'local_tecnicos.json');
+const PENDING_LOGINS_PATH = path.join(RUNTIME_DATA_DIR, 'pending_logins.json');
 
 // Configuração Centralizada da Chave Pix Oficial (Paulo Lima)
 const PIX_CONFIG = {
@@ -797,8 +816,8 @@ const REGIOES_FISCAIS_RFB = {
   '0': '10ª Região Fiscal (RS)'
 };
 
-const CPF_REGISTRY_PATH = path.join(__dirname, 'cpf_registry.json');
-const CPF_REGISTRY_BACKUP_PATH = path.join(__dirname, 'cpf_registry.backup.json');
+const CPF_REGISTRY_PATH = path.join(RUNTIME_DATA_DIR, 'cpf_registry.json');
+const CPF_REGISTRY_BACKUP_PATH = path.join(RUNTIME_DATA_DIR, 'cpf_registry.backup.json');
 
 function getCpfRegistry() {
   try {
@@ -1278,7 +1297,7 @@ async function setupDatabaseTablesAndSync() {
 
   // 6. Recupera os dados financeiros persistidos no SQL Server antes de sincronizar o cache local
   try {
-    const localDataFile = path.join(__dirname, 'local_database_data.json');
+    const localDataFile = path.join(RUNTIME_DATA_DIR, 'local_database_data.json');
     const dbFinancialRes = await pool.query('SELECT email, dados FROM dados_financeiros ORDER BY email ASC');
     let restoredCount = 0;
 
@@ -1357,7 +1376,7 @@ async function setupDatabaseTablesAndSync() {
 
   // 7. Sincronização bidirecional das Ordens de Serviço locais para o banco SQL
   try {
-    const localOrdensFile = path.join(__dirname, 'local_ordens_servico.json');
+    const localOrdensFile = path.join(RUNTIME_DATA_DIR, 'local_ordens_servico.json');
     if (fs.existsSync(localOrdensFile)) {
       const localOrdens = JSON.parse(fs.readFileSync(localOrdensFile, 'utf8')) || [];
       for (const ord of localOrdens) {
@@ -31281,8 +31300,8 @@ function removeLocalUser(email) {
 
     // Limpar de cpf_registry.json
     try {
-      const cpfPath = path.join(__dirname, 'cpf_registry.json');
-      const cpfBackupPath = path.join(__dirname, 'cpf_registry.backup.json');
+      const cpfPath = path.join(RUNTIME_DATA_DIR, 'cpf_registry.json');
+      const cpfBackupPath = path.join(RUNTIME_DATA_DIR, 'cpf_registry.backup.json');
       if (fs.existsSync(cpfPath)) {
         const reg = JSON.parse(fs.readFileSync(cpfPath, 'utf8')) || [];
         const filteredCpf = reg.filter(r => (r.email || '').toLowerCase().trim() !== clean);
@@ -32737,11 +32756,11 @@ const server = http.createServer(async (req, res) => {
         try {
           fs.writeFileSync(LOCAL_USERS_PATH, JSON.stringify(freshUsers, null, 2), 'utf8');
           fs.writeFileSync(LOCAL_USERS_BACKUP_PATH, JSON.stringify(freshUsers, null, 2), 'utf8');
-          fs.writeFileSync(path.join(__dirname, 'local_database_data.json'), '{}', 'utf8');
-          fs.writeFileSync(path.join(__dirname, 'local_database_data.backup.json'), '{}', 'utf8');
-          fs.writeFileSync(path.join(__dirname, 'cpf_registry.json'), '{}', 'utf8');
-          fs.writeFileSync(path.join(__dirname, 'cpf_registry.backup.json'), '{}', 'utf8');
-          fs.writeFileSync(path.join(__dirname, 'local_ordens_servico.json'), '[]', 'utf8');
+          fs.writeFileSync(path.join(RUNTIME_DATA_DIR, 'local_database_data.json'), '{}', 'utf8');
+          fs.writeFileSync(path.join(RUNTIME_DATA_DIR, 'local_database_data.backup.json'), '{}', 'utf8');
+          fs.writeFileSync(path.join(RUNTIME_DATA_DIR, 'cpf_registry.json'), '{}', 'utf8');
+          fs.writeFileSync(path.join(RUNTIME_DATA_DIR, 'cpf_registry.backup.json'), '{}', 'utf8');
+          fs.writeFileSync(path.join(RUNTIME_DATA_DIR, 'local_ordens_servico.json'), '[]', 'utf8');
         } catch(e){}
 
         if (pool) {
