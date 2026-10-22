@@ -1261,9 +1261,34 @@ async function setupDatabaseTablesAndSync() {
     console.warn('[BANCO AVISO] Erro na auto-configuração inicial de usuários:', cfgErr.message);
   }
 
-  // 6. Sincronização dos dados financeiros locais para o banco SQL (com merge inteligente para nunca perder transações)
+  // 6. Recupera os dados financeiros persistidos no SQL Server antes de sincronizar o cache local
   try {
     const localDataFile = path.join(__dirname, 'local_database_data.json');
+    const dbFinancialRes = await pool.query('SELECT email, dados FROM dados_financeiros ORDER BY email ASC');
+    let restoredCount = 0;
+
+    for (const row of (dbFinancialRes.rows || [])) {
+      if (!row || !row.email) continue;
+      const cleanEmail = row.email.toLowerCase().trim();
+      let dbData = row.dados;
+      if (typeof dbData === 'string') {
+        try { dbData = JSON.parse(dbData); } catch (e) { dbData = null; }
+      }
+      if (!dbData || typeof dbData !== 'object' || Array.isArray(dbData) || Object.keys(dbData).length === 0) continue;
+
+      const cachedData = getLocalData(cleanEmail);
+      const restoredData = cachedData && typeof cachedData === 'object' && Object.keys(cachedData).length > 0
+        ? mergeFinancialData(dbData, cachedData)
+        : dbData;
+
+      if (restoredData && typeof restoredData === 'object' && !Array.isArray(restoredData)) {
+        saveLocalData(cleanEmail, restoredData);
+        restoredCount++;
+      }
+    }
+    console.log(`[BANCO] ${restoredCount} conjunto(s) financeiro(s) recuperado(s) do SQL Server para o cache local.`);
+
+  // 6.1 Consolida alterações locais mais recentes no banco, sem substituir dados persistidos por cache vazio
     if (fs.existsSync(localDataFile)) {
       const allData = JSON.parse(fs.readFileSync(localDataFile, 'utf8')) || {};
       for (const [emailKey, dataVal] of Object.entries(allData)) {
