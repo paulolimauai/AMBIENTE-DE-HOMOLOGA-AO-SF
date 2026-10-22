@@ -2829,7 +2829,7 @@ body.light .auth-grid {
 
 .auth-showcase-title {
   max-width: 640px;
-  font-size: clamp(30px, 3.2vw, 42px);
+  font-size: clamp(24px, 2.6vw, 34px);
   font-weight: 900;
   line-height: 1.12;
   color: #FFFFFF !important;
@@ -13665,6 +13665,124 @@ body.light .period button.active {
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
 }
 /* 10. MICRO-INTERAÇÕES & RESPONSIVIDADE ULTRA 4K */
+
+/* Identidade refinada da autenticação Nexus */
+#authPage .auth-exec-layout {
+  max-width: 1220px;
+  grid-template-columns: minmax(0, 1.08fr) minmax(370px, 0.82fr);
+  gap: clamp(32px, 5vw, 72px);
+}
+#authPage .auth-showcase-title span {
+  background: linear-gradient(110deg, #D1FAE5 0%, #34D399 55%, #FBBF24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: none;
+}
+#authPage .auth-showcase-badge {
+  background: rgba(6, 18, 13, 0.82);
+  border-color: rgba(52, 211, 153, 0.32);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+}
+#authPage .auth-metric-card {
+  min-height: 112px;
+  background: linear-gradient(155deg, rgba(18, 29, 22, 0.94), rgba(8, 14, 10, 0.96)) !important;
+  border-color: rgba(148, 163, 129, 0.20) !important;
+  box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.46) !important;
+}
+#authPage .auth-metric-card.metric-card-budget { border-top-color: #34D399 !important; }
+#authPage .auth-metric-card.metric-card-savings { border-top-color: #FBBF24 !important; }
+#authPage .auth-metric-card.metric-card-budget .metric-card-head svg { color: #34D399 !important; }
+#authPage .auth-metric-card.metric-card-savings .metric-card-head svg { color: #FBBF24 !important; }
+#authPage .auth-metric-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(52, 211, 153, 0.45) !important;
+  box-shadow: 0 18px 36px -8px rgba(0, 0, 0, 0.52) !important;
+}
+#authPage .auth-trust-item {
+  background: rgba(9, 20, 13, 0.76);
+  border-color: rgba(52, 211, 153, 0.24);
+}
+#authPage .auth-trust-item svg { color: #34D399 !important; }
+#authPage .auth-card-nexus {
+  background: linear-gradient(155deg, rgba(18, 27, 21, 0.98), rgba(8, 13, 10, 0.98)) !important;
+  border: 1px solid rgba(52, 211, 153, 0.30) !important;
+  border-top: 2px solid #34D399 !important;
+  border-radius: 24px;
+  box-shadow: 0 28px 76px rgba(0, 0, 0, 0.52), 0 0 36px rgba(16, 185, 129, 0.08) !important;
+}
+#authPage .auth-logo-badge {
+  background: linear-gradient(145deg, #059669, #064E3B) !important;
+  border-color: rgba(167, 243, 208, 0.60) !important;
+  box-shadow: 0 10px 24px rgba(5, 150, 105, 0.28) !important;
+}
+#authPage .auth-title span {
+  background: linear-gradient(110deg, #34D399, #FBBF24) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+#authPage .auth-tabs-nav {
+  background: rgba(4, 12, 8, 0.72) !important;
+  border-color: rgba(52, 211, 153, 0.18) !important;
+}
+#authPage .auth-tab-btn { min-height: 44px; }
+#authPage .auth-tab-btn:hover { background: rgba(16, 185, 129, 0.12) !important; }
+#authPage .auth-tab-btn.active {
+  background: linear-gradient(135deg, #047857, #059669) !important;
+  border-color: rgba(167, 243, 208, 0.34) !important;
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.20) !important;
+}
+#authPage .auth-input-wrapper:focus-within {
+  border-color: #34D399 !important;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.14) !important;
+}
+#authPage .btn-auth-primary {
+  min-height: 48px;
+  background: linear-gradient(110deg, #047857, #059669) !important;
+  border: 1px solid rgba(167, 243, 208, 0.36) !important;
+  box-shadow: 0 10px 24px rgba(5, 150, 105, 0.20) !important;
+}
+#authPage .btn-auth-primary:hover {
+  background: linear-gradient(110deg, #059669, #10B981) !important;
+  box-shadow: 0 12px 26px rgba(5, 150, 105, 0.27) !important;
+}
+#authPage :is(button, a, input):focus-visible {
+  outline: 2px solid #FBBF24 !important;
+  outline-offset: 3px;
+}
+body.light #authPage .auth-card-nexus {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid #D6E4D9 !important;
+  border-top: 2px solid #059669 !important;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.11) !important;
+}
+body.light #authPage .auth-tabs-nav {
+  background: #F3F7F3 !important;
+  border-color: #DCE8DE !important;
+}
+body.light #authPage .auth-tab-btn.active {
+  color: #FFFFFF !important;
+  background: linear-gradient(135deg, #047857, #059669) !important;
+}
+body.light #authPage .auth-showcase-badge {
+  color: #065F46 !important;
+  background: #ECFDF5 !important;
+  border-color: #A7F3D0 !important;
+}
+body.light #authPage .auth-metric-card {
+  background: #FFFFFF !important;
+  border-color: #E1E9E1 !important;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06) !important;
+}
+body.light #authPage .auth-trust-item {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: #DCE8DE;
+  color: #1F2937 !important;
+}
+@media (max-width: 1024px) {
+  #authPage .auth-exec-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  #authPage .auth-showcase-panel { display: none !important; }
+  #authPage .auth-card-nexus { max-width: 460px; }
+}
 
 </style>
 </head>
