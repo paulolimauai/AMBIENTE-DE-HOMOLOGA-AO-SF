@@ -13841,9 +13841,10 @@ body.light #authPage::before {
 #authPage .auth-tab-btn { min-height: 44px; }
 #authPage .auth-tab-btn:hover { background: rgba(16, 185, 129, 0.12) !important; }
 #authPage .auth-tab-btn.active {
-  background: linear-gradient(135deg, #047857, #059669) !important;
-  border-color: rgba(167, 243, 208, 0.34) !important;
-  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.20) !important;
+  color: #18231B !important;
+  background: linear-gradient(135deg, #F5D779, #D9A928) !important;
+  border-color: rgba(255, 235, 166, 0.72) !important;
+  box-shadow: 0 6px 16px rgba(217, 169, 40, 0.26) !important;
 }
 #authPage .auth-input-wrapper:focus-within {
   border-color: #34D399 !important;
@@ -13874,8 +13875,8 @@ body.light #authPage .auth-tabs-nav {
   border-color: #DCE8DE !important;
 }
 body.light #authPage .auth-tab-btn.active {
-  color: #FFFFFF !important;
-  background: linear-gradient(135deg, #047857, #059669) !important;
+  color: #18231B !important;
+  background: linear-gradient(135deg, #F5D779, #D9A928) !important;
 }
 body.light #authPage .auth-showcase-badge {
   color: #065F46 !important;
