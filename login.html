@@ -2847,6 +2847,30 @@ body.light .period button.active {
             *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; }
         }
     </style>
+    <style id="login-layout-refinement">
+        .login-intro .fintech-live-ticker-bar,
+        .login-intro .grid.grid-cols-2,
+        .login-intro > div:last-child { display: none !important; }
+        .login-intro { gap: 1.15rem !important; }
+        .login-intro > div:first-child {
+            animation: none !important;
+            box-shadow: none !important;
+            background: rgba(59, 130, 246, .10) !important;
+            border-color: rgba(96, 165, 250, .24) !important;
+            color: #BFDBFE !important;
+        }
+        .login-intro > div:first-child span:first-child { display: none !important; }
+        .login-intro h1 { max-width: 650px; font-size: clamp(2.6rem, 4vw, 3.6rem) !important; line-height: 1.08 !important; }
+        .login-intro h1 span {
+            background: linear-gradient(100deg, #93C5FD, #67E8F9) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+        }
+        .login-intro > p:last-of-type { max-width: 510px; color: #AAB7C9 !important; font-size: 15px !important; line-height: 1.75 !important; }
+        body.light .login-intro > p:last-of-type { color: #475569 !important; }
+        body.light .login-intro > div:first-child { background: #EFF6FF !important; color: #1D4ED8 !important; }
+        #btnQuickAdminLogin span:last-child { display: none !important; }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center py-2 sm:py-3.5 px-3 sm:px-6 relative select-none auth-bg-cyber-grid">
     <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
@@ -3190,7 +3214,7 @@ body.light .period button.active {
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full">
             
             <!-- COLUNA ESQUERDA: EXECUTIVE FINANCIAL SHOWCASE (7 COLUNAS EM TELAS LARGAS) -->
-            <div class="hidden lg:flex lg:col-span-7 flex-col justify-center space-y-5 text-left pr-3">
+            <div class="hidden lg:flex lg:col-span-7 flex-col justify-center space-y-5 text-left pr-3 login-intro">
                 
                 <!-- Selo de Padrão Institucional -->
                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/15 border border-emerald-400/35 text-emerald-300 text-xs font-bold w-fit shadow-sm shadow-emerald-500/20">
