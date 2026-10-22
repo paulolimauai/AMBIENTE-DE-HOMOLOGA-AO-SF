@@ -13674,6 +13674,10 @@ body.light .period button.active {
   gap: clamp(28px, 4.5vw, 68px);
   box-sizing: border-box;
 }
+#authPage,
+#authPage *:not(svg):not(i) {
+  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+}
 #authPage *, #authPage *::before, #authPage *::after { box-sizing: border-box; }
 #authPage > #authBgCanvas { opacity: 0.42 !important; }
 #authPage::before {
