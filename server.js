@@ -14045,14 +14045,6 @@ body.light .period button.active {
     </div>
   </div>
 
-  <!-- Assinatura Oficial do Desenvolvedor no Rodapé Global da Autenticação -->
-  <footer class="auth-global-footer">
-    <div class="auth-dev-badge-wrap">
-      <div class="auth-dev-badge" title="Desenvolvido por Paulo Lima">
-        <img src="/images/dev_paulo_lima_logo.png" alt="Desenvolvido por Paulo Lima" class="auth-dev-logo-img" loading="eager" decoding="async">
-      </div>
-    </div>
-  </footer>
 </div>
 
 <!-- APLICAÇÃO PRINCIPAL -->
