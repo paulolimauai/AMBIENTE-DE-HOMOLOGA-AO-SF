@@ -2959,6 +2959,14 @@ body.light .period button.active {
         }
     </style>
     <style id="nexus-financial-login-refresh">
+        #authPage *, #authPage *::before, #authPage *::after { box-sizing: border-box; }
+        #authPage .auth-card-nexus { width: 100%; max-width: 480px; padding: clamp(22px, 2.4vh, 28px) clamp(22px, 2.2vw, 30px); }
+        #authPage #authBgCanvas { opacity: 0.42 !important; }
+        #authPage .auth-brand { margin-bottom: 16px !important; }
+        #authPage .auth-tabs-nav { margin-bottom: 16px !important; }
+        #authPage .auth-field-group { margin-bottom: 14px !important; }
+        #authPage #rememberMe { accent-color: #059669 !important; }
+        #authPage :is(button, a, input):focus-visible { outline: 2px solid #FBBF24 !important; outline-offset: 3px; }
         #authPage .auth-card-nexus {
             background: linear-gradient(155deg, rgba(18, 27, 21, 0.98), rgba(8, 13, 10, 0.98)) !important;
             border: 1px solid rgba(52, 211, 153, 0.30) !important;
@@ -3009,7 +3017,7 @@ body.light .period button.active {
         body.light #authPage .auth-tab-btn.active { color: #FFFFFF !important; background: linear-gradient(135deg, #047857, #059669) !important; }
         body.light #authPage .auth-showcase-badge { color: #065F46 !important; background: #ECFDF5 !important; border-color: #A7F3D0 !important; }
         @media (max-width: 640px) {
-            #authPage .auth-card-nexus { border-radius: 20px !important; }
+            #authPage .auth-card-nexus { border-radius: 20px !important; padding: 22px 18px !important; }
             #authPage .auth-tabs-nav { margin-bottom: 16px !important; }
         }
     </style>
@@ -5653,6 +5661,9 @@ body.light .period button.active {
             const passInput = document.getElementById('loginPassword');
 
             if (rememberCheck) rememberCheck.checked = false;
+            window.addEventListener('pageshow', function() {
+                if (rememberCheck) rememberCheck.checked = false;
+            });
             if (rememberedEmail) {
                 if (emailInput) {
                     emailInput.value = rememberedEmail;

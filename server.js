@@ -13668,9 +13668,41 @@ body.light .period button.active {
 
 /* Identidade refinada da autenticação Nexus */
 #authPage .auth-exec-layout {
-  max-width: 1220px;
-  grid-template-columns: minmax(0, 1.08fr) minmax(370px, 0.82fr);
-  gap: clamp(32px, 5vw, 72px);
+  width: min(100%, 1280px);
+  max-width: 1280px;
+  grid-template-columns: minmax(0, 1fr) minmax(390px, 0.82fr);
+  gap: clamp(28px, 4.5vw, 68px);
+  box-sizing: border-box;
+}
+#authPage *, #authPage *::before, #authPage *::after { box-sizing: border-box; }
+#authPage > #authBgCanvas { opacity: 0.42 !important; }
+#authPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(110deg, rgba(2, 8, 5, 0.48), rgba(2, 8, 5, 0.20) 52%, rgba(2, 8, 5, 0.42));
+}
+#authPage .auth-showcase-panel { max-width: 650px; gap: clamp(13px, 1.8vh, 20px); }
+#authPage .auth-showcase-title { max-width: 590px; font-size: clamp(32px, 3.05vw, 44px); line-height: 1.13; }
+#authPage .auth-showcase-desc { max-width: 540px; font-size: 15px; line-height: 1.65; }
+#authPage .auth-showcase-metrics { gap: 10px; }
+#authPage .metric-val { font-size: clamp(16px, 1.45vw, 19px); }
+#authPage .auth-card-nexus {
+  width: 100%;
+  max-width: 480px;
+  padding: clamp(22px, 2.4vh, 28px) clamp(22px, 2.2vw, 30px);
+}
+#authPage .auth-brand { margin-bottom: 16px; }
+#authPage .auth-logo-badge { width: 48px; height: 48px; margin-bottom: 10px; }
+#authPage .auth-tabs-nav { margin-bottom: 16px; }
+#authPage .auth-field { margin-bottom: 14px; }
+#authPage #rememberMe { accent-color: #059669 !important; }
+#authPage .auth-bottom-text { line-height: 1.55; }
+body.light #authPage > #authBgCanvas { opacity: 0.16 !important; }
+body.light #authPage::before {
+  background: linear-gradient(110deg, rgba(247, 250, 247, 0.62), rgba(247, 250, 247, 0.32) 52%, rgba(247, 250, 247, 0.58));
 }
 #authPage .auth-showcase-title span {
   background: linear-gradient(110deg, #D1FAE5 0%, #34D399 55%, #FBBF24 100%);
@@ -13782,6 +13814,10 @@ body.light #authPage .auth-trust-item {
   #authPage .auth-exec-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   #authPage .auth-showcase-panel { display: none !important; }
   #authPage .auth-card-nexus { max-width: 460px; }
+}
+@media (max-width: 640px) {
+  #authPage .auth-card-nexus { padding: 22px 18px; }
+  #authPage .auth-top-bar { top: 10px !important; right: 10px !important; }
 }
 
 </style>
@@ -17370,6 +17406,10 @@ if (loginPasswordEl) {
     }
   } catch(e){}
 })();
+window.addEventListener('pageshow', function() {
+  const rememberCheck = document.getElementById('rememberMe');
+  if (rememberCheck) rememberCheck.checked = false;
+});
 
 // Login direto contra o SQL Server / API com Validação Precisa em Tela e Fallback Offline
 window.handleLoginSubmit = async function(e) {
