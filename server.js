@@ -21697,41 +21697,6 @@ function pageDashboard(){
   const despPct = totalFluxo > 0 ? (100 - recPct) : 0;
   const resultado = receitas - despesas;
   const savingsPct = receitas > 0 ? Math.round((resultado / receitas) * 100) : 0;
-  const brasiliaNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-  const monthTransactions = (Array.isArray(transactions) ? transactions : []).filter(t => {
-    const txDate = t && t.date ? parseDateParts(t.date) : null;
-    return txDate && txDate.month === brasiliaNow.getMonth() + 1 && txDate.year === brasiliaNow.getFullYear();
-  });
-  const monthIncome = monthTransactions.filter(t => t.type === 'in').reduce((sum, t) => sum + parseInputValue(t.val), 0);
-  const monthExpenses = monthTransactions.filter(t => t.type === 'out').reduce((sum, t) => sum + parseInputValue(t.val), 0);
-  const monthNet = monthIncome - monthExpenses;
-  const monthSavingsPct = monthIncome > 0 ? Math.round((monthNet / monthIncome) * 100) : null;
-  const configuredBudgets = (Array.isArray(budgets) ? budgets : []).filter(b => parseInputValue(b.limit) > 0);
-  const monthBudgetLimit = configuredBudgets.reduce((sum, b) => sum + parseInputValue(b.limit), 0);
-  const monthBudgetSpent = configuredBudgets.reduce((sum, b) => sum + monthTransactions
-    .filter(t => t.type === 'out' && t.cat === b.category)
-    .reduce((spent, t) => spent + parseInputValue(t.val), 0), 0);
-  const monthBudgetPct = monthBudgetLimit > 0 ? Math.round((monthBudgetSpent / monthBudgetLimit) * 100) : null;
-  const activeGoals = (Array.isArray(goals) ? goals : []).filter(g => parseInputValue(g.target) > 0);
-  const goalTotal = activeGoals.reduce((sum, g) => sum + parseInputValue(g.target), 0);
-  const goalCurrent = activeGoals.reduce((sum, g) => sum + parseInputValue(g.current), 0);
-  const goalProgressPct = goalTotal > 0 ? Math.round((goalCurrent / goalTotal) * 100) : null;
-  const monthBudgetCaption = monthBudgetPct === null
-    ? 'Cadastre limites para acompanhar este indicador.'
-    : monthBudgetPct > 100
-      ? (monthBudgetPct - 100) + '% acima do total definido.'
-      : fmt(Math.max(0, monthBudgetLimit - monthBudgetSpent)) + ' restantes no orçamento.';
-  const monthSavingsCaption = monthSavingsPct === null
-    ? 'Sem receitas registradas neste mês.'
-    : monthNet >= 0 ? fmt(monthNet) + ' de saldo positivo no mês.' : fmt(Math.abs(monthNet)) + ' em despesas acima das receitas.';
-  const goalCaption = goalProgressPct === null
-    ? 'Cadastre uma meta para acompanhar sua reserva.'
-    : fmt(goalCurrent) + ' acumulados de ' + fmt(goalTotal) + ' nas metas.';
-  const monthlyMetricsHtml = '<section id="monthlyRealMetrics" aria-label="Indicadores financeiros reais do mês">' +
-    '<article class="monthly-real-card"><span class="metric-heading">Limite do orçamento</span><strong class="metric-percentage">' + (monthBudgetPct === null ? '—' : monthBudgetPct + '%') + '</strong><div class="metric-description">' + monthBudgetCaption + '</div><div class="metric-track"><span style="width:' + (monthBudgetPct === null ? 0 : Math.max(0, Math.min(100, monthBudgetPct))) + '%; background:' + (monthBudgetPct !== null && monthBudgetPct > 100 ? '#EF4444' : '#10B981') + '"></span></div></article>' +
-    '<article class="monthly-real-card"><span class="metric-heading">Economia deste mês</span><strong class="metric-percentage">' + (monthSavingsPct === null ? '—' : monthSavingsPct + '%') + '</strong><div class="metric-description">' + monthSavingsCaption + '</div><div class="metric-track"><span style="width:' + (monthSavingsPct === null ? 0 : Math.max(0, Math.min(100, monthSavingsPct))) + '%; background:' + (monthSavingsPct !== null && monthSavingsPct < 0 ? '#EF4444' : '#10B981') + '"></span></div></article>' +
-    '<article class="monthly-real-card"><span class="metric-heading">Meta & reserva</span><strong class="metric-percentage">' + (goalProgressPct === null ? '—' : goalProgressPct + '%') + '</strong><div class="metric-description">' + goalCaption + '</div><div class="metric-track"><span style="width:' + (goalProgressPct === null ? 0 : Math.max(0, Math.min(100, goalProgressPct))) + '%"></span></div></article>' +
-    '</section>';
   const commitPct = receitas > 0 ? Math.min(100, Math.round((despesas / receitas) * 100)) : (despesas > 0 ? 100 : 0);
   const now = new Date();
   const daysInPeriod = now.getDate() || 1;
@@ -22127,8 +22092,6 @@ function pageDashboard(){
         </div>
       </div>
     </div>
-
-    \${monthlyMetricsHtml}
 
     <!-- 3. EXECUTIVE 6-CARD KPI BENTO GRID -->
     <div class="kpis-grid-6">
