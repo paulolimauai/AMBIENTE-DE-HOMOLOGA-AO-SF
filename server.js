@@ -17225,11 +17225,9 @@ if (loginPasswordEl) {
     const remEmail = localStorage.getItem('nexus_remembered_email');
     const emailInp = document.getElementById('loginEmail');
     const remCheck = document.getElementById('rememberMe');
+    if (remCheck) remCheck.checked = false;
     if (remEmail && emailInp) {
       emailInp.value = remEmail;
-      if (remCheck) remCheck.checked = true;
-    } else if (remCheck) {
-      remCheck.checked = true;
     }
   } catch(e){}
 })();
