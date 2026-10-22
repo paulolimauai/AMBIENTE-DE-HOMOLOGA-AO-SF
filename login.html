@@ -2763,18 +2763,10 @@ body.light .period button.active {
     </style>
     <style id="nexus-login-polish">
         /* Acabamento visual da autenticação: menos brilho, hierarquia clara e foco acessível. */
-        body {
-            background-color: #070B13 !important;
-            background-image: radial-gradient(ellipse at 16% 18%, rgba(37, 99, 235, .13), transparent 38%),
-                              radial-gradient(ellipse at 82% 76%, rgba(14, 165, 233, .10), transparent 36%) !important;
-        }
-        body.light {
-            background-color: #F3F6FB !important;
-            background-image: radial-gradient(ellipse at 16% 18%, rgba(37, 99, 235, .08), transparent 38%),
-                              radial-gradient(ellipse at 82% 76%, rgba(14, 165, 233, .06), transparent 36%) !important;
+        body, body.dark, body.light {
+            transition-property: color !important;
         }
         #bgOrbitalCanvas { display: none !important; }
-        .auth-bg-cyber-grid { background-attachment: fixed !important; }
         .auth-card-nexus {
             background: rgba(12, 19, 32, .96) !important;
             border: 1px solid rgba(148, 163, 184, .22) !important;
