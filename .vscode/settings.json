@@ -32,7 +32,25 @@
     "diffEditor.removedLineBackground": "#5a1e1e30",
     "editorGutter.addedBackground": "#2ea043",
     "editorGutter.modifiedBackground": "#0078d4",
-    "editorGutter.deletedBackground": "#f85149"
+    "editorGutter.deletedBackground": "#f85149",
+    "terminal.ansiBlack": "#1E1E1E",
+    "terminal.ansiRed": "#F44747",
+    "terminal.ansiGreen": "#6A9955",
+    "terminal.ansiYellow": "#D7BA7D",
+    "terminal.ansiBlue": "#569CD6",
+    "terminal.ansiMagenta": "#C586C0",
+    "terminal.ansiCyan": "#4EC9B0",
+    "terminal.ansiWhite": "#D4D4D4",
+    "terminal.ansiBrightBlack": "#808080",
+    "terminal.ansiBrightRed": "#F14C4C",
+    "terminal.ansiBrightGreen": "#B5CEA8",
+    "terminal.ansiBrightYellow": "#DCDCAA",
+    "terminal.ansiBrightBlue": "#9CDCFE",
+    "terminal.ansiBrightMagenta": "#D670D6",
+    "terminal.ansiBrightCyan": "#29B8DB",
+    "terminal.ansiBrightWhite": "#FFFFFF",
+    "terminal.foreground": "#D4D4D4",
+    "terminalCursor.foreground": "#AEAFAD"
   },
   "terminal.integrated.defaultProfile.windows": "PowerShell",
   "terminal.integrated.fontFamily": "'Cascadia Code', Consolas, 'Courier New', monospace",
@@ -45,7 +63,8 @@
   "terminal.integrated.env.windows": {
     "BAT_THEME": "Visual Studio Dark+",
     "BAT_STYLE": "numbers,changes,header,grid",
-    "DELTA_NAVIGATE": "1"
+    "DELTA_NAVIGATE": "1",
+    "TERM": "xterm-256color"
   },
   "terminal.integrated.profiles.windows": {
     "PowerShell": {

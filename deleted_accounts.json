@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "email": "cliente.celular5g@teste.com",
+    "deleted_at": "2026-10-22T01:58:10.032Z"
+  },
+  {
+    "email": "pauloroberto@gmail.com",
+    "deleted_at": "2026-10-22T01:58:10.118Z"
+  },
+  {
+    "email": "roberto.alcantara@teste.com",
+    "deleted_at": "2026-10-22T01:58:10.195Z"
+  },
+  {
+    "email": "suporte.paulolima@outlook.com",
+    "deleted_at": "2026-10-22T01:58:10.215Z"
+  },
+  {
+    "email": "ciceragyn12@hotmail.com",
+    "deleted_at": "2026-10-22T01:58:10.296Z"
+  },
+  {
+    "email": "mobile.auditoria@teste.com",
+    "deleted_at": "2026-10-22T01:58:10.497Z"
+  },
+  {
+    "email": "novo.teste.zero@nexus.com",
+    "deleted_at": "2026-10-22T01:58:10.515Z"
+  },
+  {
+    "email": "carlos.oliveira@teste.com",
+    "deleted_at": "2026-10-22T01:58:10.529Z"
+  },
+  {
+    "email": "carlos.silva@gmail.com",
+    "deleted_at": "2026-10-22T01:58:10.602Z"
+  },
+  {
+    "email": "celular4g@teste.com",
+    "deleted_at": "2026-10-22T01:58:10.647Z"
+  }
+]
