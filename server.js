@@ -24347,6 +24347,60 @@ function getUserActivitySummary(email){
 
 let currentAdminUserFilter = 'all';
 let currentAdminUserSearch = '';
+let selectedAdminUserEmails = new Set();
+
+function setAdminUserSelected(email, selected) {
+  const cleanEmail = String(email || '').toLowerCase().trim();
+  if (!cleanEmail || (currentUser && cleanEmail === String(currentUser.email || '').toLowerCase().trim())) return;
+  if (selected) selectedAdminUserEmails.add(cleanEmail);
+  else selectedAdminUserEmails.delete(cleanEmail);
+  const count = document.getElementById('selectedAdminUsersCount');
+  const button = document.getElementById('bulkDeleteUsersButton');
+  if (count) count.textContent = String(selectedAdminUserEmails.size);
+  if (button) {
+    button.disabled = selectedAdminUserEmails.size === 0;
+    button.style.opacity = selectedAdminUserEmails.size ? '1' : '0.5';
+  }
+}
+
+function selectAllAdminUsers(checked) {
+  selectedAdminUserEmails = new Set();
+  if (checked) {
+    (registeredUsers || []).forEach(user => {
+      const email = String(user && user.email || '').toLowerCase().trim();
+      if (email && (!currentUser || email !== String(currentUser.email || '').toLowerCase().trim())) selectedAdminUserEmails.add(email);
+    });
+  }
+  render();
+}
+
+async function deleteSelectedAdminUsers() {
+  if (!currentUser || currentUser.role !== 'Administrador') return;
+  const emails = Array.from(selectedAdminUserEmails);
+  if (!emails.length) return;
+  showCustomAlert('Excluir usuários selecionados?', 'Serão excluídos ' + emails.length + ' cadastro(s) e os dados associados. Esta ação não pode ser desfeita.', 'error', async () => {
+    let deleted = 0;
+    const token = loadFromStorage('nexus_token', '') || '';
+    for (const email of emails) {
+      try {
+        const response = await fetch('/api/users?email=' + encodeURIComponent(email), {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const result = await response.json().catch(() => ({}));
+        if (response.ok && result.success) {
+          registeredUsers = registeredUsers.filter(user => String(user.email || '').toLowerCase() !== email);
+          selectedAdminUserEmails.delete(email);
+          deleted++;
+        }
+      } catch (e) {}
+    }
+    saveToStorage('nexus_users', registeredUsers);
+    await syncUsersWithServer();
+    render();
+    showToast(deleted === emails.length ? deleted + ' usuário(s) excluído(s).' : deleted + ' de ' + emails.length + ' usuário(s) excluído(s); os demais foram preservados.');
+  });
+}
 
 function setAdminUserFilter(filterType, btnEl) {
   currentAdminUserFilter = filterType;
@@ -24486,7 +24540,15 @@ function pageUsuarios(){
       <h3 style="font-size:13.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px; margin:0;">
         <span>📋</span> Grade Alinhada de Cadastros
       </h3>
-      <span class="tag" style="cursor:default; font-weight:800; font-size:10.5px; padding:3px 10px; border-radius:999px; background:rgba(5, 150, 105,0.14); border:1px solid rgba(5, 150, 105,0.32); color:#34D399;">\${totalUsers} registro(s)</span>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+        <label style="display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--text-dim); cursor:pointer;">
+          <input type="checkbox" onchange="selectAllAdminUsers(this.checked)" \${selectedAdminUserEmails.size === users.filter(u => !(currentUser && String(u.email || '').toLowerCase() === String(currentUser.email || '').toLowerCase())).length && users.length > 0 ? 'checked' : ''}>
+          Selecionar todos
+        </label>
+        <span style="font-size:11px; color:var(--text-dim);"><strong id="selectedAdminUsersCount">\${selectedAdminUserEmails.size}</strong> selecionado(s)</span>
+        <button id="bulkDeleteUsersButton" type="button" onclick="deleteSelectedAdminUsers()" \${selectedAdminUserEmails.size ? '' : 'disabled'} style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.4); color:#FCA5A5; font-size:11px; font-weight:800; cursor:pointer; opacity:\${selectedAdminUserEmails.size ? '1' : '0.5'};">🗑 Excluir selecionados</button>
+        <span class="tag" style="cursor:default; font-weight:800; font-size:10.5px; padding:3px 10px; border-radius:999px; background:rgba(5, 150, 105,0.14); border:1px solid rgba(5, 150, 105,0.32); color:#34D399;">\${totalUsers} registro(s)</span>
+      </div>
     </div>
 
     <div class="user-admin-grid-header">
@@ -24541,6 +24603,10 @@ function pageUsuarios(){
         <div class="user-card-4k \${isInactive ? 'inactive' : ''}" data-user-email="\${(u.email||'').toLowerCase()}" data-user-cpf="\${rawCpf}" data-user-phone="\${rawPhone}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isInactive ? 'inactive' : 'active'}">
           <!-- Coluna 1: Titular / Conta -->
           <div class="user-card-left">
+            <label title="Selecionar este cadastro para exclusão" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-width:44px; padding:5px 4px; border:1px solid rgba(239,68,68,0.28); border-radius:8px; background:rgba(239,68,68,0.07); color:#FCA5A5; font-size:9px; font-weight:800; line-height:1; cursor:\${isSelf ? 'not-allowed' : 'pointer'}; flex-shrink:0;">
+              <input type="checkbox" aria-label="Selecionar \${u.email} para exclusão" \${isSelf ? 'disabled title="Não é possível excluir a própria conta"' : ''} \${selectedAdminUserEmails.has(String(u.email || '').toLowerCase()) ? 'checked' : ''} onchange="setAdminUserSelected('\${u.email}', this.checked)" style="width:20px; height:20px; accent-color:#EF4444; cursor:\${isSelf ? 'not-allowed' : 'pointer'}; margin:0;">
+              <span>Selecionar</span>
+            </label>
             <div class="user-card-avatar \${isAdminUser ? 'admin-av' : 'user-av'}">
               \${initials}
               <span class="user-status-dot \${isInactive ? 'offline' : 'online'}"></span>
