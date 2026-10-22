@@ -321,6 +321,38 @@ function generateSecureToken(user) {
   return `${header}.${payload}.${signature}`;
 }
 
+function verifySecureToken(token) {
+  try {
+    const parts = String(token || '').split('.');
+    if (parts.length !== 3) return null;
+    const [header, payload, signature] = parts;
+    const expected = crypto.createHmac('sha256', JWT_SECRET).update(`${header}.${payload}`).digest();
+    const supplied = Buffer.from(signature, 'base64url');
+    if (expected.length !== supplied.length || !crypto.timingSafeEqual(expected, supplied)) return null;
+    const claims = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    if (!claims.email || !claims.exp || claims.exp <= Math.floor(Date.now() / 1000)) return null;
+    return claims;
+  } catch (e) {
+    return null;
+  }
+}
+
+function getAuthenticatedAdmin(req) {
+  const authorization = String(req.headers.authorization || '');
+  const claims = authorization.startsWith('Bearer ') ? verifySecureToken(authorization.slice(7)) : null;
+  if (!claims) return null;
+  const email = String(claims.email).toLowerCase().trim();
+  const user = getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === email);
+  return user && user.role === 'Administrador' ? user : null;
+}
+
+function hasInternalSyncAccess(req, parsedUrl) {
+  return Boolean(JWT_SECRET) && (
+    req.headers['x-nexus-sync-token'] === JWT_SECRET ||
+    req.headers.authorization === `Bearer ${JWT_SECRET}`
+  );
+}
+
 function sanitizeUser(user) {
   if (!user) return null;
   const { password, ...safeUser } = user;
@@ -1197,7 +1229,7 @@ async function setupDatabaseTablesAndSync() {
     } catch(autoFixNameErr) {}
     try {
       const sqlNow = getBrasiliaSqlString(new Date());
-      await pool.query(`UPDATE usuarios SET trial_started_at = '${sqlNow}', subscription_status = 'trial' WHERE (subscription_status IS NULL OR subscription_status = 'trial' OR subscription_status = 'expired') AND (subscription_plan IS NULL OR subscription_plan NOT IN ('vitalicio', 'cortesia_admin', 'mensal', 'anual')) AND role <> 'Administrador' AND (trial_started_at IS NULL OR trial_started_at < '2026-10-14T00:00:00')`);
+      await pool.query(`UPDATE usuarios SET trial_started_at = '${sqlNow}', subscription_status = 'trial' WHERE (subscription_status IS NULL OR subscription_status = 'trial') AND (subscription_plan IS NULL OR subscription_plan NOT IN ('vitalicio', 'cortesia_admin', 'mensal', 'anual')) AND role <> 'Administrador' AND trial_started_at IS NULL`);
     } catch(autoTrialMigrateErr) {}
     const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
     if (res.rows) {
@@ -7051,7 +7083,7 @@ body.light .executive-4k-message {
   color: #475569 !important;
 }
 
-/* ==================== WIDGET FLUTUANTE DE TESTE GRÁTIS (5 DIAS) ==================== */
+/* ==================== WIDGET FLUTUANTE DE TESTE GRÁTIS (1 DIA) ==================== */
 .trial-dock-widget {
   position: fixed;
   bottom: 24px;
@@ -14951,8 +14983,8 @@ body.light .period button.active {
         <button type="button" onclick="adminGrantCustomTime(editingUserEmail)" style="height:30px; padding:0 12px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:11px; font-weight:900; border:none; cursor:pointer;">
           Liberar ✓
         </button>
-        <button type="button" class="btn-ghost" onclick="adminResetTrialAction(editingUserEmail)" title="Resetar período de teste para 5 dias" style="height:30px; padding:0 8px; border-radius:8px; font-size:10.5px; font-weight:700;">
-          🔄 5d
+        <button type="button" class="btn-ghost" onclick="adminResetTrialAction(editingUserEmail)" title="Resetar período de teste para 1 dia" style="height:30px; padding:0 8px; border-radius:8px; font-size:10.5px; font-weight:700;">
+          🔄 1d
         </button>
       </div>
     </div>
@@ -15610,7 +15642,7 @@ body.light .period button.active {
     </div>
   </div>
 </div>
-<!-- WIDGET FLUTUANTE DE TESTE GRÁTIS (5 DIAS) -->
+<!-- WIDGET FLUTUANTE DE TESTE GRÁTIS (1 DIA) -->
 <div class="trial-dock-widget" id="trialDockWidget" style="display:none;" onclick="window.openSubscriptionPaywall(window.__isPaywallLocked)" title="Clique para assinar um plano">
   <div class="trial-dock-icon">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -15619,8 +15651,8 @@ body.light .period button.active {
     </svg>
   </div>
   <div class="trial-dock-text">
-    <span class="trial-dock-title" id="trialDockTitle">Período Gratuito (5 Dias)</span>
-    <span class="trial-dock-time" id="trialDockTime">5d 00:00:00</span>
+    <span class="trial-dock-title" id="trialDockTitle">Período Gratuito (1 Dia)</span>
+    <span class="trial-dock-time" id="trialDockTime">1d 00:00:00</span>
   </div>
   <button type="button" class="trial-dock-btn" id="trialDockBtn" onclick="event.stopPropagation(); window.openSubscriptionPaywall(window.__isPaywallLocked);">
     Assinar Plano
@@ -15648,7 +15680,7 @@ body.light .period button.active {
             </div>
             <div style="display:inline-flex; align-items:center; gap:5px; padding:2.5px 9px; border-radius:999px; background:rgba(56, 189, 248, 0.14); border:1px solid rgba(56, 189, 248, 0.38); font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#38BDF8;">
               <span>⚡</span>
-              <span class="badge-retain-color">Conciliação & Reconhecimento Automático</span>
+              <span class="badge-retain-color">Pagamento por Pix &bull; Confirmação manual</span>
             </div>
           </div>
           <h2 style="font-size:20px; font-weight:900; margin:0; letter-spacing:-0.02em; color:#FFFFFF;" id="subModalTitle">
@@ -15674,7 +15706,7 @@ body.light .period button.active {
           Admin: Ignorar
         </button>
         <button type="button" id="subAdminResetBtn" onclick="window.resetTrialForTesting()" style="display:none; padding:6px 12px; border-radius:10px; background:rgba(59,130,246,0.2); border:1px solid rgba(59,130,246,0.5); color:#60A5FA; font-size:11px; font-weight:800; cursor:pointer;">
-          Admin: +5d Teste
+          Admin: +1d Teste
         </button>
         <button type="button" id="subModalCloseBtn" onclick="window.closeSubscriptionPaywall(false)" style="display:none; width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1; cursor:pointer; align-items:center; justify-content:center; font-size:16px; line-height:1;" title="Fechar">
           ✕
@@ -15701,7 +15733,7 @@ body.light .period button.active {
       <div class="sub-step-pill" id="subStepPill3" style="border-color:rgba(16,185,129,0.35); background:rgba(16,185,129,0.05);">
         <span class="sub-step-num" style="background:rgba(16,185,129,0.22); border-color:rgba(16,185,129,0.55); color:#34D399;">3</span>
         <div>
-          <strong style="display:block; font-size:11.5px; color:#34D399;">Reconhecimento Automático</strong>
+          <strong style="display:block; font-size:11.5px; color:#34D399;">Confirmação do recebimento</strong>
           <span style="font-size:10.5px; color:#94A3B8;">Identificação e desbloqueio imediato pós-pagamento</span>
         </div>
       </div>
@@ -15785,7 +15817,7 @@ body.light .period button.active {
               </div>
               <div class="sub-breakdown-row">
                 <span>Conciliação Bancária (SPI / Gateway):</span>
-                <strong style="color:#38BDF8; font-size:11px;">Reconhecimento Automático ⚡</strong>
+                <strong style="color:#38BDF8; font-size:11px;">Confirmação do recebimento</strong>
               </div>
               <div class="sub-breakdown-row total-row">
                 <div style="display:flex; flex-direction:column;">
@@ -15846,7 +15878,7 @@ body.light .period button.active {
               </span>
               <span style="font-size:10.5px; font-weight:800; color:#10B981; display:flex; align-items:center; gap:5px;">
                 <span class="sub-radar-pulse-dot" style="width:7px; height:7px;"></span>
-                <span id="subHeaderAutoStatusBadge">Gateway Online &bull; Auto-Reconhecimento</span>
+                <span id="subHeaderAutoStatusBadge">Pix &bull; Confirmação manual</span>
               </span>
             </div>
 
@@ -15857,10 +15889,10 @@ body.light .period button.active {
                   <span class="sub-radar-pulse-dot" id="subRadarDot"></span>
                   <div>
                     <strong id="subRadarStatusTitle" style="font-size:12px; font-weight:900; color:#FFFFFF; display:block; letter-spacing:-0.01em;">
-                      Monitoramento Automático de Pagamento Ativo (BACEN SPI)
+                      Aguardando confirmação do pagamento
                     </strong>
                     <span id="subRadarStatusDesc" style="font-size:10.5px; color:#94A3B8; display:block; margin-top:1px;">
-                      Efetue o pagamento abaixo. O sistema identifica a liquidação e libera a tela automaticamente.
+                      Pague via Pix e solicite a confirmação. O acesso é liberado após a validação do recebimento.
                     </span>
                   </div>
                 </div>
@@ -15960,7 +15992,7 @@ body.light .period button.active {
                   <div style="padding:8px 11px; border-radius:11px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
                     <div style="font-size:10.5px; color:#CBD5E1; display:flex; align-items:center; gap:6px;">
                       <span style="color:#10B981; font-size:13px;">⚡</span>
-                      <span><strong>Reconhecimento Automático:</strong> Após pagar no app do seu banco, o sistema detecta e libera sozinho.</span>
+                      <span><strong>Confirmação de pagamento:</strong> Após pagar, envie o comprovante pelo WhatsApp.</span>
                     </div>
                     <input type="hidden" id="subPixTxIdInput" value="" />
                   </div>
@@ -15968,7 +16000,7 @@ body.light .period button.active {
               </div>
 
               <button type="button" class="sub-pay-action-btn" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
-                <span>⚡</span> <span id="pixActionBtnLabel">Já Efetuei o Pagamento Pix &bull; Reconhecer Automaticamente</span>
+                <span>⚡</span> <span id="pixActionBtnLabel">Já fiz o Pix &bull; Solicitar confirmação</span>
               </button>
             </div>
 
@@ -17764,12 +17796,12 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ==================== Motor de Período Gratuito (5 Dias) e Assinatura Mandatória ==================== */
+/* ==================== Motor de Período Gratuito (1 Dia) e Assinatura Mandatória ==================== */
 window.__trialTimerInterval = null;
-window.__trialRemainingSeconds = 432000;
+window.__trialRemainingSeconds = 86400;
 window.__selectedSubPlan = 'mensal';
-/* ==================== MOTOR DE ASSINATURA & PAYWALL DE TESTE GRÁTIS (5 DIAS) ==================== */
-window.__trialRemainingSeconds = 432000;
+/* ==================== MOTOR DE ASSINATURA & PAYWALL DE TESTE GRÁTIS (1 DIA) ==================== */
+window.__trialRemainingSeconds = 86400;
 window.__trialTimerInterval = null;
 window.__selectedSubPlan = 'mensal';
 window.__selectedPaymentMethod = 'pix';
@@ -17966,7 +17998,7 @@ window.initTrialAndSubscription = async function() {
           return;
         }
 
-        // Período de teste ativo (até 5 dias / 432000s)
+        // Período de teste ativo (até 1 dia / 86400s)
         window.startTrialCountdown(data.remaining_seconds);
       }
     }
@@ -18031,7 +18063,7 @@ window.updateTrialDisplay = function() {
   const widget = document.getElementById('trialDockWidget');
 
   if (labelEl) labelEl.textContent = timeFormatted;
-  if (titleEl) titleEl.textContent = 'Período Gratuito (5 Dias)';
+  if (titleEl) titleEl.textContent = 'Período Gratuito (1 Dia)';
   if (btnEl) btnEl.textContent = 'Assinar Plano';
 
   if (widget) {
@@ -18420,6 +18452,10 @@ window.selectSubPlan = function(plan) {
 };
 
 window.selectPaymentMethod = function(method) {
+  if (method !== 'pix') {
+    if (typeof showToast === 'function') showToast('Pagamento online com cartão e boleto ainda não está disponível. Use Pix.');
+    method = 'pix';
+  }
   window.__selectedPaymentMethod = method;
   const tabs = ['pix', 'credit_card', 'debit_card', 'boleto'];
   tabs.forEach(m => {
@@ -18557,44 +18593,20 @@ window.armAutoPaymentDetector = function(method) {
 
   window.updateAutoRecognitionRadar(
     'detecting',
-    '⚡ Pagamento em Andamento • Aguardando Liquidação no App do Seu Banco...',
-    'Reconhecimento automático ativado! Assim que concluir o pagamento no seu banco, o sistema detectará e liberará seu acesso sozinho.',
+    'Pix copiado • Aguardando solicitação de confirmação',
+    'Após pagar, envie o comprovante pelo WhatsApp. O acesso será liberado quando o recebimento for confirmado.',
     45
   );
 
   if (window.__autoPayDetectTimer) clearTimeout(window.__autoPayDetectTimer);
-  // Reconhecimento automático inteligente após a compensação bancária
-  window.__autoPayDetectTimer = setTimeout(() => {
-    const modal = document.getElementById('nexusSubscriptionModal');
-    const isModalOpen = modal && (modal.classList.contains('show') || modal.style.display === 'flex');
-    if (isModalOpen && window.__autoPayArmedMethod && !window.__isProcessingSubPayment) {
-      window.processSubscriptionPayment(window.__autoPayArmedMethod, true);
-    }
-  }, 5500);
+  // Copiar a chave Pix não confirma o recebimento.
+  if (window.__autoPayDetectTimer) clearTimeout(window.__autoPayDetectTimer);
+  window.__autoPayDetectTimer = null;
 };
 
-// Quando o usuário volta do aplicativo do banco para a aba/janela do sistema, reconhece imediatamente!
+// Voltar do aplicativo do banco não confirma o recebimento.
 if (!window.__autoPayFocusListenerBound) {
   window.__autoPayFocusListenerBound = true;
-  const onReturnFromBankApp = () => {
-    if (!window.__autoPayArmedMethod || window.__isProcessingSubPayment) return;
-    const elapsed = Date.now() - (window.__autoPayArmedTimestamp || 0);
-    if (elapsed >= 1200) {
-      const modal = document.getElementById('nexusSubscriptionModal');
-      const isModalOpen = modal && (modal.classList.contains('show') || modal.style.display === 'flex');
-      if (isModalOpen) {
-        if (window.__autoPayDetectTimer) {
-          clearTimeout(window.__autoPayDetectTimer);
-          window.__autoPayDetectTimer = null;
-        }
-        window.processSubscriptionPayment(window.__autoPayArmedMethod, true);
-      }
-    }
-  };
-  window.addEventListener('focus', onReturnFromBankApp);
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') onReturnFromBankApp();
-  });
 }
 
 // Conexão SSE em Tempo Real para Reconhecimento Instantâneo (0ms) de Pagamentos / Liberações
@@ -18626,7 +18638,7 @@ window.copyPixKeyDirect = function() {
         btn.style.color = '#38BDF8';
       }, 3000);
     }
-    if (typeof showToast === 'function') showToast('⚡ Chave Pix (62) 99234-5372 copiada! Monitorando seu pagamento automaticamente...');
+    if (typeof showToast === 'function') showToast('⚡ Chave Pix copiada. Após pagar, envie o comprovante para confirmar o recebimento.');
     window.armAutoPaymentDetector('pix');
   };
 
@@ -18674,7 +18686,7 @@ window.copyPixCodeToClipboard = function() {
       btn.style.color = '#10B981';
       setTimeout(() => { btn.innerHTML = orig; btn.style.color = '#34D399'; }, 3000);
     }
-    if (typeof showToast === 'function') showToast('⚡ Código Pix copiado! Efetue o pagamento no banco — o reconhecimento é automático.');
+    if (typeof showToast === 'function') showToast('⚡ Código Pix copiado. Efetue o pagamento e solicite a confirmação pelo WhatsApp.');
     window.armAutoPaymentDetector('pix');
   };
   navigator.clipboard.writeText(inputEl.value).then(onCopied).catch(() => {
@@ -18761,6 +18773,11 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   const payMethod = method || window.__selectedPaymentMethod || 'pix';
   let receiptCode = '';
 
+  if (payMethod !== 'pix') {
+    if (typeof showToast === 'function') showToast('Pagamento com cartão e boleto ainda não está integrado. Use Pix para solicitar a confirmação.');
+    return;
+  }
+
   if (payMethod === 'pix') {
     const manualTx = (document.getElementById('subPixTxIdInput')?.value || '').trim();
     receiptCode = manualTx.length >= 6 ? manualTx : ('E18236120' + Date.now() + 'SPI');
@@ -18807,25 +18824,23 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   const origBtnContent = btnEl ? btnEl.innerHTML : '';
   if (btnEl) {
     btnEl.disabled = true;
-    btnEl.innerHTML = '<span>⚡</span> <span>Consultando Liquidação no Sistema Bancário (SPI / BACEN)...</span>';
+    btnEl.innerHTML = '<span>⚡</span> <span>Registrando solicitação de confirmação...</span>';
   }
 
   window.updateAutoRecognitionRadar(
     'processing',
-    '🔄 1/3 • Conectando ao Sistema de Pagamentos Instantâneos (BACEN / Gateway)...',
-    'Localizando registro de pagamento da conta <strong>' + currentUser.email + '</strong>...',
+    '🔄 1/3 • Registrando pedido de confirmação...',
+    'Registrando pedido para a conta <strong>' + currentUser.email + '</strong>...',
     55
   );
 
-  await new Promise(r => setTimeout(r, 650));
-
   if (btnEl) {
-    btnEl.innerHTML = '<span>⚡</span> <span>Pagamento Identificado! Validando Autenticação Digital...</span>';
+    btnEl.innerHTML = '<span>⚡</span> <span>Solicitação enviada. Aguardando confirmação...</span>';
   }
   window.updateAutoRecognitionRadar(
     'processing',
-    '⚡ 2/3 • Pagamento Localizado! Validando Liquidação Financeira...',
-    'Confirmando recebimento de <strong>R$ ' + (plan === 'anual' ? '100,00' : '10,00') + '</strong> e gerando recibo fiscal...',
+    '⚡ 2/3 • Registrando pedido de confirmação...',
+    'Solicitando confirmação de <strong>R$ ' + (plan === 'anual' ? '100,00' : '10,00') + '</strong> e aguardando validação do recebimento...',
     88
   );
 
@@ -18841,7 +18856,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
         method: payMethod,
         amount: plan === 'anual' ? 100.00 : 10.00,
         receipt_code: receiptCode,
-        auto_recognized: true
+        force_pending: true
       })
     });
 
@@ -18849,7 +18864,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
     window.__isProcessingSubPayment = false;
     if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = origBtnContent; }
 
-    if (data && data.success) {
+    if (data && data.success && data.payment_confirmed) {
       window.updateAutoRecognitionRadar(
         'confirmed',
         '✅ 3/3 • Pagamento Reconhecido Automaticamente com Sucesso!',
@@ -18857,6 +18872,20 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
         100
       );
       window.unlockWithConfirmedReceipt(data);
+    } else if (data && data.success && data.status === 'pending_payment') {
+      currentUser.subscription_status = data.access_status || 'pending_payment';
+      if (data.remaining_seconds > 0) window.startTrialCountdown(data.remaining_seconds);
+      window.updateAutoRecognitionRadar(
+        'pending',
+        'Pagamento aguardando confirmação',
+        'O pedido foi registrado. Envie o comprovante pelo WhatsApp; o acesso pago será liberado após a confirmação.',
+        100
+      );
+      window.showPaymentVerifyBanner(
+        'Pedido de pagamento registrado',
+        'Envie o comprovante pelo WhatsApp. A confirmação do recebimento libera o plano. Seu período grátis continua até o fim, se ainda estiver ativo.'
+      );
+      if (data.access_status === 'pending_payment') window.openSubscriptionPaywall(true);
     } else {
       window.shakePaywallModal();
       if (typeof showToast === 'function') {
@@ -18887,7 +18916,7 @@ window.adminConfirmUserPayment = async function(targetEmail, plan = 'mensal', me
   try {
     const res = await fetch('/api/subscription/confirm-payment', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') },
       body: JSON.stringify({
         admin_email: currentUser.email,
         target_email: email,
@@ -18961,7 +18990,7 @@ window.adminRevokeUserPayment = async function(targetEmail) {
   try {
     const res = await fetch('/api/subscription/revoke-payment', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') },
       body: JSON.stringify({
         admin_email: currentUser.email,
         target_email: email
@@ -18988,12 +19017,12 @@ window.resetTrialForTesting = async function(email) {
   try {
     const res = await fetch('/api/subscription/reset-trial', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') },
       body: JSON.stringify({ email: targetEmail, admin_email: adminEmail })
     });
     const d = await res.json();
     if (d && d.success) {
-      if (typeof showToast === 'function') showToast('⏱️ Período de 5 dias grátis concedido para ' + targetEmail);
+      if (typeof showToast === 'function') showToast('⏱️ Período de 1 dia grátis concedido para ' + targetEmail);
       await syncUsersWithServer();
       window.initTrialAndSubscription();
       if (typeof render === 'function') render();
@@ -19153,7 +19182,7 @@ window.updateAdminModalBadge = function(email) {
     subBadge.textContent = '🔒 Bloqueado (Aguardando Pagamento)';
     subBadge.style.color = '#F87171';
   } else {
-    subBadge.textContent = '⏱️ Teste Gratuito (5 Dias)';
+    subBadge.textContent = '⏱️ Teste Gratuito (1 Dia)';
     subBadge.style.color = '#F59E0B';
   }
 };
@@ -23546,12 +23575,12 @@ function pageConfig(){
           <h3 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Plano & Assinatura</h3>
           \${(currentUser && currentUser.subscription_status === 'active')
             ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + (currentUser.subscription_plan === 'anual' ? 'Anual R$ 100' : 'Mensal R$ 10') + ')</span>'
-            : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (5 Dias)</span>'}
+            : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (1 Dia)</span>'}
         </div>
         <p style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
           \${(currentUser && currentUser.subscription_status === 'active')
             ? 'Válido até ' + (currentUser.subscription_expires_at ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR') : 'Ativo')
-            : 'Após os 5 dias de teste gratuito, escolha o Plano Mensal (R$ 10,00) ou Anual (R$ 100,00).'}
+            : 'Após 1 dia grátis, escolha o Plano Mensal (R$ 10,00) ou Anual (R$ 100,00).'}
         </p>
       </div>
     </div>
@@ -23561,7 +23590,7 @@ function pageConfig(){
       </button>
       \${(currentUser && currentUser.role === 'Administrador') ? \`
         <button type="button" onclick="window.resetTrialForTesting()" style="padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:var(--text); font-weight:700; font-size:12px; cursor:pointer;">
-          ⏱️ Resetar 5d (Teste)
+          ⏱️ Resetar 1d (Teste)
         </button>
       \` : ''}
     </div>
@@ -24185,17 +24214,23 @@ function pageUsuarios(){
         const formattedPhone = rawPhone.length === 11 ? rawPhone.replace(/(\\d{2})(\\d{5})(\\d{4})/, '($1) $2-$3') : (rawPhone.length === 10 ? rawPhone.replace(/(\\d{2})(\\d{4})(\\d{4})/, '($1) $2-$3') : (u.phone || ''));
 
         const subBadgeHtml = (() => {
+          const m = (u.subscription_method || '').toLowerCase();
+          const methodBadge = m.includes('pix') ? ' <span style="opacity:0.9;">(💠 Pix)</span>'
+            : (m.includes('credit') || m.includes('crédito')) ? ' <span style="opacity:0.9;">(💳 Crédito)</span>'
+            : (m.includes('debit') || m.includes('débito')) ? ' <span style="opacity:0.9;">(🏧 Débito)</span>'
+            : m.includes('boleto') ? ' <span style="opacity:0.9;">(📄 Boleto)</span>' : '';
+
           if (isAdminUser || u.subscription_plan === 'vitalicio') {
             return '<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399;">♾️ Vitalício</span>';
           }
           if (u.subscription_status === 'active') {
             const planLabel = u.subscription_plan === 'anual' ? 'Anual' : (u.subscription_plan === 'cortesia_admin' ? 'Liberado' : 'Mensal');
             const expStr = u.subscription_expires_at ? (' • ' + formatDateBR(u.subscription_expires_at.split('T')[0])) : '';
-            return '<span class="role-badge" style="background:rgba(16,185,129,0.16); border:1px solid #10B981; color:#34D399;">✅ ' + planLabel + expStr + '</span>';
+            return '<span class="role-badge" style="background:rgba(16,185,129,0.16); border:1px solid #10B981; color:#34D399;">✅ ' + planLabel + methodBadge + expStr + '</span>';
           }
           if (u.subscription_status === 'pending_payment') {
             const pendingPlan = u.subscription_plan === 'anual' ? 'Anual' : 'Mensal';
-            return '<span class="role-badge" style="background:rgba(56,189,248,0.18); border:1px solid #38BDF8; color:#7DD3FC;">⏳ Pgto (' + pendingPlan + ')</span>';
+            return '<span class="role-badge" style="background:rgba(56,189,248,0.18); border:1px solid #38BDF8; color:#7DD3FC;">⏳ Pgto Não Reconhecido (' + pendingPlan + methodBadge + ')</span>';
           }
           if (u.subscription_status === 'expired') {
             return '<span class="role-badge" style="background:rgba(239,68,68,0.18); border:1px solid #EF4444; color:#FCA5A5;">🔒 Expirado</span>';
@@ -24264,14 +24299,17 @@ function pageUsuarios(){
             \` : ''}
             \${!isSelf ? \`
               \${u.subscription_status !== 'active' ? \`
-                <button type="button" class="user-card-btn" onclick="window.adminConfirmUserPayment('\${u.email}', '\${u.subscription_plan === 'anual' ? 'anual' : 'mensal'}')" title="Confirmar pagamento e liberar acesso" style="background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; border:none;">
-                  <span>✅ Pago</span>
+                <button type="button" class="user-card-btn" onclick="window.adminConfirmUserPayment('\${u.email}', '\${u.subscription_plan === 'anual' ? 'anual' : 'mensal'}', '\${u.subscription_method || 'pix'}')" title="Liberar pagamento não reconhecido imediatamente" style="background:linear-gradient(135deg, #10B981, #059669); color:#ffffff; border:none;">
+                  <span>🔓 Liberar Pgto</span>
                 </button>
               \` : \`
                 <button type="button" class="user-card-btn" onclick="window.adminRevokeUserPayment('\${u.email}')" title="Bloquear acesso / exigir pagamento" style="background:rgba(239,68,68,0.15); color:#FCA5A5; border:1px solid rgba(239,68,68,0.4);">
                   <span>🔒</span>
                 </button>
               \`}
+              <button type="button" class="user-card-btn" onclick="window.abrirSegundaViaBoletoParaUsuario('\${u.email}', '\${(u.name||'').replace(/'/g, '')}', '\${u.cpf||''}', '\${u.phone||''}')" title="Imprimir 2ª Via de Boleto para envio ao usuário" style="background:rgba(56,189,248,0.16); color:#7DD3FC; border:1px solid rgba(56,189,248,0.4);">
+                <span>📄 2ª Via</span>
+              </button>
               <button type="button" class="user-card-btn btn-espelho" data-viewuser="\${u.email}" onclick="viewUserData('\${u.email}')" title="Visualizar conta em Modo Espelho">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 <span>Espelho</span>
@@ -24440,6 +24478,171 @@ function filterLogsTable() {
   const wrap = document.getElementById('logTableWrap');
   if (wrap) wrap.innerHTML = renderLogsTable(filtered);
 }
+
+function pagePagamentos(){
+  const isAdmin = currentUser && currentUser.role === 'Administrador';
+  if (!isAdmin || isViewingOtherUser) {
+    return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
+  }
+
+  const users = Array.from(new Map((registeredUsers || [])
+    .filter(u => u && u.email && u.role !== 'Administrador')
+    .map(u => [u.email.toLowerCase(), u])).values());
+  const pendingUsers = users.filter(u => u.subscription_status === 'pending_payment');
+  const expiredUsers = users.filter(u => u.subscription_status === 'expired');
+  const activeUsers = users.filter(u => u.subscription_status === 'active');
+  const requestedTab = window.__pagamentosActiveTab || 'pendentes';
+  const activeTab = ['pendentes', 'expirados', 'segunda_via_boleto', 'solicitacoes_boleto'].includes(requestedTab) ? requestedTab : 'pendentes';
+  const preselected = window.__boletoPreselectedUser || {};
+  const preselectedEmail = String(preselected.email || '').toLowerCase();
+
+  const userRow = (u, expired = false) => {
+    const email = escapeOsHtml(u.email || '');
+    const name = escapeOsHtml(u.name || u.email || 'Usuário');
+    const plan = u.subscription_plan === 'anual' ? 'anual' : 'mensal';
+    const method = ['pix', 'credit_card', 'debit_card', 'boleto'].includes(u.subscription_method) ? u.subscription_method : 'pix';
+    const status = expired ? 'Acesso expirado' : 'Aguardando confirmação';
+    const protocol = escapeOsHtml(u.subscription_payment_id || 'Sem protocolo');
+    const expiry = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at) : '—';
+    return \`<tr>
+      <td><strong>\${name}</strong><small style="display:block;color:var(--text-dim);">\${email}</small></td>
+      <td>\${plan === 'anual' ? 'Anual · R$ 100,00' : 'Mensal · R$ 10,00'}</td>
+      <td>\${method.toUpperCase()}</td>
+      <td><span class="role-badge" style="background:\${expired ? 'rgba(239,68,68,.15)' : 'rgba(245,158,11,.15)'};color:\${expired ? '#FCA5A5' : '#FBBF24'};">\${status}</span><small style="display:block;color:var(--text-dim);">\${protocol}</small></td>
+      <td>\${expiry}</td>
+      <td style="white-space:nowrap;">
+        \${expired ? \`<button type="button" class="btn-ghost" data-email="\${email}" onclick="window.openPaymentSecondCopy(this.dataset.email)">2ª via Pix</button>\` : \`<button type="button" class="btn-primary" data-email="\${email}" data-plan="\${plan}" data-method="\${method}" onclick="window.adminConfirmUserPayment(this.dataset.email,this.dataset.plan,this.dataset.method)">Confirmar pagamento</button>\`}
+        <button type="button" class="btn-ghost" data-email="\${email}" onclick="window.adminRevokeUserPayment(this.dataset.email)" title="Bloquear e exigir pagamento">Bloquear</button>
+      </td>
+    </tr>\`;
+  };
+
+  const requestedOrders = (systemOrdens || []).filter(o => {
+    const text = ((o.service_type || '') + ' ' + (o.title || '')).toLowerCase();
+    return (text.includes('boleto') || text.includes('2ª via') || text.includes('2a via')) && (o.status || '').toLowerCase() !== 'concluído';
+  });
+  const orderRows = requestedOrders.map(o => \`<tr>
+    <td><strong>\${escapeOsHtml(o.protocol || o.id || '—')}</strong></td>
+    <td>\${escapeOsHtml(o.client_name || 'Cliente')}<small style="display:block;color:var(--text-dim);">\${escapeOsHtml(o.client_email || '')}</small></td>
+    <td>\${escapeOsHtml(o.title || o.service_type || 'Solicitação de boleto')}</td>
+    <td>\${escapeOsHtml(o.status || 'Pendente')}</td>
+    <td><button type="button" class="btn-primary" data-osid="\${escapeOsHtml(o.id)}" onclick="openOrdemAdminModal(this.dataset.osid)">Abrir solicitação</button></td>
+  </tr>\`).join('');
+
+  const options = users.map(u => {
+    const email = escapeOsHtml(u.email);
+    const label = escapeOsHtml((u.name || 'Usuário') + ' · ' + u.email);
+    return \`<option value="\${email}" \${email.toLowerCase() === escapeOsHtml(preselectedEmail).toLowerCase() ? 'selected' : ''}>\${label}</option>\`;
+  }).join('');
+  const defaultDue = new Date();
+  defaultDue.setDate(defaultDue.getDate() + 3);
+  const dueValue = [defaultDue.getFullYear(), String(defaultDue.getMonth() + 1).padStart(2, '0'), String(defaultDue.getDate()).padStart(2, '0')].join('-');
+
+  if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
+
+  let content = '';
+  if (activeTab === 'segunda_via_boleto') {
+    content = \`<div class="table-panel" style="padding:18px;border-radius:16px;">
+      <div class="panel-head"><h3>2ª via de cobrança Pix</h3><span class="tag">Pagamento manual</span></div>
+      <p style="color:var(--text-dim);margin:0 0 14px;">Selecione a conta e o plano para imprimir uma instrução de pagamento com QR Code Pix e chave copia e cola.</p>
+      <div style="padding:12px 14px;margin-bottom:14px;border:1px solid rgba(245,158,11,.35);border-radius:12px;background:rgba(245,158,11,.08);color:#FDE68A;font-size:12px;line-height:1.5;">
+        Este documento é uma cobrança Pix para envio ao cliente; não é um boleto bancário FEBRABAN registrado. A confirmação do recebimento continua manual.
+      </div>
+      <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+        <label>Cliente<select id="paymentNoticeUser" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="">Selecione um usuário</option>\${options}</select></label>
+        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · R$ 10,00</option><option value="anual">Anual · R$ 100,00</option></select></label>
+        <label>Vencimento<input id="paymentNoticeDue" type="date" class="admin-search-input" value="\${dueValue}" style="width:100%;margin-top:5px;"></label>
+        <label>Referência<input id="paymentNoticeReference" class="admin-search-input" maxlength="25" value="NX-\${Date.now().toString().slice(-8)}" style="width:100%;margin-top:5px;"></label>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+        <button type="button" class="btn-primary" onclick="window.printAdminPaymentNotice()">Gerar 2ª via Pix para impressão</button>
+        <button type="button" class="btn-ghost" onclick="window.sendAdminPaymentNoticeWhatsApp()">Enviar instruções por WhatsApp</button>
+        <button type="button" class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Voltar aos pagamentos</button>
+      </div>
+    </div>\`;
+  } else if (activeTab === 'solicitacoes_boleto') {
+    content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
+      <div class="panel-head"><h3>Solicitações de 2ª via</h3><span class="tag">\${requestedOrders.length} pendente(s)</span></div>
+      <table class="data-table" style="width:100%;"><thead><tr><th>Protocolo</th><th>Cliente</th><th>Solicitação</th><th>Status</th><th>Ação</th></tr></thead>
+      <tbody>\${orderRows || '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-dim);">Nenhuma solicitação de boleto pendente.</td></tr>'}</tbody></table>
+    </div>\`;
+  } else {
+    const list = activeTab === 'expirados' ? expiredUsers : pendingUsers;
+    const rows = list.map(u => userRow(u, activeTab === 'expirados')).join('');
+    content = \`<div class="table-panel" style="padding:14px;border-radius:16px;overflow:auto;">
+      <div class="panel-head"><h3>\${activeTab === 'expirados' ? 'Acessos expirados' : 'Pagamentos aguardando confirmação'}</h3><span class="tag">\${list.length} conta(s)</span></div>
+      <table class="data-table" style="width:100%;"><thead><tr><th>Cliente</th><th>Plano</th><th>Meio</th><th>Status / protocolo</th><th>Expiração</th><th>Ações</th></tr></thead>
+      <tbody>\${rows || \`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-dim);">\${activeTab === 'expirados' ? 'Nenhum acesso expirado.' : 'Nenhum pagamento pendente.'}</td></tr>\`}</tbody></table>
+    </div>\`;
+  }
+
+  return \`<div class="page-head admin-page-head"><div><h1><span class="admin-head-icon">💳</span>Pagamentos & Boletos</h1><p>Confirme pagamentos recebidos, acompanhe acessos vencidos e prepare a segunda via de cobrança.</p></div><div class="admin-head-actions"><button class="btn-ghost" onclick="Promise.all([syncUsersWithServer(),syncOrdensWithServer()]).then(render)">Atualizar dados</button></div></div>
+  <div class="kpis admin-kpis-row">
+    <div class="kpi"><div class="row1"><span>Aguardando confirmação</span><span class="ic">⏳</span></div><div class="val">\${pendingUsers.length}</div><div class="sub">Pagamentos informados</div></div>
+    <div class="kpi"><div class="row1"><span>Acessos expirados</span><span class="ic">🔒</span></div><div class="val">\${expiredUsers.length}</div><div class="sub">Precisam de pagamento</div></div>
+    <div class="kpi"><div class="row1"><span>Assinaturas ativas</span><span class="ic">✓</span></div><div class="val">\${activeUsers.length}</div><div class="sub">Clientes liberados</div></div>
+  </div>
+  <div class="admin-toolbar-panel" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Pagamentos pendentes</button>
+    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('expirados')">Acessos expirados</button>
+    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('segunda_via_boleto')">2ª via / cobrança Pix</button>
+    <button class="btn-ghost" onclick="window.setPagamentosActiveTab('solicitacoes_boleto')">Solicitações de boleto (\${requestedOrders.length})</button>
+  </div>\${content}\`;
+}
+
+window.setPagamentosActiveTab = function(tab) {
+  window.__pagamentosActiveTab = tab;
+  _lastRenderedHtml = '';
+  render();
+};
+
+window.openPaymentSecondCopy = function(email) {
+  const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === String(email || '').toLowerCase());
+  if (!user) { if (typeof showToast === 'function') showToast('Não encontrei essa conta. Atualize os dados e tente novamente.'); return; }
+  window.__boletoPreselectedUser = { email: user.email, name: user.name || '', cpf: user.cpf || '', phone: user.phone || '' };
+  window.__pagamentosActiveTab = 'segunda_via_boleto';
+  navigate('pagamentos');
+};
+
+window.printAdminPaymentNotice = function() {
+  const email = document.getElementById('paymentNoticeUser')?.value || '';
+  const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === email.toLowerCase());
+  const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
+  const due = document.getElementById('paymentNoticeDue')?.value || '';
+  const reference = (document.getElementById('paymentNoticeReference')?.value || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
+  if (!user || !reference) { if (typeof showToast === 'function') showToast('Selecione o cliente e informe uma referência válida.'); return; }
+  const amount = plan === 'anual' ? 100 : 10;
+  const txid = ('NX' + reference).slice(0, 25);
+  const pixCode = window.generatePixEMVPayload('+5562992345372', 'PAULO LIMA', 'GOIANIA', amount, txid);
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(pixCode);
+  const popup = window.open('', '_blank');
+  if (!popup) { if (typeof showToast === 'function') showToast('Permita a abertura da janela para imprimir a cobrança.'); return; }
+  popup.opener = null;
+  const safe = escapeOsHtml;
+  const planLabel = plan === 'anual' ? 'Anual · 12 meses' : 'Mensal · 30 dias';
+  const html = '<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Cobrança Pix ' + safe(reference) + '</title>' +
+    '<style>body{font:15px Arial,sans-serif;color:#172033;max-width:760px;margin:32px auto;padding:24px}header{border-bottom:2px solid #059669;padding-bottom:14px}h1{font-size:24px;margin:0 0 6px}small{color:#64748b}.box{border:1px solid #cbd5e1;border-radius:12px;padding:18px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.qr{width:220px;height:220px;object-fit:contain}.code{font:12px monospace;word-break:break-all;background:#f1f5f9;padding:12px;border-radius:8px}.note{color:#92400e;background:#fffbeb;border:1px solid #fcd34d;padding:12px;border-radius:8px}@media print{button{display:none}body{margin:0 auto}}</style>' +
+    '<body><header><small>NEXUS FINANCEIRO HUB · COBRANÇA</small><h1>Instrução de pagamento via Pix</h1><small>Referência ' + safe(reference) + '</small></header>' +
+    '<section class="box grid"><div><small>CLIENTE</small><p><strong>' + safe(user.name || user.email) + '</strong><br>' + safe(user.email) + '</p></div><div><small>PLANO</small><p><strong>' + safe(planLabel) + '</strong></p></div><div><small>VALOR</small><p><strong>R$ ' + amount.toFixed(2).replace('.', ',') + '</strong></p></div><div><small>VENCIMENTO</small><p><strong>' + safe(due ? formatDateBR(due) : '—') + '</strong></p></div></section>' +
+    '<section class="box" style="text-align:center"><h2>Escaneie o QR Code Pix</h2><img class="qr" src="' + safe(qrUrl) + '" alt="QR Code Pix"><p>Favorecido: <strong>Paulo Lima</strong></p><p>Chave Pix (celular): <strong>(62) 99234-5372</strong></p></section>' +
+    '<section class="box"><strong>Pix copia e cola</strong><p class="code">' + safe(pixCode) + '</p></section>' +
+    '<p class="note"><strong>Importante:</strong> este documento é uma instrução de pagamento via Pix, não é um boleto bancário registrado. O acesso é liberado após a confirmação do recebimento.</p>' +
+    '<button onclick="window.print()">Imprimir / Salvar em PDF</button></body></html>';
+  popup.document.open(); popup.document.write(html); popup.document.close(); popup.focus();
+};
+
+window.sendAdminPaymentNoticeWhatsApp = function() {
+  const email = document.getElementById('paymentNoticeUser')?.value || '';
+  const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === email.toLowerCase());
+  if (!user) { if (typeof showToast === 'function') showToast('Selecione um cliente para enviar a cobrança.'); return; }
+  const phone = String(user.phone || '').replace(/\D/g, '');
+  if (phone.length < 10) { if (typeof showToast === 'function') showToast('Esta conta não possui telefone válido para WhatsApp.'); return; }
+  const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
+  const amount = plan === 'anual' ? 'R$ 100,00' : 'R$ 10,00';
+  const due = document.getElementById('paymentNoticeDue')?.value || '';
+  const message = 'Olá, ' + (user.name || '') + '. Segue a segunda via da cobrança Nexus via Pix. Plano ' + plan + ', valor ' + amount + (due ? ', vencimento ' + formatDateBR(due) : '') + '. Chave Pix: (62) 99234-5372. Após o pagamento, envie o comprovante para confirmação.';
+  window.open('https://wa.me/55' + phone.slice(-11) + '?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
+};
 
 function pageLogs(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
@@ -24655,6 +24858,58 @@ window.consultarProtocoloRecente = function() {
   }
 };
 
+// Seleção Rápida de Categoria Visual no Modal da Tela de Login
+window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle) {
+  const typeSelect = document.getElementById('osServiceType');
+  if (typeSelect && type) {
+    let matched = false;
+    for (let i = 0; i < typeSelect.options.length; i++) {
+      if (typeSelect.options[i].value.toLowerCase().includes(type.toLowerCase())) {
+        typeSelect.selectedIndex = i;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      const opt = document.createElement('option');
+      opt.value = type;
+      opt.textContent = '✨ ' + type;
+      opt.selected = true;
+      typeSelect.appendChild(opt);
+    }
+  }
+
+  const prioSelect = document.getElementById('osPriority');
+  if (prioSelect && priority) {
+    for (let i = 0; i < prioSelect.options.length; i++) {
+      if (prioSelect.options[i].value.toLowerCase().includes(priority.toLowerCase())) {
+        prioSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+
+  const titleInput = document.getElementById('osTitle');
+  if (titleInput && defaultTitle) {
+    titleInput.value = defaultTitle;
+  }
+
+  document.querySelectorAll('.os-quick-cat-btn').forEach(btn => {
+    const cat = (btn.getAttribute('data-oscat') || '').toLowerCase();
+    const isSel = type && cat && type.toLowerCase().includes(cat.slice(0, 10));
+    btn.style.transform = isSel ? 'scale(1.02)' : 'scale(1)';
+    btn.style.boxShadow = isSel ? '0 0 0 2px #10B981, 0 8px 20px rgba(16,185,129,0.28)' : 'none';
+  });
+
+  const nameInput = document.getElementById('osClientName');
+  const descInput = document.getElementById('osDescription');
+  if (nameInput && !nameInput.value.trim()) {
+    nameInput.focus();
+  } else if (descInput) {
+    descInput.focus();
+  }
+};
+
 // Abertura e Consulta de O.S. (Público na Tela de Login)
 window.openNovaOrdemModal = function(preselectedTypeOrTab) {
   const overlay = document.getElementById('overlayNovaOrdem');
@@ -24670,6 +24925,13 @@ window.openNovaOrdemModal = function(preselectedTypeOrTab) {
   if (feedback) feedback.style.display = 'none';
   if (form) form.reset();
 
+  // Se o usuário já digitou e-mail na tela de login, aproveita automaticamente
+  const loginEmailVal = (document.getElementById('loginEmail')?.value || '').trim();
+  const osEmailInp = document.getElementById('osClientEmail');
+  if (loginEmailVal && osEmailInp && !osEmailInp.value) {
+    osEmailInp.value = loginEmailVal;
+  }
+
   overlay.classList.add('show');
   overlay.style.display = 'flex';
 
@@ -24678,14 +24940,13 @@ window.openNovaOrdemModal = function(preselectedTypeOrTab) {
   } else {
     switchOsModalTab('abrir');
     if (preselectedTypeOrTab && preselectedTypeOrTab !== 'abrir') {
-      const typeSelect = document.getElementById('osServiceType');
-      if (typeSelect) {
-        for (let i = 0; i < typeSelect.options.length; i++) {
-          if (typeSelect.options[i].value.toLowerCase().includes(preselectedTypeOrTab.toLowerCase())) {
-            typeSelect.selectedIndex = i;
-            break;
-          }
-        }
+      const lower = preselectedTypeOrTab.toLowerCase();
+      if (lower.includes('pagamento')) {
+        window.selecionarCategoriaRapidaOs('Pagamento Não Reconhecido', 'Urgente', 'Liberação de Pagamento Não Reconhecido');
+      } else if (lower.includes('boleto') || lower.includes('2ª via')) {
+        window.selecionarCategoriaRapidaOs('Solicitar 2ª Via de Boleto', 'Alta', 'Solicitação de 2ª Via de Boleto para Pagamento');
+      } else {
+        window.selecionarCategoriaRapidaOs(preselectedTypeOrTab, 'Normal', '');
       }
     }
   }
@@ -24705,7 +24966,7 @@ window.executarConsultaOrdens = async function(e) {
       feedback.style.background = 'rgba(239,68,68,0.18)';
       feedback.style.color = '#FCA5A5';
       feedback.style.border = '1px solid rgba(239,68,68,0.4)';
-      feedback.textContent = 'Por favor, digite seu Nome Completo ou E-mail cadastrado.';
+      feedback.textContent = 'Por favor, digite seu Protocolo, Nome Completo ou E-mail cadastrado.';
       feedback.style.display = 'block';
     }
     return;
@@ -24731,7 +24992,7 @@ window.executarConsultaOrdens = async function(e) {
           <div style="text-align:center; padding:30px 14px; color:#94A3B8; background:rgba(255,255,255,0.02); border-radius:14px; border:1px dashed rgba(255,255,255,0.12);">
             <div style="font-size:32px; margin-bottom:6px;">📭</div>
             <h4 style="font-size:15px; color:var(--text); margin:0 0 4px 0; font-weight:800;">Nenhum chamado encontrado</h4>
-            <p style="font-size:12px; margin:0; line-height:1.4;">Não encontramos nenhuma O.S. aberta para "<strong>\${escapeOsHtml(query)}</strong>". Verifique se digitou o mesmo nome ou e-mail cadastrado.</p>
+            <p style="font-size:12px; margin:0; line-height:1.4;">Não encontramos nenhuma O.S. aberta para "<strong>\${escapeOsHtml(query)}</strong>". Verifique se digitou o mesmo protocolo, nome ou e-mail cadastrado.</p>
           </div>
         \`;
       } else {
@@ -24777,7 +25038,7 @@ window.executarConsultaOrdens = async function(e) {
                 <span><strong>Solicitante:</strong> \${escapeOsHtml(o.client_name || 'Anônimo')}</span>
                 <span><strong>Tipo:</strong> \${escapeOsHtml(o.service_type || 'Geral')}</span>
                 <span><strong>Prioridade:</strong> \${escapeOsHtml(o.priority || 'Normal')}</span>
-                \${o.tecnico_responsavel ? \`<span style="color:#10B981; font-weight:700;"><strong>👷 Técnico Responsável:</strong> \${escapeOsHtml(o.tecnico_responsavel)}</span>\` : '<span style="color:#94A3B8; font-style:italic;">(Aguardando atribuição de técnico)</span>'}
+                \${o.tecnico_responsavel ? \`<span style="color:#10B981; font-weight:700;"><strong>👷 Técnico Responsável:</strong> \${escapeOsHtml(o.tecnico_responsavel)}</span>\` : '<span style="color:#94A3B8; font-style:italic;">(Na Caixa de Recepção do Administrador)</span>'}
               </div>
 
               <div style="background:rgba(0,0,0,0.25); border-radius:10px; padding:10px 12px; font-size:12px; color:#E2E8F0; margin-bottom:10px; line-height:1.45; border:1px solid rgba(255,255,255,0.06);">
@@ -24788,7 +25049,7 @@ window.executarConsultaOrdens = async function(e) {
               \${o.admin_notes ? \`
                 <div style="background:linear-gradient(135deg, rgba(5, 150, 105,0.12), rgba(5, 150, 105,0.08)); border:1.5px solid rgba(16, 185, 129,0.35); border-radius:12px; padding:12px; margin-top:10px;">
                   <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:800; color:#059669; margin-bottom:4px; text-transform:uppercase;">
-                    <span>💬 Parecer / Resposta da Equipe Técnica:</span>
+                    <span>💬 Parecer / Resposta da Administração:</span>
                   </div>
                   <div style="font-size:12.5px; color:#F1F5F9; font-weight:600; line-height:1.45;">
                     \${escapeOsHtml(o.admin_notes)}
@@ -24796,7 +25057,7 @@ window.executarConsultaOrdens = async function(e) {
                 </div>
               \` : \`
                 <div style="font-size:11.5px; color:#94A3B8; font-style:italic; margin-top:6px;">
-                  ℹ️ Chamado em triagem. Aguarde o retorno técnico nesta mesma tela.
+                  ℹ️ Sua O.S. já foi recebida na Caixa de Entrada da Administração. Aguarde o retorno técnico nesta mesma tela.
                 </div>
               \`}
             </div>
@@ -24834,7 +25095,7 @@ window.enviarNovaOrdem = async function(e) {
   const clientEmail = (document.getElementById('osClientEmail')?.value || '').trim();
   const clientPhone = (document.getElementById('osClientPhone')?.value || '').trim();
   const clientCpf = (document.getElementById('osClientCpf')?.value || '').trim();
-  const serviceType = document.getElementById('osServiceType')?.value || 'Melhoria no Sistema';
+  const serviceType = document.getElementById('osServiceType')?.value || 'Pagamento Não Reconhecido';
   const priority = document.getElementById('osPriority')?.value || 'Normal';
   const title = (document.getElementById('osTitle')?.value || '').trim();
   const description = (document.getElementById('osDescription')?.value || '').trim();
@@ -24850,8 +25111,10 @@ window.enviarNovaOrdem = async function(e) {
 
   if (btn) {
     btn.disabled = true;
-    btn.textContent = 'Enviando Ordem de Serviço...';
+    btn.textContent = 'Transmitindo O.S. para a Recepção...';
   }
+
+  const isFromLoginScreen = !document.documentElement.classList.contains('user-logged-in');
 
   try {
     const res = await fetch(window.location.origin + '/api/ordens', {
@@ -24864,7 +25127,7 @@ window.enviarNovaOrdem = async function(e) {
         client_cpf: clientCpf,
         service_type: serviceType,
         priority: priority,
-        canal_atendimento: 'Portal Web / Login',
+        canal_atendimento: isFromLoginScreen ? 'Tela de Login' : 'Portal do Usuário',
         title: title,
         description: description
       })
@@ -30927,8 +31190,20 @@ const server = http.createServer(async (req, res) => {
   console.log(`[HTTP ${req.method}] ${parsedUrl.pathname}`);
 
   // Cabeçalhos globais de CORS e Segurança HTTP
+  const requestOrigin = String(req.headers.origin || '');
+  let allowOrigin = '';
+  try {
+    const originUrl = new URL(requestOrigin);
+    const requestHost = String(req.headers.host || '').toLowerCase();
+    const isLocalOrigin = ['localhost', '127.0.0.1'].includes(originUrl.hostname);
+    const configuredOrigin = String(process.env.APP_BASE_URL || '').replace(/\/$/, '');
+    if (originUrl.host.toLowerCase() === requestHost || isLocalOrigin || (configuredOrigin && requestOrigin === configuredOrigin)) {
+      allowOrigin = requestOrigin;
+    }
+  } catch (e) {}
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    ...(allowOrigin ? { 'Access-Control-Allow-Origin': allowOrigin } : {}),
+    'Vary': 'Origin',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Nexus-Sync-Token, X-Requested-With, Accept, Origin',
     'Access-Control-Allow-Credentials': 'true',
@@ -30994,6 +31269,10 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET de Backup Geral do Sistema (Admin)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/backup') {
+    if (!getAuthenticatedAdmin(req)) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: 'Autenticação de administrador obrigatória.' }));
+    }
     try {
       const localUsers = getLocalUsers().map(sanitizeUser);
       const localLogs = getFileLogs();
@@ -31034,6 +31313,10 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET de Dados Financeiros Completos para Sincronização Ultrarrápida
   if (req.method === 'GET' && parsedUrl.pathname === '/api/sync/financial') {
+    if (!hasInternalSyncAccess(req, parsedUrl)) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: 'Acesso de sincronização interna obrigatório.' }));
+    }
     try {
       let allFinancialData = {};
       if (fs.existsSync(LOCAL_DATA_PATH)) {
@@ -31049,6 +31332,10 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET de Sincronização Integral Nuvem <-> Local (Sync Engine)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/sync/all') {
+    if (!hasInternalSyncAccess(req, parsedUrl)) {
+      res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: 'Acesso de sincronização interna obrigatório.' }));
+    }
     try {
       const rawUsers = getLocalUsers();
       let allFinancialData = {};
@@ -32519,12 +32806,12 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ==================== ROTAS DE ASSINATURA & TESTE GRÁTIS (5 DIAS) ====================
+  // ==================== ROTAS DE ASSINATURA & TESTE GRÁTIS (1 DIA) ====================
 
   function getUserSubscriptionInfo(user) {
     if (!user) return null;
     const now = Date.now();
-    const TRIAL_DURATION_SECS = 5 * 24 * 60 * 60; // 5 dias de teste gratuito inicial (432.000 segundos)
+    const TRIAL_DURATION_SECS = 24 * 60 * 60; // 1 dia de teste gratuito inicial (86.400 segundos)
 
     // Normaliza subscription_expires_at
     let expiresAtMs = 0;
@@ -32706,8 +32993,8 @@ const server = http.createServer(async (req, res) => {
         }
 
         const localUsers = getLocalUsers();
-        const adminUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === adminEmail);
-        const isAuthorized = adminUser && (adminUser.role === 'Administrador' || adminEmail === 'suporte.paulolima@outlook.com' || adminEmail === 'paulolp0101@gmail.com');
+        const adminUser = getAuthenticatedAdmin(req);
+        const isAuthorized = adminUser && String(adminUser.email || '').toLowerCase() === adminEmail;
 
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -32852,7 +33139,15 @@ const server = http.createServer(async (req, res) => {
         }
 
         // Reconhecimento automático de pagamento após efetuado
-        const paymentConfirmed = parsed.force_pending === true ? false : true;
+        if (!targetUser) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado.' }));
+        }
+        const accessBeforePayment = getUserSubscriptionInfo(targetUser);
+        const accessStatus = accessBeforePayment && accessBeforePayment.is_subscribed
+          ? 'active'
+          : (accessBeforePayment && accessBeforePayment.is_trial_active ? 'trial' : 'pending_payment');
+        const paymentConfirmed = false;
 
         const now = new Date();
         const amount = plan === 'anual' ? 100.00 : 10.00;
@@ -32923,7 +33218,7 @@ const server = http.createServer(async (req, res) => {
         } else {
           // Registra como PAGAMENTO PENDENTE DE CONFIRMAÇÃO (NÃO LIBERA O SISTEMA SEM CONFIRMAR O PAGAMENTO!)
           if (targetUser) {
-            targetUser.subscription_status = 'pending_payment';
+            targetUser.subscription_status = accessStatus;
             targetUser.subscription_plan = plan;
             targetUser.subscription_method = method;
             targetUser.subscription_payment_id = txId;
@@ -32934,12 +33229,12 @@ const server = http.createServer(async (req, res) => {
             try {
               await pool.query(
                 `UPDATE usuarios 
-                 SET subscription_status = 'pending_payment',
-                     subscription_plan = $1,
-                     subscription_method = $2,
-                     subscription_payment_id = $3
-                 WHERE LOWER(email) = LOWER($4)`,
-                [plan, method, txId, email]
+                 SET subscription_status = $1,
+                     subscription_plan = $2,
+                     subscription_method = $3,
+                     subscription_payment_id = $4
+                 WHERE LOWER(email) = LOWER($5)`,
+                [accessStatus, plan, method, txId, email]
               );
               console.log(`⏳ [ASSINATURA PENDENTE] Pagamento informado por ${email} (${plan.toUpperCase()} via ${method}) aguardando confirmação real (Tx: ${txId})`);
             } catch(sqlErr) {
@@ -32970,6 +33265,8 @@ const server = http.createServer(async (req, res) => {
             success: true,
             payment_confirmed: false,
             status: 'pending_payment',
+            access_status: accessStatus,
+            remaining_seconds: accessStatus === 'trial' && accessBeforePayment ? accessBeforePayment.remaining_seconds : 0,
             message: 'Comprovante enviado! O acesso será liberado assim que o pagamento for confirmado pelo financeiro.',
             transaction_id: txId,
             plan: plan,
@@ -33007,8 +33304,8 @@ const server = http.createServer(async (req, res) => {
         }
 
         const localUsers = getLocalUsers();
-        const adminUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === adminEmail);
-        const isAuthorized = adminUser && (adminUser.role === 'Administrador' || adminEmail === 'suporte.paulolima@outlook.com' || adminEmail === 'paulolp0101@gmail.com');
+        const adminUser = getAuthenticatedAdmin(req);
+        const isAuthorized = adminUser && String(adminUser.email || '').toLowerCase() === adminEmail;
 
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -33162,8 +33459,8 @@ const server = http.createServer(async (req, res) => {
         }
 
         const localUsers = getLocalUsers();
-        const adminUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === adminEmail);
-        const isAuthorized = adminUser && (adminUser.role === 'Administrador' || adminEmail === 'suporte.paulolima@outlook.com' || adminEmail === 'paulolp0101@gmail.com');
+        const adminUser = getAuthenticatedAdmin(req);
+        const isAuthorized = adminUser && String(adminUser.email || '').toLowerCase() === adminEmail;
 
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -33237,7 +33534,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Rota POST para Resetar o Período Gratuito de 5 Dias (Restrito ao Administrador)
+  // Rota POST para Resetar o Período Gratuito de 1 Dia (Restrito ao Administrador)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/reset-trial') {
     let body = '';
     req.on('data', chunk => body += chunk.toString());
@@ -33252,8 +33549,8 @@ const server = http.createServer(async (req, res) => {
         }
 
         const localUsers = getLocalUsers();
-        const adminUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === adminEmail);
-        const isAuthorized = adminUser && (adminUser.role === 'Administrador' || adminEmail === 'suporte.paulolima@outlook.com' || adminEmail === 'paulolp0101@gmail.com');
+        const adminUser = getAuthenticatedAdmin(req);
+        const isAuthorized = adminUser && String(adminUser.email || '').toLowerCase() === adminEmail;
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Somente o Administrador pode conceder novo período de teste.' }));
@@ -33280,7 +33577,7 @@ const server = http.createServer(async (req, res) => {
         }
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, message: 'Período gratuito de 5 dias concedido pelo Administrador!' }));
+        res.end(JSON.stringify({ success: true, message: 'Período gratuito de 1 dia concedido pelo Administrador!' }));
       } catch(e) {
         res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: e.message }));
@@ -33989,7 +34286,10 @@ async function syncWithRenderCloud() {
     // 2. Tentar puxar dados financeiros consolidados ou individualmente por usuário
     let gotBulkFinancial = false;
     try {
-      const resFinAll = await fetchCloud('/api/sync/financial', { timeout: 2500 });
+      const resFinAll = await fetchCloud('/api/sync/financial', {
+        headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+        timeout: 2500
+      });
       if (resFinAll.ok) {
         const bulkData = await resFinAll.json();
         if (bulkData && typeof bulkData === 'object' && Object.keys(bulkData).length > 0) {
