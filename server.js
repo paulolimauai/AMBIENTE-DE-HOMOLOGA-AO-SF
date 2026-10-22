@@ -2828,14 +2828,18 @@ body.light .auth-grid {
 }
 
 .auth-showcase-title {
-  font-size: clamp(28px, 3.4vw, 44px);
+  max-width: 640px;
+  font-size: clamp(30px, 3.2vw, 42px);
   font-weight: 900;
-  line-height: 1.15;
+  line-height: 1.12;
   color: #FFFFFF !important;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
 }
 .auth-showcase-title span {
+  display: block;
+  margin-top: 0.04em;
   background: linear-gradient(135deg, #FFFFFF 0%, #7DD3FC 45%, #38BDF8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -13723,11 +13727,11 @@ body.light .period button.active {
       </div>
 
       <div class="auth-showcase-title">
-        Controle Total das suas Finanças Pessoais e <span>Nunca Mais Saia do Orçamento Mensal</span>
+        Controle total das suas <span>finanças pessoais.</span>
       </div>
 
       <div class="auth-showcase-desc">
-        O Nexus Financeiro é a sua plataforma inteligente para organizar gastos, gerenciar contas e faturas de cartão de crédito, eliminar despesas invisíveis e planejar metas. Tenha previsibilidade absoluta e garanta que suas despesas fiquem 100% dentro do limite estabelecido todo mês.
+        Organize gastos, contas e metas em um só lugar, com uma visão clara do seu orçamento.
       </div>
 
       <div class="auth-showcase-metrics">
