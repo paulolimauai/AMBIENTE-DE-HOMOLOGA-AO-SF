@@ -22,6 +22,21 @@ const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
 const JWT_SECRET = process.env.JWT_SECRET || 'nexus_financeiro_secret_key_2026_4k_secure';
 
+function clearDeletedEmailTombstone(email) {
+  const cleanEmail = String(email || '').toLowerCase().trim();
+  if (!cleanEmail || !cleanEmail.includes('@')) return;
+  const tombstonePath = path.join(__dirname, 'deleted_accounts.json');
+  let entries = [];
+  try {
+    if (fs.existsSync(tombstonePath)) entries = JSON.parse(fs.readFileSync(tombstonePath, 'utf8')) || [];
+  } catch (e) {}
+  const remaining = (Array.isArray(entries) ? entries : [])
+    .map(item => typeof item === 'string' ? { email: item } : item)
+    .filter(item => item && String(item.email || '').toLowerCase().trim() !== cleanEmail);
+  fs.writeFileSync(tombstonePath, JSON.stringify(remaining, null, 2), 'utf8');
+  if (typeof deletedAccountCleanupDone !== 'undefined') deletedAccountCleanupDone.delete(cleanEmail);
+}
+
 // Caminhos Centrais de Persistência e Cache Resiliente
 const LOGS_FILE_PATH = path.join(__dirname, 'system_logs.json');
 const LOCAL_DATA_PATH = path.join(__dirname, 'local_database_data.json');
@@ -32322,6 +32337,7 @@ const server = http.createServer(async (req, res) => {
         };
         localUsers.push(newUserObj);
         saveLocalUsers(localUsers);
+        clearDeletedEmailTombstone(cleanEmail);
         if (cleanCpf) {
           const numCpf = cleanCpf.replace(/\D/g, '');
           saveCpfRegistryEntry(numCpf, {
