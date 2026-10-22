@@ -5526,6 +5526,7 @@ body.light .sidebar-footer .sidebar-toggle-btn:hover .toggle-icon-wrap, html.lig
 
 /* ==================== Elementos Financeiros no Fundo do Site (FinTech Background Elements) ==================== */
 .fintech-market-ticker-banner {
+  display: none !important;
   position: fixed !important;
   bottom: 0 !important;
   left: 250px !important;
