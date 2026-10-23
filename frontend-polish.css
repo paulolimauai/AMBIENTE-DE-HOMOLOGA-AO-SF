@@ -88,7 +88,9 @@ body.light .app-bg-scene {
 .app-blob,
 .fintech-bg-candles,
 .fintech-bg-watermarks,
-.fintech-market-ticker-banner {
+.fintech-market-ticker-banner,
+.trial-dock-widget,
+.floating-mirror-exit-fab {
   display: none !important;
 }
 
