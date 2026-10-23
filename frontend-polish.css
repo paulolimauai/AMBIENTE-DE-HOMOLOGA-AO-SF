@@ -61,6 +61,23 @@ body.light #authPage .auth-card-nexus { background: linear-gradient(145deg, rgba
 body.light #authPage .auth-showcase-title, body.light #authPage .auth-showcase-title span { color: #86EFAC !important; }
 body.light #authPage .auth-input-wrapper { background: rgba(255,255,255,.075) !important; border-color: rgba(255,255,255,.20) !important; }
 
+/* Referência final: azul aço, cinza grafite e âmbar discreto. */
+#authPage { background-image: linear-gradient(135deg, rgba(8,12,17,.78), rgba(15,23,42,.68) 52%, rgba(3,7,12,.88)), url('/images/login-financial-dashboard.svg') !important; }
+#authPage .auth-showcase-badge { background: rgba(71,85,105,.26) !important; border-color: rgba(148,163,184,.42) !important; color: #CBD5E1 !important; }
+#authPage .auth-showcase-badge .badge-dot { background: #7895B2 !important; }
+#authPage .auth-showcase-title, #authPage .auth-showcase-title span { color: #F1F5F9 !important; text-shadow: none !important; }
+#authPage .auth-showcase-desc { color: #CBD5E1 !important; }
+#authPage .auth-metric-card, #authPage .auth-trust-item { background: rgba(30,41,59,.48) !important; border-color: rgba(148,163,184,.30) !important; color: #E2E8F0 !important; }
+#authPage .auth-metric-card.metric-card-savings .metric-pill-tag { color: #7DD3D0 !important; }
+#authPage .auth-metric-card.metric-card-goals .metric-pill-tag { color: #F2C66D !important; }
+#authPage .auth-card-nexus { background: linear-gradient(145deg, rgba(51,65,85,.52), rgba(15,23,42,.62)) !important; border-color: rgba(148,163,184,.42) !important; border-top-color: rgba(203,213,225,.48) !important; box-shadow: 0 28px 80px rgba(0,0,0,.64), inset 0 1px 0 rgba(255,255,255,.18) !important; }
+#authPage .auth-logo-badge { background: linear-gradient(145deg, #7895B2, #334E68) !important; border-color: rgba(191,219,254,.62) !important; box-shadow: 0 12px 28px rgba(71,97,124,.28) !important; }
+#authPage .auth-title span, #authPage .auth-input-icon, #authPage .auth-forgot-link, #authPage .auth-bottom-text a, #authPage .auth-support-link { color: #91ABC4 !important; }
+#authPage .auth-tabs-nav, #authPage .auth-input-wrapper { background: rgba(15,23,42,.38) !important; border-color: rgba(148,163,184,.30) !important; }
+#authPage .auth-tab-btn.active { color: #F1F5F9 !important; background: linear-gradient(135deg, rgba(105,139,174,.90), rgba(57,80,105,.88)) !important; border-color: rgba(165,193,220,.60) !important; box-shadow: 0 8px 18px rgba(15,23,42,.34), inset 0 1px 0 rgba(255,255,255,.26) !important; }
+#authPage .auth-input-wrapper:focus-within { border-color: rgba(125,157,190,.86) !important; box-shadow: 0 0 0 3px rgba(96,125,158,.18), inset 0 1px 0 rgba(255,255,255,.14) !important; }
+#authPage #loginSubmitBtn, #authPage #regSubmitBtn { background: linear-gradient(100deg, #4D7CA8, #D49A2A) !important; border-color: rgba(191,219,254,.52) !important; box-shadow: 0 12px 24px rgba(46,76,106,.30), inset 0 1px 0 rgba(255,255,255,.34) !important; }
+
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
