@@ -66,6 +66,8 @@ const LOCAL_ORDENS_PATH = path.join(RUNTIME_DATA_DIR, 'local_ordens_servico.json
 const LOCAL_TECNICOS_PATH = path.join(RUNTIME_DATA_DIR, 'local_tecnicos.json');
 const PENDING_LOGINS_PATH = path.join(RUNTIME_DATA_DIR, 'pending_logins.json');
 const DELETED_ACCOUNTS_PATH = path.join(RUNTIME_DATA_DIR, 'deleted_accounts.json');
+const GOOGLE_OAUTH_STATES = new Map();
+const GOOGLE_OAUTH_STATE_TTL_MS = 10 * 60 * 1000;
 
 function getDeletedAccounts() {
   try {
@@ -333,6 +335,84 @@ function sanitizeUser(user) {
     safeUser.name = 'Paulo Lima';
   }
   return safeUser;
+}
+
+function googleOAuthConfig(req) {
+  const configuredBase = String(process.env.APP_BASE_URL || '').replace(/\/$/, '');
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  const protocol = forwardedProto || (process.env.NODE_ENV === 'production' ? 'https' : 'http');
+  const host = String(req.headers.host || 'localhost:3000');
+  return {
+    clientId: String(process.env.GOOGLE_CLIENT_ID || '').trim(),
+    clientSecret: String(process.env.GOOGLE_CLIENT_SECRET || '').trim(),
+    redirectUri: String(process.env.GOOGLE_REDIRECT_URI || `${configuredBase || `${protocol}://${host}`}/auth/google/callback`)
+  };
+}
+
+function googleOAuthReady(config) {
+  return Boolean(config && config.clientId && config.clientSecret && config.redirectUri);
+}
+
+function htmlResponse(res, statusCode, html) {
+  res.writeHead(statusCode, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+  return res.end(html);
+}
+
+function googleAuthResultPage(authResult) {
+  const safeJson = JSON.stringify(authResult).replace(/</g, '\\u003c');
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Autenticando…</title></head><body style="font-family:Arial,sans-serif;background:#07111F;color:#F8FAFC;display:grid;place-items:center;min-height:100vh"><p>Concluindo seu acesso com segurança…</p><script>const auth=${safeJson};if(auth.success){localStorage.setItem('nexus_session',JSON.stringify({email:auth.user.email}));localStorage.setItem('nexus_cached_user',JSON.stringify(auth.user));localStorage.setItem('nexus_token',auth.token);sessionStorage.setItem('nexus_session_active','true');sessionStorage.setItem('nexus_last_activity',Date.now().toString());location.replace('/')}else{location.replace('/?google_error='+encodeURIComponent(auth.error||'Não foi possível autenticar com o Google.'))}</script></body></html>`;
+}
+
+async function upsertGoogleUser(profile, req) {
+  const email = String(profile.email || '').toLowerCase().trim();
+  const name = String(profile.name || profile.given_name || email.split('@')[0] || 'Usuário').trim().slice(0, 150);
+  const deviceType = /mobile|android|iphone|ipad|ipod/i.test(String(req.headers['user-agent'] || '')) ? 'Mobile' : 'Computador';
+  const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || (req.socket && req.socket.remoteAddress) || '';
+  const nowIso = getBrasiliaIsoString(new Date());
+  let user = null;
+
+  if (!pool) {
+    try { await attemptConnectDatabase(); } catch (e) {}
+  }
+  if (pool) {
+    try {
+      const result = await pool.query('SELECT id, name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, created_at, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios WHERE LOWER(email) = LOWER($1)', [email]);
+      user = result.rows && result.rows[0] ? result.rows[0] : null;
+    } catch (e) { console.warn('[GOOGLE AUTH] Falha ao consultar usuário:', e.message); }
+  }
+  if (!user) {
+    const localUser = getLocalUsers().find(item => item && String(item.email || '').toLowerCase() === email);
+    user = localUser || null;
+  }
+  if (user && (user.active === false || user.active === 0)) throw new Error('Esta conta está desativada.');
+
+  if (!user) {
+    const generatedPassword = hashPassword(`google:${crypto.randomBytes(32).toString('hex')}`);
+    const newId = Date.now();
+    user = { id: newId, name, email, password: generatedPassword, role: 'Usuário', active: true, cpf: null, phone: null, birth_date: null, terms_accepted: true, device_type: 'Google OAuth', trial_started_at: nowIso, subscription_status: 'trial', subscription_plan: null, subscription_expires_at: null, subscription_method: 'google' };
+    if (pool) {
+      try {
+        const inserted = await pool.query(`INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, device_type, last_ip) OUTPUT INSERTED.id VALUES ($1, $2, $3, $4, 1, NULL, NULL, NULL, 1, $5, $6);`, [name, email, generatedPassword, 'Usuário', 'Google OAuth', clientIp]);
+        if (inserted.rows && inserted.rows[0] && inserted.rows[0].id) user.id = inserted.rows[0].id;
+        await ensureUserIsConfiguredInDatabase(email, user);
+      } catch (e) { console.warn('[GOOGLE AUTH] Falha ao criar usuário no SQL Server:', e.message); }
+    } else {
+      saveLocalData(email, getDefaultConfiguredFinancialData());
+    }
+  }
+
+  user.last_login = nowIso;
+  user.device_type = user.device_type || 'Google OAuth';
+  try {
+    const localUsers = getLocalUsers();
+    const index = localUsers.findIndex(item => item && String(item.email || '').toLowerCase() === email);
+    if (index >= 0) localUsers[index] = { ...localUsers[index], ...user, last_login: nowIso };
+    else localUsers.push({ ...user, last_login: nowIso });
+    saveLocalUsers(localUsers);
+  } catch (e) {}
+  ensureUserIsConfiguredInDatabase(email, user).catch(() => {});
+  pushPendingLogin({ id: user.id, email, name: user.name, last_login: nowIso, timestamp: new Date().toISOString() });
+  return user;
 }
 
 // ==================== Padronização de Fuso Horário Oficial de Brasília (America/Sao_Paulo / UTC-3) ====================
@@ -13986,7 +14066,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-section-title { color: #647
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) { color: #334155 !important; }
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic { background: #F8FAFC !important; border-color: #E2E8F0 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261023-register7" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261023-google8" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -14173,6 +14253,13 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div id="registerBox" style="display:none;">
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
+          <button type="button" id="googleRegisterBtn" class="google-auth-btn" onclick="window.startGoogleRegistration()">
+            <span class="google-auth-mark" aria-hidden="true">G</span>
+            <span>Continuar com Google</span>
+          </button>
+
+          <div class="google-auth-divider" aria-hidden="true"><span>ou preencha seus dados</span></div>
+
           <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
             <span>1. Dados pessoais</span>
           </div>
@@ -19567,6 +19654,15 @@ window.handleServerPhoneInput = function(input) {
   else if (v.length > 2) v = v.replace(/([0-9]{2})([0-9]{0,5})/, '($1) $2');
   else if (v.length > 0) v = v.replace(/([0-9]{0,2})/, '($1');
   input.value = v;
+};
+
+window.startGoogleRegistration = function() {
+  const button = document.getElementById('googleRegisterBtn');
+  if (button) {
+    button.disabled = true;
+    button.innerHTML = '<span class="google-auth-mark">G</span><span>Conectando ao Google…</span>';
+  }
+  window.location.assign('/auth/google');
 };
 
 // Cadastro com padrão financeiro completo, inserção direta no SQL Server e fallback resiliente
@@ -31616,6 +31712,47 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Rota GET de Health Check & Diagnóstico do Sistema
+  // OAuth Google para criação e login de conta financeira.
+  if (req.method === 'GET' && parsedUrl.pathname === '/auth/google') {
+    const config = googleOAuthConfig(req);
+    if (!googleOAuthReady(config)) {
+      return htmlResponse(res, 503, '<!doctype html><meta charset="utf-8"><title>Google não configurado</title><body style="font-family:Arial,sans-serif;background:#07111F;color:#F8FAFC;display:grid;place-items:center;min-height:100vh"><main style="max-width:520px;padding:28px;text-align:center"><h1>Google ainda não está configurado</h1><p>Defina GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET e GOOGLE_REDIRECT_URI no ambiente do servidor.</p><a href="/" style="color:#FBBF24">Voltar para o login</a></main></body>');
+    }
+    const state = crypto.randomBytes(32).toString('hex');
+    GOOGLE_OAUTH_STATES.set(state, { createdAt: Date.now(), redirectUri: config.redirectUri });
+    for (const [key, value] of GOOGLE_OAUTH_STATES) if (Date.now() - value.createdAt > GOOGLE_OAUTH_STATE_TTL_MS) GOOGLE_OAUTH_STATES.delete(key);
+    const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+    authUrl.searchParams.set('client_id', config.clientId);
+    authUrl.searchParams.set('redirect_uri', config.redirectUri);
+    authUrl.searchParams.set('response_type', 'code');
+    authUrl.searchParams.set('scope', 'openid email profile');
+    authUrl.searchParams.set('state', state);
+    authUrl.searchParams.set('prompt', 'select_account');
+    res.writeHead(302, { Location: authUrl.toString(), 'Cache-Control': 'no-store' });
+    return res.end();
+  }
+
+  if (req.method === 'GET' && parsedUrl.pathname === '/auth/google/callback') {
+    const stateData = GOOGLE_OAUTH_STATES.get(parsedUrl.query.state);
+    GOOGLE_OAUTH_STATES.delete(parsedUrl.query.state);
+    if (!stateData || Date.now() - stateData.createdAt > GOOGLE_OAUTH_STATE_TTL_MS) return htmlResponse(res, 400, googleAuthResultPage({ success: false, error: 'A sessão de autenticação expirou. Tente novamente.' }));
+    if (parsedUrl.query.error) return htmlResponse(res, 400, googleAuthResultPage({ success: false, error: 'A autenticação com o Google foi cancelada.' }));
+    const config = googleOAuthConfig(req);
+    try {
+      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ code: parsedUrl.query.code || '', client_id: config.clientId, client_secret: config.clientSecret, redirect_uri: stateData.redirectUri, grant_type: 'authorization_code' }) });
+      const tokenData = await tokenResponse.json();
+      if (!tokenResponse.ok || !tokenData.access_token) throw new Error('Não foi possível obter o token do Google.');
+      const profileResponse = await fetch('https://openidconnect.googleapis.com/v1/userinfo', { headers: { Authorization: `Bearer ${tokenData.access_token}` } });
+      const profile = await profileResponse.json();
+      if (!profileResponse.ok || !profile.email || profile.email_verified !== true) throw new Error('O Google não confirmou o e-mail desta conta.');
+      const user = await upsertGoogleUser(profile, req);
+      return htmlResponse(res, 200, googleAuthResultPage({ success: true, token: generateSecureToken(user), user: sanitizeUser(user) }));
+    } catch (error) {
+      console.error('[GOOGLE AUTH] Falha no callback:', error.message);
+      return htmlResponse(res, 502, googleAuthResultPage({ success: false, error: error.message || 'Falha na autenticação com o Google.' }));
+    }
+  }
+
   if (req.method === 'GET' && parsedUrl.pathname === '/api/health') {
     const uptimeSeconds = Math.floor((Date.now() - SERVER_START_TIME) / 1000);
     const hours = Math.floor(uptimeSeconds / 3600);

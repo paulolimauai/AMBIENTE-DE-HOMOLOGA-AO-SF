@@ -15,6 +15,18 @@ O **Nexus Financeiro Hub** é um sistema completo de gestão financeira pessoal,
 
 ## Como Rodar Localmente
 
+## Login com Google
+
+O cadastro permite autenticação via Google usando OAuth 2.0/OpenID Connect. Configure no ambiente do servidor:
+
+```env
+GOOGLE_CLIENT_ID=seu-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=seu-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:3000/auth/google/callback
+```
+
+No Google Cloud Console, registre a mesma URL em **Authorized redirect URIs**. Em produção, use a URL HTTPS pública do ambiente.
+
 1. Instale as dependências:
    ```bash
    npm install
