@@ -15232,10 +15232,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Botões de Confirmação Oficial de Pagamento / Bloqueio -->
       <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px;">
         <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'mensal', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Mensal (30 dias)">
-          🔓 Liberar Mensal (R$ 10)
+          🔓 Liberar Mensal (R$ 15)
         </button>
         <button type="button" onclick="window.adminConfirmUserPayment(editingUserEmail, 'anual', document.getElementById('userAdminPaymentMethod')?.value)" style="height:30px; padding:0 6px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#000000; font-size:10.5px; font-weight:800; border:none; cursor:pointer;" title="Reconhecer pagamento e liberar Plano Anual (1 ano)">
-          🔓 Liberar Anual (R$ 100)
+          🔓 Liberar Anual (R$ 150)
         </button>
         <button type="button" onclick="window.adminRevokeUserPayment(editingUserEmail)" style="height:30px; padding:0 6px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.45); color:#FCA5A5; font-size:10.5px; font-weight:800; cursor:pointer;">
           🔒 Bloquear
@@ -15956,8 +15956,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </div>
           </div>
           <h2 style="font-size:20px; font-weight:900; margin:0; letter-spacing:-0.02em; color:#FFFFFF;" id="subModalTitle">
-            Central de Assinatura &bull; Nexus Financeiro Hub
-          </h2>
+             Central de Assinatura &bull; Nexus Financeiro Hub
+           </h2>
+           <p style="font-size:12px; color:#D1FAE5; margin:8px 0 0 0; line-height:1.5; max-width:620px;">Teste o sistema gratuitamente por 1 dia. Após o período de teste, escolha a cobrança mensal de R$ 15,00 ou a cobrança anual de R$ 150,00, com economia equivalente a 2 meses.</p>
           <p style="font-size:12px; color:#94A3B8; margin:2px 0 0 0;" id="subModalSubtitle">Pix com QR Code ou copia e cola. A confirmação do recebimento é feita pelo financeiro.</p>
         </div>
       </div>
@@ -15990,7 +15991,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="sub-step-num">1</span>
         <div>
           <strong style="display:block; font-size:11.5px; color:#FFFFFF;">Escolha a Periodicidade</strong>
-          <span style="font-size:10.5px; color:#94A3B8;">Plano Mensal (R$ 10) ou Anual (R$ 100)</span>
+           <span style="font-size:10.5px; color:#94A3B8;">1 dia grátis. Depois: R$ 15/mês ou R$ 150/ano.</span>
         </div>
       </div>
       <div class="sub-step-pill" id="subStepPill2" style="border-color:rgba(56,189,248,0.35); background:rgba(56,189,248,0.05);">
@@ -16043,7 +16044,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
             <!-- Cards dos Planos -->
             <div class="sub-plan-cards-stack">
-              <!-- Plano Mensal (R$ 10,00) -->
+               <!-- Plano Mensal (R$ 15,00) -->
               <div class="sub-plan-card active" id="subPlanCardMensal" onclick="window.selectSubPlan('mensal')">
                 <div style="display:flex; align-items:center; gap:10px;">
                   <div class="sub-plan-radio-circle"></div>
@@ -16053,23 +16054,23 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                   </div>
                 </div>
                 <div style="text-align:right;">
-                  <div class="sub-plan-price">R$ 10,00</div>
+                   <div class="sub-plan-price">R$ 15,00</div>
                   <div class="sub-plan-period">por mês</div>
                 </div>
               </div>
 
-              <!-- Plano Anual (R$ 100,00) -->
+               <!-- Plano Anual (R$ 150,00) -->
               <div class="sub-plan-card" id="subPlanCardAnual" onclick="window.selectSubPlan('anual')">
-                <div class="sub-plan-badge-highlight">★ ECONOMIZE R$ 20,00 (2 MESES GRÁTIS)</div>
+                <div class="sub-plan-badge-highlight">★ ECONOMIZE R$ 30,00 (2 MESES GRÁTIS)</div>
                 <div style="display:flex; align-items:center; gap:10px;">
                   <div class="sub-plan-radio-circle"></div>
                   <div>
                     <div class="sub-plan-title">Plano Anual Corporativo</div>
-                    <div style="font-size:11px; color:#94A3B8; margin-top:2px;">365 dias (equivale a R$ 8,33/mês)</div>
+                    <div style="font-size:11px; color:#94A3B8; margin-top:2px;">365 dias (equivale a R$ 12,50/mês)</div>
                   </div>
                 </div>
                 <div style="text-align:right;">
-                  <div class="sub-plan-price" style="color:#F59E0B;">R$ 100,00</div>
+                   <div class="sub-plan-price" style="color:#F59E0B;">R$ 150,00</div>
                   <div class="sub-plan-period">por ano</div>
                 </div>
               </div>
@@ -16079,11 +16080,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <div class="sub-order-breakdown" style="margin-top:12px;">
               <div class="sub-breakdown-row">
                 <span id="subSummaryPlanName">Plano Mensal Nexus (30 Dias)</span>
-                <strong id="subSummaryPlanPrice" style="color:#FFFFFF;">R$ 10,00</strong>
+                 <strong id="subSummaryPlanPrice" style="color:#FFFFFF;">R$ 15,00</strong>
               </div>
               <div class="sub-breakdown-row" id="subSummaryDiscountRow" style="display:none;">
-                <span style="color:#10B981;">Desconto Corporativo Anual (17% OFF):</span>
-                <strong style="color:#10B981;">- R$ 20,00</strong>
+                 <span style="color:#10B981;">Desconto do plano anual:</span>
+                 <strong style="color:#10B981;">- R$ 30,00</strong>
               </div>
               <div class="sub-breakdown-row">
                 <span>Conciliação Bancária (SPI / Gateway):</span>
@@ -16094,7 +16095,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                   <strong style="font-size:13px; color:#FFFFFF;">Total a Pagar</strong>
                   <span style="font-size:10px; color:#94A3B8;" id="subSummaryPaymentFrequency">Ativação imediata após o pagamento</span>
                 </div>
-                <span class="sub-breakdown-total-val" id="subSummaryTotalPrice">R$ 10,00</span>
+                 <span class="sub-breakdown-total-val" id="subSummaryTotalPrice">R$ 15,00</span>
               </div>
             </div>
           </div>
@@ -16220,7 +16221,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                         💠 Chave Pix Oficial (Celular)
                       </span>
                       <span style="font-size:11.5px; font-weight:800; color:#CBD5E1;">
-                        Valor: <strong id="pixDisplayAmount" style="color:#10B981; font-size:14.5px;">R$ 10,00</strong>
+                        Valor: <strong id="pixDisplayAmount" style="color:#10B981; font-size:14.5px;">R$ 15,00</strong>
                       </span>
                     </div>
 
@@ -16323,7 +16324,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                 <div class="sub-field-group">
                   <label class="sub-field-label">Parcelamento</label>
                   <select id="subCardInstallments" class="sub-field-input" style="cursor:pointer;">
-                    <option value="1">1x de R$ 10,00 sem juros</option>
+                    <option value="1">1x de R$ 15,00 sem juros</option>
                   </select>
                 </div>
               </div>
@@ -16333,7 +16334,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               </div>
 
               <button type="button" class="sub-pay-action-btn" id="subBtnConfirmCredit" onclick="window.processSubscriptionPayment('credit_card')">
-                <span>🔒</span> <span id="creditCardBtnLabel">Pagar R$ 10,00 com Cartão de Crédito</span>
+                <span>🔒</span> <span id="creditCardBtnLabel">Pagar R$ 15,00 com Cartão de Crédito</span>
               </button>
             </div>
 
@@ -16390,7 +16391,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               </div>
 
               <button type="button" class="sub-pay-action-btn" id="subBtnConfirmDebit" onclick="window.processSubscriptionPayment('debit_card')">
-                <span>🔒</span> <span id="debitCardBtnLabel">Pagar R$ 10,00 com Cartão de Débito</span>
+                <span>🔒</span> <span id="debitCardBtnLabel">Pagar R$ 15,00 com Cartão de Débito</span>
               </button>
             </div>
 
@@ -16406,7 +16407,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                 </div>
                 <div style="text-align:right;">
                   <span style="font-size:10.5px; color:#94A3B8; display:block;">Valor do Documento</span>
-                  <strong id="boletoDisplayAmount" style="color:#10B981; font-size:16px;">R$ 10,00</strong>
+                  <strong id="boletoDisplayAmount" style="color:#10B981; font-size:16px;">R$ 15,00</strong>
                 </div>
               </div>
 
@@ -18146,7 +18147,7 @@ window.unlockWithConfirmedReceipt = function(data) {
   const expiresEl = document.getElementById('subSuccessExpires');
   const dateTimeEl = document.getElementById('subSuccessDateTime');
 
-  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual Corporativo (R$ 100,00 - 12 Meses)' : (plan === 'vitalicio' ? 'Vitalício Ilimitado' : 'Mensal Executivo (R$ 10,00 - 30 Dias)');
+  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual Corporativo (R$ 150,00 - 12 Meses)' : (plan === 'vitalicio' ? 'Vitalício Ilimitado' : 'Mensal Executivo (R$ 15,00 - 30 Dias)');
   if (txIdEl) txIdEl.textContent = data.transaction_id || data.subscription_payment_id || ('NEXUS-SUB-' + Date.now());
   if (methodEl) {
     const methodLabels = {
@@ -18654,40 +18655,40 @@ window.selectSubPlan = function(plan) {
   if (plan === 'anual') {
     if (cardAnual) cardAnual.classList.add('active');
     if (cardMensal) cardMensal.classList.remove('active');
-    if (pixDisplay) pixDisplay.textContent = 'R$ 100,00';
-    if (boletoDisplay) boletoDisplay.textContent = 'R$ 100,00';
-    if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 100,00 com Cartão de Crédito';
-    if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 100,00 com Débito Imediato';
+     if (pixDisplay) pixDisplay.textContent = 'R$ 150,00';
+     if (boletoDisplay) boletoDisplay.textContent = 'R$ 150,00';
+    if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 150,00 com Cartão de Crédito';
+    if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 150,00 com Débito Imediato';
 
     if (summaryPlanName) summaryPlanName.textContent = 'Plano Anual Nexus (12 Meses)';
-    if (summaryPlanPrice) summaryPlanPrice.textContent = 'R$ 120,00';
+     if (summaryPlanPrice) summaryPlanPrice.textContent = 'R$ 150,00';
     if (summaryDiscountRow) summaryDiscountRow.style.display = 'flex';
-    if (summaryTotalPrice) summaryTotalPrice.textContent = 'R$ 100,00';
-    if (summaryPaymentFrequency) summaryPaymentFrequency.textContent = 'Cobrança única de R$ 100,00 (apenas R$ 8,33/mês)';
+     if (summaryTotalPrice) summaryTotalPrice.textContent = 'R$ 150,00';
+    if (summaryPaymentFrequency) summaryPaymentFrequency.textContent = 'Cobrança única de R$ 150,00 (equivale a R$ 12,50/mês)';
 
     if (installmentsSelect) {
-      installmentsSelect.innerHTML = '<option value="1">1x de R$ 100,00 sem juros (Total: R$ 100,00)</option>' +
-        '<option value="2">2x de R$ 50,00 sem juros (Total: R$ 100,00)</option>' +
-        '<option value="3">3x de R$ 33,33 sem juros (Total: R$ 100,00)</option>' +
-        '<option value="6">6x de R$ 16,67 sem juros (Total: R$ 100,00)</option>' +
-        '<option value="12">12x de R$ 8,33 sem juros (Total: R$ 100,00)</option>';
+       installmentsSelect.innerHTML = '<option value="1">1x de R$ 150,00 sem juros (Total: R$ 150,00)</option>' +
+         '<option value="2">2x de R$ 75,00 sem juros (Total: R$ 150,00)</option>' +
+         '<option value="3">3x de R$ 50,00 sem juros (Total: R$ 150,00)</option>' +
+         '<option value="6">6x de R$ 25,00 sem juros (Total: R$ 150,00)</option>' +
+         '<option value="12">12x de R$ 12,50 sem juros (Total: R$ 150,00)</option>';
     }
   } else {
     if (cardMensal) cardMensal.classList.add('active');
     if (cardAnual) cardAnual.classList.remove('active');
-    if (pixDisplay) pixDisplay.textContent = 'R$ 10,00';
-    if (boletoDisplay) boletoDisplay.textContent = 'R$ 10,00';
-    if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 10,00 com Cartão de Crédito';
-    if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 10,00 com Débito Imediato';
+     if (pixDisplay) pixDisplay.textContent = 'R$ 15,00';
+     if (boletoDisplay) boletoDisplay.textContent = 'R$ 15,00';
+    if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 15,00 com Cartão de Crédito';
+    if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 15,00 com Débito Imediato';
 
     if (summaryPlanName) summaryPlanName.textContent = 'Plano Mensal Nexus (1 Mês)';
-    if (summaryPlanPrice) summaryPlanPrice.textContent = 'R$ 10,00';
+     if (summaryPlanPrice) summaryPlanPrice.textContent = 'R$ 15,00';
     if (summaryDiscountRow) summaryDiscountRow.style.display = 'none';
-    if (summaryTotalPrice) summaryTotalPrice.textContent = 'R$ 10,00';
+     if (summaryTotalPrice) summaryTotalPrice.textContent = 'R$ 15,00';
     if (summaryPaymentFrequency) summaryPaymentFrequency.textContent = 'Cobrança mês a mês sem fidelidade';
 
     if (installmentsSelect) {
-      installmentsSelect.innerHTML = '<option value="1">1x de R$ 10,00 sem juros (Total: R$ 10,00)</option>';
+       installmentsSelect.innerHTML = '<option value="1">1x de R$ 15,00 sem juros (Total: R$ 15,00)</option>';
     }
   }
 
@@ -18897,7 +18898,7 @@ window.copyPixKeyDirect = function() {
 
 window.updatePixPayloadAndQr = function() {
   const plan = window.__selectedSubPlan || 'mensal';
-  const amount = (plan === 'anual') ? 100.00 : 10.00;
+  const amount = (plan === 'anual') ? 150.00 : 15.00;
   const pixKey = '+5562992345372';
   const beneficiaryName = 'PAULO LIMA';
   const city = 'GOIANIA';
@@ -18998,7 +18999,7 @@ window.verifyPendingPaymentNow = async function() {
 
 window.sendPaymentProofWhatsApp = function() {
   const plan = window.__selectedSubPlan || 'mensal';
-  const amountStr = plan === 'anual' ? 'R$ 100,00 (Anual)' : 'R$ 10,00 (Mensal)';
+  const amountStr = plan === 'anual' ? 'R$ 150,00 (Anual)' : 'R$ 15,00 (Mensal)';
   const email = currentUser ? currentUser.email : '';
   const name = currentUser ? currentUser.name : '';
   const pixTx = document.getElementById('subPixTxIdInput')?.value || window.__currentPixSessionTxId || '';
@@ -19098,7 +19099,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
         email: currentUser.email,
         plan: plan,
         method: payMethod,
-        amount: plan === 'anual' ? 100.00 : 10.00,
+        amount: plan === 'anual' ? 150.00 : 15.00,
         receipt_code: window.__currentPixSessionTxId || receiptCode,
         force_pending: true
       })
@@ -23831,13 +23832,13 @@ function pageConfig(){
         <div style="display:flex; align-items:center; gap:8px;">
           <h3 style="font-size:17px; font-weight:900; margin:0; color:var(--text);">Plano & Assinatura</h3>
           \${(currentUser && currentUser.subscription_status === 'active')
-            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + (currentUser.subscription_plan === 'anual' ? 'Anual R$ 100' : 'Mensal R$ 10') + ')</span>'
+            ? '<span class="role-badge" style="background:#10B981; color:#fff; font-weight:800;">✓ Assinatura Ativa (' + (currentUser.subscription_plan === 'anual' ? 'Anual R$ 150' : 'Mensal R$ 15') + ')</span>'
             : '<span class="role-badge" style="background:#F59E0B; color:#fff; font-weight:800;">⏱️ Período Gratuito (1 Dia)</span>'}
         </div>
         <p style="font-size:13px; color:var(--text-dim); margin:4px 0 0 0;">
           \${(currentUser && currentUser.subscription_status === 'active')
             ? 'Válido até ' + (currentUser.subscription_expires_at ? new Date(currentUser.subscription_expires_at).toLocaleDateString('pt-BR') : 'Ativo')
-            : 'Após 1 dia grátis, escolha o Plano Mensal (R$ 10,00) ou Anual (R$ 100,00).'}
+            : 'Você tem 1 dia grátis para testar todos os recursos. Depois, escolha o Plano Mensal por R$ 15,00 ou o Plano Anual por R$ 150,00 (equivalente a R$ 12,50 por mês).'}
         </p>
       </div>
     </div>
@@ -24829,7 +24830,7 @@ function pagePagamentos(){
     const expiry = u.subscription_expires_at ? formatDateBR(u.subscription_expires_at) : '—';
     return \`<tr>
       <td><strong>\${name}</strong><small style="display:block;color:var(--text-dim);">\${email}</small></td>
-      <td>\${plan === 'anual' ? 'Anual · R$ 100,00' : 'Mensal · R$ 10,00'}</td>
+      <td>\${plan === 'anual' ? 'Anual · R$ 150,00' : 'Mensal · R$ 15,00'}</td>
       <td>\${method.toUpperCase()}</td>
       <td><span class="role-badge" style="background:\${expired ? 'rgba(239,68,68,.15)' : 'rgba(245,158,11,.15)'};color:\${expired ? '#FCA5A5' : '#FBBF24'};">\${status}</span><small style="display:block;color:var(--text-dim);">\${protocol}</small></td>
       <td>\${expiry}</td>
@@ -24873,7 +24874,7 @@ function pagePagamentos(){
       </div>
       <div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
         <label>Cliente<select id="paymentNoticeUser" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="">Selecione um usuário</option>\${options}</select></label>
-        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · R$ 10,00</option><option value="anual">Anual · R$ 100,00</option></select></label>
+        <label>Plano<select id="paymentNoticePlan" class="admin-search-input" style="width:100%;margin-top:5px;"><option value="mensal">Mensal · R$ 15,00</option><option value="anual">Anual · R$ 150,00</option></select></label>
         <label>Vencimento<input id="paymentNoticeDue" type="date" class="admin-search-input" value="\${dueValue}" style="width:100%;margin-top:5px;"></label>
         <label>Referência<input id="paymentNoticeReference" class="admin-search-input" maxlength="25" value="NX-\${Date.now().toString().slice(-8)}" style="width:100%;margin-top:5px;"></label>
       </div>
@@ -24961,7 +24962,7 @@ window.sendAdminPaymentNoticeWhatsApp = function() {
   const phone = String(user.phone || '').replace(/\D/g, '');
   if (phone.length < 10) { if (typeof showToast === 'function') showToast('Esta conta não possui telefone válido para WhatsApp.'); return; }
   const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
-  const amount = plan === 'anual' ? 'R$ 100,00' : 'R$ 10,00';
+  const amount = plan === 'anual' ? 'R$ 150,00' : 'R$ 15,00';
   const due = document.getElementById('paymentNoticeDue')?.value || '';
   const message = 'Olá, ' + (user.name || '') + '. Segue a segunda via da cobrança Nexus via Pix. Plano ' + plan + ', valor ' + amount + (due ? ', vencimento ' + formatDateBR(due) : '') + '. Chave Pix: (62) 99234-5372. Após o pagamento, envie o comprovante para confirmação.';
   window.open('https://wa.me/55' + phone.slice(-11) + '?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
@@ -33532,7 +33533,7 @@ const server = http.createServer(async (req, res) => {
         const validPlans = ['mensal', 'anual'];
         if (!validPlans.includes(plan)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Plano inválido. Escolha mensal (R$ 10,00) ou anual (R$ 100,00).' }));
+          return res.end(JSON.stringify({ success: false, error: 'Plano inválido. Escolha mensal (R$ 15,00) ou anual (R$ 150,00).' }));
         }
 
         if (method !== 'pix') {
@@ -33564,7 +33565,7 @@ const server = http.createServer(async (req, res) => {
         const paymentConfirmed = false;
 
         const now = new Date();
-        const amount = plan === 'anual' ? 100.00 : 10.00;
+        const amount = plan === 'anual' ? 150.00 : 15.00;
         const suffix = receiptCode ? ('-REF-' + receiptCode.replace(/[^a-zA-Z0-9]/g, '').slice(0, 14).toUpperCase()) : '';
         const txId = 'NEXUS-SUB-' + Date.now() + '-' + crypto.randomBytes(3).toString('hex').toUpperCase() + suffix;
         const methodNames = { pix: 'Pix (SPI / BACEN)', credit_card: 'Cartão de Crédito', debit_card: 'Cartão de Débito', boleto: 'Boleto Bancário' };
