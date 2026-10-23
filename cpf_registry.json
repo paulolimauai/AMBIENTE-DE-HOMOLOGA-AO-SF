@@ -8,7 +8,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "Região Fiscal RFB",
     "origem": "Cadastro Oficial de Usuário",
-    "updated_at": "2026-10-21T22:27:33.320Z"
+    "updated_at": "2026-10-23T06:21:15.430Z"
   },
   "12345678909": {
     "cpf": "12345678909",
@@ -19,7 +19,7 @@
     "situacao": "REGULAR",
     "regiao_fiscal": "9ª Região Fiscal (PR, SC)",
     "origem": "Receita Federal do Brasil (Base Cadastral Oficial)",
-    "updated_at": "2026-10-21T22:27:33.336Z"
+    "updated_at": "2026-10-23T06:21:15.436Z"
   },
   "04023326100": {
     "cpf": "04023326100",
@@ -29,7 +29,7 @@
     "email": "paulodelima21@gmail.com",
     "situacao": "REGULAR",
     "regiao_fiscal": "1ª Região Fiscal (DF, GO, MT, MS, TO)",
-    "origem": "Receita Federal do Brasil (Base Cadastral Verificada)",
-    "updated_at": "2026-10-22T02:06:13.165Z"
+    "origem": "Cadastro Oficial de Usuário",
+    "updated_at": "2026-10-23T09:23:52.867Z"
   }
 }

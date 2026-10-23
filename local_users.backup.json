@@ -22,24 +22,25 @@
     "subscription_payment_id": null
   },
   {
-    "id": 1792634773124,
+    "id": "73",
     "name": "PAULO DE LIMA PEREIRA",
     "email": "paulodelima21@gmail.com",
     "password": "scrypt:9412639033776911d0da26a689df7713:6250918af504e8d59b920fef787b33fcd31dff60a12e8357e400a38c77e4c7af000273c42f1565543b35bd4af3fd9d3d5a0931f825f690561d46dfa91ee46f5b",
     "role": "Usuário",
     "active": true,
+    "created_at": "2026-10-21T22:48:59-03:00",
+    "last_login": "2026-10-23T06:23:39-03:00",
     "cpf": "04023326100",
     "phone": "(62) 98626-6049",
     "birth_date": "02/06/1992",
     "terms_accepted": true,
     "device_type": "Computador",
-    "trial_started_at": "2026-10-21T23:06:13-03:00",
+    "must_change_password": false,
+    "trial_started_at": "2026-10-23T06:21:11-03:00",
+    "subscription_plan": null,
     "subscription_status": "trial",
-    "subscription_plan": "mensal",
     "subscription_expires_at": null,
-    "subscription_method": "pix",
-    "subscription_payment_id": "NEXUS-SUB-1792634826005-05DE-DOC-E1823612017926",
-    "created_at": "2026-10-21T23:06:13-03:00",
-    "last_login": "2026-10-22T11:44:03-03:00"
+    "subscription_method": null,
+    "subscription_payment_id": null
   }
 ]
