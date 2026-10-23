@@ -925,3 +925,17 @@ body.light #nexusSubscriptionModal .sub-payment-card { box-shadow: 0 10px 26px r
   #nexusSubscriptionModal .sub-pix-qr-box { justify-self: center; width: min(100%, 190px); }
   #nexusSubscriptionModal .sub-stepper-bar { grid-template-columns: 1fr !important; }
 }
+
+/* Paleta exata da referência: grafite, azul aço, branco suave e âmbar. */
+#authPage { background-image: linear-gradient(135deg, rgba(8,12,17,.82), rgba(15,23,42,.72) 52%, rgba(3,7,12,.92)), url('/images/login-financial-dashboard.svg') !important; background-color: #252B2F !important; }
+#authPage .auth-showcase-badge { background: rgba(71,85,105,.30) !important; border-color: #607B98 !important; color: #D4D9DE !important; }
+#authPage .auth-showcase-title, #authPage .auth-showcase-title span { color: #F1F3F5 !important; text-shadow: none !important; }
+#authPage .auth-showcase-desc { color: #C2C9D0 !important; }
+#authPage .auth-metric-card, #authPage .auth-trust-item { background: rgba(37,43,47,.78) !important; border-color: rgba(148,163,184,.34) !important; color: #E2E6EA !important; }
+#authPage .auth-card-nexus { background: linear-gradient(145deg, rgba(62,70,76,.72), rgba(25,31,36,.82)) !important; border-color: rgba(148,163,184,.52) !important; border-top-color: #AAB8C5 !important; }
+#authPage .auth-logo-badge { background: linear-gradient(145deg, #7892AD, #40566C) !important; border-color: #B8C8D8 !important; }
+#authPage .auth-title span, #authPage .auth-input-icon, #authPage .auth-forgot-link, #authPage .auth-bottom-text a, #authPage .auth-support-link { color: #91ABC4 !important; }
+#authPage .auth-tabs-nav, #authPage .auth-input-wrapper { background: rgba(20,27,34,.58) !important; border-color: rgba(148,163,184,.38) !important; }
+#authPage .auth-tab-btn.active { color: #F1F3F5 !important; background: #607B98 !important; border-color: #A8B9CA !important; }
+#authPage .auth-input-wrapper:focus-within { border-color: #7892AD !important; box-shadow: 0 0 0 3px rgba(96,123,152,.22) !important; }
+#authPage #loginSubmitBtn, #authPage #regSubmitBtn { background: linear-gradient(100deg, #4D7CA8, #C99A3D) !important; border-color: #B8C8D8 !important; }
