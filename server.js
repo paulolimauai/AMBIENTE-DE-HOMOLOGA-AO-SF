@@ -13986,7 +13986,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-section-title { color: #647
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) { color: #334155 !important; }
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic { background: #F8FAFC !important; border-color: #E2E8F0 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261023-login-aligned6" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261023-login-standard5" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -14047,18 +14047,18 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </div>
 
       <div class="auth-showcase-title">
-        Clareza para cuidar melhor das suas <span>finanças pessoais.</span>
+        Controle total das suas <span>finanças pessoais.</span>
       </div>
 
       <div class="auth-showcase-desc">
-        Organize gastos, contas e metas em um só lugar — com uma visão simples e segura do seu orçamento.
+        Organize gastos, contas e metas em um só lugar, com uma visão clara do seu orçamento.
       </div>
 
       <div class="auth-showcase-metrics">
         <div class="auth-metric-card metric-card-budget">
           <div class="metric-card-head">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
-            <span class="metric-card-label">Orçamento mensal</span>
+            <span class="metric-card-label">Orçamento Mensal</span>
           </div>
           <div class="metric-val">Personalizado</div>
           <div class="metric-pill-tag green">✓ Zero Estouro de Gastos</div>
@@ -14067,7 +14067,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <div class="auth-metric-card metric-card-savings">
           <div class="metric-card-head">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
-            <span class="metric-card-label">Economia do mês</span>
+            <span class="metric-card-label">Economia do Mês</span>
           </div>
           <div class="metric-val">Calculado no mês</div>
           <div class="metric-pill-tag cyan">▲ +24% Guardado</div>
@@ -14076,7 +14076,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <div class="auth-metric-card metric-card-goals">
           <div class="metric-card-head">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
-            <span class="metric-card-label">Metas e reserva</span>
+            <span class="metric-card-label">Metas & Reserva</span>
           </div>
           <div class="metric-val">Suas metas</div>
           <div class="metric-pill-tag blue">🎯 Liberdade Financeira</div>
@@ -14105,18 +14105,18 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div class="auth-brand">
         <div class="auth-logo-badge">N</div>
         <div class="auth-title">NEXUS <span>FINANCEIRO</span></div>
-        <div class="auth-subtitle" id="authBoxSubtitle">Gestão financeira pessoal com controle inteligente de gastos</div>
+        <div class="auth-subtitle" id="authBoxSubtitle">Gestão Financeira Pessoal & Controle Inteligente de Gastos</div>
       </div>
 
       <!-- Navegação por Abas Segmentadas -->
       <div class="auth-tabs-nav" id="authTabsNav">
         <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="window.switchAuthTab('login')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Entrar na conta
+          Entrar na Conta
         </button>
         <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="window.switchAuthTab('register')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-          Criar conta grátis
+          Criar Conta Grátis
         </button>
       </div>
 
@@ -14124,7 +14124,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div id="loginBox">
         <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
-            <label>E-mail cadastrado</label>
+            <label>E-mail Cadastrado</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -14135,7 +14135,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
           <div class="auth-field">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <label style="margin-bottom:0;">Senha de acesso</label>
+              <label style="margin-bottom:0;">Senha de Acesso</label>
               <a class="auth-forgot-link" id="goForgotFromLogin" href="javascript:void(0)" onclick="window.switchAuthTab('forgot'); return false;" style="cursor:pointer;">Esqueceu a senha?</a>
             </div>
             <div class="auth-input-wrapper">
@@ -14160,12 +14160,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
-            Acessar minhas finanças →
+            Acessar Minhas Finanças →
           </button>
         </form>
 
         <p class="auth-bottom-text" style="margin-top:16px; text-align:center; font-size:12.5px; color:#CBD5E1;">
-          Ainda não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#38BDF8; font-weight:800; cursor:pointer; text-decoration:underline;">Crie sua conta gratuitamente</a>
+          Não possui uma conta? <a onclick="window.switchAuthTab('register')" style="color:#38BDF8; font-weight:800; cursor:pointer; text-decoration:underline;">Cadastre-se gratuitamente</a>
         </p>
       </div>
 
