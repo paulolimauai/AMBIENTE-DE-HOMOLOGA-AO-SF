@@ -654,6 +654,76 @@ body.light #authPage .auth-input-wrapper:focus-within { background: #FFFFFF !imp
 body.light #authPage .auth-input-wrapper input { color: #0F172A !important; }
 body.light #authPage .auth-label, body.light #authPage .auth-field-header .auth-label { color: #1E293B !important; }
 
+/* Componentes institucionais usados pelo layout financeiro principal. */
+#authPage .auth-exec-layout {
+  width: min(1120px, calc(100% - 48px)) !important;
+  grid-template-columns: minmax(0, 1fr) minmax(390px, 460px) !important;
+  gap: clamp(42px, 7vw, 104px) !important;
+  align-items: center !important;
+}
+#authPage .auth-showcase-panel { max-width: 560px !important; }
+#authPage .auth-showcase-badge {
+  color: #FDE68A !important;
+  background: rgba(245, 158, 11, .10) !important;
+  border-color: rgba(251, 191, 36, .34) !important;
+}
+#authPage .auth-showcase-badge .badge-dot { background: #FBBF24 !important; box-shadow: 0 0 9px rgba(251, 191, 36, .8) !important; }
+#authPage .auth-showcase-title { color: #F8FAFC !important; letter-spacing: -.045em !important; }
+#authPage .auth-showcase-title span {
+  background: linear-gradient(110deg, #FBBF24, #F59E0B) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+#authPage .auth-showcase-desc { color: #B8C4D4 !important; }
+#authPage .auth-metric-card {
+  background: rgba(13, 26, 43, .78) !important;
+  border-color: rgba(148, 163, 184, .24) !important;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, .18) !important;
+}
+#authPage .auth-metric-card .metric-card-head,
+#authPage .auth-metric-card .metric-card-label { color: #B8C4D4 !important; }
+#authPage .auth-metric-card .metric-val { color: #F8FAFC !important; }
+#authPage .auth-metric-card .metric-card-head svg { color: #FBBF24 !important; }
+#authPage .auth-metric-card.metric-card-budget,
+#authPage .auth-metric-card.metric-card-savings,
+#authPage .auth-metric-card.metric-card-goals { border-top-color: rgba(251, 191, 36, .62) !important; }
+#authPage .metric-pill-tag.green,
+#authPage .metric-pill-tag.cyan,
+#authPage .metric-pill-tag.blue {
+  color: #FDE68A !important;
+  background: rgba(245, 158, 11, .12) !important;
+  border-color: rgba(251, 191, 36, .28) !important;
+}
+#authPage .auth-trust-item { color: #B8C4D4 !important; background: rgba(13, 26, 43, .48) !important; border-color: rgba(148, 163, 184, .20) !important; }
+#authPage .auth-trust-item svg { color: #FBBF24 !important; }
+#authPage .auth-logo-badge {
+  background: linear-gradient(145deg, #F59E0B, #B45309) !important;
+  border-color: rgba(254, 243, 199, .78) !important;
+  box-shadow: 0 12px 26px rgba(245, 158, 11, .24) !important;
+}
+#authPage .auth-title { color: #F8FAFC !important; letter-spacing: -.035em !important; }
+#authPage .auth-title span {
+  background: linear-gradient(110deg, #FBBF24, #F59E0B) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+#authPage .auth-subtitle { color: #B8C4D4 !important; }
+#authPage .auth-forgot-link { color: #FBBF24 !important; }
+#authPage .auth-bottom-text { color: #B8C4D4 !important; }
+#authPage .auth-bottom-text a { color: #FBBF24 !important; }
+#authPage .auth-field { margin-bottom: 16px !important; }
+#authPage .auth-field > label { color: #E2E8F0 !important; font-size: 11px !important; font-weight: 750 !important; letter-spacing: .025em !important; }
+#authPage .auth-feedback-banner { border-radius: 11px !important; }
+@media (max-width: 1024px) {
+  #authPage .auth-exec-layout { width: min(460px, calc(100% - 32px)) !important; grid-template-columns: 1fr !important; gap: 0 !important; }
+}
+@media (max-width: 560px) {
+  #authPage .auth-exec-layout { width: calc(100% - 24px) !important; }
+  #authPage .auth-card-nexus { padding: 22px 18px !important; border-radius: 18px !important; }
+  #authPage .auth-tabs-nav { gap: 6px !important; }
+  #authPage .auth-tab-btn { font-size: 11px !important; padding-inline: 8px !important; }
+}
+
 /* Subscription checkout: clear Pix-only flow with manual reconciliation. */
 #nexusSubscriptionModal .sub-paywall-modal {
   width: min(100%, 980px) !important;
