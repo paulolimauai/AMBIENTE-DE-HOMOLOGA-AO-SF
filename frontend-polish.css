@@ -44,6 +44,23 @@ html { scroll-behavior: smooth; }
 body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 ::selection { color: #052E22; background: rgba(52, 211, 153, .42); }
 
+/* Fundo compartilhado do workspace: imagem ajustada sem competir com o conteúdo. */
+.persistent-system-bg {
+  background-image:
+    linear-gradient(135deg, rgba(2, 5, 8, .82), rgba(5, 12, 17, .68) 52%, rgba(1, 3, 5, .88)),
+    url('/images/nexus-workspace-background.jpg') !important;
+  background-size: cover !important;
+  background-position: center 42% !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
+body.light .persistent-system-bg {
+  background-image:
+    linear-gradient(135deg, rgba(248, 250, 252, .78), rgba(241, 245, 249, .68) 52%, rgba(226, 232, 240, .82)),
+    url('/images/nexus-workspace-background.jpg') !important;
+}
+
 /* Dashboard layout */
 #pageContent {
   width: 100%;
