@@ -606,6 +606,54 @@ body.light #authPage .auth-input-wrapper:focus-within { border-color: #D97706 !i
 body.light #authPage .auth-input-icon,
 body.light #authPage .auth-pass-toggle-btn svg { color: #B45309 !important; stroke: #B45309 !important; }
 
+/* Login: sistema de cores único e previsível. */
+#authPage {
+  --login-bg: #07111F;
+  --login-surface: #0D1A2B;
+  --login-border: rgba(148, 163, 184, .28);
+  --login-accent: #FBBF24;
+  --login-accent-strong: #D97706;
+  --login-accent-soft: rgba(251, 191, 36, .16);
+  --login-text: #F8FAFC;
+  --login-muted: #B8C4D4;
+}
+body:has(#authPage), body:has(#authPage).dark {
+  background-color: var(--login-bg) !important;
+  background-image: radial-gradient(circle at 18% 12%, rgba(245, 158, 11, .14), transparent 34%), radial-gradient(circle at 82% 18%, rgba(59, 130, 246, .10), transparent 30%), linear-gradient(145deg, #050B14 0%, #07111F 52%, #0B1728 100%) !important;
+  color: var(--login-text) !important;
+}
+#authPage .auth-card-nexus {
+  background: linear-gradient(145deg, rgba(13, 26, 43, .96), rgba(7, 17, 31, .98)) !important;
+  border: 1px solid var(--login-border) !important;
+  border-top: 2px solid rgba(251, 191, 36, .78) !important;
+  box-shadow: 0 28px 76px rgba(0, 0, 0, .46), 0 0 34px rgba(245, 158, 11, .10) !important;
+}
+#authPage .auth-tabs-nav { background: rgba(5, 12, 22, .82) !important; border: 1px solid var(--login-border) !important; }
+#authPage .auth-tab-btn { color: var(--login-muted) !important; }
+#authPage .auth-tab-btn:hover { background: var(--login-accent-soft) !important; color: #FEF3C7 !important; }
+#authPage .auth-tab-btn.active { color: #1C1405 !important; background: linear-gradient(135deg, #FBBF24, #D97706) !important; border-color: rgba(254, 243, 199, .72) !important; }
+#authPage .auth-label, #authPage .auth-field-header .auth-label { color: #E2E8F0 !important; }
+#authPage .auth-subtitle-text, #authPage #loginBox > p { color: var(--login-muted) !important; }
+#authPage .auth-input-wrapper { background: rgba(5, 12, 22, .88) !important; border-color: var(--login-border) !important; }
+#authPage .auth-input-wrapper:focus-within { background: #091522 !important; border-color: var(--login-accent) !important; box-shadow: 0 0 0 3px rgba(251, 191, 36, .16), 0 0 18px rgba(245, 158, 11, .12) !important; }
+#authPage .auth-input-wrapper input { color: var(--login-text) !important; }
+#authPage .auth-input-wrapper input::placeholder { color: #8290A3 !important; }
+#authPage .auth-input-icon, #authPage .auth-pass-toggle-btn svg { color: var(--login-accent) !important; stroke: var(--login-accent) !important; }
+#authPage #rememberMe { accent-color: var(--login-accent-strong) !important; }
+#authPage .btn-auth-primary, #authPage .btn-auth-gradient, #authPage #btnLoginSubmit { color: #1C1405 !important; background: linear-gradient(110deg, #D97706, #FBBF24) !important; border-color: rgba(254, 243, 199, .62) !important; box-shadow: 0 10px 24px rgba(245, 158, 11, .22) !important; }
+#authPage .btn-auth-primary:hover, #authPage .btn-auth-gradient:hover, #authPage #btnLoginSubmit:hover { background: linear-gradient(110deg, #F59E0B, #FCD34D) !important; }
+#authPage a, #authPage .auth-link, #authPage .auth-support-link, #authPage .auth-field-header button { color: var(--login-accent) !important; }
+#authPage .btn-open-os { color: #FEF3C7 !important; background: rgba(245, 158, 11, .10) !important; border-color: rgba(251, 191, 36, .58) !important; }
+#authPage .btn-open-os svg { color: var(--login-accent) !important; stroke: var(--login-accent) !important; }
+body.light:has(#authPage) { background-color: #F8FAFC !important; background-image: linear-gradient(145deg, #F8FAFC 0%, #FFFDF5 100%) !important; }
+body.light #authPage .auth-card-nexus { background: #FFFFFF !important; border: 1px solid #E2E8F0 !important; border-top: 2px solid #D97706 !important; box-shadow: 0 24px 64px rgba(15, 23, 42, .12) !important; }
+body.light #authPage .auth-tabs-nav { background: #F8FAFC !important; border-color: #E2E8F0 !important; }
+body.light #authPage .auth-tab-btn { color: #475569 !important; }
+body.light #authPage .auth-input-wrapper { background: #FFFFFF !important; border-color: #CBD5E1 !important; }
+body.light #authPage .auth-input-wrapper:focus-within { background: #FFFFFF !important; border-color: #D97706 !important; }
+body.light #authPage .auth-input-wrapper input { color: #0F172A !important; }
+body.light #authPage .auth-label, body.light #authPage .auth-field-header .auth-label { color: #1E293B !important; }
+
 /* Subscription checkout: clear Pix-only flow with manual reconciliation. */
 #nexusSubscriptionModal .sub-paywall-modal {
   width: min(100%, 980px) !important;
