@@ -941,6 +941,53 @@ body.light #authPage #googleRegisterBtn { background: #FFFFFF !important; color:
   #authPage #registerForm > .auth-grid-2col { grid-template-columns: 1fr !important; }
 }
 
+/* Ordem fixa dos campos do cadastro: elimina colisões entre regras antigas. */
+#authPage #serverAuthNexusCard #registerForm {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: start !important;
+  gap: 12px 14px !important;
+}
+#authPage #serverAuthNexusCard #registerForm > * { min-width: 0 !important; }
+#authPage #serverAuthNexusCard #registerForm > #googleRegisterBtn { order: 1 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > .google-auth-divider { order: 2 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > .auth-register-step-1 { order: 3 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > #registerNameField { order: 4 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > #registerCpfField { order: 5 !important; grid-column: 1 !important; }
+#authPage #serverAuthNexusCard #registerForm > #registerBirthField { order: 6 !important; grid-column: 2 !important; }
+#authPage #serverAuthNexusCard #registerForm > .auth-register-step-2 { order: 7 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > .auth-grid-2col:has(#regPhone) { order: 8 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > .auth-register-step-3 { order: 9 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > .auth-grid-2col:has(#regPassword) { order: 10 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > #regPwdMatchMsg { order: 11 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > .auth-register-consents { order: 12 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > .auth-register-security-note { order: 13 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > #registerFeedbackBanner { order: 14 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > #regSubmitBtn { order: 15 !important; grid-column: 1 / -1 !important; }
+#authPage #serverAuthNexusCard #registerForm > .auth-field,
+#authPage #serverAuthNexusCard #registerForm > .auth-grid-2col,
+#authPage #serverAuthNexusCard #registerForm .auth-field { width: 100% !important; min-width: 0 !important; margin: 0 !important; }
+#authPage #serverAuthNexusCard #registerForm > .auth-grid-2col {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px 14px !important;
+}
+#authPage #serverAuthNexusCard #registerForm .auth-field > label { min-height: 17px !important; margin: 0 0 6px !important; line-height: 1.3 !important; }
+#authPage #serverAuthNexusCard #registerForm .auth-input-wrapper { width: 100% !important; height: 50px !important; min-height: 50px !important; max-height: 50px !important; }
+#authPage #serverAuthNexusCard #registerForm .auth-input-wrapper input { min-width: 0 !important; width: 100% !important; font-size: 13px !important; }
+#authPage #serverAuthNexusCard #registerForm .auth-register-section { margin: 4px 0 0 !important; padding: 8px 2px 7px !important; line-height: 1.25 !important; }
+#authPage #serverAuthNexusCard #registerForm .auth-register-consents { display: flex !important; flex-direction: column !important; gap: 8px !important; margin: 2px 0 0 !important; line-height: 1.4 !important; }
+#authPage #serverAuthNexusCard #registerForm .auth-register-consents label { display: flex !important; align-items: flex-start !important; gap: 9px !important; min-height: 0 !important; }
+#authPage #serverAuthNexusCard #registerForm .auth-register-consents input { flex: 0 0 16px !important; width: 16px !important; height: 16px !important; margin: 2px 0 0 !important; accent-color: #D97706 !important; }
+#authPage #serverAuthNexusCard #registerForm .auth-register-security-note { display: flex !important; align-items: center !important; min-height: 44px !important; margin: 0 !important; }
+#authPage #serverAuthNexusCard #registerForm #regSubmitBtn { width: 100% !important; min-height: 52px !important; margin: 1px 0 0 !important; }
+@media (max-width: 560px) {
+  #authPage #serverAuthNexusCard #registerForm { grid-template-columns: minmax(0, 1fr) !important; gap: 11px !important; }
+  #authPage #serverAuthNexusCard #registerForm > #registerCpfField,
+  #authPage #serverAuthNexusCard #registerForm > #registerBirthField { grid-column: 1 / -1 !important; }
+  #authPage #serverAuthNexusCard #registerForm > .auth-grid-2col { grid-template-columns: minmax(0, 1fr) !important; gap: 11px !important; }
+}
+
 #nexusSubscriptionModal .sub-paywall-modal {
   width: min(100%, 980px) !important;
   max-height: min(92vh, 900px) !important;
