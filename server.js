@@ -7787,6 +7787,30 @@ body.light .sub-tab-btn.active .sub-tab-pill-badge {
   z-index: 3;
 }
 
+/* Refinamento visual do checkout e leitura do QR Code Pix */
+.sub-paywall-modal { max-width: 1160px !important; padding: 28px 32px !important; }
+.sub-header-bar { align-items: flex-start; padding-bottom: 20px; margin-bottom: 20px; }
+.sub-checkout-grid { grid-template-columns: 390px minmax(0, 1fr); gap: 22px; align-items: start; }
+.sub-summary-card, .sub-payment-card { min-width: 0; padding: 22px; border-radius: 22px; }
+.sub-payment-card { box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
+.sub-pix-split-grid { grid-template-columns: 204px minmax(0, 1fr); gap: 18px; align-items: stretch; }
+.sub-pix-qr-box { min-height: 238px; padding: 16px 12px 13px; border-radius: 20px; border: 2px solid #34D399; box-shadow: 0 14px 30px rgba(0,0,0,0.32), 0 0 26px rgba(16,185,129,0.22); }
+.sub-pix-qr-box img#subPixQrImg, #subPixQrImg { width: 184px !important; height: 184px !important; padding: 8px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px !important; image-rendering: pixelated; }
+.sub-qr-scan-line { display: none; }
+.sub-payment-card .pix-info-card { min-height: 112px; display: flex; flex-direction: column; justify-content: center; padding: 15px 16px !important; border-radius: 16px !important; }
+.sub-payment-card #subPixCodeInput { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: rgba(0,0,0,0.22); }
+.sub-payment-card #btnCopyPix, .sub-payment-card #btnCopyPixKeyDirect { min-height: 38px; }
+@media (max-width: 900px) {
+  .sub-paywall-modal { padding: 22px 18px !important; }
+  .sub-checkout-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .sub-header-bar { align-items: stretch; }
+  .sub-pix-split-grid { grid-template-columns: 1fr; }
+  .sub-pix-qr-box { min-height: 0; }
+  #subPixQrImg { width: min(68vw, 220px) !important; height: min(68vw, 220px) !important; }
+}
+
 @keyframes qrLaserScan {
   0% { top: 14px; opacity: 0.35; }
   50% { top: 146px; opacity: 1; }
@@ -18914,7 +18938,7 @@ window.updatePixPayloadAndQr = function() {
   const imgEl = document.getElementById('subPixQrImg');
   if (inputEl) inputEl.value = pixCode;
   if (imgEl) {
-    imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode);
+     imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=16&ecc=H&color=000000&bgcolor=FFFFFF&data=' + encodeURIComponent(pixCode);
   }
 };
 
