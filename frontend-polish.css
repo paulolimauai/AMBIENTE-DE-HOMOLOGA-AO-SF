@@ -506,6 +506,56 @@ body.light #authPage .auth-input-wrapper input:-webkit-autofill:active {
 body.light #authPage .auth-input-wrapper:focus-within { background: #FFFFFF !important; }
 body.light #authPage .auth-input-wrapper input { color: #0F172A !important; }
 
+/* Login: acento âmbar institucional, substituindo o verde. */
+#authPage .auth-card-nexus {
+  border-color: rgba(251, 191, 36, .30) !important;
+  border-top-color: rgba(252, 211, 77, .78) !important;
+}
+#authPage .auth-input-wrapper,
+#authPage .auth-input-wrapper:focus-within {
+  border-color: rgba(251, 191, 36, .68) !important;
+}
+#authPage .auth-input-wrapper:focus-within {
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, .18), 0 0 16px rgba(245, 158, 11, .16) !important;
+}
+#authPage .auth-input-icon,
+#authPage .auth-pass-toggle-btn svg,
+#authPage .btn-open-os svg { color: #FBBF24 !important; stroke: #FBBF24 !important; }
+#authPage header > div:first-child > div:first-child,
+#authPage #authNexusCard > div:first-child .bg-gradient-to-br {
+  background: linear-gradient(145deg, #F59E0B, #B45309) !important;
+  border-color: rgba(254, 243, 199, .82) !important;
+  box-shadow: 0 10px 24px rgba(245, 158, 11, .28) !important;
+}
+#authPage .auth-brand-title > span,
+#authPage .auth-support-link,
+#authPage .auth-field-header button,
+#authPage .auth-link,
+#authPage a.text-cyan-300,
+#authPage a.text-sky-300,
+#authPage a.text-blue-300,
+#authPage a.text-cyan-400,
+#authPage a.text-sky-400,
+#authPage a.text-blue-400 {
+  color: #FBBF24 !important;
+}
+#authPage .auth-tab-btn.active,
+#authPage .btn-auth-primary,
+#authPage .btn-auth-gradient {
+  background: linear-gradient(110deg, #B45309, #F59E0B) !important;
+  border-color: rgba(254, 243, 199, .62) !important;
+  box-shadow: 0 10px 24px rgba(245, 158, 11, .22) !important;
+}
+#authPage .btn-open-os {
+  border-color: rgba(251, 191, 36, .62) !important;
+  color: #FEF3C7 !important;
+}
+body.light #authPage .auth-card-nexus { border-top-color: #D97706 !important; }
+body.light #authPage .auth-input-wrapper,
+body.light #authPage .auth-input-wrapper:focus-within { border-color: #D97706 !important; }
+body.light #authPage .auth-input-icon,
+body.light #authPage .auth-pass-toggle-btn svg { color: #B45309 !important; stroke: #B45309 !important; }
+
 /* Subscription checkout: clear Pix-only flow with manual reconciliation. */
 #nexusSubscriptionModal .sub-paywall-modal {
   width: min(100%, 980px) !important;
