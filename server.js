@@ -13986,7 +13986,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-section-title { color: #647
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) { color: #334155 !important; }
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic { background: #F8FAFC !important; border-color: #E2E8F0 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261023-workspace-background1" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261023-login-palette4" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
