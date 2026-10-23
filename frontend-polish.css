@@ -51,6 +51,16 @@ aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic sv
 #authPage .auth-tab-btn.active { color: #F3FFF8 !important; background: linear-gradient(135deg, rgba(16,185,129,.90), rgba(4,120,87,.86)) !important; border-color: rgba(110,231,183,.70) !important; }
 #authPage #loginSubmitBtn, #authPage #regSubmitBtn { background: linear-gradient(100deg, #059669, #34D399) !important; border-color: rgba(167,243,208,.70) !important; }
 
+/* Mantém a composição de duas colunas da referência em telas desktop. */
+@media (min-width: 861px) {
+  #authPage .auth-exec-layout { grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr) !important; gap: clamp(32px, 5vw, 68px) !important; }
+  #authPage .auth-showcase-panel { display: flex !important; }
+}
+body.light #authPage { background-color: #000 !important; background-image: linear-gradient(135deg, rgba(0,0,0,.90), rgba(0,0,0,.80) 52%, rgba(0,0,0,.95)), url('/images/nexus-workspace-background.jpg') !important; }
+body.light #authPage .auth-card-nexus { background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.045)) !important; border-color: rgba(255,255,255,.24) !important; }
+body.light #authPage .auth-showcase-title, body.light #authPage .auth-showcase-title span { color: #86EFAC !important; }
+body.light #authPage .auth-input-wrapper { background: rgba(255,255,255,.075) !important; border-color: rgba(255,255,255,.20) !important; }
+
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
