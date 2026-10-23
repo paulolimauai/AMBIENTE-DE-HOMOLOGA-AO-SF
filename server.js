@@ -7818,6 +7818,27 @@ body.light .sub-tab-btn.active .sub-tab-pill-badge {
 }
 
 /* Radar de Conciliação e Reconhecimento Automático BACEN SPI */
+/* Acabamento final do checkout: alinhamento, ritmo e hierarquia */
+#nexusSubscriptionModal .sub-header-bar > div:first-child { flex: 1 1 auto; min-width: 0; }
+#nexusSubscriptionModal .sub-header-bar > div:last-child { justify-content: flex-end; }
+#nexusSubscriptionModal .sub-header-bar h2 { line-height: 1.15; }
+#nexusSubscriptionModal .sub-step-pill { min-height: 58px; box-sizing: border-box; }
+#nexusSubscriptionModal .sub-section-header { min-height: 30px; box-sizing: border-box; }
+#nexusSubscriptionModal .sub-plan-card { min-height: 78px; box-sizing: border-box; }
+#nexusSubscriptionModal .sub-plan-card > div:last-child { flex: 0 0 auto; }
+#nexusSubscriptionModal .sub-payment-tabs { margin-top: 2px; }
+#nexusSubscriptionModal .sub-payment-card .sub-section-header { align-items: flex-start; }
+#nexusSubscriptionModal .sub-payment-card .sub-section-header > span:last-child { white-space: nowrap; }
+#nexusSubscriptionModal #subFormPix .sub-pix-split-grid > div:last-child { min-width: 0; }
+#nexusSubscriptionModal #subFormPix > .sub-pay-action-btn { min-height: 52px; margin-top: 16px; }
+#nexusSubscriptionModal .sub-pay-action-btn { letter-spacing: 0; }
+#nexusSubscriptionModal .sub-auto-radar-card { margin-bottom: 14px; }
+body.light #nexusSubscriptionModal .sub-pix-qr-box { border-color: #059669; box-shadow: 0 12px 28px rgba(15,23,42,0.12); }
+@media (max-width: 640px) {
+  #nexusSubscriptionModal .sub-header-bar > div:last-child { justify-content: space-between; }
+  #nexusSubscriptionModal .sub-plan-card { min-height: 72px; }
+}
+
 .sub-auto-radar-card {
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(14, 165, 233, 0.08) 55%, rgba(15, 23, 42, 0.85) 100%);
   border: 1.5px solid rgba(16, 185, 129, 0.42);
