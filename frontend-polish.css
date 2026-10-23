@@ -81,6 +81,17 @@ body.light .app-bg-scene {
     url('/images/nexus-workspace-background.jpg') !important;
 }
 
+/* Fundo limpo: remove elementos decorativos flutuantes, preservando os controles reais. */
+.app-bg-orbital-canvas,
+.app-bg-grid,
+.app-bg-chart,
+.app-blob,
+.fintech-bg-candles,
+.fintech-bg-watermarks,
+.fintech-market-ticker-banner {
+  display: none !important;
+}
+
 /* Dashboard layout */
 #pageContent {
   width: 100%;
