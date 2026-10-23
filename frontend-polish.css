@@ -3,11 +3,40 @@
   --ui-green: #10B981;
   --ui-green-strong: #059669;
   --ui-green-soft: rgba(16, 185, 129, .12);
+  --ui-icon-size: 16px;
+  --ui-icon-size-sm: 14px;
+  --ui-icon-size-lg: 18px;
   --ui-radius: 16px;
   --ui-radius-sm: 11px;
   --ui-border: rgba(148, 163, 184, .16);
   --ui-shadow: 0 12px 32px rgba(0, 0, 0, .18);
   --ui-focus: 0 0 0 3px rgba(16, 185, 129, .22);
+}
+
+/* Iconografia: escala padrão para leitura consistente em desktop e tablet. */
+.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
+aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
+.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
+.btn-action-edit svg,
+.row-edit svg,
+[data-edit] svg, [data-editacc] svg, [data-editcat] svg, [data-editorc] svg,
+[data-editmeta] svg, [data-editrec] svg, [data-editalert] svg, [data-mgedit] svg,
+.btn-action-del svg,
+[data-del] svg, [data-delacc] svg, [data-delcat] svg, [data-delorc] svg,
+[data-delmeta] svg, [data-delrec] svg, [data-delalert] svg, [data-mgdel] svg {
+  width: var(--ui-icon-size) !important;
+  height: var(--ui-icon-size) !important;
+}
+
+.sidebar-quick-action-btn .quick-action-ic svg,
+.user-card-btn svg {
+  width: var(--ui-icon-size-sm) !important;
+  height: var(--ui-icon-size-sm) !important;
+}
+
+.mobile-drawer-nav button .ic svg {
+  width: var(--ui-icon-size-lg) !important;
+  height: var(--ui-icon-size-lg) !important;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -420,6 +449,62 @@ body.light #pageContent .dash-metric-item, body.light #pageContent .dash-pillar-
   #pageContent .kpis-grid-6 { gap: 8px !important; }
   #pageContent .kpis-grid-6 .kpi { min-height: 125px !important; padding: 13px !important; }
 }
+
+/* Login: contraste firme no preenchimento automático e acento institucional verde. */
+#authPage .auth-input-wrapper input:-webkit-autofill,
+#authPage .auth-input-wrapper input:-webkit-autofill:hover,
+#authPage .auth-input-wrapper input:-webkit-autofill:focus,
+#authPage .auth-input-wrapper input:-webkit-autofill:active {
+  -webkit-text-fill-color: #F0FDF4 !important;
+  -webkit-box-shadow: 0 0 0 1000px #06110D inset !important;
+  box-shadow: 0 0 0 1000px #06110D inset !important;
+  caret-color: #F0FDF4 !important;
+  transition: background-color 9999s ease-out !important;
+}
+#authPage .auth-input-wrapper,
+#authPage .auth-input-wrapper:focus-within {
+  border-color: rgba(52, 211, 153, .65) !important;
+}
+#authPage .auth-input-wrapper:focus-within {
+  background: #06110D !important;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, .18), 0 0 16px rgba(16, 185, 129, .16) !important;
+}
+#authPage .auth-input-icon,
+#authPage .auth-pass-toggle-btn svg { color: #34D399 !important; stroke: #34D399 !important; }
+#authPage header > div:first-child > div:first-child,
+#authPage #authNexusCard > div:first-child .bg-gradient-to-br {
+  background: linear-gradient(145deg, #10B981, #047857) !important;
+  border-color: rgba(167, 243, 208, .72) !important;
+  box-shadow: 0 10px 24px rgba(5, 150, 105, .28) !important;
+}
+#authPage .auth-brand-title > span,
+#authPage .auth-support-link,
+#authPage .auth-field-header button,
+#authPage .auth-link,
+#authPage a.text-cyan-300,
+#authPage a.text-sky-300,
+#authPage a.text-blue-300,
+#authPage a.text-cyan-400,
+#authPage a.text-sky-400,
+#authPage a.text-blue-400 {
+  color: #34D399 !important;
+}
+#authPage .btn-open-os {
+  border-color: rgba(52, 211, 153, .55) !important;
+  color: #D1FAE5 !important;
+}
+#authPage .btn-open-os svg { color: #34D399 !important; stroke: #34D399 !important; }
+body.light #authPage .auth-input-wrapper input:-webkit-autofill,
+body.light #authPage .auth-input-wrapper input:-webkit-autofill:hover,
+body.light #authPage .auth-input-wrapper input:-webkit-autofill:focus,
+body.light #authPage .auth-input-wrapper input:-webkit-autofill:active {
+  -webkit-text-fill-color: #0F172A !important;
+  -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  caret-color: #0F172A !important;
+}
+body.light #authPage .auth-input-wrapper:focus-within { background: #FFFFFF !important; }
+body.light #authPage .auth-input-wrapper input { color: #0F172A !important; }
 
 /* Subscription checkout: clear Pix-only flow with manual reconciliation. */
 #nexusSubscriptionModal .sub-paywall-modal {
