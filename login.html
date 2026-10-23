@@ -3331,6 +3331,57 @@ body.light .period button.active {
             body.auth-bg-cyber-grid { padding: 16px 12px 22px !important; }
             #authNexusCard { padding: 24px 18px !important; border-radius: 18px !important; }
         }
+
+        /* Referência visual: hero financeiro à esquerda e login glass à direita. */
+        body.auth-bg-cyber-grid > main { max-width: 1120px !important; padding: 24px 18px !important; }
+        body.auth-bg-cyber-grid > main > .grid {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1.12fr) minmax(360px, 420px) !important;
+            gap: clamp(32px, 6vw, 86px) !important;
+            align-items: center !important;
+        }
+        body.auth-bg-cyber-grid > main > .grid > .login-showcase {
+            display: block !important; width: auto !important; max-width: 560px !important; margin: 0 !important;
+        }
+        body.auth-bg-cyber-grid > main > .grid > .login-form-column {
+            width: 100% !important; max-width: 420px !important; margin: 0 !important;
+        }
+        .login-showcase .showcase-kicker {
+            display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px;
+            border: 1px solid rgba(125, 154, 187, .34); border-radius: 999px;
+            background: rgba(55, 75, 98, .24); color: #B8C9DB; font-size: 10px;
+            font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+        }
+        .login-showcase .showcase-kicker::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #7DA4CA; box-shadow: 0 0 10px rgba(125, 164, 202, .8); }
+        .login-showcase h2 { max-width: 540px; margin: 28px 0 12px; color: #F4F7FA; font-size: clamp(30px, 4vw, 48px); line-height: 1.04; letter-spacing: -.045em; font-weight: 900; text-transform: uppercase; }
+        .login-showcase > p { max-width: 500px; margin: 0; color: #A8B5C2; font-size: 14px; line-height: 1.65; }
+        .showcase-metrics { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 28px; overflow: hidden; border: 1px solid rgba(145, 166, 188, .30); border-radius: 12px; background: linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,.035)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .showcase-metric { min-height: 108px; padding: 14px 12px 12px; border-right: 1px solid rgba(145,166,188,.22); }
+        .showcase-metric:last-child { border-right: 0; }
+        .showcase-metric small { display: block; color: #B5C2CE; font-size: 9px; font-weight: 800; text-transform: uppercase; }
+        .showcase-metric strong { display: block; margin-top: 14px; color: #F3F6F8; font-size: 13px; }
+        .showcase-metric span { display: block; margin-top: 4px; color: #8EA5BA; font-size: 10px; }
+        .showcase-metric:nth-child(2) strong { color: #8DD8D2; }
+        .showcase-metric:nth-child(3) strong { color: #F2C66D; }
+        .showcase-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .showcase-pills span { padding: 8px 12px; border: 1px solid rgba(145,166,188,.24); border-radius: 8px; background: rgba(255,255,255,.055); color: #C5D0DA; font-size: 10px; font-weight: 800; text-align: center; }
+        .login-form-column #authNexusCard { max-width: 420px !important; }
+        .login-form-column #authNexusCard > div:first-child .w-12.h-12 { background: linear-gradient(145deg, #6E8FB4, #334D69) !important; border-color: rgba(177,205,231,.58) !important; box-shadow: 0 12px 28px rgba(73,111,150,.24) !important; }
+        .login-form-column #authTabsNav .auth-tab-btn.active { color: #F3F6F8 !important; background: linear-gradient(135deg, rgba(105,139,174,.88), rgba(57,80,105,.84)) !important; border-color: rgba(165,193,220,.52) !important; box-shadow: 0 8px 18px rgba(41,65,89,.25), inset 0 1px 0 rgba(255,255,255,.25) !important; }
+        .login-form-column #btnLoginSubmit, .login-form-column #btnRegisterSubmit { color: #F8FAFC !important; background: linear-gradient(100deg, #4D7CA8, #D49A2A) !important; border-color: rgba(180,204,224,.48) !important; box-shadow: 0 12px 24px rgba(46,76,106,.24), inset 0 1px 0 rgba(255,255,255,.32) !important; }
+        @media (max-width: 860px) {
+            body.auth-bg-cyber-grid > main > .grid { grid-template-columns: 1fr !important; gap: 22px !important; }
+            body.auth-bg-cyber-grid > main > .grid > .login-showcase { max-width: 520px !important; margin: 0 auto !important; }
+            .login-showcase h2 { margin-top: 18px; font-size: 32px; }
+            .login-form-column { margin: 0 auto !important; }
+        }
+        @media (max-width: 520px) {
+            body.auth-bg-cyber-grid > main { padding: 8px 4px !important; }
+            .login-showcase h2 { font-size: 27px; }
+            .showcase-metrics { grid-template-columns: 1fr; }
+            .showcase-metric { min-height: auto; border-right: 0; border-bottom: 1px solid rgba(145,166,188,.22); }
+            .showcase-metric:last-child { border-bottom: 0; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center py-2 sm:py-3.5 px-3 sm:px-6 relative select-none auth-bg-cyber-grid">
@@ -3675,7 +3726,19 @@ body.light .period button.active {
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full">
             
             <!-- COLUNA DIREITA: CARD PRINCIPAL DE AUTENTICAÇÃO (5 COLUNAS EM TELAS LARGAS, CENTRALIZADO NO MOBILE) -->
-            <div class="col-span-1 lg:col-span-5 flex flex-col items-center w-full max-w-[460px] mx-auto">
+            <section class="login-showcase" aria-label="Visao geral do Nexus">
+                <span class="showcase-kicker">Sistema de gest&atilde;o financeira pessoal - Controle total</span>
+                <h2>Assuma o controle total das suas finan&ccedil;as pessoais.</h2>
+                <p>Organize gastos, contas e metas em um s&oacute; lugar. Tenha uma vis&atilde;o clara e tome decis&otilde;es inteligentes com nossa plataforma avan&ccedil;ada de gest&atilde;o.</p>
+                <div class="showcase-metrics">
+                    <div class="showcase-metric"><small>Or&ccedil;amento pessoal</small><strong>Personalizado</strong><span>(Zerar estouro)</span></div>
+                    <div class="showcase-metric"><small>Economia do m&ecirc;s</small><strong>Economia do m&ecirc;s</strong><span>R$ 2.450 guardado</span></div>
+                    <div class="showcase-metric"><small>Impulsione suas metas</small><strong>Metas &amp; reservas</strong><span>Liberdade financeira</span></div>
+                </div>
+                <div class="showcase-pills"><span>Controle de gastos<br>&amp; cart&otilde;es</span><span>Visualiza&ccedil;&atilde;o<br>completa</span><span>Alertas e insights</span></div>
+            </section>
+
+            <div class="login-form-column col-span-1 lg:col-span-5 flex flex-col items-center w-full max-w-[460px] mx-auto">
                 
                 <!-- CARD PRINCIPAL DE AUTENTICAÇÃO -->
                 <div class="auth-card-nexus w-full p-6 sm:p-7 rounded-3xl relative" id="authNexusCard">
