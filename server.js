@@ -2597,7 +2597,7 @@ html, body {
     linear-gradient(135deg, rgba(0, 0, 0, 0.72) 0%, rgba(4, 12, 28, 0.58) 50%, rgba(0, 0, 0, 0.82) 100%),
     radial-gradient(ellipse 95% 70% at 12% 10%, rgba(16, 185, 129, 0.22) 0%, transparent 60%),
     radial-gradient(ellipse 90% 65% at 88% 12%, rgba(245, 158, 11, 0.16) 0%, transparent 58%),
-    url('/images/login-financial-dashboard.svg') !important;
+    url('/images/nexus-workspace-background.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
@@ -2621,7 +2621,7 @@ body.light .auth-container {
     linear-gradient(135deg, rgba(255, 255, 255, 0.76) 0%, rgba(241, 245, 249, 0.70) 50%, rgba(226, 232, 240, 0.80) 100%),
     radial-gradient(ellipse 90% 50% at 50% -5%, rgba(5, 150, 105, 0.10) 0%, transparent 50%),
     radial-gradient(ellipse 70% 50% at 85% 90%, rgba(217, 119, 6, 0.08) 0%, transparent 50%),
-    url('/images/login-financial-dashboard.svg') !important;
+    url('/images/nexus-workspace-background.jpg') !important;
   background-size: cover !important;
   background-position: center center !important;
   background-attachment: fixed !important;
