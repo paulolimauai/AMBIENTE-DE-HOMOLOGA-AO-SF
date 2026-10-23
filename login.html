@@ -372,6 +372,12 @@
                 url('/images/nexus-workspace-background.jpg');
         }
 
+        /* Login sem elementos flutuantes sobre o fundo. */
+        #bgOrbitalCanvas,
+        #loginAmbientDecor {
+            display: none !important;
+        }
+
         body.light .auth-bg-cyber-grid {
             background-image: 
                 radial-gradient(circle, rgba(14, 165, 233, 0.14) 1.2px, transparent 1.2px),
@@ -3486,7 +3492,7 @@ body.light .period button.active {
     <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
 
     <!-- Ambient Aura Glows Financeiros (Esmeralda, Safira, Índigo & Ouro) -->
-    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div id="loginAmbientDecor" class="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div class="absolute top-[10%] left-[15%] -translate-x-1/2 w-[520px] h-[520px] bg-emerald-500/22 rounded-full blur-[130px]"></div>
         <div class="absolute top-[25%] right-[12%] w-[480px] h-[480px] bg-sky-500/20 rounded-full blur-[140px]"></div>
         <div class="absolute bottom-[8%] left-[28%] w-[420px] h-[420px] bg-indigo-500/16 rounded-full blur-[150px]"></div>
