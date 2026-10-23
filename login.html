@@ -3254,6 +3254,32 @@ body.light .period button.active {
             box-shadow: 0 12px 24px rgba(245, 158, 11, .2) !important;
         }
         #btnLoginSubmit:hover, #btnRegisterSubmit:hover { filter: brightness(1.08) !important; }
+        /* Normalização cromática: âmbar + neutros, sem resíduos verdes ou azuis. */
+        #authNexusCard :is([class*="text-emerald"], [class*="text-teal"], [class*="text-cyan"]) {
+            color: #FBBF24 !important;
+        }
+        #authNexusCard :is([class*="border-emerald"], [class*="border-teal"], [class*="border-cyan"]) {
+            border-color: rgba(245, 158, 11, .38) !important;
+        }
+        #authNexusCard :is([class*="bg-emerald"], [class*="bg-teal"], [class*="bg-cyan"]) {
+            background-color: rgba(245, 158, 11, .12) !important;
+        }
+        #authNexusCard :is([class*="from-emerald"], [class*="from-teal"], [class*="from-cyan"]) {
+            background-image: linear-gradient(135deg, #FBBF24, #D97706) !important;
+        }
+        #authNexusCard :is([class*="shadow-emerald"], [class*="shadow-teal"], [class*="shadow-cyan"]) {
+            box-shadow: 0 12px 24px rgba(245, 158, 11, .20) !important;
+        }
+        body.light #authNexusCard {
+            background: #FFFFFF !important;
+            border-color: #D6D3D1 !important;
+            box-shadow: 0 24px 60px rgba(28, 25, 23, .12) !important;
+        }
+        body.light #authNexusCard h1 { color: #1C1917 !important; }
+        body.light #authNexusCard #authSubtitle,
+        body.light #authNexusCard .auth-label { color: #57534E !important; }
+        body.light #authNexusCard .auth-input-wrapper { background: #FAFAF9 !important; border-color: #D6D3D1 !important; }
+        body.light #authNexusCard .auth-input-wrapper input { color: #1C1917 !important; }
         @media (max-width: 520px) {
             body.auth-bg-cyber-grid { padding: 16px 12px 22px !important; }
             #authNexusCard { padding: 24px 18px !important; border-radius: 18px !important; }
