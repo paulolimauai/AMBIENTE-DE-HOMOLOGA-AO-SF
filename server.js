@@ -1624,10 +1624,24 @@ html:not(.app-ready) *::after {
   transition: none !important;
   animation: none !important;
 }
+html:not(.app-ready) #appMain,
+html:not(.app-ready) #authPage {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  transform: none !important;
+}
+html.app-ready #appMain,
+html.app-ready #authPage {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
 html {
   overflow-y: scroll;
   scrollbar-gutter: stable;
+  overflow-anchor: none;
 }
+body { overflow-anchor: none; }
 button, a, input[type="button"], input[type="submit"], [role="button"], .card, .btn {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
