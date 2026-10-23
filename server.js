@@ -13913,9 +13913,9 @@ body.light .monthly-real-card .metric-percentage { color: #0F172A; }
   font-weight: 700;
   line-height: 1.35;
 }
-#authPage .metric-card-budget::after { content: "Entre para consultar o percentual real do seu orçamento."; }
-#authPage .metric-card-savings::after { content: "Calculado com as receitas e despesas deste mês."; }
-#authPage .metric-card-goals::after { content: "Progresso calculado com as metas da sua conta."; }
+#authPage .metric-card-budget::after { content: "Categorias flexíveis para organizar sua rotina."; }
+#authPage .metric-card-savings::after { content: "Acompanhe receitas, despesas e saldo mensal."; }
+#authPage .metric-card-goals::after { content: "Defina objetivos e acompanhe seu progresso."; }
 @media (max-width: 760px) {
   #monthlyRealMetrics { grid-template-columns: 1fr; gap: 9px; }
   .monthly-real-card { padding: 13px 14px; }
@@ -14080,12 +14080,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage .auth-input-wrapper:focus-within { border-color: rgba(52,211,153,.90) !important; box-shadow: 0 0 0 3px rgba(16,185,129,.18), inset 0 1px 0 rgba(255,255,255,.16) !important; }
 #authPage #loginSubmitBtn, #authPage #regSubmitBtn { background: linear-gradient(100deg, #059669, #34D399) !important; border-color: rgba(167,243,208,.70) !important; box-shadow: 0 12px 24px rgba(5,150,105,.34), inset 0 1px 0 rgba(255,255,255,.35) !important; }
 #authPage .auth-top-bar { display: none !important; }
-#authPage .auth-showcase-title { font-size: 0 !important; line-height: 1.04 !important; }
-#authPage .auth-showcase-title::after { content: "ASSUMA O CONTROLE TOTAL\\A DAS SUAS FINAN\\00C7AS\\A PESSOAIS."; white-space: pre-line; font-size: clamp(30px, 4vw, 48px); color: #86EFAC; }
-#authPage .auth-showcase-desc { font-size: 0 !important; }
-#authPage .auth-showcase-desc::after { content: "Organize gastos, contas e metas em um s\\00F3 lugar. Tenha uma vis\\00E3o clara e tome decis\\00F5es inteligentes com nossa plataforma avan\\00E7ada de gest\\00E3o."; font-size: 14px; line-height: 1.65; color: #A7C9B7; }
+#authPage .auth-showcase-title { font-size: clamp(32px, 3.05vw, 44px) !important; line-height: 1.12 !important; }
+#authPage .auth-showcase-title::after, #authPage .auth-showcase-desc::after { content: none !important; }
+#authPage .auth-showcase-desc { font-size: 15px !important; line-height: 1.65 !important; color: #C2C9D0 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261023-steel-palette1" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261023-writing1" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -14146,11 +14145,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </div>
 
       <div class="auth-showcase-title">
-        Controle total das suas <span>finanças pessoais.</span>
+        Controle Total das Suas <span>Finanças Pessoais.</span>
       </div>
 
       <div class="auth-showcase-desc">
-        Organize gastos, contas e metas em um só lugar, com uma visão clara do seu orçamento.
+        Organize gastos, contas e metas em um só lugar, com uma visão clara do seu orçamento e das suas prioridades.
       </div>
 
       <div class="auth-showcase-metrics">
@@ -14159,8 +14158,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
             <span class="metric-card-label">Orçamento Mensal</span>
           </div>
-          <div class="metric-val">Personalizado</div>
-          <div class="metric-pill-tag green">✓ Zero Estouro de Gastos</div>
+          <div class="metric-val">Seu orçamento</div>
+          <div class="metric-pill-tag green">Organizado por categorias</div>
         </div>
 
         <div class="auth-metric-card metric-card-savings">
@@ -14168,8 +14167,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
             <span class="metric-card-label">Economia do Mês</span>
           </div>
-          <div class="metric-val">Calculado no mês</div>
-          <div class="metric-pill-tag cyan">▲ +24% Guardado</div>
+          <div class="metric-val">Visão mensal</div>
+          <div class="metric-pill-tag cyan">Receitas, despesas e saldo</div>
         </div>
 
         <div class="auth-metric-card metric-card-goals">
@@ -14177,23 +14176,23 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
             <span class="metric-card-label">Metas & Reserva</span>
           </div>
-          <div class="metric-val">Suas metas</div>
-          <div class="metric-pill-tag blue">🎯 Liberdade Financeira</div>
+          <div class="metric-val">Metas pessoais</div>
+          <div class="metric-pill-tag blue">Planos e reservas</div>
         </div>
       </div>
 
       <div class="auth-showcase-footer">
         <span class="auth-trust-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span>Controle de Gastos & Cartões</span>
+          <span>Gastos e cartões em um só lugar</span>
         </span>
         <span class="auth-trust-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>Alertas de Limite de Orçamento</span>
+          <span>Acompanhe os limites do orçamento</span>
         </span>
         <span class="auth-trust-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          <span>Blindagem e Segurança Total</span>
+          <span>Mais clareza para decidir</span>
         </span>
       </div>
     </div>
