@@ -14084,7 +14084,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage .auth-showcase-title::after, #authPage .auth-showcase-desc::after { content: none !important; }
 #authPage .auth-showcase-desc { font-size: 15px !important; line-height: 1.65 !important; color: #C2C9D0 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261023-register-align9" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261023-register-order10" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -14278,11 +14278,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
           <div class="google-auth-divider" aria-hidden="true"><span>ou preencha seus dados</span></div>
 
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
+          <div class="auth-register-section auth-register-step-1" style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
             <span>1. Dados pessoais</span>
           </div>
 
-          <div class="auth-field">
+          <div class="auth-field" id="registerCpfField">
             <label>CPF</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
@@ -14293,7 +14293,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <div id="regCpfFeedbackMsg" style="display:none; font-size:11px; font-weight:600; margin-top:4px;"></div>
           </div>
 
-          <div class="auth-field">
+          <div class="auth-field" id="registerNameField">
             <label>Nome completo</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
@@ -14303,7 +14303,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </div>
           </div>
 
-          <div class="auth-field">
+          <div class="auth-field" id="registerBirthField">
             <label>Data de nascimento</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
@@ -14314,7 +14314,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <div id="regBirthFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
           </div>
 
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
+          <div class="auth-register-section auth-register-step-2" style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
             <span>2. Contato</span>
           </div>
 
@@ -14340,7 +14340,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </div>
           </div>
 
-          <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
+          <div class="auth-register-section auth-register-step-3" style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
             <span>3. Segurança da conta</span>
           </div>
 
@@ -14370,7 +14370,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
           <div id="regPwdMatchMsg" style="display:none; font-size:10.5px; font-weight:600; margin-top:4px;"></div>
 
-          <div style="margin:12px 0 6px; font-size:11px; color:#CBD5E1; display:flex; flex-direction:column; gap:6px;">
+          <div class="auth-register-consents" style="margin:12px 0 6px; font-size:11px; color:#CBD5E1; display:flex; flex-direction:column; gap:6px;">
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#FFFFFF;">
               <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#2563EB; cursor:pointer;">
               <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade.</span>
@@ -14381,7 +14381,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </label>
           </div>
 
-          <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(37,99,235,0.16); border:1px solid rgba(56,189,248,0.40); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#FFFFFF;">
+          <div class="auth-register-security-note" style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(37,99,235,0.16); border:1px solid rgba(56,189,248,0.40); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#FFFFFF;">
             <span style="color:#38BDF8; font-weight:800; font-size:14px;">🔒</span>
             <span>Seus dados são protegidos para manter suas finanças seguras.</span>
           </div>
