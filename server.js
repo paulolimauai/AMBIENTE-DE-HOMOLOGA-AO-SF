@@ -2594,7 +2594,7 @@ html, body {
   padding: clamp(24px, 4vh, 48px) 16px;
   background-color: #000000 !important;
   background-image: 
-    linear-gradient(135deg, rgba(0, 0, 0, 0.72) 0%, rgba(4, 12, 28, 0.58) 50%, rgba(0, 0, 0, 0.82) 100%),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.90) 0%, rgba(0, 0, 0, 0.84) 50%, rgba(0, 0, 0, 0.94) 100%),
     radial-gradient(ellipse 95% 70% at 12% 10%, rgba(16, 185, 129, 0.22) 0%, transparent 60%),
     radial-gradient(ellipse 90% 65% at 88% 12%, rgba(245, 158, 11, 0.16) 0%, transparent 58%),
     url('/images/nexus-workspace-background.jpg') !important;

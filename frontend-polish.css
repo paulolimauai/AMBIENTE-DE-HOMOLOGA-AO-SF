@@ -47,7 +47,7 @@ body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; 
 /* Fundo compartilhado do workspace: imagem ajustada sem competir com o conteúdo. */
 .persistent-system-bg {
   background-image:
-    linear-gradient(135deg, rgba(2, 5, 8, .82), rgba(5, 12, 17, .68) 52%, rgba(1, 3, 5, .88)),
+    linear-gradient(135deg, rgba(0, 0, 0, .90), rgba(0, 0, 0, .84) 52%, rgba(0, 0, 0, .94)),
     linear-gradient(to bottom, transparent 58%, rgba(0, 0, 0, .62) 100%),
     url('/images/nexus-workspace-background.jpg') !important;
   background-size: cover !important;
@@ -65,7 +65,7 @@ body.light .persistent-system-bg {
 
 .app-bg-scene {
   background-image:
-    linear-gradient(135deg, rgba(2, 5, 8, .78), rgba(5, 12, 17, .62) 52%, rgba(1, 3, 5, .84)),
+    linear-gradient(135deg, rgba(0, 0, 0, .88), rgba(0, 0, 0, .80) 52%, rgba(0, 0, 0, .92)),
     linear-gradient(to bottom, transparent 58%, rgba(0, 0, 0, .62) 100%),
     url('/images/nexus-workspace-background.jpg') !important;
   background-size: cover !important;
