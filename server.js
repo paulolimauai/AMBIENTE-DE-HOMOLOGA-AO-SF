@@ -1624,17 +1624,12 @@ html:not(.app-ready) *::after {
   transition: none !important;
   animation: none !important;
 }
-html:not(.app-ready) #appMain,
-html:not(.app-ready) #authPage {
-  visibility: hidden !important;
-  opacity: 0 !important;
-  transform: none !important;
-}
-html.app-ready #appMain,
-html.app-ready #authPage {
-  visibility: visible !important;
-  opacity: 1 !important;
-  transform: none !important;
+html.is-rendering #pageContent,
+html.is-rendering #pageContent *,
+html.is-rendering #pageContent *::before,
+html.is-rendering #pageContent *::after {
+  transition: none !important;
+  animation: none !important;
 }
 html {
   overflow-y: scroll;
@@ -21372,10 +21367,15 @@ function render(){
     htmlChanged = (_lastRenderedHtml !== newHTML);
 
     if (pageChanged || htmlChanged) {
-      el.innerHTML = newHTML;
-      _lastRenderedHtml = newHTML;
-      el.setAttribute('data-current-rendered-page', currentPage);
-      attachPageEvents();
+      document.documentElement.classList.add('is-rendering');
+      try {
+        el.innerHTML = newHTML;
+        _lastRenderedHtml = newHTML;
+        el.setAttribute('data-current-rendered-page', currentPage);
+        attachPageEvents();
+      } finally {
+        requestAnimationFrame(() => document.documentElement.classList.remove('is-rendering'));
+      }
     }
   } catch(err) {
     console.error("Erro ao renderizar tela " + currentPage + ":", err);
