@@ -3544,6 +3544,44 @@ body.light .auth-support-link {
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
+#serverAuthNexusCard #registerForm { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+#serverAuthNexusCard #registerForm > div[style*="font-size:10.5px"] { grid-column: 1 / -1; margin-top: 0 !important; margin-bottom: 0 !important; padding: 10px 2px 8px !important; color: #A7F3D0 !important; border-bottom-color: rgba(52, 211, 153, 0.24) !important; }
+#serverAuthNexusCard #registerForm > div[style*="font-size:10.5px"]:nth-of-type(1) { order: 1; }
+#serverAuthNexusCard #registerForm > div[style*="font-size:10.5px"]:nth-of-type(5) { order: 4; }
+#serverAuthNexusCard #registerForm > div[style*="font-size:10.5px"]:nth-of-type(7) { order: 6; }
+#serverAuthNexusCard #registerForm > div.auth-field:has(#regName) { order: 2; }
+#serverAuthNexusCard #registerForm > div.auth-field:has(#regCpf),
+#serverAuthNexusCard #registerForm > div.auth-field:has(#regBirthDate) { order: 3; }
+#serverAuthNexusCard #registerForm > div.auth-grid-2col { order: 5; }
+#serverAuthNexusCard #registerForm > div.auth-grid-2col:has(#regPassword) { order: 7; }
+#serverAuthNexusCard #registerForm > div[id="regPwdMatchMsg"] { order: 8; }
+#serverAuthNexusCard #registerForm > div[style*="display:flex; flex-direction:column"] { order: 9; }
+#serverAuthNexusCard #registerForm > div[style*="background:rgba(37,99,235"] { order: 10; }
+#serverAuthNexusCard #registerForm > div[id="registerFeedbackBanner"] { order: 11; }
+#serverAuthNexusCard #registerForm > button { order: 12; }
+#serverAuthNexusCard #registerForm > div.auth-field:has(#regName) { grid-column: 1 / -1; margin-bottom: 0; }
+#serverAuthNexusCard #registerForm > div.auth-field:has(#regCpf),
+#serverAuthNexusCard #registerForm > div.auth-field:has(#regBirthDate) { margin-bottom: 0; }
+#serverAuthNexusCard #registerForm > div.auth-grid-2col,
+#serverAuthNexusCard #registerForm > div[id="regPwdMatchMsg"],
+#serverAuthNexusCard #registerForm > div[style*="display:flex; flex-direction:column"],
+#serverAuthNexusCard #registerForm > div[style*="background:rgba(37,99,235"],
+#serverAuthNexusCard #registerForm > div[id="registerFeedbackBanner"],
+#serverAuthNexusCard #registerForm > button { grid-column: 1 / -1; }
+#serverAuthNexusCard .auth-field label { text-transform: none; letter-spacing: 0; font-size: 12px; font-weight: 700; color: #D8E1EA !important; }
+#serverAuthNexusCard .auth-input-wrapper { min-height: 46px; }
+.auth-register-consent { display: flex; flex-direction: column; gap: 10px; padding: 2px 2px 0; color: #CBD5E1; font-size: 11px; line-height: 1.5; }
+.auth-register-consent label { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+.auth-register-consent input { flex: 0 0 auto; margin-top: 2px; accent-color: #10B981; }
+.auth-register-security { display: flex; align-items: center; gap: 9px; padding: 10px 12px; border: 1px solid rgba(52, 211, 153, 0.24); border-radius: 12px; background: rgba(16, 185, 129, 0.08); color: #D1FAE5; font-size: 10.5px; line-height: 1.4; }
+.auth-register-security-icon { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 28px; height: 28px; border-radius: 9px; background: rgba(16, 185, 129, 0.14); color: #6EE7B7; }
+#serverAuthNexusCard #regSubmitBtn { width: 100%; min-height: 50px; margin-top: 2px; }
+body.light #serverAuthNexusCard .auth-field label { color: #1F2937 !important; }
+body.light .auth-register-consent { color: #1F2937; }
+body.light .auth-register-security { background: #ECFDF5; border-color: #A7F3D0; color: #065F46; }
+@media (max-width: 640px) {
+  #serverAuthNexusCard #registerForm { grid-template-columns: 1fr; gap: 12px; }
+}
 @media (max-width: 640px) {
   .auth-grid-2col {
     grid-template-columns: 1fr !important;
