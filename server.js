@@ -13986,7 +13986,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-section-title { color: #647
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) { color: #334155 !important; }
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic { background: #F8FAFC !important; border-color: #E2E8F0 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261023-login-standard5" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261023-register7" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -14174,11 +14174,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
           <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
-            <span>1. Identificação do Titular</span>
+            <span>1. Dados pessoais</span>
           </div>
 
           <div class="auth-field">
-            <label>CPF do Titular</label>
+            <label>CPF</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
@@ -14189,7 +14189,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
 
           <div class="auth-field">
-            <label>Nome Completo</label>
+            <label>Nome completo</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -14199,7 +14199,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
 
           <div class="auth-field">
-            <label>Data de Nascimento</label>
+            <label>Data de nascimento</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
@@ -14210,7 +14210,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
 
           <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
-            <span>2. Contato & Notificações de Orçamento</span>
+            <span>2. Contato</span>
           </div>
 
           <div class="auth-grid-2col">
@@ -14236,12 +14236,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
 
           <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
-            <span>3. Senha de Acesso Financeiro</span>
+            <span>3. Segurança da conta</span>
           </div>
 
           <div class="auth-grid-2col">
             <div class="auth-field">
-              <label>Senha (Mín. 8 chars)</label>
+              <label>Senha (mínimo de 8 caracteres)</label>
               <div class="auth-input-wrapper">
                 <span class="auth-input-icon">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -14254,7 +14254,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </div>
 
             <div class="auth-field">
-              <label>Confirmar Senha</label>
+              <label>Confirmar senha</label>
               <div class="auth-input-wrapper">
                 <span class="auth-input-icon">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -14268,23 +14268,23 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <div style="margin:12px 0 6px; font-size:11px; color:#CBD5E1; display:flex; flex-direction:column; gap:6px;">
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#FFFFFF;">
               <input type="checkbox" id="regTerms" required style="margin-top:2px; accent-color:#2563EB; cursor:pointer;">
-              <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade (LGPD - Lei 13.709/18).</span>
+              <span>Li e concordo com os Termos de Abertura de Conta e a Política de Privacidade.</span>
             </label>
             <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer; color:#FFFFFF;">
               <input type="checkbox" id="regTruthful" required style="margin-top:2px; accent-color:#2563EB; cursor:pointer;">
-              <span>Declaro que as informações e dados cadastrais informados são verídicos e de minha titularidade.</span>
+              <span>Declaro que os dados informados são verdadeiros e pertencem a mim.</span>
             </label>
           </div>
 
           <div style="margin:10px 0; padding:8px 10px; border-radius:10px; background:rgba(37,99,235,0.16); border:1px solid rgba(56,189,248,0.40); display:flex; align-items:center; gap:8px; font-size:10.5px; color:#FFFFFF;">
             <span style="color:#38BDF8; font-weight:800; font-size:14px;">🔒</span>
-            <span>Ambiente seguro com criptografia de ponta a ponta e proteção integral das suas finanças.</span>
+            <span>Seus dados são protegidos para manter suas finanças seguras.</span>
           </div>
 
           <div id="registerFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="regSubmitBtn">
-            Concluir Cadastro & Iniciar Controle Financeiro →
+            Criar minha conta →
           </button>
         </form>
 

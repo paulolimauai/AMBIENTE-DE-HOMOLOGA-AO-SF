@@ -724,6 +724,70 @@ body.light #authPage .auth-label, body.light #authPage .auth-field-header .auth-
   #authPage .auth-tab-btn { font-size: 11px !important; padding-inline: 8px !important; }
 }
 
+/* Cadastro: fluxo em três etapas, com campos e consentimentos alinhados. */
+#authPage #registerBox { width: 100% !important; }
+#authPage #registerForm {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px 14px !important;
+}
+#authPage #registerForm > div[style*="font-size:10.5px"] {
+  grid-column: 1 / -1 !important;
+  margin: 5px 0 0 !important;
+  padding: 9px 2px 7px !important;
+  color: #FDE68A !important;
+  border-bottom: 1px solid rgba(251, 191, 36, .30) !important;
+  font-size: 10px !important;
+  letter-spacing: .10em !important;
+}
+#authPage #registerForm > .auth-field:has(#regCpf),
+#authPage #registerForm > .auth-field:has(#regBirthDate) { margin-bottom: 0 !important; }
+#authPage #registerForm > .auth-field:has(#regName) { grid-column: 1 / -1 !important; margin-bottom: 0 !important; }
+#authPage #registerForm > .auth-grid-2col,
+#authPage #registerForm > div[id="regPwdMatchMsg"],
+#authPage #registerForm > div[style*="display:flex; flex-direction:column"],
+#authPage #registerForm > div[style*="background:rgba(37,99,235"],
+#authPage #registerForm > div[id="registerFeedbackBanner"],
+#authPage #registerForm > button { grid-column: 1 / -1 !important; }
+#authPage #registerForm > .auth-grid-2col {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px 14px !important;
+}
+#authPage #registerForm .auth-field { margin-bottom: 0 !important; }
+#authPage #registerForm .auth-input-wrapper { height: 50px !important; min-height: 50px !important; max-height: 50px !important; }
+#authPage #registerForm .auth-input-wrapper input { font-size: 13px !important; line-height: 50px !important; }
+#authPage #registerForm .auth-input-icon { width: 44px !important; min-width: 44px !important; }
+#authPage #registerForm > div[style*="display:flex; flex-direction:column"] {
+  gap: 8px !important;
+  margin: 4px 0 0 !important;
+  color: #B8C4D4 !important;
+  font-size: 10.5px !important;
+  line-height: 1.4 !important;
+}
+#authPage #registerForm > div[style*="display:flex; flex-direction:column"] label { color: #DDE5EF !important; align-items: flex-start !important; }
+#authPage #registerForm > div[style*="display:flex; flex-direction:column"] input { accent-color: #D97706 !important; margin-top: 2px !important; flex: 0 0 auto !important; }
+#authPage #registerForm > div[style*="background:rgba(37,99,235"] {
+  margin: 2px 0 1px !important;
+  padding: 10px 12px !important;
+  background: rgba(245, 158, 11, .09) !important;
+  border: 1px solid rgba(251, 191, 36, .28) !important;
+  border-radius: 11px !important;
+  color: #FDE68A !important;
+  line-height: 1.4 !important;
+}
+#authPage #registerForm > div[style*="background:rgba(37,99,235"] > span:first-child { color: #FBBF24 !important; }
+#authPage #regSubmitBtn { min-height: 52px !important; margin-top: 2px !important; }
+#authPage #registerBox > p { color: #B8C4D4 !important; text-align: center !important; line-height: 1.45 !important; }
+#authPage #registerBox > p a { color: #FBBF24 !important; }
+@media (max-width: 560px) {
+  #authPage #registerForm { grid-template-columns: 1fr !important; gap: 11px !important; }
+  #authPage #registerForm > .auth-grid-2col { grid-template-columns: 1fr !important; gap: 11px !important; }
+  #authPage #registerForm > .auth-field:has(#regCpf),
+  #authPage #registerForm > .auth-field:has(#regBirthDate),
+  #authPage #registerForm > .auth-field:has(#regName) { grid-column: 1 !important; }
+}
+
 /* Subscription checkout: clear Pix-only flow with manual reconciliation. */
 #nexusSubscriptionModal .sub-paywall-modal {
   width: min(100%, 980px) !important;
