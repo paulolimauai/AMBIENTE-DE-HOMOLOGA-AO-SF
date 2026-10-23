@@ -14085,7 +14085,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage .auth-showcase-desc { font-size: 0 !important; }
 #authPage .auth-showcase-desc::after { content: "Organize gastos, contas e metas em um s\\00F3 lugar. Tenha uma vis\\00E3o clara e tome decis\\00F5es inteligentes com nossa plataforma avan\\00E7ada de gest\\00E3o."; font-size: 14px; line-height: 1.65; color: #A7C9B7; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261023-login-reference2" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261023-steel-palette1" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
