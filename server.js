@@ -14080,7 +14080,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage .auth-input-wrapper:focus-within { border-color: rgba(52,211,153,.90) !important; box-shadow: 0 0 0 3px rgba(16,185,129,.18), inset 0 1px 0 rgba(255,255,255,.16) !important; }
 #authPage #loginSubmitBtn, #authPage #regSubmitBtn { background: linear-gradient(100deg, #059669, #34D399) !important; border-color: rgba(167,243,208,.70) !important; box-shadow: 0 12px 24px rgba(5,150,105,.34), inset 0 1px 0 rgba(255,255,255,.35) !important; }
 #authPage .auth-top-bar { display: none !important; }
-#authPage .auth-showcase-title { font-size: clamp(32px, 3.05vw, 44px) !important; line-height: 1.12 !important; }
+#authPage .auth-showcase-title { font-size: clamp(32px, 3.05vw, 44px) !important; line-height: 1.12 !important; text-align: center !important; margin-left: auto !important; margin-right: auto !important; }
 #authPage .auth-showcase-title::after, #authPage .auth-showcase-desc::after { content: none !important; }
 #authPage .auth-showcase-desc { font-size: 15px !important; line-height: 1.65 !important; color: #C2C9D0 !important; }
 </style>
