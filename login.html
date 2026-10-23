@@ -3160,6 +3160,104 @@ body.light .period button.active {
             body:has(#registerBox:not(.hidden)) #registerForm > div:nth-child(-n+3) { padding: 14px 13px 3px !important; }
             body:has(#registerBox:not(.hidden)) #registerForm .grid { grid-template-columns: 1fr !important; gap: 0 !important; }
         }
+
+        /* Login padrão Nexus: layout único, centrado e com hierarquia consistente. */
+        body.auth-bg-cyber-grid {
+            min-height: 100vh !important;
+            padding: 24px 16px 28px !important;
+            background-color: #050505 !important;
+        }
+        body.auth-bg-cyber-grid > header { display: none !important; }
+        body.auth-bg-cyber-grid > main {
+            width: 100% !important;
+            max-width: 480px !important;
+            min-height: 0 !important;
+            margin: auto !important;
+            padding: 0 !important;
+        }
+        body.auth-bg-cyber-grid > main > .grid {
+            display: block !important;
+            width: 100% !important;
+        }
+        body.auth-bg-cyber-grid > main > .grid > div {
+            width: 100% !important;
+            max-width: 440px !important;
+            margin: 0 auto !important;
+        }
+        #authNexusCard {
+            width: 100% !important;
+            max-width: 440px !important;
+            padding: 30px !important;
+            border-radius: 22px !important;
+            background: rgba(8, 8, 8, .96) !important;
+            border: 1px solid rgba(255, 255, 255, .14) !important;
+            box-shadow: 0 28px 80px rgba(0, 0, 0, .72), inset 0 1px 0 rgba(255, 255, 255, .06) !important;
+        }
+        #authNexusCard > div:first-child { margin-bottom: 24px !important; }
+        #authNexusCard > div:first-child .w-12.h-12 {
+            width: 56px !important;
+            height: 56px !important;
+            margin-bottom: 14px !important;
+            background: linear-gradient(145deg, #FBBF24, #D97706) !important;
+            border-color: rgba(253, 230, 138, .7) !important;
+            box-shadow: 0 12px 30px rgba(245, 158, 11, .22) !important;
+        }
+        #authNexusCard h1 { font-size: 25px !important; line-height: 1.2 !important; color: #F8FAFC !important; }
+        #authNexusCard #authSubtitle { color: #94A3B8 !important; }
+        #authTabsNav {
+            padding: 4px !important;
+            margin-bottom: 22px !important;
+            gap: 4px !important;
+            background: #111111 !important;
+            border: 1px solid #2A2A2A !important;
+            border-radius: 13px !important;
+        }
+        #authTabsNav .auth-tab-btn {
+            min-height: 44px !important;
+            color: #94A3B8 !important;
+            border-radius: 10px !important;
+        }
+        #authTabsNav .auth-tab-btn.active {
+            color: #111111 !important;
+            background: linear-gradient(135deg, #FBBF24, #D97706) !important;
+            box-shadow: 0 6px 16px rgba(245, 158, 11, .22) !important;
+        }
+        #loginForm, #registerForm { display: flex !important; flex-direction: column !important; gap: 16px !important; }
+        #loginForm > :nth-child(1) { order: 1 !important; }
+        #loginForm > :nth-child(2) { order: 2 !important; }
+        #loginForm > :nth-child(3) { order: 3 !important; }
+        #loginForm > :nth-child(4) { order: 4 !important; padding-top: 2px !important; }
+        #authNexusCard .auth-field-group { margin: 0 !important; }
+        #authNexusCard .auth-field-header { margin-bottom: 7px !important; }
+        #authNexusCard .auth-label { color: #CBD5E1 !important; font-size: 12px !important; font-weight: 700 !important; }
+        #authNexusCard .auth-field-header button,
+        #authNexusCard a,
+        #authNexusCard .text-emerald-400 { color: #FBBF24 !important; }
+        #authNexusCard .auth-input-wrapper {
+            min-height: 52px !important;
+            background: #0D0D0D !important;
+            border: 1px solid #333333 !important;
+            border-radius: 12px !important;
+        }
+        #authNexusCard .auth-input-wrapper:focus-within {
+            border-color: #F59E0B !important;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, .16) !important;
+        }
+        #authNexusCard .auth-input-icon { color: #F59E0B !important; }
+        #authNexusCard .auth-input-wrapper input { color: #F8FAFC !important; font-size: 14px !important; }
+        #authNexusCard #rememberMe { accent-color: #F59E0B !important; }
+        #btnLoginSubmit, #btnRegisterSubmit {
+            min-height: 52px !important;
+            border-radius: 12px !important;
+            color: #111111 !important;
+            background: linear-gradient(135deg, #FBBF24, #D97706) !important;
+            box-shadow: 0 12px 24px rgba(245, 158, 11, .2) !important;
+        }
+        #btnLoginSubmit:hover, #btnRegisterSubmit:hover { filter: brightness(1.08) !important; }
+        @media (max-width: 520px) {
+            body.auth-bg-cyber-grid { padding: 16px 12px 22px !important; }
+            #authNexusCard { padding: 24px 18px !important; border-radius: 18px !important; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center py-2 sm:py-3.5 px-3 sm:px-6 relative select-none auth-bg-cyber-grid">
