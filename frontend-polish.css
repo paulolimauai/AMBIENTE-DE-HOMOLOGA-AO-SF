@@ -56,6 +56,42 @@ body:not(.light),
 .topheader-row #logoutBtn { min-height: 36px !important; padding: 0 9px !important; }
 .topheader-row #logoutBtn span { display: none !important; }
 
+/* Modal de login concluído: acabamento executivo e consistente com o produto. */
+.login-success-overlay {
+  background: rgba(3, 8, 18, .82) !important;
+  backdrop-filter: blur(14px) !important;
+}
+.login-success-box {
+  width: min(440px, calc(100vw - 32px)) !important;
+  padding: 34px 34px 30px !important;
+  border: 1px solid rgba(148, 163, 184, .32) !important;
+  border-top-color: rgba(203, 213, 225, .58) !important;
+  border-radius: 24px !important;
+  background: linear-gradient(145deg, #111827 0%, #0B1220 58%, #070D18 100%) !important;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, .62), inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+.login-success-box .auth-badge-success {
+  padding: 8px 15px !important;
+  border: 1px solid rgba(245, 158, 11, .55) !important;
+  border-radius: 999px !important;
+  background: rgba(245, 158, 11, .09) !important;
+  color: #FBBF24 !important;
+  font-size: 11px !important;
+  letter-spacing: .06em !important;
+}
+.login-success-check {
+  width: 74px !important;
+  height: 74px !important;
+  margin: 18px auto 19px !important;
+  border-color: rgba(245, 158, 11, .78) !important;
+  background: #151A27 !important;
+  box-shadow: 0 0 26px rgba(245,158,11,.22), inset 0 1px 4px rgba(255,255,255,.10) !important;
+}
+.login-success-box h3 { font-size: 22px !important; letter-spacing: -.02em !important; }
+.login-success-box p { color: #94A3B8 !important; font-size: 13px !important; }
+.login-success-progress-bar { height: 4px !important; background: rgba(148,163,184,.16) !important; }
+.login-success-progress-fill { background: linear-gradient(90deg, #0EA5A0, #10B981) !important; box-shadow: 0 0 12px rgba(16,185,129,.55) !important; }
+
 /* Iconografia: escala padrão para leitura consistente em desktop e tablet. */
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
 aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
