@@ -24021,7 +24021,7 @@ function pageConfig(){
     </p>
   </div>\` : \`
     <!-- PAINEL DE ASSINATURA E PLANO -->
-  <div class="panel" style="margin-bottom:20px; padding:22px; background:linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.03) 100%); border:1.5px solid rgba(16,185,129,0.3); border-radius:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+  <div class="panel subscription-overview" style="margin-bottom:20px; padding:22px; background:linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.03) 100%); border:1.5px solid rgba(16,185,129,0.3); border-radius:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
     <div style="display:flex; align-items:center; gap:16px;">
       <div style="width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg, rgba(16,185,129,0.25), rgba(5,150,105,0.15)); border:1.5px solid rgba(16,185,129,0.5); display:flex; align-items:center; justify-content:center; font-size:26px;">
         💳
