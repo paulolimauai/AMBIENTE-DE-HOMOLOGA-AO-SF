@@ -16,6 +16,19 @@
 /* Rodapé sem assinatura de desenvolvedor. */
 .app-dev-credit { display: none !important; }
 
+/* Fundo principal em cinza grafite, com textura/imagens desativadas para manter a leitura limpa. */
+body:not(.light),
+.persistent-system-bg,
+.app-bg-scene {
+  background-color: #343A40 !important;
+  background-image: none !important;
+}
+
+#authPage {
+  background-color: #343A40 !important;
+  background-image: none !important;
+}
+
 /* Iconografia: escala padrão para leitura consistente em desktop e tablet. */
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
 aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
