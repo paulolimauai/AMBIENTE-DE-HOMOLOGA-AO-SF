@@ -92,6 +92,44 @@ body:not(.light),
 .login-success-progress-bar { height: 4px !important; background: rgba(148,163,184,.16) !important; }
 .login-success-progress-fill { background: linear-gradient(90deg, #0EA5A0, #10B981) !important; box-shadow: 0 0 12px rgba(16,185,129,.55) !important; }
 
+/* Bloco de assinatura: leitura rápida, alinhamento e ação principal bem definidos. */
+.subscription-overview {
+  min-height: 142px !important;
+  padding: 24px 28px !important;
+  background: linear-gradient(135deg, #151F30 0%, #101827 100%) !important;
+  border: 1px solid rgba(148, 163, 184, .24) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 28px rgba(2, 6, 23, .18), inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+.subscription-overview > div:first-child { gap: 16px !important; }
+.subscription-overview > div:first-child > div:first-child {
+  width: 52px !important;
+  height: 52px !important;
+  flex: 0 0 52px !important;
+  border-radius: 14px !important;
+  background: rgba(14, 165, 160, .14) !important;
+  border: 1px solid rgba(45, 212, 191, .44) !important;
+  font-size: 23px !important;
+}
+.subscription-overview h3 { font-size: 16px !important; letter-spacing: -.015em !important; }
+.subscription-overview .role-badge { padding: 4px 8px !important; border-radius: 999px !important; font-size: 10px !important; letter-spacing: .01em !important; }
+.subscription-overview p { margin-top: 7px !important; color: #9AA8BA !important; }
+.subscription-overview > div:last-child { margin-left: auto !important; }
+.subscription-overview > div:last-child button:first-child {
+  min-height: 42px !important;
+  padding: 0 18px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #10B981, #0D9488) !important;
+  box-shadow: 0 8px 18px rgba(16,185,129,.22) !important;
+  transition: transform .18s ease, box-shadow .18s ease !important;
+}
+.subscription-overview > div:last-child button:first-child:hover { transform: translateY(-1px) !important; box-shadow: 0 10px 24px rgba(16,185,129,.30) !important; }
+@media (max-width: 720px) {
+  .subscription-overview { align-items: flex-start !important; padding: 18px !important; }
+  .subscription-overview > div:last-child { width: 100% !important; margin-left: 68px !important; }
+  .subscription-overview > div:last-child button:first-child { width: 100% !important; }
+}
+
 /* Iconografia: escala padrão para leitura consistente em desktop e tablet. */
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
 aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
