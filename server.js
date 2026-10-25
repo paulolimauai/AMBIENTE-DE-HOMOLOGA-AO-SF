@@ -29667,6 +29667,9 @@ function attachPageEvents(){
           ctx.drawImage(image, (size - w) / 2, (size - h) / 2, w, h);
           currentUser.avatar = canvas.toDataURL('image/jpeg', .82);
           if (avatarPreview) avatarPreview.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil">';
+          saveToStorage('nexus_cached_user', currentUser);
+          updateHeaderUser();
+          showToast('Foto de perfil atualizada. Clique em Salvar Dados para confirmar.');
         };
         image.src = reader.result;
       };
