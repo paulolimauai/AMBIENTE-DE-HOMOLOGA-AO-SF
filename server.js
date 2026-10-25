@@ -21718,6 +21718,10 @@ function updateHeaderUser(){
     }
   }
   if(avatarEl) {
+    if (currentUser.avatar) {
+      avatarEl.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      return;
+    }
     const rawParts = cleanName.split(/\s+/);
     let inits = 'PL';
     if (rawParts.length >= 2) {
@@ -24001,6 +24005,7 @@ function pageConfig(){
   const currentCreatedAt = uData.created_at || (currentUser ? currentUser.created_at : '') || '';
   const formattedCreated = currentCreatedAt ? new Date(currentCreatedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Ativa';
   const roleName = uData.role || (currentUser ? currentUser.role : 'Usuário');
+  const currentAvatar = uData.avatar || (currentUser ? currentUser.avatar : '') || '';
 
   return \`
   <div class="page-head">
@@ -24060,6 +24065,18 @@ function pageConfig(){
         <h3 style="display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800; margin:0;">
           <span style="font-size:18px;">👤</span> Dados Cadastrais & Titularidade
         </h3>
+      </div>
+
+      <div class="profile-photo-editor">
+        <div class="profile-photo-preview" id="cfgAvatarPreview">
+          \${currentAvatar ? \`<img src="\${currentAvatar}" alt="Foto do perfil">\` : '<span>PL</span>'}
+        </div>
+        <div class="profile-photo-copy">
+          <strong>Foto do perfil</strong>
+          <span>Escolha uma imagem JPG ou PNG de até 2 MB.</span>
+          <label class="profile-photo-button" for="cfgAvatarFile">Escolher foto</label>
+          <input id="cfgAvatarFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+        </div>
       </div>
 
       <!-- Nome Completo (Largura Total) -->
@@ -29632,6 +29649,29 @@ function attachPageEvents(){
 
   const saveCfg = document.getElementById('btnSalvarConfig');
   if(saveCfg){
+    const avatarFile = document.getElementById('cfgAvatarFile');
+    const avatarPreview = document.getElementById('cfgAvatarPreview');
+    if (avatarFile) avatarFile.onchange = () => {
+      const file = avatarFile.files && avatarFile.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) { showToast('A foto deve ter no máximo 2 MB'); avatarFile.value = ''; return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const image = new Image();
+        image.onload = () => {
+          const canvas = document.createElement('canvas');
+          const size = 256; canvas.width = size; canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          const scale = Math.max(size / image.width, size / image.height);
+          const w = image.width * scale, h = image.height * scale;
+          ctx.drawImage(image, (size - w) / 2, (size - h) / 2, w, h);
+          currentUser.avatar = canvas.toDataURL('image/jpeg', .82);
+          if (avatarPreview) avatarPreview.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil">';
+        };
+        image.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    };
     bindPasswordToggle('cfgPassword', 'cfgPasswordToggle');
     bindPasswordToggle('cfgPasswordConfirm', 'cfgPasswordConfirmToggle');
     const cfgThemeEl = document.getElementById('cfgTheme');
@@ -29728,6 +29768,7 @@ function attachPageEvents(){
           u.cpf = newCpf;
           u.birth_date = newBirthDate;
           u.phone = newPhone;
+          if (currentUser.avatar) u.avatar = currentUser.avatar;
           if(passwordChanged) u.password = newPass;
         }
         await saveUsersToServer();
