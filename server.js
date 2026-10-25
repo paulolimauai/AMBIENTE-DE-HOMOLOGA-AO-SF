@@ -14294,13 +14294,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div id="registerBox" style="display:none;">
 
         <form id="registerForm" onsubmit="window.handleRegisterSubmit(event); return false;">
-          <button type="button" id="googleRegisterBtn" class="google-auth-btn" onclick="window.startGoogleRegistration()">
-            <span class="google-auth-mark" aria-hidden="true">G</span>
-            <span>Continuar com Google</span>
-          </button>
-
-          <div class="google-auth-divider" aria-hidden="true"><span>ou preencha seus dados</span></div>
-
           <div class="auth-register-section auth-register-step-1" style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
             <span>1. Dados pessoais</span>
           </div>
