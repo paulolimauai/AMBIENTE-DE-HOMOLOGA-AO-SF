@@ -23,6 +23,35 @@ const IGNORE_PATTERNS = [
 
 let debounceTimer = null;
 let lastDiffOutput = '';
+let serverProcess = null;
+let restartTimer = null;
+
+const RESTART_FILES = new Set(['server.js', 'login.html', 'frontend-polish.css', 'package.json']);
+const RESTART_DIRS = ['images/'];
+
+function isApplicationFile(filename) {
+  const normalized = String(filename || '').replace(/\\/g, '/');
+  return RESTART_FILES.has(normalized) || RESTART_DIRS.some(dir => normalized.startsWith(dir));
+}
+
+function startLocalServer() {
+  if (serverProcess && !serverProcess.killed) return;
+  serverProcess = spawn(process.execPath, ['server.js'], { cwd: WORKSPACE_DIR, stdio: 'ignore', windowsHide: true });
+  serverProcess.on('exit', () => { serverProcess = null; });
+  console.log('\x1b[38;2;78;201;176m[LOCALHOST] Servidor iniciado em http://localhost:3000\x1b[0m');
+}
+
+function restartLocalServer(changedFile) {
+  if (restartTimer) clearTimeout(restartTimer);
+  restartTimer = setTimeout(() => {
+    if (serverProcess && !serverProcess.killed) {
+      serverProcess.kill();
+      serverProcess = null;
+    }
+    startLocalServer();
+    console.log(`\x1b[38;2;245;158;11m[LOCALHOST] Atualizado após alteração em ${changedFile}\x1b[0m`);
+  }, 500);
+}
 
 function clearScreen() {
   process.stdout.write('\x1Bc');
@@ -119,6 +148,7 @@ function startWatcher() {
   clearScreen();
   printHeader();
   showLiveDiff();
+  startLocalServer();
 
   try {
     fs.watch(WORKSPACE_DIR, { recursive: true }, (eventType, filename) => {
@@ -136,6 +166,7 @@ function startWatcher() {
 
       debounceTimer = setTimeout(() => {
         showLiveDiff(filename);
+        if (isApplicationFile(filename)) restartLocalServer(filename);
       }, 250);
     });
   } catch (watchErr) {
