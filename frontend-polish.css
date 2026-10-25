@@ -29,6 +29,33 @@ body:not(.light),
   background-image: none !important;
 }
 
+/* Cabeçalho compacto inspirado na referência enviada. */
+.topheader {
+  height: 64px !important;
+  background: #0B1220 !important;
+  border-bottom: 1px solid rgba(148, 163, 184, .18) !important;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, .28) !important;
+  backdrop-filter: none !important;
+}
+.topheader-row {
+  max-width: none !important;
+  height: 64px !important;
+  padding-inline: 18px !important;
+  gap: 18px !important;
+}
+.topheader .brand { gap: 8px !important; }
+.topheader .brand .logo { width: 30px !important; height: 30px !important; }
+.topheader .brand .brand-title { font-size: 12px !important; letter-spacing: .08em !important; color: #E2E8F0 !important; }
+.topheader .brand .brand-sub { display: none !important; }
+.aether-header-right { gap: 7px !important; }
+.header-user-badge { min-height: 38px !important; padding: 5px 9px !important; background: rgba(30, 41, 59, .72) !important; border-color: rgba(148, 163, 184, .24) !important; }
+.header-user-name { color: #E2E8F0 !important; font-size: 11px !important; }
+.aether-settings-btn { min-height: 38px !important; padding: 0 10px !important; background: transparent !important; }
+.aether-settings-btn span { display: none !important; }
+.topheader-row .icon-btn { width: 36px !important; height: 36px !important; background: transparent !important; }
+.topheader-row #logoutBtn { min-height: 36px !important; padding: 0 9px !important; }
+.topheader-row #logoutBtn span { display: none !important; }
+
 /* Iconografia: escala padrão para leitura consistente em desktop e tablet. */
 .menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
 aside.menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) .ic svg,
