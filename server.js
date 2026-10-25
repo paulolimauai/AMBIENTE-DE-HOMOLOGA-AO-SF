@@ -8,6 +8,7 @@ const http = require('http');
 const url = require('url');
 const tls = require('tls');
 const crypto = require('crypto');
+const zlib = require('zlib');
 
 let mssql;
 try {
@@ -354,8 +355,30 @@ function googleOAuthReady(config) {
 }
 
 function htmlResponse(res, statusCode, html) {
-  res.writeHead(statusCode, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
-  return res.end(html);
+  return sendTextResponse(res, statusCode, html, 'text/html; charset=utf-8', { 'Cache-Control': 'no-store' });
+}
+
+function sendTextResponse(res, statusCode, body, contentType, extraHeaders = {}) {
+  const text = Buffer.isBuffer(body) ? body : Buffer.from(String(body), 'utf8');
+  const accepts = String(res.req && res.req.headers && res.req.headers['accept-encoding'] || '');
+  let payload = text;
+  let encoding = '';
+  if (text.length >= 1024 && /br/i.test(accepts)) {
+    payload = zlib.brotliCompressSync(text, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 4 } });
+    encoding = 'br';
+  } else if (text.length >= 1024 && /gzip/i.test(accepts)) {
+    payload = zlib.gzipSync(text, { level: zlib.constants.Z_BEST_SPEED });
+    encoding = 'gzip';
+  }
+  res.writeHead(statusCode, {
+    'Content-Type': contentType,
+    'Content-Length': payload.length,
+    'X-Content-Type-Options': 'nosniff',
+    ...extraHeaders,
+    'Vary': extraHeaders.Vary ? `${extraHeaders.Vary}, Accept-Encoding` : 'Accept-Encoding',
+    ...(encoding ? { 'Content-Encoding': encoding } : {})
+  });
+  return res.end(payload);
 }
 
 function googleAuthResultPage(authResult) {
@@ -14084,7 +14107,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage .auth-showcase-title::after, #authPage .auth-showcase-desc::after { content: none !important; }
 #authPage .auth-showcase-desc { font-size: 15px !important; line-height: 1.65 !important; color: #C2C9D0 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261023-register-order10" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261025-dashboard-background-clean" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -14282,6 +14305,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <span>1. Dados pessoais</span>
           </div>
 
+          <div class="auth-register-personal-grid">
           <div class="auth-field" id="registerCpfField">
             <label>CPF</label>
             <div class="auth-input-wrapper">
@@ -14312,6 +14336,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               <input type="text" id="regBirthDate" placeholder="DD/MM/AAAA" maxlength="10" required autocomplete="bday" oninput="window.handleServerBirthInput(this)">
             </div>
             <div id="regBirthFeedbackMsg" style="display:none; font-size:10px; font-weight:600; margin-top:3px;"></div>
+          </div>
           </div>
 
           <div class="auth-register-section auth-register-step-2" style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38BDF8; margin:12px 0 8px; border-bottom:1px solid rgba(56,189,248,0.35); padding-bottom:4px;">
@@ -14774,9 +14799,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="menu-section-title">Preferências</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="config" class="menu-btn-user" title="Configurações & Preferências da Conta">
+      <button data-page="config" class="menu-btn-user" title="Minha Conta & Preferências">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-        <span class="label">Configurações</span>
+        <span class="label">Minha Conta</span>
       </button>
       
       <!-- Seção Administrativa Executiva (Exclusiva para Administrador) -->
@@ -31685,6 +31710,7 @@ function mergeFinancialData(serverData, localData) {
 
 
 // Servidor HTTP de Alta Performance e Resiliência
+const fileCache = new Map();
 const server = http.createServer(async (req, res) => {
   let parsedUrl;
   try {
@@ -34751,8 +34777,13 @@ const server = http.createServer(async (req, res) => {
   if (pathname === '/login' || pathname === '/login.html') {
     const loginPath = path.join(__dirname, 'login.html');
     if (fs.existsSync(loginPath)) {
-      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'text/html; charset=utf-8' });
-      return fs.createReadStream(loginPath).pipe(res);
+      const stat = fs.statSync(loginPath);
+      const cached = fileCache.get(loginPath);
+      const loginHtml = cached && cached.mtimeMs === stat.mtimeMs
+        ? cached.body
+        : fs.readFileSync(loginPath);
+      if (!cached || cached.mtimeMs !== stat.mtimeMs) fileCache.set(loginPath, { mtimeMs: stat.mtimeMs, body: loginHtml });
+      return sendTextResponse(res, 200, loginHtml, 'text/html; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'no-cache, must-revalidate' });
     }
   }
 
@@ -34778,23 +34809,26 @@ const server = http.createServer(async (req, res) => {
         '.html': 'text/html; charset=utf-8'
       };
       const isImg = ext.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/i);
-      res.writeHead(200, {
-        ...corsHeaders,
-        'Content-Type': mimeTypes[ext] || 'application/octet-stream',
-        'Cache-Control': isImg ? 'public, max-age=31536000, immutable' : 'public, max-age=86400'
-      });
+      const contentType = mimeTypes[ext] || 'application/octet-stream';
+      const cacheControl = isImg ? 'public, max-age=31536000, immutable' : 'public, max-age=86400';
+      if (/^(text\/|application\/javascript|application\/json)/i.test(contentType)) {
+        const stat = fs.statSync(safePath);
+        const cached = fileCache.get(safePath);
+        const body = cached && cached.mtimeMs === stat.mtimeMs ? cached.body : fs.readFileSync(safePath);
+        if (!cached || cached.mtimeMs !== stat.mtimeMs) fileCache.set(safePath, { mtimeMs: stat.mtimeMs, body });
+        return sendTextResponse(res, 200, body, contentType, { ...corsHeaders, 'Cache-Control': cacheControl });
+      }
+      res.writeHead(200, { ...corsHeaders, 'Content-Type': contentType, 'Cache-Control': cacheControl });
       return fs.createReadStream(safePath).pipe(res);
     }
   }
 
-  res.writeHead(200, {
+  return sendTextResponse(res, 200, htmlContent, 'text/html; charset=utf-8', {
     ...corsHeaders,
-    'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
     'Pragma': 'no-cache',
     'Expires': '0'
   });
-  res.end(htmlContent);
 });
 
 // Proteção Global de Processo contra Exceções Não Tratadas
