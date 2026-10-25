@@ -21695,6 +21695,31 @@ function updateViewModeBanner(){
   }
 }
 
+window.handleProfilePhoto = function(input) {
+  const file = input && input.files && input.files[0];
+  if (!file || !file.type || !file.type.startsWith('image/')) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('A foto deve ter no máximo 2 MB'); input.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256; canvas.height = 256;
+      const scale = Math.max(256 / image.width, 256 / image.height);
+      const width = image.width * scale, height = image.height * scale;
+      canvas.getContext('2d').drawImage(image, (256 - width) / 2, (256 - height) / 2, width, height);
+      currentUser.avatar = canvas.toDataURL('image/jpeg', .82);
+      const preview = document.getElementById('cfgAvatarPreview');
+      if (preview) preview.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil">';
+      saveToStorage('nexus_cached_user', currentUser);
+      updateHeaderUser();
+      showToast('Foto de perfil atualizada. Clique em Salvar Dados para confirmar.');
+    };
+    image.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+};
+
 function updateHeaderUser(){
   if (!currentUser) return;
   const unameEl = document.getElementById('headerName');
@@ -24075,7 +24100,7 @@ function pageConfig(){
           <strong>Foto do perfil</strong>
           <span>Escolha uma imagem JPG ou PNG de até 2 MB.</span>
           <label class="profile-photo-button" for="cfgAvatarFile">Escolher foto</label>
-          <input id="cfgAvatarFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+          <input id="cfgAvatarFile" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="window.handleProfilePhoto(this)">
         </div>
       </div>
 
