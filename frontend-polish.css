@@ -13,6 +13,8 @@
   --ui-focus: 0 0 0 3px rgba(16, 185, 129, .22);
 }
 
+/* Menu lateral Glass Premium: navegação principal com hierarquia e profundidade. */
+
 /* Rodapé sem assinatura de desenvolvedor. */
 .app-dev-credit { display: none !important; }
 
@@ -817,6 +819,30 @@ body.light #authPage .auth-input-wrapper { background: #FFFFFF !important; borde
 body.light #authPage .auth-input-wrapper:focus-within { background: #FFFFFF !important; border-color: #D97706 !important; }
 body.light #authPage .auth-input-wrapper input { color: #0F172A !important; }
 body.light #authPage .auth-label, body.light #authPage .auth-field-header .auth-label { color: #1E293B !important; }
+
+/* Restaura o fundo de vidro financeiro da tela de acesso. */
+body:has(#authPage), body:has(#authPage).dark {
+  background-color: #08111E !important;
+  background-image: linear-gradient(135deg, rgba(8, 12, 17, .58), rgba(15, 23, 42, .42) 52%, rgba(3, 7, 12, .72)), url('/images/login-financial-dashboard.svg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+}
+#authPage .auth-card-nexus {
+  background: linear-gradient(145deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .055)) !important;
+  border: 1px solid rgba(255, 255, 255, .26) !important;
+  border-top: 1px solid rgba(255, 255, 255, .34) !important;
+  backdrop-filter: blur(22px) saturate(125%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(125%) !important;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .58), inset 0 1px 0 rgba(255, 255, 255, .22) !important;
+}
+#authPage .auth-tabs-nav,
+#authPage .auth-input-wrapper {
+  background: rgba(255, 255, 255, .075) !important;
+  border-color: rgba(255, 255, 255, .22) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
 
 /* Componentes institucionais usados pelo layout financeiro principal. */
 #authPage .auth-exec-layout {
@@ -2619,5 +2645,246 @@ body.light aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-
   html.sidebar-collapsed .main,
   body.sidebar-collapsed .main {
     margin-top: 164px !important;
+  }
+}
+
+/* Aplicação final: menu lateral em vidro premium no desktop. */
+@media (min-width: 769px) {
+  nav.menu.sidebar-menu,
+  aside.menu.sidebar-menu {
+    position: fixed !important;
+    top: 76px !important;
+    right: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 278px !important;
+    height: calc(100vh - 76px) !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 15px 13px 13px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    background: linear-gradient(180deg, rgba(19, 31, 50, .86) 0%, rgba(7, 14, 27, .95) 48%, rgba(4, 9, 19, .99) 100%) !important;
+    background-image: none !important;
+    border: 1px solid rgba(148, 163, 184, .16) !important;
+    border-left: 0 !important;
+    border-radius: 0 22px 22px 0 !important;
+    box-shadow: 14px 0 42px rgba(2, 6, 23, .34), inset -1px 0 0 rgba(255, 255, 255, .08), inset 0 1px 0 rgba(255, 255, 255, .06) !important;
+    backdrop-filter: blur(30px) saturate(165%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(165%) !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+  }
+
+  nav.menu.sidebar-menu .sidebar-scroll,
+  aside.menu.sidebar-menu .sidebar-scroll,
+  nav.menu.sidebar-menu .menu-track,
+  aside.menu.sidebar-menu .menu-track {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 4px !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 2px 10px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(148, 163, 184, .22) transparent !important;
+  }
+
+  nav.menu.sidebar-menu .sidebar-workspace-header,
+  aside.menu.sidebar-menu .sidebar-workspace-header {
+    margin: 0 0 13px !important;
+    padding: 11px 12px !important;
+    min-height: 58px !important;
+    border-radius: 15px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .035)) !important;
+    border: 1px solid rgba(255, 255, 255, .13) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10), 0 10px 26px rgba(2, 6, 23, .16) !important;
+  }
+
+  nav.menu.sidebar-menu .sidebar-action-wrap,
+  aside.menu.sidebar-menu .sidebar-action-wrap {
+    padding: 0 0 12px !important;
+  }
+
+  nav.menu.sidebar-menu .sidebar-quick-action-btn,
+  aside.menu.sidebar-menu .sidebar-quick-action-btn {
+    height: 43px !important;
+    min-height: 43px !important;
+    max-height: 43px !important;
+    padding: 0 12px !important;
+    border-radius: 13px !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, .92), rgba(5, 150, 105, .72)) !important;
+    border-color: rgba(167, 243, 208, .34) !important;
+    box-shadow: 0 10px 24px rgba(5, 150, 105, .22), inset 0 1px 0 rgba(255, 255, 255, .34) !important;
+  }
+
+  nav.menu.sidebar-menu .menu-section-header,
+  aside.menu.sidebar-menu .menu-section-header {
+    padding: 13px 8px 5px !important;
+    gap: 8px !important;
+  }
+
+  nav.menu.sidebar-menu .menu-section-title,
+  aside.menu.sidebar-menu .menu-section-title {
+    color: #8FA4BA !important;
+    font-size: 9.5px !important;
+    font-weight: 800 !important;
+    letter-spacing: .13em !important;
+  }
+
+  nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+  aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
+    height: 43px !important;
+    min-height: 43px !important;
+    max-height: 43px !important;
+    margin: 1px 0 !important;
+    padding: 0 10px !important;
+    gap: 11px !important;
+    border: 1px solid transparent !important;
+    border-radius: 12px !important;
+    background: rgba(255, 255, 255, .025) !important;
+    color: #9BAEC2 !important;
+    font-size: 12.5px !important;
+    font-weight: 650 !important;
+    transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease !important;
+  }
+
+  nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover,
+  aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover {
+    background: linear-gradient(90deg, rgba(52, 211, 153, .13), rgba(56, 189, 248, .035)) !important;
+    border-color: rgba(110, 231, 183, .22) !important;
+    color: #F1F5F9 !important;
+    transform: translateX(2px) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), 0 7px 18px rgba(2, 6, 23, .16) !important;
+  }
+
+  nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active,
+  aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
+    background: linear-gradient(100deg, rgba(16, 185, 129, .24), rgba(14, 116, 144, .10)) !important;
+    border-color: rgba(110, 231, 183, .38) !important;
+    color: #ECFDF5 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10), 0 8px 22px rgba(5, 150, 105, .16) !important;
+  }
+
+  nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before,
+  aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active::before {
+    left: 0 !important;
+    top: 9px !important;
+    bottom: 9px !important;
+    width: 3px !important;
+    height: auto !important;
+    background: linear-gradient(180deg, #6EE7B7, #10B981) !important;
+    box-shadow: 0 0 12px rgba(52, 211, 153, .72) !important;
+  }
+
+  nav.menu.sidebar-menu button .ic,
+  aside.menu.sidebar-menu button .ic {
+    width: 29px !important;
+    height: 29px !important;
+    min-width: 29px !important;
+    border-radius: 9px !important;
+    background: rgba(148, 163, 184, .08) !important;
+    border-color: rgba(148, 163, 184, .14) !important;
+    color: #9BAEC2 !important;
+  }
+
+  nav.menu.sidebar-menu button.active .ic,
+  aside.menu.sidebar-menu button.active .ic {
+    background: rgba(16, 185, 129, .18) !important;
+    border-color: rgba(110, 231, 183, .36) !important;
+    color: #6EE7B7 !important;
+    box-shadow: 0 0 14px rgba(16, 185, 129, .18) !important;
+  }
+
+  nav.menu.sidebar-menu .sidebar-footer,
+  aside.menu.sidebar-menu .sidebar-footer {
+    margin-top: auto !important;
+    padding: 11px 2px 2px !important;
+    border-top-color: rgba(148, 163, 184, .16) !important;
+  }
+
+  .main,
+  html.sidebar-collapsed .main,
+  body.sidebar-collapsed .main {
+    margin-top: 76px !important;
+    margin-left: 278px !important;
+    margin-right: 0 !important;
+    width: calc(100% - 278px) !important;
+    max-width: none !important;
+    transition: margin-left .24s cubic-bezier(.16, 1, .3, 1), width .24s cubic-bezier(.16, 1, .3, 1) !important;
+  }
+
+  body.has-view-mode-banner .main {
+    margin-top: 126px !important;
+  }
+
+  html.sidebar-collapsed nav.menu.sidebar-menu,
+  body.sidebar-collapsed nav.menu.sidebar-menu,
+  html.sidebar-collapsed aside.menu.sidebar-menu,
+  body.sidebar-collapsed aside.menu.sidebar-menu {
+    width: 78px !important;
+    padding: 15px 8px 13px !important;
+  }
+
+  html.sidebar-collapsed .main,
+  body.sidebar-collapsed .main {
+    margin-left: 78px !important;
+    width: calc(100% - 78px) !important;
+  }
+
+  body.light nav.menu.sidebar-menu,
+  body.light aside.menu.sidebar-menu {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(241, 247, 250, .96)) !important;
+    border-color: rgba(100, 116, 139, .20) !important;
+    box-shadow: 14px 0 34px rgba(15, 23, 42, .12), inset -1px 0 0 rgba(255, 255, 255, .90) !important;
+  }
+
+  body.light nav.menu.sidebar-menu .sidebar-workspace-header,
+  body.light aside.menu.sidebar-menu .sidebar-workspace-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(226, 232, 240, .66)) !important;
+    border-color: rgba(100, 116, 139, .20) !important;
+    box-shadow: inset 0 1px 0 #FFFFFF, 0 8px 20px rgba(15, 23, 42, .06) !important;
+  }
+
+  body.light nav.menu.sidebar-menu .workspace-name,
+  body.light aside.menu.sidebar-menu .workspace-name {
+    color: #0F172A !important;
+  }
+
+  body.light nav.menu.sidebar-menu .workspace-subtitle,
+  body.light aside.menu.sidebar-menu .workspace-subtitle,
+  body.light nav.menu.sidebar-menu .menu-section-title,
+  body.light aside.menu.sidebar-menu .menu-section-title {
+    color: #475569 !important;
+  }
+
+  body.light nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+  body.light aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn) {
+    background: rgba(255, 255, 255, .44) !important;
+    color: #334155 !important;
+  }
+
+  body.light nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover,
+  body.light aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn):hover {
+    background: linear-gradient(90deg, rgba(16, 185, 129, .12), rgba(56, 189, 248, .06)) !important;
+    border-color: rgba(5, 150, 105, .24) !important;
+    color: #064E3B !important;
+  }
+
+  body.light nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active,
+  body.light aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn).active {
+    background: linear-gradient(100deg, rgba(16, 185, 129, .16), rgba(56, 189, 248, .07)) !important;
+    border-color: rgba(5, 150, 105, .30) !important;
+    color: #065F46 !important;
   }
 }
