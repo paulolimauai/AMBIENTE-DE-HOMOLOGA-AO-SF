@@ -11900,6 +11900,136 @@ body.light .login-success-box.warning-box p {
   color: #000000 !important;
 }
 
+/* ==================== Refinamento visual dos estados de autenticação ==================== */
+.login-success-overlay {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(30, 64, 98, 0.22) 0%, transparent 42%),
+    rgba(2, 7, 16, 0.82) !important;
+  padding: clamp(16px, 4vw, 32px) !important;
+}
+
+.login-success-box {
+  isolation: isolate;
+  min-height: 336px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-color: rgba(148, 163, 184, 0.36) !important;
+  border-top-color: rgba(226, 232, 240, 0.56) !important;
+  background:
+    linear-gradient(145deg, rgba(35, 49, 76, 0.72), rgba(8, 15, 29, 0.95) 72%) !important;
+  box-shadow:
+    0 32px 90px rgba(0, 0, 0, 0.68),
+    0 0 0 1px rgba(255, 255, 255, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -18px 34px rgba(1, 7, 18, 0.22) !important;
+}
+
+.login-success-box::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 27px;
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.login-success-box h3 {
+  line-height: 1.16 !important;
+  text-wrap: balance;
+}
+
+.login-success-box p {
+  text-wrap: balance;
+}
+
+.auth-modal-badge {
+  min-height: 28px;
+  padding-inline: 13px;
+  letter-spacing: 0.075em;
+  box-shadow: 0 8px 22px rgba(245, 158, 11, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+.auth-badge-dot {
+  animation: authBadgePulse 2.2s ease-in-out infinite;
+}
+
+@keyframes authBadgePulse {
+  0%, 100% { opacity: 0.72; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+
+.login-success-check,
+.logout-success-icon {
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.login-success-check::after,
+.logout-success-icon::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  border: 1px solid rgba(245, 158, 11, 0.16);
+  pointer-events: none;
+}
+
+#loginSuccessOverlay .login-success-box {
+  padding: 38px 30px 32px !important;
+}
+
+#logoutSuccessOverlay .login-success-box {
+  min-height: 416px;
+  padding: 40px 32px 28px !important;
+}
+
+#logoutSuccessOverlay .logout-success-icon {
+  margin-bottom: 18px !important;
+}
+
+#logoutSuccessOverlay .auth-modal-badge {
+  margin-bottom: 13px !important;
+}
+
+.logout-btn-action:focus-visible,
+.login-success-overlay button:focus-visible {
+  outline: 3px solid rgba(110, 231, 183, 0.9) !important;
+  outline-offset: 4px;
+}
+
+@media (max-width: 520px) {
+  .login-success-box {
+    border-radius: 22px !important;
+    min-height: 0;
+    padding: 32px 20px 24px !important;
+  }
+
+  .login-success-box::after { border-radius: 21px; }
+
+  #logoutSuccessOverlay .login-success-box {
+    min-height: 0;
+    padding: 32px 20px 24px !important;
+  }
+
+  .login-success-box h3 { font-size: 20px !important; }
+  .login-success-box p { font-size: 13px !important; }
+  .logout-btn-action { min-height: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-success-overlay,
+  .login-success-box,
+  .auth-badge-dot,
+  .login-success-check path,
+  .login-success-progress-fill {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 /* ==================== Responsividade Master Fluida em Todos os Dispositivos (com Suporte 4K Ultra-HD) ==================== */
 @media (min-width: 2560px) {
   /* Otimizações Específicas para Monitores 4K / UHD / Ultra-Wide */
