@@ -13989,7 +13989,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage .auth-showcase-title::after, #authPage .auth-showcase-desc::after { content: none !important; }
 #authPage .auth-showcase-desc { font-size: 15px !important; line-height: 1.65 !important; color: #C2C9D0 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261025-dashboard-background-clean" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261025-sidebar-glass-premium" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
