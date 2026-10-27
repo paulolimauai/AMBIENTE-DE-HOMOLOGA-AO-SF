@@ -2888,3 +2888,411 @@ body.light aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-
     color: #065F46 !important;
   }
 }
+
+
+/* ==========================================================================
+   TELA DE LOGIN EXECUTIVA SÓLIDA (SEM FUNDO DE VIDRO / ZERO GLASSMORPHISM)
+   ========================================================================== */
+#authPage,
+body:has(#authPage),
+body:has(#authPage).dark {
+  background-color: #0B1220 !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#authPage *,
+#authPage *::before,
+#authPage *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#authPage #authBgCanvas,
+#authPage .auth-grid,
+#authPage .auth-ambient-glow,
+#authPage::before,
+#authPage::after {
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+}
+
+#authPage .auth-exec-layout {
+  width: min(1140px, calc(100% - 48px)) !important;
+  grid-template-columns: minmax(0, 1.08fr) minmax(390px, 460px) !important;
+  gap: clamp(36px, 5.5vw, 84px) !important;
+  align-items: center !important;
+}
+
+/* Coluna Esquerda: Showcase Institucional Sólido */
+#authPage .auth-showcase-panel {
+  max-width: 580px !important;
+  gap: 18px !important;
+}
+
+#authPage .auth-showcase-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: fit-content !important;
+  padding: 7px 14px !important;
+  border-radius: 999px !important;
+  background: #112233 !important;
+  border: 1px solid #1E3A5F !important;
+  color: #6EE7B7 !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  box-shadow: none !important;
+}
+
+#authPage .auth-showcase-badge .badge-dot {
+  background: #10B981 !important;
+  box-shadow: none !important;
+}
+
+#authPage .auth-showcase-title {
+  color: #F8FAFC !important;
+  font-size: clamp(32px, 3.1vw, 44px) !important;
+  font-weight: 900 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.03em !important;
+  text-align: left !important;
+  margin: 0 !important;
+  text-shadow: none !important;
+}
+
+#authPage .auth-showcase-title span {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #34D399 !important;
+  color: #34D399 !important;
+  text-shadow: none !important;
+}
+
+#authPage .auth-showcase-desc {
+  color: #CBD5E1 !important;
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  margin: 0 !important;
+}
+
+#authPage .auth-showcase-metrics {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+#authPage .auth-metric-card {
+  background: #131F33 !important;
+  border: 1px solid #24354F !important;
+  border-top: 3px solid #10B981 !important;
+  border-radius: 14px !important;
+  padding: 16px 14px !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25) !important;
+  transition: border-color 0.15s ease, transform 0.15s ease !important;
+}
+
+#authPage .auth-metric-card.metric-card-savings {
+  border-top-color: #0EA5E9 !important;
+}
+
+#authPage .auth-metric-card.metric-card-goals {
+  border-top-color: #F59E0B !important;
+}
+
+#authPage .auth-metric-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: #34D399 !important;
+}
+
+#authPage .auth-metric-card .metric-card-head svg {
+  color: #34D399 !important;
+}
+
+#authPage .auth-metric-card.metric-card-savings .metric-card-head svg {
+  color: #38BDF8 !important;
+}
+
+#authPage .auth-metric-card.metric-card-goals .metric-card-head svg {
+  color: #FBBF24 !important;
+}
+
+#authPage .auth-metric-card .metric-card-label {
+  color: #94A3B8 !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+}
+
+#authPage .auth-metric-card .metric-val {
+  color: #F8FAFC !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+#authPage .auth-metric-card::after {
+  color: #CBD5E1 !important;
+}
+
+#authPage .auth-trust-item {
+  background: #131F33 !important;
+  border: 1px solid #24354F !important;
+  border-radius: 10px !important;
+  padding: 9px 13px !important;
+  color: #E2E8F0 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+#authPage .auth-trust-item svg {
+  color: #34D399 !important;
+}
+
+/* Coluna Direita: Card Principal de Login 100% Sólido */
+#authPage .auth-card-nexus,
+#authPage #serverAuthNexusCard {
+  background: #131F33 !important;
+  background-image: none !important;
+  border: 1px solid #283B57 !important;
+  border-top: 3px solid #10B981 !important;
+  border-radius: 20px !important;
+  padding: 28px 28px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.50) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#authPage .auth-logo-badge {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 14px !important;
+  background: #059669 !important;
+  border: 1px solid #34D399 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.25) !important;
+}
+
+#authPage .auth-title {
+  color: #F8FAFC !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.025em !important;
+}
+
+#authPage .auth-title span {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #34D399 !important;
+  color: #34D399 !important;
+}
+
+#authPage .auth-subtitle {
+  color: #94A3B8 !important;
+  font-size: 12.5px !important;
+}
+
+#authPage .auth-tabs-nav {
+  background: #0B1320 !important;
+  border: 1px solid #24354F !important;
+  border-radius: 12px !important;
+  padding: 4px !important;
+  gap: 6px !important;
+  box-shadow: none !important;
+}
+
+#authPage .auth-tab-btn {
+  min-height: 42px !important;
+  border-radius: 9px !important;
+  color: #94A3B8 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  font-weight: 700 !important;
+}
+
+#authPage .auth-tab-btn:hover {
+  background: #16243A !important;
+  color: #F8FAFC !important;
+}
+
+#authPage .auth-tab-btn.active {
+  background: #059669 !important;
+  border: 1px solid #10B981 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
+}
+
+#authPage .auth-field > label,
+#authPage .auth-label {
+  color: #E2E8F0 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+#authPage .auth-input-wrapper {
+  background: #0B1320 !important;
+  border: 1px solid #2A3F5D !important;
+  border-radius: 11px !important;
+  box-shadow: none !important;
+}
+
+#authPage .auth-input-wrapper:focus-within {
+  background: #0E1726 !important;
+  border-color: #10B981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18) !important;
+}
+
+#authPage .auth-input-wrapper input {
+  color: #F8FAFC !important;
+  background: transparent !important;
+}
+
+#authPage .auth-input-wrapper input::placeholder {
+  color: #64748B !important;
+}
+
+#authPage .auth-input-icon,
+#authPage .auth-pass-toggle-btn svg {
+  color: #34D399 !important;
+  stroke: #34D399 !important;
+}
+
+#authPage .auth-forgot-link,
+#authPage .auth-bottom-text a,
+#authPage .auth-support-link {
+  color: #34D399 !important;
+}
+
+#authPage .btn-auth-primary,
+#authPage #loginSubmitBtn,
+#authPage #regSubmitBtn,
+#authPage #btnSendPassword {
+  min-height: 48px !important;
+  border-radius: 11px !important;
+  background: #059669 !important;
+  border: 1px solid #10B981 !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.25) !important;
+}
+
+#authPage .btn-auth-primary:hover,
+#authPage #loginSubmitBtn:hover,
+#authPage #regSubmitBtn:hover,
+#authPage #btnSendPassword:hover {
+  background: #047857 !important;
+  border-color: #34D399 !important;
+}
+
+#authPage .btn-open-os {
+  background: #0B1320 !important;
+  border: 1px solid #283B57 !important;
+  border-radius: 11px !important;
+  color: #E2E8F0 !important;
+  box-shadow: none !important;
+}
+
+#authPage .btn-open-os:hover {
+  background: #16243A !important;
+  border-color: #34D399 !important;
+}
+
+#authPage .btn-open-os svg {
+  color: #34D399 !important;
+  stroke: #34D399 !important;
+}
+
+/* Modo Claro da Tela de Login Sólida (Contraste Máximo #000000) */
+body.light #authPage,
+body.light:has(#authPage) {
+  background-color: #F1F5F9 !important;
+  background-image: none !important;
+}
+
+body.light #authPage .auth-card-nexus,
+body.light #authPage #serverAuthNexusCard {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  border-top: 3px solid #059669 !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.light #authPage .auth-showcase-badge {
+  background: #ECFDF5 !important;
+  border-color: #A7F3D0 !important;
+  color: #000000 !important;
+}
+
+body.light #authPage .auth-showcase-title,
+body.light #authPage .auth-showcase-title span,
+body.light #authPage .auth-showcase-desc,
+body.light #authPage .auth-title,
+body.light #authPage .auth-subtitle,
+body.light #authPage .auth-field > label,
+body.light #authPage .auth-label,
+body.light #authPage .auth-bottom-text {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+body.light #authPage .auth-metric-card,
+body.light #authPage .auth-trust-item {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #000000 !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.light #authPage .auth-metric-card .metric-card-label,
+body.light #authPage .auth-metric-card .metric-val,
+body.light #authPage .auth-metric-card::after {
+  color: #000000 !important;
+}
+
+body.light #authPage .auth-tabs-nav {
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+}
+
+body.light #authPage .auth-tab-btn {
+  color: #000000 !important;
+}
+
+body.light #authPage .auth-tab-btn.active {
+  background: #059669 !important;
+  border-color: #047857 !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+
+body.light #authPage .auth-input-wrapper {
+  background: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
+}
+
+body.light #authPage .auth-input-wrapper:focus-within {
+  background: #FFFFFF !important;
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
+}
+
+body.light #authPage .auth-input-wrapper input {
+  color: #000000 !important;
+}
+
+body.light #authPage .btn-open-os {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #000000 !important;
+}
+
+@media (max-width: 1024px) {
+  #authPage .auth-exec-layout {
+    width: min(460px, calc(100% - 32px)) !important;
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+}
