@@ -13730,17 +13730,13 @@ body.light .period button.active {
 }
 #authPage,
 #authPage *:not(svg):not(i) {
-  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 #authPage *, #authPage *::before, #authPage *::after { box-sizing: border-box; }
-#authPage > #authBgCanvas { opacity: 0.42 !important; }
+#authPage > #authBgCanvas { display: none !important; opacity: 0 !important; }
 #authPage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(110deg, rgba(2, 8, 5, 0.48), rgba(2, 8, 5, 0.20) 52%, rgba(2, 8, 5, 0.42));
+  display: none !important;
+  content: none !important;
 }
 #authPage .auth-showcase-panel { max-width: 650px; gap: clamp(13px, 1.8vh, 20px); }
 #authPage .auth-showcase-title { max-width: 590px; font-size: clamp(32px, 3.05vw, 44px); line-height: 1.13; }
@@ -13970,26 +13966,27 @@ nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-
 html[data-theme="light"] nav.menu.sidebar-menu .menu-section-title { color: #64748B !important; }
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) { color: #334155 !important; }
 html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic { background: #F8FAFC !important; border-color: #E2E8F0 !important; }
-/* Referencia visual verde neon aplicada tambem na rota principal localhost:3000. */
-#authPage { background-image: linear-gradient(135deg, rgba(0,0,0,.90), rgba(0,0,0,.80) 52%, rgba(0,0,0,.95)), url('/images/nexus-workspace-background.jpg') !important; background-color: #000 !important; }
-#authPage #authBgCanvas, #authPage .auth-grid, #authPage .auth-ambient-glow { display: none !important; }
-#authPage .auth-showcase-badge { background: rgba(5,150,105,.22) !important; border-color: rgba(16,185,129,.58) !important; color: #86EFAC !important; }
-#authPage .auth-showcase-title, #authPage .auth-showcase-title span { color: #86EFAC !important; text-shadow: 0 0 22px rgba(16,185,129,.18); }
-#authPage .auth-showcase-desc { color: #A7C9B7 !important; }
-#authPage .auth-metric-card, #authPage .auth-trust-item { background: rgba(5,150,105,.12) !important; border-color: rgba(52,211,153,.42) !important; color: #BBF7D0 !important; }
-#authPage .auth-card-nexus { background: linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.045)) !important; border-color: rgba(255,255,255,.24) !important; backdrop-filter: blur(24px) saturate(135%) !important; -webkit-backdrop-filter: blur(24px) saturate(135%) !important; box-shadow: 0 28px 80px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.20) !important; }
-#authPage .auth-logo-badge { background: linear-gradient(145deg, #34D399, #047857) !important; border-color: rgba(167,243,208,.75) !important; box-shadow: 0 12px 28px rgba(16,185,129,.28) !important; }
-#authPage .auth-title span, #authPage .auth-input-icon, #authPage .auth-forgot-link, #authPage .auth-bottom-text a, #authPage .auth-support-link { color: #6EE7B7 !important; }
-#authPage .auth-tabs-nav, #authPage .auth-input-wrapper { background: rgba(255,255,255,.075) !important; border-color: rgba(255,255,255,.20) !important; backdrop-filter: blur(16px) !important; }
-#authPage .auth-tab-btn.active { color: #F3FFF8 !important; background: linear-gradient(135deg, rgba(16,185,129,.90), rgba(4,120,87,.86)) !important; border-color: rgba(110,231,183,.70) !important; box-shadow: 0 8px 18px rgba(5,150,105,.30), inset 0 1px 0 rgba(255,255,255,.30) !important; }
-#authPage .auth-input-wrapper:focus-within { border-color: rgba(52,211,153,.90) !important; box-shadow: 0 0 0 3px rgba(16,185,129,.18), inset 0 1px 0 rgba(255,255,255,.16) !important; }
-#authPage #loginSubmitBtn, #authPage #regSubmitBtn { background: linear-gradient(100deg, #059669, #34D399) !important; border-color: rgba(167,243,208,.70) !important; box-shadow: 0 12px 24px rgba(5,150,105,.34), inset 0 1px 0 rgba(255,255,255,.35) !important; }
-#authPage .auth-top-bar { display: none !important; }
-#authPage .auth-showcase-title { font-size: clamp(32px, 3.05vw, 44px) !important; line-height: 1.12 !important; text-align: center !important; margin-left: auto !important; margin-right: auto !important; }
+/* Acabamento Executivo Sólido (Sem Fundo de Vidro) para a Tela de Login */
+#authPage { background-color: #0B1220 !important; background-image: none !important; }
+#authPage #authBgCanvas, #authPage .auth-grid, #authPage .auth-ambient-glow, #authPage::before, #authPage::after { display: none !important; }
+#authPage *, #authPage *::before, #authPage *::after { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+#authPage .auth-showcase-badge { background: #112233 !important; border: 1px solid #1E3A5F !important; color: #6EE7B7 !important; box-shadow: none !important; }
+#authPage .auth-showcase-title { font-size: clamp(32px, 3.05vw, 44px) !important; line-height: 1.14 !important; text-align: left !important; margin-left: 0 !important; margin-right: 0 !important; color: #F8FAFC !important; text-shadow: none !important; }
+#authPage .auth-showcase-title span { background: none !important; -webkit-text-fill-color: #34D399 !important; color: #34D399 !important; text-shadow: none !important; }
 #authPage .auth-showcase-title::after, #authPage .auth-showcase-desc::after { content: none !important; }
-#authPage .auth-showcase-desc { font-size: 15px !important; line-height: 1.65 !important; color: #C2C9D0 !important; }
+#authPage .auth-showcase-desc { font-size: 15px !important; line-height: 1.65 !important; color: #CBD5E1 !important; }
+#authPage .auth-metric-card, #authPage .auth-trust-item { background: #131F33 !important; border: 1px solid #24354F !important; color: #E2E8F0 !important; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28) !important; }
+#authPage .auth-card-nexus, #authPage #serverAuthNexusCard { background: #131F33 !important; border: 1px solid #283B57 !important; border-top: 3px solid #10B981 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55) !important; }
+#authPage .auth-logo-badge { background: #059669 !important; border: 1px solid #34D399 !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28) !important; }
+#authPage .auth-title span, #authPage .auth-input-icon, #authPage .auth-forgot-link, #authPage .auth-bottom-text a, #authPage .auth-support-link { color: #34D399 !important; }
+#authPage .auth-tabs-nav { background: #0B1320 !important; border: 1px solid #24354F !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+#authPage .auth-input-wrapper { background: #0B1320 !important; border: 1px solid #2A3F5D !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+#authPage .auth-tab-btn.active { color: #FFFFFF !important; background: #059669 !important; border: 1px solid #10B981 !important; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important; }
+#authPage .auth-input-wrapper:focus-within { background: #0E1726 !important; border-color: #10B981 !important; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18) !important; }
+#authPage #loginSubmitBtn, #authPage #regSubmitBtn, #authPage #btnSendPassword { background: #059669 !important; color: #FFFFFF !important; border: 1px solid #10B981 !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28) !important; }
+#authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261025-sidebar-glass-premium" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261027-login-solid-executive" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
