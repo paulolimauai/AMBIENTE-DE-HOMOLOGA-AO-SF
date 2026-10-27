@@ -14600,7 +14600,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Busca Rápida no Menu -->
       <label class="sidebar-search" for="sidebarSearchInput">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-        <input id="sidebarSearchInput" type="search" placeholder="Buscar..." autocomplete="off" spellcheck="false" aria-label="Buscar no menu">
+        <input id="sidebarSearchInput" name="nexus-sidebar-search" type="search" placeholder="Buscar..." autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" aria-label="Buscar no menu">
         <kbd>Ctrl K</kbd>
       </label>
 
