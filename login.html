@@ -3409,6 +3409,36 @@ body.light .period button.active {
         body.light #authNexusCard .auth-input-wrapper input { color: #0F172A !important; }
         body.light #authNexusCard .auth-input-wrapper input::placeholder { color: #94A3B8 !important; }
     </style>
+    <style id="login-palette-style">
+        #loginPaletteControl { position: fixed; top: 88px; right: clamp(18px, 4vw, 64px); z-index: 60; }
+        .login-palette-btn { display:inline-flex; align-items:center; gap:7px; height:36px; padding:0 12px; border:1px solid #2B405C; border-radius:10px; background:#0F1D30; color:#A7F3D0; font:700 11px/1 var(--font-sans, Inter, sans-serif); cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.16); transition:background .18s ease,border-color .18s ease,transform .18s ease; }
+        .login-palette-btn:hover, .login-palette-btn[aria-expanded="true"] { background:#152842; border-color:#10B981; transform:translateY(-1px); }
+        .login-palette-menu { position:absolute; top:44px; right:0; width:250px; padding:14px; border:1px solid #2B405C; border-radius:14px; background:#102035; box-shadow:0 20px 46px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06); }
+        .login-palette-menu[hidden] { display:none !important; }
+        .login-palette-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding-bottom:12px; border-bottom:1px solid #263B56; }
+        .login-palette-head strong { display:block; color:#F8FAFC; font-size:12px; }
+        .login-palette-head small { display:block; margin-top:4px; color:#94A3B8; font-size:10px; }
+        .login-palette-reset { padding:4px 7px; border:1px solid #2B405C; border-radius:6px; background:transparent; color:#6EE7B7; font:700 10px/1 var(--font-sans, Inter, sans-serif); cursor:pointer; }
+        .login-palette-reset:hover { border-color:#34D399; background:#12304A; }
+        .login-palette-swatches { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:15px 2px 13px; }
+        .login-palette-swatch { display:flex; align-items:center; justify-content:center; width:42px; height:42px; padding:0; border:1px solid #2B405C; border-radius:11px; background:#0A1627; cursor:pointer; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; }
+        .login-palette-swatch span { width:24px; height:24px; border-radius:50%; box-shadow:inset 0 1px 1px rgba(255,255,255,.32),0 3px 8px rgba(0,0,0,.28); }
+        .login-palette-swatch:hover { transform:translateY(-2px); border-color:#6EE7B7; }
+        .login-palette-swatch[aria-pressed="true"] { border-color:#34D399; box-shadow:0 0 0 2px rgba(52,211,153,.20); }
+        .login-palette-swatch[aria-pressed="true"] span { box-shadow:0 0 0 2px #102035,0 0 0 4px #34D399,0 4px 10px rgba(16,185,129,.35); }
+        .login-palette-hint { display:flex; align-items:center; justify-content:space-between; gap:8px; color:#71869B; font-size:10px; }
+        .login-palette-selected-count { color:#6EE7B7; font-weight:800; }
+        body.light #loginPaletteControl .login-palette-btn { background:#FFFFFF; border-color:#CBD5E1; color:#047857; box-shadow:0 8px 20px rgba(15,23,42,.08); }
+        body.light #loginPaletteControl .login-palette-btn:hover, body.light #loginPaletteControl .login-palette-btn[aria-expanded="true"] { border-color:#059669; background:#F8FAFC; }
+        body.light .login-palette-menu { border-color:#D6E1DD; background:#FFFFFF; box-shadow:0 20px 46px rgba(15,23,42,.15); }
+        body.light .login-palette-head { border-color:#E2E8F0; }
+        body.light .login-palette-head strong { color:#0F172A; }
+        body.light .login-palette-head small, body.light .login-palette-hint { color:#64748B; }
+        body.light .login-palette-reset { border-color:#CBD5E1; color:#047857; }
+        body.light .login-palette-swatch { border-color:#CBD5E1; background:#F8FAFC; }
+        body.light .login-palette-swatch[aria-pressed="true"] span { box-shadow:0 0 0 2px #FFFFFF,0 0 0 4px #059669,0 4px 10px rgba(5,150,105,.24); }
+        @media (max-width:560px) { #loginPaletteControl { top:72px; right:12px; } .login-palette-btn span { display:none; } .login-palette-btn { width:36px; padding:0; justify-content:center; } }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center py-2 sm:py-3.5 px-3 sm:px-6 relative select-none auth-bg-cyber-grid">
     <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
@@ -3735,6 +3765,29 @@ body.light .period button.active {
             </button>
         </div>
     </header>
+    <div class="login-palette-control" id="loginPaletteControl">
+        <button type="button" id="loginPaletteBtn" class="login-palette-btn" aria-expanded="false" aria-controls="loginPaletteMenu" title="Escolher várias cores para o fundo">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="7.5" cy="9.5" r="2.5"/><circle cx="6.5" cy="16.5" r="2.5"/><path d="M17.5 13.5c2.5 0 4.5 1.7 4.5 3.8 0 2-1.7 3.7-3.8 3.7H8.5a6.5 6.5 0 0 1-1-12.9"/></svg>
+            <span>Paleta</span>
+        </button>
+        <div id="loginPaletteMenu" class="login-palette-menu" role="dialog" aria-label="Cores do fundo" hidden>
+            <div class="login-palette-head">
+                <div><strong>Cores do fundo</strong><small>Selecione várias cores</small></div>
+                <button type="button" id="loginPaletteReset" class="login-palette-reset">Resetar</button>
+            </div>
+            <div class="login-palette-swatches">
+                <button type="button" class="login-palette-swatch" data-color="#07111F" aria-label="Navy profundo" title="Navy profundo"><span style="background:#07111F"></span></button>
+                <button type="button" class="login-palette-swatch" data-color="#10B981" aria-label="Verde esmeralda" title="Verde esmeralda"><span style="background:#10B981"></span></button>
+                <button type="button" class="login-palette-swatch" data-color="#0F766E" aria-label="Teal" title="Teal"><span style="background:#0F766E"></span></button>
+                <button type="button" class="login-palette-swatch" data-color="#2563EB" aria-label="Azul safira" title="Azul safira"><span style="background:#2563EB"></span></button>
+                <button type="button" class="login-palette-swatch" data-color="#4F46E5" aria-label="Índigo" title="Índigo"><span style="background:#4F46E5"></span></button>
+                <button type="button" class="login-palette-swatch" data-color="#7C3AED" aria-label="Violeta" title="Violeta"><span style="background:#7C3AED"></span></button>
+                <button type="button" class="login-palette-swatch" data-color="#D97706" aria-label="Âmbar" title="Âmbar"><span style="background:#D97706"></span></button>
+                <button type="button" class="login-palette-swatch" data-color="#E11D48" aria-label="Rubi" title="Rubi"><span style="background:#E11D48"></span></button>
+            </div>
+            <div class="login-palette-hint"><span class="login-palette-selected-count">3 cores</span><span>O fundo atualiza na hora</span></div>
+        </div>
+    </div>
 
     <!-- Canvas de Fundo Natural (Splines de Rendimento & Rede de Ledger) -->
     <canvas id="bgOrbitalCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
@@ -6476,6 +6529,73 @@ body.light .period button.active {
             if (window.carregarUsuariosLogon) window.carregarUsuariosLogon();
         });
         if (window.carregarUsuariosLogon) window.carregarUsuariosLogon();
+    </script>
+    <script>
+        (function initLoginPalette() {
+            var body = document.body;
+            var menu = document.getElementById('loginPaletteMenu');
+            var button = document.getElementById('loginPaletteBtn');
+            var reset = document.getElementById('loginPaletteReset');
+            var swatches = Array.prototype.slice.call(document.querySelectorAll('.login-palette-swatch'));
+            if (!body || !menu || !button || !swatches.length) return;
+            var storageKey = 'nexus_login_background_palette';
+            var fallback = ['#07111F', '#10B981', '#2563EB'];
+            var allowed = swatches.map(function (item) { return item.getAttribute('data-color'); });
+
+            function normalize(colors) {
+                var list = Array.isArray(colors) ? colors.filter(function (color) { return allowed.indexOf(color) !== -1; }) : [];
+                var unique = list.filter(function (color, index) { return list.indexOf(color) === index; });
+                return unique.length ? unique : fallback.slice();
+            }
+
+            function loadColors() {
+                try { return normalize(JSON.parse(localStorage.getItem(storageKey) || 'null')); } catch (e) { return fallback.slice(); }
+            }
+
+            function applyPalette(colors, persist) {
+                var selected = normalize(colors);
+                var middle = selected[Math.floor((selected.length - 1) / 2)];
+                var last = selected[selected.length - 1];
+                var light = body.classList.contains('light');
+                var alpha = light ? ['C7', 'A8', 'D8'] : ['B8', '82', 'C8'];
+                var background = 'linear-gradient(115deg, ' + selected[0] + alpha[0] + ' 0%, ' + middle + alpha[1] + ' 52%, ' + last + alpha[2] + ' 100%), url(\'/images/login-financial-dashboard.svg\') center / cover no-repeat fixed';
+                body.style.setProperty('background', background, 'important');
+                swatches.forEach(function (swatch) {
+                    var active = selected.indexOf(swatch.getAttribute('data-color')) !== -1;
+                    swatch.setAttribute('aria-pressed', active ? 'true' : 'false');
+                });
+                var count = document.querySelector('.login-palette-selected-count');
+                if (count) count.textContent = selected.length + (selected.length === 1 ? ' cor' : ' cores');
+                if (persist) {
+                    try { localStorage.setItem(storageKey, JSON.stringify(selected)); } catch (e) {}
+                }
+            }
+
+            applyPalette(loadColors(), false);
+            button.addEventListener('click', function (event) {
+                event.stopPropagation();
+                var isOpen = !menu.hasAttribute('hidden');
+                if (isOpen) menu.setAttribute('hidden', ''); else menu.removeAttribute('hidden');
+                button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+            });
+            swatches.forEach(function (swatch) {
+                swatch.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    var current = loadColors();
+                    var color = swatch.getAttribute('data-color');
+                    var next = current.indexOf(color) === -1 ? current.concat(color) : current.filter(function (item) { return item !== color; });
+                    applyPalette(next, true);
+                });
+            });
+            if (reset) reset.addEventListener('click', function () { applyPalette(fallback, true); });
+            document.addEventListener('click', function (event) {
+                if (!event.target.closest('#loginPaletteControl')) {
+                    menu.setAttribute('hidden', '');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+            new MutationObserver(function () { applyPalette(loadColors(), false); }).observe(body, { attributes: true, attributeFilter: ['class'] });
+        })();
     </script>
 </body>
 </html>
