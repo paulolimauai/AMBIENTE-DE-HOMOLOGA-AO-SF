@@ -430,8 +430,8 @@
     "nextAlertId": 1,
     "nextAttId": 1,
     "nextNotifId": 1,
-    "updated_at": "2026-10-22T01:58:55.405Z",
-    "updated_at_ms": 1792634335405
+    "updated_at": "2026-10-25T11:56:40.631Z",
+    "updated_at_ms": 1792929400631
   },
   "homologacao.paulo@nexusfinanceiro.com": {
     "transactions": [
@@ -1422,9 +1422,9 @@
     "nextGoalId": 1,
     "nextRecId": 1,
     "nextAlertId": 1,
-    "nextAttId": 1,
+    "nextAttId": 2,
     "nextNotifId": 1,
-    "updated_at": "2026-10-23T09:26:44.823Z",
-    "updated_at_ms": 1792747604823
+    "updated_at": "2026-10-27T13:23:16.071Z",
+    "updated_at_ms": 1793107396072
   }
 }
