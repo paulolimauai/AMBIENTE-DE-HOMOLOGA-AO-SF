@@ -13986,7 +13986,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn, #authPage #regSubmitBtn, #authPage #btnSendPassword { background: #059669 !important; color: #FFFFFF !important; border: 1px solid #10B981 !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28) !important; }
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261027-menu-padrao-financeiro" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261027-recolher-menu-fix" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -14592,9 +14592,20 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
           <span class="workspace-subtitle">Gestão Financeira</span>
         </div>
+        <button type="button" class="sidebar-header-toggle sidebar-toggle-btn" id="sidebarCollapseBtn" title="Recolher / Expandir Menu Lateral" aria-label="Recolher / Expandir Menu Lateral">
+          <svg class="toggle-icon-collapse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
       </div>
 
+      <!-- Busca Rápida no Menu -->
+      <label class="sidebar-search" for="sidebarSearchInput">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="sidebarSearchInput" type="search" placeholder="Buscar..." autocomplete="off" spellcheck="false" aria-label="Buscar no menu">
+        <kbd>Ctrl K</kbd>
+      </label>
+
       <!-- Botão de Ação Rápida: Nova Transação (Usuário) / Novo Cadastro (Admin) -->
+
       <div class="sidebar-action-wrap">
         <button type="button" class="sidebar-quick-action-btn" id="sidebarNovaTransacaoBtn" onclick="openModal(null)" title="Nova Transação (Registrar receita ou despesa)">
           <span class="quick-action-ic">
@@ -14736,9 +14747,19 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
     </div>
 
-    <!-- Rodapé da Sidebar: Botão de Colapsar -->
+    <!-- Rodapé da Sidebar: Conta e Botão de Recolher Menu -->
+    <div class="sidebar-account-footer">
+      <button type="button" class="sidebar-account-link" data-nav="config" title="Abrir Minha Conta">
+        <span class="sidebar-account-icon" id="sidebarAccountAvatar">PL</span>
+        <span class="sidebar-account-copy">
+          <strong id="sidebarAccountName">Paulo de Lima Pereira</strong>
+          <small id="sidebarAccountPlan">Plano Premium</small>
+        </span>
+        <svg class="sidebar-account-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/><path d="M3 12h12"/></svg>
+      </button>
+    </div>
     <div class="sidebar-footer">
-      <button type="button" class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Recolher / Expandir Menu Lateral" aria-label="Recolher / Expandir Menu Lateral">
+      <button type="button" class="sidebar-toggle-btn" id="sidebarFooterCollapseBtn" title="Recolher / Expandir Menu Lateral" aria-label="Recolher / Expandir Menu Lateral">
         <span class="toggle-icon-wrap">
           <svg class="toggle-icon-collapse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
         </span>
@@ -21583,6 +21604,9 @@ function updateHeaderUser(){
   const unameEl = document.getElementById('headerName');
   const avatarEl = document.getElementById('headerAvatar');
   const roleEl = document.getElementById('headerRole');
+  const sidebarNameEl = document.getElementById('sidebarAccountName');
+  const sidebarPlanEl = document.getElementById('sidebarAccountPlan');
+  const sidebarAvatarEl = document.getElementById('sidebarAccountAvatar');
 
   let cleanName = (currentUser.name || '').trim();
   if (!cleanName || /^(admin|administrador)$/i.test(cleanName)) {
@@ -21591,6 +21615,11 @@ function updateHeaderUser(){
   }
 
   if(unameEl) unameEl.textContent = cleanName;
+  if(sidebarNameEl) sidebarNameEl.textContent = cleanName;
+  if(sidebarPlanEl) {
+    const plan = String(currentUser.subscription_plan || currentUser.plan || '').toLowerCase();
+    sidebarPlanEl.textContent = plan === 'anual' || plan === 'annual' ? 'Plano Anual' : 'Plano Premium';
+  }
   if(roleEl) {
     if (isViewingOtherUser) {
       roleEl.innerHTML = '<span style="color:#FBBF24; font-weight:800;">👁️ Modo Espelho</span>';
@@ -21603,6 +21632,7 @@ function updateHeaderUser(){
   if(avatarEl) {
     if (currentUser.avatar) {
       avatarEl.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      if (sidebarAvatarEl) sidebarAvatarEl.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil">';
       return;
     }
     const rawParts = cleanName.split(/\s+/);
@@ -21613,6 +21643,7 @@ function updateHeaderUser(){
       inits = rawParts[0].slice(0, 2).toUpperCase();
     }
     avatarEl.textContent = inits;
+    if (sidebarAvatarEl) sidebarAvatarEl.textContent = inits;
   }
 }
 
@@ -29956,9 +29987,9 @@ if(menuDesktop){
 }
 
 // Controle de Recolhimento e Expansão da Sidebar
-const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
-if (sidebarCollapseBtn) {
-  sidebarCollapseBtn.addEventListener('click', function(e) {
+document.querySelectorAll('#sidebarCollapseBtn, #sidebarFooterCollapseBtn, .sidebar-header-toggle, .sidebar-toggle-btn').forEach(function(toggleBtn) {
+  toggleBtn.addEventListener('click', function(e) {
+    e.preventDefault();
     e.stopPropagation();
     const isCollapsed = !document.body.classList.contains('sidebar-collapsed');
     document.body.classList.toggle('sidebar-collapsed', isCollapsed);
@@ -29967,12 +29998,41 @@ if (sidebarCollapseBtn) {
       localStorage.setItem('nexus_sidebar_collapsed', isCollapsed ? 'true' : 'false');
     } catch(err) {}
   });
-}
+});
 try {
   const savedCollapsed = localStorage.getItem('nexus_sidebar_collapsed') === 'true';
   document.body.classList.toggle('sidebar-collapsed', savedCollapsed);
   document.documentElement.classList.toggle('sidebar-collapsed', savedCollapsed);
 } catch(err) {}
+
+const sidebarSearchInput = document.getElementById('sidebarSearchInput');
+if (sidebarSearchInput) {
+  const filterSidebarItems = function() {
+    const query = String(sidebarSearchInput.value || '').trim().toLowerCase();
+    document.querySelectorAll('#menu .menu-btn-user, #menu .menu-btn-admin').forEach(function(btn) {
+      const label = (btn.querySelector('.label') || btn).textContent.toLowerCase();
+      btn.style.display = !query || label.includes(query) ? '' : 'none';
+    });
+    document.querySelectorAll('#menu .menu-section-header').forEach(function(section) {
+      if (!query) { section.style.display = ''; return; }
+      let hasVisible = false;
+      let node = section.nextElementSibling;
+      while (node && !node.classList.contains('menu-section-header')) {
+        if (node.matches && node.matches('button[data-page]') && node.style.display !== 'none') hasVisible = true;
+        node = node.nextElementSibling;
+      }
+      section.style.display = hasVisible ? '' : 'none';
+    });
+  };
+  sidebarSearchInput.addEventListener('input', filterSidebarItems);
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === 'k') {
+      e.preventDefault();
+      sidebarSearchInput.focus();
+      sidebarSearchInput.select();
+    }
+  });
+}
 
 const mobileBottomBar = document.getElementById('mobileBottomBar');
 if(mobileBottomBar){
