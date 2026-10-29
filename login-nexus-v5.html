@@ -514,7 +514,7 @@
     custom.value = savedPalette.hex;
     chooseCustom(savedPalette.hex);
   } else {
-    choosePalette(savedPalette && savedPalette.id);
+    choosePalette(savedPalette && savedPalette.id || 'ouro');
   }
 
   const depthElements = document.querySelectorAll('[data-depth]');
