@@ -649,6 +649,7 @@
     const loginIso = new Date().toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }).replace(' ', 'T') + '-03:00';
     user.last_login = loginIso;
     localStorage.setItem('nexus_session', JSON.stringify({ email, id: userId }));
+    localStorage.setItem('nexus_login_v5', 'true');
     localStorage.setItem('nexus_token', data.token || ('token_' + Date.now()));
     localStorage.setItem('nexus_cached_user', JSON.stringify(user));
     localStorage.setItem('nexus_just_logged_in', 'true');

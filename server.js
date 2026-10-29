@@ -2472,6 +2472,27 @@ html.user-logged-in #appMain {
   background-image: none !important;
 }
 
+/* Fundo pós-login alinhado à mesma paleta visual da tela Nexus v5 */
+html.user-logged-in,
+html.user-logged-in body,
+body.user-logged-in,
+html.user-logged-in #persistentSystemBg,
+html.user-logged-in .persistent-system-bg {
+  --postlogin-bg: #05050B !important;
+  --postlogin-gradient:
+    radial-gradient(ellipse 42% 72% at 8% 27%, rgba(249, 195, 50, 0.62) 0%, transparent 70%),
+    radial-gradient(ellipse 46% 62% at 62% 0%, rgba(86, 50, 249, 0.48) 0%, transparent 72%),
+    radial-gradient(ellipse 42% 64% at 92% 72%, rgba(249, 104, 50, 0.58) 0%, transparent 70%),
+    radial-gradient(ellipse 42% 54% at 50% 100%, rgba(249, 50, 130, 0.45) 0%, transparent 72%),
+    linear-gradient(135deg, #05050B 0%, #111019 45%, #05050B 100%) !important;
+  background-color: var(--postlogin-bg) !important;
+  background-image: var(--postlogin-gradient) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
 button, input, select, textarea {
   font-family: inherit;
   color: inherit;
@@ -34810,7 +34831,11 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  return sendTextResponse(res, 200, htmlContent, 'text/html; charset=utf-8', {
+  const rootEntryGate = pathname === '/'
+    ? `<script>(function(){try{var active=sessionStorage.getItem('nexus_session_active')==='true';var session=localStorage.getItem('nexus_session')||localStorage.getItem('nexus_cached_user');var v5=localStorage.getItem('nexus_login_v5')==='true';if(!active||!session||!v5){window.location.replace('/login.html');}}catch(_){window.location.replace('/login.html');}})();</script>`
+    : '';
+  const responseHtml = rootEntryGate ? htmlContent.replace('<head>', '<head>' + rootEntryGate) : htmlContent;
+  return sendTextResponse(res, 200, responseHtml, 'text/html; charset=utf-8', {
     ...corsHeaders,
     'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
     'Pragma': 'no-cache',
