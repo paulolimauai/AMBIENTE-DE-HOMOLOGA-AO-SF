@@ -508,8 +508,14 @@
   }
   custom.addEventListener('input', event => chooseCustom(event.target.value));
 
-  // A tela de login deve abrir sempre com a paleta dourada da referência visual.
-  choosePalette('ouro');
+  let savedPalette = null;
+  try { savedPalette = JSON.parse(localStorage.getItem('nexus:cores')); } catch (_) {}
+  if (savedPalette && savedPalette.id === 'custom' && /^#[0-9a-f]{6}$/i.test(savedPalette.hex || '')) {
+    custom.value = savedPalette.hex;
+    chooseCustom(savedPalette.hex);
+  } else {
+    choosePalette(savedPalette && savedPalette.id);
+  }
 
   const depthElements = document.querySelectorAll('[data-depth]');
   if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
