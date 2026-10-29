@@ -3439,6 +3439,185 @@ body.light .period button.active {
         body.light .login-palette-swatch[aria-pressed="true"] span { box-shadow:0 0 0 2px #FFFFFF,0 0 0 4px #059669,0 4px 10px rgba(5,150,105,.24); }
         @media (max-width:560px) { #loginPaletteControl { top:72px; right:12px; } .login-palette-btn span { display:none; } .login-palette-btn { width:36px; padding:0; justify-content:center; } }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+    <style id="login-v5-reference">
+        /* Replica visual da referência login-nexus-v5, mantendo os IDs da autenticação real. */
+        body.auth-bg-cyber-grid {
+            min-height: 100vh !important;
+            padding: 56px 32px !important;
+            overflow-x: hidden !important;
+            background: #05050B !important;
+            color: #F4F5FB !important;
+            font-family: "Figtree", "Segoe UI", system-ui, sans-serif !important;
+        }
+        body.auth-bg-cyber-grid::before {
+            content: "";
+            position: fixed;
+            inset: -18%;
+            z-index: -2;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 7% 12%, rgba(140,90,255,.82) 0 14%, transparent 34%),
+                radial-gradient(circle at 96% 92%, rgba(255,80,170,.72) 0 13%, transparent 32%),
+                radial-gradient(circle at 76% 8%, rgba(40,200,255,.55) 0 9%, transparent 27%),
+                radial-gradient(circle at 26% 95%, rgba(255,190,60,.42) 0 8%, transparent 25%);
+            filter: blur(48px) saturate(125%);
+        }
+        body.auth-bg-cyber-grid::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(ellipse at 50% 45%, transparent 48%, rgba(0,0,0,.58) 100%);
+        }
+        body.auth-bg-cyber-grid > header {
+            position: relative !important;
+            z-index: 4 !important;
+            max-width: 1140px !important;
+            margin: -38px auto 18px !important;
+        }
+        body.auth-bg-cyber-grid > main {
+            position: relative !important;
+            z-index: 1 !important;
+            width: 100% !important;
+            max-width: 1140px !important;
+            min-height: 0 !important;
+            padding: 0 !important;
+            margin: auto !important;
+        }
+        body.auth-bg-cyber-grid > main > .grid {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr) !important;
+            gap: 0 !important;
+            align-items: stretch !important;
+            overflow: hidden !important;
+            border: 1px solid rgba(255,255,255,.23) !important;
+            border-radius: 38px !important;
+            background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.035)) !important;
+            box-shadow: 0 50px 120px rgba(0,0,0,.62), 0 0 110px rgba(140,90,255,.18), inset 0 1px 0 rgba(255,255,255,.28) !important;
+        }
+        body.auth-bg-cyber-grid > main > .grid > .login-showcase {
+            width: auto !important;
+            max-width: none !important;
+            min-height: 100% !important;
+            margin: 0 !important;
+            padding: 46px 48px !important;
+            background: rgba(5,5,14,.14) !important;
+        }
+        .login-showcase .showcase-kicker {
+            border: 0 !important;
+            background: transparent !important;
+            color: #C8CDE2 !important;
+            font-size: 17px !important;
+            letter-spacing: -.01em !important;
+            text-transform: none !important;
+            font-weight: 700 !important;
+            padding: 0 !important;
+        }
+        .login-showcase .showcase-kicker::before { display: none !important; }
+        .login-showcase h2 {
+            max-width: 540px !important;
+            margin: 30px 0 14px !important;
+            color: #F4F5FB !important;
+            font-family: "Newsreader", Georgia, serif !important;
+            font-size: clamp(36px, 3.9vw, 50px) !important;
+            line-height: 1.08 !important;
+            letter-spacing: -.025em !important;
+            font-weight: 500 !important;
+            text-transform: none !important;
+        }
+        .login-showcase h2 span { color: #D9D4FF !important; }
+        .login-showcase > p { max-width: 440px !important; color: #D2D6E8 !important; font-size: 16.5px !important; line-height: 1.65 !important; }
+        .showcase-metrics {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            margin-top: 24px !important;
+            overflow: visible !important;
+            border: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        .showcase-metric {
+            display: flex !important;
+            align-items: center !important;
+            min-height: 0 !important;
+            padding: 14px 18px !important;
+            border: 1px solid rgba(255,255,255,.20) !important;
+            border-radius: 18px !important;
+            background: linear-gradient(145deg, rgba(255,255,255,.18), rgba(255,255,255,.05)) !important;
+            box-shadow: 0 16px 36px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.24) !important;
+        }
+        .showcase-metric:nth-child(2), .showcase-metric:nth-child(3) { margin-left: 0 !important; }
+        .showcase-metric small { color: #C8CDE2 !important; font-size: 12.5px !important; text-transform: none !important; letter-spacing: 0 !important; }
+        .showcase-metric strong { margin-top: 2px !important; color: #F4F5FB !important; font-family: "Newsreader", Georgia, serif !important; font-size: 20px !important; }
+        .showcase-metric span { margin-top: 2px !important; color: #B0B6CD !important; font-size: 11px !important; }
+        .showcase-pills { display: none !important; }
+        body.auth-bg-cyber-grid > main > .grid > .login-form-column {
+            width: auto !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 46px 46px 30px !important;
+            background: rgba(6,6,16,.50) !important;
+            border-left: 1px solid rgba(255,255,255,.08) !important;
+            align-items: stretch !important;
+        }
+        #authNexusCard, .login-form-column #authNexusCard {
+            width: 100% !important;
+            max-width: none !important;
+            padding: 0 !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        #authNexusCard > div:first-child { align-items: flex-start !important; text-align: left !important; margin-bottom: 24px !important; }
+        #authNexusCard > div:first-child .w-12.h-12 { display: none !important; }
+        #authNexusCard h1 { font-family: "Newsreader", Georgia, serif !important; font-size: 33px !important; font-weight: 500 !important; color: #F4F5FB !important; }
+        #authNexusCard #authSubtitle { color: #A8AEC6 !important; font-size: 14.5px !important; }
+        #authTabsNav { margin-bottom: 22px !important; padding: 4px !important; gap: 4px !important; border-radius: 14px !important; background: rgba(0,0,0,.40) !important; border-color: rgba(255,255,255,.08) !important; }
+        #authTabsNav .auth-tab-btn { min-height: 43px !important; border-radius: 10px !important; color: #A8AEC6 !important; }
+        #authTabsNav .auth-tab-btn.active { color: #0D0A26 !important; background: linear-gradient(145deg, #D9D4FF, #A69BFF) !important; border-color: transparent !important; box-shadow: 0 6px 18px rgba(166,155,255,.30) !important; }
+        #loginForm { gap: 16px !important; }
+        #loginForm .auth-field-header { margin-bottom: 7px !important; }
+        #loginForm .auth-label { color: #C8CDE2 !important; font-size: 12px !important; font-weight: 600 !important; }
+        #loginForm .auth-input-wrapper { min-height: 58px !important; border-radius: 14px !important; background: rgba(255,255,255,.05) !important; border-color: rgba(255,255,255,.15) !important; }
+        #loginForm .auth-input-wrapper:focus-within { background: rgba(255,255,255,.07) !important; border-color: #A69BFF !important; box-shadow: 0 0 0 4px rgba(166,155,255,.20) !important; }
+        #loginForm .auth-input-wrapper input { color: #F4F5FB !important; font-size: 15px !important; }
+        #loginForm .auth-input-icon, #loginForm .auth-field-header button, #loginForm a { color: #A69BFF !important; }
+        #loginForm #rememberMe { accent-color: #A69BFF !important; }
+        #btnLoginSubmit { min-height: 56px !important; margin-top: 4px !important; border: 0 !important; border-radius: 14px !important; color: #0D0A26 !important; background: linear-gradient(145deg, #D9D4FF, #A69BFF 55%, #6E5AEE) !important; box-shadow: 0 16px 38px rgba(166,155,255,.38), inset 0 1px 0 rgba(255,255,255,.55) !important; }
+        .btn-open-os { margin-top: 20px !important; }
+        @media (max-width: 980px) {
+            body.auth-bg-cyber-grid { padding: 96px 20px 40px !important; }
+            body.auth-bg-cyber-grid > main > .grid { grid-template-columns: 1fr !important; }
+            body.auth-bg-cyber-grid > main > .grid > .login-form-column { order: -1 !important; border-left: 0 !important; border-bottom: 1px solid rgba(255,255,255,.08) !important; padding: 36px 32px 30px !important; }
+            body.auth-bg-cyber-grid > main > .grid > .login-showcase { padding: 36px 32px !important; }
+        }
+        @media (max-width: 520px) {
+            body.auth-bg-cyber-grid { padding: 84px 12px 28px !important; }
+            body.auth-bg-cyber-grid > main > .grid { border-radius: 26px !important; }
+            body.auth-bg-cyber-grid > main > .grid > .login-form-column, body.auth-bg-cyber-grid > main > .grid > .login-showcase { padding: 30px 22px 24px !important; }
+            #authNexusCard h1 { font-size: 29px !important; }
+            .login-showcase h2 { font-size: 36px !important; }
+        }
+        body.light.auth-bg-cyber-grid { background: #F4F4F8 !important; }
+        body.light.auth-bg-cyber-grid::before { opacity: .40; }
+        body.light.auth-bg-cyber-grid > main > .grid { background: rgba(255,255,255,.72) !important; border-color: rgba(80,70,150,.18) !important; }
+        body.light.auth-bg-cyber-grid > main > .grid > .login-showcase { background: rgba(255,255,255,.58) !important; }
+        body.light.auth-bg-cyber-grid > main > .grid > .login-form-column { background: rgba(250,250,255,.68) !important; border-color: rgba(80,70,150,.12) !important; }
+        body.light .login-showcase h2, body.light #authNexusCard h1 { color: #16152A !important; }
+        body.light .login-showcase > p, body.light #authNexusCard #authSubtitle { color: #4F526A !important; }
+        body.light .showcase-metric { background: rgba(255,255,255,.78) !important; border-color: rgba(80,70,150,.16) !important; }
+        body.light .showcase-metric small { color: #555975 !important; }
+        body.light .showcase-metric strong { color: #202039 !important; }
+        body.light .showcase-metric span { color: #6A6D84 !important; }
+        body.light #loginForm .auth-input-wrapper { background: rgba(255,255,255,.72) !important; border-color: rgba(80,70,150,.20) !important; }
+        body.light #loginForm .auth-input-wrapper input { color: #202039 !important; }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between items-center py-2 sm:py-3.5 px-3 sm:px-6 relative select-none auth-bg-cyber-grid">
     <script>(function(){if(document.documentElement.classList.contains('light')){document.body.classList.add('light');}})();</script>
@@ -3806,13 +3985,13 @@ body.light .period button.active {
             
             <!-- COLUNA DIREITA: CARD PRINCIPAL DE AUTENTICAÇÃO (5 COLUNAS EM TELAS LARGAS, CENTRALIZADO NO MOBILE) -->
             <section class="login-showcase" aria-label="Visao geral do Nexus">
-                <span class="showcase-kicker">Sistema de gest&atilde;o financeira pessoal - Controle total</span>
-                <h2>Controle total das suas finan&ccedil;as pessoais.</h2>
-                <p>Organize gastos, contas e metas em um s&oacute; lugar, com uma vis&atilde;o clara do seu or&ccedil;amento e das suas prioridades.</p>
+                <span class="showcase-kicker">Nexus Financeiro</span>
+                <h2>Cada real com destino.<br><span>Cada m&ecirc;s com resultado.</span></h2>
+                <p>Controle gastos, cart&otilde;es e metas em um s&oacute; lugar e descubra, em minutos, quanto voc&ecirc; pode guardar neste m&ecirc;s.</p>
                 <div class="showcase-metrics">
-                    <div class="showcase-metric"><small>Or&ccedil;amento mensal</small><strong>Seu or&ccedil;amento</strong><span>Organizado por categorias</span></div>
-                    <div class="showcase-metric"><small>Vis&atilde;o do m&ecirc;s</small><strong>Receitas e despesas</strong><span>Acompanhe seu saldo</span></div>
-                    <div class="showcase-metric"><small>Metas pessoais</small><strong>Planos e reservas</strong><span>Acompanhe seu progresso</span></div>
+                    <div class="showcase-metric"><small>Saldo do m&ecirc;s</small><strong>R$ 4.280,00</strong><span>Dispon&iacute;vel para suas escolhas</span></div>
+                    <div class="showcase-metric"><small>Meta de reserva</small><strong>64% conclu&iacute;da</strong><span>Seu progresso em destaque</span></div>
+                    <div class="showcase-metric"><small>Limite do cart&atilde;o</small><strong>38% utilizado</strong><span>Mais controle, menos surpresas</span></div>
                 </div>
                 <div class="showcase-pills"><span>Gastos e cart&otilde;es<br>em um s&oacute; lugar</span><span>Vis&atilde;o clara<br>do or&ccedil;amento</span><span>Metas e reservas</span></div>
             </section>
@@ -3828,9 +4007,9 @@ body.light .period button.active {
                             <span class="tracking-tighter">N</span>
                         </div>
                         <h1 class="text-xl sm:text-2xl font-black tracking-tight auth-brand-nexus text-white font-display">
-                            Bem-vindo de volta
+                            Entre no seu painel
                         </h1>
-                        <p id="authSubtitle" class="text-xs auth-subtitle-text text-slate-300 mt-1 font-medium leading-relaxed">Entre com suas credenciais para acessar sua conta.</p>
+                        <p id="authSubtitle" class="text-xs auth-subtitle-text text-slate-300 mt-1 font-medium leading-relaxed">Seu resumo do m&ecirc;s est&aacute; esperando por voc&ecirc;.</p>
                     </div>
 
                     <!-- NAVEGAÇÃO SEGMENTADA POR ABAS -->
@@ -4420,7 +4599,7 @@ body.light .period button.active {
                 const forgotEmail = document.getElementById('forgotEmail');
                 if (forgotEmail) forgotEmail.focus();
             } else {
-                if (authTitle) authTitle.textContent = 'Bem-vindo de volta';
+                if (authTitle) authTitle.textContent = 'Entre no seu painel';
                 if (loginBox) {
                     loginBox.classList.remove('hidden');
                     loginBox.classList.add('block');
@@ -4428,7 +4607,7 @@ body.light .period button.active {
                 }
                 if (tabsNav) { tabsNav.classList.remove('hidden'); tabsNav.style.display = 'flex'; }
                 if (tabBtnLogin) tabBtnLogin.classList.add('active');
-                if (subTitle) subTitle.textContent = 'Entre com suas credenciais para acessar sua conta.';
+                if (subTitle) subTitle.textContent = 'Seu resumo do mes esta esperando por voce.';
                 const loginEmail = document.getElementById('loginEmail');
                 if (loginEmail) loginEmail.focus();
             }
