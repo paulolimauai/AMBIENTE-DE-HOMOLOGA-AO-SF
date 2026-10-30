@@ -2472,19 +2472,16 @@ html.user-logged-in #appMain {
   background-image: none !important;
 }
 
-/* Fundo pós-login alinhado à mesma paleta visual da tela Nexus v5 */
+/* Fundo pós-login idêntico ao cenário da tela de login Nexus v5 */
 html.user-logged-in,
 html.user-logged-in body,
 body.user-logged-in,
 html.user-logged-in #persistentSystemBg,
 html.user-logged-in .persistent-system-bg {
-  --postlogin-bg: #05050B !important;
+  --postlogin-bg: #080C11 !important;
   --postlogin-gradient:
-    radial-gradient(ellipse 42% 72% at 8% 27%, rgba(249, 195, 50, 0.62) 0%, transparent 70%),
-    radial-gradient(ellipse 46% 62% at 62% 0%, rgba(86, 50, 249, 0.48) 0%, transparent 72%),
-    radial-gradient(ellipse 42% 64% at 92% 72%, rgba(249, 104, 50, 0.58) 0%, transparent 70%),
-    radial-gradient(ellipse 42% 54% at 50% 100%, rgba(249, 50, 130, 0.45) 0%, transparent 72%),
-    linear-gradient(135deg, #05050B 0%, #111019 45%, #05050B 100%) !important;
+    linear-gradient(135deg, rgba(8,12,17,.78), rgba(15,23,42,.68) 52%, rgba(3,7,12,.88)),
+    url('/images/login-financial-dashboard.svg') !important;
   background-color: var(--postlogin-bg) !important;
   background-image: var(--postlogin-gradient) !important;
   background-size: cover !important;
