@@ -14557,14 +14557,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
         </div>
 
-        <div class="workspace-palette" id="workspacePalette" role="group" aria-label="Escolher cores do ambiente">
-          <span class="workspace-palette-label">Cores</span>
-          <div class="workspace-palette-swatches" id="workspacePaletteSwatches"></div>
-          <label class="workspace-palette-custom" title="Escolher uma cor personalizada">
-            <input type="color" id="workspacePaletteCustom" value="#8c5aff" aria-label="Escolher uma cor personalizada">
-          </label>
-        </div>
-
         <div class="scale-selector-wrap">
           <button class="icon-btn" id="scaleMenuBtn" title="Tamanho de Visualização & Resolução de Tela" style="gap:6px; width:auto; padding:0 10px; font-size:12px; font-weight:700;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
@@ -30553,114 +30545,6 @@ window.applyPostLoginBg = function(theme) {
   } catch(e){}
 })();
 
-
-// ==================== Paleta de Cores Persistente do Workspace ====================
-(function initWorkspacePalette() {
-  const palettes = [
-    { id: 'multicolor', name: 'Multicolor', h: [265, 335, 190, 45] },
-    { id: 'aurora', name: 'Aurora', h: [250, 320, 190, 280] },
-    { id: 'oceano', name: 'Oceano', h: [212, 188, 255, 165] },
-    { id: 'por-do-sol', name: 'Pôr do sol', h: [18, 340, 45, 285] },
-    { id: 'esmeralda', name: 'Esmeralda', h: [155, 185, 85, 205] },
-    { id: 'rose', name: 'Rosé', h: [335, 285, 15, 255] },
-    { id: 'ouro', name: 'Ouro', h: [42, 18, 255, 335] },
-    { id: 'turquesa', name: 'Turquesa', h: [176, 215, 135, 265] },
-    { id: 'carmesim', name: 'Carmesim', h: [352, 20, 285, 320] },
-    { id: 'neon', name: 'Neon', h: [85, 150, 195, 50] }
-  ];
-  const hslToRgb = (h, s = 95, l = 58) => {
-    s /= 100; l /= 100;
-    const k = n => (n + h / 30) % 12;
-    const a = s * Math.min(l, 1 - l);
-    const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-    return [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))];
-  };
-  const rgbStr = values => values.join(', ');
-  const hex = values => '#' + values.map(value => value.toString(16).padStart(2, '0')).join('');
-  function hexToHsl(value) {
-    const number = parseInt(value.slice(1), 16);
-    const r = (number >> 16 & 255) / 255, g = (number >> 8 & 255) / 255, b = (number & 255) / 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b), delta = max - min;
-    let hue = 0;
-    if (delta) {
-      if (max === r) hue = ((g - b) / delta) % 6;
-      else if (max === g) hue = (b - r) / delta + 2;
-      else hue = (r - g) / delta + 4;
-      hue = Math.round(hue * 60 + 360) % 360;
-    }
-    const lightness = (max + min) / 2;
-    const saturation = delta ? delta / (1 - Math.abs(2 * lightness - 1)) : 0;
-    return { h: hue, s: Math.round(saturation * 100) };
-  }
-  const save = value => { try { localStorage.setItem('nexus:cores', JSON.stringify(value)); } catch(e) {} };
-  function applyPalette(hues, saturation = 100) {
-    const root = document.documentElement;
-    const sat = Math.max(70, Math.min(100, saturation));
-    const accent = hslToRgb(hues[0], sat, 78);
-    const accentHex = hex(accent);
-    const rgbText = rgbStr(accent);
-    root.style.setProperty('--accent', accentHex);
-    root.style.setProperty('--accent-light', hex(hslToRgb(hues[0], sat, 89)));
-    root.style.setProperty('--accent-deep', hex(hslToRgb(hues[0], Math.min(sat, 80), 60)));
-    root.style.setProperty('--on-accent', hex(hslToRgb(hues[0], 55, 9)));
-    root.style.setProperty('--a-rgb', rgbText);
-    hues.forEach((hue, index) => root.style.setProperty('--o' + (index + 1), rgbStr(hslToRgb(hue, 95, 58))));
-    root.style.setProperty('--nexus-palette-rgb', rgbText);
-    root.style.setProperty('--nexus-palette', 'rgb(' + rgbText + ')');
-    const bg = document.getElementById('persistentSystemBg');
-    if (bg) bg.style.backgroundImage = 'linear-gradient(135deg, rgba(8,12,17,.78), rgba(15,23,42,.68) 52%, rgba(3,7,12,.88)), radial-gradient(circle at 10% 18%, rgba(' + rgbText + ',.28), transparent 44%), radial-gradient(circle at 88% 82%, rgba(' + rgbText + ',.16), transparent 48%), url(\'/images/login-financial-dashboard.svg\')';
-    const dot = document.getElementById('workspacePaletteDot');
-    if (dot) dot.style.background = accentHex;
-  }
-  function markPalette(id) {
-    document.querySelectorAll('#workspacePaletteSwatches button[data-palette]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.palette === id)));
-    const custom = document.getElementById('workspacePaletteCustom');
-    if (custom && custom.parentElement) custom.parentElement.classList.toggle('active', id === 'custom');
-  }
-  function choosePalette(id) {
-    const palette = palettes.find(item => item.id === id) || palettes[0];
-    applyPalette(palette.h);
-    markPalette(palette.id);
-    save({ id: palette.id });
-  }
-  function chooseCustom(value) {
-    const parsed = hexToHsl(value);
-    applyPalette([parsed.h, (parsed.h + 60) % 360, (parsed.h + 300) % 360, (parsed.h + 150) % 360], parsed.s);
-    markPalette('custom');
-    save({ id: 'custom', hex: value });
-  }
-  function apply(value) {
-    const current = value || {};
-    if (current.id === 'custom' && /^#[0-9a-f]{6}$/i.test(current.hex || '')) {
-      const custom = document.getElementById('workspacePaletteCustom');
-      if (custom) custom.value = current.hex;
-      chooseCustom(current.hex);
-      return;
-    }
-    choosePalette(current.id);
-  }
-  function init() {
-    const swatches = document.getElementById('workspacePaletteSwatches');
-    if (!swatches) return;
-    swatches.innerHTML = '';
-    palettes.forEach(item => {
-      const button = document.createElement('button');
-      button.type = 'button'; button.dataset.palette = item.id; button.title = item.name;
-      button.setAttribute('aria-label', 'Paleta ' + item.name); button.setAttribute('aria-pressed', 'false');
-      const color = hue => 'hsl(' + hue + ' 95% 58%)';
-      button.style.setProperty('--palette-color', 'linear-gradient(135deg, ' + color(item.h[0]) + ' 0 34%, ' + color(item.h[1]) + ' 34% 67%, ' + color(item.h[2]) + ' 67%)');
-      button.addEventListener('click', () => choosePalette(item.id));
-      swatches.appendChild(button);
-    });
-    const custom = document.getElementById('workspacePaletteCustom');
-    if (custom) custom.addEventListener('input', event => chooseCustom(event.target.value));
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem('nexus:cores') || 'null'); } catch(e) {}
-    apply(saved || { id: palettes[0].id });
-  }
-  window.applyWorkspacePalette = apply;
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true }); else init();
-})();
 
 /* ==================== Restaurar sessão ao atualizar a página sem flicker ==================== */
 (function initSessionStateImmediate() {
