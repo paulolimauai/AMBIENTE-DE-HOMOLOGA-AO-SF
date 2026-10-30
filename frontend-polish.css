@@ -4535,3 +4535,18 @@ html.user-logged-in #pageContent :is(input:not([type=checkbox]):not([type=radio]
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
 }
+
+/* Fundo global: a cor da tela de login permanece em todo o sistema. */
+html,
+body,
+html.light,
+body.light,
+#appMain,
+#authPage,
+#persistentSystemBg,
+.persistent-system-bg,
+.app-bg-scene,
+.main {
+  background: #0B1220 !important;
+  background-image: none !important;
+}
