@@ -215,6 +215,22 @@
   .remember input:focus-visible + .box { box-shadow: 0 0 0 4px rgba(var(--a-rgb), .3); }
   .row a { font-size: 13px; }
 
+  .v5-consents {
+    display: flex; flex-direction: column; gap: 9px; width: 100%; margin-top: -2px;
+  }
+  .v5-consent {
+    display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: start; gap: 9px;
+    width: 100%; padding: 9px 11px; border: 1px solid var(--line-soft); border-radius: 11px;
+    background: rgba(255,255,255,.035); color: #d9ddef; font-size: 12.5px; line-height: 1.42;
+    cursor: pointer;
+  }
+  .v5-consent input {
+    width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--accent); cursor: pointer;
+  }
+  .v5-consent span { display: block; min-width: 0; overflow-wrap: anywhere; }
+  .v5-consent:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--a-rgb), .16); }
+  .field-hint { display: block; margin: 5px 4px 0; color: var(--faint); font-size: 11px; line-height: 1.35; }
+
   .btn {
     height: 56px; margin-top: 4px; border: 0; border-radius: var(--radius-md); cursor: pointer;
     font: 700 15.5px var(--font-body); color: var(--on-accent);
@@ -352,6 +368,16 @@
                 <label for="nome">Seu nome</label>
               </div>
               <p class="error" data-for="nome"></p>
+            </div>
+
+            <div class="field" id="f-cpf" hidden>
+              <div class="control">
+                <svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 10h10M7 14h6"/></svg>
+                <input id="cpf" type="text" inputmode="numeric" autocomplete="off" maxlength="14" placeholder=" " aria-describedby="cpf-ajuda">
+                <label for="cpf">CPF</label>
+              </div>
+              <p class="error" data-for="cpf"></p>
+              <small id="cpf-ajuda" class="field-hint">Informe os 11 dígitos do titular.</small>
             </div>
 
             <div class="field">
@@ -560,6 +586,8 @@
     $('#tab-login').setAttribute('aria-selected', String(!registering));
     $('#tab-register').setAttribute('aria-selected', String(registering));
     $('#f-nome').hidden = !registering;
+    $('#f-cpf').hidden = !registering;
+    $('#cpf').disabled = !registering;
     $('#f-confirma').hidden = !registering;
     $('#esqueci').style.visibility = registering ? 'hidden' : 'visible';
     $('#senha').autocomplete = registering ? 'new-password' : 'current-password';
@@ -590,7 +618,7 @@
     if (input) input.closest('.control').classList.toggle('invalid', !!message);
   }
   function clearErrors() {
-    ['nome', 'email', 'senha', 'confirma'].forEach(id => setError(id, ''));
+    ['nome', 'cpf', 'email', 'senha', 'confirma'].forEach(id => setError(id, ''));
     statusEl.textContent = '';
     statusEl.classList.remove('bad');
   }
@@ -598,13 +626,47 @@
     statusEl.textContent = message || '';
     statusEl.classList.toggle('bad', bad);
   }
+  function cpfDigits(value) {
+    return String(value || '').replace(/\D/g, '').slice(0, 11);
+  }
+  function formatCpf(value) {
+    const digits = cpfDigits(value);
+    return digits
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  }
+  function validCpf(value) {
+    const digits = cpfDigits(value);
+    if (digits.length !== 11 || /^(\d)\1{10}$/.test(digits)) return false;
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += Number(digits[i]) * (10 - i);
+    let check = (sum * 10) % 11;
+    if (check === 10) check = 0;
+    if (check !== Number(digits[9])) return false;
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += Number(digits[i]) * (11 - i);
+    check = (sum * 10) % 11;
+    if (check === 10) check = 0;
+    return check === Number(digits[10]);
+  }
+  $('#cpf').addEventListener('input', event => {
+    event.target.value = formatCpf(event.target.value);
+    const digits = cpfDigits(event.target.value);
+    if (digits.length === 11 && !validCpf(digits)) setError('cpf', 'Digite um CPF válido.');
+    else setError('cpf', '');
+  });
   function validate() {
     clearErrors();
     let valid = true;
     const value = id => $('#' + id).value.trim();
     if (mode === 'register' && value('nome').length < 2) { setError('nome', 'Informe seu nome.'); valid = false; }
+    if (mode === 'register' && !validCpf(value('cpf'))) { setError('cpf', 'Informe um CPF válido com 11 dígitos.'); valid = false; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value('email'))) { setError('email', 'Digite um e-mail válido.'); valid = false; }
-    if ($('#senha').value.length < 6) { setError('senha', 'A senha precisa ter pelo menos 6 caracteres.'); valid = false; }
+    if (mode === 'register' && ($('#senha').value.length < 8 || !/[A-Z]/.test($('#senha').value) || !/[a-z]/.test($('#senha').value) || !/\d/.test($('#senha').value) || !/[@#$%!?*&._-]/.test($('#senha').value))) {
+      setError('senha', 'Use 8+ caracteres, maiúscula, minúscula, número e símbolo.');
+      valid = false;
+    }
     if (mode === 'register' && $('#confirma').value !== $('#senha').value) { setError('confirma', 'As senhas não são iguais.'); valid = false; }
     if (mode === 'register' && (!$('#v5-terms').checked || !$('#v5-truthful').checked)) {
       showStatus('Aceite os dois termos para concluir o cadastro.', true);
@@ -691,6 +753,7 @@
       const result = await api('/api/register', {
         name: data.nome,
         email: data.email,
+        cpf: data.cpf,
         password: data.senha,
         terms_accepted: true,
         truthful_declaration: true,
@@ -728,6 +791,7 @@
     if (!validate()) return;
     const data = {
       nome: $('#nome').value.trim(),
+      cpf: cpfDigits($('#cpf').value),
       email: $('#email').value.trim().toLowerCase(),
       senha: $('#senha').value,
       lembrar: $('#lembrar').checked
@@ -743,6 +807,9 @@
       let message = error.message || 'Não foi possível continuar. Tente novamente.';
       if (apiData.errorType === 'user_not_found') message = 'Esta conta não existe no banco de dados.';
       if (apiData.errorType === 'invalid_password') message = 'Senha incorreta.';
+      if (apiData.errorType === 'invalid_cpf' || apiData.code === 'INVALID_CPF') message = 'CPF inválido. Confira os dígitos informados.';
+      if (apiData.errorType === 'email_exists') message = 'Este e-mail já possui cadastro.';
+      if (apiData.errorType === 'cpf_exists') message = 'Este CPF já possui cadastro.';
       showStatus(message, true);
     } finally {
       btn.disabled = false;
