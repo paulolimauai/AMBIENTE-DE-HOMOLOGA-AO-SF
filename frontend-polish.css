@@ -4497,3 +4497,53 @@ body.light #authPage .btn-open-os {
     transform: rotate(180deg) !important;
   }
 }
+
+/* Nexus v5: garantir as cores do login e o vidro no painel autenticado */
+html.user-logged-in,
+html.user-logged-in body,
+body.user-logged-in,
+html.user-logged-in #persistentSystemBg,
+html.user-logged-in .persistent-system-bg {
+  background-color: #05050B !important;
+  background-image:
+    radial-gradient(ellipse 42% 72% at 8% 27%, rgba(249, 195, 50, .62) 0%, transparent 70%),
+    radial-gradient(ellipse 46% 62% at 62% 0%, rgba(86, 50, 249, .48) 0%, transparent 72%),
+    radial-gradient(ellipse 42% 64% at 92% 72%, rgba(249, 104, 50, .58) 0%, transparent 70%),
+    radial-gradient(ellipse 42% 54% at 50% 100%, rgba(249, 50, 130, .45) 0%, transparent 72%),
+    linear-gradient(135deg, #05050B 0%, #111019 45%, #05050B 100%) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
+html.user-logged-in .topheader,
+html.user-logged-in nav.menu.sidebar-menu,
+html.user-logged-in aside.menu.sidebar-menu {
+  background: rgba(7, 8, 18, .46) !important;
+  border-color: rgba(255, 255, 255, .16) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .14) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+}
+
+html.user-logged-in #pageContent :is(.kpi, .dash-card, .dash-overview-card, .panel, .table-panel, .cards-summary-panel, .tx-footer-summary) {
+  background: linear-gradient(145deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .035)) !important;
+  border: 1px solid rgba(255, 255, 255, .20) !important;
+  border-top-color: rgba(255, 255, 255, .34) !important;
+  box-shadow: 0 22px 54px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .22) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+}
+
+html.user-logged-in #pageContent :is(h1, h2, h3, h4, h5, h6, p, span, strong, td, th, .description, .subtitle, .muted, .kpi-label, .dash-card-title, .kpi-title) {
+  color: #F4F5FB !important;
+}
+
+html.user-logged-in #pageContent :is(input:not([type=checkbox]):not([type=radio]), select, textarea) {
+  background: rgba(255, 255, 255, .07) !important;
+  border-color: rgba(255, 255, 255, .18) !important;
+  color: #F4F5FB !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
