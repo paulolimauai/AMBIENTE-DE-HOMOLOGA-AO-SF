@@ -510,38 +510,34 @@ body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; 
 /* Fundo compartilhado do workspace: imagem ajustada sem competir com o conteúdo. */
 .persistent-system-bg {
   background-image:
-    linear-gradient(135deg, rgba(0, 0, 0, .90), rgba(0, 0, 0, .84) 52%, rgba(0, 0, 0, .94)),
-    linear-gradient(to bottom, transparent 58%, rgba(0, 0, 0, .62) 100%),
-    url('/images/nexus-workspace-background.jpg') !important;
+    linear-gradient(135deg, rgba(8,12,17,.78), rgba(15,23,42,.68) 52%, rgba(3,7,12,.88)),
+    url('/images/login-financial-dashboard.svg') !important;
   background-size: cover !important;
-  background-position: center 42% !important;
+  background-position: center center !important;
   background-attachment: fixed !important;
   background-repeat: no-repeat !important;
 }
 
 body.light .persistent-system-bg {
   background-image:
-    linear-gradient(135deg, rgba(248, 250, 252, .78), rgba(241, 245, 249, .68) 52%, rgba(226, 232, 240, .82)),
-    linear-gradient(to bottom, transparent 58%, rgba(15, 23, 42, .34) 100%),
-    url('/images/nexus-workspace-background.jpg') !important;
+    linear-gradient(135deg, rgba(8,12,17,.78), rgba(15,23,42,.68) 52%, rgba(3,7,12,.88)),
+    url('/images/login-financial-dashboard.svg') !important;
 }
 
 .app-bg-scene {
   background-image:
-    linear-gradient(135deg, rgba(0, 0, 0, .88), rgba(0, 0, 0, .80) 52%, rgba(0, 0, 0, .92)),
-    linear-gradient(to bottom, transparent 58%, rgba(0, 0, 0, .62) 100%),
-    url('/images/nexus-workspace-background.jpg') !important;
+    linear-gradient(135deg, rgba(8,12,17,.78), rgba(15,23,42,.68) 52%, rgba(3,7,12,.88)),
+    url('/images/login-financial-dashboard.svg') !important;
   background-size: cover !important;
-  background-position: center 42% !important;
+  background-position: center center !important;
   background-attachment: fixed !important;
   background-repeat: no-repeat !important;
 }
 
 body.light .app-bg-scene {
   background-image:
-    linear-gradient(135deg, rgba(248, 250, 252, .80), rgba(241, 245, 249, .70) 52%, rgba(226, 232, 240, .84)),
-    linear-gradient(to bottom, transparent 58%, rgba(15, 23, 42, .34) 100%),
-    url('/images/nexus-workspace-background.jpg') !important;
+    linear-gradient(135deg, rgba(8,12,17,.78), rgba(15,23,42,.68) 52%, rgba(3,7,12,.88)),
+    url('/images/login-financial-dashboard.svg') !important;
 }
 
 /* Fundo limpo: remove elementos decorativos flutuantes, preservando os controles reais. */
@@ -701,7 +697,7 @@ body:not(.light) {
   background-color: var(--workspace-bg) !important;
   color: var(--workspace-text) !important;
 }
-#persistentSystemBg { opacity: .22 !important; }
+#persistentSystemBg { opacity: 1 !important; }
 .topheader {
   height: 72px !important;
   background: rgba(8, 13, 23, .92) !important;
@@ -774,7 +770,7 @@ body.light, html.light body {
   background-color: #F3F6FA !important;
   color: #000 !important;
 }
-body.light #persistentSystemBg { opacity: .12 !important; }
+body.light #persistentSystemBg { opacity: 1 !important; }
 body.light .topheader { background: rgba(255,255,255,.96) !important; border-bottom-color: #E2E8F0 !important; }
 body.light .brand-sub, body.light .header-user-name { color: #000 !important; }
 body.light .header-user-badge, body.light .aether-settings-btn, body.light .topheader-row .icon-btn { background: #F8FAFC !important; border-color: #E2E8F0 !important; }
