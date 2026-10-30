@@ -4494,23 +4494,15 @@ body.light #authPage .btn-open-os {
   }
 }
 
-/* Nexus v5: garantir as cores do login e o vidro no painel autenticado */
+/* Nexus v5: o painel autenticado mantém exatamente o fundo da tela de login. */
 html.user-logged-in,
 html.user-logged-in body,
 body.user-logged-in,
 html.user-logged-in #persistentSystemBg,
-html.user-logged-in .persistent-system-bg {
-  background-color: #05050B !important;
-  background-image:
-    radial-gradient(ellipse 42% 72% at 8% 27%, rgba(249, 195, 50, .62) 0%, transparent 70%),
-    radial-gradient(ellipse 46% 62% at 62% 0%, rgba(86, 50, 249, .48) 0%, transparent 72%),
-    radial-gradient(ellipse 42% 64% at 92% 72%, rgba(249, 104, 50, .58) 0%, transparent 70%),
-    radial-gradient(ellipse 42% 54% at 50% 100%, rgba(249, 50, 130, .45) 0%, transparent 72%),
-    linear-gradient(135deg, #05050B 0%, #111019 45%, #05050B 100%) !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
+html.user-logged-in .persistent-system-bg,
+html.user-logged-in .app-bg-scene {
+  background: #0B1220 !important;
+  background-image: none !important;
 }
 
 html.user-logged-in .topheader,
