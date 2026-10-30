@@ -19887,6 +19887,7 @@ window.handleAppLogout = async (isTimeout = false) => {
   localStorage.removeItem('nexus_cached_user');
   localStorage.removeItem('nexus_token');
   localStorage.removeItem('nexus_viewing_user');
+  localStorage.removeItem('nexus_login_v5');
   document.documentElement.classList.remove('user-logged-in');
   document.documentElement.classList.remove('is-admin');
   document.body.classList.remove('user-logged-in');
@@ -19896,6 +19897,9 @@ window.handleAppLogout = async (isTimeout = false) => {
   const mobileDrawerOverlay = document.getElementById('mobileDrawerOverlay');
   if (mobileDrawer) mobileDrawer.classList.remove('open');
   if (mobileDrawerOverlay) mobileDrawerOverlay.classList.remove('show');
+
+  window.location.replace('/login.html');
+  return;
 
   const appMain = document.getElementById('appMain');
   const authPage = document.getElementById('authPage');
