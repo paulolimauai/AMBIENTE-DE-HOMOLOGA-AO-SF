@@ -32029,8 +32029,10 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
-        const email = (parsed.email || '').trim();
-        const password = parsed.password || parsed.senha || '';
+        const rawEmail = parsed.email || '';
+        const email = typeof rawEmail === 'string' ? rawEmail.trim() : '';
+        const rawPassword = parsed.password || parsed.senha || '';
+        const password = typeof rawPassword === 'string' ? rawPassword : '';
         if (!email || !password) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'E-mail e senha são obrigatórios' }));
@@ -32436,10 +32438,13 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
-        const name = (parsed.name || parsed.nome || '').trim();
-        const email = (parsed.email || '').toLowerCase().trim();
-        const password = parsed.password || parsed.senha || '';
+        const name = String(parsed.name || parsed.nome || '').replace(/\s+/g, ' ').trim();
+        const rawEmail = parsed.email || '';
+        const email = typeof rawEmail === 'string' ? rawEmail.toLowerCase().trim() : '';
+        const rawPassword = parsed.password || parsed.senha || '';
+        const password = typeof rawPassword === 'string' ? rawPassword : '';
         const cpf = parsed.cpf || null;
+        const cleanCpf = String(cpf || '').replace(/\D/g, '');
         const birth_date = parsed.birth_date || parsed.data_nascimento || parsed.nascimento || null;
         const phone = parsed.phone || parsed.telefone || parsed.celular || null;
         const terms_accepted = parsed.terms_accepted === true;
@@ -32450,15 +32455,41 @@ const server = http.createServer(async (req, res) => {
           return res.end(JSON.stringify({ success: false, error: 'Marque os dois campos de confirmação para concluir o cadastro.' }));
         }
 
-        if (!name || !email || !password) {
+        if (!name || !email || !password || !cleanCpf) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Nome completo, e-mail e senha são obrigatórios.' }));
+          return res.end(JSON.stringify({ success: false, error: 'Nome completo, CPF, e-mail e senha são obrigatórios.', errorType: 'required_fields' }));
         }
 
         const cleanEmail = email;
-        if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+        if (name.length < 2) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Informe o nome completo do titular.', errorType: 'invalid_name' }));
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(cleanEmail)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Por favor, informe um e-mail válido (ex: seu.email@exemplo.com).' }));
+        }
+
+        if (!isValidCPFBackend(cleanCpf)) {
+          res.writeHead(422, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'CPF inválido. Confira os 11 dígitos informados.', errorType: 'invalid_cpf', code: 'INVALID_CPF' }));
+        }
+
+        if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/\d/.test(password) || !/[@#$%!?*&._-]/.test(password)) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'A senha deve ter 8+ caracteres, maiúscula, minúscula, número e símbolo.', errorType: 'weak_password' }));
+        }
+
+        const localUsersBeforeRegister = getLocalUsers();
+        const existingLocalEmail = localUsersBeforeRegister.find(user => user && String(user.email || '').toLowerCase().trim() === cleanEmail);
+        if (existingLocalEmail) {
+          res.writeHead(409, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Este e-mail já possui cadastro.', errorType: 'email_exists' }));
+        }
+        const existingLocalCpf = localUsersBeforeRegister.find(user => user && String(user.cpf || '').replace(/\D/g, '') === cleanCpf);
+        if (existingLocalCpf) {
+          res.writeHead(409, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Este CPF já possui cadastro.', errorType: 'cpf_exists' }));
         }
 
         if (!pool) {
@@ -32470,8 +32501,6 @@ const server = http.createServer(async (req, res) => {
         const secureHashedPassword = hashPassword(password);
         let newUserId = Date.now();
         // CPF sempre ajustado sem pontos (apenas números de 11 dígitos para o banco de dados)
-        const rawDigitsCpf = cpf ? String(cpf).replace(/\D/g, '').slice(0, 11) : null;
-        const cleanCpf = rawDigitsCpf || (cpf ? String(cpf).trim() : null);
         const cleanBirthDate = birth_date ? String(birth_date).trim() : null;
         const cleanPhone = phone ? String(phone).trim() : null;
         const termsAcceptedVal = terms_accepted !== false;
@@ -32484,15 +32513,12 @@ const server = http.createServer(async (req, res) => {
         // 1. Gravação direta no SQL Server (quando executado no ambiente com conexão direta ao banco)
         if (pool) {
           try {
-            const existingUserRes = await pool.query('SELECT id, email FROM usuarios WHERE LOWER(email) = LOWER($1)', [cleanEmail]);
+            const existingUserRes = await pool.query('SELECT TOP 1 id, email, cpf FROM usuarios WHERE LOWER(email) = LOWER($1) OR cpf = $2', [cleanEmail, cleanCpf]);
             if (existingUserRes.rows && existingUserRes.rows.length > 0) {
-              newUserId = existingUserRes.rows[0].id;
-              await pool.query(
-                `UPDATE usuarios 
-                 SET name = $1, password = $2, cpf = $3, phone = $4, birth_date = $5, terms_accepted = $6, device_type = $7, active = 1, last_ip = COALESCE($9, last_ip)
-                 WHERE id = $8`,
-                [name.trim(), secureHashedPassword, cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, deviceTypeVal, newUserId, clientIp]
-              );
+              const duplicateType = String(existingUserRes.rows[0].email || '').toLowerCase() === cleanEmail ? 'email_exists' : 'cpf_exists';
+              const duplicateMessage = duplicateType === 'email_exists' ? 'Este e-mail já possui cadastro.' : 'Este CPF já possui cadastro.';
+              res.writeHead(409, { ...corsHeaders, 'Content-Type': 'application/json' });
+              return res.end(JSON.stringify({ success: false, error: duplicateMessage, errorType: duplicateType }));
             } else {
               const insertRes = await pool.query(
                 `INSERT INTO usuarios (name, email, password, role, active, cpf, phone, birth_date, terms_accepted, device_type, last_ip)
