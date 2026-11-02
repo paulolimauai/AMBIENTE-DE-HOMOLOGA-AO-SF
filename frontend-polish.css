@@ -6614,3 +6614,144 @@ html.user-logged-in.light .sidebar-search kbd {
     color: var(--nx-text, #edf5ff) !important;
   }
 }
+
+/* ============================================================================
+   CADASTROS (ADMIN) — LISTA SEM CORTE E SEM SOBREPOSIÇÃO
+   Cada cadastro vira um cartão: 4 colunas de informação (titular, contato, assinatura, atividade)
+   e as ações numa linha própria, alinhadas à direita. Conforme a largura DISPONÍVEL da lista
+   (container query: respeita menu aberto/recolhido) passa para 2 e depois 1 coluna.
+   Nenhum texto usa reticências: nomes, e-mails e selos quebram linha em vez de serem cortados.
+   @layer: o !important de uma layer vence o !important das regras antigas fora de layer.
+   ============================================================================ */
+@layer nx-users-grid {
+  .panel:has(> .user-admin-list) {
+    container-type: inline-size;
+    container-name: nxusers;
+  }
+
+  /* Cabeçalho das colunas: mesmas colunas e mesmo recuo do cartão */
+  .user-admin-grid-header {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 18px !important;
+    padding: 10px 19px !important;
+  }
+  .user-admin-grid-header > span,
+  .user-admin-grid-header > div {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+  }
+  .user-admin-grid-header > :nth-child(5) { display: none !important; }
+
+  /* Cartão do cadastro */
+  .user-card-4k {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-template-areas:
+      "left contact plan activity"
+      "actions actions actions actions" !important;
+    gap: 14px 18px !important;
+    align-items: start !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 16px 18px !important;
+    overflow: visible !important;
+  }
+  .user-card-4k > .user-card-left { grid-area: left !important; }
+  .user-card-4k > .user-col-contact { grid-area: contact !important; }
+  .user-card-4k > .user-col-plan { grid-area: plan !important; }
+  .user-card-4k > .user-col-activity { grid-area: activity !important; }
+  .user-card-4k > .user-card-right {
+    grid-area: actions !important;
+    grid-column: 1 / -1 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 12px 0 0 0 !important;
+    border-top: 1px solid rgba(148, 163, 184, 0.14) !important;
+  }
+
+  /* Nenhuma célula corta o conteúdo */
+  .user-card-4k .user-card-left,
+  .user-card-4k .user-card-info,
+  .user-card-4k .user-col-contact,
+  .user-card-4k .user-col-plan,
+  .user-card-4k .user-col-activity {
+    overflow: visible !important;
+    min-width: 0 !important;
+  }
+  .user-card-4k .user-card-left {
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .user-card-4k .user-card-info {
+    flex: 1 1 0 !important;
+    gap: 6px !important;
+  }
+  .user-card-4k .user-card-name-row {
+    flex-wrap: wrap !important;
+  }
+  .user-card-4k .user-card-name {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere !important;
+    line-height: 1.3 !important;
+  }
+  .user-card-4k .user-card-info > div:not(.user-card-name-row) {
+    flex-wrap: wrap !important;
+  }
+  .user-card-4k .user-email-line,
+  .user-card-4k .user-card-email {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere !important;
+  }
+  .user-card-4k .user-doc-line,
+  .user-card-4k .user-col-plan > div,
+  .user-card-4k .user-col-activity > div {
+    flex-wrap: wrap !important;
+  }
+  .user-card-4k .doc-pill,
+  .user-card-4k .user-stat-chip,
+  .user-card-4k .role-badge {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+  }
+  .user-card-4k .user-card-btn {
+    flex: 0 0 auto !important;
+  }
+
+  /* Largura disponível média: 2 colunas */
+  @container nxusers (max-width: 940px) {
+    .user-admin-grid-header { display: none !important; }
+    .user-card-4k {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+      grid-template-areas:
+        "left contact"
+        "plan activity"
+        "actions actions" !important;
+    }
+  }
+  /* Largura disponível pequena: 1 coluna, ações à esquerda */
+  @container nxusers (max-width: 580px) {
+    .user-card-4k {
+      grid-template-columns: minmax(0, 1fr) !important;
+      grid-template-areas:
+        "left"
+        "contact"
+        "plan"
+        "activity"
+        "actions" !important;
+    }
+    .user-card-4k > .user-card-right { justify-content: flex-start !important; }
+  }
+}
