@@ -6397,3 +6397,22 @@ html.user-logged-in body.light aside.menu.sidebar-menu button[data-page].active 
   }
 }
 @keyframes tx-spin { to { transform: rotate(360deg); } }
+
+/* ============================================================================
+   MENU LATERAL MAIS LARGO
+   Largura responsiva (~300px em 1366px, 272px no mínimo, 320px no máximo). Só no menu expandido
+   e em telas de computador/tablet largo; o menu recolhido e o menu do celular não mudam.
+   @layer: o !important de uma layer vence o !important das regras antigas fora de layer.
+   ============================================================================ */
+@layer nx-sidebar {
+  html.user-logged-in { --nx-sidebar-w: clamp(272px, 22vw, 320px); }
+  @media (min-width: 861px) {
+    html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) nav.menu.sidebar-menu,
+    html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) aside.menu.sidebar-menu { width: var(--nx-sidebar-w) !important; }
+    html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) .main { margin-left: var(--nx-sidebar-w) !important; width: calc(100% - var(--nx-sidebar-w)) !important; }
+  }
+  /* Até 860px o menu lateral é escondido (há barra inferior e gaveta): o conteúdo ocupa toda a largura, sem margem reservada */
+  @media (max-width: 860px) {
+    html.user-logged-in .main { margin-left: 0 !important; width: 100% !important; }
+  }
+}
