@@ -831,10 +831,11 @@
     return wrapper;
   }
 
-  function setMode(next) {
+  function setMode(next, isInit = false) {
     mode = next === 'register' ? 'register' : 'login';
     const registering = mode === 'register';
-    ensureRegistrationConsents().hidden = !registering;
+    const consentsWrap = ensureRegistrationConsents();
+    consentsWrap.hidden = !registering;
     $('#tab-login').setAttribute('aria-selected', String(!registering));
     $('#tab-register').setAttribute('aria-selected', String(registering));
     $('#f-nome').hidden = !registering;
@@ -842,11 +843,53 @@
     $('#cpf').disabled = !registering;
     $('#f-confirma').hidden = !registering;
     $('#esqueci').style.visibility = registering ? 'hidden' : 'visible';
+    const rememberRow = $('#lembrar')?.closest('.row');
+    if (rememberRow) rememberRow.style.display = registering ? 'none' : 'flex';
+    $('#email').autocomplete = registering ? 'off' : 'email';
     $('#senha').autocomplete = registering ? 'new-password' : 'current-password';
     $('#subtitulo').textContent = copy[mode].sub;
     btn.textContent = copy[mode].button;
     $('#troca').innerHTML = copy[mode].switchHtml;
     clearErrors();
+
+    if (registering) {
+      ['nome', 'cpf', 'email', 'senha', 'confirma'].forEach(id => {
+        const el = $('#' + id);
+        if (el) el.value = '';
+      });
+      ['#v5-terms', '#v5-truthful'].forEach(sel => {
+        const cb = $(sel);
+        if (cb) cb.checked = false;
+      });
+      // Impede que o navegador preencha o e-mail/senha de login ao abrir "Criar conta"
+      ['email', 'senha', 'confirma'].forEach(id => {
+        const el = $('#' + id);
+        if (!el) return;
+        el.readOnly = true;
+        const unlock = () => { el.readOnly = false; };
+        el.addEventListener('pointerdown', unlock, { once: true });
+        el.addEventListener('focus', unlock, { once: true });
+      });
+      window.setTimeout(() => {
+        if (mode === 'register') {
+          if (document.activeElement !== $('#email')) $('#email').value = '';
+          if (document.activeElement !== $('#senha')) $('#senha').value = '';
+          $('#nome')?.focus();
+        }
+      }, 60);
+    } else if (!isInit) {
+      ['email', 'senha', 'confirma'].forEach(id => {
+        const el = $('#' + id);
+        if (el) el.readOnly = false;
+      });
+      $('#senha').value = '';
+      $('#confirma').value = '';
+      try {
+        const savedEmail = localStorage.getItem('nexus:email') || localStorage.getItem('nexus_remembered_email') || '';
+        $('#email').value = savedEmail;
+        $('#lembrar').checked = !!savedEmail;
+      } catch (_) {}
+    }
   }
 
   document.addEventListener('click', event => {
@@ -1636,7 +1679,7 @@
     }
   } catch (_) {}
 
-  setMode('login');
+  setMode('login', true);
 })();
 </script>
 </body>
