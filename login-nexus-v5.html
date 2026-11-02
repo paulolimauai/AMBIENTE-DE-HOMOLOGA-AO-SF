@@ -356,46 +356,57 @@
     font-size: 14.5px; line-height: 1.5; color: #d6daec; margin-bottom: 18px;
   }
 
+  #gmodal-form {
+    display: block; margin: 0; padding: 0;
+  }
   .gmodal-control {
-    position: relative; height: 56px;
-    background: linear-gradient(145deg, rgba(6, 7, 18, .48), rgba(255, 255, 255, .07));
+    position: relative; display: flex; align-items: center;
+    width: 100%; height: 56px;
+    background: linear-gradient(145deg, rgba(6, 7, 18, .52), rgba(255, 255, 255, .07));
     border: 1px solid rgba(255, 255, 255, .26); border-radius: var(--radius-md);
     box-shadow: inset 0 2px 10px rgba(0, 0, 0, .28), 0 1px 0 rgba(255, 255, 255, .12);
     transition: border-color .2s, box-shadow .2s, background .2s;
   }
   .gmodal-control:focus-within {
     border-color: var(--accent-light);
-    background: linear-gradient(145deg, rgba(6, 7, 18, .58), rgba(var(--a-rgb), .12));
+    background: linear-gradient(145deg, rgba(6, 7, 18, .62), rgba(var(--a-rgb), .12));
     box-shadow: 0 0 0 4px rgba(var(--a-rgb), .24), inset 0 2px 8px rgba(0, 0, 0, .22);
   }
   .gmodal-control.invalid {
     border-color: var(--danger);
     box-shadow: 0 0 0 4px rgba(255, 148, 148, .15);
   }
-  .gmodal-control > svg.gmodal-ico {
+  #gmodal-ico-slot {
     position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-    color: var(--accent-light); opacity: .85; pointer-events: none;
+    width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+    color: var(--accent-light); opacity: .9; pointer-events: none; z-index: 2;
+  }
+  .gmodal-control svg.gmodal-ico {
+    display: block; width: 18px; height: 18px; flex: none;
   }
   .gmodal-input {
-    width: 100%; height: 100%; padding: 0 16px 0 46px;
+    display: block; width: 100%; height: 100%; padding: 0 16px 0 46px;
     background: transparent; border: 0; outline: 0; border-radius: var(--radius-md);
-    font: 500 16px var(--font-body); color: var(--ink); letter-spacing: .02em;
+    font: 500 16px/1.2 var(--font-body); color: var(--ink); letter-spacing: .02em;
   }
+  .gmodal-input:focus-visible { outline: none; }
   .gmodal-input::placeholder { color: rgba(210, 214, 232, .45); font-weight: 400; }
   .gmodal-control.has-eye .gmodal-input { padding-right: 48px; }
   .gmodal-eye {
     position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
     width: 38px; height: 38px; display: grid; place-items: center;
-    background: none; border: 0; border-radius: 10px; color: #c8cde2; cursor: pointer;
+    background: none; border: 0; border-radius: 10px; color: #c8cde2; cursor: pointer; z-index: 2;
   }
+  .gmodal-eye[hidden] { display: none !important; }
   .gmodal-eye:hover { color: #fff; background: rgba(255, 255, 255, .08); }
   .gmodal-hint {
-    display: block; margin: 7px 4px 0; font-size: 12px; color: #b8bed4; line-height: 1.35;
+    display: block; margin: 8px 4px 0; font-size: 12px; color: #b8bed4; line-height: 1.35;
   }
+  .gmodal-hint:empty { display: none !important; }
   .gmodal-error {
-    margin: 7px 4px 0; font-size: 12.5px; font-weight: 500; color: var(--danger);
+    margin: 8px 4px 0; font-size: 12.5px; font-weight: 500; color: var(--danger);
   }
-  .gmodal-error:empty { display: none; }
+  .gmodal-error:empty { display: none !important; }
 
   .gmodal-actions {
     display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 22px;
@@ -854,10 +865,12 @@
     } catch (_) {}
   }
 
-  function api(path, payload) {
+  function api(path, payload, token) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers.Authorization = 'Bearer ' + token;
     return fetch(apiBase + path, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(payload)
     }).then(async response => {
       let data = {};
@@ -889,7 +902,7 @@
     sessionStorage.removeItem('nexus_session_expired_reason');
     fetch('/api/user/login-ping', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (data.token || '') },
       body: JSON.stringify({ id: userId, email, last_login: loginIso })
     }).catch(() => {});
   }
@@ -911,6 +924,7 @@
   }
 
   const GLASS_ICONS = {
+    mail: '<svg class="gmodal-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>',
     calendar: '<svg class="gmodal-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
     id: '<svg class="gmodal-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 10h10M7 14h6"/></svg>',
     lock: '<svg class="gmodal-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
@@ -1079,7 +1093,7 @@
   }
   window.glassPrompt = glassPrompt;
 
-  async function changeTemporaryPassword(email) {
+  async function changeTemporaryPassword(email, sessionToken) {
     const newPassword = await glassPrompt({
       title: 'Nova senha de acesso',
       step: 'Troca obrigatória • Etapa 1 de 2',
@@ -1115,9 +1129,10 @@
     });
     if (!confirmation) throw new Error('A troca da senha temporária foi cancelada.');
 
+    // O token emitido no login com a senha temporária prova a identidade (o servidor não aceita mais troca só pelo e-mail)
     const changed = await api('/api/auth/change-temp-password', {
       email, newPassword, confirmPassword: confirmation
-    });
+    }, sessionToken);
     persistSession(changed, email);
   }
 
@@ -1126,7 +1141,7 @@
       const result = await api('/api/login', { email: data.email, password: data.senha });
       const mustChange = result.must_change_password === true || result.must_change_password === 1 ||
         result.must_change_password === '1' || (result.user && (result.user.must_change_password === true || result.user.must_change_password === 1 || result.user.must_change_password === '1'));
-      if (mustChange) await changeTemporaryPassword(data.email);
+      if (mustChange) await changeTemporaryPassword(data.email, result.token);
       else persistSession(result, data.email);
       showStatus('Tudo certo. Abrindo o seu painel…');
       window.setTimeout(() => window.location.replace('/'), 180);
@@ -1147,11 +1162,25 @@
       window.setTimeout(() => window.location.replace('/'), 220);
     },
     async recover(email) {
-      const accountEmail = (email || '').trim();
+      let accountEmail = (email || '').trim();
       if (!accountEmail) {
-        showStatus('Digite seu e-mail antes de recuperar a senha.', true);
-        $('#email').focus();
-        return;
+        const typedEmail = await glassPrompt({
+          title: 'Recuperação de Senha',
+          step: 'Identificação da conta',
+          message: 'Informe o e-mail cadastrado da sua conta:',
+          placeholder: 'seu.email@exemplo.com',
+          hint: 'Usaremos este e-mail para localizar seu cadastro.',
+          icon: 'mail',
+          okText: 'Continuar',
+          validate: val => {
+            if (!val) return 'Por favor, informe seu e-mail.';
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return 'Digite um e-mail válido.';
+            return '';
+          }
+        });
+        if (!typedEmail) return;
+        accountEmail = typedEmail.trim().toLowerCase();
+        $('#email').value = accountEmail;
       }
       const cpf = await glassPrompt({
         title: 'Confirmação de Identidade',
