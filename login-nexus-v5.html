@@ -216,20 +216,25 @@
   .row a { font-size: 13px; }
 
   .v5-consents {
-    display: flex; flex-direction: column; gap: 9px; width: 100%; margin-top: -2px;
+    display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: -2px;
   }
   .v5-consents[hidden] { display: none !important; }
   .v5-consent {
-    display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: start; gap: 9px;
-    width: 100%; padding: 9px 11px; border: 1px solid var(--line-soft); border-radius: 11px;
-    background: rgba(255,255,255,.035); color: #d9ddef; font-size: 12.5px; line-height: 1.42;
-    cursor: pointer;
+    position: relative; display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: start; gap: 12px;
+    width: 100%; padding: 12px 14px; border: 1px solid var(--line-soft); border-radius: 12px;
+    background: rgba(255,255,255,.04); color: #c4c9de; font-size: 13px; line-height: 1.5;
+    cursor: pointer; user-select: none;
+    transition: border-color .2s, background .2s, color .2s, box-shadow .2s;
   }
-  .v5-consent input {
-    width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--accent); cursor: pointer;
-  }
-  .v5-consent span { display: block; min-width: 0; overflow-wrap: anywhere; }
-  .v5-consent:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--a-rgb), .16); }
+  .v5-consent:hover { background: rgba(255,255,255,.07); border-color: var(--line); }
+  .v5-consent input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+  .v5-consent .box { margin-top: 1px; }
+  .v5-consent input:checked + .box { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .v5-consent input:focus-visible + .box { box-shadow: 0 0 0 4px rgba(var(--a-rgb), .3); }
+  .v5-consent:has(input:checked) { border-color: rgba(var(--a-rgb), .5); background: rgba(var(--a-rgb), .09); color: var(--ink); }
+  .v5-consent.invalid { border-color: var(--danger); background: rgba(255,148,148,.07); box-shadow: 0 0 0 3px rgba(255,148,148,.12); }
+  .v5-consent.invalid .box { border-color: var(--danger); }
+  .v5-consent span:not(.box) { display: block; min-width: 0; overflow-wrap: anywhere; text-wrap: pretty; }
   .field-hint { display: block; margin: 5px 4px 0; color: var(--faint); font-size: 11px; line-height: 1.35; }
 
   .btn {
@@ -575,7 +580,11 @@
     wrapper = document.createElement('div');
     wrapper.id = 'v5-consents';
     wrapper.className = 'v5-consents';
-    wrapper.innerHTML = '<label class="v5-consent"><input type="checkbox" id="v5-terms"> <span>Aceito os termos de abertura da conta e a política de privacidade.</span></label><label class="v5-consent"><input type="checkbox" id="v5-truthful"> <span>Declaro que os dados informados são verdadeiros e pertencem a mim.</span></label>';
+    const check = '<span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>';
+    wrapper.innerHTML =
+      '<label class="v5-consent"><input type="checkbox" id="v5-terms">' + check + '<span>Aceito os termos de abertura da conta e a política de privacidade.</span></label>' +
+      '<label class="v5-consent"><input type="checkbox" id="v5-truthful">' + check + '<span>Declaro que os dados informados são verdadeiros e pertencem a mim.</span></label>';
+    wrapper.querySelectorAll('input').forEach(input => input.addEventListener('change', () => input.closest('.v5-consent').classList.remove('invalid')));
     form.insertBefore(wrapper, btn);
     return wrapper;
   }
@@ -620,6 +629,7 @@
   }
   function clearErrors() {
     ['nome', 'cpf', 'email', 'senha', 'confirma'].forEach(id => setError(id, ''));
+    document.querySelectorAll('.v5-consent.invalid').forEach(item => item.classList.remove('invalid'));
     statusEl.textContent = '';
     statusEl.classList.remove('bad');
   }
@@ -670,6 +680,7 @@
     }
     if (mode === 'register' && $('#confirma').value !== $('#senha').value) { setError('confirma', 'As senhas não são iguais.'); valid = false; }
     if (mode === 'register' && (!$('#v5-terms').checked || !$('#v5-truthful').checked)) {
+      ['#v5-terms', '#v5-truthful'].forEach(id => $(id).closest('.v5-consent').classList.toggle('invalid', !$(id).checked));
       showStatus('Aceite os dois termos para concluir o cadastro.', true);
       valid = false;
     }
