@@ -1507,6 +1507,7 @@
                 '<div class="osmodal-field">' +
                   '<label for="os-inp-type">Categoria *</label>' +
                   '<select class="osmodal-sel" id="os-inp-type">' +
+                    '<option value="" selected>Selecione a categoria</option>' +
                     '<option value="Reset de Senha">Reset / Recuperação de Senha</option>' +
                     '<option value="Pagamento Não Reconhecido">Liberação de Assinatura / Pagamento</option>' +
                     '<option value="Correção de Dados">Correção de Dados Cadastrais</option>' +
@@ -1523,7 +1524,7 @@
                 '<label for="os-inp-desc">Descrição do Pedido *</label>' +
                 '<textarea class="osmodal-txt" id="os-inp-desc" rows="2" placeholder="Descreva brevemente como podemos ajudar..."></textarea>' +
               '</div>' +
-              '<input type="hidden" id="os-inp-prio" value="Alta">' +
+              '<input type="hidden" id="os-inp-prio" value="Normal">' +
               '<p class="gmodal-error" id="osmodal-error"></p>' +
               '<div class="gmodal-actions" style="margin-top:14px;">' +
                 '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-cancel">Cancelar</button>' +
@@ -1540,6 +1541,10 @@
                 '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-copy-proto" style="height:38px;font-size:13px;">Copiar Protocolo</button>' +
                 '<button type="button" class="gmodal-btn gmodal-btn-ok" id="osmodal-track-proto" style="height:38px;font-size:13px;">Acompanhar Status</button>' +
               '</div>' +
+            '</div>' +
+            '<div class="gmodal-actions" style="margin-top:14px;">' +
+              '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-done">Fechar</button>' +
+              '<button type="button" class="gmodal-btn gmodal-btn-ok" id="osmodal-new-os">Abrir outra O.S.</button>' +
             '</div>' +
           '</div>' +
           '<div id="osmodal-pane-consultar" hidden>' +
@@ -1572,6 +1577,16 @@
       if (tab === 'consultar') window.setTimeout(() => $('#os-inp-query', ov).focus(), 40);
     };
     ov._switchTab = switchTab;
+
+    // Deixa o formulário de abertura totalmente vazio: campos, categoria, atalho escolhido e mensagem de erro
+    const clearFields = () => {
+      ['#os-inp-name', '#os-inp-email', '#os-inp-phone', '#os-inp-title', '#os-inp-desc'].forEach(sel => { $(sel, ov).value = ''; });
+      $('#os-inp-type', ov).selectedIndex = 0;
+      $('#os-inp-prio', ov).value = 'Normal';
+      ov.querySelectorAll('.osmodal-qbtn').forEach(x => x.classList.remove('is-active'));
+      $('#osmodal-error', ov).textContent = '';
+    };
+    ov._clearFields = clearFields;
 
     ov.querySelectorAll('.osmodal-tab').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.ostab)));
 
@@ -1612,6 +1627,10 @@
         errEl.textContent = 'Informe um endereço de e-mail válido.';
         return;
       }
+      if (!service_type) {
+        errEl.textContent = 'Selecione a Categoria da O.S. (*).';
+        return;
+      }
 
       const submitBtn = $('#osmodal-submit', ov);
       submitBtn.disabled = true;
@@ -1631,6 +1650,8 @@
         if (!res.ok || !data.success) throw new Error(data.message || 'Não foi possível enviar a O.S.');
         const proto = data.protocol || (data.ordem && data.ordem.protocol) || 'OS-CONFIRMADA';
         $('#osmodal-proto-num', ov).textContent = proto;
+        // O.S. salva: o protocolo aparece na tela e o formulário já fica vazio para abrir outra
+        clearFields();
         $('#osmodal-pane-abrir', ov).hidden = true;
         $('#osmodal-pane-sucesso', ov).hidden = false;
         $('#os-inp-query', ov).value = proto;
@@ -1653,6 +1674,14 @@
       switchTab('consultar');
       $('#osmodal-form-consultar', ov).requestSubmit();
     });
+
+    // Depois de salvar: abrir outra O.S. com todos os campos vazios (ou fechar)
+    $('#osmodal-new-os', ov).addEventListener('click', () => {
+      clearFields();
+      switchTab('abrir');
+      window.setTimeout(() => $('#os-inp-name', ov).focus(), 40);
+    });
+    $('#osmodal-done', ov).addEventListener('click', close);
 
     $('#osmodal-form-consultar', ov).addEventListener('submit', async e => {
       e.preventDefault();
@@ -1702,16 +1731,14 @@
 
   function openGlassOsModal(initialTab = 'abrir') {
     const ov = ensureGlassOsModal();
-    const typedEmail = $('#email')?.value.trim() || '';
-    const typedName = $('#nome')?.value.trim() || '';
-    if (typedEmail && !$('#os-inp-email', ov).value) $('#os-inp-email', ov).value = typedEmail;
-    if (typedName && !$('#os-inp-name', ov).value) $('#os-inp-name', ov).value = typedName;
-    if (!$('#os-inp-title', ov).value) {
-      const firstQ = ov.querySelector('.osmodal-qbtn');
-      if (firstQ) firstQ.click();
-    }
+    // Ao abrir, tudo vazio: sem dados da abertura anterior, sem pré-preenchimento e sem atalho já escolhido
+    ov._clearFields();
+    $('#os-inp-query', ov).value = '';
+    $('#osmodal-search-error', ov).textContent = '';
+    $('#osmodal-results', ov).innerHTML = '';
     ov._switchTab(initialTab === 'consultar' ? 'consultar' : 'abrir');
     ov.classList.add('is-open');
+    if (initialTab !== 'consultar') window.setTimeout(() => $('#os-inp-name', ov).focus(), 60);
   }
 
   form.addEventListener('submit', async event => {
