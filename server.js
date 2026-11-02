@@ -294,6 +294,9 @@ function verifyPassword(password, storedPassword, user = null) {
     const sha256 = crypto.createHash('sha256').update(trimmedInput).digest('hex');
     if (sha256.toLowerCase() === trimmedStored.toLowerCase()) return true;
   }
+  // Valor armazenado com formato de hash (MD5/SHA-256) nunca é comparado como texto puro: senão quem obtivesse
+  // o hash (vazamento do banco/arquivo) entraria enviando o próprio hash como senha ("pass-the-hash").
+  if (/^[a-f0-9]{32}$/i.test(trimmedStored) || /^[a-f0-9]{64}$/i.test(trimmedStored)) return false;
 
   // 3.3 Comparação em texto puro (legado ou inserção manual no SQL Server): exata, sem ignorar maiúsculas/minúsculas
   if (trimmedStored && (safeEqual(trimmedInput, trimmedStored) || safeEqual(rawInput, rawStored))) return true;
@@ -411,12 +414,21 @@ function verifySecureToken(token) {
   }
 }
 
+// Sessões emitidas antes da última redefinição/troca de senha deixam de valer (quem recupera a senha porque
+// suspeita de invasão não pode continuar com o token antigo ativo por até 7 dias).
+function tokenPredatesPasswordChange(claims, user) {
+  if (!user || !user.password_changed_at) return false;
+  const changedAtSec = Math.floor(new Date(user.password_changed_at).getTime() / 1000);
+  return Number.isFinite(changedAtSec) && Number(claims && claims.iat || 0) < changedAtSec;
+}
+
 function getAuthenticatedUser(req) {
   const authorization = String(req.headers.authorization || '');
   const claims = authorization.startsWith('Bearer ') ? verifySecureToken(authorization.slice(7)) : null;
   if (!claims) return null;
   const email = String(claims.email).toLowerCase().trim();
   const user = getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === email);
+  if (tokenPredatesPasswordChange(claims, user)) return null;
   return user && user.active !== false && user.active !== 0 && !isAccountDeleted(email) ? user : null;
 }
 
@@ -3435,6 +3447,45 @@ body.light .auth-card-nexus {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+
+/* Recuperação de senha: alternador E-mail / CPF / E-mail + CPF */
+.forgot-mode-switch {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+}
+.forgot-mode-btn {
+  flex: 1;
+  height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #94A3B8;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.forgot-mode-btn:hover { color: #E2E8F0; }
+.forgot-mode-btn.active {
+  background: rgba(56, 189, 248, 0.18);
+  color: #7DD3FC;
+  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.45);
+}
+.forgot-birth-hint {
+  margin: 6px 2px 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #94A3B8;
+}
+body.light .forgot-mode-switch { background: #F1F5F9; border-color: #CBD5E1; }
+body.light .forgot-mode-btn { color: #475569; }
+body.light .forgot-mode-btn.active { background: #FFFFFF; color: #0369A1; box-shadow: inset 0 0 0 1px #7DD3FC; }
+body.light .forgot-birth-hint { color: #64748B; }
 
 /* Brand Header */
 .auth-brand {
@@ -14853,38 +14904,45 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <span>Confirmação Cadastral para Recuperação</span>
         </div>
         <p style="font-size:12.5px; color:#CBD5E1; margin-bottom:16px; line-height:1.5;">
-          Para gerar sua nova senha com máxima segurança e retomar o controle do seu orçamento financeiro, confirme seus dados:
+          Para gerar uma nova senha provisória, escolha como deseja se identificar (e-mail ou CPF) e confirme sua data de nascimento:
         </p>
 
         <form id="forgotStep1" onsubmit="window.handleServerForgotSubmit(event); return false;">
-          <div class="auth-field">
+          <div class="forgot-mode-switch" role="group" aria-label="Identificar conta por">
+            <button type="button" class="forgot-mode-btn active" data-mode="email" onclick="window.setForgotMode('email')">E-mail</button>
+            <button type="button" class="forgot-mode-btn" data-mode="cpf" onclick="window.setForgotMode('cpf')">CPF</button>
+            <button type="button" class="forgot-mode-btn" data-mode="both" onclick="window.setForgotMode('both')">E-mail + CPF</button>
+          </div>
+
+          <div class="auth-field" id="forgotEmailField">
             <label>E-mail Cadastrado</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </span>
-              <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" required autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
+              <input type="email" id="forgotEmail" placeholder="seu.email@exemplo.com" autocomplete="email" spellcheck="false" autocorrect="off" autocapitalize="none">
             </div>
           </div>
 
-          <div class="auth-field">
+          <div class="auth-field" id="forgotCpfField" style="display:none;">
             <label>CPF do Titular</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
               </span>
-              <input type="text" id="forgotCpf" placeholder="00000000000" maxlength="11" required autocomplete="off" oninput="window.handleServerCpfInput(this)">
+              <input type="text" id="forgotCpf" placeholder="00000000000" maxlength="11" inputmode="numeric" autocomplete="off" oninput="window.handleServerCpfInput(this)">
             </div>
           </div>
 
           <div class="auth-field">
-            <label>Data de Nascimento (Opcional)</label>
+            <label>Data de Nascimento</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
               </span>
-              <input type="text" id="forgotBirthDate" placeholder="DD/MM/AAAA" maxlength="10" autocomplete="bday" oninput="window.handleServerBirthInput(this)">
+              <input type="text" id="forgotBirthDate" placeholder="DD/MM/AAAA" maxlength="10" autocomplete="bday" inputmode="numeric" oninput="window.handleServerBirthInput(this)">
             </div>
+            <p class="forgot-birth-hint" id="forgotBirthHint">Obrigatória para confirmar que a conta é sua.</p>
           </div>
 
           <div id="forgotFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
@@ -17722,6 +17780,29 @@ let serverCurrentTempEmail = '';
 let serverCurrentTempPassword = '';
 let serverCurrentMandatoryToken = '';
 
+// Alternador da recuperação: identifica a conta por E-mail, por CPF ou pelos dois
+window.forgotMode = 'email';
+window.setForgotMode = function(mode) {
+  if (mode !== 'email' && mode !== 'cpf' && mode !== 'both') mode = 'email';
+  window.forgotMode = mode;
+  document.querySelectorAll('.forgot-mode-btn').forEach(function(b) {
+    b.classList.toggle('active', b.getAttribute('data-mode') === mode);
+  });
+  const emailField = document.getElementById('forgotEmailField');
+  const cpfField = document.getElementById('forgotCpfField');
+  if (emailField) emailField.style.display = (mode === 'cpf') ? 'none' : '';
+  if (cpfField) cpfField.style.display = (mode === 'email') ? 'none' : '';
+  const hint = document.getElementById('forgotBirthHint');
+  if (hint) {
+    hint.textContent = (mode === 'both')
+      ? 'Obrigatória quando estiver cadastrada na conta.'
+      : 'Obrigatória para confirmar que a conta é sua.';
+  }
+  if (window.clearAuthFeedback) window.clearAuthFeedback('forgot');
+  const focusEl = document.getElementById(mode === 'cpf' ? 'forgotCpf' : 'forgotEmail');
+  if (focusEl) focusEl.focus();
+};
+
 window.handleServerForgotSubmit = async function(e) {
   if (e && e.preventDefault) e.preventDefault();
   if (window.clearAuthFeedback) window.clearAuthFeedback('forgot');
@@ -17731,18 +17812,24 @@ window.handleServerForgotSubmit = async function(e) {
   const birthInput = document.getElementById('forgotBirthDate');
   const btn = document.getElementById('btnSendPassword');
 
-  const email = emailInput ? emailInput.value.trim() : '';
-  const cpf = cpfInput ? cpfInput.value.trim() : '';
+  const mode = window.forgotMode || 'email';
+  const email = (mode !== 'cpf' && emailInput) ? emailInput.value.trim() : '';
+  const cpf = (mode !== 'email' && cpfInput) ? cpfInput.value.replace(/[^0-9]/g, '') : '';
   const birth_date = birthInput ? birthInput.value.trim() : '';
 
-  if (!email) {
+  if (mode !== 'cpf' && !email) {
     window.showAuthFeedback('forgot', 'error', 'E-mail não informado', 'Por favor, informe o e-mail cadastrado da sua conta.');
     if (emailInput) emailInput.focus();
     return;
   }
-  if (!cpf) {
-    window.showAuthFeedback('forgot', 'error', 'CPF Obrigatório', 'Por favor, informe o CPF do titular para confirmação dos dados cadastrais.');
+  if (mode !== 'email' && cpf.length !== 11) {
+    window.showAuthFeedback('forgot', 'error', 'CPF Inválido', 'Por favor, informe os 11 dígitos do CPF do titular.');
     if (cpfInput) cpfInput.focus();
+    return;
+  }
+  if (mode !== 'both' && birth_date.length !== 10) {
+    window.showAuthFeedback('forgot', 'error', 'Data de Nascimento Obrigatória', 'Informe a data de nascimento (DD/MM/AAAA) para confirmar que a conta é sua.');
+    if (birthInput) birthInput.focus();
     return;
   }
 
@@ -17764,7 +17851,7 @@ window.handleServerForgotSubmit = async function(e) {
       return;
     }
 
-    serverCurrentTempEmail = email;
+    serverCurrentTempEmail = data.email || email;
     serverCurrentTempPassword = data.tempPassword || '';
 
     // Apresentar Senha Temporária em Tela no Overlay 4K
@@ -32263,6 +32350,8 @@ const server = http.createServer(async (req, res) => {
       allowOrigin = requestOrigin;
     }
   } catch (e) {}
+  const isHttpsRequest = Boolean(req.socket && req.socket.encrypted) ||
+    String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https';
   const corsHeaders = {
     ...(allowOrigin ? { 'Access-Control-Allow-Origin': allowOrigin } : {}),
     'Vary': 'Origin',
@@ -32272,13 +32361,45 @@ const server = http.createServer(async (req, res) => {
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'SAMEORIGIN',
     'X-XSS-Protection': '1; mode=block',
-    'Referrer-Policy': 'strict-origin-when-cross-origin'
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    // Sem scripts externos/inline restritos (a tela é montada com scripts inline): bloqueia embutir a página em outro
+    // site (clickjacking), <base> injetado, plugins e envio de formulários para fora do domínio.
+    'Content-Security-Policy': "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'",
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
+    'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+    'X-Permitted-Cross-Domain-Policies': 'none',
+    ...(isHttpsRequest ? { 'Strict-Transport-Security': 'max-age=15552000; includeSubDomains' } : {})
   };
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204, corsHeaders);
     return res.end();
   }
+
+  // Limite do corpo também para requisições "chunked" (sem Content-Length), que escapam da checagem acima:
+  // os handlers acumulam o corpo em memória e um envio sem fim derrubaria o servidor. Só conta os bytes dos
+  // ouvintes 'data' dos handlers (não muda o fluxo da requisição).
+  let receivedBodyBytes = 0;
+  let bodyLimitHit = false;
+  const originalReqOn = req.on.bind(req);
+  req.on = function (eventName, listener) {
+    if (eventName !== 'data' || typeof listener !== 'function') return originalReqOn(eventName, listener);
+    return originalReqOn('data', function (chunk) {
+      receivedBodyBytes += chunk.length;
+      if (receivedBodyBytes > MAX_REQUEST_BODY_BYTES) {
+        if (!bodyLimitHit) {
+          bodyLimitHit = true;
+          try {
+            if (!res.headersSent) res.writeHead(413, { ...corsHeaders, 'Content-Type': 'application/json', 'Connection': 'close' });
+            res.end(JSON.stringify({ success: false, error: 'Requisição grande demais.' }));
+          } catch (e) {}
+          try { req.destroy(); } catch (e) {}
+        }
+        return;
+      }
+      listener.call(req, chunk);
+    });
+  };
 
   // Corpo grande demais (os handlers acumulam o corpo em memória) e excesso de tentativas nas rotas sensíveis
   const declaredBodyLength = parseInt(req.headers['content-length'] || '0', 10);
@@ -32376,7 +32497,7 @@ const server = http.createServer(async (req, res) => {
     const sseToken = String(parsedUrl.query.token || '');
     const sseClaims = sseToken ? verifySecureToken(sseToken) : null;
     const sseUser = sseClaims
-      ? getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === String(sseClaims.email).toLowerCase().trim() && u.active !== false && u.active !== 0)
+      ? getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === String(sseClaims.email).toLowerCase().trim() && u.active !== false && u.active !== 0 && !isAccountDeleted(u.email) && !tokenPredatesPasswordChange(sseClaims, u))
       : getAuthenticatedUser(req);
     if (!sseUser) {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória.' });
@@ -32951,6 +33072,11 @@ const server = http.createServer(async (req, res) => {
     if (!cpfViewer) {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória para consultar CPF.' });
     }
+    // Só o administrador consulta CPF de terceiros: a resposta traz nome e data de nascimento, que são justamente
+    // os dados usados para confirmar identidade na recuperação de senha (qualquer usuário logado enumerava CPFs).
+    if (cpfViewer.role !== 'Administrador') {
+      return sendJson(res, corsHeaders, 403, { success: false, error: 'Consulta de CPF restrita ao administrador.' });
+    }
     const rawCpf = parsedUrl.query.cpf || parsedUrl.query.q || '';
     const cleanCpf = String(rawCpf).replace(/\D/g, '');
 
@@ -33226,81 +33352,109 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body || '{}');
-        const email = (parsed.email || '').trim();
-        const cpf = (parsed.cpf || '').trim();
-        const birth_date = (parsed.birth_date || parsed.birthDate || '').trim();
-
-        if (!email) {
-          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Por favor, informe seu e-mail cadastrado.' }));
+        // A conta pode ser localizada por e-mail OU por CPF (ou pelos dois). "identifier" aceita o campo único.
+        const rawIdentifier = String(parsed.identifier || '').trim();
+        let reqEmail = String(parsed.email || '').trim().toLowerCase();
+        let reqCpf = String(parsed.cpf || '').replace(/\D/g, '');
+        if (rawIdentifier) {
+          if (rawIdentifier.indexOf('@') !== -1) { if (!reqEmail) reqEmail = rawIdentifier.toLowerCase(); }
+          else if (!reqCpf) reqCpf = rawIdentifier.replace(/\D/g, '');
         }
-        if (!cpf) {
+        const birth_date = String(parsed.birth_date || parsed.birthDate || '').trim();
+
+        if (!reqEmail && !reqCpf) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Por favor, confirme seu CPF para validação cadastral.' }));
+          return res.end(JSON.stringify({ success: false, error: 'Por favor, informe o seu e-mail ou o seu CPF cadastrado.' }));
+        }
+        if (reqEmail && (reqEmail.length > 254 || reqEmail.indexOf('@') < 1)) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Informe um e-mail válido.' }));
+        }
+        if (reqCpf && reqCpf.length !== 11) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Informe um CPF válido com os 11 dígitos.' }));
         }
 
-        const cleanEmail = email.toLowerCase().trim();
-        // Mesma resposta para qualquer falha de conferência: não revela se o e-mail existe, está desativado ou foi excluído
+        // Mesma resposta para qualquer falha de conferência: não revela se o e-mail/CPF existe, está desativado ou foi excluído
         const recoveryDenied = () => {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Não foi possível confirmar os dados informados. Verifique o e-mail, o CPF e a data de nascimento.' }));
+          return res.end(JSON.stringify({ success: false, error: 'Não foi possível confirmar os dados informados. Verifique o e-mail ou CPF e a data de nascimento.' }));
         };
-        // Limite adicional por conta: evita tentativas repetidas de adivinhar CPF/nascimento de um mesmo e-mail
-        if (checkRateLimit('recover-account:' + cleanEmail, 5, 60 * 60 * 1000).limited) {
+        const rateLimited = () => {
           res.writeHead(429, { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '3600' });
           return res.end(JSON.stringify({ success: false, errorType: 'rate_limited', error: 'Muitas tentativas de recuperação para esta conta. Tente novamente mais tarde.' }));
-        }
-        if (isAccountDeleted(cleanEmail)) {
-          return recoveryDenied();
-        }
+        };
+        // Limite por identificador informado: evita tentativas repetidas de adivinhar nascimento/CPF de uma mesma conta
+        const preLimitKey = reqEmail ? ('recover-account:' + reqEmail) : ('recover-cpf:' + reqCpf);
+        if (checkRateLimit(preLimitKey, 5, 60 * 60 * 1000).limited) return rateLimited();
+        if (reqEmail && isAccountDeleted(reqEmail)) return recoveryDenied();
+
         let user = null;
+        let ambiguous = false;
         if (!pool) {
           await attemptConnectDatabase();
         }
         if (pool) {
           try {
-            const result = await pool.query(
-              'SELECT id, name, email, password, role, active, cpf, phone, birth_date, device_type FROM usuarios WHERE LOWER(email) = LOWER($1)',
-              [cleanEmail]
-            );
-            if (result.rows && result.rows.length > 0) user = result.rows[0];
+            const selectCols = 'SELECT id, name, email, password, role, active, cpf, phone, birth_date, device_type FROM usuarios WHERE ';
+            const result = reqEmail
+              ? await pool.query(selectCols + 'LOWER(email) = LOWER($1)', [reqEmail])
+              : await pool.query(selectCols + "REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', '') = $1", [reqCpf]);
+            if (result.rows && result.rows.length === 1) user = result.rows[0];
+            else if (result.rows && result.rows.length > 1) ambiguous = true;
           } catch(e){}
         }
-        if (!user) {
+        if (!user && !ambiguous) {
           const localUsers = getLocalUsers();
-          user = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail) || null;
+          const localMatches = localUsers.filter(u => u && (reqEmail
+            ? (u.email && String(u.email).toLowerCase().trim() === reqEmail)
+            : (String(u.cpf || '').replace(/\D/g, '') === reqCpf)));
+          if (localMatches.length === 1) user = localMatches[0];
+          else if (localMatches.length > 1) ambiguous = true;
         }
-
-        if (!user || user.active === false || user.active === 0) {
+        // CPF repetido em mais de uma conta: não arrisca redefinir a conta errada
+        if (ambiguous || !user || user.active === false || user.active === 0) {
           return recoveryDenied();
         }
 
-        // Validação estrita de CPF: a conta precisa ter CPF cadastrado e o informado precisa ser idêntico
-        // (antes, um CPF sem dígitos ou uma conta sem CPF pulava a conferência inteira).
+        const cleanEmail = String(user.email || '').toLowerCase().trim();
+        if (!cleanEmail || isAccountDeleted(cleanEmail)) {
+          return recoveryDenied();
+        }
+        // Quem entra por CPF compartilha o mesmo limite por conta de quem entra por e-mail
+        const accountLimitKey = 'recover-account:' + cleanEmail;
+        if (accountLimitKey !== preLimitKey && checkRateLimit(accountLimitKey, 5, 60 * 60 * 1000).limited) return rateLimited();
+
+        // Conferência estrita: e-mail e CPF informados precisam ser idênticos aos da conta
         const rawUserCpf = String(user.cpf || '').replace(/\D/g, '');
-        const rawReqCpf = cpf.replace(/\D/g, '');
-        if (rawUserCpf.length !== 11 || rawReqCpf.length !== 11 || !safeEqual(rawUserCpf, rawReqCpf)) {
+        if (reqCpf && (rawUserCpf.length !== 11 || !safeEqual(rawUserCpf, reqCpf))) {
+          return recoveryDenied();
+        }
+        if (reqEmail && !safeEqual(cleanEmail, reqEmail)) {
           return recoveryDenied();
         }
 
-        // Data de nascimento: quando a conta tem nascimento cadastrado, ela é obrigatória e precisa conferir
-        // (antes, bastava omitir o campo para pular a conferência).
-        if (user.birth_date) {
-          const normalizeDateDigits = (d) => {
-            if (!d) return '';
-            const s = String(d).trim();
-            const m1 = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-            if (m1) return `${m1[1]}${m1[2]}${m1[3]}`;
-            const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-            if (m2) return `${m2[3]}${m2[2]}${m2[1]}`;
-            return s.replace(/\D/g, '');
-          };
-          const userD = normalizeDateDigits(user.birth_date);
-          const reqD = normalizeDateDigits(birth_date);
-          if (!userD || !reqD || !safeEqual(userD, reqD)) {
+        // Data de nascimento: quando a conta tem nascimento cadastrado, ele é obrigatório e precisa conferir.
+        // Se a conta NÃO tem nascimento, um único identificador (só e-mail ou só CPF) não basta: exige e-mail + CPF.
+        const normalizeDateDigits = (d) => {
+          if (!d) return '';
+          const s = String(d).trim();
+          const m1 = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (m1) return `${m1[1]}${m1[2]}${m1[3]}`;
+          const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+          if (m2) return `${m2[3]}${m2[2]}${m2[1]}`;
+          return s.replace(/\D/g, '');
+        };
+        const userD = normalizeDateDigits(user.birth_date);
+        const reqD = normalizeDateDigits(birth_date);
+        if (userD) {
+          if (!reqD || !safeEqual(userD, reqD)) {
             return recoveryDenied();
           }
+        } else if (!(reqEmail && reqCpf)) {
+          return recoveryDenied();
         }
+        const recoveryMethod = (reqEmail && reqCpf) ? 'e-mail e CPF' : (reqCpf ? 'CPF' : 'e-mail');
 
         // Nova senha temporária aleatória (CSPRNG) — antes era Math.random() com apenas 6 dígitos
         const tempPassword = 'Nx@' + crypto.randomBytes(6).toString('hex');
@@ -33322,6 +33476,7 @@ const server = http.createServer(async (req, res) => {
         if (lu) {
           lu.password = hashedTempPassword;
           lu.must_change_password = true;
+          lu.password_changed_at = new Date().toISOString(); // derruba sessões antigas da conta
           saveLocalUsers(localUsers);
         }
 
@@ -33330,7 +33485,7 @@ const server = http.createServer(async (req, res) => {
           user.email,
           'Recuperação',
           'Autenticação',
-          'Senha temporária gerada via confirmação de dados com troca obrigatória exigida no primeiro logon'
+          'Senha temporária gerada via confirmação de dados (identificação por ' + recoveryMethod + ') com troca obrigatória exigida no primeiro logon'
         );
 
         let emailSent = false;
@@ -33451,6 +33606,7 @@ const server = http.createServer(async (req, res) => {
         if (lu) {
           lu.password = secureHashedPassword;
           lu.must_change_password = false;
+          lu.password_changed_at = new Date().toISOString(); // derruba sessões antigas da conta (o token novo abaixo vale)
           saveLocalUsers(localUsers);
         }
 
@@ -33749,7 +33905,9 @@ const server = http.createServer(async (req, res) => {
               subscription_method: u.subscription_method !== undefined ? u.subscription_method : (existing ? existing.subscription_method : null),
               subscription_payment_id: u.subscription_payment_id !== undefined ? u.subscription_payment_id : (existing ? existing.subscription_payment_id : null),
               created_at: u.created_at || (existing ? existing.created_at : new Date().toISOString()),
-              last_login: finalLastLogin
+              last_login: finalLastLogin,
+              // Marca de invalidação de sessões: só o servidor define (nunca vem do payload recebido)
+              password_changed_at: existing ? existing.password_changed_at : undefined
             });
           }
         });

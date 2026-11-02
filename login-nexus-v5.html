@@ -1280,65 +1280,91 @@
       showStatus('Conta criada. Bem-vindo ao Nexus!');
       window.setTimeout(() => window.location.replace('/'), 220);
     },
-    async recover(email) {
-      let accountEmail = (email || '').trim();
-      if (!accountEmail) {
-        const typedEmail = await glassPrompt({
+    async recover(prefill) {
+      // A conta pode ser identificada por e-mail OU por CPF. A confirmação é a data de nascimento; quando a conta
+      // não tem nascimento cadastrado, o servidor exige o outro dado (e-mail + CPF), então pedimos o que faltar.
+      const looksEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      let identifier = String(prefill || '').trim();
+      if (!(looksEmail(identifier) || cpfDigits(identifier).length === 11)) {
+        const typed = await glassPrompt({
           title: 'Recuperação de Senha',
           step: 'Identificação da conta',
-          message: 'Informe o e-mail cadastrado da sua conta:',
-          placeholder: 'seu.email@exemplo.com',
-          hint: 'Usaremos este e-mail para localizar seu cadastro.',
+          message: 'Informe o e-mail ou o CPF cadastrado da sua conta:',
+          placeholder: 'seu.email@exemplo.com ou CPF',
+          hint: 'Pode ser o e-mail OU o CPF do titular da conta.',
           icon: 'mail',
           okText: 'Continuar',
           validate: val => {
-            if (!val) return 'Por favor, informe seu e-mail.';
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return 'Digite um e-mail válido.';
-            return '';
+            if (!val) return 'Por favor, informe seu e-mail ou CPF.';
+            if (val.indexOf('@') !== -1) return looksEmail(val) ? '' : 'Digite um e-mail válido.';
+            return cpfDigits(val).length === 11 ? '' : 'Digite um e-mail válido ou os 11 dígitos do CPF.';
           }
         });
-        if (!typedEmail) return;
-        accountEmail = typedEmail.trim().toLowerCase();
-        $('#email').value = accountEmail;
+        if (!typed) return;
+        identifier = typed.trim();
       }
-      const cpf = await glassPrompt({
-        title: 'Confirmação de Identidade',
-        step: 'Recuperação de acesso • Etapa 1 de 2',
-        message: 'Para confirmar sua identidade, informe seu CPF:',
-        placeholder: '000.000.000-00',
-        hint: 'Informe os 11 dígitos do CPF do titular da conta.',
-        mask: 'cpf',
-        maxLength: 14,
-        icon: 'id',
-        okText: 'OK',
-        validate: val => {
-          if (!val) return 'Por favor, informe seu CPF.';
-          if (cpfDigits(val).length < 11) return 'Informe os 11 dígitos do CPF.';
-          return '';
-        }
-      });
-      if (!cpf) return;
+
+      const byEmail = looksEmail(identifier);
+      const payload = byEmail ? { email: identifier.toLowerCase() } : { cpf: cpfDigits(identifier) };
+      if (byEmail && $('#email')) $('#email').value = payload.email;
 
       const birthDate = await glassPrompt({
         title: 'Data de Nascimento',
-        step: 'Recuperação de acesso • Etapa 2 de 2',
+        step: 'Recuperação de acesso • Confirmação',
         message: 'Informe sua data de nascimento (DD/MM/AAAA):',
         placeholder: 'DD/MM/AAAA',
-        hint: 'Digite apenas os números (ex.: 15/08/1990).',
+        hint: 'Se sua conta não tiver data de nascimento cadastrada, deixe em branco e continue.',
         mask: 'date',
         maxLength: 10,
         icon: 'calendar',
-        okText: 'OK',
-        validate: val => {
-          if (!val) return 'Por favor, informe sua data de nascimento.';
-          if (!validBirthDate(val)) return 'Informe uma data válida no formato DD/MM/AAAA.';
-          return '';
-        }
+        okText: 'Continuar',
+        validate: val => (val && !validBirthDate(val)) ? 'Informe uma data válida no formato DD/MM/AAAA.' : ''
       });
-      if (!birthDate) return;
+      if (birthDate === null) return; // fechou/cancelou
+      if (birthDate) {
+        payload.birth_date = birthDate;
+      } else if (byEmail) {
+        const cpf = await glassPrompt({
+          title: 'Confirmação de Identidade',
+          step: 'Recuperação de acesso • Confirmação',
+          message: 'Para confirmar sua identidade, informe também o CPF do titular:',
+          placeholder: '000.000.000-00',
+          hint: 'Informe os 11 dígitos do CPF da conta.',
+          mask: 'cpf',
+          maxLength: 14,
+          icon: 'id',
+          okText: 'OK',
+          validate: val => {
+            if (!val) return 'Por favor, informe seu CPF.';
+            if (cpfDigits(val).length < 11) return 'Informe os 11 dígitos do CPF.';
+            return '';
+          }
+        });
+        if (!cpf) return;
+        payload.cpf = cpfDigits(cpf);
+      } else {
+        const otherEmail = await glassPrompt({
+          title: 'Confirmação de Identidade',
+          step: 'Recuperação de acesso • Confirmação',
+          message: 'Para confirmar sua identidade, informe também o e-mail cadastrado:',
+          placeholder: 'seu.email@exemplo.com',
+          hint: 'É o e-mail com que você criou a conta.',
+          icon: 'mail',
+          okText: 'OK',
+          validate: val => {
+            if (!val) return 'Por favor, informe seu e-mail.';
+            return looksEmail(val) ? '' : 'Digite um e-mail válido.';
+          }
+        });
+        if (!otherEmail) return;
+        payload.email = otherEmail.trim().toLowerCase();
+        if ($('#email')) $('#email').value = payload.email;
+      }
 
       try {
-        const result = await api('/api/send-password', { email: accountEmail, cpf, birth_date: birthDate });
+        const result = await api('/api/send-password', payload);
+        const accountEmail = result.email || payload.email || '';
+        if (accountEmail && $('#email') && !$('#email').value) $('#email').value = accountEmail;
         if (result.tempPassword) {
           showTempPasswordPopup(result.tempPassword, accountEmail);
           showStatus('Senha provisória gerada com sucesso.');
