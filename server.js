@@ -14948,6 +14948,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
         <span class="label">Comprovantes</span>
       </button>
+      <button data-page="ordens" class="menu-btn-user" title="Abrir Ordem de Serviço & Consultar Protocolos">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span>
+        <span class="label">Ordem de Serviço</span>
+      </button>
 
       <!-- Seção: Perfil & Preferências -->
       <div class="menu-section-header menu-section-minha-conta">
@@ -15656,15 +15660,23 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         Selecione abaixo o motivo rápido ou preencha os dados. Sua O.S. cairá <strong>imediatamente na Caixa de Recepção do Administrador</strong>.
       </p>
 
-      <!-- Seleção Rápida Visual de Motivo da O.S. na Tela de Login -->
+      <!-- Seleção Rápida Visual de Motivo da O.S. -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(125px, 1fr)); gap:7px; margin-bottom:14px;">
-        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Reset de Senha', 'Alta', 'Recuperação / Reset de Senha de Acesso')" style="padding:8px 10px; border-radius:12px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#A7F3D0; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Reset de Senha', 'Alta', 'Recuperação / Reset de Senha de Acesso', 'Solicito apoio para recuperação de acesso à minha conta.')" style="padding:8px 10px; border-radius:12px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#A7F3D0; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
           <span>🔑 Senha / Login</span>
           <span style="font-size:10px; color:#34D399; font-weight:600;">Recuperar Acesso</span>
         </button>
-        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Correção de Dados', 'Normal', 'Correção de Dados Cadastrais')" style="padding:8px 10px; border-radius:12px; background:rgba(168,85,247,0.14); border:1px solid rgba(168,85,247,0.4); color:#E9D5FF; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Pagamento Não Reconhecido', 'Urgente', 'Liberação de Assinatura / Pagamento', 'Realizei o pagamento e solicito a confirmação e liberação do meu acesso.')" style="padding:8px 10px; border-radius:12px; background:rgba(14,165,233,0.14); border:1px solid rgba(14,165,233,0.4); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>💳 Pagamento / PIX</span>
+          <span style="font-size:10px; color:#38BDF8; font-weight:600;">Liberar Assinatura</span>
+        </button>
+        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Correção de Dados', 'Normal', 'Correção de Dados Cadastrais', 'Solicito atualização dos meus dados cadastrais (CPF, data de nascimento ou telefone).')" style="padding:8px 10px; border-radius:12px; background:rgba(168,85,247,0.14); border:1px solid rgba(168,85,247,0.4); color:#E9D5FF; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
           <span>🛠️ Cadastro</span>
           <span style="font-size:10px; color:#C084FC; font-weight:600;">Corrigir Dados</span>
+        </button>
+        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Relato de Bug', 'Alta', 'Suporte Técnico ao Painel', 'Preciso de suporte técnico referente ao uso da plataforma.')" style="padding:8px 10px; border-radius:12px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.4); color:#FDE68A; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>⚡ Suporte Geral</span>
+          <span style="font-size:10px; color:#FBBF24; font-weight:600;">Dúvida ou Erro</span>
         </button>
       </div>
 
@@ -25541,7 +25553,7 @@ window.consultarProtocoloRecente = function() {
 };
 
 // Seleção Rápida de Categoria Visual no Modal da Tela de Login
-window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle) {
+window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle, defaultDesc) {
   const typeSelect = document.getElementById('osServiceType');
   if (typeSelect && type) {
     let matched = false;
@@ -25576,6 +25588,11 @@ window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle) {
     titleInput.value = defaultTitle;
   }
 
+  const descInput = document.getElementById('osDescription');
+  if (descInput && defaultDesc && !descInput.value.trim()) {
+    descInput.value = defaultDesc;
+  }
+
   document.querySelectorAll('.os-quick-cat-btn').forEach(btn => {
     const cat = (btn.getAttribute('data-oscat') || '').toLowerCase();
     const isSel = type && cat && type.toLowerCase().includes(cat.slice(0, 10));
@@ -25584,7 +25601,6 @@ window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle) {
   });
 
   const nameInput = document.getElementById('osClientName');
-  const descInput = document.getElementById('osDescription');
   if (nameInput && !nameInput.value.trim()) {
     nameInput.focus();
   } else if (descInput) {
@@ -25592,7 +25608,7 @@ window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle) {
   }
 };
 
-// Abertura e Consulta de O.S. (Público na Tela de Login)
+// Abertura e Consulta de O.S. (Público na Tela de Login e Portal do Usuário)
 window.openNovaOrdemModal = function(preselectedTypeOrTab) {
   const overlay = document.getElementById('overlayNovaOrdem');
   if (!overlay) return;
@@ -25607,10 +25623,23 @@ window.openNovaOrdemModal = function(preselectedTypeOrTab) {
   if (feedback) feedback.style.display = 'none';
   if (form) form.reset();
 
-  // Se o usuário já digitou e-mail na tela de login, aproveita automaticamente
-  const loginEmailVal = (document.getElementById('loginEmail')?.value || '').trim();
+  // Preenche automaticamente os dados do usuário logado (ou digitados no login) para abertura ultra-rápida
+  let activeU = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : null;
+  if (!activeU) {
+    try { activeU = JSON.parse(localStorage.getItem('nexus_cached_user') || 'null'); } catch(_) {}
+  }
+  const osNameInp = document.getElementById('osClientName');
   const osEmailInp = document.getElementById('osClientEmail');
-  if (loginEmailVal && osEmailInp && !osEmailInp.value) {
+  const osPhoneInp = document.getElementById('osClientPhone');
+  const osCpfInp = document.getElementById('osClientCpf');
+  const loginEmailVal = (document.getElementById('loginEmail')?.value || '').trim();
+
+  if (activeU) {
+    if (osNameInp && activeU.name && !osNameInp.value) osNameInp.value = activeU.name;
+    if (osEmailInp && activeU.email && !osEmailInp.value) osEmailInp.value = activeU.email;
+    if (osPhoneInp && activeU.phone && !osPhoneInp.value) osPhoneInp.value = activeU.phone;
+    if (osCpfInp && activeU.cpf && !osCpfInp.value) osCpfInp.value = activeU.cpf;
+  } else if (loginEmailVal && osEmailInp && !osEmailInp.value) {
     osEmailInp.value = loginEmailVal;
   }
 
