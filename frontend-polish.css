@@ -4673,6 +4673,70 @@ html.user-logged-in .main {
   #pageContent *, .topheader *, nav.menu *, aside.menu * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
 
+/* Toast profissional de boas-vindas após autenticação. */
+html.user-logged-in .executive-welcome-toast {
+  top: 18px !important;
+  right: 18px !important;
+  width: min(476px, calc(100vw - 32px)) !important;
+  max-width: 476px !important;
+  padding: 14px 16px 16px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(94, 224, 174, .3) !important;
+  border-radius: 19px !important;
+  background: linear-gradient(145deg, rgba(12, 24, 39, .98), rgba(7, 15, 27, .98)) !important;
+  box-shadow: 0 20px 54px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .09) !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+}
+html.user-logged-in .executive-welcome-toast::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 auto 0 0 !important;
+  width: 3px !important;
+  background: linear-gradient(180deg, #5ee0ae, #76b7ff) !important;
+}
+html.user-logged-in .executive-welcome-toast .toast-content-box { align-items: center !important; gap: 12px !important; }
+html.user-logged-in .executive-welcome-toast .toast-icon-wrap {
+  width: 42px !important; height: 42px !important; border-radius: 13px !important;
+  background: rgba(94, 224, 174, .11) !important; border: 1px solid rgba(94, 224, 174, .28) !important;
+  color: #5ee0ae !important; box-shadow: none !important;
+}
+html.user-logged-in .executive-welcome-toast .toast-top-row { margin-bottom: 6px !important; }
+html.user-logged-in .executive-welcome-toast .toast-badge {
+  padding: 3px 8px !important; border-radius: 6px !important;
+  background: rgba(94, 224, 174, .1) !important; border-color: rgba(94, 224, 174, .22) !important;
+  color: #79e8bd !important; font-size: 9px !important; letter-spacing: .07em !important;
+}
+html.user-logged-in .executive-welcome-toast .toast-time { color: #8293a8 !important; font-size: 10px !important; }
+html.user-logged-in .executive-welcome-toast .toast-title {
+  margin-bottom: 4px !important; color: #f4f7fb !important; font-size: 14px !important;
+  line-height: 1.3 !important; letter-spacing: -.015em !important;
+}
+html.user-logged-in .executive-welcome-toast .toast-desc { color: #a4b2c3 !important; font-size: 11.5px !important; line-height: 1.45 !important; }
+html.user-logged-in .executive-welcome-toast .toast-desc strong { color: #e7edf5 !important; font-weight: 700 !important; }
+html.user-logged-in .executive-welcome-toast .toast-close-btn { align-self: flex-start !important; color: #8293a8 !important; }
+html.user-logged-in .executive-welcome-toast .toast-close-btn:hover { color: #fff !important; background: rgba(255, 255, 255, .08) !important; }
+html.user-logged-in .executive-welcome-toast .toast-progress-bar {
+  height: 2px !important; background: linear-gradient(90deg, #5ee0ae, #76b7ff) !important;
+  box-shadow: 0 0 10px rgba(94, 224, 174, .25) !important;
+}
+html.user-logged-in.light .executive-welcome-toast,
+html.user-logged-in body.light .executive-welcome-toast {
+  background: linear-gradient(145deg, rgba(255, 255, 255, .99), rgba(244, 249, 252, .99)) !important;
+  border-color: rgba(15, 23, 42, .13) !important; box-shadow: 0 20px 54px rgba(15, 23, 42, .16) !important;
+}
+html.user-logged-in.light .executive-welcome-toast .toast-title,
+html.user-logged-in body.light .executive-welcome-toast .toast-title { color: #111827 !important; }
+html.user-logged-in.light .executive-welcome-toast .toast-desc,
+html.user-logged-in body.light .executive-welcome-toast .toast-desc { color: #536579 !important; }
+html.user-logged-in.light .executive-welcome-toast .toast-desc strong,
+html.user-logged-in body.light .executive-welcome-toast .toast-desc strong { color: #111827 !important; }
+@media (max-width: 560px) {
+  html.user-logged-in .executive-welcome-toast { top: 10px !important; right: 10px !important; width: calc(100vw - 20px) !important; padding: 12px 13px !important; }
+  html.user-logged-in .executive-welcome-toast .toast-icon-wrap { width: 36px !important; height: 36px !important; }
+  html.user-logged-in .executive-welcome-toast .toast-title { font-size: 13px !important; }
+}
+
 /* ============================================================================
    NEXUS POST-LOGIN REDESIGN 2026
    Workspace financeiro: hierarquia editorial, contraste e densidade controlada.
