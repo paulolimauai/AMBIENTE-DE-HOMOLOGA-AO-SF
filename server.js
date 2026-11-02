@@ -12235,6 +12235,11 @@ body.light .mobile-bottom-btn.active .ic svg {
   filter: drop-shadow(0 0 4px rgba(5, 150, 105, 0.4));
 }
 
+@media (max-width: 480px) {
+  /* Cabeçalho no celular: o selo do usuário e o botão "Minha Conta" ficavam sobre a marca (itens demais para a largura); a conta segue em "Mais" */
+  html.user-logged-in #headerUserBadge,
+  html.user-logged-in #headerMinhaContaBtn { display: none !important; }
+}
 @media (max-width: 860px) {
   .mobile-menu-btn { display: flex !important; }
   /* O menu hoje é <aside id="menu">: o seletor antigo (só nav.menu) não casava e a barra lateral ficava sobre o conteúdo no celular */
