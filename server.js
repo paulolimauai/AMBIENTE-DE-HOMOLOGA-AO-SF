@@ -10414,51 +10414,61 @@ body.light .dash-overview-card {
 }
 
 
-/* ==================== Executive Welcome Toast (Non-blocking) ==================== */
+/* ==================== Executive Welcome Toast (Non-blocking 4K Frosted Glass) ==================== */
 .executive-welcome-toast {
   position: fixed;
-  top: 24px;
+  top: 72px;
   right: 24px;
   z-index: 999999;
-  max-width: 430px;
-  width: calc(100vw - 48px);
-  background: linear-gradient(145deg, rgba(17, 24, 39, 0.97) 0%, rgba(10, 15, 29, 0.99) 100%);
-  border: 1px solid rgba(5, 150, 105, 0.35);
-  border-radius: 20px;
-  padding: 16px 18px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(5, 150, 105, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  transform: translateX(120%) scale(0.95);
+  max-width: 420px;
+  width: min(420px, calc(100vw - 32px));
+  background:
+    radial-gradient(160px 120px at 32px 32px, rgba(16, 185, 129, 0.18), transparent 72%),
+    linear-gradient(135deg, rgba(13, 23, 40, 0.78) 0%, rgba(7, 13, 25, 0.72) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  border-radius: 18px;
+  padding: 15px 16px 17px;
+  box-shadow:
+    0 24px 54px -12px rgba(0, 0, 0, 0.72),
+    0 0 28px rgba(16, 185, 129, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20),
+    inset 0 0 20px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  transform: translateY(-14px) scale(0.96);
   opacity: 0;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
-  pointer-events: auto;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.32s ease;
+  pointer-events: none;
+  overflow: hidden;
 }
 .executive-welcome-toast.show {
-  transform: translateX(0) scale(1);
+  transform: translateY(0) scale(1);
   opacity: 1;
+  pointer-events: auto;
 }
 .toast-content-box {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 13px;
 }
 .toast-icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.22) 0%, rgba(4, 120, 87, 0.16) 100%);
-  border: 1.5px solid rgba(5, 150, 105, 0.5);
-  color: #059669;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.10) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.38);
+  color: #34D399;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 0 20px rgba(5, 150, 105, 0.3);
+  box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  margin-top: 1px;
 }
 .toast-icon-wrap svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.35));
 }
 .toast-body {
   flex: 1;
@@ -10469,64 +10479,108 @@ body.light .dash-overview-card {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+}
+.toast-top-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
 }
 .toast-badge {
-  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 2px 8px;
-  border-radius: 6px;
-  background: rgba(5, 150, 105, 0.18);
-  border: 1px solid rgba(5, 150, 105, 0.35);
-  color: #34D399;
+  letter-spacing: 0.07em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.32);
+  color: #6EE7B7;
+  line-height: 1;
+}
+.toast-badge svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
 }
 .toast-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 10.5px;
-  color: #64748B;
+  color: #94A3B8;
   font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.toast-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  display: inline-block;
 }
 .toast-title {
-  font-size: 14.5px;
-  font-weight: 800;
-  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  color: #F8FAFC;
   margin: 0 0 3px 0;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
 }
 .toast-desc {
   font-size: 12px;
   color: #94A3B8;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 .toast-desc strong {
-  color: #E2E8F0;
+  color: #F1F5F9;
+  font-weight: 700;
 }
 .toast-close-btn {
-  background: transparent;
-  border: none;
-  color: #64748B;
-  font-size: 14px;
-  font-weight: 700;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #94A3B8;
   cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 6px;
-  transition: all 0.15s ease;
-  line-height: 1;
+  padding: 0;
+  border-radius: 8px;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+.toast-close-btn svg {
+  width: 13px;
+  height: 13px;
 }
 .toast-close-btn:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
 }
-.toast-progress-bar {
+.toast-progress-track {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #10B981, #059669, #10B981);
-  border-radius: 0 0 20px 20px;
+  height: 2.5px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+.toast-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #10B981 0%, #34D399 55%, #38BDF8 100%);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.45);
+  transform-origin: left center;
   animation: toastBarFill 4.5s linear forwards;
 }
 @keyframes toastBarFill {
@@ -10534,9 +10588,9 @@ body.light .dash-overview-card {
   to { width: 0%; }
 }
 body.light .executive-welcome-toast {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15) !important;
+  background: rgba(255, 255, 255, 0.90) !important;
+  border-color: rgba(16, 185, 129, 0.28) !important;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.14), inset 0 1px 0 #FFFFFF !important;
 }
 body.light .toast-title { color: #0F172A !important; }
 body.light .toast-desc { color: #475569 !important; }
@@ -18022,27 +18076,33 @@ function showExecutiveWelcomeToast(msg, subMsg) {
   }
   const userName = currentUser ? currentUser.name : 'Usuário';
   const userRole = currentUser ? (currentUser.role || 'Usuário') : 'Usuário';
-  const roleBadge = userRole === 'Administrador' ? '👑 Administrador Master' : '👤 Usuário';
-  
+  const roleBadgeHtml = userRole === 'Administrador'
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span>Administrador Master</span>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Conta Verificada</span>';
+
   toastEl.innerHTML = \`
     <div class="toast-content-box">
       <div class="toast-icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           <path d="m9 12 2 2 4-4"/>
         </svg>
       </div>
       <div class="toast-body">
         <div class="toast-top-row">
-          <span class="toast-badge">\${roleBadge}</span>
-          <span class="toast-time">Sessão Ativa</span>
+          <div class="toast-top-meta">
+            <span class="toast-badge">\${roleBadgeHtml}</span>
+            <span class="toast-time"><span class="toast-live-dot"></span>Sessão Ativa</span>
+          </div>
+          <button type="button" class="toast-close-btn" onclick="document.getElementById('executiveWelcomeToast').classList.remove('show')" title="Fechar" aria-label="Fechar notificação">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
         </div>
         <h4 class="toast-title">\${msg || 'Sessão Autenticada com Sucesso'}</h4>
         <p class="toast-desc">\${subMsg || ('Ambiente financeiro sincronizado e protegido para <strong>' + userName + '</strong>.')}</p>
       </div>
-      <button type="button" class="toast-close-btn" onclick="document.getElementById('executiveWelcomeToast').classList.remove('show')" title="Fechar">✕</button>
     </div>
-    <div class="toast-progress-bar"></div>
+    <div class="toast-progress-track"><div class="toast-progress-bar"></div></div>
   \`;
 
   requestAnimationFrame(() => {
