@@ -7405,888 +7405,457 @@ body.light .trial-dock-time {
   color: #047857 !important;
 }
 
-/* ==================== MODAL DE ASSINATURA E PAYWALL (EXECUTIVE FINTECH 4K) ==================== */
-.sub-paywall-overlay {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 2147483647 !important;
-  background: radial-gradient(circle at 50% 15%, rgba(6, 78, 59, 0.32) 0%, rgba(3, 7, 18, 0.96) 65%) !important;
-  backdrop-filter: blur(36px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
-  display: none;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 16px !important;
-  overflow-y: auto !important;
-  animation: fadeInPaywallOverlay 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes fadeInPaywallOverlay {
-  from { opacity: 0; backdrop-filter: blur(0px); }
-  to { opacity: 1; backdrop-filter: blur(36px) saturate(200%); }
-}
-
-.sub-paywall-overlay.show {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-body.paywall-locked {
-  overflow: hidden !important;
-}
-
+/* ==================== TELA DE PAGAMENTO • CHECKOUT PIX EM VIDRO ==================== */
+/* Bloco unico (antes havia 3 camadas brigando com !important). Todo o visual vem dos tokens --pw-* abaixo. */
+body.paywall-locked { overflow: hidden !important; }
 body.paywall-locked #appMain {
-  filter: blur(12px) brightness(0.65) !important;
+  filter: blur(4px) brightness(0.8) !important;
   user-select: none !important;
   transition: filter 0.35s ease;
 }
 
+.sub-paywall-overlay {
+  --pw-text: #F1F5F9;
+  --pw-text-2: #CBD5E1;
+  --pw-muted: #94A3B8;
+  --pw-faint: #64748B;
+  --pw-line: rgba(255, 255, 255, 0.10);
+  --pw-line-strong: rgba(255, 255, 255, 0.20);
+  --pw-glass: linear-gradient(150deg, rgba(30, 41, 59, 0.66) 0%, rgba(15, 23, 42, 0.54) 55%, rgba(7, 24, 36, 0.64) 100%);
+  --pw-card: rgba(255, 255, 255, 0.055);
+  --pw-card-hover: rgba(255, 255, 255, 0.09);
+  --pw-field: rgba(2, 6, 23, 0.40);
+  --pw-accent: #10B981;
+  --pw-accent-2: #34D399;
+  --pw-accent-soft: rgba(16, 185, 129, 0.16);
+  --pw-accent-line: rgba(52, 211, 153, 0.42);
+  --pw-sky: #38BDF8;
+  --pw-sky-soft: rgba(56, 189, 248, 0.14);
+  --pw-sky-line: rgba(56, 189, 248, 0.42);
+  --pw-amber: #FBBF24;
+  --pw-amber-soft: rgba(245, 158, 11, 0.14);
+  --pw-amber-line: rgba(245, 158, 11, 0.42);
+  --pw-danger: #FCA5A5;
+  --pw-danger-soft: rgba(239, 68, 68, 0.14);
+  --pw-danger-line: rgba(248, 113, 113, 0.45);
+  --pw-shadow: 0 32px 90px -26px rgba(0, 0, 0, 0.8);
+  --pw-overlay: rgba(3, 8, 18, 0.52);
+  --pw-orb-a: rgba(16, 185, 129, 0.36);
+  --pw-orb-b: rgba(56, 189, 248, 0.26);
+}
+body.light .sub-paywall-overlay {
+  --pw-text: #0F172A;
+  --pw-text-2: #334155;
+  --pw-muted: #475569;
+  --pw-faint: #64748B;
+  --pw-line: rgba(15, 23, 42, 0.10);
+  --pw-line-strong: rgba(15, 23, 42, 0.18);
+  --pw-glass: linear-gradient(150deg, rgba(255, 255, 255, 0.80) 0%, rgba(248, 250, 252, 0.66) 58%, rgba(236, 253, 245, 0.72) 100%);
+  --pw-card: rgba(255, 255, 255, 0.66);
+  --pw-card-hover: rgba(255, 255, 255, 0.90);
+  --pw-field: rgba(255, 255, 255, 0.88);
+  --pw-accent: #059669;
+  --pw-accent-2: #047857;
+  --pw-accent-soft: rgba(16, 185, 129, 0.13);
+  --pw-accent-line: rgba(5, 150, 105, 0.45);
+  --pw-sky: #0369A1;
+  --pw-sky-soft: rgba(14, 165, 233, 0.12);
+  --pw-sky-line: rgba(2, 132, 199, 0.42);
+  --pw-amber: #92400E;
+  --pw-amber-soft: rgba(245, 158, 11, 0.14);
+  --pw-amber-line: rgba(180, 83, 9, 0.40);
+  --pw-danger: #B91C1C;
+  --pw-danger-soft: rgba(239, 68, 68, 0.10);
+  --pw-danger-line: rgba(220, 38, 38, 0.40);
+  --pw-shadow: 0 30px 80px -30px rgba(15, 23, 42, 0.35);
+  --pw-overlay: rgba(226, 232, 240, 0.55);
+  --pw-orb-a: rgba(16, 185, 129, 0.26);
+  --pw-orb-b: rgba(56, 189, 248, 0.24);
+}
+
+/* Camada de fundo: o app aparece desfocado atras do vidro; os focos coloridos dao o reflexo. */
+.sub-paywall-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: none;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: clamp(10px, 2.4vw, 28px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--pw-text);
+  background:
+    radial-gradient(62% 52% at 14% 8%, var(--pw-orb-a), transparent 70%),
+    radial-gradient(54% 48% at 90% 94%, var(--pw-orb-b), transparent 72%),
+    var(--pw-overlay);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  animation: pwOverlayIn 0.26s ease both;
+}
+.sub-paywall-overlay.show { display: flex; }
+@keyframes pwOverlayIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Painel de vidro. margin:auto centraliza quando sobra espaco e deixa rolar (sem cortar o topo) quando nao sobra. */
 .sub-paywall-modal {
-  position: relative !important;
-  width: 100% !important;
-  max-width: 1080px !important;
-  max-height: 95vh !important;
-  overflow-y: auto !important;
-  background: linear-gradient(160deg, rgba(15, 23, 42, 0.98) 0%, rgba(9, 14, 28, 0.99) 55%, rgba(3, 7, 18, 1) 100%) !important;
-  border: 1.5px solid rgba(16, 185, 129, 0.28) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.24) !important;
-  border-radius: 26px !important;
-  box-shadow: 0 35px 100px -12px rgba(0, 0, 0, 0.95), 0 0 60px rgba(16, 185, 129, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
-  padding: 24px 28px !important;
-  box-sizing: border-box !important;
-  animation: popInPaywallModal 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1020px;
+  margin: auto;
+  padding: clamp(18px, 2.6vw, 30px);
+  border-radius: 26px;
+  background: var(--pw-glass);
+  border: 1px solid var(--pw-line-strong);
+  box-shadow: var(--pw-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.24), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(30px) saturate(170%);
+  backdrop-filter: blur(30px) saturate(170%);
+  animation: pwModalIn 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-
-@keyframes popInPaywallModal {
-  from { transform: scale(0.96) translateY(12px); opacity: 0; }
-  to { transform: scale(1) translateY(0); opacity: 1; }
+.sub-paywall-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 60% at 0% 0%, rgba(255, 255, 255, 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 28%);
 }
-
+@keyframes pwModalIn { from { opacity: 0; transform: translateY(14px) scale(0.985); } to { opacity: 1; transform: none; } }
 @keyframes paywallModalShake {
-  0%, 100% { transform: scale(1) translateX(0); }
-  20%, 60% { transform: scale(1.005) translateX(-8px); }
-  40%, 80% { transform: scale(1.005) translateX(8px); }
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
 }
+.sub-paywall-modal.shake-lock { animation: paywallModalShake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
 
-.sub-paywall-modal.shake-lock {
-  animation: paywallModalShake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) !important;
-}
-
-.sub-paywall-modal::-webkit-scrollbar {
-  width: 6px;
-}
-.sub-paywall-modal::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-}
-
-/* Cabeçalho Executivo do Checkout */
-.sub-header-bar {
+/* ---------- Cabecalho ---------- */
+.pw-head {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 14px;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px 20px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--pw-line);
 }
-
-.sub-brand-icon-box {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.12) 100%);
-  border: 1.5px solid rgba(16, 185, 129, 0.55);
+.pw-brand { display: flex; align-items: flex-start; gap: 14px; flex: 1 1 360px; min-width: 0; }
+.pw-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #34D399;
-  box-shadow: 0 0 24px rgba(16, 185, 129, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35);
-  flex-shrink: 0;
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  color: var(--pw-accent-2);
+  background: var(--pw-accent-soft);
+  border: 1px solid var(--pw-accent-line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
-
-/* Barra de Etapas (3 Passos Claros) */
-.sub-stepper-bar {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 18px;
-}
-@media (max-width: 720px) {
-  .sub-stepper-bar {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-}
-
-.sub-step-pill {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 14px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 11.5px;
-  color: #CBD5E1;
-}
-
-.sub-step-num {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: rgba(16, 185, 129, 0.2);
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  color: #34D399;
+.pw-titles { min-width: 0; }
+.pw-eyebrow {
+  display: block;
+  margin-bottom: 4px;
   font-size: 11px;
-  font-weight: 900;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--pw-accent-2);
+}
+.pw-titles h2 {
+  margin: 0;
+  font-size: clamp(19px, 2.3vw, 24px);
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+  color: var(--pw-text);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.pw-titles p {
+  max-width: 64ch;
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--pw-text-2);
+}
+.pw-actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 100%;
+}
+.pw-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--pw-card);
+  border: 1px solid var(--pw-line);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--pw-text);
+  overflow-wrap: anywhere;
+}
+.pw-dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--pw-accent); box-shadow: 0 0 8px var(--pw-accent); }
+
+/* ---------- Botoes ---------- */
+.pw-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-}
-
-/* Light Mode para Modal */
-body.light .sub-paywall-overlay {
-  background: rgba(241, 245, 249, 0.92) !important;
-  backdrop-filter: blur(28px) saturate(180%) !important;
-}
-
-body.light .sub-paywall-modal {
-  background: #FFFFFF !important;
-  border: 1.5px solid #CBD5E1 !important;
-  box-shadow: 0 35px 90px -15px rgba(15, 23, 42, 0.22), 0 0 40px rgba(16, 185, 129, 0.12) !important;
-  color: #0F172A !important;
-}
-
-body.light .sub-header-bar {
-  border-bottom-color: #E2E8F0 !important;
-}
-
-body.light .sub-step-pill {
-  background: #F8FAFC !important;
-  border-color: #E2E8F0 !important;
-  color: #1E293B !important;
-}
-
-body.light .sub-paywall-modal h1,
-body.light .sub-paywall-modal h2,
-body.light .sub-paywall-modal h3,
-body.light .sub-paywall-modal h4,
-body.light .sub-paywall-modal p,
-body.light .sub-paywall-modal span:not(.badge-retain-color),
-body.light .sub-paywall-modal label,
-body.light .sub-paywall-modal strong,
-body.light .sub-paywall-modal select,
-body.light .sub-paywall-modal option,
-body.light .sub-paywall-modal input {
-  color: #0F172A !important;
-}
-
-body.light .pix-info-card {
-  background: #F0FDF4 !important;
-  border: 1.5px solid #10B981 !important;
-}
-body.light .pix-info-card div,
-body.light .pix-info-card span,
-body.light .pix-info-card strong {
-  color: #0F172A !important;
-}
-
-/* 2-Column Split Checkout Grid */
-.sub-checkout-grid {
-  display: grid;
-  grid-template-columns: 365px minmax(0, 1fr);
-  gap: 20px;
-  align-items: stretch;
-}
-@media (max-width: 900px) {
-  .sub-checkout-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
-
-/* Coluna Esquerda: Resumo & Seleção de Planos */
-.sub-summary-card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.015) 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 14px;
-}
-body.light .sub-summary-card {
-  background: #F8FAFC !important;
-  border-color: #E2E8F0 !important;
-}
-
-.sub-section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 10px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-body.light .sub-section-header {
-  border-bottom-color: #E2E8F0 !important;
-}
-
-/* Stack de Planos */
-.sub-plan-cards-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.sub-plan-card {
-  position: relative;
-  border-radius: 16px;
-  padding: 14px 16px;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.sub-plan-card:hover {
-  border-color: rgba(16, 185, 129, 0.55);
-  transform: translateY(-1.5px);
-  background: rgba(255, 255, 255, 0.065);
-}
-.sub-plan-card.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.08) 100%);
-  border-color: #10B981 !important;
-  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.3), inset 0 0 14px rgba(16, 185, 129, 0.08);
-}
-body.light .sub-plan-card {
-  background: #FFFFFF !important;
-  border: 1.5px solid #CBD5E1 !important;
-  color: #0F172A !important;
-}
-body.light .sub-plan-card.active {
-  background: #F0FDF4 !important;
-  border-color: #059669 !important;
-  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.14) !important;
-}
-
-.sub-plan-radio-circle {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.2s ease;
-}
-.sub-plan-card.active .sub-plan-radio-circle {
-  border-color: #10B981;
-  background: #10B981;
-}
-.sub-plan-card.active .sub-plan-radio-circle::after {
-  content: '';
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #FFFFFF;
-}
-body.light .sub-plan-radio-circle {
-  border-color: #94A3B8;
-}
-
-.sub-plan-badge-highlight {
-  position: absolute;
-  top: -9px;
-  right: 12px;
-  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-  color: #FFFFFF !important;
-  font-size: 9.5px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 2px 9px;
-  border-radius: 999px;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.45);
-}
-
-.sub-plan-title {
-  font-size: 14px;
-  font-weight: 800;
-  margin: 0;
-  color: #FFFFFF;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.sub-plan-price {
-  font-size: 20px;
-  font-weight: 900;
-  color: #10B981;
-  letter-spacing: -0.02em;
-  margin: 0;
-  line-height: 1.1;
-}
-.sub-plan-period {
-  font-size: 11px;
-  font-weight: 600;
-  color: #94A3B8;
-}
-body.light .sub-plan-price {
-  color: #047857 !important;
-}
-body.light .sub-plan-period {
-  color: #475569 !important;
-}
-
-/* Tabela de Discriminação de Preço */
-.sub-order-breakdown {
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 14px;
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-body.light .sub-order-breakdown {
-  background: #FFFFFF !important;
-  border-color: #E2E8F0 !important;
-}
-.sub-breakdown-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  color: #94A3B8;
-}
-body.light .sub-breakdown-row {
-  color: #475569 !important;
-}
-.sub-breakdown-row.total-row {
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding-top: 8px;
-  margin-top: 2px;
-}
-body.light .sub-breakdown-row.total-row {
-  border-top-color: #CBD5E1 !important;
-}
-.sub-breakdown-total-val {
-  font-size: 22px;
-  font-weight: 900;
-  color: #10B981;
-  letter-spacing: -0.02em;
-}
-body.light .sub-breakdown-total-val {
-  color: #047857 !important;
-}
-
-/* Lista de Benefícios */
-.sub-benefits-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.sub-benefit-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: #CBD5E1;
-}
-body.light .sub-benefit-item {
-  color: #1E293B !important;
-}
-.sub-benefit-check {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: rgba(16, 185, 129, 0.2);
-  color: #10B981;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: 900;
-  flex-shrink: 0;
-}
-body.light .sub-benefit-check {
-  background: #DCFCE7 !important;
-  color: #059669 !important;
-}
-
-/* Coluna Direita: Métodos de Pagamento */
-.sub-payment-card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.015) 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 18px 22px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-body.light .sub-payment-card {
-  background: #FFFFFF !important;
-  border-color: #E2E8F0 !important;
-}
-
-/* Payment Method Tabs Segmented */
-.sub-payment-tabs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-bottom: 16px;
-}
-@media (max-width: 580px) {
-  .sub-payment-tabs {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.sub-tab-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 10px 8px;
-  border-radius: 13px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  color: #CBD5E1;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-}
-.sub-tab-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
-  transform: translateY(-1px);
-}
-.sub-tab-btn.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.1) 100%);
-  border-color: #10B981 !important;
-  color: #34D399 !important;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.22);
-}
-body.light .sub-tab-btn {
-  background: #F8FAFC !important;
-  border-color: #CBD5E1 !important;
-  color: #1E293B !important;
-}
-body.light .sub-tab-btn.active {
-  background: #ECFDF5 !important;
-  border-color: #059669 !important;
-  color: #047857 !important;
-}
-
-.sub-tab-pill-badge {
-  font-size: 9px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 1.5px 7px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.09);
-  color: #94A3B8;
-}
-.sub-tab-btn.active .sub-tab-pill-badge {
-  background: #10B981;
-  color: #FFFFFF !important;
-}
-body.light .sub-tab-pill-badge {
-  background: #E2E8F0;
-  color: #475569;
-}
-body.light .sub-tab-btn.active .sub-tab-pill-badge {
-  background: #059669;
-  color: #FFFFFF !important;
-}
-
-/* Grid Horizontal do Pix (QR Code + Dados Bancários Lado a Lado) */
-.sub-pix-split-grid {
-  display: grid;
-  grid-template-columns: 176px minmax(0, 1fr);
-  gap: 14px;
-  align-items: stretch;
-  margin-bottom: 12px;
-}
-@media (max-width: 640px) {
-  .sub-pix-split-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.sub-pix-qr-box {
-  background: #FFFFFF;
-  border-radius: 18px;
-  padding: 12px 10px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 22px rgba(16, 185, 129, 0.22);
-  border: 2px solid #10B981;
-  position: relative;
-  overflow: hidden;
-}
-
-.sub-qr-scan-line {
-  position: absolute;
-  top: 12px;
-  left: 10px;
-  right: 10px;
-  height: 2.5px;
-  background: linear-gradient(90deg, transparent 0%, #10B981 35%, #34D399 50%, #10B981 65%, transparent 100%);
-  box-shadow: 0 0 12px #10B981, 0 0 20px #34D399;
-  border-radius: 999px;
-  animation: qrLaserScan 2.8s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 3;
-}
-
-/* Refinamento visual do checkout e leitura do QR Code Pix */
-.sub-paywall-modal { max-width: 1160px !important; padding: 28px 32px !important; }
-.sub-header-bar { align-items: flex-start; padding-bottom: 20px; margin-bottom: 20px; }
-.sub-checkout-grid { grid-template-columns: 390px minmax(0, 1fr); gap: 22px; align-items: start; }
-.sub-summary-card, .sub-payment-card { min-width: 0; padding: 22px; border-radius: 22px; }
-.sub-payment-card { box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
-.sub-pix-split-grid { grid-template-columns: 204px minmax(0, 1fr); gap: 18px; align-items: stretch; }
-.sub-pix-qr-box { min-height: 238px; padding: 16px 12px 13px; border-radius: 20px; border: 2px solid #34D399; box-shadow: 0 14px 30px rgba(0,0,0,0.32), 0 0 26px rgba(16,185,129,0.22); }
-.sub-pix-qr-box img#subPixQrImg, #subPixQrImg { width: 184px !important; height: 184px !important; padding: 8px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px !important; image-rendering: pixelated; }
-.sub-qr-scan-line { display: none; }
-.sub-payment-card .pix-info-card { min-height: 112px; display: flex; flex-direction: column; justify-content: center; padding: 15px 16px !important; border-radius: 16px !important; }
-.sub-payment-card #subPixCodeInput { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: rgba(0,0,0,0.22); }
-.sub-payment-card #btnCopyPix, .sub-payment-card #btnCopyPixKeyDirect { min-height: 38px; }
-@media (max-width: 900px) {
-  .sub-paywall-modal { padding: 22px 18px !important; }
-  .sub-checkout-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 640px) {
-  .sub-header-bar { align-items: stretch; }
-  .sub-pix-split-grid { grid-template-columns: 1fr; }
-  .sub-pix-qr-box { min-height: 0; }
-  #subPixQrImg { width: min(68vw, 220px) !important; height: min(68vw, 220px) !important; }
-}
-
-@keyframes qrLaserScan {
-  0% { top: 14px; opacity: 0.35; }
-  50% { top: 146px; opacity: 1; }
-  100% { top: 14px; opacity: 0.35; }
-}
-
-/* Radar de Conciliação e Reconhecimento Automático BACEN SPI */
-/* Acabamento final do checkout: alinhamento, ritmo e hierarquia */
-#nexusSubscriptionModal .sub-header-bar > div:first-child { flex: 1 1 auto; min-width: 0; }
-#nexusSubscriptionModal .sub-header-bar > div:last-child { justify-content: flex-end; }
-#nexusSubscriptionModal .sub-header-bar h2 { line-height: 1.15; }
-#nexusSubscriptionModal .sub-step-pill { min-height: 58px; box-sizing: border-box; }
-#nexusSubscriptionModal .sub-section-header { min-height: 30px; box-sizing: border-box; }
-#nexusSubscriptionModal .sub-plan-card { min-height: 78px; box-sizing: border-box; }
-#nexusSubscriptionModal .sub-plan-card > div:last-child { flex: 0 0 auto; }
-#nexusSubscriptionModal .sub-payment-tabs { margin-top: 2px; }
-#nexusSubscriptionModal .sub-payment-card .sub-section-header { align-items: flex-start; }
-#nexusSubscriptionModal .sub-payment-card .sub-section-header > span:last-child { white-space: nowrap; }
-#nexusSubscriptionModal #subFormPix .sub-pix-split-grid > div:last-child { min-width: 0; }
-#nexusSubscriptionModal #subFormPix > .sub-pay-action-btn { min-height: 52px; margin-top: 16px; }
-#nexusSubscriptionModal .sub-pay-action-btn { letter-spacing: 0; }
-#nexusSubscriptionModal .sub-auto-radar-card { margin-bottom: 14px; }
-body.light #nexusSubscriptionModal .sub-pix-qr-box { border-color: #059669; box-shadow: 0 12px 28px rgba(15,23,42,0.12); }
-@media (max-width: 640px) {
-  #nexusSubscriptionModal .sub-header-bar > div:last-child { justify-content: space-between; }
-  #nexusSubscriptionModal .sub-plan-card { min-height: 72px; }
-}
-
-.sub-auto-radar-card {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(14, 165, 233, 0.08) 55%, rgba(15, 23, 42, 0.85) 100%);
-  border: 1.5px solid rgba(16, 185, 129, 0.42);
-  border-radius: 15px;
-  padding: 11px 14px;
-  margin-bottom: 12px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-.sub-auto-radar-card.radar-detecting {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.18) 0%, rgba(16, 185, 129, 0.16) 100%);
-  border-color: #38BDF8;
-  box-shadow: 0 0 28px rgba(56, 189, 248, 0.25);
-}
-body.light .sub-auto-radar-card {
-  background: #F0FDF4 !important;
-  border-color: #10B981 !important;
-}
-
-.sub-radar-pulse-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #10B981;
-  position: relative;
-  display: inline-block;
-  flex-shrink: 0;
-  box-shadow: 0 0 10px #10B981;
-}
-.sub-radar-pulse-dot::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid #10B981;
-  animation: radarPulseRing 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
-@keyframes radarPulseRing {
-  0% { transform: scale(0.8); opacity: 0.9; }
-  100% { transform: scale(2.2); opacity: 0; }
-}
-
-.sub-auto-progress-track {
-  width: 100%;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 8px;
-}
-body.light .sub-auto-progress-track {
-  background: #CBD5E1 !important;
-}
-.sub-auto-progress-bar {
-  height: 100%;
-  width: 35%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #10B981, #38BDF8, #34D399);
-  animation: radarIndeterminateSlide 2.2s ease-in-out infinite;
-}
-.sub-auto-progress-bar.recognizing-active {
-  animation: none;
-  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-@keyframes radarIndeterminateSlide {
-  0% { transform: translateX(-100%); width: 35%; }
-  50% { width: 55%; }
-  100% { transform: translateX(280%); width: 35%; }
-}
-
-/* Painel Destacado de Validação / Conciliação Automática */
-.sub-validation-box {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.09) 0%, rgba(15, 23, 42, 0.72) 100%);
-  border: 1.5px solid rgba(16, 185, 129, 0.35);
-  border-radius: 14px;
-  padding: 11px 14px;
-  margin-top: 10px;
-  text-align: left;
-}
-body.light .sub-validation-box {
-  background: #F0FDF4 !important;
-  border-color: #10B981 !important;
-}
-
-/* Card 3D Preview Compacto */
-.sub-card-3d-wrapper {
-  width: 100%;
-  max-width: 400px;
-  height: 142px;
-  margin: 0 auto 14px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #064e3b 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55), 0 0 24px rgba(16, 185, 129, 0.15);
-  padding: 14px 20px;
+  gap: 7px;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-}
-.sub-card-3d-wrapper::before {
-  content: '';
-  position: absolute;
-  top: -40%;
-  left: -20%;
-  width: 140%;
-  height: 80%;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
-  transform: rotate(-25deg);
-  pointer-events: none;
-}
-.sub-card-chip {
-  width: 34px;
-  height: 24px;
-  border-radius: 5px;
-  background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #FBBF24 100%);
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 2px 6px rgba(0, 0, 0, 0.4);
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
-.sub-card-chip::after {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.35);
-  border-radius: 3px;
-}
-
-/* Input Fields inside Modal */
-.sub-field-group {
-  margin-bottom: 10px;
-}
-.sub-field-label {
-  display: block;
-  font-size: 10.5px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #94A3B8;
-  margin-bottom: 4px;
-}
-body.light .sub-field-label {
-  color: #334155 !important;
-}
-.sub-field-input {
-  width: 100%;
-  height: 40px;
-  padding: 0 12px;
-  border-radius: 10px;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1.5px solid rgba(255, 255, 255, 0.14);
-  color: #FFFFFF;
-  font-size: 13px;
-  font-weight: 600;
-  box-sizing: border-box;
-  transition: all 0.2s ease;
-}
-.sub-field-input:focus {
-  outline: none;
-  border-color: #10B981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-}
-body.light .sub-field-input {
-  background: #FFFFFF !important;
-  border: 1.5px solid #CBD5E1 !important;
-  color: #0F172A !important;
-}
-body.light .sub-field-input:focus {
-  border-color: #059669 !important;
-}
-
-/* Primary Pay Action Button */
-.sub-pay-action-btn {
-  width: 100%;
-  height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%);
-  color: #FFFFFF !important;
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: -0.01em;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  cursor: pointer;
-  box-shadow: 0 10px 28px -4px rgba(16, 185, 129, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  margin-top: 12px;
-  position: relative;
-  overflow: hidden;
-}
-.sub-pay-action-btn:hover {
-  transform: translateY(-1.5px);
-  box-shadow: 0 14px 34px -4px rgba(16, 185, 129, 0.65);
-  filter: brightness(1.06);
-}
-.sub-pay-action-btn:active {
-  transform: translateY(0);
-}
-.sub-pay-action-btn::after {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 50%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
-  transform: skewX(-25deg);
-  animation: btnShineEffect 3.5s infinite;
-}
-@keyframes btnShineEffect {
-  0% { left: -100%; }
-  30%, 100% { left: 200%; }
-}
-
-/* Bank badges for Debit */
-.sub-bank-badge {
-  padding: 7px 10px;
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #CBD5E1;
-  font-size: 11px;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 11px;
+  border: 1px solid var(--pw-line-strong);
+  background: var(--pw-card);
+  color: var(--pw-text);
+  font-family: inherit;
+  font-size: 12.5px;
   font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  line-height: 1.25;
   text-align: center;
+  white-space: normal;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
-.sub-bank-badge:hover {
-  background: rgba(255, 255, 255, 0.1);
+.pw-btn svg { flex: 0 0 auto; }
+.pw-btn:hover { background: var(--pw-card-hover); transform: translateY(-1px); }
+.pw-btn:active { transform: none; }
+.pw-btn:focus-visible, .pw-plan:focus-visible, .pw-code:focus-visible { outline: 2px solid var(--pw-sky); outline-offset: 2px; }
+.pw-btn:disabled { opacity: 0.7; cursor: progress; transform: none; }
+.pw-btn-sm { min-height: 32px; padding: 5px 11px; font-size: 12px; border-radius: 9px; }
+.pw-btn-danger { color: var(--pw-danger); background: var(--pw-danger-soft); border-color: var(--pw-danger-line); }
+.pw-btn-amber { color: var(--pw-amber); background: var(--pw-amber-soft); border-color: var(--pw-amber-line); }
+.pw-btn-sky { color: var(--pw-sky); background: var(--pw-sky-soft); border-color: var(--pw-sky-line); }
+.pw-btn-solid { color: #FFFFFF; background: linear-gradient(135deg, #10B981, #059669); border-color: rgba(255, 255, 255, 0.25); }
+.pw-btn.is-done { color: var(--pw-accent-2); background: var(--pw-accent-soft); border-color: var(--pw-accent-line); }
+.pw-icon-btn { width: 38px; padding: 0; }
+.pw-btn-primary {
+  width: 100%;
+  min-height: 54px;
+  padding: 13px 20px;
+  font-size: 15px;
+  font-weight: 800;
   color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(135deg, #10B981 0%, #059669 55%, #047857 100%);
+  box-shadow: 0 14px 30px -12px rgba(16, 185, 129, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  text-wrap: balance;
 }
-.sub-bank-badge.active {
-  background: rgba(16, 185, 129, 0.22);
-  border-color: #10B981;
-  color: #34D399;
-}
-body.light .sub-bank-badge {
-  background: #F1F5F9;
-  border-color: #CBD5E1;
-  color: #1E293B !important;
-}
-body.light .sub-bank-badge.active {
-  background: #DCFCE7;
-  border-color: #059669;
-  color: #047857 !important;
-}
+.pw-btn-primary:hover { background: linear-gradient(135deg, #10B981 0%, #059669 55%, #047857 100%); filter: brightness(1.07); }
+.pw-btn-wa { color: #FFFFFF; background: linear-gradient(135deg, #16A34A, #15803D); border-color: rgba(255, 255, 255, 0.22); }
+.pw-btn-wa:hover { background: linear-gradient(135deg, #16A34A, #15803D); filter: brightness(1.08); }
 
-/* Digital Bank Receipt (Success View) */
-.sub-receipt-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border: 1.5px solid rgba(16, 185, 129, 0.35);
+/* ---------- Controle do administrador ---------- */
+.pw-admin { margin-bottom: 18px; border-radius: 16px; background: linear-gradient(135deg, var(--pw-amber-soft), var(--pw-accent-soft)); border: 1px solid var(--pw-amber-line); }
+.pw-admin-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; padding: 12px 14px; }
+.pw-admin-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.35; color: var(--pw-amber); }
+.pw-admin-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---------- Grade e cartoes ---------- */
+.pw-grid { display: grid; grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr); gap: 18px; align-items: start; }
+.pw-card {
+  min-width: 0;
+  padding: clamp(16px, 2vw, 22px);
   border-radius: 20px;
-  padding: 24px;
-  max-width: 520px;
-  margin: 0 auto 20px auto;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-  position: relative;
+  background: var(--pw-card);
+  border: 1px solid var(--pw-line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
-body.light .sub-receipt-card {
-  background: #FFFFFF !important;
-  border-color: #10B981 !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08) !important;
-}
-.sub-receipt-header {
-  display: flex;
-  justify-content: space-between;
+.pw-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--pw-line); }
+.pw-card-head h3 { margin: 0; font-size: 14.5px; font-weight: 800; letter-spacing: 0.01em; line-height: 1.3; color: var(--pw-text); }
+.pw-card-head .pw-chip { margin-left: auto; }
+.pw-step {
+  display: inline-flex;
   align-items: center;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.18);
-  padding-bottom: 12px;
-  margin-bottom: 14px;
+  justify-content: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--pw-accent-2);
+  background: var(--pw-accent-soft);
+  border: 1px solid var(--pw-accent-line);
 }
-body.light .sub-receipt-header {
-  border-bottom-color: #CBD5E1 !important;
+.pw-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--pw-accent-2);
+  background: var(--pw-accent-soft);
+  border: 1px solid var(--pw-accent-line);
+}
+.pw-chip-amber { color: var(--pw-amber); background: var(--pw-amber-soft); border-color: var(--pw-amber-line); }
+
+/* ---------- Planos ---------- */
+.pw-plans { display: flex; flex-direction: column; gap: 10px; }
+.pw-plan {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  background: var(--pw-card);
+  border: 1.5px solid var(--pw-line);
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.pw-plan:hover { border-color: var(--pw-accent-line); background: var(--pw-card-hover); }
+.pw-plan.active {
+  background: linear-gradient(135deg, var(--pw-accent-soft), rgba(16, 185, 129, 0.04));
+  border-color: var(--pw-accent);
+  box-shadow: 0 12px 28px -16px rgba(16, 185, 129, 0.8);
+}
+.pw-radio { display: flex; align-items: center; justify-content: center; flex: 0 0 20px; width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--pw-faint); transition: all 0.2s ease; }
+.pw-plan.active .pw-radio { border-color: var(--pw-accent); background: var(--pw-accent); }
+.pw-plan.active .pw-radio::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #FFFFFF; }
+.pw-plan-body { flex: 1 1 140px; min-width: 0; }
+.pw-plan-title { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14.5px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
+.pw-plan-desc { margin-top: 3px; font-size: 12.5px; line-height: 1.4; color: var(--pw-muted); }
+.pw-plan-price { flex: 0 0 auto; margin-left: auto; text-align: right; }
+.pw-plan-price strong { display: block; font-size: 20px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; white-space: nowrap; color: var(--pw-accent-2); }
+.pw-plan-price span { display: block; font-size: 12px; line-height: 1.3; color: var(--pw-muted); }
+.pw-tag { display: inline-flex; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; line-height: 1.35; letter-spacing: 0.02em; color: #451A03; background: linear-gradient(135deg, #FCD34D, #F59E0B); }
+
+/* ---------- Resumo ---------- */
+.pw-summary { display: flex; flex-direction: column; gap: 9px; margin-top: 14px; padding: 13px 15px; border-radius: 14px; background: var(--pw-field); border: 1px solid var(--pw-line); }
+.pw-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; font-size: 13px; line-height: 1.4; color: var(--pw-text-2); }
+.pw-row strong { font-weight: 700; text-align: right; color: var(--pw-text); }
+.pw-row-discount span, .pw-row-discount strong { color: var(--pw-accent-2); }
+.pw-total { align-items: flex-end; margin-top: 2px; padding-top: 11px; border-top: 1px solid var(--pw-line); }
+.pw-total-label { display: block; font-size: 14px; font-weight: 800; color: var(--pw-text); }
+.pw-total small { display: block; margin-top: 2px; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--pw-muted); }
+.pw-total-val { font-size: 27px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; white-space: nowrap; color: var(--pw-accent-2); }
+
+/* ---------- Beneficios ---------- */
+.pw-benefits-title { margin: 20px 0 10px; font-size: 11.5px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
+.pw-benefits { display: flex; flex-direction: column; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.pw-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.4; color: var(--pw-text-2); }
+.pw-check { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 18px; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; color: var(--pw-accent-2); background: var(--pw-accent-soft); }
+.pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: 16px; padding: 12px 14px; border-radius: 14px; font-size: 12.5px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
+.pw-guarantee svg { flex: 0 0 auto; margin-top: 1px; color: var(--pw-accent-2); }
+.pw-guarantee strong { display: block; font-size: 13px; color: var(--pw-accent-2); }
+
+/* ---------- Status do pagamento ---------- */
+.pw-status { margin-bottom: 18px; padding: 13px 15px; border-radius: 14px; background: linear-gradient(135deg, var(--pw-accent-soft), var(--pw-sky-soft)); border: 1px solid var(--pw-accent-line); transition: background 0.3s ease, border-color 0.3s ease; }
+.pw-status.radar-detecting { background: linear-gradient(135deg, var(--pw-sky-soft), var(--pw-accent-soft)); border-color: var(--pw-sky); }
+.pw-status-main { display: flex; align-items: flex-start; gap: 12px; }
+.pw-status-text { flex: 1 1 auto; min-width: 0; }
+.pw-status-text > strong { display: block; font-size: 14px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
+.pw-status-text > span { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: var(--pw-text-2); }
+.pw-pulse { position: relative; flex: 0 0 10px; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; background: #10B981; box-shadow: 0 0 10px #10B981; }
+.pw-pulse::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid currentColor; color: #10B981; animation: pwPulseRing 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+@keyframes pwPulseRing { 0% { transform: scale(0.8); opacity: 0.9; } 100% { transform: scale(2.1); opacity: 0; } }
+.pw-protocol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 11px; font-size: 12px; color: var(--pw-muted); }
+.pw-protocol strong { padding: 2px 9px; border-radius: 7px; font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12px; font-weight: 700; color: var(--pw-sky); background: var(--pw-sky-soft); border: 1px solid var(--pw-sky-line); overflow-wrap: anywhere; }
+.pw-track { height: 4px; margin-top: 12px; border-radius: 999px; background: var(--pw-line); overflow: hidden; }
+.pw-track-bar { height: 100%; width: 35%; border-radius: inherit; background: linear-gradient(90deg, #10B981, #38BDF8, #34D399); animation: pwTrackSlide 1.7s ease-in-out infinite alternate; }
+.pw-track-bar.recognizing-active { animation: none; margin-left: 0; transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes pwTrackSlide { from { margin-left: 0; } to { margin-left: 65%; } }
+
+/* ---------- Pix: QR, chave e copia e cola ---------- */
+.pw-pix { display: grid; grid-template-columns: 196px minmax(0, 1fr); gap: 18px; align-items: start; }
+.pw-qr { display: flex; flex-direction: column; align-items: center; gap: 8px; box-sizing: border-box; padding: 12px; border-radius: 18px; background: rgba(255, 255, 255, 0.97); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 16px 36px -16px rgba(0, 0, 0, 0.6); }
+.pw-qr-label { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #047857; }
+.pw-qr img { display: block; width: 100%; max-width: 172px; height: auto; aspect-ratio: 1 / 1; border-radius: 10px; background: #FFFFFF; image-rendering: pixelated; }
+.pw-qr-note { font-size: 12px; line-height: 1.35; text-align: center; color: #334155; }
+.pw-pay-info { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.pw-amount { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; }
+.pw-amount span { font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
+.pw-amount strong { font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; white-space: nowrap; color: var(--pw-accent-2); }
+.pw-key { padding: 13px 15px; border-radius: 14px; background: var(--pw-field); border: 1px solid var(--pw-line); }
+.pw-field-label { display: block; margin-bottom: 7px; font-size: 11.5px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
+.pw-key-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 12px; }
+.pw-key-value { font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 19px; font-weight: 800; line-height: 1.25; letter-spacing: 0.02em; color: var(--pw-text); }
+.pw-key-meta { margin-top: 4px; font-size: 12.5px; line-height: 1.4; color: var(--pw-muted); }
+.pw-key-meta strong { color: var(--pw-text-2); }
+.pw-code { display: block; width: 100%; min-height: 98px; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; resize: none; overflow-y: auto; background: var(--pw-field); border: 1px solid var(--pw-line-strong); color: var(--pw-text); font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+.pw-code-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
+.pw-note { display: flex; align-items: flex-start; gap: 9px; margin: 18px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--pw-text-2); }
+.pw-note svg { flex: 0 0 auto; margin-top: 2px; color: var(--pw-accent-2); }
+#subFormPix .pw-btn-primary { margin-top: 14px; }
+
+/* ---------- Aviso de pedido registrado ---------- */
+.pw-banner { margin-top: 16px; padding: 14px 16px; border-radius: 16px; background: var(--pw-amber-soft); border: 1px solid var(--pw-amber-line); }
+.pw-banner.is-error { background: var(--pw-danger-soft); border-color: var(--pw-danger-line); }
+.pw-banner-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-bottom: 6px; }
+.pw-banner-head strong { font-size: 14px; font-weight: 800; line-height: 1.35; color: var(--pw-text); }
+.pw-banner p { margin: 0 0 12px; font-size: 13px; line-height: 1.5; color: var(--pw-text-2); }
+.pw-banner .pw-btn { width: 100%; }
+
+/* ---------- Rodape ---------- */
+.pw-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--pw-line); font-size: 12px; line-height: 1.4; color: var(--pw-muted); }
+.pw-foot span { display: inline-flex; align-items: center; gap: 6px; }
+.pw-foot strong { color: var(--pw-text-2); }
+
+/* ---------- Tela de sucesso / recibo ---------- */
+.pw-success { padding: 6px 0 2px; text-align: center; }
+.pw-success-icon { display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; margin: 4px auto 16px; border-radius: 50%; color: #FFFFFF; background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.16), 0 18px 40px -10px rgba(16, 185, 129, 0.7); }
+.pw-success h3 { margin: 12px 0 8px; font-size: clamp(20px, 3vw, 26px); font-weight: 800; line-height: 1.25; text-wrap: balance; color: var(--pw-text); }
+.pw-success > p { max-width: 520px; margin: 0 auto 22px; font-size: 14px; line-height: 1.55; color: var(--pw-text-2); }
+.pw-receipt { box-sizing: border-box; max-width: 540px; margin: 0 auto 22px; padding: 20px 22px; border-radius: 20px; text-align: left; background: var(--pw-card); border: 1px solid var(--pw-accent-line); }
+.pw-receipt-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding-bottom: 14px; margin-bottom: 10px; border-bottom: 1px dashed var(--pw-line-strong); }
+.pw-receipt-head strong { display: block; font-size: 14px; font-weight: 800; color: var(--pw-text); }
+.pw-receipt-head small { display: block; margin-top: 2px; font-size: 12px; color: var(--pw-muted); }
+.pw-receipt .pw-row { flex-wrap: wrap; padding: 6px 0; }
+.pw-receipt .pw-row strong { overflow-wrap: anywhere; }
+.pw-receipt .pw-row-end { margin-top: 6px; padding-top: 12px; border-top: 1px dashed var(--pw-line-strong); }
+.pw-receipt .pw-row-end strong { font-size: 15px; color: var(--pw-accent-2); }
+.pw-success-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 560px; margin: 0 auto; }
+.pw-success-actions .pw-btn { flex: 1 1 210px; width: auto; min-height: 48px; font-size: 14px; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 900px) {
+  .pw-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .sub-paywall-modal { border-radius: 20px; }
+  .pw-head { gap: 14px; padding-bottom: 16px; margin-bottom: 16px; }
+  .pw-brand { flex-basis: 100%; }
+  .pw-actions { width: 100%; justify-content: flex-start; }
+  .pw-account { flex: 1 1 100%; }
+  .pw-pix { grid-template-columns: minmax(0, 1fr); }
+  .pw-qr { width: min(100%, 236px); justify-self: center; }
+  .pw-qr img { max-width: 200px; }
+  .pw-code-actions .pw-btn, .pw-key-row .pw-btn { width: 100%; }
+  .pw-success-actions .pw-btn { flex-basis: 100%; }
+}
+@media (max-width: 420px) {
+  .pw-card { padding: 14px; }
+  .pw-plan { padding: 12px 13px; }
+  .pw-key-value { font-size: 17px; }
+  .pw-amount strong { font-size: 27px; }
+  .pw-receipt { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sub-paywall-overlay, .sub-paywall-modal, .pw-track-bar, .pw-pulse::after { animation: none; }
 }
 
 
@@ -14595,7 +14164,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261102-users-grid2" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261102-paywall-glass" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -16618,600 +16187,239 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   </button>
 </div>
 
-<!-- MODAL DE ASSINATURA E PAYWALL MANDATÓRIO (EXECUTIVE FINTECH 4K • RECONHECIMENTO AUTOMÁTICO) -->
-<div class="sub-paywall-overlay" id="nexusSubscriptionModal" role="dialog" aria-modal="true">
+<!-- TELA DE PAGAMENTO / ASSINATURA: checkout Pix em vidro (IDs usados pelo JS preservados) -->
+<div class="sub-paywall-overlay" id="nexusSubscriptionModal" role="dialog" aria-modal="true" aria-labelledby="subModalTitle">
   <div class="sub-paywall-modal">
 
-    <!-- CABEÇALHO EXECUTIVO DO CHECKOUT -->
-    <div class="sub-header-bar">
-      <div style="display:flex; align-items:center; gap:14px;">
-        <div class="sub-brand-icon-box">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            <path d="m9 12 2 2 4-4"></path>
-          </svg>
-        </div>
-        <div>
-          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-            <div style="display:inline-flex; align-items:center; gap:6px; padding:2.5px 10px; border-radius:999px; background:rgba(16, 185, 129, 0.14); border:1px solid rgba(16, 185, 129, 0.38); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#10B981;">
-              <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block; box-shadow:0 0 8px #10B981;"></span>
-              <span class="badge-retain-color">Nexus Pay &bull; Pagamento via Pix</span>
-            </div>
-            <div style="display:inline-flex; align-items:center; gap:5px; padding:2.5px 9px; border-radius:999px; background:rgba(56, 189, 248, 0.14); border:1px solid rgba(56, 189, 248, 0.38); font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#38BDF8;">
-              <span>⚡</span>
-              <span class="badge-retain-color">Pagamento por Pix &bull; Confirmação manual</span>
-            </div>
-          </div>
-          <h2 style="font-size:20px; font-weight:900; margin:0; letter-spacing:-0.02em; color:#FFFFFF;" id="subModalTitle">
-             Central de Assinatura &bull; Nexus Financeiro Hub
-           </h2>
-           <p style="font-size:12px; color:#D1FAE5; margin:8px 0 0 0; line-height:1.5; max-width:620px;">Teste o sistema gratuitamente por 1 dia. Após o período de teste, escolha a cobrança mensal de R$ 15,00 ou a cobrança anual de R$ 150,00, com economia equivalente a 2 meses.</p>
-          <p style="font-size:12px; color:#94A3B8; margin:2px 0 0 0;" id="subModalSubtitle">Pix com QR Code ou copia e cola. A confirmação do recebimento é feita pelo financeiro.</p>
-        </div>
-      </div>
-
-      <!-- Ações do Cabeçalho / Conta Conectada -->
-      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:10px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);">
-          <span style="width:7px; height:7px; border-radius:50%; background:#10B981;" id="subHeaderStatusDot"></span>
-          <span style="font-size:11.5px; font-weight:700; color:#E2E8F0;" id="subHeaderAccountEmail">Conta Conectada</span>
-        </div>
-        <button type="button" id="subSwitchAccountBtn" onclick="window.switchAccountFromPaywall(event)" style="padding:6px 12px; border-radius:10px; background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.40); color:#FCA5A5; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s ease; position:relative; z-index:20;" title="Sair desta conta e voltar para a tela de login">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          <span class="badge-retain-color">Trocar Conta</span>
-        </button>
-        <button type="button" id="subAdminBypassBtn" onclick="window.closeSubscriptionPaywall(true)" style="display:none; padding:6px 12px; border-radius:10px; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.5); color:#FBBF24; font-size:11px; font-weight:800; cursor:pointer;">
-          Admin: Ignorar
-        </button>
-        <button type="button" id="subAdminResetBtn" onclick="window.resetTrialForTesting()" style="display:none; padding:6px 12px; border-radius:10px; background:rgba(59,130,246,0.2); border:1px solid rgba(59,130,246,0.5); color:#60A5FA; font-size:11px; font-weight:800; cursor:pointer;">
-          Admin: +1d Teste
-        </button>
-        <button type="button" id="subModalCloseBtn" onclick="window.closeSubscriptionPaywall(false)" style="display:none; width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1; cursor:pointer; align-items:center; justify-content:center; font-size:16px; line-height:1;" title="Fechar">
-          ✕
-        </button>
-      </div>
-    </div>
-
-    <!-- BARRA DE PROGRESSO EM 3 ETAPAS CLARAS -->
-    <div class="sub-stepper-bar">
-      <div class="sub-step-pill" id="subStepPill1" style="border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.06);">
-        <span class="sub-step-num">1</span>
-        <div>
-          <strong style="display:block; font-size:11.5px; color:#FFFFFF;">Escolha a Periodicidade</strong>
-           <span style="font-size:10.5px; color:#94A3B8;">1 dia grátis. Depois: R$ 15/mês ou R$ 150/ano.</span>
-        </div>
-      </div>
-      <div class="sub-step-pill" id="subStepPill2" style="border-color:rgba(56,189,248,0.35); background:rgba(56,189,248,0.05);">
-        <span class="sub-step-num" style="background:rgba(56,189,248,0.2); border-color:rgba(56,189,248,0.55); color:#38BDF8;">2</span>
-        <div>
-          <strong style="display:block; font-size:11.5px; color:#FFFFFF;">Efetue o Pagamento</strong>
-          <span style="font-size:10.5px; color:#94A3B8;">Pix por QR Code ou copia e cola</span>
-        </div>
-      </div>
-      <div class="sub-step-pill" id="subStepPill3" style="border-color:rgba(16,185,129,0.35); background:rgba(16,185,129,0.05);">
-        <span class="sub-step-num" style="background:rgba(16,185,129,0.22); border-color:rgba(16,185,129,0.55); color:#34D399;">3</span>
-        <div>
-          <strong style="display:block; font-size:11.5px; color:#34D399;">Confirmação do recebimento</strong>
-          <span style="font-size:10.5px; color:#94A3B8;">O acesso pago sera liberado apos a confirmacao do recebimento.</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- BARRA DE CONTROLE TOTAL DO ADMINISTRADOR (EXCLUSIVO ADMIN) -->
-    <div id="subAdminFullControlBar" style="display:none; margin-bottom:16px; padding:12px 16px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.16) 0%, rgba(16,185,129,0.1) 100%); border:1.5px solid rgba(245,158,11,0.45);">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-        <span style="font-size:12px; font-weight:900; color:#FBBF24; display:flex; align-items:center; gap:6px;">
-          <span>👑</span> CONTROLE DO ADMINISTRADOR: CONCESSÃO RÁPIDA DE ACESSO
+    <header class="pw-head">
+      <div class="pw-brand">
+        <span class="pw-logo" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
         </span>
-        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-          <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(60)" style="font-size:11px; padding:5px 10px; border-radius:8px; font-weight:700;">+1 Hora</button>
-          <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(1440)" style="font-size:11px; padding:5px 10px; border-radius:8px; font-weight:700;">+24 Horas</button>
-          <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(10080)" style="font-size:11px; padding:5px 10px; border-radius:8px; font-weight:700;">+7 Dias</button>
-          <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(43200)" style="font-size:11px; padding:5px 10px; border-radius:8px; font-weight:700;">+30 Dias</button>
-          <button type="button" class="btn-ghost" onclick="adminGrantTimeToActiveUser(525600)" style="font-size:11px; padding:5px 10px; border-radius:8px; font-weight:700;">+1 Ano</button>
-          <button type="button" style="font-size:11px; padding:5px 12px; border-radius:8px; font-weight:900; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; border:none; cursor:pointer;" onclick="adminGrantTimeToActiveUser('lifetime')">♾️ Vitalício</button>
-          <button type="button" class="btn-ghost" onclick="window.closeSubscriptionPaywall(true)" style="font-size:11px; padding:5px 10px; border-radius:8px; font-weight:700; color:#FBBF24;">✕ Fechar</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- CONTEÚDO PRINCIPAL DE CHECKOUT (2 COLUNAS ORGANIZADAS) -->
-    <div id="subCheckoutView">
-      <div class="sub-checkout-grid">
-        
-        <!-- COLUNA ESQUERDA: SELEÇÃO DE PLANO E RESUMO FINANCEIRO -->
-        <div class="sub-summary-card">
-          <div>
-            <div class="sub-section-header">
-              <span style="font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#E2E8F0; display:flex; align-items:center; gap:6px;">
-                <span style="color:#10B981;">01.</span> Plano de Assinatura
-              </span>
-              <span style="font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:999px; background:rgba(16,185,129,0.15); color:#34D399;">Sem Fidelidade</span>
-            </div>
-
-            <!-- Cards dos Planos -->
-            <div class="sub-plan-cards-stack">
-               <!-- Plano Mensal (R$ 15,00) -->
-              <div class="sub-plan-card active" id="subPlanCardMensal" onclick="window.selectSubPlan('mensal')">
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <div class="sub-plan-radio-circle"></div>
-                  <div>
-                    <div class="sub-plan-title">Plano Mensal Executivo</div>
-                    <div style="font-size:11px; color:#94A3B8; margin-top:2px;">Acesso completo por 30 dias</div>
-                  </div>
-                </div>
-                <div style="text-align:right;">
-                   <div class="sub-plan-price">R$ 15,00</div>
-                  <div class="sub-plan-period">por mês</div>
-                </div>
-              </div>
-
-               <!-- Plano Anual (R$ 150,00) -->
-              <div class="sub-plan-card" id="subPlanCardAnual" onclick="window.selectSubPlan('anual')">
-                <div class="sub-plan-badge-highlight">★ ECONOMIZE R$ 30,00 (2 MESES GRÁTIS)</div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <div class="sub-plan-radio-circle"></div>
-                  <div>
-                    <div class="sub-plan-title">Plano Anual Corporativo</div>
-                    <div style="font-size:11px; color:#94A3B8; margin-top:2px;">365 dias (equivale a R$ 12,50/mês)</div>
-                  </div>
-                </div>
-                <div style="text-align:right;">
-                   <div class="sub-plan-price" style="color:#F59E0B;">R$ 150,00</div>
-                  <div class="sub-plan-period">por ano</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Resumo Financeiro da Cobrança -->
-            <div class="sub-order-breakdown" style="margin-top:12px;">
-              <div class="sub-breakdown-row">
-                <span id="subSummaryPlanName">Plano Mensal Nexus (30 Dias)</span>
-                 <strong id="subSummaryPlanPrice" style="color:#FFFFFF;">R$ 15,00</strong>
-              </div>
-              <div class="sub-breakdown-row" id="subSummaryDiscountRow" style="display:none;">
-                 <span style="color:#10B981;">Desconto do plano anual:</span>
-                 <strong style="color:#10B981;">- R$ 30,00</strong>
-              </div>
-              <div class="sub-breakdown-row">
-                <span>Conciliação Bancária (SPI / Gateway):</span>
-                <strong style="color:#38BDF8; font-size:11px;">Confirmação do recebimento</strong>
-              </div>
-              <div class="sub-breakdown-row total-row">
-                <div style="display:flex; flex-direction:column;">
-                  <strong style="font-size:13px; color:#FFFFFF;">Total a Pagar</strong>
-                  <span style="font-size:10px; color:#94A3B8;" id="subSummaryPaymentFrequency">Ativação imediata após o pagamento</span>
-                </div>
-                 <span class="sub-breakdown-total-val" id="subSummaryTotalPrice">R$ 15,00</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Recursos Inclusos e Garantia -->
-          <div>
-            <div style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#94A3B8; margin-bottom:8px;">
-              Licença Completa Inclui:
-            </div>
-            <div class="sub-benefits-list">
-              <div class="sub-benefit-item">
-                <span class="sub-benefit-check">✓</span>
-                <span>Gestão Financeira Completa (Contas, Caixas e Fluxo)</span>
-              </div>
-              <div class="sub-benefit-item">
-                <span class="sub-benefit-check">✓</span>
-                <span>Conciliação Bancária, Orçamentos e Metas 4K</span>
-              </div>
-              <div class="sub-benefit-item">
-                <span class="sub-benefit-check">✓</span>
-                <span>Módulo de Ordens de Serviço & Equipe Técnica</span>
-              </div>
-              <div class="sub-benefit-item">
-                <span class="sub-benefit-check">✓</span>
-                <span>Relatórios Executivos, PDF e Excel em Tempo Real</span>
-              </div>
-              <div class="sub-benefit-item">
-                <span class="sub-benefit-check">✓</span>
-                <span>Sincronização em Tempo Real SQL Server & Nuvem</span>
-              </div>
-            </div>
-
-            <div style="margin-top:12px; padding:10px 12px; border-radius:12px; background:rgba(16, 185, 129, 0.07); border:1px solid rgba(16, 185, 129, 0.22); display:flex; align-items:center; gap:10px;">
-              <div style="width:32px; height:32px; border-radius:8px; background:rgba(16,185,129,0.16); color:#10B981; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:900; font-size:15px;">
-                7d
-              </div>
-              <div style="font-size:10.5px; line-height:1.35; color:#CBD5E1;">
-                <strong style="color:#10B981; display:block;">Garantia Incondicional de 7 Dias</strong>
-                Satisfação total garantida ou reembolso integral imediato.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- COLUNA DIREITA: MODALIDADE DE PAGAMENTO E RECONHECIMENTO AUTOMÁTICO -->
-        <div class="sub-payment-card">
-          <div>
-            <div class="sub-section-header">
-              <span style="font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#E2E8F0; display:flex; align-items:center; gap:6px;">
-                <span style="color:#10B981;">02.</span> Pagamento via Pix</span>
-              <span style="font-size:10.5px; font-weight:800; color:#10B981; display:flex; align-items:center; gap:5px;">
-                <span class="sub-radar-pulse-dot" style="width:7px; height:7px;"></span>
-                <span id="subHeaderAutoStatusBadge">Pix &bull; confirmação manual</span>
-              </span>
-            </div>
-
-            <!-- RADAR DE RECONHECIMENTO AUTOMÁTICO EM TEMPO REAL -->
-            <div class="sub-auto-radar-card" id="subAutoRecognitionRadar">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                <div style="display:flex; align-items:center; gap:9px;">
-                  <span class="sub-radar-pulse-dot" id="subRadarDot"></span>
-                  <div>
-                    <strong id="subRadarStatusTitle" style="font-size:12px; font-weight:900; color:#FFFFFF; display:block; letter-spacing:-0.01em;">Awaiting payment confirmation</strong>
-                    <span id="subRadarStatusDesc" style="font-size:10.5px; color:#94A3B8; display:block; margin-top:1px;">Pay using Pix, then send your receipt to support. Access is released after verification.</span>
-                  </div>
-                </div>
-                <div style="text-align:right;">
-                  <span style="font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#64748B; display:block;">Protocolo da solicitacao</span>
-                  <strong id="subLiveSessionTxBadge" style="font-size:10.5px; font-family:monospace; color:#38BDF8; background:rgba(56,189,248,0.12); padding:2px 7px; border-radius:6px; border:1px solid rgba(56,189,248,0.3);">PIX-REQUEST</strong>
-                </div>
-              </div>
-              <div class="sub-auto-progress-track">
-                <div class="sub-auto-progress-bar" id="subRadarProgressBar"></div>
-              </div>
-            </div>
-
-            <!-- Abas de Modalidades -->
-            <div class="sub-payment-tabs">
-              <button type="button" class="sub-tab-btn active" id="subTabPix" onclick="window.selectPaymentMethod('pix')">
-                <span style="font-size:14px;">💠</span>
-                <span>Pix</span>
-                <span class="sub-tab-pill-badge">Pix manual</span>
-              </button>
-              <button type="button" class="sub-tab-btn" id="subTabCredit" onclick="window.selectPaymentMethod('credit_card')">
-                <span style="font-size:14px;">💳</span>
-                <span>Crédito</span>
-                <span class="sub-tab-pill-badge">Até 12x</span>
-              </button>
-              <button type="button" class="sub-tab-btn" id="subTabDebit" onclick="window.selectPaymentMethod('debit_card')">
-                <span style="font-size:14px;">🏦</span>
-                <span>Débito</span>
-                <span class="sub-tab-pill-badge">Imediato</span>
-              </button>
-              <button type="button" class="sub-tab-btn" id="subTabBoleto" onclick="window.selectPaymentMethod('boleto')">
-                <span style="font-size:14px;">📄</span>
-                <span>Boleto</span>
-                <span class="sub-tab-pill-badge">FEBRABAN</span>
-              </button>
-            </div>
-
-            <!-- ==================== ABA 1: PIX (QR CODE DINÂMICO + RECONHECIMENTO AUTOMÁTICO) ==================== -->
-            <div id="subFormPix" style="display:block;">
-              <!-- Grid Horizontal: QR Code à Esquerda + Dados da Chave e Copia/Cola à Direita -->
-              <div class="sub-pix-split-grid">
-                <!-- Coluna QR Code com Scanner Line -->
-                <div class="sub-pix-qr-box" title="Escaneie com o aplicativo do seu banco">
-                  <div class="sub-qr-scan-line"></div>
-                  <div style="font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#047857; background:#DCFCE7; padding:2px 8px; border-radius:999px; margin-bottom:5px;">
-                    QR Code Pix
-                  </div>
-                  <img id="subPixQrImg" src="" alt="QR Code Pix" style="width:136px; height:136px; display:block; border-radius:8px;" />
-                  <div style="margin-top:6px; font-size:10px; font-weight:800; color:#0F172A; display:flex; align-items:center; gap:4px;">
-                    <span style="width:6px; height:6px; border-radius:50%; background:#10B981; display:inline-block;"></span>
-                    <span>Pague o valor exibido usando este QR Code</span>
-                  </div>
-                </div>
-
-                <!-- Coluna Dados Bancários Pix + Copia e Cola -->
-                <div style="display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
-                  <div class="pix-info-card" style="padding:11px 14px; border-radius:14px; background:rgba(16,185,129,0.08); border:1.5px solid rgba(16,185,129,0.32); text-align:left;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                      <span style="font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:0.06em; color:#34D399;">
-                        💠 Chave Pix Oficial (Celular)
-                      </span>
-                      <span style="font-size:11.5px; font-weight:800; color:#CBD5E1;">
-                        Valor: <strong id="pixDisplayAmount" style="color:#10B981; font-size:14.5px;">R$ 15,00</strong>
-                      </span>
-                    </div>
-
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                      <div>
-                        <div style="font-size:17px; font-weight:900; color:#FFFFFF; letter-spacing:0.03em; font-family:monospace;">
-                          (62) 99234-5372
-                        </div>
-                        <div style="font-size:11px; color:#94A3B8; margin-top:1px;">
-                          Favorecido: <strong style="color:#E2E8F0;">Paulo Lima</strong> &bull; Goiânia - GO
-                        </div>
-                      </div>
-                      <button type="button" id="btnCopyPixKeyDirect" onclick="window.copyPixKeyDirect()" style="padding:7px 12px; border-radius:9px; background:rgba(56,189,248,0.16); border:1px solid rgba(56,189,248,0.45); color:#38BDF8; font-weight:800; font-size:11px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.2s ease;">
-                        <span>📋</span> <span class="badge-retain-color">Copiar Chave</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Código Pix Copia e Cola -->
-                  <div style="text-align:left;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
-                      <label class="sub-field-label" style="margin:0;">Código Pix Copia e Cola (Padrão EMV BACEN)</label>
-                      <span style="font-size:9.5px; color:#34D399; font-weight:700;">CONFIRMACAO MANUAL</span>
-                    </div>
-                    <div style="display:flex; gap:6px;">
-                      <input type="text" id="subPixCodeInput" readonly class="sub-field-input" style="height:38px; font-size:11px; font-family:monospace;" />
-                      <button type="button" id="btnCopyPix" onclick="window.copyPixCodeToClipboard()" style="padding:0 14px; height:38px; border-radius:10px; background:linear-gradient(135deg, rgba(16,185,129,0.28), rgba(5,150,105,0.18)); border:1px solid rgba(16,185,129,0.55); color:#34D399; font-weight:800; font-size:11.5px; cursor:pointer; white-space:nowrap;">
-                        📋 Copiar Pix
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Pix payment confirmation instructions. -->
-                  <div style="padding:8px 11px; border-radius:11px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-                    <div style="font-size:10.5px; color:#CBD5E1; display:flex; align-items:center; gap:6px;">
-                      <span style="color:#10B981; font-size:13px;">⚡</span>
-                      <span><strong>Confirmação de pagamento:</strong> Após pagar, envie o comprovante pelo WhatsApp.</span>
-                    </div>
-                    <input type="hidden" id="subPixTxIdInput" value="" />
-                  </div>
-                </div>
-              </div>
-
-              <button type="button" class="sub-pay-action-btn" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
-                <span>⚡</span> <span id="pixActionBtnLabel">Paguei via Pix &bull; solicitar confirmação</span>
-              </button>
-            </div>
-
-            <!-- ==================== ABA 2: CARTÃO DE CRÉDITO ==================== -->
-            <div id="subFormCredit" style="display:none;">
-              <!-- Preview Cartão Fintech Compacto -->
-              <div class="sub-card-3d-wrapper">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span style="font-size:10px; font-weight:900; letter-spacing:0.12em; color:#94A3B8;">NEXUS CORPORATE CARD</span>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span id="creditCardFlagBadge" style="font-size:11px; font-weight:900; color:#34D399; background:rgba(0,0,0,0.45); padding:2px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.15);">VISA / MASTERCARD</span>
-                  </div>
-                </div>
-
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <div class="sub-card-chip"></div>
-                  <div id="creditCardNumberPreview" style="font-size:16px; font-weight:900; letter-spacing:0.14em; color:#FFFFFF; font-family:monospace;">
-                    •••• •••• •••• ••••
-                  </div>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                  <div>
-                    <span style="font-size:8px; text-transform:uppercase; color:#94A3B8; display:block; letter-spacing:0.04em;">Titular do Cartão</span>
-                    <span id="creditCardHolderPreview" style="font-size:11.5px; font-weight:800; color:#FFFFFF; text-transform:uppercase; letter-spacing:0.04em;">NOME IMPRESSO</span>
-                  </div>
-                  <div style="text-align:right;">
-                    <span style="font-size:8px; text-transform:uppercase; color:#94A3B8; display:block; letter-spacing:0.04em;">Validade</span>
-                    <span id="creditCardExpiryPreview" style="font-size:11.5px; font-weight:800; color:#FFFFFF; font-family:monospace;">MM/AA</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Campos Organizados em Grid -->
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div class="sub-field-group">
-                  <label class="sub-field-label">Número do Cartão de Crédito *</label>
-                  <input type="text" id="subCardNumber" maxlength="19" placeholder="0000 0000 0000 0000" class="sub-field-input" oninput="window.formatCardNumberInput(this)" style="font-family:monospace;" />
-                </div>
-                <div class="sub-field-group">
-                  <label class="sub-field-label">Nome Impresso no Cartão *</label>
-                  <input type="text" id="subCardHolder" placeholder="NOME E SOBRENOME" class="sub-field-input" oninput="document.getElementById('creditCardHolderPreview').textContent = this.value.toUpperCase() || 'NOME IMPRESSO'" />
-                </div>
-              </div>
-
-              <div style="display:grid; grid-template-columns:110px 110px 1fr; gap:10px;">
-                <div class="sub-field-group">
-                  <label class="sub-field-label">Validade *</label>
-                  <input type="text" id="subCardExpiry" maxlength="5" placeholder="MM/AA" class="sub-field-input" oninput="window.formatCardExpiryInput(this)" style="font-family:monospace; text-align:center;" />
-                </div>
-                <div class="sub-field-group">
-                  <label class="sub-field-label">CVV *</label>
-                  <input type="password" id="subCardCvv" maxlength="4" placeholder="123" class="sub-field-input" style="font-family:monospace; text-align:center;" />
-                </div>
-                <div class="sub-field-group">
-                  <label class="sub-field-label">Parcelamento</label>
-                  <select id="subCardInstallments" class="sub-field-input" style="cursor:pointer;">
-                    <option value="1">1x de R$ 15,00 sem juros</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style="font-size:10.5px; color:#94A3B8; display:flex; align-items:center; gap:6px; margin-top:4px;">
-                <span style="color:#10B981;">⚡</span> <span>Autorização integrada com reconhecimento e liberação automática imediata.</span>
-              </div>
-
-              <button type="button" class="sub-pay-action-btn" id="subBtnConfirmCredit" onclick="window.processSubscriptionPayment('credit_card')">
-                <span>🔒</span> <span id="creditCardBtnLabel">Pagar R$ 15,00 com Cartão de Crédito</span>
-              </button>
-            </div>
-
-            <!-- ==================== ABA 3: CARTÃO DE DÉBITO ==================== -->
-            <div id="subFormDebit" style="display:none;">
-              <div style="margin-bottom:10px;">
-                <label class="sub-field-label">Instituição Bancária Emissora</label>
-                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px;">
-                  <div class="sub-bank-badge active" onclick="window.selectDebitBankBadge('nubank', this)">Nubank</div>
-                  <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('itau', this)">Itaú</div>
-                  <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('bradesco', this)">Bradesco</div>
-                  <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('bb', this)">Banco do Brasil</div>
-                  <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('santander', this)">Santander</div>
-                  <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('caixa', this)">Caixa</div>
-                  <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('inter', this)">Banco Inter</div>
-                  <div class="sub-bank-badge" onclick="window.selectDebitBankBadge('c6', this)">C6 Bank</div>
-                </div>
-                <select id="subDebitBank" class="sub-field-input" style="display:none;">
-                  <option value="nubank">Nubank</option>
-                  <option value="itau">Itaú Unibanco</option>
-                  <option value="bradesco">Bradesco</option>
-                  <option value="bb">Banco do Brasil</option>
-                  <option value="santander">Santander</option>
-                  <option value="caixa">Caixa Econômica</option>
-                  <option value="inter">Banco Inter</option>
-                  <option value="c6">C6 Bank</option>
-                </select>
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div class="sub-field-group">
-                  <label class="sub-field-label">Número do Cartão de Débito *</label>
-                  <input type="text" id="subDebitNumber" maxlength="19" placeholder="0000 0000 0000 0000" class="sub-field-input" oninput="window.formatCardNumberInput(this)" style="font-family:monospace;" />
-                </div>
-                <div class="sub-field-group">
-                  <label class="sub-field-label">Nome Completo do Titular *</label>
-                  <input type="text" id="subDebitHolder" placeholder="NOME E SOBRENOME" class="sub-field-input" />
-                </div>
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div class="sub-field-group">
-                  <label class="sub-field-label">Validade (MM/AA) *</label>
-                  <input type="text" id="subDebitExpiry" maxlength="5" placeholder="MM/AA" class="sub-field-input" oninput="window.formatCardExpiryInput(this)" style="font-family:monospace;" />
-                </div>
-                <div class="sub-field-group">
-                  <label class="sub-field-label">CVV (Cód. Segurança) *</label>
-                  <input type="password" id="subDebitCvv" maxlength="4" placeholder="123" class="sub-field-input" style="font-family:monospace;" />
-                </div>
-              </div>
-
-              <div style="font-size:10.5px; color:#94A3B8; display:flex; align-items:center; gap:6px; margin-top:4px;">
-                <span style="color:#10B981;">⚡</span> <span>Débito online com conciliação e desbloqueio automático imediato.</span>
-              </div>
-
-              <button type="button" class="sub-pay-action-btn" id="subBtnConfirmDebit" onclick="window.processSubscriptionPayment('debit_card')">
-                <span>🔒</span> <span id="debitCardBtnLabel">Pagar R$ 15,00 com Cartão de Débito</span>
-              </button>
-            </div>
-
-            <!-- ==================== ABA 4: BOLETO BANCÁRIO ==================== -->
-            <div id="subFormBoleto" style="display:none;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); margin-bottom:10px;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <span style="font-size:22px;">📄</span>
-                  <div style="text-align:left;">
-                    <strong style="font-size:12.5px; color:#FFFFFF; display:block;">Boleto Bancário Registrado (FEBRABAN)</strong>
-                    <span style="font-size:11px; color:#94A3B8;">Favorecido: Paulo Lima &bull; Conciliação Automática</span>
-                  </div>
-                </div>
-                <div style="text-align:right;">
-                  <span style="font-size:10.5px; color:#94A3B8; display:block;">Valor do Documento</span>
-                  <strong id="boletoDisplayAmount" style="color:#10B981; font-size:16px;">R$ 15,00</strong>
-                </div>
-              </div>
-
-              <div style="margin-bottom:10px; text-align:left;">
-                <label class="sub-field-label">Linha Digitável do Boleto (Padrão FEBRABAN)</label>
-                <div style="display:flex; gap:8px;">
-                  <input type="text" id="subBoletoCodeInput" readonly value="23793.38128 60047.281921 54000.063304 9 91240000001000" class="sub-field-input" style="font-size:11.5px; font-family:monospace;" />
-                  <button type="button" onclick="window.copyBoletoCodeToClipboard()" style="padding:0 14px; border-radius:10px; background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.45); color:#34D399; font-weight:800; font-size:11.5px; cursor:pointer; white-space:nowrap;">
-                    📋 Copiar Linha
-                  </button>
-                </div>
-              </div>
-
-              <!-- Código de Barras Visual FEBRABAN -->
-              <div style="background:#FFFFFF; border-radius:10px; padding:8px 16px; margin:0 0 10px 0; display:flex; justify-content:center; align-items:center; gap:2.5px; height:36px; box-shadow:0 4px 12px rgba(0,0,0,0.35);">
-                <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:5px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:5px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:1px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:3px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:2px; height:100%; display:inline-block;"></span>
-                <span style="background:#000; width:4px; height:100%; display:inline-block;"></span>
-              </div>
-
-              <input type="hidden" id="subBoletoAuthInput" value="" />
-
-              <button type="button" class="sub-pay-action-btn" id="subBtnConfirmBoleto" onclick="window.processSubscriptionPayment('boleto')">
-                <span>⚡</span> <span>Já Paguei o Boleto &bull; Reconhecer Pagamento Automaticamente</span>
-              </button>
-            </div>
-
-            <!-- BANNER DE VERIFICAÇÃO E CONCILIAÇÃO AUTOMÁTICA -->
-            <div id="subPaymentVerifyBanner" style="display:none; margin-top:12px; padding:12px 14px; border-radius:14px; background:rgba(16,185,129,0.12); border:1.5px solid rgba(16,185,129,0.45); text-align:left;">
-              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:5px;">
-                <span style="font-size:12px; font-weight:900; color:#34D399; display:flex; align-items:center; gap:6px;">
-                  <span>⚡</span> <span id="subVerifyBannerTitle">Aguardando confirmação manual</span>
-                </span>
-                <span class="payment-manual-status">CONFIRMAÇÃO MANUAL</span>
-              </div>
-              <p id="subVerifyBannerDesc" style="font-size:11px; color:#E2E8F0; margin:0 0 10px 0; line-height:1.4;">
-                Solicitation registered. Awaiting payment confirmation.</span> <span>Atualizar status</span>
-                </button>
-                <button type="button" onclick="window.sendPaymentProofWhatsApp()" style="flex:1; min-width:160px; padding:8px 12px; border-radius:9px; background:rgba(37,211,102,0.18); border:1.5px solid rgba(37,211,102,0.45); color:#4ADE80; font-weight:800; font-size:11px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-                  <span>💬</span> <span>Enviar Comprovante (WhatsApp)</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Rodapé de Segurança da Coluna Direita -->
-          <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:10.5px; color:#64748B;">
-            <span>🔒 Pagamento via Pix &bull; confirmacao manual</span>
-            <span>Suporte Financeiro: <strong style="color:#94A3B8;">(62) 99234-5372</strong></span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- TELA DE SUCESSO: RECIBO BANCÁRIO DIGITAL OFICIAL + DESBLOQUEIO AUTOMÁTICO -->
-    <div id="subSuccessView" style="display:none; text-align:center; padding:14px 10px;">
-      <div style="width:72px; height:72px; margin:0 auto 14px; border-radius:50%; background:radial-gradient(circle, rgba(16,185,129,0.3) 0%, rgba(5,150,105,0.15) 60%, rgba(0,0,0,0.4) 100%); border:2px solid #10B981; display:flex; align-items:center; justify-content:center; font-size:34px; box-shadow:0 0 35px rgba(16,185,129,0.45); animation:pulseDockUrgent 2s infinite ease-in-out;">
-        ✓
-      </div>
-      <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 14px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">
-        <span class="badge-retain-color">Pagamento confirmado</span>
-      </div>
-      <h3 style="font-size:23px; font-weight:900; margin:0 0 6px 0; color:#FFFFFF;">
-        Pagamento Confirmado & Acesso Liberado!
-      </h3>
-      <p style="font-size:13px; color:#CBD5E1; margin:0 0 18px 0; max-width:540px; margin-left:auto; margin-right:auto; line-height:1.45;">Seu plano <strong id="subSuccessPlanName" style="color:#10B981;">Mensal</strong> esta ativo. Este recibo registra a ativacao da assinatura.</p>
-
-      <!-- Recibo Digital Formatado -->
-      <div class="sub-receipt-card">
-        <div class="sub-receipt-header">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:20px;">🏛️</span>
-            <div style="text-align:left;">
-              <strong style="font-size:13px; color:#FFFFFF; display:block;">NEXUS &bull; RECIBO DE ATIVACAO</strong>
-              <span style="font-size:10.5px; color:#94A3B8;">Confirmacao manual pelo financeiro</span>
-            </div>
-          </div>
-          <span style="font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:6px; background:rgba(16,185,129,0.2); color:#10B981;">ASSINATURA ATIVA</span>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12.5px;">
-          <span style="color:#94A3B8;">Código da Transação:</span>
-          <strong id="subSuccessTxId" style="color:#FFFFFF; font-family:monospace;">-</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12.5px;">
-          <span style="color:#94A3B8;">Forma de Pagamento:</span>
-          <strong id="subSuccessMethod" style="color:#FFFFFF;">-</span>
-          <strong id="subSuccessDateTime" style="color:#FFFFFF;">-</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; font-size:12.5px; border-top:1px dashed rgba(255,255,255,0.15); padding-top:8px; margin-top:8px;">
-          <span style="color:#94A3B8;">Assinatura Válida até:</span>
-          <strong id="subSuccessExpires" style="color:#34D399; font-size:14px;">-</strong>
+        <div class="pw-titles">
+          <span class="pw-eyebrow">Nexus Pay &bull; Pix</span>
+          <h2 id="subModalTitle">Central de Assinatura &bull; Nexus Financeiro Hub</h2>
+          <p id="subModalSubtitle">Escolha o plano e pague via Pix. O acesso pago é liberado após a confirmação do recebimento.</p>
         </div>
       </div>
 
-      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; max-width:480px; margin:0 auto;">
-        <button type="button" class="btn-ghost" onclick="window.printSubscriptionReceipt()" style="padding:12px 20px; border-radius:14px; font-size:13px; font-weight:800; display:inline-flex; align-items:center; gap:8px;">
-          <span>🖨️</span> <span>Imprimir Comprovante</span>
+      <div class="pw-actions">
+        <span class="pw-account"><span class="pw-dot" id="subHeaderStatusDot"></span><span id="subHeaderAccountEmail">Conta conectada</span></span>
+        <button type="button" id="subSwitchAccountBtn" class="pw-btn pw-btn-danger" onclick="window.switchAccountFromPaywall(event)" title="Sair desta conta e voltar para a tela de login">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Trocar conta</span>
         </button>
-        <button type="button" class="sub-pay-action-btn" onclick="window.closeSubscriptionPaywall(true)" style="max-width:300px; margin:0;">
-          <span>🚀</span> <span id="subSuccessAutoRedirectLabel">Acessar o Sistema Agora</span>
+        <button type="button" id="subAdminBypassBtn" class="pw-btn pw-btn-amber" onclick="window.closeSubscriptionPaywall(true)" style="display:none;">Admin: ignorar</button>
+        <button type="button" id="subAdminResetBtn" class="pw-btn pw-btn-sky" onclick="window.resetTrialForTesting()" style="display:none;">Admin: +1 dia de teste</button>
+        <button type="button" id="subModalCloseBtn" class="pw-btn pw-icon-btn" onclick="window.closeSubscriptionPaywall(false)" style="display:none;" title="Fechar" aria-label="Fechar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Controle do administrador (somente admin) -->
+    <div id="subAdminFullControlBar" class="pw-admin" style="display:none;">
+      <div class="pw-admin-inner">
+        <span class="pw-admin-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l4 4 5-7 5 7 4-4-2 11H5L3 7z"/></svg>
+          <span>Controle do administrador &bull; concessão rápida de acesso</span>
+        </span>
+        <div class="pw-admin-actions">
+          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(60)">+1 hora</button>
+          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(1440)">+24 horas</button>
+          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(10080)">+7 dias</button>
+          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(43200)">+30 dias</button>
+          <button type="button" class="pw-btn pw-btn-sm" onclick="adminGrantTimeToActiveUser(525600)">+1 ano</button>
+          <button type="button" class="pw-btn pw-btn-sm pw-btn-solid" onclick="adminGrantTimeToActiveUser('lifetime')">Vitalício</button>
+          <button type="button" class="pw-btn pw-btn-sm pw-btn-amber" onclick="window.closeSubscriptionPaywall(true)">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checkout -->
+    <div id="subCheckoutView">
+      <div class="pw-grid">
+
+        <!-- 1. Plano e resumo -->
+        <section class="pw-card" aria-labelledby="pwPlanTitle">
+          <div class="pw-card-head">
+            <span class="pw-step">1</span>
+            <h3 id="pwPlanTitle">Escolha o plano</h3>
+            <span class="pw-chip">Sem fidelidade</span>
+          </div>
+
+          <div class="pw-plans" role="radiogroup" aria-label="Plano de assinatura">
+            <div class="pw-plan active" id="subPlanCardMensal" role="radio" aria-checked="true" tabindex="0" onclick="window.selectSubPlan('mensal')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectSubPlan('mensal');}">
+              <span class="pw-radio" aria-hidden="true"></span>
+              <div class="pw-plan-body">
+                <div class="pw-plan-title">Plano Mensal</div>
+                <div class="pw-plan-desc">Acesso completo por 30 dias</div>
+              </div>
+              <div class="pw-plan-price"><strong>R$ 15,00</strong><span>por mês</span></div>
+            </div>
+
+            <div class="pw-plan" id="subPlanCardAnual" role="radio" aria-checked="false" tabindex="0" onclick="window.selectSubPlan('anual')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectSubPlan('anual');}">
+              <span class="pw-radio" aria-hidden="true"></span>
+              <div class="pw-plan-body">
+                <div class="pw-plan-title">Plano Anual <span class="pw-tag">Economize R$ 30,00</span></div>
+                <div class="pw-plan-desc">12 meses &bull; equivale a R$ 12,50 por mês</div>
+              </div>
+              <div class="pw-plan-price"><strong>R$ 150,00</strong><span>por ano</span></div>
+            </div>
+          </div>
+
+          <div class="pw-summary">
+            <div class="pw-row"><span id="subSummaryPlanName">Plano Mensal (30 dias)</span><strong id="subSummaryPlanPrice">R$ 15,00</strong></div>
+            <div class="pw-row pw-row-discount" id="subSummaryDiscountRow" style="display:none;"><span>Desconto do plano anual</span><strong>- R$ 30,00</strong></div>
+            <div class="pw-row pw-total">
+              <div>
+                <span class="pw-total-label">Total a pagar</span>
+                <small id="subSummaryPaymentFrequency">Cobrança mês a mês, sem fidelidade</small>
+              </div>
+              <span class="pw-total-val" id="subSummaryTotalPrice">R$ 15,00</span>
+            </div>
+          </div>
+
+          <div class="pw-benefits-title">A licença inclui</div>
+          <ul class="pw-benefits">
+            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Gestão financeira completa: contas, caixas e fluxo</span></li>
+            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Conciliação, orçamentos e metas</span></li>
+            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Ordens de serviço e equipe técnica</span></li>
+            <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Relatórios em PDF e Excel</span></li>
+          </ul>
+
+          <div class="pw-guarantee">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div><strong>Garantia de 7 dias</strong>Satisfação garantida ou reembolso integral.</div>
+          </div>
+        </section>
+
+        <!-- 2. Pagamento via Pix -->
+        <section class="pw-card" aria-labelledby="pwPayTitle">
+          <div class="pw-card-head">
+            <span class="pw-step">2</span>
+            <h3 id="pwPayTitle">Pagamento via Pix</h3>
+            <span class="pw-chip pw-chip-amber">Confirmação manual</span>
+          </div>
+
+          <div class="pw-status" id="subAutoRecognitionRadar" role="status" aria-live="polite">
+            <div class="pw-status-main">
+              <span class="pw-pulse" id="subRadarDot"></span>
+              <div class="pw-status-text">
+                <strong id="subRadarStatusTitle">Aguardando pagamento</strong>
+                <span id="subRadarStatusDesc">Pague via Pix e envie o comprovante. O acesso é liberado após a confirmação do recebimento.</span>
+              </div>
+            </div>
+            <div class="pw-protocol"><span>Protocolo da solicitação</span><strong id="subLiveSessionTxBadge">PIX-REQUEST</strong></div>
+            <div class="pw-track"><div class="pw-track-bar" id="subRadarProgressBar"></div></div>
+          </div>
+
+          <div id="subFormPix">
+            <div class="pw-pix">
+              <div class="pw-qr">
+                <span class="pw-qr-label">QR Code Pix</span>
+                <img id="subPixQrImg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="QR Code Pix para pagamento" width="172" height="172" />
+                <span class="pw-qr-note">Escaneie com o app do seu banco</span>
+              </div>
+
+              <div class="pw-pay-info">
+                <div class="pw-amount"><span>Valor a pagar</span><strong id="pixDisplayAmount">R$ 15,00</strong></div>
+
+                <div class="pw-key">
+                  <span class="pw-field-label">Chave Pix (celular)</span>
+                  <div class="pw-key-row">
+                    <div>
+                      <div class="pw-key-value">(62) 99234-5372</div>
+                      <div class="pw-key-meta">Favorecido: <strong>Paulo Lima</strong> &bull; Goiânia - GO</div>
+                    </div>
+                    <button type="button" id="btnCopyPixKeyDirect" class="pw-btn pw-btn-sky" onclick="window.copyPixKeyDirect()">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      <span>Copiar chave</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="pw-field-label" for="subPixCodeInput">Pix copia e cola</label>
+                  <textarea id="subPixCodeInput" class="pw-code" readonly rows="4" spellcheck="false"></textarea>
+                  <div class="pw-code-actions">
+                    <button type="button" id="btnCopyPix" class="pw-btn pw-btn-solid" onclick="window.copyPixCodeToClipboard()">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      <span>Copiar código Pix</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" id="subPixTxIdInput" value="" />
+
+            <p class="pw-note">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span><strong>Depois de pagar:</strong> toque no botão abaixo e envie o comprovante pelo WhatsApp. O acesso é liberado assim que o recebimento for confirmado.</span>
+            </p>
+
+            <button type="button" class="pw-btn pw-btn-primary" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              <span id="pixActionBtnLabel">Paguei via Pix &bull; solicitar confirmação</span>
+            </button>
+          </div>
+
+          <!-- Aviso de pedido registrado -->
+          <div id="subPaymentVerifyBanner" class="pw-banner" style="display:none;" role="status" aria-live="polite">
+            <div class="pw-banner-head">
+              <strong id="subVerifyBannerTitle">Aguardando confirmação manual</strong>
+              <span class="pw-chip pw-chip-amber">Confirmação manual</span>
+            </div>
+            <p id="subVerifyBannerDesc">Pedido registrado. Aguardando a confirmação do pagamento.</p>
+            <button type="button" class="pw-btn pw-btn-wa" onclick="window.sendPaymentProofWhatsApp()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>
+              <span>Enviar comprovante pelo WhatsApp</span>
+            </button>
+          </div>
+
+          <div class="pw-foot">
+            <span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Pagamento via Pix &bull; confirmação manual
+            </span>
+            <span>Suporte financeiro: <strong>(62) 99234-5372</strong></span>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Sucesso: recibo digital -->
+    <div id="subSuccessView" class="pw-success" style="display:none;">
+      <div class="pw-success-icon" aria-hidden="true">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <span class="pw-chip">Pagamento confirmado</span>
+      <h3>Pagamento confirmado e acesso liberado!</h3>
+      <p>Seu plano <strong id="subSuccessPlanName">Mensal</strong> está ativo. Este recibo registra a ativação da assinatura.</p>
+
+      <div class="pw-receipt">
+        <div class="pw-receipt-head">
+          <div>
+            <strong>Nexus &bull; Recibo de ativação</strong>
+            <small>Confirmação manual pelo financeiro</small>
+          </div>
+          <span class="pw-chip">Assinatura ativa</span>
+        </div>
+        <div class="pw-row"><span>Código da transação</span><strong id="subSuccessTxId">-</strong></div>
+        <div class="pw-row"><span>Forma de pagamento</span><strong id="subSuccessMethod">-</strong></div>
+        <div class="pw-row"><span>Data e hora</span><strong id="subSuccessDateTime">-</strong></div>
+        <div class="pw-row pw-row-end"><span>Assinatura válida até</span><strong id="subSuccessExpires">-</strong></div>
+      </div>
+
+      <div class="pw-success-actions">
+        <button type="button" class="pw-btn" onclick="window.printSubscriptionReceipt()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span>Imprimir comprovante</span>
+        </button>
+        <button type="button" class="pw-btn pw-btn-primary" onclick="window.closeSubscriptionPaywall(true)">
+          <span id="subSuccessAutoRedirectLabel">Acessar o sistema agora</span>
         </button>
       </div>
     </div>
@@ -18887,13 +18095,7 @@ window.showPaymentVerifyBanner = function(title, desc, isError = false) {
   const descEl = document.getElementById('subVerifyBannerDesc');
   if (!banner) return;
   banner.style.display = 'block';
-  if (isError) {
-    banner.style.background = 'rgba(239, 68, 68, 0.14)';
-    banner.style.borderColor = 'rgba(239, 68, 68, 0.55)';
-  } else {
-    banner.style.background = 'rgba(245, 158, 11, 0.12)';
-    banner.style.borderColor = 'rgba(245, 158, 11, 0.5)';
-  }
+  banner.classList.toggle('is-error', !!isError);
   if (titleEl && title) titleEl.textContent = title;
   if (descEl && desc) descEl.innerHTML = desc;
 };
@@ -18929,7 +18131,7 @@ window.unlockWithConfirmedReceipt = function(data) {
   const expiresEl = document.getElementById('subSuccessExpires');
   const dateTimeEl = document.getElementById('subSuccessDateTime');
 
-  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual Corporativo (R$ 150,00 - 12 Meses)' : (plan === 'vitalicio' ? 'Vitalício Ilimitado' : 'Mensal Executivo (R$ 15,00 - 30 Dias)');
+  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual (R$ 150,00 • 12 meses)' : (plan === 'vitalicio' ? 'Vitalício' : 'Mensal (R$ 15,00 • 30 dias)');
   if (txIdEl) txIdEl.textContent = data.transaction_id || data.subscription_payment_id || ('NEXUS-SUB-' + Date.now());
   if (methodEl) {
     const methodLabels = {
@@ -19173,13 +18375,13 @@ window.openSubscriptionPaywall = function(isLocked = false) {
   if (effectiveLocked) {
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
-    if (titleEl) titleEl.textContent = '🔒 Pagamento Obrigatório para Continuar Usando';
-    if (subEl) subEl.textContent = 'O pagamento e confirmado pela equipe financeira apos a validacao do recebimento.';
+    if (titleEl) titleEl.textContent = 'Pagamento obrigatório para continuar usando';
+    if (subEl) subEl.textContent = 'Seu acesso está bloqueado. Pague via Pix e envie o comprovante: o acesso é liberado após a confirmação do recebimento.';
   } else {
     document.body.classList.remove('paywall-locked');
     document.documentElement.classList.remove('paywall-locked');
     if (titleEl) titleEl.textContent = 'Central de Assinatura • Nexus Financeiro Hub';
-    if (subEl) subEl.textContent = 'O pagamento e confirmado pela equipe financeira apos a validacao do recebimento.';
+    if (subEl) subEl.textContent = 'Escolha o plano e pague via Pix. O acesso pago é liberado após a confirmação do recebimento.';
   }
 
   if (closeBtn) {
@@ -19208,6 +18410,9 @@ window.openSubscriptionPaywall = function(isLocked = false) {
 
   modal.style.display = 'flex';
   modal.classList.add('show');
+  window.fitPixCodeBox();
+  const overlayScroller = document.getElementById('nexusSubscriptionModal');
+  if (overlayScroller) overlayScroller.scrollTop = 0;
 };
 
 window.closeSubscriptionPaywall = function(force = false) {
@@ -19400,87 +18605,35 @@ if (!window.__paywallSyncPollInterval) {
 }
 
 window.selectSubPlan = function(plan) {
+  plan = plan === 'anual' ? 'anual' : 'mensal';
   window.__selectedSubPlan = plan;
+  const isAnnual = plan === 'anual';
   const cardMensal = document.getElementById('subPlanCardMensal');
   const cardAnual = document.getElementById('subPlanCardAnual');
-  const pixDisplay = document.getElementById('pixDisplayAmount');
-  const boletoDisplay = document.getElementById('boletoDisplayAmount');
-  const creditBtnLabel = document.getElementById('creditCardBtnLabel');
-  const debitBtnLabel = document.getElementById('debitCardBtnLabel');
-  const installmentsSelect = document.getElementById('subCardInstallments');
-  const summaryPlanName = document.getElementById('subSummaryPlanName');
-  const summaryPlanPrice = document.getElementById('subSummaryPlanPrice');
-  const summaryDiscountRow = document.getElementById('subSummaryDiscountRow');
-  const summaryTotalPrice = document.getElementById('subSummaryTotalPrice');
-  const summaryPaymentFrequency = document.getElementById('subSummaryPaymentFrequency');
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
 
-  if (plan === 'anual') {
-    if (cardAnual) cardAnual.classList.add('active');
-    if (cardMensal) cardMensal.classList.remove('active');
-     if (pixDisplay) pixDisplay.textContent = 'R$ 150,00';
-     if (boletoDisplay) boletoDisplay.textContent = 'R$ 150,00';
-    if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 150,00 com Cartão de Crédito';
-    if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 150,00 com Débito Imediato';
+  if (cardMensal) { cardMensal.classList.toggle('active', !isAnnual); cardMensal.setAttribute('aria-checked', String(!isAnnual)); }
+  if (cardAnual) { cardAnual.classList.toggle('active', isAnnual); cardAnual.setAttribute('aria-checked', String(isAnnual)); }
 
-    if (summaryPlanName) summaryPlanName.textContent = 'Plano Anual Nexus (12 Meses)';
-     if (summaryPlanPrice) summaryPlanPrice.textContent = 'R$ 150,00';
-    if (summaryDiscountRow) summaryDiscountRow.style.display = 'flex';
-     if (summaryTotalPrice) summaryTotalPrice.textContent = 'R$ 150,00';
-    if (summaryPaymentFrequency) summaryPaymentFrequency.textContent = 'Cobrança única de R$ 150,00 (equivale a R$ 12,50/mês)';
-
-    if (installmentsSelect) {
-       installmentsSelect.innerHTML = '<option value="1">1x de R$ 150,00 sem juros (Total: R$ 150,00)</option>' +
-         '<option value="2">2x de R$ 75,00 sem juros (Total: R$ 150,00)</option>' +
-         '<option value="3">3x de R$ 50,00 sem juros (Total: R$ 150,00)</option>' +
-         '<option value="6">6x de R$ 25,00 sem juros (Total: R$ 150,00)</option>' +
-         '<option value="12">12x de R$ 12,50 sem juros (Total: R$ 150,00)</option>';
-    }
-  } else {
-    if (cardMensal) cardMensal.classList.add('active');
-    if (cardAnual) cardAnual.classList.remove('active');
-     if (pixDisplay) pixDisplay.textContent = 'R$ 15,00';
-     if (boletoDisplay) boletoDisplay.textContent = 'R$ 15,00';
-    if (creditBtnLabel) creditBtnLabel.textContent = 'Pagar R$ 15,00 com Cartão de Crédito';
-    if (debitBtnLabel) debitBtnLabel.textContent = 'Pagar R$ 15,00 com Débito Imediato';
-
-    if (summaryPlanName) summaryPlanName.textContent = 'Plano Mensal Nexus (1 Mês)';
-     if (summaryPlanPrice) summaryPlanPrice.textContent = 'R$ 15,00';
-    if (summaryDiscountRow) summaryDiscountRow.style.display = 'none';
-     if (summaryTotalPrice) summaryTotalPrice.textContent = 'R$ 15,00';
-    if (summaryPaymentFrequency) summaryPaymentFrequency.textContent = 'Cobrança mês a mês sem fidelidade';
-
-    if (installmentsSelect) {
-       installmentsSelect.innerHTML = '<option value="1">1x de R$ 15,00 sem juros (Total: R$ 15,00)</option>';
-    }
-  }
+  const totalLabel = isAnnual ? 'R$ 150,00' : 'R$ 15,00';
+  setText('pixDisplayAmount', totalLabel);
+  setText('subSummaryPlanName', isAnnual ? 'Plano Anual (12 meses)' : 'Plano Mensal (30 dias)');
+  // Anual: 12 x R$ 15,00 = R$ 180,00, menos R$ 30,00 de desconto = R$ 150,00 (a conta fecha na tela).
+  setText('subSummaryPlanPrice', isAnnual ? 'R$ 180,00' : 'R$ 15,00');
+  setText('subSummaryTotalPrice', totalLabel);
+  setText('subSummaryPaymentFrequency', isAnnual ? 'Cobrança única (equivale a R$ 12,50 por mês)' : 'Cobrança mês a mês, sem fidelidade');
+  const discountRow = document.getElementById('subSummaryDiscountRow');
+  if (discountRow) discountRow.style.display = isAnnual ? 'flex' : 'none';
 
   if (window.__selectedPaymentMethod === 'pix') {
     window.updatePixPayloadAndQr();
   }
 };
 
-window.selectPaymentMethod = function(method) {
-  if (method !== 'pix') {
-    if (typeof showToast === 'function') showToast('Pagamento online com cartão e boleto ainda não está disponível. Use Pix.');
-    method = 'pix';
-  }
-  window.__selectedPaymentMethod = method;
-  const tabs = ['pix', 'credit_card', 'debit_card', 'boleto'];
-  tabs.forEach(m => {
-    const tabEl = document.getElementById(m === 'pix' ? 'subTabPix' : (m === 'credit_card' ? 'subTabCredit' : (m === 'debit_card' ? 'subTabDebit' : 'subTabBoleto')));
-    const formEl = document.getElementById(m === 'pix' ? 'subFormPix' : (m === 'credit_card' ? 'subFormCredit' : (m === 'debit_card' ? 'subFormDebit' : 'subFormBoleto')));
-    if (tabEl) {
-      if (m === method) tabEl.classList.add('active');
-      else tabEl.classList.remove('active');
-    }
-    if (formEl) {
-      formEl.style.display = (m === method) ? 'block' : 'none';
-    }
-  });
-
-  if (method === 'pix') {
-    window.updatePixPayloadAndQr();
-  }
+// Hoje so o Pix esta integrado: cartao, debito e boleto foram retirados da tela de pagamento.
+window.selectPaymentMethod = function() {
+  window.__selectedPaymentMethod = 'pix';
+  window.updatePixPayloadAndQr();
 };
 
 window.startPixCountdownTimer = function() {
@@ -19504,13 +18657,6 @@ window.startPixCountdownTimer = function() {
     }
     updateDisplay();
   }, 1000);
-};
-
-window.selectDebitBankBadge = function(bankVal, el) {
-  const sel = document.getElementById('subDebitBank');
-  if (sel) sel.value = bankVal;
-  document.querySelectorAll('.sub-bank-badge').forEach(b => b.classList.remove('active'));
-  if (el) el.classList.add('active');
 };
 
 window.printSubscriptionReceipt = function() {
@@ -19632,19 +18778,43 @@ if (!window.__subSseInitialized && typeof EventSource !== 'undefined') {
   } catch(e){}
 }
 
+// Feedback de "copiado" nos botoes da tela de pagamento (troca o texto e marca a classe is-done por 2,5 s).
+window.flashCopyButton = function(btnId, doneText) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  const label = btn.querySelector('span');
+  if (btn.__flashTimer) clearTimeout(btn.__flashTimer);
+  if (label && !btn.__origLabel) btn.__origLabel = label.textContent;
+  if (label) label.textContent = doneText;
+  btn.classList.add('is-done');
+  btn.__flashTimer = setTimeout(() => {
+    if (label && btn.__origLabel) label.textContent = btn.__origLabel;
+    btn.__origLabel = '';
+    btn.classList.remove('is-done');
+  }, 2500);
+};
+
+// Ajusta a altura do campo "Pix copia e cola" para mostrar o codigo inteiro, sem corte e sem rolagem interna.
+window.fitPixCodeBox = function() {
+  const fit = () => {
+    const box = document.getElementById('subPixCodeInput');
+    if (!box) return;
+    box.style.height = 'auto';
+    if (box.scrollHeight > 0) box.style.height = (box.scrollHeight + 2) + 'px';
+  };
+  if (!window.__pixFitBound) {
+    window.__pixFitBound = true;
+    window.addEventListener('resize', () => window.fitPixCodeBox());
+  }
+  fit();
+  if (window.requestAnimationFrame) window.requestAnimationFrame(fit);
+  setTimeout(fit, 120);
+};
+
 window.copyPixKeyDirect = function() {
   const key = '62992345372';
   const handleSuccess = () => {
-    const btn = document.getElementById('btnCopyPixKeyDirect');
-    if (btn) {
-      const orig = btn.innerHTML;
-      btn.innerHTML = '<span>✓</span> <span>Chave copiada</span>';
-      btn.style.color = '#10B981';
-      setTimeout(() => {
-        btn.innerHTML = orig;
-        btn.style.color = '#38BDF8';
-      }, 3000);
-    }
+    window.flashCopyButton('btnCopyPixKeyDirect', 'Chave copiada');
     if (typeof showToast === 'function') showToast('⚡ Chave Pix copiada. Após pagar, envie o comprovante para confirmar o recebimento.');
     window.armAutoPaymentDetector('pix');
   };
@@ -19678,81 +18848,29 @@ window.updatePixPayloadAndQr = function() {
   if (imgEl) {
      imgEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=16&ecc=H&color=000000&bgcolor=FFFFFF&data=' + encodeURIComponent(pixCode);
   }
+  window.fitPixCodeBox();
 };
 
 window.copyPixCodeToClipboard = function() {
   const inputEl = document.getElementById('subPixCodeInput');
   if (!inputEl) return;
+  inputEl.focus();
   inputEl.select();
   inputEl.setSelectionRange(0, 99999);
   const onCopied = () => {
-    const btn = document.getElementById('btnCopyPix');
-    if (btn) {
-      const orig = btn.innerHTML;
-      btn.innerHTML = '✓ Pix Copiado!';
-      btn.style.color = '#10B981';
-      setTimeout(() => { btn.innerHTML = orig; btn.style.color = '#34D399'; }, 3000);
-    }
+    window.flashCopyButton('btnCopyPix', 'Código copiado');
     if (typeof showToast === 'function') showToast('⚡ Código Pix copiado. Efetue o pagamento e solicite a confirmação pelo WhatsApp.');
     window.armAutoPaymentDetector('pix');
   };
-  navigator.clipboard.writeText(inputEl.value).then(onCopied).catch(() => {
-    document.execCommand('copy');
+  const fallbackCopy = () => {
+    try { document.execCommand('copy'); } catch (e) {}
     onCopied();
-  });
-};
-
-window.copyBoletoCodeToClipboard = function() {
-  const inputEl = document.getElementById('subBoletoCodeInput');
-  if (!inputEl) return;
-  inputEl.select();
-  navigator.clipboard.writeText(inputEl.value).then(() => {
-    if (typeof showToast === 'function') showToast('⚡ Linha digitável copiada! Monitorando pagamento do boleto automaticamente...');
-    window.armAutoPaymentDetector('boleto');
-  });
-};
-
-window.formatCardNumberInput = function(el) {
-  let val = el.value.replace(/\D/g, '').slice(0, 16);
-  let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
-  el.value = formatted;
-
-  const previewEl = document.getElementById('creditCardNumberPreview');
-  const badgeEl = document.getElementById('creditCardFlagBadge');
-  if (previewEl) previewEl.textContent = formatted || '•••• •••• •••• ••••';
-
-  if (badgeEl) {
-    if (val.startsWith('4')) badgeEl.textContent = 'VISA';
-    else if (/^(5[1-5]|2[2-7])/.test(val)) badgeEl.textContent = 'MASTERCARD';
-    else if (/^(4011|4389|5041|6362)/.test(val)) badgeEl.textContent = 'ELO';
-    else if (/^(34|37)/.test(val)) badgeEl.textContent = 'AMEX';
-    else if (/^(6062)/.test(val)) badgeEl.textContent = 'HIPERCARD';
-    else badgeEl.textContent = 'CARTÃO';
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(inputEl.value).then(onCopied).catch(fallbackCopy);
+  } else {
+    fallbackCopy();
   }
-};
-
-window.formatCardExpiryInput = function(el) {
-  let val = el.value.replace(/\D/g, '').slice(0, 4);
-  if (val.length >= 3) {
-    val = val.slice(0, 2) + '/' + val.slice(2, 4);
-  }
-  el.value = val;
-  const previewEl = document.getElementById('creditCardExpiryPreview');
-  if (previewEl) previewEl.textContent = val || 'MM/AA';
-};
-
-window.isValidLuhnCard = function(numStr) {
-  const clean = String(numStr || '').replace(/[^0-9]/g, '');
-  return clean.length >= 13 && clean.length <= 19;
-};
-
-window.isValidCardExpiry = function(expStr) {
-  const parts = String(expStr || '').split('/');
-  if (parts.length !== 2) return false;
-  const month = parseInt(parts[0], 10);
-  const year = parseInt(parts[1], 10) + 2000;
-  if (isNaN(month) || isNaN(year) || month < 1 || month > 12) return false;
-  return year >= 2025;
 };
 
 window.verifyPendingPaymentNow = async function() {
@@ -19778,46 +18896,14 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
 
   const plan = window.__selectedSubPlan || 'mensal';
   const payMethod = method || window.__selectedPaymentMethod || 'pix';
-  let receiptCode = '';
 
   if (payMethod !== 'pix') {
-    if (typeof showToast === 'function') showToast('Pagamento com cartão e boleto ainda não está integrado. Use Pix para solicitar a confirmação.');
+    if (typeof showToast === 'function') showToast('No momento o pagamento é feito somente via Pix.');
     return;
   }
 
-  if (payMethod === 'pix') {
-    const manualTx = (document.getElementById('subPixTxIdInput')?.value || '').trim();
-    receiptCode = manualTx.length >= 6 ? manualTx : (window.__currentPixSessionTxId || '');
-  } else if (payMethod === 'boleto') {
-    const manualAuth = (document.getElementById('subBoletoAuthInput')?.value || '').trim();
-    receiptCode = manualAuth.length >= 6 ? manualAuth : ('FEB-AUTH-' + Date.now());
-  } else if (payMethod === 'credit_card') {
-    const num = (document.getElementById('subCardNumber')?.value || '').replace(/[^0-9]/g, '');
-    const holder = (document.getElementById('subCardHolder')?.value || '').trim();
-    const exp = document.getElementById('subCardExpiry')?.value || '';
-    const cvv = (document.getElementById('subCardCvv')?.value || '').replace(/[^0-9]/g, '');
-    if (!window.isValidLuhnCard(num) || holder.length < 3 || !window.isValidCardExpiry(exp) || cvv.length < 3) {
-      window.shakePaywallModal();
-      if (typeof showToast === 'function') {
-        showToast('⚠️ Preencha o número do cartão, titular, validade (MM/AA) e CVV para processar.', 'warning');
-      }
-      return;
-    }
-    receiptCode = 'CARD-CREDIT-' + num.slice(-4);
-  } else if (payMethod === 'debit_card') {
-    const num = (document.getElementById('subDebitNumber')?.value || '').replace(/[^0-9]/g, '');
-    const holder = (document.getElementById('subDebitHolder')?.value || '').trim();
-    const exp = document.getElementById('subDebitExpiry')?.value || '';
-    const cvv = (document.getElementById('subDebitCvv')?.value || '').replace(/[^0-9]/g, '');
-    if (!window.isValidLuhnCard(num) || holder.length < 3 || !window.isValidCardExpiry(exp) || cvv.length < 3) {
-      window.shakePaywallModal();
-      if (typeof showToast === 'function') {
-        showToast('⚠️ Preencha os dados válidos do cartão de débito para processar.', 'warning');
-      }
-      return;
-    }
-    receiptCode = 'CARD-DEBIT-' + num.slice(-4);
-  }
+  const manualTx = (document.getElementById('subPixTxIdInput')?.value || '').trim();
+  const receiptCode = manualTx.length >= 6 ? manualTx : (window.__currentPixSessionTxId || '');
 
   window.__isProcessingSubPayment = true;
   if (window.__autoPayDetectTimer) {
@@ -19825,29 +18911,28 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
     window.__autoPayDetectTimer = null;
   }
 
-  // Feedback visual executivo de conciliação e reconhecimento automático em 3 etapas rápidas
-  const btnId = payMethod === 'pix' ? 'subBtnConfirmPix' : (payMethod === 'credit_card' ? 'subBtnConfirmCredit' : (payMethod === 'debit_card' ? 'subBtnConfirmDebit' : 'subBtnConfirmBoleto'));
-  const btnEl = document.getElementById(btnId);
+  // Feedback visual da solicitação em 3 etapas rápidas
+  const btnEl = document.getElementById('subBtnConfirmPix');
   const origBtnContent = btnEl ? btnEl.innerHTML : '';
   if (btnEl) {
     btnEl.disabled = true;
-    btnEl.innerHTML = '<span>⚡</span> <span>Registrando solicitação de confirmação...</span>';
+    btnEl.innerHTML = '<span>Registrando solicitação de confirmação...</span>';
   }
 
   window.updateAutoRecognitionRadar(
     'processing',
-    '🔄 1/3 • Registrando pedido de confirmação...',
-    'Registrando a solicitacao para sua conta...',
+    '1/3 • Registrando pedido de confirmação...',
+    'Registrando a solicitação para sua conta...',
     55
   );
 
   if (btnEl) {
-    btnEl.innerHTML = '<span>⚡</span> <span>Solicitação enviada. Aguardando confirmação...</span>';
+    btnEl.innerHTML = '<span>Solicitação enviada. Aguardando confirmação...</span>';
   }
   window.updateAutoRecognitionRadar(
     'processing',
-    '⚡ 2/3 • Registrando pedido de confirmação...',
-    'Solicitando confirmação de <strong>R$ ' + (plan === 'anual' ? '100,00' : '10,00') + '</strong> e aguardando validação do recebimento...',
+    '2/3 • Solicitando confirmação...',
+    'Solicitando confirmação de <strong>R$ ' + (plan === 'anual' ? '150,00' : '15,00') + '</strong> e aguardando validação do recebimento...',
     88
   );
 
@@ -19874,7 +18959,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
     if (data && data.success && data.payment_confirmed) {
       window.updateAutoRecognitionRadar(
         'confirmed',
-        '✅ 3/3 • Pagamento confirmado pelo financeiro.',
+        '3/3 • Pagamento confirmado pelo financeiro.',
         'Assinatura ativada e acesso liberado imediatamente.',
         100
       );
@@ -35611,7 +34696,7 @@ const server = http.createServer(async (req, res) => {
     return res.end();
   }
 
-  if (pathname === '/login' || pathname === '/login.html') {
+  if (pathname === '/login' || pathname === '/login.html' || pathname === '/login-nexus-v5.html') {
     const loginPath = path.join(__dirname, 'login-nexus-v5.html');
     if (fs.existsSync(loginPath)) {
       const stat = fs.statSync(loginPath);
