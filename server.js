@@ -14253,7 +14253,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage .auth-input-wrapper:focus-within { background: #0E1726 !important; border-color: #10B981 !important; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18) !important; }
 #authPage #loginSubmitBtn, #authPage #regSubmitBtn, #authPage #btnSendPassword { background: #059669 !important; color: #FFFFFF !important; border: 1px solid #10B981 !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28) !important; }
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
-#sidebarSearchInput, #sidebarSearchInput:-webkit-autofill, #sidebarSearchInput:-webkit-autofill:hover, #sidebarSearchInput:-webkit-autofill:focus { background: transparent !important; background-color: transparent !important; -webkit-box-shadow: 0 0 0 1000px transparent inset !important; box-shadow: none !important; transition: background-color 99999s ease-out 0s !important; }
+.sidebar-search { display: none !important; }
 </style>
 <link rel="stylesheet" href="/frontend-polish.css?v=20261102-tx-redesign5" />
 </head>
@@ -14875,19 +14875,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <svg class="toggle-icon-collapse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
         </button>
       </div>
-
-      <!-- Armadilha invisível contra preenchimento automático de credenciais do navegador -->
-      <div aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;">
-        <input type="text" name="fake_autofill_user" tabindex="-1" autocomplete="username">
-        <input type="password" name="fake_autofill_pass" tabindex="-1" autocomplete="current-password">
-      </div>
-
-      <!-- Busca Rápida no Menu -->
-      <label class="sidebar-search" for="sidebarSearchInput">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-        <input id="sidebarSearchInput" name="nx_sidebar_filter_q" type="search" inputmode="search" role="searchbox" value="" placeholder="Buscar no menu..." readonly autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other" aria-label="Buscar no menu">
-        <kbd>Ctrl K</kbd>
-      </label>
 
       <!-- Botão de Ação Rápida: Nova Transação (Usuário) / Novo Cadastro (Admin) -->
 
@@ -30247,71 +30234,6 @@ try {
   document.body.classList.toggle('sidebar-collapsed', savedCollapsed);
   document.documentElement.classList.toggle('sidebar-collapsed', savedCollapsed);
 } catch(err) {}
-
-const sidebarSearchInput = document.getElementById('sidebarSearchInput');
-if (sidebarSearchInput) {
-  let userActivatedSidebarSearch = false;
-  const unlockSidebarSearch = function() {
-    userActivatedSidebarSearch = true;
-    if (sidebarSearchInput.readOnly) sidebarSearchInput.readOnly = false;
-  };
-  const filterSidebarItems = function() {
-    const rawVal = String(sidebarSearchInput.value || '');
-    const loggedEmail = (window.currentUser && window.currentUser.email) ? String(window.currentUser.email).toLowerCase() : '';
-    if (!userActivatedSidebarSearch || rawVal.includes('@') || (loggedEmail && rawVal.trim().toLowerCase() === loggedEmail)) {
-      if (rawVal) sidebarSearchInput.value = '';
-    }
-    const query = String(sidebarSearchInput.value || '').trim().toLowerCase();
-    document.querySelectorAll('#menu .menu-btn-user, #menu .menu-btn-admin').forEach(function(btn) {
-      const label = (btn.querySelector('.label') || btn).textContent.toLowerCase();
-      btn.style.display = !query || label.includes(query) ? '' : 'none';
-    });
-    document.querySelectorAll('#menu .menu-section-header').forEach(function(section) {
-      if (!query) { section.style.display = ''; return; }
-      let hasVisible = false;
-      let node = section.nextElementSibling;
-      while (node && !node.classList.contains('menu-section-header')) {
-        if (node.matches && node.matches('button[data-page]') && node.style.display !== 'none') hasVisible = true;
-        node = node.nextElementSibling;
-      }
-      section.style.display = hasVisible ? '' : 'none';
-    });
-  };
-  const clearSidebarSearch = function() {
-    userActivatedSidebarSearch = false;
-    sidebarSearchInput.readOnly = true;
-    if (sidebarSearchInput.value) {
-      sidebarSearchInput.value = '';
-      filterSidebarItems();
-    }
-  };
-  clearSidebarSearch();
-  const searchLabel = sidebarSearchInput.closest('.sidebar-search') || sidebarSearchInput;
-  searchLabel.addEventListener('pointerdown', unlockSidebarSearch);
-  searchLabel.addEventListener('mousedown', unlockSidebarSearch);
-  sidebarSearchInput.addEventListener('keydown', unlockSidebarSearch);
-  sidebarSearchInput.addEventListener('blur', function() {
-    if (!sidebarSearchInput.value || sidebarSearchInput.value.includes('@')) {
-      sidebarSearchInput.value = '';
-      userActivatedSidebarSearch = false;
-      sidebarSearchInput.readOnly = true;
-      filterSidebarItems();
-    }
-  });
-  window.addEventListener('pageshow', clearSidebarSearch);
-  window.setTimeout(clearSidebarSearch, 120);
-  window.setTimeout(clearSidebarSearch, 450);
-  window.setTimeout(clearSidebarSearch, 1000);
-  sidebarSearchInput.addEventListener('input', filterSidebarItems);
-  document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === 'k') {
-      e.preventDefault();
-      unlockSidebarSearch();
-      sidebarSearchInput.focus();
-      sidebarSearchInput.select();
-    }
-  });
-}
 
 const mobileBottomBar = document.getElementById('mobileBottomBar');
 if(mobileBottomBar){
