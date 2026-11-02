@@ -6983,15 +6983,16 @@ body.sidebar-collapsed .main {
   align-items: center !important;
   justify-content: flex-end !important;
   gap: 5px !important;
-  flex-shrink: 0 !important;
-  flex-wrap: nowrap !important;
+  min-width: 0 !important;
+  flex-shrink: 1 !important;
+  flex-wrap: wrap !important;
 }
 .user-card-btn {
-  height: 28px !important;
-  min-height: 28px !important;
-  max-height: 28px !important;
-  padding: 0 9px !important;
-  font-size: 11px !important;
+  height: 27px !important;
+  min-height: 27px !important;
+  max-height: 27px !important;
+  padding: 0 8px !important;
+  font-size: 10.5px !important;
   font-weight: 700 !important;
   border-radius: 7px !important;
   display: inline-flex !important;
@@ -10416,59 +10417,119 @@ body.light .dash-overview-card {
 
 /* ==================== Executive Welcome Toast (Non-blocking 4K Frosted Glass) ==================== */
 .executive-welcome-toast {
+  --toast-ms: 6000ms;
   position: fixed;
   top: 72px;
   right: 24px;
   z-index: 999999;
-  max-width: 420px;
-  width: min(420px, calc(100vw - 32px));
+  width: min(440px, calc(100vw - 24px));
   background:
-    radial-gradient(160px 120px at 32px 32px, rgba(16, 185, 129, 0.18), transparent 72%),
-    linear-gradient(135deg, rgba(13, 23, 40, 0.78) 0%, rgba(7, 13, 25, 0.72) 100%);
-  border: 1px solid rgba(52, 211, 153, 0.28);
-  border-radius: 18px;
-  padding: 15px 16px 17px;
+    radial-gradient(220px 140px at 38px 36px, rgba(16, 185, 129, 0.22), transparent 72%),
+    radial-gradient(260px 160px at 100% 0%, rgba(56, 189, 248, 0.10), transparent 70%),
+    linear-gradient(135deg, rgba(13, 23, 40, 0.84) 0%, rgba(7, 13, 25, 0.78) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.30);
+  border-radius: 20px;
+  padding: 18px 18px 21px;
   box-shadow:
-    0 24px 54px -12px rgba(0, 0, 0, 0.72),
-    0 0 28px rgba(16, 185, 129, 0.14),
+    0 28px 60px -14px rgba(0, 0, 0, 0.75),
+    0 0 34px rgba(16, 185, 129, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.20),
-    inset 0 0 20px rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  transform: translateY(-14px) scale(0.96);
+    inset 0 0 24px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(30px) saturate(190%);
+  -webkit-backdrop-filter: blur(30px) saturate(190%);
+  transform: translate3d(36px, 0, 0) scale(0.96);
   opacity: 0;
-  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.32s ease;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, border-color 0.25s ease;
   pointer-events: none;
   overflow: hidden;
+  isolation: isolate;
 }
 .executive-welcome-toast.show {
-  transform: translateY(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
   opacity: 1;
   pointer-events: auto;
+}
+.executive-welcome-toast:hover {
+  border-color: rgba(52, 211, 153, 0.50);
+}
+/* Fio de luz no topo */
+.executive-welcome-toast::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110, 231, 183, 0.75), rgba(56, 189, 248, 0.55), transparent);
+  pointer-events: none;
+}
+/* Brilho que varre o cartão na entrada */
+.executive-welcome-toast::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.10) 50%, transparent 62%);
+  transform: translateX(-120%);
+  pointer-events: none;
+  z-index: -1;
+}
+.executive-welcome-toast.show::after {
+  animation: toastShine 1.2s 0.25s ease-out 1 forwards;
+}
+@keyframes toastShine {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(120%); }
 }
 .toast-content-box {
   display: flex;
   align-items: flex-start;
-  gap: 13px;
+  gap: 14px;
 }
 .toast-icon-wrap {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.10) 100%);
-  border: 1px solid rgba(52, 211, 153, 0.38);
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.26) 0%, rgba(5, 150, 105, 0.10) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.42);
   color: #34D399;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 8px 20px -4px rgba(16, 185, 129, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  margin-top: 1px;
+  box-shadow: 0 10px 24px -4px rgba(16, 185, 129, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+.toast-icon-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid rgba(52, 211, 153, 0.55);
+  opacity: 0;
+  pointer-events: none;
+}
+.executive-welcome-toast.show .toast-icon-wrap::before {
+  animation: toastRing 1.8s 0.4s ease-out 2;
+}
+@keyframes toastRing {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.55); opacity: 0; }
 }
 .toast-icon-wrap svg {
-  width: 20px;
-  height: 20px;
-  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.35));
+  width: 23px;
+  height: 23px;
+  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.40));
+}
+.toast-icon-wrap .toast-check {
+  stroke-dasharray: 12;
+  stroke-dashoffset: 0;
+}
+.executive-welcome-toast.show .toast-icon-wrap .toast-check {
+  animation: toastCheckDraw 0.5s 0.35s ease-out both;
+}
+@keyframes toastCheckDraw {
+  from { stroke-dashoffset: 12; }
+  to { stroke-dashoffset: 0; }
 }
 .toast-body {
   flex: 1;
@@ -10479,12 +10540,12 @@ body.light .dash-overview-card {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 9px;
 }
 .toast-top-meta {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 .toast-badge {
@@ -10494,11 +10555,11 @@ body.light .dash-overview-card {
   font-size: 9.5px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  padding: 3px 8px;
+  letter-spacing: 0.08em;
+  padding: 4px 9px;
   border-radius: 999px;
   background: rgba(16, 185, 129, 0.14);
-  border: 1px solid rgba(52, 211, 153, 0.32);
+  border: 1px solid rgba(52, 211, 153, 0.34);
   color: #6EE7B7;
   line-height: 1;
 }
@@ -10510,50 +10571,88 @@ body.light .dash-overview-card {
 .toast-time {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 10.5px;
-  color: #94A3B8;
+  gap: 6px;
+  font-size: 11px;
+  color: #A5B4C8;
   font-weight: 600;
   letter-spacing: 0.01em;
 }
 .toast-live-dot {
-  width: 6px;
-  height: 6px;
+  position: relative;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #10B981;
   box-shadow: 0 0 8px #10B981;
   display: inline-block;
 }
+.toast-live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #10B981;
+  animation: toastLivePulse 1.8s ease-out infinite;
+}
+@keyframes toastLivePulse {
+  0% { transform: scale(1); opacity: 0.65; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
 .toast-title {
-  font-size: 14px;
+  font-size: 15.5px;
   font-weight: 700;
   color: #F8FAFC;
-  margin: 0 0 3px 0;
-  letter-spacing: -0.015em;
+  margin: 0 0 5px 0;
+  letter-spacing: -0.02em;
   line-height: 1.3;
 }
 .toast-desc {
-  font-size: 12px;
-  color: #94A3B8;
+  font-size: 12.8px;
+  color: #A5B4C8;
   margin: 0;
-  line-height: 1.45;
+  line-height: 1.55;
 }
 .toast-desc strong {
   color: #F1F5F9;
   font-weight: 700;
 }
+.toast-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 13px;
+}
+.toast-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #B4C0D2;
+  padding: 4px 9px 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  line-height: 1;
+}
+.toast-chip svg {
+  width: 11px;
+  height: 11px;
+  color: #34D399;
+  flex-shrink: 0;
+}
 .toast-close-btn {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  color: #94A3B8;
+  color: #A5B4C8;
   cursor: pointer;
   padding: 0;
-  border-radius: 8px;
+  border-radius: 9px;
   transition: all 0.18s ease;
   flex-shrink: 0;
 }
@@ -10563,16 +10662,20 @@ body.light .dash-overview-card {
 }
 .toast-close-btn:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+.toast-close-btn:focus-visible {
+  outline: 2px solid #34D399;
+  outline-offset: 2px;
 }
 .toast-progress-track {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 2.5px;
-  background: rgba(255, 255, 255, 0.05);
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
   overflow: hidden;
 }
 .toast-progress-bar {
@@ -10581,20 +10684,54 @@ body.light .dash-overview-card {
   background: linear-gradient(90deg, #10B981 0%, #34D399 55%, #38BDF8 100%);
   box-shadow: 0 0 10px rgba(52, 211, 153, 0.45);
   transform-origin: left center;
-  animation: toastBarFill 4.5s linear forwards;
+}
+.executive-welcome-toast.show .toast-progress-bar {
+  animation: toastBarFill var(--toast-ms) linear forwards;
+}
+.executive-welcome-toast.paused .toast-progress-bar {
+  animation-play-state: paused;
 }
 @keyframes toastBarFill {
-  from { width: 100%; }
-  to { width: 0%; }
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+@media (max-width: 520px) {
+  .executive-welcome-toast {
+    top: 64px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    padding: 15px 15px 19px;
+    border-radius: 18px;
+  }
+  .toast-icon-wrap { width: 42px; height: 42px; border-radius: 12px; }
+  .toast-icon-wrap svg { width: 20px; height: 20px; }
+  .toast-title { font-size: 14.5px; }
+  .toast-desc { font-size: 12.3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .executive-welcome-toast { transform: none; transition: opacity 0.2s ease; }
+  .executive-welcome-toast.show::after,
+  .executive-welcome-toast.show .toast-icon-wrap::before,
+  .executive-welcome-toast.show .toast-icon-wrap .toast-check,
+  .toast-live-dot::after { animation: none; }
 }
 body.light .executive-welcome-toast {
-  background: rgba(255, 255, 255, 0.90) !important;
-  border-color: rgba(16, 185, 129, 0.28) !important;
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.14), inset 0 1px 0 #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(16, 185, 129, 0.30) !important;
+  box-shadow: 0 24px 56px rgba(15, 23, 42, 0.16), inset 0 1px 0 #FFFFFF !important;
 }
 body.light .toast-title { color: #0F172A !important; }
 body.light .toast-desc { color: #475569 !important; }
 body.light .toast-desc strong { color: #0F172A !important; }
+body.light .toast-icon-wrap { color: #059669 !important; background: rgba(16, 185, 129, 0.12) !important; border-color: rgba(16, 185, 129, 0.35) !important; }
+body.light .toast-badge { color: #047857 !important; background: rgba(16, 185, 129, 0.12) !important; border-color: rgba(16, 185, 129, 0.30) !important; }
+body.light .toast-time { color: #64748B !important; }
+body.light .toast-chip { color: #475569 !important; background: #F1F5F9 !important; border-color: #E2E8F0 !important; }
+body.light .toast-chip svg { color: #059669 !important; }
+body.light .toast-close-btn { color: #64748B !important; background: #F1F5F9 !important; border-color: #E2E8F0 !important; }
+body.light .toast-close-btn:hover { color: #0F172A !important; background: #E2E8F0 !important; }
+body.light .toast-progress-track { background: rgba(15, 23, 42, 0.06) !important; }
 
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
 .env-badge-homolog {
@@ -10820,56 +10957,71 @@ body.light .admin-filter-btn.active {
 
 /* ==================== Lista de Cadastros Compacta e Alinhada em Colunas ==================== */
 .user-admin-grid-header {
-  display: grid;
-  grid-template-columns: minmax(210px, 1.35fr) minmax(205px, 1.3fr) minmax(150px, 0.95fr) minmax(155px, 1fr) minmax(305px, auto);
-  align-items: center;
-  gap: 10px;
-  padding: 7px 14px;
-  margin-bottom: 6px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #94A3B8;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1.35fr) minmax(0, 1.05fr) minmax(0, 0.95fr) minmax(0, 2.05fr) !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 9px 14px !important;
+  margin-bottom: 8px !important;
+  border-radius: 9px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+  color: #94A3B8 !important;
+  box-sizing: border-box !important;
 }
-.user-admin-grid-header > div:last-child {
-  text-align: right;
+.user-admin-grid-header > span,
+.user-admin-grid-header > div {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.user-admin-grid-header > :last-child {
+  text-align: right !important;
 }
 .user-admin-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
 }
 .user-card-4k {
-  display: grid;
-  grid-template-columns: minmax(210px, 1.35fr) minmax(205px, 1.3fr) minmax(150px, 0.95fr) minmax(155px, 1fr) minmax(305px, auto);
-  align-items: center;
-  gap: 10px;
-  min-height: 52px;
-  padding: 7px 14px;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1.35fr) minmax(0, 1.05fr) minmax(0, 0.95fr) minmax(0, 2.05fr) !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 60px !important;
+  padding: 10px 14px !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
-  border-radius: 11px !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(10, 15, 29, 0.80) 100%) !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(10, 15, 29, 0.82) 100%) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  box-shadow: 0 4px 14px -3px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 14px -3px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-sizing: border-box !important;
 }
 @media (max-width: 1180px) {
   .user-admin-grid-header {
-    display: none;
+    display: none !important;
   }
   .user-card-4k {
-    grid-template-columns: 1fr auto;
-    gap: 8px 12px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 10px 14px !important;
+  }
+  .user-card-4k > .user-card-right {
+    grid-column: 1 / -1 !important;
+    justify-content: flex-start !important;
+    padding-top: 6px !important;
+    border-top: 1px solid rgba(148, 163, 184, 0.12) !important;
   }
 }
 @media (max-width: 768px) {
   .user-card-4k {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
   .user-card-right {
     justify-content: flex-start !important;
@@ -10886,10 +11038,66 @@ body.light .admin-filter-btn.active {
   border-color: rgba(239, 68, 68, 0.35) !important;
 }
 .user-card-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.admin-select-all-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  width: auto !important;
+  max-width: max-content !important;
+  margin: 0 !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: var(--text-dim) !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  flex: 0 0 auto !important;
+}
+.admin-select-all-label input[type="checkbox"] {
+  width: 15px !important;
+  height: 15px !important;
+  min-width: 15px !important;
+  min-height: 15px !important;
+  margin: 0 !important;
+  accent-color: #10B981 !important;
+  cursor: pointer !important;
+  flex: 0 0 15px !important;
+}
+.user-select-check {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 1px solid rgba(148, 163, 184, 0.24) !important;
+  border-radius: 8px !important;
+  background: rgba(15, 23, 42, 0.55) !important;
+  flex: 0 0 28px !important;
+  transition: border-color 0.16s ease, background 0.16s ease !important;
+}
+.user-select-check:hover {
+  border-color: rgba(239, 68, 68, 0.55) !important;
+  background: rgba(239, 68, 68, 0.10) !important;
+}
+.user-select-check input[type="checkbox"] {
+  width: 15px !important;
+  height: 15px !important;
+  min-width: 15px !important;
+  min-height: 15px !important;
+  margin: 0 !important;
+  accent-color: #EF4444 !important;
+  flex: 0 0 15px !important;
 }
 .user-card-avatar {
   width: 34px;
@@ -10926,46 +11134,72 @@ body.light .admin-filter-btn.active {
 .user-status-dot.offline { background: #EF4444; }
 
 .user-card-info {
-  min-width: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2px;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  overflow: hidden !important;
 }
 .user-card-name-row {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-wrap: nowrap;
-  min-width: 0;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex-wrap: nowrap !important;
+  min-width: 0 !important;
 }
 .user-card-name {
-  font-size: 13px;
-  font-weight: 700;
-  color: #FFFFFF;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.25 !important;
+  display: block !important;
 }
 .user-col-contact,
 .user-col-plan,
 .user-col-activity {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 3px;
-  min-width: 0;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
 }
-.user-card-email {
-  font-size: 11.5px;
-  color: #CBD5E1;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
+.user-card-email,
+.user-email-line {
+  font-size: 11.5px !important;
+  color: #E2E8F0 !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.25 !important;
+  display: block !important;
+}
+.user-doc-line {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex-wrap: wrap !important;
+  min-width: 0 !important;
+}
+.doc-pill {
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  padding: 1.5px 6px !important;
+  border-radius: 5px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  color: #94A3B8 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  white-space: nowrap !important;
+  line-height: 1.25 !important;
 }
 .user-card-stats-strip {
   display: flex;
@@ -11003,6 +11237,9 @@ body.light .admin-filter-btn.active {
   display: inline-flex;
   align-items: center;
   line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .role-badge.admin {
   background: rgba(245, 158, 11, 0.18);
@@ -11030,8 +11267,14 @@ body.light .user-card-4k {
   border-color: #CBD5E1 !important;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
 }
+body.light .user-select-check {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
 body.light .user-card-name { color: #000000 !important; }
-body.light .user-card-email { color: #000000 !important; }
+body.light .user-card-email,
+body.light .user-email-line { color: #000000 !important; }
+body.light .doc-pill,
 body.light .user-stat-chip {
   background: #F8FAFC !important;
   border-color: #CBD5E1 !important;
@@ -18066,53 +18309,118 @@ function getFormattedToday() {
   return weekDays[d.getDay()] + ', ' + d.getDate() + ' de ' + months[d.getMonth()] + ' de ' + d.getFullYear();
 }
 
+var WELCOME_TOAST_MS = 6000;
+var __welcomeToastTimer = null;
+var __welcomeToastRemaining = WELCOME_TOAST_MS;
+var __welcomeToastStartedAt = 0;
+
+function formatToastDisplayName(raw) {
+  var s = String(raw || '').trim();
+  if (!s) return 'Usuário';
+  if (s.indexOf('@') !== -1) return s;
+  var small = ['de', 'da', 'do', 'das', 'dos', 'e'];
+  return s.toLowerCase().split(' ').filter(Boolean).map(function (w, i) {
+    return (i > 0 && small.indexOf(w) !== -1) ? w : w.charAt(0).toUpperCase() + w.slice(1);
+  }).join(' ');
+}
+
+function escapeToastHtml(v) {
+  return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function hideExecutiveWelcomeToast() {
+  var el = document.getElementById('executiveWelcomeToast');
+  if (el) el.classList.remove('show', 'paused');
+  clearTimeout(__welcomeToastTimer);
+}
+
+function armExecutiveWelcomeToast(ms) {
+  clearTimeout(__welcomeToastTimer);
+  __welcomeToastRemaining = ms;
+  __welcomeToastStartedAt = Date.now();
+  __welcomeToastTimer = setTimeout(hideExecutiveWelcomeToast, ms);
+}
+
 function showExecutiveWelcomeToast(msg, subMsg) {
-  let toastEl = document.getElementById('executiveWelcomeToast');
+  var toastEl = document.getElementById('executiveWelcomeToast');
   if (!toastEl) {
     toastEl = document.createElement('div');
     toastEl.id = 'executiveWelcomeToast';
     toastEl.className = 'executive-welcome-toast';
+    toastEl.setAttribute('role', 'status');
+    toastEl.setAttribute('aria-live', 'polite');
     document.body.appendChild(toastEl);
   }
-  const userName = currentUser ? currentUser.name : 'Usuário';
-  const userRole = currentUser ? (currentUser.role || 'Usuário') : 'Usuário';
-  const roleBadgeHtml = userRole === 'Administrador'
+  var userName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
+  var userRole = currentUser ? (currentUser.role || 'Usuário') : 'Usuário';
+  var roleBadgeHtml = userRole === 'Administrador'
     ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span>Administrador Master</span>'
     : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Conta Verificada</span>';
 
-  toastEl.innerHTML = \`
-    <div class="toast-content-box">
-      <div class="toast-icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          <path d="m9 12 2 2 4-4"/>
-        </svg>
-      </div>
-      <div class="toast-body">
-        <div class="toast-top-row">
-          <div class="toast-top-meta">
-            <span class="toast-badge">\${roleBadgeHtml}</span>
-            <span class="toast-time"><span class="toast-live-dot"></span>Sessão Ativa</span>
-          </div>
-          <button type="button" class="toast-close-btn" onclick="document.getElementById('executiveWelcomeToast').classList.remove('show')" title="Fechar" aria-label="Fechar notificação">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-          </button>
-        </div>
-        <h4 class="toast-title">\${msg || 'Sessão Autenticada com Sucesso'}</h4>
-        <p class="toast-desc">\${subMsg || ('Ambiente financeiro sincronizado e protegido para <strong>' + userName + '</strong>.')}</p>
-      </div>
-    </div>
-    <div class="toast-progress-track"><div class="toast-progress-bar"></div></div>
-  \`;
+  var lockSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  var syncSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.5-6.2L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.5 6.2L21 16"/><path d="M16 16h5v5"/></svg>';
 
-  requestAnimationFrame(() => {
+  toastEl.innerHTML = [
+    '<div class="toast-content-box">',
+      '<div class="toast-icon-wrap">',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">',
+          '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+          '<path class="toast-check" d="m9 12 2 2 4-4"/>',
+        '</svg>',
+      '</div>',
+      '<div class="toast-body">',
+        '<div class="toast-top-row">',
+          '<div class="toast-top-meta">',
+            '<span class="toast-badge">' + roleBadgeHtml + '</span>',
+            '<span class="toast-time"><span class="toast-live-dot"></span>Sessão Ativa</span>',
+          '</div>',
+          '<button type="button" class="toast-close-btn" title="Fechar" aria-label="Fechar notificação">',
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+          '</button>',
+        '</div>',
+        '<h4 class="toast-title">' + (msg || 'Sessão Autenticada com Sucesso') + '</h4>',
+        '<p class="toast-desc">' + (subMsg || ('Ambiente financeiro sincronizado e protegido para <strong>' + userName + '</strong>.')) + '</p>',
+        '<div class="toast-footer">',
+          '<span class="toast-chip">' + lockSvg + 'Conexão segura</span>',
+          '<span class="toast-chip">' + syncSvg + 'Dados sincronizados</span>',
+        '</div>',
+      '</div>',
+    '</div>',
+    '<div class="toast-progress-track"><div class="toast-progress-bar"></div></div>'
+  ].join('');
+
+  toastEl.style.setProperty('--toast-ms', WELCOME_TOAST_MS + 'ms');
+
+  var closeBtn = toastEl.querySelector('.toast-close-btn');
+  if (closeBtn) closeBtn.addEventListener('click', hideExecutiveWelcomeToast);
+
+  // Pausa a contagem (e a barra de progresso) enquanto o mouse estiver sobre o aviso
+  toastEl.onmouseenter = function () {
+    if (!toastEl.classList.contains('show')) return;
+    clearTimeout(__welcomeToastTimer);
+    __welcomeToastRemaining = Math.max(1200, __welcomeToastRemaining - (Date.now() - __welcomeToastStartedAt));
+    toastEl.classList.add('paused');
+  };
+  toastEl.onmouseleave = function () {
+    if (!toastEl.classList.contains('show')) return;
+    toastEl.classList.remove('paused');
+    armExecutiveWelcomeToast(__welcomeToastRemaining);
+  };
+
+  if (!window.__welcomeToastEscBound) {
+    window.__welcomeToastEscBound = true;
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape') hideExecutiveWelcomeToast();
+    });
+  }
+
+  // Reinicia as animações de entrada a cada exibição
+  toastEl.classList.remove('show', 'paused');
+  void toastEl.offsetWidth;
+  requestAnimationFrame(function () {
     toastEl.classList.add('show');
   });
-
-  if (toastEl._timeout) clearTimeout(toastEl._timeout);
-  toastEl._timeout = setTimeout(() => {
-    if (toastEl) toastEl.classList.remove('show');
-  }, 4500);
+  armExecutiveWelcomeToast(WELCOME_TOAST_MS);
 }
 
 function showLoginSuccessPopup(msg){
@@ -24896,18 +25204,18 @@ function pageUsuarios(){
   </div>
 
   <div class="panel" style="margin-bottom:0; padding:14px 16px; border-radius:14px;">
-    <div class="panel-head" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-      <h3 style="font-size:13.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px; margin:0;">
+    <div class="panel-head" style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <h3 style="font-size:13.5px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px; margin:0; width:auto;">
         <span>📋</span> Grade Alinhada de Cadastros
       </h3>
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
-        <label style="display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--text-dim); cursor:pointer;">
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-left:auto;">
+        <label class="admin-select-all-label">
           <input type="checkbox" onchange="selectAllAdminUsers(this.checked)" \${selectedAdminUserEmails.size === users.filter(u => !(currentUser && String(u.email || '').toLowerCase() === String(currentUser.email || '').toLowerCase())).length && users.length > 0 ? 'checked' : ''}>
-          Selecionar todos
+          <span>Selecionar todos</span>
         </label>
-        <span style="font-size:11px; color:var(--text-dim);"><strong id="selectedAdminUsersCount">\${selectedAdminUserEmails.size}</strong> selecionado(s)</span>
-        <button id="bulkDeleteUsersButton" type="button" onclick="deleteSelectedAdminUsers()" \${selectedAdminUserEmails.size ? '' : 'disabled'} style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.4); color:#FCA5A5; font-size:11px; font-weight:800; cursor:pointer; opacity:\${selectedAdminUserEmails.size ? '1' : '0.5'};">🗑 Excluir selecionados</button>
-        <span class="tag" style="cursor:default; font-weight:800; font-size:10.5px; padding:3px 10px; border-radius:999px; background:rgba(5, 150, 105,0.14); border:1px solid rgba(5, 150, 105,0.32); color:#34D399;">\${totalUsers} registro(s)</span>
+        <span style="font-size:11px; color:var(--text-dim); white-space:nowrap;"><strong id="selectedAdminUsersCount">\${selectedAdminUserEmails.size}</strong> selecionado(s)</span>
+        <button id="bulkDeleteUsersButton" type="button" onclick="deleteSelectedAdminUsers()" \${selectedAdminUserEmails.size ? '' : 'disabled'} style="padding:6px 10px; border-radius:8px; background:rgba(239,68,68,0.16); border:1px solid rgba(239,68,68,0.4); color:#FCA5A5; font-size:11px; font-weight:800; cursor:pointer; white-space:nowrap; opacity:\${selectedAdminUserEmails.size ? '1' : '0.5'};">🗑 Excluir selecionados</button>
+        <span class="tag" style="cursor:default; font-weight:800; font-size:10.5px; padding:3px 10px; border-radius:999px; background:rgba(5, 150, 105,0.14); border:1px solid rgba(5, 150, 105,0.32); color:#34D399; white-space:nowrap;">\${totalUsers} registro(s)</span>
       </div>
     </div>
 
@@ -24934,10 +25242,10 @@ function pageUsuarios(){
 
         const subBadgeHtml = (() => {
           const m = (u.subscription_method || '').toLowerCase();
-          const methodBadge = m.includes('pix') ? ' <span style="opacity:0.9;">(💠 Pix)</span>'
-            : (m.includes('credit') || m.includes('crédito')) ? ' <span style="opacity:0.9;">(💳 Crédito)</span>'
-            : (m.includes('debit') || m.includes('débito')) ? ' <span style="opacity:0.9;">(🏧 Débito)</span>'
-            : m.includes('boleto') ? ' <span style="opacity:0.9;">(📄 Boleto)</span>' : '';
+          const methodBadge = m.includes('pix') ? ' <span style="opacity:0.9;">• 💠 Pix</span>'
+            : (m.includes('credit') || m.includes('crédito')) ? ' <span style="opacity:0.9;">• 💳 Crédito</span>'
+            : (m.includes('debit') || m.includes('débito')) ? ' <span style="opacity:0.9;">• 🏧 Débito</span>'
+            : m.includes('boleto') ? ' <span style="opacity:0.9;">• 📄 Boleto</span>' : '';
 
           if (isAdminUser || u.subscription_plan === 'vitalicio') {
             return '<span class="role-badge" style="background:rgba(16,185,129,0.18); border:1px solid #10B981; color:#34D399;">♾️ Vitalício</span>';
@@ -24945,11 +25253,11 @@ function pageUsuarios(){
           if (u.subscription_status === 'active') {
             const planLabel = u.subscription_plan === 'anual' ? 'Anual' : (u.subscription_plan === 'cortesia_admin' ? 'Liberado' : 'Mensal');
             const expStr = u.subscription_expires_at ? (' • ' + formatDateBR(u.subscription_expires_at.split('T')[0])) : '';
-            return '<span class="role-badge" style="background:rgba(16,185,129,0.16); border:1px solid #10B981; color:#34D399;">✅ ' + planLabel + methodBadge + expStr + '</span>';
+            return '<span class="role-badge" style="background:rgba(16,185,129,0.16); border:1px solid #10B981; color:#34D399;" title="Assinatura ativa">✅ ' + planLabel + methodBadge + expStr + '</span>';
           }
           if (u.subscription_status === 'pending_payment') {
             const pendingPlan = u.subscription_plan === 'anual' ? 'Anual' : 'Mensal';
-            return '<span class="role-badge" style="background:rgba(56,189,248,0.18); border:1px solid #38BDF8; color:#7DD3FC;">⏳ Pgto Não Reconhecido (' + pendingPlan + methodBadge + ')</span>';
+            return '<span class="role-badge" style="background:rgba(56,189,248,0.18); border:1px solid #38BDF8; color:#7DD3FC;" title="Pagamento não reconhecido / aguardando liberação">⏳ Pendente • ' + pendingPlan + methodBadge + '</span>';
           }
           if (u.subscription_status === 'expired') {
             return '<span class="role-badge" style="background:rgba(239,68,68,0.18); border:1px solid #EF4444; color:#FCA5A5;">🔒 Expirado</span>';
@@ -24963,9 +25271,8 @@ function pageUsuarios(){
         <div class="user-card-4k \${isInactive ? 'inactive' : ''}" data-user-email="\${(u.email||'').toLowerCase()}" data-user-cpf="\${rawCpf}" data-user-phone="\${rawPhone}" data-user-role="\${isAdminUser ? 'admin' : 'user'}" data-user-status="\${isInactive ? 'inactive' : 'active'}">
           <!-- Coluna 1: Titular / Conta -->
           <div class="user-card-left">
-            <label title="Selecionar este cadastro para exclusão" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-width:44px; padding:5px 4px; border:1px solid rgba(239,68,68,0.28); border-radius:8px; background:rgba(239,68,68,0.07); color:#FCA5A5; font-size:9px; font-weight:800; line-height:1; cursor:\${isSelf ? 'not-allowed' : 'pointer'}; flex-shrink:0;">
-              <input type="checkbox" aria-label="Selecionar \${u.email} para exclusão" \${isSelf ? 'disabled title="Não é possível excluir a própria conta"' : ''} \${selectedAdminUserEmails.has(String(u.email || '').toLowerCase()) ? 'checked' : ''} onchange="setAdminUserSelected('\${u.email}', this.checked)" style="width:20px; height:20px; accent-color:#EF4444; cursor:\${isSelf ? 'not-allowed' : 'pointer'}; margin:0;">
-              <span>Selecionar</span>
+            <label class="user-select-check" title="\${isSelf ? 'Não é possível excluir a própria conta' : 'Selecionar este cadastro para exclusão'}" style="cursor:\${isSelf ? 'not-allowed' : 'pointer'}; opacity:\${isSelf ? '0.45' : '1'};">
+              <input type="checkbox" aria-label="Selecionar \${u.email} para exclusão" \${isSelf ? 'disabled' : ''} \${selectedAdminUserEmails.has(String(u.email || '').toLowerCase()) ? 'checked' : ''} onchange="setAdminUserSelected('\${u.email}', this.checked)" style="cursor:\${isSelf ? 'not-allowed' : 'pointer'};">
             </label>
             <div class="user-card-avatar \${isAdminUser ? 'admin-av' : 'user-av'}">
               \${initials}
@@ -24975,7 +25282,7 @@ function pageUsuarios(){
               <div class="user-card-name-row">
                 <span class="user-card-name" title="\${txEsc(u.name)}">\${txEsc(u.name)}</span>
               </div>
-              <div style="display:flex; align-items:center; gap:4px; margin-top:2px;">
+              <div style="display:flex; align-items:center; gap:4px; margin-top:2px; flex-wrap:nowrap;">
                 <span class="role-badge" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); color:var(--text-dim);">#\${u.id || '-'}</span>
                 <span class="role-badge" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text-dim);">\${devLabel}</span>
                 \${isInactive ? '<span class="role-badge inactive">Inativo</span>' : ''}
@@ -30999,8 +31306,9 @@ window.applyPostLoginBg = function(theme) {
         localStorage.removeItem('nexus_just_logged_in');
         sessionStorage.removeItem('nexus_just_logged_in');
         setTimeout(() => {
-          const uName = currentUser ? currentUser.name : 'Usuário';
-          showExecutiveWelcomeToast('Sessão Autenticada com Sucesso', 'Bem-vindo de volta, <strong>' + uName + '</strong>! Ambiente financeiro sincronizado e protegido.');
+          const uName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
+          const greet = getGreetingTime().text;
+          showExecutiveWelcomeToast('Sessão Autenticada com Sucesso', greet + ', <strong>' + uName + '</strong>! Seu ambiente financeiro foi sincronizado e está protegido.');
         }, 350);
       }
     } catch(e){}
