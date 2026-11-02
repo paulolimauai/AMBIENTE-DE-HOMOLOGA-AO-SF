@@ -5738,3 +5738,197 @@ html.light .nx-sw-custom:focus-within, html.light .nx-sw:focus-visible { outline
     transform: rotate(180deg) !important;
   }
 }
+
+/* ============================================================================
+   PALETA GLOBAL DO SISTEMA
+   A mesma escolha agora colore todo o workspace, não apenas o fundo.
+   ============================================================================ */
+html.user-logged-in[data-nx-palette] {
+  --nx-palette-1: rgb(var(--nx-o1));
+  --nx-palette-2: rgb(var(--nx-o2));
+  --nx-palette-3: rgb(var(--nx-o3));
+  --nx-palette-4: rgb(var(--nx-o4));
+  --green: var(--nx-palette-1);
+  --green-soft: rgba(var(--nx-o1), .14);
+  --primary: var(--nx-palette-1);
+  --blue: var(--nx-palette-2);
+  --purple: var(--nx-palette-3);
+  --cyan: var(--nx-palette-4);
+  --gold: var(--nx-palette-2);
+  --card-border: rgba(var(--nx-o1), .24);
+  --hover: rgba(var(--nx-o1), .10);
+  --nx-line: rgba(var(--nx-o1), .20);
+  --nx-line-strong: rgba(var(--nx-o1), .38);
+  --nx-green: var(--nx-palette-1);
+  --nx-green-deep: var(--nx-palette-2);
+  --nx-blue: var(--nx-palette-3);
+}
+
+html.user-logged-in[data-nx-palette] .topheader {
+  background: linear-gradient(90deg, rgba(var(--nx-o1), .12), rgba(7, 16, 28, .96) 42%, rgba(var(--nx-o2), .07)) !important;
+  border-bottom-color: rgba(var(--nx-o1), .34) !important;
+}
+
+html.user-logged-in[data-nx-palette] .topheader .brand .logo,
+html.user-logged-in[data-nx-palette] .header-user-badge .avatar {
+  background: linear-gradient(145deg, rgba(var(--nx-o1), .92), rgba(var(--nx-o2), .88)) !important;
+  border-color: rgba(var(--nx-o1), .55) !important;
+}
+
+html.user-logged-in[data-nx-palette] .topheader-row .icon-btn:hover,
+html.user-logged-in[data-nx-palette] .header-minha-conta-btn:hover {
+  background: rgba(var(--nx-o1), .14) !important;
+  border-color: rgba(var(--nx-o1), .46) !important;
+}
+
+html.user-logged-in[data-nx-palette] nav.menu.sidebar-menu,
+html.user-logged-in[data-nx-palette] aside.menu.sidebar-menu {
+  background: linear-gradient(180deg, rgba(var(--nx-o1), .12), #0b1728 42%, rgba(var(--nx-o2), .08)) !important;
+  border-right-color: rgba(var(--nx-o1), .28) !important;
+}
+
+html.user-logged-in[data-nx-palette] .sidebar-workspace-header .workspace-avatar,
+html.user-logged-in[data-nx-palette] .sidebar-account-icon {
+  background: linear-gradient(145deg, rgba(var(--nx-o1), .92), rgba(var(--nx-o2), .82)) !important;
+  border-color: rgba(var(--nx-o1), .42) !important;
+  color: #ffffff !important;
+}
+
+html.user-logged-in[data-nx-palette] .sidebar-search:focus-within,
+html.user-logged-in[data-nx-palette] #pageContent :is(input, select, textarea):focus {
+  border-color: rgba(var(--nx-o1), .70) !important;
+  box-shadow: 0 0 0 3px rgba(var(--nx-o1), .14) !important;
+}
+
+html.user-logged-in[data-nx-palette] .sidebar-quick-action-btn,
+html.user-logged-in[data-nx-palette] .btn-primary,
+html.user-logged-in[data-nx-palette] button.save,
+html.user-logged-in[data-nx-palette] .btn-open-os {
+  background: linear-gradient(135deg, var(--nx-palette-1), var(--nx-palette-2)) !important;
+  border-color: rgba(var(--nx-o1), .55) !important;
+  color: #ffffff !important;
+  box-shadow: 0 9px 22px rgba(var(--nx-o1), .22) !important;
+}
+
+html.user-logged-in[data-nx-palette] .sidebar-quick-action-btn .label,
+html.user-logged-in[data-nx-palette] .sidebar-quick-action-btn .quick-action-badge,
+html.user-logged-in[data-nx-palette] .sidebar-quick-action-btn .quick-action-ic {
+  color: #ffffff !important;
+}
+
+html.user-logged-in[data-nx-palette] nav.menu.sidebar-menu button[data-page].active,
+html.user-logged-in[data-nx-palette] aside.menu.sidebar-menu button[data-page].active {
+  background: linear-gradient(90deg, rgba(var(--nx-o1), .24), rgba(var(--nx-o2), .08)) !important;
+  border-color: rgba(var(--nx-o1), .48) !important;
+  color: #ffffff !important;
+}
+
+html.user-logged-in[data-nx-palette] nav.menu.sidebar-menu button[data-page].active::before,
+html.user-logged-in[data-nx-palette] aside.menu.sidebar-menu button[data-page].active::before {
+  background: var(--nx-palette-1) !important;
+  box-shadow: 0 0 12px rgba(var(--nx-o1), .72) !important;
+}
+
+html.user-logged-in[data-nx-palette] nav.menu.sidebar-menu button[data-page].active .ic,
+html.user-logged-in[data-nx-palette] aside.menu.sidebar-menu button[data-page].active .ic {
+  background: rgba(var(--nx-o1), .20) !important;
+  border-color: rgba(var(--nx-o1), .48) !important;
+  color: var(--nx-palette-1) !important;
+}
+
+html.user-logged-in[data-nx-palette] .dashboard-welcome-hero {
+  background: linear-gradient(112deg, rgba(var(--nx-o1), .20), #102236 58%, rgba(var(--nx-o2), .16)) !important;
+  border-color: rgba(var(--nx-o1), .40) !important;
+}
+
+html.user-logged-in[data-nx-palette] .hero-greeting-badge,
+html.user-logged-in[data-nx-palette] .hero-badge,
+html.user-logged-in[data-nx-palette] .btn-hero-privacy,
+html.user-logged-in[data-nx-palette] .period-picker {
+  background: rgba(var(--nx-o1), .13) !important;
+  border-color: rgba(var(--nx-o1), .36) !important;
+}
+
+html.user-logged-in[data-nx-palette] .hero-name-highlight,
+html.user-logged-in[data-nx-palette] .hero-greeting-badge,
+html.user-logged-in[data-nx-palette] .hero-badge svg,
+html.user-logged-in[data-nx-palette] .hero-sub strong {
+  color: var(--nx-palette-1) !important;
+}
+
+html.user-logged-in[data-nx-palette] #pageContent :is(.kpi, .dash-card, .dash-overview-card, .panel, .table-panel, .cards-summary-panel, .tx-footer-summary, .admin-toolbar-panel, .admin-kpis-row) {
+  background: linear-gradient(145deg, rgba(var(--nx-o1), .085), var(--nx-surface) 58%, rgba(var(--nx-o2), .06)) !important;
+  border-color: rgba(var(--nx-o1), .24) !important;
+}
+
+html.user-logged-in[data-nx-palette] #pageContent :is(.kpi, .dash-card, .dash-overview-card, .panel, .table-panel, .cards-summary-panel):hover {
+  border-color: rgba(var(--nx-o1), .48) !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .20), 0 0 24px rgba(var(--nx-o1), .10) !important;
+}
+
+html.user-logged-in[data-nx-palette] .kpis-grid-6 .kpi::before,
+html.user-logged-in[data-nx-palette] .kpis-grid-6 .kpi::after {
+  background: linear-gradient(90deg, var(--nx-palette-1), var(--nx-palette-2), var(--nx-palette-3)) !important;
+}
+
+html.user-logged-in[data-nx-palette] .kpis-grid-6 .kpi .ic,
+html.user-logged-in[data-nx-palette] .dash-card-icon,
+html.user-logged-in[data-nx-palette] .kpi-mini-fill,
+html.user-logged-in[data-nx-palette] .dash-chart-mode-btn.active,
+html.user-logged-in[data-nx-palette] .dash-filter-pill.active {
+  background: linear-gradient(135deg, rgba(var(--nx-o1), .28), rgba(var(--nx-o2), .18)) !important;
+  border-color: rgba(var(--nx-o1), .48) !important;
+  color: var(--nx-palette-1) !important;
+}
+
+html.user-logged-in[data-nx-palette] .kpis-grid-6 .kpi .val,
+html.user-logged-in[data-nx-palette] .kpi-tag-success,
+html.user-logged-in[data-nx-palette] .kpi-tag-cyan,
+html.user-logged-in[data-nx-palette] .kpi-tag-purple,
+html.user-logged-in[data-nx-palette] #pageContent .tag {
+  color: var(--nx-palette-1) !important;
+  border-color: rgba(var(--nx-o1), .36) !important;
+}
+
+html.user-logged-in[data-nx-palette] .kpi-tag-success,
+html.user-logged-in[data-nx-palette] .kpi-tag-cyan,
+html.user-logged-in[data-nx-palette] .kpi-tag-purple,
+html.user-logged-in[data-nx-palette] #pageContent .tag {
+  background: rgba(var(--nx-o1), .13) !important;
+}
+
+html.user-logged-in[data-nx-palette] #pageContent :is(.progress-bar, .progress-fill, .budget-progress-fill, .goal-progress-fill) {
+  background-image: linear-gradient(90deg, var(--nx-palette-1), var(--nx-palette-2)) !important;
+}
+
+html.user-logged-in[data-nx-palette] .nx-palette-lbl {
+  font-size: 0 !important;
+}
+
+html.user-logged-in[data-nx-palette] .nx-palette-lbl::after {
+  content: 'Cores do sistema';
+  font-size: 12px;
+}
+
+html.user-logged-in[data-nx-palette].light .topheader,
+html.user-logged-in[data-nx-palette] body.light .topheader {
+  background: linear-gradient(90deg, rgba(var(--nx-o1), .12), rgba(255, 255, 255, .96) 48%, rgba(var(--nx-o2), .10)) !important;
+}
+
+html.user-logged-in[data-nx-palette].light nav.menu.sidebar-menu,
+html.user-logged-in[data-nx-palette].light aside.menu.sidebar-menu,
+html.user-logged-in[data-nx-palette] body.light nav.menu.sidebar-menu,
+html.user-logged-in[data-nx-palette] body.light aside.menu.sidebar-menu {
+  background: linear-gradient(180deg, rgba(var(--nx-o1), .12), #f8fbfd 48%, rgba(var(--nx-o2), .10)) !important;
+}
+
+html.user-logged-in[data-nx-palette].light .dashboard-welcome-hero,
+html.user-logged-in[data-nx-palette] body.light .dashboard-welcome-hero {
+  background: linear-gradient(112deg, rgba(var(--nx-o1), .13), #ffffff 62%, rgba(var(--nx-o2), .10)) !important;
+}
+
+html.user-logged-in[data-nx-palette].light #pageContent :is(.kpi, .dash-card, .dash-overview-card, .panel, .table-panel, .cards-summary-panel, .tx-footer-summary, .admin-toolbar-panel, .admin-kpis-row),
+html.user-logged-in[data-nx-palette] body.light #pageContent :is(.kpi, .dash-card, .dash-overview-card, .panel, .table-panel, .cards-summary-panel, .tx-footer-summary, .admin-toolbar-panel, .admin-kpis-row) {
+  background: linear-gradient(145deg, rgba(var(--nx-o1), .08), #ffffff 62%, rgba(var(--nx-o2), .06)) !important;
+  border-color: rgba(var(--nx-o1), .24) !important;
+}
