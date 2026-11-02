@@ -272,6 +272,161 @@
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
   .control input:focus-visible { outline: none; }
 
+  /* ---------- Modal Profissional Fundo de Vidro (Glassmorphism) ---------- */
+  .gmodal-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    display: grid; place-items: center; padding: 24px;
+    background:
+      radial-gradient(circle at 50% 38%, rgba(var(--a-rgb), .22), transparent 58%),
+      rgba(4, 5, 14, .62);
+    backdrop-filter: blur(18px) saturate(165%);
+    -webkit-backdrop-filter: blur(18px) saturate(165%);
+    opacity: 0; visibility: hidden;
+    transition: opacity .24s cubic-bezier(.2, .7, .2, 1), visibility .24s;
+  }
+  .gmodal-overlay.is-open { opacity: 1; visibility: visible; }
+
+  .gmodal-card {
+    position: relative; width: 100%; max-width: 450px;
+    padding: 28px 28px 24px; border-radius: 28px; overflow: hidden;
+    background: linear-gradient(145deg, rgba(255, 255, 255, .20) 0%, rgba(255, 255, 255, .06) 52%, rgba(var(--a-rgb), .10) 100%);
+    backdrop-filter: blur(36px) saturate(200%);
+    -webkit-backdrop-filter: blur(36px) saturate(200%);
+    box-shadow:
+      0 38px 90px rgba(0, 0, 0, .68),
+      0 0 85px rgba(var(--a-rgb), .24),
+      inset 0 1px 0 rgba(255, 255, 255, .44),
+      inset 0 -1px 0 rgba(255, 255, 255, .08);
+    transform: translateY(16px) scale(.97);
+    transition: transform .26s cubic-bezier(.2, .7, .2, 1);
+  }
+  .gmodal-overlay.is-open .gmodal-card { transform: translateY(0) scale(1); }
+
+  .gmodal-card::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: linear-gradient(115deg, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, .04) 34%, transparent 56%, rgba(var(--a-rgb), .09) 100%);
+  }
+  .gmodal-card::after {
+    content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(145deg, rgba(255, 255, 255, .78), rgba(255, 255, 255, .12) 42%, rgba(var(--a-rgb), .70));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+  .gmodal-glow {
+    position: absolute; width: 170px; height: 170px; right: -48px; top: -48px; z-index: 0;
+    border-radius: 50%; background: radial-gradient(circle, rgba(var(--a-rgb), .46), transparent 70%);
+    filter: blur(22px); pointer-events: none;
+  }
+  .gmodal-body { position: relative; z-index: 2; }
+
+  .gmodal-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px;
+  }
+  .gmodal-brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .gmodal-badge {
+    width: 38px; height: 38px; flex: none; border-radius: 12px;
+    display: grid; place-items: center; color: var(--accent-light);
+    background: linear-gradient(145deg, rgba(255, 255, 255, .22), rgba(var(--a-rgb), .18));
+    border: 1px solid rgba(255, 255, 255, .32);
+    box-shadow: 0 8px 22px rgba(var(--a-rgb), .32), inset 0 1px 0 rgba(255, 255, 255, .45);
+  }
+  .gmodal-kicker {
+    display: block; font-size: 11px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent-light); opacity: .92;
+  }
+  .gmodal-step {
+    display: block; font-size: 12px; color: #c8cde2; margin-top: 1px;
+  }
+  .gmodal-close {
+    width: 34px; height: 34px; flex: none; border-radius: 10px;
+    display: grid; place-items: center; cursor: pointer;
+    color: #d2d6e8; background: rgba(255, 255, 255, .07);
+    border: 1px solid rgba(255, 255, 255, .18);
+    transition: background .2s, color .2s, border-color .2s;
+  }
+  .gmodal-close:hover {
+    background: rgba(255, 255, 255, .15); color: #fff; border-color: rgba(255, 255, 255, .34);
+  }
+
+  .gmodal-title {
+    font-family: var(--font-display); font-weight: 500; font-size: 25px;
+    letter-spacing: -.015em; color: var(--ink); margin-bottom: 6px; line-height: 1.18;
+  }
+  .gmodal-desc {
+    font-size: 14.5px; line-height: 1.5; color: #d6daec; margin-bottom: 18px;
+  }
+
+  .gmodal-control {
+    position: relative; height: 56px;
+    background: linear-gradient(145deg, rgba(6, 7, 18, .48), rgba(255, 255, 255, .07));
+    border: 1px solid rgba(255, 255, 255, .26); border-radius: var(--radius-md);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, .28), 0 1px 0 rgba(255, 255, 255, .12);
+    transition: border-color .2s, box-shadow .2s, background .2s;
+  }
+  .gmodal-control:focus-within {
+    border-color: var(--accent-light);
+    background: linear-gradient(145deg, rgba(6, 7, 18, .58), rgba(var(--a-rgb), .12));
+    box-shadow: 0 0 0 4px rgba(var(--a-rgb), .24), inset 0 2px 8px rgba(0, 0, 0, .22);
+  }
+  .gmodal-control.invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px rgba(255, 148, 148, .15);
+  }
+  .gmodal-control > svg.gmodal-ico {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    color: var(--accent-light); opacity: .85; pointer-events: none;
+  }
+  .gmodal-input {
+    width: 100%; height: 100%; padding: 0 16px 0 46px;
+    background: transparent; border: 0; outline: 0; border-radius: var(--radius-md);
+    font: 500 16px var(--font-body); color: var(--ink); letter-spacing: .02em;
+  }
+  .gmodal-input::placeholder { color: rgba(210, 214, 232, .45); font-weight: 400; }
+  .gmodal-control.has-eye .gmodal-input { padding-right: 48px; }
+  .gmodal-eye {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    width: 38px; height: 38px; display: grid; place-items: center;
+    background: none; border: 0; border-radius: 10px; color: #c8cde2; cursor: pointer;
+  }
+  .gmodal-eye:hover { color: #fff; background: rgba(255, 255, 255, .08); }
+  .gmodal-hint {
+    display: block; margin: 7px 4px 0; font-size: 12px; color: #b8bed4; line-height: 1.35;
+  }
+  .gmodal-error {
+    margin: 7px 4px 0; font-size: 12.5px; font-weight: 500; color: var(--danger);
+  }
+  .gmodal-error:empty { display: none; }
+
+  .gmodal-actions {
+    display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 22px;
+  }
+  .gmodal-btn {
+    height: 46px; padding: 0 22px; border-radius: 99px; cursor: pointer;
+    font: 600 14.5px var(--font-body); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    transition: transform .15s, filter .2s, background .2s, border-color .2s, box-shadow .2s;
+  }
+  .gmodal-btn:active { transform: translateY(1px); }
+  .gmodal-btn-cancel {
+    color: var(--ink);
+    background: linear-gradient(145deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .04));
+    border: 1px solid rgba(255, 255, 255, .24);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22);
+  }
+  .gmodal-btn-cancel:hover {
+    background: linear-gradient(145deg, rgba(255, 255, 255, .20), rgba(255, 255, 255, .08));
+    border-color: rgba(255, 255, 255, .38);
+  }
+  .gmodal-btn-ok {
+    min-width: 112px; border: 0; font-weight: 700; color: var(--on-accent);
+    background: linear-gradient(145deg, var(--accent-light), var(--accent) 55%, var(--accent-deep));
+    box-shadow: 0 12px 28px rgba(var(--a-rgb), .42), inset 0 1px 0 rgba(255, 255, 255, .6);
+  }
+  .gmodal-btn-ok:hover {
+    filter: brightness(1.07);
+    box-shadow: 0 16px 36px rgba(var(--a-rgb), .54), inset 0 1px 0 rgba(255, 255, 255, .65);
+  }
+
   /* ---------- Responsivo ---------- */
   @media (max-width: 980px) {
     .stage { padding: 96px 20px 40px; }
@@ -739,11 +894,227 @@
     }).catch(() => {});
   }
 
+  function formatBirthDate(value) {
+    const digits = String(value || '').replace(/\D/g, '').slice(0, 8);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 4) return digits.slice(0, 2) + '/' + digits.slice(2);
+    return digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
+  }
+
+  function validBirthDate(value) {
+    const m = String(value || '').trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!m) return false;
+    const d = Number(m[1]), mo = Number(m[2]), y = Number(m[3]);
+    if (y < 1900 || y > 2100 || mo < 1 || mo > 12 || d < 1 || d > 31) return false;
+    const dt = new Date(y, mo - 1, d);
+    return dt.getFullYear() === y && dt.getMonth() === mo - 1 && dt.getDate() === d;
+  }
+
+  const GLASS_ICONS = {
+    calendar: '<svg class="gmodal-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+    id: '<svg class="gmodal-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 10h10M7 14h6"/></svg>',
+    lock: '<svg class="gmodal-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+    shield: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>'
+  };
+
+  function ensureGlassModal() {
+    let overlay = $('#gmodal-overlay');
+    if (overlay) return overlay;
+    overlay = document.createElement('div');
+    overlay.id = 'gmodal-overlay';
+    overlay.className = 'gmodal-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-labelledby', 'gmodal-title');
+    overlay.innerHTML =
+      '<div class="gmodal-card">' +
+        '<span class="gmodal-glow" aria-hidden="true"></span>' +
+        '<div class="gmodal-body">' +
+          '<div class="gmodal-head">' +
+            '<div class="gmodal-brand">' +
+              '<span class="gmodal-badge" id="gmodal-badge" aria-hidden="true">' + GLASS_ICONS.shield + '</span>' +
+              '<div>' +
+                '<span class="gmodal-kicker" id="gmodal-kicker">Nexus Financeiro</span>' +
+                '<span class="gmodal-step" id="gmodal-step">Verificação de segurança</span>' +
+              '</div>' +
+            '</div>' +
+            '<button type="button" class="gmodal-close" id="gmodal-close" aria-label="Fechar">' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+            '</button>' +
+          '</div>' +
+          '<h3 class="gmodal-title" id="gmodal-title">Confirmação de dados</h3>' +
+          '<p class="gmodal-desc" id="gmodal-desc"></p>' +
+          '<form id="gmodal-form" novalidate>' +
+            '<div class="gmodal-control" id="gmodal-control">' +
+              '<span id="gmodal-ico-slot"></span>' +
+              '<input class="gmodal-input" id="gmodal-input" type="text" autocomplete="off">' +
+              '<button type="button" class="gmodal-eye" id="gmodal-eye" aria-label="Mostrar senha" hidden>' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>' +
+              '</button>' +
+            '</div>' +
+            '<p class="gmodal-error" id="gmodal-error"></p>' +
+            '<small class="gmodal-hint" id="gmodal-hint"></small>' +
+            '<div class="gmodal-actions">' +
+              '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="gmodal-cancel">Cancelar</button>' +
+              '<button type="submit" class="gmodal-btn gmodal-btn-ok" id="gmodal-ok">OK</button>' +
+            '</div>' +
+          '</form>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    return overlay;
+  }
+
+  function glassPrompt(options) {
+    const opts = typeof options === 'string' ? { message: options } : (options || {});
+    const overlay = ensureGlassModal();
+    const titleEl = $('#gmodal-title', overlay);
+    const descEl = $('#gmodal-desc', overlay);
+    const stepEl = $('#gmodal-step', overlay);
+    const controlEl = $('#gmodal-control', overlay);
+    const icoSlot = $('#gmodal-ico-slot', overlay);
+    const inputEl = $('#gmodal-input', overlay);
+    const eyeBtn = $('#gmodal-eye', overlay);
+    const errorEl = $('#gmodal-error', overlay);
+    const hintEl = $('#gmodal-hint', overlay);
+    const okBtn = $('#gmodal-ok', overlay);
+    const cancelBtn = $('#gmodal-cancel', overlay);
+    const closeBtn = $('#gmodal-close', overlay);
+    const modalForm = $('#gmodal-form', overlay);
+
+    const isPassword = opts.type === 'password';
+    titleEl.textContent = opts.title || 'Confirmação de Segurança';
+    descEl.textContent = opts.message || '';
+    stepEl.textContent = opts.step || 'Verificação de identidade';
+    okBtn.textContent = opts.okText || 'OK';
+    cancelBtn.textContent = opts.cancelText || 'Cancelar';
+    hintEl.textContent = opts.hint || '';
+    hintEl.style.display = opts.hint ? 'block' : 'none';
+    errorEl.textContent = '';
+    controlEl.classList.remove('invalid');
+    controlEl.classList.toggle('has-eye', isPassword);
+    eyeBtn.hidden = !isPassword;
+
+    const iconKey = opts.icon || (opts.mask === 'date' ? 'calendar' : opts.mask === 'cpf' ? 'id' : isPassword ? 'lock' : 'id');
+    icoSlot.innerHTML = GLASS_ICONS[iconKey] || GLASS_ICONS.id;
+
+    inputEl.type = isPassword ? 'password' : 'text';
+    inputEl.value = opts.defaultValue || '';
+    inputEl.placeholder = opts.placeholder || '';
+    inputEl.inputMode = (opts.mask === 'date' || opts.mask === 'cpf') ? 'numeric' : 'text';
+    if (opts.maxLength) inputEl.maxLength = opts.maxLength;
+    else inputEl.removeAttribute('maxlength');
+
+    return new Promise(resolve => {
+      let settled = false;
+
+      const onInput = () => {
+        if (opts.mask === 'cpf') {
+          inputEl.value = formatCpf(inputEl.value);
+        } else if (opts.mask === 'date') {
+          inputEl.value = formatBirthDate(inputEl.value);
+        }
+        errorEl.textContent = '';
+        controlEl.classList.remove('invalid');
+      };
+
+      const onEye = () => {
+        const show = inputEl.type === 'password';
+        inputEl.type = show ? 'text' : 'password';
+        eyeBtn.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha');
+        inputEl.focus();
+      };
+
+      const finish = value => {
+        if (settled) return;
+        settled = true;
+        overlay.classList.remove('is-open');
+        inputEl.removeEventListener('input', onInput);
+        eyeBtn.removeEventListener('click', onEye);
+        modalForm.removeEventListener('submit', onSubmit);
+        cancelBtn.removeEventListener('click', onCancel);
+        closeBtn.removeEventListener('click', onCancel);
+        overlay.removeEventListener('mousedown', onBackdrop);
+        document.removeEventListener('keydown', onKey);
+        window.setTimeout(() => resolve(value), 160);
+      };
+
+      const onSubmit = event => {
+        event.preventDefault();
+        const raw = inputEl.value.trim();
+        if (typeof opts.validate === 'function') {
+          const validationError = opts.validate(raw);
+          if (validationError) {
+            errorEl.textContent = validationError;
+            controlEl.classList.add('invalid');
+            inputEl.focus();
+            return;
+          }
+        }
+        finish(raw);
+      };
+
+      const onCancel = () => finish(null);
+      const onBackdrop = event => {
+        if (event.target === overlay) onCancel();
+      };
+      const onKey = event => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          onCancel();
+        }
+      };
+
+      inputEl.addEventListener('input', onInput);
+      eyeBtn.addEventListener('click', onEye);
+      modalForm.addEventListener('submit', onSubmit);
+      cancelBtn.addEventListener('click', onCancel);
+      closeBtn.addEventListener('click', onCancel);
+      overlay.addEventListener('mousedown', onBackdrop);
+      document.addEventListener('keydown', onKey);
+
+      overlay.classList.add('is-open');
+      window.setTimeout(() => inputEl.focus(), 40);
+    });
+  }
+  window.glassPrompt = glassPrompt;
+
   async function changeTemporaryPassword(email) {
-    const newPassword = window.prompt('Sua senha temporária precisa ser trocada. Digite a nova senha (8+ caracteres, maiúscula, minúscula, número e símbolo):');
+    const newPassword = await glassPrompt({
+      title: 'Nova senha de acesso',
+      step: 'Troca obrigatória • Etapa 1 de 2',
+      message: 'Sua senha temporária precisa ser trocada. Digite a nova senha:',
+      placeholder: 'Mínimo 8 caracteres',
+      hint: 'Use 8+ caracteres com maiúscula, minúscula, número e símbolo (@#$%).',
+      type: 'password',
+      icon: 'lock',
+      okText: 'Continuar',
+      validate: val => {
+        if (!val) return 'Digite a nova senha.';
+        if (val.length < 8 || !/[A-Z]/.test(val) || !/[a-z]/.test(val) || !/\d/.test(val) || !/[^A-Za-z0-9]/.test(val)) {
+          return 'Use 8+ caracteres, maiúscula, minúscula, número e símbolo.';
+        }
+        return '';
+      }
+    });
     if (!newPassword) throw new Error('A troca da senha temporária foi cancelada.');
-    const confirmation = window.prompt('Confirme a nova senha:');
-    if (newPassword !== confirmation) throw new Error('As senhas não coincidem.');
+
+    const confirmation = await glassPrompt({
+      title: 'Confirmar nova senha',
+      step: 'Troca obrigatória • Etapa 2 de 2',
+      message: 'Confirme a nova senha informada:',
+      placeholder: 'Repita a nova senha',
+      type: 'password',
+      icon: 'lock',
+      okText: 'Salvar senha',
+      validate: val => {
+        if (!val) return 'Confirme a nova senha.';
+        if (val !== newPassword) return 'As senhas não coincidem.';
+        return '';
+      }
+    });
+    if (!confirmation) throw new Error('A troca da senha temporária foi cancelada.');
+
     const changed = await api('/api/auth/change-temp-password', {
       email, newPassword, confirmPassword: confirmation
     });
@@ -782,10 +1153,42 @@
         $('#email').focus();
         return;
       }
-      const cpf = window.prompt('Para confirmar sua identidade, informe seu CPF:');
+      const cpf = await glassPrompt({
+        title: 'Confirmação de Identidade',
+        step: 'Recuperação de acesso • Etapa 1 de 2',
+        message: 'Para confirmar sua identidade, informe seu CPF:',
+        placeholder: '000.000.000-00',
+        hint: 'Informe os 11 dígitos do CPF do titular da conta.',
+        mask: 'cpf',
+        maxLength: 14,
+        icon: 'id',
+        okText: 'OK',
+        validate: val => {
+          if (!val) return 'Por favor, informe seu CPF.';
+          if (cpfDigits(val).length < 11) return 'Informe os 11 dígitos do CPF.';
+          return '';
+        }
+      });
       if (!cpf) return;
-      const birthDate = window.prompt('Informe sua data de nascimento (DD/MM/AAAA):');
+
+      const birthDate = await glassPrompt({
+        title: 'Data de Nascimento',
+        step: 'Recuperação de acesso • Etapa 2 de 2',
+        message: 'Informe sua data de nascimento (DD/MM/AAAA):',
+        placeholder: 'DD/MM/AAAA',
+        hint: 'Digite apenas os números (ex.: 15/08/1990).',
+        mask: 'date',
+        maxLength: 10,
+        icon: 'calendar',
+        okText: 'OK',
+        validate: val => {
+          if (!val) return 'Por favor, informe sua data de nascimento.';
+          if (!validBirthDate(val)) return 'Informe uma data válida no formato DD/MM/AAAA.';
+          return '';
+        }
+      });
       if (!birthDate) return;
+
       try {
         const result = await api('/api/send-password', { email: accountEmail, cpf, birth_date: birthDate });
         showStatus((result.message || 'Senha temporária gerada.') + ' Senha: ' + (result.tempPassword || 'consulte seu e-mail.'));
