@@ -15688,6 +15688,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <div class="field" style="flex:1;">
             <label>Categoria da O.S. *</label>
             <select id="osServiceType" required>
+              <option value="" selected>Selecione a categoria</option>
               <option value="Reset de Senha">🔑 Reset / Recuperação de Senha</option>
               <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais/Financeiros</option>
               <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
@@ -15745,6 +15746,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
       </div>
 
+      <button type="button" onclick="openNovaOrdemModal('abrir')" style="width:100%; height:42px; margin-bottom:10px; border-radius:12px; background:rgba(16, 185, 129, 0.16); border:1px solid rgba(52,211,153,0.45); color:#A7F3D0; font-size:13px; font-weight:800; cursor:pointer;">
+        ＋ Abrir outra O.S.
+      </button>
       <button type="button" class="btn-auth-primary" onclick="closeNovaOrdemModal()" style="width:100%; height:42px;">
         Concluir e Voltar para o Login
       </button>
@@ -25588,25 +25592,11 @@ window.openNovaOrdemModal = function(preselectedTypeOrTab) {
   if (feedback) feedback.style.display = 'none';
   if (form) form.reset();
 
-  // Preenche automaticamente os dados do usuário logado (ou digitados no login) para abertura ultra-rápida
-  let activeU = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : null;
-  if (!activeU) {
-    try { activeU = JSON.parse(localStorage.getItem('nexus_cached_user') || 'null'); } catch(_) {}
-  }
-  const osNameInp = document.getElementById('osClientName');
-  const osEmailInp = document.getElementById('osClientEmail');
-  const osPhoneInp = document.getElementById('osClientPhone');
-  const osCpfInp = document.getElementById('osClientCpf');
-  const loginEmailVal = (document.getElementById('loginEmail')?.value || '').trim();
-
-  if (activeU) {
-    if (osNameInp && activeU.name && !osNameInp.value) osNameInp.value = activeU.name;
-    if (osEmailInp && activeU.email && !osEmailInp.value) osEmailInp.value = activeU.email;
-    if (osPhoneInp && activeU.phone && !osPhoneInp.value) osPhoneInp.value = activeU.phone;
-    if (osCpfInp && activeU.cpf && !osCpfInp.value) osCpfInp.value = activeU.cpf;
-  } else if (loginEmailVal && osEmailInp && !osEmailInp.value) {
-    osEmailInp.value = loginEmailVal;
-  }
+  // Ao abrir, todos os campos ficam vazios (sem dados do usuário logado nem da abertura anterior)
+  const osConsultarInp = document.getElementById('osConsultarQuery');
+  if (osConsultarInp) osConsultarInp.value = '';
+  const osConsultarRes = document.getElementById('osConsultarResultados');
+  if (osConsultarRes) osConsultarRes.innerHTML = '';
 
   overlay.classList.add('show');
   overlay.style.display = 'flex';
@@ -25771,12 +25761,12 @@ window.enviarNovaOrdem = async function(e) {
   const clientEmail = (document.getElementById('osClientEmail')?.value || '').trim();
   const clientPhone = (document.getElementById('osClientPhone')?.value || '').trim();
   const clientCpf = (document.getElementById('osClientCpf')?.value || '').trim();
-  const serviceType = document.getElementById('osServiceType')?.value || 'Pagamento Não Reconhecido';
+  const serviceType = document.getElementById('osServiceType')?.value || '';
   const priority = document.getElementById('osPriority')?.value || 'Normal';
   const title = (document.getElementById('osTitle')?.value || '').trim();
   const description = (document.getElementById('osDescription')?.value || '').trim();
 
-  if (!clientName || !clientEmail || !title || !description) {
+  if (!clientName || !clientEmail || !serviceType || !title || !description) {
     if (feedback) {
       feedback.className = 'auth-feedback-banner error';
       feedback.textContent = 'Por favor, preencha todos os campos obrigatórios (*).';
@@ -25816,6 +25806,9 @@ window.enviarNovaOrdem = async function(e) {
       const protocolEl = document.getElementById('osSuccessProtocol');
 
       if (protocolEl) protocolEl.textContent = result.protocol || '#OS-CONFIRMADO';
+      // O.S. salva: o protocolo aparece na tela e o formulário já fica vazio para abrir outra
+      const formNovaOrdemEl = document.getElementById('formNovaOrdem');
+      if (formNovaOrdemEl) formNovaOrdemEl.reset();
       if (formBox) formBox.style.display = 'none';
       if (successBox) successBox.style.display = 'block';
 
