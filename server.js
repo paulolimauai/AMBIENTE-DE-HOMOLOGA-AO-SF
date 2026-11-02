@@ -1649,6 +1649,72 @@ const htmlContent = `<!DOCTYPE html>
       try { document.documentElement.classList.add('nexus-leaving'); } catch (e) {}
       window.location.replace('/login.html');
     };
+    // Paleta de cores do fundo: mesmas paletas da tela de login (/login.html) e mesma chave de armazenamento (nexus:cores)
+    window.__nxPalette = (function() {
+      var KEY = 'nexus:cores';
+      var PALETAS = [
+        { id: 'multicolor', nome: 'Multicolor', h: [265, 335, 190, 45] },
+        { id: 'aurora', nome: 'Aurora', h: [250, 320, 190, 280] },
+        { id: 'oceano', nome: 'Oceano', h: [212, 188, 255, 165] },
+        { id: 'por-do-sol', nome: 'Pôr do sol', h: [18, 340, 45, 285] },
+        { id: 'esmeralda', nome: 'Esmeralda', h: [155, 185, 85, 205] },
+        { id: 'rose', nome: 'Rosé', h: [335, 285, 15, 255] },
+        { id: 'ouro', nome: 'Ouro', h: [42, 18, 255, 335] },
+        { id: 'turquesa', nome: 'Turquesa', h: [176, 215, 135, 265] },
+        { id: 'carmesim', nome: 'Carmesim', h: [352, 20, 285, 320] },
+        { id: 'neon', nome: 'Neon', h: [85, 150, 195, 50] }
+      ];
+      var state = { id: 'multicolor' };
+      function hslToRgb(h, s, l) {
+        s /= 100; l /= 100;
+        var k = function(n) { return (n + h / 30) % 12; };
+        var a = s * Math.min(l, 1 - l);
+        var f = function(n) { return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); };
+        return [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))];
+      }
+      function hexToHue(value) {
+        var n = parseInt(value.slice(1), 16);
+        var r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, hue = 0;
+        if (d) {
+          if (max === r) hue = ((g - b) / d) % 6;
+          else if (max === g) hue = (b - r) / d + 2;
+          else hue = (r - g) / d + 4;
+          hue = Math.round(hue * 60 + 360) % 360;
+        }
+        return hue;
+      }
+      function paint(hues, id) {
+        var root = document.documentElement;
+        for (var i = 0; i < 4; i++) root.style.setProperty('--nx-o' + (i + 1), hslToRgb(hues[i], 95, 58).join(', '));
+        root.setAttribute('data-nx-palette', id);
+      }
+      function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+      function choose(id) {
+        var p = PALETAS.filter(function(x) { return x.id === id; })[0] || PALETAS[0];
+        state = { id: p.id };
+        paint(p.h, p.id);
+        save();
+      }
+      function chooseCustom(hex) {
+        if (!/^#[0-9a-f]{6}$/i.test(hex || '')) return;
+        var h = hexToHue(hex);
+        state = { id: 'custom', hex: hex };
+        paint([h, (h + 60) % 360, (h + 300) % 360, (h + 150) % 360], 'custom');
+        save();
+      }
+      function load() {
+        var saved = null;
+        try { saved = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+        if (saved && saved.id === 'custom' && /^#[0-9a-f]{6}$/i.test(saved.hex || '')) {
+          chooseCustom(saved.hex);
+        } else {
+          choose(saved && saved.id);
+        }
+      }
+      return { PALETAS: PALETAS, choose: choose, chooseCustom: chooseCustom, load: load, current: function() { return state; } };
+    })();
+    window.__nxPalette.load();
     // Validação estrita: se a página de internet foi fechada e reaberta (sessionStorage vazio), invalida a sessão antiga
     var isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
     if (!isSessionActive) {
@@ -14016,7 +14082,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn, #authPage #regSubmitBtn, #authPage #btnSendPassword { background: #059669 !important; color: #FFFFFF !important; border: 1px solid #10B981 !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28) !important; }
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261102-postlogin-redesign" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261102-bg-palette3" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -14589,6 +14655,16 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
         </div>
 
+
+        <div class="nx-palette-wrap" id="nxPaletteWrap">
+          <div class="icon-btn" id="nxPaletteBtn" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Cores do fundo">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+          </div>
+          <div class="nx-palette-pop" id="nxPalettePop" role="group" aria-label="Escolher cores do fundo">
+            <span class="nx-palette-lbl">Cores do fundo</span>
+            <div class="nx-palette-swatches" id="nxPaletteSwatches"></div>
+          </div>
+        </div>
 
         <div class="icon-btn" id="miniThemeBtn" title="Alternar Modo Noturno / Diurno">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>
@@ -30517,6 +30593,57 @@ window.applyPostLoginBg = function(theme) {
     }
     window.applyPostLoginBg(saved);
   } catch(e){}
+})();
+
+// ==================== Seletor de Cores do Fundo (mesmas cores da tela de login) ====================
+(function initNexusPaletteMenu() {
+  const api = window.__nxPalette;
+  const wrap = document.getElementById('nxPaletteWrap');
+  const btn = document.getElementById('nxPaletteBtn');
+  const swatches = document.getElementById('nxPaletteSwatches');
+  if (!api || !wrap || !btn || !swatches) return;
+
+  const hue = h => 'hsl(' + h + ' 95% 58%)';
+  api.PALETAS.forEach(p => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'nx-sw';
+    b.dataset.id = p.id;
+    b.title = p.nome;
+    b.setAttribute('aria-label', 'Paleta ' + p.nome);
+    b.style.setProperty('--c', 'linear-gradient(135deg, ' + hue(p.h[0]) + ' 0 34%, ' + hue(p.h[1]) + ' 34% 67%, ' + hue(p.h[2]) + ' 67%)');
+    b.addEventListener('click', () => { api.choose(p.id); mark(); });
+    swatches.appendChild(b);
+  });
+
+  const customLabel = document.createElement('label');
+  customLabel.className = 'nx-sw-custom';
+  customLabel.title = 'Escolher uma cor personalizada';
+  const customInput = document.createElement('input');
+  customInput.type = 'color';
+  customInput.value = (api.current().hex) || '#8c5aff';
+  customInput.setAttribute('aria-label', 'Escolher uma cor personalizada');
+  customInput.addEventListener('input', e => { api.chooseCustom(e.target.value); mark(); });
+  customLabel.appendChild(customInput);
+  swatches.appendChild(customLabel);
+
+  function mark() {
+    const cur = api.current();
+    swatches.querySelectorAll('.nx-sw').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === cur.id)));
+    customLabel.classList.toggle('on', cur.id === 'custom');
+  }
+  mark();
+
+  function setOpen(open) {
+    wrap.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  }
+  btn.addEventListener('click', e => { e.stopPropagation(); setOpen(!wrap.classList.contains('open')); });
+  btn.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!wrap.classList.contains('open')); }
+  });
+  document.addEventListener('click', e => { if (!wrap.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
 })();
 
 
