@@ -21,8 +21,31 @@ try {
 
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
-const JWT_SECRET = process.env.JWT_SECRET || 'nexus_financeiro_secret_key_2026_4k_secure';
 const RUNTIME_DATA_DIR = process.env.NEXUS_DATA_DIR || __dirname;
+
+// Segredo de assinatura dos tokens: nunca fica no código-fonte. Vem do ambiente (JWT_SECRET) ou é gerado
+// aleatoriamente na primeira execução e guardado em arquivo local (fora do Git) para sobreviver a reinícios.
+function loadOrCreateJwtSecret() {
+  const fromEnv = String(process.env.JWT_SECRET || '').trim();
+  if (fromEnv) return fromEnv;
+  const secretPath = path.join(RUNTIME_DATA_DIR, '.nexus_jwt_secret');
+  try {
+    const saved = fs.readFileSync(secretPath, 'utf8').trim();
+    if (saved.length >= 32) return saved;
+  } catch (e) {}
+  const generated = crypto.randomBytes(48).toString('hex');
+  try {
+    fs.mkdirSync(RUNTIME_DATA_DIR, { recursive: true });
+    fs.writeFileSync(secretPath, generated, { encoding: 'utf8', mode: 0o600 });
+    console.warn('[SEGURANÇA] JWT_SECRET não definido: foi gerado um segredo aleatório em ' + path.basename(secretPath) + '. Defina JWT_SECRET (e NEXUS_SYNC_TOKEN igual nos dois lados da sincronização) no ambiente.');
+  } catch (e) {
+    console.warn('[SEGURANÇA] JWT_SECRET não definido e não foi possível gravar o segredo local; usando segredo temporário (sessões caem ao reiniciar).');
+  }
+  return generated;
+}
+const JWT_SECRET = loadOrCreateJwtSecret();
+// Token de sincronização interna (Render <-> servidor local). Separado do segredo de assinatura quando configurado.
+const SYNC_TOKEN = String(process.env.NEXUS_SYNC_TOKEN || '').trim() || JWT_SECRET;
 
 if (process.env.NEXUS_DATA_DIR) {
   fs.mkdirSync(RUNTIME_DATA_DIR, { recursive: true });
@@ -272,11 +295,91 @@ function verifyPassword(password, storedPassword, user = null) {
     if (sha256.toLowerCase() === trimmedStored.toLowerCase()) return true;
   }
 
-  // 3.3 Comparação em texto puro (legado ou inserção manual no SQL Server)
-  if (trimmedInput === trimmedStored || rawInput === rawStored) return true;
-  if (trimmedInput.toLowerCase() === trimmedStored.toLowerCase()) return true;
+  // 3.3 Comparação em texto puro (legado ou inserção manual no SQL Server): exata, sem ignorar maiúsculas/minúsculas
+  if (trimmedStored && (safeEqual(trimmedInput, trimmedStored) || safeEqual(rawInput, rawStored))) return true;
   return false;
 }
+
+// Validação de dados que o painel de administração exibe via HTML: e-mail e nome sem aspas, sinais de menor/maior ou crases
+// (antes o regex de e-mail aceitava <img onerror=...>@x.com e o nome era livre: XSS armazenado contra o administrador).
+const STRICT_EMAIL_REGEX = /^[A-Za-z0-9._%+\-]{1,64}@[A-Za-z0-9.\-]{1,190}\.[A-Za-z]{2,24}$/;
+const SAFE_NAME_REGEX = /^[\p{L}\p{M}][\p{L}\p{M} '.\-]{1,118}[\p{L}\p{M}.]$/u;
+function isStrictEmail(value) {
+  const email = String(value || '');
+  return email.length <= 254 && STRICT_EMAIL_REGEX.test(email) && !email.includes('..');
+}
+function isSafeDisplayName(value) {
+  return SAFE_NAME_REGEX.test(String(value || '').trim());
+}
+// Escape de texto livre (ex.: título/descrição de O.S.) para ser exibido com segurança em telas montadas com innerHTML
+function escapeHtmlText(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+// Comparação de segredos em tempo constante (evita vazamento por tempo de resposta)
+function safeEqual(a, b) {
+  const bufA = Buffer.from(String(a == null ? '' : a), 'utf8');
+  const bufB = Buffer.from(String(b == null ? '' : b), 'utf8');
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
+// IP do cliente. Cabeçalho X-Forwarded-For só é confiável atrás de proxy (Render / TRUST_PROXY=1); fora disso é forjável.
+function getClientIp(req) {
+  const trustProxy = Boolean(process.env.RENDER) || process.env.TRUST_PROXY === '1';
+  const forwarded = trustProxy ? String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() : '';
+  return forwarded || (req.socket && req.socket.remoteAddress) || 'desconhecido';
+}
+
+// Limitador de tentativas em memória (janela deslizante simples)
+const RATE_BUCKETS = new Map();
+function checkRateLimit(bucketKey, maxHits, windowMs) {
+  const now = Date.now();
+  const hits = (RATE_BUCKETS.get(bucketKey) || []).filter(ts => now - ts < windowMs);
+  if (hits.length >= maxHits) {
+    RATE_BUCKETS.set(bucketKey, hits);
+    return { limited: true, retryAfterSeconds: Math.max(1, Math.ceil((windowMs - (now - hits[0])) / 1000)) };
+  }
+  hits.push(now);
+  RATE_BUCKETS.set(bucketKey, hits);
+  return { limited: false, retryAfterSeconds: 0 };
+}
+// Consulta sem registrar nova tentativa (usada para bloquear contas após falhas consecutivas)
+function peekRateLimit(bucketKey, maxHits, windowMs) {
+  const now = Date.now();
+  const hits = (RATE_BUCKETS.get(bucketKey) || []).filter(ts => now - ts < windowMs);
+  return hits.length >= maxHits;
+}
+function recordRateLimitHit(bucketKey) {
+  const hits = RATE_BUCKETS.get(bucketKey) || [];
+  hits.push(Date.now());
+  RATE_BUCKETS.set(bucketKey, hits);
+}
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, hits] of RATE_BUCKETS) {
+    if (!hits.length || now - hits[hits.length - 1] > 60 * 60 * 1000) RATE_BUCKETS.delete(key);
+  }
+}, 10 * 60 * 1000).unref();
+
+// Corpo máximo aceito (os dados financeiros podem incluir anexos em base64) e regras de limite por rota
+const MAX_REQUEST_BODY_BYTES = 30 * 1024 * 1024;
+const LOGIN_FAIL_MAX = 8;
+const LOGIN_FAIL_WINDOW_MS = 15 * 60 * 1000;
+const RATE_LIMIT_RULES = {
+  'POST /api/login': { key: 'login', max: 30, windowMs: 15 * 60 * 1000 },
+  'POST /api/register': { key: 'register', max: 10, windowMs: 60 * 60 * 1000 },
+  'POST /api/send-password': { key: 'recover', max: 6, windowMs: 60 * 60 * 1000 },
+  'POST /api/auth/verify-and-reset': { key: 'recover', max: 6, windowMs: 60 * 60 * 1000 },
+  'POST /api/forgot-password': { key: 'recover', max: 6, windowMs: 60 * 60 * 1000 },
+  'POST /api/auth/change-temp-password': { key: 'change-temp', max: 10, windowMs: 15 * 60 * 1000 },
+  'POST /api/user/change-mandatory-password': { key: 'change-temp', max: 10, windowMs: 15 * 60 * 1000 },
+  'GET /api/cpf/consultar': { key: 'cpf', max: 30, windowMs: 10 * 60 * 1000 },
+  'GET /api/cpf': { key: 'cpf', max: 30, windowMs: 10 * 60 * 1000 },
+  'POST /api/ordens': { key: 'os-open', max: 15, windowMs: 60 * 60 * 1000 },
+  'GET /api/ordens/consultar': { key: 'os-consult', max: 40, windowMs: 10 * 60 * 1000 },
+  'POST /api/ordens/consultar': { key: 'os-consult', max: 40, windowMs: 10 * 60 * 1000 }
+};
 
 function generateSecureToken(user) {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
@@ -323,10 +426,27 @@ function getAuthenticatedAdmin(req) {
 }
 
 function hasInternalSyncAccess(req, parsedUrl) {
-  return Boolean(JWT_SECRET) && (
-    req.headers['x-nexus-sync-token'] === JWT_SECRET ||
-    req.headers.authorization === `Bearer ${JWT_SECRET}`
+  return Boolean(SYNC_TOKEN) && (
+    safeEqual(req.headers['x-nexus-sync-token'] || '', SYNC_TOKEN) ||
+    safeEqual(req.headers.authorization || '', `Bearer ${SYNC_TOKEN}`)
   );
+}
+
+// Autorização de acesso aos dados de uma conta: o próprio titular, um administrador ou a sincronização interna.
+// Retorna { ok, user, status, error } para o handler responder de forma uniforme.
+function authorizeAccountAccess(req, targetEmail) {
+  if (hasInternalSyncAccess(req)) return { ok: true, user: null };
+  const user = getAuthenticatedUser(req);
+  if (!user) return { ok: false, status: 401, error: 'Autenticação obrigatória.' };
+  const target = String(targetEmail || '').toLowerCase().trim();
+  const isOwner = String(user.email || '').toLowerCase().trim() === target;
+  if (isOwner || user.role === 'Administrador') return { ok: true, user };
+  return { ok: false, status: 403, error: 'Acesso negado a dados de outra conta.' };
+}
+
+function sendJson(res, corsHeaders, status, payload) {
+  res.writeHead(status, { ...corsHeaders, 'Content-Type': 'application/json' });
+  return res.end(JSON.stringify(payload));
 }
 
 function sanitizeUser(user) {
@@ -498,9 +618,16 @@ function getBrasiliaIsoString(dateInput) {
 // ==================== Gerenciador de Eventos em Tempo Real (SSE) ====================
 const sseClients = new Set();
 
+// Cada conexão SSE carrega o usuário autenticado (client.nexusUser). Administradores recebem todos os eventos;
+// os demais recebem apenas eventos que tenham o próprio e-mail (ex.: confirmação da própria assinatura).
 function broadcastEvent(eventType, eventData) {
   const message = `event: ${eventType}\ndata: ${JSON.stringify(eventData)}\n\n`;
+  const eventEmail = eventData && eventData.email ? String(eventData.email).toLowerCase().trim() : '';
   for (const client of sseClients) {
+    const viewer = client.nexusUser;
+    const isAdminViewer = viewer && viewer.role === 'Administrador';
+    const isOwnEvent = viewer && eventEmail && String(viewer.email || '').toLowerCase().trim() === eventEmail;
+    if (!isAdminViewer && !isOwnEvent) continue;
     try {
       client.write(message);
     } catch (e) {
@@ -663,7 +790,12 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
       return resolve(false);
     }
 
-    const socket = tls.connect(port, host, { rejectUnauthorized: false }, () => {
+    // Endereço e nome vão para comandos SMTP e HTML: remove quebras de linha e escapa caracteres especiais
+    if (/[\r\n<>]/.test(String(toEmail || ''))) return resolve(false);
+    userName = String(userName || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+
+    // Validação do certificado TLS do servidor SMTP mantida (credenciais trafegam neste canal)
+    const socket = tls.connect(port, host, { servername: host }, () => {
       let step = 0;
 
       const send = (cmd) => {
@@ -730,6 +862,11 @@ function sendPasswordEmail(toEmail, userName, userPassword) {
 
     socket.on('error', (err) => {
       console.error('Erro na conexão SMTP:', err);
+      resolve(false);
+    });
+    // Sem resposta do servidor SMTP: encerra o socket e libera a promessa (antes ficava pendente para sempre)
+    socket.setTimeout(20000, () => {
+      try { socket.destroy(); } catch (e) {}
       resolve(false);
     });
   });
@@ -1715,6 +1852,35 @@ const htmlContent = `<!DOCTYPE html>
       return { PALETAS: PALETAS, choose: choose, chooseCustom: chooseCustom, load: load, current: function() { return state; } };
     })();
     window.__nxPalette.load();
+    // Token da sessão: aceita o formato cru (login v5) e o formato JSON (login legado)
+    window.__nxGetToken = function() {
+      try {
+        var raw = localStorage.getItem('nexus_token');
+        if (!raw) return '';
+        try { var parsed = JSON.parse(raw); return typeof parsed === 'string' ? parsed : ''; } catch (parseErr) { return raw; }
+      } catch (e) { return ''; }
+    };
+    // Toda chamada à API do próprio site leva o token da sessão. Antes o token gravado cru pelo login v5 não era lido
+    // (JSON.parse falhava) e as chamadas autenticadas saíam com "Authorization: Bearer " vazio.
+    (function() {
+      var nativeFetch = window.fetch;
+      if (typeof nativeFetch !== 'function') return;
+      window.fetch = function(input, init) {
+        try {
+          var target = typeof input === 'string' ? input : ((input && input.url) || '');
+          var isOwnApi = target.indexOf('/api/') === 0 || target.indexOf(location.origin + '/api/') === 0;
+          var token = isOwnApi ? window.__nxGetToken() : '';
+          if (token) {
+            init = init || {};
+            var headers = new Headers(init.headers || ((typeof input !== 'string' && input && input.headers) || undefined));
+            var current = headers.get('Authorization');
+            if (!current || /^Bearer\\s*$/i.test(current)) headers.set('Authorization', 'Bearer ' + token);
+            init.headers = headers;
+          }
+        } catch (e) {}
+        return nativeFetch.call(this, input, init);
+      };
+    })();
     // Validação estrita: se a página de internet foi fechada e reaberta (sessionStorage vazio), invalida a sessão antiga
     var isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
     if (!isSessionActive) {
@@ -12071,7 +12237,8 @@ body.light .mobile-bottom-btn.active .ic svg {
 
 @media (max-width: 860px) {
   .mobile-menu-btn { display: flex !important; }
-  nav.menu { display: none !important; }
+  /* O menu hoje é <aside id="menu">: o seletor antigo (só nav.menu) não casava e a barra lateral ficava sobre o conteúdo no celular */
+  nav.menu, aside.menu, #menu.sidebar-menu { display: none !important; }
   .mobile-bottom-bar { display: flex !important; }
   .main { margin-left: 0 !important; margin-top: 72px !important; width: 100% !important; padding: 16px 14px 76px !important; }
   .aether-credit-pill { display: none !important; }
@@ -14081,6 +14248,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage .auth-input-wrapper:focus-within { background: #0E1726 !important; border-color: #10B981 !important; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18) !important; }
 #authPage #loginSubmitBtn, #authPage #regSubmitBtn, #authPage #btnSendPassword { background: #059669 !important; color: #FFFFFF !important; border: 1px solid #10B981 !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28) !important; }
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
+#sidebarSearchInput, #sidebarSearchInput:-webkit-autofill, #sidebarSearchInput:-webkit-autofill:hover, #sidebarSearchInput:-webkit-autofill:focus { background: transparent !important; background-color: transparent !important; -webkit-box-shadow: 0 0 0 1000px transparent inset !important; box-shadow: none !important; transition: background-color 99999s ease-out 0s !important; }
 </style>
 <link rel="stylesheet" href="/frontend-polish.css?v=20261102-tx-redesign5" />
 </head>
@@ -14106,7 +14274,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         if (isLight) {
           icon.innerHTML = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>';
         } else {
-          icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
+          icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
         }
       }
     });
@@ -14121,7 +14289,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <div style="display:flex; align-items:center; gap:12px;">
       <button type="button" class="auth-theme-btn" id="authThemeToggleBtn" title="Alternar Tema Claro / Escuro">
         <svg id="authThemeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
         </svg>
       </button>
     </div>
@@ -14240,7 +14408,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               </span>
               <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" spellcheck="false">
               <button type="button" class="auth-pass-toggle-btn" id="toggleLoginPassBtn" onclick="window.togglePasswordVisibility('loginPassword', 'toggleLoginPassBtn')" title="Visualizar Senha" aria-label="Visualizar Senha">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
           </div>
@@ -14346,7 +14514,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                 </span>
                 <input type="password" id="regPassword" placeholder="••••••••" required minlength="8" autocomplete="new-password" spellcheck="false" oninput="window.checkServerRegPasswordMatch()">
                 <button type="button" class="auth-pass-toggle-btn" id="toggleRegPassBtn" onclick="window.toggleRegisterBothPasswords('toggleRegPassBtn')" title="Visualizar Senhas" aria-label="Visualizar Senhas">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
               </div>
             </div>
@@ -14667,7 +14835,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
 
         <div class="icon-btn" id="miniThemeBtn" title="Alternar Modo Noturno / Diurno">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>
         </div>
 
         <button type="button" class="btn-primary" id="headerMirrorExitBtn" onclick="exitViewMode()" style="display:none; background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important; color:#060B18 !important; font-weight:800 !important; font-size:12px !important; padding:6px 14px !important; border-radius:10px !important; border:1.5px solid #FDE68A !important; box-shadow:0 0 16px rgba(245,158,11,0.5) !important; cursor:pointer !important; align-items:center; gap:6px;">
@@ -14703,10 +14871,16 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </button>
       </div>
 
+      <!-- Armadilha invisível contra preenchimento automático de credenciais do navegador -->
+      <div aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;">
+        <input type="text" name="fake_autofill_user" tabindex="-1" autocomplete="username">
+        <input type="password" name="fake_autofill_pass" tabindex="-1" autocomplete="current-password">
+      </div>
+
       <!-- Busca Rápida no Menu -->
       <label class="sidebar-search" for="sidebarSearchInput">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-        <input id="sidebarSearchInput" name="nx_menu_query_manual" type="text" inputmode="search" role="searchbox" value="" placeholder="Buscar no menu..." autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-label="Buscar no menu">
+        <input id="sidebarSearchInput" name="nx_sidebar_filter_q" type="search" inputmode="search" role="searchbox" value="" placeholder="Buscar no menu..." readonly autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other" aria-label="Buscar no menu">
         <kbd>Ctrl K</kbd>
       </label>
 
@@ -14932,13 +15106,13 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       if (miniBtn) {
         miniBtn.innerHTML = isLight ?
           '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>' :
-          '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
+          '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
       }
       var authIcon = document.getElementById('authThemeIcon');
       if (authIcon) {
         authIcon.innerHTML = isLight ?
           '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>' :
-          '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
+          '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
       }
       var savedScale = localStorage.getItem('nexus_display_scale') || 'auto';
       var scaleLabel = document.getElementById('currentScaleLabel');
@@ -16769,7 +16943,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </span>
           <input type="password" id="mandNewPass" placeholder="••••••••" required autocomplete="new-password" spellcheck="false" oninput="window.checkMandatoryPasswordStrength(this.value)">
           <button type="button" class="auth-pass-toggle-btn" id="toggleMandNewPassBtn" onclick="window.togglePasswordVisibility('mandNewPass', 'toggleMandNewPassBtn')" title="Visualizar Senha">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
       </div>
@@ -16802,7 +16976,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </span>
           <input type="password" id="mandConfPass" placeholder="Repita a nova senha" required autocomplete="new-password" spellcheck="false" oninput="window.checkMandatoryPasswordMatch()">
           <button type="button" class="auth-pass-toggle-btn" id="toggleMandConfPassBtn" onclick="window.togglePasswordVisibility('mandConfPass', 'toggleMandConfPassBtn')" title="Visualizar Senha">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
         <div id="mandMatchMsgServer" style="display:none; font-size:11px; font-weight:700; margin-top:4px;"></div>
@@ -16834,7 +17008,13 @@ function getApiBaseUrl() {
 function loadFromStorage(key, defaultVal) {
   try {
     const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : defaultVal;
+    if (!data) return defaultVal;
+    try {
+      return JSON.parse(data);
+    } catch (parseErr) {
+      // Valor gravado como texto puro (ex.: token JWT do login v5) não é JSON: devolve o texto quando o padrão esperado é texto
+      return typeof defaultVal === 'string' ? data : defaultVal;
+    }
   } catch(e) {
     return defaultVal;
   }
@@ -17100,7 +17280,7 @@ window.toggleAuthTheme = function() {
     if (nextLight) {
       icon.innerHTML = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>';
     } else {
-      icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
+      icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
     }
   }
 };
@@ -17116,7 +17296,7 @@ window.togglePasswordVisibility = function(inputId, btnId) {
     btn.setAttribute('aria-label', 'Ocultar Senha');
   } else {
     input.type = 'password';
-    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
     btn.title = 'Visualizar Senha';
     btn.setAttribute('aria-label', 'Visualizar Senha');
   }
@@ -17138,7 +17318,7 @@ window.toggleRegisterBothPasswords = function(btnId) {
       btn.title = 'Ocultar Senhas';
       btn.setAttribute('aria-label', 'Ocultar Senhas');
     } else {
-      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
       btn.title = 'Visualizar Senhas';
       btn.setAttribute('aria-label', 'Visualizar Senhas');
     }
@@ -17212,10 +17392,8 @@ async function syncUsersWithServer() {
       return u;
     });
   } else {
-    registeredUsers = [
-      { id: 3, name: 'Paulo Lima', email: 'admin@nexusfinanceiro.com', password: '86266049', role: 'Administrador', active: true },
-      { id: 4, name: 'Paulo Lima', email: 'admin@nexusfinanceirohub.com.br', password: '86266049', role: 'Administrador', active: true }
-    ];
+    // Sem cache nem servidor: lista vazia. Nunca embutir contas/senhas no código enviado ao navegador.
+    registeredUsers = [];
     saveToStorage('nexus_users', registeredUsers);
   }
   if (window.carregarUsuariosLogonServer) window.carregarUsuariosLogonServer();
@@ -17545,7 +17723,7 @@ window.handleMandatoryPasswordSubmit = async function(e) {
   try {
     const res = await fetch(window.location.origin + '/api/auth/change-temp-password', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (serverCurrentMandatoryToken || '') },
       body: JSON.stringify({ email, newPassword, confirmPassword })
     });
     const data = await res.json();
@@ -19007,7 +19185,7 @@ if (!window.__autoPayFocusListenerBound) {
 if (!window.__subSseInitialized && typeof EventSource !== 'undefined') {
   window.__subSseInitialized = true;
   try {
-    const subEvtSource = new EventSource('/api/events');
+    const subEvtSource = new EventSource('/api/events?token=' + encodeURIComponent(window.__nxGetToken ? window.__nxGetToken() : ''));
     subEvtSource.addEventListener('subscription_activated', function(e) {
       try {
         const d = JSON.parse(e.data);
@@ -24334,12 +24512,12 @@ function pageFuncoes(){
                     \${u.name.slice(0,2).toUpperCase()}
                   </div>
                   <div>
-                    <span>\${u.name}</span>
+                    <span>\${txEsc(u.name)}</span>
                     \${isMe ? ' <span style="font-size:10px; color:#fbbf24; background:rgba(232,176,75,0.15); padding:1px 6px; border-radius:6px; font-weight:700;">Você</span>' : ''}
                   </div>
                 </div>
               </td>
-              <td style="padding:14px 16px; color:var(--text-dim); font-size:13px;">\${u.email}</td>
+              <td style="padding:14px 16px; color:var(--text-dim); font-size:13px;">\${txEsc(u.email)}</td>
               <td style="padding:14px 16px;">
                 <span class="role-badge \${u.role==='Administrador'?'admin':'user'}" style="font-size:12px; padding:4px 10px;">\${u.role}</span>
               </td>
@@ -24762,7 +24940,7 @@ function pageUsuarios(){
             </div>
             <div class="user-card-info">
               <div class="user-card-name-row">
-                <span class="user-card-name" title="\${u.name}">\${u.name}</span>
+                <span class="user-card-name" title="\${txEsc(u.name)}">\${txEsc(u.name)}</span>
               </div>
               <div style="display:flex; align-items:center; gap:4px; margin-top:2px;">
                 <span class="role-badge" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); color:var(--text-dim);">#\${u.id || '-'}</span>
@@ -24774,7 +24952,7 @@ function pageUsuarios(){
 
           <!-- Coluna 2: E-mail & Documento -->
           <div class="user-col-contact">
-            <span class="user-email-line" title="\${u.email}">✉️ \${u.email}</span>
+            <span class="user-email-line" title="\${txEsc(u.email)}">✉️ \${txEsc(u.email)}</span>
             <div class="user-doc-line">
               \${formattedCpf ? \`<span class="doc-pill">🪪 \${formattedCpf}</span>\` : '<span class="doc-pill" style="opacity:0.55;">Sem CPF</span>'}
               \${formattedPhone ? \`<span class="doc-pill" style="color:#10B981; border-color:rgba(16,185,129,0.28);">📱 \${formattedPhone}</span>\` : ''}
@@ -24819,11 +24997,11 @@ function pageUsuarios(){
                   <span>🔒</span>
                 </button>
               \`}
-              <button type="button" class="user-card-btn" onclick="window.abrirSegundaViaBoletoParaUsuario('\${u.email}', '\${(u.name||'').replace(/'/g, '')}', '\${u.cpf||''}', '\${u.phone||''}')" title="Imprimir 2ª Via de Boleto para envio ao usuário" style="background:rgba(56,189,248,0.16); color:#7DD3FC; border:1px solid rgba(56,189,248,0.4);">
+              <button type="button" class="user-card-btn" onclick="window.abrirSegundaViaBoletoParaUsuario('\${u.email}', '\${txEsc((u.name||'').replace(/'/g, ''))}', '\${txEsc(u.cpf||'')}', '\${txEsc(u.phone||'')}')" title="Imprimir 2ª Via de Boleto para envio ao usuário" style="background:rgba(56,189,248,0.16); color:#7DD3FC; border:1px solid rgba(56,189,248,0.4);">
                 <span>📄 2ª Via</span>
               </button>
               <button type="button" class="user-card-btn btn-espelho" data-viewuser="\${u.email}" onclick="viewUserData('\${u.email}')" title="Visualizar conta em Modo Espelho">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 <span>Espelho</span>
               </button>
               <button type="button" class="user-card-btn \${isInactive ? 'btn-ativar' : 'btn-desativar'}" data-toggleuser="\${u.email}" onclick="toggleUserActive('\${u.email}')" title="\${isInactive ? 'Ativar usuário' : 'Desativar usuário'}">
@@ -30067,7 +30245,17 @@ try {
 
 const sidebarSearchInput = document.getElementById('sidebarSearchInput');
 if (sidebarSearchInput) {
+  let userActivatedSidebarSearch = false;
+  const unlockSidebarSearch = function() {
+    userActivatedSidebarSearch = true;
+    if (sidebarSearchInput.readOnly) sidebarSearchInput.readOnly = false;
+  };
   const filterSidebarItems = function() {
+    const rawVal = String(sidebarSearchInput.value || '');
+    const loggedEmail = (window.currentUser && window.currentUser.email) ? String(window.currentUser.email).toLowerCase() : '';
+    if (!userActivatedSidebarSearch || rawVal.includes('@') || (loggedEmail && rawVal.trim().toLowerCase() === loggedEmail)) {
+      if (rawVal) sidebarSearchInput.value = '';
+    }
     const query = String(sidebarSearchInput.value || '').trim().toLowerCase();
     document.querySelectorAll('#menu .menu-btn-user, #menu .menu-btn-admin').forEach(function(btn) {
       const label = (btn.querySelector('.label') || btn).textContent.toLowerCase();
@@ -30085,18 +30273,35 @@ if (sidebarSearchInput) {
     });
   };
   const clearSidebarSearch = function() {
+    userActivatedSidebarSearch = false;
+    sidebarSearchInput.readOnly = true;
     if (sidebarSearchInput.value) {
       sidebarSearchInput.value = '';
       filterSidebarItems();
     }
   };
   clearSidebarSearch();
+  const searchLabel = sidebarSearchInput.closest('.sidebar-search') || sidebarSearchInput;
+  searchLabel.addEventListener('pointerdown', unlockSidebarSearch);
+  searchLabel.addEventListener('mousedown', unlockSidebarSearch);
+  sidebarSearchInput.addEventListener('keydown', unlockSidebarSearch);
+  sidebarSearchInput.addEventListener('blur', function() {
+    if (!sidebarSearchInput.value || sidebarSearchInput.value.includes('@')) {
+      sidebarSearchInput.value = '';
+      userActivatedSidebarSearch = false;
+      sidebarSearchInput.readOnly = true;
+      filterSidebarItems();
+    }
+  });
   window.addEventListener('pageshow', clearSidebarSearch);
-  window.setTimeout(clearSidebarSearch, 300);
+  window.setTimeout(clearSidebarSearch, 120);
+  window.setTimeout(clearSidebarSearch, 450);
+  window.setTimeout(clearSidebarSearch, 1000);
   sidebarSearchInput.addEventListener('input', filterSidebarItems);
   document.addEventListener('keydown', function(e) {
     if ((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === 'k') {
       e.preventDefault();
+      unlockSidebarSearch();
       sidebarSearchInput.focus();
       sidebarSearchInput.select();
     }
@@ -30272,7 +30477,7 @@ function toggleTheme(){
   localStorage.setItem('nexus_theme', nextIsLight ? 'light' : 'dark');
 
   const btn = document.getElementById('miniThemeBtn');
-  const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
+  const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
   const sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
   if(btn) btn.innerHTML = nextIsLight ? sunSvg : moonSvg;
   if(typeof applyDisplayScale === 'function') applyDisplayScale(localStorage.getItem('nexus_display_scale') || 'auto');
@@ -30306,11 +30511,11 @@ document.getElementById('miniThemeBtn').onclick = toggleTheme;
     document.body.classList.toggle('light', isLight);
     document.documentElement.classList.toggle('light', isLight);
     const btn = document.getElementById('miniThemeBtn');
-    const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
+    const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
     const sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
     if (btn) btn.innerHTML = isLight ? sunSvg : moonSvg;
     const authIcon = document.getElementById('authThemeIcon');
-    if (authIcon) authIcon.innerHTML = isLight ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>' : '<path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/>';
+    if (authIcon) authIcon.innerHTML = isLight ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>' : '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
   } catch(e){}
 })();
 
@@ -31840,6 +32045,20 @@ const server = http.createServer(async (req, res) => {
     return res.end();
   }
 
+  // Corpo grande demais (os handlers acumulam o corpo em memória) e excesso de tentativas nas rotas sensíveis
+  const declaredBodyLength = parseInt(req.headers['content-length'] || '0', 10);
+  if (declaredBodyLength > MAX_REQUEST_BODY_BYTES) {
+    return sendJson(res, corsHeaders, 413, { success: false, error: 'Requisição grande demais.' });
+  }
+  const rateRule = RATE_LIMIT_RULES[req.method + ' ' + parsedUrl.pathname];
+  if (rateRule) {
+    const verdict = checkRateLimit(rateRule.key + ':' + getClientIp(req), rateRule.max, rateRule.windowMs);
+    if (verdict.limited) {
+      res.writeHead(429, { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': String(verdict.retryAfterSeconds) });
+      return res.end(JSON.stringify({ success: false, errorType: 'rate_limited', error: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.' }));
+    }
+  }
+
   // Rota GET de Health Check & Diagnóstico do Sistema
   // OAuth Google para criação e login de conta financeira.
   if (req.method === 'GET' && parsedUrl.pathname === '/auth/google') {
@@ -31889,31 +32108,45 @@ const server = http.createServer(async (req, res) => {
     const seconds = uptimeSeconds % 60;
     const uptimeStr = `${hours}h ${minutes}m ${seconds}s`;
 
-    const mem = process.memoryUsage();
-    const localUsers = getLocalUsers();
-
     res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({
+    // Resposta pública mínima (usada por monitoramento): detalhes de banco, memória e nº de usuários só para administradores
+    const healthPayload = {
       status: 'healthy',
       system: 'Nexus Financeiro Hub',
       version: '1.0.2',
       uptime: uptimeStr,
       uptime_seconds: uptimeSeconds,
-      timestamp: new Date().toISOString(),
-      database: pool ? 'connected_mssql_internal' : 'resilient_local_json',
-      database_type: pool ? 'Microsoft SQL Server (Interno)' : 'Local JSON Cache',
-      database_name: pool ? (process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF') : 'local_json',
-      active_users_count: localUsers.length,
-      memory: {
-        rss_mb: (mem.rss / 1024 / 1024).toFixed(2),
-        heap_used_mb: (mem.heapUsed / 1024 / 1024).toFixed(2),
-        heap_total_mb: (mem.heapTotal / 1024 / 1024).toFixed(2)
-      }
-    }));
+      timestamp: new Date().toISOString()
+    };
+    if (getAuthenticatedAdmin(req) || hasInternalSyncAccess(req)) {
+      const mem = process.memoryUsage();
+      Object.assign(healthPayload, {
+        database: pool ? 'connected_mssql_internal' : 'resilient_local_json',
+        database_type: pool ? 'Microsoft SQL Server (Interno)' : 'Local JSON Cache',
+        database_name: pool ? (process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF') : 'local_json',
+        active_users_count: getLocalUsers().length,
+        memory: {
+          rss_mb: (mem.rss / 1024 / 1024).toFixed(2),
+          heap_used_mb: (mem.heapUsed / 1024 / 1024).toFixed(2),
+          heap_total_mb: (mem.heapTotal / 1024 / 1024).toFixed(2)
+        }
+      });
+    }
+    return res.end(JSON.stringify(healthPayload));
   }
 
   // Rota GET para Server-Sent Events (SSE) em Tempo Real
   if (req.method === 'GET' && parsedUrl.pathname === '/api/events') {
+    // EventSource não envia cabeçalhos: o token vai na query (o log HTTP registra só o caminho, sem query)
+    const sseToken = String(parsedUrl.query.token || '');
+    const sseClaims = sseToken ? verifySecureToken(sseToken) : null;
+    const sseUser = sseClaims
+      ? getLocalUsers().find(u => u && String(u.email || '').toLowerCase().trim() === String(sseClaims.email).toLowerCase().trim() && u.active !== false && u.active !== 0)
+      : getAuthenticatedUser(req);
+    if (!sseUser) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória.' });
+    }
+    res.nexusUser = sseUser;
     res.writeHead(200, {
       ...corsHeaders,
       'Content-Type': 'text/event-stream',
@@ -32036,15 +32269,21 @@ const server = http.createServer(async (req, res) => {
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body || '{}');
-        const cleanId = parsed.id || parsed.userId || null;
-        const cleanEmail = (parsed.email || '').toLowerCase().trim();
+        // Somente o próprio usuário autenticado pode registrar o seu último login (identidade vem do token, não do corpo)
+        const pingUser = getAuthenticatedUser(req);
+        if (!pingUser) {
+          res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Autenticação obrigatória.' }));
+        }
+        const cleanId = pingUser.id || null;
+        const cleanEmail = String(pingUser.email || '').toLowerCase().trim();
         if (!cleanEmail && !cleanId) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'E-mail ou ID de usuário obrigatório' }));
         }
         const brasiliaSqlTime = getBrasiliaSqlString(parsed.last_login) || getBrasiliaSqlString(new Date());
         const nowIso = getBrasiliaIsoString(parsed.last_login) || getBrasiliaIsoString(new Date());
-        const pingIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || (req.socket && req.socket.remoteAddress) || '';
+        const pingIp = getClientIp(req);
         let targetUser = null;
         if (pool) {
           try {
@@ -32115,6 +32354,12 @@ const server = http.createServer(async (req, res) => {
         }
 
         const cleanEmail = email.toLowerCase().trim();
+        // Bloqueio temporário da conta após falhas consecutivas (proteção contra adivinhação de senha)
+        const loginFailKey = 'login-fail:' + cleanEmail;
+        if (peekRateLimit(loginFailKey, LOGIN_FAIL_MAX, LOGIN_FAIL_WINDOW_MS)) {
+          res.writeHead(429, { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '900' });
+          return res.end(JSON.stringify({ success: false, errorType: 'rate_limited', error: 'Muitas tentativas de acesso para esta conta. Aguarde alguns minutos e tente novamente.' }));
+        }
         let user = null;
         if (!pool) {
           await attemptConnectDatabase();
@@ -32153,6 +32398,7 @@ const server = http.createServer(async (req, res) => {
         }
 
         if (!verifyPassword(password, user.password, user)) {
+          recordRateLimitHit(loginFailKey);
           res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({
             success: false,
@@ -32160,25 +32406,28 @@ const server = http.createServer(async (req, res) => {
             error: 'Senha incorreta para este usuário.'
           }));
         }
+        RATE_BUCKETS.delete(loginFailKey);
 
-        // Auto-cura e sincronização transparente: atualiza a senha para o novo hash scrypt permanente caso tenha ocorrido validação alternativa ou troca
-        const effectivePass = (password || '').trim() || password;
-        const currentSecureHash = hashPassword(effectivePass);
-        const needsHashUpdate = !user.password || !user.password.startsWith('scrypt:') || user.must_change_password;
-        if (needsHashUpdate) {
+        // A troca obrigatória (senha temporária) só é encerrada pelo endpoint de troca de senha: aqui apenas
+        // registramos que ela está pendente para avisar o cliente (antes a flag era zerada antes de responder).
+        const mustChangePasswordPending = user.must_change_password === 1 || user.must_change_password === true || user.must_change_password === '1';
+
+        // Auto-cura e sincronização transparente: migra senhas legadas (texto puro/MD5/SHA-256) para hash scrypt
+        if (!user.password || !String(user.password).startsWith('scrypt:')) {
+          const effectivePass = (password || '').trim() || password;
+          const currentSecureHash = hashPassword(effectivePass);
           user.password = currentSecureHash;
-          user.must_change_password = false;
           if (pool) {
-            pool.query('UPDATE usuarios SET password = $1, must_change_password = 0 WHERE LOWER(email) = LOWER($2)', [currentSecureHash, cleanEmail]).catch(()=>{});
+            pool.query('UPDATE usuarios SET password = $1 WHERE LOWER(email) = LOWER($2)', [currentSecureHash, cleanEmail]).catch(()=>{});
           }
           const localUsers = getLocalUsers();
           const lu = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail);
           if (lu) {
             lu.password = currentSecureHash;
-            lu.must_change_password = false;
             saveLocalUsers(localUsers);
           }
         }
+        user.must_change_password = mustChangePasswordPending;
 
         if (user.active === false || user.active === 0) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -32193,7 +32442,7 @@ const server = http.createServer(async (req, res) => {
         const brasiliaSqlTime = getBrasiliaSqlString(new Date());
         user.last_login = nowTimestamp;
 
-        const loginClientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || (req.socket && req.socket.remoteAddress) || '';
+        const loginClientIp = getClientIp(req);
 
         if (pool) {
           try {
@@ -32462,6 +32711,11 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET para Consulta e Validação de CPF na Receita Federal do Brasil
   if (req.method === 'GET' && (parsedUrl.pathname === '/api/cpf/consultar' || parsedUrl.pathname === '/api/cpf')) {
+    // A consulta devolve nome, nascimento, telefone e e-mail do titular de CPFs cadastrados: exige login
+    const cpfViewer = getAuthenticatedUser(req);
+    if (!cpfViewer) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória para consultar CPF.' });
+    }
     const rawCpf = parsedUrl.query.cpf || parsedUrl.query.q || '';
     const cleanCpf = String(rawCpf).replace(/\D/g, '');
 
@@ -32496,7 +32750,7 @@ const server = http.createServer(async (req, res) => {
           situacao: dadosRfb.situacao,
           regiao_fiscal: dadosRfb.regiao_fiscal,
           origem: dadosRfb.origem,
-          email_associado: dadosRfb.email_associado || null
+          email_associado: cpfViewer.role === 'Administrador' ? (dadosRfb.email_associado || null) : null
         }));
       } catch (err) {
         console.error('Erro na consulta de CPF:', err);
@@ -32541,7 +32795,11 @@ const server = http.createServer(async (req, res) => {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Informe o nome completo do titular.', errorType: 'invalid_name' }));
         }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(cleanEmail)) {
+        if (!isSafeDisplayName(name)) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'O nome pode conter apenas letras, espaços, apóstrofo, ponto e hífen.', errorType: 'invalid_name' }));
+        }
+        if (!isStrictEmail(cleanEmail)) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Por favor, informe um e-mail válido (ex: seu.email@exemplo.com).' }));
         }
@@ -32584,7 +32842,7 @@ const server = http.createServer(async (req, res) => {
         const ua = (req.headers && req.headers['user-agent']) ? req.headers['user-agent'] : '';
         const isMobileUA = /mobile|android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua);
         const deviceTypeVal = (parsed.device_type || parsed.device || (isMobileUA ? 'Mobile' : 'Computador')).trim();
-        const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || (req.socket && req.socket.remoteAddress) || '';
+        const clientIp = getClientIp(req);
 
         // 1. Gravação direta no SQL Server (quando executado no ambiente com conexão direta ao banco)
         if (pool) {
@@ -32747,9 +33005,18 @@ const server = http.createServer(async (req, res) => {
         }
 
         const cleanEmail = email.toLowerCase().trim();
+        // Mesma resposta para qualquer falha de conferência: não revela se o e-mail existe, está desativado ou foi excluído
+        const recoveryDenied = () => {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Não foi possível confirmar os dados informados. Verifique o e-mail, o CPF e a data de nascimento.' }));
+        };
+        // Limite adicional por conta: evita tentativas repetidas de adivinhar CPF/nascimento de um mesmo e-mail
+        if (checkRateLimit('recover-account:' + cleanEmail, 5, 60 * 60 * 1000).limited) {
+          res.writeHead(429, { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '3600' });
+          return res.end(JSON.stringify({ success: false, errorType: 'rate_limited', error: 'Muitas tentativas de recuperação para esta conta. Tente novamente mais tarde.' }));
+        }
         if (isAccountDeleted(cleanEmail)) {
-          res.writeHead(410, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Este e-mail pertence a uma conta excluída permanentemente.' }));
+          return recoveryDenied();
         }
         let user = null;
         if (!pool) {
@@ -32769,57 +33036,39 @@ const server = http.createServer(async (req, res) => {
           user = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail) || null;
         }
 
-        if (!user) {
-          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({
-            success: false,
-            error: 'Dados não localizados. Verifique o e-mail e CPF informados.'
-          }));
+        if (!user || user.active === false || user.active === 0) {
+          return recoveryDenied();
         }
 
-        if (user.active === false || user.active === 0) {
-          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({
-            success: false,
-            error: 'Esta conta de usuário foi desativada no banco de dados pelo administrador.'
-          }));
-        }
-
-        // Validação estrita de CPF
-        const rawUserCpf = (user.cpf || '').replace(/\D/g, '');
+        // Validação estrita de CPF: a conta precisa ter CPF cadastrado e o informado precisa ser idêntico
+        // (antes, um CPF sem dígitos ou uma conta sem CPF pulava a conferência inteira).
+        const rawUserCpf = String(user.cpf || '').replace(/\D/g, '');
         const rawReqCpf = cpf.replace(/\D/g, '');
-        if (rawUserCpf && rawReqCpf && rawUserCpf !== rawReqCpf) {
-          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({
-            success: false,
-            error: 'O CPF informado não coincide com as informações cadastrais desta conta.'
-          }));
+        if (rawUserCpf.length !== 11 || rawReqCpf.length !== 11 || !safeEqual(rawUserCpf, rawReqCpf)) {
+          return recoveryDenied();
         }
 
-        // Validação de Data de Nascimento (se informada e se existir no banco)
-        if (birth_date && user.birth_date) {
+        // Data de nascimento: quando a conta tem nascimento cadastrado, ela é obrigatória e precisa conferir
+        // (antes, bastava omitir o campo para pular a conferência).
+        if (user.birth_date) {
           const normalizeDateDigits = (d) => {
             if (!d) return '';
             const s = String(d).trim();
             const m1 = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
             if (m1) return `${m1[1]}${m1[2]}${m1[3]}`;
-            const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
             if (m2) return `${m2[3]}${m2[2]}${m2[1]}`;
             return s.replace(/\D/g, '');
           };
           const userD = normalizeDateDigits(user.birth_date);
           const reqD = normalizeDateDigits(birth_date);
-          if (userD && reqD && userD !== reqD) {
-            res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-            return res.end(JSON.stringify({
-              success: false,
-              error: 'A data de nascimento informada não coincide com os dados do titular.'
-            }));
+          if (!userD || !reqD || !safeEqual(userD, reqD)) {
+            return recoveryDenied();
           }
         }
 
-        // Gerar nova senha temporária dentro do padrão de alta segurança
-        const tempPassword = 'Nx@' + Math.floor(100000 + Math.random() * 900000);
+        // Nova senha temporária aleatória (CSPRNG) — antes era Math.random() com apenas 6 dígitos
+        const tempPassword = 'Nx@' + crypto.randomBytes(6).toString('hex');
         const hashedTempPassword = hashPassword(tempPassword);
 
         if (pool) {
@@ -32849,12 +33098,23 @@ const server = http.createServer(async (req, res) => {
           'Senha temporária gerada via confirmação de dados com troca obrigatória exigida no primeiro logon'
         );
 
+        let emailSent = false;
         try {
-          sendPasswordEmail(user.email, user.name, tempPassword).catch(() => {});
+          emailSent = await sendPasswordEmail(user.email, user.name, tempPassword);
         } catch(e){}
 
-        // Retorna a senha temporária em tela de forma direta e transparente
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        if (emailSent) {
+          // E-mail entregue: a senha temporária vai só para a caixa de entrada do titular, nunca na resposta HTTP
+          return res.end(JSON.stringify({
+            success: true,
+            mode: 'email',
+            email: user.email,
+            name: user.name,
+            message: 'Dados confirmados! Enviamos a senha temporária para o e-mail cadastrado.'
+          }));
+        }
+        // Sem SMTP configurado não há outro canal de entrega: a senha é exibida na tela (troca obrigatória no primeiro acesso)
         return res.end(JSON.stringify({
           success: true,
           mode: 'direct',
@@ -32882,6 +33142,14 @@ const server = http.createServer(async (req, res) => {
         const email = (parsed.email || '').toLowerCase().trim();
         const newPassword = parsed.newPassword || parsed.password || '';
         const confirmPassword = parsed.confirmPassword || parsed.confirmarSenha || '';
+
+        // Prova de identidade: o token emitido no login com a senha temporária. Sem isso qualquer pessoa trocava a senha
+        // de qualquer conta apenas informando o e-mail (e ainda recebia um token válido da conta).
+        const changeAuthUser = getAuthenticatedUser(req);
+        if (!changeAuthUser || String(changeAuthUser.email || '').toLowerCase().trim() !== email) {
+          res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Sessão inválida. Entre novamente com a senha temporária para definir a nova senha.' }));
+        }
 
         if (!email || !newPassword || !confirmPassword) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -32914,7 +33182,7 @@ const server = http.createServer(async (req, res) => {
         if (pool) {
           try {
             const result = await pool.query(
-              'SELECT id, name, email, password, role, active, cpf, phone, birth_date, terms_accepted, created_at, device_type FROM usuarios WHERE LOWER(email) = LOWER($1)',
+              'SELECT id, name, email, password, role, active, cpf, phone, birth_date, terms_accepted, created_at, device_type, must_change_password FROM usuarios WHERE LOWER(email) = LOWER($1)',
               [email]
             );
             if (result.rows && result.rows.length > 0) user = result.rows[0];
@@ -32928,6 +33196,13 @@ const server = http.createServer(async (req, res) => {
         if (!user) {
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Usuário não encontrado.' }));
+        }
+
+        // Este endpoint existe só para a troca obrigatória da senha temporária; a troca normal é feita em "Minha Conta"
+        const mustChangeFlag = user.must_change_password !== undefined ? user.must_change_password : changeAuthUser.must_change_password;
+        if (!(mustChangeFlag === 1 || mustChangeFlag === true || mustChangeFlag === '1')) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Esta conta não tem troca obrigatória de senha pendente.' }));
         }
 
         if (verifyPassword(newPassword, user.password)) {
@@ -32985,6 +33260,18 @@ const server = http.createServer(async (req, res) => {
   // Rota GET de Usuários (Sanitizada sem Exposição de Senhas para Clientes, Preservada para Sincronizador Interno)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/users') {
     const isInternalSync = hasInternalSyncAccess(req, parsedUrl);
+    // Lista de usuários contém CPF, telefone e nascimento: exige login. Administrador vê todos; usuário comum vê só o próprio cadastro.
+    const usersViewer = isInternalSync ? null : getAuthenticatedUser(req);
+    if (!isInternalSync && !usersViewer) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória.' });
+    }
+    const viewerIsAdmin = Boolean(usersViewer && usersViewer.role === 'Administrador');
+    const viewerEmail = usersViewer ? String(usersViewer.email || '').toLowerCase().trim() : '';
+    const shapeUsersForViewer = (list) => {
+      if (isInternalSync) return list;
+      const safeList = list.map(sanitizeUser);
+      return viewerIsAdmin ? safeList : safeList.filter(u => String(u.email || '').toLowerCase().trim() === viewerEmail);
+    };
     if (pool) {
       const sqlFields = isInternalSync
         ? 'SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password FROM usuarios ORDER BY id ASC'
@@ -32998,20 +33285,20 @@ const server = http.createServer(async (req, res) => {
             return copy;
           });
           saveLocalUsers(rows, true);
-          const sanitized = isInternalSync ? rows : rows.map(sanitizeUser);
+          const sanitized = shapeUsersForViewer(rows);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(sanitized));
         })
         .catch(err => {
           console.warn('[BANCO AVISO] Erro ao consultar usuários no SQL Server:', err.message);
           const activeUsers = getLocalUsers().filter(u => !isAccountDeleted(u.email));
-          const localUsers = isInternalSync ? activeUsers : activeUsers.map(sanitizeUser);
+          const localUsers = shapeUsersForViewer(activeUsers);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(localUsers));
         });
     } else {
       const activeUsers = getLocalUsers().filter(u => !isAccountDeleted(u.email));
-      const localUsers = isInternalSync ? activeUsers : activeUsers.map(sanitizeUser);
+      const localUsers = shapeUsersForViewer(activeUsers);
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       res.end(JSON.stringify(localUsers));
     }
@@ -33064,6 +33351,9 @@ const server = http.createServer(async (req, res) => {
 
   // Rota POST para Confirmação de Logins Processados (ACK)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/sync/logins/ack') {
+    if (!hasInternalSyncAccess(req, parsedUrl)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Não autorizado' });
+    }
     let body = '';
     req.on('data', chunk => body += chunk.toString());
     req.on('end', () => {
@@ -33090,9 +33380,9 @@ const server = http.createServer(async (req, res) => {
         let authOk = false;
         try {
           const parsed = JSON.parse(body || '{}');
-          if (parsed.sync_secret === JWT_SECRET) authOk = true;
+          if (safeEqual(parsed.sync_secret || '', SYNC_TOKEN)) authOk = true;
         } catch(e){}
-        if (req.headers['x-nexus-sync-token'] === JWT_SECRET || req.headers['authorization'] === 'Bearer ' + JWT_SECRET) {
+        if (hasInternalSyncAccess(req)) {
           authOk = true;
         }
 
@@ -33188,7 +33478,8 @@ const server = http.createServer(async (req, res) => {
         }
 
         users.forEach(u => {
-          if (u && u.email && !isAccountDeleted(u.email)) {
+          // E-mail fora do padrão estrito é descartado (nunca chega ao HTML do painel nem ao banco)
+          if (u && u.email && isStrictEmail(String(u.email).trim().toLowerCase()) && !isAccountDeleted(u.email)) {
             const emailKey = u.email.toLowerCase().trim();
             const existing = existingMap.get(emailKey) || userMap.get(emailKey);
             let finalPassword = existing ? existing.password : '';
@@ -33196,7 +33487,8 @@ const server = http.createServer(async (req, res) => {
               finalPassword = u.password.startsWith('scrypt:') ? u.password : hashPassword(u.password);
             }
             if (!finalPassword) {
-              finalPassword = hashPassword('123456');
+              // Sem senha informada: senha aleatória (a conta só entra via recuperação). Antes era a senha fixa "123456".
+              finalPassword = hashPassword(crypto.randomBytes(24).toString('hex'));
             }
 
             // Preserva o last_login mais recente entre o payload recebido e o existente localmente
@@ -33215,7 +33507,7 @@ const server = http.createServer(async (req, res) => {
 
             userMap.set(emailKey, {
               id: u.id || (existing ? existing.id : Date.now()),
-              name: (u.name || (existing ? existing.name : 'Usuário')).trim(),
+              name: String(u.name || (existing ? existing.name : 'Usuário')).replace(/[<>"`&]/g, '').trim() || 'Usuário',
               email: emailKey,
               password: finalPassword,
               role: u.role || (existing ? existing.role : 'Usuário'),
@@ -33361,6 +33653,10 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET de Logs de Auditoria
   if (req.method === 'GET' && parsedUrl.pathname === '/api/logs') {
+    // Trilha de auditoria contém e-mails e ações de todos os usuários: somente administradores (ou sincronização interna)
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
     if (pool) {
       pool.query('SELECT TOP 500 id, timestamp, user_name, user_email, action, entity, details FROM system_logs ORDER BY id DESC')
         .then(result => {
@@ -33391,6 +33687,11 @@ const server = http.createServer(async (req, res) => {
 
   // Rota POST de Logs de Auditoria
   if (req.method === 'POST' && parsedUrl.pathname === '/api/logs') {
+    // Registro de auditoria só por usuário autenticado, e a autoria vem do token (não pode ser forjada pelo corpo)
+    const logAuthor = getAuthenticatedUser(req);
+    if (!logAuthor && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória.' });
+    }
     let body = '';
     req.on('data', chunk => body += chunk.toString());
     req.on('end', () => {
@@ -33404,11 +33705,11 @@ const server = http.createServer(async (req, res) => {
           } catch(e2){}
         }
 
-        const action = parsed.action || parsed.act || 'Edição';
-        const entity = parsed.entity || parsed.ent || 'Sistema';
-        const details = parsed.details || parsed.desc || parsed.msg || body || 'Alteração efetuada no sistema';
-        const userName = parsed.userName || parsed.user_name || parsed.name || 'Usuário';
-        const userEmail = parsed.userEmail || parsed.user_email || parsed.email || '';
+        const action = String(parsed.action || parsed.act || 'Edição').slice(0, 120);
+        const entity = String(parsed.entity || parsed.ent || 'Sistema').slice(0, 120);
+        const details = String(parsed.details || parsed.desc || parsed.msg || body || 'Alteração efetuada no sistema').slice(0, 2000);
+        const userName = logAuthor ? (logAuthor.name || 'Usuário') : String(parsed.userName || parsed.user_name || parsed.name || 'Usuário').slice(0, 120);
+        const userEmail = logAuthor ? (logAuthor.email || '') : String(parsed.userEmail || parsed.user_email || parsed.email || '').slice(0, 200);
 
         recordSystemLog(userName, userEmail, action, entity, details);
 
@@ -33425,6 +33726,10 @@ const server = http.createServer(async (req, res) => {
   // Rota GET para buscar dados financeiros do Usuário no banco (com Inicialização Zerada Soberana para Novos Cadastros)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/data') {
     const email = (parsedUrl.query.email || '').toLowerCase().trim();
+    const dataAccess = authorizeAccountAccess(req, email);
+    if (!dataAccess.ok) {
+      return sendJson(res, corsHeaders, dataAccess.status, { success: false, error: dataAccess.error });
+    }
     if (isAccountDeleted(email)) {
       res.writeHead(410, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ success: false, error: 'Esta conta foi excluída permanentemente.' }));
@@ -33507,6 +33812,10 @@ const server = http.createServer(async (req, res) => {
         return res.end(JSON.stringify({ success: false }));
       }
       const cleanEmail = (payload.email || '').toLowerCase().trim();
+      const saveAccess = authorizeAccountAccess(req, cleanEmail);
+      if (!saveAccess.ok) {
+        return sendJson(res, corsHeaders, saveAccess.status, { success: false, error: saveAccess.error });
+      }
       if (isAccountDeleted(cleanEmail)) {
         res.writeHead(410, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, error: 'Esta conta foi excluída permanentemente.' }));
@@ -34357,64 +34666,73 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET/POST para Consultar Ordens de Serviço por Nome, E-mail ou Protocolo (Público)
   if ((req.method === 'GET' && parsedUrl.pathname === '/api/ordens/consultar') || (req.method === 'POST' && parsedUrl.pathname === '/api/ordens/consultar')) {
-    const handleConsultQuery = (qStr) => {
-      const q = (qStr || '').toLowerCase().trim();
+    const handleConsultQuery = async (qStr) => {
+      const q = String(qStr || '').toLowerCase().trim();
       if (!q) {
         res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, message: 'Informe o Nome, E-mail, Telefone ou Protocolo para consulta.', ordens: [] }));
       }
 
+      // Consulta pública: só por correspondência exata (protocolo, e-mail, telefone ou CPF) e com dados pessoais mascarados.
+      // Administradores e a sincronização interna mantêm a busca ampla e os dados completos.
+      const isPrivileged = Boolean(getAuthenticatedAdmin(req) || hasInternalSyncAccess(req));
+      if (!isPrivileged && q.length < 6) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'Informe o protocolo completo ou o e-mail usado na solicitação.', ordens: [] }));
+      }
+      const digitsOf = (v) => String(v || '').replace(/\D/g, '');
+      const qDigits = digitsOf(q);
+      const matchesBroad = (o) =>
+        (o.client_email && o.client_email.toLowerCase().includes(q)) ||
+        (o.client_name && o.client_name.toLowerCase().includes(q)) ||
+        (o.client_phone && o.client_phone.toLowerCase().includes(q)) ||
+        (o.client_cpf && o.client_cpf.toLowerCase().includes(q)) ||
+        (o.protocol && o.protocol.toLowerCase().includes(q));
+      const matchesExact = (o) =>
+        String(o.protocol || '').toLowerCase() === q ||
+        String(o.client_email || '').toLowerCase() === q ||
+        (qDigits.length >= 8 && (digitsOf(o.client_phone) === qDigits || digitsOf(o.client_cpf) === qDigits));
+      const maskOrderForPublic = (o) => {
+        const { admin_notes, client_cpf, client_phone, client_email, ...rest } = o;
+        const emailParts = String(client_email || '').split('@');
+        return {
+          ...rest,
+          client_email: emailParts.length === 2 ? emailParts[0].slice(0, 2) + '***@' + emailParts[1] : '',
+          client_phone: client_phone ? '*****' + digitsOf(client_phone).slice(-4) : '',
+          client_cpf: client_cpf ? '***.***.***-' + digitsOf(client_cpf).slice(-2) : ''
+        };
+      };
+      const respondWithRows = (rows) => {
+        const visible = isPrivileged ? rows : rows.filter(matchesExact).map(maskOrderForPublic);
+        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: true, count: visible.length, ordens: visible }));
+      };
+
       if (pool) {
-        pool.query(
-          `SELECT TOP 50 id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, concluido_em, created_at, updated_at
-           FROM ordens_servico
-           WHERE LOWER(client_email) = $1
-              OR LOWER(client_name) LIKE $2
-              OR LOWER(protocol) = $1
-              OR client_phone LIKE $2
-              OR client_cpf LIKE $2
-              OR LOWER(title) LIKE $2
-           ORDER BY id DESC`,
-          [q, '%' + q + '%']
-        ).then(result => {
+        try {
+          const result = await pool.query(
+            `SELECT TOP 50 id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, concluido_em, created_at, updated_at
+             FROM ordens_servico
+             WHERE LOWER(client_email) = $1
+                OR LOWER(client_name) LIKE $2
+                OR LOWER(protocol) = $1
+                OR client_phone LIKE $2
+                OR client_cpf LIKE $2
+                OR LOWER(title) LIKE $2
+             ORDER BY id DESC`,
+            [q, '%' + q + '%']
+          );
           let rows = result.rows || [];
           if (rows.length === 0) {
             // Fallback para arquivo local caso não retorne no banco
-            const localList = getLocalOrdens();
-            rows = localList.filter(o =>
-              (o.client_email && o.client_email.toLowerCase().includes(q)) ||
-              (o.client_name && o.client_name.toLowerCase().includes(q)) ||
-              (o.client_phone && o.client_phone.toLowerCase().includes(q)) ||
-              (o.client_cpf && o.client_cpf.toLowerCase().includes(q)) ||
-              (o.protocol && o.protocol.toLowerCase().includes(q))
-            );
+            rows = getLocalOrdens().filter(matchesBroad);
           }
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: true, count: rows.length, ordens: rows }));
-        }).catch(err => {
-          const localList = getLocalOrdens();
-          const rows = localList.filter(o =>
-            (o.client_email && o.client_email.toLowerCase().includes(q)) ||
-            (o.client_name && o.client_name.toLowerCase().includes(q)) ||
-            (o.client_phone && o.client_phone.toLowerCase().includes(q)) ||
-            (o.client_cpf && o.client_cpf.toLowerCase().includes(q)) ||
-            (o.protocol && o.protocol.toLowerCase().includes(q))
-          );
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: true, count: rows.length, ordens: rows }));
-        });
-      } else {
-        const localList = getLocalOrdens();
-        const rows = localList.filter(o =>
-          (o.client_email && o.client_email.toLowerCase().includes(q)) ||
-          (o.client_name && o.client_name.toLowerCase().includes(q)) ||
-          (o.client_phone && o.client_phone.toLowerCase().includes(q)) ||
-          (o.client_cpf && o.client_cpf.toLowerCase().includes(q)) ||
-          (o.protocol && o.protocol.toLowerCase().includes(q))
-        );
-        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true, count: rows.length, ordens: rows }));
+          return respondWithRows(rows);
+        } catch (err) {
+          return respondWithRows(getLocalOrdens().filter(matchesBroad));
+        }
       }
+      return respondWithRows(getLocalOrdens().filter(matchesBroad));
     };
 
     if (req.method === 'GET') {
@@ -34437,6 +34755,10 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET para Listar Ordens de Serviço
   if (req.method === 'GET' && parsedUrl.pathname === '/api/ordens') {
+    // Lista completa de O.S. (nome, CPF, telefone e e-mail de clientes): somente administradores ou sincronização interna
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
+    }
     if (pool) {
       pool.query(`
         SELECT TOP 500
@@ -34481,21 +34803,28 @@ const server = http.createServer(async (req, res) => {
         return res.end(JSON.stringify({ success: false, message: 'JSON inválido' }));
       }
 
-      const clientName = (payload.client_name || '').trim();
-      const clientEmail = (payload.client_email || '').toLowerCase().trim();
-      const clientPhone = (payload.client_phone || '').trim();
-      const clientCpf = (payload.client_cpf || '').trim();
-      const serviceType = payload.service_type || 'Melhoria no Sistema';
-      const priority = payload.priority || 'Normal';
-      const title = (payload.title || '').trim();
-      const description = (payload.description || '').trim();
-      const canalAtendimento = (payload.canal_atendimento || 'Portal Web').trim();
-      const initialTecnico = (payload.tecnico_responsavel || '').trim() || null;
-      const initialStatus = payload.status || (initialTecnico ? 'Em Andamento' : 'Pendente');
+      // Quem abre a O.S. pode ser qualquer pessoa; status, técnico e observações internas só valem se vierem de um administrador
+      const orderOpenedByAdmin = Boolean(getAuthenticatedAdmin(req));
+      // Textos livres são exibidos pelo painel com innerHTML: caracteres especiais viram entidades (evita XSS armazenado)
+      const clientName = escapeHtmlText(String(payload.client_name || '').trim().slice(0, 200));
+      const clientEmail = String(payload.client_email || '').toLowerCase().trim().slice(0, 200);
+      const clientPhone = escapeHtmlText(String(payload.client_phone || '').trim().slice(0, 40));
+      const clientCpf = escapeHtmlText(String(payload.client_cpf || '').trim().slice(0, 20));
+      const serviceType = escapeHtmlText(String(payload.service_type || 'Melhoria no Sistema').slice(0, 100));
+      const priority = escapeHtmlText(String(payload.priority || 'Normal').slice(0, 30));
+      const title = escapeHtmlText(String(payload.title || '').trim().slice(0, 200));
+      const description = escapeHtmlText(String(payload.description || '').trim().slice(0, 5000));
+      const canalAtendimento = escapeHtmlText(String(payload.canal_atendimento || 'Portal Web').trim().slice(0, 60));
+      const initialTecnico = orderOpenedByAdmin ? ((payload.tecnico_responsavel || '').trim() || null) : null;
+      const initialStatus = orderOpenedByAdmin ? (payload.status || (initialTecnico ? 'Em Andamento' : 'Pendente')) : 'Pendente';
 
       if (!clientName || !clientEmail || !title || !description) {
         res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, message: 'Preencha todos os campos obrigatórios (*).' }));
+      }
+      if (!isStrictEmail(clientEmail)) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'Informe um e-mail válido.' }));
       }
 
       const nowIso = new Date().toISOString();
@@ -34513,7 +34842,7 @@ const server = http.createServer(async (req, res) => {
         title: title,
         description: description,
         status: initialStatus,
-        admin_notes: (payload.admin_notes || '').trim(),
+        admin_notes: orderOpenedByAdmin ? String(payload.admin_notes || '').trim().slice(0, 2000) : '',
         tecnico_responsavel: initialTecnico,
         assumido_em: initialTecnico ? nowIso : null,
         canal_atendimento: canalAtendimento,
@@ -34597,6 +34926,9 @@ const server = http.createServer(async (req, res) => {
 
   // Rota POST/PUT para Atualizar Status / Parecer de Ordem de Serviço (Admin & Suporte)
   if ((req.method === 'POST' && parsedUrl.pathname === '/api/ordens/update') || (req.method === 'PUT' && parsedUrl.pathname === '/api/ordens')) {
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
+    }
     let body = '';
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
@@ -34697,6 +35029,9 @@ const server = http.createServer(async (req, res) => {
 
   // Rota GET para Listar Técnicos Credenciados (Admin & Suporte - com Proteção Total de Dados)
   if (req.method === 'GET' && parsedUrl.pathname === '/api/tecnicos') {
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
+    }
     let tecnicos = getLocalTecnicos();
     if (pool) {
       try {
@@ -34734,6 +35069,9 @@ const server = http.createServer(async (req, res) => {
 
   // Rota POST para Cadastrar / Atualizar Técnico
   if (req.method === 'POST' && parsedUrl.pathname === '/api/tecnicos') {
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
+    }
     let body = '';
     req.on('data', chunk => body += chunk.toString());
     req.on('end', async () => {
@@ -34815,6 +35153,9 @@ const server = http.createServer(async (req, res) => {
 
   // Rota DELETE para Excluir Técnico
   if (req.method === 'DELETE' && parsedUrl.pathname === '/api/tecnicos') {
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
+    }
     const idToDelete = parsedUrl.query.id || '';
     if (!idToDelete) {
       res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -34842,6 +35183,9 @@ const server = http.createServer(async (req, res) => {
 
   // Rota DELETE para Excluir Ordem de Serviço (Admin)
   if (req.method === 'DELETE' && parsedUrl.pathname === '/api/ordens') {
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
+    }
     const idToDelete = parsedUrl.query.id || '';
     if (!idToDelete) {
       res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -34909,29 +35253,58 @@ const server = http.createServer(async (req, res) => {
     return res.end(JSON.stringify({ error: 'Arquivo não encontrado.' }));
   }
 
-  if (pathname.startsWith('/images/') || pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js|json|html)$/i)) {
-    const safePath = path.normalize(path.join(__dirname, pathname)).replace(/^(\.\.[\/\\])+/, '');
-    if (fs.existsSync(safePath) && fs.statSync(safePath).isFile()) {
-      const ext = path.extname(safePath).toLowerCase();
-      const mimeTypes = {
-        '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
-        '.gif': 'image/gif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
-        '.css': 'text/css', '.js': 'application/javascript', '.json': 'application/json',
-        '.html': 'text/html; charset=utf-8'
-      };
-      const isImg = ext.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/i);
-      const contentType = mimeTypes[ext] || 'application/octet-stream';
-      const cacheControl = isImg ? 'public, max-age=31536000, immutable' : 'public, max-age=86400';
-      if (/^(text\/|application\/javascript|application\/json)/i.test(contentType)) {
-        const stat = fs.statSync(safePath);
-        const cached = fileCache.get(safePath);
-        const body = cached && cached.mtimeMs === stat.mtimeMs ? cached.body : fs.readFileSync(safePath);
-        if (!cached || cached.mtimeMs !== stat.mtimeMs) fileCache.set(safePath, { mtimeMs: stat.mtimeMs, body });
-        return sendTextResponse(res, 200, body, contentType, { ...corsHeaders, 'Cache-Control': cacheControl });
+  // Arquivos estáticos: SOMENTE lista de permissão. Antes qualquer .js/.json/.html da pasta do projeto (server.js, package.json,
+  // node_modules, cópias em /images/...) e qualquer arquivo sob /images/ (inclusive .env) eram baixáveis por qualquer visitante.
+  const STATIC_IMAGE_TYPES = {
+    '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif',
+    '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.webp': 'image/webp', '.avif': 'image/avif'
+  };
+  const STATIC_EXACT_FILES = { '/frontend-polish.css': 'text/css' };
+  let staticFile = null;
+  if (STATIC_EXACT_FILES[pathname]) {
+    staticFile = { filePath: path.join(__dirname, pathname.slice(1)), contentType: STATIC_EXACT_FILES[pathname], isImage: false };
+  } else if (pathname.startsWith('/images/')) {
+    let relativePath = null;
+    try { relativePath = decodeURIComponent(pathname.slice(1)); } catch (e) {}
+    if (relativePath && !relativePath.includes('\0')) {
+      const imagesRoot = path.resolve(__dirname, 'images');
+      const resolvedPath = path.resolve(__dirname, relativePath);
+      const insideImages = resolvedPath.startsWith(imagesRoot + path.sep);
+      const hasHiddenSegment = path.relative(imagesRoot, resolvedPath).split(path.sep).some(segment => segment.startsWith('.'));
+      const imageType = STATIC_IMAGE_TYPES[path.extname(resolvedPath).toLowerCase()];
+      if (insideImages && !hasHiddenSegment && imageType) {
+        staticFile = { filePath: resolvedPath, contentType: imageType, isImage: true };
       }
-      res.writeHead(200, { ...corsHeaders, 'Content-Type': contentType, 'Cache-Control': cacheControl });
-      return fs.createReadStream(safePath).pipe(res);
     }
+  }
+  if (staticFile) {
+    let isFile = false;
+    try { isFile = fs.statSync(staticFile.filePath).isFile(); } catch (e) {}
+    if (!isFile) {
+      res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: 'Arquivo não encontrado.' }));
+    }
+    const cacheControl = staticFile.isImage ? 'public, max-age=31536000, immutable' : 'public, max-age=86400';
+    if (!staticFile.isImage) {
+      const stat = fs.statSync(staticFile.filePath);
+      const cached = fileCache.get(staticFile.filePath);
+      const body = cached && cached.mtimeMs === stat.mtimeMs ? cached.body : fs.readFileSync(staticFile.filePath);
+      if (!cached || cached.mtimeMs !== stat.mtimeMs) fileCache.set(staticFile.filePath, { mtimeMs: stat.mtimeMs, body });
+      return sendTextResponse(res, 200, body, staticFile.contentType, { ...corsHeaders, 'Cache-Control': cacheControl });
+    }
+    res.writeHead(200, { ...corsHeaders, 'Content-Type': staticFile.contentType, 'Cache-Control': cacheControl });
+    return fs.createReadStream(staticFile.filePath).pipe(res);
+  }
+
+  // Rotas /api/* inexistentes e caminhos de arquivo desconhecidos não devem cair na página do app (200 com HTML)
+  if (pathname.startsWith('/api/')) {
+    res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ success: false, error: 'Rota não encontrada.' }));
+  }
+  // Arquivos ocultos (.env, .git, .nexus_jwt_secret...) e qualquer caminho com extensão que não seja uma rota do app
+  if (/\.[a-z0-9]{1,8}$/i.test(pathname) || pathname.split('/').some(segment => segment.startsWith('.'))) {
+    res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ error: 'Arquivo não encontrado.' }));
   }
 
   const rootEntryGate = pathname === '/'
@@ -35023,7 +35396,7 @@ async function syncWithRenderCloud() {
     let deletedAccounts = getDeletedAccounts();
     try {
       const deletedRes = await fetchCloud('/api/sync/deleted-users', {
-        headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+        headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
         timeout: 2500
       });
       if (deletedRes.ok) {
@@ -35034,7 +35407,7 @@ async function syncWithRenderCloud() {
     const deletedEmailSet = new Set(deletedAccounts.map(item => item.email));
     await fetchCloud('/api/sync/deleted-users', {
       method: 'POST',
-      headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+      headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
       body: JSON.stringify({ accounts: deletedAccounts })
     }).catch(() => {});
     for (const deletedAccount of deletedAccounts) {
@@ -35055,7 +35428,7 @@ async function syncWithRenderCloud() {
 
     try {
       const resUsers = await fetchCloud('/api/users', {
-        headers: { 'X-Nexus-Sync-Token': JWT_SECRET }
+        headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN }
       });
       if (resUsers.ok) {
         const remoteUsers = await resUsers.json();
@@ -35066,7 +35439,7 @@ async function syncWithRenderCloud() {
     // 1.1 Puxar e processar fila de logins pendentes da nuvem (Render)
     try {
       const resLogins = await fetchCloud('/api/sync/logins', {
-        headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+        headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
         timeout: 2500
       });
       if (resLogins.ok) {
@@ -35094,7 +35467,7 @@ async function syncWithRenderCloud() {
           if (ackKeys.length > 0) {
             fetchCloud('/api/sync/logins/ack', {
               method: 'POST',
-              headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+              headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
               body: JSON.stringify({ keys: ackKeys })
             }).catch(()=>{});
           }
@@ -35106,7 +35479,7 @@ async function syncWithRenderCloud() {
     let gotBulkFinancial = false;
     try {
       const resFinAll = await fetchCloud('/api/sync/financial', {
-        headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+        headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
         timeout: 2500
       });
       if (resFinAll.ok) {
@@ -35136,7 +35509,7 @@ async function syncWithRenderCloud() {
 
     // 3. Puxar técnicos de suporte da nuvem
     try {
-      const resTecs = await fetchCloud('/api/tecnicos', { timeout: 2500 });
+      const resTecs = await fetchCloud('/api/tecnicos', { timeout: 2500, headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN } });
       if (resTecs.ok) {
         const tecJson = await resTecs.json();
         if (tecJson && Array.isArray(tecJson.tecnicos)) {
@@ -35155,7 +35528,8 @@ async function syncWithRenderCloud() {
           // Se o usuário foi cadastrado pela web/nuvem (Render), grava diretamente no SQL Server
           const isRealUser = cu.name && cu.name.trim() !== '' && cleanEmail.includes('@');
           if (isRealUser) {
-            const defaultPass = (cu.password && cu.password.startsWith('scrypt:')) ? cu.password : hashPassword(cu.password || '86266049');
+            // Usuário vindo da nuvem sem senha: nunca recebe uma senha padrão conhecida (conta fica sem acesso até recuperar a senha)
+            const defaultPass = (cu.password && cu.password.startsWith('scrypt:')) ? cu.password : hashPassword(cu.password || crypto.randomBytes(24).toString('hex'));
             const initialLastLogin = (cu.last_login && cu.last_login !== 'null') ? getBrasiliaSqlString(cu.last_login) : null;
             const deviceVal = cu.device_type || cu.device || (cu.is_mobile ? 'Mobile' : 'Computador');
             const rawCuCpf = cu.cpf ? String(cu.cpf).replace(/\D/g, '') : null;
@@ -35342,7 +35716,7 @@ async function syncWithRenderCloud() {
       saveLocalUsers(usersToSync, true);
       await fetchCloud('/api/users?overwrite=true', {
         method: 'POST',
-        headers: { 'X-Nexus-Sync-Token': JWT_SECRET },
+        headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
         body: JSON.stringify(usersToSync)
       }).catch(() => {});
     }
@@ -35354,6 +35728,7 @@ async function syncWithRenderCloud() {
       if (deletedEmailSet.has(String(emKey).toLowerCase().trim())) continue;
       await fetchCloud('/api/data', {
         method: 'POST',
+        headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
         body: JSON.stringify({ email: emKey, data: dataVal, forceEmpty: true })
       }).catch(() => {});
     }

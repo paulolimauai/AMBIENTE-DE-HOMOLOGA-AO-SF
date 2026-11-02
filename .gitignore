@@ -8,3 +8,9 @@ Thumbs.db
 supabase/.temp/
 *.log
 .vs/
+
+# Segredos gerados em execução (assinatura dos tokens) — nunca versionar
+.nexus_jwt_secret
+# Cópias do projeto/backups dentro da pasta de imagens e pacotes compactados (centenas de MB; já causaram exposição via /images)
+images/SITE/
+*.zip
