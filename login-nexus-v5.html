@@ -669,7 +669,6 @@
 
             <button class="btn" type="submit" id="enviar">Entrar no painel</button>
             <p class="status" id="status" role="status" aria-live="polite"></p>
-            <p class="switch" id="troca">Ainda não tem conta? <a href="#" data-go="register">Crie a sua Conta</a></p>
           </form>
 
           <div class="divider">outros atendimentos</div>
@@ -806,13 +805,11 @@
   const copy = {
     login: {
       sub: 'Seu resumo do mês está esperando por você.',
-      button: 'Entrar no painel',
-      switchHtml: 'Ainda não tem conta? <a href="#" data-go="register">Crie a sua Conta</a>'
+      button: 'Entrar no painel'
     },
     register: {
       sub: 'Em menos de um minuto você começa a organizar tudo.',
-      button: 'Criar minha conta grátis',
-      switchHtml: 'Já tem conta? <a href="#" data-go="login">Entre agora</a>'
+      button: 'Criar minha conta grátis'
     }
   };
 
@@ -849,7 +846,6 @@
     $('#senha').autocomplete = registering ? 'new-password' : 'current-password';
     $('#subtitulo').textContent = copy[mode].sub;
     btn.textContent = copy[mode].button;
-    $('#troca').innerHTML = copy[mode].switchHtml;
     clearErrors();
 
     if (registering) {
