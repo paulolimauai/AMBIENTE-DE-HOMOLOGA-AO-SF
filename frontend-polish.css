@@ -5445,3 +5445,296 @@ html.user-logged-in body.light #pageContent table tbody tr {
   html.user-logged-in .kpis-grid-6 .kpi { min-height: 122px !important; }
   html.user-logged-in #pageContent :is(.dash-card, .panel, .table-panel, .cards-summary-panel) { padding: 15px !important; }
 }
+
+/* ============================================================================
+   Cores do fundo: mesmas paletas da tela de login (variaveis --nx-o1..4 vindas de nexus:cores)
+   ============================================================================ */
+html.user-logged-in[data-nx-palette] body,
+html.user-logged-in[data-nx-palette] body.light,
+html.user-logged-in[data-nx-palette] body:has(#appMain),
+html.user-logged-in[data-nx-palette] #appMain {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+html.user-logged-in[data-nx-palette]:not(.light),
+html.user-logged-in[data-nx-palette]:not(.light) #persistentSystemBg {
+  background-color: #05050b !important;
+  background-image:
+    radial-gradient(ellipse 62% 58% at 4% 0%, rgba(var(--nx-o1), .80), transparent 72%),
+    radial-gradient(ellipse 56% 56% at 100% 100%, rgba(var(--nx-o2), .74), transparent 72%),
+    radial-gradient(ellipse 42% 42% at 72% 0%, rgba(var(--nx-o3), .58), transparent 72%),
+    radial-gradient(ellipse 40% 40% at 24% 100%, rgba(var(--nx-o4), .50), transparent 72%) !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
+html.user-logged-in[data-nx-palette].light,
+html.user-logged-in[data-nx-palette].light #persistentSystemBg {
+  background-color: #f2f5fb !important;
+  background-image:
+    radial-gradient(ellipse 66% 62% at 4% 0%, rgba(var(--nx-o1), .50), transparent 74%),
+    radial-gradient(ellipse 60% 60% at 100% 100%, rgba(var(--nx-o2), .46), transparent 74%),
+    radial-gradient(ellipse 46% 46% at 72% 0%, rgba(var(--nx-o3), .40), transparent 74%),
+    radial-gradient(ellipse 44% 44% at 24% 100%, rgba(var(--nx-o4), .38), transparent 74%) !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Seletor de cores no cabecalho (acao do sistema, ao lado do modo noturno/diurno) */
+.nx-palette-wrap { position: relative; display: inline-flex; align-items: center; }
+.nx-palette-pop {
+  display: none;
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 100020;
+  width: min(268px, calc(100vw - 24px));
+  padding: 12px 14px 14px;
+  border-radius: 18px;
+  background: rgba(12, 14, 28, .94);
+  border: 1px solid rgba(255, 255, 255, .16);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .42), inset 0 1px 0 rgba(255, 255, 255, .10);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+}
+.nx-palette-wrap.open .nx-palette-pop { display: block; }
+.nx-palette-lbl {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: #d3d7ea;
+}
+.nx-palette-swatches {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  justify-items: center;
+}
+.nx-sw, .nx-sw-custom {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .28);
+}
+.nx-sw { background: var(--c); }
+.nx-sw:hover, .nx-sw-custom:hover { transform: translateY(-1px); filter: brightness(1.12); }
+.nx-sw[aria-pressed="true"], .nx-sw-custom.on {
+  border-color: #fff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .45), 0 0 14px rgba(255, 255, 255, .38);
+}
+.nx-sw-custom {
+  position: relative;
+  overflow: hidden;
+  background: conic-gradient(#ff4d4d, #ffd24d, #4dff88, #4dd2ff, #7a4dff, #ff4dd2, #ff4d4d);
+}
+.nx-sw-custom input { position: absolute; inset: -6px; width: 40px; height: 40px; opacity: 0; cursor: pointer; }
+.nx-sw-custom:focus-within, .nx-sw:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+html.light .nx-palette-pop {
+  background: rgba(255, 255, 255, .97);
+  border-color: rgba(15, 23, 42, .14);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, .18), inset 0 1px 0 rgba(255, 255, 255, .9);
+}
+html.light .nx-palette-lbl { color: #334155; }
+html.light .nx-sw, html.light .nx-sw-custom { box-shadow: 0 0 0 1px rgba(15, 23, 42, .22); }
+html.light .nx-sw[aria-pressed="true"], html.light .nx-sw-custom.on {
+  border-color: #0f172a;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, .5), 0 0 12px rgba(15, 23, 42, .22);
+}
+html.light .nx-sw-custom:focus-within, html.light .nx-sw:focus-visible { outline-color: #0f172a; }
+
+/* ============================================================================
+   CORREÇÃO FINAL DO MENU RECOLHIDO
+   Último bloco intencionalmente para vencer as regras legadas de 68/72px.
+   ============================================================================ */
+@media (min-width: 761px) {
+  html.user-logged-in.sidebar-collapsed nav.menu.sidebar-menu,
+  html.user-logged-in body.sidebar-collapsed nav.menu.sidebar-menu,
+  html.user-logged-in.sidebar-collapsed aside.menu.sidebar-menu,
+  html.user-logged-in body.sidebar-collapsed aside.menu.sidebar-menu {
+    top: 76px !important;
+    width: 74px !important;
+    min-width: 74px !important;
+    max-width: 74px !important;
+    height: calc(100vh - 76px) !important;
+    padding: 14px 10px 12px !important;
+    overflow: hidden !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .main,
+  html.user-logged-in body.sidebar-collapsed .main {
+    margin-top: 76px !important;
+    margin-left: 74px !important;
+    width: calc(100% - 74px) !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-scroll,
+  html.user-logged-in body.sidebar-collapsed .sidebar-scroll {
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 0 0 10px !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-workspace-header,
+  html.user-logged-in body.sidebar-collapsed .sidebar-workspace-header {
+    width: 54px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 0 14px !important;
+    padding: 0 0 10px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 9px !important;
+    border-bottom: 1px solid var(--nx-line) !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-workspace-header .workspace-avatar,
+  html.user-logged-in body.sidebar-collapsed .sidebar-workspace-header .workspace-avatar {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    border-radius: 12px !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-workspace-header .workspace-meta,
+  html.user-logged-in body.sidebar-collapsed .sidebar-workspace-header .workspace-meta,
+  html.user-logged-in.sidebar-collapsed .sidebar-search,
+  html.user-logged-in body.sidebar-collapsed .sidebar-search,
+  html.user-logged-in.sidebar-collapsed .menu-section-header,
+  html.user-logged-in body.sidebar-collapsed .menu-section-header,
+  html.user-logged-in.sidebar-collapsed .sidebar-action-wrap .label,
+  html.user-logged-in body.sidebar-collapsed .sidebar-action-wrap .label,
+  html.user-logged-in.sidebar-collapsed .sidebar-action-wrap .quick-action-badge,
+  html.user-logged-in body.sidebar-collapsed .sidebar-action-wrap .quick-action-badge,
+  html.user-logged-in.sidebar-collapsed .sidebar-account-copy,
+  html.user-logged-in body.sidebar-collapsed .sidebar-account-copy,
+  html.user-logged-in.sidebar-collapsed .sidebar-account-arrow,
+  html.user-logged-in body.sidebar-collapsed .sidebar-account-arrow,
+  html.user-logged-in.sidebar-collapsed .sidebar-footer .toggle-label,
+  html.user-logged-in body.sidebar-collapsed .sidebar-footer .toggle-label,
+  html.user-logged-in.sidebar-collapsed .admin-sidebar-summary-card,
+  html.user-logged-in body.sidebar-collapsed .admin-sidebar-summary-card {
+    display: none !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-header-toggle,
+  html.user-logged-in body.sidebar-collapsed .sidebar-header-toggle,
+  html.user-logged-in.sidebar-collapsed #sidebarCollapseBtn,
+  html.user-logged-in body.sidebar-collapsed #sidebarCollapseBtn {
+    position: static !important;
+    width: 30px !important;
+    min-width: 30px !important;
+    max-width: 30px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-action-wrap,
+  html.user-logged-in body.sidebar-collapsed .sidebar-action-wrap {
+    width: 100% !important;
+    padding: 0 0 12px !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-quick-action-btn,
+  html.user-logged-in body.sidebar-collapsed .sidebar-quick-action-btn {
+    width: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    gap: 0 !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed nav.menu.sidebar-menu button[data-page],
+  html.user-logged-in body.sidebar-collapsed nav.menu.sidebar-menu button[data-page],
+  html.user-logged-in.sidebar-collapsed aside.menu.sidebar-menu button[data-page],
+  html.user-logged-in body.sidebar-collapsed aside.menu.sidebar-menu button[data-page] {
+    width: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    margin: 2px auto !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    gap: 0 !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed nav.menu.sidebar-menu button[data-page] .ic,
+  html.user-logged-in body.sidebar-collapsed nav.menu.sidebar-menu button[data-page] .ic,
+  html.user-logged-in.sidebar-collapsed aside.menu.sidebar-menu button[data-page] .ic,
+  html.user-logged-in body.sidebar-collapsed aside.menu.sidebar-menu button[data-page] .ic {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    border-radius: 9px !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-account-footer,
+  html.user-logged-in body.sidebar-collapsed .sidebar-account-footer {
+    width: 100% !important;
+    padding: 10px 0 0 !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-account-link,
+  html.user-logged-in body.sidebar-collapsed .sidebar-account-link {
+    width: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    max-height: 46px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-footer,
+  html.user-logged-in body.sidebar-collapsed .sidebar-footer {
+    width: 100% !important;
+    padding: 10px 0 0 !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .sidebar-footer .sidebar-toggle-btn,
+  html.user-logged-in body.sidebar-collapsed .sidebar-footer .sidebar-toggle-btn,
+  html.user-logged-in.sidebar-collapsed .sidebar-footer #sidebarFooterCollapseBtn,
+  html.user-logged-in body.sidebar-collapsed .sidebar-footer #sidebarFooterCollapseBtn {
+    width: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+
+  html.user-logged-in.sidebar-collapsed .toggle-icon-collapse,
+  html.user-logged-in body.sidebar-collapsed .toggle-icon-collapse {
+    transform: rotate(180deg) !important;
+  }
+}
