@@ -1339,7 +1339,12 @@
 
       try {
         const result = await api('/api/send-password', { email: accountEmail, cpf, birth_date: birthDate });
-        showStatus((result.message || 'Senha temporária gerada.') + ' Senha: ' + (result.tempPassword || 'consulte seu e-mail.'));
+        if (result.tempPassword) {
+          showTempPasswordPopup(result.tempPassword, accountEmail);
+          showStatus('Senha provisória gerada com sucesso.');
+        } else {
+          showStatus(result.message || 'Senha provisória enviada para seu e-mail.');
+        }
       } catch (error) {
         showStatus(error.message, true);
       }
@@ -1348,6 +1353,84 @@
       openGlassOsModal(initialTab);
     }
   };
+
+  function showTempPasswordPopup(tempPassword, accountEmail) {
+    let ov = $('#temppass-glass-overlay');
+    if (!ov) {
+      ov = document.createElement('div');
+      ov.id = 'temppass-glass-overlay';
+      ov.className = 'gmodal-overlay';
+      ov.setAttribute('role', 'dialog');
+      ov.setAttribute('aria-modal', 'true');
+      ov.innerHTML =
+        '<div class="gmodal-card" style="max-width:460px;">' +
+          '<span class="gmodal-glow" aria-hidden="true"></span>' +
+          '<div class="gmodal-body">' +
+            '<div class="gmodal-head">' +
+              '<div class="gmodal-brand">' +
+                '<span class="gmodal-badge" aria-hidden="true">' + GLASS_ICONS.lock + '</span>' +
+                '<div>' +
+                  '<span class="gmodal-kicker">Nexus Financeiro</span>' +
+                  '<span class="gmodal-step">Recuperação de Acesso Concluída</span>' +
+                '</div>' +
+              '</div>' +
+              '<button type="button" class="gmodal-close" id="temppass-close" aria-label="Fechar">' +
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+              '</button>' +
+            '</div>' +
+            '<h3 class="gmodal-title">Senha Provisória Gerada</h3>' +
+            '<p class="gmodal-desc" style="margin-bottom:14px;">Seus dados foram confirmados. Copie a senha provisória abaixo para entrar na sua conta:</p>' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-radius:16px;background:linear-gradient(145deg, rgba(6, 7, 18, .62), rgba(var(--a-rgb), .16));border:1px solid rgba(255, 255, 255, .32);box-shadow:inset 0 2px 10px rgba(0,0,0,.35);margin-bottom:14px;">' +
+              '<div style="min-width:0;">' +
+                '<span style="display:block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-light);margin-bottom:3px;">Sua Senha Provisória</span>' +
+                '<strong id="temppass-value" style="display:block;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:21px;font-weight:700;color:#fff;letter-spacing:.05em;user-select:all;word-break:break-all;"></strong>' +
+              '</div>' +
+              '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="temppass-copy" style="height:40px;padding:0 16px;flex:none;border-color:rgba(255,255,255,.35);">' +
+                '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+                '<span id="temppass-copy-lbl">Copiar</span>' +
+              '</button>' +
+            '</div>' +
+            '<small class="gmodal-hint" style="margin-bottom:18px;">Por segurança, ao entrar com esta senha provisória será solicitado que você defina sua nova senha pessoal.</small>' +
+            '<div class="gmodal-actions" style="margin-top:16px;">' +
+              '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="temppass-fechar">Fechar</button>' +
+              '<button type="button" class="gmodal-btn gmodal-btn-ok" id="temppass-use">Copiar e Preencher no Login</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(ov);
+
+      const close = () => ov.classList.remove('is-open');
+      $('#temppass-close', ov).addEventListener('click', close);
+      $('#temppass-fechar', ov).addEventListener('click', close);
+      ov.addEventListener('mousedown', e => { if (e.target === ov) close(); });
+
+      $('#temppass-copy', ov).addEventListener('click', () => {
+        const val = $('#temppass-value', ov).textContent.trim();
+        if (navigator.clipboard) navigator.clipboard.writeText(val).catch(() => {});
+        const lbl = $('#temppass-copy-lbl', ov);
+        lbl.textContent = 'Copiada!';
+        window.setTimeout(() => { lbl.textContent = 'Copiar'; }, 1800);
+      });
+
+      $('#temppass-use', ov).addEventListener('click', () => {
+        const val = $('#temppass-value', ov).textContent.trim();
+        if (navigator.clipboard) navigator.clipboard.writeText(val).catch(() => {});
+        if (ov._email && $('#email')) $('#email').value = ov._email;
+        if ($('#senha')) {
+          $('#senha').readOnly = false;
+          $('#senha').value = val;
+        }
+        close();
+        showStatus('Senha provisória preenchida. Clique em "Entrar no painel".');
+        $('#enviar')?.focus();
+      });
+    }
+
+    ov._email = accountEmail || '';
+    $('#temppass-value', ov).textContent = tempPassword;
+    $('#temppass-copy-lbl', ov).textContent = 'Copiar';
+    ov.classList.add('is-open');
+  }
 
   function maskPhoneBr(v) {
     const d = String(v || '').replace(/\D/g, '').slice(0, 11);
