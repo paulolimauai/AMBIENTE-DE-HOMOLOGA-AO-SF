@@ -14082,7 +14082,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn, #authPage #regSubmitBtn, #authPage #btnSendPassword { background: #059669 !important; color: #FFFFFF !important; border: 1px solid #10B981 !important; box-shadow: 0 8px 20px rgba(5, 150, 105, 0.28) !important; }
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261102-bg-palette3" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261102-tx-redesign5" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -20712,10 +20712,10 @@ const fmt = v => 'R$ ' + (v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,
 const catColor = name => (categories.find(c=>c.name===name)||{}).color || '#888';
 const catIcon = name => getCategoryIcon(name);
 
-function catOptionsHTML(type, selected){
+function catOptionsHTML(type, selected, plain){
   let list = type ? categories.filter(c=>(c.type||'despesa')===type) : categories.slice();
   list = list.slice().sort((a,b)=> (b.count||0)-(a.count||0) || a.name.localeCompare(b.name,'pt-BR'));
-  return list.map(c=>'<option value="'+c.name+'"'+(selected===c.name?' selected':'')+'>'+catIcon(c.name)+' '+c.name+'</option>').join('');
+  return list.map(c=>'<option value="'+c.name+'"'+(selected===c.name?' selected':'')+'>'+(plain ? '' : catIcon(c.name)+' ')+c.name+'</option>').join('');
 }
 const periodLabel = () => currentPeriod.month === 0 ? 'Todas as Datas (Geral)' : ((MONTHS[currentPeriod.month-1] || 'Mês ' + currentPeriod.month) + ' / ' + currentPeriod.year);
 
@@ -21053,16 +21053,55 @@ function computeTotals(list=transactions){
   const saldo = (receitas - despesas) + saldoInicialManualContas;
   return { receitas, despesas, saldo, saldoContasBancarias, faturasCartoesCredito };
 }
+/* ==================== Página de Transações: ícones e blocos visuais ==================== */
+const TX_ICONS = {
+  up: '<path d="M12 19V5"/><path d="m5 12 7-7 7 7"/>',
+  down: '<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>',
+  swap: '<path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/>',
+  list: '<path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  tag: '<path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z"/><path d="M7 7h.01"/>',
+  close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  plus: '<path d="M12 5v14"/><path d="M5 12h14"/>',
+  card: '<rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/>',
+  bank: '<path d="M3 21h18"/><path d="M5 21V10"/><path d="M9 21V10"/><path d="M15 21V10"/><path d="M19 21V10"/><path d="m2 10 10-6 10 6Z"/>',
+  cash: '<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01"/><path d="M18 12h.01"/>',
+  bolt: '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+  inbox: '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+  edit: '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/>'
+};
+function txIcon(name, size){
+  size = size || 16;
+  return '<svg class="tx-ic" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (TX_ICONS[name] || '') + '</svg>';
+}
+function txEsc(v){
+  return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function txAccountIcon(accName){
+  const e = getAccountIcon(accName);
+  return txIcon(e === '🏦' ? 'bank' : e === '💵' ? 'cash' : e === '⚡' ? 'bolt' : 'card', 14);
+}
+function txKpiHTML(kind, label, value, note, icon){
+  return '<div class="tx-kpi tx-kpi-' + kind + '">' +
+    '<div class="tx-kpi-top"><span class="tx-kpi-label">' + label + '</span><span class="tx-kpi-ic">' + txIcon(icon, 17) + '</span></div>' +
+    '<div class="tx-kpi-val">' + value + '</div>' +
+    '<div class="tx-kpi-note">' + note + '</div>' +
+  '</div>';
+}
 function txStatsCardsHTML(list){
-  const receitas = list.filter(t=>t.type==='in').reduce((s,t)=>s+parseInputValue(t.val),0);
-  const despesas = list.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val),0);
+  const entradas = list.filter(t=>t.type==='in');
+  const saidas = list.filter(t=>t.type==='out');
+  const receitas = entradas.reduce((s,t)=>s+parseInputValue(t.val),0);
+  const despesas = saidas.reduce((s,t)=>s+parseInputValue(t.val),0);
   const saldo = receitas - despesas;
-  let html = '';
-  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Receitas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(5, 150, 105,0.14); color:var(--brand-bright);">↑</span></div><div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">' + fmt(receitas) + '</div><div class="sub" style="font-size:11px;">Entradas no filtro</div></div>';
-  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Despesas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">↓</span></div><div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">' + fmt(despesas) + '</div><div class="sub" style="font-size:11px;">Saídas no filtro</div></div>';
-  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Balanço Líquido</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:' + (saldo < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(5, 150, 105,0.14)') + '; color:' + (saldo < 0 ? 'var(--red)' : 'var(--blue)') + ';">⇄</span></div><div class="val" style="font-size:20px; color:' + (saldo < 0 ? 'var(--red)' : 'var(--green)') + '; margin-bottom:2px;">' + fmt(saldo) + '</div><div class="sub" style="font-size:11px;">Receitas − Despesas</div></div>';
-  html += '<div class="kpi" style="padding:14px 16px;"><div class="row1" style="margin-bottom:6px;"><span>Total de Registros</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(5, 150, 105, 0.14); color:var(--purple);">📋</span></div><div class="val" style="font-size:20px; margin-bottom:2px;">' + list.length + '</div><div class="sub" style="font-size:11px;">Lançamentos no filtro</div></div>';
-  return html;
+  const pendentes = list.filter(t=>t.status==='Pendente').length;
+  const qtd = (n, um, varios) => n + ' ' + (n === 1 ? um : varios);
+  return txKpiHTML('in', 'Receitas', fmt(receitas), qtd(entradas.length, 'lançamento de entrada', 'lançamentos de entrada'), 'up') +
+    txKpiHTML('out', 'Despesas', fmt(despesas), qtd(saidas.length, 'lançamento de saída', 'lançamentos de saída'), 'down') +
+    txKpiHTML(saldo < 0 ? 'neg' : 'bal', 'Saldo do período', fmt(saldo), 'Receitas − despesas', 'swap') +
+    txKpiHTML('count', 'Lançamentos', String(list.length), pendentes ? qtd(pendentes, 'pendente', 'pendentes') : 'Nenhum pendente', 'list');
 }
 function despesasPorCategoria(list=transactions){
   const map = {};
@@ -22738,7 +22777,7 @@ function getAccountIcon(accName) {
 
 function transactionsTable(list, showActions){
   if (typeof isDataLoading !== 'undefined' && isDataLoading && list.length === 0) {
-    return \`<div class="placeholder" style="padding:40px 20px;"><div class="big" style="font-size:30px;margin-bottom:12px;">⏳</div><h3>Carregando suas transações...</h3><p>Sincronizando seus dados financeiros com o servidor.</p></div>\`;
+    return \`<div class="tx-empty"><span class="tx-spinner" aria-hidden="true"></span><h3>Carregando transações</h3><p>Sincronizando seus dados financeiros com o servidor.</p></div>\`;
   }
   if(list.length===0) {
     const totalAllTxs = Array.isArray(transactions) ? transactions.length : 0;
@@ -22754,27 +22793,26 @@ function transactionsTable(list, showActions){
 
     if (totalAllTxs > 0) {
       return \`
-      <div class="placeholder" style="padding:36px 20px; text-align:center;">
-        <div class="big" style="font-size:34px; margin-bottom:10px;">🔍</div>
-        <h3 style="font-size:16px; font-weight:800; color:var(--text); margin-bottom:6px;">
-          \${isFiltered ? 'Nenhum lançamento encontrado para os filtros selecionados' : 'Nenhuma transação encontrada no período de ' + periodLabel()}
-        </h3>
-        <p style="font-size:12.5px; color:var(--text-dim); margin-bottom:16px; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.5;">
-          Você possui <strong style="color:var(--text);">\${totalAllTxs} lançamento(s)</strong> no seu extrato geral.
-        </p>
-        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-          <button type="button" class="btn-primary" onclick="window.clearAllTxFilters(true)" style="padding:8px 16px; font-size:12.5px; font-weight:700; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-            🌐 Ver Todas as Transações (Todas as Datas)
-          </button>
-          \${isFiltered ? \`
-          <button type="button" class="btn-ghost" onclick="window.clearAllTxFilters(false)" style="padding:8px 16px; font-size:12.5px; font-weight:700; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.15); color:var(--text);">
-            ✕ Limpar Filtros do Mês
-          </button>\` : ''}
+      <div class="tx-empty">
+        <div class="tx-empty-ic">\${txIcon(isFiltered ? 'search' : 'inbox', 26)}</div>
+        <h3>\${isFiltered ? 'Nenhum lançamento encontrado' : 'Nenhuma transação neste período'}</h3>
+        <p>\${isFiltered ? 'Nenhum registro corresponde aos filtros selecionados.' : 'Não há lançamentos em ' + periodLabel() + '.'} Seu extrato geral tem <strong>\${totalAllTxs} lançamento(s)</strong>.</p>
+        <div class="tx-empty-actions">
+          <button type="button" class="btn-primary tx-btn" onclick="window.clearAllTxFilters(true)">\${txIcon('globe', 15)}<span>Ver todas as datas</span></button>
+          \${isFiltered ? \`<button type="button" class="btn-ghost tx-btn" onclick="window.clearAllTxFilters(false)">\${txIcon('close', 14)}<span>Limpar filtros</span></button>\` : ''}
         </div>
       </div>\`;
     }
 
-    return \`<div class="placeholder"><div class="big">🗂️</div><h3>Nenhuma transação encontrada</h3><p>Nenhuma transação registrada no período selecionado.</p></div>\`;
+    return \`
+    <div class="tx-empty">
+      <div class="tx-empty-ic">\${txIcon('inbox', 26)}</div>
+      <h3>Nenhuma transação registrada</h3>
+      <p>Cadastre receitas e despesas para acompanhar o fluxo de caixa de \${periodLabel()}.</p>
+      <div class="tx-empty-actions">
+        <button type="button" class="btn-primary tx-btn" onclick="openModal(null)">\${txIcon('plus', 15)}<span>Nova transação</span></button>
+      </div>
+    </div>\`;
   }
 
   const totalDespesas = list.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val), 0);
@@ -22784,80 +22822,59 @@ function transactionsTable(list, showActions){
   const countReceitas = list.filter(t=>t.type==='in').length;
 
   return \`
-  <table>
+  <div class="tx-table-scroll">
+  <table class="tx-table">
     <thead>
       <tr>
         <th>Data</th>
         <th>Descrição</th>
         <th>Categoria</th>
         <th>Conta / Cartão</th>
-        <th>Tipo</th>
-        <th>Valor</th>
+        <th class="tx-num">Valor</th>
         <th>Status</th>
-        \${showActions?'<th style="text-align:center;">Ações</th>':''}
+        \${showActions?'<th class="tx-actions-col">Ações</th>':''}
       </tr>
     </thead>
     <tbody>
       \${list.map(t=>{
         const method = t.paymentMethod || detectPaymentMethodFromName(t.desc) || ((t.cat && t.cat.toLowerCase().includes('cartão')) || (t.acc && t.acc.toLowerCase().includes('cartão')) ? 'Cartão de Crédito' : (t.type === 'out' ? 'Boleto' : null));
+        const isIn = t.type === 'in';
+        const isPending = t.status === 'Pendente';
         return \`
         <tr class="trow">
-          <td><span class="tx-date-badge">\${formatDateBR(t.date)}</span></td>
+          <td class="tx-date">\${formatDateBR(t.date)}</td>
           <td class="tx-desc">
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-              <span>\${t.desc}</span>
-              \${t.type === 'out' && method ? \`<span class="pill" style="padding:1.5px 6px; font-size:10px; font-weight:700; border-radius:5px; background:\${method === 'Cartão de Crédito' ? 'rgba(5, 150, 105, 0.16)' : 'rgba(245,158,11,0.16)'}; color:\${method === 'Cartão de Crédito' ? '#10B981' : '#FBBF24'}; border:1px solid \${method === 'Cartão de Crédito' ? 'rgba(5, 150, 105, 0.35)' : 'rgba(245,158,11,0.35)'};">\${method === 'Cartão de Crédito' ? '💳 Cartão' : '📄 Boleto'}</span>\` : ''}
-            </div>
+            <span class="tx-desc-text">\${txEsc(t.desc)}</span>
+            \${!isIn && method ? \`<span class="tx-method">\${method === 'Cartão de Crédito' ? 'Cartão' : 'Boleto'}</span>\` : ''}
           </td>
-          <td><span class="pill cat-pill" style="background:\${catColor(t.cat)}18; color:\${catColor(t.cat)}; border:1px solid \${catColor(t.cat)}35">\${catIcon(t.cat)} \${t.cat}</span></td>
-          <td><span class="pill acc-pill">\${getAccountIcon(t.acc)} \${t.acc || '—'}</span></td>
-          <td><span class="type-pill \${t.type}">\${t.type==='in'?'↑ Receita':'↓ Despesa'}</span></td>
-          <td class="\${t.type==='in'?'val-in':'val-out'}">\${t.type==='in'?'+':'-'}\${fmt(t.val)}</td>
+          <td><span class="tx-cat"><i style="background:\${txEsc(catColor(t.cat))}"></i>\${txEsc(t.cat)}</span></td>
+          <td><span class="tx-acc">\${txAccountIcon(t.acc)}<span>\${txEsc(t.acc || '—')}</span></span></td>
+          <td class="tx-num \${isIn ? 'tx-in' : 'tx-out'}" title="\${isIn ? 'Receita' : 'Despesa'}">\${isIn ? '+' : '-'}\${fmt(t.val)}</td>
           <td>
-            <span class="pill status-\${t.status.toLowerCase()} status-toggle-btn" data-togglestatus="\${t.id}" title="Clique para alternar o status (Pendente / Pago)">
-              \${t.status === 'Pendente' ? '⏳ Pendente' : (t.type === 'in' ? '✓ Recebido' : '✓ Pago')}
-            </span>
+            <button type="button" class="tx-status \${isPending ? 'is-pending' : 'is-done'}" data-togglestatus="\${t.id}" title="Clique para alternar o status (Pendente / Pago)"><i></i>\${isPending ? 'Pendente' : (isIn ? 'Recebido' : 'Pago')}</button>
           </td>
-          \${showActions?\`<td><div class="row-actions" style="justify-content:center;"><button data-edit="\${t.id}" title="Editar Transação" class="btn-action-edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></button><button data-del="\${t.id}" title="Excluir Transação" class="btn-action-del"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></td>\`:''}
+          \${showActions?\`<td class="tx-actions"><div class="row-actions"><button type="button" data-edit="\${t.id}" title="Editar transação" aria-label="Editar transação" class="btn-action-edit">\${txIcon('edit', 14)}</button><button type="button" data-del="\${t.id}" title="Excluir transação" aria-label="Excluir transação" class="btn-action-del">\${txIcon('trash', 14)}</button></div></td>\`:''}
         </tr>\`;
       }).join('')}
     </tbody>
-    <tfoot>
-      <tr class="tfoot-row">
-        <td colspan="5" class="tfoot-label">TOTAL DE GASTOS (\${countDespesas} despesa\${countDespesas===1?'':'s'}):</td>
-        <td class="tfoot-value">-\${fmt(totalDespesas)}</td>
-        <td colspan="\${showActions?2:1}"></td>
-      </tr>
-    </tfoot>
   </table>
+  </div>
 
-  <!-- Aba / Card com Cálculo Consolidado dos Gastos ao final -->
-  <div class="tx-footer-summary">
-    <div class="tx-summary-card expense">
-      <div class="tx-summary-icon expense">↓</div>
-      <div>
-        <div class="tx-summary-label">Cálculo Total de Gastos</div>
-        <div class="tx-summary-val expense">-\${fmt(totalDespesas)}</div>
-        <div class="tx-summary-sub">\${countDespesas} lançamento(s) de despesa</div>
-      </div>
+  <div class="tx-totals">
+    <div class="tx-totals-item">
+      <span class="tx-totals-label">Receitas</span>
+      <strong class="tx-in">+\${fmt(totalReceitas)}</strong>
+      <small>\${countReceitas} lançamento(s)</small>
     </div>
-
-    <div class="tx-summary-card income">
-      <div class="tx-summary-icon income">↑</div>
-      <div>
-        <div class="tx-summary-label">Total de Entradas (Receitas)</div>
-        <div class="tx-summary-val income">+\${fmt(totalReceitas)}</div>
-        <div class="tx-summary-sub">\${countReceitas} lançamento(s) de receita</div>
-      </div>
+    <div class="tx-totals-item">
+      <span class="tx-totals-label">Despesas</span>
+      <strong class="tx-out">-\${fmt(totalDespesas)}</strong>
+      <small>\${countDespesas} lançamento(s)</small>
     </div>
-
-    <div class="tx-summary-card \${saldoPeriodo < 0 ? 'expense' : 'balance'}">
-      <div class="tx-summary-icon \${saldoPeriodo < 0 ? 'expense' : 'balance'}">⇄</div>
-      <div>
-        <div class="tx-summary-label">Balanço do Período</div>
-        <div class="tx-summary-val \${saldoPeriodo < 0 ? 'expense' : 'income'}">\${fmt(saldoPeriodo)}</div>
-        <div class="tx-summary-sub">\${list.length} registro(s) no filtro</div>
-      </div>
+    <div class="tx-totals-item">
+      <span class="tx-totals-label">Balanço do período</span>
+      <strong class="\${saldoPeriodo < 0 ? 'tx-out' : 'tx-in'}">\${fmt(saldoPeriodo)}</strong>
+      <small>\${list.length} registro(s)</small>
     </div>
   </div>\`;
 }
@@ -22866,68 +22883,38 @@ function transactionsTable(list, showActions){
 
 function pageTransacoes(){
   const periodTx = transactions.filter(inPeriod);
-  const accOptsHTML = accounts.slice().sort((a,b)=>a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' })).map(a => '<option value="' + a.name + '">' + a.name + ' (' + a.type + ')</option>').join('');
-  const totalDesp = periodTx.filter(t=>t.type==='out').reduce((s,t)=>s+parseInputValue(t.val),0);
-  const totalRec = periodTx.filter(t=>t.type==='in').reduce((s,t)=>s+parseInputValue(t.val),0);
-  const saldoPer = totalRec - totalDesp;
+  const accOptsHTML = accounts.slice().sort((a,b)=>a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' })).map(a => '<option value="' + txEsc(a.name) + '">' + txEsc(a.name) + ' (' + txEsc(a.type) + ')</option>').join('');
 
   return \`
-  <div class="page-head">
-    <div>
-      <h1 style="font-size:22px; font-weight:800; letter-spacing:-0.02em; margin:0; display:flex; align-items:center; gap:8px;">
-        Transações — <span style="color:var(--green);">\${periodLabel()}</span>
-      </h1>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:4px 0 0 0; font-weight:500;">
-        Gerencie e filtre todas as suas receitas e despesas com atualização em tempo real
-      </p>
-    </div>
-    <div class="head-actions" style="display:flex; align-items:center; gap:10px;">
-      \${periodPickerHTML()}
-      <button class="btn-ghost" id="btnGerenciarCategorias" style="display:flex; align-items:center; gap:6px;">🏷️ Categorias</button>
-      <button class="btn-primary" id="btnNovaTransacao" style="display:flex; align-items:center; gap:6px; font-weight:700;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nova Transação
-      </button>
-    </div>
-  </div>
-
-  <div class="kpis" id="txStatsRow" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:18px;">
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Total de Receitas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(5, 150, 105,0.14); color:var(--brand-bright);">↑</span></div>
-      <div class="val" style="font-size:20px; color:var(--green); margin-bottom:2px;">\${fmt(totalRec)}</div>
-      <div class="sub" style="font-size:11px;">Entradas no período</div>
-    </div>
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Total de Despesas</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(239,68,68,0.14); color:var(--red);">↓</span></div>
-      <div class="val" style="font-size:20px; color:var(--red); margin-bottom:2px;">\${fmt(totalDesp)}</div>
-      <div class="sub" style="font-size:11px;">Saídas no período</div>
-    </div>
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Balanço Líquido</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:\${saldoPer < 0 ? 'rgba(239,68,68,0.14)' : 'rgba(5, 150, 105,0.14)'}; color:\${saldoPer < 0 ? 'var(--red)' : 'var(--blue)'};">⇄</span></div>
-      <div class="val" style="font-size:20px; color:\${saldoPer < 0 ? 'var(--red)' : 'var(--green)'}; margin-bottom:2px;">\${fmt(saldoPer)}</div>
-      <div class="sub" style="font-size:11px;">Receitas − Despesas</div>
-    </div>
-    <div class="kpi" style="padding:14px 16px;">
-      <div class="row1" style="margin-bottom:6px;"><span>Total de Registros</span><span class="ic" style="width:32px; height:32px; font-size:14px; background:rgba(5, 150, 105, 0.14); color:var(--purple);">📋</span></div>
-      <div class="val" style="font-size:20px; margin-bottom:2px;">\${periodTx.length}</div>
-      <div class="sub" style="font-size:11px;">Lançamentos no período</div>
-    </div>
-  </div>
-
-  <div class="table-panel">
-    <div class="filters" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
-      <div style="position:relative; flex:1.5; min-width:200px;">
-        <input id="txSearch" type="search" name="tx_filter_query_safe" autocomplete="one-time-code" data-lpignore="true" data-form-type="other" data-1p-ignore="true" spellcheck="false" placeholder="🔍 Buscar por descrição, valor, categoria..." style="width:100%; font-size:13px;">
+  <div class="tx-page">
+    <div class="page-head tx-head">
+      <div class="tx-head-copy">
+        <h1>Transações</h1>
+        <p>Receitas e despesas de <strong>\${periodLabel()}</strong>, com atualização em tempo real.</p>
       </div>
-      <select id="txFiltroConta" style="flex:1; min-width:160px;"><option value="">Todas as Contas / Cartões</option>\${accOptsHTML}</select>
-      <select id="txFiltroTipo" style="flex:0.8; min-width:120px;"><option value="">Todos os tipos</option><option value="in">Receitas</option><option value="out">Despesas</option></select>
-      <select id="txFiltroCat" style="flex:1; min-width:140px;"><option value="">Todas categorias</option>\${catOptionsHTML(null)}</select>
-      <select id="txFiltroStatus" style="flex:0.8; min-width:120px;"><option value="">Todos status</option><option>Pago</option><option>Recebido</option><option>Pendente</option></select>
-      <button type="button" id="btnResetTxFilters" class="btn-ghost" title="Limpar filtros ativos" style="display:none; align-items:center; gap:5px; padding:7px 12px; font-size:12px; font-weight:700; border-radius:9px; border:1px solid rgba(255,255,255,0.15); color:var(--text); cursor:pointer; white-space:nowrap;">
-        ✕ Limpar Filtros
-      </button>
+      <div class="head-actions tx-head-actions">
+        \${periodPickerHTML()}
+        <button type="button" class="btn-ghost tx-btn" id="btnGerenciarCategorias">\${txIcon('tag', 15)}<span>Categorias</span></button>
+        <button type="button" class="btn-primary tx-btn" id="btnNovaTransacao">\${txIcon('plus', 15)}<span>Nova transação</span></button>
+      </div>
     </div>
-    <div id="txTableWrap">\${transactionsTable(periodTx.slice().sort((a,b)=>b.date.localeCompare(a.date)), true)}</div>
+
+    <div class="tx-kpis" id="txStatsRow">\${txStatsCardsHTML(periodTx)}</div>
+
+    <div class="table-panel tx-panel">
+      <div class="tx-toolbar">
+        <div class="tx-search">
+          \${txIcon('search', 16)}
+          <input id="txSearch" type="search" name="tx_filter_query_safe" autocomplete="one-time-code" data-lpignore="true" data-form-type="other" data-1p-ignore="true" spellcheck="false" placeholder="Buscar por descrição ou valor" aria-label="Buscar transações">
+        </div>
+        <select id="txFiltroConta" class="tx-select" aria-label="Filtrar por conta ou cartão"><option value="">Todas as contas</option>\${accOptsHTML}</select>
+        <select id="txFiltroTipo" class="tx-select" aria-label="Filtrar por tipo"><option value="">Todos os tipos</option><option value="in">Receitas</option><option value="out">Despesas</option></select>
+        <select id="txFiltroCat" class="tx-select" aria-label="Filtrar por categoria"><option value="">Todas as categorias</option>\${catOptionsHTML(null, null, true)}</select>
+        <select id="txFiltroStatus" class="tx-select" aria-label="Filtrar por status"><option value="">Todos os status</option><option>Pago</option><option>Recebido</option><option>Pendente</option></select>
+        <button type="button" id="btnResetTxFilters" class="btn-ghost tx-reset" title="Limpar filtros ativos" style="display:none;">\${txIcon('close', 14)}<span>Limpar filtros</span></button>
+      </div>
+      <div id="txTableWrap">\${transactionsTable(periodTx.slice().sort((a,b)=>b.date.localeCompare(a.date)), true)}</div>
+    </div>
   </div>\`;
 }
 
@@ -29912,7 +29899,8 @@ function attachPageEvents(){
     [search,fTipo,fCat,fStatus,fConta].forEach(el=>{
       if(el) {
         el.addEventListener('input', refreshTxTable);
-        el.addEventListener('change', refreshTxTable);
+        // Na busca, o 'change' (disparado ao perder o foco) redesenharia a tabela no meio do clique e o botão do estado vazio perderia o primeiro clique
+        if (el !== search) el.addEventListener('change', refreshTxTable);
       }
     });
     refreshTxTable();
