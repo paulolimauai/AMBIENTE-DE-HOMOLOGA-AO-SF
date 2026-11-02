@@ -17095,6 +17095,12 @@ window.switchAuthTab = function(tab) {
     if (tabsNav) tabsNav.style.display = 'flex';
     if (tabReg) tabReg.classList.add('active');
     if (subTitle) subTitle.textContent = 'Crie sua conta para começar a gerenciar suas finanças';
+    const regFormEl = document.getElementById('registerForm');
+    if (regFormEl) regFormEl.reset();
+    ['regName', 'regCpf', 'regBirthDate', 'regPhone', 'regEmail', 'regPassword', 'regConfirmPassword'].forEach(function(id) {
+      const inp = document.getElementById(id);
+      if (inp) inp.value = '';
+    });
   } else if (tab === 'users') {
     if (loginBox) loginBox.style.display = 'none';
     if (regBox) regBox.style.display = 'none';
