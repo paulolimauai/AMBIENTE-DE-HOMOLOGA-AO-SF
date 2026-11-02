@@ -4672,3 +4672,776 @@ html.user-logged-in .main {
 @media (prefers-reduced-motion: reduce) {
   #pageContent *, .topheader *, nav.menu *, aside.menu * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* ============================================================================
+   NEXUS POST-LOGIN REDESIGN 2026
+   Workspace financeiro: hierarquia editorial, contraste e densidade controlada.
+   Este bloco é estritamente autenticado para preservar a tela de login oficial.
+   ============================================================================ */
+
+html.user-logged-in {
+  --nx-bg: #0a1220;
+  --nx-bg-deep: #07101c;
+  --nx-surface: #101d30;
+  --nx-surface-2: #14243a;
+  --nx-surface-soft: rgba(16, 29, 48, .84);
+  --nx-line: rgba(148, 163, 184, .17);
+  --nx-line-strong: rgba(148, 163, 184, .28);
+  --nx-text: #edf5ff;
+  --nx-muted: #8ea3bb;
+  --nx-faint: #60758e;
+  --nx-green: #5ee0ae;
+  --nx-green-deep: #18b77d;
+  --nx-blue: #76b7ff;
+  --nx-amber: #f3bf64;
+  --nx-red: #ff8293;
+  background: var(--nx-bg) !important;
+  background-image: linear-gradient(135deg, #0a1220 0%, #0d1829 55%, #0a1424 100%) !important;
+}
+
+html.user-logged-in,
+html.user-logged-in body,
+html.user-logged-in #persistentSystemBg,
+html.user-logged-in .persistent-system-bg,
+html.user-logged-in .app-bg-scene {
+  background-color: var(--nx-bg) !important;
+  background-image: none !important;
+}
+
+html.user-logged-in .app-bg-scene,
+html.user-logged-in .fintech-market-ticker-banner,
+html.user-logged-in .fintech-bg-candles,
+html.user-logged-in .fintech-bg-watermarks,
+html.user-logged-in .app-bg-orbital-canvas,
+html.user-logged-in .app-bg-chart,
+html.user-logged-in .app-bg-grid,
+html.user-logged-in .app-blob {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+html.user-logged-in #appMain,
+html.user-logged-in .main,
+html.user-logged-in #pageContent {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+html.user-logged-in #appMain {
+  min-height: 100vh !important;
+}
+
+/* Cabeçalho: identidade e ações, sem ruído de status ou relógio. */
+html.user-logged-in .topheader {
+  height: 76px !important;
+  background: rgba(7, 16, 28, .94) !important;
+  border-bottom: 1px solid var(--nx-line) !important;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .22) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+html.user-logged-in .topheader-row {
+  height: 76px !important;
+  max-width: none !important;
+  padding: 0 30px !important;
+}
+
+html.user-logged-in .topheader .brand {
+  gap: 11px !important;
+  padding: 0 !important;
+}
+
+html.user-logged-in .topheader .brand .logo {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(145deg, #183a50, #10263a) !important;
+  border: 1px solid rgba(118, 183, 255, .35) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .28) !important;
+}
+
+html.user-logged-in .topheader .brand .name {
+  gap: 1px !important;
+}
+
+html.user-logged-in .topheader .brand-title {
+  color: #f4f8ff !important;
+  font-size: 15px !important;
+  letter-spacing: .18em !important;
+}
+
+html.user-logged-in .topheader .brand-sub {
+  color: var(--nx-muted) !important;
+  font-size: 8px !important;
+  letter-spacing: .19em !important;
+}
+
+html.user-logged-in .aether-header-right {
+  gap: 9px !important;
+}
+
+html.user-logged-in .header-user-badge {
+  height: 42px !important;
+  padding: 0 13px 0 6px !important;
+  border: 1px solid var(--nx-line) !important;
+  border-radius: 13px !important;
+  background: rgba(255, 255, 255, .035) !important;
+}
+
+html.user-logged-in .header-user-badge .avatar {
+  width: 30px !important;
+  height: 30px !important;
+  background: linear-gradient(145deg, var(--nx-green), #167c69) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html.user-logged-in .header-user-name {
+  color: var(--nx-text) !important;
+  font-size: 12px !important;
+}
+
+html.user-logged-in .header-minha-conta-btn,
+html.user-logged-in .topheader-row .icon-btn,
+html.user-logged-in .topheader-row #logoutBtn {
+  height: 40px !important;
+  border-radius: 11px !important;
+  background: rgba(255, 255, 255, .035) !important;
+  border: 1px solid var(--nx-line) !important;
+  box-shadow: none !important;
+  color: #b9c9da !important;
+  font-size: 11.5px !important;
+}
+
+html.user-logged-in .header-minha-conta-btn:hover,
+html.user-logged-in .topheader-row .icon-btn:hover {
+  background: rgba(118, 183, 255, .11) !important;
+  border-color: rgba(118, 183, 255, .35) !important;
+  color: #f4f8ff !important;
+  transform: none !important;
+}
+
+html.user-logged-in .topheader-row #logoutBtn {
+  background: rgba(255, 130, 147, .07) !important;
+  border-color: rgba(255, 130, 147, .25) !important;
+  color: #ff9eaa !important;
+}
+
+html.user-logged-in .topheader-row #logoutBtn:hover {
+  background: rgba(255, 130, 147, .16) !important;
+  border-color: rgba(255, 130, 147, .48) !important;
+  color: #fff !important;
+  transform: none !important;
+}
+
+/* Sidebar redesenhada: navegação editorial e estado ativo evidente. */
+html.user-logged-in nav.menu.sidebar-menu,
+html.user-logged-in aside.menu.sidebar-menu {
+  top: 76px !important;
+  width: 248px !important;
+  height: calc(100vh - 76px) !important;
+  padding: 18px 14px 14px !important;
+  background: #0b1728 !important;
+  border-right: 1px solid var(--nx-line) !important;
+  box-shadow: 12px 0 32px rgba(0, 0, 0, .16) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html.user-logged-in .sidebar-scroll {
+  gap: 4px !important;
+  padding: 0 2px 12px !important;
+}
+
+html.user-logged-in .sidebar-workspace-header {
+  height: 56px !important;
+  margin: 0 0 18px !important;
+  padding: 0 8px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html.user-logged-in .sidebar-workspace-header .workspace-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  border-radius: 13px !important;
+  background: linear-gradient(145deg, #1b5360, #12313f) !important;
+  border: 1px solid rgba(94, 224, 174, .32) !important;
+  box-shadow: none !important;
+}
+
+html.user-logged-in .sidebar-workspace-header .workspace-status-dot {
+  display: none !important;
+}
+
+html.user-logged-in .sidebar-workspace-header .workspace-name {
+  color: var(--nx-text) !important;
+  font-size: 15px !important;
+}
+
+html.user-logged-in .sidebar-workspace-header .workspace-subtitle {
+  color: var(--nx-muted) !important;
+  font-size: 10px !important;
+}
+
+html.user-logged-in .sidebar-search {
+  height: 40px !important;
+  margin: 0 2px 14px !important;
+  padding: 0 11px !important;
+  background: rgba(255, 255, 255, .045) !important;
+  border: 1px solid var(--nx-line) !important;
+  border-radius: 11px !important;
+  color: var(--nx-muted) !important;
+}
+
+html.user-logged-in .sidebar-search input {
+  color: var(--nx-text) !important;
+  font-size: 12px !important;
+}
+
+html.user-logged-in .sidebar-search kbd {
+  color: var(--nx-faint) !important;
+  background: transparent !important;
+  border: 0 !important;
+  font-size: 9px !important;
+}
+
+html.user-logged-in .sidebar-action-wrap {
+  padding: 0 2px 16px !important;
+}
+
+html.user-logged-in .sidebar-quick-action-btn {
+  height: 42px !important;
+  border-radius: 11px !important;
+  background: var(--nx-green) !important;
+  border: 0 !important;
+  color: #072318 !important;
+  box-shadow: 0 8px 22px rgba(24, 183, 125, .18) !important;
+}
+
+html.user-logged-in .sidebar-quick-action-btn .label,
+html.user-logged-in .sidebar-quick-action-btn .quick-action-badge {
+  color: #072318 !important;
+}
+
+html.user-logged-in .sidebar-quick-action-btn .quick-action-ic {
+  background: rgba(7, 35, 24, .13) !important;
+  color: #072318 !important;
+}
+
+html.user-logged-in .menu-section-header {
+  padding: 15px 9px 6px !important;
+}
+
+html.user-logged-in .menu-section-title {
+  color: var(--nx-faint) !important;
+  font-size: 9px !important;
+  letter-spacing: .14em !important;
+}
+
+html.user-logged-in .menu-section-line {
+  background: var(--nx-line) !important;
+}
+
+html.user-logged-in nav.menu.sidebar-menu button[data-page],
+html.user-logged-in aside.menu.sidebar-menu button[data-page] {
+  height: 42px !important;
+  min-height: 42px !important;
+  margin: 2px 0 !important;
+  padding: 0 11px !important;
+  border-radius: 11px !important;
+  border: 1px solid transparent !important;
+  color: #9eb0c4 !important;
+  font-size: 12.5px !important;
+}
+
+html.user-logged-in nav.menu.sidebar-menu button[data-page]:hover,
+html.user-logged-in aside.menu.sidebar-menu button[data-page]:hover {
+  background: rgba(118, 183, 255, .07) !important;
+  border-color: rgba(118, 183, 255, .14) !important;
+  color: #eaf3ff !important;
+}
+
+html.user-logged-in nav.menu.sidebar-menu button[data-page].active,
+html.user-logged-in aside.menu.sidebar-menu button[data-page].active {
+  background: linear-gradient(90deg, rgba(94, 224, 174, .16), rgba(94, 224, 174, .035)) !important;
+  border-color: rgba(94, 224, 174, .3) !important;
+  color: #f2fff9 !important;
+  box-shadow: none !important;
+}
+
+html.user-logged-in nav.menu.sidebar-menu button[data-page].active::before,
+html.user-logged-in aside.menu.sidebar-menu button[data-page].active::before {
+  width: 3px !important;
+  height: 22px !important;
+  left: -1px !important;
+  border-radius: 0 4px 4px 0 !important;
+  background: var(--nx-green) !important;
+  box-shadow: 0 0 12px rgba(94, 224, 174, .65) !important;
+}
+
+html.user-logged-in nav.menu.sidebar-menu button[data-page] .ic,
+html.user-logged-in aside.menu.sidebar-menu button[data-page] .ic {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, .04) !important;
+  border: 1px solid transparent !important;
+  color: #71869d !important;
+}
+
+html.user-logged-in nav.menu.sidebar-menu button[data-page].active .ic,
+html.user-logged-in aside.menu.sidebar-menu button[data-page].active .ic {
+  background: rgba(94, 224, 174, .14) !important;
+  border-color: rgba(94, 224, 174, .22) !important;
+  color: var(--nx-green) !important;
+  box-shadow: none !important;
+}
+
+html.user-logged-in .sidebar-account-footer {
+  padding: 12px 2px 0 !important;
+  border-top: 1px solid var(--nx-line) !important;
+}
+
+html.user-logged-in .sidebar-account-link {
+  min-height: 50px !important;
+  border-radius: 11px !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+}
+
+html.user-logged-in .sidebar-account-link:hover {
+  background: rgba(255, 255, 255, .05) !important;
+  border-color: var(--nx-line) !important;
+}
+
+html.user-logged-in .sidebar-account-icon {
+  background: #1d3a4a !important;
+  color: var(--nx-green) !important;
+}
+
+html.user-logged-in .sidebar-account-copy strong {
+  color: var(--nx-text) !important;
+  font-size: 11px !important;
+}
+
+html.user-logged-in .sidebar-account-copy small {
+  color: var(--nx-muted) !important;
+  font-size: 9px !important;
+}
+
+html.user-logged-in .sidebar-footer {
+  padding: 12px 2px 0 !important;
+}
+
+html.user-logged-in .sidebar-footer .sidebar-toggle-btn {
+  height: 36px !important;
+  border-radius: 10px !important;
+  color: var(--nx-muted) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+/* Conteúdo: mais respiro e uma grade com leitura de produto. */
+html.user-logged-in .main {
+  margin-top: 76px !important;
+  margin-left: 248px !important;
+  width: calc(100% - 248px) !important;
+  max-width: none !important;
+  padding: 30px 36px 62px !important;
+}
+
+html.user-logged-in.sidebar-collapsed .main,
+html.user-logged-in body.sidebar-collapsed .main {
+  margin-left: 72px !important;
+  width: calc(100% - 72px) !important;
+}
+
+html.user-logged-in #pageContent {
+  max-width: 1600px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+html.user-logged-in .dashboard-cockpit-frame,
+html.user-logged-in .admin-page-head,
+html.user-logged-in .admin-kpis-row,
+html.user-logged-in .admin-toolbar-panel,
+html.user-logged-in .dashboard-main-grid {
+  max-width: none !important;
+}
+
+html.user-logged-in .dashboard-welcome-hero {
+  min-height: 160px !important;
+  margin-bottom: 18px !important;
+  padding: 28px 30px !important;
+  border-radius: 20px !important;
+  background: linear-gradient(112deg, #152b3d 0%, #102236 60%, #11253a 100%) !important;
+  border: 1px solid rgba(118, 183, 255, .2) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .18) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html.user-logged-in .dashboard-welcome-hero::before,
+html.user-logged-in .dashboard-welcome-hero::after {
+  display: none !important;
+}
+
+html.user-logged-in .hero-content {
+  gap: 24px !important;
+}
+
+html.user-logged-in .hero-left {
+  gap: 12px !important;
+}
+
+html.user-logged-in .hero-badge {
+  padding: 4px 9px !important;
+  border: 0 !important;
+  background: rgba(118, 183, 255, .1) !important;
+  color: #a9ccf1 !important;
+  font-size: 10px !important;
+}
+
+html.user-logged-in .hero-title-group {
+  gap: 14px !important;
+}
+
+html.user-logged-in .hero-greeting-badge {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 14px !important;
+  background: rgba(94, 224, 174, .13) !important;
+  border: 1px solid rgba(94, 224, 174, .3) !important;
+  box-shadow: none !important;
+}
+
+html.user-logged-in .hero-greeting {
+  color: var(--nx-text) !important;
+  font-size: clamp(25px, 2.3vw, 34px) !important;
+  letter-spacing: -.035em !important;
+}
+
+html.user-logged-in .hero-name-highlight {
+  color: var(--nx-green) !important;
+}
+
+html.user-logged-in .hero-sub {
+  color: #9cb1c8 !important;
+  font-size: 12px !important;
+}
+
+html.user-logged-in .hero-actions {
+  gap: 8px !important;
+}
+
+html.user-logged-in .btn-hero-privacy,
+html.user-logged-in .period-picker {
+  height: 40px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, .06) !important;
+  border: 1px solid rgba(255, 255, 255, .16) !important;
+  color: #e2eefb !important;
+  box-shadow: none !important;
+}
+
+html.user-logged-in .kpis-grid-6 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  margin-bottom: 18px !important;
+}
+
+html.user-logged-in .kpis-grid-6 .kpi {
+  min-height: 142px !important;
+  padding: 18px 19px 15px !important;
+  border-radius: 17px !important;
+  background: var(--nx-surface) !important;
+  border: 1px solid var(--nx-line) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .15) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html.user-logged-in .kpis-grid-6 .kpi:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--nx-line-strong) !important;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, .2) !important;
+}
+
+html.user-logged-in .kpis-grid-6 .kpi::after {
+  background: linear-gradient(90deg, transparent, rgba(118, 183, 255, .45), transparent) !important;
+}
+
+html.user-logged-in .kpis-grid-6 .kpi .row1 {
+  color: var(--nx-muted) !important;
+  font-size: 10px !important;
+  letter-spacing: .09em !important;
+}
+
+html.user-logged-in .kpis-grid-6 .kpi .val {
+  color: var(--nx-text) !important;
+  font-size: clamp(21px, 1.8vw, 29px) !important;
+}
+
+html.user-logged-in .kpis-grid-6 .kpi .sub,
+html.user-logged-in .kpis-grid-6 .kpi .sub span {
+  color: var(--nx-muted) !important;
+  border-color: var(--nx-line) !important;
+}
+
+html.user-logged-in .dashboard-main-grid {
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, .88fr) !important;
+  gap: 18px !important;
+}
+
+html.user-logged-in .dashboard-main-grid > div {
+  gap: 18px !important;
+}
+
+html.user-logged-in #pageContent :is(.dash-card, .dash-overview-card, .panel, .table-panel, .cards-summary-panel, .tx-footer-summary, .admin-toolbar-panel, .admin-kpis-row) {
+  background: var(--nx-surface) !important;
+  border: 1px solid var(--nx-line) !important;
+  border-radius: 17px !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .14) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html.user-logged-in #pageContent :is(.dash-card, .panel, .table-panel, .cards-summary-panel) {
+  padding: 20px !important;
+}
+
+html.user-logged-in .dash-card-head,
+html.user-logged-in .panel-head,
+html.user-logged-in .table-panel-head {
+  padding-bottom: 14px !important;
+  border-bottom: 1px solid var(--nx-line) !important;
+}
+
+html.user-logged-in .dash-card-title,
+html.user-logged-in .dash-card-title > div:last-child > div:first-child,
+html.user-logged-in .panel h2,
+html.user-logged-in .panel h3,
+html.user-logged-in .table-panel h2,
+html.user-logged-in .table-panel h3 {
+  color: var(--nx-text) !important;
+}
+
+html.user-logged-in #pageContent :is(.dash-card-title > div:last-child > div:last-child, .dash-card-subtitle, .panel-subtitle, .muted, .description, .subtitle) {
+  color: var(--nx-muted) !important;
+}
+
+html.user-logged-in #pageContent table {
+  border-collapse: separate !important;
+  border-spacing: 0 5px !important;
+}
+
+html.user-logged-in #pageContent table thead th {
+  color: var(--nx-faint) !important;
+  font-size: 10px !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  border: 0 !important;
+}
+
+html.user-logged-in #pageContent table tbody tr {
+  background: rgba(255, 255, 255, .025) !important;
+}
+
+html.user-logged-in #pageContent table tbody td {
+  color: var(--nx-text) !important;
+  border-top: 1px solid rgba(148, 163, 184, .07) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, .07) !important;
+}
+
+html.user-logged-in #pageContent :is(input:not([type=checkbox]):not([type=radio]), select, textarea) {
+  min-height: 40px !important;
+  background: #0b1728 !important;
+  border: 1px solid var(--nx-line) !important;
+  border-radius: 10px !important;
+  color: var(--nx-text) !important;
+  box-shadow: none !important;
+}
+
+html.user-logged-in #pageContent :is(input, select, textarea):focus {
+  border-color: rgba(118, 183, 255, .58) !important;
+  box-shadow: 0 0 0 3px rgba(118, 183, 255, .1) !important;
+  outline: none !important;
+}
+
+html.user-logged-in .btn-primary,
+html.user-logged-in button.save,
+html.user-logged-in .btn-open-os {
+  border-radius: 10px !important;
+  background: var(--nx-green) !important;
+  border: 0 !important;
+  color: #072318 !important;
+  box-shadow: 0 8px 20px rgba(24, 183, 125, .18) !important;
+}
+
+html.user-logged-in .btn-primary:hover,
+html.user-logged-in button.save:hover,
+html.user-logged-in .btn-open-os:hover {
+  background: #7ce8bc !important;
+  color: #052016 !important;
+  transform: translateY(-1px) !important;
+}
+
+html.user-logged-in .trial-dock-widget,
+html.user-logged-in .floating-mirror-exit-fab {
+  border-radius: 13px !important;
+  background: #14263a !important;
+  border: 1px solid var(--nx-line-strong) !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .25) !important;
+}
+
+/* Tema claro: mesma estrutura, superfície clara e texto preto de alto contraste. */
+html.user-logged-in.light,
+html.user-logged-in body.light,
+html.user-logged-in.light #persistentSystemBg {
+  --nx-bg: #eef3f8;
+  --nx-bg-deep: #e5edf5;
+  --nx-surface: #ffffff;
+  --nx-surface-2: #f7fafc;
+  --nx-surface-soft: rgba(255, 255, 255, .94);
+  --nx-line: rgba(15, 23, 42, .12);
+  --nx-line-strong: rgba(15, 23, 42, .22);
+  --nx-text: #0b1220;
+  --nx-muted: #44566b;
+  --nx-faint: #66788d;
+  background: var(--nx-bg) !important;
+  background-image: linear-gradient(135deg, #eef3f8 0%, #f8fbfd 60%, #e9f0f6 100%) !important;
+}
+
+html.user-logged-in.light .topheader,
+html.user-logged-in body.light .topheader {
+  background: rgba(255, 255, 255, .94) !important;
+  box-shadow: 0 8px 26px rgba(15, 23, 42, .08) !important;
+}
+
+html.user-logged-in.light .topheader .brand-title,
+html.user-logged-in body.light .topheader .brand-title,
+html.user-logged-in.light .header-user-name,
+html.user-logged-in body.light .header-user-name {
+  color: #0b1220 !important;
+}
+
+html.user-logged-in.light .header-minha-conta-btn,
+html.user-logged-in.light .topheader-row .icon-btn,
+html.user-logged-in.light .topheader-row #logoutBtn {
+  background: #f7fafc !important;
+  color: #334155 !important;
+}
+
+html.user-logged-in.light nav.menu.sidebar-menu,
+html.user-logged-in.light aside.menu.sidebar-menu,
+html.user-logged-in body.light nav.menu.sidebar-menu,
+html.user-logged-in body.light aside.menu.sidebar-menu {
+  background: #f8fbfd !important;
+  box-shadow: 8px 0 26px rgba(15, 23, 42, .06) !important;
+}
+
+html.user-logged-in.light .sidebar-workspace-header .workspace-name,
+html.user-logged-in body.light .sidebar-workspace-header .workspace-name,
+html.user-logged-in.light .sidebar-account-copy strong,
+html.user-logged-in body.light .sidebar-account-copy strong {
+  color: #0b1220 !important;
+}
+
+html.user-logged-in.light .sidebar-search,
+html.user-logged-in body.light .sidebar-search {
+  background: #ffffff !important;
+}
+
+html.user-logged-in.light nav.menu.sidebar-menu button[data-page],
+html.user-logged-in body.light nav.menu.sidebar-menu button[data-page],
+html.user-logged-in.light aside.menu.sidebar-menu button[data-page],
+html.user-logged-in body.light aside.menu.sidebar-menu button[data-page] {
+  color: #4b6076 !important;
+}
+
+html.user-logged-in.light nav.menu.sidebar-menu button[data-page].active,
+html.user-logged-in body.light nav.menu.sidebar-menu button[data-page].active,
+html.user-logged-in.light aside.menu.sidebar-menu button[data-page].active,
+html.user-logged-in body.light aside.menu.sidebar-menu button[data-page].active {
+  color: #064e3b !important;
+  background: linear-gradient(90deg, rgba(24, 183, 125, .16), rgba(24, 183, 125, .04)) !important;
+}
+
+html.user-logged-in.light .dashboard-welcome-hero,
+html.user-logged-in body.light .dashboard-welcome-hero {
+  background: linear-gradient(112deg, #ffffff 0%, #f8fbfd 100%) !important;
+  border-color: rgba(15, 23, 42, .1) !important;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, .08) !important;
+}
+
+html.user-logged-in.light .hero-greeting,
+html.user-logged-in body.light .hero-greeting,
+html.user-logged-in.light .hero-sub,
+html.user-logged-in body.light .hero-sub {
+  color: #0b1220 !important;
+}
+
+html.user-logged-in.light #pageContent :is(.kpi, .dash-card, .dash-overview-card, .panel, .table-panel, .cards-summary-panel, .tx-footer-summary, .admin-toolbar-panel, .admin-kpis-row),
+html.user-logged-in body.light #pageContent :is(.kpi, .dash-card, .dash-overview-card, .panel, .table-panel, .cards-summary-panel, .tx-footer-summary, .admin-toolbar-panel, .admin-kpis-row) {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, .12) !important;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, .07) !important;
+}
+
+html.user-logged-in.light #pageContent :is(h1, h2, h3, h4, h5, h6, p, span, strong, td, th, label, .description, .subtitle, .muted, .kpi-label, .dash-card-title, .kpi-title),
+html.user-logged-in body.light #pageContent :is(h1, h2, h3, h4, h5, h6, p, span, strong, td, th, label, .description, .subtitle, .muted, .kpi-label, .dash-card-title, .kpi-title) {
+  color: #000000 !important;
+}
+
+html.user-logged-in.light #pageContent :is(input:not([type=checkbox]):not([type=radio]), select, textarea),
+html.user-logged-in body.light #pageContent :is(input:not([type=checkbox]):not([type=radio]), select, textarea) {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #000000 !important;
+}
+
+html.user-logged-in.light #pageContent table tbody tr,
+html.user-logged-in body.light #pageContent table tbody tr {
+  background: #f8fafc !important;
+}
+
+/* Breakpoints finais do novo shell. */
+@media (max-width: 1180px) {
+  html.user-logged-in .kpis-grid-6 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  html.user-logged-in .dashboard-main-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 760px) {
+  html.user-logged-in .topheader,
+  html.user-logged-in .topheader-row { height: 64px !important; }
+  html.user-logged-in nav.menu.sidebar-menu,
+  html.user-logged-in aside.menu.sidebar-menu { top: 64px !important; height: calc(100vh - 64px) !important; }
+  html.user-logged-in .main,
+  html.user-logged-in.sidebar-collapsed .main,
+  html.user-logged-in body.sidebar-collapsed .main {
+    margin: 64px 0 0 !important;
+    width: 100% !important;
+    padding: 16px 12px 86px !important;
+  }
+  html.user-logged-in .topheader-row { padding: 0 14px !important; }
+  html.user-logged-in .header-minha-conta-btn span,
+  html.user-logged-in .topheader-row #logoutBtn span { display: none !important; }
+  html.user-logged-in .header-minha-conta-btn,
+  html.user-logged-in .topheader-row #logoutBtn { width: 38px !important; padding: 0 !important; justify-content: center !important; }
+  html.user-logged-in .header-user-badge { max-width: 42px !important; padding: 0 6px !important; }
+  html.user-logged-in .header-user-name { display: none !important; }
+  html.user-logged-in .dashboard-welcome-hero { padding: 22px 18px !important; }
+  html.user-logged-in .hero-content { align-items: flex-start !important; }
+  html.user-logged-in .hero-actions { width: 100% !important; }
+  html.user-logged-in .hero-actions > * { flex: 1 1 150px !important; }
+  html.user-logged-in .kpis-grid-6 { grid-template-columns: 1fr !important; gap: 10px !important; }
+  html.user-logged-in .kpis-grid-6 .kpi { min-height: 122px !important; }
+  html.user-logged-in #pageContent :is(.dash-card, .panel, .table-panel, .cards-summary-panel) { padding: 15px !important; }
+}
