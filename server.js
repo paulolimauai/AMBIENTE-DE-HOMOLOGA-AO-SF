@@ -1644,6 +1644,11 @@ const htmlContent = `<!DOCTYPE html>
     if (localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
       document.documentElement.classList.add('sidebar-collapsed');
     }
+    // Encaminha SEMPRE para a tela de login oficial (/login.html), sem exibir o login embutido antigo
+    window.__goToLogin = function() {
+      try { document.documentElement.classList.add('nexus-leaving'); } catch (e) {}
+      window.location.replace('/login.html');
+    };
     // Validação estrita: se a página de internet foi fechada e reaberta (sessionStorage vazio), invalida a sessão antiga
     var isSessionActive = sessionStorage.getItem('nexus_session_active') === 'true';
     if (!isSessionActive) {
@@ -1668,6 +1673,10 @@ const htmlContent = `<!DOCTYPE html>
           localStorage.removeItem('nexus_viewing_user');
         } catch(e){}
       }
+    }
+    // Sem sessão ativa (logout, sessão expirada ou aba reaberta): vai direto para a tela de login oficial
+    if (!isSessionActive) {
+      window.__goToLogin();
     }
     var cu = isSessionActive ? localStorage.getItem('nexus_cached_user') : null;
     var s = isSessionActive ? localStorage.getItem('nexus_session') : null;
@@ -1746,6 +1755,9 @@ button, a, input[type="button"], input[type="submit"], [role="button"], .card, .
 }
 html.user-logged-in #authPage { display: none !important; }
 html.user-logged-in #appMain { display: flex !important; flex-direction: column !important; min-height: 100vh !important; width: 100% !important; }
+/* Saindo para a tela de login oficial (/login.html): nada do app/login antigo pode aparecer durante a navegação */
+html.nexus-leaving,
+html.nexus-leaving * { visibility: hidden !important; }
 
 html:not(.user-logged-in) #appMain,
 html:not(.user-logged-in) .topheader {
@@ -14648,15 +14660,15 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </div>
       <button data-page="dashboard" class="menu-btn-user" title="Dashboard Financeiro Geral">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span>
-        <span class="label">Dashboard</span>
+        <span class="label">Visão geral</span>
       </button>
       <button data-page="transacoes" class="menu-btn-user" title="Extrato de Transações & Movimentações">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>
-        <span class="label">Transações</span>
+        <span class="label">Movimentações</span>
       </button>
       <button data-page="cartoes" class="menu-btn-user" title="Cartões de Crédito & Débito">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
-        <span class="label">Cartões</span>
+        <span class="label">Contas e cartões</span>
       </button>
 
       <!-- Seção: Planejamento Financeiro -->
@@ -14670,11 +14682,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </button>
       <button data-page="metas" class="menu-btn-user" title="Metas & Objetivos Financeiros">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></span>
-        <span class="label">Metas</span>
+        <span class="label">Metas financeiras</span>
       </button>
       <button data-page="relatorios" class="menu-btn-user" title="Relatórios Analíticos & Gráficos">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
-        <span class="label">Relatórios</span>
+        <span class="label">Análises</span>
       </button>
 
       <!-- Seção: Ferramentas & Fluxos -->
@@ -14684,15 +14696,15 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </div>
       <button data-page="recorrentes" class="menu-btn-user" title="Despesas & Assinaturas Recorrentes">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
-        <span class="label">Recorrentes</span>
+        <span class="label">Contas recorrentes</span>
       </button>
       <button data-page="importar" class="menu-btn-user" title="Importação de Extratos OFX e CSV">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
-        <span class="label">Importar</span>
+        <span class="label">Importar extrato</span>
       </button>
       <button data-page="anexos" class="menu-btn-user" title="Comprovantes & Documentos Anexados">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
-        <span class="label">Anexos</span>
+        <span class="label">Comprovantes</span>
       </button>
 
       <!-- Seção: Perfil & Preferências -->
@@ -18596,6 +18608,7 @@ window.switchAccountFromPaywall = function(e) {
     localStorage.removeItem('nexus_cached_user');
     localStorage.removeItem('nexus_token');
     localStorage.removeItem('nexus_viewing_user');
+    localStorage.removeItem('nexus_login_v5');
   } catch (err) {}
 
   const mobileDrawer = document.getElementById('mobileDrawer');
@@ -18603,29 +18616,8 @@ window.switchAccountFromPaywall = function(e) {
   if (mobileDrawer) mobileDrawer.classList.remove('open');
   if (mobileDrawerOverlay) mobileDrawerOverlay.classList.remove('show');
 
-  const appMain = document.getElementById('appMain');
-  const authPage = document.getElementById('authPage');
-  if (appMain) {
-    appMain.classList.remove('show');
-    appMain.style.display = 'none';
-  }
-  if (authPage) {
-    authPage.classList.add('show');
-    authPage.style.display = 'flex';
-  }
-
-  if (typeof window.switchAuthTab === 'function') {
-    try { window.switchAuthTab('login'); } catch (err) {}
-  }
-
-  const loginPassInput = document.getElementById('loginPass') || document.getElementById('authLoginPassword');
-  if (loginPassInput) loginPassInput.value = '';
-  const loginEmailInput = document.getElementById('loginEmail') || document.getElementById('authLoginEmail');
-  if (loginEmailInput) {
-    setTimeout(() => {
-      try { loginEmailInput.focus(); loginEmailInput.select(); } catch (err) {}
-    }, 50);
-  }
+  // Volta para a tela de login oficial (nunca para o login embutido antigo)
+  window.__goToLogin();
 };
 
 // Fechamento ao clicar fora bloqueado se estiver travado (shake feedback)
@@ -19840,6 +19832,8 @@ if (registerFormElem) {
 
 // Logout seguro global (Desktop & Mobile)
 window.handleAppLogout = async (isTimeout = false) => {
+  // Oculta o app imediatamente: evita piscar o login embutido antigo enquanto navega para /login.html
+  document.documentElement.classList.add('nexus-leaving');
   try {
     if (currentUser && typeof saveUserData === 'function') {
       saveUserData().catch(() => {});
@@ -19895,27 +19889,7 @@ window.handleAppLogout = async (isTimeout = false) => {
   if (mobileDrawer) mobileDrawer.classList.remove('open');
   if (mobileDrawerOverlay) mobileDrawerOverlay.classList.remove('show');
 
-  window.location.replace('/login.html');
-  return;
-
-  const appMain = document.getElementById('appMain');
-  const authPage = document.getElementById('authPage');
-  if (appMain) {
-    appMain.classList.remove('show');
-    appMain.style.display = 'none';
-  }
-  if (authPage) {
-    authPage.classList.add('show');
-    authPage.style.display = 'flex';
-  }
-  if (typeof window.switchAuthTab === 'function') {
-    try { window.switchAuthTab('login'); } catch (err) {}
-  }
-  if (isTimeout === true) {
-    showSessionTimeoutPopup();
-  } else {
-    showLogoutPopup('Você saiu da sua conta com segurança. Suas informações estão salvas e protegidas no banco de dados.');
-  }
+  window.__goToLogin();
 };
 
 const logoutButton = document.getElementById('logoutBtn');
@@ -30566,10 +30540,7 @@ window.applyPostLoginBg = function(theme) {
         localStorage.removeItem('nexus_viewing_user');
       } catch(e){}
       document.documentElement.classList.remove('user-logged-in');
-      const ap = document.getElementById('authPage');
-      const am = document.getElementById('appMain');
-      if (ap) { ap.classList.add('show'); ap.style.display = 'flex'; }
-      if (am) { am.classList.remove('show'); am.style.display = 'none'; }
+      window.__goToLogin();
       return;
     }
 
@@ -30643,20 +30614,7 @@ window.applyPostLoginBg = function(theme) {
     } catch(e){}
 
     document.documentElement.classList.remove('user-logged-in');
-    const am = document.getElementById('appMain');
-    const ap = document.getElementById('authPage');
-    if (am) { am.classList.remove('show'); am.style.display = 'none'; }
-    if (ap) { ap.classList.add('show'); ap.style.display = 'flex'; }
-
-    if (expiredReason === 'timeout') {
-      setTimeout(() => {
-        if (typeof showSessionTimeoutPopup === 'function') {
-          showSessionTimeoutPopup();
-        } else if (typeof showLogoutPopup === 'function') {
-          showLogoutPopup('Sua sessão expirou por inatividade (5 minutos sem movimentação). Faça login novamente.');
-        }
-      }, 250);
-    }
+    window.__goToLogin();
     return;
   }
 
@@ -30667,8 +30625,7 @@ window.applyPostLoginBg = function(theme) {
 
   if (!sessionEmail && !cachedUser) {
     document.documentElement.classList.remove('user-logged-in');
-    document.getElementById('appMain').classList.remove('show');
-    document.getElementById('authPage').classList.add('show');
+    window.__goToLogin();
     return;
   }
 
@@ -30688,13 +30645,8 @@ window.applyPostLoginBg = function(theme) {
     sessionStorage.removeItem('nexus_last_activity');
     document.documentElement.classList.remove('user-logged-in');
     document.documentElement.classList.remove('is-admin');
-    const appM = document.getElementById('appMain');
-    const authP = document.getElementById('authPage');
-    if (appM) { appM.classList.remove('show'); appM.style.display = 'none'; }
-    if (authP) { authP.classList.add('show'); authP.style.display = 'flex'; }
-    if (window.showAuthFeedback) {
-      window.showAuthFeedback('login', 'error', 'Conta Não Existe', 'Esta conta de usuário não existe no banco de dados. O acesso foi encerrado.');
-    }
+    localStorage.removeItem('nexus_login_v5');
+    window.__goToLogin();
     return;
   }
 
@@ -34859,7 +34811,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   const rootEntryGate = pathname === '/'
-    ? `<script>(function(){try{var active=sessionStorage.getItem('nexus_session_active')==='true';var session=localStorage.getItem('nexus_session')||localStorage.getItem('nexus_cached_user');var v5=localStorage.getItem('nexus_login_v5')==='true';if(!active||!session||!v5){window.location.replace('/login.html');}}catch(_){window.location.replace('/login.html');}})();</script>`
+    ? `<style>html.root-entry-pending body{visibility:hidden!important;}</style><script>(function(){var root=document.documentElement;root.classList.add('root-entry-pending');try{var active=sessionStorage.getItem('nexus_session_active')==='true';var session=localStorage.getItem('nexus_session')||localStorage.getItem('nexus_cached_user');var v5=localStorage.getItem('nexus_login_v5')==='true';if(!active||!session||!v5){window.location.replace('/login.html');}else{root.classList.remove('root-entry-pending');}}catch(_){window.location.replace('/login.html');}window.addEventListener('pageshow',function(ev){if(!ev.persisted)return;try{if(sessionStorage.getItem('nexus_session_active')!=='true'||!localStorage.getItem('nexus_session')&&!localStorage.getItem('nexus_cached_user')){root.classList.add('nexus-leaving');window.location.replace('/login.html');}}catch(_){}});})();</script>`
     : '';
   const responseHtml = rootEntryGate ? htmlContent.replace('<head>', '<head>' + rootEntryGate) : htmlContent;
   return sendTextResponse(res, 200, responseHtml, 'text/html; charset=utf-8', {

@@ -1,4 +1,5 @@
 node_modules/
+lance-flow/
 .env
 .env.txt
 system_logs.json
