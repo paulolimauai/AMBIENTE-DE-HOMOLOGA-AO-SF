@@ -5996,3 +5996,69 @@ html.user-logged-in[data-nx-palette] body.light #pageContent :is(.kpi, .dash-car
   background: linear-gradient(145deg, rgba(var(--nx-o1), .08), #ffffff 62%, rgba(var(--nx-o2), .06)) !important;
   border-color: rgba(var(--nx-o1), .24) !important;
 }
+
+/* Marca Nexus: alinhamento e leitura refinados no cabeçalho autenticado. */
+html.user-logged-in .topheader-row > div:first-child {
+  min-width: 0 !important;
+  gap: 13px !important;
+}
+
+html.user-logged-in .topheader .brand {
+  min-height: 48px !important;
+  padding: 0 13px 0 0 !important;
+  gap: 11px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html.user-logged-in .topheader .brand .logo {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  border-radius: 13px !important;
+  background: linear-gradient(145deg, #123c4b, #0d2737) !important;
+  border: 1px solid rgba(94, 224, 174, .34) !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .12) !important;
+}
+
+html.user-logged-in .topheader .brand .logo svg {
+  width: 25px !important;
+  height: 25px !important;
+}
+
+html.user-logged-in .topheader .brand .name {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  line-height: 1 !important;
+}
+
+html.user-logged-in .topheader .brand-title {
+  color: #f3f7fc !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: .17em !important;
+}
+
+html.user-logged-in .topheader .brand-sub {
+  display: block !important;
+  color: #8fa2b7 !important;
+  font-size: 8px !important;
+  font-weight: 700 !important;
+  letter-spacing: .19em !important;
+}
+
+html.user-logged-in.light .topheader .brand-title,
+html.user-logged-in body.light .topheader .brand-title { color: #142235 !important; }
+html.user-logged-in.light .topheader .brand-sub,
+html.user-logged-in body.light .topheader .brand-sub { color: #5c6d80 !important; }
+
+@media (max-width: 560px) {
+  html.user-logged-in .topheader .brand { gap: 8px !important; padding-right: 4px !important; }
+  html.user-logged-in .topheader .brand .logo { width: 36px !important; height: 36px !important; min-width: 36px !important; border-radius: 11px !important; }
+  html.user-logged-in .topheader .brand-title { font-size: 12px !important; letter-spacing: .14em !important; }
+  html.user-logged-in .topheader .brand-sub { font-size: 7px !important; letter-spacing: .13em !important; }
+}
