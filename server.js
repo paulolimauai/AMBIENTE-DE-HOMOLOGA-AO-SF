@@ -7505,7 +7505,7 @@ body.light .sub-paywall-overlay {
   width: 100%;
   max-width: 1020px;
   margin: auto;
-  padding: clamp(18px, 2.6vw, 30px);
+  padding: clamp(18px, 2.4vw, 26px);
   border-radius: 26px;
   background: var(--pw-glass);
   border: 1px solid var(--pw-line-strong);
@@ -7540,8 +7540,8 @@ body.light .sub-paywall-overlay {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px 20px;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
   border-bottom: 1px solid var(--pw-line);
 }
 .pw-brand { display: flex; align-items: flex-start; gap: 14px; flex: 1 1 360px; min-width: 0; }
@@ -7672,7 +7672,8 @@ body.light .sub-paywall-overlay {
 .pw-admin-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 
 /* ---------- Grade e cartoes ---------- */
-.pw-grid { display: grid; grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr); gap: 18px; align-items: start; }
+.pw-grid { display: grid; grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr); gap: 18px; align-items: stretch; }
+.pw-card-plan { display: flex; flex-direction: column; }
 .pw-card {
   min-width: 0;
   padding: clamp(16px, 2vw, 22px);
@@ -7748,18 +7749,19 @@ body.light .sub-paywall-overlay {
 .pw-summary { display: flex; flex-direction: column; gap: 9px; margin-top: 14px; padding: 13px 15px; border-radius: 14px; background: var(--pw-field); border: 1px solid var(--pw-line); }
 .pw-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; font-size: 13px; line-height: 1.4; color: var(--pw-text-2); }
 .pw-row strong { font-weight: 700; text-align: right; color: var(--pw-text); }
+.pw-summary .pw-row strong { white-space: nowrap; }
 .pw-row-discount span, .pw-row-discount strong { color: var(--pw-accent-2); }
-.pw-total { align-items: flex-end; margin-top: 2px; padding-top: 11px; border-top: 1px solid var(--pw-line); }
+.pw-total { align-items: center; margin-top: 2px; padding-top: 11px; border-top: 1px solid var(--pw-line); }
 .pw-total-label { display: block; font-size: 14px; font-weight: 800; color: var(--pw-text); }
-.pw-total small { display: block; margin-top: 2px; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--pw-muted); }
-.pw-total-val { font-size: 27px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; white-space: nowrap; color: var(--pw-accent-2); }
+.pw-total-val { font-size: 27px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; white-space: nowrap; color: var(--pw-accent-2); }
+.pw-total-note { display: block; margin-top: -4px; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--pw-muted); }
 
 /* ---------- Beneficios ---------- */
-.pw-benefits-title { margin: 20px 0 10px; font-size: 11.5px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
-.pw-benefits { display: flex; flex-direction: column; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.pw-benefits-title { margin: auto 0 10px; padding-top: 20px; font-size: 11.5px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
+.pw-benefits { display: flex; flex-direction: column; gap: 10px; margin: 0 0 18px; padding: 0; list-style: none; }
 .pw-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.4; color: var(--pw-text-2); }
 .pw-check { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 18px; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; color: var(--pw-accent-2); background: var(--pw-accent-soft); }
-.pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: 16px; padding: 12px 14px; border-radius: 14px; font-size: 12.5px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
+.pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: auto; padding: 12px 14px; border-radius: 14px; font-size: 12.5px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
 .pw-guarantee svg { flex: 0 0 auto; margin-top: 1px; color: var(--pw-accent-2); }
 .pw-guarantee strong { display: block; font-size: 13px; color: var(--pw-accent-2); }
 
@@ -7789,7 +7791,7 @@ body.light .sub-paywall-overlay {
 .pw-pay-info { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .pw-amount { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; }
 .pw-amount span { font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
-.pw-amount strong { font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; white-space: nowrap; color: var(--pw-accent-2); }
+.pw-amount strong { font-size: 30px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; white-space: nowrap; color: var(--pw-accent-2); }
 .pw-key { padding: 13px 15px; border-radius: 14px; background: var(--pw-field); border: 1px solid var(--pw-line); }
 .pw-field-label { display: block; margin-bottom: 7px; font-size: 11.5px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
 .pw-key-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 12px; }
@@ -7798,9 +7800,7 @@ body.light .sub-paywall-overlay {
 .pw-key-meta strong { color: var(--pw-text-2); }
 .pw-code { display: block; width: 100%; min-height: 98px; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; resize: none; overflow-y: auto; background: var(--pw-field); border: 1px solid var(--pw-line-strong); color: var(--pw-text); font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
 .pw-code-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
-.pw-note { display: flex; align-items: flex-start; gap: 9px; margin: 18px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--pw-text-2); }
-.pw-note svg { flex: 0 0 auto; margin-top: 2px; color: var(--pw-accent-2); }
-#subFormPix .pw-btn-primary { margin-top: 14px; }
+#subFormPix .pw-btn-primary { margin-top: 18px; }
 
 /* ---------- Aviso de pedido registrado ---------- */
 .pw-banner { margin-top: 16px; padding: 14px 16px; border-radius: 16px; background: var(--pw-amber-soft); border: 1px solid var(--pw-amber-line); }
@@ -16241,7 +16241,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div class="pw-grid">
 
         <!-- 1. Plano e resumo -->
-        <section class="pw-card" aria-labelledby="pwPlanTitle">
+        <section class="pw-card pw-card-plan" aria-labelledby="pwPlanTitle">
           <div class="pw-card-head">
             <span class="pw-step">1</span>
             <h3 id="pwPlanTitle">Escolha o plano</h3>
@@ -16262,7 +16262,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               <span class="pw-radio" aria-hidden="true"></span>
               <div class="pw-plan-body">
                 <div class="pw-plan-title">Plano Anual <span class="pw-tag">Economize R$ 30,00</span></div>
-                <div class="pw-plan-desc">12 meses &bull; equivale a R$ 12,50 por mês</div>
+                <div class="pw-plan-desc">12 meses &bull; equivale a R$&nbsp;12,50 por mês</div>
               </div>
               <div class="pw-plan-price"><strong>R$ 150,00</strong><span>por ano</span></div>
             </div>
@@ -16272,12 +16272,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <div class="pw-row"><span id="subSummaryPlanName">Plano Mensal (30 dias)</span><strong id="subSummaryPlanPrice">R$ 15,00</strong></div>
             <div class="pw-row pw-row-discount" id="subSummaryDiscountRow" style="display:none;"><span>Desconto do plano anual</span><strong>- R$ 30,00</strong></div>
             <div class="pw-row pw-total">
-              <div>
-                <span class="pw-total-label">Total a pagar</span>
-                <small id="subSummaryPaymentFrequency">Cobrança mês a mês, sem fidelidade</small>
-              </div>
+              <span class="pw-total-label">Total a pagar</span>
               <span class="pw-total-val" id="subSummaryTotalPrice">R$ 15,00</span>
             </div>
+            <small class="pw-total-note" id="subSummaryPaymentFrequency">Cobrança mês a mês, sem fidelidade</small>
           </div>
 
           <div class="pw-benefits-title">A licença inclui</div>
@@ -16353,11 +16351,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             </div>
 
             <input type="hidden" id="subPixTxIdInput" value="" />
-
-            <p class="pw-note">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-              <span><strong>Depois de pagar:</strong> toque no botão abaixo e envie o comprovante pelo WhatsApp. O acesso é liberado assim que o recebimento for confirmado.</span>
-            </p>
 
             <button type="button" class="pw-btn pw-btn-primary" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -18149,6 +18142,14 @@ window.unlockWithConfirmedReceipt = function(data) {
   if (dateTimeEl) {
     dateTimeEl.textContent = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' (Brasília)';
   }
+
+  // O cabeçalho deixa de falar em bloqueio: o acesso foi liberado.
+  const successTitleEl = document.getElementById('subModalTitle');
+  const successSubEl = document.getElementById('subModalSubtitle');
+  const successDotEl = document.getElementById('subHeaderStatusDot');
+  if (successTitleEl) successTitleEl.textContent = 'Assinatura ativada';
+  if (successSubEl) successSubEl.textContent = 'Seu pagamento foi confirmado e o acesso está liberado.';
+  if (successDotEl) { successDotEl.style.background = '#10B981'; successDotEl.style.boxShadow = '0 0 8px #10B981'; }
 
   window.hideTrialDockWidget();
   if (window.__trialTimerInterval) {
