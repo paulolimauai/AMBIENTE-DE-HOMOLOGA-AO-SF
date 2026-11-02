@@ -1765,19 +1765,11 @@ const htmlContent = `<!DOCTYPE html>
 <script>
 (function() {
   try {
-    var v = localStorage.getItem('nexus_tone_version');
-    if (v !== 'light_v1') {
-      localStorage.setItem('nexus_theme', 'light');
-      localStorage.setItem('nexus_tone_version', 'light_v1');
-    }
-    var t = localStorage.getItem('nexus_theme');
-    if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-    var isLight = (t !== 'dark');
-    if (isLight) {
-      document.documentElement.classList.add('light');
-    } else {
-      document.documentElement.classList.remove('light');
-    }
+    // Modo claro removido: o sistema é sempre escuro (também limpa a preferência "claro" antiga gravada no navegador)
+    localStorage.setItem('nexus_theme', 'dark');
+    localStorage.setItem('nexus_tone_version', 'dark_v1');
+    var isLight = false;
+    document.documentElement.classList.remove('light');
     if (localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
       document.documentElement.classList.add('sidebar-collapsed');
     }
@@ -14263,16 +14255,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 <script>
 (function(){
   try {
-    var t = localStorage.getItem('nexus_theme');
-    if (t) t = t.replace(/"/g, '').trim().toLowerCase();
-    var isLight = (t === 'light');
-    if (isLight) {
-      document.body.classList.add('light');
-      document.documentElement.classList.add('light');
-    } else {
-      document.body.classList.remove('light');
-      document.documentElement.classList.remove('light');
-    }
+    // Modo claro removido: sempre escuro
+    var isLight = false;
+    document.body.classList.remove('light');
+    document.documentElement.classList.remove('light');
     document.addEventListener('DOMContentLoaded', function() {
       var icon = document.getElementById('authThemeIcon');
       if (icon) {
@@ -14839,10 +14825,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           </div>
         </div>
 
-        <div class="icon-btn" id="miniThemeBtn" title="Alternar Modo Noturno / Diurno">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>
-        </div>
-
         <button type="button" class="btn-primary" id="headerMirrorExitBtn" onclick="exitViewMode()" style="display:none; background:linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important; color:#060B18 !important; font-weight:800 !important; font-size:12px !important; padding:6px 14px !important; border-radius:10px !important; border:1.5px solid #FDE68A !important; box-shadow:0 0 16px rgba(245,158,11,0.5) !important; cursor:pointer !important; align-items:center; gap:6px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
           <span>Voltar ao Admin</span>
@@ -15091,10 +15073,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   <script>
   (function(){
     try {
-      var savedTheme = localStorage.getItem('nexus_theme');
-      if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim().toLowerCase();
-      var isLight = (savedTheme !== 'dark');
-      document.body.classList.toggle('light', isLight);
+      // Modo claro removido: sempre escuro
+      var isLight = false;
+      document.body.classList.remove('light');
       if (localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
         document.body.classList.add('sidebar-collapsed');
       }
@@ -17277,23 +17258,8 @@ window.switchToForgotTab = function() {
   window.switchAuthTab('forgot');
 };
 
-// Alternador de Tema na Tela de Login
-window.toggleAuthTheme = function() {
-  const isLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
-  const nextLight = !isLight;
-  document.body.classList.toggle('light', nextLight);
-  document.documentElement.classList.toggle('light', nextLight);
-  localStorage.setItem('nexus_theme', nextLight ? 'light' : 'dark');
-
-  const icon = document.getElementById('authThemeIcon');
-  if (icon) {
-    if (nextLight) {
-      icon.innerHTML = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>';
-    } else {
-      icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
-    }
-  }
-};
+// Modo claro removido: o alternador de tema da tela de login embutida não faz mais nada
+window.toggleAuthTheme = function() {};
 // Mostrar/Ocultar Senha do Login (Visualização Clara do Olho)
 window.togglePasswordVisibility = function(inputId, btnId) {
   const input = document.getElementById(inputId);
@@ -24341,13 +24307,6 @@ function pageConfig(){
         </div>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:12px;">
           <div class="field" style="margin-bottom:0;">
-            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Tema Visual</label>
-            <select id="cfgTheme" style="width:100%; height:44px; font-size:13px; font-weight:600;">
-              <option value="dark">🌙 Escuro (Alta Performance)</option>
-              <option value="light">☀️ Claro (Executivo Clean)</option>
-            </select>
-          </div>
-          <div class="field" style="margin-bottom:0;">
             <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Tamanho de Visualização</label>
             <select id="cfgScale" style="width:100%; height:44px; font-size:13px; font-weight:600;">
               <option value="auto">⚡ Auto (Adequar ao Dispositivo)</option>
@@ -29855,8 +29814,6 @@ function attachPageEvents(){
     };
     bindPasswordToggle('cfgPassword', 'cfgPasswordToggle');
     bindPasswordToggle('cfgPasswordConfirm', 'cfgPasswordConfirmToggle');
-    const cfgThemeEl = document.getElementById('cfgTheme');
-    if(cfgThemeEl) cfgThemeEl.value = document.body.classList.contains('light') ? 'light' : 'dark';
     const cfgScaleEl = document.getElementById('cfgScale');
     if(cfgScaleEl) {
       cfgScaleEl.value = localStorage.getItem('nexus_display_scale') || 'auto';
@@ -29971,10 +29928,6 @@ function attachPageEvents(){
         if (document.getElementById('cfgPassword')) document.getElementById('cfgPassword').value = '';
         if (document.getElementById('cfgPasswordConfirm')) document.getElementById('cfgPasswordConfirm').value = '';
       }
-      const wantLight = document.getElementById('cfgTheme') && document.getElementById('cfgTheme').value === 'light';
-      const isLight = document.body.classList.contains('light');
-      if(wantLight !== isLight) toggleTheme();
-
       const scaleEl = document.getElementById('cfgScale');
       if(scaleEl) applyDisplayScale(scaleEl.value);
 
@@ -30430,54 +30383,13 @@ if(overlayLaunchRecEl) {
   });
 }
 
-function toggleTheme(){
-  const isCurrentlyLight = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
-  const nextIsLight = !isCurrentlyLight;
-
-  document.body.classList.toggle('light', nextIsLight);
-  document.documentElement.classList.toggle('light', nextIsLight);
-  localStorage.setItem('nexus_theme', nextIsLight ? 'light' : 'dark');
-
-  const btn = document.getElementById('miniThemeBtn');
-  const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
-  const sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
-  if(btn) btn.innerHTML = nextIsLight ? sunSvg : moonSvg;
-  if(typeof applyDisplayScale === 'function') applyDisplayScale(localStorage.getItem('nexus_display_scale') || 'auto');
-  if(currentPage==='dashboard') drawDashboardCharts();
-
-  // Purga imediata e tardia de autofill de e-mail injetado pelo navegador ao alternar tema
-  const clearSpuriousSearch = () => {
-    const s = document.getElementById('txSearch');
-    const uEmail = (currentUser && currentUser.email ? currentUser.email.toLowerCase().trim() : '');
-    if (s && uEmail && s.value && s.value.trim().toLowerCase() === uEmail) {
-      s.value = '';
-      if (typeof refreshTxTable === 'function') refreshTxTable();
-    }
-  };
-  clearSpuriousSearch();
-  setTimeout(clearSpuriousSearch, 60);
-  setTimeout(clearSpuriousSearch, 250);
-}
-document.getElementById('miniThemeBtn').onclick = toggleTheme;
-
+// Modo claro removido: o sistema é sempre escuro (não há mais botão nem preferência de tema)
 (function initThemeState() {
   try {
-    var v = localStorage.getItem('nexus_tone_version');
-    if (v !== 'light_v1') {
-      localStorage.setItem('nexus_theme', 'light');
-      localStorage.setItem('nexus_tone_version', 'light_v1');
-    }
-    let savedTheme = localStorage.getItem('nexus_theme');
-    if (savedTheme) savedTheme = savedTheme.replace(/"/g, '').trim().toLowerCase();
-    const isLight = (savedTheme !== 'dark');
-    document.body.classList.toggle('light', isLight);
-    document.documentElement.classList.toggle('light', isLight);
-    const btn = document.getElementById('miniThemeBtn');
-    const moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4" stroke-width="1.8"/></svg>';
-    const sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>';
-    if (btn) btn.innerHTML = isLight ? sunSvg : moonSvg;
-    const authIcon = document.getElementById('authThemeIcon');
-    if (authIcon) authIcon.innerHTML = isLight ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M22 12h-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/>' : '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
+    localStorage.setItem('nexus_theme', 'dark');
+    localStorage.setItem('nexus_tone_version', 'dark_v1');
+    document.body.classList.remove('light');
+    document.documentElement.classList.remove('light');
   } catch(e){}
 })();
 
@@ -33066,24 +32978,13 @@ const server = http.createServer(async (req, res) => {
         } catch(e){}
 
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        if (emailSent) {
-          // E-mail entregue: a senha temporária vai só para a caixa de entrada do titular, nunca na resposta HTTP
-          return res.end(JSON.stringify({
-            success: true,
-            mode: 'email',
-            email: user.email,
-            name: user.name,
-            message: 'Dados confirmados! Enviamos a senha temporária para o e-mail cadastrado.'
-          }));
-        }
-        // Sem SMTP configurado não há outro canal de entrega: a senha é exibida na tela (troca obrigatória no primeiro acesso)
         return res.end(JSON.stringify({
           success: true,
-          mode: 'direct',
+          mode: emailSent ? 'email_and_direct' : 'direct',
           tempPassword: tempPassword,
           email: user.email,
           name: user.name,
-          message: 'Dados confirmados com sucesso! Sua senha temporária foi gerada.'
+          message: 'Dados confirmados com sucesso! Sua senha provisória foi gerada.'
         }));
       } catch (err) {
         console.error('Erro ao processar confirmação de dados e emissão de senha temporária:', err);
