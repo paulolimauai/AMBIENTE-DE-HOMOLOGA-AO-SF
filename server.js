@@ -372,9 +372,9 @@ const LOGIN_FAIL_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_RULES = {
   'POST /api/login': { key: 'login', max: 30, windowMs: 15 * 60 * 1000 },
   'POST /api/register': { key: 'register', max: 10, windowMs: 60 * 60 * 1000 },
-  'POST /api/send-password': { key: 'recover', max: 6, windowMs: 60 * 60 * 1000 },
-  'POST /api/auth/verify-and-reset': { key: 'recover', max: 6, windowMs: 60 * 60 * 1000 },
-  'POST /api/forgot-password': { key: 'recover', max: 6, windowMs: 60 * 60 * 1000 },
+  'POST /api/send-password': { key: 'recover', max: 25, windowMs: 60 * 60 * 1000 },
+  'POST /api/auth/verify-and-reset': { key: 'recover', max: 25, windowMs: 60 * 60 * 1000 },
+  'POST /api/forgot-password': { key: 'recover', max: 25, windowMs: 60 * 60 * 1000 },
   'POST /api/auth/change-temp-password': { key: 'change-temp', max: 10, windowMs: 15 * 60 * 1000 },
   'POST /api/user/change-mandatory-password': { key: 'change-temp', max: 10, windowMs: 15 * 60 * 1000 },
   'GET /api/cpf/consultar': { key: 'cpf', max: 30, windowMs: 10 * 60 * 1000 },
@@ -17470,14 +17470,14 @@ window.handleLoginSubmit = async function(e) {
 
   if (res && data) {
     if (!res.ok || !data.success) {
-      if (data.errorType === 'user_not_found') {
+      if (data.errorType === 'user_not_found' || data.errorType === 'account_deleted') {
         if (emailWrap) emailWrap.classList.add('input-error');
         if (emailInput) emailInput.focus();
         window.showAuthFeedback(
           'login',
           'error',
-          'Conta de Usuário Não Existe',
-          'A conta de usuário informada (<strong>' + cleanEmail + '</strong>) <strong>não existe no banco de dados SQL Server</strong>. Caso o usuário tenha sido excluído do banco, o acesso é expressamente bloqueado.'
+          'Usuário Não Possui Conta Criada',
+          'O usuário informado (<strong>' + cleanEmail + '</strong>) <strong>não possui conta criada</strong>.'
         );
       } else if (data.errorType === 'invalid_password') {
         if (passWrap) passWrap.classList.add('input-error');
@@ -31824,18 +31824,14 @@ const server = http.createServer(async (req, res) => {
           user = localUsers.find(u => u && u.email && u.email.toLowerCase() === cleanEmail);
         }
 
-        // Validação estrita: Se o usuário foi excluído do SQL Server (e consequentemente do espelho), impede o login
-        if (isAccountDeleted(cleanEmail)) {
-          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, errorType: 'account_deleted', error: 'Esta conta foi excluída permanentemente.' }));
-        }
-        if (!user) {
-          console.log(`[LOGIN RECUSADO] Conta não existe no SQL Server: ${cleanEmail}`);
+        // Validação estrita: Se o usuário não existe ou não possui mais cadastro ativo, retorna mensagem padronizada sem expor exclusão
+        if (isAccountDeleted(cleanEmail) || !user) {
+          console.log(`[LOGIN RECUSADO] Usuário não possui conta criada: ${cleanEmail}`);
           res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({
             success: false,
             errorType: 'user_not_found',
-            error: 'Esta conta de usuário não existe no banco de dados.'
+            error: 'Usuário não possui conta criada.'
           }));
         }
 
@@ -32461,19 +32457,17 @@ const server = http.createServer(async (req, res) => {
           return res.end(JSON.stringify({ success: false, error: 'Informe um CPF válido com os 11 dígitos.' }));
         }
 
-        // Mesma resposta para qualquer falha de conferência: não revela se o e-mail/CPF existe, está desativado ou foi excluído
-        const recoveryDenied = () => {
-          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-          return res.end(JSON.stringify({ success: false, error: 'Não foi possível confirmar os dados informados. Verifique o e-mail ou CPF e a data de nascimento.' }));
+        const notFoundResponse = () => {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, errorType: 'user_not_found', error: 'Usuário não possui conta criada.' }));
         };
         const rateLimited = () => {
           res.writeHead(429, { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '3600' });
           return res.end(JSON.stringify({ success: false, errorType: 'rate_limited', error: 'Muitas tentativas de recuperação para esta conta. Tente novamente mais tarde.' }));
         };
-        // Limite por identificador informado: evita tentativas repetidas de adivinhar nascimento/CPF de uma mesma conta
         const preLimitKey = reqEmail ? ('recover-account:' + reqEmail) : ('recover-cpf:' + reqCpf);
-        if (checkRateLimit(preLimitKey, 5, 60 * 60 * 1000).limited) return rateLimited();
-        if (reqEmail && isAccountDeleted(reqEmail)) return recoveryDenied();
+        if (checkRateLimit(preLimitKey, 15, 60 * 60 * 1000).limited) return rateLimited();
+        if (reqEmail && isAccountDeleted(reqEmail)) return notFoundResponse();
 
         let user = null;
         let ambiguous = false;
@@ -32498,30 +32492,22 @@ const server = http.createServer(async (req, res) => {
           if (localMatches.length === 1) user = localMatches[0];
           else if (localMatches.length > 1) ambiguous = true;
         }
-        // CPF repetido em mais de uma conta: não arrisca redefinir a conta errada
-        if (ambiguous || !user || user.active === false || user.active === 0) {
-          return recoveryDenied();
+        if (ambiguous || !user) {
+          return notFoundResponse();
         }
 
         const cleanEmail = String(user.email || '').toLowerCase().trim();
         if (!cleanEmail || isAccountDeleted(cleanEmail)) {
-          return recoveryDenied();
+          return notFoundResponse();
         }
-        // Quem entra por CPF compartilha o mesmo limite por conta de quem entra por e-mail
+        if (user.active === false || user.active === 0) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, errorType: 'user_inactive', error: 'Esta conta está desativada pelo administrador.' }));
+        }
         const accountLimitKey = 'recover-account:' + cleanEmail;
-        if (accountLimitKey !== preLimitKey && checkRateLimit(accountLimitKey, 5, 60 * 60 * 1000).limited) return rateLimited();
+        if (accountLimitKey !== preLimitKey && checkRateLimit(accountLimitKey, 15, 60 * 60 * 1000).limited) return rateLimited();
 
-        // Conferência estrita: e-mail e CPF informados precisam ser idênticos aos da conta
         const rawUserCpf = String(user.cpf || '').replace(/\D/g, '');
-        if (reqCpf && (rawUserCpf.length !== 11 || !safeEqual(rawUserCpf, reqCpf))) {
-          return recoveryDenied();
-        }
-        if (reqEmail && !safeEqual(cleanEmail, reqEmail)) {
-          return recoveryDenied();
-        }
-
-        // Data de nascimento: quando a conta tem nascimento cadastrado, ele é obrigatório e precisa conferir.
-        // Se a conta NÃO tem nascimento, um único identificador (só e-mail ou só CPF) não basta: exige e-mail + CPF.
         const normalizeDateDigits = (d) => {
           if (!d) return '';
           const s = String(d).trim();
@@ -32532,13 +32518,38 @@ const server = http.createServer(async (req, res) => {
           return s.replace(/\D/g, '');
         };
         const userD = normalizeDateDigits(user.birth_date);
+
+        // Etapa de pré-verificação de cenário da conta (sem expor dados sensíveis)
+        if (parsed.step === 'check') {
+          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({
+            success: true,
+            exists: true,
+            hasBirthDate: !!userD,
+            hasCpf: rawUserCpf.length === 11,
+            hasEmail: !!cleanEmail
+          }));
+        }
+
+        // Conferência estrita conforme cada cenário da conta
+        if (reqCpf && (rawUserCpf.length !== 11 || !safeEqual(rawUserCpf, reqCpf))) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, errorType: 'invalid_cpf_match', error: 'O CPF informado não corresponde a esta conta.' }));
+        }
+        if (reqEmail && !safeEqual(cleanEmail, reqEmail)) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, errorType: 'invalid_email_match', error: 'O e-mail informado não corresponde a esta conta.' }));
+        }
+
         const reqD = normalizeDateDigits(birth_date);
         if (userD) {
           if (!reqD || !safeEqual(userD, reqD)) {
-            return recoveryDenied();
+            res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, errorType: 'invalid_birth_date', error: 'Data de nascimento incorreta para esta conta.' }));
           }
         } else if (!(reqEmail && reqCpf)) {
-          return recoveryDenied();
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, errorType: 'missing_second_factor', error: 'Confirme o e-mail e o CPF cadastrados nesta conta.' }));
         }
         const recoveryMethod = (reqEmail && reqCpf) ? 'e-mail e CPF' : (reqCpf ? 'CPF' : 'e-mail');
 
@@ -33199,8 +33210,8 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, corsHeaders, dataAccess.status, { success: false, error: dataAccess.error });
     }
     if (isAccountDeleted(email)) {
-      res.writeHead(410, { ...corsHeaders, 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ success: false, error: 'Esta conta foi excluída permanentemente.' }));
+      res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ success: false, errorType: 'user_not_found', error: 'Usuário não possui conta criada.' }));
     }
     const localData = getLocalData(email);
     if (pool) {
@@ -33285,8 +33296,8 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, corsHeaders, saveAccess.status, { success: false, error: saveAccess.error });
       }
       if (isAccountDeleted(cleanEmail)) {
-        res.writeHead(410, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: 'Esta conta foi excluída permanentemente.' }));
+        res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, errorType: 'user_not_found', error: 'Usuário não possui conta criada.' }));
       }
 
       // Soberania do usuário: os dados salvos (incluindo exclusões intencionais) são a verdade absoluta da conta
