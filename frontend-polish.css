@@ -6471,3 +6471,7 @@ html.user-logged-in.light .sidebar-search kbd {
     .user-card-4k > .user-card-right { justify-content: flex-start !important; }
   }
 }
+
+/* Atualizar a pagina: o sistema e sempre escuro, entao a barra de rolagem e os controles nativos tambem.
+   Antes a barra clara aparecia como uma faixa de outra cor colada no fundo, principalmente atras do vidro do pagamento. */
+html:not(.light) { color-scheme: dark; }
