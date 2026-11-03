@@ -267,107 +267,77 @@
   .os-wrap { display: flex; justify-content: center; margin-top: 12px; width: 100%; }
   .os {
     position: relative;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    width: 100%; padding: 10px 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    width: 100%; padding: 11px 14px;
     text-decoration: none; color: var(--ink);
-    background: linear-gradient(135deg, rgba(255,255,255,.08) 0%, rgba(10,12,26,.62) 100%);
-    border: 1px solid rgba(255,255,255,.16);
-    border-radius: 16px;
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    background: linear-gradient(135deg, rgba(255,255,255,.07) 0%, rgba(9,11,24,.68) 100%);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 14px;
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
     box-shadow:
-      0 12px 28px -8px rgba(0,0,0,.45),
-      0 0 0 1px rgba(var(--a-rgb), .10),
-      inset 0 1px 0 rgba(255,255,255,.20);
-    transition: transform .2s cubic-bezier(.2,.8,.2,1), border-color .2s ease, box-shadow .2s ease, background .2s ease;
+      0 10px 26px -8px rgba(0,0,0,.48),
+      inset 0 1px 0 rgba(255,255,255,.16);
+    transition: transform .18s cubic-bezier(.2,.8,.2,1), border-color .2s ease, box-shadow .2s ease, background .2s ease;
     cursor: pointer;
   }
-  .os::before {
-    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-    background: radial-gradient(180px circle at 18% 50%, rgba(var(--a-rgb), .16), transparent 70%);
-    opacity: .85; transition: opacity .2s ease;
-  }
   .os:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(135deg, rgba(var(--a-rgb), .16) 0%, rgba(14,16,34,.78) 100%);
-    border-color: rgba(var(--a-rgb), .58);
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(var(--a-rgb), .14) 0%, rgba(13,15,32,.82) 100%);
+    border-color: rgba(var(--a-rgb), .52);
     box-shadow:
-      0 16px 34px -8px rgba(var(--a-rgb), .28),
-      0 0 0 1px rgba(var(--a-rgb), .24),
-      inset 0 1px 0 rgba(255,255,255,.30);
+      0 14px 32px -8px rgba(var(--a-rgb), .26),
+      inset 0 1px 0 rgba(255,255,255,.26);
     text-decoration: none; color: #fff;
   }
   .os:active { transform: translateY(0); }
   .os-left {
     position: relative; z-index: 1;
-    display: flex; align-items: center; gap: 11px; min-width: 0; flex: 1;
+    display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;
   }
   .os-ico {
-    position: relative;
-    width: 38px; height: 38px; border-radius: 12px; flex: none;
+    width: 36px; height: 36px; border-radius: 10px; flex: none;
     display: grid; place-items: center;
-    background: linear-gradient(145deg, rgba(var(--a-rgb), .34), rgba(var(--a-rgb), .10));
-    border: 1px solid rgba(var(--a-rgb), .52);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.38), 0 6px 14px rgba(var(--a-rgb), .24);
+    background: linear-gradient(145deg, rgba(var(--a-rgb), .24), rgba(var(--a-rgb), .07));
+    border: 1px solid rgba(var(--a-rgb), .38);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
     color: var(--accent-light);
-    transition: transform .2s ease, background .2s ease, color .2s ease;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
   }
   .os:hover .os-ico {
-    transform: scale(1.04);
-    background: linear-gradient(145deg, var(--accent-light), var(--accent));
-    color: var(--on-accent);
-  }
-  .os-ico svg { width: 18px; height: 18px; display: block; }
-  .os-dot {
-    position: absolute; top: -2px; right: -2px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: #34d399;
-    border: 2px solid #0e1022;
-    box-shadow: 0 0 8px rgba(52, 211, 153, .9);
-  }
-  .os-copy {
-    display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; text-align: left; min-width: 0;
-  }
-  .os-head {
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  }
-  .os-title {
-    font: 700 13px var(--font-body); color: var(--ink); letter-spacing: -.005em;
-  }
-  .os-badge {
-    font: 700 9px/1 var(--font-body); letter-spacing: .06em; text-transform: uppercase;
-    padding: 3px 6px; border-radius: 99px;
-    color: #6ee7b7; background: rgba(16, 185, 129, .14);
-    border: 1px solid rgba(52, 211, 153, .32);
-  }
-  .os-sub {
-    font: 500 11.2px var(--font-body); color: var(--muted); margin-top: 2px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
-  }
-  .os-actions {
-    position: relative; z-index: 1;
-    display: flex; align-items: center; gap: 6px; flex: none;
-  }
-  .os-chip {
-    display: inline-flex; align-items: center; gap: 4px;
-    height: 28px; padding: 0 10px; border-radius: 9px;
-    font: 600 11.2px var(--font-body); color: #dce0f2;
-    background: rgba(255,255,255,.07);
-    border: 1px solid rgba(255,255,255,.16);
-    transition: background .18s ease, border-color .18s ease, color .18s ease, transform .15s ease;
-  }
-  .os-chip:hover {
-    background: rgba(var(--a-rgb), .28);
-    border-color: var(--accent-light);
-    color: #fff;
-  }
-  .os-chip.primary {
-    color: var(--on-accent); font-weight: 700;
     background: linear-gradient(145deg, var(--accent-light), var(--accent));
     border-color: transparent;
-    box-shadow: 0 4px 12px rgba(var(--a-rgb), .28);
+    color: var(--on-accent);
   }
-  .os-chip.primary:hover { filter: brightness(1.06); }
+  .os-ico svg { width: 17px; height: 17px; display: block; }
+  .os-copy {
+    display: flex; flex-direction: column; align-items: flex-start; line-height: 1.22; text-align: left; min-width: 0;
+  }
+  .os-title {
+    font: 600 13.2px var(--font-body); color: var(--ink); letter-spacing: -.005em;
+  }
+  .os-sub {
+    font: 400 11.5px var(--font-body); color: var(--muted); margin-top: 1px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+  }
+  .os-cta {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; gap: 6px; flex: none;
+    height: 30px; padding: 0 12px; border-radius: 8px;
+    font: 600 11.8px var(--font-body); letter-spacing: .01em;
+    color: var(--accent-light);
+    background: rgba(var(--a-rgb), .14);
+    border: 1px solid rgba(var(--a-rgb), .34);
+    transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .os:hover .os-cta {
+    color: var(--on-accent);
+    background: linear-gradient(145deg, var(--accent-light), var(--accent));
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(var(--a-rgb), .32);
+  }
+  .os-cta svg { width: 13px; height: 13px; transition: transform .2s ease; }
+  .os:hover .os-cta svg { transform: translateX(2px); }
 
   a { color: var(--accent); text-decoration: none; font-weight: 600; }
   a:hover { color: var(--accent-light); text-decoration: underline; text-underline-offset: 3px; }
@@ -780,23 +750,19 @@
             <a href="mailto:suporte.paulolima@outlook.com">suporte.paulolima@outlook.com</a>
           </p>
           <div class="os-wrap">
-            <a class="os" href="#" id="os" title="Abrir Ordem de Serviço ou consultar protocolo" aria-label="Central de Ordem de Serviço: Abrir chamado ou consultar protocolo">
+            <a class="os" href="#" id="os" title="Abrir chamado técnico na Central de O.S." aria-label="Central de O.S.: Abertura de chamado técnico">
               <span class="os-left">
                 <span class="os-ico" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M8.5 11h7M8.5 14.5h4.5"/></svg>
-                  <span class="os-dot"></span>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M8.5 11h7M8.5 14.5h4.5"/></svg>
                 </span>
                 <span class="os-copy">
-                  <span class="os-head">
-                    <span class="os-title">Central de O.S.</span>
-                    <span class="os-badge">Online</span>
-                  </span>
-                  <span class="os-sub">Chamado técnico ou protocolo</span>
+                  <span class="os-title">Central de O.S.</span>
+                  <span class="os-sub">Abertura de chamado técnico</span>
                 </span>
               </span>
-              <span class="os-actions">
-                <span class="os-chip" data-ostab-go="consultar" title="Consultar protocolo existente">Protocolo</span>
-                <span class="os-chip primary" data-ostab-go="abrir" title="Abrir nova Ordem de Serviço">Abrir O.S.</span>
+              <span class="os-cta">
+                <span>Abrir chamado</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </span>
             </a>
           </div>
@@ -1626,21 +1592,17 @@
       '<div class="gmodal-card osmodal-card">' +
         '<span class="gmodal-glow" aria-hidden="true"></span>' +
         '<div class="gmodal-body">' +
-          '<div class="gmodal-head" style="margin-bottom:8px;">' +
+          '<div class="gmodal-head" style="margin-bottom:14px;">' +
             '<div class="gmodal-brand">' +
               '<span class="gmodal-badge" aria-hidden="true">' + GLASS_ICONS.shield + '</span>' +
               '<div>' +
-                '<span class="gmodal-kicker">Central de Atendimento</span>' +
-                '<span class="gmodal-step">Recepção Direta na Administração</span>' +
+                '<span class="gmodal-kicker">Central de O.S.</span>' +
+                '<span class="gmodal-step">Abertura de Chamado Técnico</span>' +
               '</div>' +
             '</div>' +
             '<button type="button" class="gmodal-close" id="osmodal-close" aria-label="Fechar">' +
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
             '</button>' +
-          '</div>' +
-          '<div class="osmodal-tabs">' +
-            '<button type="button" class="osmodal-tab active" data-ostab="abrir">Abrir O.S. Rápida</button>' +
-            '<button type="button" class="osmodal-tab" data-ostab="consultar">Consultar Protocolo</button>' +
           '</div>' +
           '<div id="osmodal-pane-abrir">' +
             '<span class="osmodal-quick-lbl">Escolha rápida em 1 clique:</span>' +
@@ -1704,17 +1666,16 @@
           '</div>' +
           '<div id="osmodal-pane-sucesso" hidden>' +
             '<div class="osmodal-proto-box">' +
-              '<span class="gmodal-kicker">Ordem de Serviço Registrada com Sucesso</span>' +
+              '<span class="gmodal-kicker">Chamado Técnico Registrado com Sucesso</span>' +
               '<div class="osmodal-proto-num" id="osmodal-proto-num">OS-000000</div>' +
-              '<p style="font-size:13px;color:#d6daec;margin-bottom:14px;">Sua solicitação já está na Caixa de Recepção do Administrador.</p>' +
+              '<p style="font-size:13px;color:#d6daec;margin-bottom:14px;">Sua solicitação já foi encaminhada para a Administração.</p>' +
               '<div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">' +
-                '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-copy-proto" style="height:38px;font-size:13px;">Copiar Protocolo</button>' +
-                '<button type="button" class="gmodal-btn gmodal-btn-ok" id="osmodal-track-proto" style="height:38px;font-size:13px;">Acompanhar Status</button>' +
+                '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-copy-proto" style="height:38px;font-size:13px;">Copiar Número</button>' +
               '</div>' +
             '</div>' +
             '<div class="gmodal-actions" style="margin-top:14px;">' +
               '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-done">Fechar</button>' +
-              '<button type="button" class="gmodal-btn gmodal-btn-ok" id="osmodal-new-os">Abrir outra O.S.</button>' +
+              '<button type="button" class="gmodal-btn gmodal-btn-ok" id="osmodal-new-os">Abrir outro chamado</button>' +
             '</div>' +
           '</div>' +
           '<div id="osmodal-pane-consultar" hidden>' +
@@ -1836,13 +1797,8 @@
     $('#osmodal-copy-proto', ov).addEventListener('click', () => {
       const proto = $('#osmodal-proto-num', ov).textContent.trim();
       if (navigator.clipboard) navigator.clipboard.writeText(proto).catch(() => {});
-      $('#osmodal-copy-proto', ov).textContent = 'Protocolo Copiado!';
-      window.setTimeout(() => { $('#osmodal-copy-proto', ov).textContent = 'Copiar Protocolo'; }, 1800);
-    });
-
-    $('#osmodal-track-proto', ov).addEventListener('click', () => {
-      switchTab('consultar');
-      $('#osmodal-form-consultar', ov).requestSubmit();
+      $('#osmodal-copy-proto', ov).textContent = 'Número Copiado!';
+      window.setTimeout(() => { $('#osmodal-copy-proto', ov).textContent = 'Copiar Número'; }, 1800);
     });
 
     // Depois de salvar: abrir outra O.S. com todos os campos vazios (ou fechar)
@@ -1961,8 +1917,7 @@
   });
   $('#os').addEventListener('click', event => {
     event.preventDefault();
-    const chip = event.target.closest('[data-ostab-go]');
-    window.nexusAuth.openOS(chip ? chip.dataset.ostabGo : 'abrir');
+    window.nexusAuth.openOS('abrir');
   });
 
   try {
