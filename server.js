@@ -7439,9 +7439,13 @@ body.paywall-locked #appMain {
   --pw-danger-soft: rgba(239, 68, 68, 0.14);
   --pw-danger-line: rgba(248, 113, 113, 0.45);
   --pw-shadow: 0 32px 90px -26px rgba(0, 0, 0, 0.8);
-  --pw-overlay: rgba(3, 8, 18, 0.52);
-  --pw-orb-a: rgba(16, 185, 129, 0.36);
-  --pw-orb-b: rgba(56, 189, 248, 0.26);
+  /* Fundo atras do vidro = as cores da paleta escolhida em "Cores do fundo" (--nx-o1..4 vem do <html>).
+     Os numeros depois da virgula sao so o padrao caso a paleta ainda nao tenha sido aplicada. */
+  --pw-overlay: rgba(3, 6, 14, 0.40);
+  --pw-orb-a: rgba(var(--nx-o1, 16, 185, 129), 0.34);
+  --pw-orb-b: rgba(var(--nx-o2, 56, 189, 248), 0.30);
+  --pw-orb-c: rgba(var(--nx-o3, 56, 189, 248), 0.22);
+  --pw-orb-d: rgba(var(--nx-o4, 16, 185, 129), 0.20);
 }
 body.light .sub-paywall-overlay {
   --pw-text: #0F172A;
@@ -7468,9 +7472,11 @@ body.light .sub-paywall-overlay {
   --pw-danger-soft: rgba(239, 68, 68, 0.10);
   --pw-danger-line: rgba(220, 38, 38, 0.40);
   --pw-shadow: 0 30px 80px -30px rgba(15, 23, 42, 0.35);
-  --pw-overlay: rgba(226, 232, 240, 0.55);
-  --pw-orb-a: rgba(16, 185, 129, 0.26);
-  --pw-orb-b: rgba(56, 189, 248, 0.24);
+  --pw-overlay: rgba(226, 232, 240, 0.50);
+  --pw-orb-a: rgba(var(--nx-o1, 16, 185, 129), 0.26);
+  --pw-orb-b: rgba(var(--nx-o2, 56, 189, 248), 0.24);
+  --pw-orb-c: rgba(var(--nx-o3, 56, 189, 248), 0.18);
+  --pw-orb-d: rgba(var(--nx-o4, 16, 185, 129), 0.16);
 }
 
 /* Camada de fundo: o app aparece desfocado atras do vidro; os focos coloridos dao o reflexo. */
@@ -7487,11 +7493,13 @@ body.light .sub-paywall-overlay {
   overscroll-behavior: contain;
   color: var(--pw-text);
   background:
-    radial-gradient(62% 52% at 14% 8%, var(--pw-orb-a), transparent 70%),
-    radial-gradient(54% 48% at 90% 94%, var(--pw-orb-b), transparent 72%),
+    radial-gradient(62% 58% at 4% 0%, var(--pw-orb-a), transparent 72%),
+    radial-gradient(56% 56% at 100% 100%, var(--pw-orb-b), transparent 72%),
+    radial-gradient(42% 42% at 72% 0%, var(--pw-orb-c), transparent 72%),
+    radial-gradient(40% 40% at 24% 100%, var(--pw-orb-d), transparent 72%),
     var(--pw-overlay);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   animation: pwOverlayIn 0.26s ease both;
 }
 .sub-paywall-overlay.show { display: flex; }
@@ -14164,7 +14172,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261102-paywall-glass" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261102-refresh-cor" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
