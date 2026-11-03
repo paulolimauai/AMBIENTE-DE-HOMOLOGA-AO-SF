@@ -7441,6 +7441,7 @@ body.paywall-locked #appMain {
   --pw-shadow: 0 32px 90px -26px rgba(0, 0, 0, 0.8);
   /* Fundo atras do vidro = as cores da paleta escolhida em "Cores do fundo" (--nx-o1..4 vem do <html>).
      Os numeros depois da virgula sao so o padrao caso a paleta ainda nao tenha sido aplicada. */
+  --pw-bar: rgba(8, 16, 28, 0.84);
   --pw-overlay: rgba(3, 6, 14, 0.40);
   --pw-orb-a: rgba(var(--nx-o1, 16, 185, 129), 0.34);
   --pw-orb-b: rgba(var(--nx-o2, 56, 189, 248), 0.30);
@@ -7472,6 +7473,7 @@ body.light .sub-paywall-overlay {
   --pw-danger-soft: rgba(239, 68, 68, 0.10);
   --pw-danger-line: rgba(220, 38, 38, 0.40);
   --pw-shadow: 0 30px 80px -30px rgba(15, 23, 42, 0.35);
+  --pw-bar: rgba(255, 255, 255, 0.88);
   --pw-overlay: rgba(226, 232, 240, 0.50);
   --pw-orb-a: rgba(var(--nx-o1, 16, 185, 129), 0.26);
   --pw-orb-b: rgba(var(--nx-o2, 56, 189, 248), 0.24);
@@ -7492,6 +7494,8 @@ body.light .sub-paywall-overlay {
   overflow-y: auto;
   overscroll-behavior: contain;
   color: var(--pw-text);
+  /* O app usa espacamento negativo entre letras; em texto pequeno isso aperta e corta a leitura. */
+  letter-spacing: 0;
   background:
     radial-gradient(62% 58% at 4% 0%, var(--pw-orb-a), transparent 72%),
     radial-gradient(56% 56% at 100% 100%, var(--pw-orb-b), transparent 72%),
@@ -7511,7 +7515,7 @@ body.light .sub-paywall-overlay {
   isolation: isolate;
   box-sizing: border-box;
   width: 100%;
-  max-width: 1020px;
+  max-width: 1080px;
   margin: auto;
   padding: clamp(18px, 2.4vw, 26px);
   border-radius: 26px;
@@ -7547,12 +7551,12 @@ body.light .sub-paywall-overlay {
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px 20px;
-  padding-bottom: 18px;
+  gap: 14px 20px;
+  padding-bottom: 16px;
   margin-bottom: 18px;
   border-bottom: 1px solid var(--pw-line);
 }
-.pw-brand { display: flex; align-items: flex-start; gap: 14px; flex: 1 1 360px; min-width: 0; }
+.pw-brand { display: flex; align-items: flex-start; gap: 14px; flex: 1 1 420px; min-width: 0; }
 .pw-logo {
   display: flex;
   align-items: center;
@@ -7570,15 +7574,16 @@ body.light .sub-paywall-overlay {
 .pw-eyebrow {
   display: block;
   margin-bottom: 4px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.09em;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--pw-accent-2);
 }
 .pw-titles h2 {
   margin: 0;
-  font-size: clamp(19px, 2.3vw, 24px);
+  font-size: clamp(20px, 2.2vw, 25px);
   font-weight: 800;
   line-height: 1.22;
   letter-spacing: -0.01em;
@@ -7587,10 +7592,10 @@ body.light .sub-paywall-overlay {
   overflow-wrap: anywhere;
 }
 .pw-titles p {
-  max-width: 64ch;
-  margin: 8px 0 0;
-  font-size: 13px;
-  line-height: 1.55;
+  max-width: 78ch;
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--pw-text-2);
 }
 .pw-actions {
@@ -7611,11 +7616,11 @@ body.light .sub-paywall-overlay {
   min-width: 0;
   max-width: 100%;
   box-sizing: border-box;
-  padding: 8px 12px;
+  padding: 8px 13px;
   border-radius: 12px;
   background: var(--pw-card);
   border: 1px solid var(--pw-line);
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.3;
   color: var(--pw-text);
@@ -7637,7 +7642,7 @@ body.light .sub-paywall-overlay {
   background: var(--pw-card);
   color: var(--pw-text);
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
   line-height: 1.25;
   text-align: center;
@@ -7650,7 +7655,7 @@ body.light .sub-paywall-overlay {
 .pw-btn:active { transform: none; }
 .pw-btn:focus-visible, .pw-plan:focus-visible, .pw-code:focus-visible { outline: 2px solid var(--pw-sky); outline-offset: 2px; }
 .pw-btn:disabled { opacity: 0.7; cursor: progress; transform: none; }
-.pw-btn-sm { min-height: 32px; padding: 5px 11px; font-size: 12px; border-radius: 9px; }
+.pw-btn-sm { min-height: 34px; padding: 5px 12px; font-size: 12.5px; border-radius: 10px; }
 .pw-btn-danger { color: var(--pw-danger); background: var(--pw-danger-soft); border-color: var(--pw-danger-line); }
 .pw-btn-amber { color: var(--pw-amber); background: var(--pw-amber-soft); border-color: var(--pw-amber-line); }
 .pw-btn-sky { color: var(--pw-sky); background: var(--pw-sky-soft); border-color: var(--pw-sky-line); }
@@ -7660,8 +7665,8 @@ body.light .sub-paywall-overlay {
 .pw-btn-primary {
   width: 100%;
   min-height: 54px;
-  padding: 13px 20px;
-  font-size: 15px;
+  padding: 13px 22px;
+  font-size: 15.5px;
   font-weight: 800;
   color: #FFFFFF;
   border: 1px solid rgba(255, 255, 255, 0.28);
@@ -7676,11 +7681,11 @@ body.light .sub-paywall-overlay {
 /* ---------- Controle do administrador ---------- */
 .pw-admin { margin-bottom: 18px; border-radius: 16px; background: linear-gradient(135deg, var(--pw-amber-soft), var(--pw-accent-soft)); border: 1px solid var(--pw-amber-line); }
 .pw-admin-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 14px; padding: 12px 14px; }
-.pw-admin-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.35; color: var(--pw-amber); }
+.pw-admin-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.35; color: var(--pw-amber); }
 .pw-admin-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 
 /* ---------- Grade e cartoes ---------- */
-.pw-grid { display: grid; grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr); gap: 18px; align-items: stretch; }
+.pw-grid { display: grid; grid-template-columns: minmax(300px, 0.92fr) minmax(0, 1.08fr); gap: 18px; align-items: stretch; }
 .pw-card-plan { display: flex; flex-direction: column; }
 .pw-card {
   min-width: 0;
@@ -7691,17 +7696,17 @@ body.light .sub-paywall-overlay {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 .pw-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--pw-line); }
-.pw-card-head h3 { margin: 0; font-size: 14.5px; font-weight: 800; letter-spacing: 0.01em; line-height: 1.3; color: var(--pw-text); }
+.pw-card-head h3 { margin: 0; font-size: 15.5px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
 .pw-card-head .pw-chip { margin-left: auto; }
 .pw-step {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 24px;
-  width: 24px;
-  height: 24px;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
   color: var(--pw-accent-2);
   background: var(--pw-accent-soft);
@@ -7711,9 +7716,9 @@ body.light .sub-paywall-overlay {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 4px 11px;
   border-radius: 999px;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.25;
   color: var(--pw-accent-2);
@@ -7728,8 +7733,8 @@ body.light .sub-paywall-overlay {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
-  padding: 14px 16px;
+  gap: 6px 12px;
+  padding: 13px 15px;
   border-radius: 16px;
   cursor: pointer;
   background: var(--pw-card);
@@ -7745,99 +7750,123 @@ body.light .sub-paywall-overlay {
 .pw-radio { display: flex; align-items: center; justify-content: center; flex: 0 0 20px; width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--pw-faint); transition: all 0.2s ease; }
 .pw-plan.active .pw-radio { border-color: var(--pw-accent); background: var(--pw-accent); }
 .pw-plan.active .pw-radio::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #FFFFFF; }
-.pw-plan-body { flex: 1 1 140px; min-width: 0; }
-.pw-plan-title { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14.5px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
-.pw-plan-desc { margin-top: 3px; font-size: 12.5px; line-height: 1.4; color: var(--pw-muted); }
+.pw-plan-body { flex: 1 1 150px; min-width: 0; }
+.pw-plan-title { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 15.5px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
+.pw-plan-desc { margin-top: 3px; font-size: 13px; line-height: 1.4; color: var(--pw-muted); }
 .pw-plan-price { flex: 0 0 auto; margin-left: auto; text-align: right; }
-.pw-plan-price strong { display: block; font-size: 20px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; white-space: nowrap; color: var(--pw-accent-2); }
-.pw-plan-price span { display: block; font-size: 12px; line-height: 1.3; color: var(--pw-muted); }
-.pw-tag { display: inline-flex; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; line-height: 1.35; letter-spacing: 0.02em; color: #451A03; background: linear-gradient(135deg, #FCD34D, #F59E0B); }
+.pw-plan-price strong { display: block; font-size: 22px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-accent-2); }
+.pw-plan-price span { display: block; font-size: 12.5px; line-height: 1.3; color: var(--pw-muted); }
+.pw-tag { display: inline-flex; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; line-height: 1.35; color: #451A03; background: linear-gradient(135deg, #FCD34D, #F59E0B); }
 
 /* ---------- Resumo ---------- */
-.pw-summary { display: flex; flex-direction: column; gap: 9px; margin-top: 14px; padding: 13px 15px; border-radius: 14px; background: var(--pw-field); border: 1px solid var(--pw-line); }
-.pw-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; font-size: 13px; line-height: 1.4; color: var(--pw-text-2); }
+.pw-summary { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; padding: 13px 16px; border-radius: 14px; background: var(--pw-field); border: 1px solid var(--pw-line); }
+.pw-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; font-size: 13.5px; line-height: 1.4; color: var(--pw-text-2); }
 .pw-row strong { font-weight: 700; text-align: right; color: var(--pw-text); }
-.pw-summary .pw-row strong { white-space: nowrap; }
+.pw-summary .pw-row strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .pw-row-discount span, .pw-row-discount strong { color: var(--pw-accent-2); }
-.pw-total { align-items: center; margin-top: 2px; padding-top: 11px; border-top: 1px solid var(--pw-line); }
-.pw-total-label { display: block; font-size: 14px; font-weight: 800; color: var(--pw-text); }
-.pw-total-val { font-size: 27px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; white-space: nowrap; color: var(--pw-accent-2); }
-.pw-total-note { display: block; margin-top: -4px; font-size: 12px; font-weight: 500; line-height: 1.4; color: var(--pw-muted); }
+.pw-total { align-items: center; margin-top: 2px; padding-top: 10px; border-top: 1px solid var(--pw-line); }
+.pw-total-label { display: block; font-size: 15px; font-weight: 800; color: var(--pw-text); }
+.pw-total-val { font-size: 28px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-accent-2); }
+.pw-total-note { display: block; margin-top: -4px; font-size: 12.5px; font-weight: 500; line-height: 1.4; color: var(--pw-muted); }
 
 /* ---------- Beneficios ---------- */
-.pw-benefits-title { margin: auto 0 10px; padding-top: 20px; font-size: 11.5px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
-.pw-benefits { display: flex; flex-direction: column; gap: 10px; margin: 0 0 18px; padding: 0; list-style: none; }
-.pw-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.4; color: var(--pw-text-2); }
+.pw-benefits-title { margin: auto 0 10px; padding-top: 18px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pw-muted); }
+.pw-benefits { display: flex; flex-direction: column; gap: 9px; margin: 0 0 16px; padding: 0; list-style: none; }
+.pw-benefits li { display: flex; align-items: flex-start; gap: 9px; font-size: 13.5px; line-height: 1.4; color: var(--pw-text-2); }
 .pw-check { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 18px; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; color: var(--pw-accent-2); background: var(--pw-accent-soft); }
-.pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: auto; padding: 12px 14px; border-radius: 14px; font-size: 12.5px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
+.pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: auto; padding: 12px 14px; border-radius: 14px; font-size: 13px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
 .pw-guarantee svg { flex: 0 0 auto; margin-top: 1px; color: var(--pw-accent-2); }
-.pw-guarantee strong { display: block; font-size: 13px; color: var(--pw-accent-2); }
+.pw-guarantee strong { display: block; font-size: 13.5px; color: var(--pw-accent-2); }
 
 /* ---------- Status do pagamento ---------- */
-.pw-status { margin-bottom: 18px; padding: 13px 15px; border-radius: 14px; background: linear-gradient(135deg, var(--pw-accent-soft), var(--pw-sky-soft)); border: 1px solid var(--pw-accent-line); transition: background 0.3s ease, border-color 0.3s ease; }
+.pw-status { margin-bottom: 16px; padding: 12px 15px; border-radius: 14px; background: linear-gradient(135deg, var(--pw-accent-soft), var(--pw-sky-soft)); border: 1px solid var(--pw-accent-line); transition: background 0.3s ease, border-color 0.3s ease; }
 .pw-status.radar-detecting { background: linear-gradient(135deg, var(--pw-sky-soft), var(--pw-accent-soft)); border-color: var(--pw-sky); }
 .pw-status-main { display: flex; align-items: flex-start; gap: 12px; }
 .pw-status-text { flex: 1 1 auto; min-width: 0; }
-.pw-status-text > strong { display: block; font-size: 14px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
-.pw-status-text > span { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: var(--pw-text-2); }
-.pw-pulse { position: relative; flex: 0 0 10px; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; background: #10B981; box-shadow: 0 0 10px #10B981; }
+.pw-status-text > strong { display: block; font-size: 15px; font-weight: 800; line-height: 1.3; color: var(--pw-text); }
+.pw-status-text > span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.45; color: var(--pw-text-2); }
+.pw-pulse { position: relative; flex: 0 0 10px; width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; background: #10B981; box-shadow: 0 0 10px #10B981; }
 .pw-pulse::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid currentColor; color: #10B981; animation: pwPulseRing 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
 @keyframes pwPulseRing { 0% { transform: scale(0.8); opacity: 0.9; } 100% { transform: scale(2.1); opacity: 0; } }
-.pw-protocol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 11px; font-size: 12px; color: var(--pw-muted); }
-.pw-protocol strong { padding: 2px 9px; border-radius: 7px; font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12px; font-weight: 700; color: var(--pw-sky); background: var(--pw-sky-soft); border: 1px solid var(--pw-sky-line); overflow-wrap: anywhere; }
-.pw-track { height: 4px; margin-top: 12px; border-radius: 999px; background: var(--pw-line); overflow: hidden; }
+.pw-protocol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 9px; font-size: 12.5px; color: var(--pw-muted); }
+.pw-protocol strong { padding: 2px 9px; border-radius: 7px; font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12.5px; font-weight: 700; color: var(--pw-sky); background: var(--pw-sky-soft); border: 1px solid var(--pw-sky-line); overflow-wrap: anywhere; }
+.pw-track { height: 4px; margin-top: 10px; border-radius: 999px; background: var(--pw-line); overflow: hidden; }
 .pw-track-bar { height: 100%; width: 35%; border-radius: inherit; background: linear-gradient(90deg, #10B981, #38BDF8, #34D399); animation: pwTrackSlide 1.7s ease-in-out infinite alternate; }
 .pw-track-bar.recognizing-active { animation: none; margin-left: 0; transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
 @keyframes pwTrackSlide { from { margin-left: 0; } to { margin-left: 65%; } }
 
-/* ---------- Pix: QR, chave e copia e cola ---------- */
-.pw-pix { display: grid; grid-template-columns: 196px minmax(0, 1fr); gap: 18px; align-items: start; }
-.pw-qr { display: flex; flex-direction: column; align-items: center; gap: 8px; box-sizing: border-box; padding: 12px; border-radius: 18px; background: rgba(255, 255, 255, 0.97); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 16px 36px -16px rgba(0, 0, 0, 0.6); }
-.pw-qr-label { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #047857; }
-.pw-qr img { display: block; width: 100%; max-width: 172px; height: auto; aspect-ratio: 1 / 1; border-radius: 10px; background: #FFFFFF; image-rendering: pixelated; }
-.pw-qr-note { font-size: 12px; line-height: 1.35; text-align: center; color: #334155; }
-.pw-pay-info { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-.pw-amount { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; }
-.pw-amount span { font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
-.pw-amount strong { font-size: 30px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; white-space: nowrap; color: var(--pw-accent-2); }
-.pw-key { padding: 13px 15px; border-radius: 14px; background: var(--pw-field); border: 1px solid var(--pw-line); }
-.pw-field-label { display: block; margin-bottom: 7px; font-size: 11.5px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
-.pw-key-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 12px; }
-.pw-key-value { font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 19px; font-weight: 800; line-height: 1.25; letter-spacing: 0.02em; color: var(--pw-text); }
-.pw-key-meta { margin-top: 4px; font-size: 12.5px; line-height: 1.4; color: var(--pw-muted); }
+/* ---------- Pix: QR e chave lado a lado (mesma altura), copia e cola embaixo em largura total ---------- */
+.pw-pix { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 14px; align-items: stretch; }
+.pw-qr { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; padding: 12px; border-radius: 18px; background: rgba(255, 255, 255, 0.97); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 16px 36px -16px rgba(0, 0, 0, 0.6); }
+.pw-qr-label { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #047857; }
+.pw-qr img { display: block; width: 100%; max-width: 142px; height: auto; aspect-ratio: 1 / 1; border-radius: 10px; background: #FFFFFF; image-rendering: pixelated; }
+.pw-qr-note { font-size: 12.5px; line-height: 1.35; text-align: center; color: #334155; }
+.pw-pay-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.pw-key { box-sizing: border-box; padding: 12px 14px; border-radius: 16px; background: var(--pw-field); border: 1px solid var(--pw-line); }
+.pw-field-label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--pw-muted); }
+.pw-key-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.pw-key-value { font-size: 21px; font-weight: 800; line-height: 1.25; letter-spacing: 0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-text); }
+.pw-key-meta { margin-top: 5px; font-size: 13px; line-height: 1.4; color: var(--pw-muted); }
 .pw-key-meta strong { color: var(--pw-text-2); }
-.pw-code { display: block; width: 100%; min-height: 98px; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; resize: none; overflow-y: auto; background: var(--pw-field); border: 1px solid var(--pw-line-strong); color: var(--pw-text); font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
-.pw-code-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
-#subFormPix .pw-btn-primary { margin-top: 18px; }
+.pw-code-block { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
+.pw-code-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-bottom: 7px; }
+.pw-code-head .pw-field-label { margin: 0; }
+.pw-code { display: block; width: 100%; min-height: 64px; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; resize: none; overflow-y: auto; background: var(--pw-field); border: 1px solid var(--pw-line-strong); color: var(--pw-text); font-family: ui-monospace, Consolas, 'Courier New', monospace; font-size: 12.5px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
 
 /* ---------- Aviso de pedido registrado ---------- */
-.pw-banner { margin-top: 16px; padding: 14px 16px; border-radius: 16px; background: var(--pw-amber-soft); border: 1px solid var(--pw-amber-line); }
+.pw-banner { margin: 0 0 16px; padding: 14px 16px; border-radius: 16px; background: var(--pw-amber-soft); border: 1px solid var(--pw-amber-line); }
 .pw-banner.is-error { background: var(--pw-danger-soft); border-color: var(--pw-danger-line); }
 .pw-banner-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-bottom: 6px; }
-.pw-banner-head strong { font-size: 14px; font-weight: 800; line-height: 1.35; color: var(--pw-text); }
-.pw-banner p { margin: 0 0 12px; font-size: 13px; line-height: 1.5; color: var(--pw-text-2); }
+.pw-banner-head strong { font-size: 15px; font-weight: 800; line-height: 1.35; color: var(--pw-text); }
+.pw-banner p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.5; color: var(--pw-text-2); }
 .pw-banner .pw-btn { width: 100%; }
 
-/* ---------- Rodape ---------- */
-.pw-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--pw-line); font-size: 12px; line-height: 1.4; color: var(--pw-muted); }
-.pw-foot span { display: inline-flex; align-items: center; gap: 6px; }
-.pw-foot strong { color: var(--pw-text-2); }
+/* ---------- Rodape do cartao ---------- */
+.pw-card:not(.pw-card-plan) { display: flex; flex-direction: column; }
+#subFormPix { margin-bottom: 16px; }
+.pw-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 16px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--pw-line); font-size: 12.5px; line-height: 1.4; color: var(--pw-muted); }
+.pw-foot span { display: inline-flex; align-items: center; gap: 7px; }
+.pw-foot strong { color: var(--pw-text-2); font-variant-numeric: tabular-nums; }
+
+/* ---------- Barra de pagamento fixa: o botao principal fica sempre visivel, mesmo em telas baixas ---------- */
+.pw-paybar {
+  position: sticky;
+  bottom: 0;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-top: 18px;
+  padding: 11px 12px 11px 20px;
+  border-radius: 20px;
+  background: var(--pw-bar);
+  border: 1px solid var(--pw-accent-line);
+  box-shadow: 0 -14px 28px -18px rgba(0, 0, 0, 0.55), 0 18px 40px -18px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+}
+.pw-paybar-amount { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.pw-paybar-amount span { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.3; color: var(--pw-muted); }
+.pw-paybar-amount strong { font-size: 28px; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-accent-2); }
+.pw-paybar .pw-btn-primary { flex: 1 1 320px; width: auto; max-width: 540px; margin-left: auto; }
 
 /* ---------- Tela de sucesso / recibo ---------- */
 .pw-success { padding: 6px 0 2px; text-align: center; }
 .pw-success-icon { display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; margin: 4px auto 16px; border-radius: 50%; color: #FFFFFF; background: linear-gradient(135deg, #10B981, #059669); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.16), 0 18px 40px -10px rgba(16, 185, 129, 0.7); }
-.pw-success h3 { margin: 12px 0 8px; font-size: clamp(20px, 3vw, 26px); font-weight: 800; line-height: 1.25; text-wrap: balance; color: var(--pw-text); }
-.pw-success > p { max-width: 520px; margin: 0 auto 22px; font-size: 14px; line-height: 1.55; color: var(--pw-text-2); }
+.pw-success h3 { margin: 12px 0 8px; font-size: clamp(21px, 3vw, 27px); font-weight: 800; line-height: 1.25; text-wrap: balance; color: var(--pw-text); }
+.pw-success > p { max-width: 540px; margin: 0 auto 22px; font-size: 14.5px; line-height: 1.55; color: var(--pw-text-2); }
 .pw-receipt { box-sizing: border-box; max-width: 540px; margin: 0 auto 22px; padding: 20px 22px; border-radius: 20px; text-align: left; background: var(--pw-card); border: 1px solid var(--pw-accent-line); }
 .pw-receipt-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding-bottom: 14px; margin-bottom: 10px; border-bottom: 1px dashed var(--pw-line-strong); }
-.pw-receipt-head strong { display: block; font-size: 14px; font-weight: 800; color: var(--pw-text); }
-.pw-receipt-head small { display: block; margin-top: 2px; font-size: 12px; color: var(--pw-muted); }
+.pw-receipt-head strong { display: block; font-size: 15px; font-weight: 800; color: var(--pw-text); }
+.pw-receipt-head small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--pw-muted); }
 .pw-receipt .pw-row { flex-wrap: wrap; padding: 6px 0; }
 .pw-receipt .pw-row strong { overflow-wrap: anywhere; }
 .pw-receipt .pw-row-end { margin-top: 6px; padding-top: 12px; border-top: 1px dashed var(--pw-line-strong); }
-.pw-receipt .pw-row-end strong { font-size: 15px; color: var(--pw-accent-2); }
+.pw-receipt .pw-row-end strong { font-size: 15.5px; color: var(--pw-accent-2); }
 .pw-success-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 560px; margin: 0 auto; }
-.pw-success-actions .pw-btn { flex: 1 1 210px; width: auto; min-height: 48px; font-size: 14px; }
+.pw-success-actions .pw-btn { flex: 1 1 210px; width: auto; min-height: 48px; font-size: 14.5px; }
 
 /* ---------- Responsivo ---------- */
 @media (max-width: 900px) {
@@ -7852,14 +7881,18 @@ body.light .sub-paywall-overlay {
   .pw-pix { grid-template-columns: minmax(0, 1fr); }
   .pw-qr { width: min(100%, 236px); justify-self: center; }
   .pw-qr img { max-width: 200px; }
-  .pw-code-actions .pw-btn, .pw-key-row .pw-btn { width: 100%; }
+  .pw-key-value { font-size: 22px; }
+  .pw-paybar { gap: 8px; padding: 12px; }
+  .pw-paybar-amount { flex-direction: row; align-items: baseline; justify-content: space-between; width: 100%; padding: 0 4px; }
+  .pw-paybar-amount strong { font-size: 25px; }
+  .pw-paybar .pw-btn-primary { flex: 1 1 100%; max-width: none; margin-left: 0; min-height: 50px; font-size: 14.5px; }
   .pw-success-actions .pw-btn { flex-basis: 100%; }
 }
 @media (max-width: 420px) {
   .pw-card { padding: 14px; }
   .pw-plan { padding: 12px 13px; }
-  .pw-key-value { font-size: 17px; }
-  .pw-amount strong { font-size: 27px; }
+  .pw-key-value { font-size: 20px; }
+  .pw-total-val { font-size: 26px; }
   .pw-receipt { padding: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -16270,7 +16303,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               <span class="pw-radio" aria-hidden="true"></span>
               <div class="pw-plan-body">
                 <div class="pw-plan-title">Plano Anual <span class="pw-tag">Economize R$ 30,00</span></div>
-                <div class="pw-plan-desc">12 meses &bull; equivale a R$&nbsp;12,50 por mês</div>
+                <div class="pw-plan-desc">12 meses &bull; R$&nbsp;12,50 por mês</div>
               </div>
               <div class="pw-plan-price"><strong>R$ 150,00</strong><span>por ano</span></div>
             </div>
@@ -16328,42 +16361,33 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                 <span class="pw-qr-note">Escaneie com o app do seu banco</span>
               </div>
 
-              <div class="pw-pay-info">
-                <div class="pw-amount"><span>Valor a pagar</span><strong id="pixDisplayAmount">R$ 15,00</strong></div>
-
+              <div class="pw-pay-col">
                 <div class="pw-key">
                   <span class="pw-field-label">Chave Pix (celular)</span>
                   <div class="pw-key-row">
-                    <div>
-                      <div class="pw-key-value">(62) 99234-5372</div>
-                      <div class="pw-key-meta">Favorecido: <strong>Paulo Lima</strong> &bull; Goiânia - GO</div>
-                    </div>
-                    <button type="button" id="btnCopyPixKeyDirect" class="pw-btn pw-btn-sky" onclick="window.copyPixKeyDirect()">
+                    <div class="pw-key-value">(62) 99234-5372</div>
+                    <button type="button" id="btnCopyPixKeyDirect" class="pw-btn pw-btn-sky pw-btn-sm" onclick="window.copyPixKeyDirect()">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                      <span>Copiar chave</span>
+                      <span>Copiar</span>
                     </button>
                   </div>
+                  <div class="pw-key-meta">Favorecido: <strong>Paulo Lima</strong> &bull; Goiânia - GO</div>
                 </div>
 
-                <div>
-                  <label class="pw-field-label" for="subPixCodeInput">Pix copia e cola</label>
-                  <textarea id="subPixCodeInput" class="pw-code" readonly rows="4" spellcheck="false"></textarea>
-                  <div class="pw-code-actions">
-                    <button type="button" id="btnCopyPix" class="pw-btn pw-btn-solid" onclick="window.copyPixCodeToClipboard()">
+                <div class="pw-code-block">
+                  <div class="pw-code-head">
+                    <label class="pw-field-label" for="subPixCodeInput">Pix copia e cola</label>
+                    <button type="button" id="btnCopyPix" class="pw-btn pw-btn-solid pw-btn-sm" onclick="window.copyPixCodeToClipboard()">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                      <span>Copiar código Pix</span>
+                      <span>Copiar código</span>
                     </button>
                   </div>
+                  <textarea id="subPixCodeInput" class="pw-code" readonly rows="3" spellcheck="false"></textarea>
                 </div>
               </div>
             </div>
 
             <input type="hidden" id="subPixTxIdInput" value="" />
-
-            <button type="button" class="pw-btn pw-btn-primary" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-              <span id="pixActionBtnLabel">Paguei via Pix &bull; solicitar confirmação</span>
-            </button>
           </div>
 
           <!-- Aviso de pedido registrado -->
@@ -16381,13 +16405,21 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
           <div class="pw-foot">
             <span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Pagamento via Pix &bull; confirmação manual
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Dúvidas? Suporte financeiro: <strong>(62) 99234-5372</strong>
             </span>
-            <span>Suporte financeiro: <strong>(62) 99234-5372</strong></span>
           </div>
         </section>
 
+      </div>
+
+      <!-- Barra de pagamento fixa: o botao principal fica sempre visivel, mesmo em telas baixas -->
+      <div class="pw-paybar">
+        <div class="pw-paybar-amount"><span>Valor a pagar</span><strong id="pixDisplayAmount">R$ 15,00</strong></div>
+        <button type="button" class="pw-btn pw-btn-primary" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="pixActionBtnLabel">Paguei via Pix &bull; solicitar confirmação</span>
+        </button>
       </div>
     </div>
 
@@ -18385,7 +18417,7 @@ window.openSubscriptionPaywall = function(isLocked = false) {
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
     if (titleEl) titleEl.textContent = 'Pagamento obrigatório para continuar usando';
-    if (subEl) subEl.textContent = 'Seu acesso está bloqueado. Pague via Pix e envie o comprovante: o acesso é liberado após a confirmação do recebimento.';
+    if (subEl) subEl.textContent = 'Seu acesso está bloqueado. Pague via Pix e envie o comprovante para liberar o acesso.';
   } else {
     document.body.classList.remove('paywall-locked');
     document.documentElement.classList.remove('paywall-locked');
@@ -18823,7 +18855,7 @@ window.fitPixCodeBox = function() {
 window.copyPixKeyDirect = function() {
   const key = '62992345372';
   const handleSuccess = () => {
-    window.flashCopyButton('btnCopyPixKeyDirect', 'Chave copiada');
+    window.flashCopyButton('btnCopyPixKeyDirect', 'Copiada');
     if (typeof showToast === 'function') showToast('⚡ Chave Pix copiada. Após pagar, envie o comprovante para confirmar o recebimento.');
     window.armAutoPaymentDetector('pix');
   };
@@ -18867,7 +18899,7 @@ window.copyPixCodeToClipboard = function() {
   inputEl.select();
   inputEl.setSelectionRange(0, 99999);
   const onCopied = () => {
-    window.flashCopyButton('btnCopyPix', 'Código copiado');
+    window.flashCopyButton('btnCopyPix', 'Copiado');
     if (typeof showToast === 'function') showToast('⚡ Código Pix copiado. Efetue o pagamento e solicite a confirmação pelo WhatsApp.');
     window.armAutoPaymentDetector('pix');
   };
@@ -18987,6 +19019,13 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
         'Envie o comprovante pelo WhatsApp. A confirmação do recebimento libera o plano. Seu período grátis continua até o fim, se ainda estiver ativo.'
       );
       if (data.access_status === 'pending_payment') window.openSubscriptionPaywall(true);
+      // Mostra o aviso com o botao do WhatsApp (a barra de pagamento fixa pode deixar o aviso fora da tela)
+      setTimeout(function() {
+        try {
+          const bn = document.getElementById('subPaymentVerifyBanner');
+          if (bn && bn.style.display !== 'none') bn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (scrollErr) {}
+      }, 180);
     } else {
       window.shakePaywallModal();
       if (typeof showToast === 'function') {
