@@ -1399,8 +1399,8 @@
       window.setTimeout(() => window.location.replace('/'), 220);
     },
     async recover(prefill) {
-      // A conta pode ser identificada por e-mail OU por CPF. A confirmação é a data de nascimento; quando a conta
-      // não tem nascimento cadastrado, o servidor exige o outro dado (e-mail + CPF), então pedimos o que faltar.
+      // Identifica a conta por e-mail OU CPF e puxa dinamicamente a etapa de acordo com o cenário cadastrado no banco,
+      // sem nunca expor se uma conta foi excluída (sempre exibindo "Usuário não possui conta criada.").
       const looksEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
       let identifier = String(prefill || '').trim();
       if (!(looksEmail(identifier) || cpfDigits(identifier).length === 11)) {
@@ -1426,32 +1426,51 @@
       const payload = byEmail ? { email: identifier.toLowerCase() } : { cpf: cpfDigits(identifier) };
       if (byEmail && $('#email')) $('#email').value = payload.email;
 
-      const birthDate = await glassPrompt({
-        title: 'Data de Nascimento',
-        step: 'Recuperação de acesso • Confirmação',
-        message: 'Informe sua data de nascimento (DD/MM/AAAA):',
-        placeholder: 'DD/MM/AAAA',
-        hint: 'Se sua conta não tiver data de nascimento cadastrada, deixe em branco e continue.',
-        mask: 'date',
-        maxLength: 10,
-        icon: 'calendar',
-        okText: 'Continuar',
-        validate: val => (val && !validBirthDate(val)) ? 'Informe uma data válida no formato DD/MM/AAAA.' : ''
-      });
-      if (birthDate === null) return; // fechou/cancelou
-      if (birthDate) {
+      let checkInfo = null;
+      try {
+        checkInfo = await api('/api/send-password', { ...payload, step: 'check' });
+      } catch (err) {
+        const errData = err.data || {};
+        let msg = err.message || 'Usuário não possui conta criada.';
+        if (errData.errorType === 'user_not_found' || errData.errorType === 'account_deleted') {
+          msg = 'Usuário não possui conta criada.';
+          if (byEmail) setError('email', msg);
+        } else if (errData.errorType === 'user_inactive') {
+          msg = 'Esta conta está desativada pelo administrador.';
+        }
+        showStatus(msg, true);
+        return;
+      }
+
+      if (checkInfo && checkInfo.hasBirthDate) {
+        const birthDate = await glassPrompt({
+          title: 'Data de Nascimento',
+          step: 'Recuperação de acesso • Confirmação',
+          message: 'Informe sua data de nascimento (DD/MM/AAAA):',
+          placeholder: 'DD/MM/AAAA',
+          hint: 'Confirme a data de nascimento cadastrada na sua conta.',
+          mask: 'date',
+          maxLength: 10,
+          icon: 'calendar',
+          okText: 'Continuar',
+          validate: val => {
+            if (!val) return 'Por favor, informe sua data de nascimento.';
+            return validBirthDate(val) ? '' : 'Informe uma data válida no formato DD/MM/AAAA.';
+          }
+        });
+        if (!birthDate) return;
         payload.birth_date = birthDate;
       } else if (byEmail) {
         const cpf = await glassPrompt({
           title: 'Confirmação de Identidade',
           step: 'Recuperação de acesso • Confirmação',
-          message: 'Para confirmar sua identidade, informe também o CPF do titular:',
+          message: 'Para confirmar sua identidade, informe o CPF cadastrado nesta conta:',
           placeholder: '000.000.000-00',
-          hint: 'Informe os 11 dígitos do CPF da conta.',
+          hint: 'Informe os 11 dígitos do CPF do titular.',
           mask: 'cpf',
           maxLength: 14,
           icon: 'id',
-          okText: 'OK',
+          okText: 'Confirmar',
           validate: val => {
             if (!val) return 'Por favor, informe seu CPF.';
             if (cpfDigits(val).length < 11) return 'Informe os 11 dígitos do CPF.';
@@ -1464,11 +1483,11 @@
         const otherEmail = await glassPrompt({
           title: 'Confirmação de Identidade',
           step: 'Recuperação de acesso • Confirmação',
-          message: 'Para confirmar sua identidade, informe também o e-mail cadastrado:',
+          message: 'Para confirmar sua identidade, informe o e-mail cadastrado nesta conta:',
           placeholder: 'seu.email@exemplo.com',
-          hint: 'É o e-mail com que você criou a conta.',
+          hint: 'É o e-mail utilizado na criação da conta.',
           icon: 'mail',
-          okText: 'OK',
+          okText: 'Confirmar',
           validate: val => {
             if (!val) return 'Por favor, informe seu e-mail.';
             return looksEmail(val) ? '' : 'Digite um e-mail válido.';
@@ -1490,7 +1509,14 @@
           showStatus(result.message || 'Senha provisória enviada para seu e-mail.');
         }
       } catch (error) {
-        showStatus(error.message, true);
+        const errData = error.data || {};
+        let msg = error.message || 'Não foi possível concluir a recuperação.';
+        if (errData.errorType === 'user_not_found' || errData.errorType === 'account_deleted') msg = 'Usuário não possui conta criada.';
+        if (errData.errorType === 'invalid_birth_date') msg = 'Data de nascimento incorreta para esta conta.';
+        if (errData.errorType === 'invalid_cpf_match') msg = 'O CPF informado não corresponde a esta conta.';
+        if (errData.errorType === 'invalid_email_match') msg = 'O e-mail informado não corresponde a esta conta.';
+        if (errData.errorType === 'user_inactive') msg = 'Esta conta está desativada pelo administrador.';
+        showStatus(msg, true);
       }
     },
     openOS(initialTab = 'abrir') {
@@ -1904,11 +1930,24 @@
     } catch (error) {
       const apiData = error.data || {};
       let message = error.message || 'Não foi possível continuar. Tente novamente.';
-      if (apiData.errorType === 'user_not_found') message = 'Esta conta não existe no banco de dados.';
-      if (apiData.errorType === 'invalid_password') message = 'Senha incorreta.';
-      if (apiData.errorType === 'invalid_cpf' || apiData.code === 'INVALID_CPF') message = 'CPF inválido. Confira os dígitos informados.';
-      if (apiData.errorType === 'email_exists') message = 'Este e-mail já possui cadastro.';
-      if (apiData.errorType === 'cpf_exists') message = 'Este CPF já possui cadastro.';
+      if (apiData.errorType === 'user_not_found' || apiData.errorType === 'account_deleted') {
+        message = 'Usuário não possui conta criada.';
+        setError('email', message);
+      } else if (apiData.errorType === 'invalid_password') {
+        message = 'Senha incorreta para este usuário.';
+        setError('senha', 'Senha incorreta.');
+      } else if (apiData.errorType === 'user_inactive') {
+        message = 'Esta conta está desativada pelo administrador.';
+      } else if (apiData.errorType === 'invalid_cpf' || apiData.code === 'INVALID_CPF') {
+        message = 'CPF inválido. Confira os dígitos informados.';
+        setError('cpf', message);
+      } else if (apiData.errorType === 'email_exists') {
+        message = 'Este e-mail já possui conta criada.';
+        setError('email', message);
+      } else if (apiData.errorType === 'cpf_exists') {
+        message = 'Este CPF já possui conta criada.';
+        setError('cpf', message);
+      }
       showStatus(message, true);
     } finally {
       btn.disabled = false;
