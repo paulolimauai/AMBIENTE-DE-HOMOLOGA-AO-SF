@@ -5810,7 +5810,7 @@ html.user-logged-in aside.menu.sidebar-menu {
 
 html.user-logged-in .sidebar-scroll {
   gap: 3px !important;
-  padding: 0 1px 10px !important;
+  padding: 4px 1px 10px !important;
   scrollbar-width: thin !important;
   scrollbar-color: rgba(148, 163, 184, .22) transparent !important;
 }
@@ -5867,7 +5867,12 @@ html.user-logged-in .sidebar-quick-action-btn .quick-action-ic { color: #fff !im
 
 html.user-logged-in .menu-section-header {
   min-height: 30px !important;
-  padding: 12px 9px 4px !important;
+  padding: 8px 9px 4px !important;
+}
+
+/* O cabeçalho de workspace foi removido: o primeiro grupo começa com respiro curto e alinhamento consistente. */
+html.user-logged-in .sidebar-scroll > .menu-section-visao {
+  padding-top: 4px !important;
 }
 
 html.user-logged-in .menu-section-title {
