@@ -14282,45 +14282,49 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   <div class="auth-exec-layout">
     <!-- Showcase Institucional Executivo -->
     <div class="auth-showcase-panel">
+      <div class="auth-showcase-brand">
+        <div class="auth-showcase-logo">N</div>
+        <strong>Nexus Financeiro</strong>
+      </div>
       <div class="auth-showcase-badge">
         <span class="badge-dot"></span>
-        <span>SISTEMA DE GESTÃO FINANCEIRA PESSOAL • CONTROLE TOTAL</span>
+        <span>GESTÃO FINANCEIRA PESSOAL</span>
       </div>
 
       <div class="auth-showcase-title">
-        Controle Total das Suas <span>Finanças Pessoais.</span>
+        Cada real com <span>destino.</span><br>Cada mês com <span>resultado.</span>
       </div>
 
       <div class="auth-showcase-desc">
-        Organize gastos, contas e metas em um só lugar, com uma visão clara do seu orçamento e das suas prioridades.
+        Controle gastos, cartões e metas em um só lugar e descubra, em minutos, quanto você pode guardar neste mês.
       </div>
 
       <div class="auth-showcase-metrics">
         <div class="auth-metric-card metric-card-budget">
           <div class="metric-card-head">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
-            <span class="metric-card-label">Orçamento Mensal</span>
+            <span class="metric-card-label">Saldo do mês</span>
           </div>
-          <div class="metric-val">Seu orçamento</div>
-          <div class="metric-pill-tag green">Organizado por categorias</div>
+          <div class="metric-val">R$ 4.280,00</div>
+          <div class="metric-pill-tag green">Disponível para organizar</div>
         </div>
 
         <div class="auth-metric-card metric-card-savings">
           <div class="metric-card-head">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
-            <span class="metric-card-label">Economia do Mês</span>
+            <span class="metric-card-label">Meta: reserva de emergência</span>
           </div>
-          <div class="metric-val">Visão mensal</div>
-          <div class="metric-pill-tag cyan">Receitas, despesas e saldo</div>
+          <div class="metric-val">64% concluída</div>
+          <div class="metric-pill-tag cyan">Acompanhe seu progresso</div>
         </div>
 
         <div class="auth-metric-card metric-card-goals">
           <div class="metric-card-head">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
-            <span class="metric-card-label">Metas & Reserva</span>
+            <span class="metric-card-label">Limite do cartão</span>
           </div>
-          <div class="metric-val">Metas pessoais</div>
-          <div class="metric-pill-tag blue">Planos e reservas</div>
+          <div class="metric-val">38% utilizado</div>
+          <div class="metric-pill-tag blue">Controle seus gastos</div>
         </div>
       </div>
 
@@ -14345,19 +14349,19 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Brand Header -->
       <div class="auth-brand">
         <div class="auth-logo-badge">N</div>
-        <div class="auth-title">NEXUS <span>FINANCEIRO</span></div>
-        <div class="auth-subtitle" id="authBoxSubtitle">Gestão Financeira Pessoal & Controle Inteligente de Gastos</div>
+        <div class="auth-title">Entre no seu painel</div>
+        <div class="auth-subtitle" id="authBoxSubtitle">Seu resumo do mês está esperando por você.</div>
       </div>
 
       <!-- Navegação por Abas Segmentadas -->
       <div class="auth-tabs-nav" id="authTabsNav">
         <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="window.switchAuthTab('login')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Entrar na Conta
+          Entrar
         </button>
         <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="window.switchAuthTab('register')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-          Criar Conta Grátis
+          Criar conta
         </button>
       </div>
 
@@ -14365,7 +14369,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div id="loginBox">
         <form id="loginForm" onsubmit="window.handleLoginSubmit(event); return false;">
           <div class="auth-field">
-            <label>E-mail Cadastrado</label>
+            <label>E-mail</label>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -14376,8 +14380,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
           <div class="auth-field">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <label style="margin-bottom:0;">Senha de Acesso</label>
-              <a class="auth-forgot-link" id="goForgotFromLogin" href="javascript:void(0)" onclick="window.switchAuthTab('forgot'); return false;" style="cursor:pointer;">Esqueceu a senha?</a>
+              <label style="margin-bottom:0;">Senha</label>
+              <a class="auth-forgot-link" id="goForgotFromLogin" href="javascript:void(0)" onclick="window.switchAuthTab('forgot'); return false;" style="cursor:pointer;">Esqueci a senha</a>
             </div>
             <div class="auth-input-wrapper">
               <span class="auth-input-icon">
@@ -14394,14 +14398,14 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:12px; font-size:12px; color:#CBD5E1;">
             <label style="display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; color:#FFFFFF; font-weight:600;">
               <input type="checkbox" id="rememberMe" style="accent-color:#2563EB; width:15px; height:15px; cursor:pointer;">
-              <span>Lembrar meu acesso neste dispositivo</span>
+              <span>Manter conectado</span>
             </label>
           </div>
 
           <div id="loginFeedbackBanner" class="auth-feedback-banner error" style="display:none;"></div>
 
           <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">
-            Acessar Minhas Finanças →
+            Entrar no painel
           </button>
         </form>
 
@@ -14601,13 +14605,13 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
           <span>📋 Abrir Ordem de Serviço (O.S.) / Consultar Protocolo</span>
         </button>
-        <!-- E-mail de Suporte Diretamente Abaixo da Abertura de O.S. -->
+        <!-- Canais de suporte abaixo da abertura de O.S. -->
         <div class="auth-support-bar">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <rect width="20" height="16" x="2" y="4" rx="2"/>
             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
           </svg>
-          <span class="auth-support-label">Suporte:</span>
+          <span class="auth-support-label">CANAIS DE SUPORTE</span>
           <a href="mailto:suporte.paulolima@outlook.com" class="auth-support-link" title="E-mail do Suporte Técnico">suporte.paulolima@outlook.com</a>
         </div>
       </div>
