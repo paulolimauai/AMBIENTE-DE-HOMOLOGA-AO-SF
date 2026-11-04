@@ -6475,3 +6475,33 @@ html.user-logged-in.light .sidebar-search kbd {
 /* Atualizar a pagina: o sistema e sempre escuro, entao a barra de rolagem e os controles nativos tambem.
    Antes a barra clara aparecia como uma faixa de outra cor colada no fundo, principalmente atras do vidro do pagamento. */
 html:not(.light) { color-scheme: dark; }
+
+/* ==================== Menu centralizado (barra lateral expandida) ====================
+   Icone + texto de cada item, titulos de secao (linha dos dois lados) e botoes de acao no eixo central da barra.
+   Fica no fim do arquivo porque as regras acima fixam justify-content:flex-start com a mesma especificidade.
+   No modo recolhido (68px) os icones ja ficam centralizados e textos/linhas ficam ocultos. */
+nav.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+aside.menu.sidebar-menu button:not(.sidebar-toggle-btn):not(.sidebar-quick-action-btn),
+nav.menu.sidebar-menu .sidebar-quick-action-btn,
+aside.menu.sidebar-menu .sidebar-quick-action-btn,
+nav.menu.sidebar-menu .sidebar-footer .sidebar-toggle-btn,
+aside.menu.sidebar-menu .sidebar-footer .sidebar-toggle-btn {
+  justify-content: center !important;
+  text-align: center !important;
+}
+.menu.sidebar-menu .sidebar-quick-action-btn .label {
+  flex: 0 1 auto !important;
+  text-align: center !important;
+}
+.menu.sidebar-menu .menu-section-header { justify-content: center !important; }
+.menu.sidebar-menu .menu-section-header::before {
+  content: '';
+  flex: 1;
+  height: 1px;
+  border-radius: 1px;
+  background: linear-gradient(270deg, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, .01) 100%);
+}
+html.sidebar-collapsed .menu.sidebar-menu .menu-section-header::before,
+body.sidebar-collapsed .menu.sidebar-menu .menu-section-header::before { display: none !important; }
+/* Os cards do painel administrativo (Cadastros, Ordens, Pagamentos, Auditoria) ficam como estao: o bloco
+   @layer nx-admin-menu define titulo/subtitulo a esquerda e contador a direita de proposito. */

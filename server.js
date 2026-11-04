@@ -4706,11 +4706,13 @@ body.light .header-live-time {
   display:flex; align-items:center; justify-content:space-between;
   padding-bottom:16px; margin-bottom:16px; border-bottom:1px solid var(--card-border);
 }
-.mobile-drawer-nav { display:flex; flex-direction:column; gap:8px; flex:1; }
+.mobile-drawer-nav { display:flex; flex-direction:column; align-items:stretch; gap:8px; flex:1; }
+/* Menu centralizado: títulos de seção e itens (ícone + texto) no eixo central da gaveta */
+.mobile-drawer-section-title { text-align:center; justify-content:center; }
 .mobile-drawer-nav button {
-  position:relative; display:flex; align-items:center; gap:12px; padding:12px 16px;
+  position:relative; display:flex; align-items:center; justify-content:center; gap:12px; padding:12px 16px;
   border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); color:#94A3B8;
-  font-size:14px; font-weight:600; cursor:pointer; text-align:left;
+  font-size:14px; font-weight:600; cursor:pointer; text-align:center;
   transition:background 0.1s ease, color 0.1s ease, border-color 0.1s ease; white-space:nowrap;
   touch-action: manipulation;
 }
@@ -14211,7 +14213,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261102-refresh-cor" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261103-menu-centralizado" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
