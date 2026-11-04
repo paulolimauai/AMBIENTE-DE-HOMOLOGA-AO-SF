@@ -1800,7 +1800,7 @@ const htmlContent = `<!DOCTYPE html>
         { id: 'por-do-sol', nome: 'Pôr do sol', h: [18, 340, 45, 285] },
         { id: 'esmeralda', nome: 'Esmeralda', h: [155, 185, 85, 205] },
         { id: 'rose', nome: 'Rosé', h: [335, 285, 15, 255] },
-        { id: 'ouro', nome: 'Ouro', h: [42, 18, 255, 335] },
+        { id: 'ouro', nome: 'Dourado', h: [42, 26, 50, 10] },
         { id: 'turquesa', nome: 'Turquesa', h: [176, 215, 135, 265] },
         { id: 'carmesim', nome: 'Carmesim', h: [352, 20, 285, 320] },
         { id: 'neon', nome: 'Neon', h: [85, 150, 195, 50] }
