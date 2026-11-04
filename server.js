@@ -2083,6 +2083,12 @@ html:not(.is-admin) #sidebarNovaTransacaoBtn {
   display: flex !important;
 }
 
+/* Usuário comum não tem atalho no topo da barra lateral: o contêiner (agora só com o botão do administrador) não ocupa espaço */
+html:not(.is-admin) nav.menu.sidebar-menu .sidebar-action-wrap,
+html:not(.is-admin) aside.menu.sidebar-menu .sidebar-action-wrap {
+  display: none !important;
+}
+
 /* ==================== Balcão Executivo de Recepção de O.S. (Compacto e Alinhado) ==================== */
 .reception-grid {
   display: grid;
@@ -14823,16 +14829,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </button>
       </div>
 
-      <!-- Botão de Ação Rápida: Nova Transação (Usuário) / Novo Cadastro (Admin) -->
+      <!-- Botão de Ação Rápida: Novo Cadastro (Admin). O atalho "Nova Transação" foi retirado da barra lateral (continua na página Transações) -->
 
       <div class="sidebar-action-wrap">
-        <button type="button" class="sidebar-quick-action-btn" id="sidebarNovaTransacaoBtn" onclick="openModal(null)" title="Nova Transação (Registrar receita ou despesa)">
-          <span class="quick-action-ic">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </span>
-          <span class="label">Nova Transação</span>
-          <span class="quick-action-badge">+</span>
-        </button>
         <button type="button" class="sidebar-quick-action-btn" id="sidebarAdminQuickCreateBtn" onclick="openAdminCreateUserModal()" style="display:none;" title="Novo Cadastro Administrativo">
           <span class="quick-action-ic">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
