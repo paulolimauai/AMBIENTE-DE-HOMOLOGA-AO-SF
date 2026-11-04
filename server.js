@@ -7750,6 +7750,16 @@ body.light .sub-paywall-overlay {
   transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 .pw-plan:hover { border-color: var(--pw-accent-line); background: var(--pw-card-hover); }
+.pw-plan-trial {
+  cursor: default;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.10), rgba(255, 255, 255, 0.035));
+  border-style: dashed;
+  border-color: var(--pw-sky-line);
+}
+.pw-plan-trial:hover { border-color: var(--pw-sky-line); background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(255, 255, 255, 0.045)); }
+.pw-plan-trial .pw-radio { border-color: var(--pw-sky); background: var(--pw-sky-soft); }
+.pw-plan-trial .pw-radio::after { content: '✓'; font-size: 12px; font-weight: 900; line-height: 1; color: var(--pw-sky); }
+.pw-plan-trial .pw-plan-price strong { color: var(--pw-sky); }
 .pw-plan.active {
   background: linear-gradient(135deg, var(--pw-accent-soft), rgba(16, 185, 129, 0.04));
   border-color: var(--pw-accent);
@@ -7765,6 +7775,11 @@ body.light .sub-paywall-overlay {
 .pw-plan-price strong { display: block; font-size: 22px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pw-accent-2); }
 .pw-plan-price span { display: block; font-size: 12.5px; line-height: 1.3; color: var(--pw-muted); }
 .pw-tag { display: inline-flex; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; line-height: 1.35; color: #451A03; background: linear-gradient(135deg, #FCD34D, #F59E0B); }
+.pw-plan-status { display: inline-flex; align-items: center; gap: 5px; margin-left: 4px; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; line-height: 1.25; color: var(--pw-sky); background: var(--pw-sky-soft); border: 1px solid var(--pw-sky-line); }
+.pw-plan-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pw-plan-note { display: flex; align-items: flex-start; gap: 9px; margin-top: 12px; padding: 11px 13px; border-radius: 13px; color: var(--pw-text-2); background: var(--pw-field); border: 1px solid var(--pw-line); font-size: 12.5px; line-height: 1.45; }
+.pw-plan-note svg { flex: 0 0 auto; margin-top: 1px; color: var(--pw-sky); }
+.pw-plan-note strong { color: var(--pw-text); }
 
 /* ---------- Resumo ---------- */
 .pw-summary { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; padding: 13px 16px; border-radius: 14px; background: var(--pw-field); border: 1px solid var(--pw-line); }
@@ -7785,6 +7800,10 @@ body.light .sub-paywall-overlay {
 .pw-guarantee { display: flex; align-items: flex-start; gap: 11px; margin-top: auto; padding: 12px 14px; border-radius: 14px; font-size: 13px; line-height: 1.45; color: var(--pw-text-2); background: var(--pw-accent-soft); border: 1px solid var(--pw-accent-line); }
 .pw-guarantee svg { flex: 0 0 auto; margin-top: 1px; color: var(--pw-accent-2); }
 .pw-guarantee strong { display: block; font-size: 13.5px; color: var(--pw-accent-2); }
+.pw-trust-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 18px; }
+.pw-trust-item { min-width: 0; padding: 10px 11px; border-radius: 13px; background: var(--pw-field); border: 1px solid var(--pw-line); }
+.pw-trust-item strong { display: block; font-size: 12.5px; line-height: 1.3; color: var(--pw-text); }
+.pw-trust-item span { display: block; margin-top: 3px; font-size: 11.5px; line-height: 1.35; color: var(--pw-muted); }
 
 /* ---------- Status do pagamento ---------- */
 .pw-status { margin-bottom: 16px; padding: 12px 15px; border-radius: 14px; background: linear-gradient(135deg, var(--pw-accent-soft), var(--pw-sky-soft)); border: 1px solid var(--pw-accent-line); transition: background 0.3s ease, border-color 0.3s ease; }
@@ -7895,6 +7914,7 @@ body.light .sub-paywall-overlay {
   .pw-paybar-amount strong { font-size: 25px; }
   .pw-paybar .pw-btn-primary { flex: 1 1 100%; max-width: none; margin-left: 0; min-height: 50px; font-size: 14.5px; }
   .pw-success-actions .pw-btn { flex-basis: 100%; }
+  .pw-trust-strip { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 420px) {
   .pw-card { padding: 14px; }
@@ -14814,23 +14834,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   <!-- BARRA LATERAL EXECUTIVA (SIDEBAR DESIGN 4K - LIQUID GLASS) -->
   <aside class="menu sidebar-menu" id="menu">
     <div class="sidebar-scroll" id="menuTrack">
-      <!-- Identidade do Workspace / Sistema -->
-      <div class="sidebar-workspace-header">
-        <div class="workspace-avatar">
-          <span class="workspace-avatar-text">NX</span>
-          <span class="workspace-status-dot"></span>
-        </div>
-        <div class="workspace-meta">
-          <div class="workspace-title-row">
-            <span class="workspace-name">Nexus</span>
-          </div>
-          <span class="workspace-subtitle">Gestão Financeira</span>
-        </div>
-        <button type="button" class="sidebar-header-toggle sidebar-toggle-btn" id="sidebarCollapseBtn" title="Recolher / Expandir Menu Lateral" aria-label="Recolher / Expandir Menu Lateral">
-          <svg class="toggle-icon-collapse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
-        </button>
-      </div>
-
       <!-- Botão de Ação Rápida: Novo Cadastro (Admin). O atalho "Nova Transação" foi retirado da barra lateral (continua na página Transações) -->
 
       <div class="sidebar-action-wrap">
@@ -14977,7 +14980,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="sidebar-account-icon" id="sidebarAccountAvatar">PL</span>
         <span class="sidebar-account-copy">
           <strong id="sidebarAccountName">Paulo de Lima Pereira</strong>
-          <small id="sidebarAccountPlan">Plano Premium</small>
+          <small id="sidebarAccountPlan">Plano Gratuito 1 dia</small>
         </span>
         <svg class="sidebar-account-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/><path d="M3 12h12"/></svg>
       </button>
@@ -16239,9 +16242,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
         </span>
         <div class="pw-titles">
-          <span class="pw-eyebrow">Nexus Pay &bull; Pix</span>
-          <h2 id="subModalTitle">Central de Assinatura &bull; Nexus Financeiro Hub</h2>
-          <p id="subModalSubtitle">Escolha o plano e pague via Pix. O acesso pago é liberado após a confirmação do recebimento.</p>
+          <span class="pw-eyebrow">Nexus Pay &bull; assinatura segura</span>
+          <h2 id="subModalTitle">Escolha o plano ideal para o seu controle financeiro</h2>
+          <p id="subModalSubtitle">Comece com 1 dia grátis. Depois, escolha o Plano Mensal ou o Plano Anual e pague via Pix.</p>
         </div>
       </div>
 
@@ -16258,6 +16261,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </button>
       </div>
     </header>
+
+    <div class="pw-trust-strip" aria-label="Informações da assinatura">
+      <div class="pw-trust-item"><strong>1 dia grátis</strong><span>Teste todos os recursos sem cobrança.</span></div>
+      <div class="pw-trust-item"><strong>Pagamento via Pix</strong><span>Chave, QR Code e copia e cola na mesma tela.</span></div>
+      <div class="pw-trust-item"><strong>Ativação segura</strong><span>Liberação após a confirmação do pagamento.</span></div>
+    </div>
 
     <!-- Controle do administrador (somente admin) -->
     <div id="subAdminFullControlBar" class="pw-admin" style="display:none;">
@@ -16286,16 +16295,25 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <section class="pw-card pw-card-plan" aria-labelledby="pwPlanTitle">
           <div class="pw-card-head">
             <span class="pw-step">1</span>
-            <h3 id="pwPlanTitle">Escolha o plano</h3>
-            <span class="pw-chip">Sem fidelidade</span>
+            <h3 id="pwPlanTitle">Planos disponíveis</h3>
+            <span class="pw-chip">Comece grátis</span>
           </div>
 
-          <div class="pw-plans" role="radiogroup" aria-label="Plano de assinatura">
+          <div class="pw-plans" role="list" aria-label="Planos de assinatura">
+            <div class="pw-plan pw-plan-trial" role="listitem" aria-label="Plano Gratuito 1 dia">
+              <span class="pw-radio" aria-hidden="true"></span>
+              <div class="pw-plan-body">
+                <div class="pw-plan-title">Plano Gratuito 1 dia <span class="pw-plan-status">disponível no cadastro</span></div>
+                <div class="pw-plan-desc">Teste todos os recursos por 24 horas, sem cobrança</div>
+              </div>
+              <div class="pw-plan-price"><strong>Grátis</strong><span>por 1 dia</span></div>
+            </div>
+
             <div class="pw-plan active" id="subPlanCardMensal" role="radio" aria-checked="true" tabindex="0" onclick="window.selectSubPlan('mensal')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.selectSubPlan('mensal');}">
               <span class="pw-radio" aria-hidden="true"></span>
               <div class="pw-plan-body">
                 <div class="pw-plan-title">Plano Mensal</div>
-                <div class="pw-plan-desc">Acesso completo por 30 dias</div>
+                <div class="pw-plan-desc">Acesso completo por 30 dias, sem fidelidade</div>
               </div>
               <div class="pw-plan-price"><strong>R$ 15,00</strong><span>por mês</span></div>
             </div>
@@ -16304,15 +16322,20 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               <span class="pw-radio" aria-hidden="true"></span>
               <div class="pw-plan-body">
                 <div class="pw-plan-title">Plano Anual <span class="pw-tag">Economize R$ 30,00</span></div>
-                <div class="pw-plan-desc">12 meses &bull; R$&nbsp;12,50 por mês</div>
+                <div class="pw-plan-desc">Acesso completo por 12 meses, com melhor custo-benefício</div>
               </div>
               <div class="pw-plan-price"><strong>R$ 150,00</strong><span>por ano</span></div>
             </div>
           </div>
 
+          <div class="pw-plan-note">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="12" y1="7" x2="12.01" y2="7"/></svg>
+            <span><strong>Como funciona:</strong> o período gratuito é liberado no cadastro. Para continuar usando o sistema, selecione um plano pago e confirme o pagamento via Pix.</span>
+          </div>
+
           <div class="pw-summary">
             <div class="pw-row"><span id="subSummaryPlanName">Plano Mensal (30 dias)</span><strong id="subSummaryPlanPrice">R$ 15,00</strong></div>
-            <div class="pw-row pw-row-discount" id="subSummaryDiscountRow" style="display:none;"><span>Desconto do plano anual</span><strong>- R$ 30,00</strong></div>
+            <div class="pw-row pw-row-discount" id="subSummaryDiscountRow" style="display:none;"><span>Economia do Plano Anual</span><strong>- R$ 30,00</strong></div>
             <div class="pw-row pw-total">
               <span class="pw-total-label">Total a pagar</span>
               <span class="pw-total-val" id="subSummaryTotalPrice">R$ 15,00</span>
@@ -16320,7 +16343,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <small class="pw-total-note" id="subSummaryPaymentFrequency">Cobrança mês a mês, sem fidelidade</small>
           </div>
 
-          <div class="pw-benefits-title">A licença inclui</div>
+          <div class="pw-benefits-title">Todos os planos pagos incluem</div>
           <ul class="pw-benefits">
             <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Gestão financeira completa: contas, caixas e fluxo</span></li>
             <li><span class="pw-check" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Conciliação, orçamentos e metas</span></li>
@@ -16330,7 +16353,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
           <div class="pw-guarantee">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <div><strong>Garantia de 7 dias</strong>Satisfação garantida ou reembolso integral.</div>
+            <div><strong>Acesso seguro</strong>Seu acesso é liberado somente após a confirmação do pagamento.</div>
           </div>
         </section>
 
@@ -16338,8 +16361,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <section class="pw-card" aria-labelledby="pwPayTitle">
           <div class="pw-card-head">
             <span class="pw-step">2</span>
-            <h3 id="pwPayTitle">Pagamento via Pix</h3>
-            <span class="pw-chip pw-chip-amber">Confirmação manual</span>
+            <h3 id="pwPayTitle">Finalize com Pix</h3>
+            <span class="pw-chip pw-chip-amber">Liberação após confirmação</span>
           </div>
 
           <div class="pw-status" id="subAutoRecognitionRadar" role="status" aria-live="polite">
@@ -16347,10 +16370,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               <span class="pw-pulse" id="subRadarDot"></span>
               <div class="pw-status-text">
                 <strong id="subRadarStatusTitle">Aguardando pagamento</strong>
-                <span id="subRadarStatusDesc">Pague via Pix e envie o comprovante. O acesso é liberado após a confirmação do recebimento.</span>
+                <span id="subRadarStatusDesc">Faça o pagamento, informe a confirmação e envie o comprovante pelo WhatsApp.</span>
               </div>
             </div>
-            <div class="pw-protocol"><span>Protocolo da solicitação</span><strong id="subLiveSessionTxBadge">PIX-REQUEST</strong></div>
+            <div class="pw-protocol"><span>Identificador do pedido</span><strong id="subLiveSessionTxBadge">PIX-REQUEST</strong></div>
             <div class="pw-track"><div class="pw-track-bar" id="subRadarProgressBar"></div></div>
           </div>
 
@@ -16359,12 +16382,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
               <div class="pw-qr">
                 <span class="pw-qr-label">QR Code Pix</span>
                 <img id="subPixQrImg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="QR Code Pix para pagamento" width="172" height="172" />
-                <span class="pw-qr-note">Escaneie com o app do seu banco</span>
+                <span class="pw-qr-note">Aponte a câmera do app do seu banco</span>
               </div>
 
               <div class="pw-pay-col">
                 <div class="pw-key">
-                  <span class="pw-field-label">Chave Pix (celular)</span>
+                  <span class="pw-field-label">Chave Pix</span>
                   <div class="pw-key-row">
                     <div class="pw-key-value">(62) 99234-5372</div>
                     <button type="button" id="btnCopyPixKeyDirect" class="pw-btn pw-btn-sky pw-btn-sm" onclick="window.copyPixKeyDirect()">
@@ -16380,7 +16403,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
                     <label class="pw-field-label" for="subPixCodeInput">Pix copia e cola</label>
                     <button type="button" id="btnCopyPix" class="pw-btn pw-btn-solid pw-btn-sm" onclick="window.copyPixCodeToClipboard()">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                      <span>Copiar código</span>
+                      <span>Copiar Pix copia e cola</span>
                     </button>
                   </div>
                   <textarea id="subPixCodeInput" class="pw-code" readonly rows="3" spellcheck="false"></textarea>
@@ -16394,8 +16417,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <!-- Aviso de pedido registrado -->
           <div id="subPaymentVerifyBanner" class="pw-banner" style="display:none;" role="status" aria-live="polite">
             <div class="pw-banner-head">
-              <strong id="subVerifyBannerTitle">Aguardando confirmação manual</strong>
-              <span class="pw-chip pw-chip-amber">Confirmação manual</span>
+              <strong id="subVerifyBannerTitle">Pagamento enviado para análise</strong>
+              <span class="pw-chip pw-chip-amber">Em análise</span>
             </div>
             <p id="subVerifyBannerDesc">Pedido registrado. Aguardando a confirmação do pagamento.</p>
             <button type="button" class="pw-btn pw-btn-wa" onclick="window.sendPaymentProofWhatsApp()">
@@ -16416,10 +16439,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
       <!-- Barra de pagamento fixa: o botao principal fica sempre visivel, mesmo em telas baixas -->
       <div class="pw-paybar">
-        <div class="pw-paybar-amount"><span>Valor a pagar</span><strong id="pixDisplayAmount">R$ 15,00</strong></div>
+        <div class="pw-paybar-amount"><span>Total da assinatura</span><strong id="pixDisplayAmount">R$ 15,00</strong></div>
         <button type="button" class="pw-btn pw-btn-primary" id="subBtnConfirmPix" onclick="window.processSubscriptionPayment('pix')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          <span id="pixActionBtnLabel">Paguei via Pix &bull; solicitar confirmação</span>
+          <span id="pixActionBtnLabel">Já paguei via Pix &bull; enviar para confirmação</span>
         </button>
       </div>
     </div>
@@ -16430,8 +16453,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       <span class="pw-chip">Pagamento confirmado</span>
-      <h3>Pagamento confirmado e acesso liberado!</h3>
-      <p>Seu plano <strong id="subSuccessPlanName">Mensal</strong> está ativo. Este recibo registra a ativação da assinatura.</p>
+      <h3>Assinatura ativada com sucesso!</h3>
+      <p>Seu <strong id="subSuccessPlanName">Plano Mensal</strong> está ativo. Este recibo registra a ativação da assinatura.</p>
 
       <div class="pw-receipt">
         <div class="pw-receipt-head">
@@ -18165,7 +18188,7 @@ window.unlockWithConfirmedReceipt = function(data) {
   const expiresEl = document.getElementById('subSuccessExpires');
   const dateTimeEl = document.getElementById('subSuccessDateTime');
 
-  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Anual (R$ 150,00 • 12 meses)' : (plan === 'vitalicio' ? 'Vitalício' : 'Mensal (R$ 15,00 • 30 dias)');
+  if (planNameEl) planNameEl.textContent = plan === 'anual' ? 'Plano Anual (R$ 150,00 • 12 meses)' : (plan === 'vitalicio' ? 'Acesso administrativo' : 'Plano Mensal (R$ 15,00 • 30 dias)');
   if (txIdEl) txIdEl.textContent = data.transaction_id || data.subscription_payment_id || ('NEXUS-SUB-' + Date.now());
   if (methodEl) {
     const methodLabels = {
@@ -18262,8 +18285,8 @@ window.initTrialAndSubscription = async function() {
           window.openSubscriptionPaywall(true);
           if (data.status === 'pending_payment') {
             window.showPaymentVerifyBanner(
-              'Pagamento Aguardando Confirmação Bancária',
-              'Seu pagamento informado está aguardando confirmação efetiva na conta recebedora. <strong>O acesso só é liberado após a confirmação real do pagamento.</strong>',
+              'Pagamento em análise',
+              'Seu pagamento está aguardando a confirmação na conta recebedora. <strong>O acesso só é liberado após a confirmação do pagamento.</strong>',
               false
             );
           }
@@ -18417,13 +18440,13 @@ window.openSubscriptionPaywall = function(isLocked = false) {
   if (effectiveLocked) {
     document.body.classList.add('paywall-locked');
     document.documentElement.classList.add('paywall-locked');
-    if (titleEl) titleEl.textContent = 'Pagamento obrigatório para continuar usando';
-    if (subEl) subEl.textContent = 'Seu acesso está bloqueado. Pague via Pix e envie o comprovante para liberar o acesso.';
+    if (titleEl) titleEl.textContent = 'Escolha um plano para continuar usando';
+    if (subEl) subEl.textContent = 'Seu período gratuito terminou. Escolha o Plano Mensal ou o Plano Anual, pague via Pix e envie o comprovante para liberar o acesso.';
   } else {
     document.body.classList.remove('paywall-locked');
     document.documentElement.classList.remove('paywall-locked');
-    if (titleEl) titleEl.textContent = 'Central de Assinatura • Nexus Financeiro Hub';
-    if (subEl) subEl.textContent = 'Escolha o plano e pague via Pix. O acesso pago é liberado após a confirmação do recebimento.';
+    if (titleEl) titleEl.textContent = 'Escolha o plano ideal para o seu controle financeiro';
+    if (subEl) subEl.textContent = 'Comece com 1 dia grátis. Depois, escolha o Plano Mensal ou o Plano Anual e pague via Pix.';
   }
 
   if (closeBtn) {
@@ -18788,8 +18811,8 @@ window.armAutoPaymentDetector = function(method) {
 
   window.updateAutoRecognitionRadar(
     'detecting',
-    'Pix copiado • Aguardando solicitação de confirmação',
-    'Após pagar, envie o comprovante pelo WhatsApp. O acesso será liberado quando o recebimento for confirmado.',
+    'Pix copiado • aguardando confirmação',
+    'Após o pagamento, envie o comprovante pelo WhatsApp. O acesso será liberado quando o recebimento for confirmado.',
     45
   );
 
@@ -18963,8 +18986,8 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
 
   window.updateAutoRecognitionRadar(
     'processing',
-    '1/3 • Registrando pedido de confirmação...',
-    'Registrando a solicitação para sua conta...',
+    '1/3 • Registrando o pedido...',
+    'Registrando o pedido de confirmação para sua conta...',
     55
   );
 
@@ -18973,8 +18996,8 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
   }
   window.updateAutoRecognitionRadar(
     'processing',
-    '2/3 • Solicitando confirmação...',
-    'Solicitando confirmação de <strong>R$ ' + (plan === 'anual' ? '150,00' : '15,00') + '</strong> e aguardando validação do recebimento...',
+    '2/3 • Enviando para análise...',
+    'Enviando a confirmação de <strong>R$ ' + (plan === 'anual' ? '150,00' : '15,00') + '</strong> e aguardando a validação do recebimento...',
     88
   );
 
@@ -19002,7 +19025,7 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
       window.updateAutoRecognitionRadar(
         'confirmed',
         '3/3 • Pagamento confirmado pelo financeiro.',
-        'Assinatura ativada e acesso liberado imediatamente.',
+        'Assinatura ativada e acesso liberado.',
         100
       );
       window.unlockWithConfirmedReceipt(data);
@@ -19011,13 +19034,13 @@ window.processSubscriptionPayment = async function(method, isAutoTriggered = fal
       if (data.remaining_seconds > 0) window.startTrialCountdown(data.remaining_seconds);
       window.updateAutoRecognitionRadar(
         'pending',
-        'Pagamento aguardando confirmação',
-        'O pedido foi registrado. Envie o comprovante pelo WhatsApp; o acesso pago será liberado após a confirmação.',
+        'Pagamento em análise',
+        'O pedido foi registrado. Envie o comprovante pelo WhatsApp; o acesso será liberado após a confirmação.',
         100
       );
       window.showPaymentVerifyBanner(
         'Pedido de pagamento registrado',
-        'Envie o comprovante pelo WhatsApp. A confirmação do recebimento libera o plano. Seu período grátis continua até o fim, se ainda estiver ativo.'
+        'Envie o comprovante pelo WhatsApp. A confirmação do recebimento libera o plano. O Plano Gratuito 1 dia continua ativo até o fim, se ainda estiver dentro do prazo.'
       );
       if (data.access_status === 'pending_payment') window.openSubscriptionPaywall(true);
       // Mostra o aviso com o botao do WhatsApp (a barra de pagamento fixa pode deixar o aviso fora da tela)
@@ -21476,7 +21499,14 @@ function updateHeaderUser(){
   if(sidebarNameEl) sidebarNameEl.textContent = cleanName;
   if(sidebarPlanEl) {
     const plan = String(currentUser.subscription_plan || currentUser.plan || '').toLowerCase();
-    sidebarPlanEl.textContent = plan === 'anual' || plan === 'annual' ? 'Plano Anual' : 'Plano Premium';
+    const status = String(currentUser.subscription_status || '').toLowerCase();
+    sidebarPlanEl.textContent = plan === 'anual' || plan === 'annual'
+      ? 'Plano Anual'
+      : plan === 'mensal'
+        ? 'Plano Mensal'
+        : status === 'trial' || !plan
+          ? 'Plano Gratuito 1 dia'
+          : 'Acesso administrativo';
   }
   if(roleEl) {
     if (isViewingOtherUser) {
