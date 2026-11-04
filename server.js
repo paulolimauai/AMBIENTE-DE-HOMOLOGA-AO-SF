@@ -14233,7 +14233,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/frontend-polish.css?v=20261103-menu-centralizado" />
+<link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -22859,8 +22859,91 @@ function pageContas(){
   </div>\`;
 }
 
+/* Tela de Orçamentos: resumo (com orçamentos) e estado vazio com sugestões. HTML por concatenação para não aninhar template literals. */
+function orcEsc(v){ return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function orcSummaryHTML(list){
+  const totalLimit = list.reduce((s,b)=>s+(Number(b.limit)||0),0);
+  const totalSpent = list.reduce((s,b)=>s+b.spent,0);
+  const totalPct = totalLimit>0 ? Math.round(totalSpent/totalLimit*100) : 0;
+  const remaining = totalLimit - totalSpent;
+  const nOver = list.filter(b=>b.pct>=100).length;
+  const nWarn = list.filter(b=>b.pct>=80 && b.pct<100).length;
+  const nOk = list.length - nOver - nWarn;
+  const tone = totalPct>=100 ? '#F87171' : totalPct>=80 ? '#FBBF24' : '#34D399';
+  const svg = function(p){ return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>'; };
+  const ic = function(c, rgb){ return 'background:linear-gradient(135deg, rgba(' + rgb + ',0.18), rgba(' + rgb + ',0.06)); border:1px solid rgba(' + rgb + ',0.3); color:' + c + ';'; };
+  const situacao = nOver>0 ? nOver + (nOver===1 ? ' excedido' : ' excedidos') : nWarn>0 ? nWarn + ' em alerta' : 'Tudo em dia';
+  const situacaoCor = nOver>0 ? '#F87171' : nWarn>0 ? '#FBBF24' : '#34D399';
+  return '<div class="orc-summary">' +
+    '<div class="kpi kpi-balance">' +
+      '<div class="row1"><span>Total orçado</span><span class="ic" style="' + ic('#34D399','16,185,129') + '">' + svg('<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>') + '</span></div>' +
+      '<div class="val" style="color:#34D399;">' + fmt(totalLimit) + '</div>' +
+      '<div class="sub"><span>' + list.length + (list.length===1 ? ' categoria com limite' : ' categorias com limite') + '</span><span class="kpi-tag kpi-tag-cyan">Por mês</span></div>' +
+    '</div>' +
+    '<div class="kpi kpi-expense">' +
+      '<div class="row1"><span>Gasto no período</span><span class="ic" style="' + ic('#FB7185','244,63,94') + '">' + svg('<polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/>') + '</span></div>' +
+      '<div class="val" style="color:' + tone + ';">' + fmt(totalSpent) + '</div>' +
+      '<div class="orc-sum-bar"><div class="orc-sum-fill" style="width:' + Math.min(totalPct,100) + '%; background:' + tone + ';"></div></div>' +
+      '<div class="sub"><span>' + totalPct + '% do total orçado</span></div>' +
+    '</div>' +
+    '<div class="kpi kpi-net">' +
+      '<div class="row1"><span>' + (remaining<0 ? 'Acima do orçamento' : 'Ainda disponível') + '</span><span class="ic" style="' + ic(remaining<0 ? '#F87171' : '#34D399', remaining<0 ? '239,68,68' : '16,185,129') + '">' + svg(remaining<0 ? '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>' : '<path d="M20 6 9 17l-5-5"/>') + '</span></div>' +
+      '<div class="val" style="color:' + (remaining<0 ? '#F87171' : '#34D399') + ';">' + (remaining<0 ? '-' : '') + fmt(Math.abs(remaining)) + '</div>' +
+      '<div class="sub"><span>' + (remaining<0 ? 'Gasto acima da soma dos limites' : 'Soma dos limites menos o gasto') + '</span></div>' +
+    '</div>' +
+    '<div class="kpi kpi-tx">' +
+      '<div class="row1"><span>Situação</span><span class="ic" style="' + ic('#34D399','16,185,129') + '">' + svg('<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>') + '</span></div>' +
+      '<div class="val" style="color:' + situacaoCor + ';">' + situacao + '</div>' +
+      '<div class="sub orc-sum-tags">' +
+        '<span class="kpi-tag kpi-tag-success">' + nOk + ' normal</span>' +
+        '<span class="kpi-tag" style="background:rgba(245,158,11,0.14); color:#FBBF24; border:1px solid rgba(245,158,11,0.3);">' + nWarn + ' alerta</span>' +
+        '<span class="kpi-tag kpi-tag-danger">' + nOver + ' excedido</span>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+function orcEmptyHTML(){
+  const periodTx = transactions.filter(inPeriod);
+  const used = budgets.map(b=>b.category);
+  const sug = categories.filter(c=>c.type!=='receita' && used.indexOf(c.name)<0).map(function(c){
+    return {name:c.name, spent: periodTx.filter(t=>t.cat===c.name && t.type==='out').reduce((s,t)=>s+parseInputValue(t.val),0)};
+  }).sort((a,b)=>b.spent-a.spent).slice(0,8);
+  let chips = '';
+  sug.forEach(function(s){
+    const limit = s.spent>0 ? Math.ceil(s.spent/10)*10 : 0;
+    const col = catColor(s.name);
+    chips += '<button type="button" class="orc-chip" data-orcpreset="' + encodeURIComponent(s.name) + '" data-orclimit="' + limit + '">' +
+      '<span class="orc-chip-ic" style="background:' + col + '22; border-color:' + col + '55;">' + catIcon(s.name) + '</span>' +
+      '<span class="orc-chip-txt"><strong>' + orcEsc(s.name) + '</strong><small>' + (s.spent>0 ? 'Gasto: ' + fmt(s.spent) : 'Definir limite mensal') + '</small></span>' +
+    '</button>';
+  });
+  const temGasto = sug.some(s=>s.spent>0);
+  const steps = [
+    ['Escolha a categoria', 'Comece pelo que mais pesa no seu mês: alimentação, moradia, transporte, lazer.'],
+    ['Defina o limite mensal', 'Quanto você quer gastar, no máximo, em cada categoria.'],
+    ['Acompanhe em tempo real', 'O card muda para alerta ao chegar a 80% e para excedido ao passar de 100%.']
+  ];
+  let stepsHTML = '';
+  steps.forEach(function(st, i){ stepsHTML += '<li><span class="orc-step-n">' + (i+1) + '</span><div><strong>' + st[0] + '</strong><p>' + st[1] + '</p></div></li>'; });
+  return '<section class="orc-empty">' +
+    '<div class="orc-empty-hero">' +
+      '<div class="orc-empty-ic"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></div>' +
+      '<h2>Nenhum orçamento definido</h2>' +
+      '<p>Crie limites mensais por categoria para controlar suas despesas e poupar mais.</p>' +
+      '<button type="button" class="btn-primary orc-empty-cta" data-orcnew style="display:inline-flex; align-items:center; gap:8px; font-weight:700;">' +
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Criar primeiro orçamento' +
+      '</button>' +
+    '</div>' +
+    '<div class="orc-empty-grid">' +
+      (chips ? '<div class="orc-empty-card"><h3>Comece por uma categoria</h3><p class="orc-empty-note">Escolha uma para abrir o orçamento já com ela selecionada.' + (temGasto ? ' Onde já há gasto neste período, o limite vem sugerido.' : '') + '</p><div class="orc-chips">' + chips + '</div></div>' : '') +
+      '<div class="orc-empty-card"><h3>Como funciona</h3><ol class="orc-steps">' + stepsHTML + '</ol></div>' +
+    '</div>' +
+  '</section>';
+}
+
 function pageOrcamentos(){
   const list = budgetStatus();
+  const sorted = list.slice().sort((a,b)=>b.pct-a.pct);
   return \`
   <div class="page-head">
     <div>
@@ -22879,8 +22962,9 @@ function pageOrcamentos(){
       </button>
     </div>
   </div>
+  \${list.length ? orcSummaryHTML(list) : ''}
   <div class="cat-cards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;">
-    \${list.length ? list.map(b => {
+    \${list.length ? sorted.map(b => {
       const color = b.pct >= 100 ? 'var(--red)' : b.pct >= 80 ? 'var(--orange)' : 'var(--green)';
       const remaining = b.limit - b.spent;
       const isOver = remaining < 0;
@@ -22925,8 +23009,9 @@ function pageOrcamentos(){
           </strong>
         </div>
       </div>\`;
-    }).join('') : \`<div class="placeholder"><div class="big">◔</div><h3>Nenhum orçamento definido</h3><p>Crie limites mensais por categoria para controlar suas despesas e poupar mais.</p></div>\`}
-  </div>\`;
+    }).join('') : ''}
+  </div>
+  \${list.length ? '' : orcEmptyHTML()}\`;
 }
 
 function pageMetas(){
@@ -27953,7 +28038,7 @@ function openCatManageModal(){
 }
 function closeCatManageModal(){ document.getElementById('overlayCatManage').classList.remove('show'); }
 
-function openBudgetModal(id){
+function openBudgetModal(id, presetCategory, presetLimit){
   if(categories.length===0){ showToast('Cadastre uma categoria antes de criar um orçamento'); return; }
   editingBudgetId = id || null;
   document.getElementById('overlayBudget').classList.add('show');
@@ -27968,7 +28053,10 @@ function openBudgetModal(id){
     document.getElementById('orcLimite').value = b.limit !== undefined && b.limit !== null ? b.limit : 0;
   } else {
     document.getElementById('orcModalTitle').textContent = 'Novo Orçamento';
-    document.getElementById('orcLimite').value = '0';
+    document.getElementById('orcLimite').value = presetLimit > 0 ? presetLimit : '0';
+    if(presetCategory && Array.prototype.some.call(sel.options, o=>o.value===presetCategory)) sel.value = presetCategory;
+    const limInp = document.getElementById('orcLimite');
+    setTimeout(()=>{ try{ limInp.focus(); limInp.select(); }catch(e){} }, 60);
   }
 }
 function closeBudgetModal(){ document.getElementById('overlayBudget').classList.remove('show'); }
@@ -29296,6 +29384,8 @@ function attachPageEvents(){
   document.querySelectorAll('[data-delcat]').forEach(el=>el.onclick = ()=>deleteCategory(el.getAttribute('data-delcat')));
 
   const novoOrc = document.getElementById('btnNovoOrcamento'); if(novoOrc) novoOrc.onclick = ()=>openBudgetModal(null);
+  document.querySelectorAll('[data-orcnew]').forEach(el=>el.onclick = ()=>openBudgetModal(null));
+  document.querySelectorAll('[data-orcpreset]').forEach(el=>el.onclick = ()=>openBudgetModal(null, decodeURIComponent(el.getAttribute('data-orcpreset')), parseFloat(el.getAttribute('data-orclimit')) || 0));
   document.querySelectorAll('[data-editorc]').forEach(el=>el.onclick = ()=>openBudgetModal(parseInt(el.getAttribute('data-editorc'))));
   document.querySelectorAll('[data-delorc]').forEach(el=>el.onclick = ()=>deleteBudget(parseInt(el.getAttribute('data-delorc'))));
 
