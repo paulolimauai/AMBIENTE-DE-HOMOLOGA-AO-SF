@@ -6505,3 +6505,87 @@ html.sidebar-collapsed .menu.sidebar-menu .menu-section-header::before,
 body.sidebar-collapsed .menu.sidebar-menu .menu-section-header::before { display: none !important; }
 /* Os cards do painel administrativo (Cadastros, Ordens, Pagamentos, Auditoria) ficam como estao: o bloco
    @layer nx-admin-menu define titulo/subtitulo a esquerda e contador a direita de proposito. */
+
+/* ==================== Orcamentos: resumo no topo e estado vazio com sugestoes ==================== */
+.orc-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 0 0 20px; }
+.orc-summary .kpi { display: flex; flex-direction: column; min-width: 0; }
+.orc-summary .kpi .val { overflow-wrap: anywhere; }
+.orc-summary .kpi .sub { margin-top: auto; flex-wrap: wrap; }
+.orc-sum-tags { justify-content: flex-start !important; gap: 6px !important; }
+.orc-sum-bar { height: 6px; border-radius: 999px; background: rgba(255, 255, 255, .08); overflow: hidden; margin: 0 0 12px; }
+.orc-sum-fill { height: 100%; border-radius: 999px; transition: width .4s ease; }
+
+.orc-empty { display: grid; gap: 18px; width: 100%; max-width: 1120px; margin: 4px auto 28px; }
+.orc-empty-hero,
+.orc-empty-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, .05) 0%, rgba(15, 23, 42, .68) 50%, rgba(10, 15, 29, .78) 100%);
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 255, 255, .2);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+}
+.orc-empty-hero {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 44px 24px 40px; border-radius: 24px;
+}
+.orc-empty-ic {
+  width: 76px; height: 76px; border-radius: 50%; margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: center; color: #34D399;
+  background: rgba(16, 185, 129, .14); border: 1.5px solid rgba(52, 211, 153, .38);
+  box-shadow: 0 0 28px rgba(16, 185, 129, .28);
+}
+.orc-empty-hero h2 { font-size: 26px; font-weight: 800; letter-spacing: -.02em; color: var(--text); margin: 0 0 8px; }
+.orc-empty-hero p { font-size: 14.5px; line-height: 1.6; color: var(--text-dim); max-width: 520px; margin: 0 0 22px; }
+.orc-empty-cta { padding: 12px 22px !important; font-size: 14px; }
+.orc-empty-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.orc-empty-card { padding: 22px; border-radius: 20px; min-width: 0; }
+.orc-empty-card h3 { font-size: 15px; font-weight: 800; color: var(--text); margin: 0 0 4px; }
+.orc-empty-note { font-size: 12.5px; line-height: 1.5; color: var(--text-dim); margin: 0 0 14px; }
+.orc-chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.orc-chip {
+  display: flex; align-items: center; gap: 10px; min-width: 0; text-align: left; cursor: pointer;
+  padding: 11px 13px; border-radius: 14px; font-family: inherit; color: var(--text);
+  background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .1);
+  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.orc-chip:hover { background: rgba(16, 185, 129, .1); border-color: rgba(52, 211, 153, .5); transform: translateY(-1px); }
+.orc-chip:focus-visible { outline: 2px solid #34D399; outline-offset: 2px; }
+.orc-chip-ic {
+  flex: none; width: 36px; height: 36px; border-radius: 11px; font-size: 17px;
+  display: flex; align-items: center; justify-content: center; border: 1px solid transparent;
+}
+.orc-chip-txt { display: flex; flex-direction: column; min-width: 0; }
+.orc-chip-txt strong { font-size: 13.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.orc-chip-txt small { font-size: 11px; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.orc-steps { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 14px; }
+.orc-steps li { display: flex; align-items: flex-start; gap: 12px; }
+.orc-step-n {
+  flex: none; width: 28px; height: 28px; border-radius: 50%; font-size: 13px; font-weight: 800; color: #34D399;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(16, 185, 129, .16); border: 1px solid rgba(52, 211, 153, .4);
+}
+.orc-steps strong { display: block; font-size: 13.5px; color: var(--text); }
+.orc-steps p { margin: 2px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--text-dim); }
+@media (max-width: 900px) {
+  .orc-empty-grid { grid-template-columns: 1fr; }
+  .orc-empty-hero { padding: 32px 18px; }
+  .orc-empty-hero h2 { font-size: 22px; }
+}
+html.light .orc-empty-hero, html.light .orc-empty-card, body.light .orc-empty-hero, body.light .orc-empty-card {
+  background: #fff; border-color: #cbd5e1; box-shadow: 0 8px 24px rgba(15, 23, 42, .06);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+html.light .orc-chip, body.light .orc-chip { background: #f8fafc; border-color: #cbd5e1; }
+html.light .orc-sum-bar, body.light .orc-sum-bar { background: #e2e8f0; }
+
+/* Botao "Cancelar" dos modais no tema escuro: o fundo vinha de var(--bg) (branco) com texto claro, ficando ilegivel. */
+html:not(.light) body:not(.light) .modal-actions button:not(.save) {
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .16);
+  color: var(--text);
+  transition: background-color .15s ease, border-color .15s ease;
+}
+html:not(.light) body:not(.light) .modal-actions button:not(.save):hover {
+  background: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .3);
+}
