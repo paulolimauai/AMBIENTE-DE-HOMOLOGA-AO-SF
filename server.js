@@ -9,6 +9,7 @@ const url = require('url');
 const tls = require('tls');
 const crypto = require('crypto');
 const zlib = require('zlib');
+const Atendimento = require('./atendimento'); // regras da Central de Atendimento (chamados / O.S.)
 
 let mssql;
 try {
@@ -31319,6 +31320,166 @@ function saveLocalOrdens(ordens) {
   }
 }
 
+// ==================== Central de Atendimento: apoio das rotas de chamados (as regras ficam em atendimento.js) ====================
+const ORDEM_COLUNAS_SQL = 'id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, concluido_em, created_at, updated_at';
+const ATENDIMENTO_LIMITE_CORPO_BYTES = 64 * 1024;
+const ATENDIMENTO_LIMITE_LISTA = 500;
+
+// Lê o corpo JSON com limite próprio: o limite global (30 MB) existe para anexos; um chamado tem poucos KB.
+function lerCorpoJson(req, limiteBytes = ATENDIMENTO_LIMITE_CORPO_BYTES) {
+  return new Promise((resolve) => {
+    const partes = [];
+    let recebido = 0;
+    let encerrado = false;
+    const terminar = (resultado) => {
+      if (encerrado) return;
+      encerrado = true;
+      resolve(resultado);
+    };
+    req.on('data', (parte) => {
+      if (encerrado) return;
+      recebido += parte.length;
+      if (recebido > limiteBytes) return terminar({ ok: false, status: 413, mensagem: 'Pedido grande demais.' });
+      partes.push(parte);
+    });
+    req.on('end', () => {
+      const texto = Buffer.concat(partes).toString('utf8').trim();
+      if (!texto) return terminar({ ok: true, dados: {} });
+      try {
+        const dados = JSON.parse(texto);
+        if (!dados || typeof dados !== 'object' || Array.isArray(dados)) return terminar({ ok: false, status: 400, mensagem: 'JSON inválido' });
+        terminar({ ok: true, dados });
+      } catch (e) {
+        terminar({ ok: false, status: 400, mensagem: 'JSON inválido' });
+      }
+    });
+    req.on('error', () => terminar({ ok: false, status: 400, mensagem: 'Não foi possível ler a requisição.' }));
+  });
+}
+
+// Quem fez a ação, para o registro de auditoria (antes todo log aparecia como "admin@nexusfinanceiro.com")
+function atorDaRequisicao(req) {
+  const admin = getAuthenticatedAdmin(req);
+  if (admin) return { nome: admin.name || 'Administrador', email: admin.email || 'sistema@nexus.com' };
+  return { nome: 'Sincronização interna', email: 'sistema@nexus.com' };
+}
+
+function idNumericoDeOrdem(valor) {
+  return /^\d{1,9}$/.test(String(valor == null ? '' : valor).trim()) ? parseInt(valor, 10) : -1;
+}
+
+function proximoIdLocalDeOrdem(lista) {
+  const usados = new Set(lista.map((o) => String(o.id)));
+  let id = Date.now();
+  while (usados.has(String(id))) id++;
+  return id;
+}
+
+async function protocoloJaExiste(protocolo) {
+  if (getLocalOrdens().some((o) => String(o.protocol || '').toUpperCase() === protocolo)) return true;
+  if (!pool) return false;
+  try {
+    const r = await pool.query('SELECT 1 AS existe FROM ordens_servico WHERE UPPER(protocol) = $1', [protocolo]);
+    return Boolean(r && r.rows && r.rows.length);
+  } catch (e) {
+    return false;
+  }
+}
+
+// Lista do administrador: une o SQL Server com o arquivo local. Chamados que só existem no arquivo (banco fora do ar
+// na hora da abertura) não se perdem: antes o arquivo era sobrescrito pelas linhas do banco a cada listagem.
+async function carregarOrdens(limite = ATENDIMENTO_LIMITE_LISTA) {
+  const locais = getLocalOrdens();
+  if (pool) {
+    try {
+      const r = await pool.query(`SELECT TOP ${Number(limite)} ${ORDEM_COLUNAS_SQL} FROM ordens_servico ORDER BY id DESC`);
+      const doBanco = r && r.rows ? r.rows : [];
+      const todas = Atendimento.mesclarOrdens(doBanco, locais);
+      if (doBanco.length) saveLocalOrdens(todas);
+      return todas.slice(0, limite);
+    } catch (err) {
+      console.warn('[AVISO BD O.S.] Falha ao listar no SQL Server, usando o arquivo local:', err.message);
+    }
+  }
+  return Atendimento.mesclarOrdens([], locais).slice(0, limite);
+}
+
+// Acha um chamado por id ou protocolo (arquivo local primeiro, depois o banco). Devolve { todas, indice } sobre a
+// lista local mais recente, pronta para alterar e gravar, ou null se não existir.
+async function buscarOrdemPorReferencia(referencia) {
+  const mesma = (o) => Atendimento.mesmaReferencia(o, referencia);
+  const locais = getLocalOrdens();
+  const indiceLocal = locais.findIndex(mesma);
+  if (indiceLocal !== -1) return { todas: locais, indice: indiceLocal };
+  if (!pool) return null;
+  try {
+    const protocolo = Atendimento.normalizarProtocolo(referencia) || String(referencia).trim().toUpperCase();
+    const r = await pool.query(`SELECT TOP 1 ${ORDEM_COLUNAS_SQL} FROM ordens_servico WHERE id = $1 OR UPPER(protocol) = $2`, [idNumericoDeOrdem(referencia), protocolo]);
+    const linha = r && r.rows && r.rows[0] ? Atendimento.normalizarOrdem(r.rows[0]) : null;
+    if (!linha) return null;
+    const frescas = getLocalOrdens(); // o arquivo pode ter mudado durante a consulta ao banco
+    if (!frescas.some(mesma)) frescas.unshift(linha);
+    return { todas: frescas, indice: frescas.findIndex(mesma) };
+  } catch (err) {
+    console.warn('[AVISO BD O.S.] Falha ao buscar chamado no SQL Server:', err.message);
+    return null;
+  }
+}
+
+// Consulta pública: só correspondência exata (protocolo, e-mail, telefone ou CPF), no banco e no arquivo local
+async function consultarOrdensPublico(consulta) {
+  const locais = getLocalOrdens().filter((o) => Atendimento.ordemCorresponde(o, consulta));
+  let doBanco = [];
+  if (pool) {
+    try {
+      let onde;
+      let parametros;
+      if (consulta.tipo === 'protocolo') {
+        onde = 'UPPER(protocol) = $1';
+        parametros = [consulta.valor];
+      } else if (consulta.tipo === 'email') {
+        onde = 'LOWER(client_email) = $1';
+        parametros = [consulta.valor];
+      } else {
+        const digitos = consulta.valor;
+        const nacional = digitos.length > 11 && digitos.startsWith('55') ? digitos.slice(2) : digitos;
+        const soNumeros = (coluna) => `REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(${coluna}, '(', ''), ')', ''), '-', ''), ' ', ''), '.', ''), '+', '')`;
+        onde = `${soNumeros('client_phone')} IN ($1, $2, $3) OR ${soNumeros('client_cpf')} = $1`;
+        parametros = [digitos, nacional, '55' + nacional];
+      }
+      const r = await pool.query(`SELECT TOP 50 ${ORDEM_COLUNAS_SQL} FROM ordens_servico WHERE ${onde} ORDER BY id DESC`, parametros);
+      doBanco = (r && r.rows ? r.rows : []).filter((o) => Atendimento.ordemCorresponde(o, consulta));
+    } catch (err) {
+      console.warn('[AVISO BD O.S.] Falha na consulta no SQL Server, usando o arquivo local:', err.message);
+    }
+  }
+  return Atendimento.mesclarOrdens(doBanco, locais).slice(0, 50);
+}
+
+// Busca ampla (nome, e-mail, telefone, CPF, protocolo ou assunto): só administrador e sincronização interna
+async function consultarOrdensAmplo(termo) {
+  const q = String(termo || '').toLowerCase().trim();
+  const confere = (o) => [o.client_email, o.client_name, o.client_phone, o.client_cpf, o.protocol, o.title]
+    .some((v) => String(v || '').toLowerCase().includes(q));
+  const locais = getLocalOrdens().filter(confere);
+  let doBanco = [];
+  if (pool) {
+    try {
+      const r = await pool.query(
+        `SELECT TOP 50 ${ORDEM_COLUNAS_SQL} FROM ordens_servico
+         WHERE LOWER(client_email) = $1 OR LOWER(client_name) LIKE $2 OR LOWER(protocol) = $1
+            OR client_phone LIKE $2 OR client_cpf LIKE $2 OR LOWER(title) LIKE $2
+         ORDER BY id DESC`,
+        [q, '%' + q + '%']
+      );
+      doBanco = r && r.rows ? r.rows : [];
+    } catch (err) {
+      console.warn('[AVISO BD O.S.] Falha na busca no SQL Server, usando o arquivo local:', err.message);
+    }
+  }
+  return Atendimento.mesclarOrdens(doBanco, locais).slice(0, 50);
+}
+
 function getLocalTecnicos() {
   try {
     if (fs.existsSync(LOCAL_TECNICOS_PATH)) {
@@ -34251,369 +34412,217 @@ const server = http.createServer(async (req, res) => {
   }
 
 
-  // ==================== ROTAS DE ORDENS DE SERVIÇO (O.S.) ====================
+  // ==================== CENTRAL DE ATENDIMENTO: ROTAS DE CHAMADOS (O.S.) ====================
+  // Regras (validação, protocolo, status e o que o público pode ver) em atendimento.js; aqui ficam só o HTTP e a gravação
+  // (arquivo local + SQL Server).
 
-  // Rota GET/POST para Consultar Ordens de Serviço por Nome, E-mail ou Protocolo (Público)
-  if ((req.method === 'GET' && parsedUrl.pathname === '/api/ordens/consultar') || (req.method === 'POST' && parsedUrl.pathname === '/api/ordens/consultar')) {
-    const handleConsultQuery = async (qStr) => {
-      const q = String(qStr || '').toLowerCase().trim();
-      if (!q) {
-        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, message: 'Informe o Nome, E-mail, Telefone ou Protocolo para consulta.', ordens: [] }));
-      }
-
-      // Consulta pública: só por correspondência exata (protocolo, e-mail, telefone ou CPF) e com dados pessoais mascarados.
-      // Administradores e a sincronização interna mantêm a busca ampla e os dados completos.
-      const isPrivileged = Boolean(getAuthenticatedAdmin(req) || hasInternalSyncAccess(req));
-      if (!isPrivileged && q.length < 6) {
-        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, message: 'Informe o protocolo completo ou o e-mail usado na solicitação.', ordens: [] }));
-      }
-      const digitsOf = (v) => String(v || '').replace(/\D/g, '');
-      const qDigits = digitsOf(q);
-      const matchesBroad = (o) =>
-        (o.client_email && o.client_email.toLowerCase().includes(q)) ||
-        (o.client_name && o.client_name.toLowerCase().includes(q)) ||
-        (o.client_phone && o.client_phone.toLowerCase().includes(q)) ||
-        (o.client_cpf && o.client_cpf.toLowerCase().includes(q)) ||
-        (o.protocol && o.protocol.toLowerCase().includes(q));
-      const matchesExact = (o) =>
-        String(o.protocol || '').toLowerCase() === q ||
-        String(o.client_email || '').toLowerCase() === q ||
-        (qDigits.length >= 8 && (digitsOf(o.client_phone) === qDigits || digitsOf(o.client_cpf) === qDigits));
-      const maskOrderForPublic = (o) => {
-        const { admin_notes, client_cpf, client_phone, client_email, ...rest } = o;
-        const emailParts = String(client_email || '').split('@');
-        return {
-          ...rest,
-          client_email: emailParts.length === 2 ? emailParts[0].slice(0, 2) + '***@' + emailParts[1] : '',
-          client_phone: client_phone ? '*****' + digitsOf(client_phone).slice(-4) : '',
-          client_cpf: client_cpf ? '***.***.***-' + digitsOf(client_cpf).slice(-2) : ''
-        };
-      };
-      const respondWithRows = (rows) => {
-        const visible = isPrivileged ? rows : rows.filter(matchesExact).map(maskOrderForPublic);
-        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: true, count: visible.length, ordens: visible }));
-      };
-
-      if (pool) {
-        try {
-          const result = await pool.query(
-            `SELECT TOP 50 id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, concluido_em, created_at, updated_at
-             FROM ordens_servico
-             WHERE LOWER(client_email) = $1
-                OR LOWER(client_name) LIKE $2
-                OR LOWER(protocol) = $1
-                OR client_phone LIKE $2
-                OR client_cpf LIKE $2
-                OR LOWER(title) LIKE $2
-             ORDER BY id DESC`,
-            [q, '%' + q + '%']
-          );
-          let rows = result.rows || [];
-          if (rows.length === 0) {
-            // Fallback para arquivo local caso não retorne no banco
-            rows = getLocalOrdens().filter(matchesBroad);
-          }
-          return respondWithRows(rows);
-        } catch (err) {
-          return respondWithRows(getLocalOrdens().filter(matchesBroad));
-        }
-      }
-      return respondWithRows(getLocalOrdens().filter(matchesBroad));
-    };
-
+  // Consulta de chamados.
+  // - Público: correspondência exata por protocolo, e-mail, telefone ou CPF. Por protocolo mostra o andamento; pelos demais
+  //   mostra só um resumo, e nunca dados pessoais nem o parecer interno (ver Atendimento.visaoPublica).
+  // - Administrador e sincronização interna: busca ampla com os dados completos.
+  if ((req.method === 'GET' || req.method === 'POST') && parsedUrl.pathname === '/api/ordens/consultar') {
+    let termo = '';
     if (req.method === 'GET') {
-      const q = parsedUrl.query.query || parsedUrl.query.q || parsedUrl.query.email || parsedUrl.query.nome || '';
-      return handleConsultQuery(q);
+      termo = parsedUrl.query.query || parsedUrl.query.q || parsedUrl.query.email || parsedUrl.query.nome || '';
     } else {
-      let body = '';
-      req.on('data', chunk => body += chunk.toString());
-      req.on('end', () => {
-        let q = '';
-        try {
-          const p = JSON.parse(body);
-          q = p.query || p.q || p.email || p.name || p.nome || '';
-        } catch(e) {}
-        handleConsultQuery(q);
-      });
-      return;
+      const leitura = await lerCorpoJson(req, 4 * 1024);
+      if (!leitura.ok) return sendJson(res, corsHeaders, leitura.status, { success: false, message: leitura.mensagem, ordens: [] });
+      const p = leitura.dados;
+      termo = p.query || p.q || p.email || p.name || p.nome || '';
     }
+
+    if (getAuthenticatedAdmin(req) || hasInternalSyncAccess(req)) {
+      if (!String(termo).trim()) {
+        return sendJson(res, corsHeaders, 400, { success: false, message: 'Informe o nome, e-mail, telefone ou protocolo para consulta.', ordens: [] });
+      }
+      const ordens = await consultarOrdensAmplo(termo);
+      return sendJson(res, corsHeaders, 200, { success: true, count: ordens.length, ordens });
+    }
+
+    const consulta = Atendimento.classificarConsulta(termo);
+    if (consulta.tipo === 'invalida') {
+      return sendJson(res, corsHeaders, 400, {
+        success: false,
+        message: 'Informe o número do protocolo (ex.: OS-261106-K7QX) ou o e-mail, CPF ou telefone usado no chamado.',
+        ordens: []
+      });
+    }
+    const encontradas = await consultarOrdensPublico(consulta);
+    const ordens = encontradas.map((o) => Atendimento.visaoPublica(o, { detalhada: consulta.tipo === 'protocolo' }));
+    return sendJson(res, corsHeaders, 200, { success: true, count: ordens.length, ordens });
   }
 
-  // Rota GET para Listar Ordens de Serviço
+  // Lista completa de chamados (nome, CPF, telefone e e-mail de clientes): somente administradores ou sincronização interna
   if (req.method === 'GET' && parsedUrl.pathname === '/api/ordens') {
-    // Lista completa de O.S. (nome, CPF, telefone e e-mail de clientes): somente administradores ou sincronização interna
     if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
       return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
     }
-    if (pool) {
-      pool.query(`
-        SELECT TOP 500
-          id, protocol, client_name, client_email, client_phone, client_cpf,
-          service_type, priority, title, description, status, admin_notes,
-          tecnico_responsavel, assumido_em, canal_atendimento, concluido_em,
-          created_at, updated_at
-        FROM ordens_servico
-        ORDER BY id DESC
-      `)
-        .then(result => {
-          if (result.rows && result.rows.length > 0) {
-            saveLocalOrdens(result.rows);
-          }
-          const ordens = (result.rows && result.rows.length > 0) ? result.rows : getLocalOrdens();
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: true, ordens: ordens }));
-        })
-        .catch(err => {
-          const ordens = getLocalOrdens();
-          res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: true, ordens: ordens }));
-        });
-    } else {
-      const ordens = getLocalOrdens();
-      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, ordens: ordens }));
-    }
-    return;
+    const ordens = await carregarOrdens();
+    return sendJson(res, corsHeaders, 200, { success: true, count: ordens.length, ordens });
   }
 
-  // Rota POST para Abertura de Nova Ordem de Serviço (Recepção de O.S.)
+  // Abertura de chamado. Qualquer pessoa pode abrir; status, técnico e parecer só valem se vierem de um administrador.
   if (req.method === 'POST' && parsedUrl.pathname === '/api/ordens') {
-    let body = '';
-    req.on('data', chunk => body += chunk.toString());
-    req.on('end', async () => {
-      let payload;
-      try {
-        payload = JSON.parse(body);
-      } catch(e) {
-        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, message: 'JSON inválido' }));
-      }
+    const leitura = await lerCorpoJson(req);
+    if (!leitura.ok) return sendJson(res, corsHeaders, leitura.status, { success: false, message: leitura.mensagem });
 
-      // Quem abre a O.S. pode ser qualquer pessoa; status, técnico e observações internas só valem se vierem de um administrador
-      const orderOpenedByAdmin = Boolean(getAuthenticatedAdmin(req));
-      // Textos livres são exibidos pelo painel com innerHTML: caracteres especiais viram entidades (evita XSS armazenado)
-      const clientName = escapeHtmlText(String(payload.client_name || '').trim().slice(0, 200));
-      const clientEmail = String(payload.client_email || '').toLowerCase().trim().slice(0, 200);
-      const clientPhone = escapeHtmlText(String(payload.client_phone || '').trim().slice(0, 40));
-      const clientCpf = escapeHtmlText(String(payload.client_cpf || '').trim().slice(0, 20));
-      const serviceType = escapeHtmlText(String(payload.service_type || 'Melhoria no Sistema').slice(0, 100));
-      const priority = escapeHtmlText(String(payload.priority || 'Normal').slice(0, 30));
-      const title = escapeHtmlText(String(payload.title || '').trim().slice(0, 200));
-      const description = escapeHtmlText(String(payload.description || '').trim().slice(0, 5000));
-      const canalAtendimento = escapeHtmlText(String(payload.canal_atendimento || 'Portal Web').trim().slice(0, 60));
-      const initialTecnico = orderOpenedByAdmin ? ((payload.tecnico_responsavel || '').trim() || null) : null;
-      const initialStatus = orderOpenedByAdmin ? (payload.status || (initialTecnico ? 'Em Andamento' : 'Pendente')) : 'Pendente';
+    const admin = getAuthenticatedAdmin(req);
+    const validacao = Atendimento.validarAbertura(leitura.dados, { admin: Boolean(admin), isEmail: isStrictEmail });
+    if (!validacao.ok) {
+      return sendJson(res, corsHeaders, 400, { success: false, message: validacao.mensagem, errors: validacao.erros });
+    }
+    const dados = validacao.dados;
 
-      if (!clientName || !clientEmail || !title || !description) {
-        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, message: 'Preencha todos os campos obrigatórios (*).' }));
-      }
-      if (!isStrictEmail(clientEmail)) {
-        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, message: 'Informe um e-mail válido.' }));
-      }
+    let protocolo;
+    try {
+      protocolo = await Atendimento.gerarProtocolo(protocoloJaExiste);
+    } catch (err) {
+      return sendJson(res, corsHeaders, 503, { success: false, message: 'Não foi possível registrar o chamado agora. Tente novamente em instantes.' });
+    }
 
-      const nowIso = new Date().toISOString();
-      const protocol = 'OS-' + Date.now().toString().slice(-6) + Math.floor(10 + Math.random() * 90);
-
-      const newOrder = {
-        id: Date.now(),
-        protocol: protocol,
-        client_name: clientName,
-        client_email: clientEmail,
-        client_phone: clientPhone,
-        client_cpf: clientCpf,
-        service_type: serviceType,
-        priority: priority,
-        title: title,
-        description: description,
-        status: initialStatus,
-        admin_notes: orderOpenedByAdmin ? String(payload.admin_notes || '').trim().slice(0, 2000) : '',
-        tecnico_responsavel: initialTecnico,
-        assumido_em: initialTecnico ? nowIso : null,
-        canal_atendimento: canalAtendimento,
-        concluido_em: null,
-        created_at: nowIso,
-        updated_at: nowIso
-      };
-
-      const localList = getLocalOrdens();
-      localList.unshift(newOrder);
-      saveLocalOrdens(localList);
-
-      recordSystemLog(clientName, clientEmail, 'Abertura de O.S.', 'Ordem de Serviço', 'Nova solicitação #' + protocol + ': ' + title + ' (' + canalAtendimento + ')');
-
-      // Notificação em tempo real via SSE
-      broadcastEvent('new_order', {
-        id: newOrder.id,
-        protocol: newOrder.protocol,
-        client_name: newOrder.client_name,
-        client_email: newOrder.client_email,
-        client_phone: newOrder.client_phone,
-        service_type: newOrder.service_type,
-        priority: newOrder.priority,
-        title: newOrder.title,
-        canal_atendimento: newOrder.canal_atendimento,
-        status: newOrder.status,
-        timestamp: newOrder.created_at
+    // Da leitura da lista até a gravação não há espera: dois envios iguais ao mesmo tempo não geram dois chamados
+    const lista = getLocalOrdens();
+    const jaAberta = Atendimento.encontrarDuplicada(lista, dados);
+    if (jaAberta) {
+      return sendJson(res, corsHeaders, 200, {
+        success: true,
+        duplicate: true,
+        protocol: jaAberta.protocol,
+        message: 'Este chamado já foi registrado. Guarde o protocolo para acompanhar o andamento.',
+        ordem: admin ? jaAberta : Atendimento.visaoPublica(jaAberta, { detalhada: true })
       });
+    }
 
-      // Gravação direta e garantida no Microsoft SQL Server interno
-      if (pool) {
-        try {
-          const resDb = await pool.query(
-            `INSERT INTO ordens_servico (
-               protocol, client_name, client_email, client_phone, client_cpf,
-               service_type, priority, title, description, status,
-               admin_notes, tecnico_responsavel, assumido_em, canal_atendimento,
-               concluido_em, created_at, updated_at
-             )
-             OUTPUT INSERTED.id
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
-            [
-              newOrder.protocol,
-              newOrder.client_name,
-              newOrder.client_email,
-              newOrder.client_phone || null,
-              newOrder.client_cpf || null,
-              newOrder.service_type,
-              newOrder.priority,
-              newOrder.title,
-              newOrder.description,
-              newOrder.status,
-              newOrder.admin_notes || '',
-              newOrder.tecnico_responsavel || null,
-              newOrder.assumido_em || null,
-              newOrder.canal_atendimento || 'Portal Web',
-              newOrder.concluido_em || null,
-              newOrder.created_at,
-              newOrder.updated_at
-            ]
-          );
-          if (resDb && resDb.rows && resDb.rows[0] && resDb.rows[0].id) {
-            newOrder.id = resDb.rows[0].id;
-            const idx = localList.findIndex(o => o.protocol === newOrder.protocol);
-            if (idx !== -1) {
-              localList[idx].id = resDb.rows[0].id;
-              saveLocalOrdens(localList);
-            }
-          }
-          console.log(`[BANCO] Nova O.S. #${newOrder.protocol} gravada com sucesso no Microsoft SQL Server (ID: ${newOrder.id})!`);
-        } catch(err) {
-          console.warn('[AVISO BD O.S.] Erro ao gravar no SQL Server, mantido localmente:', err.message);
-        }
-      }
+    const agoraIso = new Date().toISOString();
+    const novaOrdem = Atendimento.montarOrdem(dados, { protocolo, id: proximoIdLocalDeOrdem(lista), agoraIso });
+    lista.unshift(novaOrdem);
+    saveLocalOrdens(lista);
 
-      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, protocol: protocol, ordem: newOrder }));
+    recordSystemLog(novaOrdem.client_name, novaOrdem.client_email, 'Abertura de O.S.', 'Ordem de Serviço', 'Nova solicitação #' + protocolo + ': ' + novaOrdem.title + ' (' + novaOrdem.canal_atendimento + ')');
+
+    // Notificação em tempo real (só administradores recebem; ver broadcastEvent)
+    broadcastEvent('new_order', {
+      id: novaOrdem.id,
+      protocol: novaOrdem.protocol,
+      client_name: novaOrdem.client_name,
+      client_email: novaOrdem.client_email,
+      client_phone: novaOrdem.client_phone,
+      service_type: novaOrdem.service_type,
+      priority: novaOrdem.priority,
+      title: novaOrdem.title,
+      canal_atendimento: novaOrdem.canal_atendimento,
+      status: novaOrdem.status,
+      timestamp: novaOrdem.created_at
     });
-    return;
+
+    // Gravação no Microsoft SQL Server interno (se falhar, o chamado já está salvo no arquivo local e entra no banco na sincronização)
+    if (pool) {
+      try {
+        const gravado = await pool.query(
+          `INSERT INTO ordens_servico (
+             protocol, client_name, client_email, client_phone, client_cpf,
+             service_type, priority, title, description, status,
+             admin_notes, tecnico_responsavel, assumido_em, canal_atendimento,
+             concluido_em, created_at, updated_at
+           )
+           OUTPUT INSERTED.id
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+          [
+            novaOrdem.protocol, novaOrdem.client_name, novaOrdem.client_email,
+            novaOrdem.client_phone || null, novaOrdem.client_cpf || null,
+            novaOrdem.service_type, novaOrdem.priority, novaOrdem.title, novaOrdem.description, novaOrdem.status,
+            novaOrdem.admin_notes || '', novaOrdem.tecnico_responsavel || null, novaOrdem.assumido_em || null,
+            novaOrdem.canal_atendimento || 'Portal Web', novaOrdem.concluido_em || null, novaOrdem.created_at, novaOrdem.updated_at
+          ]
+        );
+        const idDoBanco = gravado && gravado.rows && gravado.rows[0] ? gravado.rows[0].id : null;
+        if (idDoBanco) {
+          novaOrdem.id = idDoBanco;
+          const atual = getLocalOrdens(); // relê: outros chamados podem ter sido salvos durante a gravação no banco
+          const posicao = atual.findIndex((o) => o.protocol === novaOrdem.protocol);
+          if (posicao !== -1) {
+            atual[posicao].id = idDoBanco;
+            saveLocalOrdens(atual);
+          }
+        }
+        console.log(`[BANCO] Nova O.S. #${novaOrdem.protocol} gravada com sucesso no Microsoft SQL Server (ID: ${novaOrdem.id})!`);
+      } catch (err) {
+        console.warn('[AVISO BD O.S.] Erro ao gravar no SQL Server, mantido localmente:', err.message);
+      }
+    }
+
+    return sendJson(res, corsHeaders, 200, {
+      success: true,
+      protocol: protocolo,
+      message: 'Chamado registrado. Guarde o protocolo para acompanhar o andamento.',
+      ordem: admin ? novaOrdem : Atendimento.visaoPublica(novaOrdem, { detalhada: true })
+    });
   }
 
-  // Rota POST/PUT para Atualizar Status / Parecer de Ordem de Serviço (Admin & Suporte)
+  // Atualização de status, parecer, técnico, prioridade, categoria ou canal (administrador e suporte).
+  // Só muda o que vier no pedido e devolve 404 se o chamado não existir (antes gravava valores padrão no banco).
   if ((req.method === 'POST' && parsedUrl.pathname === '/api/ordens/update') || (req.method === 'PUT' && parsedUrl.pathname === '/api/ordens')) {
     if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
       return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
     }
-    let body = '';
-    req.on('data', chunk => body += chunk.toString());
-    req.on('end', async () => {
-      let payload;
-      try {
-        payload = JSON.parse(body);
-      } catch(e) {
-        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, message: 'JSON inválido' }));
-      }
+    const leitura = await lerCorpoJson(req);
+    if (!leitura.ok) return sendJson(res, corsHeaders, leitura.status, { success: false, message: leitura.mensagem });
+    const payload = leitura.dados;
 
-      const id = payload.id;
-      const status = payload.status || 'Pendente';
-      const adminNotes = payload.admin_notes !== undefined ? payload.admin_notes : '';
-      const priority = payload.priority !== undefined ? payload.priority : undefined;
-      const serviceType = payload.service_type !== undefined ? payload.service_type : undefined;
-      const tecnicoResponsavel = payload.tecnico_responsavel !== undefined ? payload.tecnico_responsavel : undefined;
-      const canalAtendimento = payload.canal_atendimento !== undefined ? payload.canal_atendimento : undefined;
-      const nowIso = new Date().toISOString();
+    const referencia = String(payload.id != null && payload.id !== '' ? payload.id : (payload.protocol || '')).trim();
+    if (!referencia) return sendJson(res, corsHeaders, 400, { success: false, message: 'Informe o id ou o protocolo do chamado.' });
 
-      const localList = getLocalOrdens();
-      const target = localList.find(o => String(o.id) === String(id) || String(o.protocol) === String(id));
-      if (target) {
-        target.status = status;
-        if (adminNotes !== undefined) target.admin_notes = adminNotes;
-        if (priority !== undefined && priority) target.priority = priority;
-        if (serviceType !== undefined && serviceType) target.service_type = serviceType;
-        if (canalAtendimento !== undefined && canalAtendimento) target.canal_atendimento = canalAtendimento;
-        
-        if (tecnicoResponsavel !== undefined) {
-          target.tecnico_responsavel = tecnicoResponsavel || null;
-          if (tecnicoResponsavel && !target.assumido_em) {
-            target.assumido_em = nowIso;
-          } else if (!tecnicoResponsavel) {
-            target.assumido_em = null;
-          }
-        }
+    const achada = await buscarOrdemPorReferencia(referencia);
+    if (!achada) return sendJson(res, corsHeaders, 404, { success: false, message: 'Chamado não encontrado.' });
 
-        if (status === 'Concluído') {
-          target.concluido_em = target.concluido_em || nowIso;
-        } else {
-          target.concluido_em = null;
-        }
+    const agoraIso = new Date().toISOString();
+    const resultado = Atendimento.aplicarAtualizacao(achada.todas[achada.indice], payload, { agoraIso });
+    if (!resultado.ok) return sendJson(res, corsHeaders, 400, { success: false, message: resultado.mensagem });
 
-        target.updated_at = nowIso;
-        saveLocalOrdens(localList);
-      }
+    const ordem = resultado.ordem;
+    achada.todas[achada.indice] = ordem;
+    saveLocalOrdens(achada.todas);
 
-      recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Atualização de O.S.', 'Ordem de Serviço', 'Atualizou O.S. #' + (target ? target.protocol : id) + ' para status: ' + status + ' (Prioridade: ' + (target ? target.priority : (priority || 'Normal')) + ')' + (target && target.tecnico_responsavel ? (' (Técnico: ' + target.tecnico_responsavel + ')') : ''));
+    const ator = atorDaRequisicao(req);
+    recordSystemLog(ator.nome, ator.email, 'Atualização de O.S.', 'Ordem de Serviço',
+      'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Prioridade: ' + ordem.priority + ')' +
+      (ordem.tecnico_responsavel ? ' (Técnico: ' + ordem.tecnico_responsavel + ')' : '') +
+      (resultado.mudancas.length ? ' — ' + resultado.mudancas.join('; ') : ''));
 
-      // Notificação em tempo real via SSE
-      broadcastEvent('order_updated', {
-        id: id,
-        protocol: target ? target.protocol : id,
-        status: status,
-        priority: target ? target.priority : priority,
-        service_type: target ? target.service_type : serviceType,
-        tecnico_responsavel: target ? target.tecnico_responsavel : null,
-        assumido_em: target ? target.assumido_em : null,
-        concluido_em: target ? target.concluido_em : null,
-        updated_at: nowIso
-      });
-
-      // Atualização direta no Microsoft SQL Server
-      if (pool) {
-        try {
-          await pool.query(
-            `UPDATE ordens_servico
-             SET status = $1, admin_notes = $2, priority = $3, service_type = $4,
-                 tecnico_responsavel = $5, assumido_em = $6, canal_atendimento = $7,
-                 concluido_em = $8, updated_at = $9
-             WHERE id = $10 OR protocol = $11`,
-            [
-              status,
-              adminNotes,
-              target ? target.priority : (priority || 'Normal'),
-              target ? target.service_type : (serviceType || 'Melhoria no Sistema'),
-              target ? target.tecnico_responsavel : null,
-              target ? target.assumido_em : null,
-              target ? target.canal_atendimento : (canalAtendimento || 'Portal Web'),
-              target ? target.concluido_em : null,
-              nowIso,
-              isNaN(id) ? -1 : parseInt(id),
-              String(id)
-            ]
-          );
-          console.log(`[BANCO] O.S. #${target ? target.protocol : id} atualizada com sucesso no SQL Server.`);
-        } catch(err) {
-          console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server, mantido localmente:', err.message);
-        }
-      }
-
-      res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, ordem: target }));
+    broadcastEvent('order_updated', {
+      id: ordem.id,
+      protocol: ordem.protocol,
+      status: ordem.status,
+      priority: ordem.priority,
+      service_type: ordem.service_type,
+      tecnico_responsavel: ordem.tecnico_responsavel,
+      assumido_em: ordem.assumido_em,
+      concluido_em: ordem.concluido_em,
+      updated_at: agoraIso
     });
-    return;
+
+    if (pool) {
+      try {
+        await pool.query(
+          `UPDATE ordens_servico
+           SET status = $1, admin_notes = $2, priority = $3, service_type = $4,
+               tecnico_responsavel = $5, assumido_em = $6, canal_atendimento = $7,
+               concluido_em = $8, updated_at = $9
+           WHERE id = $10 OR UPPER(protocol) = $11`,
+          [
+            ordem.status, ordem.admin_notes || '', ordem.priority, ordem.service_type,
+            ordem.tecnico_responsavel || null, ordem.assumido_em || null, ordem.canal_atendimento || 'Portal Web',
+            ordem.concluido_em || null, agoraIso,
+            idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase()
+          ]
+        );
+        console.log(`[BANCO] O.S. #${ordem.protocol} atualizada com sucesso no SQL Server.`);
+      } catch (err) {
+        console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server, mantido localmente:', err.message);
+      }
+    }
+
+    return sendJson(res, corsHeaders, 200, { success: true, ordem });
   }
 
   // Rota GET para Listar Técnicos Credenciados (Admin & Suporte - com Proteção Total de Dados)
@@ -34770,40 +34779,37 @@ const server = http.createServer(async (req, res) => {
     return res.end(JSON.stringify({ success: true }));
   }
 
-  // Rota DELETE para Excluir Ordem de Serviço (Admin)
+  // Exclusão de chamado (administrador). Aceita id ou protocolo; responde 404 se não existir em lugar nenhum.
   if (req.method === 'DELETE' && parsedUrl.pathname === '/api/ordens') {
     if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
       return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
     }
-    const idToDelete = parsedUrl.query.id || '';
-    if (!idToDelete) {
-      res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ success: false, message: 'ID ausente' }));
-    }
+    const referencia = String(parsedUrl.query.id || parsedUrl.query.protocol || '').trim();
+    if (!referencia) return sendJson(res, corsHeaders, 400, { success: false, message: 'Informe o id ou o protocolo do chamado.' });
 
-    const localList = getLocalOrdens();
-    const updatedList = localList.filter(o => String(o.id) !== String(idToDelete) && String(o.protocol) !== String(idToDelete));
-    saveLocalOrdens(updatedList);
+    const mesma = (o) => Atendimento.mesmaReferencia(o, referencia);
+    const locais = getLocalOrdens();
+    const restantes = locais.filter((o) => !mesma(o));
+    const removidasLocal = locais.length - restantes.length;
+    if (removidasLocal) saveLocalOrdens(restantes);
 
-    recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Exclusão de O.S.', 'Ordem de Serviço', 'Excluiu O.S. id/protocolo: ' + idToDelete);
-
+    let removidasBanco = 0;
     if (pool) {
-      pool.query(
-        'DELETE FROM ordens_servico WHERE id = $1 OR protocol = $2',
-        [isNaN(idToDelete) ? -1 : parseInt(idToDelete), String(idToDelete)]
-      ).then(() => {
-        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true }));
-      }).catch(err => {
-        res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: true }));
-      });
-      return;
+      try {
+        const protocolo = Atendimento.normalizarProtocolo(referencia) || referencia.toUpperCase();
+        const r = await pool.query('DELETE FROM ordens_servico WHERE id = $1 OR UPPER(protocol) = $2', [idNumericoDeOrdem(referencia), protocolo]);
+        removidasBanco = r && Number.isFinite(r.rowCount) ? r.rowCount : 0;
+      } catch (err) {
+        console.warn('[AVISO BD O.S.] Erro ao excluir no SQL Server:', err.message);
+      }
     }
 
-    res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ success: true }));
-    return;
+    if (!removidasLocal && !removidasBanco) {
+      return sendJson(res, corsHeaders, 404, { success: false, message: 'Chamado não encontrado.' });
+    }
+    const ator = atorDaRequisicao(req);
+    recordSystemLog(ator.nome, ator.email, 'Exclusão de O.S.', 'Ordem de Serviço', 'Excluiu O.S. id/protocolo: ' + referencia);
+    return sendJson(res, corsHeaders, 200, { success: true });
   }
 
   // Suporte a arquivos estáticos (Imagens, Favicon, CSS, JS)
