@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node --check server.js && node --check atendimento.js && node --test atendimento.test.js",
+    "test": "node --check server.js && node --check atendimento.js && node --check dashboard-financeiro.js && node --test atendimento.test.js dashboard-financeiro.test.js",
     "watch": "node watch-diff.js",
     "watch:diff": "node watch-diff.js",
     "auto:sync": "node auto-sync.js",
