@@ -1760,6 +1760,10 @@
   function escapeHtmlSafe(s) {
     return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
+  // O servidor grava os textos do chamado já escapados (&amp; &lt; ...): desfaz antes de escapar para exibir, senão aparecem as entidades
+  function textoSalvo(s) {
+    return String(s == null ? '' : s).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+  }
 
   function ensureGlassOsModal() {
     let ov = $('#os-glass-overlay');
@@ -1873,7 +1877,7 @@
               '<div class="osmodal-field">' +
                 '<label for="os-inp-query">Número do protocolo, e-mail, CPF ou telefone</label>' +
                 '<div style="display:flex;gap:8px;">' +
-                  '<input class="osmodal-inp" id="os-inp-query" type="text" placeholder="Ex: OS-123456 ou seu.email@exemplo.com" style="flex:1;">' +
+                  '<input class="osmodal-inp" id="os-inp-query" type="text" placeholder="Ex: OS-261106-K7QX ou seu e-mail" style="flex:1;">' +
                   '<button type="submit" class="gmodal-btn gmodal-btn-ok" id="osmodal-btn-search" style="height:42px;padding:0 18px;">Consultar</button>' +
                 '</div>' +
               '</div>' +
@@ -1977,7 +1981,7 @@
           })
         });
         const data = await res.json();
-        if (!res.ok || !data.success) throw new Error(data.message || 'Não foi possível enviar o chamado.');
+        if (!res.ok || !data.success) throw new Error(data.message || data.error || 'Não foi possível enviar o chamado.');
         const proto = data.protocol || (data.ordem && data.ordem.protocol) || 'OS-CONFIRMADA';
         $('#osmodal-proto-num', ov).textContent = proto;
         // O.S. salva: o protocolo aparece na tela e o formulário já fica vazio para abrir outra
@@ -2015,8 +2019,8 @@
       const errEl = $('#osmodal-search-error', ov);
       const resBox = $('#osmodal-results', ov);
       errEl.textContent = '';
-      if (!q || q.length < 5) {
-        errEl.textContent = 'Informe o protocolo completo (ex: OS-123456) ou o e-mail utilizado.';
+      if (!q) {
+        errEl.textContent = 'Informe o número do protocolo, e-mail, CPF ou telefone usado no chamado.';
         return;
       }
       const sBtn = $('#osmodal-btn-search', ov);
@@ -2026,7 +2030,7 @@
       try {
         const res = await fetch('/api/ordens/consultar?query=' + encodeURIComponent(q));
         const data = await res.json();
-        if (!res.ok || !data.success) throw new Error(data.message || 'Não foi possível consultar.');
+        if (!res.ok || !data.success) throw new Error(data.message || data.error || 'Não foi possível consultar.');
         const list = data.ordens || [];
         if (!list.length) {
           resBox.innerHTML = '<div class="osmodal-item" style="text-align:center;color:#c8cde2;font-size:13px;">Nenhum chamado encontrado para <strong>' + escapeHtmlSafe(q) + '</strong>.</div>';
@@ -2039,9 +2043,13 @@
               '<strong style="font-size:13px;color:var(--accent-light);">#' + escapeHtmlSafe(o.protocol || o.id) + '</strong>' +
               '<span class="osmodal-pill">' + escapeHtmlSafe(o.status || 'Pendente') + '</span>' +
             '</div>' +
-            '<div style="font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px;">' + escapeHtmlSafe(o.title || o.service_type) + '</div>' +
-            '<div style="font-size:12px;color:#c8cde2;margin-bottom:6px;">' + escapeHtmlSafe(o.service_type || '') + (dt ? ' • ' + dt : '') + (o.tecnico_responsavel ? ' • Técnico: ' + escapeHtmlSafe(o.tecnico_responsavel) : '') + '</div>' +
-            '<div style="font-size:12.5px;color:#e2e6f5;line-height:1.4;">' + escapeHtmlSafe(o.description || '') + '</div>' +
+            '<div style="font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px;">' + escapeHtmlSafe(textoSalvo(o.title || o.service_type)) + '</div>' +
+            '<div style="font-size:12px;color:#c8cde2;margin-bottom:6px;">' +
+              [o.title ? o.service_type : '', dt, o.tecnico_responsavel ? 'Técnico: ' + textoSalvo(o.tecnico_responsavel) : ''].filter(Boolean).map(escapeHtmlSafe).join(' • ') +
+            '</div>' +
+            (o.description === undefined
+              ? '<div style="font-size:12px;color:#b8bed4;line-height:1.4;">Para ver os detalhes, consulte pelo número do protocolo.</div>'
+              : '<div style="font-size:12.5px;color:#e2e6f5;line-height:1.4;white-space:pre-line;">' + escapeHtmlSafe(textoSalvo(o.description)) + '</div>') +
           '</div>';
         }).join('');
       } catch (err) {
