@@ -14903,10 +14903,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
         <span class="label">Comprovantes</span>
       </button>
-      <button data-page="ordens" class="menu-btn-user" title="Abrir Ordem de Serviço & Consultar Protocolos">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span>
-        <span class="label">Ordem de Serviço</span>
-      </button>
+      <!-- "Ordem de Serviço" é exclusiva do perfil Administrador (botão #menuOrdensBtn no Painel Administrativo). Usuário comum abre chamado pela tela de login. -->
 
       <!-- Seção: Perfil & Preferências -->
       <div class="menu-section-header menu-section-minha-conta">
@@ -17392,13 +17389,8 @@ window.handleMandatoryPasswordSubmit = async function(e) {
     }
 
     document.documentElement.classList.add('user-logged-in');
-    if (currentUser.role === 'Administrador') {
-      document.documentElement.classList.add('is-admin');
-      currentPage = 'usuarios';
-    } else {
-      document.documentElement.classList.remove('is-admin');
-      currentPage = 'dashboard';
-    }
+    document.documentElement.classList.toggle('is-admin', nexusIsAdminUser(currentUser));
+    currentPage = nexusResolvePage('', nexusIsAdminUser(currentUser));
 
     await loadUserData();
     showLoginSuccessPopup('Senha definitiva configurada! Acessando sistema...');
@@ -17609,13 +17601,8 @@ window.handleLoginSubmit = async function(e) {
     } catch(pingErr){}
 
     document.documentElement.classList.add('user-logged-in');
-    if (currentUser.role === 'Administrador') {
-      document.documentElement.classList.add('is-admin');
-      currentPage = 'usuarios';
-    } else {
-      document.documentElement.classList.remove('is-admin');
-      currentPage = 'dashboard';
-    }
+    document.documentElement.classList.toggle('is-admin', nexusIsAdminUser(currentUser));
+    currentPage = nexusResolvePage('', nexusIsAdminUser(currentUser));
 
     await loadUserData();
     showLoginSuccessPopup('Redirecionando para o seu sistema...');
@@ -18255,7 +18242,7 @@ window.unlockWithConfirmedReceipt = function(data) {
 window.initTrialAndSubscription = async function() {
   if (!currentUser || !currentUser.email) return;
 
-  const isAdmin = currentUser && (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
+  const isAdmin = nexusIsAdminUser(currentUser);
   if (!isAdmin && (currentUser.subscription_status === 'expired' || currentUser.subscription_status === 'pending_payment')) {
     window.__trialRemainingSeconds = 0;
     window.showTrialDockExpired();
@@ -18403,7 +18390,7 @@ window.showTrialDockExpired = function() {
 
 window.isUserAllowedToUnlockPaywall = function() {
   if (!currentUser) return false;
-  const isAdmin = (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
+  const isAdmin = nexusIsAdminUser(currentUser);
   if (isAdmin) return true;
   if (currentUser.subscription_plan === 'vitalicio') return true;
   if (currentUser.subscription_status === 'active' && currentUser.subscription_expires_at) {
@@ -18417,7 +18404,7 @@ window.isUserAllowedToUnlockPaywall = function() {
 };
 
 window.openSubscriptionPaywall = function(isLocked = false) {
-  const isAdmin = currentUser && (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
+  const isAdmin = nexusIsAdminUser(currentUser);
   const allowedToClose = window.isUserAllowedToUnlockPaywall();
   const effectiveLocked = !allowedToClose || !!isLocked;
 
@@ -18485,7 +18472,7 @@ window.openSubscriptionPaywall = function(isLocked = false) {
 };
 
 window.closeSubscriptionPaywall = function(force = false) {
-  const isAdmin = currentUser && (currentUser.role === 'Administrador' || currentUser.email === 'suporte.paulolima@outlook.com' || currentUser.email === 'paulolp0101@gmail.com');
+  const isAdmin = nexusIsAdminUser(currentUser);
   const allowedToUnlock = window.isUserAllowedToUnlockPaywall();
 
   // NUNCA libera o sistema sem pagamento confirmado (exceto Administrador)
@@ -20425,6 +20412,16 @@ function pdCustom(y,m,day){
 }
 function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day); }
 
+// Perfis de acesso: cada papel enxerga SOMENTE as suas páginas. Menu lateral, gaveta mobile, barra inferior,
+// hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
+const NEXUS_ADMIN_PAGES = ['usuarios', 'ordens', 'pagamentos', 'logs'];
+const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
+function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
+function nexusResolvePage(page, isAdmin) {
+  const allowed = isAdmin ? NEXUS_ADMIN_PAGES : NEXUS_USER_PAGES;
+  return allowed.includes(page) ? page : allowed[0];
+}
+
 let editingId=null, editingAccId=null, editingCatName=null, editingBudgetId=null, editingGoalId=null, editingRecId=null, editingAlertId=null, editingUserEmail=null;
 let catManageType = 'despesa';
 let currentType='out', currentRecType='out';
@@ -20432,21 +20429,14 @@ let currentPage = (function getInitialPage() {
   try {
     const cu = localStorage.getItem('nexus_cached_user');
     const u = cu ? JSON.parse(cu) : null;
-    const isAdmin = u && u.role === 'Administrador';
-    const adminPages = ['usuarios', 'ordens', 'pagamentos', 'logs'];
-    const commonPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
+    const isAdmin = nexusIsAdminUser(u);
+    const allowed = isAdmin ? NEXUS_ADMIN_PAGES : NEXUS_USER_PAGES;
     const hashPage = window.location.hash ? window.location.hash.replace('#', '') : null;
     const savedPage = localStorage.getItem('nexus_current_page');
 
-    if (isAdmin) {
-      if (hashPage && adminPages.includes(hashPage)) return hashPage;
-      if (savedPage && adminPages.includes(savedPage)) return savedPage;
-      return 'usuarios';
-    } else {
-      if (hashPage && commonPages.includes(hashPage)) return hashPage;
-      if (savedPage && commonPages.includes(savedPage)) return savedPage;
-      return 'dashboard';
-    }
+    if (hashPage && allowed.includes(hashPage)) return hashPage;
+    if (savedPage && allowed.includes(savedPage)) return savedPage;
+    return allowed[0];
   } catch(e){}
   return 'dashboard';
 })();
@@ -21169,15 +21159,12 @@ function render(){
   if (!el) return;
   updateMainHeaderSpacing();
 
-  const isAdmin = currentUser && currentUser.role === 'Administrador';
+  const isAdmin = nexusIsAdminUser(currentUser);
   const isAdminView = isAdmin && !isViewingOtherUser;
 
-  if (!isAdmin) {
-    // Usuários comuns não podem acessar páginas administrativas restritas
-    if (['usuarios', 'pagamentos', 'logs'].includes(currentPage)) {
-      currentPage = 'dashboard';
-    }
-  }
+  // Cada perfil só renderiza as próprias páginas: usuário comum nunca cai em Ordens/Usuários/Pagamentos/Logs
+  // e o administrador nunca cai nas telas financeiras do usuário.
+  currentPage = nexusResolvePage(currentPage, isAdmin);
 
   let newHTML = '';
   let pageChanged = false;
@@ -21309,19 +21296,7 @@ function render(){
 }
 
 function updateActiveMenu(){
-  const isAdmin = currentUser && currentUser.role === 'Administrador';
-  const adminPages = ['usuarios', 'ordens', 'pagamentos', 'logs'];
-  const commonPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
-
-  if (isAdmin) {
-    if (!adminPages.includes(currentPage)) {
-      currentPage = 'usuarios';
-    }
-  } else {
-    if (!commonPages.includes(currentPage)) {
-      currentPage = 'dashboard';
-    }
-  }
+  currentPage = nexusResolvePage(currentPage, nexusIsAdminUser(currentUser));
 
   const buttons = document.querySelectorAll('.menu button, .mobile-drawer-nav button, .mobile-bottom-btn');
   for (let i = 0; i < buttons.length; i++) {
@@ -21365,7 +21340,7 @@ function updateAdminSidebarBadges(){
 }
 
 function updateAdminMenuVisibility(force = false){
-  const isAdmin = currentUser && currentUser.role === 'Administrador';
+  const isAdmin = nexusIsAdminUser(currentUser);
   updateAdminSidebarBadges();
   const currentKey = String(isAdmin);
   if (!force && _lastAdminVisibilityKey === currentKey) return;
@@ -21392,8 +21367,7 @@ function updateAdminMenuVisibility(force = false){
     el.style.display = isAdmin ? 'none' : 'flex';
   });
 
-  const userPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
-  userPages.forEach(function(pg) {
+  NEXUS_USER_PAGES.forEach(function(pg) {
     document.querySelectorAll('#menu button[data-page="' + pg + '"], #mobileDrawerMenu button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdmin ? 'none' : 'flex';
     });
@@ -21405,8 +21379,7 @@ function updateAdminMenuVisibility(force = false){
     el.style.display = isAdmin ? 'flex' : 'none';
   });
 
-  const adminPages = ['usuarios', 'ordens', 'pagamentos', 'logs'];
-  adminPages.forEach(function(pg) {
+  NEXUS_ADMIN_PAGES.forEach(function(pg) {
     document.querySelectorAll('button[data-page="' + pg + '"]').forEach(function(btn) {
       btn.style.display = isAdmin ? 'flex' : 'none';
     });
@@ -21504,13 +21477,16 @@ function updateHeaderUser(){
   if(sidebarPlanEl) {
     const plan = String(currentUser.subscription_plan || currentUser.plan || '').toLowerCase();
     const status = String(currentUser.subscription_status || '').toLowerCase();
-    sidebarPlanEl.textContent = plan === 'anual' || plan === 'annual'
-      ? 'Plano Anual'
-      : plan === 'mensal'
-        ? 'Plano Mensal'
-        : status === 'trial' || !plan
-          ? 'Plano Gratuito 1 dia'
-          : 'Acesso administrativo';
+    // Administrador mostra o perfil (não tem plano de assinatura); usuário comum mostra o plano contratado.
+    sidebarPlanEl.textContent = nexusIsAdminUser(currentUser)
+      ? 'Administrador'
+      : plan === 'anual' || plan === 'annual'
+        ? 'Plano Anual'
+        : plan === 'mensal'
+          ? 'Plano Mensal'
+          : plan === 'vitalicio'
+            ? 'Plano Vitalício'
+            : 'Plano Gratuito 1 dia';
   }
   if(roleEl) {
     if (isViewingOtherUser) {
@@ -29791,20 +29767,8 @@ function attachPageEvents(){
 }
 
 function navigate(page){
-  const isAdmin = currentUser && currentUser.role === 'Administrador';
-  const adminPages = ['usuarios', 'ordens', 'pagamentos', 'logs'];
-  const commonPages = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
-
-  if (isAdmin) {
-    if (!adminPages.includes(page)) {
-      page = 'usuarios';
-    }
-  } else {
-    if (!commonPages.includes(page)) {
-      page = 'dashboard';
-    }
-  }
-  if(!page) page = isAdmin ? 'usuarios' : 'dashboard';
+  const isAdmin = nexusIsAdminUser(currentUser);
+  page = nexusResolvePage(page, isAdmin);
   const isSamePage = (currentPage === page);
   currentPage = page;
   try {
@@ -30466,22 +30430,8 @@ window.applyPostLoginBg = function(theme) {
       const savedPage = localStorage.getItem('nexus_current_page');
       const pageTarget = hashPage || savedPage;
 
-      if (currentUser.role === 'Administrador') {
-        document.documentElement.classList.add('is-admin');
-        const validAdminTargets = ['usuarios', 'ordens', 'pagamentos', 'logs'];
-        if (validAdminTargets.includes(pageTarget)) {
-          currentPage = pageTarget;
-        } else {
-          currentPage = 'usuarios';
-        }
-      } else {
-        document.documentElement.classList.remove('is-admin');
-        if (['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(pageTarget)) {
-          currentPage = pageTarget;
-        } else {
-          currentPage = 'dashboard';
-        }
-      }
+      document.documentElement.classList.toggle('is-admin', nexusIsAdminUser(currentUser));
+      currentPage = nexusResolvePage(pageTarget, nexusIsAdminUser(currentUser));
       if (typeof updateHeaderUser === 'function') updateHeaderUser();
       if (typeof updateAdminMenuVisibility === 'function') updateAdminMenuVisibility();
 
@@ -30614,20 +30564,7 @@ window.applyPostLoginBg = function(theme) {
   const savedPage = localStorage.getItem('nexus_current_page');
   const pageTarget = hashPage || savedPage || currentPage;
 
-  if (currentUser.role === 'Administrador') {
-    const validAdminTargets = ['usuarios', 'ordens', 'pagamentos', 'logs'];
-    if (validAdminTargets.includes(pageTarget)) {
-      currentPage = pageTarget;
-    } else {
-      currentPage = 'usuarios';
-    }
-  } else {
-    if (['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'alertas', 'config'].includes(pageTarget)) {
-      currentPage = pageTarget;
-    } else {
-      currentPage = 'dashboard';
-    }
-  }
+  currentPage = nexusResolvePage(pageTarget, nexusIsAdminUser(currentUser));
 
   await loadUserData();
   if (!window.__initialRenderDone && typeof render === 'function') render();
@@ -33528,7 +33465,8 @@ const server = http.createServer(async (req, res) => {
       if (isNaN(expiresAtMs)) expiresAtMs = 0;
     }
 
-    const isAdmin = (user.role === 'Administrador' || user.email === 'suporte.paulolima@outlook.com' || user.email === 'paulolp0101@gmail.com');
+    // Acesso ilimitado vale só para quem tem o perfil Administrador cadastrado; e-mail não concede privilégio.
+    const isAdmin = (user.role === 'Administrador');
     const isLifetime = (user.subscription_plan === 'vitalicio');
     // Somente considera assinatura ativa se for Admin, Vitalício, ou tiver status 'active' com data de expiração futura válida (expiresAtMs > now)
     const isSubscribed = isAdmin || isLifetime || (user.subscription_status === 'active' && expiresAtMs > now);
