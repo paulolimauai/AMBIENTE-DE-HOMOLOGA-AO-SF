@@ -14235,6 +14235,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 .sidebar-search { display: none !important; }
 </style>
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
+<link rel="stylesheet" href="/dashboard-financeiro.css?v=20261106-2" />
+<script src="/dashboard-financeiro.js?v=20261106-2"></script>
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -21646,15 +21648,63 @@ function getPendingBillsSummary() {
 async function markTransactionAsPaid(id) {
   const t = transactions.find(x => x.id === id);
   if (!t) return;
-  t.status = 'Pago';
-  showToast(\`✅ Conta "\${t.desc}" marcada como PAGA!\`);
-  logActivity('Pagamento', 'Transação', \`Baixa realizada no pagamento de "\${t.desc}" (\${fmt(t.val)}).\`);
-  await pushNotification(\`Pagamento realizado: \${t.desc} — \${fmt(t.val)}\`, '✅');
+  const ehEntrada = t.type === 'in';
+  t.status = ehEntrada ? 'Recebido' : 'Pago';
+  showToast(ehEntrada ? \`✅ "\${t.desc}" marcado como RECEBIDO!\` : \`✅ Conta "\${t.desc}" marcada como PAGA!\`);
+  logActivity(ehEntrada ? 'Recebimento' : 'Pagamento', 'Transação', ehEntrada ? \`Baixa realizada no recebimento de "\${t.desc}" (\${fmt(t.val)}).\` : \`Baixa realizada no pagamento de "\${t.desc}" (\${fmt(t.val)}).\`);
+  await pushNotification(ehEntrada ? \`Recebimento confirmado: \${t.desc} — \${fmt(t.val)}\` : \`Pagamento realizado: \${t.desc} — \${fmt(t.val)}\`, '✅');
   await saveUserData();
   render();
 }
 
-function pageDashboard(){
+// Dashboard novo (dashboard-financeiro.js): o app entrega as movimentações e os resumos de conta/cartão que só ele sabe calcular
+function nexusDashContexto() {
+  const contasCtx = accounts.map(function(a) {
+    const st = getCardStats(a);
+    const ehCartao = isAccountCreditCard(a);
+    return {
+      id: a.id,
+      nome: a.name,
+      ehCartao: ehCartao,
+      saldoInicial: ehCartao ? 0 : (parseInputValue(a.balance) || 0),
+      limiteTotal: st.totalLimit,
+      fatura: st.spentTotal,
+      disponivel: st.availableLimit,
+      usoPct: st.usagePct,
+      txIds: transactions.filter(function(t) { return isTxForAccount(t, a); }).map(function(t) { return t.id; })
+    };
+  });
+  const rawFirstName = currentUser ? (currentUser.name || '').split(' ')[0] : 'Usuário';
+  return {
+    hoje: new Date(),
+    periodo: { year: currentPeriod.year, month: currentPeriod.month },
+    transacoes: transactions,
+    contas: contasCtx,
+    categorias: categories,
+    orcamentos: budgets,
+    util: {
+      fmt: fmt,
+      periodPickerHTML: periodPickerHTML,
+      saudacao: function() { return getGreetingTime(); },
+      dataHoje: function() { return getFormattedToday(); },
+      primeiroNome: rawFirstName ? (rawFirstName.charAt(0).toUpperCase() + rawFirstName.slice(1).toLowerCase()) : 'Usuário'
+    }
+  };
+}
+
+function pageDashboard() {
+  if (window.NexusDash && typeof window.NexusDash.pagina === 'function') {
+    try {
+      return window.NexusDash.pagina(nexusDashContexto());
+    } catch (e) {
+      console.error('Dashboard novo falhou; usando o painel anterior:', e);
+      window.NexusDash.estado.ativo = false;
+    }
+  }
+  return pageDashboardLegado();
+}
+
+function pageDashboardLegado(){
   const periodTx = Array.isArray(transactions) ? transactions.filter(inPeriod) : [];
   const {receitas, despesas, saldo} = computeTotals(periodTx);
   const cats = despesasPorCategoria(periodTx);
@@ -26896,6 +26946,16 @@ window.switchDashWheelTab = function(tabName, btnEl) {
 
 /* ==================== Charts ==================== */
 function drawDashboardCharts(){
+  // Dashboard novo: o próprio módulo desenha seus gráficos (e tenta de novo se o Chart.js ainda estiver carregando)
+  if (window.NexusDash && window.NexusDash.estado && window.NexusDash.estado.ativo) {
+    try {
+      window.NexusDash.desenhar();
+      charts.cashFlow = window.NexusDash.graficoPrincipal() || charts.cashFlow;
+    } catch (eNovo) {
+      console.warn('Aviso ao desenhar o dashboard novo:', eNovo);
+    }
+    return;
+  }
   if (typeof Chart === 'undefined') return;
   try {
     const isLightMode = document.body.classList.contains('light') || document.documentElement.classList.contains('light');
@@ -34854,7 +34914,11 @@ const server = http.createServer(async (req, res) => {
     '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif',
     '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.webp': 'image/webp', '.avif': 'image/avif'
   };
-  const STATIC_EXACT_FILES = { '/frontend-polish.css': 'text/css' };
+  const STATIC_EXACT_FILES = {
+    '/frontend-polish.css': 'text/css',
+    '/dashboard-financeiro.css': 'text/css',
+    '/dashboard-financeiro.js': 'application/javascript; charset=utf-8'
+  };
   let staticFile = null;
   if (STATIC_EXACT_FILES[pathname]) {
     staticFile = { filePath: path.join(__dirname, pathname.slice(1)), contentType: STATIC_EXACT_FILES[pathname], isImage: false };
