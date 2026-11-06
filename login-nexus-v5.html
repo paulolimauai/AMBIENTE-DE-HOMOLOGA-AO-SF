@@ -354,8 +354,8 @@
   .access-foot { display: flex; flex-direction: column; }
   .help {
     position: relative; isolation: isolate; overflow: hidden;
-    display: flex; flex-direction: column; gap: 12px;
-    padding: 16px 16px 14px; border-radius: 20px;
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 14px 14px 16px; border-radius: 20px;
     background:
       linear-gradient(145deg, rgba(255,255,255,.17) 0%, rgba(255,255,255,.05) 46%, rgba(var(--a-rgb), .11) 100%),
       rgba(255,255,255,.02);
@@ -380,7 +380,6 @@
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude;
   }
-  .help-head { display: flex; align-items: center; gap: 12px; }
   .help-ico {
     width: 42px; height: 42px; flex: none; display: grid; place-items: center; border-radius: 13px;
     color: var(--accent-light);
@@ -389,46 +388,21 @@
     box-shadow: 0 8px 22px rgba(var(--a-rgb), .28), inset 0 1px 0 rgba(255,255,255,.45);
   }
   .help-ico svg { width: 20px; height: 20px; display: block; }
-  .help-copy { min-width: 0; }
-  .help-title { font-family: var(--font-display); font-weight: 500; font-size: 19px; letter-spacing: -.01em; line-height: 1.15; color: var(--ink); }
+  .help-copy { min-width: 0; flex: 1; }
+  .help-title { font-family: var(--font-display); font-weight: 500; font-size: 18px; letter-spacing: -.01em; line-height: 1.15; color: var(--ink); }
   .help-sub { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.35; color: var(--muted); }
 
-  .help-actions { display: grid; grid-template-columns: 1fr 1.12fr; gap: 8px; }
   .help-btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    height: 42px; padding: 0 12px; border-radius: 12px; cursor: pointer; white-space: nowrap;
-    font: 600 13.5px var(--font-body); letter-spacing: .005em;
-    transition: transform .15s, filter .2s, background .2s, border-color .2s, box-shadow .2s, color .2s;
-  }
-  .help-btn svg { width: 16px; height: 16px; flex: none; }
-  .help-btn:active { transform: translateY(1px); }
-  .help-btn.primary {
-    border: 0; color: var(--on-accent); font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: none;
+    height: 42px; padding: 0 18px; border-radius: 12px; cursor: pointer; white-space: nowrap;
+    font: 700 13.5px var(--font-body); letter-spacing: .005em; color: var(--on-accent); border: 0;
     background: linear-gradient(145deg, var(--accent-light), var(--accent) 55%, var(--accent-deep));
     box-shadow: 0 10px 24px -6px rgba(var(--a-rgb), .5), inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(0,0,0,.12);
+    transition: transform .15s, filter .2s, box-shadow .2s;
   }
-  .help-btn.primary:hover { filter: brightness(1.07); box-shadow: 0 14px 30px -6px rgba(var(--a-rgb), .62), inset 0 1px 0 rgba(255,255,255,.65), inset 0 -1px 0 rgba(0,0,0,.12); }
-  .help-btn.ghost {
-    color: var(--ink);
-    background: linear-gradient(145deg, rgba(255,255,255,.15), rgba(255,255,255,.04));
-    border: 1px solid rgba(255,255,255,.26);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.24);
-  }
-  .help-btn.ghost:hover { color: #fff; border-color: rgba(var(--a-rgb), .62); background: linear-gradient(145deg, rgba(var(--a-rgb), .24), rgba(255,255,255,.05)); }
-
-  .help-mail {
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px;
-    padding-top: 11px; border-top: 1px solid rgba(255,255,255,.13);
-    font-size: 12.5px; color: var(--muted);
-  }
-  .help-mail a { display: inline-flex; align-items: center; gap: 7px; color: var(--ink); font-weight: 600; }
-  .help-mail a svg { color: var(--accent-light); flex: none; }
-  .help-mail a:hover { color: var(--accent-light); }
-  /* Em "Criar conta" o formulário é alto: no desktop o card de atendimento fica compacto (sem a linha de e-mail) para a placa caber em 1080p */
-  @media (min-width: 981px) {
-    .access.is-register { gap: 16px; }
-    .access.is-register .help-mail { display: none; }
-  }
+  .help-btn svg { width: 16px; height: 16px; flex: none; }
+  .help-btn:hover { filter: brightness(1.07); box-shadow: 0 14px 30px -6px rgba(var(--a-rgb), .62), inset 0 1px 0 rgba(255,255,255,.65), inset 0 -1px 0 rgba(0,0,0,.12); }
+  .help-btn:active { transform: translateY(1px); }
 
   a { color: var(--accent); text-decoration: none; font-weight: 600; }
   a:hover { color: var(--accent-light); text-decoration: underline; text-underline-offset: 3px; }
@@ -608,10 +582,22 @@
     background: rgba(5, 6, 16, .48); border: 1px solid rgba(255, 255, 255, .14); border-radius: 13px;
   }
   .osmodal-tab {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     height: 40px; border: 0; border-radius: 10px; cursor: pointer;
     font: 600 13.5px var(--font-body); color: #c8cde2; background: transparent;
     transition: background .2s, color .2s, box-shadow .2s;
   }
+  .osmodal-tab svg { width: 15px; height: 15px; flex: none; }
+  .osmodal-tab:not(.active):hover { color: #fff; background: rgba(255, 255, 255, .08); }
+  .osmodal-lead { margin: -2px 2px 14px; font-size: 13px; line-height: 1.45; color: #d6daec; }
+  .osmodal-lead[hidden] { display: none; }
+  .osmodal-foot {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px 8px;
+    margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, .12);
+    font-size: 12.5px; color: #c8cde2;
+  }
+  .osmodal-foot a { color: var(--ink); font-weight: 600; }
+  .osmodal-foot a:hover { color: var(--accent-light); }
   .osmodal-tab.active {
     color: var(--on-accent); font-weight: 700;
     background: linear-gradient(145deg, var(--accent-light), var(--accent));
@@ -676,6 +662,19 @@
   @media (max-width: 520px) {
     .osmodal-quicks, .osmodal-grid { grid-template-columns: 1fr; }
   }
+  /* Janelas baixas (notebook 768px): o modal compacta o espaçamento para caber sem rolar */
+  @media (max-height: 820px) {
+    .gmodal-card.osmodal-card { padding: 20px 24px 16px; }
+    .osmodal-tabs { margin-bottom: 10px; }
+    .osmodal-lead { margin-bottom: 10px; }
+    .osmodal-quicks { gap: 6px; margin-bottom: 10px; }
+    .osmodal-qbtn { padding: 7px 10px; }
+    .osmodal-field { gap: 4px; margin-bottom: 8px; }
+    .osmodal-grid { margin-bottom: 8px; }
+    .osmodal-inp, .osmodal-sel { height: 38px; }
+    .osmodal-txt { min-height: 54px; }
+    .osmodal-foot { margin-top: 10px; padding-top: 10px; }
+  }
 
   /* ---------- Responsivo ---------- */
   @media (max-width: 980px) {
@@ -698,8 +697,8 @@
     h1 { font-size: 28px; }
     .stage { padding-top: 72px; }
     .slab { border-radius: 30px; }
-    .help-actions { grid-template-columns: 1fr; }
-    .help-mail { justify-content: center; text-align: center; }
+    .help { flex-wrap: wrap; }
+    .help-btn { flex: 1 1 100%; }
   }
 
   /* ---------- Notebooks e janelas baixas: compacta o espaçamento para a placa caber sem rolar a página ---------- */
@@ -719,10 +718,9 @@
     form { gap: 11px; }
     .control { height: 54px; }
     .btn { height: 52px; }
-    .help { gap: 10px; padding: 13px 14px 12px; }
+    .help { padding: 11px 12px 11px 14px; }
     .help-ico { width: 38px; height: 38px; }
     .help-btn { height: 40px; }
-    .help-mail { padding-top: 9px; }
   }
 
   /* ---------- Telas grandes (2K, 5K, 4K): a interface cresce junto, em vez de virar um cartão pequeno no meio do vidro ---------- */
@@ -893,32 +891,17 @@
 
           <div class="access-foot">
           <section class="help" aria-labelledby="help-title">
-            <div class="help-head">
-              <span class="help-ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/></svg>
-              </span>
-              <div class="help-copy">
-                <h3 class="help-title" id="help-title">Central de Atendimento</h3>
-                <span class="help-sub">Suporte técnico e acompanhamento de chamados</span>
-              </div>
+            <span class="help-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/></svg>
+            </span>
+            <div class="help-copy">
+              <h3 class="help-title" id="help-title">Central de Atendimento</h3>
+              <span class="help-sub">Abra ou acompanhe chamados</span>
             </div>
-            <div class="help-actions">
-              <button type="button" class="help-btn primary" id="os" title="Abrir um chamado de suporte técnico">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-                Abrir chamado
-              </button>
-              <button type="button" class="help-btn ghost" id="os-track" title="Consultar um chamado pelo protocolo, e-mail, CPF ou telefone">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                Acompanhar protocolo
-              </button>
-            </div>
-            <p class="help-mail">
-              <span>Prefere e-mail?</span>
-              <a href="mailto:suporte.paulolima@outlook.com">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 7 9 6 9-6"/></svg>
-                suporte.paulolima@outlook.com
-              </a>
-            </p>
+            <button type="button" class="help-btn" id="os" title="Abrir um chamado ou acompanhar um protocolo">
+              Abrir chamado
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
           </section>
           </div>
         </section>
@@ -1128,7 +1111,6 @@
     if (rememberRow) rememberRow.style.display = registering ? 'none' : 'flex';
     $('#email').autocomplete = registering ? 'off' : 'email';
     $('#senha').autocomplete = registering ? 'new-password' : 'current-password';
-    document.querySelector('.access').classList.toggle('is-register', registering);
     $('#titulo-card').textContent = copy[mode].title;
     $('#subtitulo').textContent = copy[mode].sub;
     btn.textContent = copy[mode].button;
@@ -1804,9 +1786,14 @@
             '</button>' +
           '</div>' +
           '<div class="osmodal-tabs" role="tablist" aria-label="Atendimento">' +
-            '<button type="button" class="osmodal-tab active" role="tab" aria-selected="true" data-ostab="abrir">Abrir chamado</button>' +
-            '<button type="button" class="osmodal-tab" role="tab" aria-selected="false" data-ostab="consultar">Acompanhar protocolo</button>' +
+            '<button type="button" class="osmodal-tab active" role="tab" aria-selected="true" data-ostab="abrir">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Novo chamado' +
+            '</button>' +
+            '<button type="button" class="osmodal-tab" role="tab" aria-selected="false" data-ostab="consultar">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Acompanhar chamado' +
+            '</button>' +
           '</div>' +
+          '<p class="osmodal-lead" id="osmodal-lead"></p>' +
           '<div id="osmodal-pane-abrir">' +
             '<span class="osmodal-quick-lbl">Escolha rápida em 1 clique:</span>' +
             '<div class="osmodal-quicks">' +
@@ -1871,7 +1858,7 @@
             '<div class="osmodal-proto-box">' +
               '<span class="gmodal-kicker">Chamado Técnico Registrado com Sucesso</span>' +
               '<div class="osmodal-proto-num" id="osmodal-proto-num">OS-000000</div>' +
-              '<p style="font-size:13px;color:#d6daec;margin-bottom:14px;">Sua solicitação já foi encaminhada para a Administração.</p>' +
+              '<p style="font-size:13px;color:#d6daec;margin-bottom:14px;line-height:1.45;">Guarde este número: na aba <strong>Acompanhar chamado</strong> você vê o andamento a qualquer momento.</p>' +
               '<div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">' +
                 '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-copy-proto" style="height:38px;font-size:13px;">Copiar Número</button>' +
               '</div>' +
@@ -1884,7 +1871,7 @@
           '<div id="osmodal-pane-consultar" hidden>' +
             '<form id="osmodal-form-consultar" style="display:block;margin:0;" novalidate>' +
               '<div class="osmodal-field">' +
-                '<label for="os-inp-query">Protocolo (OS-...), E-mail, CPF ou Telefone</label>' +
+                '<label for="os-inp-query">Número do protocolo, e-mail, CPF ou telefone</label>' +
                 '<div style="display:flex;gap:8px;">' +
                   '<input class="osmodal-inp" id="os-inp-query" type="text" placeholder="Ex: OS-123456 ou seu.email@exemplo.com" style="flex:1;">' +
                   '<button type="submit" class="gmodal-btn gmodal-btn-ok" id="osmodal-btn-search" style="height:42px;padding:0 18px;">Consultar</button>' +
@@ -1894,6 +1881,7 @@
             '<p class="gmodal-error" id="osmodal-search-error"></p>' +
             '<div class="osmodal-results" id="osmodal-results"></div>' +
           '</div>' +
+          '<p class="osmodal-foot"><span>Prefere e-mail?</span><a href="mailto:suporte.paulolima@outlook.com">suporte.paulolima@outlook.com</a></p>' +
         '</div>' +
       '</div>';
     document.body.appendChild(ov);
@@ -1911,6 +1899,11 @@
       $('#osmodal-pane-abrir', ov).hidden = tab !== 'abrir';
       $('#osmodal-pane-sucesso', ov).hidden = true;
       $('#osmodal-pane-consultar', ov).hidden = tab !== 'consultar';
+      const lead = $('#osmodal-lead', ov);
+      lead.hidden = false;
+      lead.textContent = tab === 'consultar'
+        ? 'Já abriu um chamado? Informe o protocolo para ver o andamento.'
+        : 'Descreva o que precisa. Você recebe um protocolo para acompanhar.';
       if (tab === 'consultar') window.setTimeout(() => $('#os-inp-query', ov).focus(), 40);
     };
     ov._switchTab = switchTab;
@@ -1991,6 +1984,7 @@
         clearFields();
         $('#osmodal-pane-abrir', ov).hidden = true;
         $('#osmodal-pane-sucesso', ov).hidden = false;
+        $('#osmodal-lead', ov).hidden = true;
         $('#os-inp-query', ov).value = proto;
       } catch (err) {
         errEl.textContent = err.message || 'Falha ao enviar o chamado.';
@@ -2124,10 +2118,6 @@
   $('#os').addEventListener('click', event => {
     event.preventDefault();
     window.nexusAuth.openOS('abrir');
-  });
-  $('#os-track').addEventListener('click', event => {
-    event.preventDefault();
-    window.nexusAuth.openOS('consultar');
   });
 
   try {
