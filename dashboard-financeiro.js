@@ -812,7 +812,7 @@
   }
 
   function linhasUltimas(m, filtro) {
-    const lista = m.ultimas.filter((u) => filtro === 'all' || u.tipo === filtro).slice(0, 6);
+    const lista = m.ultimas.filter((u) => filtro === 'all' || u.tipo === filtro).slice(0, 5);
     if (!lista.length) return '<div class="fd-vazio"><strong>Nenhuma movimentação realizada</strong><span>As movimentações pagas ou recebidas do período aparecem aqui.</span></div>';
     return '<ul class="fd-ult-lista">' + lista.map((u) =>
       '<li class="fd-ult-item"><div class="fd-ult-data">' + esc(dataCurta(u.data)) + '</div>' +
