@@ -11,9 +11,13 @@
 const crypto = require('crypto');
 
 // ---------- Catálogos ----------
-const STATUS = Object.freeze(['Pendente', 'Em Andamento', 'Concluído', 'Cancelado']);
-const PRIORIDADES = Object.freeze(['Normal', 'Alta', 'Urgente']);
+const STATUS = Object.freeze(['Novo', 'Pendente', 'Em Andamento', 'Em Atendimento', 'Pendente Cliente', 'Resolvido', 'Concluído', 'Cancelado']);
+const PRIORIDADES = Object.freeze(['Baixa', 'Normal', 'Média', 'Alta', 'Urgente', 'Crítica']);
 const CATEGORIAS = Object.freeze([
+  'Sistema Financeiro & ERP',
+  'Gestão de Acessos & Reset de Senha',
+  'Suporte Técnico & Infraestrutura',
+  'Projetos & Melhorias',
   'Reset de Senha',
   'Pagamento Não Reconhecido',
   '2ª Via de Boleto',
@@ -22,14 +26,23 @@ const CATEGORIAS = Object.freeze([
   'Atendimento Geral',
   'Relato de Bug',
   'Melhoria no Sistema',
-  'Instalação / Configuração'
+  'Instalação / Configuração',
+  'Outro Suporte'
 ]);
 const CATEGORIA_PADRAO = 'Atendimento Geral';
 const CANAL_PADRAO = 'Portal Web';
 // Quem não é administrador só pode abrir chamado por estes canais (os demais, como "Telefone", são de atendimento interno)
-const CANAIS_PUBLICOS = Object.freeze(['Tela de Login', 'Portal Web', 'App Mobile']);
+const CANAIS_PUBLICOS = Object.freeze(['Tela de Login', 'Portal Web', 'App Mobile', 'Central GLPI', 'GLPI Tela de Login']);
 
-const LIMITES = Object.freeze({ nome: 120, email: 254, telefone: 40, titulo: 200, descricao: 5000, notas: 2000, tecnico: 150, canal: 60, categoria: 100 });
+const LIMITES = Object.freeze({ nome: 120, email: 254, telefone: 40, titulo: 200, descricao: 5000, notas: 2000, tecnico: 150, canal: 60, categoria: 100, sla: 40, asset: 150, solution: 4000 });
+
+function calcularSlaPorPrioridade(prioridade) {
+  const p = String(prioridade || '').toLowerCase();
+  if (p === 'crítica' || p === 'critica' || p === 'urgente') return '30 Minutos';
+  if (p === 'alta') return '1 Hora';
+  if (p === 'baixa') return '8 Horas';
+  return '2 Horas';
+}
 // Mínimos de texto: o público precisa descrever o pedido; a recepção (administrador) pode registrar anotações curtas
 const MINIMOS_PUBLICO = Object.freeze({ nome: 2, titulo: 3, descricao: 10 });
 const MINIMOS_ADMIN = Object.freeze({ nome: 2, titulo: 3, descricao: 3 });
@@ -245,6 +258,13 @@ function validarAbertura(payload, { admin = false, isEmail } = {}) {
   const campos = Object.keys(erros);
   if (campos.length) return { ok: false, mensagem: erros[campos[0]], erros };
 
+  const slaBruto = limparTexto(p.sla, LIMITES.sla);
+  const sla = slaBruto || calcularSlaPorPrioridade(prioridade);
+  const asset = limparTexto(p.asset, LIMITES.asset) || 'Nenhum';
+  const timeSpentNum = Number(p.time_spent ?? p.timeSpent ?? 0);
+  const time_spent = Number.isFinite(timeSpentNum) && timeSpentNum >= 0 ? Math.round(timeSpentNum * 100) / 100 : 0;
+  const solution = admin ? limparTexto(p.solution, LIMITES.solution, { multilinha: true }) : '';
+
   return {
     ok: true,
     dados: {
@@ -259,12 +279,29 @@ function validarAbertura(payload, { admin = false, isEmail } = {}) {
       canal_atendimento: escaparHtml(canal),
       status,
       tecnico_responsavel: tecnico,
-      admin_notes: notas
+      admin_notes: notas,
+      sla: escaparHtml(sla),
+      asset: escaparHtml(asset),
+      time_spent,
+      solution: escaparHtml(solution),
+      timeline: Array.isArray(p.timeline) ? p.timeline : null
     }
   };
 }
 
 function montarOrdem(dados, { protocolo, id, agoraIso }) {
+  const isResolvido = dados.status === 'Concluído' || dados.status === 'Resolvido';
+  const timelineInicial = Array.isArray(dados.timeline) && dados.timeline.length > 0
+    ? dados.timeline
+    : [
+        {
+          sender: 'Solicitante',
+          author: dados.client_name || 'Solicitante',
+          text: 'Chamado aberto via GLPI Service Desk. Aguardando atribuição técnica.',
+          date: agoraIso,
+          internal: false
+        }
+      ];
   return {
     id,
     protocol: protocolo,
@@ -281,7 +318,12 @@ function montarOrdem(dados, { protocolo, id, agoraIso }) {
     tecnico_responsavel: dados.tecnico_responsavel,
     assumido_em: dados.tecnico_responsavel ? agoraIso : null,
     canal_atendimento: dados.canal_atendimento,
-    concluido_em: dados.status === 'Concluído' ? agoraIso : null,
+    sla: dados.sla || calcularSlaPorPrioridade(dados.priority),
+    asset: dados.asset || 'Nenhum',
+    time_spent: Number(dados.time_spent) || 0,
+    solution: dados.solution || '',
+    timeline: timelineInicial,
+    concluido_em: isResolvido ? agoraIso : null,
     created_at: agoraIso,
     updated_at: agoraIso
   };
@@ -308,6 +350,9 @@ function encontrarDuplicada(lista, dados, { agora = Date.now(), janelaMs = 10 * 
 function aplicarAtualizacao(ordem, payload, { agoraIso }) {
   const p = payload && typeof payload === 'object' ? payload : {};
   const novo = { ...ordem };
+  if (Array.isArray(ordem.timeline)) {
+    novo.timeline = ordem.timeline.map((item) => ({ ...item }));
+  }
   const mudancas = [];
 
   if (p.status !== undefined && String(p.status).trim() !== '') {
@@ -350,8 +395,66 @@ function aplicarAtualizacao(ordem, payload, { agoraIso }) {
     else if (!tecnico) novo.assumido_em = null;
   }
 
-  if (novo.status === 'Concluído') novo.concluido_em = paraIso(ordem.concluido_em) || agoraIso;
-  else novo.concluido_em = null;
+  if (p.sla !== undefined && String(p.sla).trim() !== '') {
+    const slaNovo = limparTexto(p.sla, LIMITES.sla);
+    if (slaNovo && slaNovo !== (ordem.sla || '')) mudancas.push('SLA: ' + (ordem.sla || '—') + ' → ' + slaNovo);
+    novo.sla = slaNovo;
+  }
+
+  if (p.asset !== undefined) {
+    const assetNovo = limparTexto(p.asset, LIMITES.asset) || 'Nenhum';
+    if (assetNovo !== (ordem.asset || 'Nenhum')) mudancas.push('ativo CMDB: ' + (ordem.asset || 'Nenhum') + ' → ' + assetNovo);
+    novo.asset = assetNovo;
+  }
+
+  if (p.time_spent !== undefined || p.timeSpent !== undefined) {
+    const tsBruto = Number(p.time_spent ?? p.timeSpent);
+    if (Number.isFinite(tsBruto) && tsBruto >= 0) {
+      const tsNovo = Math.round(tsBruto * 100) / 100;
+      if (tsNovo !== Number(ordem.time_spent || 0)) mudancas.push('horas trabalhadas: ' + (ordem.time_spent || 0) + 'h → ' + tsNovo + 'h');
+      novo.time_spent = tsNovo;
+    }
+  }
+
+  if (p.solution !== undefined) {
+    const solNova = limparTexto(p.solution, LIMITES.solution, { multilinha: true });
+    if (solNova !== (ordem.solution || '')) mudancas.push('solução definitiva registrada');
+    novo.solution = solNova;
+  }
+
+  if (Array.isArray(p.timeline)) {
+    novo.timeline = p.timeline
+      .filter((item) => item && typeof item === 'object' && String(item.text || '').trim())
+      .map((item) => ({
+        sender: limparTexto(item.sender || 'Técnico', 40) || 'Técnico',
+        author: limparTexto(item.author || '', 120) || 'Equipe TI',
+        text: limparTexto(item.text, LIMITES.notas, { multilinha: true }),
+        date: dataOuOriginal(item.date) || agoraIso,
+        internal: Boolean(item.internal)
+      }));
+    mudancas.push('histórico GLPI atualizado');
+  } else if (p.timeline_entry && typeof p.timeline_entry === 'object') {
+    const txt = limparTexto(p.timeline_entry.text, LIMITES.notas, { multilinha: true });
+    if (txt) {
+      const listaAtual = Array.isArray(novo.timeline) ? [...novo.timeline] : [];
+      const novaMsg = {
+        sender: limparTexto(p.timeline_entry.sender || 'Técnico', 40) || 'Técnico',
+        author: limparTexto(p.timeline_entry.author || novo.tecnico_responsavel || 'Equipe TI', 120),
+        text: txt,
+        date: dataOuOriginal(p.timeline_entry.date) || agoraIso,
+        internal: Boolean(p.timeline_entry.internal)
+      };
+      listaAtual.push(novaMsg);
+      novo.timeline = listaAtual;
+      mudancas.push(novaMsg.internal ? 'nota interna TI adicionada' : 'resposta técnica registrada');
+    }
+  }
+
+  if (novo.status === 'Concluído' || novo.status === 'Resolvido') {
+    novo.concluido_em = paraIso(ordem.concluido_em) || agoraIso;
+  } else {
+    novo.concluido_em = null;
+  }
 
   novo.updated_at = agoraIso;
   return { ok: true, ordem: novo, mudancas };
@@ -362,6 +465,25 @@ function aplicarAtualizacao(ordem, payload, { agoraIso }) {
 function normalizarOrdem(linha) {
   if (!linha || typeof linha !== 'object') return null;
   const texto = (v) => (v == null ? '' : String(v));
+  const priority = texto(linha.priority) || 'Normal';
+  const createdAt = dataOuOriginal(linha.created_at);
+  let timelineNormalizada = [];
+  if (Array.isArray(linha.timeline)) {
+    timelineNormalizada = linha.timeline;
+  } else if (typeof linha.timeline === 'string' && linha.timeline.trim().startsWith('[')) {
+    try { timelineNormalizada = JSON.parse(linha.timeline); } catch (_e) { timelineNormalizada = []; }
+  }
+  if (!Array.isArray(timelineNormalizada) || timelineNormalizada.length === 0) {
+    timelineNormalizada = [
+      {
+        sender: 'Solicitante',
+        author: texto(linha.client_name) || 'Solicitante',
+        text: 'Chamado registrado na Central GLPI Service Desk.',
+        date: createdAt,
+        internal: false
+      }
+    ];
+  }
   return {
     ...linha,
     protocol: texto(linha.protocol).trim(),
@@ -370,7 +492,7 @@ function normalizarOrdem(linha) {
     client_phone: texto(linha.client_phone),
     client_cpf: texto(linha.client_cpf),
     service_type: texto(linha.service_type) || CATEGORIA_PADRAO,
-    priority: texto(linha.priority) || 'Normal',
+    priority,
     title: texto(linha.title),
     description: texto(linha.description),
     status: texto(linha.status) || 'Pendente',
@@ -378,8 +500,13 @@ function normalizarOrdem(linha) {
     tecnico_responsavel: linha.tecnico_responsavel ? String(linha.tecnico_responsavel) : null,
     assumido_em: dataOuOriginal(linha.assumido_em),
     canal_atendimento: texto(linha.canal_atendimento) || CANAL_PADRAO,
+    sla: texto(linha.sla) || calcularSlaPorPrioridade(priority),
+    asset: texto(linha.asset) || 'Nenhum',
+    time_spent: Number.isFinite(Number(linha.time_spent)) ? Number(linha.time_spent) : 0,
+    solution: texto(linha.solution),
+    timeline: timelineNormalizada,
     concluido_em: dataOuOriginal(linha.concluido_em),
-    created_at: dataOuOriginal(linha.created_at),
+    created_at: createdAt,
     updated_at: dataOuOriginal(linha.updated_at)
   };
 }
@@ -392,7 +519,18 @@ function mesclarOrdens(preferidas, outras) {
   for (const lista of [outras, preferidas]) {
     for (const bruta of Array.isArray(lista) ? lista : []) {
       const ordem = normalizarOrdem(bruta);
-      if (ordem) porChave.set(chaveDe(ordem), ordem);
+      if (!ordem) continue;
+      const chave = chaveDe(ordem);
+      const anterior = porChave.get(chave);
+      if (anterior) {
+        if ((!ordem.timeline || ordem.timeline.length <= 1) && Array.isArray(anterior.timeline) && anterior.timeline.length > 1) {
+          ordem.timeline = anterior.timeline;
+        }
+        if (!ordem.solution && anterior.solution) ordem.solution = anterior.solution;
+        if ((!ordem.asset || ordem.asset === 'Nenhum') && anterior.asset && anterior.asset !== 'Nenhum') ordem.asset = anterior.asset;
+        if (!ordem.time_spent && anterior.time_spent) ordem.time_spent = anterior.time_spent;
+      }
+      porChave.set(chave, ordem);
     }
   }
   const instante = (o) => {
@@ -445,11 +583,19 @@ function visaoPublica(ordem, { detalhada = false } = {}) {
     protocol: ordem.protocol,
     status: ordem.status || 'Pendente',
     service_type: ordem.service_type || CATEGORIA_PADRAO,
+    sla: ordem.sla || calcularSlaPorPrioridade(ordem.priority),
     created_at: paraIso(ordem.created_at),
     updated_at: paraIso(ordem.updated_at),
     concluido_em: paraIso(ordem.concluido_em)
   };
   if (!detalhada) return resumo;
+  const timelinePublica = (Array.isArray(ordem.timeline) ? ordem.timeline : [])
+    .filter((item) => item && !item.internal && item.sender === 'Técnico')
+    .map((item) => ({
+      sender: 'Técnico',
+      text: item.text || '',
+      date: paraIso(item.date)
+    }));
   return {
     ...resumo,
     priority: ordem.priority || 'Normal',
@@ -457,12 +603,16 @@ function visaoPublica(ordem, { detalhada = false } = {}) {
     description: ordem.description || '',
     tecnico_responsavel: ordem.tecnico_responsavel || null,
     assumido_em: paraIso(ordem.assumido_em),
-    canal_atendimento: ordem.canal_atendimento || CANAL_PADRAO
+    canal_atendimento: ordem.canal_atendimento || CANAL_PADRAO,
+    asset: ordem.asset || 'Nenhum',
+    solution: ordem.solution || '',
+    timeline: timelinePublica
   };
 }
 
 module.exports = {
   STATUS, PRIORIDADES, CATEGORIAS, CANAIS_PUBLICOS, CATEGORIA_PADRAO, CANAL_PADRAO, LIMITES,
+  calcularSlaPorPrioridade,
   limparTexto, escaparHtml, paraIso,
   gerarProtocolo, normalizarProtocolo, mesmaReferencia,
   formatarTelefone, mesmoNumero, validarCpf, soDigitos,

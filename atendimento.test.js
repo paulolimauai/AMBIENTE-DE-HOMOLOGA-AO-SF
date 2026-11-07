@@ -299,3 +299,47 @@ test('validarCpf', () => {
   assert.ok(!A.validarCpf('11111111111'));
   assert.ok(!A.validarCpf('123'));
 });
+
+test('integração GLPI 10: SLA automático, ativo CMDB, horas, timeline pública/interna e solução', () => {
+  const r = A.validarAbertura({
+    client_name: 'Ana',
+    client_email: 'ana@empresa.com.br',
+    service_type: 'Sistema Financeiro & ERP',
+    priority: 'Crítica',
+    title: 'Erro na conciliação bancária',
+    description: 'Falha ao importar arquivo OFX na tela de lançamentos',
+    canal_atendimento: 'GLPI Tela de Login'
+  });
+  assert.ok(r.ok);
+  assert.equal(r.dados.sla, '30 Minutos');
+  const ordem = A.montarOrdem(r.dados, { protocolo: 'OS-261102-GLPI', id: 10, agoraIso: AGORA });
+  assert.equal(ordem.sla, '30 Minutos');
+  assert.equal(ordem.timeline.length, 1);
+
+  const att1 = A.aplicarAtualizacao(ordem, {
+    status: 'Em Atendimento',
+    tecnico_responsavel: 'Eng. Carlos Silva (N2)',
+    asset: 'SRV-ERP-01 (Cluster Produção)',
+    time_spent: 1.5,
+    timeline_entry: { sender: 'Técnico', text: 'Nota privada N2', internal: true }
+  }, { agoraIso: AGORA });
+  assert.ok(att1.ok);
+  assert.equal(att1.ordem.asset, 'SRV-ERP-01 (Cluster Produção)');
+  assert.equal(att1.ordem.time_spent, 1.5);
+  assert.equal(att1.ordem.timeline.length, 2);
+
+  const att2 = A.aplicarAtualizacao(att1.ordem, {
+    status: 'Resolvido',
+    solution: 'Índice do banco reconstruído com sucesso.',
+    timeline_entry: { sender: 'Técnico', text: 'Reprocessamento liberado.', internal: false }
+  }, { agoraIso: AGORA });
+  assert.ok(att2.ok);
+  assert.equal(att2.ordem.status, 'Resolvido');
+  assert.equal(att2.ordem.concluido_em, AGORA);
+
+  const pub = A.visaoPublica(att2.ordem, { detalhada: true });
+  assert.equal(pub.solution, 'Índice do banco reconstruído com sucesso.');
+  assert.equal(pub.timeline.length, 1);
+  assert.equal(pub.timeline[0].text, 'Reprocessamento liberado.');
+  assert.ok(!JSON.stringify(pub).includes('Nota privada N2'));
+});

@@ -891,15 +891,15 @@
 
           <div class="access-foot">
           <section class="help" aria-labelledby="help-title">
-            <span class="help-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/></svg>
+            <span class="help-ico" aria-hidden="true" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;font-weight:900;font-size:15px;">
+              G
             </span>
             <div class="help-copy">
-              <h3 class="help-title" id="help-title">Central de Atendimento</h3>
-              <span class="help-sub">Abra ou acompanhe chamados</span>
+              <h3 class="help-title" id="help-title">Central de Serviços GLPI</h3>
+              <span class="help-sub">Abra chamados ITSM ou consulte protocolo</span>
             </div>
-            <button type="button" class="help-btn" id="os" title="Abrir um chamado ou acompanhar um protocolo">
-              Abrir chamado
+            <button type="button" class="help-btn" id="os" title="Abrir um chamado no GLPI Service Desk ou acompanhar protocolo">
+              Abrir Chamado GLPI
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
           </section>
@@ -1779,92 +1779,111 @@
         '<div class="gmodal-body">' +
           '<div class="gmodal-head" style="margin-bottom:14px;">' +
             '<div class="gmodal-brand">' +
-              '<span class="gmodal-badge" aria-hidden="true">' + GLASS_ICONS.headset + '</span>' +
+              '<span class="gmodal-badge" aria-hidden="true" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;font-weight:900;font-size:17px;">G</span>' +
               '<div>' +
-                '<span class="gmodal-kicker">Central de Atendimento</span>' +
-                '<span class="gmodal-step">Abertura e acompanhamento de chamados</span>' +
+                '<span class="gmodal-kicker" style="color:#fbbf24;">GLPI 10 Enterprise ITSM</span>' +
+                '<span class="gmodal-step">Central de Serviços &amp; Autoatendimento</span>' +
               '</div>' +
             '</div>' +
             '<button type="button" class="gmodal-close" id="osmodal-close" aria-label="Fechar">' +
               '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
             '</button>' +
           '</div>' +
-          '<div class="osmodal-tabs" role="tablist" aria-label="Atendimento">' +
+          '<div class="osmodal-tabs" role="tablist" aria-label="Atendimento GLPI">' +
             '<button type="button" class="osmodal-tab active" role="tab" aria-selected="true" data-ostab="abrir">' +
-              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Novo chamado' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Abrir Chamado GLPI' +
             '</button>' +
             '<button type="button" class="osmodal-tab" role="tab" aria-selected="false" data-ostab="consultar">' +
-              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Acompanhar chamado' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Consultar Protocolo GLPI' +
             '</button>' +
           '</div>' +
           '<p class="osmodal-lead" id="osmodal-lead"></p>' +
           '<div id="osmodal-pane-abrir">' +
-            '<span class="osmodal-quick-lbl">Escolha rápida em 1 clique:</span>' +
+            '<span class="osmodal-quick-lbl">Catálogo de Serviços GLPI (Clique para preencher):</span>' +
             '<div class="osmodal-quicks">' +
-              '<button type="button" class="osmodal-qbtn" data-type="Reset de Senha" data-prio="Alta" data-title="Recuperação / Reset de Senha de Acesso" data-desc="Solicito apoio para recuperar o acesso à minha conta.">' +
-                '<strong>Recuperar Senha / Acesso</strong><small>Reset imediato de credencial</small>' +
+              '<button type="button" class="osmodal-qbtn" data-type="Sistema Financeiro & ERP" data-prio="Alta" data-title="Incidente no Sistema Financeiro / ERP" data-desc="Relato de erro em lançamentos financeiros, conciliação bancária, boletos ou relatórios contábeis.">' +
+                '<strong>💰 Sistema Financeiro &amp; ERP</strong><small>Lançamentos, conciliação, PIX ou boletos</small>' +
               '</button>' +
-              '<button type="button" class="osmodal-qbtn" data-type="Pagamento Não Reconhecido" data-prio="Urgente" data-title="Liberação de Assinatura / Pagamento" data-desc="Realizei o pagamento e solicito a confirmação e liberação do meu acesso.">' +
-                '<strong>Liberar Assinatura / PIX</strong><small>Reconhecer pagamento ou 2ª via</small>' +
+              '<button type="button" class="osmodal-qbtn" data-type="Gestão de Acessos & Senha" data-prio="Alta" data-title="Gestão de Acessos / Reset de Senha" data-desc="Solicito recuperação de acesso, reset de senha, desbloqueio de MFA ou liberação de perfil.">' +
+                '<strong>🔐 Gestão de Acessos &amp; Senha</strong><small>Reset de senha, bloqueio de login ou MFA</small>' +
               '</button>' +
-              '<button type="button" class="osmodal-qbtn" data-type="Correção de Dados" data-prio="Normal" data-title="Atualização de Dados Cadastrais" data-desc="Solicito atualização dos meus dados cadastrais (CPF, data de nascimento ou telefone).">' +
-                '<strong>Corrigir Dados Cadastrais</strong><small>CPF, nascimento ou e-mail</small>' +
+              '<button type="button" class="osmodal-qbtn" data-type="Suporte Técnico & Infra" data-prio="Média" data-title="Suporte Técnico & Infraestrutura" data-desc="Solicito apoio técnico para lentidão, falha de conexão, certificado digital ou estação de trabalho.">' +
+                '<strong>💻 Suporte Técnico &amp; Infra</strong><small>Lentidão, rede, banco de dados ou app</small>' +
               '</button>' +
-              '<button type="button" class="osmodal-qbtn" data-type="Relato de Bug" data-prio="Alta" data-title="Suporte Técnico ao Painel" data-desc="Preciso de suporte técnico referente ao uso da plataforma.">' +
-                '<strong>Suporte Técnico Geral</strong><small>Dúvida, erro ou melhoria</small>' +
+              '<button type="button" class="osmodal-qbtn" data-type="Projetos & Melhorias" data-prio="Baixa" data-title="Solicitação de Projeto / Nova Funcionalidade" data-desc="Solicito avaliação de melhoria, automação de processo ou novo relatório gerencial.">' +
+                '<strong>🚀 Projetos &amp; Melhorias</strong><small>Novas funcionalidades, relatórios e integrações</small>' +
               '</button>' +
             '</div>' +
             '<form id="osmodal-form-abrir" style="display:block;margin:0;" novalidate>' +
               '<div class="osmodal-grid">' +
                 '<div class="osmodal-field">' +
-                  '<label for="os-inp-name">Seu Nome *</label>' +
-                  '<input class="osmodal-inp" id="os-inp-name" type="text" placeholder="Ex: Paulo Lima">' +
+                  '<label for="os-inp-name">Nome Completo *</label>' +
+                  '<input class="osmodal-inp" id="os-inp-name" type="text" placeholder="Ex: Maria Souza">' +
                 '</div>' +
                 '<div class="osmodal-field">' +
-                  '<label for="os-inp-email">Seu E-mail *</label>' +
-                  '<input class="osmodal-inp" id="os-inp-email" type="email" placeholder="seu.email@exemplo.com">' +
+                  '<label for="os-inp-email">E-mail Corporativo / Contato *</label>' +
+                  '<input class="osmodal-inp" id="os-inp-email" type="email" placeholder="seu.email@empresa.com.br">' +
                 '</div>' +
               '</div>' +
               '<div class="osmodal-grid">' +
                 '<div class="osmodal-field">' +
-                  '<label for="os-inp-phone">WhatsApp / Celular</label>' +
+                  '<label for="os-inp-phone">WhatsApp / Telefone</label>' +
                   '<input class="osmodal-inp" id="os-inp-phone" type="text" inputmode="numeric" maxlength="15" placeholder="(00) 00000-0000">' +
                 '</div>' +
                 '<div class="osmodal-field">' +
-                  '<label for="os-inp-type">Categoria *</label>' +
+                  '<label for="os-inp-type">Categoria do Serviço (GLPI) *</label>' +
                   '<select class="osmodal-sel" id="os-inp-type">' +
-                    '<option value="" selected>Selecione a categoria</option>' +
+                    '<option value="" selected>Selecione a categoria GLPI</option>' +
+                    '<option value="Sistema Financeiro & ERP">Sistema Financeiro &amp; ERP</option>' +
+                    '<option value="Gestão de Acessos & Senha">Gestão de Acessos &amp; Senha</option>' +
+                    '<option value="Suporte Técnico & Infra">Suporte Técnico &amp; Infra</option>' +
+                    '<option value="Projetos & Melhorias">Projetos &amp; Melhorias</option>' +
                     '<option value="Reset de Senha">Reset / Recuperação de Senha</option>' +
-                    '<option value="Pagamento Não Reconhecido">Liberação de Assinatura / Pagamento</option>' +
+                    '<option value="Pagamento Não Reconhecido">Liberação de Assinatura / Pagamento PIX</option>' +
                     '<option value="Correção de Dados">Correção de Dados Cadastrais</option>' +
-                    '<option value="Relato de Bug">Suporte Técnico / Relato de Erro</option>' +
-                    '<option value="Melhoria no Sistema">Sugestão de Melhoria</option>' +
+                    '<option value="Relato de Bug">Relato de Bug / Erro no Painel</option>' +
                   '</select>' +
                 '</div>' +
               '</div>' +
-              '<div class="osmodal-field">' +
-                '<label for="os-inp-title">Assunto Resumido *</label>' +
-                '<input class="osmodal-inp" id="os-inp-title" type="text" placeholder="Ex: Preciso de ajuda para acessar minha conta">' +
+              '<div class="osmodal-grid">' +
+                '<div class="osmodal-field">' +
+                  '<label for="os-inp-prio">Nível de Urgência / Impacto *</label>' +
+                  '<select class="osmodal-sel" id="os-inp-prio">' +
+                    '<option value="Baixa">🟢 Baixa — Dúvida ou solicitação sem impacto</option>' +
+                    '<option value="Média" selected>🔵 Média — Impacto parcial (há contorno)</option>' +
+                    '<option value="Alta">🟠 Alta — Setor ou função importante parada</option>' +
+                    '<option value="Crítica">🔴 Crítica — Operação financeira paralisada</option>' +
+                  '</select>' +
+                '</div>' +
+                '<div class="osmodal-field">' +
+                  '<label>Compromisso de SLA GLPI</label>' +
+                  '<div id="os-sla-box" style="height:40px;padding:0 12px;border-radius:10px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#fde68a;">' +
+                    '<span>⏱️ Meta SLA:</span><strong id="os-sla-preview" style="color:#fbbf24;font-family:monospace;font-size:13px;">2 Horas</strong>' +
+                  '</div>' +
+                '</div>' +
               '</div>' +
               '<div class="osmodal-field">' +
-                '<label for="os-inp-desc">Descrição do Pedido *</label>' +
-                '<textarea class="osmodal-txt" id="os-inp-desc" rows="2" placeholder="Descreva brevemente como podemos ajudar..."></textarea>' +
+                '<label for="os-inp-title">Título Resumido do Chamado *</label>' +
+                '<input class="osmodal-inp" id="os-inp-title" type="text" placeholder="Ex: Erro ao conciliar extrato OFX no módulo financeiro">' +
               '</div>' +
-              '<input type="hidden" id="os-inp-prio" value="Normal">' +
+              '<div class="osmodal-field">' +
+                '<label for="os-inp-desc">Descrição Detalhada da Solicitação *</label>' +
+                '<textarea class="osmodal-txt" id="os-inp-desc" rows="2" placeholder="Descreva o que ocorreu, mensagens de erro ou dados necessários para o atendimento..."></textarea>' +
+              '</div>' +
               '<p class="gmodal-error" id="osmodal-error"></p>' +
               '<div class="gmodal-actions" style="margin-top:14px;">' +
                 '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-cancel">Cancelar</button>' +
-                '<button type="submit" class="gmodal-btn gmodal-btn-ok" id="osmodal-submit">Enviar chamado</button>' +
+                '<button type="submit" class="gmodal-btn gmodal-btn-ok" id="osmodal-submit">Registrar Chamado no GLPI</button>' +
               '</div>' +
             '</form>' +
           '</div>' +
           '<div id="osmodal-pane-sucesso" hidden>' +
             '<div class="osmodal-proto-box">' +
-              '<span class="gmodal-kicker">Chamado Técnico Registrado com Sucesso</span>' +
+              '<span class="gmodal-kicker" style="color:#34d399;">Chamado Registrado no GLPI Service Desk</span>' +
               '<div class="osmodal-proto-num" id="osmodal-proto-num">OS-000000</div>' +
-              '<p style="font-size:13px;color:#d6daec;margin-bottom:14px;line-height:1.45;">Guarde este número: na aba <strong>Acompanhar chamado</strong> você vê o andamento a qualquer momento.</p>' +
+              '<p style="font-size:13px;color:#d6daec;margin-bottom:14px;line-height:1.45;">Seu chamado já está na fila da equipe de TI/Administração. Guarde o protocolo para acompanhar a solução na aba <strong>Consultar Protocolo GLPI</strong>.</p>' +
               '<div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">' +
-                '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-copy-proto" style="height:38px;font-size:13px;">Copiar Número</button>' +
+                '<button type="button" class="gmodal-btn gmodal-btn-cancel" id="osmodal-copy-proto" style="height:38px;font-size:13px;">Copiar Protocolo</button>' +
               '</div>' +
             '</div>' +
             '<div class="gmodal-actions" style="margin-top:14px;">' +
@@ -1875,7 +1894,7 @@
           '<div id="osmodal-pane-consultar" hidden>' +
             '<form id="osmodal-form-consultar" style="display:block;margin:0;" novalidate>' +
               '<div class="osmodal-field">' +
-                '<label for="os-inp-query">Número do protocolo, e-mail, CPF ou telefone</label>' +
+                '<label for="os-inp-query">Protocolo GLPI, e-mail, CPF ou telefone</label>' +
                 '<div style="display:flex;gap:8px;">' +
                   '<input class="osmodal-inp" id="os-inp-query" type="text" placeholder="Ex: OS-261106-K7QX ou seu e-mail" style="flex:1;">' +
                   '<button type="submit" class="gmodal-btn gmodal-btn-ok" id="osmodal-btn-search" style="height:42px;padding:0 18px;">Consultar</button>' +
@@ -1885,7 +1904,7 @@
             '<p class="gmodal-error" id="osmodal-search-error"></p>' +
             '<div class="osmodal-results" id="osmodal-results"></div>' +
           '</div>' +
-          '<p class="osmodal-foot"><span>Prefere e-mail?</span><a href="mailto:suporte.paulolima@outlook.com">suporte.paulolima@outlook.com</a></p>' +
+          '<p class="osmodal-foot"><span>Suporte Direto GLPI:</span><a href="mailto:suporte.paulolima@outlook.com">suporte.paulolima@outlook.com</a></p>' +
         '</div>' +
       '</div>';
     document.body.appendChild(ov);
@@ -1894,6 +1913,23 @@
     $('#osmodal-close', ov).addEventListener('click', close);
     $('#osmodal-cancel', ov).addEventListener('click', close);
     ov.addEventListener('mousedown', e => { if (e.target === ov) close(); });
+
+    const computeSlaFromPrio = (prio) => {
+      const p = String(prio || '').toLowerCase();
+      if (p === 'crítica' || p === 'critica' || p === 'urgente') return '30 Minutos';
+      if (p === 'alta') return '1 Hora';
+      if (p === 'baixa') return '8 Horas';
+      return '2 Horas';
+    };
+
+    const updateSlaBanner = () => {
+      const prio = $('#os-inp-prio', ov).value;
+      const slaTxt = computeSlaFromPrio(prio);
+      const previewEl = $('#os-sla-preview', ov);
+      if (previewEl) previewEl.textContent = slaTxt;
+    };
+
+    $('#os-inp-prio', ov).addEventListener('change', updateSlaBanner);
 
     const switchTab = tab => {
       ov.querySelectorAll('.osmodal-tab').forEach(b => {
@@ -1906,17 +1942,17 @@
       const lead = $('#osmodal-lead', ov);
       lead.hidden = false;
       lead.textContent = tab === 'consultar'
-        ? 'Já abriu um chamado? Informe o protocolo para ver o andamento.'
-        : 'Descreva o que precisa. Você recebe um protocolo para acompanhar.';
+        ? 'Informe o protocolo GLPI ou seu e-mail para consultar o status, técnico atribuído e respostas da equipe.'
+        : 'Selecione um item do Catálogo GLPI abaixo ou preencha os dados para encaminhar direto ao Console do Administrador.';
       if (tab === 'consultar') window.setTimeout(() => $('#os-inp-query', ov).focus(), 40);
     };
     ov._switchTab = switchTab;
 
-    // Deixa o formulário de abertura totalmente vazio: campos, categoria, atalho escolhido e mensagem de erro
     const clearFields = () => {
       ['#os-inp-name', '#os-inp-email', '#os-inp-phone', '#os-inp-title', '#os-inp-desc'].forEach(sel => { $(sel, ov).value = ''; });
       $('#os-inp-type', ov).selectedIndex = 0;
-      $('#os-inp-prio', ov).value = 'Normal';
+      $('#os-inp-prio', ov).value = 'Média';
+      updateSlaBanner();
       ov.querySelectorAll('.osmodal-qbtn').forEach(x => x.classList.remove('is-active'));
       $('#osmodal-error', ov).textContent = '';
     };
@@ -1930,8 +1966,9 @@
       qbtn.addEventListener('click', () => {
         ov.querySelectorAll('.osmodal-qbtn').forEach(x => x.classList.remove('is-active'));
         qbtn.classList.add('is-active');
-        $('#os-inp-type', ov).value = qbtn.dataset.type || 'Reset de Senha';
+        $('#os-inp-type', ov).value = qbtn.dataset.type || 'Sistema Financeiro & ERP';
         $('#os-inp-prio', ov).value = qbtn.dataset.prio || 'Alta';
+        updateSlaBanner();
         $('#os-inp-title', ov).value = qbtn.dataset.title || '';
         if (!$('#os-inp-desc', ov).value.trim()) {
           $('#os-inp-desc', ov).value = qbtn.dataset.desc || '';
@@ -1948,13 +1985,14 @@
       const client_email = $('#os-inp-email', ov).value.trim().toLowerCase();
       const client_phone = $('#os-inp-phone', ov).value.trim();
       const service_type = $('#os-inp-type', ov).value;
-      const priority = $('#os-inp-prio', ov).value || 'Normal';
+      const priority = $('#os-inp-prio', ov).value || 'Média';
+      const sla = computeSlaFromPrio(priority);
       const title = $('#os-inp-title', ov).value.trim();
       const description = $('#os-inp-desc', ov).value.trim();
       const client_cpf = cpfDigits($('#cpf')?.value || '');
 
       if (!client_name || !client_email || !title || !description) {
-        errEl.textContent = 'Preencha Nome, E-mail, Assunto e Descrição (*).';
+        errEl.textContent = 'Preencha Nome, E-mail, Título e Descrição (*).';
         return;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(client_email)) {
@@ -1962,29 +2000,28 @@
         return;
       }
       if (!service_type) {
-        errEl.textContent = 'Selecione a categoria do chamado (*).';
+        errEl.textContent = 'Selecione a categoria do serviço GLPI (*).';
         return;
       }
 
       const submitBtn = $('#osmodal-submit', ov);
       submitBtn.disabled = true;
       const origTxt = submitBtn.textContent;
-      submitBtn.textContent = 'Enviando chamado…';
+      submitBtn.textContent = 'Registrando no GLPI…';
       try {
         const res = await fetch('/api/ordens', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             client_name, client_email, client_phone, client_cpf,
-            service_type, priority, title, description,
-            canal_atendimento: 'Tela de Login'
+            service_type, priority, sla, title, description,
+            canal_atendimento: 'GLPI Tela de Login'
           })
         });
         const data = await res.json();
         if (!res.ok || !data.success) throw new Error(data.message || data.error || 'Não foi possível enviar o chamado.');
         const proto = data.protocol || (data.ordem && data.ordem.protocol) || 'OS-CONFIRMADA';
         $('#osmodal-proto-num', ov).textContent = proto;
-        // O.S. salva: o protocolo aparece na tela e o formulário já fica vazio para abrir outra
         clearFields();
         $('#osmodal-pane-abrir', ov).hidden = true;
         $('#osmodal-pane-sucesso', ov).hidden = false;
@@ -2001,11 +2038,10 @@
     $('#osmodal-copy-proto', ov).addEventListener('click', () => {
       const proto = $('#osmodal-proto-num', ov).textContent.trim();
       if (navigator.clipboard) navigator.clipboard.writeText(proto).catch(() => {});
-      $('#osmodal-copy-proto', ov).textContent = 'Número Copiado!';
-      window.setTimeout(() => { $('#osmodal-copy-proto', ov).textContent = 'Copiar Número'; }, 1800);
+      $('#osmodal-copy-proto', ov).textContent = 'Protocolo Copiado!';
+      window.setTimeout(() => { $('#osmodal-copy-proto', ov).textContent = 'Copiar Protocolo'; }, 1800);
     });
 
-    // Depois de salvar: abrir outra O.S. com todos os campos vazios (ou fechar)
     $('#osmodal-new-os', ov).addEventListener('click', () => {
       clearFields();
       switchTab('abrir');
@@ -2020,7 +2056,7 @@
       const resBox = $('#osmodal-results', ov);
       errEl.textContent = '';
       if (!q) {
-        errEl.textContent = 'Informe o número do protocolo, e-mail, CPF ou telefone usado no chamado.';
+        errEl.textContent = 'Informe o número do protocolo GLPI, e-mail, CPF ou telefone usado no chamado.';
         return;
       }
       const sBtn = $('#osmodal-btn-search', ov);
@@ -2038,18 +2074,29 @@
         }
         resBox.innerHTML = list.map(o => {
           const dt = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '';
+          const solutionHtml = o.solution
+            ? '<div style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.35);font-size:12px;color:#a7f3d0;"><strong>✅ Solução Técnica GLPI:</strong> ' + escapeHtmlSafe(textoSalvo(o.solution)) + '</div>'
+            : '';
+          const timelineHtml = Array.isArray(o.timeline) && o.timeline.length > 0
+            ? '<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);font-size:11.5px;color:#cbd5e1;">' +
+              o.timeline.map(t => '<div style="margin-top:4px;"><strong>👨‍💻 Equipe TI:</strong> ' + escapeHtmlSafe(textoSalvo(t.text)) + '</div>').join('') +
+              '</div>'
+            : '';
           return '<div class="osmodal-item">' +
             '<div class="osmodal-item-top">' +
               '<strong style="font-size:13px;color:var(--accent-light);">#' + escapeHtmlSafe(o.protocol || o.id) + '</strong>' +
-              '<span class="osmodal-pill">' + escapeHtmlSafe(o.status || 'Pendente') + '</span>' +
+              '<div style="display:flex;gap:6px;align-items:center;">' +
+                (o.sla ? '<span style="font-size:10.5px;padding:2px 7px;border-radius:99px;background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);">⏱️ SLA ' + escapeHtmlSafe(o.sla) + '</span>' : '') +
+                '<span class="osmodal-pill">' + escapeHtmlSafe(o.status || 'Pendente') + '</span>' +
+              '</div>' +
             '</div>' +
             '<div style="font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px;">' + escapeHtmlSafe(textoSalvo(o.title || o.service_type)) + '</div>' +
             '<div style="font-size:12px;color:#c8cde2;margin-bottom:6px;">' +
-              [o.title ? o.service_type : '', dt, o.tecnico_responsavel ? 'Técnico: ' + textoSalvo(o.tecnico_responsavel) : ''].filter(Boolean).map(escapeHtmlSafe).join(' • ') +
+              [o.title ? o.service_type : '', dt, o.tecnico_responsavel ? 'Técnico: ' + textoSalvo(o.tecnico_responsavel) : 'Aguardando atribuição'].filter(Boolean).map(escapeHtmlSafe).join(' • ') +
             '</div>' +
             (o.description === undefined
-              ? '<div style="font-size:12px;color:#b8bed4;line-height:1.4;">Para ver os detalhes, consulte pelo número do protocolo.</div>'
-              : '<div style="font-size:12.5px;color:#e2e6f5;line-height:1.4;white-space:pre-line;">' + escapeHtmlSafe(textoSalvo(o.description)) + '</div>') +
+              ? '<div style="font-size:12px;color:#b8bed4;line-height:1.4;">Para ver os detalhes completos e respostas técnicas, consulte pelo número exato do protocolo.</div>'
+              : '<div style="font-size:12.5px;color:#e2e6f5;line-height:1.4;white-space:pre-line;">' + escapeHtmlSafe(textoSalvo(o.description)) + '</div>' + solutionHtml + timelineHtml) +
           '</div>';
         }).join('');
       } catch (err) {
