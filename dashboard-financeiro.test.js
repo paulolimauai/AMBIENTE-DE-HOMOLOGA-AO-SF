@@ -250,3 +250,45 @@ test('utilitários: parseValor, parseData e eixo', () => {
   assert.equal(D.util.diferencaDias('2026-11-06', '2026-11-20'), 14);
   assert.equal(D.util.somarDias('2026-11-30', 1), '2026-12-01');
 });
+
+test('menorSaldoProjetado: acha o fundo da curva e o dia (null quando não há projeção)', () => {
+  const m = D.calcular(ctx());
+  const menor = D.menorSaldoProjetado(m.serieDiaria);
+  assert.equal(menor.valor, 8400); // depois do aluguel do dia 10, antes do freela do dia 20
+  assert.equal(menor.dia, 10);
+  assert.equal(menor.valor, m.contas.saldoMinimo);
+  // mês já encerrado: todas as projeções são null
+  const out = D.calcular(ctx({ periodo: { year: 2026, month: 10 } }));
+  assert.equal(D.menorSaldoProjetado(out.serieDiaria), null);
+  assert.equal(D.menorSaldoProjetado(null), null);
+});
+
+test('filtrosDeAtalho: só entrega à lista de movimentações valores que ela aceita', () => {
+  assert.deepEqual(D.filtrosDeAtalho({ fdTipo: 'out', fdStatus: 'Pendente', fdCat: 'Moradia', fdConta: 'Nubank' }), { tipo: 'out', status: 'Pendente', cat: 'Moradia', conta: 'Nubank' });
+  assert.deepEqual(D.filtrosDeAtalho({ fdTipo: 'drop table', fdStatus: 'Hackeado' }), { tipo: '', status: '', cat: '', conta: '' });
+  assert.deepEqual(D.filtrosDeAtalho(undefined), { tipo: '', status: '', cat: '', conta: '' });
+});
+
+test('pagina(): atalhos de navegação, ações rápidas e escape dos atributos', () => {
+  const lista = transacoes().concat([tx(12, 'out', 'Teste', 10, '2026-11-02', 'A"B<c>', 'Pago')]);
+  const html = D.pagina({ ...ctx({ transacoes: lista }), util: { saudacao: () => ({ text: 'Bom dia' }), primeiroNome: 'Marina', dataHoje: () => 'sexta-feira' } });
+  for (const trecho of [
+    'data-fd-ir="mov" data-fd-tipo="in"', // tile Receitas
+    'data-fd-ir="mov" data-fd-tipo="out"', // tile Despesas
+    'data-fd-ir="cartoes"', // tile Cartões
+    'data-fd-ir="mov" data-fd-tipo="in" data-fd-status="Pendente"', // A receber (30 dias)
+    'data-fd-ir="mov" data-fd-tipo="out" data-fd-cat="Supermercado"', // categoria do ranking
+    'data-fd-acao="nova-receita"', 'data-fd-acao="nova-despesa"', 'data-fd-acao="atualizar"',
+    'fd-spark-ponto', 'fd-spark-eixo'
+  ]) assert.ok(html.includes(trecho), 'faltou: ' + trecho);
+  // categoria com aspas e sinais de maior/menor não escapa do atributo
+  assert.ok(html.includes('data-fd-cat="A&quot;B&lt;c&gt;"'));
+  assert.ok(!html.includes('data-fd-cat="A"B'));
+});
+
+test('pagina() vazia: convida a cadastrar e mantém o cabeçalho com as ações rápidas', () => {
+  const html = D.pagina({ ...ctx({ transacoes: [], contas: [] }), util: {} });
+  assert.match(html, /data-fd-acao="nova-despesa"/);
+  assert.match(html, /data-fd-acao="nova-receita"/);
+  assert.ok(!html.includes('fd-linha-a'), 'sem dados não monta as faixas do painel');
+});

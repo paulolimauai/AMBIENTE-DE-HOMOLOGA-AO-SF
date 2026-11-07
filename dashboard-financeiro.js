@@ -436,22 +436,60 @@
     };
   }
 
+  // Menor saldo previsto nas contas e o dia em que acontece (null quando o período não tem projeção, como um mês já encerrado)
+  function menorSaldoProjetado(serie) {
+    let melhor = null;
+    ((serie && serie.dias) || []).forEach((dia, i) => {
+      const v = serie.saldoProj[i];
+      if (v != null && (melhor === null || v < melhor.valor)) melhor = { valor: v, dia, idx: i };
+    });
+    return melhor;
+  }
+
+  // Cada elemento clicável do painel carrega o destino em data-fd-*; esta função devolve só o que a lista de movimentações aceita
+  const STATUS_VALIDOS = ['Pago', 'Recebido', 'Pendente'];
+  function filtrosDeAtalho(ds) {
+    const d = ds || {};
+    return {
+      tipo: d.fdTipo === 'in' || d.fdTipo === 'out' ? d.fdTipo : '',
+      status: STATUS_VALIDOS.includes(d.fdStatus) ? d.fdStatus : '',
+      cat: String(d.fdCat || ''),
+      conta: String(d.fdConta || '')
+    };
+  }
+
   // ======================================================================
   // Tela (HTML)
   // ======================================================================
   const estado = { visao: 'saldo', filtro: 'all', tabela: false, modelo: null, util: null, ativo: false, grafico: null };
 
+  const svg = (corpo, tam, sw) => '<svg width="' + (tam || 15) + '" height="' + (tam || 15) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (sw || 2.2) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + corpo + '</svg>';
   const ICONES = {
-    seta: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>',
-    check: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
-    alerta: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
-    info: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
-    tabela: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M9 4v16"/></svg>'
+    seta: svg('<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>', 14, 2.4),
+    check: svg('<polyline points="20 6 9 17 4 12"/>', 13, 2.8),
+    alerta: svg('<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>'),
+    info: svg('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>'),
+    tabela: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M9 4v16"/>', 13),
+    receita: svg('<path d="M17 7 7 17"/><path d="M17 17H7V7"/>', 16, 2.4),
+    despesa: svg('<path d="M7 7h10v10"/><path d="M7 17 17 7"/>', 16, 2.4),
+    resultado: svg('<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>', 16),
+    cartao: svg('<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>', 16),
+    atualizar: svg('<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>', 16),
+    mais: svg('<path d="M12 5v14"/><path d="M5 12h14"/>', 14, 2.6),
+    olho: svg('<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>', 14),
+    olhoFechado: svg('<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>', 14)
   };
 
   const fmtU = (v) => ((estado.util && estado.util.fmt) || fmtBR)(v);
   const dinheiro = (v) => '<span class="fd-money">' + esc(fmtU(v)) + '</span>';
   const dinheiroSinal = (v, tipo) => '<span class="fd-money">' + (tipo === 'in' ? '+' : '−') + esc(fmtU(v)) + '</span>';
+
+  // Atributos de um elemento clicável: um único ouvinte no documento (ver ligarOuvintes) leva até a tela de destino
+  function atalho(f) {
+    const o = f || {};
+    if (o.pagina) return ' role="link" tabindex="0" data-fd-ir="' + esc(o.pagina) + '"';
+    return ' role="link" tabindex="0" data-fd-ir="mov"' + ['tipo', 'status', 'cat', 'conta'].filter((k) => o[k]).map((k) => ' data-fd-' + k + '="' + esc(o[k]) + '"').join('');
+  }
 
   // Variação contra o mês anterior. "boaSe": se subir é bom (receitas) ou ruim (despesas). Cor + seta + sinal: nunca só cor.
   function chipVariacao(v, boaSe, rotulo, emReais) {
@@ -466,10 +504,11 @@
     const bom = boaSe === 'subir' ? sobe : !sobe;
     const texto = emReais ? fmtU(Math.abs(v.diff)) : Math.round(Math.abs(v.pct)) + '%';
     const dica = 'Atual: ' + fmtU(v.atual) + ' · Anterior: ' + fmtU(v.anterior);
-    return '<span class="fd-delta ' + (bom ? 'fd-bom' : 'fd-ruim') + '" title="' + esc(dica) + '">' + (sobe ? '▲' : '▼') + ' ' + esc(texto) + '</span>' + rot;
+    return '<span class="fd-delta ' + (bom ? 'fd-bom' : 'fd-ruim') + (emReais ? ' fd-money' : '') + '" title="' + esc(dica) + '">' + (sobe ? '▲' : '▼') + ' ' + esc(texto) + '</span>' + rot;
   }
 
-  function sparkline(m) {
+  // Evolução do saldo no mês (área sob o realizado, tracejado na projeção, marcador em "hoje"); preenche a largura do cartão
+  function graficoSaldo(m) {
     const d = m.serieDiaria;
     const pontos = [];
     d.dias.forEach((dia, i) => {
@@ -478,89 +517,147 @@
       if (real != null || proj != null) pontos.push({ i, real, proj });
     });
     if (pontos.length < 2) return '';
-    const valores = pontos.map((p) => (p.real != null ? p.real : p.proj));
-    const min = Math.min(...valores);
-    const max = Math.max(...valores);
-    const faixa = max - min || 1;
-    const L = 240; const A = 64; const margem = 8;
-    const x = (i) => margem + (i / Math.max(1, d.dias.length - 1)) * (L - margem * 2);
-    const y = (v) => A - margem - ((v - min) / faixa) * (A - margem * 2);
+    const valores = [];
+    pontos.forEach((p) => { if (p.real != null) valores.push(p.real); if (p.proj != null) valores.push(p.proj); });
+    let min = Math.min(...valores);
+    let max = Math.max(...valores);
+    const folga = ((max - min) || Math.abs(max) || 1) * 0.14;
+    min -= folga; max += folga;
+    // O SVG estica na largura do cartão (preserveAspectRatio none) e tem altura fixa: traços com non-scaling-stroke;
+    // o marcador de "hoje" e os rótulos do eixo ficam em HTML posicionado por porcentagem, para não deformarem
+    const L = 460; const A = 130; const mE = 0; const mD = 0; const mT = 10; const mB = 8;
+    const base = A - mB;
+    const x = (i) => mE + (i / Math.max(1, d.dias.length - 1)) * (L - mE - mD);
+    const y = (v) => mT + (1 - (v - min) / (max - min)) * (A - mT - mB);
     const rota = (lista) => lista.map((p, k) => (k ? 'L' : 'M') + x(p.i).toFixed(1) + ' ' + y(p.v).toFixed(1)).join(' ');
     const reais = pontos.filter((p) => p.real != null).map((p) => ({ i: p.i, v: p.real }));
     const projs = pontos.filter((p) => p.proj != null).map((p) => ({ i: p.i, v: p.proj }));
     const hojeP = d.hojeIdx >= 0 ? reais[reais.length - 1] : null;
-    return '<svg class="fd-spark" viewBox="0 0 ' + L + ' ' + A + '" role="img" aria-label="Evolução do saldo no mês: linha cheia é o realizado e a tracejada é a projeção">' +
+    const area = reais.length > 1 ? rota(reais) + ' L' + x(reais[reais.length - 1].i).toFixed(1) + ' ' + base + ' L' + x(reais[0].i).toFixed(1) + ' ' + base + ' Z' : '';
+    const zero = min < 0 && max > 0 ? '<line x1="' + mE + '" x2="' + (L - mD) + '" y1="' + y(0).toFixed(1) + '" y2="' + y(0).toFixed(1) + '" class="fd-svg-zero"/>' : '';
+    const pctX = (i) => (x(i) / L * 100).toFixed(2) + '%';
+    const ultimo = d.dias.length - 1;
+    const eixo = '<div class="fd-spark-eixo" aria-hidden="true"><span style="left:0">' + d.dias[0] + '</span>' +
+      (hojeP && hojeP.i > 3 && hojeP.i < ultimo - 3 ? '<span class="fd-spark-hoje" style="left:' + pctX(hojeP.i) + '">hoje</span>' : '') +
+      '<span style="right:0">' + d.dias[ultimo] + '</span></div>';
+    return '<div class="fd-spark-caixa"><svg class="fd-spark" viewBox="0 0 ' + L + ' ' + A + '" preserveAspectRatio="none" role="img" aria-label="Evolução do saldo em contas no mês: a linha cheia é o realizado e a tracejada é a projeção com as pendências cadastradas">' +
+      '<defs><linearGradient id="fdGradSaldo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="fd-grad-a"/><stop offset="1" class="fd-grad-b"/></linearGradient></defs>' +
+      zero +
+      (area ? '<path d="' + area + '" fill="url(#fdGradSaldo)"/>' : '') +
+      (hojeP ? '<line x1="' + x(hojeP.i).toFixed(1) + '" x2="' + x(hojeP.i).toFixed(1) + '" y1="' + mT + '" y2="' + base + '" class="fd-svg-hoje"/>' : '') +
       (reais.length > 1 ? '<path d="' + rota(reais) + '" class="fd-spark-real"/>' : '') +
       (projs.length > 1 ? '<path d="' + rota(projs) + '" class="fd-spark-proj"/>' : '') +
-      (hojeP ? '<circle cx="' + x(hojeP.i).toFixed(1) + '" cy="' + y(hojeP.v).toFixed(1) + '" r="5" class="fd-spark-dot"/>' : '') +
-      '</svg>';
+      '</svg>' +
+      (hojeP ? '<i class="fd-spark-ponto" style="left:' + pctX(hojeP.i) + ';top:' + (y(hojeP.v) / A * 100).toFixed(2) + '%"></i>' : '') + '</div>' + eixo;
   }
 
-  function tile(rotulo, valorHtml, linhas, extraClasse) {
-    return '<div class="fd-tile ' + (extraClasse || '') + '"><div class="fd-tile-rotulo">' + esc(rotulo) + '</div>' + valorHtml + linhas.filter(Boolean).map((l) => '<div class="fd-tile-linha">' + l + '</div>').join('') + '</div>';
-  }
-  const valorTile = (v, prefixo) => '<div class="fd-tile-valor" data-anim-val="' + v + '"' + (prefixo ? ' data-prefix="' + prefixo + '"' : '') + '>' + esc((prefixo || '') + fmtU(v)) + '</div>';
+  const valorTile = (v, prefixo) => '<div class="fd-tile-valor fd-money" data-anim-val="' + v + '"' + (prefixo ? ' data-prefix="' + prefixo + '"' : '') + '>' + esc((prefixo || '') + fmtU(v)) + '</div>';
+  const progresso = (real, previsto, rotulo) => {
+    if (!(previsto > 0)) return '';
+    const pct = Math.max(2, Math.min(100, Math.round((real / (real + previsto)) * 100)));
+    return '<div class="fd-meter" role="img" aria-label="' + esc(rotulo + ': ' + pct + '% já realizado') + '"><i class="fd-m-acc" style="width:' + pct + '%"></i></div>';
+  };
 
   function cabecalho(m, util) {
     const saud = util.saudacao ? util.saudacao() : { text: 'Olá' };
-    return '<header class="fd-cabecalho">' +
+    const agora = new Date();
+    const hhmm = pad(agora.getHours()) + ':' + pad(agora.getMinutes());
+    const oculto = typeof document !== 'undefined' && document.body && document.body.classList.contains('hide-sensitive-balances');
+    const movs = m.totais.receitas.qtd + m.totais.despesas.qtd;
+    return '<header class="fd-cabecalho fd-vidro">' +
       '<div class="fd-cab-esq"><div class="fd-data">' + esc(util.dataHoje ? util.dataHoje() : m.hoje) + '</div>' +
       '<h1 class="fd-saudacao">' + esc(saud.text) + ', <span>' + esc(util.primeiroNome || 'Usuário') + '</span></h1>' +
-      '<p class="fd-sub">Visão financeira baseada nas suas movimentações cadastradas</p></div>' +
+      '<p class="fd-sub">' + esc(m.periodo.rotulo) + ' · ' + movs + ' movimentaç' + (movs === 1 ? 'ão' : 'ões') + ' · atualizado às ' + hhmm + '</p></div>' +
       '<div class="fd-cab-dir">' + (util.periodPickerHTML ? util.periodPickerHTML() : '') +
-      '<button type="button" class="btn-hero-privacy fd-privacidade" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou exibir saldos">' +
-      '<span class="btn-hero-icon-pill"><span id="btnEyeIcon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></span>' +
-      '<span id="btnEyeText">Ocultar Saldos</span></button></div></header>';
+      '<button type="button" class="fd-btn fd-btn-icone" data-fd-acao="atualizar" title="Atualizar os dados" aria-label="Atualizar os dados">' + ICONES.atualizar + '</button>' +
+      '<button type="button" class="fd-btn fd-privacidade" onclick="window.toggleSensitiveBalances()" id="btnToggleBalances" title="Ocultar ou exibir saldos">' +
+      '<span id="btnEyeIcon">' + (oculto ? ICONES.olhoFechado : ICONES.olho) + '</span><span id="btnEyeText">' + (oculto ? 'Exibir Saldos' : 'Ocultar Saldos') + '</span></button>' +
+      '<div class="fd-acoes-rapidas">' +
+      '<button type="button" class="fd-btn fd-btn-receita" data-fd-acao="nova-receita" title="Lançar uma receita">' + ICONES.mais + '<span>Receita</span></button>' +
+      '<button type="button" class="fd-btn fd-btn-despesa" data-fd-acao="nova-despesa" title="Lançar uma despesa">' + ICONES.mais + '<span>Despesa</span></button></div>' +
+      '</div></header>';
   }
 
   function blocoAvisos(m) {
     if (!m.insights.length) return '';
     return '<div class="fd-avisos" role="list">' + m.insights.map((i) =>
-      '<div class="fd-aviso fd-aviso-' + i.nivel + '" role="listitem"><span class="fd-aviso-ic">' + (i.nivel === 'alerta' || i.nivel === 'atencao' ? ICONES.alerta : i.nivel === 'ok' ? ICONES.check : ICONES.info) + '</span>' +
+      '<div class="fd-aviso fd-vidro fd-aviso-' + i.nivel + '" role="listitem"><span class="fd-aviso-ic">' + (i.nivel === 'alerta' || i.nivel === 'atencao' ? ICONES.alerta : i.nivel === 'ok' ? ICONES.check : ICONES.info) + '</span>' +
       '<div><strong>' + esc(i.titulo) + '</strong><span>' + esc(i.texto) + '</span></div></div>').join('') + '</div>';
   }
 
-  function blocoSituacao(m) {
+  // Número-herói: saldo em contas hoje, projeção do fim do mês, a curva do mês e os três pontos que mudam a decisão
+  function blocoSaldo(m) {
     const c = m.contas;
-    const t = m.totais;
-    const cmp = m.comparativo;
+    const a = m.agenda;
     const projDiff = arred(c.saldoProjetadoFim - c.saldoAtual);
     const mesCurto = MESES_CURTOS[m.periodo.mes - 1];
     const encerrado = !m.periodo.ehMesAtual && !m.periodo.ehFuturo && !m.periodo.todasAsDatas;
     const fimRotulo = encerrado ? 'Saldo no fim de ' + mesCurto : (m.periodo.ehFuturo ? 'Projeção para o fim de ' + mesCurto : 'Projeção para o fim do mês');
-    const hero = '<div class="fd-hero">' +
+    const minimo = menorSaldoProjetado(m.serieDiaria);
+    const quando = (dia) => (m.periodo.ehMesAtual && dia === m.hojeDia ? 'hoje' : 'em ' + pad(dia) + '/' + pad(m.periodo.mes));
+    const aReceber = a.itens.filter((i) => i.tipo === 'in').length;
+    const aPagar = a.itens.filter((i) => i.tipo === 'out').length;
+    const mini = (rot, valorHtml, nota, ir, classe) => '<div class="fd-mini-item fd-clicavel ' + (classe || '') + '"' + atalho(ir) + '><span class="fd-mini-rot">' + rot + '</span><strong>' + valorHtml + '</strong><em>' + nota + '</em></div>';
+    const itens =
+      (minimo ? mini('Menor saldo previsto', dinheiro(minimo.valor), quando(minimo.dia), { pagina: 'transacoes' }, minimo.valor < 0 ? 'fd-mini-neg' : '') : '') +
+      mini('A receber · 30 dias', dinheiro(a.totalAReceber), aReceber ? aReceber + (aReceber === 1 ? ' lançamento' : ' lançamentos') : 'nada pendente', { tipo: 'in', status: 'Pendente' }) +
+      mini('A pagar · 30 dias', dinheiro(a.totalAPagar), a.qtdVencidas ? '<span class="fd-delta fd-ruim">' + a.qtdVencidas + (a.qtdVencidas === 1 ? ' vencida' : ' vencidas') + '</span>' : (aPagar ? aPagar + (aPagar === 1 ? ' lançamento' : ' lançamentos') : 'em dia'), { tipo: 'out', status: 'Pendente' });
+    return '<section class="fd-card fd-vidro fd-saldo" aria-label="Saldo em contas">' +
       '<div class="fd-hero-rotulo">Saldo em contas hoje <span class="fd-dica" tabindex="0" title="Saldo inicial das contas + entradas − saídas já realizadas. Cartões de crédito entram quando a fatura é paga.">?</span></div>' +
-      '<div class="fd-hero-valor" data-anim-val="' + c.saldoAtual + '">' + esc(fmtU(c.saldoAtual)) + '</div>' +
-      '<div class="fd-hero-proj">' +
-        '<span class="fd-hero-proj-rot">' + esc(fimRotulo) + '</span> ' + dinheiro(c.saldoProjetadoFim) +
-        (Math.abs(projDiff) >= 0.01 ? ' <span class="fd-delta ' + (projDiff >= 0 ? 'fd-bom' : 'fd-ruim') + '">' + (projDiff >= 0 ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(projDiff))) + '</span>' : '') +
-      '</div>' +
-      '<div class="fd-hero-nota">' + (m.agenda.itens.length ? 'Considera ' + m.agenda.itens.length + ' lançamento' + (m.agenda.itens.length === 1 ? ' pendente' : 's pendentes') + ' nos próximos 30 dias.' : 'Nenhuma pendência nos próximos 30 dias.') + '</div>' +
-      sparkline(m) + '</div>';
+      '<div class="fd-hero-valor fd-money" data-anim-val="' + c.saldoAtual + '">' + esc(fmtU(c.saldoAtual)) + '</div>' +
+      '<div class="fd-hero-proj"><span class="fd-hero-proj-rot">' + esc(fimRotulo) + '</span> ' + dinheiro(c.saldoProjetadoFim) +
+        (Math.abs(projDiff) >= 0.01 ? ' <span class="fd-delta fd-money ' + (projDiff >= 0 ? 'fd-bom' : 'fd-ruim') + '">' + (projDiff >= 0 ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(projDiff))) + '</span>' : '') + '</div>' +
+      '<div class="fd-hero-grafico">' + graficoSaldo(m) + '</div>' +
+      '<div class="fd-mini">' + itens + '</div></section>';
+  }
 
+  function tileKpi(o) {
+    return '<div class="fd-tile fd-vidro fd-clicavel ' + (o.classe || '') + '"' + atalho(o.ir) + ' title="' + esc(o.dica) + '">' +
+      '<div class="fd-tile-topo"><span class="fd-ic ' + o.tom + '">' + o.icone + '</span><span class="fd-tile-rotulo">' + esc(o.rotulo) + '</span><span class="fd-ir" aria-hidden="true">' + ICONES.seta + '</span></div>' +
+      o.valorHtml + '<div class="fd-tile-rodape">' + o.linhas.filter(Boolean).map((l) => '<div class="fd-tile-linha">' + l + '</div>').join('') + '</div></div>';
+  }
+
+  function blocoKpis(m) {
+    const c = m.contas;
+    const t = m.totais;
+    const cmp = m.comparativo;
+    const cartoes = c.cartoes;
     const tiles =
-      tile('Receitas', valorTile(t.receitas.realizado), [
-        cmp ? chipVariacao(cmp.receitas, 'subir', cmp.rotulo) : '',
-        t.receitas.previsto > 0 ? '+ ' + dinheiro(t.receitas.previsto) + ' a receber' : (t.receitas.qtd + ' entrada' + (t.receitas.qtd === 1 ? '' : 's'))
-      ]) +
-      tile('Despesas', valorTile(t.despesas.realizado), [
-        cmp ? chipVariacao(cmp.despesas, 'descer', cmp.rotulo) : '',
-        t.despesas.previsto > 0 ? '+ ' + dinheiro(t.despesas.previsto) + ' a pagar' : (t.despesas.qtd + ' saída' + (t.despesas.qtd === 1 ? '' : 's'))
-      ]) +
-      tile('Resultado', valorTile(t.resultadoRealizado, t.resultadoRealizado > 0 ? '+' : ''), [
-        cmp ? chipVariacao(cmp.resultado, 'subir', cmp.rotulo, true) : '',
-        t.taxaPoupanca == null ? 'Sem receita realizada' : (t.taxaPoupanca >= 0 ? 'Guardou ' : 'Gastou além: ') + Math.abs(t.taxaPoupanca) + '% da renda'
-      ], t.resultadoRealizado < 0 ? 'fd-tile-neg' : '') +
-      tile('Cartões', valorTile(c.cartoes.fatura), [
-        c.cartoes.itens.length ? c.cartoes.usoPct + '% do limite · ' + dinheiro(c.cartoes.disponivel) + ' livres' : 'Nenhum cartão cadastrado',
-        c.cartoes.itens.length ? '<div class="fd-meter" role="img" aria-label="Uso do limite ' + c.cartoes.usoPct + '%"><i class="' + (c.cartoes.usoPct >= 85 ? 'fd-m-ruim' : c.cartoes.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom') + '" style="width:' + Math.min(100, c.cartoes.usoPct) + '%"></i></div>' : ''
-      ]) +
-      tile('A pagar (30 dias)', valorTile(m.agenda.totalAPagar), [
-        m.agenda.qtdVencidas ? '<span class="fd-delta fd-ruim">' + m.agenda.qtdVencidas + ' vencida' + (m.agenda.qtdVencidas === 1 ? '' : 's') + ' · ' + esc(fmtU(m.agenda.totalVencido)) + '</span>' : '<span class="fd-delta fd-bom">✓ em dia</span>',
-        m.agenda.totalAReceber > 0 ? 'A receber: ' + dinheiro(m.agenda.totalAReceber) : ''
-      ], m.agenda.qtdVencidas ? 'fd-tile-neg' : '');
-
-    return '<section class="fd-situacao" aria-label="Situação financeira">' + hero + '<div class="fd-tiles">' + tiles + '</div></section>';
+      tileKpi({
+        rotulo: 'Receitas', tom: 'fd-ic-in', icone: ICONES.receita, ir: { tipo: 'in' }, dica: 'Ver as receitas em Movimentações',
+        valorHtml: valorTile(t.receitas.realizado),
+        linhas: [
+          cmp ? chipVariacao(cmp.receitas, 'subir', cmp.rotulo) : '',
+          t.receitas.previsto > 0 ? '+ ' + dinheiro(t.receitas.previsto) + ' a receber' : (t.receitas.qtd + ' entrada' + (t.receitas.qtd === 1 ? '' : 's')),
+          progresso(t.receitas.realizado, t.receitas.previsto, 'Receitas')
+        ]
+      }) +
+      tileKpi({
+        rotulo: 'Despesas', tom: 'fd-ic-out', icone: ICONES.despesa, ir: { tipo: 'out' }, dica: 'Ver as despesas em Movimentações',
+        valorHtml: valorTile(t.despesas.realizado),
+        linhas: [
+          cmp ? chipVariacao(cmp.despesas, 'descer', cmp.rotulo) : '',
+          t.despesas.previsto > 0 ? '+ ' + dinheiro(t.despesas.previsto) + ' a pagar' : (t.despesas.qtd + ' saída' + (t.despesas.qtd === 1 ? '' : 's')),
+          progresso(t.despesas.realizado, t.despesas.previsto, 'Despesas')
+        ]
+      }) +
+      tileKpi({
+        rotulo: 'Resultado', tom: 'fd-ic-neutro', icone: ICONES.resultado, ir: {}, dica: 'Ver todas as movimentações do período', classe: t.resultadoRealizado < 0 ? 'fd-tile-neg' : '',
+        valorHtml: valorTile(t.resultadoRealizado, t.resultadoRealizado > 0 ? '+' : ''),
+        linhas: [
+          cmp ? chipVariacao(cmp.resultado, 'subir', cmp.rotulo, true) : '',
+          t.taxaPoupanca == null ? 'Sem receita realizada' : (t.taxaPoupanca >= 0 ? 'Guardou ' : 'Gastou além: ') + Math.abs(t.taxaPoupanca) + '% da renda'
+        ]
+      }) +
+      tileKpi({
+        rotulo: 'Cartões', tom: 'fd-ic-neutro', icone: ICONES.cartao, ir: { pagina: 'cartoes' }, dica: 'Abrir Contas e cartões',
+        valorHtml: valorTile(cartoes.fatura),
+        linhas: [
+          cartoes.itens.length ? cartoes.usoPct + '% do limite · ' + dinheiro(cartoes.disponivel) + ' livres' : 'Nenhum cartão cadastrado',
+          cartoes.itens.length ? '<div class="fd-meter" role="img" aria-label="Uso do limite ' + cartoes.usoPct + '%"><i class="' + (cartoes.usoPct >= 85 ? 'fd-m-ruim' : cartoes.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom') + '" style="width:' + Math.min(100, cartoes.usoPct) + '%"></i></div>' : ''
+        ]
+      });
+    return '<div class="fd-kpis" aria-label="Resumo do período">' + tiles + '</div>';
   }
 
   function abasGrafico() {
@@ -577,11 +674,11 @@
 
   function blocoGrafico(m) {
     const r = m.ritmo;
-    return '<article class="fd-card fd-card-grafico">' +
+    return '<article class="fd-card fd-vidro fd-card-grafico">' +
       '<div class="fd-card-topo"><div><h2 class="fd-titulo">Fluxo de caixa</h2><p class="fd-legenda" id="fdLegendaGrafico">' + esc(textoGrafico(m)) + '</p></div>' +
       '<div class="fd-topo-acoes">' + abasGrafico() +
       '<button type="button" class="fd-btn-tabela' + (estado.tabela ? ' ativa' : '') + '" onclick="NexusDash.alternarTabela()" aria-pressed="' + estado.tabela + '" title="Ver os mesmos dados em tabela">' + ICONES.tabela + ' Tabela</button></div></div>' +
-      '<div class="fd-grafico-caixa" id="fdGraficoCaixa"' + (estado.tabela ? ' hidden' : '') + '><canvas id="fdChartPrincipal" role="img" aria-label="Gráfico de fluxo de caixa"></canvas></div>' +
+      '<div class="fd-grafico-caixa fd-grafico-caixa-saldo" id="fdGraficoCaixa"' + (estado.tabela ? ' hidden' : '') + '><canvas id="fdChartPrincipal" role="img" aria-label="Gráfico de fluxo de caixa"></canvas></div>' +
       '<div class="fd-tabela-caixa" id="fdTabelaCaixa"' + (estado.tabela ? '' : ' hidden') + '>' + tabelaDados(m) + '</div>' +
       '<div class="fd-metricas">' +
         metrica('Média diária de gastos', dinheiro(r.mediaDiaria30), 'últimos 30 dias') +
@@ -613,13 +710,14 @@
     if (c.baseFraca) {
       if (Math.abs(c.deltaValor) < 20) return '';
       const sobe = c.deltaValor > 0;
-      return '<span class="fd-delta ' + (sobe ? 'fd-ruim' : 'fd-bom') + '" title="Mês anterior até o mesmo dia: ' + esc(fmtU(c.anterior)) + '">' + (sobe ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(c.deltaValor))) + '</span>';
+      return '<span class="fd-delta fd-money ' + (sobe ? 'fd-ruim' : 'fd-bom') + '" title="Mês anterior até o mesmo dia: ' + esc(fmtU(c.anterior)) + '">' + (sobe ? '▲ ' : '▼ ') + esc(fmtU(Math.abs(c.deltaValor))) + '</span>';
     }
     const p = Math.round(c.deltaPct);
     if (p === 0) return '<span class="fd-delta fd-neutro">= estável</span>';
     return '<span class="fd-delta ' + (p > 0 ? 'fd-ruim' : 'fd-bom') + '" title="Mês anterior até o mesmo dia: ' + esc(fmtU(c.anterior)) + '">' + (p > 0 ? '▲' : '▼') + ' ' + Math.abs(p) + '%</span>';
   }
 
+  // Ranking de categorias: barras horizontais de um tom só, na mesma linha de base (a rosca esconde diferenças pequenas)
   function blocoCategorias(m) {
     const lista = m.categorias;
     let corpo;
@@ -630,15 +728,15 @@
       const resto = lista.slice(6);
       const maximo = topo[0].valor || 1;
       corpo = '<ol class="fd-ranking">' + topo.map((c) =>
-        '<li class="fd-rank-item"><div class="fd-rank-linha"><span class="fd-rank-nome"><i class="fd-bolinha" style="background:' + esc(c.cor) + '"></i>' + esc(c.nome) + '</span>' +
+        '<li class="fd-rank-item fd-clicavel"' + atalho({ tipo: 'out', cat: c.nome }) + ' title="Ver as despesas de ' + esc(c.nome) + '"><div class="fd-rank-linha"><span class="fd-rank-nome"><i class="fd-bolinha" style="background:' + esc(c.cor) + '"></i>' + esc(c.nome) + '</span>' + chipDeCategoria(c) +
         '<span class="fd-rank-valor">' + dinheiro(c.valor) + ' <small>' + Math.round(c.pct) + '%</small></span></div>' +
         '<div class="fd-barra" role="img" aria-label="' + esc(c.nome) + ': ' + Math.round(c.pct) + '% das despesas"><i style="width:' + Math.max(2, (c.valor / maximo) * 100).toFixed(1) + '%"></i></div>' +
-        '<div class="fd-rank-nota">' + chipDeCategoria(c) + (c.previsto > 0 ? ' <span class="fd-delta-rot">' + dinheiro(c.previsto) + ' ainda a pagar</span>' : '') + '</div></li>').join('') + '</ol>' +
+        (c.previsto > 0 ? '<div class="fd-rank-nota"><span class="fd-delta-rot">' + dinheiro(c.previsto) + ' ainda a pagar</span></div>' : '') + '</li>').join('') + '</ol>' +
         (resto.length ? '<div class="fd-rank-resto">+ ' + resto.length + ' categoria' + (resto.length === 1 ? '' : 's') + ' · ' + dinheiro(resto.reduce((s, c) => s + c.valor, 0)) + '</div>' : '');
     }
-    return '<article class="fd-card"><div class="fd-card-topo"><div><h2 class="fd-titulo">Para onde vai o dinheiro</h2><p class="fd-legenda">Despesas de ' + esc(m.periodo.rotulo) + ' · pagas e a pagar</p></div>' +
+    return '<article class="fd-card fd-vidro fd-card-categorias"><div class="fd-card-topo"><div><h2 class="fd-titulo">Para onde vai o dinheiro</h2><p class="fd-legenda">Despesas de ' + esc(m.periodo.rotulo) + ' · pagas e a pagar</p></div>' +
       '<span class="fd-selo">' + dinheiro(m.totalDespesaCats) + '</span></div>' + corpo +
-      (m.comparativo && lista.length ? '<p class="fd-rodape-nota">Variação ' + esc(m.comparativo.rotulo) + '.</p>' : '') + '</article>';
+      (m.comparativo && lista.length ? '<p class="fd-rodape-nota">Variação ' + esc(m.comparativo.rotulo) + '. Toque numa categoria para ver os lançamentos.</p>' : '') + '</article>';
   }
 
   function linhaAgenda(i, hojeStr) {
@@ -664,9 +762,9 @@
     });
     const ocultos = a.itens.length - (8 - restante);
     if (!a.itens.length) corpo = '<div class="fd-vazio fd-vazio-ok"><strong>Tudo em dia</strong><span>Nenhuma conta a pagar ou a receber nos próximos 30 dias.</span></div>';
-    return '<article class="fd-card"><div class="fd-card-topo"><div><h2 class="fd-titulo">Contas dos próximos 30 dias</h2><p class="fd-legenda">Pendências cadastradas, das mais urgentes às mais distantes</p></div>' +
+    return '<article class="fd-card fd-vidro fd-card-agenda"><div class="fd-card-topo"><div><h2 class="fd-titulo">Contas dos próximos 30 dias</h2><p class="fd-legenda">Pendências cadastradas, das mais urgentes às mais distantes</p></div>' +
       '<div class="fd-resumo-agenda"><span><em>A pagar</em>' + dinheiro(a.totalAPagar) + '</span><span><em>A receber</em>' + dinheiro(a.totalAReceber) + '</span></div></div>' + corpo +
-      (ocultos > 0 ? '<button type="button" class="fd-link" data-nav="transacoes" onclick="navigate(\'transacoes\')">+ ' + ocultos + ' lançamento' + (ocultos === 1 ? '' : 's') + ' · ver todos ' + ICONES.seta + '</button>' : '') + '</article>';
+      (ocultos > 0 ? '<button type="button" class="fd-link" data-fd-ir="mov" data-fd-status="Pendente">+ ' + ocultos + ' lançamento' + (ocultos === 1 ? '' : 's') + ' · ver todos ' + ICONES.seta + '</button>' : '') + '</article>';
   }
 
   function medidor(valor, nivelClasse, rotulo) {
@@ -679,7 +777,7 @@
       const nivel = p.bom ? 'fd-m-bom' : p.medio ? 'fd-m-medio' : 'fd-m-ruim';
       return '<div class="fd-pilar"><div class="fd-pilar-topo"><span>' + esc(p.nome) + '</span><strong>' + Math.round(p.valor) + '%</strong></div>' + medidor(p.valor, nivel, p.nome + ' ' + Math.round(p.valor) + '%') + '</div>';
     }).join('');
-    return '<article class="fd-card"><div class="fd-card-topo"><div><h2 class="fd-titulo">Saúde financeira</h2><p class="fd-legenda">Nota calculada com as movimentações do período</p></div>' +
+    return '<article class="fd-card fd-vidro"><div class="fd-card-topo"><div><h2 class="fd-titulo">Saúde financeira</h2><p class="fd-legenda">Nota calculada com as movimentações do período</p></div>' +
       '<span class="fd-selo fd-selo-' + s.nivel + '">' + esc(s.status) + '</span></div>' +
       '<div class="fd-nota"><div class="fd-nota-valor">' + s.score + '<small>/100</small></div>' + medidor(s.score, s.nivel === 'bom' ? 'fd-m-bom' : s.nivel === 'medio' ? 'fd-m-medio' : 'fd-m-ruim', 'Nota ' + s.score + ' de 100') + '</div>' +
       '<div class="fd-pilares">' + pilares + '</div></article>';
@@ -688,33 +786,33 @@
   function blocoContas(m) {
     const c = m.contas;
     const bancos = c.bancarias.length
-      ? '<ul class="fd-lista-simples">' + c.bancarias.map((b) => '<li><span>' + esc(b.nome) + '</span><strong class="' + (b.saldo < 0 ? 'fd-sai' : '') + '">' + dinheiro(b.saldo) + '</strong></li>').join('') + '</ul>'
+      ? '<ul class="fd-lista-simples">' + c.bancarias.map((b) => '<li class="fd-clicavel"' + atalho({ conta: b.nome }) + ' title="Ver as movimentações de ' + esc(b.nome) + '"><span>' + esc(b.nome) + '</span><strong class="' + (b.saldo < 0 ? 'fd-sai' : '') + '">' + dinheiro(b.saldo) + '</strong></li>').join('') + '</ul>'
       : '<p class="fd-legenda">Nenhuma conta bancária cadastrada.</p>';
     const cartoes = c.cartoes.itens.length
-      ? '<ul class="fd-cartoes">' + c.cartoes.itens.map((k) => '<li><div class="fd-cartao-topo"><span>' + esc(k.nome) + '</span><strong>' + k.usoPct + '%</strong></div>' +
+      ? '<ul class="fd-cartoes">' + c.cartoes.itens.map((k) => '<li class="fd-clicavel"' + atalho({ conta: k.nome }) + ' title="Ver as movimentações de ' + esc(k.nome) + '"><div class="fd-cartao-topo"><span>' + esc(k.nome) + '</span><strong>' + k.usoPct + '%</strong></div>' +
         medidor(k.usoPct, k.usoPct >= 85 ? 'fd-m-ruim' : k.usoPct >= 60 ? 'fd-m-medio' : 'fd-m-bom', k.nome + ' ' + k.usoPct + '% do limite') +
         '<div class="fd-cartao-nota"><span>Fatura ' + dinheiro(k.fatura) + '</span><span>Livre ' + dinheiro(k.disponivel) + '</span></div></li>').join('') + '</ul>'
       : '';
-    return '<article class="fd-card"><div class="fd-card-topo"><div><h2 class="fd-titulo">Contas e cartões</h2><p class="fd-legenda">Saldos de hoje e uso dos limites</p></div>' +
-      '<button type="button" class="fd-link fd-link-topo" data-nav="cartoes" onclick="navigate(\'cartoes\')">Gerenciar</button></div>' +
+    return '<article class="fd-card fd-vidro"><div class="fd-card-topo"><div><h2 class="fd-titulo">Contas e cartões</h2><p class="fd-legenda">Saldos de hoje e uso dos limites</p></div>' +
+      '<button type="button" class="fd-link fd-link-topo" data-fd-ir="cartoes">Gerenciar</button></div>' +
       '<h3 class="fd-sub-titulo">Contas</h3>' + bancos + (cartoes ? '<h3 class="fd-sub-titulo">Cartões de crédito</h3>' + cartoes : '') + '</article>';
   }
 
   function blocoOrcamentos(m) {
     if (!m.orcamentos.length) return '';
     const marcador = m.tempoDecorridoPct;
-    return '<article class="fd-card"><div class="fd-card-topo"><div><h2 class="fd-titulo">Orçamentos</h2><p class="fd-legenda">Gasto contra o limite · o traço marca o tempo do mês (' + marcador + '%)</p></div>' +
-      '<button type="button" class="fd-link fd-link-topo" data-nav="orcamentos" onclick="navigate(\'orcamentos\')">Ajustar</button></div>' +
+    return '<article class="fd-card fd-vidro"><div class="fd-card-topo"><div><h2 class="fd-titulo">Orçamentos</h2><p class="fd-legenda">Gasto contra o limite · o traço marca o tempo do mês (' + marcador + '%)</p></div>' +
+      '<button type="button" class="fd-link fd-link-topo" data-fd-ir="orcamentos">Ajustar</button></div>' +
       '<ul class="fd-orcamentos">' + m.orcamentos.slice(0, 5).map((o) => {
         const nivel = o.pct > 100 ? 'fd-m-ruim' : o.pct > marcador + 10 || o.pct >= 90 ? 'fd-m-medio' : 'fd-m-bom';
-        return '<li><div class="fd-cartao-topo"><span>' + esc(o.categoria) + '</span><strong>' + o.pct + '%</strong></div>' +
+        return '<li class="fd-clicavel"' + atalho({ tipo: 'out', cat: o.categoria }) + ' title="Ver as despesas de ' + esc(o.categoria) + '"><div class="fd-cartao-topo"><span>' + esc(o.categoria) + '</span><strong>' + o.pct + '%</strong></div>' +
           '<div class="fd-meter fd-meter-marca" role="img" aria-label="' + esc(o.categoria) + ': ' + o.pct + '% do limite"><i class="' + nivel + '" style="width:' + Math.min(100, o.pct) + '%"></i><b style="left:' + marcador + '%" title="Tempo decorrido do mês"></b></div>' +
           '<div class="fd-cartao-nota"><span>' + dinheiro(o.gasto) + ' de ' + dinheiro(o.limite) + '</span><span>' + (o.limite - o.gasto >= 0 ? 'Sobram ' + dinheiro(o.limite - o.gasto) : 'Estourou ' + dinheiro(o.gasto - o.limite)) + '</span></div></li>';
       }).join('') + '</ul></article>';
   }
 
   function linhasUltimas(m, filtro) {
-    const lista = m.ultimas.filter((u) => filtro === 'all' || u.tipo === filtro).slice(0, 8);
+    const lista = m.ultimas.filter((u) => filtro === 'all' || u.tipo === filtro).slice(0, 6);
     if (!lista.length) return '<div class="fd-vazio"><strong>Nenhuma movimentação realizada</strong><span>As movimentações pagas ou recebidas do período aparecem aqui.</span></div>';
     return '<ul class="fd-ult-lista">' + lista.map((u) =>
       '<li class="fd-ult-item"><div class="fd-ult-data">' + esc(dataCurta(u.data)) + '</div>' +
@@ -724,26 +822,118 @@
 
   function blocoUltimas(m) {
     const filtros = [['all', 'Todas'], ['in', 'Receitas'], ['out', 'Despesas']];
-    return '<article class="fd-card fd-card-largo"><div class="fd-card-topo"><div><h2 class="fd-titulo">Últimas movimentações</h2><p class="fd-legenda">Só o que já foi pago ou recebido em ' + esc(m.periodo.rotulo) + '</p></div>' +
+    return '<article class="fd-card fd-vidro fd-card-ultimas"><div class="fd-card-topo"><div><h2 class="fd-titulo">Últimas movimentações</h2><p class="fd-legenda">Só o que já foi pago ou recebido em ' + esc(m.periodo.rotulo) + '</p></div>' +
       '<div class="fd-topo-acoes"><div class="fd-abas fd-abas-peq" role="group" aria-label="Filtrar movimentações">' + filtros.map(([id, nome]) =>
         '<button type="button" class="fd-aba' + (estado.filtro === id ? ' ativa' : '') + '" data-fd-filtro="' + id + '" onclick="NexusDash.filtrarUltimas(\'' + id + '\')">' + nome + '</button>').join('') + '</div>' +
-      '<button type="button" class="fd-link fd-link-topo" data-nav="transacoes" onclick="navigate(\'transacoes\')">Ver extrato ' + ICONES.seta + '</button></div></div>' +
+      '<button type="button" class="fd-link fd-link-topo" id="fdVerExtrato" data-fd-ir="mov"' + (estado.filtro !== 'all' ? ' data-fd-tipo="' + estado.filtro + '"' : '') + '>Ver extrato ' + ICONES.seta + '</button></div></div>' +
       '<div id="fdUltimas">' + linhasUltimas(m, estado.filtro) + '</div></article>';
   }
 
   function blocoVazio() {
-    return '<section class="fd-card fd-vazio-total"><h2 class="fd-titulo">Comece pelas suas movimentações</h2>' +
+    return '<section class="fd-card fd-vidro fd-vazio-total"><h2 class="fd-titulo">Comece pelas suas movimentações</h2>' +
       '<p class="fd-legenda">Cadastre receitas e despesas para ver saldo, projeção, categorias e contas a pagar aqui.</p>' +
-      '<button type="button" class="btn-primary" data-nav="transacoes" onclick="navigate(\'transacoes\')">Cadastrar movimentação</button></section>';
+      '<button type="button" class="fd-btn fd-btn-despesa" data-fd-acao="nova-despesa">' + ICONES.mais + '<span>Cadastrar movimentação</span></button></section>';
   }
 
   function paginaHtml(m, util) {
-    return '<div class="dashboard-cockpit-frame fd-root">' + cabecalho(m, util) +
-      (m.vazio ? blocoVazio() : blocoAvisos(m) + blocoSituacao(m) +
-        '<div class="fd-grade fd-grade-1">' + blocoGrafico(m) + blocoCategorias(m) + '</div>' +
-        '<div class="fd-grade fd-grade-2"><div class="fd-coluna">' + blocoAgenda(m) + blocoUltimas(m) + '</div>' +
-        '<div class="fd-coluna">' + blocoSaude(m) + blocoContas(m) + blocoOrcamentos(m) + '</div></div>') +
-      '</div>';
+    const raiz = (miolo) => '<div class="dashboard-cockpit-frame fd-root">' + cabecalho(m, util) + miolo + '</div>';
+    if (m.vazio) return raiz('<div class="fd-corpo">' + blocoVazio() + '</div>');
+    const baixo = [blocoSaude(m), blocoContas(m), blocoOrcamentos(m)].filter(Boolean);
+    return raiz('<div class="fd-corpo">' + blocoAvisos(m) +
+      '<div class="fd-linha fd-linha-a">' + blocoSaldo(m) + blocoKpis(m) + '</div>' +
+      '<div class="fd-linha fd-linha-b">' + blocoGrafico(m) + blocoCategorias(m) + '</div>' +
+      '<div class="fd-linha fd-linha-c">' + blocoAgenda(m) + blocoUltimas(m) + '</div>' +
+      '<div class="fd-linha fd-linha-d fd-n' + baixo.length + '">' + baixo.join('') + '</div></div>');
+  }
+
+  // ======================================================================
+  // Cena de vidro (fundo fixo do painel) e ações
+  // ======================================================================
+  // Fica fora do painel, direto no app: sobrevive às renderizações (sem piscar) e só aparece enquanto o dashboard está na tela.
+  // Tudo em vmax e gradientes: nítido de 1080p a 4K e acompanha a paleta escolhida (--nx-o1..o4).
+  const CENA = '<span class="fd-orb fd-o1"></span><span class="fd-orb fd-o2"></span><span class="fd-orb fd-o3"></span><span class="fd-orb fd-o4"></span>' +
+    '<span class="fd-placa fd-p1"></span><span class="fd-placa fd-p2"></span><span class="fd-placa fd-p3"></span>' +
+    '<div class="fd-malha"></div><div class="fd-granulado"></div><div class="fd-vinheta"></div>';
+  let observadorSaida = null;
+
+  function garantirCena() {
+    if (typeof document === 'undefined' || !document.body) return;
+    let cena = document.getElementById('fdCena');
+    if (!cena) {
+      cena = document.createElement('div');
+      cena.id = 'fdCena';
+      cena.className = 'fd-cena';
+      cena.setAttribute('aria-hidden', 'true');
+      cena.innerHTML = CENA;
+      const pai = document.getElementById('appMain') || document.body;
+      pai.insertBefore(cena, pai.firstChild);
+    }
+    document.documentElement.classList.add('fd-vidro-ativo');
+    const conteudo = document.getElementById('pageContent');
+    if (conteudo && !observadorSaida && typeof MutationObserver !== 'undefined') {
+      // Ao trocar de página o painel some do DOM: desliga o vidro e solta o gráfico
+      observadorSaida = new MutationObserver(() => {
+        if (document.querySelector('.fd-root')) return;
+        document.documentElement.classList.remove('fd-vidro-ativo');
+        if (estado.grafico && estado.grafico.destroy) { estado.grafico.destroy(); estado.grafico = null; }
+      });
+      observadorSaida.observe(conteudo, { childList: true });
+    }
+  }
+
+  function irParaMovimentacoes(filtros) {
+    if (typeof window === 'undefined' || typeof window.navigate !== 'function') return;
+    const f = filtros || {};
+    window.navigate('transacoes');
+    let tentativas = 0;
+    // A tela de movimentações é montada de forma assíncrona: espera os filtros existirem antes de preenchê-los
+    const aplicar = () => {
+      const tipo = document.getElementById('txFiltroTipo');
+      if (!tipo) { if (tentativas++ < 40) setTimeout(aplicar, 50); return; }
+      const campos = { txFiltroTipo: f.tipo, txFiltroStatus: f.status, txFiltroCat: f.cat, txFiltroConta: f.conta };
+      Object.keys(campos).forEach((id) => { const el = document.getElementById(id); if (el) el.value = campos[id] || ''; });
+      if (typeof window.refreshTxTable === 'function') window.refreshTxTable();
+      else tipo.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    aplicar();
+  }
+
+  function executarAcao(nome, el) {
+    const w = window;
+    if (nome === 'nova-receita' && typeof w.openModal === 'function') w.openModal(null, 'in');
+    else if (nome === 'nova-despesa' && typeof w.openModal === 'function') w.openModal(null, 'out');
+    else if (nome === 'atualizar' && typeof w.syncDashboardData === 'function') {
+      el.classList.add('girando');
+      el.disabled = true;
+      w.syncDashboardData();
+    }
+  }
+
+  let ouvintesLigados = false;
+  function ligarOuvintes() {
+    if (ouvintesLigados || typeof document === 'undefined') return;
+    ouvintesLigados = true;
+    const ativar = (el) => {
+      if (el.hasAttribute('data-fd-acao')) { executarAcao(el.getAttribute('data-fd-acao'), el); return; }
+      const destino = el.getAttribute('data-fd-ir');
+      if (destino === 'mov') irParaMovimentacoes(filtrosDeAtalho(el.dataset));
+      else if (destino && typeof window.navigate === 'function') window.navigate(destino);
+    };
+    document.addEventListener('click', (e) => {
+      const el = e.target && e.target.closest ? e.target.closest('.fd-root [data-fd-acao], .fd-root [data-fd-ir]') : null;
+      if (!el) return;
+      // Botão dentro de um cartão clicável (ex.: dar baixa) faz só o que é dele
+      const interno = e.target.closest('button, a, input, select, textarea');
+      if (interno && interno !== el && el.contains(interno)) return;
+      ativar(el);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const el = e.target && e.target.closest ? e.target.closest('.fd-root [role="link"][data-fd-ir]') : null;
+      if (!el || el !== e.target) return;
+      e.preventDefault();
+      ativar(el);
+    });
   }
 
   // ======================================================================
@@ -792,7 +982,7 @@
       plugins: {
         fdCruz: { cor: t.zero },
         legend: { display: true, position: 'top', align: 'start', labels: { color: t.ink2, usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, font: { size: 11.5, weight: '600' }, padding: 14 } },
-        tooltip: { backgroundColor: t.tipFundo, titleColor: t.tipTexto, bodyColor: t.tipTexto, footerColor: t.muted, borderColor: t.grid, borderWidth: 1, padding: 11, boxPadding: 5, usePointStyle: true, displayColors: true }
+        tooltip: { backgroundColor: t.tipFundo, titleColor: t.tipTexto, bodyColor: t.tipTexto, footerColor: t.muted, borderColor: t.grid, borderWidth: 1, padding: 11, boxPadding: 5, cornerRadius: 10, usePointStyle: true, displayColors: true }
       },
       scales: {
         x: { grid: { display: false }, border: { color: t.grid }, ticks: { color: t.muted, font: { size: 11 }, maxRotation: 0, autoSkipPadding: 12 } },
@@ -818,12 +1008,21 @@
         return ev.map((e) => (e.tipo === 'in' ? '+ ' : '− ') + e.desc + ' · ' + fmtU(e.valor) + (e.realizado ? '' : ' (previsto)'));
       }
     };
+    // Área sob o realizado: degradê do acento até transparente (calculado com a área útil do gráfico)
+    const degrade = (c) => {
+      const area = c.chart.chartArea;
+      if (!area) return comAlpha(t.accent, 0.12);
+      const g = c.chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
+      g.addColorStop(0, comAlpha(t.accent, 0.34));
+      g.addColorStop(1, comAlpha(t.accent, 0));
+      return g;
+    };
     return {
       type: 'line',
       data: {
         labels: d.dias.map((x) => String(x)),
         datasets: [
-          { label: 'Saldo realizado', data: d.saldoReal, borderColor: t.accent, backgroundColor: comAlpha(t.accent, 0.1), fill: 'origin', borderWidth: 2, tension: 0.2, spanGaps: false,
+          { label: 'Saldo realizado', data: d.saldoReal, borderColor: t.accent, backgroundColor: degrade, fill: 'origin', borderWidth: 2, tension: 0.2, spanGaps: false,
             pointRadius: d.saldoReal.map((v, i) => (i === hojeIdx ? 5 : 0)), pointHoverRadius: 6, pointHitRadius: 18, pointBackgroundColor: t.accent, pointBorderColor: t.surface, pointBorderWidth: 2 },
           { label: 'Saldo projetado', data: d.saldoProj, borderColor: t.accent, backgroundColor: 'transparent', fill: false, borderWidth: 2, borderDash: [6, 5], tension: 0.2, spanGaps: false,
             pointRadius: 0, pointHoverRadius: 6, pointHitRadius: 18, pointBackgroundColor: t.accent, pointBorderColor: t.surface, pointBorderWidth: 2 }
@@ -925,6 +1124,8 @@
     estado.modelo = modelo;
     estado.util = ctx.util || {};
     estado.ativo = true;
+    garantirCena();
+    ligarOuvintes();
     return paginaHtml(modelo, estado.util);
   }
 
@@ -961,12 +1162,16 @@
     document.querySelectorAll('[data-fd-filtro]').forEach((b) => b.classList.toggle('ativa', b.getAttribute('data-fd-filtro') === estado.filtro));
     const alvo = document.getElementById('fdUltimas');
     if (alvo) alvo.innerHTML = linhasUltimas(estado.modelo, estado.filtro);
+    // "Ver extrato" leva para a lista já filtrada pelo mesmo tipo
+    const extrato = document.getElementById('fdVerExtrato');
+    if (extrato) { if (estado.filtro === 'all') extrato.removeAttribute('data-fd-tipo'); else extrato.setAttribute('data-fd-tipo', estado.filtro); }
   }
 
   return {
     calcular, pagina, desenhar, mudarVisao, alternarTabela, filtrarUltimas, estado,
     graficoPrincipal: () => estado.grafico,
     // exportados para os testes
+    menorSaldoProjetado, filtrosDeAtalho,
     util: { parseValor, parseData, diferencaDias, somarDias, fmtBR, fmtEixo, esc, chave }
   };
 });
