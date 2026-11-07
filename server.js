@@ -2008,39 +2008,59 @@ const htmlContent = `<!DOCTYPE html>
       }
     }
     var sc = localStorage.getItem('nexus_display_scale') || 'auto';
-    var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || screen.width || 1366;
-    var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || screen.height || 768;
-    var sw = (window.screen && window.screen.width) ? window.screen.width : w;
-    var sh = (window.screen && window.screen.height) ? window.screen.height : h;
-    var dev = 'desktop';
-    var ua = navigator.userAgent || '';
-    var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    var isIpad = /iPad/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    if (isIpad || (/Tablet|Android/i.test(ua) && !/Mobile/i.test(ua)) || (isTouch && w > 640 && w <= 1024)) dev = 'tablet';
-    else if (/Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) || (w <= 768 && isTouch) || w <= 640) dev = 'mobile';
-    else if (w >= 2560) dev = '4k';
-    else if (w >= 1921) dev = 'ultrawide';
-    else if (w <= 1440) dev = 'laptop';
+    // Aparelho e escala: UMA só implementação, reutilizada por detectDeviceType() / getAutoDisplayScale() / applyDisplayScale() mais abaixo.
+    // Escala automática CONTÍNUA pela janela do navegador (antes eram degraus fixos pela tela): Full HD (janela ~1920x970) fica em 100% e a
+    // interface cresce junto com monitores maiores (2K, ultrawide, 4K, 5K), sem passar de 200%. Celular/tablet usam o layout responsivo (sem zoom).
+    window.__nexusDeviceInfo = function () {
+      var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || screen.width || 1366;
+      var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || screen.height || 768;
+      var sw = (window.screen && window.screen.width) ? window.screen.width : w;
+      var sh = (window.screen && window.screen.height) ? window.screen.height : h;
+      var dev = 'desktop';
+      var ua = navigator.userAgent || '';
+      var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      var coarse = false;
+      try { coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); } catch (e0) {}
+      var isIpad = /iPad/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIpad || (/Tablet|Android/i.test(ua) && !/Mobile/i.test(ua)) || (isTouch && w > 640 && w <= 1024)) dev = 'tablet';
+      else if (/Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) || (w <= 768 && isTouch) || w <= 640) dev = 'mobile';
+      else if (w >= 2560) dev = '4k';
+      else if (w >= 1921) dev = 'ultrawide';
+      else if (w <= 1440) dev = 'laptop';
+      // Aparelho de mão: celular/tablet ou tela pequena só de toque. Notebook/monitor com tela sensível (ponteiro principal = mouse/touchpad) escala normalmente.
+      var handheld = (dev === 'mobile' || dev === 'tablet' || (coarse && Math.min(sw, sh) <= 1100));
+      return { dev: dev, w: w, h: h, sw: sw, sh: sh, handheld: handheld, coarse: coarse };
+    };
+    window.__nexusAutoScale = function (i) {
+      if (i.handheld) return 1;
+      if (i.sh <= 640 || i.sw <= 1180) return 0.95;
+      var zw = 1 + 0.5 * (i.w / 1920 - 1);
+      var zh = 1 + 0.5 * (i.h / 970 - 1);
+      var z = Math.min(zw, zh, 2);
+      if (z < 1.03) return 1;
+      return Math.round(z * 20) / 20;
+    };
+    window.__nexusScaleFor = function (scaleVal, i) {
+      var num = (scaleVal === 'auto') ? window.__nexusAutoScale(i) : (parseFloat(scaleVal) / 100 || 1.0);
+      // zoom efetivo: celular/tablet e janelas de até 1024px ficam no layout responsivo (sem zoom)
+      var eff = (i.handheld || i.w <= 1024 || num === 1) ? 1 : num;
+      return { num: num, eff: eff, label: Math.round(num * 100) + '%' };
+    };
+    var info = window.__nexusDeviceInfo();
+    var dev = info.dev;
+    var w = info.w;
 
     document.documentElement.setAttribute('data-device-type', dev);
 
-    var sn = 1.0;
-    if (sc === 'auto') {
-      if (dev === 'mobile' || dev === 'tablet') sn = 1.0;
-      else if (dev === 'laptop') sn = (sh <= 640 || sw <= 1180) ? 0.95 : 1.0;
-      else if (dev === '4k') sn = (sw >= 3400) ? ((sh >= 1900) ? 1.50 : 1.20) : 1.10;
-      else if (dev === 'ultrawide') sn = 1.05;
-      else sn = 1.0;
-    } else {
-      sn = parseFloat(sc) / 100 || 1.0;
-    }
+    var sf = window.__nexusScaleFor(sc, info);
+    var sn = sf.num;
     document.documentElement.style.setProperty('--app-zoom', sn);
     var bgCol = isLight ? '#F8FAFC' : '#000000';
     document.write('<style id="critical-fouc-shield">html, body { scroll-behavior: auto !important; background-color:' + bgCol + ' !important; transition:none !important; }' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + ' #serverAuthNexusCard, .auth-card-nexus, #authNexusCard, .auth-container, #authPage, #loginBox, #registerBox, #forgotBox { animation: none !important; transform: none !important; transition: none !important; }</style>');
-    var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || isTouch || w <= 1024 || sn === 1.0);
+    var isMobileOrTablet = (sf.eff === 1);
     var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('@media screen { body { zoom: ' + sn + ' !important; } }');
     // --app-zoom é o zoom EFETIVO (1 quando o zoom não é aplicado): o CSS usa para compensar o 100vh, que não acompanha o zoom do body
-    var effZoom = isMobileOrTablet ? 1 : sn;
+    var effZoom = sf.eff;
     document.documentElement.style.setProperty('--app-zoom', effZoom);
     document.write('<style id="nexus-scale-override">' + zoomRule + ' :root { --app-zoom: ' + effZoom + '; }</style>');
   } catch(e){}
@@ -14323,8 +14343,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 </style>
 <link rel="stylesheet" href="/nexus-shell.css?v=20261107-8" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
-<link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-3" />
-<script src="/dashboard-financeiro.js?v=20261107-3"></script>
+<link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
+<script src="/dashboard-financeiro.js?v=20261107-4"></script>
 <script src="/importacao.js?v=20261107-1"></script>
 </head>
 <body>
@@ -14887,8 +14907,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <button class="scale-opt-btn" data-scale="90%">🔍 90% (Reduzido)</button>
             <button class="scale-opt-btn" data-scale="100%">🔍 100% (Padrão 1:1)</button>
             <button class="scale-opt-btn" data-scale="110%">🔍 110% (Ampliado)</button>
-            <button class="scale-opt-btn" data-scale="125%">🔍 125% (Grande)</button>
-            <button class="scale-opt-btn" data-scale="150%">🔍 150% (Extra Grande)</button>
+            <button class="scale-opt-btn" data-scale="125%">🔍 125% (Grande · 2K)</button>
+            <button class="scale-opt-btn" data-scale="150%">🔍 150% (Extra Grande · 4K)</button>
+            <button class="scale-opt-btn" data-scale="175%">🔍 175% (4K em tela grande)</button>
+            <button class="scale-opt-btn" data-scale="200%">🔍 200% (5K / TV)</button>
           </div>
         </div>
 
@@ -24321,8 +24343,10 @@ function pageConfig(){
               <option value="90%">🔍 90% (Reduzido)</option>
               <option value="100%">🔍 100% (Padrão 1:1)</option>
               <option value="110%">🔍 110% (Ampliado)</option>
-              <option value="125%">🔍 125% (Grande)</option>
-              <option value="150%">🔍 150% (Extra Grande)</option>
+              <option value="125%">🔍 125% (Grande · 2K)</option>
+              <option value="150%">🔍 150% (Extra Grande · 4K)</option>
+              <option value="175%">🔍 175% (4K em tela grande)</option>
+              <option value="200%">🔍 200% (5K / TV)</option>
             </select>
           </div>
         </div>
@@ -30930,6 +30954,8 @@ bindDualPasswordToggle('regPassword', 'regConfirmPassword', 'regPasswordToggle')
 
 /* ==================== Controle de Escala & Dispositivo Logado ==================== */
 function detectDeviceType() {
+  // mesma detecção do <head> (window.__nexusDeviceInfo); o restante abaixo é só reserva caso aquele script não tenha rodado
+  if (window.__nexusDeviceInfo) return window.__nexusDeviceInfo().dev;
   var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || screen.width || 1366;
   var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || screen.height || 768;
   var ua = navigator.userAgent || '';
@@ -30955,7 +30981,9 @@ function detectDeviceType() {
   return 'desktop';
 }
 
-function getDeviceName(devType) {
+function getDeviceName(devType, screenW) {
+  // o tipo '4k' começa em 2560px de largura: abaixo de 3200px é um monitor 2K/QHD, não 4K
+  if (devType === '4k' && screenW && screenW < 3200) return 'Monitor 2K / QHD 🖥️✨';
   switch (devType) {
     case 'mobile': return 'Smartphone (Celular) 📱';
     case 'tablet': return 'Tablet 📱↔️';
@@ -30967,6 +30995,11 @@ function getDeviceName(devType) {
 }
 
 function getAutoDisplayScale(w, h, devType) {
+  // escala contínua pela janela, definida no <head> (window.__nexusAutoScale); os degraus abaixo são só reserva
+  if (window.__nexusDeviceInfo && window.__nexusAutoScale) {
+    var autoNum = window.__nexusAutoScale(window.__nexusDeviceInfo());
+    return { scaleNum: autoNum, effectiveScale: Math.round(autoNum * 100) + '%' };
+  }
   if (devType === 'mobile' || devType === 'tablet') {
     return { scaleNum: 1.0, effectiveScale: '100%' };
   }
@@ -31011,34 +31044,42 @@ function applyDisplayScale(scaleVal) {
     effectiveScale = scaleVal;
   }
 
+  // Zoom efetivo: celular/tablet (ou tela só de toque pequena) e janelas de até 1024px ficam no layout responsivo, sem zoom.
+  // Notebook/monitor com tela sensível NÃO entra aqui: antes qualquer toque desligava a escala (4K com toque ficava minúsculo).
+  var devInfo = window.__nexusDeviceInfo ? window.__nexusDeviceInfo() : null;
+  var isMobileScale = devInfo
+    ? (devInfo.handheld || devInfo.w <= 1024 || scaleNum === 1.0)
+    : (devType === 'mobile' || devType === 'tablet' || w <= 1024 || scaleNum === 1.0);
+  var effZoomNow = isMobileScale ? 1 : scaleNum;
+
   // Anti-oscilação & Anti-tremor: se os valores aplicados forem idênticos, não reescreve estilos para evitar tremor no DOM
-  if (window.__lastAppliedScaleNum === scaleNum && window.__lastAppliedDeviceType === devType && window.__lastAppliedScaleVal === scaleVal) {
-    return;
-  }
+  // (mas o texto dos controles e o cartão "Dispositivo Detectado" abaixo sempre são atualizados: a tela de Configurações é redesenhada a cada visita)
+  var scaleUnchanged = (window.__lastAppliedScaleNum === scaleNum && window.__lastAppliedDeviceType === devType && window.__lastAppliedScaleVal === scaleVal && window.__lastAppliedEffZoom === effZoomNow);
   window.__lastAppliedScaleNum = scaleNum;
   window.__lastAppliedDeviceType = devType;
   window.__lastAppliedScaleVal = scaleVal;
+  window.__lastAppliedEffZoom = effZoomNow;
 
-  // Atualiza ou injeta regra dinâmica estritamente restrita a @media screen
-  var scaleStyle = document.getElementById('nexus-scale-override');
-  if (!scaleStyle) {
-    scaleStyle = document.createElement('style');
-    scaleStyle.id = 'nexus-scale-override';
-    document.head.appendChild(scaleStyle);
-  }
-  var isTouchScreen = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (w <= 1024);
-  var isMobileScale = (devType === 'mobile' || devType === 'tablet' || isTouchScreen || scaleNum === 1.0);
-  var zoomRule = isMobileScale 
-    ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' 
-    : ('@media screen { body { zoom: ' + scaleNum + ' !important; } }');
-  scaleStyle.textContent = zoomRule + ' :root { --app-zoom: ' + (isMobileScale ? 1 : scaleNum) + '; }';
+  if (!scaleUnchanged) {
+    // Atualiza ou injeta regra dinâmica estritamente restrita a @media screen
+    var scaleStyle = document.getElementById('nexus-scale-override');
+    if (!scaleStyle) {
+      scaleStyle = document.createElement('style');
+      scaleStyle.id = 'nexus-scale-override';
+      document.head.appendChild(scaleStyle);
+    }
+    var zoomRule = isMobileScale
+      ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }'
+      : ('@media screen { body { zoom: ' + scaleNum + ' !important; } }');
+    scaleStyle.textContent = zoomRule + ' :root { --app-zoom: ' + effZoomNow + '; }';
 
-  document.documentElement.style.setProperty('--app-zoom', isMobileScale ? 1 : scaleNum);
-  if (document.body) {
-    if (isMobileScale) {
-      document.body.style.removeProperty('zoom');
-    } else {
-      document.body.style.setProperty('zoom', scaleNum);
+    document.documentElement.style.setProperty('--app-zoom', effZoomNow);
+    if (document.body) {
+      if (isMobileScale) {
+        document.body.style.removeProperty('zoom');
+      } else {
+        document.body.style.setProperty('zoom', scaleNum);
+      }
     }
   }
 
@@ -31084,11 +31125,11 @@ function applyDisplayScale(scaleVal) {
       '<div style="flex:1; min-width:0;">' +
         '<div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">' +
           '<strong>Dispositivo Detectado:</strong>' +
-          '<span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:6px; font-weight:700; font-size:11px; color:var(--accent,#10B981);">' + getDeviceName(devType) + '</span>' +
+          '<span style="background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:6px; font-weight:700; font-size:11px; color:var(--accent,#10B981);">' + getDeviceName(devType, devInfo ? devInfo.sw : 0) + '</span>' +
         '</div>' +
         '<div style="color:var(--text-muted); font-size:12px; margin-top:4px; line-height:1.4;">' +
-          'Resolução da Tela: <strong>' + w + 'px × ' + h + 'px</strong> (' + orientation + ') | DPR: <strong>' + dpr + '</strong><br>' +
-          'Escala Ativa: <strong>' + effectiveScale + '</strong> ' + autoText +
+          'Resolução da Tela: <strong>' + (devInfo ? devInfo.sw : w) + ' × ' + (devInfo ? devInfo.sh : h) + ' px</strong> | Janela: <strong>' + w + ' × ' + h + ' px</strong> (' + orientation + ') | DPR: <strong>' + dpr + '</strong><br>' +
+          'Escala Ativa: <strong>' + (isMobileScale ? '100%' : effectiveScale) + '</strong> ' + autoText + ' | Área útil da interface: <strong>' + Math.round(w / effZoomNow) + ' × ' + Math.round(h / effZoomNow) + ' px</strong>' +
         '</div>' +
       '</div>' +
     '</div>';
