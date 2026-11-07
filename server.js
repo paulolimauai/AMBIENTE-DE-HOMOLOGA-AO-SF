@@ -10213,323 +10213,7 @@ body.light .dash-overview-card {
 }
 
 
-/* ==================== Executive Welcome Toast (Non-blocking 4K Frosted Glass) ==================== */
-.executive-welcome-toast {
-  --toast-ms: 6000ms;
-  position: fixed;
-  top: 72px;
-  right: 24px;
-  z-index: 999999;
-  width: min(440px, calc(100vw - 24px));
-  background:
-    radial-gradient(220px 140px at 38px 36px, rgba(16, 185, 129, 0.22), transparent 72%),
-    radial-gradient(260px 160px at 100% 0%, rgba(56, 189, 248, 0.10), transparent 70%),
-    linear-gradient(135deg, rgba(13, 23, 40, 0.84) 0%, rgba(7, 13, 25, 0.78) 100%);
-  border: 1px solid rgba(52, 211, 153, 0.30);
-  border-radius: 20px;
-  padding: 18px 18px 21px;
-  box-shadow:
-    0 28px 60px -14px rgba(0, 0, 0, 0.75),
-    0 0 34px rgba(16, 185, 129, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.20),
-    inset 0 0 24px rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(30px) saturate(190%);
-  -webkit-backdrop-filter: blur(30px) saturate(190%);
-  transform: translate3d(36px, 0, 0) scale(0.96);
-  opacity: 0;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, border-color 0.25s ease;
-  pointer-events: none;
-  overflow: hidden;
-  isolation: isolate;
-}
-.executive-welcome-toast.show {
-  transform: translate3d(0, 0, 0) scale(1);
-  opacity: 1;
-  pointer-events: auto;
-}
-.executive-welcome-toast:hover {
-  border-color: rgba(52, 211, 153, 0.50);
-}
-/* Fio de luz no topo */
-.executive-welcome-toast::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 20px;
-  right: 20px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(110, 231, 183, 0.75), rgba(56, 189, 248, 0.55), transparent);
-  pointer-events: none;
-}
-/* Brilho que varre o cartão na entrada */
-.executive-welcome-toast::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.10) 50%, transparent 62%);
-  transform: translateX(-120%);
-  pointer-events: none;
-  z-index: -1;
-}
-.executive-welcome-toast.show::after {
-  animation: toastShine 1.2s 0.25s ease-out 1 forwards;
-}
-@keyframes toastShine {
-  from { transform: translateX(-120%); }
-  to { transform: translateX(120%); }
-}
-.toast-content-box {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-.toast-icon-wrap {
-  position: relative;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.26) 0%, rgba(5, 150, 105, 0.10) 100%);
-  border: 1px solid rgba(52, 211, 153, 0.42);
-  color: #34D399;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 10px 24px -4px rgba(16, 185, 129, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.24);
-}
-.toast-icon-wrap::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  border: 1px solid rgba(52, 211, 153, 0.55);
-  opacity: 0;
-  pointer-events: none;
-}
-.executive-welcome-toast.show .toast-icon-wrap::before {
-  animation: toastRing 1.8s 0.4s ease-out 2;
-}
-@keyframes toastRing {
-  0% { transform: scale(1); opacity: 0.7; }
-  100% { transform: scale(1.55); opacity: 0; }
-}
-.toast-icon-wrap svg {
-  width: 23px;
-  height: 23px;
-  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.40));
-}
-.toast-icon-wrap .toast-check {
-  stroke-dasharray: 12;
-  stroke-dashoffset: 0;
-}
-.executive-welcome-toast.show .toast-icon-wrap .toast-check {
-  animation: toastCheckDraw 0.5s 0.35s ease-out both;
-}
-@keyframes toastCheckDraw {
-  from { stroke-dashoffset: 12; }
-  to { stroke-dashoffset: 0; }
-}
-.toast-body {
-  flex: 1;
-  min-width: 0;
-}
-.toast-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 9px;
-}
-.toast-top-meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.toast-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 9.5px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 4px 9px;
-  border-radius: 999px;
-  background: rgba(16, 185, 129, 0.14);
-  border: 1px solid rgba(52, 211, 153, 0.34);
-  color: #6EE7B7;
-  line-height: 1;
-}
-.toast-badge svg {
-  width: 11px;
-  height: 11px;
-  flex-shrink: 0;
-}
-.toast-time {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  color: #A5B4C8;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-.toast-live-dot {
-  position: relative;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 8px #10B981;
-  display: inline-block;
-}
-.toast-live-dot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #10B981;
-  animation: toastLivePulse 1.8s ease-out infinite;
-}
-@keyframes toastLivePulse {
-  0% { transform: scale(1); opacity: 0.65; }
-  100% { transform: scale(2.8); opacity: 0; }
-}
-.toast-title {
-  font-size: 15.5px;
-  font-weight: 700;
-  color: #F8FAFC;
-  margin: 0 0 5px 0;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
-}
-.toast-desc {
-  font-size: 12.8px;
-  color: #A5B4C8;
-  margin: 0;
-  line-height: 1.55;
-}
-.toast-desc strong {
-  color: #F1F5F9;
-  font-weight: 700;
-}
-.toast-footer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 13px;
-}
-.toast-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10.5px;
-  font-weight: 600;
-  color: #B4C0D2;
-  padding: 4px 9px 4px 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  line-height: 1;
-}
-.toast-chip svg {
-  width: 11px;
-  height: 11px;
-  color: #34D399;
-  flex-shrink: 0;
-}
-.toast-close-btn {
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  color: #A5B4C8;
-  cursor: pointer;
-  padding: 0;
-  border-radius: 9px;
-  transition: all 0.18s ease;
-  flex-shrink: 0;
-}
-.toast-close-btn svg {
-  width: 13px;
-  height: 13px;
-}
-.toast-close-btn:hover {
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.13);
-  border-color: rgba(255, 255, 255, 0.24);
-}
-.toast-close-btn:focus-visible {
-  outline: 2px solid #34D399;
-  outline-offset: 2px;
-}
-.toast-progress-track {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.06);
-  overflow: hidden;
-}
-.toast-progress-bar {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(90deg, #10B981 0%, #34D399 55%, #38BDF8 100%);
-  box-shadow: 0 0 10px rgba(52, 211, 153, 0.45);
-  transform-origin: left center;
-}
-.executive-welcome-toast.show .toast-progress-bar {
-  animation: toastBarFill var(--toast-ms) linear forwards;
-}
-.executive-welcome-toast.paused .toast-progress-bar {
-  animation-play-state: paused;
-}
-@keyframes toastBarFill {
-  from { transform: scaleX(1); }
-  to { transform: scaleX(0); }
-}
-@media (max-width: 520px) {
-  .executive-welcome-toast {
-    top: 64px;
-    right: 12px;
-    left: 12px;
-    width: auto;
-    padding: 15px 15px 19px;
-    border-radius: 18px;
-  }
-  .toast-icon-wrap { width: 42px; height: 42px; border-radius: 12px; }
-  .toast-icon-wrap svg { width: 20px; height: 20px; }
-  .toast-title { font-size: 14.5px; }
-  .toast-desc { font-size: 12.3px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .executive-welcome-toast { transform: none; transition: opacity 0.2s ease; }
-  .executive-welcome-toast.show::after,
-  .executive-welcome-toast.show .toast-icon-wrap::before,
-  .executive-welcome-toast.show .toast-icon-wrap .toast-check,
-  .toast-live-dot::after { animation: none; }
-}
-body.light .executive-welcome-toast {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border-color: rgba(16, 185, 129, 0.30) !important;
-  box-shadow: 0 24px 56px rgba(15, 23, 42, 0.16), inset 0 1px 0 #FFFFFF !important;
-}
-body.light .toast-title { color: #0F172A !important; }
-body.light .toast-desc { color: #475569 !important; }
-body.light .toast-desc strong { color: #0F172A !important; }
-body.light .toast-icon-wrap { color: #059669 !important; background: rgba(16, 185, 129, 0.12) !important; border-color: rgba(16, 185, 129, 0.35) !important; }
-body.light .toast-badge { color: #047857 !important; background: rgba(16, 185, 129, 0.12) !important; border-color: rgba(16, 185, 129, 0.30) !important; }
-body.light .toast-time { color: #64748B !important; }
-body.light .toast-chip { color: #475569 !important; background: #F1F5F9 !important; border-color: #E2E8F0 !important; }
-body.light .toast-chip svg { color: #059669 !important; }
-body.light .toast-close-btn { color: #64748B !important; background: #F1F5F9 !important; border-color: #E2E8F0 !important; }
-body.light .toast-close-btn:hover { color: #0F172A !important; background: #E2E8F0 !important; }
-body.light .toast-progress-track { background: rgba(15, 23, 42, 0.06) !important; }
+/* (O aviso de sessão em vidro tem o CSS em nexus-shell.css, seção 7.) */
 
 /* ==================== Admin Center: Usuários Cadastrados ==================== */
 .env-badge-homolog {
@@ -14342,7 +14026,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261107-8" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261107-9" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
@@ -17855,6 +17539,7 @@ function getFormattedToday() {
 }
 
 var WELCOME_TOAST_MS = 8000;
+var FAREWELL_MS = 3000;
 var __welcomeToastTimer = null;
 var __welcomeToastRemaining = WELCOME_TOAST_MS;
 var __welcomeToastStartedAt = 0;
@@ -17871,6 +17556,41 @@ function formatToastDisplayName(raw) {
 
 function escapeToastHtml(v) {
   return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ---- Placas de vidro de sessão (entrada, saída e inatividade). O visual está em nexus-shell.css, seção 7. ----
+var SG_SVG = {
+  shield: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path class="sg-check" d="m9 12 2 2 4-4"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="11" width="15" height="10" rx="2.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path class="sg-check" d="m9.4 16.2 1.9 1.9 3.4-3.6"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path class="sg-check" d="M12 7v5l3.2 2"/></svg>'
+};
+
+function sgGlyph(name) {
+  var paths = {
+    user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    star: '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
+    lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    sync: '<path d="M21 12a9 9 0 0 0-15.5-6.2L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.5 6.2L21 16"/><path d="M16 16h5v5"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/>',
+    out: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+    x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
+  };
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (paths[name] || '') + '</svg>';
+}
+
+function sgChip(glyph, label, id) {
+  return '<span class="sg-chip"' + (id ? ' id="' + id + '"' : '') + '>' + sgGlyph(glyph) + '<span>' + escapeToastHtml(label) + '</span></span>';
+}
+
+function sgNowLabel() {
+  return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+// Cena de luz dentro da placa (orbes, vidro canelado, grão e a camada que garante o contraste do texto)
+function sgFx() {
+  return '<span class="sg-fx" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="flute"></i><i class="grain"></i><i class="shade"></i></span>';
 }
 
 function hideExecutiveWelcomeToast() {
@@ -17891,55 +17611,40 @@ function showExecutiveWelcomeToast(msg, subMsg) {
   if (!toastEl) {
     toastEl = document.createElement('div');
     toastEl.id = 'executiveWelcomeToast';
-    toastEl.className = 'executive-welcome-toast';
     toastEl.setAttribute('role', 'status');
     toastEl.setAttribute('aria-live', 'polite');
     document.body.appendChild(toastEl);
   }
+  toastEl.className = 'sg sg-toast';
+  toastEl.setAttribute('data-kind', 'login');
   var userName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
   var userRole = currentUser ? (currentUser.role || 'Usuário') : 'Usuário';
-  var roleBadgeHtml = userRole === 'Administrador'
-    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span>Administrador Master</span>'
-    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Conta Verificada</span>';
+  var badgeHtml = userRole === 'Administrador'
+    ? sgGlyph('star') + '<span>Administrador Master</span>'
+    : sgGlyph('user') + '<span>Conta Verificada</span>';
 
-  var lockSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
-  var syncSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.5-6.2L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.5 6.2L21 16"/><path d="M16 16h5v5"/></svg>';
+  toastEl.innerHTML =
+    sgFx() +
+    '<div class="sg-in">' +
+      '<div class="sg-plate">' + SG_SVG.shield + '</div>' +
+      '<div class="sg-main">' +
+        '<div class="sg-top">' +
+          '<div class="sg-meta"><span class="sg-badge">' + badgeHtml + '</span><span class="sg-state"><span class="sg-dot"></span>Sessão ativa</span></div>' +
+          '<button type="button" class="sg-x" title="Fechar" aria-label="Fechar notificação">' + sgGlyph('x') + '</button>' +
+        '</div>' +
+        '<h4 class="sg-title">' + (msg || 'Sessão Autenticada com Sucesso') + '</h4>' +
+        '<p class="sg-text">' + (subMsg || ('Ambiente financeiro sincronizado e protegido para <strong>' + userName + '</strong>.')) + '</p>' +
+      '</div>' +
+      '<div class="sg-chips">' + sgChip('lock', 'Conexão segura') + sgChip('sync', 'Dados sincronizados') + sgChip('clock', 'Acesso às ' + sgNowLabel()) + '</div>' +
+    '</div>' +
+    '<div class="sg-bar"><i></i></div>';
 
-  toastEl.innerHTML = [
-    '<div class="toast-content-box">',
-      '<div class="toast-icon-wrap">',
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">',
-          '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
-          '<path class="toast-check" d="m9 12 2 2 4-4"/>',
-        '</svg>',
-      '</div>',
-      '<div class="toast-body">',
-        '<div class="toast-top-row">',
-          '<div class="toast-top-meta">',
-            '<span class="toast-badge">' + roleBadgeHtml + '</span>',
-            '<span class="toast-time"><span class="toast-live-dot"></span>Sessão Ativa</span>',
-          '</div>',
-          '<button type="button" class="toast-close-btn" title="Fechar" aria-label="Fechar notificação">',
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
-          '</button>',
-        '</div>',
-        '<h4 class="toast-title">' + (msg || 'Sessão Autenticada com Sucesso') + '</h4>',
-        '<p class="toast-desc">' + (subMsg || ('Ambiente financeiro sincronizado e protegido para <strong>' + userName + '</strong>.')) + '</p>',
-        '<div class="toast-footer">',
-          '<span class="toast-chip">' + lockSvg + 'Conexão segura</span>',
-          '<span class="toast-chip">' + syncSvg + 'Dados sincronizados</span>',
-        '</div>',
-      '</div>',
-    '</div>',
-    '<div class="toast-progress-track"><div class="toast-progress-bar"></div></div>'
-  ].join('');
+  toastEl.style.setProperty('--sg-ms', WELCOME_TOAST_MS + 'ms');
 
-  toastEl.style.setProperty('--toast-ms', WELCOME_TOAST_MS + 'ms');
-
-  var closeBtn = toastEl.querySelector('.toast-close-btn');
+  var closeBtn = toastEl.querySelector('.sg-x');
   if (closeBtn) closeBtn.addEventListener('click', hideExecutiveWelcomeToast);
 
-  // Pausa a contagem (e a barra de progresso) enquanto o mouse estiver sobre o aviso
+  // Pausa a contagem (e a barra de tempo) enquanto o mouse estiver sobre o aviso
   toastEl.onmouseenter = function () {
     if (!toastEl.classList.contains('show')) return;
     clearTimeout(__welcomeToastTimer);
@@ -17966,6 +17671,91 @@ function showExecutiveWelcomeToast(msg, subMsg) {
     toastEl.classList.add('show');
   });
   armExecutiveWelcomeToast(WELCOME_TOAST_MS);
+}
+
+// Despedida em vidro: cobre a tela com o fundo de luz e uma placa central enquanto os dados são salvos; depois chama onDone
+// (ir para o login). kind: 'logout' (saída pelo botão) ou 'timeout' (expirou por inatividade).
+// savePromise (opcional) é a gravação dos dados: a placa só segue quando ela termina (no máximo 2,5 s além do tempo mínimo).
+function showSessionFarewell(kind, name, savePromise, onDone) {
+  var old = document.getElementById('nexusSessionFarewell');
+  if (old) old.remove();
+  var timeout = kind === 'timeout';
+  var first = formatToastDisplayName(name).split(' ')[0];
+
+  var stage = document.createElement('div');
+  stage.id = 'nexusSessionFarewell';
+  stage.className = 'sg-stage';
+  stage.setAttribute('data-kind', timeout ? 'timeout' : 'logout');
+  stage.setAttribute('role', 'alertdialog');
+  stage.setAttribute('aria-live', 'assertive');
+  stage.setAttribute('aria-label', timeout ? 'Sessão encerrada por inatividade' : 'Sessão encerrada');
+
+  var title = timeout ? 'Sessão encerrada por inatividade' : 'Até logo, ' + escapeToastHtml(first) + '!';
+  var text = timeout
+    ? 'Por segurança, desconectamos a sua conta depois de um tempo sem atividade. Entre novamente para continuar de onde parou.'
+    : 'Sua sessão foi encerrada com segurança. Para voltar ao painel, basta entrar de novo com o seu e-mail e senha.';
+
+  stage.innerHTML =
+    '<div class="bg" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i><i class="beam b1"></i><i class="beam b2"></i><i class="flute"></i><i class="grid"></i><i class="grain"></i><i class="vig"></i></div>' +
+    '<div class="sg sg-plaque" data-kind="' + (timeout ? 'timeout' : 'logout') + '">' +
+      sgFx() +
+      '<div class="sg-in">' +
+        '<div class="sg-plate">' + (timeout ? SG_SVG.clock : SG_SVG.lock) + '</div>' +
+        '<div class="sg-top"><div class="sg-meta"><span class="sg-badge">' + sgGlyph(timeout ? 'clock' : 'out') + '<span>' + (timeout ? 'Sessão expirada' : 'Sessão encerrada') + '</span></span></div></div>' +
+        '<h3 class="sg-title">' + title + '</h3>' +
+        '<p class="sg-text">' + text + '</p>' +
+        '<div class="sg-chips">' +
+          (savePromise ? sgChip('save', 'Salvando dados...', 'sgSaveChip') : sgChip('check', 'Dados salvos', 'sgSaveChip')) +
+          sgChip('lock', timeout ? 'Conta protegida' : 'Sessão protegida') +
+          sgChip('clock', 'Saída às ' + sgNowLabel()) +
+        '</div>' +
+        '<button type="button" class="sg-go">' + sgGlyph('out') + '<span>Ir para o login</span></button>' +
+        '<div class="sg-wait">Redirecionando automaticamente...</div>' +
+      '</div>' +
+      '<div class="sg-bar"><i></i></div>' +
+    '</div>';
+  document.body.appendChild(stage);
+  document.documentElement.classList.add('nexus-farewell');
+
+  var plaque = stage.querySelector('.sg-plaque');
+  plaque.style.setProperty('--sg-ms', FAREWELL_MS + 'ms');
+
+  var finished = false;
+  var minDone = false;
+  var saveDone = !savePromise;
+  function finish() {
+    if (finished) return;
+    finished = true;
+    document.removeEventListener('keydown', onKey, true);
+    try { if (typeof onDone === 'function') onDone(); } catch (e) {}
+  }
+  function tryFinish() { if (minDone && saveDone) finish(); }
+  function onKey(ev) {
+    if (ev.key === 'Escape' || ev.key === 'Enter') { ev.preventDefault(); finish(); }
+  }
+  document.addEventListener('keydown', onKey, true);
+  stage.querySelector('.sg-go').addEventListener('click', finish);
+  stage.addEventListener('mousedown', function (ev) { if (ev.target === stage || ev.target.closest('.bg')) finish(); });
+
+  if (savePromise) {
+    Promise.resolve(savePromise).then(function () {
+      var chip = document.getElementById('sgSaveChip');
+      if (chip) chip.innerHTML = sgGlyph('check') + '<span>Dados salvos</span>';
+      saveDone = true;
+      tryFinish();
+    });
+    setTimeout(function () { saveDone = true; tryFinish(); }, FAREWELL_MS + 2500);
+  }
+  setTimeout(function () { minDone = true; tryFinish(); }, FAREWELL_MS);
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      stage.classList.add('show');
+      plaque.classList.add('show');
+      var go = stage.querySelector('.sg-go');
+      if (go) { try { go.focus(); } catch (e) {} }
+    });
+  });
 }
 
 function showLoginSuccessPopup(msg){
@@ -19871,13 +19661,30 @@ if (registerFormElem) {
 
 // Logout seguro global (Desktop & Mobile)
 window.handleAppLogout = async (isTimeout = false) => {
-  // Oculta o app imediatamente: evita piscar o login embutido antigo enquanto navega para /login.html
-  document.documentElement.classList.add('nexus-leaving');
+  // Um só encerramento por vez (duplo clique em "Sair" ou aviso de inatividade junto com o botão)
+  if (window.__nexusLoggingOut) return;
+  window.__nexusLoggingOut = true;
+  try { if (typeof window.hideInactivityWarning === 'function') window.hideInactivityWarning(); } catch(e){}
+
+  // A gravação dos dados começa ANTES de zerar o estado (ela lê as variáveis na hora da chamada)
+  let savePromise = null;
+  const farewellName = currentUser ? currentUser.name : '';
   try {
     if (currentUser && typeof saveUserData === 'function') {
-      saveUserData().catch(() => {});
+      savePromise = Promise.resolve(saveUserData()).catch(() => {});
     }
   } catch(e){}
+
+  // Despedida em vidro (só quando havia alguém logado): a placa cobre a tela enquanto os dados são salvos e depois leva ao login.
+  // Sem ela (ou se falhar), oculta o app na hora e navega, como antes: evita piscar o login embutido antigo.
+  let farewellShown = false;
+  if (farewellName && typeof showSessionFarewell === 'function') {
+    try {
+      showSessionFarewell(isTimeout === true ? 'timeout' : 'logout', farewellName, savePromise, () => window.__goToLogin());
+      farewellShown = true;
+    } catch(e){}
+  }
+  if (!farewellShown) document.documentElement.classList.add('nexus-leaving');
   if (typeof window.stopInactivityMonitoring === 'function') {
     window.stopInactivityMonitoring();
   }
@@ -19928,7 +19735,8 @@ window.handleAppLogout = async (isTimeout = false) => {
   if (mobileDrawer) mobileDrawer.classList.remove('open');
   if (mobileDrawerOverlay) mobileDrawerOverlay.classList.remove('show');
 
-  window.__goToLogin();
+  // Com a despedida na tela, é ela quem chama __goToLogin quando termina
+  if (!farewellShown) window.__goToLogin();
 };
 
 const logoutButton = document.getElementById('logoutBtn');
