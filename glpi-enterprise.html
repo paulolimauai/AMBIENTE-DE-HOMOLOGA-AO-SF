@@ -632,6 +632,199 @@
         .solution { display: grid; gap: .6rem; padding-top: 1rem; border-top: 1px solid var(--line-soft); }
         .solution > label { font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #6ee7b7; }
 
+        /* ---------- Abrir e atender chamado (formulário, andamento, conversa, filtros da fila) ---------- */
+        .lk { margin-right: .3rem; font-size: .6rem; color: var(--faint); }
+        .opt { font-weight: 500; color: var(--faint); }
+        .input[readonly] { cursor: default; color: var(--ink-2); background: rgba(3, 6, 16, .34); border-style: dashed; }
+        .input[readonly]:focus { box-shadow: inset 0 1px 3px rgba(0, 0, 0, .4); border-color: rgba(255, 255, 255, .26); }
+        .input.is-invalid, .select.is-invalid, .textarea.is-invalid { border-color: rgba(var(--rose-rgb), .9); box-shadow: 0 0 0 3px rgba(var(--rose-rgb), .16), inset 0 1px 3px rgba(0, 0, 0, .4); }
+        .field-foot { display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem; margin-top: .3rem; min-height: 1rem; }
+        .field-err { flex: 1; font-size: .6875rem; font-weight: 700; color: #fda4af; }
+        .field-err::before { content: "\f071"; font-family: "Font Awesome 6 Free"; font-weight: 900; margin-right: .35rem; font-size: .6rem; }
+        .counter { margin-left: auto; flex: none; font-family: var(--font-mono); font-size: .625rem; color: var(--faint); }
+        .counter.is-short { color: #fcd34d; }
+        .counter.is-ok { color: #6ee7b7; }
+        .notice { display: flex; align-items: flex-start; gap: .75rem; padding: .8rem 1rem; border-radius: .9rem; font-size: .75rem; line-height: 1.55; color: var(--ink-2); background: rgba(var(--n), .12); border: 1px solid rgba(var(--n), .4); --n: var(--blue-rgb); --nl: #93c5fd; }
+        .notice > i { margin-top: .15rem; font-size: .9rem; color: var(--nl); }
+        .notice b { color: #fff; }
+        .notice .btn { margin-top: .55rem; }
+        .notice.rose { --n: var(--rose-rgb); --nl: #fda4af; }
+        .notice.amber { --n: var(--amber-rgb); --nl: #fcd34d; }
+        .notice.green { --n: var(--green-rgb); --nl: #6ee7b7; }
+        .notice.slate { --n: var(--slate-rgb); --nl: #cbd5e1; }
+        .notice-sol { white-space: pre-wrap; color: #e7fbf2; }
+
+        .cat-tips { display: grid; gap: .35rem; padding: .7rem .9rem; border-radius: .85rem; font-size: .6875rem; color: var(--ink-2); background: rgba(var(--blue-rgb), .09); border: 1px solid rgba(var(--blue-rgb), .28); }
+        .cat-tips b { display: flex; align-items: center; gap: .45rem; font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #93c5fd; }
+        .cat-tips ul { display: grid; gap: .2rem; }
+        .cat-tips li { display: flex; gap: .5rem; line-height: 1.5; }
+        .cat-tips li::before { content: ""; flex: none; width: .3rem; height: .3rem; margin-top: .5rem; border-radius: 50%; background: #93c5fd; }
+        .modal-form { max-width: 44rem; }
+        /* Cancelar/Enviar ficam sempre visíveis, mesmo com o formulário rolando em telas baixas */
+        .modal-form .modal-foot { position: sticky; bottom: -1.5rem; z-index: 3; margin: .2rem -1.5rem -1.5rem; padding: .9rem 1.5rem; background: rgba(6, 9, 22, .94); border-top: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        @media (max-width: 767px) { .modal-form .modal-foot { bottom: -1.5rem; margin-left: -1.1rem; margin-right: -1.1rem; padding-left: 1.1rem; padding-right: 1.1rem; } }
+        .modal-foot .hint { margin-right: auto; align-self: center; font-size: .6875rem; color: var(--faint); }
+        .modal-foot .hint kbd { padding: .05rem .35rem; border-radius: .35rem; font-family: var(--font-mono); font-size: .625rem; color: var(--ink-2); background: rgba(255, 255, 255, .1); border: 1px solid var(--line); }
+
+        .success-panel { display: grid; gap: 1.1rem; justify-items: center; text-align: center; padding: 1.2rem .5rem .4rem; }
+        .success-ico { width: 4.2rem; height: 4.2rem; display: grid; place-items: center; border-radius: 50%; font-size: 1.8rem; color: #032a1c; background: linear-gradient(145deg, #6ee7b7, #10b981 58%, #059669); box-shadow: 0 14px 34px -10px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .55); }
+        .success-panel h4 { font-family: var(--font-display); font-weight: 500; font-size: 1.7rem; line-height: 1.1; letter-spacing: -.02em; }
+        .success-panel p { max-width: 30rem; font-size: .8125rem; color: var(--ink-2); }
+        .proto-big { display: inline-flex; align-items: center; gap: .8rem; padding: .7rem .8rem .7rem 1.2rem; border-radius: 1rem; background: rgba(3, 6, 16, .55); border: 1px solid rgba(var(--blue-rgb), .5); box-shadow: 0 0 40px -12px rgba(var(--blue-rgb), .7), inset 0 1px 0 rgba(255, 255, 255, .12); }
+        .proto-big b { font-family: var(--font-mono); font-size: 1.35rem; font-weight: 700; letter-spacing: .02em; color: #fff; }
+        .success-grid { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; text-align: left; }
+        .success-grid > div { padding: .7rem .85rem; border-radius: .85rem; background: rgba(3, 6, 16, .45); border: 1px solid var(--line-soft); }
+        .success-grid small { display: block; margin-bottom: .15rem; font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+        .success-grid span { font-size: .75rem; font-weight: 700; color: #fff; }
+        .success-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; }
+
+        .attention { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: 1rem 1.2rem; border-radius: 1.1rem; background: linear-gradient(135deg, rgba(var(--amber-rgb), .2), rgba(var(--amber-rgb), .06)), rgba(8, 12, 28, .6); border: 1px solid rgba(var(--amber-rgb), .55); box-shadow: 0 0 44px -16px rgba(var(--amber-rgb), .6), inset 0 1px 0 rgba(255, 255, 255, .15); }
+        .attention > div { display: flex; align-items: center; gap: .9rem; min-width: 0; }
+        .attention i.big { width: 2.5rem; height: 2.5rem; flex: none; display: grid; place-items: center; border-radius: .85rem; font-size: 1rem; color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); }
+        .attention b { display: block; font-size: .875rem; color: #fff; }
+        .attention span { font-size: .75rem; color: var(--ink-2); }
+
+        /* Abas e filtros rápidos */
+        .fchips { display: flex; flex-wrap: wrap; gap: .5rem; }
+        .fchip { display: inline-flex; align-items: center; gap: .5rem; height: 2.2rem; padding: 0 .9rem; border-radius: 99px; font-size: .75rem; font-weight: 700; color: var(--ink-2); background: rgba(255, 255, 255, .06); border: 1px solid var(--line); transition: background .18s, color .18s, border-color .18s, box-shadow .18s; }
+        .fchip:hover { background: rgba(255, 255, 255, .12); color: #fff; }
+        .fchip b { min-width: 1.35rem; padding: .05rem .4rem; border-radius: 99px; text-align: center; font-family: var(--font-mono); font-size: .625rem; color: #fff; background: rgba(255, 255, 255, .14); }
+        .fchip.is-on { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; box-shadow: 0 8px 18px -8px rgba(245, 158, 11, .8), inset 0 1px 0 rgba(255, 255, 255, .5); }
+        .fchip.is-on b { color: #261800; background: rgba(0, 0, 0, .14); }
+        .fchips.blue .fchip.is-on { color: #fff; background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 8px 18px -8px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
+        .fchips.blue .fchip.is-on b { color: #fff; background: rgba(0, 0, 0, .2); }
+        .fchip.warn:not(.is-on) b { color: #fcd34d; background: rgba(var(--amber-rgb), .2); }
+        .fchip.late:not(.is-on) b { color: #fda4af; background: rgba(var(--rose-rgb), .2); }
+        .toolbar.stacked { display: grid; gap: .9rem; }
+        .toolbar-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; }
+        .sync-stamp { display: inline-flex; align-items: center; gap: .5rem; font-size: .6875rem; font-family: var(--font-mono); color: var(--muted); }
+        .sync-stamp .dotlive { width: .45rem; height: .45rem; border-radius: 50%; background: #34d399; box-shadow: 0 0 .5rem rgba(52, 211, 153, .9); }
+        .sync-stamp.is-off .dotlive { background: #fb7185; box-shadow: 0 0 .5rem rgba(251, 113, 133, .9); }
+        .spin { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .tbl tbody tr.is-click { cursor: pointer; }
+        .tbl tbody tr.is-hot td:first-child { box-shadow: inset 3px 0 0 #fb7185; }
+        .tbl tbody tr.is-wait td:first-child { box-shadow: inset 3px 0 0 #fbbf24; }
+        .row-acts { display: inline-flex; align-items: center; justify-content: flex-end; gap: .4rem; }
+        .btn-take { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; }
+        .btn-take:hover { color: #261800; background: linear-gradient(145deg, #fef3c7, #fbbf24); }
+        .t-flag { display: inline-flex; align-items: center; gap: .3rem; margin-left: .5rem; padding: .05rem .45rem; border-radius: 99px; font-size: .5625rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; vertical-align: middle; }
+        .t-flag.reply { color: #7dd3fc; background: rgba(var(--sky-rgb), .16); border: 1px solid rgba(var(--sky-rgb), .45); }
+        .t-flag.you { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); }
+
+        /* Janela do chamado: andamento e resumo */
+        .ws-id.blue { color: #93c5fd; background: rgba(var(--blue-rgb), .16); border-color: rgba(var(--blue-rgb), .4); }
+        .stepper { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .3rem; }
+        .step { position: relative; display: grid; justify-items: center; gap: .4rem; padding-top: .1rem; text-align: center; font-size: .625rem; font-weight: 700; color: var(--faint); }
+        .step i { position: relative; z-index: 1; width: 2rem; height: 2rem; display: grid; place-items: center; border-radius: 50%; font-size: .75rem; background: rgba(3, 6, 16, .7); border: 1px solid var(--line); }
+        .step::before { content: ""; position: absolute; top: 1rem; right: 50%; width: 100%; height: 2px; background: var(--line); }
+        .step:first-child::before { display: none; }
+        .step.is-done { color: var(--ink-2); }
+        .step.is-done i { color: #032a1c; background: linear-gradient(145deg, #6ee7b7, #10b981); border-color: transparent; }
+        .step.is-done::before, .step.is-now::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .step.is-now { color: #fff; }
+        .step.is-now i { color: #fff; background: linear-gradient(145deg, #2f6ff2, #1d4ed8); border-color: rgba(147, 197, 253, .7); box-shadow: 0 0 0 .3rem rgba(var(--blue-rgb), .2); }
+        .step.is-wait i { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; box-shadow: 0 0 0 .3rem rgba(var(--amber-rgb), .2); }
+        .step.is-off i { color: #fda4af; background: rgba(var(--rose-rgb), .14); border-color: rgba(var(--rose-rgb), .5); }
+        .sumlist { display: grid; gap: 0; }
+        .sumlist > div { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem 0; border-bottom: 1px dashed var(--line-soft); font-size: .75rem; }
+        .sumlist > div:last-child { border-bottom: 0; }
+        .sumlist dt { flex: none; color: var(--muted); font-weight: 600; }
+        .sumlist dd { min-width: 0; text-align: right; font-weight: 700; color: #fff; overflow-wrap: anywhere; }
+        .sumlist dd.mono { font-size: .6875rem; font-weight: 600; color: var(--ink-2); }
+        .ws-right .btn-block + .btn-block { margin-top: .5rem; }
+        .btn-danger { color: #fda4af; background: rgba(var(--rose-rgb), .1); border-color: rgba(var(--rose-rgb), .4); }
+        .btn-danger:hover { color: #fff; background: rgba(var(--rose-rgb), .3); }
+        .btn-danger.is-armed { color: #fff; background: linear-gradient(145deg, #f43f5e, #be123c); border-color: transparent; }
+        .req-card { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem .9rem; padding: .8rem 1rem; border-radius: .9rem; background: rgba(3, 6, 16, .45); border: 1px solid var(--line-soft); }
+        .req-card > div { min-width: 0; }
+        .req-card small { display: block; font-size: .5625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+        .req-card span, .req-card a { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .75rem; font-weight: 600; color: var(--ink); }
+        .req-card a { color: #93c5fd; }
+        .req-card a:hover { text-decoration: underline; }
+        .ws-left .ws-desc-wrap { display: grid; gap: .7rem; }
+        .ws-left > .notice { margin: 1rem 1.2rem 0; }
+        .savestate { display: inline-flex; align-items: center; gap: .45rem; min-height: 1.1rem; font-size: .6875rem; font-weight: 600; color: var(--faint); }
+        .savestate.is-saving { color: #fcd34d; }
+        .savestate.is-saved { color: #6ee7b7; }
+        .savestate.is-error { color: #fda4af; }
+        .ws-right .eyebrow { display: flex; justify-content: space-between; }
+        .props .field label small { font-weight: 500; color: var(--faint); }
+        .ws-status-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+
+        /* Conversa (histórico): balões, notas internas e linhas automáticas */
+        .tl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .75rem; padding: 0; background: none; border: 0; border-radius: 0; }
+        .tl.tech, .tl.internal { background: none; border-color: transparent; color: inherit; }
+        .tl-av { width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border-radius: .75rem; font-size: .6875rem; font-weight: 800; color: var(--ink); background: rgba(255, 255, 255, .1); border: 1px solid var(--line); }
+        .tl.tech .tl-av { color: #fff; background: linear-gradient(145deg, #2f6ff2, #1d4ed8); border-color: rgba(147, 197, 253, .6); }
+        .tl.internal .tl-av { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; }
+        .tl-bubble { min-width: 0; padding: .75rem .95rem; border-radius: .2rem 1rem 1rem 1rem; background: rgba(3, 6, 16, .55); border: 1px solid var(--line-soft); color: var(--ink-2); }
+        .tl.tech .tl-bubble { background: linear-gradient(145deg, rgba(var(--blue-rgb), .17), rgba(var(--blue-rgb), .05)); border-color: rgba(var(--blue-rgb), .4); color: #e5edfb; }
+        .tl.internal .tl-bubble { background: linear-gradient(145deg, rgba(var(--amber-rgb), .18), rgba(var(--amber-rgb), .05)); border-color: rgba(var(--amber-rgb), .45); color: #fde9b0; }
+        .tl-head { margin-bottom: .3rem; font-weight: 700; }
+        .tl-head .who { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; min-width: 0; color: #fff; }
+        .tl-head .role { padding: .02rem .45rem; border-radius: 99px; font-size: .5625rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: rgba(255, 255, 255, .08); }
+        .tl.tech .tl-head .role { color: #93c5fd; background: rgba(var(--blue-rgb), .18); }
+        .tl.internal .tl-head .role { color: #fcd34d; background: rgba(var(--amber-rgb), .2); }
+        .tl-ev { display: flex; align-items: center; justify-content: center; gap: .6rem; padding: .1rem 0; font-size: .6875rem; color: var(--muted); text-align: center; }
+        .tl-ev::before, .tl-ev::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
+        .tl-ev span { max-width: 80%; }
+        .tl-ev i { margin-right: .35rem; font-size: .6rem; color: var(--faint); }
+        .tl-ev.internal span { color: #fcd34d; }
+        .tl-ev time { font-family: var(--font-mono); font-size: .5625rem; color: var(--faint); white-space: nowrap; }
+        .ws-reply textarea { min-height: 4.4rem; }
+        .reply-foot { display: flex; align-items: center; justify-content: space-between; gap: .7rem; flex-wrap: wrap; }
+        .reply-foot .btns { display: inline-flex; flex-wrap: wrap; gap: .5rem; margin-left: auto; }
+        .reply-foot .kb { font-size: .625rem; color: var(--faint); }
+        .reply-foot .kb kbd { padding: .05rem .3rem; border-radius: .3rem; font-family: var(--font-mono); font-size: .5625rem; color: var(--ink-2); background: rgba(255, 255, 255, .1); border: 1px solid var(--line); }
+        .help-card { display: grid; gap: .45rem; }
+        .help-card li { display: flex; gap: .55rem; font-size: .6875rem; line-height: 1.5; color: var(--ink-2); }
+        .help-card li i { margin-top: .2rem; font-size: .6rem; color: #fcd34d; }
+        .help-card kbd { padding: .02rem .3rem; border-radius: .3rem; font-family: var(--font-mono); font-size: .5625rem; color: #fff; background: rgba(255, 255, 255, .12); border: 1px solid var(--line); }
+        @container (max-width: 62rem) { .req-card { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 899px) {
+            .req-card { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .modal-my .ws-right { border-top: 1px solid var(--line-soft); }
+        }
+        @media (max-width: 599px) {
+            .success-grid { grid-template-columns: 1fr; }
+            .proto-big b { font-size: 1.05rem; }
+            .fchip { height: 2.4rem; }
+            .row-acts .act-txt { display: none; }
+            .modal-foot .hint { display: none; }
+        }
+
+        /* Celular: cabeçalho das janelas mais limpo e listas em cartões (sem rolar de lado) */
+        @media (max-width: 767px) {
+            .modal-form .modal-head { flex-wrap: nowrap; }
+            .modal-form .modal-head .mh-l { flex: 1 1 auto; }
+            .modal-ws .modal-head { padding-top: .9rem; padding-bottom: .9rem; }
+            .modal-ws .modal-head .mh-l { flex-direction: column; align-items: flex-start; gap: .55rem; }
+            .ws-meta { gap: .4rem .5rem; }
+            .ws-meta .dotsep { display: none; }
+            .ws-meta .badge { max-width: 100%; white-space: normal; }
+            .ws-meta .mono { flex-basis: 100%; }
+            .tbl.cards { min-width: 0; width: 100%; }
+            .tbl.cards thead { display: none; }
+            .tbl.cards, .tbl.cards tbody { display: block; }
+            .tbl.cards tbody tr { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr) auto; grid-template-areas: "id id act" "title title title" "urg sla status"; align-items: center; gap: .55rem .7rem; padding: .9rem 1rem; border-bottom: 1px solid var(--line-soft); }
+            .tbl.cards tbody tr:has(td.c-chk) { grid-template-columns: 1.5rem 5.2rem minmax(0, 1fr) auto; grid-template-areas: "chk id id act" "chk title title title" "chk urg sla status"; }
+            .tbl.cards tbody tr:last-child { border-bottom: 0; }
+            .tbl.cards tbody tr.t-empty { display: block; padding: 0; }
+            .tbl.cards td { display: block; padding: 0; border: 0; min-width: 0; }
+            .tbl.cards td.c-chk { grid-area: chk; align-self: start; padding-top: .2rem; }
+            .tbl.cards td.c-urg { justify-self: start; }
+            .tbl.cards td.c-id { grid-area: id; }
+            .tbl.cards td.t-cell { grid-area: title; width: auto; max-width: none; min-width: 0; }
+            .tbl.cards td.c-urg { grid-area: urg; }
+            .tbl.cards td.c-sla { grid-area: sla; }
+            .tbl.cards td.c-status { grid-area: status; justify-self: end; text-align: right; }
+            .tbl.cards td.c-act { grid-area: act; }
+            .tbl.cards td.c-date, .tbl.cards td.col-tech { display: none; }
+            .tbl.cards .t-title { max-width: none; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+            .tbl.cards .tech-inline { display: block; text-align: right; }
+            .tbl.cards .sla-cell { white-space: normal; }
+        }
         /* ---------- Avisos ---------- */
         .toasts { position: fixed; z-index: 90; right: 1.25rem; bottom: 1.25rem; display: grid; gap: .6rem; max-width: 24rem; pointer-events: none; }
         .toast {
@@ -877,13 +1070,23 @@
                     </a>
                 </nav>
 
-                <!-- Base de conhecimento -->
-                <nav class="nav-group">
-                    <div class="nav-label">Base de Conhecimento</div>
-                    <a href="#" onclick="showToast('Base de Conhecimento GLPI atualizada com 42 artigos.', 'info'); return false;" class="nav-item">
-                        <span><i class="fa-solid fa-book"></i> Artigos &amp; FAQs</span>
-                    </a>
-                </nav>
+                <!-- Dicas rápidas -->
+                <div id="help-user" class="sb-card help-card">
+                    <div class="sb-card-t"><i class="fa-solid fa-lightbulb"></i> Atendimento mais rápido</div>
+                    <ul>
+                        <li><i class="fa-solid fa-check"></i>Cole a mensagem de erro exata</li>
+                        <li><i class="fa-solid fa-check"></i>Diga desde quando acontece</li>
+                        <li><i class="fa-solid fa-check"></i>Informe quantas pessoas são afetadas</li>
+                    </ul>
+                </div>
+                <div id="help-tech" class="sb-card help-card hidden">
+                    <div class="sb-card-t"><i class="fa-solid fa-keyboard"></i> Atalhos do atendimento</div>
+                    <ul>
+                        <li><i class="fa-solid fa-check"></i><span><kbd>Ctrl</kbd>+<kbd>Enter</kbd> registra a resposta</span></li>
+                        <li><i class="fa-solid fa-check"></i><span><kbd>Esc</kbd> fecha a janela</span></li>
+                        <li><i class="fa-solid fa-check"></i>Clique na linha para abrir o chamado</li>
+                    </ul>
+                </div>
 
                 <!-- Política de SLA (mesma regra gravada no chamado) -->
                 <div class="sb-card">
@@ -920,6 +1123,8 @@
                                 <i class="fa-solid fa-circle-plus"></i> Abrir Solicitação Geral
                             </button>
                         </div>
+
+                        <div id="user-attention" class="attention hidden" role="status"></div>
 
                         <div class="svc-grid">
                             <div class="glass svc" role="button" tabindex="0" onclick="openFormModal('Sistema Financeiro & ERP')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
@@ -972,7 +1177,7 @@
                             </div>
 
                             <div class="table-wrap">
-                                <table class="tbl">
+                                <table class="tbl cards">
                                     <thead>
                                         <tr>
                                             <th>Protocolo</th>
@@ -1013,12 +1218,14 @@
                                 </div>
                                 <div class="input-icon" style="flex:none; width:min(100%, 20rem);">
                                     <i class="fa-solid fa-magnifying-glass"></i>
-                                    <input type="text" id="user-search-input" onkeyup="renderUserTickets()" placeholder="Pesquisar protocolo ou título..." class="input focus-blue">
+                                    <input type="text" id="user-search-input" oninput="renderUserTickets()" placeholder="Pesquisar protocolo ou título..." class="input focus-blue">
                                 </div>
                             </div>
 
+                            <div id="user-chips" class="fchips blue" style="padding:0 .1rem;"></div>
+
                             <div class="table-wrap">
-                                <table class="tbl">
+                                <table class="tbl cards">
                                     <thead>
                                         <tr>
                                             <th>Protocolo</th>
@@ -1062,7 +1269,7 @@
 
                         <div class="kpis">
                             <div class="glass kpi slate">
-                                <div class="kpi-label">Total Ativos</div>
+                                <div class="kpi-label">Total na Base</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-layer-group"></i></div>
                                 <div id="kpi-tech-total" class="kpi-value">0</div>
                                 <div class="kpi-sub">Todos na base</div>
@@ -1086,7 +1293,7 @@
                                 <div class="kpi-label"><span class="pulse-dot"></span> Críticos</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-triangle-exclamation"></i></div>
                                 <div id="kpi-tech-critical" class="kpi-value">0</div>
-                                <div class="kpi-sub">SLA prioritário</div>
+                                <div id="kpi-tech-critical-sub" class="kpi-sub">SLA prioritário</div>
                             </div>
 
                             <div class="glass kpi green">
@@ -1126,7 +1333,7 @@
                             </div>
 
                             <div class="table-wrap">
-                                <table class="tbl">
+                                <table class="tbl cards">
                                     <thead>
                                         <tr>
                                             <th>Protocolo</th>
@@ -1153,46 +1360,50 @@
                                 <p id="tech-queue-sub">Todos os chamados registrados: filtre, assuma e atenda direto da lista.</p>
                             </div>
                             <div class="ph-actions">
+                                <span id="tech-sync-stamp" class="sync-stamp"><span class="dotlive"></span><span id="tech-sync-text">Atualizando...</span></span>
+                                <button type="button" id="btn-refresh-queue" onclick="refreshNow()" class="btn btn-ghost" title="Atualizar agora"><i class="fa-solid fa-rotate"></i> Atualizar</button>
                                 <span class="count-chip"><i class="fa-solid fa-ticket"></i> <b id="tech-queue-count">0</b> <span id="tech-queue-count-label">chamados</span></span>
                             </div>
                         </div>
 
-                        <div class="glass toolbar">
-                            <div class="toolbar-l">
-                                <div class="input-icon">
-                                    <i class="fa-solid fa-filter"></i>
-                                    <input type="text" id="tech-queue-search" onkeyup="renderTechQueue()" placeholder="Filtrar por protocolo, solicitante ou título..." class="input">
+                        <div class="glass toolbar stacked">
+                            <div id="tech-chips" class="fchips" aria-label="Filtros rápidos da fila"></div>
+                            <div class="toolbar-row">
+                                <div class="toolbar-l">
+                                    <div class="input-icon">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <input type="text" id="tech-queue-search" oninput="renderTechQueue()" placeholder="Buscar por protocolo, solicitante, e-mail, título ou técnico..." class="input">
+                                    </div>
+
+                                    <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por prioridade">
+                                        <option value="ALL">Todas Prioridades</option>
+                                        <option value="Crítica">Crítica</option>
+                                        <option value="Alta">Alta</option>
+                                        <option value="Média">Média</option>
+                                        <option value="Baixa">Baixa</option>
+                                    </select>
+
+                                    <select id="tech-sort" onchange="renderTechQueue()" class="select select-sm" aria-label="Ordenar a fila">
+                                        <option value="urgent">Mais urgentes primeiro</option>
+                                        <option value="sla">Prazo de SLA mais próximo</option>
+                                        <option value="new">Mais recentes</option>
+                                        <option value="old">Mais antigos</option>
+                                    </select>
                                 </div>
 
-                                <select id="tech-filter-status" onchange="renderTechQueue()" class="select select-sm">
-                                    <option value="ALL">Todos os Status</option>
-                                    <option value="Novo">Novo (Sem Técnico)</option>
-                                    <option value="Em Atendimento">Em Atendimento</option>
-                                    <option value="Pendente Cliente">Pendente Resposta Cliente</option>
-                                    <option value="Resolvido">Resolvido</option>
-                                </select>
-
-                                <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm">
-                                    <option value="ALL">Todas Prioridades</option>
-                                    <option value="Crítica">Crítica</option>
-                                    <option value="Alta">Alta</option>
-                                    <option value="Média">Média</option>
-                                    <option value="Baixa">Baixa</option>
-                                </select>
+                                <button type="button" onclick="assignBulkToMe()" class="btn btn-ghost">
+                                    <i class="fa-solid fa-hand-holding-hand c-amber"></i> Assumir Selecionados
+                                </button>
                             </div>
-
-                            <button type="button" onclick="assignBulkToMe()" class="btn btn-ghost">
-                                <i class="fa-solid fa-hand-holding-hand c-amber"></i> Assumir Selecionados
-                            </button>
                         </div>
 
                         <div class="glass" style="overflow:hidden;">
                             <div class="table-wrap">
-                                <table class="tbl">
+                                <table class="tbl cards">
                                     <thead>
                                         <tr>
                                             <th class="ta-c" style="width:3rem;">
-                                                <input type="checkbox" onchange="toggleSelectAllQueue(this)" aria-label="Selecionar todos">
+                                                <input type="checkbox" id="queue-select-all" onchange="toggleSelectAllQueue(this)" aria-label="Selecionar todos">
                                             </th>
                                             <th>Protocolo</th>
                                             <th>Solicitação / Solicitante</th>
@@ -1217,7 +1428,7 @@
     </div>
 
 
-    <!-- JANELA A: ABERTURA DE CHAMADO PELO CLIENTE -->
+    <!-- JANELA A: ABERTURA DE CHAMADO PELO CLIENTE (formulário guiado + tela de confirmação com o protocolo) -->
     <div id="modal-form" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-form-title">
         <div class="slab modal modal-form">
             <div class="modal-head">
@@ -1225,7 +1436,7 @@
                     <div class="mh-ico"><i class="fa-solid fa-pen-to-square"></i></div>
                     <div>
                         <h3 id="modal-form-title" class="mh-title">Abrir Solicitação de Suporte</h3>
-                        <p class="mh-sub">Preencha os detalhes para envio ao Service Desk</p>
+                        <p id="modal-form-sub" class="mh-sub">Preencha os detalhes para envio ao Service Desk</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeModal('modal-form')" class="btn btn-icon" aria-label="Fechar">
@@ -1233,22 +1444,24 @@
                 </button>
             </div>
 
-            <form onsubmit="handleCreateTicket(event)" class="modal-body">
+            <form id="form-ticket" onsubmit="handleCreateTicket(event)" class="modal-body" novalidate>
+                <div id="form-banner" class="notice rose hidden" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><div id="form-banner-text"></div></div>
+
                 <div class="form-grid cols-2">
                     <div class="field">
-                        <label for="form-req-name">Solicitante</label>
-                        <input type="text" id="form-req-name" required class="input focus-blue">
+                        <label for="form-req-name"><i class="fa-solid fa-lock lk"></i>Solicitante</label>
+                        <input type="text" id="form-req-name" readonly class="input">
                     </div>
                     <div class="field">
-                        <label for="form-req-email">E-mail Corporativo</label>
-                        <input type="email" id="form-req-email" required class="input focus-blue">
+                        <label for="form-req-email"><i class="fa-solid fa-lock lk"></i>E-mail da conta</label>
+                        <input type="email" id="form-req-email" readonly class="input">
                     </div>
                 </div>
 
                 <div class="form-grid cols-2">
                     <div class="field">
                         <label for="form-category">Categoria do Incidente *</label>
-                        <select id="form-category" onchange="calculateSLA()" required class="select focus-blue">
+                        <select id="form-category" onchange="onFormCategoryChange()" class="select focus-blue">
                             <option value="Sistema Financeiro & ERP">Sistema Financeiro &amp; ERP</option>
                             <option value="Gestão de Acessos & Reset de Senha">Gestão de Acessos &amp; Reset de Senha</option>
                             <option value="Suporte Técnico & Infraestrutura">Suporte Técnico &amp; Infraestrutura</option>
@@ -1258,23 +1471,33 @@
 
                     <div class="field">
                         <label for="form-urgency">Impacto / Urgência *</label>
-                        <select id="form-urgency" onchange="calculateSLA()" required class="select focus-blue">
-                            <option value="Baixa">Baixa - Dúvidas ou Operação Normal</option>
-                            <option value="Média" selected>Média - Impacto Parcial (Contornável)</option>
-                            <option value="Alta">Alta - Impacto Relevante no Setor</option>
-                            <option value="Crítica">Crítica - Parada Total de Sistema</option>
+                        <select id="form-urgency" onchange="calculateSLA()" class="select focus-blue">
+                            <option value="Baixa">Baixa · dúvida ou operação normal</option>
+                            <option value="Média" selected>Média · impacto parcial, dá para contornar</option>
+                            <option value="Alta">Alta · impacto relevante no setor</option>
+                            <option value="Crítica">Crítica · parada total de sistema</option>
                         </select>
                     </div>
                 </div>
 
+                <div id="form-tips" class="cat-tips"></div>
+
                 <div class="field">
-                    <label for="form-subject">Título Resumido da Solicitação *</label>
-                    <input type="text" id="form-subject" required placeholder="Ex: Lentidão extrema ao emitir relatórios de faturamento" class="input focus-blue">
+                    <label for="form-subject">Assunto *</label>
+                    <input type="text" id="form-subject" maxlength="200" autocomplete="off" oninput="onFormInput()" class="input focus-blue" placeholder="Ex: Lentidão ao emitir relatórios de faturamento">
+                    <div class="field-foot"><p id="err-subject" class="field-err hidden"></p><span id="cnt-subject" class="counter">0/200</span></div>
                 </div>
 
                 <div class="field">
-                    <label for="form-desc">Descrição Detalhada do Problema *</label>
-                    <textarea id="form-desc" rows="4" required placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..." class="textarea focus-blue"></textarea>
+                    <label for="form-desc">Descrição detalhada *</label>
+                    <textarea id="form-desc" rows="5" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
+                    <div class="field-foot"><p id="err-desc" class="field-err hidden"></p><span id="cnt-desc" class="counter">mínimo de 10 caracteres</span></div>
+                </div>
+
+                <div class="field">
+                    <label for="form-req-phone">Telefone para contato <span class="opt">(opcional)</span></label>
+                    <input type="tel" id="form-req-phone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="(62) 99999-9999" oninput="maskPhoneInput(this)" class="input focus-blue">
+                    <div class="field-foot"><p id="err-phone" class="field-err hidden"></p></div>
                 </div>
 
                 <div class="sla-box">
@@ -1296,12 +1519,112 @@
                 </div>
 
                 <div class="modal-foot">
+                    <span class="hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> envia</span>
                     <button type="button" onclick="closeModal('modal-form')" class="btn btn-ghost">Cancelar</button>
                     <button type="submit" id="btn-submit-ticket" class="btn btn-blue">
                         <i class="fa-solid fa-paper-plane"></i> Enviar Solicitação
                     </button>
                 </div>
             </form>
+
+            <!-- Confirmação: o protocolo só aparece depois que o servidor confirmou o registro -->
+            <div id="form-success" class="modal-body hidden">
+                <div class="success-panel">
+                    <div class="success-ico"><i class="fa-solid fa-check"></i></div>
+                    <div>
+                        <h4 id="success-title">Chamado registrado!</h4>
+                        <p id="success-sub">Guarde o protocolo: com ele você acompanha o andamento a qualquer momento em "Meus Chamados".</p>
+                    </div>
+                    <div class="proto-big">
+                        <b id="success-protocol" class="mono">OS-000000-XXXX</b>
+                        <button type="button" id="btn-copy-protocol" onclick="copyProtocol(document.getElementById('success-protocol').textContent, this)" class="btn btn-ghost btn-sm"><i class="fa-regular fa-copy"></i> Copiar</button>
+                    </div>
+                    <div class="success-grid">
+                        <div><small>Categoria</small><span id="success-cat">—</span></div>
+                        <div><small>Urgência</small><span id="success-urg">—</span></div>
+                        <div><small>Previsão de atendimento</small><span id="success-sla">—</span></div>
+                    </div>
+                    <div class="success-actions">
+                        <button type="button" onclick="viewCreatedTicket()" class="btn btn-blue"><i class="fa-solid fa-eye"></i> Ver meu chamado</button>
+                        <button type="button" onclick="openFormModal()" class="btn btn-ghost"><i class="fa-solid fa-circle-plus"></i> Abrir outro</button>
+                        <button type="button" onclick="closeModal('modal-form')" class="btn btn-ghost">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JANELA C: ACOMPANHAMENTO DO CHAMADO PELO SOLICITANTE (andamento, conversa, responder, reabrir, cancelar) -->
+    <div id="modal-my-ticket" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="my-title">
+        <div class="slab modal modal-ws modal-my">
+            <div class="modal-head">
+                <div class="mh-l">
+                    <span id="my-id" class="ws-id blue">OS-000000-XXXX</span>
+                    <div style="min-width:0;">
+                        <h3 id="my-title" class="mh-title">Chamado</h3>
+                        <div class="ws-meta">
+                            <span id="my-status-badge"></span>
+                            <span class="dotsep">•</span>
+                            <span id="my-date" class="mono">Data</span>
+                            <span class="dotsep">•</span>
+                            <span id="my-sla" class="badge b-green"><i class="fa-solid fa-stopwatch"></i> SLA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mh-actions" style="display:flex; align-items:center; gap:.7rem;">
+                    <button type="button" onclick="copyProtocol(document.getElementById('my-id').textContent, this)" class="btn btn-ghost btn-sm"><i class="fa-regular fa-copy"></i> Copiar protocolo</button>
+                    <button type="button" onclick="closeModal('modal-my-ticket')" class="btn btn-icon" aria-label="Fechar">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ws-body">
+                <div class="ws-left">
+                    <div id="my-notice"></div>
+
+                    <div class="ws-desc-wrap">
+                        <div class="eyebrow"><i class="fa-solid fa-circle-info"></i> O que você pediu</div>
+                        <div id="my-desc" class="ws-desc"></div>
+                    </div>
+
+                    <div id="my-timeline" class="ws-timeline" aria-live="polite"><!-- JS --></div>
+
+                    <div id="my-reply" class="ws-reply">
+                        <label for="my-reply-text" class="lbl" style="margin-bottom:0;">Responder à equipe</label>
+                        <textarea id="my-reply-text" rows="3" maxlength="2000" oninput="onMyReplyInput()" placeholder="Escreva a sua mensagem, informação pedida ou dúvida..." class="textarea focus-blue"></textarea>
+                        <p id="my-reply-err" class="field-err hidden"></p>
+                        <div class="reply-foot">
+                            <span class="kb"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> envia · <span id="my-reply-count" class="mono">0/2000</span></span>
+                            <div class="btns">
+                                <button type="button" id="btn-my-send" onclick="sendMyReply()" class="btn btn-blue"><i class="fa-solid fa-paper-plane"></i> Enviar mensagem</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="my-reopen" class="ws-reply hidden">
+                        <label for="my-reopen-text" class="lbl" style="margin-bottom:0;">O problema voltou ou não foi resolvido?</label>
+                        <textarea id="my-reopen-text" rows="3" maxlength="2000" placeholder="Explique o que ainda não funciona (mínimo de 5 caracteres)..." class="textarea focus-blue"></textarea>
+                        <p id="my-reopen-err" class="field-err hidden"></p>
+                        <div class="reply-foot">
+                            <span class="kb" id="my-reopen-hint"></span>
+                            <div class="btns">
+                                <button type="button" id="btn-my-reopen" onclick="reopenMyTicket()" class="btn btn-amber"><i class="fa-solid fa-rotate-left"></i> Reabrir chamado</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ws-right">
+                    <div class="eyebrow"><span><i class="fa-solid fa-route"></i> Andamento</span></div>
+                    <div id="my-stepper" class="stepper"></div>
+                    <dl id="my-summary" class="sumlist"></dl>
+                    <div id="my-cancel-wrap" class="hidden">
+                        <button type="button" id="btn-my-cancel" onclick="cancelMyTicket()" class="btn btn-danger btn-block"><i class="fa-solid fa-ban"></i> Cancelar este chamado</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1316,10 +1639,11 @@
                     <div style="min-width:0;">
                         <h3 id="workspace-title" class="mh-title">Título do Incidente</h3>
                         <div class="ws-meta">
-                            <b id="workspace-requester">Solicitante</b>
-                            <span>•</span>
+                            <span id="workspace-status-badge"></span>
+                            <span id="workspace-urgency-badge"></span>
+                            <span class="dotsep">•</span>
                             <span id="workspace-date" class="mono">Data</span>
-                            <span>•</span>
+                            <span class="dotsep">•</span>
                             <span id="workspace-sla" class="badge b-green"><i class="fa-solid fa-stopwatch"></i> SLA</span>
                         </div>
                     </div>
@@ -1337,15 +1661,23 @@
 
             <div class="ws-body">
 
-                <!-- Coluna esquerda: descrição, histórico e resposta -->
+                <!-- Coluna esquerda: solicitante, descrição, histórico e resposta -->
                 <div class="ws-left">
 
                     <div class="ws-desc-wrap">
-                        <div class="eyebrow"><i class="fa-solid fa-circle-info"></i> Descrição do Cliente</div>
-                        <div id="workspace-desc" class="ws-desc"></div>
+                        <div class="req-card">
+                            <div><small>Solicitante</small><span id="workspace-requester">—</span></div>
+                            <div><small>E-mail</small><a id="workspace-email" href="#">—</a></div>
+                            <div><small>Telefone</small><span id="workspace-phone">—</span></div>
+                            <div><small>Canal</small><span id="workspace-channel">—</span></div>
+                        </div>
+                        <div>
+                            <div class="eyebrow"><i class="fa-solid fa-circle-info"></i> Descrição do Cliente</div>
+                            <div id="workspace-desc" class="ws-desc"></div>
+                        </div>
                     </div>
 
-                    <div id="workspace-timeline" class="ws-timeline"><!-- JS --></div>
+                    <div id="workspace-timeline" class="ws-timeline" aria-live="polite"><!-- JS --></div>
 
                     <div class="ws-reply">
                         <div class="ws-reply-bar">
@@ -1360,47 +1692,57 @@
 
                             <select id="select-canned-response" onchange="applyCannedResponse(this.value); this.value='';" class="select select-sm" aria-label="Respostas rápidas">
                                 <option value="">Respostas Rápidas...</option>
-                                <option value="SOLICITAR_PRINTS">Solicitar Print do Erro</option>
-                                <option value="RESET_EFETUADO">Senha Resetada</option>
-                                <option value="RESOLVIDO">Chamado Resolvido</option>
+                                <option value="EM_ANALISE">Em análise</option>
+                                <option value="SOLICITAR_INFO">Solicitar mais informações</option>
+                                <option value="SOLICITAR_PRINTS">Solicitar print do erro</option>
+                                <option value="RESET_EFETUADO">Senha resetada</option>
+                                <option value="ACOMPANHAMENTO">Em acompanhamento</option>
+                                <option value="RESOLVIDO">Chamado resolvido</option>
                             </select>
                         </div>
 
-                        <textarea id="workspace-reply-text" rows="3" placeholder="Digite sua resposta ou mensagem..." class="textarea"></textarea>
+                        <textarea id="workspace-reply-text" rows="3" maxlength="2000" oninput="onWsReplyInput()" placeholder="Digite sua resposta ou mensagem..." class="textarea"></textarea>
 
-                        <div style="display:flex; justify-content:flex-end;">
-                            <button type="button" onclick="submitTechReply()" class="btn btn-green">
-                                <i class="fa-solid fa-paper-plane"></i> Registrar Interação
-                            </button>
+                        <div class="reply-foot">
+                            <span class="kb"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> envia · <span id="ws-reply-count" class="mono">0/2000</span></span>
+                            <div class="btns">
+                                <button type="button" id="btn-reply-wait" onclick="submitTechReply(true)" class="btn btn-ghost" title="Envia a resposta e deixa o chamado como 'Pendente Cliente'">
+                                    <i class="fa-solid fa-hourglass-half c-amber"></i> Enviar e aguardar cliente
+                                </button>
+                                <button type="button" id="btn-reply-send" onclick="submitTechReply(false)" class="btn btn-green">
+                                    <i class="fa-solid fa-paper-plane"></i> Registrar Interação
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Coluna direita: propriedades GLPI -->
                 <div class="ws-right">
-                    <div class="eyebrow"><i class="fa-solid fa-sliders"></i> Propriedades GLPI</div>
+                    <div class="eyebrow"><span><i class="fa-solid fa-sliders"></i> Propriedades GLPI</span><span id="ws-save-state" class="savestate" aria-live="polite"></span></div>
 
                     <div class="props">
                         <div class="field">
                             <label for="prop-status">Status Atual</label>
-                            <select id="prop-status" onchange="updateTicketProperties()" class="select">
+                            <select id="prop-status" onchange="onPropChange('status')" class="select">
                                 <option value="Novo">Novo (Sem Técnico)</option>
                                 <option value="Em Atendimento">Em Atendimento</option>
                                 <option value="Pendente Cliente">Pendente Resposta Cliente</option>
                                 <option value="Resolvido">Resolvido</option>
+                                <option value="Cancelado">Cancelado</option>
                             </select>
                         </div>
 
                         <div class="field">
                             <label for="prop-technician">Técnico / Administrador Responsável</label>
-                            <select id="prop-technician" onchange="updateTicketProperties()" class="select">
+                            <select id="prop-technician" onchange="onPropChange('technician')" class="select">
                                 <option value="Não Atribuído">-- Não Atribuído --</option>
                             </select>
                         </div>
 
                         <div class="field">
                             <label for="prop-category">Categoria ITSM</label>
-                            <select id="prop-category" onchange="updateTicketProperties()" class="select">
+                            <select id="prop-category" onchange="onPropChange('category')" class="select">
                                 <option value="Sistema Financeiro & ERP">Sistema Financeiro &amp; ERP</option>
                                 <option value="Gestão de Acessos & Reset de Senha">Gestão de Acessos &amp; Reset de Senha</option>
                                 <option value="Suporte Técnico & Infraestrutura">Suporte Técnico &amp; Infraestrutura</option>
@@ -1410,8 +1752,8 @@
 
                         <div class="row2">
                             <div class="field">
-                                <label for="prop-urgency">Urgência</label>
-                                <select id="prop-urgency" onchange="updateTicketProperties()" class="select">
+                                <label for="prop-urgency">Urgência <small>(muda o SLA)</small></label>
+                                <select id="prop-urgency" onchange="onPropChange('urgency')" class="select">
                                     <option value="Baixa">Baixa</option>
                                     <option value="Média">Média</option>
                                     <option value="Alta">Alta</option>
@@ -1420,13 +1762,13 @@
                             </div>
                             <div class="field">
                                 <label for="prop-hours">Horas Trabalhadas</label>
-                                <input type="number" id="prop-hours" step="0.5" onchange="updateTicketProperties()" class="input num-input">
+                                <input type="number" id="prop-hours" step="0.25" min="0" max="999" inputmode="decimal" placeholder="0" onchange="onPropChange('hours')" class="input num-input">
                             </div>
                         </div>
 
                         <div class="field">
                             <label for="prop-asset">Ativo CMDB Vinculado</label>
-                            <select id="prop-asset" onchange="updateTicketProperties()" class="select">
+                            <select id="prop-asset" onchange="onPropChange('asset')" class="select">
                                 <option value="Nenhum">Nenhum Ativo</option>
                                 <option value="SRV-DB-PROD-01 (Servidor SQL)">SRV-DB-PROD-01 (Servidor SQL)</option>
                                 <option value="SW-CORE-02 (Switch Cisco)">SW-CORE-02 (Switch Cisco)</option>
@@ -1436,9 +1778,20 @@
 
                         <div id="box-resolve-solution" class="solution">
                             <label for="prop-solution">Solução Definitiva</label>
-                            <textarea id="prop-solution" rows="3" placeholder="Descreva a solução para encerramento..." class="textarea focus-green"></textarea>
+                            <textarea id="prop-solution" rows="3" maxlength="4000" placeholder="Descreva a solução para encerramento..." class="textarea focus-green"></textarea>
                             <button type="button" id="btn-resolve-solution" onclick="resolveTicketWithSolution()" class="btn btn-green btn-block">
                                 <i class="fa-solid fa-circle-check"></i> Encerrar como RESOLVIDO
+                            </button>
+                            <button type="button" id="btn-cancel-ticket" onclick="cancelTicketAdmin()" class="btn btn-danger btn-block">
+                                <i class="fa-solid fa-ban"></i> Cancelar chamado
+                            </button>
+                        </div>
+
+                        <div id="box-closed" class="solution hidden">
+                            <label>Chamado encerrado</label>
+                            <div id="closed-info" class="notice slate"></div>
+                            <button type="button" id="btn-reopen-admin" onclick="reopenTicketAdmin()" class="btn btn-amber btn-block">
+                                <i class="fa-solid fa-rotate-left"></i> Reabrir chamado
                             </button>
                         </div>
                     </div>
@@ -1451,22 +1804,207 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // GLOBAL STATE
+        // ============================== ESTADO ==============================
         let currentUser = null;
         let ticketsList = [];
-        let activeTicketIndex = null;
+        let activeProtocol = null;      // chamado aberto no console técnico
+        let myProtocol = null;          // chamado aberto na janela do solicitante
+        let lastCreatedProtocol = null;
         let techReplyMode = 'public';
         let chartCategoryInstance = null;
         let chartUrgencyInstance = null;
+        let queueQuick = 'open';        // filtro rápido da fila: open | unassigned | mine | progress | late | waiting | closed | all
+        let userTab = 'all';            // abas de "Meus Chamados": all | open | waiting | closed
+        let technicians = [];
+        let selectedIds = new Set();
+        let snapshot = new Map();       // protocolo -> { updatedAt, len, status } (para avisar o que mudou)
+        let syncTimer = null;
+        let syncBusy = false;
+        let formBusy = false;
+        let wsBusy = false;
+        let myBusy = false;
+        let lastSyncAt = null;
+        let syncFailed = false;
 
+        const $ = (id) => document.getElementById(id);
+        const isTechMode = () => Boolean(currentUser && currentUser.isAdmin && currentUser.role === 'tech');
+
+        // Respostas rápidas ({nome}, {protocolo} e {tecnico} são preenchidos sozinhos)
         const cannedTemplates = {
-            SOLICITAR_PRINTS: "Prezado(a), para dar continuidade à análise técnica, por favor envie um print contendo a tela inteira e o código de erro exibido.",
-            RESET_EFETUADO: "Informamos que o procedimento de reset de senha foi concluído. Enviamos a credencial temporária para o seu contato de cadastro.",
-            RESOLVIDO: "O incidente reportado foi corrigido e testado com sucesso pela nossa equipe de TI. O chamado está marcado como RESOLVIDO."
+            EM_ANALISE: "Olá, {nome}! Recebemos o seu chamado {protocolo} e ele já está em análise pela equipe de TI. Voltaremos com uma atualização em breve.",
+            SOLICITAR_INFO: "Olá, {nome}! Para avançarmos no chamado {protocolo}, precisamos de mais informações: (1) qual é a mensagem de erro exata, (2) desde quando acontece e (3) quantas pessoas são afetadas. Pode nos responder por aqui?",
+            SOLICITAR_PRINTS: "Prezado(a) {nome}, para dar continuidade à análise técnica, por favor envie um print contendo a tela inteira e o código de erro exibido.",
+            RESET_EFETUADO: "Olá, {nome}! O procedimento de reset de senha foi concluído. Enviamos a credencial temporária para o seu contato de cadastro; no primeiro acesso o sistema pedirá uma nova senha.",
+            ACOMPANHAMENTO: "Olá, {nome}! A correção do chamado {protocolo} foi aplicada e estamos acompanhando o ambiente. Se notar qualquer comportamento estranho, responda por aqui.",
+            RESOLVIDO: "Olá, {nome}! O incidente do chamado {protocolo} foi corrigido e testado com sucesso pela nossa equipe de TI. O chamado será marcado como RESOLVIDO; se o problema voltar, você pode reabri-lo."
         };
 
-        const DEFAULT_DEMO_TICKETS = [];
+        // Orientações por categoria: o que informar para o chamado ser resolvido mais rápido
+        const CATEGORY_HELP = {
+            'Sistema Financeiro & ERP': {
+                subject: 'Ex: Boleto pago não baixou na conciliação',
+                desc: 'Informe a tela ou relatório, o valor e a data envolvidos, a mensagem de erro exata e desde quando acontece...',
+                tips: ['Diga a tela, o relatório ou a rotina onde acontece', 'Cole a mensagem de erro exatamente como aparece', 'Informe valores, datas ou números de documento envolvidos']
+            },
+            'Gestão de Acessos & Reset de Senha': {
+                subject: 'Ex: Usuário bloqueado após 3 tentativas de login',
+                desc: 'Informe o sistema, o usuário (login) e o que acontece ao tentar entrar. Diga se já tentou redefinir a senha...',
+                tips: ['Qual sistema e qual usuário (login) precisa de acesso', 'O que aparece na tela quando você tenta entrar', 'Se precisa do acesso com urgência, explique o motivo']
+            },
+            'Suporte Técnico & Infraestrutura': {
+                subject: 'Ex: VPN desconecta a cada 10 minutos',
+                desc: 'Descreva o que parou ou ficou lento, desde quando, quantas pessoas ou setores são afetados e o que já foi tentado...',
+                tips: ['Quantas pessoas ou setores são afetados', 'Horário em que começou e se é constante ou intermitente', 'Equipamento, rede ou VPN envolvidos']
+            },
+            'Projetos & Melhorias': {
+                subject: 'Ex: Novo relatório de fluxo de caixa por centro de custo',
+                desc: 'Explique o objetivo, quem vai usar, o resultado esperado e o prazo desejado...',
+                tips: ['Qual problema a melhoria resolve e quem vai usar', 'Resultado esperado (com um exemplo, se possível)', 'Prazo desejado e o que acontece se atrasar']
+            }
+        };
 
+        // ============================== UTILIDADES ==============================
+        // O servidor guarda título, descrição e nomes já "escapados" (&amp; &lt; &#39;...): aqui voltam ao texto normal e
+        // só então são escapados de novo ao desenhar a tela (sem isso "d'água" apareceria como "d&#39;água").
+        function decodeEntities(s) {
+            return String(s == null ? '' : s).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&amp;/g, '&');
+        }
+
+        function formatDateBr(isoOrDate) {
+            if (!isoOrDate) return '';
+            if (typeof isoOrDate === 'string' && /^\d{2}\/\d{2}\/\d{4}/.test(isoOrDate)) return isoOrDate;
+            try {
+                const d = new Date(isoOrDate);
+                if (isNaN(d.getTime())) return String(isoOrDate);
+                return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return String(isoOrDate);
+            }
+        }
+
+        function relTime(iso) {
+            const d = new Date(iso);
+            if (!iso || isNaN(d.getTime())) return '';
+            const min = Math.round((Date.now() - d.getTime()) / 60000);
+            if (min < 1) return 'agora';
+            if (min < 60) return 'há ' + min + ' min';
+            const h = Math.round(min / 60);
+            if (h < 24) return 'há ' + h + ' h';
+            const dias = Math.round(h / 24);
+            if (dias < 7) return 'há ' + dias + (dias === 1 ? ' dia' : ' dias');
+            return formatDateBr(iso);
+        }
+
+        function initials(name) {
+            const parts = String(name || '?').replace(/\(.*?\)/g, '').trim().split(/\s+/).filter(Boolean);
+            if (!parts.length) return '?';
+            return ((parts[0][0] || '') + (parts.length > 1 ? parts[parts.length - 1][0] : (parts[0][1] || ''))).toUpperCase();
+        }
+
+        function firstName(name) {
+            return String(name || '').trim().split(/\s+/)[0] || 'cliente';
+        }
+
+        // Nomes de status do servidor (e apelidos antigos) -> os 5 que a tela usa
+        function normStatus(raw) {
+            switch (String(raw || '')) {
+                case 'Pendente': case 'Novo': case 'Em Aberto': return 'Novo';
+                case 'Em Andamento': case 'Em Atendimento': return 'Em Atendimento';
+                case 'Pendente Cliente': case 'Aguardando Peça': return 'Pendente Cliente';
+                case 'Resolvido': case 'Concluído': return 'Resolvido';
+                case 'Cancelado': return 'Cancelado';
+                default: return 'Novo';
+            }
+        }
+        const isClosed = (t) => t.status === 'Resolvido' || t.status === 'Cancelado';
+        const isOpenTicket = (t) => !isClosed(t);
+        const hasTech = (t) => Boolean(t.technician) && t.technician !== 'Não Atribuído';
+        const getTicket = (protocol) => ticketsList.find((t) => t.protocol === protocol) || null;
+
+        function statusLabel(status, forUser) {
+            return forUser && status === 'Pendente Cliente' ? 'Aguardando você' : status;
+        }
+
+        function lastHumanEntry(t, includeInternal) {
+            return [...(t.timeline || [])].reverse().find((i) => !i.event && (includeInternal || !i.internal)) || null;
+        }
+
+        // O solicitante respondeu e a equipe ainda não retornou
+        function needsTechReply(t) {
+            if (!isOpenTicket(t) || t.timeline.length < 2) return false;
+            const last = lastHumanEntry(t, false);
+            return Boolean(last && last.sender === 'Solicitante');
+        }
+
+        function setBusy(btn, busy, label) {
+            if (!btn) return;
+            if (busy) {
+                btn.dataset.html = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch spin"></i> ' + escapeHtml(label || 'Aguarde...');
+            } else {
+                btn.disabled = false;
+                if (btn.dataset.html) btn.innerHTML = btn.dataset.html;
+                delete btn.dataset.html;
+            }
+        }
+
+        function showFieldError(id, msg) {
+            const el = $(id);
+            if (!el) return;
+            el.textContent = msg || '';
+            el.classList.toggle('hidden', !msg);
+        }
+
+        function copyProtocol(text, btn) {
+            const value = String(text || '').trim();
+            const done = () => {
+                if (!btn) return;
+                const old = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
+                setTimeout(() => { btn.innerHTML = old; }, 1600);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(value).then(done, () => { fallbackCopy(value); done(); });
+            } else {
+                fallbackCopy(value);
+                done();
+            }
+        }
+
+        function fallbackCopy(value) {
+            const ta = document.createElement('textarea');
+            ta.value = value;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            ta.remove();
+        }
+
+        // Botão de perigo em duas etapas (sem janela de confirmação): o 1º clique arma, o 2º executa
+        function armConfirm(btn, armedLabel, fn) {
+            if (btn.dataset.armed === '1') {
+                clearTimeout(btn._armTimer);
+                btn.dataset.armed = '0';
+                btn.classList.remove('is-armed');
+                if (btn.dataset.orig) btn.innerHTML = btn.dataset.orig;
+                fn();
+                return;
+            }
+            btn.dataset.orig = btn.innerHTML;
+            btn.dataset.armed = '1';
+            btn.classList.add('is-armed');
+            btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> ' + escapeHtml(armedLabel);
+            btn._armTimer = setTimeout(() => {
+                btn.dataset.armed = '0';
+                btn.classList.remove('is-armed');
+                btn.innerHTML = btn.dataset.orig;
+            }, 4500);
+        }
+
+        // ============================== SESSÃO ==============================
         function getNexusAuthHeaders() {
             const headers = { 'Content-Type': 'application/json' };
             try {
@@ -1500,8 +2038,8 @@
         }
 
         // Converte os dados cadastrados no Sistema Financeiro para o perfil correspondente no GLPI:
-        // - Usuário comum -> role: 'user' (Abrir e consultar seus chamados)
-        // - Administrador -> role: 'tech' (Tratar, atribuir e resolver chamados)
+        // - Usuário comum -> role: 'user' (abre e acompanha os seus chamados)
+        // - Administrador -> role: 'tech' (trata, atribui e resolve chamados)
         function buildGlpiUserFromNexus(userObj) {
             if (!userObj || !userObj.email) return null;
             const isAdmin = Boolean(
@@ -1521,130 +2059,290 @@
             };
         }
 
-        function formatDateBr(isoOrDate) {
-            if (!isoOrDate) return '';
-            if (typeof isoOrDate === 'string' && /^\d{2}\/\d{2}\/\d{4}/.test(isoOrDate)) return isoOrDate;
+        // Chamada à API com erro tratado: nunca lança; devolve { ok, status, data, network }
+        async function api(method, path, body) {
+            const opts = { method, headers: getNexusAuthHeaders() };
+            if (body !== undefined) opts.body = JSON.stringify(body);
+            let res;
             try {
-                const d = new Date(isoOrDate);
-                if (isNaN(d.getTime())) return String(isoOrDate);
-                return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                res = await fetch(path, opts);
             } catch (e) {
-                return String(isoOrDate);
+                return { ok: false, status: 0, data: {}, network: true };
             }
+            let data = {};
+            try { data = await res.json(); } catch (e) {}
+            return { ok: res.ok && data.success !== false, status: res.status, data };
         }
 
-        function mapOrdemToGlpiTicket(o) {
-            const proto = o.protocol || o.id || '#TK-0000';
-            let status = o.status || 'Novo';
-            if (status === 'Em Aberto') status = 'Novo';
-            if (status === 'Aguardando Peça') status = 'Pendente Cliente';
-            if (status === 'Concluído' || status === 'Cancelado') status = 'Resolvido';
+        function handleAuthExpired() {
+            logout(true);
+        }
 
-            let timeline = [];
-            if (Array.isArray(o.timeline) && o.timeline.length > 0) {
-                timeline = o.timeline;
-            } else if (typeof o.timeline === 'string' && o.timeline.trim().startsWith('[')) {
-                try { timeline = JSON.parse(o.timeline); } catch (e) { timeline = []; }
-            }
-            if (!timeline.length) {
-                timeline.push({
-                    sender: 'Solicitante',
-                    name: o.client_name || 'Solicitante',
-                    text: 'Chamado registrado via Central GLPI.',
-                    time: formatDateBr(o.created_at),
-                    internal: false
-                });
-            }
+        // ============================== DADOS ==============================
+        function mapTimelineItem(i, requesterName) {
+            const sender = i.sender || 'Técnico';
+            const isEvent = i.event === true || sender === 'Sistema';
+            const authorRaw = i.author || i.name || '';
+            return {
+                sender: sender,
+                name: decodeEntities(authorRaw) || (sender === 'Solicitante' ? requesterName : 'Equipe TI'),
+                text: String(i.text == null ? '' : i.text),
+                time: formatDateBr(i.date || i.time),
+                ts: i.date || '',
+                internal: Boolean(i.internal),
+                event: isEvent
+            };
+        }
 
+        // Aceita a ordem completa (administrador) e a visão do solicitante (/api/ordens/minhas)
+        function mapOrdem(o, own) {
+            const protocol = String(o.protocol || o.id || '').trim().replace(/^#/, '');
+            const status = normStatus(o.status);
             const urgency = o.priority === 'Urgente' ? 'Crítica' : (o.priority === 'Normal' ? 'Média' : (o.priority || 'Média'));
-
+            const name = own ? ((currentUser && currentUser.name) || 'Você') : (decodeEntities(o.client_name) || 'Solicitante');
+            const email = own ? ((currentUser && currentUser.email) || '') : String(o.client_email || '');
+            const timeline = (Array.isArray(o.timeline) ? o.timeline : []).map((i) => mapTimelineItem(i, name));
+            if (!timeline.length) {
+                timeline.push({ sender: 'Solicitante', name: name, text: 'Chamado registrado via Central GLPI.', time: formatDateBr(o.created_at), ts: o.created_at || '', internal: false, event: false });
+            }
             return {
                 dbId: o.id,
-                protocol: o.protocol,
-                id: String(proto).startsWith('#') ? String(proto) : '#' + String(proto),
-                name: o.client_name || 'Solicitante',
-                email: o.client_email || '',
-                company: o.canal_atendimento || 'Matriz Corporativa',
+                protocol: protocol,
+                id: '#' + protocol,
+                name: name,
+                email: email,
+                phone: decodeEntities(o.client_phone || ''),
+                channel: decodeEntities(o.canal_atendimento || ''),
                 category: o.service_type || 'Sistema Financeiro & ERP',
                 urgency: urgency,
-                subject: o.title || 'Solicitação Técnica',
-                description: o.description || '',
+                subject: decodeEntities(o.title) || 'Solicitação Técnica',
+                description: decodeEntities(o.description),
                 status: status,
                 date: formatDateBr(o.created_at),
                 createdAt: o.created_at || '',
+                updatedAt: o.updated_at || '',
+                assumedAt: o.assumido_em || '',
+                closedAt: o.concluido_em || '',
                 sla: o.sla || slaForUrgency(urgency),
                 technician: o.tecnico_responsavel || 'Não Atribuído',
                 asset: o.asset || 'Nenhum',
                 timeSpent: Number(o.time_spent) || 0,
-                solution: o.solution || '',
-                timeline: timeline
+                solution: String(o.solution || ''),
+                timeline: timeline,
+                canReply: own ? o.pode_responder !== false : true,
+                canReopen: own ? o.pode_reabrir === true : false,
+                canCancel: own ? o.pode_cancelar === true : false
             };
         }
 
+        function takeSnapshot(list) {
+            const map = new Map();
+            list.forEach((t) => map.set(t.protocol, { updatedAt: t.updatedAt, len: t.timeline.length, status: t.status }));
+            return map;
+        }
+
+        // O que mudou desde a última atualização (para avisar quem está com a tela aberta)
+        function detectChanges(prev, list) {
+            const msgs = [];
+            if (!prev.size) return msgs;
+            const tech = isTechMode();
+            list.forEach((t) => {
+                const before = prev.get(t.protocol);
+                if (!before) {
+                    if (tech) msgs.push(['warning', 'Novo chamado ' + t.protocol + ': ' + t.subject]);
+                    return;
+                }
+                if (before.updatedAt === t.updatedAt) return;
+                const last = lastHumanEntry(t, false);
+                if (tech) {
+                    if (t.timeline.length > before.len && last && last.sender === 'Solicitante') msgs.push(['info', t.name + ' respondeu o chamado ' + t.protocol]);
+                } else if (before.status !== t.status) {
+                    msgs.push(['info', 'Chamado ' + t.protocol + ': agora está "' + statusLabel(t.status, true) + '"']);
+                } else if (t.timeline.length > before.len && last && last.sender === 'Técnico') {
+                    msgs.push(['info', 'Nova resposta da equipe no chamado ' + t.protocol]);
+                }
+            });
+            return msgs;
+        }
+
+        // Carrega os chamados do servidor: administrador no console técnico vê a fila inteira; os demais, os próprios.
+        // Retorna true (ok), false (falhou) ou 'auth' (sessão expirada).
+        async function loadTickets(opts) {
+            const silent = Boolean(opts && opts.silent);
+            const r = await api('GET', isTechMode() ? '/api/ordens' : '/api/ordens/minhas');
+            if (r.status === 401) return 'auth';
+            if (!r.ok) {
+                syncFailed = true;
+                if (!silent) showToast(r.network ? 'Sem conexão com o servidor. Verifique a rede e tente novamente.' : (r.data.message || 'Não foi possível carregar os chamados.'), 'warning');
+                return false;
+            }
+            const own = !isTechMode();
+            const list = (Array.isArray(r.data.ordens) ? r.data.ordens : []).map((o) => mapOrdem(o, own));
+            const msgs = silent ? detectChanges(snapshot, list) : [];
+            ticketsList = list;
+            snapshot = takeSnapshot(list);
+            syncFailed = false;
+            lastSyncAt = new Date();
+            msgs.slice(0, 3).forEach((m) => showToast(m[1], m[0]));
+            if (msgs.length > 3) showToast('+' + (msgs.length - 3) + ' atualização(ões) nos chamados.', 'info');
+            // O painel do Financeiro (que embute esta tela) só recarrega a lista quando algo mudou de verdade
+            if (!silent || msgs.length) notifyParentOrdersChanged();
+            return true;
+        }
+
+        // Troca um chamado pela versão que o servidor devolveu (e evita avisar a própria alteração)
+        function applyServerOrder(ordem, own) {
+            const t = mapOrdem(ordem, own);
+            const idx = ticketsList.findIndex((x) => x.protocol === t.protocol);
+            if (idx === -1) ticketsList.unshift(t); else ticketsList[idx] = t;
+            snapshot.set(t.protocol, { updatedAt: t.updatedAt, len: t.timeline.length, status: t.status });
+            return t;
+        }
+
+        function notifyParentOrdersChanged() {
+            try {
+                if (window.parent && window.parent !== window && typeof window.parent.loadAdminOrders === 'function') {
+                    window.parent.loadAdminOrders();
+                }
+            } catch (e) {}
+        }
+
+        async function loadTechnicians() {
+            if (!currentUser || !currentUser.isAdmin) return;
+            const r = await api('GET', '/api/tecnicos');
+            if (r.ok && Array.isArray(r.data.tecnicos)) {
+                technicians = r.data.tecnicos.filter((x) => x && x.name && x.active !== false).map((x) => String(x.name));
+            }
+        }
+
+        // ============================== ATUALIZAÇÃO AUTOMÁTICA ==============================
+        function startSync() {
+            stopSync();
+            syncTimer = setInterval(() => syncTick(false), isTechMode() ? 20000 : 30000);
+            renderSyncStamp();
+        }
+
+        function stopSync() {
+            if (syncTimer) clearInterval(syncTimer);
+            syncTimer = null;
+        }
+
+        async function syncTick(force) {
+            if (!currentUser || syncBusy) return;
+            if (!force && (document.hidden || formBusy || wsBusy || myBusy)) return;
+            syncBusy = true;
+            const btn = $('btn-refresh-queue');
+            if (btn) btn.querySelector('i').classList.add('spin');
+            const result = await loadTickets({ silent: true });
+            syncBusy = false;
+            if (btn) btn.querySelector('i').classList.remove('spin');
+            if (result === 'auth') { handleAuthExpired(); return; }
+            if (force && result === false) showToast('Sem conexão com o servidor. Tentaremos de novo automaticamente.', 'warning');
+            refreshViews();
+        }
+
+        function refreshNow() { syncTick(true); }
+
+        function renderSyncStamp() {
+            const stamp = $('tech-sync-stamp');
+            const text = $('tech-sync-text');
+            if (!stamp || !text) return;
+            stamp.classList.toggle('is-off', syncFailed);
+            text.textContent = syncFailed
+                ? 'Sem conexão — tentando de novo'
+                : (lastSyncAt ? 'Atualizado às ' + lastSyncAt.toLocaleTimeString('pt-BR') : 'Atualizando...');
+        }
+
+        // Redesenha o que está na tela depois de uma atualização, sem tirar o foco de quem está digitando
+        function refreshViews() {
+            if (!currentUser) return;
+            if (isTechMode()) {
+                renderTechQueue();
+                if (!$('tech-subview-dashboard').classList.contains('hidden')) initCharts();
+                if (activeProtocol) {
+                    if (getTicket(activeProtocol)) renderWorkspace(false); else closeModal('modal-tech-workspace');
+                }
+            } else {
+                renderUserTickets();
+                if (myProtocol) {
+                    if (getTicket(myProtocol)) renderMyTicket(false); else closeModal('modal-my-ticket');
+                }
+            }
+            renderSyncStamp();
+        }
+
+        document.addEventListener('visibilitychange', () => { if (!document.hidden && currentUser) syncTick(false); });
+
+        // ============================== ENTRADA ==============================
         window.onload = async function() {
             const params = new URLSearchParams(window.location.search);
             const entry = params.get('entry');
             const mode = params.get('mode');
             const embedded = params.get('embedded') === '1';
 
+            try { localStorage.removeItem('enterprise_service_desk_tickets'); } catch (e) {}
+
             if (embedded) {
-                const backBtn = document.getElementById('btn-back-nexus');
+                const backBtn = $('btn-back-nexus');
                 if (backBtn) backBtn.classList.add('hidden');
             }
 
-            // Se aberto dentro do Perfil Admin (?mode=tech), puxa os dados do Administrador logado no Sistema Financeiro
+            // Aberto dentro do Perfil Admin (?mode=tech): usa o administrador logado no Sistema Financeiro
             if (mode === 'tech') {
-                const nexusUser = getNexusSessionUser();
-                const glpiUser = buildGlpiUserFromNexus(nexusUser);
+                const glpiUser = buildGlpiUserFromNexus(getNexusSessionUser());
                 if (glpiUser && glpiUser.isAdmin) {
                     currentUser = glpiUser;
                     localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
-                    await loadTickets();
-                    showAppView();
-                    if (params.get('tab') === 'queue') {
-                        navTech('queue');
-                    }
-                    return;
-                } else {
-                    await loadTickets();
-                    showLoginView();
+                    await enterApp(params.get('tab') === 'queue' ? 'queue' : null);
                     return;
                 }
-            }
-
-            // Se aberto pelo botão "Abrir Chamado GLPI" na tela de login (?entry=login), exibe a tela de login limpa
-            if (entry === 'login') {
-                await loadTickets();
                 showLoginView();
                 return;
             }
 
-            // Se já houver sessão no GLPI ou no Sistema Financeiro, puxa automaticamente os dados cadastrados
-            const nexusUser = getNexusSessionUser();
-            if (nexusUser && nexusUser.email) {
-                currentUser = buildGlpiUserFromNexus(nexusUser);
-                localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
-                await loadTickets();
-                showAppView();
+            // Aberto pelo botão "Abrir Chamado GLPI" na tela de login (?entry=login): tela de login limpa
+            if (entry === 'login') {
+                showLoginView();
                 return;
             }
 
-            const savedSession = localStorage.getItem('glpi_10_session');
-            if (savedSession) {
+            // "Sair" nesta aba não deve entrar de novo sozinho ao recarregar
+            let manualLogout = false;
+            try { manualLogout = sessionStorage.getItem('glpi_manual_logout') === '1'; } catch (e) {}
+
+            if (!manualLogout) {
+                const nexusUser = getNexusSessionUser();
+                if (nexusUser && nexusUser.email) {
+                    currentUser = buildGlpiUserFromNexus(nexusUser);
+                    localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
+                    await enterApp(null);
+                    return;
+                }
                 try {
-                    const parsed = JSON.parse(savedSession);
+                    const savedSession = localStorage.getItem('glpi_10_session');
+                    const parsed = savedSession ? JSON.parse(savedSession) : null;
                     if (parsed && parsed.email) {
                         currentUser = buildGlpiUserFromNexus(parsed);
-                        await loadTickets();
-                        showAppView();
+                        await enterApp(null);
                         return;
                     }
-                } catch(e) {}
+                } catch (e) {}
             }
 
-            await loadTickets();
             showLoginView();
         };
+
+        // Carrega os dados do perfil e abre o sistema; se a sessão do Financeiro expirou, volta ao login com aviso
+        async function enterApp(tab) {
+            const result = await loadTickets({ silent: false });
+            if (result === 'auth') {
+                logout(true);
+                return;
+            }
+            if (currentUser.isAdmin) await loadTechnicians();
+            showAppView();
+            if (tab && isTechMode()) navTech(tab);
+        }
 
         function closeGlpiOrReturn() {
             try {
@@ -1656,90 +2354,8 @@
             window.location.href = '/login.html';
         }
 
-        async function loadTickets() {
-            const stored = localStorage.getItem('enterprise_service_desk_tickets');
-            let localList = [];
-            if (stored) {
-                try {
-                    localList = (JSON.parse(stored) || []).filter(t => {
-                        const cleanId = String(t && t.id || '').replace(/^#/, '');
-                        return cleanId !== 'TK-2026-9041' && cleanId !== 'TK-2026-8104';
-                    });
-                } catch(e) { localList = []; }
-            }
-
-            // Busca chamados reais do servidor (SQL Server / local_ordens_servico.json)
-            let serverTickets = [];
-            try {
-                const res = await fetch('/api/ordens', { headers: getNexusAuthHeaders() });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && Array.isArray(data.ordens)) {
-                        serverTickets = data.ordens.map(mapOrdemToGlpiTicket);
-                    }
-                } else if (currentUser && currentUser.email) {
-                    const resPub = await fetch('/api/ordens/consultar?email=' + encodeURIComponent(currentUser.email));
-                    if (resPub.ok) {
-                        const dataPub = await resPub.json();
-                        if (dataPub && Array.isArray(dataPub.ordens)) {
-                            serverTickets = dataPub.ordens.map(mapOrdemToGlpiTicket);
-                        }
-                    }
-                }
-            } catch (e) {}
-
-            const mergedMap = new Map();
-            serverTickets.forEach(t => mergedMap.set(t.id.replace(/^#/, ''), t));
-            localList.forEach(t => {
-                const cleanKey = String(t.id || '').replace(/^#/, '');
-                if (cleanKey && !mergedMap.has(cleanKey)) {
-                    mergedMap.set(cleanKey, t);
-                }
-            });
-
-            ticketsList = Array.from(mergedMap.values());
-            saveTickets();
-        }
-
-        function saveTickets() {
-            localStorage.setItem('enterprise_service_desk_tickets', JSON.stringify(ticketsList));
-            try {
-                if (window.parent && window.parent !== window && typeof window.parent.loadAdminOrders === 'function') {
-                    window.parent.loadAdminOrders();
-                }
-            } catch (e) {}
-        }
-
-        async function syncTicketUpdateToServer(t) {
-            if (!t) return;
-            const ref = t.protocol || String(t.id || '').replace(/^#/, '');
-            if (!ref) return;
-            try {
-                await fetch('/api/ordens/update', {
-                    method: 'POST',
-                    headers: getNexusAuthHeaders(),
-                    body: JSON.stringify({
-                        protocol: ref,
-                        id: t.dbId || ref,
-                        status: t.status,
-                        tecnico_responsavel: t.technician === 'Não Atribuído' ? '' : t.technician,
-                        service_type: t.category,
-                        priority: t.urgency,
-                        sla: t.sla,
-                        asset: t.asset,
-                        time_spent: t.timeSpent,
-                        solution: t.solution,
-                        timeline: t.timeline
-                    })
-                });
-                if (window.parent && window.parent !== window && typeof window.parent.loadAdminOrders === 'function') {
-                    window.parent.loadAdminOrders();
-                }
-            } catch (e) {}
-        }
-
         function setLoginError(msg) {
-            const el = document.getElementById('login-error-msg');
+            const el = $('login-error-msg');
             if (!el) return;
             if (!msg) {
                 el.textContent = '';
@@ -1751,17 +2367,12 @@
         }
 
         // AUTENTICAÇÃO DIRETA COM O SISTEMA FINANCEIRO (POST /api/login)
-        // Puxa automaticamente todos os dados cadastrados (nome, e-mail, telefone, CPF e perfil)
-        // - Perfil de Usuário -> Direciona para Abrir Chamados e Meus Chamados
-        // - Perfil de Administrador -> Direciona para Tratar Chamados (Console Técnico ITSM)
+        // - Perfil de Usuário -> Abrir chamados e Meus Chamados
+        // - Perfil de Administrador -> Tratar chamados (Console Técnico ITSM)
         async function authenticateWithFinancialSystem(email, password) {
             setLoginError('');
-            const submitBtn = document.getElementById('btn-submit-login');
-            const originalHtml = submitBtn ? submitBtn.innerHTML : '';
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Carregando dados do Sistema Financeiro...';
-            }
+            const submitBtn = $('btn-submit-login');
+            if (submitBtn) setBusy(submitBtn, true, 'Entrando...');
 
             try {
                 const res = await fetch('/api/login', {
@@ -1778,41 +2389,37 @@
                     return;
                 }
 
-                // Sincroniza sessão e dados do usuário cadastrado no Sistema Financeiro
                 if (data.token) {
                     localStorage.setItem('nexus_token', data.token);
                     localStorage.setItem('nexus_auth_token', data.token);
                 }
                 localStorage.setItem('nexus_session', JSON.stringify({ email: data.user.email || email, id: data.user.id || 1 }));
                 localStorage.setItem('nexus_cached_user', JSON.stringify(data.user));
+                try { sessionStorage.removeItem('glpi_manual_logout'); } catch (e) {}
 
                 currentUser = buildGlpiUserFromNexus(data.user);
                 localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
 
-                await loadTickets();
-                const msgPerfil = currentUser.isAdmin
+                const result = await loadTickets({ silent: false });
+                if (result === 'auth') { setLoginError('Não foi possível validar a sua sessão. Entre novamente.'); return; }
+                if (currentUser.isAdmin) await loadTechnicians();
+                showToast(currentUser.isAdmin
                     ? `Bem-vindo(a), ${currentUser.name} (Administrador - Tratar Chamados)`
-                    : `Bem-vindo(a), ${currentUser.name} (Abrir e Consultar Chamados)`;
-                showToast(msgPerfil, 'success');
+                    : `Bem-vindo(a), ${currentUser.name} (Abrir e Consultar Chamados)`, 'success');
                 showAppView();
-                if (currentUser.isAdmin) {
-                    navTech('queue');
-                }
+                if (currentUser.isAdmin) navTech('queue');
             } catch (err) {
                 setLoginError('Erro de comunicação com o servidor de autenticação.');
                 showToast('Falha ao conectar ao servidor.', 'warning');
             } finally {
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalHtml;
-                }
+                if (submitBtn) setBusy(submitBtn, false);
             }
         }
 
         async function handleManualLogin(e) {
             if (e && typeof e.preventDefault === 'function') e.preventDefault();
-            const email = (document.getElementById('login-email').value || '').trim();
-            const password = document.getElementById('login-password').value || '';
+            const email = (($('login-email').value) || '').trim();
+            const password = $('login-password').value || '';
             if (!email || !password) {
                 setLoginError('Preencha o e-mail e a senha cadastrados no Sistema Financeiro.');
                 return;
@@ -1820,13 +2427,26 @@
             await authenticateWithFinancialSystem(email, password);
         }
 
-        function logout() {
+        function logout(expired) {
+            stopSync();
             localStorage.removeItem('glpi_10_session');
+            try { if (new URLSearchParams(window.location.search).get('embedded') !== '1') sessionStorage.setItem('glpi_manual_logout', '1'); } catch (e) {}
             currentUser = null;
-            const passInput = document.getElementById('login-password');
+            ticketsList = [];
+            snapshot = new Map();
+            selectedIds = new Set();
+            activeProtocol = null;
+            myProtocol = null;
+            document.querySelectorAll('.overlay').forEach((el) => el.classList.add('hidden'));
+            const passInput = $('login-password');
             if (passInput) passInput.value = '';
             showLoginView();
-            showToast('Sessão GLPI encerrada.', 'info');
+            if (expired === true) {
+                setLoginError('Sua sessão expirou. Entre novamente para continuar.');
+                showToast('Sua sessão expirou. Entre novamente.', 'warning');
+            } else {
+                showToast('Sessão GLPI encerrada.', 'info');
+            }
         }
 
         async function switchRole(role) {
@@ -1839,27 +2459,31 @@
             currentUser.role = role;
             localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
             toggleProfileMenu(true);
-            await loadTickets();
+            snapshot = new Map();
+            selectedIds = new Set();
+            const result = await loadTickets({ silent: false });
+            if (result === 'auth') { handleAuthExpired(); return; }
             showToast(`Modo alterado para ${role === 'tech' ? 'TRATAR CHAMADOS (ADMIN)' : 'ABRIR CHAMADOS (USUÁRIO)'}`, 'warning');
             showAppView();
         }
 
         function toggleProfileMenu(forceClose = false) {
-            const menu = document.getElementById('profile-menu');
+            const menu = $('profile-menu');
             if (!menu) return;
             if (forceClose) menu.classList.add('hidden');
             else menu.classList.toggle('hidden');
         }
 
         function showLoginView() {
+            stopSync();
             document.body.classList.remove('in-app');
-            document.getElementById('view-login').classList.remove('hidden');
-            document.getElementById('app-header').classList.add('hidden');
-            document.getElementById('app-wrapper').classList.add('hidden');
+            $('view-login').classList.remove('hidden');
+            $('app-header').classList.add('hidden');
+            $('app-wrapper').classList.add('hidden');
             setLoginError('');
 
-            // Preenche automaticamente o e-mail caso o usuário já tenha e-mail salvo no Sistema Financeiro
-            const emailInput = document.getElementById('login-email');
+            // Preenche o e-mail se o usuário já tem sessão no Sistema Financeiro
+            const emailInput = $('login-email');
             if (emailInput && !emailInput.value) {
                 const nexusUser = getNexusSessionUser();
                 const savedEmail = (nexusUser && nexusUser.email) || localStorage.getItem('nexus_saved_email') || '';
@@ -1867,16 +2491,18 @@
             }
         }
 
-        function ensureAdminInTechSelect() {
-            const techSelect = document.getElementById('prop-technician');
-            if (!techSelect || !currentUser || !currentUser.name) return;
-            const adminName = currentUser.name;
-            if (!Array.from(techSelect.options).some(opt => opt.value === adminName)) {
-                const opt = document.createElement('option');
-                opt.value = adminName;
-                opt.textContent = `${adminName} (Administrador)`;
-                techSelect.appendChild(opt);
-            }
+        // Lista do campo "Técnico responsável": não atribuído, você, os técnicos cadastrados e quem já está no chamado
+        function fillTechnicianOptions(selected) {
+            const sel = $('prop-technician');
+            if (!sel) return;
+            const names = [];
+            const add = (n) => { if (n && n !== 'Não Atribuído' && !names.includes(n)) names.push(n); };
+            if (currentUser) add(currentUser.name);
+            technicians.forEach(add);
+            add(selected);
+            sel.innerHTML = '<option value="Não Atribuído">-- Não Atribuído --</option>' + names.map((n) =>
+                `<option value="${escapeHtml(n)}">${escapeHtml(n)}${currentUser && n === currentUser.name ? ' (você)' : ''}</option>`).join('');
+            sel.value = selected && selected !== '' ? selected : 'Não Atribuído';
         }
 
         function showAppView() {
@@ -1885,79 +2511,75 @@
                 return;
             }
 
-            // Garante que usuários não-administradores NUNCA acessem o perfil técnico
+            // Usuários não-administradores NUNCA acessam o perfil técnico
             if (!currentUser.isAdmin && currentUser.role === 'tech') {
                 currentUser.role = 'user';
                 localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
             }
 
-            document.getElementById('view-login').classList.add('hidden');
-            document.getElementById('app-header').classList.remove('hidden');
-            document.getElementById('app-wrapper').classList.remove('hidden');
+            $('view-login').classList.add('hidden');
+            $('app-header').classList.remove('hidden');
+            $('app-wrapper').classList.remove('hidden');
 
-            // Exibe o seletor de alternância APENAS para Administradores
-            const switcherWrap = document.getElementById('profile-switcher-wrap');
-            const switcherDivider = document.getElementById('profile-switcher-divider');
-            if (currentUser.isAdmin) {
-                if (switcherWrap) switcherWrap.classList.remove('hidden');
-                if (switcherDivider) switcherDivider.classList.remove('hidden');
-                ensureAdminInTechSelect();
-            } else {
-                if (switcherWrap) switcherWrap.classList.add('hidden');
-                if (switcherDivider) switcherDivider.classList.add('hidden');
-            }
+            // O seletor de modo aparece APENAS para administradores
+            const switcherWrap = $('profile-switcher-wrap');
+            const switcherDivider = $('profile-switcher-divider');
+            if (switcherWrap) switcherWrap.classList.toggle('hidden', !currentUser.isAdmin);
+            if (switcherDivider) switcherDivider.classList.toggle('hidden', !currentUser.isAdmin);
 
-            // Preenche cabeçalho e formulários com os dados reais cadastrados no Sistema Financeiro
-            document.getElementById('user-display-name').innerText = currentUser.name;
-            document.getElementById('user-display-email').innerText = currentUser.email;
-            document.getElementById('user-avatar-box').innerText = (currentUser.name || 'US').substring(0,2).toUpperCase();
-            document.getElementById('header-role-badge').innerText = currentUser.role === 'tech'
-                ? 'ADMINISTRADOR • TRATAR CHAMADOS'
-                : 'USUÁRIO • ABRIR CHAMADOS';
-            document.getElementById('profile-active-label').innerText = currentUser.role === 'tech' ? 'TRATAR CHAMADOS' : 'ABRIR CHAMADOS';
-            // Vidro: avatar e selo do cabeçalho acompanham o modo (técnico = âmbar, solicitante = azul)
+            $('user-display-name').innerText = currentUser.name;
+            $('user-display-email').innerText = currentUser.email;
+            $('user-avatar-box').innerText = initials(currentUser.name);
+            $('header-role-badge').innerText = currentUser.role === 'tech' ? 'ADMINISTRADOR • TRATAR CHAMADOS' : 'USUÁRIO • ABRIR CHAMADOS';
+            $('profile-active-label').innerText = currentUser.role === 'tech' ? 'TRATAR CHAMADOS' : 'ABRIR CHAMADOS';
             const glassIsTech = currentUser.role === 'tech';
-            document.getElementById('user-avatar-box').classList.toggle('tech', glassIsTech);
-            const glassBadge = document.getElementById('header-role-badge');
+            $('user-avatar-box').classList.toggle('tech', glassIsTech);
+            const glassBadge = $('header-role-badge');
             glassBadge.classList.toggle('b-amber', glassIsTech);
             glassBadge.classList.toggle('b-blue', !glassIsTech);
 
-            const reqNameInput = document.getElementById('form-req-name');
-            const reqEmailInput = document.getElementById('form-req-email');
-            if (reqNameInput) reqNameInput.value = currentUser.name || '';
-            if (reqEmailInput) reqEmailInput.value = currentUser.email || '';
+            $('form-req-name').value = currentUser.name || '';
+            $('form-req-email').value = currentUser.email || '';
+
+            const helpUser = $('help-user');
+            const helpTech = $('help-tech');
+            if (helpUser) helpUser.classList.toggle('hidden', glassIsTech);
+            if (helpTech) helpTech.classList.toggle('hidden', !glassIsTech);
 
             if (currentUser.role === 'user') {
-                document.getElementById('nav-group-user').classList.remove('hidden');
-                document.getElementById('nav-group-tech').classList.add('hidden');
-                document.getElementById('view-section-user').classList.remove('hidden');
-                document.getElementById('view-section-tech').classList.add('hidden');
+                $('nav-group-user').classList.remove('hidden');
+                $('nav-group-tech').classList.add('hidden');
+                $('view-section-user').classList.remove('hidden');
+                $('view-section-tech').classList.add('hidden');
                 renderUserTickets();
             } else {
-                document.getElementById('nav-group-tech').classList.remove('hidden');
-                document.getElementById('nav-group-user').classList.add('hidden');
-                document.getElementById('view-section-tech').classList.remove('hidden');
-                document.getElementById('view-section-user').classList.add('hidden');
+                $('nav-group-tech').classList.remove('hidden');
+                $('nav-group-user').classList.add('hidden');
+                $('view-section-tech').classList.remove('hidden');
+                $('view-section-user').classList.add('hidden');
+                queueQuick = 'open';
                 renderTechQueue();
                 initCharts();
             }
 
-            // Ao entrar (ou trocar de modo) sempre abre a tela inicial do perfil: catálogo ou dashboard
+            // Sempre abre a tela inicial do perfil: catálogo ou dashboard
             document.body.classList.add('in-app');
             if (currentUser.role === 'user') navUser('catalog');
             else navTech('dashboard');
+            startSync();
         }
 
-        // NAV NAVIGATION
+        // ============================== NAVEGAÇÃO ==============================
         // Cada item do menu abre UMA tela (catálogo ou lista; dashboard ou fila), sempre com o mesmo cabeçalho de página
         function navUser(tab) {
             toggleSidebar(false);
-            const catalog = document.getElementById('user-section-catalog');
-            const tickets = document.getElementById('user-section-tickets');
+            const catalog = $('user-section-catalog');
+            const tickets = $('user-section-tickets');
             if (tab === 'catalog') {
                 setActiveNav('.user-nav-item', 'user-nav-catalog');
                 catalog.classList.remove('hidden');
                 tickets.classList.add('hidden');
+                renderUserTickets();
             } else {
                 setActiveNav('.user-nav-item', 'user-nav-tickets');
                 tickets.classList.remove('hidden');
@@ -1969,8 +2591,8 @@
 
         function navTech(tab) {
             toggleSidebar(false);
-            const dash = document.getElementById('tech-subview-dashboard');
-            const queue = document.getElementById('tech-subview-queue');
+            const dash = $('tech-subview-dashboard');
+            const queue = $('tech-subview-queue');
             if (tab === 'dashboard') {
                 setActiveNav('.tech-nav-item', 'tech-nav-dash');
                 dash.classList.remove('hidden');
@@ -1981,257 +2603,727 @@
                 setActiveNav('.tech-nav-item', unassigned ? 'tech-nav-unassigned' : 'tech-nav-queue');
                 queue.classList.remove('hidden');
                 dash.classList.add('hidden');
-                document.getElementById('tech-filter-status').value = unassigned ? 'Novo' : 'ALL';
-                document.getElementById('tech-queue-title').innerText = unassigned ? 'Chamados sem Técnico' : 'Fila de Chamados';
-                document.getElementById('tech-queue-crumb').innerText = unassigned ? 'Sem Técnico (Novos)' : 'Fila de Chamados';
-                document.getElementById('tech-queue-sub').innerText = unassigned
+                queueQuick = unassigned ? 'unassigned' : 'open';
+                $('tech-queue-title').innerText = unassigned ? 'Chamados sem Técnico' : 'Fila de Chamados';
+                $('tech-queue-crumb').innerText = unassigned ? 'Sem Técnico (Novos)' : 'Fila de Chamados';
+                $('tech-queue-sub').innerText = unassigned
                     ? 'Chamados novos aguardando um técnico: assuma para iniciar o atendimento e o relógio do SLA.'
-                    : 'Todos os chamados registrados: filtre, assuma e atenda direto da lista.';
+                    : 'Chamados em aberto: filtre, assuma e atenda direto da lista. A fila atualiza sozinha a cada 20 segundos.';
                 renderTechQueue();
             }
             scrollMainTop();
         }
 
-        // CLIENT FUNCTIONS
+        // ============================== MODAIS ==============================
+        const modalReturnFocus = {};
+
+        function openModal(id, focusSelector) {
+            const el = $(id);
+            if (!el) return;
+            modalReturnFocus[id] = document.activeElement;
+            el.classList.remove('hidden');
+            const target = focusSelector ? el.querySelector(focusSelector) : null;
+            if (target) setTimeout(() => { try { target.focus(); } catch (e) {} }, 40);
+        }
+
+        function closeModal(id) {
+            const el = $(id);
+            if (!el) return;
+            el.classList.add('hidden');
+            if (id === 'modal-tech-workspace') activeProtocol = null;
+            if (id === 'modal-my-ticket') myProtocol = null;
+            const back = modalReturnFocus[id];
+            if (back && document.contains(back) && typeof back.focus === 'function') { try { back.focus(); } catch (e) {} }
+        }
+
+        function formIsDirty() {
+            return Boolean($('form-subject').value.trim() || $('form-desc').value.trim());
+        }
+
+        function closeTopModal() {
+            const open = Array.from(document.querySelectorAll('.overlay')).filter((el) => !el.classList.contains('hidden'));
+            if (!open.length) return false;
+            closeModal(open[open.length - 1].id);
+            return true;
+        }
+
+        document.querySelectorAll('.overlay').forEach((ov) => {
+            // Clicar fora fecha a janela, menos o formulário com texto digitado (para ninguém perder o que escreveu)
+            ov.addEventListener('mousedown', (e) => {
+                if (e.target !== ov) return;
+                if (ov.id === 'modal-form' && (formIsDirty() || formBusy) && !$('form-ticket').classList.contains('hidden')) return;
+                closeModal(ov.id);
+            });
+        });
+
+        // Tab fica dentro da janela aberta
+        document.addEventListener('keydown', function(ev) {
+            if (ev.key !== 'Tab') return;
+            const open = Array.from(document.querySelectorAll('.overlay')).filter((el) => !el.classList.contains('hidden'));
+            if (!open.length) return;
+            const box = open[open.length - 1];
+            const items = Array.from(box.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter((el) => !el.disabled && el.offsetParent !== null);
+            if (!items.length) return;
+            const first = items[0];
+            const last = items[items.length - 1];
+            if (!box.contains(document.activeElement)) { first.focus(); ev.preventDefault(); }
+            else if (ev.shiftKey && document.activeElement === first) { last.focus(); ev.preventDefault(); }
+            else if (!ev.shiftKey && document.activeElement === last) { first.focus(); ev.preventDefault(); }
+        });
+
+        // ============================== SOLICITANTE: ABRIR CHAMADO ==============================
+        function draftKey() { return 'glpi_ticket_draft:' + (currentUser ? currentUser.email : ''); }
+
+        function saveDraft() {
+            try {
+                sessionStorage.setItem(draftKey(), JSON.stringify({
+                    category: $('form-category').value, urgency: $('form-urgency').value,
+                    subject: $('form-subject').value, desc: $('form-desc').value, phone: $('form-req-phone').value
+                }));
+            } catch (e) {}
+        }
+
+        function loadDraft() {
+            try { return JSON.parse(sessionStorage.getItem(draftKey()) || 'null'); } catch (e) { return null; }
+        }
+
+        function clearDraft() {
+            try { sessionStorage.removeItem(draftKey()); } catch (e) {}
+        }
+
+        function formatPhoneDigits(digits) {
+            const d = String(digits || '').replace(/\D/g, '').slice(0, 11);
+            if (d.length <= 2) return d.length ? '(' + d : '';
+            if (d.length <= 6) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
+            if (d.length <= 10) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6);
+            return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+        }
+
+        function maskPhoneInput(el) {
+            const raw = el.value.replace(/\D/g, '');
+            const national = raw.length > 11 && raw.startsWith('55') ? raw.slice(2) : raw;
+            el.value = formatPhoneDigits(national);
+            showFieldError('err-phone', '');
+            el.classList.remove('is-invalid');
+            saveDraft();
+        }
+
+        function resetFormView() {
+            $('form-ticket').classList.remove('hidden');
+            $('form-success').classList.add('hidden');
+            $('modal-form-title').textContent = 'Abrir Solicitação de Suporte';
+            $('modal-form-sub').textContent = 'Preencha os detalhes para envio ao Service Desk';
+            $('form-banner').classList.add('hidden');
+            ['subject', 'desc', 'phone'].forEach((k) => showFieldError('err-' + k, ''));
+            ['form-subject', 'form-desc', 'form-req-phone'].forEach((id) => $(id).classList.remove('is-invalid'));
+        }
+
+        function openFormModal(category = '') {
+            resetFormView();
+            $('form-req-name').value = currentUser ? currentUser.name : '';
+            $('form-req-email').value = currentUser ? currentUser.email : '';
+            const draft = loadDraft();
+            $('form-subject').value = draft && draft.subject ? draft.subject : '';
+            $('form-desc').value = draft && draft.desc ? draft.desc : '';
+            $('form-req-phone').value = draft && draft.phone ? draft.phone : formatPhoneDigits(((currentUser && currentUser.phone) || '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, ''));
+            if (draft && draft.urgency) $('form-urgency').value = draft.urgency;
+            if (draft && draft.category) $('form-category').value = draft.category;
+            if (category) $('form-category').value = category;
+            onFormCategoryChange();
+            onFormInput(true);
+            openModal('modal-form', '#form-subject');
+        }
+
+        function onFormCategoryChange() {
+            const help = CATEGORY_HELP[$('form-category').value] || CATEGORY_HELP['Sistema Financeiro & ERP'];
+            $('form-subject').placeholder = help.subject;
+            $('form-desc').placeholder = help.desc;
+            $('form-tips').innerHTML = '<b><i class="fa-solid fa-lightbulb"></i> Para resolver mais rápido, informe</b><ul>' + help.tips.map((t) => '<li>' + escapeHtml(t) + '</li>').join('') + '</ul>';
+            calculateSLA();
+            saveDraft();
+        }
+
+        function onFormInput(silent) {
+            const subject = $('form-subject').value;
+            const desc = $('form-desc').value.trim();
+            $('cnt-subject').textContent = subject.length + '/200';
+            const cd = $('cnt-desc');
+            if (desc.length < 10) {
+                cd.textContent = desc.length ? desc.length + ' · faltam ' + (10 - desc.length) + ' caracteres' : 'mínimo de 10 caracteres';
+                cd.className = 'counter' + (desc.length ? ' is-short' : '');
+            } else {
+                cd.textContent = desc.length + '/5000';
+                cd.className = 'counter is-ok';
+            }
+            if (silent !== true) {
+                showFieldError('err-subject', '');
+                showFieldError('err-desc', '');
+                $('form-subject').classList.remove('is-invalid');
+                $('form-desc').classList.remove('is-invalid');
+                saveDraft();
+            }
+        }
+
+        function calculateSLA() {
+            const urgency = $('form-urgency').value;
+            const sla = slaForUrgency(urgency);
+            $('form-sla-preview').innerText = sla;
+
+            // Previsão de atendimento a partir de agora (dias úteis pulam sábado e domingo)
+            const due = slaDueDate(new Date(), sla);
+            const dueEl = $('form-sla-due');
+            if (dueEl) dueEl.textContent = due ? 'Previsão de atendimento até ' + fmtDue(due) : '';
+
+            document.querySelectorAll('.sla-chip').forEach((chip) => chip.classList.toggle('is-on', chip.dataset.urgency === urgency));
+            saveDraft();
+        }
+
+        function validateTicketForm(v) {
+            const errs = {};
+            if (v.subject.length < 3) errs.subject = 'Informe o assunto do chamado (mínimo de 3 caracteres).';
+            if (v.desc.length < 10) errs.desc = 'Descreva o que você precisa com um pouco mais de detalhes (mínimo de 10 caracteres).';
+            if (v.phone) {
+                const d = v.phone.replace(/\D/g, '');
+                const nat = d.length > 11 && d.startsWith('55') ? d.slice(2) : d;
+                if (nat.length !== 10 && nat.length !== 11) errs.phone = 'Informe o telefone com DDD (ex.: (62) 99999-9999) ou deixe em branco.';
+            }
+            return errs;
+        }
+
+        function showFormErrors(errs) {
+            const map = { subject: 'form-subject', desc: 'form-desc', phone: 'form-req-phone' };
+            let first = null;
+            Object.keys(errs).forEach((k) => {
+                showFieldError('err-' + k, errs[k]);
+                const el = $(map[k]);
+                if (el) { el.classList.add('is-invalid'); if (!first) first = el; }
+            });
+            if (first) first.focus();
+        }
+
+        function showFormBanner(msg) {
+            $('form-banner-text').textContent = msg;
+            $('form-banner').classList.remove('hidden');
+            $('form-banner').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+
+        async function handleCreateTicket(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            if (formBusy) return;
+            $('form-banner').classList.add('hidden');
+
+            const v = {
+                subject: $('form-subject').value.trim(),
+                desc: $('form-desc').value.trim(),
+                phone: $('form-req-phone').value.trim(),
+                category: $('form-category').value,
+                urgency: $('form-urgency').value
+            };
+            const errs = validateTicketForm(v);
+            if (Object.keys(errs).length) { showFormErrors(errs); return; }
+
+            formBusy = true;
+            const btn = $('btn-submit-ticket');
+            setBusy(btn, true, 'Enviando...');
+            const r = await api('POST', '/api/ordens', {
+                client_name: currentUser ? currentUser.name : '',
+                client_email: currentUser ? currentUser.email : '',
+                client_phone: v.phone || '',
+                client_cpf: (currentUser && currentUser.cpf) || '',
+                service_type: v.category,
+                priority: v.urgency,
+                title: v.subject,
+                description: v.desc,
+                canal_atendimento: 'Central GLPI'
+            });
+            formBusy = false;
+            setBusy(btn, false);
+
+            // Nada de "chamado aberto" sem confirmação do servidor: o texto fica na tela para tentar de novo
+            if (r.status === 401) { showFormBanner('Sua sessão expirou. Entre novamente para abrir o chamado; o texto digitado foi guardado.'); return; }
+            if (r.network) { showFormBanner('Não foi possível enviar: sem conexão com o servidor. O texto foi mantido; tente novamente em instantes.'); return; }
+            if (r.status === 429) { showFormBanner('Muitos chamados em pouco tempo. Aguarde alguns minutos e tente novamente.'); return; }
+            if (!r.ok) {
+                const serverErrs = r.data && r.data.errors ? r.data.errors : {};
+                const mapped = {};
+                if (serverErrs.title) mapped.subject = serverErrs.title;
+                if (serverErrs.description) mapped.desc = serverErrs.description;
+                if (serverErrs.client_phone) mapped.phone = serverErrs.client_phone;
+                if (Object.keys(mapped).length) showFormErrors(mapped);
+                showFormBanner((r.data && r.data.message) || 'Não foi possível registrar o chamado agora. Tente novamente.');
+                return;
+            }
+
+            lastCreatedProtocol = String(r.data.protocol || '').replace(/^#/, '');
+            clearDraft();
+            $('form-subject').value = '';
+            $('form-desc').value = '';
+            showFormSuccess(r.data, v);
+            await loadTickets({ silent: true });
+            refreshViews();
+        }
+
+        function showFormSuccess(data, v) {
+            $('form-ticket').classList.add('hidden');
+            $('form-success').classList.remove('hidden');
+            $('modal-form-title').textContent = data.duplicate ? 'Chamado já registrado' : 'Chamado registrado';
+            $('modal-form-sub').textContent = 'Confirmação do registro no Service Desk';
+            $('success-title').textContent = data.duplicate ? 'Este chamado já havia sido registrado' : 'Chamado registrado!';
+            $('success-sub').textContent = data.duplicate
+                ? 'Identificamos um chamado igual enviado há pouco, então não criamos outro. Guarde o protocolo para acompanhar o andamento.'
+                : 'Guarde o protocolo: com ele você acompanha o andamento a qualquer momento em "Meus Chamados".';
+            $('success-protocol').textContent = lastCreatedProtocol;
+            $('success-cat').textContent = v.category;
+            $('success-urg').textContent = v.urgency;
+            const sla = slaForUrgency(v.urgency);
+            const due = slaDueDate(new Date(), sla);
+            $('success-sla').textContent = sla + (due ? ' · até ' + fmtDue(due) : '');
+            setTimeout(() => { try { $('btn-copy-protocol').focus(); } catch (e) {} }, 40);
+        }
+
+        function viewCreatedTicket() {
+            closeModal('modal-form');
+            navUser('my-tickets');
+            if (lastCreatedProtocol && getTicket(lastCreatedProtocol)) openMyTicket(lastCreatedProtocol);
+        }
+
+        // ============================== SOLICITANTE: MEUS CHAMADOS ==============================
+        function userStatusBadge(t) { return getStatusBadge(t.status, true); }
+
         function userTicketRow(t) {
-            const realIndex = ticketsList.findIndex(x => x.id === t.id);
+            const waiting = t.status === 'Pendente Cliente';
             return `
-                <td class="mono strong c-blue">${escapeHtml(t.id)}</td>
+                <td class="mono strong c-blue c-id">${escapeHtml(t.id)}</td>
                 <td class="t-cell">
-                    <div class="t-title">${escapeHtml(t.subject)}</div>
+                    <div class="t-title">${escapeHtml(t.subject)}${waiting ? '<span class="t-flag you"><i class="fa-solid fa-reply"></i> Responder</span>' : ''}</div>
                     <div class="t-sub">${escapeHtml(t.category)}</div>
                 </td>
-                <td class="c-muted nw">${escapeHtml(t.date)}</td>
-                <td>${getUrgencyBadge(t.urgency)}</td>
-                <td>${slaCell(t)}</td>
-                <td>${getStatusBadge(t.status)}</td>
-                <td class="ta-r">
-                    <button type="button" onclick="openTechWorkspace(${realIndex})" class="btn btn-ghost btn-sm row-act-user" title="Ver detalhes" aria-label="Ver detalhes de ${escapeHtml(t.id)}">
-                        <i class="fa-solid fa-eye"></i><span class="act-txt">Detalhes</span>
+                <td class="c-muted nw c-date">${escapeHtml(t.date)}</td>
+                <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
+                <td class="c-sla">${slaCell(t)}</td>
+                <td class="c-status">${userStatusBadge(t)}</td>
+                <td class="ta-r c-act">
+                    <button type="button" data-p="${escapeHtml(t.protocol)}" onclick="openMyTicket(this.dataset.p)" class="btn ${waiting ? 'btn-take' : 'btn-ghost'} btn-sm row-act-user" title="Ver detalhes" aria-label="Ver detalhes de ${escapeHtml(t.id)}">
+                        <i class="fa-solid ${waiting ? 'fa-reply' : 'fa-eye'}"></i><span class="act-txt">${waiting ? 'Responder' : 'Detalhes'}</span>
                     </button>
                 </td>`;
         }
 
+        function setUserTab(tab) {
+            userTab = tab;
+            renderUserTickets();
+        }
+
         function renderUserTickets() {
-            const tbody = document.getElementById('user-tickets-tbody');
-            const recentBody = document.getElementById('user-recent-tbody');
-            const searchVal = document.getElementById('user-search-input').value.toLowerCase();
-            tbody.innerHTML = '';
-            if (recentBody) recentBody.innerHTML = '';
+            const tbody = $('user-tickets-tbody');
+            const recentBody = $('user-recent-tbody');
+            if (!tbody) return;
+            const searchVal = ($('user-search-input').value || '').toLowerCase().trim();
 
-            // Só os chamados do próprio solicitante (admin vê todos), do mais novo para o mais antigo
-            const myEmail = currentUser && currentUser.email ? String(currentUser.email).toLowerCase() : '';
-            const mine = ticketsList.filter(t => (currentUser && currentUser.isAdmin)
-                ? true
-                : (!myEmail || String(t.email || '').toLowerCase() === myEmail))
-                .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
-            const userTickets = mine.filter(t => t.id.toLowerCase().includes(searchVal) || t.subject.toLowerCase().includes(searchVal));
+            // Já vem só do solicitante (o servidor filtra pela conta), do mais novo para o mais antigo
+            const mine = ticketsList.slice().sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+            const waitingList = mine.filter((t) => t.status === 'Pendente Cliente');
+            const tabs = {
+                all: mine,
+                open: mine.filter((t) => isOpenTicket(t) && t.status !== 'Pendente Cliente'),
+                waiting: waitingList,
+                closed: mine.filter(isClosed)
+            };
 
-            document.getElementById('sidebar-user-ticket-count').innerText = mine.length;
-            const chip = document.getElementById('user-tickets-count-chip');
+            const chips = $('user-chips');
+            if (chips) {
+                const defs = [['all', 'Todos'], ['open', 'Em andamento'], ['waiting', 'Aguardando você'], ['closed', 'Encerrados']];
+                chips.innerHTML = defs.map(([k, label]) =>
+                    `<button type="button" class="fchip${userTab === k ? ' is-on' : ''}${k === 'waiting' && tabs.waiting.length ? ' warn' : ''}" onclick="setUserTab('${k}')" aria-pressed="${userTab === k}">${label}<b>${tabs[k].length}</b></button>`).join('');
+            }
+
+            const userTickets = tabs[userTab].filter((t) => !searchVal || t.protocol.toLowerCase().includes(searchVal) || t.subject.toLowerCase().includes(searchVal));
+
+            const countEl = $('sidebar-user-ticket-count');
+            const openCount = mine.filter(isOpenTicket).length;
+            countEl.innerText = openCount;
+            countEl.classList.toggle('amber', waitingList.length > 0);
+            const chip = $('user-tickets-count-chip');
             if (chip) chip.innerText = userTickets.length;
 
+            // Aviso no catálogo: o que precisa da resposta do solicitante
+            const att = $('user-attention');
+            if (att) {
+                if (waitingList.length) {
+                    const first = waitingList[0];
+                    att.classList.remove('hidden');
+                    att.innerHTML = `<div><i class="fa-solid fa-reply big"></i><div><b>${waitingList.length === 1 ? 'Um chamado aguarda a sua resposta' : waitingList.length + ' chamados aguardam a sua resposta'}</b><span>${escapeHtml(first.subject)} · ${escapeHtml(first.protocol)}</span></div></div><button type="button" class="btn btn-amber" data-p="${escapeHtml(first.protocol)}" onclick="openMyTicket(this.dataset.p)"><i class="fa-solid fa-reply"></i> Responder agora</button>`;
+                } else {
+                    att.classList.add('hidden');
+                    att.innerHTML = '';
+                }
+            }
+
             if (recentBody) {
+                recentBody.innerHTML = '';
                 if (!mine.length) recentBody.innerHTML = emptyRow(7, 'Você ainda não abriu nenhum chamado. Escolha um serviço acima para começar.');
-                else mine.slice(0, 4).forEach(t => {
+                else mine.slice(0, 4).forEach((t) => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = userTicketRow(t);
                     recentBody.appendChild(tr);
                 });
             }
 
+            tbody.innerHTML = '';
             if (!userTickets.length) {
-                tbody.innerHTML = emptyRow(7, 'Nenhum chamado encontrado.');
+                tbody.innerHTML = emptyRow(7, mine.length ? 'Nenhum chamado encontrado neste filtro.' : 'Você ainda não abriu nenhum chamado.');
                 return;
             }
-
-            userTickets.forEach(t => {
+            userTickets.forEach((t) => {
                 const tr = document.createElement('tr');
+                tr.className = 'is-click' + (t.status === 'Pendente Cliente' ? ' is-wait' : '');
+                tr.dataset.p = t.protocol;
                 tr.innerHTML = userTicketRow(t);
                 tbody.appendChild(tr);
             });
         }
 
-        function openFormModal(category = '') {
-            document.getElementById('form-req-name').value = currentUser ? currentUser.name : '';
-            document.getElementById('form-req-email').value = currentUser ? currentUser.email : '';
-            if (category) document.getElementById('form-category').value = category;
-            calculateSLA();
-            document.getElementById('modal-form').classList.remove('hidden');
+        // ---- Janela do chamado (visão do solicitante) ----
+        function stepperHtml(status) {
+            const step = (cls, icon, label) => `<div class="step ${cls}"><i class="fa-solid ${icon}"></i><span>${label}</span></div>`;
+            if (status === 'Cancelado') {
+                return step('is-done', 'fa-inbox', 'Aberto') + step('is-off', 'fa-ban', 'Cancelado') + step('', 'fa-check', 'Resolvido');
+            }
+            if (status === 'Novo') return step('is-now', 'fa-inbox', 'Aberto') + step('', 'fa-gears', 'Em atendimento') + step('', 'fa-check', 'Resolvido');
+            if (status === 'Em Atendimento') return step('is-done', 'fa-inbox', 'Aberto') + step('is-now', 'fa-gears', 'Em atendimento') + step('', 'fa-check', 'Resolvido');
+            if (status === 'Pendente Cliente') return step('is-done', 'fa-inbox', 'Aberto') + step('is-wait', 'fa-hourglass-half', 'Aguardando você') + step('', 'fa-check', 'Resolvido');
+            return step('is-done', 'fa-inbox', 'Aberto') + step('is-done', 'fa-gears', 'Em atendimento') + step('is-done', 'fa-check', 'Resolvido');
         }
 
-        function calculateSLA() {
-            const urgency = document.getElementById('form-urgency').value;
-            const sla = slaForUrgency(urgency);
-            document.getElementById('form-sla-preview').innerText = sla;
-
-            // Previsão de atendimento a partir de agora (dias úteis pulam sábado e domingo)
-            const due = slaDueDate(new Date(), sla);
-            const dueEl = document.getElementById('form-sla-due');
-            if (dueEl) dueEl.textContent = due ? 'Previsão de atendimento até ' + fmtDue(due) : '';
-
-            document.querySelectorAll('.sla-chip').forEach(chip => chip.classList.toggle('is-on', chip.dataset.urgency === urgency));
-        }
-
-        async function handleCreateTicket(e) {
-            e.preventDefault();
-            const reqName = document.getElementById('form-req-name').value.trim() || (currentUser ? currentUser.name : 'Solicitante');
-            const reqEmail = document.getElementById('form-req-email').value.trim() || (currentUser ? currentUser.email : '');
-            const category = document.getElementById('form-category').value;
-            const urgency = document.getElementById('form-urgency').value;
-            const subject = document.getElementById('form-subject').value.trim();
-            const description = document.getElementById('form-desc').value.trim();
-            const sla = document.getElementById('form-sla-preview').innerText;
-
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-            let protocolId = `#TK-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-            let dbId = null;
-
-            // Persiste em tempo real no servidor SQL Server + local_ordens_servico.json via POST /api/ordens com os dados cadastrados no Sistema Financeiro
-            try {
-                const res = await fetch('/api/ordens', {
-                    method: 'POST',
-                    headers: getNexusAuthHeaders(),
-                    body: JSON.stringify({
-                        client_name: reqName,
-                        client_email: reqEmail,
-                        client_phone: (currentUser && currentUser.phone) || '',
-                        client_cpf: (currentUser && currentUser.cpf) || '',
-                        service_type: category,
-                        priority: urgency,
-                        title: subject,
-                        description: description,
-                        canal_atendimento: 'GLPI 10 Enterprise',
-                        sla: sla
-                    })
-                });
-                const data = await res.json();
-                if (data && data.success && data.protocol) {
-                    protocolId = '#' + data.protocol;
-                    if (data.ordem && data.ordem.id) dbId = data.ordem.id;
+        function renderTimelineHtml(items, tech, requesterName) {
+            let html = '';
+            items.forEach((item) => {
+                if (item.internal && !tech) return;
+                const whenExact = escapeHtml(item.time || '');
+                const when = escapeHtml(relTime(item.ts) || item.time || '');
+                if (item.event) {
+                    html += `<div class="tl-ev${item.internal ? ' internal' : ''}"><span><i class="fa-solid ${item.internal ? 'fa-lock' : 'fa-circle-dot'}"></i>${escapeHtml(item.text)}</span><time title="${whenExact}">${when}</time></div>`;
+                    return;
                 }
-            } catch (err) {}
+                const isTech = item.sender === 'Técnico';
+                const isMe = !tech && item.sender === 'Solicitante';
+                const nameShown = isMe ? 'Você' : item.name;
+                const role = item.internal ? 'Nota interna TI' : (isTech ? 'Equipe TI' : (isMe ? '' : 'Solicitante'));
+                html += `<div class="tl${item.internal ? ' internal' : (isTech ? ' tech' : '')}">
+                    <div class="tl-av" aria-hidden="true">${item.internal ? '<i class="fa-solid fa-lock"></i>' : escapeHtml(initials(item.name))}</div>
+                    <div class="tl-bubble">
+                        <div class="tl-head">
+                            <span class="who">${escapeHtml(nameShown)}${role ? `<span class="role">${role}</span>` : ''}</span>
+                            <span class="tl-time" title="${whenExact}">${when}</span>
+                        </div>
+                        <p>${escapeHtml(item.text)}</p>
+                    </div>
+                </div>`;
+            });
+            return html;
+        }
 
-            const newTicket = {
-                dbId: dbId,
-                protocol: protocolId.replace(/^#/, ''),
-                id: protocolId,
-                name: reqName,
-                email: reqEmail,
-                company: "Matriz Corporativa",
-                category: category,
-                urgency: urgency,
-                subject: subject,
-                description: description,
-                status: "Novo",
-                date: dateStr,
-                createdAt: now.toISOString(),
-                sla: sla,
-                technician: "Não Atribuído",
-                asset: "Nenhum",
-                timeSpent: 0,
-                solution: "",
-                timeline: [
-                    { sender: "Solicitante", name: reqName, text: "Chamado registrado via Central GLPI.", time: dateStr, internal: false }
-                ]
-            };
+        function setTimeline(containerId, items, tech, keepScroll) {
+            const c = $(containerId);
+            const nearBottom = c.scrollHeight - c.scrollTop - c.clientHeight < 80;
+            c.innerHTML = renderTimelineHtml(items, tech);
+            if (!keepScroll || nearBottom) c.scrollTop = c.scrollHeight;
+        }
 
-            ticketsList.unshift(newTicket);
-            saveTickets();
-            document.getElementById('form-subject').value = '';
-            document.getElementById('form-desc').value = '';
-            closeModal('modal-form');
-            showToast(`Chamado ${protocolId} aberto com sucesso!`, 'success');
+        function openMyTicket(protocol) {
+            const t = getTicket(protocol);
+            if (!t) return;
+            myProtocol = protocol;
+            renderMyTicket(true);
+            openModal('modal-my-ticket', '#my-reply-text');
+        }
 
-            if (currentUser && currentUser.role === 'user') {
-                renderUserTickets();
-                navUser('my-tickets'); // leva o solicitante para a lista, onde o chamado novo já aparece no topo
-            } else {
-                renderTechQueue();
-                initCharts();
+        function renderMyTicket(reset) {
+            const t = getTicket(myProtocol);
+            if (!t) return;
+            $('my-id').textContent = t.protocol;
+            $('my-title').textContent = t.subject;
+            $('my-status-badge').innerHTML = getStatusBadge(t.status, true);
+            $('my-date').textContent = t.date;
+            const s = slaInfo(t);
+            const slaEl = $('my-sla');
+            slaEl.className = 'badge ' + (s.state === 'late' ? 'b-rose' : s.state === 'warn' ? 'b-amber' : s.state === 'done' ? 'b-slate' : 'b-green');
+            slaEl.innerHTML = '<i class="fa-solid fa-stopwatch"></i> SLA ' + escapeHtml(s.label) + (s.text ? ' · ' + escapeHtml(s.text) : '');
+            $('my-desc').textContent = t.description;
+
+            let notice = '';
+            if (t.status === 'Pendente Cliente') {
+                notice = '<div class="notice amber" role="status"><i class="fa-solid fa-hourglass-half"></i><div><b>A equipe aguarda a sua resposta.</b><br>Responda abaixo para o atendimento continuar.</div></div>';
+            } else if (t.status === 'Resolvido') {
+                notice = `<div class="notice green" role="status"><i class="fa-solid fa-circle-check"></i><div><b>Chamado resolvido${t.closedAt ? ' em ' + escapeHtml(formatDateBr(t.closedAt)) : ''}.</b>${t.solution ? `<div class="notice-sol">${escapeHtml(t.solution)}</div>` : ''}</div></div>`;
+            } else if (t.status === 'Cancelado') {
+                notice = '<div class="notice slate" role="status"><i class="fa-solid fa-ban"></i><div><b>Este chamado foi cancelado.</b><br>Se ainda precisar de ajuda, abra um novo chamado.</div></div>';
+            }
+            $('my-notice').innerHTML = notice;
+
+            setTimeline('my-timeline', t.timeline, false, !reset);
+
+            $('my-reply').classList.toggle('hidden', !t.canReply);
+            const closedResolved = t.status === 'Resolvido';
+            $('my-reopen').classList.toggle('hidden', !(closedResolved && t.canReopen));
+            if (closedResolved && !t.canReopen) {
+                $('my-notice').innerHTML += '<div class="notice slate" style="margin-top:.7rem;"><i class="fa-solid fa-clock"></i><div>O prazo de 7 dias para reabrir terminou. Se o problema voltou, abra um novo chamado informando o protocolo <b>' + escapeHtml(t.protocol) + '</b>.</div></div>';
+            }
+            $('my-reopen-hint').textContent = 'Você pode reabrir até 7 dias depois de resolvido.';
+
+            $('my-stepper').innerHTML = stepperHtml(t.status);
+            const row = (label, value, cls) => `<div><dt>${label}</dt><dd${cls ? ' class="' + cls + '"' : ''}>${value}</dd></div>`;
+            $('my-summary').innerHTML =
+                row('Status', getStatusBadge(t.status, true)) +
+                row('Urgência', getUrgencyBadge(t.urgency)) +
+                row('Categoria', escapeHtml(t.category)) +
+                row('Prazo (SLA)', escapeHtml(s.label) + (s.text ? '<br><span class="c-muted" style="font-weight:500;">' + escapeHtml(s.text) + '</span>' : '')) +
+                row('Responsável', hasTech(t) ? escapeHtml(t.technician) : '<span class="c-muted" style="font-weight:600;">Aguardando atribuição</span>') +
+                row('Aberto em', escapeHtml(t.date), 'mono') +
+                (t.assumedAt ? row('Atendimento iniciado', escapeHtml(formatDateBr(t.assumedAt)), 'mono') : '') +
+                (t.closedAt ? row('Encerrado em', escapeHtml(formatDateBr(t.closedAt)), 'mono') : '') +
+                row('Última atualização', escapeHtml(relTime(t.updatedAt) || formatDateBr(t.updatedAt)), 'mono');
+            $('my-cancel-wrap').classList.toggle('hidden', !t.canCancel);
+
+            if (reset) {
+                $('my-reply-text').value = '';
+                $('my-reopen-text').value = '';
+                showFieldError('my-reply-err', '');
+                showFieldError('my-reopen-err', '');
+                onMyReplyInput();
             }
         }
 
-        // TECH & ITSM QUEUE FUNCTIONS
-        function renderTechQueue() {
-            const tbody = document.getElementById('tech-queue-tbody');
-            const searchVal = document.getElementById('tech-queue-search').value.toLowerCase();
-            const filterStatus = document.getElementById('tech-filter-status').value;
-            const filterUrgency = document.getElementById('tech-filter-urgency').value;
-            tbody.innerHTML = '';
+        function onMyReplyInput() {
+            $('my-reply-count').textContent = $('my-reply-text').value.length + '/2000';
+            showFieldError('my-reply-err', '');
+        }
 
-            const filtered = ticketsList.filter(t => {
-                const matchSearch = t.id.toLowerCase().includes(searchVal) || t.subject.toLowerCase().includes(searchVal) || t.name.toLowerCase().includes(searchVal);
-                const matchStatus = filterStatus === 'ALL' ? true : (filterStatus === 'Novo' ? (t.status === 'Novo' || t.status === 'Em Aberto') : t.status === filterStatus);
-                const matchUrgency = filterUrgency === 'ALL' ? true : t.urgency === filterUrgency;
-                return matchSearch && matchStatus && matchUrgency;
-            });
-
-            // Update KPIs
-            document.getElementById('kpi-tech-total').innerText = ticketsList.length;
-            document.getElementById('kpi-tech-unassigned').innerText = ticketsList.filter(t => t.technician === 'Não Atribuído' || t.status === 'Novo').length;
-            document.getElementById('kpi-tech-progress').innerText = ticketsList.filter(t => t.status === 'Em Atendimento').length;
-            document.getElementById('kpi-tech-critical').innerText = ticketsList.filter(t => t.urgency === 'Crítica').length;
-            document.getElementById('kpi-tech-resolved').innerText = ticketsList.filter(t => t.status === 'Resolvido').length;
-
-            document.getElementById('sidebar-tech-queue-count').innerText = ticketsList.length;
-            document.getElementById('sidebar-tech-unassigned-count').innerText = ticketsList.filter(t => t.technician === 'Não Atribuído' || t.status === 'Novo').length;
-
-            renderPriorityTickets();
-
-            const countEl = document.getElementById('tech-queue-count');
-            if (countEl) {
-                countEl.innerText = filtered.length;
-                const countLabel = document.getElementById('tech-queue-count-label');
-                if (countLabel) countLabel.innerText = filtered.length === ticketsList.length ? 'chamados' : 'de ' + ticketsList.length + ' chamados';
-            }
-
-            if (!filtered.length) {
-                tbody.innerHTML = emptyRow(8, 'Nenhum chamado corresponde aos filtros.');
+        async function sendMyReply() {
+            const t = getTicket(myProtocol);
+            if (!t || myBusy) return;
+            const ta = $('my-reply-text');
+            const text = ta.value.trim();
+            if (text.length < 2) { showFieldError('my-reply-err', 'Escreva a sua mensagem.'); ta.focus(); return; }
+            myBusy = true;
+            const btn = $('btn-my-send');
+            setBusy(btn, true, 'Enviando...');
+            const r = await api('POST', '/api/ordens/acao', { protocol: t.protocol, acao: 'responder', texto: text });
+            myBusy = false;
+            setBusy(btn, false);
+            if (r.status === 401) { handleAuthExpired(); return; }
+            if (!r.ok) {
+                showFieldError('my-reply-err', r.network ? 'Sem conexão com o servidor. A mensagem foi mantida; tente novamente.' : ((r.data && r.data.message) || 'Não foi possível enviar a mensagem.'));
                 return;
             }
+            applyServerOrder(r.data.ordem, true);
+            ta.value = '';
+            onMyReplyInput();
+            renderMyTicket(false);
+            renderUserTickets();
+            showToast('Mensagem enviada à equipe.', 'success');
+        }
 
-            filtered.forEach(t => {
-                const realIndex = ticketsList.findIndex(x => x.id === t.id);
-                const unassigned = t.technician === 'Não Atribuído';
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="ta-c">
-                        <input type="checkbox" data-id="${escapeHtml(t.id)}" class="queue-checkbox" aria-label="Selecionar ${escapeHtml(t.id)}">
-                    </td>
-                    <td class="mono strong c-amber">${escapeHtml(t.id)}</td>
+        async function reopenMyTicket() {
+            const t = getTicket(myProtocol);
+            if (!t || myBusy) return;
+            const ta = $('my-reopen-text');
+            const text = ta.value.trim();
+            if (text.length < 5) { showFieldError('my-reopen-err', 'Explique o que ainda não foi resolvido (mínimo de 5 caracteres).'); ta.focus(); return; }
+            myBusy = true;
+            const btn = $('btn-my-reopen');
+            setBusy(btn, true, 'Reabrindo...');
+            const r = await api('POST', '/api/ordens/acao', { protocol: t.protocol, acao: 'reabrir', texto: text });
+            myBusy = false;
+            setBusy(btn, false);
+            if (r.status === 401) { handleAuthExpired(); return; }
+            if (!r.ok) {
+                showFieldError('my-reopen-err', r.network ? 'Sem conexão com o servidor. Tente novamente.' : ((r.data && r.data.message) || 'Não foi possível reabrir o chamado.'));
+                return;
+            }
+            applyServerOrder(r.data.ordem, true);
+            ta.value = '';
+            renderMyTicket(true);
+            renderUserTickets();
+            showToast('Chamado reaberto. A equipe foi avisada.', 'success');
+        }
+
+        function cancelMyTicket() {
+            armConfirm($('btn-my-cancel'), 'Clique de novo para confirmar o cancelamento', async () => {
+                const t = getTicket(myProtocol);
+                if (!t || myBusy) return;
+                myBusy = true;
+                const r = await api('POST', '/api/ordens/acao', { protocol: t.protocol, acao: 'cancelar' });
+                myBusy = false;
+                if (r.status === 401) { handleAuthExpired(); return; }
+                if (!r.ok) { showToast((r.data && r.data.message) || 'Não foi possível cancelar o chamado.', 'warning'); return; }
+                applyServerOrder(r.data.ordem, true);
+                renderMyTicket(true);
+                renderUserTickets();
+                showToast('Chamado cancelado.', 'info');
+            });
+        }
+
+        // ============================== ADMINISTRADOR: FILA ==============================
+        function slaDueMs(t) {
+            const d = slaInfo(t).due;
+            return d ? d.getTime() : Number.MAX_SAFE_INTEGER;
+        }
+
+        function isLate(t) { return isOpenTicket(t) && slaInfo(t).state === 'late'; }
+
+        const QUICK_FILTERS = [
+            ['open', 'Abertos', (t) => isOpenTicket(t)],
+            ['unassigned', 'Sem técnico', (t) => isOpenTicket(t) && !hasTech(t)],
+            ['mine', 'Meus', (t) => isOpenTicket(t) && currentUser && t.technician === currentUser.name],
+            ['progress', 'Em atendimento', (t) => t.status === 'Em Atendimento'],
+            ['late', 'SLA vencido', (t) => isLate(t)],
+            ['waiting', 'Aguardando cliente', (t) => t.status === 'Pendente Cliente'],
+            ['closed', 'Encerrados', (t) => isClosed(t)],
+            ['all', 'Todos', () => true]
+        ];
+
+        function setQueueQuick(key) {
+            queueQuick = key;
+            renderTechQueue();
+        }
+
+        function renderQueueChips() {
+            const box = $('tech-chips');
+            if (!box) return;
+            box.innerHTML = QUICK_FILTERS.map(([key, label, fn]) => {
+                const n = ticketsList.filter(fn).length;
+                const extra = (key === 'late' && n) ? ' late' : (key === 'unassigned' && n) ? ' warn' : '';
+                return `<button type="button" class="fchip${queueQuick === key ? ' is-on' : ''}${extra}" onclick="setQueueQuick('${key}')" aria-pressed="${queueQuick === key}">${label}<b>${n}</b></button>`;
+            }).join('');
+        }
+
+        function techRowHtml(t, withCheckbox) {
+            const unassigned = !hasTech(t);
+            const hot = isOpenTicket(t) && (t.urgency === 'Crítica' || isLate(t));
+            const techColor = unassigned ? 'color:#fcd34d; font-style:italic;' : 'color:#bfdbfe;';
+            const canTake = isOpenTicket(t) && (!currentUser || t.technician !== currentUser.name);
+            const reply = needsTechReply(t) ? '<span class="t-flag reply"><i class="fa-solid fa-reply"></i> Respondeu</span>' : '';
+            const attr = `data-p="${escapeHtml(t.protocol)}"`;
+            return {
+                cls: 'is-click' + (hot ? ' is-hot' : '') + (t.status === 'Pendente Cliente' ? ' is-wait' : ''),
+                html: `
+                    ${withCheckbox ? `<td class="ta-c c-chk"><input type="checkbox" ${attr} class="queue-checkbox"${selectedIds.has(t.protocol) ? ' checked' : ''} aria-label="Selecionar ${escapeHtml(t.id)}"></td>` : ''}
+                    <td class="mono strong c-amber c-id">${escapeHtml(t.id)}</td>
                     <td class="t-cell">
-                        <div class="t-title">${escapeHtml(t.subject)}</div>
+                        <div class="t-title">${escapeHtml(t.subject)}${reply}</div>
                         <div class="t-sub"><i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}</div>
                     </td>
-                    <td>${getUrgencyBadge(t.urgency)}</td>
-                    <td>${slaCell(t)}</td>
-                    <td class="col-tech strong nw" style="${unassigned ? 'color:#fcd34d; font-style:italic;' : 'color:#bfdbfe;'}">${escapeHtml(t.technician)}</td>
-                    <td>
-                        ${getStatusBadge(t.status)}
-                        <div class="tech-inline" style="${unassigned ? 'color:#fcd34d; font-style:italic;' : 'color:#bfdbfe;'}"><i class="fa-solid fa-user-gear"></i> ${escapeHtml(t.technician)}</div>
+                    <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
+                    <td class="c-sla">${slaCell(t)}</td>
+                    ${withCheckbox ? `<td class="col-tech strong nw" style="${techColor}">${escapeHtml(t.technician)}</td>` : ''}
+                    <td class="c-status">
+                        ${getStatusBadge(t.status, false)}
+                        ${withCheckbox ? `<div class="tech-inline" style="${techColor}"><i class="fa-solid fa-user-gear"></i> ${escapeHtml(t.technician)}</div>` : ''}
                     </td>
-                    <td class="ta-r">
-                        <button type="button" onclick="openTechWorkspace(${realIndex})" class="btn btn-ghost btn-sm row-act-tech" title="Atender chamado" aria-label="Atender ${escapeHtml(t.id)}">
-                            <i class="fa-solid fa-wrench"></i><span class="act-txt">Atender</span>
-                        </button>
-                    </td>
-                `;
+                    <td class="ta-r c-act">
+                        <div class="row-acts">
+                            ${canTake && unassigned ? `<button type="button" ${attr} onclick="quickTake(this.dataset.p)" class="btn btn-take btn-sm" title="Assumir este chamado" aria-label="Assumir ${escapeHtml(t.id)}"><i class="fa-solid fa-user-plus"></i><span class="act-txt">Assumir</span></button>` : ''}
+                            <button type="button" ${attr} onclick="openTechWorkspace(this.dataset.p)" class="btn btn-ghost btn-sm row-act-tech" title="Atender chamado" aria-label="Atender ${escapeHtml(t.id)}">
+                                <i class="fa-solid fa-wrench"></i><span class="act-txt">Atender</span>
+                            </button>
+                        </div>
+                    </td>`
+            };
+        }
+
+        function renderTechQueue() {
+            const tbody = $('tech-queue-tbody');
+            if (!tbody) return;
+            const searchVal = ($('tech-queue-search').value || '').toLowerCase().trim();
+            const filterUrgency = $('tech-filter-urgency').value;
+            const sortBy = $('tech-sort').value;
+
+            // KPIs e contadores (sobre todos os chamados, sem filtro)
+            const open = ticketsList.filter(isOpenTicket);
+            const unassignedCount = open.filter((t) => !hasTech(t)).length;
+            const lateCount = open.filter(isLate).length;
+            $('kpi-tech-total').innerText = ticketsList.length;
+            $('kpi-tech-unassigned').innerText = unassignedCount;
+            $('kpi-tech-progress').innerText = ticketsList.filter((t) => t.status === 'Em Atendimento').length;
+            $('kpi-tech-critical').innerText = open.filter((t) => t.urgency === 'Crítica').length;
+            const critSub = $('kpi-tech-critical-sub');
+            if (critSub) critSub.innerText = lateCount ? lateCount + ' com SLA vencido' : 'SLA prioritário';
+            $('kpi-tech-resolved').innerText = ticketsList.filter((t) => t.status === 'Resolvido').length;
+            $('sidebar-tech-queue-count').innerText = open.length;
+            $('sidebar-tech-unassigned-count').innerText = unassignedCount;
+            $('sidebar-tech-unassigned-count').classList.toggle('amber', unassignedCount > 0);
+
+            renderPriorityTickets();
+            renderQueueChips();
+            renderSyncStamp();
+
+            const quick = (QUICK_FILTERS.find((q) => q[0] === queueQuick) || QUICK_FILTERS[0])[2];
+            const rank = { 'Crítica': 0, 'Alta': 1, 'Média': 2, 'Baixa': 3 };
+            let filtered = ticketsList.filter((t) => {
+                if (!quick(t)) return false;
+                if (filterUrgency !== 'ALL' && t.urgency !== filterUrgency) return false;
+                if (!searchVal) return true;
+                return [t.protocol, t.subject, t.name, t.email, t.technician, t.category].some((v) => String(v || '').toLowerCase().includes(searchVal));
+            });
+            filtered = filtered.slice().sort((a, b) => {
+                if (sortBy === 'new') return String(b.createdAt).localeCompare(String(a.createdAt));
+                if (sortBy === 'old') return String(a.createdAt).localeCompare(String(b.createdAt));
+                if (sortBy === 'sla') return slaDueMs(a) - slaDueMs(b);
+                const closedDiff = Number(isClosed(a)) - Number(isClosed(b));
+                if (closedDiff) return closedDiff;
+                return ((rank[a.urgency] ?? 9) - (rank[b.urgency] ?? 9)) || (slaDueMs(a) - slaDueMs(b));
+            });
+
+            const countEl = $('tech-queue-count');
+            countEl.innerText = filtered.length;
+            $('tech-queue-count-label').innerText = filtered.length === ticketsList.length ? 'chamados' : 'de ' + ticketsList.length + ' chamados';
+
+            // Seleção que já não aparece na lista sai do conjunto
+            const visible = new Set(filtered.map((t) => t.protocol));
+            selectedIds = new Set([...selectedIds].filter((p) => visible.has(p)));
+            const master = $('queue-select-all');
+            if (master) master.checked = filtered.length > 0 && filtered.every((t) => selectedIds.has(t.protocol));
+
+            tbody.innerHTML = '';
+            if (!filtered.length) {
+                tbody.innerHTML = emptyRow(8, ticketsList.length ? 'Nenhum chamado corresponde aos filtros.' : 'Nenhum chamado registrado ainda. Quando alguém abrir um chamado, ele aparece aqui sozinho.');
+                return;
+            }
+            filtered.forEach((t) => {
+                const row = techRowHtml(t, true);
+                const tr = document.createElement('tr');
+                tr.className = row.cls;
+                tr.dataset.p = t.protocol;
+                tr.innerHTML = row.html;
                 tbody.appendChild(tr);
             });
         }
 
+        // Clique na linha abre o atendimento; o checkbox só marca
+        document.addEventListener('click', function(ev) {
+            const tr = ev.target.closest && ev.target.closest('tbody tr.is-click');
+            if (!tr || ev.target.closest('button, a, input, label, select')) return;
+            if (tr.parentElement.id === 'tech-queue-tbody' && isTechMode()) openTechWorkspace(tr.dataset.p);
+            else if (tr.parentElement.id === 'user-tickets-tbody') openMyTicket(tr.dataset.p);
+        });
+        document.addEventListener('change', function(ev) {
+            const cb = ev.target;
+            if (!cb.classList || !cb.classList.contains('queue-checkbox')) return;
+            if (cb.checked) selectedIds.add(cb.dataset.p); else selectedIds.delete(cb.dataset.p);
+            const master = $('queue-select-all');
+            if (master) master.checked = document.querySelectorAll('.queue-checkbox').length > 0 && Array.from(document.querySelectorAll('.queue-checkbox')).every((c) => c.checked);
+        });
+
         // Dashboard: os 5 chamados abertos mais urgentes (prioridade e, em empate, o prazo de SLA mais próximo)
         function renderPriorityTickets() {
-            const body = document.getElementById('tech-priority-tbody');
+            const body = $('tech-priority-tbody');
             if (!body) return;
             body.innerHTML = '';
             const rank = { 'Crítica': 0, 'Alta': 1, 'Média': 2, 'Baixa': 3 };
-            const dueMs = t => { const d = slaInfo(t).due; return d ? d.getTime() : Number.MAX_SAFE_INTEGER; };
             const top = ticketsList
-                .filter(t => t.status !== 'Resolvido')
-                .sort((a, b) => ((rank[a.urgency] ?? 9) - (rank[b.urgency] ?? 9)) || (dueMs(a) - dueMs(b)))
+                .filter(isOpenTicket)
+                .sort((a, b) => ((rank[a.urgency] ?? 9) - (rank[b.urgency] ?? 9)) || (slaDueMs(a) - slaDueMs(b)))
                 .slice(0, 5);
 
             if (!top.length) {
@@ -2239,20 +3331,19 @@
                 return;
             }
 
-            top.forEach(t => {
-                const realIndex = ticketsList.findIndex(x => x.id === t.id);
+            top.forEach((t) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="mono strong c-amber">${escapeHtml(t.id)}</td>
+                    <td class="mono strong c-amber c-id">${escapeHtml(t.id)}</td>
                     <td class="t-cell">
                         <div class="t-title">${escapeHtml(t.subject)}</div>
                         <div class="t-sub"><i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}</div>
                     </td>
-                    <td>${getUrgencyBadge(t.urgency)}</td>
-                    <td>${slaCell(t)}</td>
-                    <td>${getStatusBadge(t.status)}</td>
-                    <td class="ta-r">
-                        <button type="button" onclick="openTechWorkspace(${realIndex})" class="btn btn-ghost btn-sm row-act-tech" title="Atender chamado" aria-label="Atender ${escapeHtml(t.id)}">
+                    <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
+                    <td class="c-sla">${slaCell(t)}</td>
+                    <td class="c-status">${getStatusBadge(t.status, false)}</td>
+                    <td class="ta-r c-act">
+                        <button type="button" data-p="${escapeHtml(t.protocol)}" onclick="openTechWorkspace(this.dataset.p)" class="btn btn-ghost btn-sm row-act-tech" title="Atender chamado" aria-label="Atender ${escapeHtml(t.id)}">
                             <i class="fa-solid fa-wrench"></i><span class="act-txt">Atender</span>
                         </button>
                     </td>
@@ -2261,232 +3352,310 @@
             });
         }
 
-        function openTechWorkspace(index) {
-            activeTicketIndex = index;
-            const t = ticketsList[index];
-            if (!t) return;
-
-            const isTechMode = Boolean(currentUser && currentUser.isAdmin && currentUser.role === 'tech');
-
-            document.getElementById('workspace-id').innerText = t.id;
-            document.getElementById('workspace-title').innerText = t.subject;
-            document.getElementById('workspace-requester').innerText = `${t.name} (${t.email})`;
-            document.getElementById('workspace-date').innerText = t.date;
-            const wsSla = slaInfo(t);
-            const wsSlaEl = document.getElementById('workspace-sla');
-            wsSlaEl.className = 'badge ' + (wsSla.state === 'late' ? 'b-rose' : wsSla.state === 'warn' ? 'b-amber' : wsSla.state === 'done' ? 'b-slate' : 'b-green');
-            wsSlaEl.innerHTML = '<i class="fa-solid fa-stopwatch"></i> SLA ' + escapeHtml(wsSla.label) + (wsSla.text ? ' · ' + escapeHtml(wsSla.text) : '');
-            document.getElementById('workspace-desc').innerText = t.description;
-
-            document.getElementById('prop-status').value = t.status === 'Em Aberto' ? 'Novo' : t.status;
-            const techSelect = document.getElementById('prop-technician');
-            const techVal = t.technician || 'Não Atribuído';
-            if (!Array.from(techSelect.options).some(opt => opt.value === techVal)) {
-                const newOpt = document.createElement('option');
-                newOpt.value = techVal;
-                newOpt.textContent = techVal;
-                techSelect.appendChild(newOpt);
-            }
-            techSelect.value = techVal;
-
-            document.getElementById('prop-category').value = t.category;
-            document.getElementById('prop-urgency').value = t.urgency;
-            document.getElementById('prop-hours').value = t.timeSpent || 0.5;
-            document.getElementById('prop-asset').value = t.asset || 'Nenhum';
-            document.getElementById('prop-solution').value = t.solution || '';
-
-            // Oculta controles exclusivos de Técnico/Admin quando aberto por usuário comum (Solicitante)
-            const btnTake = document.getElementById('btn-take-ticket');
-            const btnInternal = document.getElementById('btn-mode-internal');
-            const selectCanned = document.getElementById('select-canned-response');
-            const btnResolve = document.getElementById('btn-resolve-solution');
-            if (btnTake) btnTake.classList.toggle('hidden', !isTechMode);
-            if (btnInternal) btnInternal.classList.toggle('hidden', !isTechMode);
-            if (selectCanned) selectCanned.classList.toggle('hidden', !isTechMode);
-            if (btnResolve) btnResolve.classList.toggle('hidden', !isTechMode);
-
-            if (!isTechMode) {
-                setTechReplyMode('public');
-            }
-
-            ['prop-status', 'prop-technician', 'prop-category', 'prop-urgency', 'prop-hours', 'prop-asset', 'prop-solution'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.disabled = !isTechMode;
-            });
-
-            renderWorkspaceTimeline(t.timeline || []);
-            document.getElementById('modal-tech-workspace').classList.remove('hidden');
+        // ============================== ADMINISTRADOR: ATENDIMENTO ==============================
+        function setSaveState(kind, msg) {
+            const el = $('ws-save-state');
+            if (!el) return;
+            el.className = 'savestate' + (kind ? ' is-' + kind : '');
+            el.innerHTML = kind === 'saving' ? '<i class="fa-solid fa-circle-notch spin"></i> Salvando...'
+                : kind === 'saved' ? '<i class="fa-solid fa-check"></i> ' + escapeHtml(msg || 'Salvo')
+                : kind === 'error' ? '<i class="fa-solid fa-triangle-exclamation"></i> ' + escapeHtml(msg || 'Falha ao salvar')
+                : '';
         }
 
-        function renderWorkspaceTimeline(timeline) {
-            const container = document.getElementById('workspace-timeline');
-            container.innerHTML = '';
+        // Envia SÓ o que mudou (nunca o chamado inteiro: assim não se desfaz o que outra pessoa alterou no meio tempo).
+        // Devolve o chamado atualizado pelo servidor, ou null se falhou (a tela volta ao valor salvo).
+        async function saveTicketPatch(t, patch, opts) {
+            const quiet = Boolean(opts && opts.quiet);
+            if (!quiet) { wsBusy = true; setSaveState('saving'); }
+            const r = await api('POST', '/api/ordens/update', Object.assign({ protocol: t.protocol }, patch));
+            if (!quiet) wsBusy = false;
+            if (r.status === 401) { handleAuthExpired(); return null; }
+            if (!r.ok || !r.data.ordem) {
+                const msg = r.network ? 'Sem conexão: nada foi salvo' : ((r.data && r.data.message) || 'Não foi possível salvar');
+                if (!quiet) setSaveState('error', msg);
+                showToast(msg + '.', 'warning');
+                if (!quiet && activeProtocol === t.protocol) renderWorkspace(false);
+                return null;
+            }
+            const updated = applyServerOrder(r.data.ordem, false);
+            notifyParentOrdersChanged();
+            if (!quiet) setSaveState('saved', 'Salvo às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }));
+            return updated;
+        }
 
-            const isTechMode = Boolean(currentUser && currentUser.isAdmin && currentUser.role === 'tech');
+        function afterTicketChange() {
+            renderTechQueue();
+            if ($('tech-subview-dashboard') && !$('tech-subview-dashboard').classList.contains('hidden')) initCharts();
+            if (activeProtocol && getTicket(activeProtocol)) renderWorkspace(false);
+        }
 
-            timeline.forEach(item => {
-                const isInternal = item.internal;
-                if (isInternal && !isTechMode) return; // Notas privadas de TI não aparecem para o usuário comum
-                const isTech = item.sender === 'Técnico';
-                const div = document.createElement('div');
+        function openTechWorkspace(protocol) {
+            const t = getTicket(protocol);
+            if (!t) return;
+            activeProtocol = protocol;
+            renderWorkspace(true);
+            openModal('modal-tech-workspace', '#workspace-reply-text');
+        }
 
-                div.className = 'tl' + (isInternal ? ' internal' : (isTech ? ' tech' : ''));
+        function renderWorkspace(full) {
+            const t = getTicket(activeProtocol);
+            if (!t) return;
+            const closed = isClosed(t);
 
-                div.innerHTML = `
-                    <div class="tl-head">
-                        <span>
-                            ${isInternal ? '<i class="fa-solid fa-lock c-amber"></i>[NOTA INTERNA TI] ' : ''}
-                            <i class="${isTech ? 'fa-solid fa-user-gear c-blue' : 'fa-solid fa-user c-muted'}"></i>${escapeHtml(item.name)} (${escapeHtml(item.sender)})
-                        </span>
-                        <span class="tl-time">${escapeHtml(item.time)}</span>
-                    </div>
-                    <p>${escapeHtml(item.text)}</p>
-                `;
-                container.appendChild(div);
-            });
-            container.scrollTop = container.scrollHeight;
+            $('workspace-id').innerText = t.protocol;
+            $('workspace-title').innerText = t.subject;
+            $('workspace-status-badge').innerHTML = getStatusBadge(t.status, false);
+            $('workspace-urgency-badge').innerHTML = getUrgencyBadge(t.urgency);
+            $('workspace-date').innerText = 'Aberto ' + t.date + (relTime(t.createdAt) ? ' (' + relTime(t.createdAt) + ')' : '');
+            const wsSla = slaInfo(t);
+            const wsSlaEl = $('workspace-sla');
+            wsSlaEl.className = 'badge ' + (wsSla.state === 'late' ? 'b-rose' : wsSla.state === 'warn' ? 'b-amber' : wsSla.state === 'done' ? 'b-slate' : 'b-green');
+            wsSlaEl.innerHTML = '<i class="fa-solid fa-stopwatch"></i> SLA ' + escapeHtml(wsSla.label) + (wsSla.text ? ' · ' + escapeHtml(wsSla.text) : '');
+
+            $('workspace-requester').innerText = t.name;
+            const mail = $('workspace-email');
+            mail.innerText = t.email || '—';
+            mail.href = t.email ? 'mailto:' + t.email : '#';
+            $('workspace-phone').innerText = t.phone || '—';
+            $('workspace-channel').innerText = t.channel || '—';
+            $('workspace-desc').innerText = t.description;
+
+            // Propriedades: não mexe num campo que a pessoa está usando agora
+            const focusedId = document.activeElement && document.activeElement.id;
+            const setVal = (id, value) => { if (focusedId !== id) $(id).value = value; };
+            setVal('prop-status', t.status);
+            if (focusedId !== 'prop-technician') fillTechnicianOptions(t.technician);
+            setVal('prop-category', t.category);
+            setVal('prop-urgency', t.urgency);
+            setVal('prop-hours', t.timeSpent ? String(t.timeSpent) : '');
+            setVal('prop-asset', t.asset || 'Nenhum');
+            if (full || focusedId !== 'prop-solution') $('prop-solution').value = t.solution || (full ? '' : $('prop-solution').value);
+
+            $('btn-take-ticket').classList.toggle('hidden', closed || (currentUser && t.technician === currentUser.name));
+            $('btn-take-ticket').innerHTML = hasTech(t) ? '<i class="fa-solid fa-right-left"></i> Assumir (trocar técnico)' : '<i class="fa-solid fa-user-plus"></i> Assumir Chamado';
+            $('box-resolve-solution').classList.toggle('hidden', closed);
+            $('box-closed').classList.toggle('hidden', !closed);
+            if (closed) {
+                $('closed-info').innerHTML = t.status === 'Cancelado'
+                    ? '<i class="fa-solid fa-ban"></i><div><b>Chamado cancelado.</b></div>'
+                    : `<i class="fa-solid fa-circle-check"></i><div><b>Resolvido${t.closedAt ? ' em ' + escapeHtml(formatDateBr(t.closedAt)) : ''}.</b>${t.solution ? '<div class="notice-sol">' + escapeHtml(t.solution) + '</div>' : ''}</div>`;
+            }
+
+            setTimeline('workspace-timeline', t.timeline, true, !full);
+            if (full) {
+                $('workspace-reply-text').value = '';
+                setTechReplyMode('public');
+                onWsReplyInput();
+                setSaveState('');
+            }
+            const waitBtn = $('btn-reply-wait');
+            if (waitBtn) waitBtn.classList.toggle('hidden', techReplyMode !== 'public' || closed);
         }
 
         function setTechReplyMode(mode) {
             techReplyMode = mode;
-            const btnPub = document.getElementById('btn-mode-public');
-            const btnInt = document.getElementById('btn-mode-internal');
-            btnPub.classList.toggle('is-public', mode === 'public');
-            btnInt.classList.toggle('is-internal', mode !== 'public');
+            $('btn-mode-public').classList.toggle('is-public', mode === 'public');
+            $('btn-mode-internal').classList.toggle('is-internal', mode !== 'public');
+            const t = getTicket(activeProtocol);
+            const waitBtn = $('btn-reply-wait');
+            if (waitBtn) waitBtn.classList.toggle('hidden', mode !== 'public' || (t ? isClosed(t) : false));
+            $('btn-reply-send').innerHTML = mode === 'public'
+                ? '<i class="fa-solid fa-paper-plane"></i> Registrar Interação'
+                : '<i class="fa-solid fa-lock"></i> Salvar Nota Interna';
+            $('workspace-reply-text').placeholder = mode === 'public'
+                ? 'Digite sua resposta ao solicitante...'
+                : 'Nota privada da equipe de TI (o solicitante não vê)...';
         }
 
         function applyCannedResponse(val) {
-            if (val && cannedTemplates[val]) {
-                document.getElementById('workspace-reply-text').value = cannedTemplates[val];
-            }
+            if (!val || !cannedTemplates[val]) return;
+            const t = getTicket(activeProtocol);
+            const text = cannedTemplates[val]
+                .replace(/\{nome\}/g, t ? firstName(t.name) : 'cliente')
+                .replace(/\{protocolo\}/g, t ? t.protocol : '')
+                .replace(/\{tecnico\}/g, currentUser ? currentUser.name : 'Equipe TI');
+            const ta = $('workspace-reply-text');
+            ta.value = ta.value.trim() ? ta.value.trim() + '\n\n' + text : text;
+            onWsReplyInput();
+            ta.focus();
         }
 
-        async function submitTechReply() {
-            if (activeTicketIndex === null) return;
-            const text = document.getElementById('workspace-reply-text').value.trim();
-            if (!text) return;
-
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-
-            const t = ticketsList[activeTicketIndex];
-            const senderLabel = (currentUser && currentUser.role === 'user') ? "Solicitante" : "Técnico";
-            const senderName = currentUser ? currentUser.name : "Administrador";
-
-            t.timeline.push({
-                sender: senderLabel,
-                name: senderName,
-                text: text,
-                time: dateStr,
-                internal: (techReplyMode === 'internal')
-            });
-
-            if (senderLabel === 'Técnico' && techReplyMode === 'public' && (t.status === 'Novo' || t.status === 'Em Aberto')) {
-                t.status = "Em Atendimento";
-                t.technician = senderName;
-                document.getElementById('prop-status').value = "Em Atendimento";
-                document.getElementById('prop-technician').value = senderName;
-            }
-
-            saveTickets();
-            await syncTicketUpdateToServer(t);
-            document.getElementById('workspace-reply-text').value = '';
-            renderWorkspaceTimeline(t.timeline);
-            if (currentUser && currentUser.role === 'user') renderUserTickets();
-            else renderTechQueue();
-            showToast('Interação registrada com sucesso.', 'success');
+        function onWsReplyInput() {
+            $('ws-reply-count').textContent = $('workspace-reply-text').value.length + '/2000';
         }
 
-        async function updateTicketProperties() {
-            if (activeTicketIndex === null) return;
-            const t = ticketsList[activeTicketIndex];
-            const previousUrgency = t.urgency;
-            t.status = document.getElementById('prop-status').value;
-            t.technician = document.getElementById('prop-technician').value;
-            t.category = document.getElementById('prop-category').value;
-            t.urgency = document.getElementById('prop-urgency').value;
-            // Mudou a urgência: o prazo de SLA acompanha a nova urgência (a contagem continua da abertura do chamado)
-            if (t.urgency !== previousUrgency) t.sla = slaForUrgency(t.urgency);
-            t.timeSpent = parseFloat(document.getElementById('prop-hours').value) || 0;
-            t.asset = document.getElementById('prop-asset').value;
-            saveTickets();
-            await syncTicketUpdateToServer(t);
-            renderTechQueue();
-            initCharts();
+        async function submitTechReply(waitClient) {
+            const t = getTicket(activeProtocol);
+            if (!t || wsBusy) return;
+            const ta = $('workspace-reply-text');
+            const text = ta.value.trim();
+            if (!text) { showToast('Escreva a mensagem antes de registrar.', 'warning'); ta.focus(); return; }
+
+            const me = currentUser ? currentUser.name : 'Administrador';
+            const internal = techReplyMode === 'internal';
+            const patch = { timeline_entry: { sender: 'Técnico', author: me, text: text, internal: internal } };
+            if (!internal && isOpenTicket(t)) {
+                if (!hasTech(t)) patch.tecnico_responsavel = me;
+                if (waitClient === true) patch.status = 'Pendente Cliente';
+                else if (t.status === 'Novo') patch.status = 'Em Atendimento';
+            }
+            const btn = waitClient === true ? $('btn-reply-wait') : $('btn-reply-send');
+            setBusy(btn, true, 'Enviando...');
+            const updated = await saveTicketPatch(t, patch);
+            setBusy(btn, false);
+            if (!updated) return;
+            ta.value = '';
+            onWsReplyInput();
+            afterTicketChange();
+            showToast(internal ? 'Nota interna salva.' : (waitClient === true ? 'Resposta enviada. Chamado aguardando o cliente.' : 'Interação registrada com sucesso.'), 'success');
+        }
+
+        async function onPropChange(field) {
+            const t = getTicket(activeProtocol);
+            if (!t || wsBusy) return;
+            const patch = {};
+            const me = currentUser ? currentUser.name : 'Administrador';
+            if (field === 'status') {
+                const v = $('prop-status').value;
+                if (v === 'Resolvido') {
+                    // Encerrar exige a solução: volta o campo e leva a pessoa até a caixa certa
+                    $('prop-status').value = t.status;
+                    const sol = $('prop-solution');
+                    if (sol.value.trim()) { resolveTicketWithSolution(); return; }
+                    showToast('Para encerrar, descreva a solução definitiva e use o botão "Encerrar como RESOLVIDO".', 'warning');
+                    sol.focus();
+                    return;
+                }
+                if (v === 'Cancelado') { $('prop-status').value = t.status; showToast('Para cancelar use o botão "Cancelar chamado".', 'warning'); return; }
+                patch.status = v;
+                if (isClosed(t) && v !== 'Novo' && !hasTech(t)) patch.tecnico_responsavel = me;
+            } else if (field === 'technician') {
+                const v = $('prop-technician').value;
+                patch.tecnico_responsavel = v === 'Não Atribuído' ? '' : v;
+                if (v !== 'Não Atribuído' && t.status === 'Novo') patch.status = 'Em Atendimento';
+            } else if (field === 'category') {
+                patch.service_type = $('prop-category').value;
+            } else if (field === 'urgency') {
+                patch.priority = $('prop-urgency').value;
+            } else if (field === 'hours') {
+                const n = parseFloat(String($('prop-hours').value).replace(',', '.'));
+                if (!(n >= 0) || n > 999) { showToast('Informe as horas trabalhadas com um número entre 0 e 999.', 'warning'); renderWorkspace(false); return; }
+                patch.time_spent = Math.round(n * 100) / 100;
+            } else if (field === 'asset') {
+                patch.asset = $('prop-asset').value;
+            }
+            const updated = await saveTicketPatch(t, patch);
+            if (updated) afterTicketChange();
         }
 
         async function takeCurrentTicket() {
-            if (activeTicketIndex === null) return;
-            const techName = currentUser ? currentUser.name : "Administrador";
-            const techSelect = document.getElementById('prop-technician');
-            if (!Array.from(techSelect.options).some(opt => opt.value === techName)) {
-                const opt = document.createElement('option');
-                opt.value = techName;
-                opt.textContent = techName;
-                techSelect.appendChild(opt);
-            }
-            techSelect.value = techName;
-            document.getElementById('prop-status').value = "Em Atendimento";
-            await updateTicketProperties();
-            showToast('Chamado atribuído a você.', 'info');
+            const t = getTicket(activeProtocol);
+            if (!t || wsBusy) return;
+            const me = currentUser ? currentUser.name : 'Administrador';
+            const patch = { tecnico_responsavel: me };
+            if (t.status === 'Novo') patch.status = 'Em Atendimento';
+            const updated = await saveTicketPatch(t, patch);
+            if (updated) { afterTicketChange(); showToast('Chamado atribuído a você.', 'info'); }
+        }
+
+        // Assumir direto da lista, sem abrir o chamado
+        async function quickTake(protocol) {
+            const t = getTicket(protocol);
+            if (!t) return;
+            const me = currentUser ? currentUser.name : 'Administrador';
+            const patch = { tecnico_responsavel: me };
+            if (t.status === 'Novo') patch.status = 'Em Atendimento';
+            const updated = await saveTicketPatch(t, patch, { quiet: true });
+            if (updated) { afterTicketChange(); showToast('Chamado ' + t.protocol + ' assumido por você.', 'success'); }
         }
 
         async function resolveTicketWithSolution() {
-            if (activeTicketIndex === null) return;
-            const sol = document.getElementById('prop-solution').value.trim();
+            const t = getTicket(activeProtocol);
+            if (!t || wsBusy) return;
+            const sol = $('prop-solution').value.trim();
             if (!sol) {
-                showToast("Por favor informe a solução técnica antes de encerrar.", "warning");
+                showToast('Por favor informe a solução técnica antes de encerrar.', 'warning');
+                $('prop-solution').focus();
                 return;
             }
-
-            const t = ticketsList[activeTicketIndex];
-            t.solution = sol;
-            t.status = "Resolvido";
-            
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-
-            t.timeline.push({
-                sender: "Técnico",
-                name: currentUser ? currentUser.name : "Administrador",
-                text: `[SOLUÇÃO APLICADA]: ${sol}`,
-                time: dateStr,
-                internal: false
-            });
-
-            saveTickets();
-            await syncTicketUpdateToServer(t);
-            renderTechQueue();
-            initCharts();
+            const me = currentUser ? currentUser.name : 'Administrador';
+            const patch = {
+                status: 'Resolvido',
+                solution: sol,
+                timeline_entry: { sender: 'Técnico', author: me, text: '[SOLUÇÃO APLICADA]: ' + sol, internal: false }
+            };
+            if (!hasTech(t)) patch.tecnico_responsavel = me;
+            const btn = $('btn-resolve-solution');
+            setBusy(btn, true, 'Encerrando...');
+            const updated = await saveTicketPatch(t, patch);
+            setBusy(btn, false);
+            if (!updated) return;
+            afterTicketChange();
             closeModal('modal-tech-workspace');
-            showToast('Chamado encerrado como RESOLVIDO.', 'success');
+            showToast('Chamado ' + t.protocol + ' encerrado como RESOLVIDO.', 'success');
+        }
+
+        function cancelTicketAdmin() {
+            armConfirm($('btn-cancel-ticket'), 'Clique de novo para cancelar', async () => {
+                const t = getTicket(activeProtocol);
+                if (!t || wsBusy) return;
+                const me = currentUser ? currentUser.name : 'Administrador';
+                const updated = await saveTicketPatch(t, { status: 'Cancelado', timeline_entry: { sender: 'Técnico', author: me, text: 'Chamado cancelado pela equipe de TI.', internal: true } });
+                if (updated) { afterTicketChange(); showToast('Chamado ' + t.protocol + ' cancelado.', 'info'); }
+            });
+        }
+
+        async function reopenTicketAdmin() {
+            const t = getTicket(activeProtocol);
+            if (!t || wsBusy) return;
+            const me = currentUser ? currentUser.name : 'Administrador';
+            const patch = { status: 'Em Atendimento', timeline_entry: { sender: 'Técnico', author: me, text: 'Chamado reaberto pela equipe de TI.', internal: true } };
+            if (!hasTech(t)) patch.tecnico_responsavel = me;
+            const updated = await saveTicketPatch(t, patch);
+            if (updated) { afterTicketChange(); showToast('Chamado reaberto.', 'success'); }
         }
 
         async function assignBulkToMe() {
-            const selected = document.querySelectorAll('.queue-checkbox:checked');
-            if (selected.length === 0) {
-                showToast("Selecione ao menos um chamado na lista.", "warning");
+            const chosen = [...selectedIds].map(getTicket).filter(Boolean);
+            if (!chosen.length) {
+                showToast('Selecione ao menos um chamado na lista.', 'warning');
                 return;
             }
-            const techName = currentUser ? currentUser.name : "Administrador";
-            for (const cb of selected) {
-                const id = cb.getAttribute('data-id');
-                const t = ticketsList.find(x => x.id === id);
-                if (t) {
-                    t.technician = techName;
-                    if (t.status === 'Novo' || t.status === 'Em Aberto') t.status = "Em Atendimento";
-                    await syncTicketUpdateToServer(t);
-                }
+            const me = currentUser ? currentUser.name : 'Administrador';
+            let done = 0;
+            let skipped = 0;
+            let failed = 0;
+            for (const t of chosen) {
+                if (isClosed(t) || t.technician === me) { skipped++; continue; }
+                const patch = { tecnico_responsavel: me };
+                if (t.status === 'Novo') patch.status = 'Em Atendimento';
+                const updated = await saveTicketPatch(t, patch, { quiet: true });
+                if (updated) done++; else failed++;
             }
-            saveTickets();
-            renderTechQueue();
-            initCharts();
-            showToast(`${selected.length} chamado(s) atribuído(s) a você.`, 'success');
+            selectedIds = new Set();
+            afterTicketChange();
+            const parts = [done + ' chamado(s) atribuído(s) a você'];
+            if (skipped) parts.push(skipped + ' ignorado(s) (já seus ou encerrados)');
+            if (failed) parts.push(failed + ' com falha');
+            showToast(parts.join(' · ') + '.', failed ? 'warning' : 'success');
         }
 
         function toggleSelectAllQueue(master) {
-            document.querySelectorAll('.queue-checkbox').forEach(cb => cb.checked = master.checked);
+            document.querySelectorAll('.queue-checkbox').forEach((cb) => {
+                cb.checked = master.checked;
+                if (master.checked) selectedIds.add(cb.dataset.p); else selectedIds.delete(cb.dataset.p);
+            });
         }
+
+        // Ctrl+Enter envia a mensagem / o formulário
+        document.addEventListener('keydown', function(ev) {
+            if (ev.key !== 'Enter' || !(ev.ctrlKey || ev.metaKey)) return;
+            const id = document.activeElement && document.activeElement.id;
+            if (id === 'workspace-reply-text') { ev.preventDefault(); submitTechReply(false); }
+            else if (id === 'my-reply-text') { ev.preventDefault(); sendMyReply(); }
+            else if (id === 'form-subject' || id === 'form-desc' || id === 'form-req-phone') { ev.preventDefault(); handleCreateTicket(); }
+        });
 
         // CHARTS & UTILS
         function initCharts() {
@@ -2652,7 +3821,7 @@
 
             toast.append(ico, text, close);
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+            setTimeout(() => toast.remove(), type === 'warning' ? 7000 : 4500);
         }
 
         function toggleSidebar(force) {
@@ -2661,10 +3830,6 @@
             const open = typeof force === 'boolean' ? force : !sidebar.classList.contains('is-open');
             sidebar.classList.toggle('is-open', open);
             scrim.classList.toggle('is-on', open);
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
         }
 
         // ---- Apoio visual (vidro): navegação ativa, linha vazia, rótulos de gráfico e atalho Esc ----
@@ -2745,7 +3910,7 @@
             const due = slaDueDate(start, label);
             if (!due) return info;
             info.due = due;
-            if (t.status === 'Resolvido') { info.state = 'done'; info.text = 'Encerrado'; return info; }
+            if (t.status === 'Resolvido' || t.status === 'Cancelado') { info.state = 'done'; info.text = t.status === 'Cancelado' ? 'Cancelado' : 'Encerrado'; return info; }
             const left = due.getTime() - Date.now();
             const total = due.getTime() - start.getTime();
             if (left <= 0) { info.state = 'late'; info.text = 'Vencido em ' + fmtDue(due); }
@@ -2762,26 +3927,29 @@
         // Esc fecha a janela aberta (ou o menu lateral no celular e o menu de modo)
         document.addEventListener('keydown', function(ev) {
             if (ev.key !== 'Escape') return;
-            const open = Array.from(document.querySelectorAll('.overlay')).filter(el => !el.classList.contains('hidden'));
-            if (open.length) {
-                open[open.length - 1].classList.add('hidden');
-                return;
-            }
+            if (closeTopModal()) return;
             toggleSidebar(false);
             toggleProfileMenu(true);
         });
 
-        function getStatusBadge(status) {
+        function getStatusBadge(status, forUser) {
             switch(status) {
                 case 'Novo':
                 case 'Em Aberto':
-                    return `<span class="badge b-amber"><span class="dot"></span>Novo</span>`;
+                case 'Pendente':
+                    return `<span class="badge b-amber"><span class="dot"></span>${forUser ? 'Aberto' : 'Novo'}</span>`;
                 case 'Em Atendimento':
+                case 'Em Andamento':
                     return `<span class="badge b-blue"><span class="dot live"></span>Em Atendimento</span>`;
                 case 'Pendente Cliente':
-                    return `<span class="badge b-purple"><span class="dot"></span>Pendente Cliente</span>`;
+                    return forUser
+                        ? `<span class="badge b-amber"><span class="dot live"></span>Aguardando você</span>`
+                        : `<span class="badge b-purple"><span class="dot"></span>Pendente Cliente</span>`;
                 case 'Resolvido':
+                case 'Concluído':
                     return `<span class="badge b-green"><i class="fa-solid fa-check" style="font-size:.6rem;"></i>Resolvido</span>`;
+                case 'Cancelado':
+                    return `<span class="badge b-slate"><i class="fa-solid fa-ban" style="font-size:.6rem;"></i>Cancelado</span>`;
                 default:
                     return `<span class="badge b-slate">${escapeHtml(status)}</span>`;
             }

@@ -343,30 +343,54 @@ function encontrarDuplicada(lista, dados, { agora = Date.now(), janelaMs = 10 * 
 }
 
 // ---------- Atualização (administrador) ----------
+// Nomes que o painel mostra (o servidor aceita os apelidos antigos "Pendente", "Em Andamento" e "Concluído")
+const ROTULO_STATUS = Object.freeze({ 'Pendente': 'Novo', 'Em Andamento': 'Em Atendimento', 'Concluído': 'Resolvido' });
+const rotuloStatus = (status) => ROTULO_STATUS[status] || status || '—';
+
+// Linha do histórico gerada pelo sistema ("Status alterado…"): o solicitante vê as públicas; as internas são só da equipe
+function eventoDeSistema(texto, { agoraIso, autor, interno = false }) {
+  return { sender: 'Sistema', author: limparTexto(autor || '', 120) || 'Equipe TI', text: texto, date: agoraIso, internal: interno, event: true };
+}
+
 /**
  * Aplica as mudanças do administrador sobre um chamado existente.
  * Só altera o que veio no pedido (antes, enviar apenas as notas devolvia o chamado para "Pendente").
+ * Cada mudança relevante (status, técnico, prioridade) vira uma linha automática no histórico; categoria, ativo e horas
+ * viram linhas internas. Se a prioridade mudar e o pedido não trouxer o SLA, o prazo é recalculado pela política.
  * Retorna { ok: true, ordem, mudancas } ou { ok: false, mensagem }.
  */
-function aplicarAtualizacao(ordem, payload, { agoraIso }) {
+function aplicarAtualizacao(ordem, payload, { agoraIso, ator }) {
   const p = payload && typeof payload === 'object' ? payload : {};
   const novo = { ...ordem };
   if (Array.isArray(ordem.timeline)) {
     novo.timeline = ordem.timeline.map((item) => ({ ...item }));
   }
   const mudancas = [];
+  const eventos = [];
+  const autorDoEvento = ator || ordem.tecnico_responsavel || 'Equipe TI';
+  const publico = (texto) => eventos.push(eventoDeSistema(texto, { agoraIso, autor: autorDoEvento }));
+  const interno = (texto) => eventos.push(eventoDeSistema(texto, { agoraIso, autor: autorDoEvento, interno: true }));
 
   if (p.status !== undefined && String(p.status).trim() !== '') {
     const status = acharNaLista(STATUS, p.status);
     if (!status) return { ok: false, mensagem: 'Status inválido. Use: ' + STATUS.join(', ') + '.' };
-    if (status !== ordem.status) mudancas.push('status: ' + (ordem.status || '—') + ' → ' + status);
+    if (status !== ordem.status) {
+      mudancas.push('status: ' + (ordem.status || '—') + ' → ' + status);
+      if (rotuloStatus(status) !== rotuloStatus(ordem.status)) {
+        publico('Status alterado de "' + rotuloStatus(ordem.status) + '" para "' + rotuloStatus(status) + '".');
+      }
+    }
     novo.status = status;
   }
 
+  let prioridadeMudou = false;
   if (p.priority !== undefined && String(p.priority).trim() !== '') {
     const prioridade = acharNaLista(PRIORIDADES, p.priority);
     if (!prioridade) return { ok: false, mensagem: 'Prioridade inválida. Use: ' + PRIORIDADES.join(', ') + '.' };
-    if (prioridade !== ordem.priority) mudancas.push('prioridade: ' + (ordem.priority || '—') + ' → ' + prioridade);
+    if (prioridade !== ordem.priority) {
+      mudancas.push('prioridade: ' + (ordem.priority || '—') + ' → ' + prioridade);
+      prioridadeMudou = true;
+    }
     novo.priority = prioridade;
   }
 
@@ -375,7 +399,10 @@ function aplicarAtualizacao(ordem, payload, { agoraIso }) {
     // Chamados antigos podem ter categorias que já não estão no catálogo: mantê-las não é erro
     const categoria = acharNaLista(CATEGORIAS, bruta) || (bruta === ordem.service_type ? bruta : null);
     if (!categoria) return { ok: false, mensagem: 'Categoria inválida.' };
-    if (categoria !== ordem.service_type) mudancas.push('categoria: ' + (ordem.service_type || '—') + ' → ' + categoria);
+    if (categoria !== ordem.service_type) {
+      mudancas.push('categoria: ' + (ordem.service_type || '—') + ' → ' + categoria);
+      interno('Categoria alterada de "' + (ordem.service_type || '—') + '" para "' + categoria + '".');
+    }
     novo.service_type = categoria;
   }
 
@@ -390,10 +417,24 @@ function aplicarAtualizacao(ordem, payload, { agoraIso }) {
 
   if (p.tecnico_responsavel !== undefined) {
     const tecnico = limparTexto(p.tecnico_responsavel, LIMITES.tecnico) || null;
-    if (tecnico !== (ordem.tecnico_responsavel || null)) mudancas.push('técnico: ' + (ordem.tecnico_responsavel || '—') + ' → ' + (tecnico || '—'));
+    const anterior = ordem.tecnico_responsavel || null;
+    if (tecnico !== anterior) {
+      mudancas.push('técnico: ' + (anterior || '—') + ' → ' + (tecnico || '—'));
+      if (tecnico && !anterior) publico('Chamado assumido por ' + tecnico + '.');
+      else if (tecnico) publico('Chamado reatribuído de ' + anterior + ' para ' + tecnico + '.');
+      else publico('Atribuição removida (o responsável era ' + anterior + ').');
+    }
     novo.tecnico_responsavel = tecnico;
     if (tecnico && !novo.assumido_em) novo.assumido_em = agoraIso;
     else if (!tecnico) novo.assumido_em = null;
+  }
+
+  // O prazo acompanha a prioridade, a menos que o pedido já traga um SLA próprio
+  if (prioridadeMudou && (p.sla === undefined || String(p.sla).trim() === '')) {
+    novo.sla = calcularSlaPorPrioridade(novo.priority);
+  }
+  if (prioridadeMudou) {
+    publico('Prioridade alterada de "' + (ordem.priority || '—') + '" para "' + novo.priority + '". Prazo de atendimento (SLA): ' + (p.sla !== undefined && String(p.sla).trim() !== '' ? limparTexto(p.sla, LIMITES.sla) : novo.sla) + '.');
   }
 
   if (p.sla !== undefined && String(p.sla).trim() !== '') {
@@ -404,7 +445,10 @@ function aplicarAtualizacao(ordem, payload, { agoraIso }) {
 
   if (p.asset !== undefined) {
     const assetNovo = limparTexto(p.asset, LIMITES.asset) || 'Nenhum';
-    if (assetNovo !== (ordem.asset || 'Nenhum')) mudancas.push('ativo CMDB: ' + (ordem.asset || 'Nenhum') + ' → ' + assetNovo);
+    if (assetNovo !== (ordem.asset || 'Nenhum')) {
+      mudancas.push('ativo CMDB: ' + (ordem.asset || 'Nenhum') + ' → ' + assetNovo);
+      interno('Ativo CMDB vinculado: "' + (ordem.asset || 'Nenhum') + '" → "' + assetNovo + '".');
+    }
     novo.asset = assetNovo;
   }
 
@@ -412,7 +456,10 @@ function aplicarAtualizacao(ordem, payload, { agoraIso }) {
     const tsBruto = Number(p.time_spent ?? p.timeSpent);
     if (Number.isFinite(tsBruto) && tsBruto >= 0) {
       const tsNovo = Math.round(tsBruto * 100) / 100;
-      if (tsNovo !== Number(ordem.time_spent || 0)) mudancas.push('horas trabalhadas: ' + (ordem.time_spent || 0) + 'h → ' + tsNovo + 'h');
+      if (tsNovo !== Number(ordem.time_spent || 0)) {
+        mudancas.push('horas trabalhadas: ' + (ordem.time_spent || 0) + 'h → ' + tsNovo + 'h');
+        interno('Horas trabalhadas: ' + (ordem.time_spent || 0) + 'h → ' + tsNovo + 'h.');
+      }
       novo.time_spent = tsNovo;
     }
   }
@@ -451,10 +498,129 @@ function aplicarAtualizacao(ordem, payload, { agoraIso }) {
     }
   }
 
+  // As linhas automáticas entram depois da resposta (se vier junto): "respondeu" e em seguida "status alterado"
+  if (eventos.length) novo.timeline = [...(Array.isArray(novo.timeline) ? novo.timeline : []), ...eventos];
+
   if (novo.status === 'Concluído' || novo.status === 'Resolvido') {
     novo.concluido_em = paraIso(ordem.concluido_em) || agoraIso;
   } else {
     novo.concluido_em = null;
+  }
+
+  novo.updated_at = agoraIso;
+  return { ok: true, ordem: novo, mudancas };
+}
+
+// ---------- O solicitante acompanha e responde o próprio chamado ----------
+const PRAZO_REABERTURA_DIAS = 7;
+const LIMITE_INTERACOES = 300;
+const STATUS_ENCERRADOS = Object.freeze(['Resolvido', 'Concluído']);
+const statusEncerrado = (status) => STATUS_ENCERRADOS.includes(status);
+
+function podeReabrir(ordem, agora = Date.now()) {
+  if (!statusEncerrado(ordem.status)) return false;
+  const fechadoEm = Date.parse(paraIso(ordem.concluido_em) || paraIso(ordem.updated_at) || '');
+  return !Number.isFinite(fechadoEm) || agora - fechadoEm <= PRAZO_REABERTURA_DIAS * 24 * 60 * 60 * 1000;
+}
+
+function podeCancelar(ordem) {
+  return (ordem.status === 'Pendente' || ordem.status === 'Novo') && !ordem.tecnico_responsavel && !ordem.assumido_em;
+}
+
+/**
+ * O que o solicitante (dono do chamado, com login) enxerga: andamento completo, SEM o parecer interno, as notas privadas
+ * da equipe nem as linhas internas do histórico. Inclui o que ele pode fazer agora (responder, reabrir, cancelar).
+ */
+function visaoSolicitante(ordem, { agora = Date.now() } = {}) {
+  const status = ordem.status || 'Pendente';
+  const encerrado = statusEncerrado(status);
+  return {
+    protocol: ordem.protocol,
+    status,
+    priority: ordem.priority || 'Normal',
+    service_type: ordem.service_type || CATEGORIA_PADRAO,
+    title: ordem.title || '',
+    description: ordem.description || '',
+    sla: ordem.sla || calcularSlaPorPrioridade(ordem.priority),
+    canal_atendimento: ordem.canal_atendimento || CANAL_PADRAO,
+    tecnico_responsavel: ordem.tecnico_responsavel || null,
+    solution: ordem.solution || '',
+    created_at: paraIso(ordem.created_at),
+    updated_at: paraIso(ordem.updated_at),
+    assumido_em: paraIso(ordem.assumido_em),
+    concluido_em: paraIso(ordem.concluido_em),
+    timeline: (Array.isArray(ordem.timeline) ? ordem.timeline : [])
+      .filter((item) => item && !item.internal)
+      .map((item) => ({
+        sender: item.sender || 'Técnico',
+        author: item.author || '',
+        text: item.text || '',
+        date: paraIso(item.date),
+        event: item.event === true || item.sender === 'Sistema'
+      })),
+    pode_responder: !encerrado && status !== 'Cancelado',
+    pode_reabrir: podeReabrir(ordem, agora),
+    pode_cancelar: podeCancelar(ordem)
+  };
+}
+
+/**
+ * Ação do solicitante sobre o próprio chamado (a rota já conferiu que ele é o dono):
+ *  - responder: mensagem na conversa; se a equipe aguardava o cliente, o chamado volta para atendimento;
+ *  - reabrir: só chamado resolvido, até 7 dias depois, com o motivo;
+ *  - cancelar: só enquanto ninguém assumiu o chamado.
+ * Retorna { ok: true, ordem, mudancas } ou { ok: false, mensagem, codigo } (400 = pedido inválido, 409 = estado não permite).
+ */
+function aplicarAcaoSolicitante(ordem, payload, { agoraIso, agora = Date.now() }) {
+  const p = payload && typeof payload === 'object' ? payload : {};
+  const acao = String(p.acao || 'responder').trim().toLowerCase();
+  const texto = limparTexto(p.texto ?? p.text, LIMITES.notas, { multilinha: true });
+  const autor = limparTexto(ordem.client_name || '', 120) || 'Solicitante';
+  const recusa = (mensagem, codigo) => ({ ok: false, mensagem, codigo });
+
+  if (!['responder', 'reabrir', 'cancelar'].includes(acao)) return recusa('Ação inválida. Use: responder, reabrir ou cancelar.', 400);
+
+  const novo = { ...ordem, timeline: Array.isArray(ordem.timeline) ? ordem.timeline.map((item) => ({ ...item })) : [] };
+  const mensagem = { sender: 'Solicitante', author: autor, text: texto, date: agoraIso, internal: false };
+  const evento = (t) => eventoDeSistema(t, { agoraIso, autor });
+  const mudancas = [];
+
+  if (novo.timeline.length >= LIMITE_INTERACOES) return recusa('Este chamado atingiu o limite de mensagens. Abra um novo chamado informando o protocolo ' + ordem.protocol + '.', 409);
+
+  if (acao === 'responder') {
+    if (texto.length < 2) return recusa('Escreva a sua mensagem.', 400);
+    if (ordem.status === 'Cancelado') return recusa('Este chamado foi cancelado. Abra um novo chamado se ainda precisar de ajuda.', 409);
+    if (statusEncerrado(ordem.status)) return recusa('Este chamado está encerrado. Use "Reabrir chamado" se o problema voltou.', 409);
+    // Mesma mensagem enviada duas vezes seguidas (duplo clique): vale uma só
+    // (as linhas automáticas do sistema não contam: a última "mensagem" é a última que não é evento)
+    const ultima = [...novo.timeline].reverse().find((item) => item && item.sender !== 'Sistema');
+    if (ultima && ultima.sender === 'Solicitante' && ultima.text === texto && Date.parse(ultima.date) && agora - Date.parse(ultima.date) < 60 * 1000) {
+      return { ok: true, ordem: novo, mudancas: [] };
+    }
+    novo.timeline.push(mensagem);
+    mudancas.push('resposta do solicitante');
+    if (ordem.status === 'Pendente Cliente') {
+      novo.status = ordem.tecnico_responsavel ? 'Em Atendimento' : 'Pendente';
+      novo.timeline.push(evento('Resposta recebida: o chamado voltou para atendimento.'));
+      mudancas.push('status: Pendente Cliente → ' + novo.status);
+    }
+  } else if (acao === 'reabrir') {
+    if (!statusEncerrado(ordem.status)) return recusa('Só é possível reabrir chamados resolvidos.', 409);
+    if (!podeReabrir(ordem, agora)) return recusa('O prazo de ' + PRAZO_REABERTURA_DIAS + ' dias para reabrir terminou. Abra um novo chamado informando o protocolo ' + ordem.protocol + '.', 409);
+    if (texto.length < 5) return recusa('Explique o que ainda não foi resolvido (mínimo de 5 caracteres).', 400);
+    novo.status = ordem.tecnico_responsavel ? 'Em Atendimento' : 'Pendente';
+    novo.concluido_em = null;
+    novo.timeline.push(mensagem, evento('Chamado reaberto pelo solicitante.'));
+    mudancas.push('reaberto: ' + (ordem.status || '—') + ' → ' + novo.status);
+  } else {
+    if (!podeCancelar(ordem)) {
+      return recusa(ordem.status === 'Cancelado' ? 'Este chamado já foi cancelado.' : 'O chamado já está em atendimento e não pode ser cancelado. Envie uma mensagem à equipe.', 409);
+    }
+    if (texto) novo.timeline.push(mensagem);
+    novo.status = 'Cancelado';
+    novo.concluido_em = null;
+    novo.timeline.push(evento('Chamado cancelado pelo solicitante.'));
+    mudancas.push('cancelado pelo solicitante');
   }
 
   novo.updated_at = agoraIso;
@@ -619,5 +785,6 @@ module.exports = {
   formatarTelefone, mesmoNumero, validarCpf, soDigitos,
   validarAbertura, montarOrdem, encontrarDuplicada, aplicarAtualizacao,
   normalizarOrdem, mesclarOrdens,
-  classificarConsulta, ordemCorresponde, visaoPublica
+  classificarConsulta, ordemCorresponde, visaoPublica,
+  visaoSolicitante, aplicarAcaoSolicitante, podeReabrir, podeCancelar, statusEncerrado, PRAZO_REABERTURA_DIAS
 };

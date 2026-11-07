@@ -344,7 +344,9 @@ test('integração GLPI 10: SLA automático, ativo CMDB, horas, timeline públic
   assert.ok(att1.ok);
   assert.equal(att1.ordem.asset, 'SRV-ERP-01 (Cluster Produção)');
   assert.equal(att1.ordem.time_spent, 1.5);
-  assert.equal(att1.ordem.timeline.length, 2);
+  // 1 abertura + 1 nota interna + 4 linhas automáticas (status, técnico, ativo e horas)
+  assert.equal(att1.ordem.timeline.length, 6);
+  assert.equal(att1.ordem.timeline.filter((i) => i.event).length, 4);
 
   const att2 = A.aplicarAtualizacao(att1.ordem, {
     status: 'Resolvido',
@@ -360,4 +362,137 @@ test('integração GLPI 10: SLA automático, ativo CMDB, horas, timeline públic
   assert.equal(pub.timeline.length, 1);
   assert.equal(pub.timeline[0].text, 'Reprocessamento liberado.');
   assert.ok(!JSON.stringify(pub).includes('Nota privada N2'));
+});
+
+// ---------- Histórico automático, visão e ações do solicitante ----------
+const ordemAberta = () => A.montarOrdem(A.validarAbertura({
+  client_name: 'Ana Souza', client_email: 'ana@empresa.com.br', service_type: 'Sistema Financeiro & ERP', priority: 'Média',
+  title: 'Boleto não liquidou', description: 'O boleto pago ontem continua em aberto na conciliação.', canal_atendimento: 'Central GLPI'
+}).dados, { protocolo: 'OS-261107-ABCD', id: 77, agoraIso: AGORA });
+
+test('aplicarAtualizacao registra no histórico quem assumiu, status e prioridade, e recalcula o SLA', () => {
+  const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Em Atendimento', tecnico_responsavel: 'Carlos', priority: 'Alta' }, { agoraIso: AGORA, ator: 'Admin Paulo' });
+  assert.ok(r.ok);
+  assert.equal(r.ordem.sla, '1 Hora');
+  const eventos = r.ordem.timeline.filter((i) => i.event);
+  assert.deepEqual(eventos.map((e) => e.sender), ['Sistema', 'Sistema', 'Sistema']);
+  assert.ok(eventos.some((e) => /de "Novo" para "Em Atendimento"/.test(e.text)));
+  assert.ok(eventos.some((e) => /assumido por Carlos/.test(e.text)));
+  assert.ok(eventos.some((e) => /Prioridade alterada de "Média" para "Alta"/.test(e.text) && /1 Hora/.test(e.text)));
+  assert.ok(eventos.every((e) => e.author === 'Admin Paulo' && e.internal === false));
+});
+
+test('aplicarAtualizacao: a resposta vem antes das linhas automáticas; sem mudança não cria linha; SLA enviado vale', () => {
+  const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Pendente Cliente', timeline_entry: { sender: 'Técnico', author: 'Carlos', text: 'Pode enviar o comprovante?' } }, { agoraIso: AGORA });
+  const t = r.ordem.timeline;
+  assert.equal(t[t.length - 2].text, 'Pode enviar o comprovante?');
+  assert.equal(t[t.length - 1].event, true);
+  const igual = A.aplicarAtualizacao(r.ordem, { status: 'Pendente Cliente', priority: 'Média' }, { agoraIso: AGORA });
+  assert.equal(igual.ordem.timeline.length, r.ordem.timeline.length);
+  const sla = A.aplicarAtualizacao(ordemAberta(), { priority: 'Baixa', sla: '3 Dias Úteis' }, { agoraIso: AGORA });
+  assert.equal(sla.ordem.sla, '3 Dias Úteis');
+});
+
+test('aplicarAtualizacao: apelidos antigos de status não geram linha de "mudança" falsa', () => {
+  const r = A.aplicarAtualizacao(ordemAberta(), { status: 'Novo' }, { agoraIso: AGORA });
+  assert.equal(r.ordem.timeline.filter((i) => i.event).length, 0);
+});
+
+test('linhas internas (categoria, ativo, horas) só aparecem para a equipe', () => {
+  const r = A.aplicarAtualizacao(ordemAberta(), { service_type: 'Projetos & Melhorias', asset: 'SW-CORE-02 (Switch Cisco)', time_spent: 2 }, { agoraIso: AGORA });
+  assert.equal(r.ordem.timeline.filter((i) => i.event && i.internal).length, 3);
+  const v = A.visaoSolicitante(r.ordem);
+  assert.equal(v.timeline.length, 1);
+  assert.ok(!JSON.stringify(v).includes('Switch Cisco'));
+});
+
+test('visaoSolicitante mostra título, andamento e conversa pública, sem parecer interno, dados pessoais nem id', () => {
+  const base = A.aplicarAtualizacao(ordemAberta(), {
+    status: 'Em Atendimento', tecnico_responsavel: 'Carlos', admin_notes: 'cliente chato', solution: '',
+    timeline_entry: { sender: 'Técnico', author: 'Carlos', text: 'Estou analisando.' }
+  }, { agoraIso: AGORA });
+  const nota = A.aplicarAtualizacao(base.ordem, { timeline_entry: { sender: 'Técnico', author: 'Carlos', text: 'Nota privada', internal: true } }, { agoraIso: AGORA });
+  const v = A.visaoSolicitante(nota.ordem);
+  assert.equal(v.title, 'Boleto não liquidou');
+  assert.equal(v.tecnico_responsavel, 'Carlos');
+  assert.ok(v.timeline.some((i) => i.text === 'Estou analisando.' && i.sender === 'Técnico'));
+  assert.ok(v.timeline.some((i) => i.event && i.sender === 'Sistema'));
+  const json = JSON.stringify(v);
+  for (const proibido of ['Nota privada', 'cliente chato', 'ana@empresa.com.br', 'client_email', 'client_cpf', 'admin_notes', '"id"']) assert.ok(!json.includes(proibido), proibido);
+  assert.equal(v.pode_responder, true);
+  assert.equal(v.pode_cancelar, false);
+  assert.equal(v.pode_reabrir, false);
+});
+
+test('responder: registra a mensagem, devolve "Pendente Cliente" ao atendimento e ignora o duplo clique', () => {
+  const aguardando = A.aplicarAtualizacao(ordemAberta(), { status: 'Pendente Cliente', tecnico_responsavel: 'Carlos' }, { agoraIso: AGORA }).ordem;
+  const agora = Date.parse('2026-11-07T12:00:30.000Z');
+  const r = A.aplicarAcaoSolicitante(aguardando, { acao: 'responder', texto: '  Segue o comprovante em anexo.  ' }, { agoraIso: '2026-11-07T12:00:00.000Z', agora });
+  assert.ok(r.ok);
+  assert.equal(r.ordem.status, 'Em Atendimento');
+  const t = r.ordem.timeline;
+  assert.equal(t[t.length - 2].sender, 'Solicitante');
+  assert.equal(t[t.length - 2].text, 'Segue o comprovante em anexo.');
+  assert.equal(t[t.length - 2].author, 'Ana Souza');
+  assert.equal(t[t.length - 1].event, true);
+  // mesma mensagem logo depois: nada muda
+  const repetida = A.aplicarAcaoSolicitante(r.ordem, { acao: 'responder', texto: 'Segue o comprovante em anexo.' }, { agoraIso: '2026-11-07T12:00:40.000Z', agora: Date.parse('2026-11-07T12:00:40.000Z') });
+  assert.ok(repetida.ok);
+  assert.equal(repetida.ordem.timeline.length, r.ordem.timeline.length);
+  assert.equal(r.ordem.updated_at, '2026-11-07T12:00:00.000Z');
+});
+
+test('responder: recusa texto vazio, chamado encerrado e cancelado', () => {
+  assert.equal(A.aplicarAcaoSolicitante(ordemAberta(), { acao: 'responder', texto: ' ' }, { agoraIso: AGORA }).codigo, 400);
+  const resolvida = A.aplicarAtualizacao(ordemAberta(), { status: 'Resolvido', solution: 'ok' }, { agoraIso: AGORA }).ordem;
+  const r = A.aplicarAcaoSolicitante(resolvida, { acao: 'responder', texto: 'Obrigado!' }, { agoraIso: AGORA });
+  assert.equal(r.ok, false);
+  assert.equal(r.codigo, 409);
+  assert.match(r.mensagem, /Reabrir/);
+  const cancelada = A.aplicarAcaoSolicitante(ordemAberta(), { acao: 'cancelar' }, { agoraIso: AGORA }).ordem;
+  assert.equal(A.aplicarAcaoSolicitante(cancelada, { acao: 'responder', texto: 'Alô?' }, { agoraIso: AGORA }).codigo, 409);
+});
+
+test('reabrir: só chamado resolvido, com motivo e dentro de 7 dias', () => {
+  const resolvida = A.aplicarAtualizacao(ordemAberta(), { status: 'Resolvido', tecnico_responsavel: 'Carlos', solution: 'Reprocessado.' }, { agoraIso: AGORA }).ordem;
+  assert.equal(resolvida.concluido_em, AGORA);
+  assert.equal(A.aplicarAcaoSolicitante(ordemAberta(), { acao: 'reabrir', texto: 'Voltou a falhar' }, { agoraIso: AGORA }).codigo, 409);
+  assert.equal(A.aplicarAcaoSolicitante(resolvida, { acao: 'reabrir', texto: 'ok' }, { agoraIso: AGORA, agora: Date.parse(AGORA) }).codigo, 400);
+
+  const dentro = A.aplicarAcaoSolicitante(resolvida, { acao: 'reabrir', texto: 'O erro voltou hoje cedo.' }, { agoraIso: '2026-11-08T10:00:00.000Z', agora: Date.parse('2026-11-08T10:00:00.000Z') });
+  assert.ok(dentro.ok);
+  assert.equal(dentro.ordem.status, 'Em Atendimento');
+  assert.equal(dentro.ordem.concluido_em, null);
+  assert.ok(dentro.ordem.timeline.some((i) => i.event && /reaberto/.test(i.text)));
+
+  const fora = A.aplicarAcaoSolicitante(resolvida, { acao: 'reabrir', texto: 'O erro voltou hoje cedo.' }, { agoraIso: '2026-11-20T10:00:00.000Z', agora: Date.parse('2026-11-20T10:00:00.000Z') });
+  assert.equal(fora.ok, false);
+  assert.equal(fora.codigo, 409);
+  assert.match(fora.mensagem, /OS-261107-ABCD/);
+  assert.equal(A.visaoSolicitante(resolvida, { agora: Date.parse('2026-11-20T10:00:00.000Z') }).pode_reabrir, false);
+  assert.equal(A.visaoSolicitante(resolvida, { agora: Date.parse('2026-11-08T10:00:00.000Z') }).pode_reabrir, true);
+});
+
+test('cancelar: só enquanto ninguém assumiu o chamado', () => {
+  const r = A.aplicarAcaoSolicitante(ordemAberta(), { acao: 'cancelar', texto: 'Resolvi por conta própria' }, { agoraIso: AGORA });
+  assert.ok(r.ok);
+  assert.equal(r.ordem.status, 'Cancelado');
+  assert.equal(r.ordem.concluido_em, null);
+  assert.equal(r.ordem.timeline.filter((i) => i.sender === 'Solicitante').length, 2);
+  const assumida = A.aplicarAtualizacao(ordemAberta(), { tecnico_responsavel: 'Carlos' }, { agoraIso: AGORA }).ordem;
+  const negada = A.aplicarAcaoSolicitante(assumida, { acao: 'cancelar' }, { agoraIso: AGORA });
+  assert.equal(negada.ok, false);
+  assert.equal(negada.codigo, 409);
+  assert.equal(A.visaoSolicitante(assumida).pode_cancelar, false);
+  assert.equal(A.visaoSolicitante(ordemAberta()).pode_cancelar, true);
+  assert.equal(A.aplicarAcaoSolicitante(ordemAberta(), { acao: 'apagar' }, { agoraIso: AGORA }).codigo, 400);
+});
+
+test('aplicarAcaoSolicitante não altera o chamado original e respeita o limite de mensagens', () => {
+  const original = ordemAberta();
+  const copia = JSON.stringify(original);
+  A.aplicarAcaoSolicitante(original, { acao: 'responder', texto: 'Alguma novidade?' }, { agoraIso: AGORA });
+  assert.equal(JSON.stringify(original), copia);
+  const cheia = { ...original, timeline: Array.from({ length: 300 }, (_, i) => ({ sender: 'Técnico', author: 'x', text: 'm' + i, date: AGORA })) };
+  assert.equal(A.aplicarAcaoSolicitante(cheia, { acao: 'responder', texto: 'Mais uma' }, { agoraIso: AGORA }).codigo, 409);
 });
