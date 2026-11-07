@@ -6,6 +6,26 @@
 <title>Nexus Financeiro | Entrar no painel</title>
 <meta name="description" content="Entre no Nexus Financeiro para acompanhar gastos, cartões e metas em um só lugar.">
 <meta name="theme-color" content="#04040a">
+<script>
+/* Tamanho da placa: em monitores grandes ela cresce junto com a janela (cerca de 78% da largura e 82% da altura) em vez de
+   virar um cartao pequeno no meio do vidro. Notebooks e janelas baixas ficam em 100%; no celular/tablet empilhado nao ha zoom.
+   Roda no <head> para a escala ja estar certa no primeiro desenho; as media queries "Telas grandes" abaixo ficam so de reserva. */
+(function () {
+  var root = document.documentElement, raf;
+  function fit() {
+    var w = window.innerWidth, h = window.innerHeight, z = 1;
+    if (w > 980) {
+      var alturaNatural = h <= 860 ? 560 : 670; /* altura da placa de login a 100%: compacta em janelas baixas */
+      z = Math.min(w * 0.78 / 1140, h * 0.82 / alturaNatural);
+      z = Math.max(1, Math.min(z, 2.6));
+      if (z < 1.03) z = 1;
+    }
+    root.style.setProperty('--ui-zoom', String(Math.round(z * 100) / 100));
+  }
+  fit();
+  window.addEventListener('resize', function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); });
+})();
+</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffeec7'/%3E%3Cstop offset='1' stop-color='%23ebba47'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23241c0a'%3EN%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -759,7 +779,7 @@
     .help-btn { height: 40px; }
   }
 
-  /* ---------- Telas grandes (2K, 5K, 4K): a interface cresce junto, em vez de virar um cartão pequeno no meio do vidro ---------- */
+  /* ---------- Telas grandes (2K, 5K, 4K): reserva caso o JavaScript do <head> não rode; com ele a escala é contínua (ver script no <head>) ---------- */
   @media (min-width: 2400px) and (min-height: 1300px) { :root { --ui-zoom: 1.25; } }
   @media (min-width: 3000px) and (min-height: 1700px) { :root { --ui-zoom: 1.55; } }
   @media (min-width: 3600px) and (min-height: 2000px) { :root { --ui-zoom: 1.9; } }
