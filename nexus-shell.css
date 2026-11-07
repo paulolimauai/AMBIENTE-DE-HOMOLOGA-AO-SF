@@ -330,7 +330,6 @@ html.user-logged-in #mobileDrawer #mobileDrawerLogoutBtn .ic { width: auto !impo
   html.user-logged-in #pageContent .subscription-overview { flex-direction: row !important; }
 }
 html.user-logged-in #pageContent label[style*="justify-content:space-between"] > span + span { margin-left: 10px !important; }
-}
 
 /* =====================================================================================
    6. Telas internas em celular e tablet em pé: nada fica cortado pela borda do cartão

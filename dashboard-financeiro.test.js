@@ -206,13 +206,14 @@ test('saldo negativo previsto gera aviso com o primeiro dia', () => {
   assert.ok(m.insights.some((i) => i.titulo === 'Saldo negativo previsto' && /12\/11/.test(i.texto)));
 });
 
-test('sem movimentações: modelo vazio e sem exceções', () => {
+test('sem movimentações: modelo vazio exibe painel completo e sem exceções', () => {
   const m = D.calcular(ctx({ transacoes: [], contas: [] }));
   assert.equal(m.vazio, true);
   assert.equal(m.contas.saldoAtual, 0);
   assert.equal(m.agenda.itens.length, 0);
   const html = D.pagina({ ...ctx({ transacoes: [], contas: [] }), util: {} });
-  assert.match(html, /Comece pelas suas movimentações/);
+  assert.match(html, /Saldo em contas hoje/);
+  assert.match(html, /Fluxo de caixa/);
 });
 
 test('dados sujos: valor em texto, data em DD/MM/AAAA, tipo inválido e data ausente', () => {
@@ -286,9 +287,9 @@ test('pagina(): atalhos de navegação, ações rápidas e escape dos atributos'
   assert.ok(!html.includes('data-fd-cat="A"B'));
 });
 
-test('pagina() vazia: convida a cadastrar e mantém o cabeçalho com as ações rápidas', () => {
+test('pagina() vazia: exibe todas as faixas do painel completo e mantém o cabeçalho com as ações rápidas', () => {
   const html = D.pagina({ ...ctx({ transacoes: [], contas: [] }), util: {} });
   assert.match(html, /data-fd-acao="nova-despesa"/);
   assert.match(html, /data-fd-acao="nova-receita"/);
-  assert.ok(!html.includes('fd-linha-a'), 'sem dados não monta as faixas do painel');
+  assert.ok(html.includes('fd-linha-a'), 'sem dados exibe as faixas completas do painel');
 });
