@@ -320,6 +320,33 @@ function escapeHtmlText(value) {
   return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 }
 
+// Os textos dos dados financeiros (descrições, nomes de conta/categoria/meta...) são exibidos como HTML pelo app.
+// Sem isto, quem gravasse "<img src=x onerror=...>" em qualquer um desses campos executava script no navegador de
+// quem abrisse os dados (inclusive o administrador no Modo Espelho). Troca < > " por caracteres tipográficos equivalentes.
+// Anexos: o app injeta dataUrl em <iframe src>, <img src> e <a href>. "javascript:..." ali executaria script: só entra base64 de tipos seguros.
+const DATAURL_ANEXO_OK = /^data:(image\/(?!svg)[a-z0-9.+-]+|application\/pdf|text\/plain|application\/msword|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document|application\/octet-stream)(;[a-z0-9=.-]+)*;base64,[a-z0-9+/=]*$/i;
+function neutralizeFinancialData(node, depth) {
+  depth = depth || 0;
+  if (depth > 14) return node;
+  if (typeof node === 'string') {
+    // Anexos guardam o arquivo em base64 (data URL): é só A-Z, 0-9, + / =; não passa pelo filtro
+    if (node.indexOf('data:') === 0 && /^data:[A-Za-z0-9.\/+-]*(;[A-Za-z0-9=.-]+)*;base64,/.test(node.slice(0, 200))) return node;
+    return node.replace(/[<>"]/g, ch => (ch === '<' ? '‹' : ch === '>' ? '›' : '”'));
+  }
+  if (Array.isArray(node)) {
+    for (let i = 0; i < node.length; i++) node[i] = neutralizeFinancialData(node[i], depth + 1);
+    return node;
+  }
+  if (node && typeof node === 'object') {
+    for (const k of Object.keys(node)) {
+      if (k === 'dataUrl') { const v = node[k]; node[k] = (typeof v === 'string' && DATAURL_ANEXO_OK.test(v)) ? v : ''; continue; }
+      node[k] = neutralizeFinancialData(node[k], depth + 1);
+    }
+    return node;
+  }
+  return node;
+}
+
 // Comparação de segredos em tempo constante (evita vazamento por tempo de resposta)
 function safeEqual(a, b) {
   const bufA = Buffer.from(String(a == null ? '' : a), 'utf8');
@@ -377,6 +404,7 @@ const RATE_LIMIT_RULES = {
   'POST /api/auth/verify-and-reset': { key: 'recover', max: 25, windowMs: 60 * 60 * 1000 },
   'POST /api/forgot-password': { key: 'recover', max: 25, windowMs: 60 * 60 * 1000 },
   'POST /api/auth/change-temp-password': { key: 'change-temp', max: 10, windowMs: 15 * 60 * 1000 },
+  'POST /api/user/profile': { key: 'profile', max: 40, windowMs: 15 * 60 * 1000 },
   'POST /api/user/change-mandatory-password': { key: 'change-temp', max: 10, windowMs: 15 * 60 * 1000 },
   'GET /api/cpf/consultar': { key: 'cpf', max: 30, windowMs: 10 * 60 * 1000 },
   'GET /api/cpf': { key: 'cpf', max: 30, windowMs: 10 * 60 * 1000 },
@@ -469,6 +497,39 @@ function sanitizeUser(user) {
     safeUser.name = 'Paulo Lima';
   }
   return safeUser;
+}
+
+// Foto do perfil: o app a exibe em <img src="...">, então só entra data URL de imagem em base64 (nunca "javascript:" nem SVG).
+// Fica em arquivo próprio (e não na tabela usuarios) para valer também com o SQL Server, que não tem essa coluna.
+const LOCAL_AVATARS_PATH = path.join(RUNTIME_DATA_DIR, 'local_avatars.json');
+const AVATAR_DATAURL_OK = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/;
+const AVATAR_MAX_CHARS = 400000;
+function readAvatarStore() {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(LOCAL_AVATARS_PATH, 'utf8'));
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch (e) {
+    return {};
+  }
+}
+function getStoredAvatar(email) {
+  const avatar = readAvatarStore()[String(email || '').toLowerCase().trim()];
+  return typeof avatar === 'string' && avatar.length <= AVATAR_MAX_CHARS && AVATAR_DATAURL_OK.test(avatar) ? avatar : '';
+}
+function setStoredAvatar(email, avatar) {
+  const key = String(email || '').toLowerCase().trim();
+  if (!key) return;
+  const store = readAvatarStore();
+  if (avatar) store[key] = avatar; else delete store[key];
+  fs.writeFileSync(LOCAL_AVATARS_PATH, JSON.stringify(store), 'utf8');
+}
+// Igual a sanitizeUser, mas com a foto do titular (só para a resposta que vai para o próprio dono da conta)
+function sanitizeUserWithAvatar(user) {
+  const safe = sanitizeUser(user);
+  if (!safe) return safe;
+  const avatar = getStoredAvatar(safe.email);
+  if (avatar) safe.avatar = avatar; else delete safe.avatar;
+  return safe;
 }
 
 function googleOAuthConfig(req) {
@@ -14256,6 +14317,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-2" />
 <script src="/dashboard-financeiro.js?v=20261107-2"></script>
+<script src="/importacao.js?v=20261107-1"></script>
 </head>
 <body>
 <!-- CAMADA PERMANENTE DE FUNDO 4K (Zero-Flicker / Sem Piscar) -->
@@ -15090,7 +15152,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           var a = document.getElementById('headerAvatar');
           var sn = document.getElementById('sidebarAccountName');
           var sa = document.getElementById('sidebarAccountAvatar');
-          var p = cleanName.split(/\s+/);
+          var p = cleanName.split(/\\s+/);
           var inits = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
           if (n) n.textContent = cleanName;
           if (sn) sn.textContent = cleanName;
@@ -15585,7 +15647,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="cfg-hint" id="userAdminPasswordHint" style="margin:0; font-size:10px;">Em branco mantém a atual</span>
       </div>
       <div class="pass-field">
-        <input id="userAdminPassword" type="password" placeholder="Nova senha (mín. 6 dígitos)" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
+        <input id="userAdminPassword" type="password" placeholder="Mín. 8, com maiúscula e símbolo" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px;">
         <button type="button" class="pass-toggle" id="userAdminPasswordToggle" tabindex="-1" aria-label="Mostrar senha"></button>
       </div>
     </div>
@@ -17025,7 +17087,7 @@ async function saveUsersToServer() {
   saveToStorage('nexus_users', registeredUsers);
   const apiBase = getApiBaseUrl();
   try {
-    await fetch(apiBase + '/api/users', {
+    const resp = await fetch(apiBase + '/api/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -17033,7 +17095,12 @@ async function saveUsersToServer() {
       },
       body: JSON.stringify(registeredUsers)
     });
-  } catch(e){}
+    let corpo = null;
+    try { corpo = await resp.json(); } catch(parseErr) {}
+    return !!(resp && resp.ok && (!corpo || corpo.success !== false));
+  } catch(e){
+    return false;
+  }
 }
 
 let currentUser = null;
@@ -19348,7 +19415,7 @@ window.updateAdminModalBadge = function(email) {
       subBadge.textContent = '⭐ Pago / Ativo até ' + expStr;
       subBadge.style.color = '#34D399';
     }
-  } else if (u.subscription_status === 'pending_payment') {
+  } else if (nexusPagamentoAguardando(u)) {
     subBadge.textContent = '⏳ Pagamento Informado (Aguardando Confirmação)';
     subBadge.style.color = '#38BDF8';
   } else if (u.subscription_status === 'expired') {
@@ -19484,7 +19551,7 @@ window.handleRegisterSubmit = async function(e) {
   }
 
   // 2. Validação e Ajuste de CPF do Titular (com ou sem pontos)
-  const cleanCpfDigits = cpf.replace(/\D/g, '');
+  const cleanCpfDigits = cpf.replace(/\\D/g, '');
   if (!cleanCpfDigits || cleanCpfDigits.length < 11) {
     showCustomAlert('Atenção', 'Por favor, informe seu CPF completo com 11 dígitos.', 'error');
     if (cpfInput) cpfInput.focus();
@@ -19858,7 +19925,7 @@ function parseInputValue(valStr) {
   let cleaned = String(valStr).replace(/[^0-9.,-]/g, '').trim();
   if (cleaned.includes(',') && cleaned.includes('.')) {
     if (cleaned.indexOf('.') < cleaned.indexOf(',')) {
-      cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+      cleaned = cleaned.replace(/\\./g, '').replace(',', '.');
     } else {
       cleaned = cleaned.replace(/,/g, '');
     }
@@ -20051,13 +20118,50 @@ function autoCompleteAllRecurringMonths() {
   return changed;
 }
 
+// Os textos dos dados são exibidos como HTML: troca < > " por equivalentes tipográficos para que nada vire tag/atributo
+// (XSS armazenado: descrição, categoria, conta, meta... também era neutralizado só no servidor; aqui cobre o cache local).
+function nexusNeutralizeData(node, depth) {
+  depth = depth || 0;
+  if (depth > 14) return node;
+  if (typeof node === 'string') {
+    if (node.indexOf('data:') === 0 && /^data:[A-Za-z0-9./+-]*(;[A-Za-z0-9=.-]+)*;base64,/.test(node.slice(0, 200))) return node;
+    return node.replace(/[<>"]/g, function(ch) { return ch === '<' ? '‹' : ch === '>' ? '›' : '”'; });
+  }
+  if (Array.isArray(node)) {
+    for (var i = 0; i < node.length; i++) node[i] = nexusNeutralizeData(node[i], depth + 1);
+    return node;
+  }
+  if (node && typeof node === 'object') {
+    Object.keys(node).forEach(function(k) {
+      if (k === 'dataUrl') { node[k] = nexusSafeDataUrl(node[k]); return; }
+      node[k] = nexusNeutralizeData(node[k], depth + 1);
+    });
+    return node;
+  }
+  return node;
+}
+
+// dataUrl de anexo: só base64 de imagem (sem SVG), PDF, texto ou Word. Qualquer outra coisa (ex.: javascript:) vira vazio.
+const NEXUS_DATAURL_OK = new RegExp('^data:(image/(?!svg)[a-z0-9.+-]+|application/pdf|text/plain|application/msword|application/vnd[.]openxmlformats-officedocument[.]wordprocessingml[.]document|application/octet-stream)(;[a-z0-9=.-]+)*;base64,[a-z0-9+/=]*$', 'i');
+function nexusSafeDataUrl(u) {
+  const s = String(u == null ? '' : u);
+  return NEXUS_DATAURL_OK.test(s) ? s : '';
+}
+// Foto do perfil: só data URL de imagem base64 (JPG/PNG/WEBP). Qualquer outra coisa (ex.: javascript:) vira vazio.
+const NEXUS_AVATAR_OK = new RegExp('^data:image/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$');
+function nexusSafeAvatar(u) {
+  const s = String(u == null ? '' : u);
+  return s.length <= 400000 && NEXUS_AVATAR_OK.test(s) ? s : '';
+}
+
 function applyDataPayload(data) {
   resetUserDataState();
   if (typeof data === 'string') {
     try { data = JSON.parse(data); } catch(e){ data = null; }
   }
   if (!data || typeof data !== 'object') return;
-  
+  data = nexusNeutralizeData(data);
+
   if (Array.isArray(data.categories) && data.categories.length > 0) {
     categories = data.categories;
   }
@@ -20182,6 +20286,9 @@ async function saveUserData() {
   const userKey = 'nexus_data_' + cleanEmail;
   const nowIso = new Date().toISOString();
 
+  // O que o usuário acabou de digitar também é neutralizado (a próxima renderização já usa o texto seguro)
+  [categories, accounts, transactions, budgets, goals, recurringList, alerts, attachments, notifications].forEach(function(lista) { nexusNeutralizeData(lista); });
+
   const payloadData = {
     categories, accounts, transactions, budgets, goals, recurringList, alerts, attachments, notifications,
     nextAccId, nextTxId, nextBudgetId, nextGoalId, nextRecId, nextAlertId, nextAttId, nextNotifId,
@@ -20260,7 +20367,13 @@ async function toggleUserActive(email){
   }
 
   u.active = willDeactivate ? false : true;
-  await saveUsersToServer();
+  const salvouAtivo = await saveUsersToServer();
+  if(!salvouAtivo){
+    u.active = !u.active;
+    showToast('⚠️ Não foi possível alterar o acesso no servidor.');
+    render();
+    return;
+  }
   showToast(willDeactivate ? 'Usuário desativado.' : 'Usuário ativado novamente.');
   logActivity('Edição', 'Usuário', 'Administrador ' + (willDeactivate ? 'desativou' : 'ativou') + ' o acesso do usuário ' + u.email + ' (' + u.name + ')');
   render();
@@ -20283,7 +20396,7 @@ async function deleteUserAdmin(email){
 
   showCustomAlert(
     'Excluir Usuário?',
-    'Excluir permanentemente "' + u.name + '" (' + u.email + '), incluindo cadastro, finanças, transações, contas, categorias, CPF, ordens de serviço e registros associados? Esta ação não pode ser desfeita.',
+    'Excluir permanentemente "' + txEsc(u.name) + '" (' + txEsc(u.email) + '), incluindo cadastro, finanças, transações, contas, categorias, CPF, ordens de serviço e registros associados? Esta ação não pode ser desfeita.',
     'error',
     async () => {
       try {
@@ -20435,6 +20548,12 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 const NEXUS_ADMIN_PAGES = ['usuarios', 'ordens', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
+// Pagamento informado e ainda sem confirmação do financeiro. Com o teste esgotado o acesso fica "pending_payment"; mas quem informa o Pix
+// ainda dentro do teste grátis (o caso comum) continua "trial" no acesso e só ganha o protocolo NEXUS-SUB-: sem isto nunca aparecia para o admin.
+function nexusPagamentoAguardando(u) {
+  return !!u && u.role !== 'Administrador' && (u.subscription_status === 'pending_payment' ||
+    (u.subscription_status === 'trial' && String(u.subscription_payment_id || '').indexOf('NEXUS-SUB-') === 0));
+}
 function nexusResolvePage(page, isAdmin) {
   const allowed = isAdmin ? NEXUS_ADMIN_PAGES : NEXUS_USER_PAGES;
   return allowed.includes(page) ? page : allowed[0];
@@ -20714,6 +20833,19 @@ function isPgtoFaturaOrEstorno(t) {
   return true;
 }
 
+// Lançamento já realizado? Pago/Recebido; sem status (dados antigos) vale se a data já passou. Mesma regra do dashboard.
+function nexusTxRealizada(t) {
+  if (!t) return false;
+  const st = String(t.status || '');
+  if (st === 'Pago' || st === 'Recebido') return true;
+  if (st) return false;
+  const m = String(t.date || '').match(/^(\\d{4})-(\\d{2})-(\\d{2})/);
+  if (!m) return true;
+  const d = new Date();
+  const hoje = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  return (m[1] + '-' + m[2] + '-' + m[3]) <= hoje;
+}
+
 function getCardStats(account) {
   if (!account) return { spentPeriod: 0, spentTotal: 0, totalLimit: 0, availableLimit: 0, usagePct: 0, currentBalance: 0, initialBalance: 0, isCreditCard: false, txCount: 0, periodIn: 0, periodOut: 0 };
   
@@ -20757,7 +20889,12 @@ function getCardStats(account) {
     // Para Contas Bancárias (Conta Corrente, Poupança, Investimentos, etc.): puxa sempre base 0 + saldo manual + entradas - saídas
     const spentTotal = totalDespesas;
     const spentPeriod = periodDespesas;
-    const currentBalance = initialBalance + totalPagamentos - totalDespesas;
+    // Saldo da conta = só o que JÁ aconteceu (Pago/Recebido; sem status, data já passada). Pendências não saem da conta até serem
+    // pagas: é a mesma regra do dashboard (antes o saldo daqui descontava contas a pagar e divergia do "Saldo em contas hoje").
+    const realizadas = cardTx.filter(nexusTxRealizada);
+    const entradasReais = realizadas.filter(t => t.type === 'in').reduce((s, t) => s + parseInputValue(t.val), 0);
+    const saidasReais = realizadas.filter(t => t.type === 'out').reduce((s, t) => s + parseInputValue(t.val), 0);
+    const currentBalance = initialBalance + entradasReais - saidasReais;
     const availableLimit = currentBalance;
     const totalLimit = initialBalance;
     const usagePct = 0;
@@ -20941,6 +21078,15 @@ function showCustomAlert(title, message, type = 'success', onConfirm = null) {
     btnStyle = 'background:linear-gradient(135deg, #EF4444 0%, #DC2626 60%, #991B1B 100%) !important; box-shadow:0 12px 28px -4px rgba(239,68,68,0.5), inset 0 1px 1px rgba(255,255,255,0.45) !important;';
   }
 
+  // Pergunta de exclusão (tipo erro + ação a confirmar): tem de ter "Cancelar", e clicar fora do quadro NÃO confirma
+  const ehConfirmacao = (type === 'error' && typeof onConfirm === 'function');
+  const botoesHtml = ehConfirmacao
+    ? '<div style="display:flex; flex-direction:column; gap:10px;">' +
+        '<button type="button" class="executive-4k-btn" style="' + btnStyle + '" id="exec4kOkBtn">Confirmar</button>' +
+        '<button type="button" class="executive-4k-btn" style="background:rgba(255,255,255,0.08) !important; box-shadow:none !important; color:var(--text) !important; border:1px solid rgba(255,255,255,0.22) !important;" id="exec4kCancelBtn">Cancelar</button>' +
+      '</div>'
+    : '<button type="button" class="executive-4k-btn" style="' + btnStyle + '" id="exec4kOkBtn">Entendido</button>';
+
   modal.innerHTML = \`
     <div class="executive-4k-card">
       <div class="executive-4k-badge" style="\${badgeStyle}">
@@ -20948,23 +21094,23 @@ function showCustomAlert(title, message, type = 'success', onConfirm = null) {
       </div>
       <h3 class="executive-4k-title">\${title}</h3>
       <p class="executive-4k-message">\${message}</p>
-      <button type="button" class="executive-4k-btn" style="\${btnStyle}" id="exec4kOkBtn">
-        Entendido
-      </button>
+      \${botoesHtml}
     </div>
   \`;
 
   modal.style.display = 'flex';
 
-  const closeAlert = () => {
+  const closeAlert = (confirmado) => {
     modal.style.display = 'none';
-    if (typeof onConfirm === 'function') onConfirm();
+    if (confirmado !== false && typeof onConfirm === 'function') onConfirm();
   };
 
   const okBtn = document.getElementById('exec4kOkBtn');
-  if (okBtn) okBtn.onclick = closeAlert;
+  if (okBtn) okBtn.onclick = () => closeAlert(true);
+  const cancelBtn = document.getElementById('exec4kCancelBtn');
+  if (cancelBtn) cancelBtn.onclick = () => closeAlert(false);
   modal.onclick = (e) => {
-    if (e.target === modal) closeAlert();
+    if (e.target === modal) closeAlert(!ehConfirmacao);
   };
 }
 
@@ -21037,8 +21183,8 @@ function renderNotifications(){
   list.innerHTML = notifications.length ? notifications.map(n=>\`
     <div class="notif-item \${n.read?'':'unread'}">
       \${n.read? '' : '<span class="unread-dot"></span>'}
-      <span class="ic">\${n.icon}</span>
-      <div class="body"><div class="txt">\${n.text}</div><div class="time">\${timeAgo(n.time)}</div></div>
+      <span class="ic">\${txEsc(n.icon)}</span>
+      <div class="body"><div class="txt">\${txEsc(n.text)}</div><div class="time">\${timeAgo(n.time)}</div></div>
     </div>\`).join('') : \`<div class="notif-empty">Nenhuma notificação por aqui.</div>\`;
 }
 
@@ -21332,7 +21478,7 @@ function updateAdminSidebarBadges(){
   const osPendingCount = Array.isArray(systemOrdens) ? systemOrdens.filter(function(o){ return (o.status || '').toLowerCase() === 'pendente'; }).length : 0;
   const osTotalCount = Array.isArray(systemOrdens) ? systemOrdens.length : 0;
   const techsCount = Array.isArray(systemTecnicos) ? systemTecnicos.filter(function(t){ return t.active !== false; }).length : 0;
-  const pendingPayCount = Array.isArray(registeredUsers) ? registeredUsers.filter(function(u){ return u && u.role !== 'Administrador' && (u.subscription_status === 'pending_payment' || u.subscription_status === 'expired'); }).length : 0;
+  const pendingPayCount = Array.isArray(registeredUsers) ? registeredUsers.filter(function(u){ return u && u.role !== 'Administrador' && (nexusPagamentoAguardando(u) || u.subscription_status === 'expired'); }).length : 0;
 
   const uBadge = document.getElementById('menuUsersCountBadge');
   if (uBadge) uBadge.textContent = usersCount;
@@ -21514,12 +21660,13 @@ function updateHeaderUser(){
       roleEl.style.display = 'none';
     }
   }
-  if (currentUser.avatar) {
-    if (avatarEl) avatarEl.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-    if (sidebarAvatarEl) sidebarAvatarEl.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil">';
+  const avatarSeguro = nexusSafeAvatar(currentUser.avatar);
+  if (avatarSeguro) {
+    if (avatarEl) avatarEl.innerHTML = '<img src="' + avatarSeguro + '" alt="Foto do perfil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    if (sidebarAvatarEl) sidebarAvatarEl.innerHTML = '<img src="' + avatarSeguro + '" alt="Foto do perfil">';
     return;
   }
-  const rawParts = cleanName.split(/\s+/);
+  const rawParts = cleanName.split(/\\s+/);
   let inits = 'PL';
   if (rawParts.length >= 2) {
     inits = (rawParts[0][0] + rawParts[1][0]).toUpperCase();
@@ -22852,7 +22999,7 @@ function pageContas(){
               <div class="acc-subgrid">
                 <div class="acc-subgrid-col">
                   <span class="acc-subgrid-label">Fatura do Mês</span>
-                  <span class="acc-subgrid-val" style="color:var(--orange);">\${fmt(stats.spentTotal)}</span>
+                  <span class="acc-subgrid-val" style="color:var(--orange);">\${fmt(stats.spentPeriod)}</span>
                 </div>
                 <div class="acc-subgrid-col" style="text-align:right;">
                   <span class="acc-subgrid-label">Limite Total</span>
@@ -22876,7 +23023,7 @@ function pageContas(){
                 </div>
                 <div class="acc-subgrid-col" style="text-align:right;">
                   <span class="acc-subgrid-label">Saídas no Mês</span>
-                  <span class="acc-subgrid-val" style="color:var(--red);">-\${fmt(stats.spentTotal)}</span>
+                  <span class="acc-subgrid-val" style="color:var(--red);">-\${fmt(stats.spentPeriod)}</span>
                 </div>
               </div>
               <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-faint);">
@@ -23562,8 +23709,8 @@ function pageImportar(){
 
 function getAttachmentCoverHtml(a, t){
   const isImage = (a.type && a.type.startsWith('image/')) || (a.dataUrl && a.dataUrl.startsWith('data:image/'));
-  if (isImage && a.dataUrl) {
-    return \`<img src="\${a.dataUrl}" style="width:100%; height:150px; object-fit:cover; border-radius:12px; border:1px solid var(--card-border); transition:transform 0.2s ease;">\`;
+  if (isImage && nexusSafeDataUrl(a.dataUrl)) {
+    return \`<img src="\${nexusSafeDataUrl(a.dataUrl)}" style="width:100%; height:150px; object-fit:cover; border-radius:12px; border:1px solid var(--card-border); transition:transform 0.2s ease;">\`;
   }
 
   const nameSearch = ((a.name || '') + ' ' + (t ? t.desc : '')).toLowerCase();
@@ -23874,16 +24021,24 @@ function pageConfig(){
   }
   const currentEmail = uData.email || (currentUser ? currentUser.email : '') || '';
   const rawCpf = uData.cpf || (currentUser ? currentUser.cpf : '') || '';
-  const cleanCpf = rawCpf.replace(/\D/g, '');
+  const cleanCpf = rawCpf.replace(/\\D/g, '');
   const formattedCpf = cleanCpf || rawCpf;
-  const currentBirthDate = uData.birth_date || uData.birthDate || (currentUser ? (currentUser.birth_date || currentUser.birthDate) : '') || '';
+  const currentBirthDateRaw = uData.birth_date || uData.birthDate || (currentUser ? (currentUser.birth_date || currentUser.birthDate) : '') || '';
+  // O cadastro guarda DD/MM/AAAA e o campo de data só entende AAAA-MM-DD: sem converter o campo aparecia vazio
+  const currentBirthDate = (function(v) {
+    const t = String(v || '').trim();
+    let m = /^(\\d{2})\\/(\\d{2})\\/(\\d{4})$/.exec(t);
+    if (m) return m[3] + '-' + m[2] + '-' + m[1];
+    m = /^(\\d{4}-\\d{2}-\\d{2})/.exec(t);
+    return m ? m[1] : '';
+  })(currentBirthDateRaw);
   const rawPhone = uData.phone || (currentUser ? currentUser.phone : '') || '';
-  const cleanPhone = rawPhone.replace(/\D/g, '');
-  const formattedPhone = cleanPhone.length === 11 ? cleanPhone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3') : (cleanPhone.length === 10 ? cleanPhone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3') : rawPhone);
+  const cleanPhone = rawPhone.replace(/\\D/g, '');
+  const formattedPhone = cleanPhone.length === 11 ? cleanPhone.replace(/(\\d{2})(\\d{5})(\\d{4})/, '($1) $2-$3') : (cleanPhone.length === 10 ? cleanPhone.replace(/(\\d{2})(\\d{4})(\\d{4})/, '($1) $2-$3') : rawPhone);
   const currentCreatedAt = uData.created_at || (currentUser ? currentUser.created_at : '') || '';
   const formattedCreated = currentCreatedAt ? new Date(currentCreatedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Ativa';
   const roleName = uData.role || (currentUser ? currentUser.role : 'Usuário');
-  const currentAvatar = uData.avatar || (currentUser ? currentUser.avatar : '') || '';
+  const currentAvatar = nexusSafeAvatar(uData.avatar || (currentUser ? currentUser.avatar : '') || '');
 
   return \`
   <div class="page-head">
@@ -23960,7 +24115,7 @@ function pageConfig(){
       <!-- Nome Completo (Largura Total) -->
       <div class="field" style="margin-bottom:0;">
         <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">Nome Completo do Titular</label>
-        <input id="cfgName" value="\${currentName}" placeholder="Seu nome completo" autocomplete="name" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
+        <input id="cfgName" value="\${txEsc(currentName)}" placeholder="Seu nome completo" autocomplete="name" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
       </div>
 
       <!-- Grid de 2 Colunas para Dados do Titular -->
@@ -23969,9 +24124,9 @@ function pageConfig(){
         <div class="field" style="margin-bottom:0;">
           <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">
             <span>CPF (Receita Federal)</span>
-            <span style="font-size:10.5px; color:#059669; font-weight:800; text-transform:none;">✓ Autenticado</span>
+            \${cleanCpf.length === 11 ? '<span style="font-size:10.5px; color:#059669; font-weight:800; text-transform:none;">✓ Autenticado</span>' : '<span style="font-size:10.5px; color:#F59E0B; font-weight:800; text-transform:none;">Pendente</span>'}
           </label>
-          <input id="cfgCpf" value="\${formattedCpf}" placeholder="00000000000" maxlength="11" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
+          <input id="cfgCpf" value="\${txEsc(formattedCpf)}" placeholder="00000000000" maxlength="11" inputmode="numeric" \${cleanCpf.length === 11 ? 'readonly title="CPF autenticado: não pode ser alterado por aqui. Fale com o suporte."' : ''} style="width:100%; height:44px; font-size:13.5px; font-weight:700;\${cleanCpf.length === 11 ? ' opacity:.78; cursor:not-allowed;' : ''}">
         </div>
 
         <!-- Data de Nascimento -->
@@ -23989,13 +24144,13 @@ function pageConfig(){
             <span>Celular com DDD (2FA)</span>
             <span style="font-size:10.5px; color:var(--text-dim); text-transform:none;">Segurança</span>
           </label>
-          <input id="cfgPhone" value="\${formattedPhone}" placeholder="(00) 00000-0000" maxlength="15" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
+          <input id="cfgPhone" value="\${txEsc(formattedPhone)}" inputmode="tel" placeholder="(00) 00000-0000" maxlength="15" style="width:100%; height:44px; font-size:13.5px; font-weight:700;">
         </div>
 
         <!-- E-mail Cadastrado -->
         <div class="field" style="margin-bottom:0;">
-          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;">E-mail Cadastrado</label>
-          <input id="cfgEmail" type="text" value="\${currentEmail}" placeholder="seu.email@exemplo.com" autocomplete="email" style="width:100%; height:44px; font-size:13.5px; font-weight:600;">
+          <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em;"><span>E-mail Cadastrado</span><span style="font-size:10.5px; color:var(--text-dim); text-transform:none;">Login da conta</span></label>
+          <input id="cfgEmail" type="text" value="\${txEsc(currentEmail)}" readonly title="O e-mail é o login da conta e não pode ser alterado por aqui. Fale com o suporte." autocomplete="email" style="width:100%; height:44px; font-size:13.5px; font-weight:600; opacity:.78; cursor:not-allowed;">
         </div>
       </div>
 
@@ -24029,20 +24184,27 @@ function pageConfig(){
           </h3>
         </div>
         <p class="cfg-hint" style="font-size:12px; margin-bottom:14px; color:var(--text-dim);">
-          Preencha apenas se desejar trocar sua senha de acesso
+          Preencha só se quiser trocar a senha: informe a atual e uma nova com 8+ caracteres, maiúscula, minúscula, número e símbolo.
         </p>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
           <div class="field" style="margin-bottom:0;">
+            <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Senha Atual</label>
+            <div class="pass-field">
+              <input id="cfgPasswordCurrent" type="password" placeholder="••••••••" autocomplete="current-password" style="width:100%; height:44px; font-size:13.5px;">
+              <button type="button" class="pass-toggle" id="cfgPasswordCurrentToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
             <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Nova Senha</label>
             <div class="pass-field">
-              <input id="cfgPassword" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
+              <input id="cfgPassword" type="password" placeholder="••••••••" minlength="8" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
               <button type="button" class="pass-toggle" id="cfgPasswordToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
             </div>
           </div>
           <div class="field" style="margin-bottom:0;">
             <label style="font-size:12px; font-weight:700; margin-bottom:6px; display:block; color:var(--text-dim);">Confirmar Senha</label>
             <div class="pass-field">
-              <input id="cfgPasswordConfirm" type="password" placeholder="••••••••" minlength="6" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
+              <input id="cfgPasswordConfirm" type="password" placeholder="••••••••" minlength="8" autocomplete="new-password" style="width:100%; height:44px; font-size:13.5px;">
               <button type="button" class="pass-toggle" id="cfgPasswordConfirmToggle" tabindex="-1" aria-label="Mostrar senha">\${EYE_ICON}</button>
             </div>
           </div>
@@ -24480,7 +24642,7 @@ function applyAdminUserFiltering() {
     let matchesSearch = true;
     if (currentAdminUserSearch) {
       const q = currentAdminUserSearch.toLowerCase();
-      const qDigits = q.replace(/\D/g, '');
+      const qDigits = q.replace(/\\D/g, '');
       matchesSearch = email.includes(q) || name.includes(q) || (qDigits && (cpf.includes(qDigits) || phone.includes(qDigits))) || cpf.includes(q) || phone.includes(q);
     }
 
@@ -24634,7 +24796,7 @@ function pageUsuarios(){
             const expStr = u.subscription_expires_at ? (' • ' + formatDateBR(u.subscription_expires_at.split('T')[0])) : '';
             return '<span class="role-badge" style="background:rgba(16,185,129,0.16); border:1px solid #10B981; color:#34D399;" title="Assinatura ativa">✅ ' + planLabel + methodBadge + expStr + '</span>';
           }
-          if (u.subscription_status === 'pending_payment') {
+          if (nexusPagamentoAguardando(u)) {
             const pendingPlan = u.subscription_plan === 'anual' ? 'Anual' : 'Mensal';
             return '<span class="role-badge" style="background:rgba(56,189,248,0.18); border:1px solid #38BDF8; color:#7DD3FC;" title="Pagamento não reconhecido / aguardando liberação">⏳ Pendente • ' + pendingPlan + methodBadge + '</span>';
           }
@@ -24774,17 +24936,14 @@ async function logActivity(action, entity, details) {
       details: details
     });
 
-    if (navigator.sendBeacon) {
-      const blob = new Blob([payload], { type: 'application/json' });
-      navigator.sendBeacon(window.location.origin + '/api/logs', blob);
-    } else {
-      fetch(window.location.origin + '/api/logs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload,
-        keepalive: true
-      }).catch(() => {});
-    }
+    // fetch com keepalive (e não sendBeacon): o servidor exige login para gravar o log e o beacon não consegue mandar o
+    // cabeçalho Authorization (o wrapper de fetch do app injeta o token). Com beacon, toda ação saía com 401 e o log de auditoria ficava vazio.
+    fetch(window.location.origin + '/api/logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
+      keepalive: true
+    }).catch(() => {});
   } catch(e) {}
 }
 
@@ -24832,9 +24991,11 @@ function renderLogsTable(list) {
       actionBg = 'rgba(74,144,226,0.15)';
     }
 
-    let formattedDetails = (l.details || '');
-    if (formattedDetails.includes('➔')) {
-      const parts = formattedDetails.split(' | ');
+    // Tudo que vem do log é texto de usuário: escapa antes de montar o HTML (senão HTML plantado no log executava no navegador do admin)
+    const detalhesBrutos = String(l.details || '');
+    let formattedDetails = txEsc(detalhesBrutos);
+    if (detalhesBrutos.includes('➔')) {
+      const parts = detalhesBrutos.split(' | ');
       formattedDetails = parts.map(function(part) {
         if (part.includes('➔')) {
           const colonIdx = part.indexOf(': ');
@@ -24849,21 +25010,21 @@ function renderLogsTable(list) {
           const newV = arrowIdx !== -1 ? valsStr.substring(arrowIdx + 1).trim() : '';
 
           return '<span style="display:inline-flex; align-items:center; margin:2px 4px 2px 0; padding:4px 9px; background:rgba(255,255,255,0.04); border-radius:8px; border:1px solid rgba(255,255,255,0.08); font-size:12px;">'
-            + (fieldName ? '<strong style="color:var(--text-dim); margin-right:5px;">' + fieldName + ':</strong> ' : '')
-            + '<span style="color:#ef5a5a; text-decoration:line-through; margin-right:4px; opacity:0.85;">' + oldV + '</span>'
+            + (fieldName ? '<strong style="color:var(--text-dim); margin-right:5px;">' + txEsc(fieldName) + ':</strong> ' : '')
+            + '<span style="color:#ef5a5a; text-decoration:line-through; margin-right:4px; opacity:0.85;">' + txEsc(oldV) + '</span>'
             + '<span style="color:#e8b04b; font-weight:bold; margin:0 5px;">➔</span>'
-            + '<span style="color:#3ec7c7; font-weight:700;">' + newV + '</span>'
+            + '<span style="color:#3ec7c7; font-weight:700;">' + txEsc(newV) + '</span>'
             + '</span>';
         }
-        return '<span style="display:inline-block; margin:2px 0;">' + part + '</span>';
+        return '<span style="display:inline-block; margin:2px 0;">' + txEsc(part) + '</span>';
       }).join(' ');
     }
 
     return '<tr class="trow">'
       + '<td style="font-size:12px; color:var(--text-dim); white-space:nowrap;">' + dateStr + '</td>'
-      + '<td><div style="display:flex; flex-direction:column;"><strong style="font-size:12.5px;">' + (l.user_name || 'Usuário') + '</strong><span style="font-size:11px; color:var(--text-faint);">' + (l.user_email || '—') + '</span></div></td>'
-      + '<td><span class="pill" style="background:' + actionBg + '; color:' + actionBadgeClass + '; font-weight:700;">' + l.action + '</span></td>'
-      + '<td><span class="pill" style="background:rgba(255,255,255,0.05); color:var(--text-dim); font-weight:600;">' + l.entity + '</span></td>'
+      + '<td><div style="display:flex; flex-direction:column;"><strong style="font-size:12.5px;">' + txEsc(l.user_name || 'Usuário') + '</strong><span style="font-size:11px; color:var(--text-faint);">' + txEsc(l.user_email || '—') + '</span></div></td>'
+      + '<td><span class="pill" style="background:' + actionBg + '; color:' + actionBadgeClass + '; font-weight:700;">' + txEsc(l.action) + '</span></td>'
+      + '<td><span class="pill" style="background:rgba(255,255,255,0.05); color:var(--text-dim); font-weight:600;">' + txEsc(l.entity) + '</span></td>'
       + '<td style="font-size:12.5px; line-height:1.5;">' + formattedDetails + '</td>'
       + '</tr>';
   }).join('');
@@ -24897,7 +25058,7 @@ function pagePagamentos(){
   const users = Array.from(new Map((registeredUsers || [])
     .filter(u => u && u.email && u.role !== 'Administrador')
     .map(u => [u.email.toLowerCase(), u])).values());
-  const pendingUsers = users.filter(u => u.subscription_status === 'pending_payment');
+  const pendingUsers = users.filter(u => nexusPagamentoAguardando(u));
   const expiredUsers = users.filter(u => u.subscription_status === 'expired');
   const activeUsers = users.filter(u => u.subscription_status === 'active');
   const requestedTab = window.__pagamentosActiveTab || 'pendentes';
@@ -25020,7 +25181,7 @@ window.printAdminPaymentNotice = function() {
   const due = document.getElementById('paymentNoticeDue')?.value || '';
   const reference = (document.getElementById('paymentNoticeReference')?.value || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 25);
   if (!user || !reference) { if (typeof showToast === 'function') showToast('Selecione o cliente e informe uma referência válida.'); return; }
-  const amount = plan === 'anual' ? 100 : 10;
+  const amount = plan === 'anual' ? 150 : 15; // mesmos valores da assinatura (Mensal R$ 15,00 / Anual R$ 150,00); estava 10 e 100
   const txid = ('NX' + reference).slice(0, 25);
   const pixCode = window.generatePixEMVPayload('+5562992345372', 'PAULO LIMA', 'GOIANIA', amount, txid);
   const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(pixCode);
@@ -25044,7 +25205,7 @@ window.sendAdminPaymentNoticeWhatsApp = function() {
   const email = document.getElementById('paymentNoticeUser')?.value || '';
   const user = (registeredUsers || []).find(u => u && u.email && u.email.toLowerCase() === email.toLowerCase());
   if (!user) { if (typeof showToast === 'function') showToast('Selecione um cliente para enviar a cobrança.'); return; }
-  const phone = String(user.phone || '').replace(/\D/g, '');
+  const phone = String(user.phone || '').replace(/\\D/g, '');
   if (phone.length < 10) { if (typeof showToast === 'function') showToast('Esta conta não possui telefone válido para WhatsApp.'); return; }
   const plan = document.getElementById('paymentNoticePlan')?.value === 'anual' ? 'anual' : 'mensal';
   const amount = plan === 'anual' ? 'R$ 150,00' : 'R$ 15,00';
@@ -25656,7 +25817,7 @@ window.submeterRecepcaoOrdem = async function(atenderImediatamente) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         client_name: name,
-        client_email: email || ((phone.replace(/\D/g, '') || 'contato') + '@nexus.local'),
+        client_email: email || ((phone.replace(/\\D/g, '') || 'contato') + '@nexus.local'),
         client_phone: phone,
         client_cpf: cpf,
         canal_atendimento: canal,
@@ -25743,7 +25904,7 @@ function renderOrdensTable(list) {
     }
 
     const dateFormatted = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Hoje';
-    const cleanPhone = String(o.client_phone || '').replace(/\D/g, '');
+    const cleanPhone = String(o.client_phone || '').replace(/\\D/g, '');
     const protoClean = escapeOsHtml(o.protocol || o.id);
 
     html += '<tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s ease;">';
@@ -26061,7 +26222,7 @@ function renderBalcaoRecepcaoOs(ordens, tecOpts) {
   } else {
     h += '  <div id="receptionQueueList" style="max-height:430px; overflow-y:auto; padding-right:4px;">';
     pendentes.forEach(o => {
-      const cleanPhone = String(o.client_phone || '').replace(/\D/g, '');
+      const cleanPhone = String(o.client_phone || '').replace(/\\D/g, '');
       const proto = escapeOsHtml(o.protocol || o.id);
       const searchData = (proto + ' ' + (o.client_name || '') + ' ' + (o.client_phone || '') + ' ' + (o.title || '')).toLowerCase();
       
@@ -26300,7 +26461,7 @@ window.openOrdemAdminModal = function(id) {
   }
 
   const phoneEl = document.getElementById('osAdminClientPhone');
-  const cleanPhone = String(ordem.client_phone || '').replace(/\D/g, '');
+  const cleanPhone = String(ordem.client_phone || '').replace(/\\D/g, '');
   if (phoneEl) {
     phoneEl.textContent = ordem.client_phone || 'Não informado';
   }
@@ -26824,9 +26985,20 @@ window.salvarTecnico = async function(e) {
   }
 };
 
-window.excluirTecnico = async function(id) {
+window.excluirTecnico = async function(id, jaConfirmado) {
   const t = (systemTecnicos || []).find(x => String(x.id) === String(id));
   if (!t) return;
+
+  // Exclusão definitiva: antes bastava um clique no ícone da lixeira
+  if (jaConfirmado !== true) {
+    showConfirmModal({
+      title: 'Excluir técnico?',
+      message: escapeOsHtml(t.name) + ' deixará de aparecer na equipe técnica e na atribuição de O.S.',
+      confirmText: 'Excluir',
+      onConfirm: () => window.excluirTecnico(id, true)
+    });
+    return;
+  }
 
   try {
     const res = await fetch(window.location.origin + '/api/tecnicos?id=' + id, {
@@ -26905,9 +27077,21 @@ function renderListaTecnicosModal() {
   wrap.innerHTML = html;
 }
 
-window.excluirOrdemAdmin = async function(paramId) {
+window.excluirOrdemAdmin = async function(paramId, jaConfirmado) {
   const id = paramId || document.getElementById('osAdminCurrentId')?.value;
   if (!id) return;
+
+  // Exclusão definitiva: antes bastava um clique no ícone da lixeira
+  if (jaConfirmado !== true) {
+    const alvoOs = (systemOrdens || []).find(o => String(o.id) === String(id));
+    showConfirmModal({
+      title: 'Excluir O.S.?',
+      message: 'A ordem de serviço ' + escapeOsHtml(alvoOs ? (alvoOs.protocol || alvoOs.id) : id) + ' será removida definitivamente. Esta ação não pode ser desfeita.',
+      confirmText: 'Excluir',
+      onConfirm: () => window.excluirOrdemAdmin(id, true)
+    });
+    return;
+  }
 
   try {
     const res = await fetch(window.location.origin + '/api/ordens?id=' + id, {
@@ -27727,8 +27911,8 @@ async function saveTransaction(){
     if(descEl) descEl.focus();
     return;
   }
-  if(isNaN(val) || val < 0) {
-    showToast('⚠️ Por favor, informe um valor válido (Ex: 0,00 ou 100,50).');
+  if(isNaN(val) || val <= 0) {
+    showToast('⚠️ Por favor, informe um valor maior que zero (Ex: 100,50).');
     if(valorEl) valorEl.focus();
     return;
   }
@@ -27916,6 +28100,15 @@ async function saveAccount(){
   const numBalance = isNaN(balance) ? 0 : balance;
   const isCredit = (type === 'Cartão de Crédito');
 
+  // Os lançamentos se ligam à conta pelo NOME: dois cadastros com o mesmo nome misturariam saldos e extratos
+  const nomeNormalizado = name.toLowerCase();
+  const contaDuplicada = accounts.find(x => String(x.name || '').trim().toLowerCase() === nomeNormalizado && x.id !== editingAccId);
+  if (contaDuplicada) {
+    showToast('⚠️ Já existe uma conta/cartão com esse nome. Use um nome diferente.');
+    if (nameEl) nameEl.focus();
+    return;
+  }
+
   if(editingAccId){
     const a = accounts.find(x=>x.id===editingAccId);
     if (a) {
@@ -27961,7 +28154,12 @@ async function saveAccount(){
   render();
 }
 async function deleteAccount(id){
-  if(!confirm('Excluir esta conta/cartão?')) return;
+  const contaAlvo = accounts.find(a=>a.id===id);
+  const qtdLanc = contaAlvo ? transactions.filter(t=>isTxForAccount(t, contaAlvo)).length : 0;
+  const aviso = qtdLanc > 0
+    ? 'Esta conta/cartão tem ' + qtdLanc + ' lançamento' + (qtdLanc === 1 ? '' : 's') + '. Eles continuam no extrato, mas sem conta vinculada. Excluir mesmo assim?'
+    : 'Excluir esta conta/cartão?';
+  if(!confirm(aviso)) return;
   accounts = accounts.filter(a=>a.id!==id);
   await saveUserData();
   showToast('Conta removida');
@@ -28093,15 +28291,18 @@ function closeCatManageModal(){ document.getElementById('overlayCatManage').clas
 
 function openBudgetModal(id, presetCategory, presetLimit){
   if(categories.length===0){ showToast('Cadastre uma categoria antes de criar um orçamento'); return; }
+  // Orçamento é limite de GASTO: só categorias de despesa, e uma categoria não pode ter dois orçamentos
+  const used = budgets.filter(b=>b.id!==id).map(b=>b.category);
+  const opts = categories.filter(c=>(c.type||'despesa')==='despesa' && !used.includes(c.name));
+  if(!id && !opts.length){ showToast('Todas as categorias de despesa já têm orçamento. Crie uma categoria nova ou edite um orçamento existente.'); return; }
   editingBudgetId = id || null;
   document.getElementById('overlayBudget').classList.add('show');
   const sel = document.getElementById('orcCategoria');
-  const used = budgets.filter(b=>b.id!==id).map(b=>b.category);
-  const opts = categories.filter(c=>!used.includes(c.name));
-  sel.innerHTML = (opts.length?opts:categories).map(c=>'<option>'+c.name+'</option>').join('');
+  sel.innerHTML = opts.map(c=>'<option>'+txEsc(c.name)+'</option>').join('');
   if(id){
     const b = budgets.find(x=>x.id===id);
     document.getElementById('orcModalTitle').textContent = 'Editar Orçamento';
+    if(!Array.prototype.some.call(sel.options, o=>o.value===b.category)) sel.insertAdjacentHTML('afterbegin', '<option>'+txEsc(b.category)+'</option>');
     sel.value = b.category;
     document.getElementById('orcLimite').value = b.limit !== undefined && b.limit !== null ? b.limit : 0;
   } else {
@@ -28116,7 +28317,8 @@ function closeBudgetModal(){ document.getElementById('overlayBudget').classList.
 async function saveBudget(){
   const category = document.getElementById('orcCategoria').value;
   const limit = parseInputValue(document.getElementById('orcLimite').value);
-  if(!category || isNaN(limit) || limit<0){ showToast('Informe categoria e limite válidos'); return; }
+  if(!category || isNaN(limit) || limit<=0){ showToast('Informe a categoria e um limite maior que zero'); return; }
+  if(budgets.some(b=>b.category===category && b.id!==editingBudgetId)){ showToast('Essa categoria já tem orçamento. Edite o existente.'); return; }
   if(editingBudgetId){
     Object.assign(budgets.find(b=>b.id===editingBudgetId), {category, limit});
     showToast('Orçamento atualizado!');
@@ -28166,7 +28368,8 @@ async function saveGoal(){
   const target = parseInputValue(document.getElementById('goalTarget').value);
   const current = parseInputValue(document.getElementById('goalCurrent').value) || 0;
   const deadline = document.getElementById('goalDeadline').value;
-  if(!name || isNaN(target) || target<0 || !deadline){ showToast('Preencha os campos da meta corretamente'); return; }
+  if(!name || !deadline){ showToast('Preencha o nome e o prazo da meta'); return; }
+  if(isNaN(target) || target<=0){ showToast('O objetivo da meta deve ser maior que zero'); return; }
   if(editingGoalId){
     Object.assign(goals.find(g=>g.id===editingGoalId), {name,target,current,deadline});
     showToast('Meta atualizada!');
@@ -28473,6 +28676,10 @@ async function saveRecurring(){
 
   if(!desc || isNaN(val) || val < 0 || isNaN(day) || day < 1 || day > 31){
     showToast('Preencha os campos corretamente.');
+    return;
+  }
+  if(val <= 0){
+    showToast('⚠️ Informe um valor maior que zero (Ex: 100,50).');
     return;
   }
 
@@ -28824,11 +29031,12 @@ async function openAdminCreateUserModal(){
   const modalTitle = document.querySelector('#overlayUserAdmin h2');
   if(modalTitle) modalTitle.textContent = 'Cadastrar Novo Usuário';
   const passHint = document.getElementById('userAdminPasswordHint');
-  if(passHint) passHint.textContent = 'Informe a senha inicial do novo usuário (mínimo 6 caracteres)';
+  if(passHint) passHint.textContent = 'Senha inicial do novo usuário: 8+ caracteres, maiúscula, minúscula, número e símbolo';
   const emailInput = document.getElementById('userAdminEmail');
   if(emailInput) {
     emailInput.disabled = false;
     emailInput.style.opacity = '1';
+    emailInput.title = '';
     emailInput.value = '';
     emailInput.placeholder = 'email.usuario@exemplo.com';
   }
@@ -28844,21 +29052,21 @@ async function openAdminCreateUserModal(){
 // Máscaras globais para campos de auditoria e suporte
 window.maskCpfInput = function(el) {
   if (!el) return;
-  let v = el.value.replace(/\D/g, '');
+  let v = el.value.replace(/\\D/g, '');
   if (v.length > 11) v = v.slice(0, 11);
   el.value = v; // Sem pontos (apenas números)
 };
 
 window.maskPhoneInput = function(el) {
   if (!el) return;
-  let v = el.value.replace(/\D/g, '');
+  let v = el.value.replace(/\\D/g, '');
   if (v.length > 11) v = v.slice(0, 11);
   if (v.length > 10) {
-    v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    v = v.replace(/(\\d{2})(\\d{5})(\\d{4})/, '($1) $2-$3');
   } else if (v.length > 5) {
-    v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+    v = v.replace(/(\\d{2})(\\d{4})(\\d{0,4})/, '($1) $2-$3');
   } else if (v.length > 2) {
-    v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+    v = v.replace(/(\\d{2})(\\d{0,5})/, '($1) $2');
   }
   el.value = v;
 };
@@ -28881,21 +29089,23 @@ async function openUserAdminModal(email){
 
   const emailInput = document.getElementById('userAdminEmail');
   if(emailInput) {
-    emailInput.disabled = false;
-    emailInput.style.opacity = '1';
+    // O e-mail é a chave da conta (dados, sessão, assinatura): trocá-lo criava um cadastro novo e vazio ao lado do antigo
+    emailInput.disabled = true;
+    emailInput.style.opacity = '0.6';
+    emailInput.title = 'O e-mail é o login da conta e não pode ser alterado. Para trocar, cadastre a conta correta e exclua esta.';
     emailInput.value = u.email || '';
   }
 
   const cpfInput = document.getElementById('userAdminCpf');
   if(cpfInput) {
-    const rawCpf = String(u.cpf || '').replace(/\D/g, '');
-    cpfInput.value = rawCpf.length === 11 ? rawCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : (u.cpf || '');
+    const rawCpf = String(u.cpf || '').replace(/\\D/g, '');
+    cpfInput.value = rawCpf.length === 11 ? rawCpf : (u.cpf || ''); // CPF sempre só com números
   }
 
   const phoneInput = document.getElementById('userAdminPhone');
   if(phoneInput) {
-    const rawPhone = String(u.phone || '').replace(/\D/g, '');
-    phoneInput.value = rawPhone.length === 11 ? rawPhone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3') : (rawPhone.length === 10 ? rawPhone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3') : (u.phone || ''));
+    const rawPhone = String(u.phone || '').replace(/\\D/g, '');
+    phoneInput.value = rawPhone.length === 11 ? rawPhone.replace(/(\\d{2})(\\d{5})(\\d{4})/, '($1) $2-$3') : (rawPhone.length === 10 ? rawPhone.replace(/(\\d{2})(\\d{4})(\\d{4})/, '($1) $2-$3') : (u.phone || ''));
   }
 
   const roleSelect = document.getElementById('userAdminRole');
@@ -28925,11 +29135,13 @@ async function saveUserAdmin(){
   await syncUsersWithServer();
   const name = (document.getElementById('userAdminName')?.value || '').trim();
   const rawEmail = (document.getElementById('userAdminEmail')?.value || '').trim().toLowerCase();
-  const rawCpf = (document.getElementById('userAdminCpf')?.value || '').replace(/\D/g, '').trim();
+  const rawCpf = (document.getElementById('userAdminCpf')?.value || '').replace(/\\D/g, '').trim();
   const rawPhone = (document.getElementById('userAdminPhone')?.value || '').trim();
   const role = document.getElementById('userAdminRole')?.value || 'Usuário';
   const active = document.getElementById('userAdminActive')?.value !== 'false';
   const newPass = (document.getElementById('userAdminPassword')?.value || '').trim();
+  // Mesma regra de senha do cadastro e da troca pelo próprio usuário
+  const senhaForte = (p) => p.length >= 8 && /[a-z]/.test(p) && /[A-Z]/.test(p) && /[0-9]/.test(p) && /[^A-Za-z0-9]/.test(p);
 
   if(!name){ showToast('Informe o nome completo do usuário'); return; }
   if(!rawEmail || !rawEmail.includes('@')){ showToast('Informe um e-mail válido para o usuário'); return; }
@@ -28939,17 +29151,24 @@ async function saveUserAdmin(){
       showToast('Este e-mail já está cadastrado no sistema');
       return;
     }
-    if(!newPass || newPass.length < 6){
-      showToast('A senha inicial deve ter no mínimo 6 caracteres');
+    // Mesma regra do servidor: e-mail fora do padrão era descartado em silêncio e a tela dizia "cadastrado com sucesso"
+    const emailValido = new RegExp('^[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,190}[.][A-Za-z]{2,24}$').test(rawEmail) && rawEmail.indexOf('..') < 0 && rawEmail.length <= 254;
+    if(!emailValido){
+      showToast('Informe um e-mail válido (ex.: nome@dominio.com)');
       return;
     }
-    const formattedCpf = rawCpf.length === 11 ? rawCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : (rawCpf || null);
+    if(!senhaForte(newPass)){
+      showToast('A senha inicial deve ter 8+ caracteres, maiúscula, minúscula, número e símbolo');
+      return;
+    }
+    const formattedCpf = rawCpf || null;
     const newUser = {
       name,
       email: rawEmail,
       cpf: rawCpf || null, // CPF ajustado sem pontos
       phone: rawPhone || null,
       password: newPass,
+      admin_create: true,
       role,
       active: active,
       trial_started_at: new Date().toISOString(),
@@ -28959,7 +29178,15 @@ async function saveUserAdmin(){
     };
     try { localStorage.removeItem('nexus_data_' + rawEmail.toLowerCase().trim()); } catch(e) {}
     registeredUsers.push(newUser);
-    await saveUsersToServer();
+    const salvouNovo = await saveUsersToServer();
+    delete newUser.admin_create;
+    if(!salvouNovo){
+      // o servidor não aceitou: desfaz a inclusão local para a lista não mostrar um cadastro que não existe
+      registeredUsers = registeredUsers.filter(x => x !== newUser);
+      saveToStorage('nexus_users', registeredUsers);
+      showToast('⚠️ O servidor não aceitou o cadastro. Confira o e-mail e tente novamente.');
+      return;
+    }
     showToast('Usuário cadastrado com sucesso!');
     logActivity('Criação', 'Usuário', 'Administrador cadastrou usuário: ' + rawEmail + ' (' + name + ', ' + role + ')');
     closeUserAdminModal();
@@ -28971,16 +29198,18 @@ async function saveUserAdmin(){
   const u = registeredUsers.find(x => x.email.toLowerCase() === editingUserEmail.toLowerCase());
   if(!u) return;
 
-  // Se o e-mail foi corrigido, verificar se não colide com outro usuário
-  if(rawEmail !== u.email.toLowerCase()){
-    if(registeredUsers.some(x => x.email.toLowerCase() === rawEmail)){
-      showToast('O e-mail "' + rawEmail + '" já pertence a outra conta cadastrada');
-      return;
-    }
+  // O e-mail é a chave da conta e não muda por aqui (mudar criava um cadastro novo e vazio ao lado do antigo)
+  if(rawEmail && rawEmail !== u.email.toLowerCase()){
+    showToast('O e-mail da conta não pode ser alterado. Cadastre a conta correta e exclua esta.');
+    return;
   }
 
   if(u.role === 'Administrador' && role !== 'Administrador' && registeredUsers.filter(x => x.role === 'Administrador').length <= 1){
     showToast('É necessário manter ao menos um administrador ativo no sistema');
+    return;
+  }
+  if(newPass && !senhaForte(newPass)){
+    showToast('A nova senha deve ter 8+ caracteres, maiúscula, minúscula, número e símbolo');
     return;
   }
 
@@ -28993,7 +29222,7 @@ async function saveUserAdmin(){
   u.phone = rawPhone || null;
   u.role = role;
   u.active = active;
-  if(newPass && newPass.length >= 6) {
+  if(newPass) {
     u.password = newPass;
   }
 
@@ -29008,7 +29237,13 @@ async function saveUserAdmin(){
     }
   }
 
-  await saveUsersToServer();
+  const salvouEdicao = await saveUsersToServer();
+  if(!salvouEdicao){
+    showToast('⚠️ Não foi possível salvar no servidor. As alterações não foram aplicadas.');
+    await syncUsersWithServer();
+    render();
+    return;
+  }
 
   if(currentUser && currentUser.email.toLowerCase() === oldEmail.toLowerCase()){
     currentUser.name = u.name;
@@ -29109,76 +29344,105 @@ window.enviarSuporteNovaOrdem = async function(e) {
   }
 };
 
-function handleImportFile(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    const text = reader.result;
-    let rows = [];
-    if(/\\.ofx$/i.test(file.name)){
-      const re = /<STMTTRN>([\\s\\S]*?)<\\/STMTTRN>/gi;
-      let m;
-      while((m = re.exec(text))){
-        const block = m[1];
-        const amt = (block.match(/<TRNAMT>([-\\d.,]+)/i)||[])[1];
-        const dtRaw = (block.match(/<DTPOSTED>(\\d{8})/i)||[])[1];
-        const memo = ((block.match(/<MEMO>([^\\n<]*)/i)||[])[1] || (block.match(/<NAME>([^\\n<]*)/i)||[])[1] || 'Importado').trim();
-        if(amt && dtRaw){
-          const date = \`\${dtRaw.slice(0,4)}-\${dtRaw.slice(4,6)}-\${dtRaw.slice(6,8)}\`;
-          rows.push({date, desc:memo, val:parseFloat(amt.replace(',','.'))});
-        }
-      }
-    } else {
-      const lines = text.split(/\\r?\\n/).filter(l=>l.trim());
-      lines.forEach(line=>{
-        const parts = line.split(',');
-        if(parts.length<3) return;
-        const [d,desc,val] = parts;
-        const dt = (d||'').trim();
-        const v = parseFloat((val||'').replace(',','.'));
-        if(!dt || isNaN(v) || /data/i.test(dt)) return;
-        rows.push({date:dt, desc:(desc||'').trim(), val:v});
-      });
-    }
-    pendingImport = rows;
-    renderImportPreview();
-  };
-  reader.readAsText(file);
+// ==================== Importar extrato (OFX / CSV) ====================
+// A leitura vive em importacao.js (window.NexusImport, testada): entende CSV brasileiro (";", "1.234,56", DD/MM/AAAA), OFX pelo
+// conteúdo e separa o que a conta já tem. Aqui ficam só a tela e a gravação.
+if (typeof pendingImport === 'undefined') { var pendingImport = []; }
+var pendingImportInfo = { arquivo: '', formato: '', ignoradas: [] };
+
+async function lerArquivoComoTexto(file) {
+  const buf = await file.arrayBuffer();
+  // Extratos de banco costumam vir em Windows-1252 (acentos quebrariam como UTF-8)
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(buf); }
+  catch (e) { try { return new TextDecoder('windows-1252').decode(buf); } catch (e2) { return new TextDecoder().decode(buf); } }
 }
+
+function handleImportFile(e){
+  const input = e.target;
+  const file = input && input.files && input.files[0];
+  if(!file) return;
+  if(!window.NexusImport){ showToast('Módulo de importação indisponível. Recarregue a página.'); return; }
+  if(file.size > 5 * 1024 * 1024){ showToast('Arquivo muito grande (máximo 5 MB).'); try { input.value = ''; } catch(err){} return; }
+  lerArquivoComoTexto(file).then(function(texto){
+    const r = window.NexusImport.lerExtrato(texto);
+    pendingImport = r.linhas;
+    pendingImportInfo = { arquivo: file.name, formato: r.formato, ignoradas: r.ignoradas };
+    renderImportPreview();
+  }).catch(function(){
+    showToast('Não foi possível ler o arquivo.');
+  }).then(function(){
+    // permite escolher o mesmo arquivo de novo (sem isto o navegador não dispara "change")
+    try { input.value = ''; } catch(err){}
+  });
+}
+
+function resolveImportAccount(){
+  const sel = document.getElementById('impConta');
+  const rawAcc = ((sel && sel.value) || '').split(' — ')[0].trim();
+  let targetAcc = accounts.find(function(a){ return a.name === rawAcc || a.name.toLowerCase().trim() === rawAcc.toLowerCase(); });
+  if (!targetAcc && (rawAcc.toLowerCase().indexOf('cartão') >= 0 || rawAcc.toLowerCase().indexOf('cartao') >= 0)) {
+    const creditCards = accounts.filter(function(a){ return isAccountCreditCard(a); });
+    if (creditCards.length > 0) targetAcc = creditCards[0];
+  }
+  return { rawAcc: rawAcc, conta: targetAcc || null };
+}
+
+function splitImportRows(){
+  const alvo = resolveImportAccount();
+  const existentes = alvo.conta ? transactions.filter(function(t){ return isTxForAccount(t, alvo.conta); }) : [];
+  return window.NexusImport.separarRepetidas(pendingImport, existentes);
+}
+
 function renderImportPreview(){
   const el = document.getElementById('importPreview');
   if(!el) return;
-  if(pendingImport.length===0){ el.innerHTML = '<p style="color:var(--text-faint);font-size:12.5px;margin-top:12px;">Nenhuma transação reconhecida no arquivo.</p>'; return; }
-  el.innerHTML = \`
-    <p style="font-size:12.5px;color:var(--text-dim);margin:14px 0 8px;">\${pendingImport.length} transações encontradas:</p>
-    <table><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>
-    \${pendingImport.slice(0,50).map(r=>\`<tr class="trow"><td>\${r.date}</td><td>\${r.desc}</td><td class="\${r.val>=0?'val-in':'val-out'}">\${fmt(Math.abs(r.val))}</td></tr>\`).join('')}
-    </tbody></table>
-    <button class="btn-primary" id="btnConfirmarImport" style="margin-top:14px">Confirmar Importação (\${pendingImport.length})</button>\`;
+  const info = pendingImportInfo || { arquivo: '', formato: '', ignoradas: [] };
+  const ignoradasTxt = info.ignoradas.length
+    ? '<p style="font-size:12px;color:var(--text-faint);margin:6px 0 0;">' + info.ignoradas.length + ' linha(s) ignorada(s): ' + txEsc(info.ignoradas.slice(0, 3).map(function(i){ return 'linha ' + i.linha + ' (' + i.motivo + ')'; }).join(', ')) + (info.ignoradas.length > 3 ? '…' : '') + '</p>'
+    : '';
+  if(pendingImport.length === 0){
+    el.innerHTML = '<p style="color:var(--text-faint);font-size:12.5px;margin-top:12px;">Nenhuma transação reconhecida' + (info.arquivo ? ' em <strong>' + txEsc(info.arquivo) + '</strong>' : ' no arquivo') + '. Confira se o arquivo tem data, descrição e valor.</p>' + ignoradasTxt;
+    return;
+  }
+  const sp = splitImportRows();
+  const repetidas = new Set(sp.repetidas);
+  const linhas = pendingImport.slice(0, 50).map(function(r){
+    const jaExiste = repetidas.has(r);
+    return '<tr class="trow"' + (jaExiste ? ' style="opacity:.5;"' : '') + '><td>' + txEsc(formatDateBR(r.date)) + '</td><td>' + txEsc(r.desc) + (jaExiste ? ' <span class="pill" style="font-size:10.5px;">já existe</span>' : '') + '</td><td class="' + (r.val >= 0 ? 'val-in' : 'val-out') + '">' + (r.val >= 0 ? '+' : '−') + fmt(Math.abs(r.val)) + '</td></tr>';
+  }).join('');
+  el.innerHTML =
+    '<p style="font-size:12.5px;color:var(--text-dim);margin:14px 0 8px;"><strong>' + pendingImport.length + '</strong> transações reconhecidas em <strong>' + txEsc(info.arquivo) + '</strong> (' + (info.formato === 'ofx' ? 'OFX' : 'CSV') + ') · <strong style="color:var(--green);">' + sp.novas.length + ' novas</strong>' + (sp.repetidas.length ? ' · ' + sp.repetidas.length + ' já existem na conta e serão ignoradas' : '') + '</p>' +
+    '<table><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>' + linhas + '</tbody></table>' +
+    (pendingImport.length > 50 ? '<p style="font-size:12px;color:var(--text-faint);margin:6px 0 0;">Mostrando as 50 primeiras; todas as ' + sp.novas.length + ' novas serão importadas.</p>' : '') + ignoradasTxt +
+    '<button class="btn-primary" id="btnConfirmarImport" style="margin-top:14px"' + (sp.novas.length ? '' : ' disabled') + '>Confirmar Importação (' + sp.novas.length + ')</button>';
   document.getElementById('btnConfirmarImport').onclick = confirmImport;
 }
-async function confirmImport(){
-  const rawAcc = (document.getElementById('impConta').value || '').split(' — ')[0].trim();
-  let targetAcc = accounts.find(a => a.name === rawAcc || a.name.toLowerCase().trim() === rawAcc.toLowerCase());
-  if (!targetAcc && (rawAcc.toLowerCase().includes('cartão') || rawAcc.toLowerCase().includes('cartao'))) {
-    const creditCards = accounts.filter(a => isAccountCreditCard(a));
-    if (creditCards.length > 0) targetAcc = creditCards[0];
-  }
-  const accId = targetAcc ? targetAcc.id : null;
-  const finalAcc = targetAcc ? targetAcc.name : rawAcc;
 
-  const cat = document.getElementById('impCategoria').value;
-  let added = 0;
-  pendingImport.forEach(r=>{
-    let date = r.date;
-    transactions.push({ id: nextTxId++, date, desc:r.desc||'Importado', cat, acc:finalAcc, accId, type: r.val>=0?'in':'out', val: Math.abs(r.val), status: r.val>=0?'Recebido':'Pago' });
-    added++;
+async function confirmImport(){
+  if(!window.NexusImport) return;
+  const alvo = resolveImportAccount();
+  const sp = splitImportRows();
+  if(!sp.novas.length){ showToast('Nada novo para importar: esses lançamentos já existem nessa conta.'); return; }
+  const escolhida = (document.getElementById('impCategoria') || {}).value || '';
+  const accId = alvo.conta ? alvo.conta.id : null;
+  const finalAcc = alvo.conta ? alvo.conta.name : alvo.rawAcc;
+  sp.novas.forEach(function(r){
+    transactions.push({
+      id: nextTxId++, date: r.date, desc: r.desc || 'Importado',
+      // categoria do tipo certo: uma despesa nunca cai numa categoria de receita (e vice-versa)
+      cat: window.NexusImport.categoriaDaLinha(r, escolhida, categories),
+      acc: finalAcc, accId: accId, type: r.val >= 0 ? 'in' : 'out', val: Math.abs(r.val), status: r.val >= 0 ? 'Recebido' : 'Pago'
+    });
   });
+  const added = sp.novas.length;
+  const rep = sp.repetidas.length;
+  const ign = (pendingImportInfo.ignoradas || []).length;
   pendingImport = [];
+  pendingImportInfo = { arquivo: '', formato: '', ignoradas: [] };
   autoMigrateTransactionsAndAccounts();
   await saveUserData();
-  showToast(added + ' transações importadas!');
+  logActivity('Importação', 'Transações', 'Importou ' + added + ' lançamento(s) de extrato em "' + finalAcc + '" (' + rep + ' já existiam, ' + ign + ' linhas ignoradas)');
+  showToast(added + ' transação(ões) importada(s)' + (rep ? ' · ' + rep + ' já existiam' : '') + (ign ? ' · ' + ign + ' linha(s) ignorada(s)' : ''));
   navigate('transacoes');
 }
 
@@ -29232,13 +29496,33 @@ async function addAttachment(filesToProcess = null){
     return;
   }
 
+  // Só imagens (sem SVG), PDF, Word e texto; imagens até 15 MB (são reduzidas ao enviar) e demais arquivos até 5 MB
+  const EXT_PERMITIDA = /[.](png|jpe?g|gif|webp|bmp|heic|heif|pdf|docx?|txt)$/i;
+  const tipoPermitido = function(f) {
+    const t = String(f.type || '').toLowerCase();
+    if (t.indexOf('svg') >= 0) return false;
+    if (t.indexOf('image/') === 0 || t === 'application/pdf' || t === 'application/msword' || t.indexOf('wordprocessingml') >= 0 || t === 'text/plain') return true;
+    return EXT_PERMITIDA.test(f.name || '');
+  };
+  const rejeitados = [];
+  const arquivosValidos = [];
+  files.forEach(function(f) {
+    const ehImagem = String(f.type || '').indexOf('image/') === 0;
+    const limiteMb = ehImagem ? 15 : 5;
+    if (!tipoPermitido(f)) rejeitados.push(f.name + ' (tipo não permitido)');
+    else if (f.size > limiteMb * 1024 * 1024) rejeitados.push(f.name + ' (acima de ' + limiteMb + ' MB)');
+    else arquivosValidos.push(f);
+  });
+  if (rejeitados.length) showToast('Não incluído: ' + rejeitados.slice(0, 2).join('; ') + (rejeitados.length > 2 ? ' e mais ' + (rejeitados.length - 2) : ''));
+  if (arquivosValidos.length === 0) { if (fileInput) fileInput.value = ''; return; }
+
   isDataLoading = true;
 
   try {
     let addedCount = 0;
     showToast('Processando anexo(s)...');
 
-    for (const file of files) {
+    for (const file of arquivosValidos) {
       try {
         let dataUrl = null;
         if (file.type && file.type.startsWith('image/')) {
@@ -29253,6 +29537,13 @@ async function addAttachment(filesToProcess = null){
           });
         }
 
+        if (dataUrl && !nexusSafeDataUrl(dataUrl)) dataUrl = null;
+        // Os anexos moram dentro dos dados do usuário (base64): limita o total para não estourar o salvamento
+        const usadoAnexos = attachments.reduce(function(soma, x) { return soma + String(x.dataUrl || '').length; }, 0);
+        if (dataUrl && usadoAnexos + dataUrl.length > 30 * 1024 * 1024) {
+          showToast('Limite de armazenamento de anexos atingido (30 MB). Exclua anexos antigos para enviar novos.');
+          break;
+        }
         if (dataUrl) {
           attachments.push({
             id: nextAttId++,
@@ -29304,17 +29595,18 @@ async function relinkAttachment(id, newTxId){
 
 function previewAttachment(id){
   const att = attachments.find(a => a.id === id);
-  if (!att || !att.dataUrl) { showToast('Não foi possível carregar a visualização'); return; }
-  const isImage = (att.type && att.type.startsWith('image/')) || (att.dataUrl && att.dataUrl.startsWith('data:image/'));
-  const isPdf = (att.type && att.type.includes('pdf')) || (att.dataUrl && att.dataUrl.startsWith('data:application/pdf')) || (att.name && att.name.toLowerCase().endsWith('.pdf'));
+  const urlSegura = att ? nexusSafeDataUrl(att.dataUrl) : '';
+  if (!att || !urlSegura) { showToast('Não foi possível carregar a visualização (anexo inválido ou corrompido).'); return; }
+  const isImage = (att.type && att.type.startsWith('image/')) || (urlSegura && urlSegura.startsWith('data:image/'));
+  const isPdf = (att.type && att.type.includes('pdf')) || (urlSegura && urlSegura.startsWith('data:application/pdf')) || (att.name && att.name.toLowerCase().endsWith('.pdf'));
 
   let contentHtml = '';
   if (isImage) {
-    contentHtml = '<div style="text-align:center; max-height:78vh; overflow:auto; padding:10px;"><img src="' + att.dataUrl + '" style="max-width:100%; max-height:72vh; object-fit:contain; border-radius:12px; display:block; margin:0 auto; box-shadow:0 8px 28px rgba(0,0,0,0.4);"></div>';
+    contentHtml = '<div style="text-align:center; max-height:78vh; overflow:auto; padding:10px;"><img src="' + urlSegura + '" style="max-width:100%; max-height:72vh; object-fit:contain; border-radius:12px; display:block; margin:0 auto; box-shadow:0 8px 28px rgba(0,0,0,0.4);"></div>';
   } else if (isPdf) {
-    contentHtml = '<iframe src="' + att.dataUrl + '" style="width:100%; height:78vh; border:none; border-radius:12px;"></iframe>';
+    contentHtml = '<iframe src="' + urlSegura + '" style="width:100%; height:78vh; border:none; border-radius:12px;"></iframe>';
   } else {
-    contentHtml = '<div style="text-align:center; padding:50px 24px;"><div style="font-size:56px; margin-bottom:14px;">📄</div><h4 style="font-size:18px; font-weight:700;">' + att.name + '</h4><p style="color:var(--text-dim); margin-top:8px; font-size:14px;">Arquivo disponível para visualização e download</p><a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="display:inline-flex; align-items:center; gap:8px; margin-top:20px; text-decoration:none; padding:12px 24px; font-size:15px; font-weight:700; border-radius:10px;">📥 Baixar Arquivo Agora</a></div>';
+    contentHtml = '<div style="text-align:center; padding:50px 24px;"><div style="font-size:56px; margin-bottom:14px;">📄</div><h4 style="font-size:18px; font-weight:700;">' + att.name + '</h4><p style="color:var(--text-dim); margin-top:8px; font-size:14px;">Arquivo disponível para visualização e download</p><a href="' + urlSegura + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="display:inline-flex; align-items:center; gap:8px; margin-top:20px; text-decoration:none; padding:12px 24px; font-size:15px; font-weight:700; border-radius:10px;">📥 Baixar Arquivo Agora</a></div>';
   }
 
   const modalOverlay = document.createElement('div');
@@ -29324,7 +29616,7 @@ function previewAttachment(id){
     '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--card-border);">' +
       '<h3 style="font-size:18px; font-weight:800; margin:0; display:flex; align-items:center; gap:10px; color:var(--text); word-break:break-word;"><span>📎</span> ' + (att.name || 'Anexo') + '</h3>' +
       '<div style="display:flex; gap:10px; align-items:center;">' +
-        '<a href="' + att.dataUrl + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="padding:10px 20px; font-size:14px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px; border-radius:8px; height:40px;">📥 Baixar</a>' +
+        '<a href="' + urlSegura + '" download="' + (att.name || 'comprovante') + '" class="btn-primary" style="padding:10px 20px; font-size:14px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px; border-radius:8px; height:40px;">📥 Baixar</a>' +
         '<button class="btn-ghost btn-close-modal" style="padding:10px 20px; font-size:14px; font-weight:700; border-radius:8px; height:40px; background:rgba(255,255,255,0.08); border:1px solid var(--card-border); color:var(--text); cursor:pointer; display:inline-flex; align-items:center; gap:6px;">✕ Fechar</button>' +
       '</div>' +
     '</div>' +
@@ -29492,6 +29784,7 @@ function attachPageEvents(){
   }
 
   const importFile = document.getElementById('importFile'); if(importFile) importFile.onchange = handleImportFile;
+  const impContaSel = document.getElementById('impConta'); if(impContaSel) impContaSel.onchange = function(){ if(pendingImport && pendingImport.length) renderImportPreview(); };
   const importDropZone = document.getElementById('importDropZone');
   if(importDropZone) {
     importDropZone.ondragover = (e) => { e.preventDefault(); importDropZone.style.borderColor = 'var(--brand-bright)'; importDropZone.style.background = 'rgba(5, 150, 105,0.1)'; };
@@ -29568,6 +29861,7 @@ function attachPageEvents(){
     };
     bindPasswordToggle('cfgPassword', 'cfgPasswordToggle');
     bindPasswordToggle('cfgPasswordConfirm', 'cfgPasswordConfirmToggle');
+    bindPasswordToggle('cfgPasswordCurrent', 'cfgPasswordCurrentToggle');
     const cfgScaleEl = document.getElementById('cfgScale');
     if(cfgScaleEl) {
       cfgScaleEl.value = localStorage.getItem('nexus_display_scale') || 'auto';
@@ -29578,114 +29872,106 @@ function attachPageEvents(){
     // Máscaras automáticas nos campos financeiros de configurações
     const cfgCpfInput = document.getElementById('cfgCpf');
     if (cfgCpfInput) {
-      if (cfgCpfInput.value) {
-        let v = cfgCpfInput.value.replace(/\D/g, '');
-        if (v.length === 11) cfgCpfInput.value = v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-      }
+      // CPF sempre só com números (é assim que o cadastro e o banco guardam; sem pontos nem traço)
+      cfgCpfInput.value = cfgCpfInput.value.replace(/\\D/g, '').slice(0, 11);
       cfgCpfInput.addEventListener('input', function(e) {
-        let v = e.target.value.replace(/\D/g, '');
-        if (v.length > 11) v = v.slice(0, 11);
-        v = v.replace(/(\d{3})(\d)/, '$1.$2');
-        v = v.replace(/(\d{3})(\d)/, '$1.$2');
-        v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-        e.target.value = v;
+        e.target.value = e.target.value.replace(/\\D/g, '').slice(0, 11);
       });
     }
 
     const cfgPhoneInput = document.getElementById('cfgPhone');
     if (cfgPhoneInput) {
       if (cfgPhoneInput.value) {
-        let v = cfgPhoneInput.value.replace(/\D/g, '');
-        if (v.length === 11) cfgPhoneInput.value = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-        else if (v.length === 10) cfgPhoneInput.value = v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+        let v = cfgPhoneInput.value.replace(/\\D/g, '');
+        if (v.length === 11) cfgPhoneInput.value = v.replace(/(\\d{2})(\\d{5})(\\d{4})/, '($1) $2-$3');
+        else if (v.length === 10) cfgPhoneInput.value = v.replace(/(\\d{2})(\\d{4})(\\d{4})/, '($1) $2-$3');
       }
       cfgPhoneInput.addEventListener('input', function(e) {
-        let v = e.target.value.replace(/\D/g, '');
+        let v = e.target.value.replace(/\\D/g, '');
         if (v.length > 11) v = v.slice(0, 11);
         if (v.length > 10) {
-          v = v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+          v = v.replace(/(\\d{2})(\\d{5})(\\d{4})/, '($1) $2-$3');
         } else if (v.length > 5) {
-          v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+          v = v.replace(/(\\d{2})(\\d{4})(\\d{0,4})/, '($1) $2-$3');
         } else if (v.length > 2) {
-          v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+          v = v.replace(/(\\d{2})(\\d{0,5})/, '($1) $2');
         }
         e.target.value = v;
       });
     }
 
     saveCfg.onclick = async ()=>{
-      if (currentUser) {
-        await syncUsersWithServer();
-        const newName = document.getElementById('cfgName') ? document.getElementById('cfgName').value.trim() : currentUser.name;
-        const newEmail = document.getElementById('cfgEmail') ? document.getElementById('cfgEmail').value.trim() : currentUser.email;
-        const newCpf = document.getElementById('cfgCpf') ? document.getElementById('cfgCpf').value.trim() : (currentUser.cpf || '');
-        const newBirthDate = document.getElementById('cfgBirthDate') ? document.getElementById('cfgBirthDate').value.trim() : (currentUser.birth_date || '');
-        const newPhone = document.getElementById('cfgPhone') ? document.getElementById('cfgPhone').value.trim() : (currentUser.phone || '');
-        const newPass = document.getElementById('cfgPassword') ? document.getElementById('cfgPassword').value.trim() : '';
-        const newPassConfirm = document.getElementById('cfgPasswordConfirm') ? document.getElementById('cfgPasswordConfirm').value.trim() : '';
+      if (!currentUser) return;
+      const valor = (id) => { const el = document.getElementById(id); return el ? String(el.value || '').trim() : ''; };
+      const bruto = (id) => { const el = document.getElementById(id); return el ? String(el.value || '') : ''; };
+      const newName = valor('cfgName');
+      const newCpf = valor('cfgCpf');
+      const newBirthDate = valor('cfgBirthDate');
+      const newPhone = valor('cfgPhone');
+      const curPass = bruto('cfgPasswordCurrent');
+      const newPass = bruto('cfgPassword');
+      const newPassConfirm = bruto('cfgPasswordConfirm');
 
-        if (!newName) { showToast('Informe o nome completo do titular'); return; }
+      if (!newName) { showToast('Informe o nome completo do titular'); return; }
+      if (newCpf && newCpf.replace(/\\D/g, '').length !== 11) { showToast('O CPF deve possuir 11 dígitos'); return; }
+      const phoneDigits = newPhone.replace(/\\D/g, '');
+      if (phoneDigits && phoneDigits.length !== 10 && phoneDigits.length !== 11) { showToast('Informe o celular com DDD (10 ou 11 dígitos)'); return; }
+      if (newBirthDate && newBirthDate > new Date().toLocaleDateString('sv-SE')) { showToast('A data de nascimento não pode ser futura'); return; }
 
-        const isValidEmail = (str) => {
-          if (!str || typeof str !== 'string') return false;
-          const at = str.indexOf('@');
-          const dot = str.lastIndexOf('.');
-          return at > 0 && dot > at + 1 && dot < str.length - 1 && !str.includes(' ');
-        };
-        if(!newEmail || !isValidEmail(newEmail)){ showToast('Informe um e-mail válido'); return; }
-        const emailTaken = registeredUsers.some(u => u && u.email && u.email.toLowerCase()===newEmail.toLowerCase() && u.email.toLowerCase()!==currentUser.email.toLowerCase());
-        if(emailTaken){ showToast('Este e-mail já está em uso por outro usuário'); return; }
-
-        if (newCpf) {
-          const rawCpf = newCpf.replace(/\D/g, '');
-          if (rawCpf.length > 0 && rawCpf.length !== 11) {
-            showToast('O CPF deve possuir 11 dígitos');
-            return;
-          }
+      // Senha: se qualquer um dos três campos foi preenchido, os três são obrigatórios (antes um campo sozinho era ignorado em silêncio)
+      const quertrocarSenha = !!(curPass || newPass || newPassConfirm);
+      if (quertrocarSenha) {
+        if (!curPass) { showToast('Informe a senha atual para trocar a senha'); return; }
+        if (!newPass || !newPassConfirm) { showToast('Preencha a nova senha e a confirmação'); return; }
+        if (newPass !== newPassConfirm) { showToast('As senhas de confirmação não coincidem'); return; }
+        if (newPass.length < 8 || !/[a-z]/.test(newPass) || !/[A-Z]/.test(newPass) || !/[0-9]/.test(newPass) || !/[^A-Za-z0-9]/.test(newPass)) {
+          showToast('A nova senha deve ter 8+ caracteres, maiúscula, minúscula, número e símbolo'); return;
         }
-        
-        // Atualiza a senha SOMENTE se AMBOS os campos de senha foram preenchidos propositalmente
-        let passwordChanged = false;
-        if(newPass && newPassConfirm){
-          if(newPass.length < 6){ showToast('A nova senha deve ter ao menos 6 caracteres'); return; }
-          if(newPass !== newPassConfirm){ showToast('As senhas de confirmação não coincidem'); return; }
-          passwordChanged = true;
-        }
-
-        const oldEmail = currentUser.email;
-        const u = registeredUsers.find(x => x && x.email && x.email.toLowerCase() === oldEmail.toLowerCase());
-        if (u) {
-          u.name = newName;
-          u.email = newEmail;
-          u.cpf = newCpf;
-          u.birth_date = newBirthDate;
-          u.phone = newPhone;
-          if (currentUser.avatar) u.avatar = currentUser.avatar;
-          if(passwordChanged) u.password = newPass;
-        }
-        await saveUsersToServer();
-
-        if(newEmail.toLowerCase() !== oldEmail.toLowerCase()){
-          const oldKey = 'nexus_data_' + oldEmail;
-          const dataBackup = loadFromStorage(oldKey, null);
-          currentUser.email = newEmail;
-          if(dataBackup) saveToStorage('nexus_data_' + newEmail, dataBackup);
-          localStorage.removeItem(oldKey);
-        }
-        currentUser.name = newName;
-        currentUser.cpf = newCpf;
-        currentUser.birth_date = newBirthDate;
-        currentUser.phone = newPhone;
-        saveToStorage('nexus_cached_user', currentUser);
-        await saveUserData();
-
-        if (document.getElementById('cfgPassword')) document.getElementById('cfgPassword').value = '';
-        if (document.getElementById('cfgPasswordConfirm')) document.getElementById('cfgPasswordConfirm').value = '';
+        if (newPass === curPass) { showToast('A nova senha precisa ser diferente da atual'); return; }
       }
+
+      const payload = { name: newName, phone: newPhone, birth_date: newBirthDate };
+      const cpfEl = document.getElementById('cfgCpf');
+      if (cpfEl && !cpfEl.readOnly) payload.cpf = newCpf;
+      const avatarAtual = nexusSafeAvatar(currentUser.avatar);
+      if (avatarAtual) payload.avatar = avatarAtual;
+      if (quertrocarSenha) { payload.currentPassword = curPass; payload.newPassword = newPass; }
+
+      saveCfg.disabled = true;
+      let resp = null;
+      let data = null;
+      try {
+        resp = await fetch(window.location.origin + '/api/user/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (loadFromStorage('nexus_token', '') || '') },
+          body: JSON.stringify(payload)
+        });
+        data = await resp.json().catch(function(){ return null; });
+      } catch (netErr) { resp = null; }
+      saveCfg.disabled = false;
+
+      // Só mostra "salvo" quando o servidor confirmou; qualquer falha aparece para o usuário
+      if (!resp) { showToast('Sem conexão com o servidor. Nada foi salvo.'); return; }
+      if (resp.status === 401) { showToast('Sua sessão expirou. Entre novamente para salvar.'); return; }
+      if (!resp.ok || !data || !data.success) { showToast('⚠️ ' + ((data && data.error) || 'Não foi possível salvar. Tente novamente.')); return; }
+
+      const saved = data.user || {};
+      ['name', 'phone', 'birth_date', 'cpf'].forEach(function(k){ if (saved[k] !== undefined) currentUser[k] = saved[k]; });
+      if (saved.avatar !== undefined) currentUser.avatar = saved.avatar;
+      const entry = registeredUsers.find(function(x){ return x && x.email && x.email.toLowerCase() === String(currentUser.email || '').toLowerCase(); });
+      if (entry) {
+        ['name', 'phone', 'birth_date', 'cpf', 'avatar'].forEach(function(k){ if (currentUser[k] !== undefined) entry[k] = currentUser[k]; });
+        saveToStorage('nexus_users', registeredUsers);
+      }
+      if (data.token) saveToStorage('nexus_token', data.token);
+      saveToStorage('nexus_cached_user', currentUser);
+      updateHeaderUser();
+
+      ['cfgPasswordCurrent', 'cfgPassword', 'cfgPasswordConfirm'].forEach(function(id){ const el = document.getElementById(id); if (el) el.value = ''; });
       const scaleEl = document.getElementById('cfgScale');
       if(scaleEl) applyDisplayScale(scaleEl.value);
 
-      showToast('Dados cadastrais e configurações salvos com sucesso!');
+      showToast(data.changed && data.changed.indexOf('senha') >= 0 ? 'Dados salvos e senha alterada com sucesso!' : 'Dados cadastrais e configurações salvos com sucesso!');
       render();
     };
   }
@@ -31275,14 +31561,17 @@ function saveFileLogEntry(entry) {
 }
 
 function recordSystemLog(userName, userEmail, action, entity, details) {
+  // O log aparece na tela de Auditoria do administrador e o texto vem de usuários (descrições, nomes, chamados...):
+  // neutraliza < > " na gravação para que HTML plantado não execute no navegador do administrador.
+  const limpo = (v) => neutralizeFinancialData(String(v == null ? '' : v));
   const logObj = {
     id: Date.now(),
     timestamp: new Date().toISOString(),
-    user_name: userName || 'Sistema',
-    user_email: userEmail || 'sistema@nexus.com',
-    action: action || 'Ação',
-    entity: entity || 'Sistema',
-    details: details || 'Alteração registrada no sistema'
+    user_name: limpo(userName) || 'Sistema',
+    user_email: limpo(userEmail) || 'sistema@nexus.com',
+    action: limpo(action) || 'Ação',
+    entity: limpo(entity) || 'Sistema',
+    details: limpo(details) || 'Alteração registrada no sistema'
   };
 
   saveFileLogEntry(logObj);
@@ -31356,6 +31645,7 @@ function removeLocalUser(email) {
     const clean = (email || '').toLowerCase().trim();
     const current = getLocalUsers();
     const filtered = current.filter(u => (u.email || '').toLowerCase().trim() !== clean);
+    try { setStoredAvatar(clean, ''); } catch (avatarErr) {}
     const jsonStr = JSON.stringify(filtered, null, 2);
     fs.writeFileSync(LOCAL_USERS_PATH, jsonStr, 'utf8');
     try { fs.writeFileSync(LOCAL_USERS_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
@@ -32321,7 +32611,7 @@ const server = http.createServer(async (req, res) => {
           success: true,
           token: token,
           must_change_password: user.must_change_password,
-          user: sanitizeUser(user)
+          user: sanitizeUserWithAvatar(user)
         }));
       } catch (err) {
         console.error('Erro no endpoint de login:', err);
@@ -33097,7 +33387,7 @@ const server = http.createServer(async (req, res) => {
           success: true,
           message: 'Nova senha cadastrada com sucesso!',
           token: token,
-          user: sanitizeUser(updatedUser)
+          user: sanitizeUserWithAvatar(updatedUser)
         }));
       } catch (err) {
         console.error('Erro ao processar troca obrigatória de senha:', err);
@@ -33120,7 +33410,8 @@ const server = http.createServer(async (req, res) => {
     const viewerEmail = usersViewer ? String(usersViewer.email || '').toLowerCase().trim() : '';
     const shapeUsersForViewer = (list) => {
       if (isInternalSync) return list;
-      const safeList = list.map(sanitizeUser);
+      // a foto só acompanha o cadastro do próprio usuário que está consultando (o administrador não recebe a foto de todos)
+      const safeList = list.map(sanitizeUser).map(u => (viewerEmail && String(u.email || '').toLowerCase().trim() === viewerEmail && getStoredAvatar(u.email)) ? { ...u, avatar: getStoredAvatar(u.email) } : u);
       return viewerIsAdmin ? safeList : safeList.filter(u => String(u.email || '').toLowerCase().trim() === viewerEmail);
     };
     if (pool) {
@@ -33301,6 +33592,178 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Rota POST de Usuários (Sincronização Segura sem Deleção Involuntária e com Preservação de Senhas)
+  // Minha Conta: o titular edita o PRÓPRIO cadastro (nome, celular, nascimento, foto e senha). Antes a tela chamava
+  // POST /api/users, que é só do administrador: para usuário comum o servidor respondia 401, o erro era engolido e a tela
+  // dizia "salvo" (a senha nova nunca passava a valer). E-mail e CPF já autenticado não mudam por aqui: o e-mail é a chave
+  // dos dados e da sessão e o CPF vincula o teste grátis.
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/user/profile') {
+    const selfUser = getAuthenticatedUser(req);
+    if (!selfUser) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Sessão inválida. Entre novamente.' });
+    }
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', async () => {
+      const fail = (status, error, field) => sendJson(res, corsHeaders, status, { success: false, error, field });
+      try {
+        let parsed = {};
+        try { parsed = JSON.parse(body || '{}') || {}; } catch (parseErr) { return fail(400, 'Requisição inválida.'); }
+        const email = String(selfUser.email || '').toLowerCase().trim();
+        const updates = {};
+        const changes = []; // nomes dos campos alterados (vai para o log; nunca os valores)
+
+        if (parsed.email !== undefined && String(parsed.email || '').toLowerCase().trim() !== email) {
+          return fail(400, 'O e-mail é o login da conta e não pode ser alterado por aqui. Fale com o suporte.', 'email');
+        }
+
+        if (parsed.name !== undefined) {
+          const name = String(parsed.name || '').replace(/\s+/g, ' ').trim();
+          if (!isSafeDisplayName(name)) {
+            return fail(400, 'O nome pode conter apenas letras, espaços, apóstrofo, ponto e hífen (mínimo 3 caracteres).', 'name');
+          }
+          if (name !== String(selfUser.name || '')) { updates.name = name; changes.push('nome'); }
+        }
+
+        if (parsed.phone !== undefined) {
+          const digits = String(parsed.phone || '').replace(/\D/g, '');
+          if (digits && digits.length !== 10 && digits.length !== 11) {
+            return fail(400, 'Informe o celular com DDD (10 ou 11 dígitos).', 'phone');
+          }
+          if (digits !== String(selfUser.phone || '').replace(/\D/g, '')) {
+            updates.phone = digits.length === 11 ? `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
+              : digits.length === 10 ? `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}` : null;
+            changes.push('celular');
+          }
+        }
+
+        if (parsed.birth_date !== undefined) {
+          const rawBirth = String(parsed.birth_date || '').trim();
+          // Vazio nunca apaga: o nascimento confere a identidade na recuperação de senha
+          if (rawBirth) {
+            // aceita AAAA-MM-DD (campo de data) e DD/MM/AAAA (formato em que os cadastros ficam gravados)
+            let by; let bmo; let bda;
+            let bm = /^(\d{4})-(\d{2})-(\d{2})$/.exec(rawBirth);
+            if (bm) { by = +bm[1]; bmo = +bm[2]; bda = +bm[3]; } else if ((bm = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(rawBirth))) { bda = +bm[1]; bmo = +bm[2]; by = +bm[3]; }
+            const bd = by ? new Date(Date.UTC(by, bmo - 1, bda)) : null;
+            const validBirth = bd && bd.getUTCFullYear() === by && bd.getUTCMonth() === bmo - 1 && bd.getUTCDate() === bda && by >= 1900 && bd.getTime() <= Date.now();
+            if (!validBirth) return fail(400, 'Data de nascimento inválida.', 'birth_date');
+            const birthBr = String(bda).padStart(2, '0') + '/' + String(bmo).padStart(2, '0') + '/' + by;
+            const birthDigits = (v) => {
+              const t = String(v || '').trim();
+              const m1 = t.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+              if (m1) return m1[1] + m1[2] + m1[3];
+              const m2 = t.match(/^(\d{4})-(\d{2})-(\d{2})/);
+              return m2 ? m2[3] + m2[2] + m2[1] : t.replace(/\D/g, '');
+            };
+            if (birthDigits(birthBr) !== birthDigits(selfUser.birth_date || selfUser.birthDate)) {
+              updates.birth_date = birthBr;
+              changes.push('nascimento');
+            }
+          }
+        }
+
+        if (parsed.cpf !== undefined) {
+          const newCpf = String(parsed.cpf || '').replace(/\D/g, '');
+          const currentCpf = String(selfUser.cpf || '').replace(/\D/g, '');
+          if (newCpf && newCpf !== currentCpf) {
+            if (currentCpf) return fail(403, 'O CPF já foi autenticado e não pode ser alterado por aqui. Fale com o suporte.', 'cpf');
+            if (!isValidCPFBackend(newCpf)) return fail(422, 'CPF inválido. Confira os 11 dígitos informados.', 'cpf');
+            const cpfOwner = getLocalUsers().find(u => u && u.email && String(u.email).toLowerCase().trim() !== email && String(u.cpf || '').replace(/\D/g, '') === newCpf);
+            if (cpfOwner) return fail(409, 'Este CPF já possui cadastro.', 'cpf');
+            updates.cpf = newCpf;
+            changes.push('CPF');
+          }
+        }
+
+        let avatarToStore;
+        if (parsed.avatar !== undefined) {
+          const avatar = String(parsed.avatar || '');
+          if (avatar && !(avatar.length <= AVATAR_MAX_CHARS && AVATAR_DATAURL_OK.test(avatar))) {
+            return fail(400, 'Foto inválida. Use uma imagem JPG, PNG ou WEBP de até 2 MB.', 'avatar');
+          }
+          if (avatar !== getStoredAvatar(email)) { avatarToStore = avatar; changes.push(avatar ? 'foto' : 'remoção da foto'); }
+        }
+
+        let newHash = null;
+        if (parsed.newPassword !== undefined && String(parsed.newPassword) !== '') {
+          const currentPassword = String(parsed.currentPassword || '');
+          const newPassword = String(parsed.newPassword);
+          if (!pool) { try { await attemptConnectDatabase(); } catch (connErr) {} }
+          let storedHash = selfUser.password;
+          if (pool) {
+            try {
+              const pwRes = await pool.query('SELECT password FROM usuarios WHERE LOWER(email) = LOWER($1)', [email]);
+              if (pwRes.rows && pwRes.rows[0] && pwRes.rows[0].password) storedHash = pwRes.rows[0].password;
+            } catch (pwErr) {}
+          }
+          if (!currentPassword || !verifyPassword(currentPassword, storedHash)) {
+            return fail(400, 'A senha atual não confere.', 'currentPassword');
+          }
+          if (newPassword.length < 8 || !/[a-z]/.test(newPassword) || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword) || !/[^A-Za-z0-9]/.test(newPassword)) {
+            return fail(400, 'A nova senha deve ter 8+ caracteres, maiúscula, minúscula, número e símbolo.', 'newPassword');
+          }
+          if (verifyPassword(newPassword, storedHash)) {
+            return fail(400, 'A nova senha precisa ser diferente da atual.', 'newPassword');
+          }
+          newHash = hashPassword(newPassword);
+          changes.push('senha');
+        }
+
+        if (!changes.length) {
+          return sendJson(res, corsHeaders, 200, { success: true, changed: [], user: sanitizeUserWithAvatar(selfUser) });
+        }
+
+        if (!pool) { try { await attemptConnectDatabase(); } catch (connErr) {} }
+        if (pool) {
+          try {
+            const sets = [];
+            const params = [];
+            const addSet = (column, value) => { params.push(value); sets.push(`${column} = $${params.length}`); };
+            if (updates.name !== undefined) addSet('name', updates.name);
+            if (updates.phone !== undefined) addSet('phone', updates.phone);
+            if (updates.birth_date !== undefined) addSet('birth_date', updates.birth_date);
+            if (updates.cpf !== undefined) addSet('cpf', updates.cpf);
+            if (newHash) addSet('password', newHash);
+            if (sets.length) {
+              params.push(email);
+              await pool.query(`UPDATE usuarios SET ${sets.join(', ')} WHERE LOWER(email) = LOWER($${params.length})`, params);
+            }
+          } catch (dbErr) {
+            console.warn('[AVISO BD] Falha ao atualizar o cadastro no SQL Server:', dbErr.message);
+          }
+        }
+
+        const allLocal = getLocalUsers();
+        const localIdx = allLocal.findIndex(u => u && String(u.email || '').toLowerCase().trim() === email);
+        if (localIdx >= 0) {
+          Object.assign(allLocal[localIdx], updates);
+          if (newHash) {
+            allLocal[localIdx].password = newHash;
+            allLocal[localIdx].must_change_password = false;
+            allLocal[localIdx].password_changed_at = new Date().toISOString(); // derruba as outras sessões da conta
+          }
+          saveLocalUsers(allLocal);
+        }
+        if (avatarToStore !== undefined) setStoredAvatar(email, avatarToStore);
+
+        const updatedUser = { ...selfUser, ...updates };
+        recordSystemLog(updatedUser.name, email, newHash ? 'Segurança' : 'Perfil', 'Minha Conta', 'Alterou: ' + changes.join(', '));
+
+        // a senha mudou: as sessões antigas (inclusive esta) deixam de valer, então devolve um token novo para continuar logado
+        return sendJson(res, corsHeaders, 200, {
+          success: true,
+          changed: changes,
+          token: newHash ? generateSecureToken(updatedUser) : undefined,
+          user: sanitizeUserWithAvatar(updatedUser)
+        });
+      } catch (err) {
+        console.error('Erro ao atualizar o perfil:', err);
+        return fail(500, 'Erro interno ao salvar o cadastro.');
+      }
+    });
+    return;
+  }
+
   if (req.method === 'POST' && parsedUrl.pathname === '/api/users') {
     if (!hasInternalSyncAccess(req, parsedUrl) && !getAuthenticatedAdmin(req)) {
       res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -33328,9 +33791,16 @@ const server = http.createServer(async (req, res) => {
           });
         }
 
+        let acceptedUsers = 0;
+        const requestIsInternalSync = hasInternalSyncAccess(req, parsedUrl);
         users.forEach(u => {
+          // Cadastro NOVO digitado pelo administrador: se o e-mail era de uma conta excluída, libera-o (a sincronização interna nunca ressuscita contas)
+          if (u && u.admin_create === true && !requestIsInternalSync && u.email && isStrictEmail(String(u.email).trim().toLowerCase()) && !existingMap.has(String(u.email).toLowerCase().trim())) {
+            clearDeletedEmailTombstone(u.email);
+          }
           // E-mail fora do padrão estrito é descartado (nunca chega ao HTML do painel nem ao banco)
           if (u && u.email && isStrictEmail(String(u.email).trim().toLowerCase()) && !isAccountDeleted(u.email)) {
+            acceptedUsers++;
             const emailKey = u.email.toLowerCase().trim();
             const existing = existingMap.get(emailKey) || userMap.get(emailKey);
             let finalPassword = existing ? existing.password : '';
@@ -33378,10 +33848,18 @@ const server = http.createServer(async (req, res) => {
               created_at: u.created_at || (existing ? existing.created_at : new Date().toISOString()),
               last_login: finalLastLogin,
               // Marca de invalidação de sessões: só o servidor define (nunca vem do payload recebido)
-              password_changed_at: existing ? existing.password_changed_at : undefined
+              // Senha nova definida pelo administrador (texto puro recebido): as sessões anteriores dessa conta deixam de valer
+              password_changed_at: (u.password && typeof u.password === 'string' && u.password.trim() !== '' && !u.password.startsWith('scrypt:'))
+                ? new Date().toISOString()
+                : (existing ? existing.password_changed_at : undefined)
             });
           }
         });
+        // Se nenhum cadastro enviado era válido, avisa (antes respondia "sucesso" sem ter gravado nada)
+        if (acceptedUsers === 0 && !hasInternalSyncAccess(req, parsedUrl)) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Nenhum cadastro válido (e-mail inválido ou conta excluída). Nada foi salvo.' }));
+        }
         const finalUsers = Array.from(userMap.values());
         saveLocalUsers(finalUsers, isOverwrite);
 
@@ -33406,7 +33884,7 @@ const server = http.createServer(async (req, res) => {
                        name = $2,
                        password = CASE WHEN $3 IS NOT NULL AND $3 != '' THEN $3 ELSE password END,
                        role = $4,
-                       active = 1,
+                       active = $15,
                        last_login = CASE WHEN $5 IS NOT NULL AND (last_login IS NULL OR $5 > last_login) THEN $5 ELSE last_login END,
                        cpf = COALESCE($6, cpf),
                        phone = COALESCE($7, phone),
@@ -33422,9 +33900,9 @@ const server = http.createServer(async (req, res) => {
                    ELSE
                    BEGIN
                      INSERT INTO usuarios (name, email, password, role, active, last_login, cpf, phone, birth_date, terms_accepted, device_type, subscription_status, subscription_plan, subscription_expires_at, trial_started_at)
-                     VALUES ($2, $1, $3, $4, 1, $5, $6, $7, $8, $9, $10, COALESCE($11, 'trial'), $12, $13, $14);
+                     VALUES ($2, $1, $3, $4, $15, $5, $6, $7, $8, $9, $10, COALESCE($11, 'trial'), $12, $13, $14);
                    END;`,
-                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador', u.subscription_status || null, u.subscription_plan || null, sqlSubExpires, sqlTrialStarted]
+                  [uEmail, u.name.trim(), u.password || '', u.role || 'Usuário', sqlLastLogin, u.cpf || null, u.phone || null, u.birth_date || null, u.terms_accepted !== false ? 1 : 0, u.device_type || 'Computador', u.subscription_status || null, u.subscription_plan || null, sqlSubExpires, sqlTrialStarted, u.active === false ? 0 : 1]
                 );
 
                 // Garante que todo novo usuário cadastrado tenha dados financeiros 100% zerados
@@ -33523,17 +34001,17 @@ const server = http.createServer(async (req, res) => {
           const finalLogs = Array.from(combinedMap.values());
           finalLogs.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(finalLogs));
+          res.end(JSON.stringify(neutralizeFinancialData(finalLogs)));
         })
         .catch(err => {
           const fileLogs = getFileLogs();
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(fileLogs));
+          res.end(JSON.stringify(neutralizeFinancialData(fileLogs)));
         });
     } else {
       const fileLogs = getFileLogs();
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(fileLogs));
+      res.end(JSON.stringify(neutralizeFinancialData(fileLogs)));
     }
     return;
   }
@@ -33612,6 +34090,7 @@ const server = http.createServer(async (req, res) => {
           if (!Array.isArray(finalData.recurringList)) finalData.recurringList = [];
 
           if (finalData) {
+            finalData = neutralizeFinancialData(finalData);
             saveLocalData(email, finalData);
           }
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -33629,7 +34108,7 @@ const server = http.createServer(async (req, res) => {
             fallbackData.categories = SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 }));
           }
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(fallbackData));
+          res.end(JSON.stringify(neutralizeFinancialData(fallbackData)));
         });
     } else {
       let fallbackData = localData || getEmptyFinancialData();
@@ -33643,7 +34122,7 @@ const server = http.createServer(async (req, res) => {
         fallbackData.categories = SYSTEM_BASE_CATEGORIES.map((c, idx) => ({ id: idx + 1, ...c, count: 0 }));
       }
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(fallbackData));
+      res.end(JSON.stringify(neutralizeFinancialData(fallbackData)));
     }
     return;
   }
@@ -33682,6 +34161,7 @@ const server = http.createServer(async (req, res) => {
       if (!dataToSave || typeof dataToSave !== 'object') {
         dataToSave = getEmptyFinancialData();
       }
+      dataToSave = neutralizeFinancialData(dataToSave);
       dataToSave.updated_at = dataToSave.updated_at || new Date().toISOString();
 
       saveLocalData(cleanEmail, dataToSave);
@@ -34962,7 +35442,8 @@ const server = http.createServer(async (req, res) => {
     '/frontend-polish.css': 'text/css',
     '/nexus-shell.css': 'text/css',
     '/dashboard-financeiro.css': 'text/css',
-    '/dashboard-financeiro.js': 'application/javascript; charset=utf-8'
+    '/dashboard-financeiro.js': 'application/javascript; charset=utf-8',
+    '/importacao.js': 'application/javascript; charset=utf-8'
   };
   let staticFile = null;
   if (STATIC_EXACT_FILES[pathname]) {

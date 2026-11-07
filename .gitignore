@@ -14,3 +14,6 @@ supabase/.temp/
 # Cópias do projeto/backups dentro da pasta de imagens e pacotes compactados (centenas de MB; já causaram exposição via /images)
 images/SITE/
 *.zip
+
+# Fotos de perfil enviadas pelos usuários (dados pessoais gerados em execução)
+local_avatars.json
