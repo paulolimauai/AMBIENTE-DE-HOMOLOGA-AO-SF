@@ -2079,9 +2079,15 @@ html:not(.is-admin) .menu-section-planejamento,
 html:not(.is-admin) .menu-section-ferramentas,
 html:not(.is-admin) .menu-section-minha-conta,
 html:not(.is-admin) #mobileBottomBar .mobile-btn-user,
-html:not(.is-admin) .header-minha-conta-btn,
 html:not(.is-admin) #sidebarNovaTransacaoBtn {
   display: flex !important;
+}
+
+.header-user-badge,
+#headerUserBadge,
+.header-minha-conta-btn,
+#headerMinhaContaBtn {
+  display: none !important;
 }
 
 /* Usuário comum não tem atalho no topo da barra lateral: o contêiner (agora só com o botão do administrador) não ocupa espaço */
@@ -14767,17 +14773,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
 
       <div class="aether-header-right">
-        <!-- 1. Cápsula de Identidade do Usuário (Avatar e Nome Separados de Minha Conta) -->
-        <div class="header-user-badge" id="headerUserBadge" data-nav="config" title="Perfil do Usuário Conectado">
-          <div class="avatar" id="headerAvatar" style="width:26px; height:26px; font-size:11px; font-weight:800; border-radius:50%; background:linear-gradient(135deg, #059669, #047857); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">PL</div>
-          <span class="header-user-name" id="headerName" style="font-weight:800; color:#10B981; font-size:13px; max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Paulo Lima</span>
-        </div>
-
-        <!-- 2. Botão Independente 'Minha Conta' -->
-        <button type="button" class="aether-settings-btn header-minha-conta-btn" id="headerMinhaContaBtn" data-nav="config" title="Acessar Minha Conta & Configurações">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Minha Conta</span>
-        </button>
         <span id="headerRole" style="display:none;"></span>
 
         <div class="notif-wrap">
@@ -15080,11 +15075,14 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           }
           var n = document.getElementById('headerName');
           var a = document.getElementById('headerAvatar');
+          var sn = document.getElementById('sidebarAccountName');
+          var sa = document.getElementById('sidebarAccountAvatar');
+          var p = cleanName.split(/\s+/);
+          var inits = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
           if (n) n.textContent = cleanName;
-          if (a) {
-            var p = cleanName.split(/\s+/);
-            a.textContent = (p.length >= 2 ? (p[0][0] + p[1][0]) : p[0].slice(0,2)).toUpperCase();
-          }
+          if (sn) sn.textContent = cleanName;
+          if (a) a.textContent = inits;
+          if (sa) sa.textContent = inits;
         }
       }
     } catch(e){}
@@ -21404,9 +21402,8 @@ function updateAdminMenuVisibility(force = false){
     el.style.display = 'none';
   });
 
-  // Atalho Minha Conta no header: visível apenas para usuário comum
-  document.querySelectorAll('.header-minha-conta-btn').forEach(function(el) {
-    el.style.display = isAdmin ? 'none' : 'inline-flex';
+  document.querySelectorAll('.header-minha-conta-btn, #headerUserBadge').forEach(function(el) {
+    el.style.display = 'none';
   });
 }
 
@@ -21500,22 +21497,20 @@ function updateHeaderUser(){
       roleEl.style.display = 'none';
     }
   }
-  if(avatarEl) {
-    if (currentUser.avatar) {
-      avatarEl.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-      if (sidebarAvatarEl) sidebarAvatarEl.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil">';
-      return;
-    }
-    const rawParts = cleanName.split(/\s+/);
-    let inits = 'PL';
-    if (rawParts.length >= 2) {
-      inits = (rawParts[0][0] + rawParts[1][0]).toUpperCase();
-    } else if (rawParts.length === 1 && rawParts[0].length >= 2) {
-      inits = rawParts[0].slice(0, 2).toUpperCase();
-    }
-    avatarEl.textContent = inits;
-    if (sidebarAvatarEl) sidebarAvatarEl.textContent = inits;
+  if (currentUser.avatar) {
+    if (avatarEl) avatarEl.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    if (sidebarAvatarEl) sidebarAvatarEl.innerHTML = '<img src="' + currentUser.avatar + '" alt="Foto do perfil">';
+    return;
   }
+  const rawParts = cleanName.split(/\s+/);
+  let inits = 'PL';
+  if (rawParts.length >= 2) {
+    inits = (rawParts[0][0] + rawParts[1][0]).toUpperCase();
+  } else if (rawParts.length === 1 && rawParts[0].length >= 2) {
+    inits = rawParts[0].slice(0, 2).toUpperCase();
+  }
+  if (avatarEl) avatarEl.textContent = inits;
+  if (sidebarAvatarEl) sidebarAvatarEl.textContent = inits;
 }
 
 function periodPickerHTML(){
