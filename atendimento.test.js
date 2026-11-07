@@ -300,6 +300,24 @@ test('validarCpf', () => {
   assert.ok(!A.validarCpf('123'));
 });
 
+test('política de SLA: Crítica 30 min, Alta 1 h, Média 24 h e Baixa 5 dias úteis (padrão = Média)', () => {
+  assert.equal(A.calcularSlaPorPrioridade('Crítica'), '30 Minutos');
+  assert.equal(A.calcularSlaPorPrioridade('Urgente'), '30 Minutos');
+  assert.equal(A.calcularSlaPorPrioridade('Alta'), '1 Hora');
+  assert.equal(A.calcularSlaPorPrioridade('Média'), '24 Horas');
+  assert.equal(A.calcularSlaPorPrioridade('Normal'), '24 Horas');
+  assert.equal(A.calcularSlaPorPrioridade(''), '24 Horas');
+  assert.equal(A.calcularSlaPorPrioridade('Baixa'), '5 Dias Úteis');
+  const base = { client_name: 'Ana', client_email: 'ana@empresa.com.br', service_type: 'Sistema Financeiro & ERP', title: 'Duvida sobre relatorio', description: 'Gostaria de entender o relatorio de faturamento', canal_atendimento: 'GLPI Tela de Login' };
+  const media = A.validarAbertura({ ...base, priority: 'Média' });
+  assert.ok(media.ok);
+  assert.equal(media.dados.sla, '24 Horas');
+  const baixa = A.validarAbertura({ ...base, priority: 'Baixa' });
+  assert.ok(baixa.ok);
+  assert.equal(baixa.dados.sla, '5 Dias Úteis');
+  assert.equal(A.montarOrdem(baixa.dados, { protocolo: 'OS-261107-GLPI', id: 11, agoraIso: AGORA }).sla, '5 Dias Úteis');
+});
+
 test('integração GLPI 10: SLA automático, ativo CMDB, horas, timeline pública/interna e solução', () => {
   const r = A.validarAbertura({
     client_name: 'Ana',

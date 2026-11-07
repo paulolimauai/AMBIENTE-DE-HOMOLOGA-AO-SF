@@ -36,12 +36,13 @@ const CANAIS_PUBLICOS = Object.freeze(['Tela de Login', 'Portal Web', 'App Mobil
 
 const LIMITES = Object.freeze({ nome: 120, email: 254, telefone: 40, titulo: 200, descricao: 5000, notas: 2000, tecnico: 150, canal: 60, categoria: 100, sla: 40, asset: 150, solution: 4000 });
 
+// Política de SLA por prioridade: Crítica 30 min, Alta 1 h, Média 24 h (corridas), Baixa 5 dias úteis (sáb. e dom. não contam)
 function calcularSlaPorPrioridade(prioridade) {
   const p = String(prioridade || '').toLowerCase();
   if (p === 'crítica' || p === 'critica' || p === 'urgente') return '30 Minutos';
   if (p === 'alta') return '1 Hora';
-  if (p === 'baixa') return '8 Horas';
-  return '2 Horas';
+  if (p === 'baixa') return '5 Dias Úteis';
+  return '24 Horas';
 }
 // Mínimos de texto: o público precisa descrever o pedido; a recepção (administrador) pode registrar anotações curtas
 const MINIMOS_PUBLICO = Object.freeze({ nome: 2, titulo: 3, descricao: 10 });

@@ -1680,7 +1680,7 @@ async function setupDatabaseTablesAndSync() {
               ord.tecnico_responsavel || null,
               ord.assumido_em || null,
               ord.canal_atendimento || 'Portal Web',
-              ord.sla || '2 Horas',
+              ord.sla || Atendimento.calcularSlaPorPrioridade(ord.priority),
               ord.asset || 'Nenhum',
               Number(ord.time_spent) || 0,
               ord.solution || '',
@@ -15772,7 +15772,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <!-- Banner Dinâmico de SLA GLPI -->
         <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; border-radius:10px; background:rgba(245,158,11,0.10); border:1px solid rgba(245,158,11,0.32); margin-bottom:10px;">
           <span style="font-size:11.5px; color:#FDE68A; font-weight:700;">⏱️ Compromisso de SLA GLPI Estimado:</span>
-          <strong id="osSlaPreviewBadge" style="font-size:12.5px; color:#FBBF24; font-family:monospace;">2 Horas</strong>
+          <strong id="osSlaPreviewBadge" style="font-size:12.5px; color:#FBBF24; font-family:monospace;">24 Horas</strong>
         </div>
 
         <div class="field">
@@ -15872,7 +15872,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <div>
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:3px;">
             <span id="osAdminProtocolBadge" style="padding:2px 10px; border-radius:999px; background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:11.5px; font-weight:900; font-family:monospace;">#OS-000000</span>
-            <span id="osAdminSlaBadge" style="padding:2px 9px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#6EE7B7; font-size:11px; font-weight:800;">⏱️ SLA: 2 Horas</span>
+            <span id="osAdminSlaBadge" style="padding:2px 9px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#6EE7B7; font-size:11px; font-weight:800;">⏱️ SLA: 24 Horas</span>
             <span id="osAdminDate" style="font-size:11.5px; color:var(--text-dim);">Aberta em: --/--/----</span>
           </div>
           <h2 style="font-size:18px; font-weight:900; margin:0; color:#F8FAFC;" id="osAdminTitle">Título da Solicitação</h2>
@@ -25523,12 +25523,13 @@ window.consultarProtocoloRecente = function() {
 };
 
 // Calcula o SLA GLPI com base na urgência / prioridade
+// Política de SLA: Crítica 30 min, Alta 1 h, Média 24 h (corridas), Baixa 5 dias úteis (mesma regra do atendimento.js)
 window.calcularSlaPorPrioridadeFront = function(priority) {
   const p = String(priority || '').toLowerCase();
   if (p.includes('crít') || p.includes('crit') || p.includes('urg')) return '30 Minutos';
   if (p.includes('alt')) return '1 Hora';
-  if (p.includes('baix')) return '8 Horas';
-  return '2 Horas';
+  if (p.includes('baix')) return '5 Dias Úteis';
+  return '24 Horas';
 };
 
 window.atualizarSlaPreviewGlpi = function() {
@@ -35580,7 +35581,7 @@ const server = http.createServer(async (req, res) => {
             novaOrdem.service_type, novaOrdem.priority, novaOrdem.title, novaOrdem.description, novaOrdem.status,
             novaOrdem.admin_notes || '', novaOrdem.tecnico_responsavel || null, novaOrdem.assumido_em || null,
             novaOrdem.canal_atendimento || 'Portal Web',
-            novaOrdem.sla || '2 Horas', novaOrdem.asset || 'Nenhum', Number(novaOrdem.time_spent) || 0,
+            novaOrdem.sla || Atendimento.calcularSlaPorPrioridade(novaOrdem.priority), novaOrdem.asset || 'Nenhum', Number(novaOrdem.time_spent) || 0,
             novaOrdem.solution || '', Array.isArray(novaOrdem.timeline) ? JSON.stringify(novaOrdem.timeline) : null,
             novaOrdem.concluido_em || null, novaOrdem.created_at, novaOrdem.updated_at
           ]
@@ -35667,7 +35668,7 @@ const server = http.createServer(async (req, res) => {
           [
             ordem.status, ordem.admin_notes || '', ordem.priority, ordem.service_type,
             ordem.tecnico_responsavel || null, ordem.assumido_em || null, ordem.canal_atendimento || 'Portal Web',
-            ordem.sla || '2 Horas', ordem.asset || 'Nenhum', Number(ordem.time_spent) || 0,
+            ordem.sla || Atendimento.calcularSlaPorPrioridade(ordem.priority), ordem.asset || 'Nenhum', Number(ordem.time_spent) || 0,
             ordem.solution || '', Array.isArray(ordem.timeline) ? JSON.stringify(ordem.timeline) : null,
             ordem.concluido_em || null, agoraIso,
             idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase()
