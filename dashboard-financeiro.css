@@ -448,7 +448,7 @@ body.light .fd-root .fd-link, html.light .fd-root .fd-link { color: #1D5FB8; }
   .fd-tile-valor { font-size: clamp(16px, 4.6vw, 20px); }
   .fd-pilares { grid-template-columns: 1fr; }
   .fd-mini { grid-template-columns: minmax(0, 1fr); gap: 2px; }
-  .fd-mini-item { flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-left: -12px; }
+  .fd-mini-item { flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-left: -10px; }
   .fd-mini-rot { flex: 1 1 100%; }
   .fd-resumo-agenda { width: 100%; justify-content: space-between; }
   .fd-resumo-agenda span { text-align: left; }
