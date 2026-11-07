@@ -1493,6 +1493,26 @@ async function setupDatabaseTablesAndSync() {
       BEGIN
         ALTER TABLE ordens_servico ADD concluido_em NVARCHAR(50) NULL;
       END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'sla')
+      BEGIN
+        ALTER TABLE ordens_servico ADD sla NVARCHAR(50) NULL DEFAULT '2 Horas';
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'asset')
+      BEGIN
+        ALTER TABLE ordens_servico ADD asset NVARCHAR(150) NULL DEFAULT 'Nenhum';
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'time_spent')
+      BEGIN
+        ALTER TABLE ordens_servico ADD time_spent FLOAT NULL DEFAULT 0;
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'solution')
+      BEGIN
+        ALTER TABLE ordens_servico ADD solution NVARCHAR(MAX) NULL;
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'timeline')
+      BEGIN
+        ALTER TABLE ordens_servico ADD timeline NVARCHAR(MAX) NULL;
+      END;
     END;
 
     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'tecnicos_suporte')
@@ -1641,9 +1661,10 @@ async function setupDatabaseTablesAndSync() {
                protocol, client_name, client_email, client_phone, client_cpf,
                service_type, priority, title, description, status,
                admin_notes, tecnico_responsavel, assumido_em, canal_atendimento,
+               sla, asset, time_spent, solution, timeline,
                concluido_em, created_at, updated_at
              )
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)`,
             [
               ord.protocol,
               ord.client_name,
@@ -1659,6 +1680,11 @@ async function setupDatabaseTablesAndSync() {
               ord.tecnico_responsavel || null,
               ord.assumido_em || null,
               ord.canal_atendimento || 'Portal Web',
+              ord.sla || '2 Horas',
+              ord.asset || 'Nenhum',
+              Number(ord.time_spent) || 0,
+              ord.solution || '',
+              Array.isArray(ord.timeline) ? JSON.stringify(ord.timeline) : null,
               ord.concluido_em || null,
               ord.created_at || new Date().toISOString(),
               ord.updated_at || new Date().toISOString()
@@ -1668,39 +1694,21 @@ async function setupDatabaseTablesAndSync() {
       }
     }
 
-    // Consolida do banco SQL para o cache local
+    // Consolida do banco SQL para o cache local preservando interações GLPI
     const dbOrdens = await pool.query(`
       SELECT TOP 500
         id, protocol, client_name, client_email, client_phone, client_cpf,
         service_type, priority, title, description, status, admin_notes,
-        tecnico_responsavel, assumido_em, canal_atendimento, concluido_em,
-        created_at, updated_at
+        tecnico_responsavel, assumido_em, canal_atendimento,
+        sla, asset, time_spent, solution, timeline,
+        concluido_em, created_at, updated_at
       FROM ordens_servico
       ORDER BY id DESC
     `);
     if (dbOrdens.rows && Array.isArray(dbOrdens.rows) && dbOrdens.rows.length > 0) {
-      const formattedOrdens = dbOrdens.rows.map(r => ({
-        id: String(r.id),
-        protocol: r.protocol,
-        client_name: r.client_name,
-        client_email: r.client_email,
-        client_phone: r.client_phone || '',
-        client_cpf: r.client_cpf || '',
-        service_type: r.service_type || 'Melhoria no Sistema',
-        priority: r.priority || 'Normal',
-        title: r.title,
-        description: r.description,
-        status: r.status || 'Pendente',
-        admin_notes: r.admin_notes || '',
-        tecnico_responsavel: r.tecnico_responsavel || null,
-        assumido_em: r.assumido_em || null,
-        canal_atendimento: r.canal_atendimento || 'Portal Web',
-        concluido_em: r.concluido_em || null,
-        created_at: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
-        updated_at: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString()
-      }));
-      saveLocalOrdens(formattedOrdens);
-      console.log(`[BANCO] ${formattedOrdens.length} ordens de serviço consolidadas entre o banco SQL interno e o cache local.`);
+      const mescladas = Atendimento.mesclarOrdens(dbOrdens.rows, getLocalOrdens());
+      saveLocalOrdens(mescladas);
+      console.log(`[BANCO] ${mescladas.length} ordens de serviço GLPI consolidadas entre o banco SQL interno e o cache local.`);
     }
   } catch(syncOrdErr) {
     console.warn('[BANCO AVISO] Erro ao sincronizar ordens de serviço locais:', syncOrdErr.message);
@@ -14683,11 +14691,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </div>
       </div>
 
-      <!-- Ação Visual de Ordem de Serviço na Tela de Login -->
+      <!-- Ação Visual GLPI 10 Service Desk na Tela de Login -->
       <div style="margin-top:14px; width:100%; display:flex; flex-direction:column; align-items:center; gap:8px;">
-        <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()" style="width:100%; justify-content:center; padding:11px 16px; border-radius:14px; background:linear-gradient(135deg, rgba(16,185,129,0.18), rgba(6,182,212,0.14)); border:1.5px solid rgba(16,185,129,0.45); color:#6EE7B7; font-weight:800; font-size:12.5px; box-shadow:0 8px 20px rgba(0,0,0,0.35);">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg>
-          <span>📋 Abrir Ordem de Serviço (O.S.) / Consultar Protocolo</span>
+        <button type="button" class="btn-open-os" onclick="openNovaOrdemModal()" style="width:100%; justify-content:center; padding:11px 16px; border-radius:14px; background:linear-gradient(135deg, rgba(245,158,11,0.22), rgba(16,185,129,0.16)); border:1.5px solid rgba(245,158,11,0.5); color:#FDE68A; font-weight:800; font-size:12.5px; box-shadow:0 8px 20px rgba(0,0,0,0.35);">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#fff; font-weight:900; font-size:12px;">G</span>
+          <span>🎫 Central GLPI — Abrir Chamado / Consultar Protocolo</span>
         </button>
         <!-- Canais de suporte abaixo da abertura de O.S. -->
         <div class="auth-support-bar">
@@ -15001,11 +15009,11 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </span>
         <span class="admin-menu-count-pill" id="menuUsersCountBadge">0</span>
       </button>
-      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;" title="Recepção & Gestão de Ordens de Serviço">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span>
+      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;" title="Console GLPI 10 ITSM — Recepção & Tratamento de Chamados">
+        <span class="ic" style="background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(234,88,12,0.2));color:#FBBF24;font-weight:900;border-radius:8px;">G</span>
         <span class="admin-menu-field-body">
-          <span class="label">Ordens de Serviço</span>
-          <span class="sub-label">Recepção O.S. Login & Fila</span>
+          <span class="label">Central GLPI &amp; O.S.</span>
+          <span class="sub-label">Console ITSM, Chamados Login &amp; Fila</span>
         </span>
         <span id="osBadgeCount" style="display:none;">0</span>
       </button>
@@ -15661,71 +15669,71 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   </div>
 </div>
 
-<!-- Modal Abrir Nova Ordem de Serviço (Público / Tela de Login -> Recebido Diretamente pelo Admin) -->
+<!-- Modal Abrir Nova Ordem de Serviço GLPI 10 (Público / Tela de Login -> Recebido Diretamente pelo Admin) -->
 <div class="overlay" id="overlayNovaOrdem" onclick="if(event.target===this) closeNovaOrdemModal()">
-  <div class="modal" style="max-width:590px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.68) 0%, rgba(15,23,42,0.86) 45%, rgba(8,12,26,0.96) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(14, 165, 233, 0.22), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
+  <div class="modal" style="max-width:640px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.75) 0%, rgba(15,23,42,0.92) 45%, rgba(8,12,26,0.98) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(245, 158, 11, 0.18), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
     <button class="close-x" type="button" onclick="closeNovaOrdemModal()">✕</button>
 
-    <!-- Abas de Navegação: Abrir Ordem de Serviço OS vs Consulta de OS -->
+    <!-- Abas de Navegação: Catálogo & Abertura GLPI vs Consulta de Protocolo GLPI -->
     <div class="os-tabs-nav">
       <button type="button" id="tabBtnNovaOrdem" class="os-tab-btn active" onclick="switchOsModalTab('abrir')">
-        ⚡ Abrir Ordem de Serviço (O.S.)
+        🎫 Catálogo &amp; Abrir Chamado GLPI
       </button>
       <button type="button" id="tabBtnConsultarOrdem" class="os-tab-btn" onclick="switchOsModalTab('consultar')">
-        🔍 Consultar Minha O.S.
+        🔍 Consultar Protocolo GLPI
       </button>
     </div>
 
     <div id="boxNovaOrdemForm">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-        <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(16, 185, 129, 0.16); border:1px solid rgba(16, 185, 129, 0.4); color:#6EE7B7; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em;">
-          <span style="width:7px; height:7px; border-radius:50%; background:#10B981; box-shadow:0 0 8px #10B981;"></span>
-          <span>Recepção Direta na Central do Administrador</span>
+        <div style="display:inline-flex; align-items:center; gap:7px; padding:4px 12px; border-radius:999px; background:rgba(245, 158, 11, 0.16); border:1px solid rgba(245, 158, 11, 0.45); color:#FDE68A; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em;">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:4px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#fff; font-weight:900; font-size:10px;">G</span>
+          <span>GLPI 10 Enterprise ITSM — Recepção Direta no Perfil Admin</span>
         </div>
-        <span style="font-size:11px; color:#94A3B8; font-weight:700;">📡 Envio Instantâneo</span>
+        <span style="font-size:11px; color:#94A3B8; font-weight:700;">📡 Sincronizado em Tempo Real</span>
       </div>
-      <h2 style="font-size:19px; font-weight:900; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
-        Central de Abertura de Ordem de Serviço (O.S.)
+      <h2 style="font-size:18.5px; font-weight:900; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+        Central de Serviços &amp; Autoatendimento GLPI
       </h2>
-      <p style="font-size:12.5px; color:var(--text-dim); margin:0 0 12px 0; line-height:1.4;">
-        Selecione abaixo o motivo rápido ou preencha os dados. Sua O.S. cairá <strong>imediatamente na Caixa de Recepção do Administrador</strong>.
+      <p style="font-size:12px; color:var(--text-dim); margin:0 0 11px 0; line-height:1.4;">
+        Selecione um item do <strong>Catálogo de Serviços GLPI</strong> abaixo ou preencha os campos. O chamado cai imediatamente no <strong>Console GLPI do Administrador</strong>.
       </p>
 
-      <!-- Seleção Rápida Visual de Motivo da O.S. -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(125px, 1fr)); gap:7px; margin-bottom:14px;">
-        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Reset de Senha', 'Alta', 'Recuperação / Reset de Senha de Acesso', 'Solicito apoio para recuperação de acesso à minha conta.')" style="padding:8px 10px; border-radius:12px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#A7F3D0; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
-          <span>🔑 Senha / Login</span>
-          <span style="font-size:10px; color:#34D399; font-weight:600;">Recuperar Acesso</span>
+      <!-- Catálogo de Serviços GLPI 10 -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:7px; margin-bottom:12px;">
+        <button type="button" class="os-quick-cat-btn" data-oscat="Sistema Financeiro" onclick="window.selecionarCategoriaRapidaOs('Sistema Financeiro & ERP', 'Alta', 'Incidente no Sistema Financeiro / ERP', 'Relato de erro em lançamentos financeiros, conciliação bancária, boletos ou relatórios contábeis.')" style="padding:8px 10px; border-radius:12px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#A7F3D0; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>💰 Financeiro &amp; ERP</span>
+          <span style="font-size:10px; color:#34D399; font-weight:600;">Lançamentos, PIX e Boletos</span>
         </button>
-        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Pagamento Não Reconhecido', 'Urgente', 'Liberação de Assinatura / Pagamento', 'Realizei o pagamento e solicito a confirmação e liberação do meu acesso.')" style="padding:8px 10px; border-radius:12px; background:rgba(14,165,233,0.14); border:1px solid rgba(14,165,233,0.4); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
-          <span>💳 Pagamento / PIX</span>
-          <span style="font-size:10px; color:#38BDF8; font-weight:600;">Liberar Assinatura</span>
+        <button type="button" class="os-quick-cat-btn" data-oscat="Gestão de Acessos" onclick="window.selecionarCategoriaRapidaOs('Gestão de Acessos & Senha', 'Alta', 'Gestão de Acessos / Reset de Senha', 'Solicito recuperação de acesso, reset de senha, desbloqueio de MFA ou liberação de perfil.')" style="padding:8px 10px; border-radius:12px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.4); color:#FDE68A; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>🔐 Acessos &amp; Senha</span>
+          <span style="font-size:10px; color:#FBBF24; font-weight:600;">Reset, Login e MFA</span>
         </button>
-        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Correção de Dados', 'Normal', 'Correção de Dados Cadastrais', 'Solicito atualização dos meus dados cadastrais (CPF, data de nascimento ou telefone).')" style="padding:8px 10px; border-radius:12px; background:rgba(168,85,247,0.14); border:1px solid rgba(168,85,247,0.4); color:#E9D5FF; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
-          <span>🛠️ Cadastro</span>
-          <span style="font-size:10px; color:#C084FC; font-weight:600;">Corrigir Dados</span>
+        <button type="button" class="os-quick-cat-btn" data-oscat="Suporte Técnico" onclick="window.selecionarCategoriaRapidaOs('Suporte Técnico & Infra', 'Média', 'Suporte Técnico & Infraestrutura', 'Solicito apoio técnico para lentidão, falha de conexão, banco de dados ou estação de trabalho.')" style="padding:8px 10px; border-radius:12px; background:rgba(14,165,233,0.14); border:1px solid rgba(14,165,233,0.4); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>💻 Suporte &amp; Infra</span>
+          <span style="font-size:10px; color:#38BDF8; font-weight:600;">Erros, Rede e Estação</span>
         </button>
-        <button type="button" onclick="window.selecionarCategoriaRapidaOs('Relato de Bug', 'Alta', 'Suporte Técnico ao Painel', 'Preciso de suporte técnico referente ao uso da plataforma.')" style="padding:8px 10px; border-radius:12px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.4); color:#FDE68A; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
-          <span>⚡ Suporte Geral</span>
-          <span style="font-size:10px; color:#FBBF24; font-weight:600;">Dúvida ou Erro</span>
+        <button type="button" class="os-quick-cat-btn" data-oscat="Projetos" onclick="window.selecionarCategoriaRapidaOs('Projetos & Melhorias', 'Baixa', 'Solicitação de Projeto / Melhoria', 'Solicito avaliação de melhoria, automação de processo ou novo relatório gerencial.')" style="padding:8px 10px; border-radius:12px; background:rgba(168,85,247,0.14); border:1px solid rgba(168,85,247,0.4); color:#E9D5FF; font-size:11px; font-weight:800; cursor:pointer; text-align:left; display:flex; flex-direction:column; gap:2px; transition:all 0.2s;">
+          <span>🚀 Projetos &amp; Melhorias</span>
+          <span style="font-size:10px; color:#C084FC; font-weight:600;">Novas Funções e Relatórios</span>
         </button>
       </div>
 
       <form id="formNovaOrdem" onsubmit="enviarNovaOrdem(event)">
         <div class="field-row" style="display:flex; gap:12px;">
           <div class="field" style="flex:1;">
-            <label>Seu Nome Completo *</label>
-            <input id="osClientName" required placeholder="Ex: Paulo Lima">
+            <label>Nome Completo do Solicitante *</label>
+            <input id="osClientName" required placeholder="Ex: Maria Souza">
           </div>
           <div class="field" style="flex:1;">
-            <label>Seu E-mail Cadastrado *</label>
-            <input id="osClientEmail" type="email" required placeholder="seu.email@exemplo.com">
+            <label>E-mail Corporativo / Contato *</label>
+            <input id="osClientEmail" type="email" required placeholder="seu.email@empresa.com.br">
           </div>
         </div>
 
         <div class="field-row" style="display:flex; gap:12px;">
           <div class="field" style="flex:1;">
-            <label>WhatsApp / Celular (Para receber retorno / boleto)</label>
+            <label>WhatsApp / Telefone (Ramal)</label>
             <input id="osClientPhone" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhoneInput(this)">
           </div>
           <div class="field" style="flex:1;">
@@ -15736,94 +15744,105 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
         <div class="field-row" style="display:flex; gap:12px;">
           <div class="field" style="flex:1;">
-            <label>Categoria da O.S. *</label>
+            <label>Categoria do Serviço (GLPI) *</label>
             <select id="osServiceType" required>
-              <option value="" selected>Selecione a categoria</option>
+              <option value="" selected>Selecione a categoria GLPI</option>
+              <option value="Sistema Financeiro & ERP">💰 Sistema Financeiro &amp; ERP</option>
+              <option value="Gestão de Acessos & Senha">🔐 Gestão de Acessos &amp; Senha</option>
+              <option value="Suporte Técnico & Infra">💻 Suporte Técnico &amp; Infra</option>
+              <option value="Projetos & Melhorias">🚀 Projetos &amp; Melhorias</option>
+              <option value="Pagamento Não Reconhecido">💳 Liberação de Pagamento / PIX</option>
               <option value="Reset de Senha">🔑 Reset / Recuperação de Senha</option>
-              <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais/Financeiros</option>
-              <option value="Melhoria no Sistema">⚡ Sugestão de Melhoria no Sistema</option>
+              <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais</option>
               <option value="Relato de Bug">🐛 Relato de Bug ou Erro</option>
               <option value="Outro Suporte">💬 Outro Chamado Técnico</option>
             </select>
           </div>
           <div class="field" style="flex:1;">
-            <label>Nível de Prioridade</label>
-            <select id="osPriority">
-              <option value="Normal">🟢 Normal</option>
-              <option value="Alta">🟡 Alta</option>
-              <option value="Urgente">🔴 Urgente</option>
+            <label>Nível de Urgência / Impacto *</label>
+            <select id="osPriority" onchange="window.atualizarSlaPreviewGlpi()">
+              <option value="Baixa">🟢 Baixa (Dúvida / Sem parada)</option>
+              <option value="Média" selected>🔵 Média (Impacto parcial)</option>
+              <option value="Alta">🟠 Alta (Setor / Função parada)</option>
+              <option value="Crítica">🔴 Crítica (Operação paralisada)</option>
             </select>
           </div>
         </div>
 
-        <div class="field">
-          <label>Assunto Resumido *</label>
-          <input id="osTitle" required placeholder="Ex: Preciso de ajuda para acessar minha conta">
+        <!-- Banner Dinâmico de SLA GLPI -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; border-radius:10px; background:rgba(245,158,11,0.10); border:1px solid rgba(245,158,11,0.32); margin-bottom:10px;">
+          <span style="font-size:11.5px; color:#FDE68A; font-weight:700;">⏱️ Compromisso de SLA GLPI Estimado:</span>
+          <strong id="osSlaPreviewBadge" style="font-size:12.5px; color:#FBBF24; font-family:monospace;">2 Horas</strong>
         </div>
 
         <div class="field">
-          <label>Descrição Detalhada do Pedido *</label>
-          <textarea id="osDescription" rows="3" required style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;" placeholder="Descreva como podemos ajudar."></textarea>
+          <label>Título Resumido do Chamado *</label>
+          <input id="osTitle" required placeholder="Ex: Erro ao conciliar extrato OFX no módulo financeiro">
+        </div>
+
+        <div class="field">
+          <label>Descrição Detalhada da Solicitação *</label>
+          <textarea id="osDescription" rows="3" required style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;" placeholder="Descreva o que ocorreu, código de erro ou informações para o atendimento técnico..."></textarea>
         </div>
 
         <div id="osFormFeedback" style="display:none; padding:10px 14px; border-radius:10px; font-size:12px; font-weight:700; margin-bottom:14px;"></div>
 
         <div class="modal-actions" style="margin-top:14px;">
           <button type="button" onclick="closeNovaOrdemModal()">Cancelar</button>
-          <button type="submit" class="save" id="btnSubmitOs" style="background:linear-gradient(135deg, #10B981, #059669); font-weight:800; border:1px solid rgba(255,255,255,0.25);">
-            📡 Enviar O.S. para o Administrador 🚀
+          <button type="submit" class="save" id="btnSubmitOs" style="background:linear-gradient(135deg, #F59E0B, #EA580C); color:#fff; font-weight:800; border:1px solid rgba(255,255,255,0.25);">
+            🎫 Registrar Chamado no GLPI 🚀
           </button>
         </div>
       </form>
     </div>
 
-    <!-- Tela de Sucesso após Abertura -->
+    <!-- Tela de Sucesso após Abertura GLPI -->
     <div id="boxNovaOrdemSuccess" style="display:none; text-align:center; padding:12px 6px;">
       <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.35)); border:2px solid #10B981; color:#34D399; font-size:26px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 0 24px rgba(16, 185, 129, 0.4);">
         ✓
       </div>
-      <h3 style="font-size:20px; font-weight:900; margin-bottom:6px;">Ordem de Serviço Recebida pelo Admin!</h3>
+      <h3 style="font-size:20px; font-weight:900; margin-bottom:6px;">Chamado Registrado no GLPI Service Desk!</h3>
       <p style="font-size:13px; color:var(--text-dim); margin-bottom:18px;">
-        Sua O.S. já foi entregue diretamente na Caixa de Recepção Exclusiva do Administrador e está em atendimento.
+        Seu chamado já foi entregue diretamente na fila do <strong>Console GLPI do Administrador</strong> para tratamento técnico.
       </p>
 
       <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(16, 185, 129, 0.35); border-radius:16px; padding:16px; margin-bottom:20px;">
-        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Número do Protocolo</span>
+        <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#94A3B8; letter-spacing:0.06em; display:block; margin-bottom:4px;">Protocolo Oficial GLPI</span>
         <div style="font-size:22px; font-weight:900; color:#34D399; letter-spacing:0.04em;" id="osSuccessProtocol">OS-000000</div>
         <div style="display:flex; justify-content:center; gap:8px; margin-top:10px; flex-wrap:wrap;">
           <button type="button" onclick="copyOsProtocol()" style="background:rgba(16, 185, 129, 0.2); border:1px solid rgba(52,211,153,0.4); color:#A7F3D0; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">📋 Copiar Protocolo</button>
-          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(56, 189, 248, 0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Acompanhar Status</button>
+          <button type="button" onclick="consultarProtocoloRecente()" style="background:rgba(14, 165, 233, 0.2); border:1px solid rgba(56, 189, 248, 0.4); color:#BAE6FD; font-size:12px; font-weight:700; border-radius:8px; padding:6px 14px; cursor:pointer;">🔍 Acompanhar Andamento</button>
         </div>
       </div>
 
       <button type="button" onclick="openNovaOrdemModal('abrir')" style="width:100%; height:42px; margin-bottom:10px; border-radius:12px; background:rgba(16, 185, 129, 0.16); border:1px solid rgba(52,211,153,0.45); color:#A7F3D0; font-size:13px; font-weight:800; cursor:pointer;">
-        ＋ Abrir outra O.S.
+        ＋ Abrir outro chamado GLPI
       </button>
       <button type="button" class="btn-auth-primary" onclick="closeNovaOrdemModal()" style="width:100%; height:42px;">
-        Concluir e Voltar para o Login
+        Concluir e Voltar
       </button>
     </div>
 
-    <!-- Aba de Consulta de O.S. Aberta por Nome ou E-mail -->
+    <!-- Aba de Consulta de Chamado GLPI -->
     <div id="boxConsultarOrdem" style="display:none;">
       <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:999px; background:rgba(14, 165, 233, 0.15); border:1px solid rgba(14, 165, 233, 0.35); color:#38BDF8; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">
         <span style="width:6px; height:6px; border-radius:50%; background:#38BDF8; box-shadow:0 0 8px #38BDF8;"></span>
-        <span>Acompanhamento de Chamados</span>
+        <span>Acompanhamento de Chamados GLPI</span>
       </div>
       <h2 style="font-size:20px; font-weight:900; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
-        Consulta de OS
+        Consultar Protocolo GLPI
       </h2>
       <p style="font-size:13px; color:var(--text-dim); margin:0 0 16px 0; line-height:1.45;">
-        Consulte suas solicitações informando seu <strong>Nome Completo</strong>, <strong>E-mail</strong> ou <strong>Protocolo</strong>.
+        Consulte o status, técnico atribuído, SLA e respostas técnicas informando seu <strong>Protocolo GLPI</strong>, <strong>E-mail</strong> ou <strong>Telefone/CPF</strong>.
       </p>
 
       <form id="formConsultarOrdem" onsubmit="executarConsultaOrdens(event)" style="margin-bottom:16px;">
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <div style="flex:1; min-width:240px; position:relative;">
-            <input id="osConsultarQuery" required placeholder="Digite seu Nome, E-mail ou Protocolo..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
+            <input id="osConsultarQuery" required placeholder="Digite seu Protocolo (ex: OS-261106-XXXX) ou E-mail..." style="width:100%; height:44px; border-radius:12px; padding:0 14px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-size:13px; font-weight:600;">
           </div>
           <button type="submit" id="btnExecutarConsultaOs" style="height:44px; padding:0 18px; border-radius:12px; background:linear-gradient(135deg, #0284C7, #0369A1); color:#FFFFFF; font-size:13px; font-weight:800; border:1px solid rgba(255,255,255,0.2); cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 14px rgba(14, 165, 233, 0.35);">
-            🔍 Buscar O.S.
+            🔍 Buscar no GLPI
           </button>
         </div>
       </form>
@@ -15833,7 +15852,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div id="osConsultarResultados" style="max-height:360px; overflow-y:auto; padding-right:4px;">
         <div style="text-align:center; padding:30px 14px; color:var(--text-dim); font-size:12.5px;">
           <div style="font-size:32px; margin-bottom:8px;">🔎</div>
-          Digite seu Nome ou E-mail acima para consultar o status de suas solicitações em tempo real.
+          Informe seu Protocolo GLPI ou E-mail acima para consultar o andamento e a solução técnica em tempo real.
         </div>
       </div>
     </div>
@@ -15841,150 +15860,225 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
   </div>
 </div>
 
-<!-- Modal Visualizar e Atender Ordem de Serviço (Administrador / Suporte) -->
+<!-- Modal Workspace Técnico GLPI 10 Enterprise ITSM (Administrador / Suporte) -->
 <div class="overlay" id="overlayOrdemAdmin" onclick="if(event.target===this) closeOrdemAdminModal()">
-  <div class="modal" style="max-width:640px; border-radius:26px; border:1px solid rgba(5, 150, 105, 0.35); box-shadow:0 30px 80px rgba(0,0,0,0.9); background:linear-gradient(145deg, rgba(20,28,48,0.96) 0%, rgba(10,15,30,0.99) 100%);">
+  <div class="modal" style="max-width:1040px; width:96%; border-radius:24px; border:1px solid rgba(245, 158, 11, 0.38); box-shadow:0 30px 90px rgba(0,0,0,0.92); background:linear-gradient(145deg, rgba(17,24,39,0.98) 0%, rgba(10,15,28,0.99) 100%); padding:20px 22px;">
     <button class="close-x" type="button" onclick="closeOrdemAdminModal()">✕</button>
-    
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap;">
-      <div>
-        <div style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#6EE7B7; font-size:11.5px; font-weight:800; margin-bottom:6px;">
-          <span id="osAdminProtocolBadge">#OS-000000</span>
-        </div>
-        <h2 style="font-size:19px; font-weight:900; margin:0;" id="osAdminTitle">Título da Solicitação</h2>
-        <span style="font-size:12px; color:var(--text-dim);" id="osAdminDate">Aberta em: --/--/----</span>
-      </div>
-      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-        <label style="font-size:10.5px; font-weight:800; text-transform:uppercase; color:#6EE7B7; letter-spacing:0.04em;">Prioridade do Chamado:</label>
-        <select id="osAdminPrioritySelect" onchange="atualizarEstiloPrioridadeAdmin(this.value)" style="height:34px; padding:0 12px; border-radius:10px; font-size:12px; font-weight:800; background:rgba(15,23,42,0.85); border:1.5px solid rgba(245,158,11,0.5); color:#FBBF24; cursor:pointer; outline:none; box-shadow:0 4px 14px rgba(0,0,0,0.4); transition:all 0.2s ease;">
-          <option value="Normal">🟢 Prioridade Normal</option>
-          <option value="Alta">🟡 Prioridade Alta</option>
-          <option value="Urgente">🔴 Prioridade Urgente / Crítica</option>
-        </select>
-      </div>
-    </div>
 
-    <!-- Informações do Solicitante & Ações Rápidas de Contato + Pagamento / 2ª Via Boleto -->
-    <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:16px; padding:14px; margin-bottom:14px;">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+    <!-- Cabeçalho do Workspace Técnico GLPI 10 -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; flex-wrap:wrap; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px;">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#fff; font-weight:900; font-size:18px; box-shadow:0 4px 14px rgba(245,158,11,0.35);">G</span>
         <div>
-          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Solicitante</span>
-          <strong style="font-size:14px; color:var(--text);" id="osAdminClientName">Nome</strong>
-        </div>
-        <div>
-          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">E-mail</span>
-          <a href="#" id="osAdminClientEmail" style="font-size:13px; color:#34D399; text-decoration:none; font-weight:600;">email@exemplo.com</a>
-        </div>
-        <div>
-          <label style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700; margin-bottom:2px;">Tipo de Demanda</label>
-          <select id="osAdminServiceTypeSelect" style="height:32px; padding:0 8px; border-radius:8px; font-size:12px; font-weight:700; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#E2E8F0; width:100%;">
-            <option value="Pagamento Não Reconhecido">💳 Pagamento Não Reconhecido</option>
-            <option value="2ª Via de Boleto">📄 Solicitação de 2ª Via de Boleto</option>
-            <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais</option>
-            <option value="Reset de Senha">🔑 Reset de Senha / Recuperação</option>
-            <option value="Atendimento Geral">💬 Atendimento / Dúvida Operacional</option>
-            <option value="Relato de Bug">🐛 Relato de Bug / Erro no Sistema</option>
-            <option value="Melhoria no Sistema">⚡ Melhoria / Sugestão de Recurso</option>
-          </select>
-        </div>
-        <div>
-          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Telefone / Contato</span>
-          <span style="font-size:13px; color:#E2E8F0; font-weight:600;" id="osAdminClientPhone">Não informado</span>
-        </div>
-        <div>
-          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">CPF do Solicitante</span>
-          <span style="font-size:13px; color:#E2E8F0; font-weight:600;" id="osAdminClientCpf">Não informado</span>
-        </div>
-        <div>
-          <span style="font-size:11px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:700;">Canal de Recepção</span>
-          <span style="font-size:13px; color:#10B981; font-weight:700;" id="osAdminCanal">Portal Web</span>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:3px;">
+            <span id="osAdminProtocolBadge" style="padding:2px 10px; border-radius:999px; background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.4); color:#FBBF24; font-size:11.5px; font-weight:900; font-family:monospace;">#OS-000000</span>
+            <span id="osAdminSlaBadge" style="padding:2px 9px; border-radius:999px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.35); color:#6EE7B7; font-size:11px; font-weight:800;">⏱️ SLA: 2 Horas</span>
+            <span id="osAdminDate" style="font-size:11.5px; color:var(--text-dim);">Aberta em: --/--/----</span>
+          </div>
+          <h2 style="font-size:18px; font-weight:900; margin:0; color:#F8FAFC;" id="osAdminTitle">Título da Solicitação</h2>
         </div>
       </div>
 
-      <!-- Atalhos Rápidos de Contato Direto e Liberação Financeira do Suporte -->
-      <div style="display:flex; gap:8px; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px; flex-wrap:wrap;">
-        <a id="osAdminWhatsappBtn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:10px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:11.5px; font-weight:800; text-decoration:none;">
-          <span>💬 WhatsApp</span>
-        </a>
-        <a id="osAdminEmailBtn" href="#" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:10px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#34D399; font-size:11.5px; font-weight:800; text-decoration:none;">
-          <span>✉️ E-mail</span>
-        </a>
-        <button type="button" onclick="window.liberarPagamentoPelaOsModal()" style="display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:10px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(245,158,11,0.3);">
-          <span>🔓 Liberar Pagamento Não Reconhecido</span>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <button type="button" onclick="assumirOrdemDiretoNoModal()" style="height:34px; padding:0 13px; border-radius:9px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:11.5px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(245,158,11,0.3);">
+          🤝 Assumir para Mim
         </button>
-        <button type="button" onclick="window.abrirSegundaViaBoletoPelaOsModal()" style="display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:10px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.45); color:#BAE6FD; font-size:11.5px; font-weight:800; cursor:pointer;">
-          <span>📄 Imprimir 2ª Via de Boleto</span>
+        <button type="button" class="btn-ghost" onclick="imprimirFichaOrdem(document.getElementById('osAdminCurrentId').value)" style="height:34px; padding:0 12px; border-radius:9px; color:#10B981; border-color:rgba(16, 185, 129,0.35); font-size:11.5px; font-weight:800;">
+          🖨️ Ficha GLPI
+        </button>
+        <button type="button" class="btn-ghost" onclick="excluirOrdemAdmin()" style="height:34px; padding:0 12px; border-radius:9px; color:#F87171; border-color:rgba(239,68,68,0.3); font-size:11.5px; font-weight:800;">
+          🗑️ Excluir
         </button>
       </div>
     </div>
 
-    <!-- Descrição Completa Enviada pelo Usuário -->
-    <div class="field" style="margin-bottom:16px;">
-      <label style="font-weight:700; color:var(--text-dim); font-size:12px;">Descrição da Solicitação:</label>
-      <div id="osAdminDescription" style="background:rgba(0,0,0,0.28); border:1px solid var(--card-border); border-radius:12px; padding:12px; font-size:13px; line-height:1.5; color:#F8FAFC; white-space:pre-wrap; max-height:140px; overflow-y:auto;"></div>
-    </div>
+    <!-- Layout de 2 Colunas do Workspace GLPI: Esquerda (Solicitante, Timeline & Interações) | Direita (Propriedades ITSM, CMDB, Horas & Solução) -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:16px; align-items:start;">
 
-    <!-- Área de Resolução e Status (Suporte) -->
-    <div style="border-top:1px solid var(--card-border); padding-top:14px; margin-top:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <h3 style="font-size:14px; font-weight:800; margin:0; color:#6EE7B7;">🎧 Atendimento do Suporte</h3>
-        <span style="font-size:11px; color:var(--text-dim);">Fila oficial de suporte</span>
+      <!-- COLUNA ESQUERDA: Dados do Solicitante, Descrição, Histórico GLPI e Caixa de Interação -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <!-- Card de Dados do Solicitante e Ações Rápidas -->
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:14px; padding:12px 14px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+            <div>
+              <span style="font-size:10px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">Solicitante</span>
+              <strong style="font-size:13px; color:var(--text);" id="osAdminClientName">Nome</strong>
+            </div>
+            <div>
+              <span style="font-size:10px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">E-mail</span>
+              <a href="#" id="osAdminClientEmail" style="font-size:12px; color:#34D399; text-decoration:none; font-weight:600; word-break:break-all;">email@exemplo.com</a>
+            </div>
+            <div>
+              <span style="font-size:10px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">WhatsApp / Telefone</span>
+              <span style="font-size:12px; color:#E2E8F0; font-weight:600;" id="osAdminClientPhone">Não informado</span>
+            </div>
+            <div>
+              <span style="font-size:10px; color:var(--text-dim); display:block; text-transform:uppercase; font-weight:800;">CPF / Canal</span>
+              <span style="font-size:12px; color:#E2E8F0; font-weight:600;"><span id="osAdminClientCpf">--</span> • <strong style="color:#FBBF24;" id="osAdminCanal">GLPI</strong></span>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:6px; border-top:1px solid rgba(255,255,255,0.06); padding-top:8px; flex-wrap:wrap;">
+            <a id="osAdminWhatsappBtn" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border-radius:8px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#10B981; font-size:11px; font-weight:800; text-decoration:none;">💬 WhatsApp</a>
+            <a id="osAdminEmailBtn" href="#" style="display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border-radius:8px; background:rgba(5, 150, 105,0.15); border:1px solid rgba(5, 150, 105,0.35); color:#34D399; font-size:11px; font-weight:800; text-decoration:none;">✉️ E-mail</a>
+            <button type="button" onclick="window.liberarPagamentoPelaOsModal()" style="display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-size:11px; font-weight:900; border:none; cursor:pointer;">🔓 Liberar Pagamento</button>
+            <button type="button" onclick="window.abrirSegundaViaBoletoPelaOsModal()" style="display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:rgba(56,189,248,0.18); border:1px solid rgba(56,189,248,0.45); color:#BAE6FD; font-size:11px; font-weight:800; cursor:pointer;">📄 2ª Via Boleto</button>
+          </div>
+        </div>
+
+        <!-- Descrição Original do Chamado -->
+        <div style="background:rgba(0,0,0,0.28); border:1px solid var(--card-border); border-radius:12px; padding:10px 12px;">
+          <span style="display:block; font-size:10.5px; font-weight:800; text-transform:uppercase; color:#94A3B8; margin-bottom:4px;">📋 Relato Inicial do Solicitante:</span>
+          <div id="osAdminDescription" style="font-size:12.5px; line-height:1.45; color:#F8FAFC; white-space:pre-wrap; max-height:105px; overflow-y:auto;"></div>
+        </div>
+
+        <!-- Timeline / Histórico de Interações GLPI -->
+        <div style="background:rgba(15,23,42,0.65); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#FBBF24; letter-spacing:0.05em;">💬 Histórico de Acompanhamento GLPI (Timeline)</span>
+            <span style="font-size:10.5px; color:#94A3B8;" id="osAdminTimelineCount">0 interações</span>
+          </div>
+          <div id="osAdminTimelineContainer" style="max-height:185px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:4px;"></div>
+        </div>
+
+        <!-- Caixa de Nova Interação GLPI (Resposta Pública vs Nota Interna Privada TI + Respostas Prontas) -->
+        <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(245,158,11,0.3); border-radius:14px; padding:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+            <div style="display:flex; gap:6px;">
+              <button type="button" id="btnGlpiModePublic" onclick="window.setGlpiReplyMode('public')" style="padding:4px 10px; border-radius:7px; font-size:11px; font-weight:800; cursor:pointer; background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.5); color:#7DD3FC;">
+                💬 Resposta Pública (Cliente)
+              </button>
+              <button type="button" id="btnGlpiModePrivate" onclick="window.setGlpiReplyMode('private')" style="padding:4px 10px; border-radius:7px; font-size:11px; font-weight:800; cursor:pointer; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); color:#94A3B8;">
+                🔒 Nota Interna (Privada TI)
+              </button>
+            </div>
+            <select id="osAdminCannedSelect" onchange="window.inserirRespostaProntaGlpi(this)" style="height:28px; padding:0 8px; border-radius:7px; font-size:11px; font-weight:700; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); color:#CBD5E1;">
+              <option value="">⚡ Respostas Prontas TI...</option>
+              <option value="SOLICITAR_PRINTS">Solicitar evidências / prints</option>
+              <option value="RESET_EFETUADO">Confirmar reset de senha / MFA</option>
+              <option value="PAGAMENTO_LIBERADO">Confirmar liberação de assinatura / PIX</option>
+              <option value="EM_ANALISE_N2">Escalonado para Engenharia N2</option>
+              <option value="RESOLVIDO">Confirmar normalização do serviço</option>
+            </select>
+          </div>
+          <textarea id="osAdminReplyInput" rows="2" placeholder="Digite uma resposta para o solicitante ou nota técnica interna..." style="width:100%; border-radius:10px; padding:8px 10px; background:rgba(0,0,0,0.35); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:12.5px; resize:vertical; margin-bottom:8px;"></textarea>
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" onclick="window.adicionarInteracaoGlpiAdmin()" style="height:32px; padding:0 14px; border-radius:8px; background:linear-gradient(135deg, #0284C7, #0369A1); color:#fff; font-size:11.5px; font-weight:800; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(2,132,199,0.3);">
+              📤 Registrar Interação no Histórico
+            </button>
+          </div>
+        </div>
       </div>
 
-      <!-- Atribuição de Técnico Responsável -->
-      <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:16px; padding:14px; margin-bottom:14px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
-          <label style="font-size:12px; font-weight:800; color:#6EE7B7; display:flex; align-items:center; gap:6px; margin:0;">
-            <span>👷 Técnico Responsável:</span>
-          </label>
-          <button type="button" onclick="assumirOrdemDiretoNoModal()" style="display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:8px; background:linear-gradient(135deg, #059669, #059669); color:#060B18; font-size:11px; font-weight:900; border:none; cursor:pointer; box-shadow:0 0 10px rgba(5, 150, 105,0.4);" title="Assumir este chamado com meu usuário atual">
-            <span>⚡ Assumir Chamado Agora</span>
+      <!-- COLUNA DIREITA: Painel de Controle GLPI 10 (Status, Técnico, Categoria, Urgência, SLA, Horas, Ativo CMDB e Solução Definitiva) -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:14px; padding:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span style="font-size:11.5px; font-weight:900; text-transform:uppercase; color:#FBBF24; letter-spacing:0.05em;">⚙️ Propriedades do Chamado GLPI</span>
+            <button type="button" onclick="openGerenciarTecnicosModal()" style="height:26px; padding:0 9px; border-radius:7px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:11px; font-weight:700; cursor:pointer;">👷 Gerenciar Técnicos</button>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div>
+              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Status GLPI</label>
+              <select id="osAdminStatusSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:800; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+                <option value="Novo">🔵 Novo (Fila de Entrada)</option>
+                <option value="Pendente">⏳ Pendente (Triagem)</option>
+                <option value="Em Atendimento">🟡 Em Atendimento (GLPI)</option>
+                <option value="Em Andamento">⚙️ Em Andamento</option>
+                <option value="Pendente Cliente">🟣 Pendente Cliente (Aguardando Retorno)</option>
+                <option value="Resolvido">🟢 Resolvido (Solução Aplicada)</option>
+                <option value="Concluído">✅ Concluído (Fechado)</option>
+                <option value="Cancelado">❌ Cancelado / Recusado</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Urgência / Prioridade</label>
+              <select id="osAdminPrioritySelect" onchange="atualizarEstiloPrioridadeAdmin(this.value)" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:800; width:100%; background:rgba(15,23,42,0.85); border:1.5px solid rgba(245,158,11,0.5); color:#FBBF24;">
+                <option value="Baixa">🟢 Baixa (SLA 8h)</option>
+                <option value="Normal">🟢 Normal (SLA 2h)</option>
+                <option value="Média">🔵 Média (SLA 2h)</option>
+                <option value="Alta">🟠 Alta (SLA 1h)</option>
+                <option value="Urgente">🔴 Urgente (SLA 30m)</option>
+                <option value="Crítica">🔴 Crítica (SLA 30m)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div>
+              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Técnico Responsável (N1/N2/N3)</label>
+              <select id="osAdminTecnicoSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:700; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+                <option value="">(Nenhum técnico atribuído)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Categoria ITSM</label>
+              <select id="osAdminServiceTypeSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:700; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+                <option value="Sistema Financeiro & ERP">💰 Sistema Financeiro &amp; ERP</option>
+                <option value="Gestão de Acessos & Senha">🔐 Gestão de Acessos &amp; Senha</option>
+                <option value="Suporte Técnico & Infra">💻 Suporte Técnico &amp; Infra</option>
+                <option value="Projetos & Melhorias">🚀 Projetos &amp; Melhorias</option>
+                <option value="Pagamento Não Reconhecido">💳 Pagamento Não Reconhecido</option>
+                <option value="2ª Via de Boleto">📄 Solicitação de 2ª Via de Boleto</option>
+                <option value="Correção de Dados">🛠️ Correção de Dados Cadastrais</option>
+                <option value="Reset de Senha">🔑 Reset de Senha / Recuperação</option>
+                <option value="Atendimento Geral">💬 Atendimento Geral</option>
+                <option value="Relato de Bug">🐛 Relato de Bug / Erro no Sistema</option>
+                <option value="Melhoria no Sistema">⚡ Melhoria no Sistema</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px;">
+            <div>
+              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Ativo CMDB Vinculado</label>
+              <select id="osAdminAssetSelect" style="height:36px; padding:0 10px; border-radius:9px; font-size:12px; font-weight:700; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">
+                <option value="Nenhum">Nenhum ativo específico</option>
+                <option value="SRV-ERP-01 (Cluster Produção)">SRV-ERP-01 (Cluster Produção)</option>
+                <option value="SRV-DB-FINANCE (MSSQL/PostgreSQL)">SRV-DB-FINANCE (MSSQL/PostgreSQL)</option>
+                <option value="GATEWAY-API-BANK (Integração PIX/Boleto)">GATEWAY-API-BANK (Integração PIX/Boleto)</option>
+                <option value="PORTAL-WEB-AUTH (SSO / Tela de Login)">PORTAL-WEB-AUTH (SSO / Tela de Login)</option>
+                <option value="ESTACAO-FIN-04 (Desktop Financeiro)">ESTACAO-FIN-04 (Desktop Financeiro)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:10.5px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:3px; text-transform:uppercase;">Horas Trabalhadas (Time Spent)</label>
+              <input id="osAdminTimeSpent" type="number" step="0.5" min="0" value="0" style="height:36px; padding:0 10px; border-radius:9px; font-size:12.5px; font-weight:800; width:100%; background:var(--input-bg); border:1px solid var(--card-border); color:#FBBF24; font-family:monospace;">
+            </div>
+          </div>
+
+          <div id="osAdminAssumidoBanner" style="display:none; margin-top:6px; padding:6px 10px; border-radius:8px; background:rgba(5, 150, 105,0.12); border:1px solid rgba(5, 150, 105,0.3); font-size:11px; color:#10B981; font-weight:700; align-items:center; gap:6px;">
+            <span>✓ Atribuído a:</span>
+            <strong id="osAdminAssumidoNome" style="color:#10B981;"></strong>
+            <span id="osAdminAssumidoData" style="font-size:10px; color:#7DD3FC; margin-left:auto;"></span>
+          </div>
+        </div>
+
+        <!-- Parecer / Observações Administrativas -->
+        <div style="background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:14px; padding:12px;">
+          <label style="font-size:11px; font-weight:800; color:var(--text-dim); display:block; margin-bottom:4px; text-transform:uppercase;">📝 Parecer Técnico Geral (Visível na Consulta):</label>
+          <textarea id="osAdminNotes" rows="2" placeholder="Observações gerais do atendimento..." style="width:100%; border-radius:10px; padding:8px 10px; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:12px; resize:vertical;"></textarea>
+        </div>
+
+        <!-- Solução Definitiva GLPI (Encerramento Oficial) -->
+        <div style="background:linear-gradient(135deg, rgba(16,185,129,0.10), rgba(5,150,105,0.06)); border:1.5px solid rgba(16,185,129,0.38); border-radius:14px; padding:12px;">
+          <label style="font-size:11px; font-weight:900; color:#34D399; display:block; margin-bottom:4px; text-transform:uppercase;">✅ Solução Definitiva GLPI (Encerramento Técnico):</label>
+          <textarea id="osAdminSolution" rows="2" placeholder="Descreva a causa raiz e a solução definitiva aplicada para encerrar o chamado..." style="width:100%; border-radius:10px; padding:8px 10px; background:rgba(0,0,0,0.35); border:1px solid rgba(16,185,129,0.35); color:#F8FAFC; font-family:inherit; font-size:12px; resize:vertical; margin-bottom:8px;"></textarea>
+          <button type="button" onclick="window.resolverChamadoGlpiComSolucao()" style="width:100%; height:36px; border-radius:9px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-size:12px; font-weight:900; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(16,185,129,0.35);">
+            ✅ Encerrar Chamado como RESOLVIDO
           </button>
         </div>
-
-        <div style="display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center;">
-          <select id="osAdminTecnicoSelect" style="height:42px; border-radius:12px; font-size:13px; font-weight:700; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); width:100%;">
-            <option value="">(Nenhum técnico atribuído)</option>
-          </select>
-          <button type="button" onclick="openGerenciarTecnicosModal()" style="height:42px; padding:0 12px; border-radius:12px; background:rgba(255,255,255,0.06); border:1px solid var(--card-border); color:var(--text); font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;" title="Cadastrar ou editar técnicos">
-            <span>⚙️ Técnicos</span>
-          </button>
-        </div>
-
-        <div id="osAdminAssumidoBanner" style="display:none; margin-top:8px; padding:6px 10px; border-radius:8px; background:rgba(5, 150, 105,0.12); border:1px solid rgba(5, 150, 105,0.3); font-size:11.5px; color:#10B981; font-weight:700; align-items:center; gap:6px;">
-          <span>✓ Responsável atual:</span>
-          <strong id="osAdminAssumidoNome" style="color:#10B981;"></strong>
-          <span id="osAdminAssumidoData" style="font-size:10.5px; color:#7DD3FC; margin-left:auto;"></span>
-        </div>
-      </div>
-      
-      <div class="field">
-        <label style="font-size:12px; font-weight:700;">Status do Atendimento:</label>
-        <select id="osAdminStatusSelect" style="font-weight:700; height:42px; border-radius:12px;">
-          <option value="Pendente">⏳ Pendente (Aguardando Atendimento)</option>
-          <option value="Em Andamento">⚙️ Em Andamento (Em Atendimento pelo Suporte)</option>
-          <option value="Concluído">✅ Concluído (Resolvido com Sucesso)</option>
-          <option value="Cancelado">❌ Cancelado / Recusado</option>
-        </select>
       </div>
 
-      <div class="field">
-        <label style="font-size:12px; font-weight:700;">Parecer Técnico do Suporte / Resolução Aplicada:</label>
-        <textarea id="osAdminNotes" rows="3" placeholder="Ex: Dados cadastrais corrigidos no sistema, senha resetada ou dúvida esclarecida..." style="width:100%; border-radius:12px; padding:10px 12px; background:var(--input-bg, rgba(0,0,0,0.3)); border:1px solid var(--card-border); color:var(--text); font-family:inherit; font-size:13px; resize:vertical;"></textarea>
-      </div>
     </div>
 
     <input type="hidden" id="osAdminCurrentId">
 
-    <div class="modal-actions" style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; flex-wrap:wrap; gap:10px;">
-      <div style="display:flex; gap:8px;">
-        <button type="button" class="btn-ghost" onclick="excluirOrdemAdmin()" style="color:#F87171; border-color:rgba(239,68,68,0.3);">🗑️ Excluir O.S.</button>
-        <button type="button" class="btn-ghost" onclick="imprimirFichaOrdem(document.getElementById('osAdminCurrentId').value)" style="color:#10B981; border-color:rgba(16, 185, 129,0.35);">🖨️ Imprimir Ficha O.S.</button>
-      </div>
-      <div style="display:flex; gap:10px;">
-        <button type="button" onclick="closeOrdemAdminModal()">Fechar</button>
-        <button type="button" class="save" onclick="salvarOrdemAdmin()" style="background:linear-gradient(135deg, #059669, #059669); font-weight:800;">Salvar Atendimento ✓</button>
-      </div>
+    <div class="modal-actions" style="display:flex; justify-content:flex-end; align-items:center; margin-top:14px; gap:10px; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+      <button type="button" onclick="closeOrdemAdminModal()">Fechar Workspace</button>
+      <button type="button" class="save" onclick="salvarOrdemAdmin()" style="background:linear-gradient(135deg, #F59E0B, #D97706); color:#060B18; font-weight:900; padding:0 20px;">💾 Salvar Alterações GLPI ✓</button>
+    </div>
     </div>
   </div>
 </div>
@@ -25428,7 +25522,22 @@ window.consultarProtocoloRecente = function() {
   }
 };
 
-// Seleção Rápida de Categoria Visual no Modal da Tela de Login
+// Calcula o SLA GLPI com base na urgência / prioridade
+window.calcularSlaPorPrioridadeFront = function(priority) {
+  const p = String(priority || '').toLowerCase();
+  if (p.includes('crít') || p.includes('crit') || p.includes('urg')) return '30 Minutos';
+  if (p.includes('alt')) return '1 Hora';
+  if (p.includes('baix')) return '8 Horas';
+  return '2 Horas';
+};
+
+window.atualizarSlaPreviewGlpi = function() {
+  const prio = document.getElementById('osPriority')?.value || 'Média';
+  const badge = document.getElementById('osSlaPreviewBadge');
+  if (badge) badge.textContent = window.calcularSlaPorPrioridadeFront(prio);
+};
+
+// Seleção Rápida de Categoria Visual no Modal GLPI da Tela de Login
 window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle, defaultDesc) {
   const typeSelect = document.getElementById('osServiceType');
   if (typeSelect && type) {
@@ -25458,6 +25567,7 @@ window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle, defa
       }
     }
   }
+  window.atualizarSlaPreviewGlpi();
 
   const titleInput = document.getElementById('osTitle');
   if (titleInput && defaultTitle) {
@@ -25473,7 +25583,7 @@ window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle, defa
     const cat = (btn.getAttribute('data-oscat') || '').toLowerCase();
     const isSel = type && cat && type.toLowerCase().includes(cat.slice(0, 10));
     btn.style.transform = isSel ? 'scale(1.02)' : 'scale(1)';
-    btn.style.boxShadow = isSel ? '0 0 0 2px #10B981, 0 8px 20px rgba(16,185,129,0.28)' : 'none';
+    btn.style.boxShadow = isSel ? '0 0 0 2px #F59E0B, 0 8px 20px rgba(245,158,11,0.28)' : 'none';
   });
 
   const nameInput = document.getElementById('osClientName');
@@ -25484,7 +25594,7 @@ window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle, defa
   }
 };
 
-// Abertura e Consulta de O.S. (Público na Tela de Login e Portal do Usuário)
+// Abertura e Consulta de O.S. GLPI (Público na Tela de Login e Portal do Usuário)
 window.openNovaOrdemModal = function(preselectedTypeOrTab) {
   const overlay = document.getElementById('overlayNovaOrdem');
   if (!overlay) return;
@@ -25498,6 +25608,7 @@ window.openNovaOrdemModal = function(preselectedTypeOrTab) {
   if (successBox) successBox.style.display = 'none';
   if (feedback) feedback.style.display = 'none';
   if (form) form.reset();
+  window.atualizarSlaPreviewGlpi();
 
   // Ao abrir, todos os campos ficam vazios (sem dados do usuário logado nem da abertura anterior)
   const osConsultarInp = document.getElementById('osConsultarQuery');
@@ -25515,11 +25626,11 @@ window.openNovaOrdemModal = function(preselectedTypeOrTab) {
     if (preselectedTypeOrTab && preselectedTypeOrTab !== 'abrir') {
       const lower = preselectedTypeOrTab.toLowerCase();
       if (lower.includes('pagamento')) {
-        window.selecionarCategoriaRapidaOs('Pagamento Não Reconhecido', 'Urgente', 'Liberação de Pagamento Não Reconhecido');
+        window.selecionarCategoriaRapidaOs('Pagamento Não Reconhecido', 'Crítica', 'Liberação de Pagamento Não Reconhecido');
       } else if (lower.includes('boleto') || lower.includes('2ª via')) {
-        window.selecionarCategoriaRapidaOs('Solicitar 2ª Via de Boleto', 'Alta', 'Solicitação de 2ª Via de Boleto para Pagamento');
+        window.selecionarCategoriaRapidaOs('Sistema Financeiro & ERP', 'Alta', 'Solicitação de 2ª Via de Boleto para Pagamento');
       } else {
-        window.selecionarCategoriaRapidaOs(preselectedTypeOrTab, 'Normal', '');
+        window.selecionarCategoriaRapidaOs(preselectedTypeOrTab, 'Média', '');
       }
     }
   }
@@ -25669,7 +25780,8 @@ window.enviarNovaOrdem = async function(e) {
   const clientPhone = (document.getElementById('osClientPhone')?.value || '').trim();
   const clientCpf = (document.getElementById('osClientCpf')?.value || '').trim();
   const serviceType = document.getElementById('osServiceType')?.value || '';
-  const priority = document.getElementById('osPriority')?.value || 'Normal';
+  const priority = document.getElementById('osPriority')?.value || 'Média';
+  const sla = window.calcularSlaPorPrioridadeFront(priority);
   const title = (document.getElementById('osTitle')?.value || '').trim();
   const description = (document.getElementById('osDescription')?.value || '').trim();
 
@@ -25684,7 +25796,7 @@ window.enviarNovaOrdem = async function(e) {
 
   if (btn) {
     btn.disabled = true;
-    btn.textContent = 'Transmitindo O.S. para a Recepção...';
+    btn.textContent = 'Registrando no GLPI Service Desk...';
   }
 
   const isFromLoginScreen = !document.documentElement.classList.contains('user-logged-in');
@@ -25700,7 +25812,8 @@ window.enviarNovaOrdem = async function(e) {
         client_cpf: clientCpf,
         service_type: serviceType,
         priority: priority,
-        canal_atendimento: isFromLoginScreen ? 'Tela de Login' : 'Portal do Usuário',
+        sla: sla,
+        canal_atendimento: isFromLoginScreen ? 'GLPI Tela de Login' : 'Portal do Usuário',
         title: title,
         description: description
       })
@@ -25725,7 +25838,7 @@ window.enviarNovaOrdem = async function(e) {
     } else {
       if (feedback) {
         feedback.className = 'auth-feedback-banner error';
-        feedback.textContent = result.message || 'Erro ao registrar ordem de serviço. Tente novamente.';
+        feedback.textContent = result.message || 'Erro ao registrar chamado GLPI. Tente novamente.';
         feedback.style.display = 'block';
       }
     }
@@ -25738,7 +25851,7 @@ window.enviarNovaOrdem = async function(e) {
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.textContent = 'Enviar Ordem de Serviço 🚀';
+      btn.textContent = '🎫 Registrar Chamado no GLPI 🚀';
     }
   }
 };
@@ -25866,108 +25979,221 @@ window.filterReceptionQueue = function() {
   });
 };
 
+window.toggleSelectAllGlpiChecks = function(master) {
+  const checked = Boolean(master && master.checked);
+  document.querySelectorAll('.glpi-row-check').forEach(cb => { cb.checked = checked; });
+};
+
+window.assumirSelecionadosGlpiEmMassa = async function() {
+  const checkedBoxes = Array.from(document.querySelectorAll('.glpi-row-check:checked'));
+  if (checkedBoxes.length === 0) {
+    showToast('Selecione pelo menos um chamado na fila GLPI para assumir em massa.');
+    return;
+  }
+  let tecnicoNome = (currentUser && currentUser.name) ? currentUser.name : 'Paulo Lima (Admin)';
+  if (Array.isArray(systemTecnicos) && systemTecnicos.length > 0) {
+    const match = systemTecnicos.find(t => t.active !== false && currentUser && t.email && t.email.toLowerCase() === currentUser.email.toLowerCase());
+    if (match) tecnicoNome = match.name;
+  }
+  let okCount = 0;
+  for (const cb of checkedBoxes) {
+    const id = cb.value;
+    try {
+      const res = await fetch(window.location.origin + '/api/ordens/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: id,
+          status: 'Em Atendimento',
+          tecnico_responsavel: tecnicoNome,
+          timeline_entry: {
+            sender: 'Técnico',
+            author: tecnicoNome,
+            text: 'Chamado assumido em lote pelo Console GLPI (' + tecnicoNome + ').',
+            internal: true
+          }
+        })
+      });
+      if (res.ok) okCount++;
+    } catch(_e) {}
+  }
+  showToast(okCount + ' chamado(s) GLPI assumido(s) por ' + tecnicoNome + '!');
+  await syncOrdensWithServer();
+  render();
+};
+
+function renderDashboardExecutivoGlpi(ordens) {
+  const lista = ordens || [];
+  const total = lista.length || 1;
+  const cats = [
+    { label: 'Sistema Financeiro & ERP / Pagamentos', keys: ['financeiro', 'pagamento', 'boleto', 'correção'], color: '#10B981' },
+    { label: 'Gestão de Acessos & Reset de Senha', keys: ['acesso', 'senha'], color: '#F59E0B' },
+    { label: 'Suporte Técnico & Infra / Bugs', keys: ['suporte', 'infra', 'bug', 'configuração'], color: '#38BDF8' },
+    { label: 'Projetos & Melhorias no Sistema', keys: ['projeto', 'melhoria'], color: '#A855F7' }
+  ];
+
+  const countCrit = lista.filter(o => { const p = (o.priority||'').toLowerCase(); return p.includes('crít') || p.includes('crit') || p.includes('urg'); }).length;
+  const countAlta = lista.filter(o => (o.priority||'').toLowerCase().includes('alt')).length;
+  const countMed = lista.filter(o => { const p = (o.priority||'').toLowerCase(); return p.includes('méd') || p.includes('med') || p === 'normal'; }).length;
+  const countBaixa = lista.filter(o => (o.priority||'').toLowerCase().includes('baix')).length;
+  const totalHoras = lista.reduce((acc, o) => acc + (Number(o.time_spent) || 0), 0);
+  const resolvidos = lista.filter(o => { const s = (o.status||'').toLowerCase(); return s.includes('concl') || s.includes('resolv'); }).length;
+  const taxaResolucao = lista.length ? Math.round((resolvidos / lista.length) * 100) : 100;
+
+  let h = '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:14px;">';
+
+  // Card 1: Volume por Categoria ITSM
+  h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:16px;">';
+  h += '<h3 style="font-size:14px; font-weight:900; margin:0 0 4px 0; color:var(--text);">📊 Volume de Chamados por Categoria GLPI</h3>';
+  h += '<p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0;">Distribuição consolidada do catálogo de serviços ITSM.</p>';
+  cats.forEach(c => {
+    const cnt = lista.filter(o => {
+      const st = (o.service_type || '').toLowerCase();
+      return c.keys.some(k => st.includes(k));
+    }).length;
+    const pct = Math.round((cnt / total) * 100);
+    h += '<div style="margin-bottom:12px;">';
+    h += '<div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; margin-bottom:4px;"><span>' + c.label + '</span><span style="color:' + c.color + ';">' + cnt + ' (' + pct + '%)</span></div>';
+    h += '<div style="height:8px; width:100%; border-radius:99px; background:rgba(255,255,255,0.06); overflow:hidden;">';
+    h += '<div style="height:100%; width:' + Math.max(pct, cnt > 0 ? 6 : 0) + '%; background:' + c.color + '; border-radius:99px;"></div>';
+    h += '</div></div>';
+  });
+  h += '</div>';
+
+  // Card 2: Matriz de Urgência / SLA & Esforço Técnico
+  h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:16px;">';
+  h += '<h3 style="font-size:14px; font-weight:900; margin:0 0 4px 0; color:var(--text);">⏱️ Matriz de Criticidade, SLA &amp; Horas Técnicas</h3>';
+  h += '<p style="font-size:11.5px; color:var(--text-dim); margin:0 0 14px 0;">Indicadores operacionais da fila GLPI em tempo real.</p>';
+  h += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">';
+  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3);"><span style="font-size:10.5px; color:#FCA5A5; font-weight:800; text-transform:uppercase;">🔴 Crítica / Urgente (30m)</span><div style="font-size:20px; font-weight:900; color:#F87171; margin-top:2px;">' + countCrit + '</div></div>';
+  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3);"><span style="font-size:10.5px; color:#FDE68A; font-weight:800; text-transform:uppercase;">🟠 Alta (SLA 1h)</span><div style="font-size:20px; font-weight:900; color:#FBBF24; margin-top:2px;">' + countAlta + '</div></div>';
+  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.3);"><span style="font-size:10.5px; color:#BAE6FD; font-weight:800; text-transform:uppercase;">🔵 Média / Normal (2h)</span><div style="font-size:20px; font-weight:900; color:#38BDF8; margin-top:2px;">' + countMed + '</div></div>';
+  h += '<div style="padding:10px 12px; border-radius:10px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3);"><span style="font-size:10.5px; color:#A7F3D0; font-weight:800; text-transform:uppercase;">🟢 Baixa (SLA 8h)</span><div style="font-size:20px; font-weight:900; color:#34D399; margin-top:2px;">' + countBaixa + '</div></div>';
+  h += '</div>';
+  h += '<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--card-border); font-size:12px;">';
+  h += '<span>⏱️ Esforço Técnico Acumulado: <strong style="color:#FBBF24;">' + totalHoras.toFixed(1) + 'h</strong></span>';
+  h += '<span>✅ Taxa de Resolução GLPI: <strong style="color:#34D399;">' + taxaResolucao + '%</strong></span>';
+  h += '</div>';
+  h += '</div>';
+
+  h += '</div>';
+  return h;
+}
+
 function renderOrdensTable(list) {
   if (!list || list.length === 0) {
-    return '<div class="placeholder"><div class="big">📋</div><h3>Nenhuma Ordem de Serviço encontrada</h3><p>Quando os usuários abrirem solicitações de suporte ou melhorias, elas aparecerão listadas aqui em tempo real.</p></div>';
+    return '<div class="placeholder"><div class="big">🎫</div><h3>Nenhum chamado GLPI encontrado</h3><p>Quando os usuários abrirem solicitações na Tela de Login ou no Portal, elas aparecerão listadas aqui em tempo real.</p></div>';
   }
 
   let html = '<div style="overflow-x:auto;">';
   html += '<table style="width:100%; border-collapse:collapse; text-align:left;">';
   html += '<thead><tr style="border-bottom:1px solid var(--card-border); text-align:left;">';
-  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Protocolo</th>';
-  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Data & Canal</th>';
-  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Solicitante</th>';
-  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Demanda / Assunto</th>';
-  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Técnico Responsável</th>';
-  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Prioridade</th>';
-  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Status</th>';
-  html += '<th style="padding:12px 14px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800; text-align:right;">Ações</th>';
+  html += '<th style="padding:12px 10px; width:32px;"><input type="checkbox" id="glpiSelectAllCheck" onchange="window.toggleSelectAllGlpiChecks(this)" title="Selecionar todos da fila"></th>';
+  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Protocolo GLPI</th>';
+  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Data &amp; Canal</th>';
+  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Solicitante</th>';
+  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Categoria / Assunto / Ativo CMDB</th>';
+  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Técnico Atribuído</th>';
+  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Urgência &amp; SLA</th>';
+  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800;">Status GLPI</th>';
+  html += '<th style="padding:12px 12px; font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:800; text-align:right;">Ações</th>';
   html += '</tr></thead><tbody>';
 
   list.forEach(o => {
-    let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ Pendente';
+    let statusBg = 'rgba(234,179,8,0.15)', statusColor = '#FBBF24', statusBorder = 'rgba(234,179,8,0.35)', statusLabel = '⏳ ' + (o.status || 'Pendente');
     const st = (o.status || '').toLowerCase();
-    if (st.includes('anda')) {
-      statusBg = 'rgba(5, 150, 105,0.18)'; statusColor = '#34D399'; statusBorder = 'rgba(5, 150, 105,0.4)'; statusLabel = '⚙️ Em Andamento';
-    } else if (st.includes('concl') || st.includes('final')) {
-      statusBg = 'rgba(5, 150, 105,0.18)'; statusColor = '#059669'; statusBorder = 'rgba(5, 150, 105,0.4)'; statusLabel = '✅ Concluído';
+    if (st === 'novo') {
+      statusBg = 'rgba(56, 189, 248,0.18)'; statusColor = '#38BDF8'; statusBorder = 'rgba(56, 189, 248,0.4)'; statusLabel = '🔵 Novo';
+    } else if (st.includes('anda') || st.includes('atend')) {
+      statusBg = 'rgba(245, 158, 11,0.18)'; statusColor = '#FBBF24'; statusBorder = 'rgba(245, 158, 11,0.4)'; statusLabel = '⚙️ ' + o.status;
+    } else if (st.includes('cliente')) {
+      statusBg = 'rgba(168, 85, 247,0.18)'; statusColor = '#C084FC'; statusBorder = 'rgba(168, 85, 247,0.4)'; statusLabel = '🟣 Pendente Cliente';
+    } else if (st.includes('concl') || st.includes('final') || st.includes('resolv')) {
+      statusBg = 'rgba(16, 185, 129,0.18)'; statusColor = '#34D399'; statusBorder = 'rgba(16, 185, 129,0.4)'; statusLabel = '✅ ' + o.status;
     } else if (st.includes('canc') || st.includes('recus')) {
       statusBg = 'rgba(239,68,68,0.15)'; statusColor = '#F87171'; statusBorder = 'rgba(239,68,68,0.35)'; statusLabel = '❌ Cancelado';
     }
 
-    let prioBg = 'rgba(5, 150, 105,0.12)', prioColor = '#059669', prioBorder = 'rgba(5, 150, 105,0.3)';
+    let prioBg = 'rgba(5, 150, 105,0.12)', prioColor = '#34D399', prioBorder = 'rgba(5, 150, 105,0.3)';
     const prio = (o.priority || '').toLowerCase();
-    if (prio.includes('urg')) {
+    if (prio.includes('urg') || prio.includes('crít') || prio.includes('crit')) {
       prioBg = 'rgba(239,68,68,0.18)'; prioColor = '#F87171'; prioBorder = 'rgba(239,68,68,0.4)';
     } else if (prio.includes('alt')) {
       prioBg = 'rgba(245,158,11,0.18)'; prioColor = '#FBBF24'; prioBorder = 'rgba(245,158,11,0.4)';
+    } else if (prio.includes('méd') || prio.includes('med')) {
+      prioBg = 'rgba(56,189,248,0.16)'; prioColor = '#38BDF8'; prioBorder = 'rgba(56,189,248,0.35)';
     }
 
     const dateFormatted = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : 'Hoje';
     const cleanPhone = String(o.client_phone || '').replace(/\\D/g, '');
     const protoClean = escapeOsHtml(o.protocol || o.id);
+    const slaText = escapeOsHtml(o.sla || window.calcularSlaPorPrioridadeFront(o.priority));
 
     html += '<tr style="border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s ease;">';
-    
-    html += '<td style="padding:13px 14px; white-space:nowrap;">';
+    html += '<td style="padding:12px 10px;"><input type="checkbox" class="glpi-row-check" value="' + escapeOsHtml(o.id) + '"></td>';
+
+    html += '<td style="padding:12px 12px; white-space:nowrap;">';
     html += '<div style="display:inline-flex; align-items:center; gap:5px;">';
-    html += '<span style="font-weight:800; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(5, 150, 105,0.12); color:#6EE7B7; border:1px solid rgba(5, 150, 105,0.3);">#' + protoClean + '</span>';
+    html += '<span style="font-weight:900; font-size:12px; padding:3px 8px; border-radius:6px; background:rgba(245, 158, 11,0.14); color:#FBBF24; border:1px solid rgba(245, 158, 11,0.35); font-family:monospace;">#' + protoClean + '</span>';
     html += '<button type="button" onclick="copyProtocolText(&quot;' + protoClean + '&quot;)" style="background:none; border:none; cursor:pointer; font-size:13px; padding:2px; color:var(--text-dim);" title="Copiar Protocolo">📋</button>';
     html += '</div></td>';
 
-    html += '<td style="padding:13px 14px; font-size:12px; color:var(--text-dim); white-space:nowrap;">';
+    html += '<td style="padding:12px 12px; font-size:12px; color:var(--text-dim); white-space:nowrap;">';
     html += '<div>' + dateFormatted + '</div>';
-    html += '<span style="display:inline-block; margin-top:3px; font-size:10.5px; font-weight:700; color:#10B981; padding:1px 6px; border-radius:4px; background:rgba(16, 185, 129,0.12); border:1px solid rgba(16, 185, 129,0.25);">' + escapeOsHtml(o.canal_atendimento || 'Portal Web') + '</span>';
+    html += '<span style="display:inline-block; margin-top:3px; font-size:10px; font-weight:800; color:#FDE68A; padding:1px 6px; border-radius:4px; background:rgba(245, 158, 11,0.14); border:1px solid rgba(245, 158, 11,0.3);">' + escapeOsHtml(o.canal_atendimento || 'GLPI Login') + '</span>';
     html += '</td>';
 
-    html += '<td style="padding:13px 14px;">';
+    html += '<td style="padding:12px 12px;">';
     html += '<div style="font-weight:700; color:var(--text); font-size:13px;">' + escapeOsHtml(o.client_name || 'Anônimo') + '</div>';
     html += '<div style="font-size:11.5px; color:var(--text-dim); margin-top:1px;"><a href="mailto:' + escapeOsHtml(o.client_email || '') + '" style="color:var(--text-dim); text-decoration:none;">' + escapeOsHtml(o.client_email || '') + '</a></div>';
     if (cleanPhone) {
       html += '<div style="font-size:11px; margin-top:2px;"><a href="https://wa.me/55' + cleanPhone + '" target="_blank" style="color:#059669; font-weight:700; text-decoration:none;">📱 ' + escapeOsHtml(o.client_phone) + '</a></div>';
     }
-    if (o.client_cpf) {
-      html += '<div style="font-size:10.5px; color:#34D399; font-weight:700; margin-top:2px;">🪪 CPF: ' + escapeOsHtml(o.client_cpf) + '</div>';
-    }
     html += '</td>';
 
-    html += '<td style="padding:13px 14px; max-width:280px;">';
-    html += '<div style="display:inline-block; padding:2px 7px; border-radius:4px; font-size:10.5px; font-weight:800; background:rgba(5, 150, 105,0.12); color:#6EE7B7; margin-bottom:3px;">' + escapeOsHtml(o.service_type || 'Melhoria') + '</div>';
+    html += '<td style="padding:12px 12px; max-width:270px;">';
+    html += '<div style="display:flex; gap:5px; align-items:center; flex-wrap:wrap; margin-bottom:3px;">';
+    html += '<span style="padding:2px 7px; border-radius:4px; font-size:10px; font-weight:800; background:rgba(5, 150, 105,0.14); color:#6EE7B7;">' + escapeOsHtml(o.service_type || 'Geral') + '</span>';
+    if (o.asset && o.asset !== 'Nenhum') {
+      html += '<span style="padding:2px 6px; border-radius:4px; font-size:9.5px; font-weight:800; background:rgba(56,189,248,0.14); color:#7DD3FC; font-family:monospace;">🖥️ ' + escapeOsHtml(o.asset) + '</span>';
+    }
+    html += '</div>';
     html += '<div style="font-weight:700; color:var(--text); font-size:12.5px;">' + escapeOsHtml(o.title || 'Sem título') + '</div>';
     if (o.description) {
       html += '<div style="font-size:11px; color:var(--text-dim); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + escapeOsHtml(o.description) + '">' + escapeOsHtml(o.description) + '</div>';
     }
     html += '</td>';
 
-    html += '<td style="padding:13px 14px; white-space:nowrap;">';
+    html += '<td style="padding:12px 12px; white-space:nowrap;">';
     if (o.tecnico_responsavel) {
-      html += '<div style="font-weight:800; color:#10B981; font-size:12.5px; display:inline-flex; align-items:center; gap:4px;">👷 ' + escapeOsHtml(o.tecnico_responsavel) + '</div>';
-      html += '<div style="font-size:10.5px; color:var(--text-dim); margin-top:2px;">' + (o.assumido_em ? ('Assumido ' + new Date(o.assumido_em).toLocaleDateString('pt-BR')) : 'Em atendimento') + '</div>';
+      html += '<div style="font-weight:800; color:#10B981; font-size:12px; display:inline-flex; align-items:center; gap:4px;">👷 ' + escapeOsHtml(o.tecnico_responsavel) + '</div>';
+      html += '<div style="font-size:10px; color:var(--text-dim); margin-top:2px;">' + (o.time_spent ? ('⏱️ ' + o.time_spent + 'h registradas') : 'Em atendimento') + '</div>';
     } else {
-      html += '<button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; padding:5px 12px; border-radius:8px; background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.4); font-size:11.5px; font-weight:800; cursor:pointer;" title="Assumir esta Ordem de Serviço">';
-      html += '<span>⚡ Assumir Chamado</span></button>';
+      html += '<button type="button" onclick="quickAssumirOrdemPrompt(&quot;' + o.id + '&quot;)" style="display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px; background:rgba(245,158,11,0.16); color:#FBBF24; border:1px solid rgba(245,158,11,0.45); font-size:11px; font-weight:800; cursor:pointer;" title="Assumir este chamado GLPI">';
+      html += '<span>🤝 Assumir</span></button>';
     }
     html += '</td>';
 
-    html += '<td style="padding:13px 14px; white-space:nowrap;">';
-    html += '<span style="display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:800; background:' + prioBg + '; color:' + prioColor + '; border:1px solid ' + prioBorder + ';">' + escapeOsHtml(o.priority || 'Normal') + '</span>';
+    html += '<td style="padding:12px 12px; white-space:nowrap;">';
+    html += '<span style="display:inline-block; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:800; background:' + prioBg + '; color:' + prioColor + '; border:1px solid ' + prioBorder + ';">' + escapeOsHtml(o.priority || 'Normal') + '</span>';
+    html += '<div style="font-size:10.5px; color:#94A3B8; font-family:monospace; margin-top:3px;">⏱️ ' + slaText + '</div>';
     html += '</td>';
 
-    html += '<td style="padding:13px 14px; white-space:nowrap;">';
-    html += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + statusLabel + '</span>';
+    html += '<td style="padding:12px 12px; white-space:nowrap;">';
+    html += '<span style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:800; background:' + statusBg + '; color:' + statusColor + '; border:1px solid ' + statusBorder + ';">' + escapeOsHtml(statusLabel) + '</span>';
     if (o.concluido_em) {
-      html += '<div style="font-size:10px; color:#059669; margin-top:2px;">Finalizado ' + new Date(o.concluido_em).toLocaleDateString('pt-BR') + '</div>';
+      html += '<div style="font-size:10px; color:#34D399; margin-top:2px;">Resolvido ' + new Date(o.concluido_em).toLocaleDateString('pt-BR') + '</div>';
     }
     html += '</td>';
 
-    html += '<td style="padding:13px 14px; text-align:right; white-space:nowrap;">';
+    html += '<td style="padding:12px 12px; text-align:right; white-space:nowrap;">';
     html += '<div style="display:flex; gap:5px; justify-content:flex-end; align-items:center;">';
-    html += '<button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="padding:6px 11px; border-radius:8px; background:linear-gradient(135deg, #10B981, #047857); color:#ffffff; font-size:11.5px; font-weight:800; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(5, 150, 105,0.3);" title="Atender Chamado">👁️ Atender</button>';
-    if (!st.includes('concl') && !st.includes('canc')) {
-      html += '<button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 9px; border-radius:8px; background:rgba(5, 150, 105,0.18); color:#059669; border:1px solid rgba(5, 150, 105,0.35); font-size:11.5px; font-weight:800; cursor:pointer;" title="Concluir O.S. Agora">✓ Concluir</button>';
+    html += '<button type="button" onclick="openOrdemAdminModal(&quot;' + o.id + '&quot;)" style="padding:6px 11px; border-radius:8px; background:linear-gradient(135deg, #F59E0B, #EA580C); color:#ffffff; font-size:11px; font-weight:800; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(245, 158, 11,0.3);" title="Abrir Workspace Técnico GLPI">🛠️ Tratar GLPI</button>';
+    if (!st.includes('concl') && !st.includes('resolv') && !st.includes('canc')) {
+      html += '<button type="button" onclick="quickConcluirOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 9px; border-radius:8px; background:rgba(16, 185, 129,0.18); color:#34D399; border:1px solid rgba(16, 185, 129,0.35); font-size:11px; font-weight:800; cursor:pointer;" title="Concluir/Resolver Agora">✓</button>';
     }
-    html += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.3); font-size:11.5px; cursor:pointer;" title="Imprimir Ficha O.S.">🖨️</button>';
-    html += '<button type="button" onclick="excluirOrdemAdmin(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:11.5px; cursor:pointer;" title="Excluir O.S.">🗑️</button>';
+    html += '<button type="button" onclick="imprimirFichaOrdem(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(16, 185, 129,0.12); color:#10B981; border:1px solid rgba(16, 185, 129,0.3); font-size:11px; cursor:pointer;" title="Imprimir Ficha GLPI">🖨️</button>';
+    html += '<button type="button" onclick="excluirOrdemAdmin(&quot;' + o.id + '&quot;)" style="padding:6px 8px; border-radius:8px; background:rgba(239,68,68,0.12); color:#F87171; border:1px solid rgba(239,68,68,0.25); font-size:11px; cursor:pointer;" title="Excluir">🗑️</button>';
     html += '</div></td>';
 
     html += '</tr>';
@@ -25986,14 +26212,14 @@ function filterOrdensTable() {
   const tabFilter = window.currentOsTabFilter || 'todas';
 
   const filtered = (systemOrdens || []).filter(o => {
-    const text = ((o.protocol||'') + ' ' + (o.client_name||'') + ' ' + (o.client_email||'') + ' ' + (o.client_phone||'') + ' ' + (o.client_cpf||'') + ' ' + (o.title||'') + ' ' + (o.description||'') + ' ' + (o.tecnico_responsavel||'')).toLowerCase();
+    const text = ((o.protocol||'') + ' ' + (o.client_name||'') + ' ' + (o.client_email||'') + ' ' + (o.client_phone||'') + ' ' + (o.client_cpf||'') + ' ' + (o.title||'') + ' ' + (o.description||'') + ' ' + (o.tecnico_responsavel||'') + ' ' + (o.asset||'')).toLowerCase();
     const matchQuery = !query || text.includes(query);
 
     const st = (o.status || '').toLowerCase();
     let matchTab = true;
-    if (tabFilter === 'pendente') matchTab = st === 'pendente';
-    else if (tabFilter === 'andamento') matchTab = st.includes('anda');
-    else if (tabFilter === 'concluido') matchTab = st.includes('concl') || st.includes('final');
+    if (tabFilter === 'pendente') matchTab = st === 'pendente' || st === 'novo' || !o.tecnico_responsavel;
+    else if (tabFilter === 'andamento') matchTab = st.includes('anda') || st.includes('atend') || st.includes('cliente');
+    else if (tabFilter === 'concluido') matchTab = st.includes('concl') || st.includes('final') || st.includes('resolv');
     else if (tabFilter === 'cancelado') matchTab = st.includes('canc') || st.includes('recus');
 
     const matchStatus = !statusFilter || st.includes(statusFilter);
@@ -26312,11 +26538,12 @@ function renderEquipeTecnicaOs() {
 
   const ordens = systemOrdens || [];
   const countTotal = ordens.length;
-  const countPendentes = ordens.filter(o => (o.status||'').toLowerCase() === 'pendente').length;
-  const countAndamento = ordens.filter(o => (o.status||'').toLowerCase().includes('anda')).length;
-  const countConcluidas = ordens.filter(o => (o.status||'').toLowerCase().includes('concl') || (o.status||'').toLowerCase().includes('final')).length;
+  const countPendentes = ordens.filter(o => { const s = (o.status||'').toLowerCase(); return s === 'pendente' || s === 'novo' || !o.tecnico_responsavel; }).length;
+  const countAndamento = ordens.filter(o => { const s = (o.status||'').toLowerCase(); return s.includes('anda') || s.includes('atend') || s.includes('cliente'); }).length;
+  const countCriticos = ordens.filter(o => { const p = (o.priority||'').toLowerCase(); const s = (o.status||'').toLowerCase(); return (p.includes('crít') || p.includes('crit') || p.includes('urg')) && !s.includes('concl') && !s.includes('resolv') && !s.includes('canc'); }).length;
+  const countConcluidas = ordens.filter(o => { const s = (o.status||'').toLowerCase(); return s.includes('concl') || s.includes('final') || s.includes('resolv'); }).length;
   const countCanceladas = ordens.filter(o => (o.status||'').toLowerCase().includes('canc') || (o.status||'').toLowerCase().includes('recus')).length;
-  const currentTab = window.currentOsTabFilter || 'receber';
+  const currentTab = window.currentOsTabFilter || 'todas';
 
   if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
 
@@ -26330,62 +26557,73 @@ function renderEquipeTecnicaOs() {
   h += '<div class="page-head admin-page-head">';
   h += '<div>';
   h += '<h1>';
-  h += '<span class="admin-head-icon">📋</span>';
-  h += 'Central de Ordens de Serviço & Recepção</h1>';
-  h += '<p>Recepção compacta, triagem técnica, credenciamento de especialistas e sincronização SQL Server.</p>';
+  h += '<span class="admin-head-icon" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;font-weight:900;">G</span>';
+  h += 'GLPI 10 Enterprise ITSM — Central de Chamados &amp; O.S.</h1>';
+  h += '<p>Console de Operações TI &amp; Administração: recepção direta da Tela de Login, fila SLA, ativos CMDB e resolução técnica.</p>';
   h += '</div>';
 
   h += '<div class="admin-head-actions">';
-  h += '<button onclick="setOsStatusTab(&quot;receber&quot;)" style="display:inline-flex; align-items:center; gap:6px; padding:0 14px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(5, 150, 105,0.38);">';
-  h += '<span>📥 Receber O.S.</span></button>';
+  h += '<button onclick="openNovaOrdemModal(&quot;abrir&quot;)" style="display:inline-flex; align-items:center; gap:6px; padding:0 14px; background:linear-gradient(135deg, #F59E0B, #EA580C); color:#FFFFFF; font-weight:800; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(245, 158, 11,0.38);">';
+  h += '<span>🎫 + Novo Chamado GLPI</span></button>';
+
+  h += '<button onclick="setOsStatusTab(&quot;receber&quot;)" style="display:inline-flex; align-items:center; gap:6px; padding:0 13px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; border:none; cursor:pointer;">';
+  h += '<span>📥 Balcão O.S.</span></button>';
   
   h += '<button onclick="openGerenciarTecnicosModal()" style="display:inline-flex; align-items:center; gap:6px; padding:0 13px; background:linear-gradient(135deg, rgba(245,158,11,0.20), rgba(217,119,6,0.12)); border:1px solid rgba(245,158,11,0.45); color:#FDE68A; font-weight:800; cursor:pointer;">';
   h += '<span>👷 Técnicos</span>';
   h += '<span id="tecnicosBadgeCount" style="padding:1px 6px; border-radius:999px; background:#F59E0B; color:#060B18; font-size:10px; font-weight:900;">' + ((systemTecnicos || []).filter(t => t.active !== false).length) + '</span>';
   h += '</button>';
 
-  h += '<button onclick="imprimirFilaOrdens()" style="display:inline-flex; align-items:center; gap:5px; padding:0 12px; background:rgba(16, 185, 129,0.12); border:1px solid rgba(16, 185, 129,0.32); color:#10B981; font-weight:800; cursor:pointer;" title="Imprimir Relatório da Fila de O.S.">';
+  h += '<button onclick="imprimirFilaOrdens()" style="display:inline-flex; align-items:center; gap:5px; padding:0 12px; background:rgba(16, 185, 129,0.12); border:1px solid rgba(16, 185, 129,0.32); color:#10B981; font-weight:800; cursor:pointer;" title="Imprimir Relatório da Fila GLPI">';
   h += '<span>🖨️ Imprimir</span></button>';
 
   h += '<button class="btn-ghost" onclick="syncOrdensWithServer().then(() => syncTecnicosWithServer()).then(render)" style="display:inline-flex; align-items:center; gap:5px; font-weight:700;">🔄 Sincronizar</button>';
   h += '</div></div>';
 
-  h += '<div class="kpis admin-kpis-row">';
+  // 5 KPIs Executivos GLPI 10 ITSM
+  h += '<div class="kpis admin-kpis-row" style="grid-template-columns:repeat(auto-fit, minmax(175px, 1fr));">';
   
   h += '<div class="kpi" style="cursor:pointer;" onclick="setOsStatusTab(&quot;todas&quot;)">';
-  h += '<div class="row1"><span>Total de Chamados</span><div class="ic" style="background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.32); color:#34D399;">📋</div></div>';
+  h += '<div class="row1"><span>Total na Fila GLPI</span><div class="ic" style="background:rgba(56, 189, 248,0.14); border:1px solid rgba(56, 189, 248,0.32); color:#38BDF8;">🎫</div></div>';
   h += '<div class="val" style="color:var(--text);">' + countTotal + '</div>';
-  h += '<div class="sub" style="color:#34D399;">Todas as solicitações</div>';
+  h += '<div class="sub" style="color:#38BDF8;">Chamados sincronizados</div>';
   h += '</div>';
 
-  h += '<div class="kpi" style="cursor:pointer;" onclick="setOsStatusTab(&quot;receber&quot;)">';
-  h += '<div class="row1"><span>Pendentes (Fila)</span><div class="ic" style="background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24;">⏳</div></div>';
+  h += '<div class="kpi" style="cursor:pointer;" onclick="setOsStatusTab(&quot;pendente&quot;)">';
+  h += '<div class="row1"><span>Sem Atribuição / Novos</span><div class="ic" style="background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.35); color:#FBBF24;">🔥</div></div>';
   h += '<div class="val" style="color:#FBBF24;">' + countPendentes + '</div>';
-  h += '<div class="sub" style="color:#FDE68A;">Aguardando triagem</div>';
+  h += '<div class="sub" style="color:#FDE68A;">Aguardando técnico</div>';
   h += '</div>';
 
   h += '<div class="kpi" style="cursor:pointer;" onclick="setOsStatusTab(&quot;andamento&quot;)">';
-  h += '<div class="row1"><span>Em Atendimento</span><div class="ic" style="background:rgba(56, 189, 248,0.14); border:1px solid rgba(56, 189, 248,0.32); color:#38BDF8;">⚙️</div></div>';
-  h += '<div class="val" style="color:#38BDF8;">' + countAndamento + '</div>';
-  h += '<div class="sub" style="color:#7DD3FC;">Com equipe técnica</div>';
+  h += '<div class="row1"><span>Em Atendimento</span><div class="ic" style="background:rgba(168, 85, 247,0.14); border:1px solid rgba(168, 85, 247,0.32); color:#C084FC;">⚙️</div></div>';
+  h += '<div class="val" style="color:#C084FC;">' + countAndamento + '</div>';
+  h += '<div class="sub" style="color:#E9D5FF;">Sendo tratados no GLPI</div>';
+  h += '</div>';
+
+  h += '<div class="kpi" style="cursor:pointer; border-color:rgba(239,68,68,0.35);" onclick="setOsStatusTab(&quot;criticos&quot;)">';
+  h += '<div class="row1"><span style="color:#FCA5A5;">Críticos / Urgentes</span><div class="ic" style="background:rgba(239, 68, 68,0.18); border:1px solid rgba(239, 68, 68,0.4); color:#F87171;">🚨</div></div>';
+  h += '<div class="val" style="color:#F87171;">' + countCriticos + '</div>';
+  h += '<div class="sub" style="color:#FCA5A5;">SLA Prioritário (30m)</div>';
   h += '</div>';
 
   h += '<div class="kpi" style="cursor:pointer;" onclick="setOsStatusTab(&quot;concluido&quot;)">';
-  h += '<div class="row1"><span>Concluídos</span><div class="ic" style="background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.32); color:#10B981;">✅</div></div>';
+  h += '<div class="row1"><span>Resolvidos / Fechados</span><div class="ic" style="background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.32); color:#10B981;">✅</div></div>';
   h += '<div class="val" style="color:#10B981;">' + countConcluidas + '</div>';
-  h += '<div class="sub" style="color:#A7F3D0;">Finalizados</div>';
+  h += '<div class="sub" style="color:#A7F3D0;">Solução GLPI registrada</div>';
   h += '</div>';
 
   h += '</div>';
 
-  // Barra de Abas Superiores Compacta e Alinhada
-  h += '<div class="admin-toolbar-panel" style="padding:7px 10px; gap:6px; justify-content:flex-start;">';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='receber'?'active':'') + '" data-tab="receber" onclick="setOsStatusTab(&quot;receber&quot;)" style="height:32px; padding:0 13px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='receber'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='receber'?'linear-gradient(135deg, #10B981, #059669)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='receber'?'#FFFFFF':'var(--text)') + '; display:inline-flex; align-items:center; gap:6px;"><span>📥 Balcão de Recepção</span>' + (countPendentes > 0 ? '<span class="os-tab-pill-badge">' + countPendentes + '</span>' : '') + '</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='todas'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='todas'?'linear-gradient(135deg, #10B981, #047857)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">Todas (' + countTotal + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">⏳ Pendentes (' + countPendentes + ')</button>';
+  // Barra de Abas Superiores GLPI 10
+  h += '<div class="admin-toolbar-panel" style="padding:7px 10px; gap:6px; justify-content:flex-start; flex-wrap:wrap;">';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="height:32px; padding:0 13px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='todas'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='todas'?'linear-gradient(135deg, #F59E0B, #EA580C)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">📋 Fila Geral GLPI (' + countTotal + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">🔥 Sem Técnico / Novos (' + countPendentes + ')</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #10B981, #047857)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#34D399') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #059669, #059669)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='concluido'?'#060B18':'#059669') + ';">✅ Concluídas (' + countConcluidas + ')</button>';
-  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='cancelado'?'active':'') + '" data-tab="cancelado" onclick="setOsStatusTab(&quot;cancelado&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.35); background:' + (currentTab==='cancelado'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.10)') + '; color:' + (currentTab==='cancelado'?'#FFFFFF':'#F87171') + ';">❌ Canceladas (' + countCanceladas + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='criticos'?'active':'') + '" data-tab="criticos" onclick="setOsStatusTab(&quot;criticos&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.35); background:' + (currentTab==='criticos'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.10)') + '; color:' + (currentTab==='criticos'?'#FFFFFF':'#F87171') + ';">🚨 Críticos (' + countCriticos + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='concluido'?'active':'') + '" data-tab="concluido" onclick="setOsStatusTab(&quot;concluido&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='concluido'?'linear-gradient(135deg, #059669, #059669)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='concluido'?'#060B18':'#059669') + ';">✅ Resolvidos (' + countConcluidas + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='dashboard'?'active':'') + '" data-tab="dashboard" onclick="setOsStatusTab(&quot;dashboard&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(56,189,248,0.35); background:' + (currentTab==='dashboard'?'linear-gradient(135deg, #0284C7, #0369A1)':'rgba(56,189,248,0.10)') + '; color:' + (currentTab==='dashboard'?'#FFFFFF':'#38BDF8') + ';">📊 Dashboard ITSM</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='receber'?'active':'') + '" data-tab="receber" onclick="setOsStatusTab(&quot;receber&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='receber'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='receber'?'linear-gradient(135deg, #10B981, #059669)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='receber'?'#FFFFFF':'var(--text)') + ';">📥 Balcão O.S.</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='tecnicos'?'active':'') + '" data-tab="tecnicos" onclick="setOsStatusTab(&quot;tecnicos&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='tecnicos'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='tecnicos'?'#060B18':'#FDE68A') + '; margin-left:auto;">👷 Equipe Técnica (' + ((systemTecnicos || []).filter(t => t.active !== false).length) + ')</button>';
   h += '</div>';
 
@@ -26393,27 +26631,33 @@ function renderEquipeTecnicaOs() {
     h += renderBalcaoRecepcaoOs(ordens, tecOpts);
   } else if (currentTab === 'tecnicos') {
     h += renderEquipeTecnicaOs();
+  } else if (currentTab === 'dashboard') {
+    h += renderDashboardExecutivoGlpi(ordens);
   } else {
     let filteredList = ordens;
-    if (currentTab === 'pendente') filteredList = ordens.filter(o => (o.status||'').toLowerCase() === 'pendente');
-    else if (currentTab === 'andamento') filteredList = ordens.filter(o => (o.status||'').toLowerCase().includes('anda'));
-    else if (currentTab === 'concluido') filteredList = ordens.filter(o => (o.status||'').toLowerCase().includes('concl') || (o.status||'').toLowerCase().includes('final'));
+    if (currentTab === 'pendente') filteredList = ordens.filter(o => { const s = (o.status||'').toLowerCase(); return s === 'pendente' || s === 'novo' || !o.tecnico_responsavel; });
+    else if (currentTab === 'andamento') filteredList = ordens.filter(o => { const s = (o.status||'').toLowerCase(); return s.includes('anda') || s.includes('atend') || s.includes('cliente'); });
+    else if (currentTab === 'criticos') filteredList = ordens.filter(o => { const p = (o.priority||'').toLowerCase(); return p.includes('crít') || p.includes('crit') || p.includes('urg'); });
+    else if (currentTab === 'concluido') filteredList = ordens.filter(o => { const s = (o.status||'').toLowerCase(); return s.includes('concl') || s.includes('final') || s.includes('resolv'); });
     else if (currentTab === 'cancelado') filteredList = ordens.filter(o => (o.status||'').toLowerCase().includes('canc') || (o.status||'').toLowerCase().includes('recus'));
 
     h += '<div class="table-panel" style="background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:14px 16px;">';
     
     h += '<div class="panel-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">';
-    h += '<h3 style="font-size:13.5px; font-weight:800; margin:0;">📋 Fila Geral de Solicitações</h3>';
-    h += '<span class="tag" style="font-weight:800; font-size:10.5px; padding:3px 10px;">' + filteredList.length + ' de ' + countTotal + ' O.S.</span>';
+    h += '<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">';
+    h += '<h3 style="font-size:13.5px; font-weight:800; margin:0;">🎫 Fila de Chamados GLPI Service Desk</h3>';
+    h += '<span class="tag" style="font-weight:800; font-size:10.5px; padding:3px 10px;">' + filteredList.length + ' de ' + countTotal + ' chamados</span>';
+    h += '</div>';
+    h += '<button type="button" onclick="window.assumirSelecionadosGlpiEmMassa()" style="height:30px; padding:0 12px; border-radius:8px; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.45); color:#FBBF24; font-size:11px; font-weight:800; cursor:pointer;">🤝 Assumir Selecionados</button>';
     h += '</div>';
 
     h += '<div class="filters" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center;">';
     h += '<div style="position:relative; flex:1.6; min-width:210px;">';
-    h += '<input id="osSearchInput" placeholder="🔍 Filtrar por protocolo, solicitante, CPF ou assunto..." onkeyup="filterOrdensTable()" style="width:100%; height:34px; font-size:12px; padding:0 11px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
+    h += '<input id="osSearchInput" placeholder="🔍 Buscar no GLPI por protocolo, solicitante, ativo CMDB ou assunto..." onkeyup="filterOrdensTable()" style="width:100%; height:34px; font-size:12px; padding:0 11px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text);">';
     h += '</div>';
     
     h += '<select id="osFilterStatus" onchange="filterOrdensTable()" style="flex:1; min-width:125px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
-    h += '<option value="">Status: Todos</option><option value="pendente"' + (currentTab==='pendente'?' selected':'') + '>⏳ Pendentes</option><option value="andamento"' + (currentTab==='andamento'?' selected':'') + '>⚙️ Em Andamento</option><option value="concl"' + (currentTab==='concluido'?' selected':'') + '>✅ Concluídos</option><option value="canc"' + (currentTab==='cancelado'?' selected':'') + '>❌ Cancelados</option>';
+    h += '<option value="">Status: Todos</option><option value="novo">🔵 Novo</option><option value="pendente"' + (currentTab==='pendente'?' selected':'') + '>⏳ Pendentes</option><option value="atendimento">⚙️ Em Atendimento</option><option value="andamento"' + (currentTab==='andamento'?' selected':'') + '>⚙️ Em Andamento</option><option value="resolvido">🟢 Resolvidos</option><option value="concl"' + (currentTab==='concluido'?' selected':'') + '>✅ Concluídos</option><option value="canc"' + (currentTab==='cancelado'?' selected':'') + '>❌ Cancelados</option>';
     h += '</select>';
 
     h += '<select id="osFilterTecnico" onchange="filterOrdensTable()" style="flex:1.1; min-width:140px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
@@ -26421,11 +26665,11 @@ function renderEquipeTecnicaOs() {
     h += '</select>';
 
     h += '<select id="osFilterType" onchange="filterOrdensTable()" style="flex:1; min-width:130px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
-    h += '<option value="">Tipo: Todos</option><option value="melhoria">Melhoria</option><option value="senha">Reset de Senha</option><option value="correção">Correção</option><option value="bug">Relato de Bug</option><option value="geral">Atendimento</option>';
+    h += '<option value="">Categoria GLPI: Todas</option><option value="financeiro">💰 Financeiro &amp; ERP</option><option value="acessos">🔐 Acessos &amp; Senha</option><option value="suporte">💻 Suporte &amp; Infra</option><option value="projetos">🚀 Projetos &amp; Melhorias</option><option value="pagamento">💳 Pagamento / PIX</option><option value="correção">🛠️ Correção Cadastral</option><option value="bug">🐛 Relato de Bug</option>';
     h += '</select>';
 
     h += '<select id="osFilterPriority" onchange="filterOrdensTable()" style="flex:1; min-width:115px; height:34px; padding:0 9px; border-radius:9px; background:var(--input-bg); border:1px solid var(--card-border); color:var(--text); font-size:11.5px; font-weight:700;">';
-    h += '<option value="">Prioridade: Todas</option><option value="normal">🟢 Normal</option><option value="alta">🟡 Alta</option><option value="urgente">🔴 Urgente</option>';
+    h += '<option value="">Urgência: Todas</option><option value="baixa">🟢 Baixa</option><option value="normal">🟢 Normal</option><option value="média">🔵 Média</option><option value="alta">🟠 Alta</option><option value="urgente">🔴 Urgente</option><option value="crítica">🔴 Crítica</option>';
     h += '</select>';
     h += '</div>';
 
@@ -26542,15 +26786,246 @@ window.openOrdemAdminModal = function(id) {
     atualizarEstiloPrioridadeAdmin(prioSelect.value);
   }
 
+  const slaBadge = document.getElementById('osAdminSlaBadge');
+  if (slaBadge) {
+    const slaVal = ordem.sla || window.calcularSlaPorPrioridadeFront(ordem.priority);
+    slaBadge.textContent = '⏱️ SLA: ' + slaVal;
+  }
+
+  const assetSelect = document.getElementById('osAdminAssetSelect');
+  if (assetSelect) {
+    assetSelect.value = ordem.asset || 'Nenhum';
+  }
+
+  const timeSpentInput = document.getElementById('osAdminTimeSpent');
+  if (timeSpentInput) {
+    timeSpentInput.value = Number(ordem.time_spent) || 0;
+  }
+
+  const solutionInput = document.getElementById('osAdminSolution');
+  if (solutionInput) {
+    solutionInput.value = ordem.solution || '';
+  }
+
+  const replyInput = document.getElementById('osAdminReplyInput');
+  if (replyInput) replyInput.value = '';
+  window.setGlpiReplyMode('public');
+  window.renderGlpiTimelineModal(ordem);
+
   overlay.classList.add('show');
   overlay.style.display = 'flex';
 };
 
+window.currentGlpiReplyMode = 'public';
+
+window.setGlpiReplyMode = function(mode) {
+  window.currentGlpiReplyMode = mode === 'private' ? 'private' : 'public';
+  const pubBtn = document.getElementById('btnGlpiModePublic');
+  const privBtn = document.getElementById('btnGlpiModePrivate');
+  const replyInp = document.getElementById('osAdminReplyInput');
+  if (pubBtn && privBtn) {
+    if (window.currentGlpiReplyMode === 'private') {
+      privBtn.style.background = 'rgba(245,158,11,0.22)';
+      privBtn.style.borderColor = 'rgba(245,158,11,0.6)';
+      privBtn.style.color = '#FBBF24';
+      pubBtn.style.background = 'rgba(255,255,255,0.04)';
+      pubBtn.style.borderColor = 'rgba(255,255,255,0.12)';
+      pubBtn.style.color = '#94A3B8';
+      if (replyInp) replyInp.placeholder = '🔒 Nota interna confidencial (visível apenas para Administradores e Equipe TI)...';
+    } else {
+      pubBtn.style.background = 'rgba(56,189,248,0.2)';
+      pubBtn.style.borderColor = 'rgba(56,189,248,0.5)';
+      pubBtn.style.color = '#7DD3FC';
+      privBtn.style.background = 'rgba(255,255,255,0.04)';
+      privBtn.style.borderColor = 'rgba(255,255,255,0.12)';
+      privBtn.style.color = '#94A3B8';
+      if (replyInp) replyInp.placeholder = '💬 Digite uma resposta pública para o solicitante (visível na consulta de protocolo)...';
+    }
+  }
+};
+
+window.inserirRespostaProntaGlpi = function(selectEl) {
+  if (!selectEl || !selectEl.value) return;
+  const templates = {
+    'SOLICITAR_PRINTS': 'Olá! Recebemos seu chamado na Central GLPI. Para prosseguirmos com o diagnóstico, poderia informar o horário exato ou anexar print da mensagem de erro?',
+    'RESET_EFETUADO': 'Olá! Suas credenciais de acesso foram redefinidas e o token MFA sincronizado. Por gentileza, realize um novo teste de acesso na Tela de Login.',
+    'PAGAMENTO_LIBERADO': 'Olá! Confirmamos a compensação do seu pagamento no sistema financeiro e sua assinatura/acesso já encontra-se 100% liberada.',
+    'EM_ANALISE_N2': '[NOTA INTERNA TI] Chamado escalonado para verificação de logs no servidor SQL Server e API de integração.',
+    'RESOLVIDO': 'Olá! Informamos que o procedimento técnico foi concluído com sucesso e o serviço encontra-se normalizado. Permanecemos à disposição!'
+  };
+  const replyInp = document.getElementById('osAdminReplyInput');
+  if (replyInp && templates[selectEl.value]) {
+    if (selectEl.value === 'EM_ANALISE_N2') window.setGlpiReplyMode('private');
+    replyInp.value = templates[selectEl.value];
+    replyInp.focus();
+  }
+  selectEl.value = '';
+};
+
+window.renderGlpiTimelineModal = function(ordem) {
+  const container = document.getElementById('osAdminTimelineContainer');
+  const countEl = document.getElementById('osAdminTimelineCount');
+  if (!container) return;
+
+  const list = Array.isArray(ordem && ordem.timeline) && ordem.timeline.length > 0
+    ? ordem.timeline
+    : [
+        {
+          sender: 'Solicitante',
+          author: (ordem && ordem.client_name) || 'Solicitante',
+          text: 'Chamado aberto na Central GLPI Service Desk.',
+          date: (ordem && ordem.created_at) || new Date().toISOString(),
+          internal: false
+        }
+      ];
+
+  if (countEl) countEl.textContent = list.length + ' interação(ões)';
+
+  let h = '';
+  list.forEach(item => {
+    const isInternal = Boolean(item.internal);
+    const isTech = item.sender === 'Técnico';
+    let bg = 'rgba(255,255,255,0.04)', border = 'rgba(255,255,255,0.1)', tagColor = '#94A3B8', tagLabel = '👤 ' + escapeOsHtml(item.author || item.sender || 'Solicitante');
+    if (isInternal) {
+      bg = 'rgba(245,158,11,0.12)';
+      border = 'rgba(245,158,11,0.4)';
+      tagColor = '#FBBF24';
+      tagLabel = '🔒 [NOTA INTERNA TI] • ' + escapeOsHtml(item.author || 'Equipe TI');
+    } else if (isTech) {
+      bg = 'rgba(56,189,248,0.12)';
+      border = 'rgba(56,189,248,0.35)';
+      tagColor = '#38BDF8';
+      tagLabel = '👨‍💻 Equipe TI (Público) • ' + escapeOsHtml(item.author || 'Suporte');
+    }
+    const dt = item.date ? new Date(item.date).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '';
+    h += '<div style="padding:8px 10px; border-radius:10px; background:' + bg + '; border:1px solid ' + border + ';">';
+    h += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; gap:8px;">';
+    h += '<span style="font-size:10.5px; font-weight:800; color:' + tagColor + ';">' + tagLabel + '</span>';
+    h += '<span style="font-size:10px; color:#94A3B8; font-family:monospace;">' + escapeOsHtml(dt) + '</span>';
+    h += '</div>';
+    h += '<div style="font-size:12px; color:#F1F5F9; line-height:1.4; white-space:pre-wrap;">' + escapeOsHtml(item.text || '') + '</div>';
+    h += '</div>';
+  });
+  container.innerHTML = h;
+  container.scrollTop = container.scrollHeight;
+};
+
+window.adicionarInteracaoGlpiAdmin = async function() {
+  const id = document.getElementById('osAdminCurrentId')?.value;
+  const replyInp = document.getElementById('osAdminReplyInput');
+  const text = (replyInp?.value || '').trim();
+  if (!id) return;
+  if (!text) {
+    showToast('Digite uma mensagem ou selecione uma resposta pronta para registrar na timeline GLPI.');
+    replyInp?.focus();
+    return;
+  }
+
+  const isInternal = window.currentGlpiReplyMode === 'private';
+  const author = (document.getElementById('osAdminTecnicoSelect')?.value || '').trim() || (currentUser && currentUser.name) || 'Administrador TI';
+  const statusAtual = document.getElementById('osAdminStatusSelect')?.value || 'Em Atendimento';
+  const novoStatus = (statusAtual === 'Novo' || statusAtual === 'Pendente') ? 'Em Atendimento' : statusAtual;
+
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: id,
+        status: novoStatus,
+        tecnico_responsavel: author,
+        timeline_entry: {
+          sender: 'Técnico',
+          author: author,
+          text: text,
+          internal: isInternal
+        }
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      if (replyInp) replyInp.value = '';
+      showToast(isInternal ? '🔒 Nota interna TI registrada no GLPI!' : '💬 Resposta pública registrada no GLPI!');
+      await syncOrdensWithServer();
+      const atualizada = (systemOrdens || []).find(o => String(o.id) === String(id));
+      if (atualizada) {
+        const statusSel = document.getElementById('osAdminStatusSelect');
+        if (statusSel) statusSel.value = atualizada.status;
+        window.renderGlpiTimelineModal(atualizada);
+      }
+      render();
+    } else {
+      showToast(data.message || 'Erro ao registrar interação.');
+    }
+  } catch(_e) {
+    showToast('Falha na comunicação com o servidor.');
+  }
+};
+
+window.resolverChamadoGlpiComSolucao = async function() {
+  const id = document.getElementById('osAdminCurrentId')?.value;
+  const solInp = document.getElementById('osAdminSolution');
+  const solution = (solInp?.value || '').trim();
+  if (!id) return;
+  if (!solution) {
+    showToast('Descreva a Solução Definitiva aplicada antes de encerrar o chamado como RESOLVIDO.');
+    solInp?.focus();
+    return;
+  }
+
+  const tecnico = (document.getElementById('osAdminTecnicoSelect')?.value || '').trim() || (currentUser && currentUser.name) || 'Paulo Lima (Admin)';
+  const priority = document.getElementById('osAdminPrioritySelect')?.value || 'Normal';
+  const serviceType = document.getElementById('osAdminServiceTypeSelect')?.value || 'Sistema Financeiro & ERP';
+  const asset = document.getElementById('osAdminAssetSelect')?.value || 'Nenhum';
+  const timeSpent = Number(document.getElementById('osAdminTimeSpent')?.value) || 0.5;
+  const notes = (document.getElementById('osAdminNotes')?.value || '').trim() || solution;
+
+  try {
+    const res = await fetch(window.location.origin + '/api/ordens/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: id,
+        status: 'Resolvido',
+        priority: priority,
+        sla: window.calcularSlaPorPrioridadeFront(priority),
+        service_type: serviceType,
+        tecnico_responsavel: tecnico,
+        asset: asset,
+        time_spent: timeSpent,
+        admin_notes: notes,
+        solution: solution,
+        timeline_entry: {
+          sender: 'Técnico',
+          author: tecnico,
+          text: '✅ SOLUÇÃO DEFINITIVA APLICADA: ' + solution,
+          internal: false
+        }
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      showToast('✅ Chamado GLPI encerrado como RESOLVIDO com solução técnica registrada!');
+      closeOrdemAdminModal();
+      await syncOrdensWithServer();
+      render();
+    } else {
+      showToast(data.message || 'Erro ao resolver chamado.');
+    }
+  } catch(_e) {
+    showToast('Falha na comunicação com o servidor.');
+  }
+};
+
 window.atualizarEstiloPrioridadeAdmin = function(val) {
   const prioSelect = document.getElementById('osAdminPrioritySelect');
+  const slaBadge = document.getElementById('osAdminSlaBadge');
+  if (slaBadge) {
+    slaBadge.textContent = '⏱️ SLA: ' + window.calcularSlaPorPrioridadeFront(val);
+  }
   if (!prioSelect) return;
   const p = (val || '').toLowerCase();
-  if (p.includes('urg')) {
+  if (p.includes('urg') || p.includes('crít') || p.includes('crit')) {
     prioSelect.style.borderColor = 'rgba(239,68,68,0.7)';
     prioSelect.style.color = '#F87171';
     prioSelect.style.background = 'rgba(239,68,68,0.14)';
@@ -26853,6 +27328,9 @@ window.salvarOrdemAdmin = async function() {
   const tecnico = (document.getElementById('osAdminTecnicoSelect')?.value || '').trim();
   const priority = document.getElementById('osAdminPrioritySelect')?.value || 'Normal';
   const serviceType = document.getElementById('osAdminServiceTypeSelect')?.value || 'Melhoria no Sistema';
+  const asset = document.getElementById('osAdminAssetSelect')?.value || 'Nenhum';
+  const timeSpent = Number(document.getElementById('osAdminTimeSpent')?.value) || 0;
+  const solution = (document.getElementById('osAdminSolution')?.value || '').trim();
 
   if (!id) return;
 
@@ -26865,18 +27343,22 @@ window.salvarOrdemAdmin = async function() {
         status: status,
         admin_notes: notes,
         priority: priority,
+        sla: window.calcularSlaPorPrioridadeFront(priority),
         service_type: serviceType,
-        tecnico_responsavel: tecnico || null
+        tecnico_responsavel: tecnico || null,
+        asset: asset,
+        time_spent: timeSpent,
+        solution: solution
       })
     });
 
     if (res.ok) {
-      showToast('Ordem de Serviço atualizada com sucesso!');
+      showToast('Chamado GLPI atualizado com sucesso no SQL Server!');
       closeOrdemAdminModal();
       await syncOrdensWithServer();
       render();
     } else {
-      showToast('Erro ao atualizar Ordem de Serviço.');
+      showToast('Erro ao atualizar chamado GLPI.');
     }
   } catch(e) {
     showToast('Falha na comunicação com o servidor.');
@@ -31715,7 +32197,7 @@ function saveLocalOrdens(ordens) {
 }
 
 // ==================== Central de Atendimento: apoio das rotas de chamados (as regras ficam em atendimento.js) ====================
-const ORDEM_COLUNAS_SQL = 'id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, concluido_em, created_at, updated_at';
+const ORDEM_COLUNAS_SQL = 'id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, sla, asset, time_spent, solution, timeline, concluido_em, created_at, updated_at';
 const ATENDIMENTO_LIMITE_CORPO_BYTES = 64 * 1024;
 const ATENDIMENTO_LIMITE_LISTA = 500;
 
@@ -35107,16 +35589,20 @@ const server = http.createServer(async (req, res) => {
              protocol, client_name, client_email, client_phone, client_cpf,
              service_type, priority, title, description, status,
              admin_notes, tecnico_responsavel, assumido_em, canal_atendimento,
+             sla, asset, time_spent, solution, timeline,
              concluido_em, created_at, updated_at
            )
            OUTPUT INSERTED.id
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)`,
           [
             novaOrdem.protocol, novaOrdem.client_name, novaOrdem.client_email,
             novaOrdem.client_phone || null, novaOrdem.client_cpf || null,
             novaOrdem.service_type, novaOrdem.priority, novaOrdem.title, novaOrdem.description, novaOrdem.status,
             novaOrdem.admin_notes || '', novaOrdem.tecnico_responsavel || null, novaOrdem.assumido_em || null,
-            novaOrdem.canal_atendimento || 'Portal Web', novaOrdem.concluido_em || null, novaOrdem.created_at, novaOrdem.updated_at
+            novaOrdem.canal_atendimento || 'Portal Web',
+            novaOrdem.sla || '2 Horas', novaOrdem.asset || 'Nenhum', Number(novaOrdem.time_spent) || 0,
+            novaOrdem.solution || '', Array.isArray(novaOrdem.timeline) ? JSON.stringify(novaOrdem.timeline) : null,
+            novaOrdem.concluido_em || null, novaOrdem.created_at, novaOrdem.updated_at
           ]
         );
         const idDoBanco = gravado && gravado.rows && gravado.rows[0] ? gravado.rows[0].id : null;
@@ -35129,7 +35615,7 @@ const server = http.createServer(async (req, res) => {
             saveLocalOrdens(atual);
           }
         }
-        console.log(`[BANCO] Nova O.S. #${novaOrdem.protocol} gravada com sucesso no Microsoft SQL Server (ID: ${novaOrdem.id})!`);
+        console.log(`[BANCO] Nova O.S. GLPI #${novaOrdem.protocol} gravada com sucesso no Microsoft SQL Server (ID: ${novaOrdem.id})!`);
       } catch (err) {
         console.warn('[AVISO BD O.S.] Erro ao gravar no SQL Server, mantido localmente:', err.message);
       }
@@ -35143,7 +35629,7 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
-  // Atualização de status, parecer, técnico, prioridade, categoria ou canal (administrador e suporte).
+  // Atualização de status, parecer, técnico, prioridade, categoria, SLA, ativo CMDB, horas, solução ou timeline GLPI (administrador e suporte).
   // Só muda o que vier no pedido e devolve 404 se o chamado não existir (antes gravava valores padrão no banco).
   if ((req.method === 'POST' && parsedUrl.pathname === '/api/ordens/update') || (req.method === 'PUT' && parsedUrl.pathname === '/api/ordens')) {
     if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
@@ -35180,6 +35666,10 @@ const server = http.createServer(async (req, res) => {
       priority: ordem.priority,
       service_type: ordem.service_type,
       tecnico_responsavel: ordem.tecnico_responsavel,
+      sla: ordem.sla,
+      asset: ordem.asset,
+      time_spent: ordem.time_spent,
+      solution: ordem.solution,
       assumido_em: ordem.assumido_em,
       concluido_em: ordem.concluido_em,
       updated_at: agoraIso
@@ -35191,16 +35681,19 @@ const server = http.createServer(async (req, res) => {
           `UPDATE ordens_servico
            SET status = $1, admin_notes = $2, priority = $3, service_type = $4,
                tecnico_responsavel = $5, assumido_em = $6, canal_atendimento = $7,
-               concluido_em = $8, updated_at = $9
-           WHERE id = $10 OR UPPER(protocol) = $11`,
+               sla = $8, asset = $9, time_spent = $10, solution = $11, timeline = $12,
+               concluido_em = $13, updated_at = $14
+           WHERE id = $15 OR UPPER(protocol) = $16`,
           [
             ordem.status, ordem.admin_notes || '', ordem.priority, ordem.service_type,
             ordem.tecnico_responsavel || null, ordem.assumido_em || null, ordem.canal_atendimento || 'Portal Web',
+            ordem.sla || '2 Horas', ordem.asset || 'Nenhum', Number(ordem.time_spent) || 0,
+            ordem.solution || '', Array.isArray(ordem.timeline) ? JSON.stringify(ordem.timeline) : null,
             ordem.concluido_em || null, agoraIso,
             idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase()
           ]
         );
-        console.log(`[BANCO] O.S. #${ordem.protocol} atualizada com sucesso no SQL Server.`);
+        console.log(`[BANCO] O.S. GLPI #${ordem.protocol} atualizada com sucesso no SQL Server.`);
       } catch (err) {
         console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server, mantido localmente:', err.message);
       }
