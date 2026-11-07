@@ -1,452 +1,966 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full bg-slate-900">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GLPI 10 Enterprise ITSM | Service Desk Corporativo</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome 6 Pro Icons -->
+    <!-- Ícones, tipografia e gráficos (versões fixas) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter & JetBrains Mono -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chart.js for ITSM Dashboard -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        glpi: {
-                            50: '#f0f4f8',
-                            100: '#d9e2ec',
-                            500: '#334e68',
-                            600: '#243b53',
-                            700: '#102a43',
-                            800: '#0b1b2b',
-                            900: '#06101e',
-                            brand: '#d97706',
-                            accent: '#2563eb'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 99px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+        /* =====================================================================
+           GLPI 10 Enterprise — Service Desk em vidro
+           Mesma linguagem do login do Nexus: luz viva atrás de camadas de vidro.
+           Todas as medidas em rem: em telas 2K/4K a raiz cresce e a interface inteira acompanha
+           (sem CSS zoom, então 100vh e as alturas continuam corretos).
+           ===================================================================== */
+        :root {
+            color-scheme: dark;
+            --bg: #05070f;
+            --ink: #f4f6fd;
+            --ink-2: #cdd4e8;
+            --muted: #aab5d2;
+            --faint: #97a3c2;
+            --line: rgba(255, 255, 255, .15);
+            --line-soft: rgba(255, 255, 255, .08);
 
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            --amber-rgb: 251, 191, 36;
+            --blue-rgb: 96, 165, 250;
+            --green-rgb: 52, 211, 153;
+            --rose-rgb: 251, 113, 133;
+            --orange-rgb: 251, 146, 60;
+            --purple-rgb: 192, 132, 252;
+            --sky-rgb: 56, 189, 248;
+            --slate-rgb: 148, 163, 184;
+
+            --o1: 245, 158, 11;
+            --o2: 37, 99, 235;
+            --o3: 20, 184, 166;
+            --o4: 124, 58, 237;
+
+            --font-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+            --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+            --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+            --glass-fill:
+                radial-gradient(70% 55% at 6% 0%, rgba(255, 255, 255, .13), transparent 70%),
+                linear-gradient(145deg, rgba(255, 255, 255, .105), rgba(255, 255, 255, .025) 52%, rgba(255, 255, 255, .06)),
+                rgba(8, 12, 28, .62);
+            --glass-shadow:
+                0 1px 2px rgba(0, 0, 0, .28),
+                0 24px 48px -20px rgba(0, 0, 0, .62),
+                inset 0 1px 0 rgba(255, 255, 255, .24),
+                inset 0 -1px 0 rgba(255, 255, 255, .04);
         }
 
-        .badge-pulse {
-            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-            animation: pulse-red 1.8s infinite;
+        /* Telas grandes: a interface cresce junto (2K, 5K, 4K) em vez de virar uma faixa pequena no meio do vidro */
+        html { font-size: 16px; }
+        @media (min-width: 2400px) and (min-height: 1200px) { html { font-size: 20px; } }
+        @media (min-width: 3000px) and (min-height: 1500px) { html { font-size: 24px; } }
+        @media (min-width: 3600px) and (min-height: 1800px) { html { font-size: 28px; } }
+        @media (min-width: 5000px) and (min-height: 2600px) { html { font-size: 40px; } }
+
+        /* ---------- Base ---------- */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        body {
+            height: 100vh; height: 100dvh;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            font-family: var(--font-body);
+            font-size: .8125rem; line-height: 1.5;
+            color: var(--ink); background: var(--bg);
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
+        button, input, select, textarea { font: inherit; color: inherit; }
+        button { background: none; border: 0; cursor: pointer; }
+        a { color: inherit; text-decoration: none; }
+        h1, h2, h3, h4 { font-size: inherit; font-weight: inherit; }
+        ul { list-style: none; }
+        table { border-collapse: collapse; }
+        .hidden { display: none !important; }
+        ::selection { background: rgba(var(--blue-rgb), .55); color: #fff; }
+        :focus-visible { outline: 2px solid rgba(var(--amber-rgb), .9); outline-offset: 2px; }
+
+        * { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .26) transparent; }
+        ::-webkit-scrollbar { width: .5rem; height: .5rem; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .22); border-radius: 99px; border: 2px solid transparent; background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, .36); background-clip: padding-box; border: 2px solid transparent; }
+
+        .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+        .ta-r { text-align: right; }
+        .ta-c { text-align: center; }
+        .strong { font-weight: 700; }
+        .c-muted { color: var(--muted); }
+        .c-blue { color: #93c5fd; }
+        .c-amber { color: #fcd34d; }
+        .c-green { color: #6ee7b7; }
+
+        /* ---------- Fundo: luz viva atrás das placas (tamanhos em vmax: nítido de 1080p a 4K) ---------- */
+        .scene {
+            position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+            background:
+                radial-gradient(110% 80% at 50% -10%, rgba(var(--o1), .13), transparent 62%),
+                radial-gradient(100% 80% at 50% 112%, rgba(var(--o2), .15), transparent 62%),
+                var(--bg);
+        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(clamp(56px, 4.7vmax, 210px)); }
+        .o1 { width: 46vmax; height: 46vmax; left: -6%; top: -20%; background: rgb(var(--o1)); opacity: .54; animation: drift1 28s ease-in-out infinite alternate; }
+        .o2 { width: 48vmax; height: 48vmax; right: -6%; bottom: -26%; background: rgb(var(--o2)); opacity: .72; animation: drift2 32s ease-in-out infinite alternate; }
+        .o3 { width: 30vmax; height: 30vmax; right: 24%; top: -8%; background: rgb(var(--o3)); opacity: .42; }
+        .o4 { width: 28vmax; height: 28vmax; left: 18%; bottom: -18%; background: rgb(var(--o4)); opacity: .46; animation: drift1 36s ease-in-out infinite alternate-reverse; }
+        .beam { position: absolute; width: 6vmax; height: 160vh; top: -30vh; filter: blur(clamp(18px, 1.8vmax, 80px)); transform: rotate(28deg); }
+        .b1 { left: 16%; background: linear-gradient(rgba(var(--o3), 0), rgba(var(--o3), .34) 50%, rgba(var(--o3), 0)); }
+        .b2 { right: 12%; background: linear-gradient(rgba(var(--o1), 0), rgba(var(--o1), .3) 50%, rgba(var(--o1), 0)); }
+        @keyframes drift1 { to { transform: translate(7vmax, 4.5vmax); } }
+        @keyframes drift2 { to { transform: translate(-7vmax, -4vmax); } }
+        .flute {
+            position: absolute; inset: 0;
+            background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .10) 0, rgba(255, 255, 255, .02) .38vmax, rgba(0, 0, 0, .20) .76vmax, rgba(255, 255, 255, .07) 1.1vmax);
+            backdrop-filter: blur(4px) saturate(140%); -webkit-backdrop-filter: blur(4px) saturate(140%);
+            -webkit-mask-image: linear-gradient(90deg, #000 0, rgba(0, 0, 0, .35) 12%, transparent 26%, transparent 74%, rgba(0, 0, 0, .35) 88%, #000 100%);
+            mask-image: linear-gradient(90deg, #000 0, rgba(0, 0, 0, .35) 12%, transparent 26%, transparent 74%, rgba(0, 0, 0, .35) 88%, #000 100%);
+            opacity: .45;
+        }
+        .gridlines {
+            position: absolute; inset: 0; opacity: .5;
+            background-image: linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px);
+            background-size: 5vmax 5vmax; background-position: center;
+            -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 0, transparent 70%);
+            mask-image: radial-gradient(ellipse at 50% 45%, #000 0, transparent 70%);
+        }
+        .grain {
+            position: absolute; inset: 0; opacity: .5; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.2'/></svg>");
+        }
+        .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(0, 0, 0, .55) 100%); }
+
+        /* ---------- Vidro ---------- */
+        .glass {
+            position: relative;
+            border-radius: 1.25rem;
+            border: 1px solid var(--line);
+            background: var(--glass-fill);
+            backdrop-filter: blur(26px) saturate(180%); -webkit-backdrop-filter: blur(26px) saturate(180%);
+            box-shadow: var(--glass-shadow);
+        }
+        /* Placa principal (login e janelas): borda de luz em degradê + brilho */
+        .slab {
+            position: relative;
+            border-radius: 2rem; overflow: hidden;
+            background:
+                radial-gradient(60% 45% at 8% 0%, rgba(255, 255, 255, .15), transparent 70%),
+                linear-gradient(145deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, .035) 46%, rgba(255, 255, 255, .08)),
+                rgba(7, 10, 24, .5);
+            backdrop-filter: blur(40px) saturate(190%) brightness(1.05); -webkit-backdrop-filter: blur(40px) saturate(190%) brightness(1.05);
+            box-shadow:
+                0 2px 4px rgba(0, 0, 0, .24),
+                0 28px 56px -14px rgba(0, 0, 0, .52),
+                0 70px 150px -24px rgba(0, 0, 0, .7),
+                0 0 140px rgba(var(--o2), .16),
+                inset 0 1px 0 rgba(255, 255, 255, .4),
+                inset 0 -1px 0 rgba(255, 255, 255, .06);
+        }
+        .slab::after {
+            content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; padding: 1px; pointer-events: none;
+            background: linear-gradient(135deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .06) 28%, rgba(255, 255, 255, .04) 68%, rgba(var(--amber-rgb), .55));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+        }
+
+        /* ---------- Botões ---------- */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+            height: 2.5rem; padding: 0 1.1rem;
+            font-size: .75rem; font-weight: 700; line-height: 1; white-space: nowrap;
+            border-radius: .8rem; border: 1px solid transparent;
+            transition: transform .18s ease, box-shadow .18s ease, background .18s ease, filter .18s ease, color .18s ease;
+        }
+        .btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+        .btn:active { transform: translateY(0); filter: brightness(.98); }
+        .btn:disabled { opacity: .6; cursor: progress; transform: none; filter: none; }
+        .btn-sm { height: 2rem; padding: 0 .8rem; font-size: .6875rem; border-radius: .65rem; }
+        .btn-lg { height: 3rem; padding: 0 1.4rem; font-size: .8125rem; border-radius: .95rem; }
+        .btn-block { width: 100%; }
+        .btn-amber { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b 55%, #d97706); box-shadow: 0 10px 24px -8px rgba(245, 158, 11, .65), inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 -1px 0 rgba(0, 0, 0, .14); }
+        .btn-blue { color: #fff; background: linear-gradient(145deg, #2f6ff2, #2563eb 50%, #1d4ed8); box-shadow: 0 10px 24px -8px rgba(37, 99, 235, .7), inset 0 1px 0 rgba(255, 255, 255, .3), inset 0 -1px 0 rgba(0, 0, 0, .18); }
+        .btn-green { color: #032a1c; background: linear-gradient(145deg, #6ee7b7, #10b981 58%, #059669); box-shadow: 0 10px 24px -8px rgba(16, 185, 129, .6), inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .14); }
+        .btn-ghost { color: var(--ink-2); background: rgba(255, 255, 255, .075); border-color: rgba(255, 255, 255, .15); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12); }
+        .btn-ghost:hover { background: rgba(255, 255, 255, .14); color: #fff; }
+        .btn-icon { width: 2.25rem; height: 2.25rem; padding: 0; border-radius: .75rem; color: var(--ink-2); background: transparent; border-color: transparent; }
+        .btn-icon:hover { background: rgba(255, 255, 255, .1); color: #fff; transform: none; }
+        .btn-icon.danger:hover { color: #fda4af; background: rgba(var(--rose-rgb), .14); }
+        .row-act-user:hover { background: linear-gradient(145deg, #2f6ff2, #1d4ed8); border-color: transparent; color: #fff; }
+        .row-act-tech:hover { background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: transparent; color: #261800; }
+
+        /* ---------- Campos ---------- */
+        .field label, .lbl { display: block; margin-bottom: .35rem; font-size: .75rem; font-weight: 700; color: var(--ink-2); }
+        .input, .select, .textarea {
+            width: 100%; padding: .65rem .9rem;
+            color: var(--ink); font-size: .8125rem;
+            background: rgba(3, 6, 16, .55);
+            border: 1px solid rgba(255, 255, 255, .15); border-radius: .8rem;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, .4);
+            outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .input::placeholder, .textarea::placeholder { color: #8893b0; }
+        .input:hover, .select:hover, .textarea:hover { border-color: rgba(255, 255, 255, .26); }
+        .input:focus, .select:focus, .textarea:focus {
+            border-color: rgba(var(--amber-rgb), .85);
+            box-shadow: 0 0 0 3px rgba(var(--amber-rgb), .18), inset 0 1px 3px rgba(0, 0, 0, .4);
+            background: rgba(3, 6, 16, .7);
+        }
+        .focus-blue:focus { border-color: rgba(var(--blue-rgb), .9); box-shadow: 0 0 0 3px rgba(var(--blue-rgb), .2), inset 0 1px 3px rgba(0, 0, 0, .4); }
+        .focus-green:focus { border-color: rgba(var(--green-rgb), .9); box-shadow: 0 0 0 3px rgba(var(--green-rgb), .2), inset 0 1px 3px rgba(0, 0, 0, .4); }
+        .input:disabled, .select:disabled, .textarea:disabled { opacity: .62; cursor: not-allowed; background: rgba(3, 6, 16, .35); }
+        .select {
+            appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 2.2rem;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' fill='none' stroke='%23b4bedb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+            background-repeat: no-repeat; background-position: right .85rem center; background-size: .75rem;
+        }
+        .select option { background: #0b1022; color: #f4f6fd; }
+        .textarea { resize: vertical; line-height: 1.55; }
+        .select-sm { width: auto; padding: .5rem 2.1rem .5rem .8rem; font-size: .75rem; }
+        .input-icon { position: relative; flex: 1; min-width: 12rem; }
+        .input-icon > i { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); font-size: .75rem; color: var(--faint); pointer-events: none; }
+        .input-icon > .input { padding-left: 2.4rem; }
+        .num-input { text-align: center; font-family: var(--font-mono); }
+        input[type="checkbox"] { width: 1rem; height: 1rem; accent-color: #f59e0b; cursor: pointer; }
+        .form-grid { display: grid; gap: 1rem; }
+        .form-grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+        /* ---------- Selos ---------- */
+        .badge {
+            --c: var(--slate-rgb); --cl: #cbd5e1;
+            display: inline-flex; align-items: center; gap: .4rem;
+            padding: .2rem .65rem; border-radius: 99px;
+            font-size: .6875rem; font-weight: 700; line-height: 1.4; white-space: nowrap;
+            color: var(--cl);
+            background: rgba(var(--c), .15); border: 1px solid rgba(var(--c), .42);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);
+        }
+        .badge .dot { width: .4rem; height: .4rem; border-radius: 50%; background: currentColor; }
+        .badge .dot.live { animation: livedot 1.8s ease-in-out infinite; }
+        .b-amber { --c: var(--amber-rgb); --cl: #fcd34d; }
+        .b-blue { --c: var(--blue-rgb); --cl: #93c5fd; }
+        .b-purple { --c: var(--purple-rgb); --cl: #d8b4fe; }
+        .b-green { --c: var(--green-rgb); --cl: #6ee7b7; }
+        .b-rose { --c: var(--rose-rgb); --cl: #fda4af; }
+        .b-orange { --c: var(--orange-rgb); --cl: #fdba74; }
+        .b-sky { --c: var(--sky-rgb); --cl: #7dd3fc; }
+        .b-slate { --c: var(--slate-rgb); --cl: #cbd5e1; }
+        .badge.caps { text-transform: uppercase; letter-spacing: .06em; font-size: .625rem; }
+        @keyframes livedot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.8); } }
         @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, .7); }
+            70% { box-shadow: 0 0 0 .5rem rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .pulse-dot { display: inline-block; width: .5rem; height: .5rem; border-radius: 50%; background: #f43f5e; animation: pulse-red 1.8s infinite; }
+
+        /* ---------- Login ---------- */
+        .login-wrap {
+            position: fixed; inset: 0; z-index: 50;
+            display: flex; align-items: center; justify-content: center;
+            padding: 1.5rem; overflow-y: auto;
+        }
+        .login-slab { width: 100%; max-width: 62rem; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin: auto; animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; }
+        @keyframes rise { from { opacity: 0; transform: translateY(1.4rem) scale(.99); } }
+        .login-brand {
+            padding: 2.4rem 2.2rem; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
+            background: linear-gradient(180deg, rgba(5, 7, 18, .6), rgba(5, 7, 18, .68));
+            border-right: 1px solid var(--line-soft);
+        }
+        .brandline { display: flex; align-items: center; gap: .85rem; margin-bottom: 2rem; }
+        .mark {
+            width: 2.6rem; height: 2.6rem; flex: none; display: grid; place-items: center;
+            border-radius: .85rem;
+            font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: #261800;
+            background: linear-gradient(145deg, #fde68a, #f59e0b 60%, #d97706);
+            box-shadow: 0 8px 24px rgba(var(--amber-rgb), .42), inset 0 1px 0 rgba(255, 255, 255, .6), inset 0 -1px 0 rgba(0, 0, 0, .18);
+        }
+        .mark.sm { width: 2.2rem; height: 2.2rem; font-size: 1.3rem; border-radius: .7rem; }
+        .brand-title { font-size: 1.1rem; font-weight: 800; letter-spacing: -.01em; }
+        .brand-sub { font-size: .6875rem; font-weight: 600; font-family: var(--font-mono); color: #fcd34d; margin-top: .1rem; }
+        .hero-h { font-family: var(--font-display); font-weight: 500; font-size: 2.1rem; line-height: 1.1; letter-spacing: -.025em; margin-bottom: .8rem; text-wrap: balance; }
+        .lead { font-size: .8125rem; line-height: 1.7; color: var(--ink-2); }
+        .feat { display: grid; gap: .6rem; margin-top: 1.5rem; }
+        .feat li {
+            display: flex; align-items: center; gap: .75rem; padding: .6rem .8rem; border-radius: .9rem;
+            font-size: .75rem; font-weight: 600; color: #e6eaf7;
+            background: linear-gradient(145deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .03));
+            border: 1px solid rgba(255, 255, 255, .15);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2);
+        }
+        .feat li i { width: 1.9rem; height: 1.9rem; display: grid; place-items: center; border-radius: .6rem; font-size: .75rem; color: #fcd34d; background: rgba(var(--amber-rgb), .14); border: 1px solid rgba(var(--amber-rgb), .3); flex: none; }
+        .brand-foot { padding-top: 1.2rem; border-top: 1px solid var(--line-soft); display: grid; gap: .45rem; }
+        .secure { display: flex; align-items: center; gap: .5rem; font-size: .75rem; font-weight: 600; color: #6ee7b7; }
+        .build { font-size: .625rem; font-family: var(--font-mono); color: var(--faint); }
+        .login-form { padding: 2.4rem 2.4rem 2.2rem; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(180deg, rgba(9, 11, 26, .5), rgba(5, 7, 18, .66)); }
+        .login-form h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.9rem; letter-spacing: -.02em; line-height: 1.15; }
+        .login-form .sub { margin-top: .5rem; margin-bottom: 1.6rem; font-size: .8125rem; line-height: 1.65; color: var(--muted); }
+        .profile-btn {
+            --p: var(--blue-rgb); --pl: #93c5fd;
+            width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: .8rem;
+            padding: .85rem 1rem; border-radius: 1rem;
+            background: linear-gradient(145deg, rgba(255, 255, 255, .11), rgba(255, 255, 255, .03));
+            border: 1px solid rgba(255, 255, 255, .16);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18);
+            transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+        .profile-btn:hover { transform: translateY(-2px); border-color: rgba(var(--p), .6); box-shadow: 0 14px 30px -14px rgba(var(--p), .55), inset 0 1px 0 rgba(255, 255, 255, .22); background: linear-gradient(145deg, rgba(var(--p), .16), rgba(255, 255, 255, .03)); }
+        .profile-btn.amber { --p: var(--amber-rgb); --pl: #fcd34d; }
+        .profile-btn .pi { width: 2.6rem; height: 2.6rem; flex: none; display: grid; place-items: center; border-radius: .85rem; font-size: 1.05rem; color: var(--pl); background: rgba(var(--p), .15); border: 1px solid rgba(var(--p), .38); transition: transform .2s ease; }
+        .profile-btn:hover .pi { transform: scale(1.07); }
+        .profile-btn .pt { font-size: .8125rem; font-weight: 700; color: #fff; }
+        .profile-btn .ps { font-size: .6875rem; color: var(--muted); margin-top: .1rem; }
+        .profile-btn .chev { color: var(--faint); font-size: .7rem; transition: transform .2s ease, color .2s ease; }
+        .profile-btn:hover .chev { color: var(--pl); transform: translateX(3px); }
+        .login-error { padding: .6rem .8rem; border-radius: .8rem; font-size: .6875rem; font-weight: 700; color: #fda4af; background: rgba(var(--rose-rgb), .12); border: 1px solid rgba(var(--rose-rgb), .4); }
+        .login-form form { display: grid; gap: 1.1rem; }
+
+        /* ---------- Barra superior ---------- */
+        .topbar {
+            position: relative; z-index: 40; flex: none;
+            height: 4rem; padding: 0 1.5rem;
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .025)), rgba(7, 10, 24, .68);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(28px) saturate(185%); -webkit-backdrop-filter: blur(28px) saturate(185%);
+            box-shadow: 0 10px 30px -16px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 255, 255, .22);
+        }
+        .topbar-l, .topbar-r { display: flex; align-items: center; gap: 1rem; min-width: 0; }
+        .menu-btn { display: none; }
+        .tb-brand { display: flex; align-items: center; gap: .8rem; min-width: 0; }
+        .tb-title { display: flex; align-items: center; gap: .6rem; font-size: .9375rem; font-weight: 800; letter-spacing: -.01em; }
+        .tb-sub { font-size: .6875rem; color: var(--muted); }
+        .user-box { display: flex; align-items: center; gap: .75rem; }
+        .avatar {
+            width: 2.2rem; height: 2.2rem; flex: none; display: grid; place-items: center;
+            border-radius: .75rem; font-size: .75rem; font-weight: 800; color: #fff;
+            background: linear-gradient(145deg, #2f6ff2, #1d4ed8);
+            border: 1px solid rgba(147, 197, 253, .6);
+            box-shadow: 0 6px 16px -6px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .35);
+        }
+        .avatar.tech { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); border-color: rgba(253, 230, 138, .8); box-shadow: 0 6px 16px -6px rgba(245, 158, 11, .8), inset 0 1px 0 rgba(255, 255, 255, .5); }
+        .user-meta { text-align: left; }
+        .user-name { font-size: .75rem; font-weight: 700; line-height: 1.2; }
+        .user-email { font-size: .6875rem; color: var(--muted); line-height: 1.3; }
+        .tb-sep { width: 1px; height: 1.6rem; background: var(--line); }
+        .profile-switch { position: relative; }
+        .profile-switch > .btn { height: 2.25rem; }
+        .menu-pop { position: absolute; right: 0; top: calc(100% + .5rem); width: 15rem; padding: .5rem; z-index: 60; border-radius: 1rem; background: rgba(9, 13, 30, .94); border: 1px solid var(--line); box-shadow: 0 24px 50px -12px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .15); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+        .menu-pop .mp-head { padding: .4rem .7rem; font-size: .625rem; font-family: var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--line-soft); margin-bottom: .3rem; }
+        .menu-pop button { width: 100%; display: flex; align-items: center; gap: .6rem; padding: .55rem .7rem; border-radius: .7rem; text-align: left; font-size: .75rem; color: var(--ink-2); }
+        .menu-pop button:hover { background: rgba(255, 255, 255, .09); color: #fff; }
+
+        /* ---------- Estrutura ---------- */
+        .shell { position: relative; z-index: 1; flex: 1; min-height: 0; display: flex; }
+        .sidebar {
+            width: 17rem; flex: none; display: flex; flex-direction: column; justify-content: space-between;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .02)), rgba(6, 9, 22, .72);
+            border-right: 1px solid var(--line);
+            backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%);
+            box-shadow: 12px 0 40px -24px rgba(0, 0, 0, .7), inset -1px 0 0 rgba(255, 255, 255, .05);
+            transition: transform .3s cubic-bezier(.2, .7, .2, 1);
+        }
+        .sb-scroll { padding: 1.1rem; display: grid; gap: 1.5rem; align-content: start; overflow-y: auto; }
+        .nav-group { display: grid; gap: .3rem; }
+        .nav-label { padding: 0 .8rem; margin-bottom: .35rem; font-size: .625rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: var(--faint); }
+        .nav-item {
+            --n: var(--blue-rgb);
+            display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+            padding: .7rem .85rem; border-radius: .85rem;
+            font-size: .75rem; font-weight: 600; color: var(--ink-2);
+            border: 1px solid transparent;
+            transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
+        }
+        .nav-item.tech { --n: 245, 158, 11; }
+        .nav-item > span { display: flex; align-items: center; gap: .7rem; min-width: 0; }
+        .nav-item i { width: 1.1rem; text-align: center; font-size: .8rem; color: var(--faint); transition: color .2s; }
+        .nav-item:hover { background: rgba(255, 255, 255, .075); color: #fff; }
+        .nav-item:hover i { color: rgb(var(--n)); }
+        .nav-item.is-active { color: #fff; font-weight: 700; background: linear-gradient(135deg, rgba(var(--n), .36), rgba(var(--n), .1)); border-color: rgba(var(--n), .55); box-shadow: 0 10px 24px -12px rgba(var(--n), .85), inset 0 1px 0 rgba(255, 255, 255, .2); }
+        .nav-item.is-active i { color: #fff; }
+        .count { padding: .1rem .55rem; border-radius: 99px; font-family: var(--font-mono); font-size: .625rem; font-weight: 700; color: var(--ink-2); background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .12); }
+        .count.amber { color: #fcd34d; background: rgba(var(--amber-rgb), .16); border-color: rgba(var(--amber-rgb), .32); }
+        .sb-foot { padding: .9rem 1.2rem; display: flex; align-items: center; justify-content: space-between; font-size: .6875rem; color: var(--muted); border-top: 1px solid var(--line-soft); background: rgba(3, 5, 14, .35); }
+        .sb-foot .on { display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-mono); font-weight: 600; color: #6ee7b7; }
+        .sb-foot .on::before { content: ""; width: .45rem; height: .45rem; border-radius: 50%; background: #34d399; box-shadow: 0 0 .6rem rgba(52, 211, 153, .9); }
+        .scrim { display: none; }
+
+        .main { flex: 1; min-width: 0; overflow-y: auto; padding: 1.5rem; }
+        .page { max-width: 112rem; margin: 0 auto; container-type: inline-size; }
+        .stack { display: grid; gap: 1.5rem; }
+
+        /* ---------- Cabeçalho de página / herói ---------- */
+        .hero {
+            --glass-fill:
+                radial-gradient(70% 55% at 6% 0%, rgba(255, 255, 255, .12), transparent 70%),
+                linear-gradient(145deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .02) 52%, rgba(255, 255, 255, .05)),
+                rgba(8, 12, 28, .7);
+            display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+            padding: 1.9rem 2rem; border-radius: 1.75rem; overflow: hidden;
+        }
+        .hero::before { content: ""; position: absolute; width: 22rem; height: 22rem; right: -6rem; top: -11rem; border-radius: 50%; background: radial-gradient(circle, rgba(var(--blue-rgb), .35), transparent 68%); pointer-events: none; }
+        .hero-tag { display: inline-flex; align-items: center; gap: .45rem; margin-bottom: .8rem; padding: .3rem .8rem; border-radius: 99px; font-size: .6875rem; font-weight: 700; color: #93c5fd; background: rgba(var(--blue-rgb), .14); border: 1px solid rgba(var(--blue-rgb), .38); }
+        .hero h2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.1; letter-spacing: -.025em; }
+        .hero p { margin-top: .5rem; max-width: 36rem; font-size: .8125rem; color: var(--ink-2); }
+        .hero .btn { position: relative; }
+
+        /* ---------- Catálogo ---------- */
+        .svc-grid { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
+        @container (min-width: 34rem) { .svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @container (min-width: 62rem) { .svc-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        .svc {
+            --k: var(--green-rgb); --kl: #6ee7b7;
+            display: flex; flex-direction: column; justify-content: space-between; gap: 1.1rem;
+            padding: 1.3rem; cursor: pointer; overflow: hidden; text-align: left;
+            transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+        .svc::before { content: ""; position: absolute; left: 10%; right: 10%; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgb(var(--k)), transparent); opacity: .55; transition: opacity .25s; }
+        .svc:hover { transform: translateY(-4px); border-color: rgba(var(--k), .6); box-shadow: 0 30px 56px -20px rgba(0, 0, 0, .7), 0 0 56px -12px rgba(var(--k), .5), inset 0 1px 0 rgba(255, 255, 255, .28); }
+        .svc:hover::before { opacity: 1; }
+        .svc.sky { --k: var(--sky-rgb); --kl: #7dd3fc; }
+        .svc.rose { --k: var(--rose-rgb); --kl: #fda4af; }
+        .svc.purple { --k: var(--purple-rgb); --kl: #d8b4fe; }
+        .svc-ico { width: 2.9rem; height: 2.9rem; display: grid; place-items: center; margin-bottom: 1rem; border-radius: .95rem; font-size: 1.15rem; color: var(--kl); background: linear-gradient(145deg, rgba(var(--k), .24), rgba(var(--k), .08)); border: 1px solid rgba(var(--k), .42); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2); transition: transform .25s ease; }
+        .svc:hover .svc-ico { transform: scale(1.1) rotate(-3deg); }
+        .svc h4 { font-size: .9375rem; font-weight: 700; letter-spacing: -.01em; }
+        .svc p { margin-top: .4rem; font-size: .75rem; line-height: 1.6; color: var(--muted); }
+        .svc-foot { display: flex; align-items: center; justify-content: space-between; padding-top: .8rem; border-top: 1px solid var(--line-soft); font-size: .75rem; font-weight: 700; color: var(--kl); }
+        .svc-foot i { font-size: .7rem; transition: transform .25s ease; }
+        .svc:hover .svc-foot i { transform: translateX(4px); }
+
+        /* ---------- Painéis, tabelas ---------- */
+        .panel { padding: 1.3rem 1.4rem; display: grid; gap: 1rem; }
+        .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-bottom: 1rem; border-bottom: 1px solid var(--line-soft); }
+        .panel-head h3 { display: flex; align-items: center; gap: .6rem; font-size: 1rem; font-weight: 700; letter-spacing: -.01em; }
+        .panel-head h3 i { font-size: .9rem; }
+        .panel-head p { margin-top: .15rem; font-size: .75rem; color: var(--ink-2); }
+        .table-wrap { overflow-x: auto; border-radius: .9rem; background: rgba(3, 6, 16, .3); }
+        .glass > .table-wrap { border-radius: inherit; }
+        .tbl { width: 100%; min-width: 46rem; text-align: left; }
+        .tbl th { padding: .85rem 1rem; font-size: .6875rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: #bdc7e1; white-space: nowrap; background: rgba(255, 255, 255, .055); border-bottom: 1px solid var(--line); }
+        .tbl td { padding: .9rem 1rem; font-size: .75rem; vertical-align: middle; border-bottom: 1px solid var(--line-soft); }
+        .tbl td.mono { white-space: nowrap; }
+        .tbl tbody tr { transition: background .15s; }
+        .tbl tbody tr:hover { background: rgba(255, 255, 255, .055); }
+        .tbl tbody tr:last-child td { border-bottom: 0; }
+        .t-title { font-weight: 700; color: #fff; max-width: 28rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .t-sub { margin-top: .1rem; font-size: .6875rem; color: var(--muted); }
+        .t-empty td { padding: 2.6rem 1rem; text-align: center; color: var(--muted); }
+        .t-empty i { display: block; margin-bottom: .6rem; font-size: 1.6rem; color: var(--faint); }
+
+        /* ---------- KPIs ---------- */
+        .kpis { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .kpis .kpi:last-child { grid-column: span 2; }
+        @container (min-width: 36rem) {
+            .kpis { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+            .kpis .kpi:nth-child(-n+3) { grid-column: span 2; }
+            .kpis .kpi:nth-child(n+4) { grid-column: span 3; }
+        }
+        @container (min-width: 62rem) {
+            .kpis { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+            .kpis .kpi:nth-child(n) { grid-column: span 1; }
+        }
+        .kpi { --k: var(--blue-rgb); --kl: #93c5fd; padding: 1.1rem 1.2rem; overflow: hidden; }
+        .kpi::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, transparent, rgb(var(--k)), transparent); opacity: .9; }
+        .kpi.amber { --k: var(--amber-rgb); --kl: #fcd34d; }
+        .kpi.rose { --k: var(--rose-rgb); --kl: #fda4af; }
+        .kpi.green { --k: var(--green-rgb); --kl: #6ee7b7; }
+        .kpi.slate { --k: var(--slate-rgb); --kl: #cbd5e1; }
+        .kpi-label { display: flex; align-items: center; gap: .45rem; padding-right: 2.6rem; font-size: .6875rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--kl); }
+        .kpi-value { margin-top: .5rem; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 2.1rem; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 0 1.6rem rgba(var(--k), .5); }
+        .kpi-sub { margin-top: .5rem; font-size: .6875rem; color: var(--muted); }
+        .kpi-ico { position: absolute; right: 1rem; top: 1rem; width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border-radius: .7rem; font-size: .8rem; color: var(--kl); background: linear-gradient(145deg, rgba(var(--k), .24), rgba(var(--k), .07)); border: 1px solid rgba(var(--k), .4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2); }
+
+        /* ---------- Gráficos ---------- */
+        .charts { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+        @container (min-width: 56rem) { .charts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        .chart-box { position: relative; height: 17rem; }
+
+        /* ---------- Fila ---------- */
+        .toolbar { padding: 1rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; }
+        .toolbar-l { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; flex: 1; min-width: 0; }
+
+        /* ---------- Janelas ---------- */
+        .overlay {
+            position: fixed; inset: 0; z-index: 60;
+            display: flex; align-items: center; justify-content: center; padding: 1rem;
+            background: radial-gradient(80% 70% at 50% 40%, rgba(5, 8, 20, .5), rgba(2, 4, 12, .78));
+            backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
+            animation: fadein .2s ease both;
+        }
+        @keyframes fadein { from { opacity: 0; } }
+        .modal { width: 100%; min-width: 0; display: flex; flex-direction: column; max-height: calc(100dvh - 2rem); animation: rise .35s cubic-bezier(.2, .7, .2, 1) both; }
+        .modal-form { max-width: 42rem; }
+        .modal-ws { max-width: 74rem; height: min(56rem, calc(100dvh - 2rem)); }
+        .modal-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.5rem; background: rgba(3, 5, 14, .4); border-bottom: 1px solid var(--line); }
+        .modal-head .mh-l { display: flex; align-items: center; gap: .85rem; min-width: 0; }
+        .mh-ico { width: 2.4rem; height: 2.4rem; flex: none; display: grid; place-items: center; border-radius: .8rem; font-size: .95rem; color: #fff; background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 8px 20px -8px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .35); }
+        .mh-title { font-size: 1rem; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; }
+        .mh-sub { font-size: .6875rem; color: var(--muted); }
+        .modal-body { padding: 1.5rem; overflow-y: auto; display: grid; gap: 1rem; }
+        .modal-foot { display: flex; justify-content: flex-end; gap: .7rem; padding-top: 1rem; border-top: 1px solid var(--line-soft); }
+        .sla-box { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1rem; border-radius: .85rem; background: rgba(3, 6, 16, .5); border: 1px solid var(--line); }
+        .sla-box span:first-child { color: var(--muted); }
+        .sla-box b { font-family: var(--font-mono); font-weight: 700; color: #6ee7b7; }
+
+        .ws-id { padding: .3rem .7rem; border-radius: .6rem; font-family: var(--font-mono); font-size: .75rem; font-weight: 700; color: #fcd34d; background: rgba(var(--amber-rgb), .16); border: 1px solid rgba(var(--amber-rgb), .38); white-space: nowrap; }
+        .ws-meta { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; font-size: .6875rem; color: var(--muted); }
+        .ws-meta b { color: var(--ink-2); font-weight: 600; }
+        .ws-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); overflow: hidden; }
+        .ws-left { min-height: 0; display: flex; flex-direction: column; border-right: 1px solid var(--line-soft); background: rgba(3, 5, 14, .22); }
+        .ws-desc-wrap { flex: none; padding: 1rem 1.2rem; border-bottom: 1px solid var(--line-soft); }
+        .eyebrow { display: flex; align-items: center; gap: .45rem; margin-bottom: .55rem; font-size: .625rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; color: var(--muted); }
+        .eyebrow i { color: #93c5fd; }
+        .ws-desc { max-height: 9rem; overflow-y: auto; padding: .85rem 1rem; border-radius: .85rem; font-size: .75rem; line-height: 1.65; color: var(--ink-2); white-space: pre-wrap; background: rgba(3, 6, 16, .5); border: 1px solid var(--line-soft); }
+        .ws-timeline { flex: 1; min-height: 8rem; overflow-y: auto; padding: 1rem 1.2rem; display: grid; gap: .7rem; align-content: start; }
+        .tl { padding: .85rem 1rem; border-radius: 1rem; font-size: .75rem; background: rgba(3, 6, 16, .5); border: 1px solid var(--line-soft); color: var(--ink-2); }
+        .tl.tech { background: linear-gradient(145deg, rgba(var(--blue-rgb), .16), rgba(var(--blue-rgb), .05)); border-color: rgba(var(--blue-rgb), .38); color: #e5edfb; }
+        .tl.internal { background: linear-gradient(145deg, rgba(var(--amber-rgb), .17), rgba(var(--amber-rgb), .05)); border-color: rgba(var(--amber-rgb), .42); color: #fde9b0; }
+        .tl-head { display: flex; justify-content: space-between; align-items: center; gap: .8rem; margin-bottom: .35rem; font-weight: 700; }
+        .tl-head i { margin-right: .35rem; }
+        .tl-time { flex: none; font-family: var(--font-mono); font-size: .625rem; font-weight: 500; color: var(--faint); }
+        .tl p { line-height: 1.6; white-space: pre-wrap; }
+        .ws-reply { flex: none; display: grid; gap: .7rem; padding: 1rem 1.2rem; background: rgba(3, 5, 14, .5); border-top: 1px solid var(--line-soft); }
+        .ws-reply-bar { display: flex; align-items: center; justify-content: space-between; gap: .6rem; flex-wrap: wrap; }
+        .seg { display: inline-flex; gap: .3rem; padding: .2rem; border-radius: .8rem; background: rgba(3, 6, 16, .55); border: 1px solid var(--line-soft); }
+        .seg-btn { height: 1.8rem; padding: 0 .8rem; border-radius: .6rem; font-size: .6875rem; font-weight: 700; color: var(--muted); transition: background .18s, color .18s; display: inline-flex; align-items: center; gap: .4rem; }
+        .seg-btn:hover { color: #fff; background: rgba(255, 255, 255, .08); }
+        .seg-btn.is-public { color: #fff; background: linear-gradient(145deg, #2f6ff2, #1d4ed8); box-shadow: 0 6px 14px -6px rgba(37, 99, 235, .8), inset 0 1px 0 rgba(255, 255, 255, .3); }
+        .seg-btn.is-internal { color: #261800; background: linear-gradient(145deg, #fde68a, #f59e0b); box-shadow: 0 6px 14px -6px rgba(245, 158, 11, .8), inset 0 1px 0 rgba(255, 255, 255, .5); }
+        .ws-right { min-height: 0; overflow-y: auto; padding: 1.2rem 1.4rem; display: grid; gap: 1rem; align-content: start; background: rgba(3, 5, 14, .4); }
+        .ws-right .eyebrow { padding-bottom: .7rem; border-bottom: 1px solid var(--line-soft); margin-bottom: 0; }
+        .ws-right .eyebrow i { color: #fcd34d; }
+        .props { display: grid; gap: .9rem; }
+        .props .field label { color: var(--muted); font-weight: 600; margin-bottom: .3rem; }
+        .props .row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+        .solution { display: grid; gap: .6rem; padding-top: 1rem; border-top: 1px solid var(--line-soft); }
+        .solution > label { font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #6ee7b7; }
+
+        /* ---------- Avisos ---------- */
+        .toasts { position: fixed; z-index: 90; right: 1.25rem; bottom: 1.25rem; display: grid; gap: .6rem; max-width: 24rem; pointer-events: none; }
+        .toast {
+            --t: var(--blue-rgb); --tl: #93c5fd;
+            pointer-events: auto; display: flex; align-items: center; gap: .8rem; padding: .8rem .9rem .8rem 1rem;
+            border-radius: 1rem; font-size: .75rem; font-weight: 600; color: #fff;
+            background: linear-gradient(145deg, rgba(var(--t), .28), rgba(8, 12, 28, .9) 60%);
+            border: 1px solid rgba(var(--t), .55);
+            box-shadow: 0 20px 44px -14px rgba(0, 0, 0, .8), 0 0 36px -12px rgba(var(--t), .6), inset 0 1px 0 rgba(255, 255, 255, .22);
+            backdrop-filter: blur(22px) saturate(170%); -webkit-backdrop-filter: blur(22px) saturate(170%);
+            animation: toastin .35s cubic-bezier(.2, .7, .2, 1) both;
+        }
+        .toast.success { --t: var(--green-rgb); --tl: #6ee7b7; }
+        .toast.warning { --t: var(--amber-rgb); --tl: #fcd34d; }
+        .toast > i:first-child { color: var(--tl); font-size: .95rem; }
+        .toast > span { flex: 1; line-height: 1.4; }
+        .toast button { color: rgba(255, 255, 255, .6); padding: .2rem; }
+        .toast button:hover { color: #fff; }
+        @keyframes toastin { from { opacity: 0; transform: translateY(.8rem) scale(.97); } }
+
+        /* ---------- Responsivo ---------- */
+        @media (max-width: 1023px) {
+            .menu-btn { display: inline-grid; place-items: center; }
+            .sidebar { position: absolute; top: 0; bottom: 0; left: 0; z-index: 35; transform: translateX(-102%); width: min(17rem, 86vw); }
+            .sidebar.is-open { transform: none; }
+            .scrim { display: block; position: absolute; inset: 0; z-index: 34; background: rgba(2, 4, 12, .6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .25s; }
+            .scrim.is-on { opacity: 1; pointer-events: auto; }
+        }
+        @media (max-width: 899px) {
+            .ws-body { display: block; overflow-y: auto; }
+            .ws-left { border-right: 0; }
+            .ws-timeline { max-height: 18rem; }
+            .ws-right { overflow: visible; }
+        }
+        @media (max-width: 767px) {
+            .user-meta { display: none; }
+            .tb-sub { display: none; }
+            .topbar { padding: 0 1rem; }
+            .main { padding: 1rem; }
+            .hero { padding: 1.4rem; }
+            .hero .btn { width: 100%; }
+            .login-slab { grid-template-columns: 1fr; }
+            .login-brand { border-right: 0; border-bottom: 1px solid var(--line-soft); padding: 1.8rem 1.5rem; }
+            .login-form { padding: 1.8rem 1.5rem; }
+            .feat { display: none; }
+            .form-grid.cols-2 { grid-template-columns: 1fr; }
+            .modal-head, .modal-body { padding-left: 1.1rem; padding-right: 1.1rem; }
+            .toasts { left: 1rem; right: 1rem; max-width: none; }
+            .chart-box { height: 15rem; }
+        }
+        /* Celular: a barra superior e o cabeçalho da janela nunca passam da largura da tela */
+        @media (max-width: 767px) {
+            .topbar-l { flex: 1 1 auto; }
+            .topbar-r { flex: none; gap: .6rem; }
+            .tb-brand > div:last-child { min-width: 0; }
+            .tb-title { min-width: 0; }
+            .tb-title > span:first-child { white-space: nowrap; }
+            .modal-head { flex-wrap: wrap; }
+            .modal-head .mh-l { flex: 1 1 100%; }
+            .mh-actions { width: 100%; justify-content: space-between; }
+            .mh-title { overflow-wrap: anywhere; }
+        }
+        @media (max-width: 599px) {
+            .profile-switch .btn > span { display: none; }
+        }
+        @media (max-width: 479px) {
+            .tb-title .badge { display: none; }
+            .t-title { max-width: 14rem; }
+        }
+        @media (max-width: 359px) {
+            .tb-title > span:first-child { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .orb, .login-slab, .modal, .overlay, .toast, .pulse-dot, .badge .dot.live { animation: none !important; }
+            * { transition: none !important; }
+        }
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            .glass, .slab, .topbar, .sidebar, .overlay, .toast { background: linear-gradient(145deg, rgba(32, 38, 70, .94), rgba(11, 14, 30, .96)); }
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white">
+<body>
 
-    <!-- Toast Alerts Container -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+    <!-- Fundo de vidro: luz viva atrás das placas -->
+    <div class="scene" aria-hidden="true">
+        <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span><span class="orb o4"></span>
+        <span class="beam b1"></span><span class="beam b2"></span>
+        <div class="gridlines"></div>
+        <div class="flute"></div>
+        <div class="grain"></div>
+        <div class="vignette"></div>
+    </div>
 
-    <!-- 1. TELA DE LOGIN (GLPI ENTERPRISE AUTH) -->
-    <div id="view-login" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4 overflow-y-auto">
-        <div class="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12">
-            
-            <!-- Branding Panel Left -->
-            <div class="md:col-span-5 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800">
+    <!-- Avisos -->
+    <div id="toast-container" class="toasts" aria-live="polite"></div>
+
+    <!-- 1. TELA DE ACESSO (GLPI ENTERPRISE AUTH) -->
+    <div id="view-login" class="login-wrap">
+        <div class="slab login-slab">
+
+            <section class="login-brand">
                 <div>
-                    <div class="flex items-center gap-3 mb-8">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-600 text-slate-950 font-black text-xl flex items-center justify-center font-mono shadow-lg shadow-amber-500/20">
-                            G
-                        </div>
+                    <div class="brandline">
+                        <div class="mark">G</div>
                         <div>
-                            <h1 class="font-extrabold text-lg text-white tracking-tight">GLPI 10 Enterprise</h1>
-                            <p class="text-[11px] text-amber-500 font-mono font-semibold">ITSM & Service Desk Platform</p>
+                            <h1 class="brand-title">GLPI 10 Enterprise</h1>
+                            <p class="brand-sub">ITSM &amp; Service Desk Platform</p>
                         </div>
                     </div>
-                    
-                    <h2 class="text-2xl font-bold text-white mb-3">Gestão de TI Corporativa</h2>
-                    <p class="text-xs text-slate-400 leading-relaxed mb-6">Centralize chamados para sistemas financeiros, reset de acessos, gestão de incidentes, inventário de TI (CMDB) e controle de SLA.</p>
+
+                    <h2 class="hero-h">Gestão de TI Corporativa</h2>
+                    <p class="lead">Centralize chamados para sistemas financeiros, reset de acessos, gestão de incidentes, inventário de TI (CMDB) e controle de SLA.</p>
+
+                    <ul class="feat">
+                        <li><i class="fa-solid fa-ticket"></i> Chamados com protocolo único</li>
+                        <li><i class="fa-solid fa-stopwatch"></i> SLA calculado por urgência</li>
+                        <li><i class="fa-solid fa-server"></i> Ativos de TI (CMDB) vinculados</li>
+                    </ul>
                 </div>
 
-                <div class="pt-6 border-t border-slate-800/80 space-y-2">
-                    <div class="flex items-center gap-2 text-xs text-emerald-400 font-medium">
-                        <i class="fa-solid fa-shield-halved"></i> Autenticação Criptografada SSL 256-bit
-                    </div>
-                    <p class="text-[10px] text-slate-500 font-mono">Build v10.0.12 LTS • Teclansoft / GLPI Network</p>
+                <div class="brand-foot">
+                    <div class="secure"><i class="fa-solid fa-shield-halved"></i> Autenticação Criptografada SSL 256-bit</div>
+                    <p class="build">Build v10.0.12 LTS • Teclansoft / GLPI Network</p>
                 </div>
-            </div>
+            </section>
 
             <!-- Login Form Right (Apenas Login Direto com Credenciais do Sistema Financeiro) -->
-            <div class="md:col-span-7 p-8 flex flex-col justify-center">
-                <div class="mb-6">
-                    <h3 class="text-xl font-bold text-white mb-1">Acessar o Sistema</h3>
-                    <p class="text-xs text-slate-400">Entre com seu e-mail e senha cadastrados no Sistema Financeiro. O seu perfil (Usuário para abrir chamados ou Administrador para tratar chamados) será carregado automaticamente:</p>
-                </div>
+            <section class="login-form">
+                <h3>Acessar o Sistema</h3>
+                <p class="sub">Entre com seu e-mail e senha cadastrados no Sistema Financeiro. O seu perfil (Usuário para abrir chamados ou Administrador para tratar chamados) será carregado automaticamente:</p>
 
-                <!-- Manual Login Form (Mesmo Acesso do Sistema Financeiro) -->
-                <form onsubmit="handleManualLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">E-mail Cadastrado</label>
-                        <input type="email" id="login-email" placeholder="Digite seu e-mail do Sistema Financeiro" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                <!-- Login manual (mesmo acesso do Sistema Financeiro) -->
+                <form onsubmit="handleManualLogin(event)">
+                    <div class="field">
+                        <label for="login-email">E-mail Cadastrado</label>
+                        <input type="email" id="login-email" class="input" placeholder="Digite seu e-mail do Sistema Financeiro" required autocomplete="username">
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Senha de Acesso</label>
-                        <input type="password" id="login-password" placeholder="Digite sua senha do Sistema Financeiro" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                    <div class="field">
+                        <label for="login-password">Senha de Acesso</label>
+                        <input type="password" id="login-password" class="input" placeholder="Digite sua senha do Sistema Financeiro" required autocomplete="current-password">
                     </div>
-                    <p id="login-error-msg" class="hidden text-[11px] font-semibold text-rose-400 bg-rose-950/40 border border-rose-500/30 rounded-xl px-3 py-2"></p>
-                    <button type="submit" id="btn-submit-login" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
+                    <p id="login-error-msg" class="hidden login-error"></p>
+                    <button type="submit" id="btn-submit-login" class="btn btn-amber btn-lg btn-block">
                         <i class="fa-solid fa-right-to-bracket"></i> Entrar na Central GLPI
                     </button>
                 </form>
-            </div>
+            </section>
         </div>
     </div>
 
 
-    <!-- 2. TOP HEADER NAVBAR -->
-    <header id="app-header" class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 h-16 flex items-center justify-between px-4 sm:px-6 hidden">
-        <div class="flex items-center gap-4">
-            <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800">
-                <i class="fa-solid fa-bars text-base"></i>
+    <!-- 2. BARRA SUPERIOR -->
+    <header id="app-header" class="topbar hidden">
+        <div class="topbar-l">
+            <button type="button" onclick="toggleSidebar()" class="btn btn-icon menu-btn" aria-label="Abrir menu">
+                <i class="fa-solid fa-bars"></i>
             </button>
-            
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-black text-base flex items-center justify-center font-mono">
-                    G
-                </div>
+
+            <div class="tb-brand">
+                <div class="mark sm">G</div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-sm text-white tracking-tight">GLPI 10 ITSM</span>
-                        <span id="header-role-badge" class="bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase">Solicitante</span>
+                    <div class="tb-title">
+                        <span>GLPI 10 ITSM</span>
+                        <span id="header-role-badge" class="badge b-blue caps">Solicitante</span>
                     </div>
-                    <p class="text-[10px] text-slate-400 hidden sm:block">Central de Serviços & Atendimento Técnico</p>
+                    <p class="tb-sub">Central de Serviços &amp; Atendimento Técnico</p>
                 </div>
             </div>
         </div>
 
-        <!-- Global Search & User Profile -->
-        <div class="flex items-center gap-4">
-            <!-- Profile Switcher Dropdown Button (Visível APENAS para Admin caso queira alternar entre Tratar e Abrir Chamado) -->
-            <div id="profile-switcher-wrap" class="relative hidden">
-                <button onclick="toggleProfileMenu()" class="flex items-center gap-2 bg-slate-950 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-xl text-xs text-slate-300 transition-all">
-                    <i class="fa-solid fa-repeat text-amber-500"></i>
-                    <span class="hidden sm:inline text-slate-400">Modo:</span>
-                    <span id="profile-active-label" class="font-bold text-white uppercase">ADMINISTRADOR</span>
-                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i>
+        <div class="topbar-r">
+            <!-- Alternador de modo (visível APENAS para Admin: tratar chamados ou abrir chamados) -->
+            <div id="profile-switcher-wrap" class="profile-switch hidden">
+                <button type="button" onclick="toggleProfileMenu()" class="btn btn-ghost btn-sm">
+                    <i class="fa-solid fa-repeat c-amber"></i>
+                    <span class="c-muted">Modo:</span>
+                    <span id="profile-active-label" style="text-transform:uppercase;">ADMINISTRADOR</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size:.6rem;"></i>
                 </button>
-                
-                <!-- Profile Switcher Dropdown Menu -->
-                <div id="profile-menu" class="hidden absolute right-0 mt-2 w-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 text-xs">
-                    <div class="text-[10px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 border-b border-slate-800">Alternar Visão (Admin)</div>
-                    <button onclick="switchRole('user')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center gap-2 text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-user-tie text-blue-400"></i> Abrir Chamados (Usuário)
-                    </button>
-                    <button onclick="switchRole('tech')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center gap-2 text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-headset text-amber-400"></i> Tratar Chamados (Admin)
-                    </button>
+
+                <div id="profile-menu" class="hidden menu-pop">
+                    <div class="mp-head">Alternar Visão (Admin)</div>
+                    <button type="button" onclick="switchRole('user')"><i class="fa-solid fa-user-tie c-blue"></i> Abrir Chamados (Usuário)</button>
+                    <button type="button" onclick="switchRole('tech')"><i class="fa-solid fa-headset c-amber"></i> Tratar Chamados (Admin)</button>
                 </div>
             </div>
 
-            <div id="profile-switcher-divider" class="h-6 w-px bg-slate-800 hidden"></div>
+            <div id="profile-switcher-divider" class="tb-sep hidden"></div>
 
-            <!-- Current Logged User Info -->
-            <div class="flex items-center gap-3">
-                <div id="user-avatar-box" class="w-8 h-8 rounded-xl bg-blue-600 text-white font-bold text-xs flex items-center justify-center border border-blue-400">
-                    US
+            <div class="user-box">
+                <div id="user-avatar-box" class="avatar">US</div>
+                <div class="user-meta">
+                    <div id="user-display-name" class="user-name">Usuário</div>
+                    <div id="user-display-email" class="user-email"></div>
                 </div>
-                <div class="text-left hidden md:block text-xs">
-                    <div id="user-display-name" class="font-bold text-white leading-none">Usuário</div>
-                    <div id="user-display-email" class="text-[10px] text-slate-400 leading-tight mt-0.5"></div>
-                </div>
-                <button onclick="logout()" class="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-800 transition-colors" title="Sair / Trocar Perfil">
-                    <i class="fa-solid fa-power-off text-sm"></i>
+                <button type="button" onclick="logout()" class="btn btn-icon danger" title="Sair / Trocar Perfil" aria-label="Sair">
+                    <i class="fa-solid fa-power-off"></i>
                 </button>
             </div>
         </div>
     </header>
 
 
-    <!-- 3. MAIN WRAPPER WITH SIDEBAR & CONTENT -->
-    <div id="app-wrapper" class="flex flex-1 overflow-hidden hidden">
-        
-        <!-- Sidebar Navigation -->
-        <aside id="app-sidebar" class="w-64 bg-slate-900 border-r border-slate-800 flex-shrink-0 flex flex-col justify-between transition-all duration-300 absolute lg:relative z-30 inset-y-0 left-0 -translate-x-full lg:translate-x-0">
-            <div class="p-4 space-y-6 overflow-y-auto custom-scrollbar">
-                
-                <!-- Client Navigation -->
-                <div id="nav-group-user" class="space-y-1">
-                    <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 px-3 mb-2">Central do Cliente</div>
-                    <a href="#" onclick="navUser('catalog'); return false;" id="user-nav-catalog" class="user-nav-item active flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-white bg-blue-600 transition-all">
-                        <span class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-cubes w-4 text-center"></i> Catálogo de Serviços
-                        </span>
-                    </a>
-                    <a href="#" onclick="navUser('my-tickets'); return false;" id="user-nav-tickets" class="user-nav-item flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-                        <span class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-ticket w-4 text-center"></i> Meus Chamados
-                        </span>
-                        <span id="sidebar-user-ticket-count" class="bg-slate-800 text-slate-300 text-[10px] px-2 py-0.5 rounded-full font-mono">0</span>
-                    </a>
-                </div>
+    <!-- 3. ÁREA PRINCIPAL: MENU LATERAL + CONTEÚDO -->
+    <div id="app-wrapper" class="shell hidden">
 
-                <!-- Tech ITSM Navigation -->
-                <div id="nav-group-tech" class="space-y-1 hidden">
-                    <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 px-3 mb-2">ITSM Operations Console</div>
-                    <a href="#" onclick="navTech('dashboard'); return false;" id="tech-nav-dash" class="tech-nav-item active flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-white bg-amber-600 transition-all">
-                        <i class="fa-solid fa-chart-pie w-4 text-center"></i> Dashboard Executivo
-                    </a>
-                    <a href="#" onclick="navTech('queue'); return false;" id="tech-nav-queue" class="tech-nav-item flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-                        <span class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-list-check w-4 text-center"></i> Fila de Chamados
-                        </span>
-                        <span id="sidebar-tech-queue-count" class="bg-amber-500/20 text-amber-400 text-[10px] px-2 py-0.5 rounded-full font-mono">0</span>
-                    </a>
-                    <a href="#" onclick="navTech('unassigned'); return false;" id="tech-nav-unassigned" class="tech-nav-item flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-                        <span class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-inbox w-4 text-center text-amber-400"></i> Sem Técnico (Novos)
-                        </span>
-                        <span id="sidebar-tech-unassigned-count" class="bg-slate-800 text-slate-300 text-[10px] px-2 py-0.5 rounded-full font-mono">0</span>
-                    </a>
-                </div>
+        <div id="sidebar-scrim" class="scrim" onclick="toggleSidebar(false)"></div>
 
-                <!-- Common CMDB Assets Link -->
-                <div class="space-y-1">
-                    <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 px-3 mb-2">Base de Conhecimento</div>
-                    <a href="#" onclick="showToast('Base de Conhecimento GLPI atualizada com 42 artigos.', 'info'); return false;" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-                        <i class="fa-solid fa-book w-4 text-center text-slate-500"></i> Artigos & FAQs
+        <aside id="app-sidebar" class="sidebar">
+            <div class="sb-scroll">
+
+                <!-- Navegação do cliente -->
+                <nav id="nav-group-user" class="nav-group">
+                    <div class="nav-label">Central do Cliente</div>
+                    <a href="#" onclick="navUser('catalog'); return false;" id="user-nav-catalog" class="user-nav-item nav-item is-active">
+                        <span><i class="fa-solid fa-cubes"></i> Catálogo de Serviços</span>
                     </a>
-                </div>
+                    <a href="#" onclick="navUser('my-tickets'); return false;" id="user-nav-tickets" class="user-nav-item nav-item">
+                        <span><i class="fa-solid fa-ticket"></i> Meus Chamados</span>
+                        <span id="sidebar-user-ticket-count" class="count">0</span>
+                    </a>
+                </nav>
+
+                <!-- Navegação ITSM técnica -->
+                <nav id="nav-group-tech" class="nav-group hidden">
+                    <div class="nav-label">ITSM Operations Console</div>
+                    <a href="#" onclick="navTech('dashboard'); return false;" id="tech-nav-dash" class="tech-nav-item nav-item tech is-active">
+                        <span><i class="fa-solid fa-chart-pie"></i> Dashboard Executivo</span>
+                    </a>
+                    <a href="#" onclick="navTech('queue'); return false;" id="tech-nav-queue" class="tech-nav-item nav-item tech">
+                        <span><i class="fa-solid fa-list-check"></i> Fila de Chamados</span>
+                        <span id="sidebar-tech-queue-count" class="count amber">0</span>
+                    </a>
+                    <a href="#" onclick="navTech('unassigned'); return false;" id="tech-nav-unassigned" class="tech-nav-item nav-item tech">
+                        <span><i class="fa-solid fa-inbox"></i> Sem Técnico (Novos)</span>
+                        <span id="sidebar-tech-unassigned-count" class="count">0</span>
+                    </a>
+                </nav>
+
+                <!-- Base de conhecimento -->
+                <nav class="nav-group">
+                    <div class="nav-label">Base de Conhecimento</div>
+                    <a href="#" onclick="showToast('Base de Conhecimento GLPI atualizada com 42 artigos.', 'info'); return false;" class="nav-item">
+                        <span><i class="fa-solid fa-book"></i> Artigos &amp; FAQs</span>
+                    </a>
+                </nav>
             </div>
 
-            <div class="p-4 border-t border-slate-800 bg-slate-950/60 text-[11px] text-slate-500 flex items-center justify-between">
+            <div class="sb-foot">
                 <span>GLPI 10 Active</span>
-                <span class="font-mono text-emerald-400">Online</span>
+                <span class="on">Online</span>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
-        <main class="flex-1 bg-slate-950 overflow-y-auto custom-scrollbar p-4 sm:p-6 space-y-6">
+        <main class="main">
+            <div class="page">
 
-            <!-- 4. CLIENT VIEW: SERVICE CATALOG & OWN TICKETS -->
-            <div id="view-section-user" class="space-y-8">
-                
-                <!-- Service Catalog Cards -->
-                <section id="user-section-catalog" class="space-y-6">
-                    <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xl flex flex-col md:flex-row items-md-center justify-between gap-6">
-                        <div>
-                            <span class="inline-flex items-center gap-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs px-3 py-1 rounded-full font-semibold mb-3">
-                                <i class="fa-solid fa-headset"></i> Central de Suporte & Autoatendimento
-                            </span>
-                            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Qual serviço você precisa hoje?</h2>
-                            <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl">Abra solicitações técnicas com preenchimento guiado e acompanhamento em tempo real.</p>
+                <!-- 4. VISÃO DO CLIENTE: CATÁLOGO DE SERVIÇOS E CHAMADOS -->
+                <div id="view-section-user" class="stack">
+
+                    <section id="user-section-catalog" class="stack">
+                        <div class="glass hero">
+                            <div style="position:relative;">
+                                <span class="hero-tag"><i class="fa-solid fa-headset"></i> Central de Suporte &amp; Autoatendimento</span>
+                                <h2>Qual serviço você precisa hoje?</h2>
+                                <p>Abra solicitações técnicas com preenchimento guiado e acompanhamento em tempo real.</p>
+                            </div>
+                            <button type="button" onclick="openFormModal()" class="btn btn-blue btn-lg">
+                                <i class="fa-solid fa-circle-plus"></i> Abrir Solicitação Geral
+                            </button>
                         </div>
-                        <button onclick="openFormModal()" class="px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-2xl shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2 shrink-0">
-                            <i class="fa-solid fa-plus-circle text-base"></i> Abrir Solicitação Geral
-                        </button>
-                    </div>
 
-                    <!-- Grid of Service Categories -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        
-                        <!-- Financeiro -->
-                        <div onclick="openFormModal('Sistema Financeiro & ERP')" class="bg-slate-900 border border-slate-800 hover:border-emerald-500/50 p-5 rounded-2xl transition-all cursor-pointer group flex flex-col justify-between shadow-sm hover:shadow-xl">
-                            <div>
-                                <div class="w-11 h-11 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                    <i class="fa-solid fa-file-invoice-dollar text-xl"></i>
+                        <div class="svc-grid">
+                            <div class="glass svc" role="button" tabindex="0" onclick="openFormModal('Sistema Financeiro & ERP')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                                    <h4>Sistema Financeiro &amp; ERP</h4>
+                                    <p>NF-e, liquidação de boletos, relatórios de faturamento e divergências.</p>
                                 </div>
-                                <h4 class="font-bold text-white text-sm group-hover:text-emerald-400 transition-colors">Sistema Financeiro & ERP</h4>
-                                <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">NF-e, liquidação de boletos, relatórios de faturamento e divergências.</p>
+                                <div class="svc-foot"><span>Solicitar Suporte</span><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
-                            <div class="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs text-emerald-400 font-semibold">
-                                <span>Solicitar Suporte</span>
-                                <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
-                            </div>
-                        </div>
 
-                        <!-- Reset de Senha -->
-                        <div onclick="openFormModal('Gestão de Acessos & Reset de Senha')" class="bg-slate-900 border border-slate-800 hover:border-sky-500/50 p-5 rounded-2xl transition-all cursor-pointer group flex flex-col justify-between shadow-sm hover:shadow-xl">
-                            <div>
-                                <div class="w-11 h-11 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                    <i class="fa-solid fa-key text-xl"></i>
+                            <div class="glass svc sky" role="button" tabindex="0" onclick="openFormModal('Gestão de Acessos & Reset de Senha')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-key"></i></div>
+                                    <h4>Reset de Senha &amp; Acessos</h4>
+                                    <p>Desbloqueio de usuários, reset de MFA, perfis de acesso e privilégios.</p>
                                 </div>
-                                <h4 class="font-bold text-white text-sm group-hover:text-sky-400 transition-colors">Reset de Senha & Acessos</h4>
-                                <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Desbloqueio de usuários, reset de MFA, perfis de acesso e privilégios.</p>
+                                <div class="svc-foot"><span>Solicitar Acesso</span><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
-                            <div class="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs text-sky-400 font-semibold">
-                                <span>Solicitar Acesso</span>
-                                <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
-                            </div>
-                        </div>
 
-                        <!-- Falhas Técnicas -->
-                        <div onclick="openFormModal('Suporte Técnico & Infraestrutura')" class="bg-slate-900 border border-slate-800 hover:border-rose-500/50 p-5 rounded-2xl transition-all cursor-pointer group flex flex-col justify-between shadow-sm hover:shadow-xl">
-                            <div>
-                                <div class="w-11 h-11 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                    <i class="fa-solid fa-server text-xl"></i>
+                            <div class="glass svc rose" role="button" tabindex="0" onclick="openFormModal('Suporte Técnico & Infraestrutura')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-server"></i></div>
+                                    <h4>Falhas &amp; Infraestrutura</h4>
+                                    <p>Quedas de servidor, travamentos de sistema e instabilidades de rede/VPN.</p>
                                 </div>
-                                <h4 class="font-bold text-white text-sm group-hover:text-rose-400 transition-colors">Falhas & Infraestrutura</h4>
-                                <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Quedas de servidor, travamentos de sistema e instabilidades de rede/VPN.</p>
+                                <div class="svc-foot"><span>Reportar Erro</span><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
-                            <div class="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs text-rose-400 font-semibold">
-                                <span>Reportar Erro</span>
-                                <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
-                            </div>
-                        </div>
 
-                        <!-- Customização -->
-                        <div onclick="openFormModal('Projetos & Melhorias')" class="bg-slate-900 border border-slate-800 hover:border-purple-500/50 p-5 rounded-2xl transition-all cursor-pointer group flex flex-col justify-between shadow-sm hover:shadow-xl">
-                            <div>
-                                <div class="w-11 h-11 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                    <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                            <div class="glass svc purple" role="button" tabindex="0" onclick="openFormModal('Projetos & Melhorias')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div>
+                                    <div class="svc-ico"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                                    <h4>Projetos &amp; Melhorias</h4>
+                                    <p>Solicitações de novos relatórios, ajustes de fluxo e integração via API.</p>
                                 </div>
-                                <h4 class="font-bold text-white text-sm group-hover:text-purple-400 transition-colors">Projetos & Melhorias</h4>
-                                <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Solicitações de novos relatórios, ajustes de fluxo e integração via API.</p>
-                            </div>
-                            <div class="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs text-purple-400 font-semibold">
-                                <span>Solicitar Projeto</span>
-                                <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
+                                <div class="svc-foot"><span>Solicitar Projeto</span><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
                         </div>
+                    </section>
 
-                    </div>
-                </section>
-
-                <!-- Client Ticket Grid -->
-                <section id="user-section-tickets" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                        <div>
-                            <h3 class="font-bold text-base text-white flex items-center gap-2">
-                                <i class="fa-solid fa-list-check text-blue-500"></i> Meus Chamados Registrados
-                            </h3>
-                            <p class="text-xs text-slate-400">Acompanhe as respostas e o andamento dos seus incidentes</p>
-                        </div>
-                        
-                        <div class="flex items-center gap-2">
-                            <input type="text" id="user-search-input" onkeyup="renderUserTickets()" placeholder="Pesquisar protocolo ou título..." class="bg-slate-950 text-xs text-slate-200 placeholder-slate-500 rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-950 text-slate-400 text-[11px] uppercase tracking-wider font-extrabold border-b border-slate-800">
-                                    <th class="py-3.5 px-4">Protocolo</th>
-                                    <th class="py-3.5 px-4">Solicitação / Categoria</th>
-                                    <th class="py-3.5 px-4">Data Abertura</th>
-                                    <th class="py-3.5 px-4">Urgência</th>
-                                    <th class="py-3.5 px-4">SLA Estimado</th>
-                                    <th class="py-3.5 px-4">Status</th>
-                                    <th class="py-3.5 px-4 text-right">Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody id="user-tickets-tbody" class="divide-y divide-slate-800/60 text-xs">
-                                <!-- JS Populated -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-            </div>
-
-
-            <!-- 5. TECH VIEW: ITSM DASHBOARD & FULL QUEUE -->
-            <div id="view-section-tech" class="space-y-6 hidden">
-                
-                <!-- Dashboard Sub-view -->
-                <div id="tech-subview-dashboard" class="space-y-6">
-                    <!-- Executive KPIs -->
-                    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-                        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                            <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Ativos</div>
-                            <div id="kpi-tech-total" class="text-2xl font-black text-white font-mono mt-1">0</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Todos na base</div>
-                        </div>
-
-                        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                            <div class="text-[11px] font-semibold text-amber-400 uppercase tracking-wider">Sem Atribuição</div>
-                            <div id="kpi-tech-unassigned" class="text-2xl font-black text-amber-400 font-mono mt-1">0</div>
-                            <div class="text-[10px] text-amber-500/80 mt-0.5">Aguardando N1/N2</div>
-                        </div>
-
-                        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                            <div class="text-[11px] font-semibold text-blue-400 uppercase tracking-wider">Em Atendimento</div>
-                            <div id="kpi-tech-progress" class="text-2xl font-black text-blue-400 font-mono mt-1">0</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Com analistas</div>
-                        </div>
-
-                        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-                            <div class="text-[11px] font-semibold text-rose-400 uppercase tracking-wider flex items-center gap-1">
-                                <span class="w-2 h-2 rounded-full bg-rose-500 badge-pulse"></span> Críticos
+                    <section id="user-section-tickets" class="glass panel">
+                        <div class="panel-head">
+                            <div>
+                                <h3><i class="fa-solid fa-list-check c-blue"></i> Meus Chamados Registrados</h3>
+                                <p>Acompanhe as respostas e o andamento dos seus incidentes</p>
                             </div>
-                            <div id="kpi-tech-critical" class="text-2xl font-black text-rose-400 font-mono mt-1">0</div>
-                            <div class="text-[10px] text-rose-400/80 mt-0.5">SLA prioritário</div>
-                        </div>
-
-                        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl col-span-2 sm:col-span-1">
-                            <div class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Resolvidos</div>
-                            <div id="kpi-tech-resolved" class="text-2xl font-black text-emerald-400 font-mono mt-1">0</div>
-                            <div class="text-[10px] text-emerald-500/80 mt-0.5">Fechados com sucesso</div>
-                        </div>
-                    </div>
-
-                    <!-- Canvas Analytics Charts -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                            <h4 class="font-bold text-sm text-white flex items-center gap-2">
-                                <i class="fa-solid fa-chart-bar text-amber-500"></i> Incidentes por Categoria ITSM
-                            </h4>
-                            <div class="h-64 relative">
-                                <canvas id="chartCategory"></canvas>
+                            <div class="input-icon" style="flex:none; width:min(100%, 20rem);">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="user-search-input" onkeyup="renderUserTickets()" placeholder="Pesquisar protocolo ou título..." class="input focus-blue">
                             </div>
                         </div>
 
-                        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
-                            <h4 class="font-bold text-sm text-white flex items-center gap-2">
-                                <i class="fa-solid fa-chart-pie text-blue-500"></i> Distribuição por Prioridade / Urgência
-                            </h4>
-                            <div class="h-64 relative">
-                                <canvas id="chartUrgency"></canvas>
-                            </div>
+                        <div class="table-wrap">
+                            <table class="tbl">
+                                <thead>
+                                    <tr>
+                                        <th>Protocolo</th>
+                                        <th>Solicitação / Categoria</th>
+                                        <th>Data Abertura</th>
+                                        <th>Urgência</th>
+                                        <th>SLA Estimado</th>
+                                        <th>Status</th>
+                                        <th class="ta-r">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-tickets-tbody"><!-- JS --></tbody>
+                            </table>
                         </div>
-                    </div>
+                    </section>
+
                 </div>
 
-                <!-- ITSM Queue Sub-view -->
-                <div id="tech-subview-queue" class="space-y-4">
-                    
-                    <!-- Filters Toolbar -->
-                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl space-y-4 shadow-xl">
-                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                            
-                            <div class="flex flex-wrap items-center gap-2.5 flex-1">
-                                <div class="relative flex-1 min-w-[200px]">
-                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 text-xs">
-                                        <i class="fa-solid fa-filter"></i>
-                                    </span>
-                                    <input type="text" id="tech-queue-search" onkeyup="renderTechQueue()" placeholder="Filtrar por protocolo, solicitante ou título..." class="w-full bg-slate-950 text-slate-200 placeholder-slate-500 text-xs rounded-xl py-2 pl-9 pr-3 border border-slate-800 focus:outline-none focus:border-amber-500">
+
+                <!-- 5. VISÃO TÉCNICA: DASHBOARD ITSM E FILA COMPLETA -->
+                <div id="view-section-tech" class="stack hidden">
+
+                    <!-- Dashboard -->
+                    <div id="tech-subview-dashboard" class="stack">
+                        <div class="kpis">
+                            <div class="glass kpi slate">
+                                <div class="kpi-label">Total Ativos</div>
+                                <div class="kpi-ico"><i class="fa-solid fa-layer-group"></i></div>
+                                <div id="kpi-tech-total" class="kpi-value">0</div>
+                                <div class="kpi-sub">Todos na base</div>
+                            </div>
+
+                            <div class="glass kpi amber">
+                                <div class="kpi-label">Sem Atribuição</div>
+                                <div class="kpi-ico"><i class="fa-solid fa-inbox"></i></div>
+                                <div id="kpi-tech-unassigned" class="kpi-value">0</div>
+                                <div class="kpi-sub">Aguardando N1/N2</div>
+                            </div>
+
+                            <div class="glass kpi">
+                                <div class="kpi-label">Em Atendimento</div>
+                                <div class="kpi-ico"><i class="fa-solid fa-gears"></i></div>
+                                <div id="kpi-tech-progress" class="kpi-value">0</div>
+                                <div class="kpi-sub">Com analistas</div>
+                            </div>
+
+                            <div class="glass kpi rose">
+                                <div class="kpi-label"><span class="pulse-dot"></span> Críticos</div>
+                                <div class="kpi-ico"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                                <div id="kpi-tech-critical" class="kpi-value">0</div>
+                                <div class="kpi-sub">SLA prioritário</div>
+                            </div>
+
+                            <div class="glass kpi green">
+                                <div class="kpi-label">Resolvidos</div>
+                                <div class="kpi-ico"><i class="fa-solid fa-circle-check"></i></div>
+                                <div id="kpi-tech-resolved" class="kpi-value">0</div>
+                                <div class="kpi-sub">Fechados com sucesso</div>
+                            </div>
+                        </div>
+
+                        <div class="charts">
+                            <div class="glass panel">
+                                <div class="panel-head">
+                                    <h3><i class="fa-solid fa-chart-bar c-amber"></i> Incidentes por Categoria ITSM</h3>
+                                </div>
+                                <div class="chart-box"><canvas id="chartCategory"></canvas></div>
+                            </div>
+
+                            <div class="glass panel">
+                                <div class="panel-head">
+                                    <h3><i class="fa-solid fa-chart-pie c-blue"></i> Distribuição por Prioridade / Urgência</h3>
+                                </div>
+                                <div class="chart-box"><canvas id="chartUrgency"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila ITSM -->
+                    <div id="tech-subview-queue" class="stack">
+
+                        <div class="glass toolbar">
+                            <div class="toolbar-l">
+                                <div class="input-icon">
+                                    <i class="fa-solid fa-filter"></i>
+                                    <input type="text" id="tech-queue-search" onkeyup="renderTechQueue()" placeholder="Filtrar por protocolo, solicitante ou título..." class="input">
                                 </div>
 
-                                <select id="tech-filter-status" onchange="renderTechQueue()" class="bg-slate-950 text-slate-300 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-amber-500">
+                                <select id="tech-filter-status" onchange="renderTechQueue()" class="select select-sm">
                                     <option value="ALL">Todos os Status</option>
                                     <option value="Novo">Novo (Sem Técnico)</option>
                                     <option value="Em Atendimento">Em Atendimento</option>
@@ -454,7 +968,7 @@
                                     <option value="Resolvido">Resolvido</option>
                                 </select>
 
-                                <select id="tech-filter-urgency" onchange="renderTechQueue()" class="bg-slate-950 text-slate-300 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-amber-500">
+                                <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm">
                                     <option value="ALL">Todas Prioridades</option>
                                     <option value="Crítica">Crítica</option>
                                     <option value="Alta">Alta</option>
@@ -463,90 +977,84 @@
                                 </select>
                             </div>
 
-                            <button onclick="assignBulkToMe()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition-all flex items-center gap-2">
-                                <i class="fa-solid fa-hand-holding-hand text-amber-400"></i> Assumir Selecionados
+                            <button type="button" onclick="assignBulkToMe()" class="btn btn-ghost">
+                                <i class="fa-solid fa-hand-holding-hand c-amber"></i> Assumir Selecionados
                             </button>
-
                         </div>
-                    </div>
 
-                    <!-- Tech Queue Table -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-                        <div class="overflow-x-auto custom-scrollbar">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="bg-slate-950 text-slate-400 text-[11px] uppercase tracking-wider font-extrabold border-b border-slate-800">
-                                        <th class="py-3.5 px-4 w-10 text-center">
-                                            <input type="checkbox" onchange="toggleSelectAllQueue(this)" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-                                        </th>
-                                        <th class="py-3.5 px-4">Protocolo</th>
-                                        <th class="py-3.5 px-4">Solicitação / Categoria</th>
-                                        <th class="py-3.5 px-4">Solicitante</th>
-                                        <th class="py-3.5 px-4">Prioridade</th>
-                                        <th class="py-3.5 px-4">Técnico Atribuído</th>
-                                        <th class="py-3.5 px-4">Status</th>
-                                        <th class="py-3.5 px-4 text-right">Ação</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tech-queue-tbody" class="divide-y divide-slate-800/60 text-xs">
-                                    <!-- JS Populated -->
-                                </tbody>
-                            </table>
+                        <div class="glass" style="overflow:hidden;">
+                            <div class="table-wrap">
+                                <table class="tbl" style="min-width:54rem;">
+                                    <thead>
+                                        <tr>
+                                            <th class="ta-c" style="width:3rem;">
+                                                <input type="checkbox" onchange="toggleSelectAllQueue(this)" aria-label="Selecionar todos">
+                                            </th>
+                                            <th>Protocolo</th>
+                                            <th>Solicitação / Categoria</th>
+                                            <th>Solicitante</th>
+                                            <th>Prioridade</th>
+                                            <th>Técnico Atribuído</th>
+                                            <th>Status</th>
+                                            <th class="ta-r">Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tech-queue-tbody"><!-- JS --></tbody>
+                                </table>
+                            </div>
                         </div>
+
                     </div>
 
                 </div>
 
             </div>
-
         </main>
     </div>
 
 
-    <!-- MODAL A: ABERTURA DE CHAMADO PELO CLIENTE -->
-    <div id="modal-form" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-slate-900 rounded-3xl shadow-2xl w-full max-w-2xl border border-slate-800 overflow-hidden">
-            <div class="bg-slate-950 p-6 border-b border-slate-800 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center text-base font-bold">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </div>
+    <!-- JANELA A: ABERTURA DE CHAMADO PELO CLIENTE -->
+    <div id="modal-form" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-form-title">
+        <div class="slab modal modal-form">
+            <div class="modal-head">
+                <div class="mh-l">
+                    <div class="mh-ico"><i class="fa-solid fa-pen-to-square"></i></div>
                     <div>
-                        <h3 class="font-bold text-white text-base">Abrir Solicitação de Suporte</h3>
-                        <p class="text-[11px] text-slate-400">Preencha os detalhes para envio ao Service Desk</p>
+                        <h3 id="modal-form-title" class="mh-title">Abrir Solicitação de Suporte</h3>
+                        <p class="mh-sub">Preencha os detalhes para envio ao Service Desk</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modal-form')" class="text-slate-400 hover:text-white p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                <button type="button" onclick="closeModal('modal-form')" class="btn btn-icon" aria-label="Fechar">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <form onsubmit="handleCreateTicket(event)" class="p-6 space-y-4 text-xs">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Solicitante</label>
-                        <input type="text" id="form-req-name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-200 outline-none focus:border-blue-500">
+            <form onsubmit="handleCreateTicket(event)" class="modal-body">
+                <div class="form-grid cols-2">
+                    <div class="field">
+                        <label for="form-req-name">Solicitante</label>
+                        <input type="text" id="form-req-name" required class="input focus-blue">
                     </div>
-                    <div>
-                        <label class="block font-semibold text-slate-300 mb-1">E-mail Corporativo</label>
-                        <input type="email" id="form-req-email" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-200 outline-none focus:border-blue-500">
+                    <div class="field">
+                        <label for="form-req-email">E-mail Corporativo</label>
+                        <input type="email" id="form-req-email" required class="input focus-blue">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Categoria do Incidente *</label>
-                        <select id="form-category" onchange="calculateSLA()" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-200 outline-none focus:border-blue-500">
-                            <option value="Sistema Financeiro & ERP">Sistema Financeiro & ERP</option>
-                            <option value="Gestão de Acessos & Reset de Senha">Gestão de Acessos & Reset de Senha</option>
-                            <option value="Suporte Técnico & Infraestrutura">Suporte Técnico & Infraestrutura</option>
-                            <option value="Projetos & Melhorias">Projetos & Melhorias</option>
+                <div class="form-grid cols-2">
+                    <div class="field">
+                        <label for="form-category">Categoria do Incidente *</label>
+                        <select id="form-category" onchange="calculateSLA()" required class="select focus-blue">
+                            <option value="Sistema Financeiro & ERP">Sistema Financeiro &amp; ERP</option>
+                            <option value="Gestão de Acessos & Reset de Senha">Gestão de Acessos &amp; Reset de Senha</option>
+                            <option value="Suporte Técnico & Infraestrutura">Suporte Técnico &amp; Infraestrutura</option>
+                            <option value="Projetos & Melhorias">Projetos &amp; Melhorias</option>
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Impacto / Urgência *</label>
-                        <select id="form-urgency" onchange="calculateSLA()" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-200 outline-none focus:border-blue-500">
+                    <div class="field">
+                        <label for="form-urgency">Impacto / Urgência *</label>
+                        <select id="form-urgency" onchange="calculateSLA()" required class="select focus-blue">
                             <option value="Baixa">Baixa - Dúvidas ou Operação Normal</option>
                             <option value="Média" selected>Média - Impacto Parcial (Contornável)</option>
                             <option value="Alta">Alta - Impacto Relevante no Setor</option>
@@ -555,25 +1063,25 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Título Resumido da Solicitação *</label>
-                    <input type="text" id="form-subject" required placeholder="Ex: Lentidão extrema ao emitir relatórios de faturamento" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-200 outline-none focus:border-blue-500">
+                <div class="field">
+                    <label for="form-subject">Título Resumido da Solicitação *</label>
+                    <input type="text" id="form-subject" required placeholder="Ex: Lentidão extrema ao emitir relatórios de faturamento" class="input focus-blue">
                 </div>
 
-                <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Descrição Detalhada do Problema *</label>
-                    <textarea id="form-desc" rows="4" required placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-slate-200 outline-none focus:border-blue-500"></textarea>
+                <div class="field">
+                    <label for="form-desc">Descrição Detalhada do Problema *</label>
+                    <textarea id="form-desc" rows="4" required placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..." class="textarea focus-blue"></textarea>
                 </div>
 
-                <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between">
-                    <span class="text-slate-400">Compromisso SLA Estimado:</span>
-                    <span id="form-sla-preview" class="font-bold text-emerald-400 font-mono">2 Horas</span>
+                <div class="sla-box">
+                    <span>Compromisso SLA Estimado:</span>
+                    <b id="form-sla-preview">2 Horas</b>
                 </div>
 
-                <div class="pt-2 flex justify-end gap-3 border-t border-slate-800">
-                    <button type="button" onclick="closeModal('modal-form')" class="px-4 py-2.5 bg-slate-800 text-slate-300 font-semibold rounded-xl hover:bg-slate-700">Cancelar</button>
-                    <button type="submit" id="btn-submit-ticket" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20">
-                        <i class="fa-solid fa-paper-plane me-1"></i> Enviar Solicitação
+                <div class="modal-foot">
+                    <button type="button" onclick="closeModal('modal-form')" class="btn btn-ghost">Cancelar</button>
+                    <button type="submit" id="btn-submit-ticket" class="btn btn-blue">
+                        <i class="fa-solid fa-paper-plane"></i> Enviar Solicitação
                     </button>
                 </div>
             </form>
@@ -581,67 +1089,57 @@
     </div>
 
 
-    <!-- MODAL B: CONSOLE TÉCNICO COMPLETO 2 COLUNAS (GLPI WORKSPACE) -->
-    <div id="modal-tech-workspace" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-2 sm:p-4">
-        <div class="bg-slate-900 rounded-3xl shadow-2xl w-full max-w-6xl h-[92vh] flex flex-col border border-slate-800 overflow-hidden">
-            
-            <!-- Modal Header -->
-            <div class="bg-slate-950 px-6 py-3.5 border-b border-slate-800 flex items-center justify-between shrink-0">
-                <div class="flex items-center gap-3">
-                    <span id="workspace-id" class="font-mono bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs px-2.5 py-1 rounded-lg font-bold">#TK-0000</span>
-                    <div>
-                        <h3 id="workspace-title" class="font-bold text-sm sm:text-base text-white tracking-tight">Título do Incidente</h3>
-                        <div class="flex items-center gap-2 text-[11px] text-slate-400">
-                            <span id="workspace-requester" class="text-slate-300 font-semibold">Solicitante</span>
+    <!-- JANELA B: CONSOLE TÉCNICO EM 2 COLUNAS (GLPI WORKSPACE) -->
+    <div id="modal-tech-workspace" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="workspace-title">
+        <div class="slab modal modal-ws">
+
+            <div class="modal-head">
+                <div class="mh-l">
+                    <span id="workspace-id" class="ws-id">#TK-0000</span>
+                    <div style="min-width:0;">
+                        <h3 id="workspace-title" class="mh-title">Título do Incidente</h3>
+                        <div class="ws-meta">
+                            <b id="workspace-requester">Solicitante</b>
                             <span>•</span>
-                            <span id="workspace-date" class="font-mono text-slate-400">Data</span>
+                            <span id="workspace-date" class="mono">Data</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-3">
-                    <button id="btn-take-ticket" onclick="takeCurrentTicket()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs rounded-xl transition-all flex items-center gap-1.5">
+
+                <div class="mh-actions" style="display:flex; align-items:center; gap:.7rem;">
+                    <button type="button" id="btn-take-ticket" onclick="takeCurrentTicket()" class="btn btn-amber btn-sm">
                         <i class="fa-solid fa-user-plus"></i> Assumir Chamado
                     </button>
-                    <button onclick="closeModal('modal-tech-workspace')" class="text-slate-400 hover:text-white p-1">
-                        <i class="fa-solid fa-xmark text-xl"></i>
+                    <button type="button" onclick="closeModal('modal-tech-workspace')" class="btn btn-icon" aria-label="Fechar">
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Workspace Grid 2 Columns -->
-            <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
-                
-                <!-- Left Pane: Timeline & Reply (7 cols) -->
-                <div class="lg:col-span-7 border-r border-slate-800 flex flex-col h-full bg-slate-900/50">
-                    
-                    <!-- Original Description -->
-                    <div class="p-4 border-b border-slate-800 bg-slate-950/40">
-                        <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-info text-blue-400"></i> Descrição do Cliente
-                        </div>
-                        <div id="workspace-desc" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs text-slate-300 whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto custom-scrollbar"></div>
+            <div class="ws-body">
+
+                <!-- Coluna esquerda: descrição, histórico e resposta -->
+                <div class="ws-left">
+
+                    <div class="ws-desc-wrap">
+                        <div class="eyebrow"><i class="fa-solid fa-circle-info"></i> Descrição do Cliente</div>
+                        <div id="workspace-desc" class="ws-desc"></div>
                     </div>
 
-                    <!-- Interactions Timeline -->
-                    <div class="flex-1 p-4 overflow-y-auto space-y-3 custom-scrollbar" id="workspace-timeline">
-                        <!-- Dynamic timeline items -->
-                    </div>
+                    <div id="workspace-timeline" class="ws-timeline"><!-- JS --></div>
 
-                    <!-- Technician Response Box -->
-                    <div class="p-4 border-t border-slate-800 bg-slate-950 shrink-0 space-y-3">
-                        
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <button type="button" onclick="setTechReplyMode('public')" id="btn-mode-public" class="px-3 py-1 bg-blue-600 text-white font-semibold text-[11px] rounded-lg transition-all">
-                                    <i class="fa-solid fa-reply mr-1"></i> Resposta Pública
+                    <div class="ws-reply">
+                        <div class="ws-reply-bar">
+                            <div class="seg">
+                                <button type="button" onclick="setTechReplyMode('public')" id="btn-mode-public" class="seg-btn is-public">
+                                    <i class="fa-solid fa-reply"></i> Resposta Pública
                                 </button>
-                                <button type="button" onclick="setTechReplyMode('internal')" id="btn-mode-internal" class="px-3 py-1 bg-slate-800 text-slate-400 hover:text-slate-200 font-semibold text-[11px] rounded-lg transition-all">
-                                    <i class="fa-solid fa-lock mr-1"></i> Nota Interna (Privada TI)
+                                <button type="button" onclick="setTechReplyMode('internal')" id="btn-mode-internal" class="seg-btn">
+                                    <i class="fa-solid fa-lock"></i> Nota Interna (Privada TI)
                                 </button>
                             </div>
 
-                            <select id="select-canned-response" onchange="applyCannedResponse(this.value); this.value='';" class="bg-slate-900 text-slate-300 text-[11px] rounded-lg px-2.5 py-1 border border-slate-800 outline-none">
+                            <select id="select-canned-response" onchange="applyCannedResponse(this.value); this.value='';" class="select select-sm" aria-label="Respostas rápidas">
                                 <option value="">Respostas Rápidas...</option>
                                 <option value="SOLICITAR_PRINTS">Solicitar Print do Erro</option>
                                 <option value="RESET_EFETUADO">Senha Resetada</option>
@@ -649,29 +1147,24 @@
                             </select>
                         </div>
 
-                        <textarea id="workspace-reply-text" rows="3" placeholder="Digite sua resposta ou mensagem..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:ring-1 focus:ring-amber-500 outline-none transition-all"></textarea>
+                        <textarea id="workspace-reply-text" rows="3" placeholder="Digite sua resposta ou mensagem..." class="textarea"></textarea>
 
-                        <div class="flex justify-end">
-                            <button onclick="submitTechReply()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center gap-2">
+                        <div style="display:flex; justify-content:flex-end;">
+                            <button type="button" onclick="submitTechReply()" class="btn btn-green">
                                 <i class="fa-solid fa-paper-plane"></i> Registrar Interação
                             </button>
                         </div>
-
                     </div>
-
                 </div>
 
-                <!-- Right Pane: GLPI Properties Control Panel (5 cols) -->
-                <div class="lg:col-span-5 p-5 bg-slate-950 overflow-y-auto custom-scrollbar space-y-4 text-xs">
-                    
-                    <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 pb-2 border-b border-slate-800 flex items-center justify-between">
-                        <span><i class="fa-solid fa-sliders text-amber-500 mr-1"></i> Propriedades GLPI</span>
-                    </div>
+                <!-- Coluna direita: propriedades GLPI -->
+                <div class="ws-right">
+                    <div class="eyebrow"><i class="fa-solid fa-sliders"></i> Propriedades GLPI</div>
 
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block font-semibold text-slate-400 mb-1">Status Atual</label>
-                            <select id="prop-status" onchange="updateTicketProperties()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-semibold focus:border-amber-500 outline-none">
+                    <div class="props">
+                        <div class="field">
+                            <label for="prop-status">Status Atual</label>
+                            <select id="prop-status" onchange="updateTicketProperties()" class="select">
                                 <option value="Novo">Novo (Sem Técnico)</option>
                                 <option value="Em Atendimento">Em Atendimento</option>
                                 <option value="Pendente Cliente">Pendente Resposta Cliente</option>
@@ -679,42 +1172,42 @@
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block font-semibold text-slate-400 mb-1">Técnico / Administrador Responsável</label>
-                            <select id="prop-technician" onchange="updateTicketProperties()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:border-amber-500 outline-none">
+                        <div class="field">
+                            <label for="prop-technician">Técnico / Administrador Responsável</label>
+                            <select id="prop-technician" onchange="updateTicketProperties()" class="select">
                                 <option value="Não Atribuído">-- Não Atribuído --</option>
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block font-semibold text-slate-400 mb-1">Categoria ITSM</label>
-                            <select id="prop-category" onchange="updateTicketProperties()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:border-amber-500 outline-none">
-                                <option value="Sistema Financeiro & ERP">Sistema Financeiro & ERP</option>
-                                <option value="Gestão de Acessos & Reset de Senha">Gestão de Acessos & Reset de Senha</option>
-                                <option value="Suporte Técnico & Infraestrutura">Suporte Técnico & Infraestrutura</option>
-                                <option value="Projetos & Melhorias">Projetos & Melhorias</option>
+                        <div class="field">
+                            <label for="prop-category">Categoria ITSM</label>
+                            <select id="prop-category" onchange="updateTicketProperties()" class="select">
+                                <option value="Sistema Financeiro & ERP">Sistema Financeiro &amp; ERP</option>
+                                <option value="Gestão de Acessos & Reset de Senha">Gestão de Acessos &amp; Reset de Senha</option>
+                                <option value="Suporte Técnico & Infraestrutura">Suporte Técnico &amp; Infraestrutura</option>
+                                <option value="Projetos & Melhorias">Projetos &amp; Melhorias</option>
                             </select>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-semibold text-slate-400 mb-1">Urgência</label>
-                                <select id="prop-urgency" onchange="updateTicketProperties()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:border-amber-500 outline-none">
+                        <div class="row2">
+                            <div class="field">
+                                <label for="prop-urgency">Urgência</label>
+                                <select id="prop-urgency" onchange="updateTicketProperties()" class="select">
                                     <option value="Baixa">Baixa</option>
                                     <option value="Média">Média</option>
                                     <option value="Alta">Alta</option>
                                     <option value="Crítica">Crítica</option>
                                 </select>
                             </div>
-                            <div>
-                                <label class="block font-semibold text-slate-400 mb-1">Horas Trabalhadas</label>
-                                <input type="number" id="prop-hours" step="0.5" onchange="updateTicketProperties()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 font-mono text-center outline-none">
+                            <div class="field">
+                                <label for="prop-hours">Horas Trabalhadas</label>
+                                <input type="number" id="prop-hours" step="0.5" onchange="updateTicketProperties()" class="input num-input">
                             </div>
                         </div>
 
-                        <div>
-                            <label class="block font-semibold text-slate-400 mb-1">Ativo CMDB Vinculado</label>
-                            <select id="prop-asset" onchange="updateTicketProperties()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:border-amber-500 outline-none">
+                        <div class="field">
+                            <label for="prop-asset">Ativo CMDB Vinculado</label>
+                            <select id="prop-asset" onchange="updateTicketProperties()" class="select">
                                 <option value="Nenhum">Nenhum Ativo</option>
                                 <option value="SRV-DB-PROD-01 (Servidor SQL)">SRV-DB-PROD-01 (Servidor SQL)</option>
                                 <option value="SW-CORE-02 (Switch Cisco)">SW-CORE-02 (Switch Cisco)</option>
@@ -722,20 +1215,17 @@
                             </select>
                         </div>
 
-                        <div id="box-resolve-solution" class="pt-3 border-t border-slate-800 space-y-2">
-                            <label class="block font-bold text-emerald-400 uppercase text-[10px]">Solução Definitiva</label>
-                            <textarea id="prop-solution" rows="3" placeholder="Descreva a solução para encerramento..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:border-emerald-500 outline-none transition-all"></textarea>
-                            <button id="btn-resolve-solution" onclick="resolveTicketWithSolution()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                        <div id="box-resolve-solution" class="solution">
+                            <label for="prop-solution">Solução Definitiva</label>
+                            <textarea id="prop-solution" rows="3" placeholder="Descreva a solução para encerramento..." class="textarea focus-green"></textarea>
+                            <button type="button" id="btn-resolve-solution" onclick="resolveTicketWithSolution()" class="btn btn-green btn-block">
                                 <i class="fa-solid fa-circle-check"></i> Encerrar como RESOLVIDO
                             </button>
                         </div>
-
                     </div>
-
                 </div>
 
             </div>
-
         </div>
     </div>
 
@@ -1202,6 +1692,12 @@
                 ? 'ADMINISTRADOR • TRATAR CHAMADOS'
                 : 'USUÁRIO • ABRIR CHAMADOS';
             document.getElementById('profile-active-label').innerText = currentUser.role === 'tech' ? 'TRATAR CHAMADOS' : 'ABRIR CHAMADOS';
+            // Vidro: avatar e selo do cabeçalho acompanham o modo (técnico = âmbar, solicitante = azul)
+            const glassIsTech = currentUser.role === 'tech';
+            document.getElementById('user-avatar-box').classList.toggle('tech', glassIsTech);
+            const glassBadge = document.getElementById('header-role-badge');
+            glassBadge.classList.toggle('b-amber', glassIsTech);
+            glassBadge.classList.toggle('b-blue', !glassIsTech);
 
             const reqNameInput = document.getElementById('form-req-name');
             const reqEmailInput = document.getElementById('form-req-email');
@@ -1226,36 +1722,38 @@
 
         // NAV NAVIGATION
         function navUser(tab) {
-            document.querySelectorAll('.user-nav-item').forEach(el => el.classList.remove('bg-blue-600', 'text-white'));
+            toggleSidebar(false);
             if (tab === 'catalog') {
-                document.getElementById('user-nav-catalog').classList.add('bg-blue-600', 'text-white');
+                setActiveNav('.user-nav-item', 'user-nav-catalog');
                 document.getElementById('user-section-catalog').classList.remove('hidden');
+                scrollMainTop();
             } else {
-                document.getElementById('user-nav-tickets').classList.add('bg-blue-600', 'text-white');
+                setActiveNav('.user-nav-item', 'user-nav-tickets');
                 document.getElementById('user-section-tickets').scrollIntoView({ behavior: 'smooth' });
             }
         }
 
         function navTech(tab) {
-            document.querySelectorAll('.tech-nav-item').forEach(el => el.classList.remove('bg-amber-600', 'text-white'));
+            toggleSidebar(false);
             if (tab === 'dashboard') {
-                document.getElementById('tech-nav-dash').classList.add('bg-amber-600', 'text-white');
+                setActiveNav('.tech-nav-item', 'tech-nav-dash');
                 document.getElementById('tech-subview-dashboard').classList.remove('hidden');
                 document.getElementById('tech-subview-queue').classList.add('hidden');
                 initCharts();
             } else if (tab === 'unassigned') {
-                document.getElementById('tech-nav-unassigned').classList.add('bg-amber-600', 'text-white');
+                setActiveNav('.tech-nav-item', 'tech-nav-unassigned');
                 document.getElementById('tech-subview-queue').classList.remove('hidden');
                 document.getElementById('tech-subview-dashboard').classList.add('hidden');
                 document.getElementById('tech-filter-status').value = 'Novo';
                 renderTechQueue();
             } else {
-                document.getElementById('tech-nav-queue').classList.add('bg-amber-600', 'text-white');
+                setActiveNav('.tech-nav-item', 'tech-nav-queue');
                 document.getElementById('tech-subview-queue').classList.remove('hidden');
                 document.getElementById('tech-subview-dashboard').classList.add('hidden');
                 document.getElementById('tech-filter-status').value = 'ALL';
                 renderTechQueue();
             }
+            scrollMainTop();
         }
 
         // CLIENT FUNCTIONS
@@ -1274,23 +1772,27 @@
             });
             document.getElementById('sidebar-user-ticket-count').innerText = userTickets.length;
 
+            if (!userTickets.length) {
+                tbody.innerHTML = emptyRow(7, 'Nenhum chamado encontrado.');
+                return;
+            }
+
             userTickets.forEach(t => {
                 const realIndex = ticketsList.findIndex(x => x.id === t.id);
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/40 transition-colors border-b border-slate-800/60";
                 tr.innerHTML = `
-                    <td class="py-3.5 px-4 font-mono font-bold text-blue-400">${t.id}</td>
-                    <td class="py-3.5 px-4">
-                        <div class="font-bold text-white">${escapeHtml(t.subject)}</div>
-                        <div class="text-[10px] text-slate-400">${escapeHtml(t.category)}</div>
+                    <td class="mono strong c-blue">${escapeHtml(t.id)}</td>
+                    <td>
+                        <div class="t-title">${escapeHtml(t.subject)}</div>
+                        <div class="t-sub">${escapeHtml(t.category)}</div>
                     </td>
-                    <td class="py-3.5 px-4 text-slate-400">${t.date}</td>
-                    <td class="py-3.5 px-4">${getUrgencyBadge(t.urgency)}</td>
-                    <td class="py-3.5 px-4 font-mono font-semibold text-emerald-400">${t.sla || '2h'}</td>
-                    <td class="py-3.5 px-4">${getStatusBadge(t.status)}</td>
-                    <td class="py-3.5 px-4 text-right">
-                        <button onclick="openTechWorkspace(${realIndex})" class="px-3 py-1.5 bg-slate-800 hover:bg-blue-600 hover:text-white text-slate-300 rounded-xl text-xs font-semibold transition-all">
-                            <i class="fa-solid fa-eye me-1"></i> Detalhes
+                    <td class="c-muted">${escapeHtml(t.date)}</td>
+                    <td>${getUrgencyBadge(t.urgency)}</td>
+                    <td class="mono strong c-green">${escapeHtml(t.sla || '2h')}</td>
+                    <td>${getStatusBadge(t.status)}</td>
+                    <td class="ta-r">
+                        <button type="button" onclick="openTechWorkspace(${realIndex})" class="btn btn-ghost btn-sm row-act-user">
+                            <i class="fa-solid fa-eye"></i> Detalhes
                         </button>
                     </td>
                 `;
@@ -1417,26 +1919,31 @@
             document.getElementById('sidebar-tech-queue-count').innerText = ticketsList.length;
             document.getElementById('sidebar-tech-unassigned-count').innerText = ticketsList.filter(t => t.technician === 'Não Atribuído' || t.status === 'Novo').length;
 
+            if (!filtered.length) {
+                tbody.innerHTML = emptyRow(8, 'Nenhum chamado corresponde aos filtros.');
+                return;
+            }
+
             filtered.forEach(t => {
                 const realIndex = ticketsList.findIndex(x => x.id === t.id);
+                const unassigned = t.technician === 'Não Atribuído';
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/40 transition-colors border-b border-slate-800/60";
                 tr.innerHTML = `
-                    <td class="py-3.5 px-4 text-center">
-                        <input type="checkbox" data-id="${t.id}" class="queue-checkbox rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+                    <td class="ta-c">
+                        <input type="checkbox" data-id="${escapeHtml(t.id)}" class="queue-checkbox" aria-label="Selecionar ${escapeHtml(t.id)}">
                     </td>
-                    <td class="py-3.5 px-4 font-mono font-bold text-amber-400">${t.id}</td>
-                    <td class="py-3.5 px-4">
-                        <div class="font-bold text-white line-clamp-1">${escapeHtml(t.subject)}</div>
-                        <div class="text-[10px] text-slate-400">${escapeHtml(t.category)}</div>
+                    <td class="mono strong c-amber">${escapeHtml(t.id)}</td>
+                    <td>
+                        <div class="t-title">${escapeHtml(t.subject)}</div>
+                        <div class="t-sub">${escapeHtml(t.category)}</div>
                     </td>
-                    <td class="py-3.5 px-4 text-slate-300 font-semibold">${escapeHtml(t.name)}</td>
-                    <td class="py-3.5 px-4">${getUrgencyBadge(t.urgency)}</td>
-                    <td class="py-3.5 px-4 font-medium ${t.technician === 'Não Atribuído' ? 'text-amber-400 italic' : 'text-blue-300 font-semibold'}">${escapeHtml(t.technician)}</td>
-                    <td class="py-3.5 px-4">${getStatusBadge(t.status)}</td>
-                    <td class="py-3.5 px-4 text-right">
-                        <button onclick="openTechWorkspace(${realIndex})" class="px-3 py-1.5 bg-slate-800 hover:bg-amber-600 hover:text-slate-950 text-slate-200 rounded-xl text-xs font-bold transition-all">
-                            <i class="fa-solid fa-wrench me-1"></i> Atender
+                    <td class="strong" style="color:var(--ink-2);">${escapeHtml(t.name)}</td>
+                    <td>${getUrgencyBadge(t.urgency)}</td>
+                    <td class="strong" style="${unassigned ? 'color:#fcd34d; font-style:italic;' : 'color:#bfdbfe;'}">${escapeHtml(t.technician)}</td>
+                    <td>${getStatusBadge(t.status)}</td>
+                    <td class="ta-r">
+                        <button type="button" onclick="openTechWorkspace(${realIndex})" class="btn btn-ghost btn-sm row-act-tech">
+                            <i class="fa-solid fa-wrench"></i> Atender
                         </button>
                     </td>
                 `;
@@ -1509,40 +2016,29 @@
                 const isTech = item.sender === 'Técnico';
                 const div = document.createElement('div');
 
-                div.className = `p-3.5 rounded-2xl text-xs border ${
-                    isInternal 
-                        ? 'bg-amber-950/20 border-amber-500/30 text-amber-200' 
-                        : isTech 
-                            ? 'bg-blue-950/30 border-blue-500/30 text-slate-200' 
-                            : 'bg-slate-950 border-slate-800 text-slate-300'
-                }`;
+                div.className = 'tl' + (isInternal ? ' internal' : (isTech ? ' tech' : ''));
 
                 div.innerHTML = `
-                    <div class="flex justify-between items-center mb-1 font-bold">
+                    <div class="tl-head">
                         <span>
-                            ${isInternal ? '<i class="fa-solid fa-lock text-amber-400 me-1"></i> [NOTA INTERNA TI] ' : ''}
-                            <i class="${isTech ? 'fa-solid fa-user-gear text-blue-400' : 'fa-solid fa-user text-slate-400'} me-1"></i>
-                            ${escapeHtml(item.name)} (${escapeHtml(item.sender)})
+                            ${isInternal ? '<i class="fa-solid fa-lock c-amber"></i>[NOTA INTERNA TI] ' : ''}
+                            <i class="${isTech ? 'fa-solid fa-user-gear c-blue' : 'fa-solid fa-user c-muted'}"></i>${escapeHtml(item.name)} (${escapeHtml(item.sender)})
                         </span>
-                        <span class="text-[10px] text-slate-500 font-mono">${escapeHtml(item.time)}</span>
+                        <span class="tl-time">${escapeHtml(item.time)}</span>
                     </div>
-                    <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(item.text)}</p>
+                    <p>${escapeHtml(item.text)}</p>
                 `;
                 container.appendChild(div);
             });
+            container.scrollTop = container.scrollHeight;
         }
 
         function setTechReplyMode(mode) {
             techReplyMode = mode;
             const btnPub = document.getElementById('btn-mode-public');
             const btnInt = document.getElementById('btn-mode-internal');
-            if (mode === 'public') {
-                btnPub.className = 'px-3 py-1 bg-blue-600 text-white font-semibold text-[11px] rounded-lg transition-all';
-                btnInt.className = 'px-3 py-1 bg-slate-800 text-slate-400 hover:text-slate-200 font-semibold text-[11px] rounded-lg transition-all';
-            } else {
-                btnInt.className = 'px-3 py-1 bg-amber-600 text-slate-950 font-bold text-[11px] rounded-lg transition-all';
-                btnPub.className = 'px-3 py-1 bg-slate-800 text-slate-400 hover:text-slate-200 font-semibold text-[11px] rounded-lg transition-all';
-            }
+            btnPub.classList.toggle('is-public', mode === 'public');
+            btnInt.classList.toggle('is-internal', mode !== 'public');
         }
 
         function applyCannedResponse(val) {
@@ -1677,6 +2173,8 @@
 
         // CHARTS & UTILS
         function initCharts() {
+            if (typeof Chart === 'undefined') return;
+
             const categories = {};
             const urgencies = {};
 
@@ -1687,105 +2185,211 @@
 
             if (chartCategoryInstance) chartCategoryInstance.destroy();
             if (chartUrgencyInstance) chartUrgencyInstance.destroy();
+            chartCategoryInstance = null;
+            chartUrgencyInstance = null;
 
             const canvasCat = document.getElementById('chartCategory');
             const canvasUrg = document.getElementById('chartUrgency');
             if (!canvasCat || !canvasUrg) return;
 
+            // Os textos do gráfico acompanham a escala da interface (rem), inclusive em 2K/4K
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            const fontBase = { family: '"Figtree", "Segoe UI", system-ui, sans-serif', size: Math.round(rem * 0.75) };
+            const tickColor = '#b4bedb';
+            const gridColor = 'rgba(255, 255, 255, 0.08)';
+            const tooltip = {
+                backgroundColor: 'rgba(8, 12, 28, 0.94)',
+                borderColor: 'rgba(255, 255, 255, 0.2)',
+                borderWidth: 1,
+                padding: Math.round(rem * 0.7),
+                cornerRadius: Math.round(rem * 0.6),
+                titleColor: '#ffffff',
+                bodyColor: '#d6ddf0',
+                titleFont: { ...fontBase, weight: '700' },
+                bodyFont: fontBase,
+                displayColors: true,
+                boxPadding: 4
+            };
+
             const ctxCat = canvasCat.getContext('2d');
+            const catLabels = Object.keys(categories);
+            const barGradient = ctxCat.createLinearGradient(0, 0, canvasCat.clientWidth || 400, 0);
+            barGradient.addColorStop(0, 'rgba(245, 158, 11, 0.55)');
+            barGradient.addColorStop(1, 'rgba(253, 224, 138, 0.98)');
+
             chartCategoryInstance = new Chart(ctxCat, {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(categories),
+                    labels: catLabels.map(l => shortLabel(l, (canvasCat.clientWidth || 400) < 440 ? 16 : 26)),
                     datasets: [{
-                        label: 'Quantidade',
+                        label: 'Chamados',
                         data: Object.values(categories),
-                        backgroundColor: '#d97706',
-                        borderRadius: 8
+                        backgroundColor: barGradient,
+                        borderColor: 'rgba(253, 224, 138, 0.9)',
+                        borderWidth: 1,
+                        borderRadius: Math.round(rem * 0.5),
+                        borderSkipped: false,
+                        maxBarThickness: Math.round(rem * 2.2)
                     }]
                 },
                 options: {
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { ...tooltip, callbacks: { title: items => catLabels[items[0].dataIndex] } }
+                    },
                     scales: {
-                        x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
-                        y: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: '#334155' } }
+                        x: { beginAtZero: true, ticks: { color: tickColor, font: fontBase, precision: 0 }, grid: { color: gridColor }, border: { display: false } },
+                        y: { ticks: { color: '#e6ebf8', font: fontBase }, grid: { display: false }, border: { display: false } }
                     }
                 }
             });
 
-            const ctxUrg = canvasUrg.getContext('2d');
-            chartUrgencyInstance = new Chart(ctxUrg, {
+            const urgLabels = Object.keys(urgencies);
+            const urgTotal = Object.values(urgencies).reduce((a, b) => a + b, 0);
+            const centerText = {
+                id: 'centerText',
+                afterDraw(chart) {
+                    const { ctx, chartArea } = chart;
+                    if (!chartArea) return;
+                    const x = (chartArea.left + chartArea.right) / 2;
+                    const y = (chartArea.top + chartArea.bottom) / 2;
+                    ctx.save();
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = `700 ${Math.round(rem * 1.9)}px "JetBrains Mono", Consolas, monospace`;
+                    ctx.fillText(String(urgTotal), x, y - rem * 0.35);
+                    ctx.fillStyle = '#9ba6c4';
+                    ctx.font = `600 ${Math.round(rem * 0.7)}px "Figtree", "Segoe UI", sans-serif`;
+                    ctx.fillText('CHAMADOS', x, y + rem * 1.1);
+                    ctx.restore();
+                }
+            };
+
+            chartUrgencyInstance = new Chart(canvasUrg.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(urgencies),
+                    labels: urgLabels,
                     datasets: [{
                         data: Object.values(urgencies),
-                        backgroundColor: ['#ef4444', '#f97316', '#38bdf8', '#94a3b8']
+                        backgroundColor: urgLabels.map(l => URGENCY_COLORS[l] || '#64748b'),
+                        borderColor: 'rgba(10, 14, 32, 0.95)',
+                        borderWidth: Math.max(2, Math.round(rem * 0.2)),
+                        hoverOffset: Math.round(rem * 0.4)
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '68%',
                     plugins: {
-                        legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 11 } } }
+                        legend: { position: 'bottom', labels: { color: '#dbe2f3', font: fontBase, usePointStyle: true, pointStyle: 'circle', padding: Math.round(rem * 1.1) } },
+                        tooltip
                     }
-                }
+                },
+                plugins: [centerText]
             });
         }
 
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toast-container');
+            const icon = type === 'success' ? 'fa-circle-check' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
             const toast = document.createElement('div');
-            const bg = type === 'success' ? 'bg-emerald-600' : type === 'warning' ? 'bg-amber-500 text-slate-950' : 'bg-blue-600';
-            toast.className = `p-3 rounded-2xl text-xs font-semibold text-white shadow-xl ${bg} flex items-center justify-between pointer-events-auto transition-all transform translate-y-2`;
-            toast.innerHTML = `
-                <span>${msg}</span>
-                <button onclick="this.parentElement.remove()" class="ml-3 opacity-70 hover:opacity-100">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            `;
+            toast.className = `toast ${type}`;
+
+            const ico = document.createElement('i');
+            ico.className = `fa-solid ${icon}`;
+            const text = document.createElement('span');
+            text.textContent = msg;
+            const close = document.createElement('button');
+            close.type = 'button';
+            close.setAttribute('aria-label', 'Fechar aviso');
+            close.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            close.addEventListener('click', () => toast.remove());
+
+            toast.append(ico, text, close);
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
         }
 
-        function toggleSidebar() {
-            document.getElementById('app-sidebar').classList.toggle('-translate-x-full');
+        function toggleSidebar(force) {
+            const sidebar = document.getElementById('app-sidebar');
+            const scrim = document.getElementById('sidebar-scrim');
+            const open = typeof force === 'boolean' ? force : !sidebar.classList.contains('is-open');
+            sidebar.classList.toggle('is-open', open);
+            scrim.classList.toggle('is-on', open);
         }
 
         function closeModal(id) {
             document.getElementById(id).classList.add('hidden');
         }
 
+        // ---- Apoio visual (vidro): navegação ativa, linha vazia, rótulos de gráfico e atalho Esc ----
+        function setActiveNav(selector, activeId) {
+            document.querySelectorAll(selector).forEach(el => el.classList.remove('is-active'));
+            const active = document.getElementById(activeId);
+            if (active) active.classList.add('is-active');
+        }
+
+        function scrollMainTop() {
+            const main = document.querySelector('.main');
+            if (main) main.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function emptyRow(cols, text) {
+            return `<tr class="t-empty"><td colspan="${cols}"><i class="fa-regular fa-folder-open"></i>${escapeHtml(text)}</td></tr>`;
+        }
+
+        const URGENCY_COLORS = { 'Crítica': '#f43f5e', 'Alta': '#fb923c', 'Média': '#38bdf8', 'Baixa': '#94a3b8' };
+
+        function shortLabel(text, max) {
+            const s = String(text || '');
+            return s.length > max ? s.slice(0, max - 1) + '…' : s;
+        }
+
+        // Esc fecha a janela aberta (ou o menu lateral no celular e o menu de modo)
+        document.addEventListener('keydown', function(ev) {
+            if (ev.key !== 'Escape') return;
+            const open = Array.from(document.querySelectorAll('.overlay')).filter(el => !el.classList.contains('hidden'));
+            if (open.length) {
+                open[open.length - 1].classList.add('hidden');
+                return;
+            }
+            toggleSidebar(false);
+            toggleProfileMenu(true);
+        });
+
         function getStatusBadge(status) {
             switch(status) {
                 case 'Novo':
                 case 'Em Aberto':
-                    return `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Novo</span>`;
+                    return `<span class="badge b-amber"><span class="dot"></span>Novo</span>`;
                 case 'Em Atendimento':
-                    return `<span class="bg-blue-500/10 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> Em Atendimento</span>`;
+                    return `<span class="badge b-blue"><span class="dot live"></span>Em Atendimento</span>`;
                 case 'Pendente Cliente':
-                    return `<span class="bg-purple-500/10 text-purple-400 border border-purple-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Pendente Cliente</span>`;
+                    return `<span class="badge b-purple"><span class="dot"></span>Pendente Cliente</span>`;
                 case 'Resolvido':
-                    return `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1"><i class="fa-solid fa-check text-[9px]"></i> Resolvido</span>`;
+                    return `<span class="badge b-green"><i class="fa-solid fa-check" style="font-size:.6rem;"></i>Resolvido</span>`;
                 default:
-                    return `<span class="bg-slate-800 text-slate-400 text-[10px] px-2 py-0.5 rounded">${status}</span>`;
+                    return `<span class="badge b-slate">${escapeHtml(status)}</span>`;
             }
         }
 
         function getUrgencyBadge(urgency) {
             switch(urgency) {
                 case 'Crítica':
-                    return `<span class="bg-rose-500/20 text-rose-400 text-[10px] font-black px-2 py-0.5 rounded border border-rose-500/40">Crítica</span>`;
+                    return `<span class="badge b-rose">Crítica</span>`;
                 case 'Alta':
-                    return `<span class="bg-orange-500/20 text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded border border-orange-500/30">Alta</span>`;
+                    return `<span class="badge b-orange">Alta</span>`;
                 case 'Média':
-                    return `<span class="bg-sky-500/20 text-sky-400 text-[10px] font-semibold px-2 py-0.5 rounded border border-sky-500/30">Média</span>`;
+                    return `<span class="badge b-sky">Média</span>`;
                 case 'Baixa':
-                    return `<span class="bg-slate-800 text-slate-400 text-[10px] font-medium px-2 py-0.5 rounded border border-slate-700">Baixa</span>`;
+                    return `<span class="badge b-slate">Baixa</span>`;
                 default:
-                    return `<span class="text-slate-400 text-xs">${urgency}</span>`;
+                    return `<span class="c-muted">${escapeHtml(urgency)}</span>`;
             }
         }
 
