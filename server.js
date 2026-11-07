@@ -25594,46 +25594,40 @@ window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle, defa
   }
 };
 
+window.closeGlpiFullModal = function() {
+  const fullOv = document.getElementById('glpiFullOverlayHost');
+  if (fullOv) {
+    fullOv.style.display = 'none';
+    const ifr = document.getElementById('glpiFullIframeHost');
+    if (ifr) ifr.src = 'about:blank';
+  }
+  if (typeof syncOrdensWithServer === 'function') {
+    syncOrdensWithServer().then(() => { if (typeof render === 'function') render(); }).catch(() => {});
+  }
+};
+
+window.loadAdminOrders = function() {
+  if (typeof syncOrdensWithServer === 'function') {
+    syncOrdensWithServer().then(() => { if (typeof render === 'function' && currentPage === 'ordens' && window.currentOsTabFilter !== 'glpi_console') render(); }).catch(() => {});
+  }
+};
+
 // Abertura e Consulta de O.S. GLPI (Público na Tela de Login e Portal do Usuário)
 window.openNovaOrdemModal = function(preselectedTypeOrTab) {
-  const overlay = document.getElementById('overlayNovaOrdem');
-  if (!overlay) return;
-  
-  const formBox = document.getElementById('boxNovaOrdemForm');
-  const successBox = document.getElementById('boxNovaOrdemSuccess');
-  const feedback = document.getElementById('osFormFeedback');
-  const form = document.getElementById('formNovaOrdem');
-  
-  if (formBox) formBox.style.display = 'block';
-  if (successBox) successBox.style.display = 'none';
-  if (feedback) feedback.style.display = 'none';
-  if (form) form.reset();
-  window.atualizarSlaPreviewGlpi();
-
-  // Ao abrir, todos os campos ficam vazios (sem dados do usuário logado nem da abertura anterior)
-  const osConsultarInp = document.getElementById('osConsultarQuery');
-  if (osConsultarInp) osConsultarInp.value = '';
-  const osConsultarRes = document.getElementById('osConsultarResultados');
-  if (osConsultarRes) osConsultarRes.innerHTML = '';
-
-  overlay.classList.add('show');
-  overlay.style.display = 'flex';
-
-  if (preselectedTypeOrTab === 'consultar') {
-    switchOsModalTab('consultar');
-  } else {
-    switchOsModalTab('abrir');
-    if (preselectedTypeOrTab && preselectedTypeOrTab !== 'abrir') {
-      const lower = preselectedTypeOrTab.toLowerCase();
-      if (lower.includes('pagamento')) {
-        window.selecionarCategoriaRapidaOs('Pagamento Não Reconhecido', 'Crítica', 'Liberação de Pagamento Não Reconhecido');
-      } else if (lower.includes('boleto') || lower.includes('2ª via')) {
-        window.selecionarCategoriaRapidaOs('Sistema Financeiro & ERP', 'Alta', 'Solicitação de 2ª Via de Boleto para Pagamento');
-      } else {
-        window.selecionarCategoriaRapidaOs(preselectedTypeOrTab, 'Média', '');
-      }
-    }
+  let fullOv = document.getElementById('glpiFullOverlayHost');
+  if (!fullOv) {
+    fullOv = document.createElement('div');
+    fullOv.id = 'glpiFullOverlayHost';
+    fullOv.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#020617;display:none;width:100vw;height:100vh;';
+    fullOv.innerHTML = '<iframe id="glpiFullIframeHost" src="about:blank" style="width:100%;height:100%;border:0;display:block;" title="GLPI 10 Enterprise ITSM"></iframe>';
+    document.body.appendChild(fullOv);
   }
+  const ifr = document.getElementById('glpiFullIframeHost');
+  if (ifr) {
+    const modeQuery = (preselectedTypeOrTab === 'tech') ? 'mode=tech&tab=queue' : 'entry=login';
+    ifr.src = '/glpi.html?' + modeQuery + '&t=' + Date.now();
+  }
+  fullOv.style.display = 'block';
 };
 
 window.executarConsultaOrdens = async function(e) {
@@ -26564,7 +26558,10 @@ function renderEquipeTecnicaOs() {
 
   h += '<div class="admin-head-actions">';
   h += '<button onclick="openNovaOrdemModal(&quot;abrir&quot;)" style="display:inline-flex; align-items:center; gap:6px; padding:0 14px; background:linear-gradient(135deg, #F59E0B, #EA580C); color:#FFFFFF; font-weight:800; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(245, 158, 11,0.38);">';
-  h += '<span>🎫 + Novo Chamado GLPI</span></button>';
+  h += '<span>🎫 Abrir Central GLPI 10</span></button>';
+
+  h += '<button onclick="setOsStatusTab(&quot;glpi_console&quot;)" style="display:inline-flex; align-items:center; gap:6px; padding:0 14px; background:linear-gradient(135deg, #2563EB, #1D4ED8); color:#FFFFFF; font-weight:800; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(37, 99, 235,0.38);">';
+  h += '<span>🖥️ Console GLPI 10 Integrado</span></button>';
 
   h += '<button onclick="setOsStatusTab(&quot;receber&quot;)" style="display:inline-flex; align-items:center; gap:6px; padding:0 13px; background:linear-gradient(135deg, #10B981, #059669); color:#FFFFFF; font-weight:800; border:none; cursor:pointer;">';
   h += '<span>📥 Balcão O.S.</span></button>';
@@ -26618,6 +26615,7 @@ function renderEquipeTecnicaOs() {
   // Barra de Abas Superiores GLPI 10
   h += '<div class="admin-toolbar-panel" style="padding:7px 10px; gap:6px; justify-content:flex-start; flex-wrap:wrap;">';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='todas'?'active':'') + '" data-tab="todas" onclick="setOsStatusTab(&quot;todas&quot;)" style="height:32px; padding:0 13px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid ' + (currentTab==='todas'?'transparent':'var(--card-border)') + '; background:' + (currentTab==='todas'?'linear-gradient(135deg, #F59E0B, #EA580C)':'rgba(255,255,255,0.04)') + '; color:' + (currentTab==='todas'?'#FFFFFF':'var(--text)') + ';">📋 Fila Geral GLPI (' + countTotal + ')</button>';
+  h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='glpi_console'?'active':'') + '" data-tab="glpi_console" onclick="setOsStatusTab(&quot;glpi_console&quot;)" style="height:32px; padding:0 13px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(37,99,235,0.45); background:' + (currentTab==='glpi_console'?'linear-gradient(135deg, #2563EB, #1D4ED8)':'rgba(37,99,235,0.14)') + '; color:' + (currentTab==='glpi_console'?'#FFFFFF':'#93C5FD') + ';">🖥️ Console GLPI 10 Enterprise</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='pendente'?'active':'') + '" data-tab="pendente" onclick="setOsStatusTab(&quot;pendente&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='pendente'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='pendente'?'#060B18':'#FBBF24') + ';">🔥 Sem Técnico / Novos (' + countPendentes + ')</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='andamento'?'active':'') + '" data-tab="andamento" onclick="setOsStatusTab(&quot;andamento&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(5, 150, 105,0.35); background:' + (currentTab==='andamento'?'linear-gradient(135deg, #10B981, #047857)':'rgba(5, 150, 105,0.10)') + '; color:' + (currentTab==='andamento'?'#FFFFFF':'#34D399') + ';">⚙️ Em Atendimento (' + countAndamento + ')</button>';
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='criticos'?'active':'') + '" data-tab="criticos" onclick="setOsStatusTab(&quot;criticos&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(239,68,68,0.35); background:' + (currentTab==='criticos'?'linear-gradient(135deg, #EF4444, #B91C1C)':'rgba(239,68,68,0.10)') + '; color:' + (currentTab==='criticos'?'#FFFFFF':'#F87171') + ';">🚨 Críticos (' + countCriticos + ')</button>';
@@ -26627,7 +26625,11 @@ function renderEquipeTecnicaOs() {
   h += '<button type="button" class="os-status-tab-btn ' + (currentTab==='tecnicos'?'active':'') + '" data-tab="tecnicos" onclick="setOsStatusTab(&quot;tecnicos&quot;)" style="height:32px; padding:0 12px; border-radius:8px; font-size:11.5px; font-weight:800; cursor:pointer; border:1px solid rgba(245,158,11,0.35); background:' + (currentTab==='tecnicos'?'linear-gradient(135deg, #F59E0B, #D97706)':'rgba(245,158,11,0.10)') + '; color:' + (currentTab==='tecnicos'?'#060B18':'#FDE68A') + '; margin-left:auto;">👷 Equipe Técnica (' + ((systemTecnicos || []).filter(t => t.active !== false).length) + ')</button>';
   h += '</div>';
 
-  if (currentTab === 'receber') {
+  if (currentTab === 'glpi_console') {
+    h += '<div class="table-panel" style="background:#020617; border:1px solid var(--card-border); border-radius:16px; overflow:hidden; padding:0; height:760px;">';
+    h += '<iframe src="/glpi.html?mode=tech&embedded=1&t=' + Date.now() + '" style="width:100%; height:100%; border:0; display:block;" title="Console GLPI 10 Enterprise"></iframe>';
+    h += '</div>';
+  } else if (currentTab === 'receber') {
     h += renderBalcaoRecepcaoOs(ordens, tecOpts);
   } else if (currentTab === 'tecnicos') {
     h += renderEquipeTecnicaOs();
@@ -35911,6 +35913,19 @@ const server = http.createServer(async (req, res) => {
         : fs.readFileSync(loginPath);
       if (!cached || cached.mtimeMs !== stat.mtimeMs) fileCache.set(loginPath, { mtimeMs: stat.mtimeMs, body: loginHtml });
       return sendTextResponse(res, 200, loginHtml, 'text/html; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'no-cache, must-revalidate' });
+    }
+  }
+
+  if (pathname === '/glpi' || pathname === '/glpi.html' || pathname === '/glpi-enterprise.html') {
+    const glpiPath = path.join(__dirname, 'glpi-enterprise.html');
+    if (fs.existsSync(glpiPath)) {
+      const stat = fs.statSync(glpiPath);
+      const cached = fileCache.get(glpiPath);
+      const glpiHtml = cached && cached.mtimeMs === stat.mtimeMs
+        ? cached.body
+        : fs.readFileSync(glpiPath);
+      if (!cached || cached.mtimeMs !== stat.mtimeMs) fileCache.set(glpiPath, { mtimeMs: stat.mtimeMs, body: glpiHtml });
+      return sendTextResponse(res, 200, glpiHtml, 'text/html; charset=utf-8', { ...corsHeaders, 'Cache-Control': 'no-cache, must-revalidate' });
     }
   }
 

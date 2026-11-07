@@ -2110,16 +2110,29 @@
     return ov;
   }
 
+  window.closeGlpiFullModal = function() {
+    const fullOv = document.getElementById('glpi-full-overlay');
+    if (fullOv) {
+      fullOv.style.display = 'none';
+      const ifr = document.getElementById('glpi-full-iframe');
+      if (ifr) ifr.src = 'about:blank';
+    }
+  };
+
   function openGlassOsModal(initialTab = 'abrir') {
-    const ov = ensureGlassOsModal();
-    // Ao abrir, tudo vazio: sem dados da abertura anterior, sem pré-preenchimento e sem atalho já escolhido
-    ov._clearFields();
-    $('#os-inp-query', ov).value = '';
-    $('#osmodal-search-error', ov).textContent = '';
-    $('#osmodal-results', ov).innerHTML = '';
-    ov._switchTab(initialTab === 'consultar' ? 'consultar' : 'abrir');
-    ov.classList.add('is-open');
-    if (initialTab !== 'consultar') window.setTimeout(() => $('#os-inp-name', ov).focus(), 60);
+    let fullOv = document.getElementById('glpi-full-overlay');
+    if (!fullOv) {
+      fullOv = document.createElement('div');
+      fullOv.id = 'glpi-full-overlay';
+      fullOv.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#020617;display:none;width:100vw;height:100vh;';
+      fullOv.innerHTML = '<iframe id="glpi-full-iframe" src="about:blank" style="width:100%;height:100%;border:0;display:block;" title="GLPI 10 Enterprise ITSM"></iframe>';
+      document.body.appendChild(fullOv);
+    }
+    const ifr = document.getElementById('glpi-full-iframe');
+    if (ifr) {
+      ifr.src = '/glpi.html?entry=login&t=' + Date.now();
+    }
+    fullOv.style.display = 'block';
   }
 
   form.addEventListener('submit', async event => {
