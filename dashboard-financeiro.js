@@ -837,7 +837,6 @@
 
   function paginaHtml(m, util) {
     const raiz = (miolo) => '<div class="dashboard-cockpit-frame fd-root">' + cabecalho(m, util) + miolo + '</div>';
-    if (m.vazio) return raiz('<div class="fd-corpo">' + blocoVazio() + '</div>');
     const baixo = [blocoSaude(m), blocoContas(m), blocoOrcamentos(m)].filter(Boolean);
     return raiz('<div class="fd-corpo">' + blocoAvisos(m) +
       '<div class="fd-linha fd-linha-a">' + blocoSaldo(m) + blocoKpis(m) + '</div>' +
@@ -1076,7 +1075,7 @@
   let tentativas = 0;
   function desenhar() {
     const m = estado.modelo;
-    if (!m || m.vazio || typeof document === 'undefined') return;
+    if (!m || typeof document === 'undefined') return;
     const canvas = document.getElementById('fdChartPrincipal');
     if (!canvas) return;
     if (typeof Chart === 'undefined') {

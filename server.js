@@ -14321,10 +14321,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261107-6" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261107-7" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
-<link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-2" />
-<script src="/dashboard-financeiro.js?v=20261107-2"></script>
+<link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-3" />
+<script src="/dashboard-financeiro.js?v=20261107-3"></script>
 <script src="/importacao.js?v=20261107-1"></script>
 </head>
 <body>
