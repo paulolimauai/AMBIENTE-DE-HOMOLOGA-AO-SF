@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nexus Financeiro | Entrar no painel</title>
+<meta name="description" content="Entre no Nexus Financeiro para acompanhar gastos, cartões e metas em um só lugar.">
+<meta name="theme-color" content="#04040a">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffeec7'/%3E%3Cstop offset='1' stop-color='%23ebba47'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23241c0a'%3EN%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
@@ -18,8 +21,12 @@
     --bg: #04040a;
     --ink: #f6f7fc;
     --muted: #d0d5e8;
-    --faint: #727a96;
+    --faint: #8f97b3;
+    --hint: #aab1c9;
     --danger: #ff9494;
+    /* Respiro interno único das duas colunas da placa: topo e base das duas metades ficam na mesma linha */
+    --pad-x: 48px;
+    --pad-y: 46px;
     --line: rgba(255, 255, 255, .15);
     --line-soft: rgba(255, 255, 255, .08);
     --radius-md: 14px;
@@ -186,8 +193,12 @@
   @keyframes rise { from { opacity: 0; transform: translateY(22px) scale(.99); } }
 
   /* ---------- Vitrine ---------- */
-  .showcase { padding: 46px 48px; display: flex; flex-direction: column; gap: 22px; background: linear-gradient(180deg, rgba(5,5,14,.6), rgba(5,5,14,.62)); }
+  /* Três blocos: marca (topo), mensagem e cards. Os cards ficam ancorados na base, na mesma linha do cartão de suporte da outra coluna */
+  .showcase { padding: var(--pad-y) var(--pad-x); display: flex; flex-direction: column; justify-content: space-between; gap: 22px; background: linear-gradient(180deg, rgba(5,5,14,.6), rgba(5,5,14,.62)); }
+  .hero { display: grid; gap: 16px; align-content: start; }
+  .showcase-foot { display: grid; gap: 14px; }
   .wordmark { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 17px; letter-spacing: -.01em; }
+  .mbrand { display: none; }
   .wordmark .mark {
     width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px;
     font-family: var(--font-display); font-size: 23px; font-weight: 600; color: var(--on-accent);
@@ -195,7 +206,7 @@
     box-shadow: 0 8px 24px rgba(var(--a-rgb), .45), inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(0,0,0,.18);
   }
   .wordmark small { font-weight: 500; color: #e6e9f5; font-size: 14px; margin-left: 2px; }
-  .brandrow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px 14px; }
+  .brandrow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px 14px; min-height: 40px; }
   .eyebrow {
     padding: 6px 12px; border-radius: 99px; white-space: nowrap;
     font-size: 10.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: #fff;
@@ -209,17 +220,27 @@
     text-wrap: balance;
   }
   h1 span { display: block; color: var(--accent-light); }
-  .lead { font-size: 16.5px; line-height: 1.65; color: #f0f2fa; max-width: 440px; }
+  .lead { font-size: 16.5px; line-height: 1.65; color: #f0f2fa; max-width: 46ch; text-wrap: pretty; }
 
-  .cluster { display: grid; gap: 12px; margin-top: 6px; }
+  .cluster { display: grid; gap: 12px; }
+  /* Os três cards seguem o mesmo molde (ícone | texto | complemento) e a mesma altura */
   .fc {
-    position: relative; display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 18px;
+    position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; column-gap: 14px;
+    min-height: 76px; padding: 12px 18px; border-radius: 18px;
     background: linear-gradient(145deg, rgba(255,255,255,.19), rgba(255,255,255,.045));
     border: 1px solid rgba(255,255,255,.2);
     backdrop-filter: blur(20px) saturate(170%); -webkit-backdrop-filter: blur(20px) saturate(170%);
     box-shadow: 0 18px 36px -10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.3);
   }
-  .fc .txt { flex: 1; min-width: 0; }
+  .fc .txt { min-width: 0; }
+  .fc-ico {
+    width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; color: var(--accent-light);
+    background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(var(--a-rgb), .16));
+    border: 1px solid rgba(255,255,255,.28);
+    box-shadow: 0 8px 22px rgba(var(--a-rgb), .22), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .fc-ico svg { width: 20px; height: 20px; display: block; }
+  .fc > svg.ring { width: 44px; height: 44px; display: block; }
   .fc small { display: block; font-size: 12.5px; color: #c8cde2; margin-bottom: 2px; }
   .fc b { font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
   .fc b.serif { font-family: var(--font-display); font-weight: 500; font-size: 24px; }
@@ -232,12 +253,15 @@
   /* Três blocos (cabeçalho, formulário, suporte) com o espaço livre repartido entre eles: sem vão solto no meio da placa */
   .access {
     display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
-    padding: 46px 46px 30px; border-left: 1px solid var(--line-soft);
+    padding: var(--pad-y) var(--pad-x); border-left: 1px solid var(--line-soft);
     background: linear-gradient(180deg, rgba(9,10,24,.6), rgba(5,5,14,.76));
     box-shadow: inset 1px 0 0 rgba(255,255,255,.05);
   }
-  .access h2 { font-family: var(--font-display); font-weight: 500; font-size: 33px; letter-spacing: -.02em; margin-bottom: 6px; }
+  /* A linha do título tem a mesma altura da linha da marca (40px): os dois centros coincidem */
+  .access h2 { font-family: var(--font-display); font-weight: 500; font-size: 33px; line-height: 40px; letter-spacing: -.02em; margin-bottom: 8px; }
   .access .sub { font-size: 14.5px; color: var(--muted); line-height: 1.5; }
+  /* Ajuste óptico: as minúsculas da serifada ficam acima do centro da caixa; 3px as alinham ao centro da marca */
+  @media (min-width: 981px) { .access h2 { position: relative; top: 3px; } }
 
   .tabs {
     display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin-bottom: 22px;
@@ -247,9 +271,15 @@
     padding: 11px 8px; font: 600 14px var(--font-body); color: var(--muted);
     background: transparent; border: 0; border-radius: 10px; cursor: pointer; transition: background .2s, color .2s;
   }
+  .tab:not([aria-selected="true"]):hover { color: #fff; background: rgba(255,255,255,.07); }
   .tab[aria-selected="true"] { color: var(--on-accent); background: linear-gradient(145deg, var(--accent-light), var(--accent)); box-shadow: 0 6px 18px rgba(var(--a-rgb), .3); }
 
-  form { display: grid; gap: 16px; }
+  /* Formulário em duas colunas: tudo ocupa a linha inteira, exceto senha + confirmação no cadastro (em telas com largura para isso) */
+  form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; align-items: start; }
+  form > * { grid-column: 1 / -1; }
+  @media (min-width: 1181px), (min-width: 640px) and (max-width: 980px) {
+    form.is-register #f-senha, form.is-register #f-confirma { grid-column: auto; }
+  }
   .field[hidden] { display: none; }
 
   .control {
@@ -291,12 +321,12 @@
   .caps-aviso[hidden] { display: none; }
 
   .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .remember { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: #c4c9de; cursor: pointer; }
+  .remember { display: flex; align-items: center; gap: 10px; font-size: 13.5px; line-height: 20px; color: #c4c9de; cursor: pointer; }
   .remember input { position: absolute; opacity: 0; }
   .box { width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center; border: 1px solid var(--line); background: rgba(255,255,255,.05); color: transparent; transition: .2s; }
   .remember input:checked + .box { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .remember input:focus-visible + .box { box-shadow: 0 0 0 4px rgba(var(--a-rgb), .3); }
-  .row a { font-size: 13px; }
+  .row a { font-size: 13.5px; line-height: 20px; }
 
   .v5-consents {
     display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: -2px;
@@ -304,8 +334,8 @@
   .v5-consents[hidden] { display: none !important; }
   .v5-consent {
     position: relative; display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: start; gap: 12px;
-    width: 100%; padding: 12px 14px; border: 1px solid var(--line-soft); border-radius: 12px;
-    background: rgba(255,255,255,.04); color: #c4c9de; font-size: 13px; line-height: 1.5;
+    width: 100%; padding: 10px 14px; border: 1px solid var(--line-soft); border-radius: 12px;
+    background: rgba(255,255,255,.04); color: #c4c9de; font-size: 12.5px; line-height: 1.45;
     cursor: pointer; user-select: none;
     transition: border-color .2s, background .2s, color .2s, box-shadow .2s;
   }
@@ -318,7 +348,7 @@
   .v5-consent.invalid { border-color: var(--danger); background: rgba(255,148,148,.07); box-shadow: 0 0 0 3px rgba(255,148,148,.12); }
   .v5-consent.invalid .box { border-color: var(--danger); }
   .v5-consent span:not(.box) { display: block; min-width: 0; overflow-wrap: anywhere; text-wrap: pretty; }
-  .field-hint { display: block; margin: 5px 4px 0; color: var(--faint); font-size: 11px; line-height: 1.35; }
+  .field-hint { display: block; margin: 6px 4px 0; color: var(--hint); font-size: 12px; line-height: 1.35; }
 
   .btn {
     position: relative; overflow: hidden; isolation: isolate;
@@ -354,8 +384,8 @@
   .access-foot { display: flex; flex-direction: column; }
   .help {
     position: relative; isolation: isolate; overflow: hidden;
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 14px 14px 16px; border-radius: 20px;
+    display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: center; gap: 12px 14px;
+    padding: 16px; border-radius: 20px;
     background:
       linear-gradient(145deg, rgba(255,255,255,.17) 0%, rgba(255,255,255,.05) 46%, rgba(var(--a-rgb), .11) 100%),
       rgba(255,255,255,.02);
@@ -381,7 +411,7 @@
     -webkit-mask-composite: xor; mask-composite: exclude;
   }
   .help-ico {
-    width: 42px; height: 42px; flex: none; display: grid; place-items: center; border-radius: 13px;
+    width: 44px; height: 44px; flex: none; display: grid; place-items: center; border-radius: 14px;
     color: var(--accent-light);
     background: linear-gradient(145deg, rgba(255,255,255,.24), rgba(var(--a-rgb), .16));
     border: 1px solid rgba(255,255,255,.32);
@@ -389,12 +419,13 @@
   }
   .help-ico svg { width: 20px; height: 20px; display: block; }
   .help-copy { min-width: 0; flex: 1; }
-  .help-title { font-family: var(--font-display); font-weight: 500; font-size: 18px; letter-spacing: -.01em; line-height: 1.15; color: var(--ink); }
-  .help-sub { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.35; color: var(--muted); }
+  .help-title { font-family: var(--font-display); font-weight: 500; font-size: 18px; letter-spacing: -.01em; line-height: 1.2; color: var(--ink); }
+  .help-sub { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.35; color: var(--muted); text-wrap: balance; }
 
   .help-btn {
+    grid-column: 1 / -1; width: 100%;
     display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: none;
-    height: 42px; padding: 0 18px; border-radius: 12px; cursor: pointer; white-space: nowrap;
+    height: 44px; padding: 0 18px; border-radius: 12px; cursor: pointer; white-space: nowrap;
     font: 700 13.5px var(--font-body); letter-spacing: .005em; color: var(--on-accent); border: 0;
     background: linear-gradient(145deg, var(--accent-light), var(--accent) 55%, var(--accent-deep));
     box-shadow: 0 10px 24px -6px rgba(var(--a-rgb), .5), inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(0,0,0,.12);
@@ -683,6 +714,10 @@
     .frame { max-width: 560px; }
     .slab { grid-template-columns: minmax(0, 1fr); }
     .access { order: -1; border-left: 0; border-bottom: 1px solid var(--line-soft); }
+    /* Empilhado: a marca sobe para o topo do acesso (antes só aparecia no fim da página) */
+    .mbrand { display: flex; margin-bottom: 22px; }
+    .showcase .wordmark { display: none; }
+    .brandrow { min-height: 0; }
     .showcase { padding: 36px 32px; }
     .s2, .s3, .h2s { display: none; }
     .h1s { width: 150px; height: 200px; right: -50px; top: -60px; }
@@ -692,34 +727,35 @@
     .access { padding: 34px 22px 24px; }
     .showcase { padding: 30px 22px; }
     .s1 { width: 120px; height: 120px; left: -30px; top: -34px; }
-    .wordmark small { display: none; }
     .eyebrow { display: none; }
+    .brandrow { display: none; }
     h1 { font-size: 28px; }
     .stage { padding-top: 72px; }
     .slab { border-radius: 30px; }
-    .help { flex-wrap: wrap; }
-    .help-btn { flex: 1 1 100%; }
+    .fc { padding: 12px 16px; }
   }
 
   /* ---------- Notebooks e janelas baixas: compacta o espaçamento para a placa caber sem rolar a página ---------- */
   @media (min-width: 981px) and (max-height: 860px) {
     .stage { padding-top: 26px; padding-bottom: 26px; }
     .colors { top: 10px; }
-    .showcase { padding: 30px 44px; gap: 14px; }
-    .access { padding: 30px 44px 20px; }
+    :root { --pad-x: 44px; --pad-y: 30px; }
+    .showcase { gap: 14px; }
+    .hero { gap: 12px; }
     h1 { font-size: clamp(32px, 3.2vw, 44px); }
     .lead { font-size: 15.5px; line-height: 1.55; }
-    .cluster { gap: 9px; margin-top: 2px; }
-    .fc { padding: 10px 16px; }
+    .cluster { gap: 9px; }
+    .showcase-foot { gap: 10px; }
+    .fc { padding: 8px 16px; min-height: 64px; }
     .fc b.serif { font-size: 21px; }
     .access { gap: 14px; }
     .access h2 { font-size: 29px; margin-bottom: 4px; }
     .tabs { margin-bottom: 14px; }
-    form { gap: 11px; }
+    form { row-gap: 11px; }
     .control { height: 54px; }
     .btn { height: 52px; }
-    .help { padding: 11px 12px 11px 14px; }
-    .help-ico { width: 38px; height: 38px; }
+    .help { padding: 12px 14px; gap: 10px 12px; grid-template-columns: 40px minmax(0, 1fr); }
+    .help-ico { width: 40px; height: 40px; border-radius: 12px; }
     .help-btn { height: 40px; }
   }
 
@@ -780,37 +816,44 @@
             <span class="eyebrow">Gestão financeira pessoal</span>
           </div>
 
-          <h1>
-            Cada real com destino.
-            <span>Cada mês com resultado.</span>
-          </h1>
-          <p class="lead">Controle gastos, cartões e metas em um só lugar e descubra, em minutos, quanto você pode guardar neste mês.</p>
-
-          <div class="cluster" aria-hidden="true">
-            <div class="fc">
-              <div class="txt"><small>Saldo do mês</small><b class="serif">R$ 4.280,00</b></div>
-              <svg width="96" height="38" viewBox="0 0 96 38" fill="none">
-                <defs><linearGradient id="sp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="st-a" stop-opacity=".45"/><stop offset="1" class="st-a" stop-opacity="0"/></linearGradient></defs>
-                <path d="M2 32 C14 30 18 24 30 23 S46 27 56 19 S74 12 82 8 S92 4 94 3 V38 H2Z" fill="url(#sp)"/>
-                <path d="M2 32 C14 30 18 24 30 23 S46 27 56 19 S74 12 82 8 S92 4 94 3" stroke="var(--accent-light)" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <div class="fc">
-              <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
-                <circle cx="23" cy="23" r="18" stroke="rgba(255,255,255,.18)" stroke-width="5"/>
-                <circle cx="23" cy="23" r="18" stroke="var(--accent-light)" stroke-width="5" stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="40.7" transform="rotate(-90 23 23)"/>
-              </svg>
-              <div class="txt"><small>Meta: reserva de emergência</small><b>64% concluída</b></div>
-            </div>
-            <div class="fc">
-              <div class="txt"><small>Limite do cartão</small><b>38% utilizado</b><div class="bar"><i></i></div></div>
-            </div>
+          <div class="hero">
+            <h1>
+              Cada real com destino.
+              <span>Cada mês com resultado.</span>
+            </h1>
+            <p class="lead">Controle gastos, cartões e metas em um só lugar e descubra, em minutos, quanto você pode guardar neste mês.</p>
           </div>
-          <p class="caption">Exemplo ilustrativo do painel.</p>
+
+          <div class="showcase-foot">
+            <div class="cluster" aria-hidden="true">
+              <div class="fc">
+                <span class="fc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v2"/><path d="M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-3"/><path d="M21 9H6a3 3 0 0 1-3-2"/><path d="M21 9v6h-4a3 3 0 0 1 0-6z"/></svg></span>
+                <div class="txt"><small>Saldo do mês</small><b class="serif">R$ 4.280,00</b></div>
+                <svg width="96" height="38" viewBox="0 0 96 38" fill="none">
+                  <defs><linearGradient id="sp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="st-a" stop-opacity=".45"/><stop offset="1" class="st-a" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M2 32 C14 30 18 24 30 23 S46 27 56 19 S74 12 82 8 S92 4 94 3 V38 H2Z" fill="url(#sp)"/>
+                  <path d="M2 32 C14 30 18 24 30 23 S46 27 56 19 S74 12 82 8 S92 4 94 3" stroke="var(--accent-light)" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="fc">
+                <svg class="ring" viewBox="0 0 46 46" fill="none">
+                  <circle cx="23" cy="23" r="18" stroke="rgba(255,255,255,.18)" stroke-width="5"/>
+                  <circle cx="23" cy="23" r="18" stroke="var(--accent-light)" stroke-width="5" stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="40.7" transform="rotate(-90 23 23)"/>
+                </svg>
+                <div class="txt"><small>Meta: reserva de emergência</small><b>64% concluída</b></div>
+              </div>
+              <div class="fc">
+                <span class="fc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M2.5 10h19M6.5 15h3"/></svg></span>
+                <div class="txt"><small>Limite do cartão</small><b>38% utilizado</b><div class="bar"><i></i></div></div>
+              </div>
+            </div>
+            <p class="caption">Exemplo ilustrativo do painel.</p>
+          </div>
         </section>
 
         <section class="access" aria-labelledby="titulo-card">
           <div class="access-head">
+            <div class="wordmark mbrand" aria-hidden="true"><span class="mark">N</span><span>Nexus <small>Financeiro</small></span></div>
             <h2 id="titulo-card">Entre no seu painel</h2>
             <p class="sub" id="subtitulo">Seu resumo do mês está esperando por você.</p>
           </div>
@@ -850,7 +893,7 @@
               <p class="error" data-for="email"></p>
             </div>
 
-            <div class="field">
+            <div class="field" id="f-senha">
               <div class="control has-eye">
                 <svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
                 <input id="senha" type="password" autocomplete="current-password" placeholder=" ">
@@ -891,8 +934,8 @@
 
           <div class="access-foot">
           <section class="help" aria-labelledby="help-title">
-            <span class="help-ico" aria-hidden="true" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;font-weight:900;font-size:15px;">
-              G
+            <span class="help-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/></svg>
             </span>
             <div class="help-copy">
               <h3 class="help-title" id="help-title">Central de Serviços GLPI</h3>
@@ -1098,6 +1141,7 @@
   function setMode(next, isInit = false) {
     mode = next === 'register' ? 'register' : 'login';
     const registering = mode === 'register';
+    form.classList.toggle('is-register', registering);
     const consentsWrap = ensureRegistrationConsents();
     consentsWrap.hidden = !registering;
     $('#tab-login').setAttribute('aria-selected', String(!registering));
