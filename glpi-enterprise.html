@@ -96,53 +96,18 @@
                 </div>
             </div>
 
-            <!-- Login Form & Quick Switcher Right -->
+            <!-- Login Form Right (Apenas Login Direto com Credenciais do Sistema Financeiro) -->
             <div class="md:col-span-7 p-8 flex flex-col justify-center">
                 <div class="mb-6">
                     <h3 class="text-xl font-bold text-white mb-1">Acessar o Sistema</h3>
-                    <p class="text-xs text-slate-400">Utilize o mesmo e-mail e senha de acesso do Sistema Financeiro:</p>
-                </div>
-
-                <!-- Quick Profile Buttons -->
-                <div class="space-y-3 mb-6">
-                    <button type="button" id="btn-quick-user" onclick="loginAs('user')" class="w-full text-left p-3.5 rounded-2xl bg-slate-950/80 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/50 transition-all group flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center group-hover:scale-105 transition-transform">
-                                <i class="fa-solid fa-user-tie text-lg"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-xs text-white group-hover:text-blue-400 transition-colors">Perfil Solicitante (Cliente)</div>
-                                <div class="text-[11px] text-slate-400">Abertura de chamados, consulta de status e base de conhecimento</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-blue-400 text-xs"></i>
-                    </button>
-
-                    <!-- Visível EXCLUSIVAMENTE para Perfil Administrador -->
-                    <button type="button" id="btn-quick-tech" onclick="loginAs('tech')" class="hidden w-full text-left p-3.5 rounded-2xl bg-slate-950/80 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 transition-all group flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center group-hover:scale-105 transition-transform">
-                                <i class="fa-solid fa-headset text-lg"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-xs text-white group-hover:text-amber-400 transition-colors">Perfil Técnico (Suporte / Admin)</div>
-                                <div class="text-[11px] text-slate-400">Console ITSM, atribuição de chamados, notas privadas e SLAs</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-amber-400 text-xs"></i>
-                    </button>
-                </div>
-
-                <div class="relative flex items-center justify-center my-4">
-                    <div class="border-t border-slate-800 w-full"></div>
-                    <span class="bg-slate-900 px-3 text-[10px] font-mono text-slate-500 uppercase tracking-wider absolute">acesso sistema financeiro</span>
+                    <p class="text-xs text-slate-400">Entre com seu e-mail e senha cadastrados no Sistema Financeiro. O seu perfil (Usuário para abrir chamados ou Administrador para tratar chamados) será carregado automaticamente:</p>
                 </div>
 
                 <!-- Manual Login Form (Mesmo Acesso do Sistema Financeiro) -->
                 <form onsubmit="handleManualLogin(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">E-mail Corporativo (Sistema Financeiro)</label>
-                        <input type="email" id="login-email" placeholder="seu.email@exemplo.com" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">E-mail Cadastrado</label>
+                        <input type="email" id="login-email" placeholder="Digite seu e-mail do Sistema Financeiro" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Senha de Acesso</label>
@@ -181,12 +146,12 @@
 
         <!-- Global Search & User Profile -->
         <div class="flex items-center gap-4">
-            <!-- Profile Switcher Dropdown Button (Visível APENAS para Admin) -->
+            <!-- Profile Switcher Dropdown Button (Visível APENAS para Admin caso queira alternar entre Tratar e Abrir Chamado) -->
             <div id="profile-switcher-wrap" class="relative hidden">
                 <button onclick="toggleProfileMenu()" class="flex items-center gap-2 bg-slate-950 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-xl text-xs text-slate-300 transition-all">
                     <i class="fa-solid fa-repeat text-amber-500"></i>
-                    <span class="hidden sm:inline text-slate-400">Perfil:</span>
-                    <span id="profile-active-label" class="font-bold text-white uppercase">USUÁRIO</span>
+                    <span class="hidden sm:inline text-slate-400">Modo:</span>
+                    <span id="profile-active-label" class="font-bold text-white uppercase">ADMINISTRADOR</span>
                     <i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i>
                 </button>
                 
@@ -194,10 +159,10 @@
                 <div id="profile-menu" class="hidden absolute right-0 mt-2 w-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 text-xs">
                     <div class="text-[10px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 border-b border-slate-800">Alternar Visão (Admin)</div>
                     <button onclick="switchRole('user')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center gap-2 text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-user-tie text-blue-400"></i> Solicitante / Cliente
+                        <i class="fa-solid fa-user-tie text-blue-400"></i> Abrir Chamados (Usuário)
                     </button>
                     <button onclick="switchRole('tech')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center gap-2 text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-headset text-amber-400"></i> Técnico / Administrador
+                        <i class="fa-solid fa-headset text-amber-400"></i> Tratar Chamados (Admin)
                     </button>
                 </div>
             </div>
@@ -207,11 +172,11 @@
             <!-- Current Logged User Info -->
             <div class="flex items-center gap-3">
                 <div id="user-avatar-box" class="w-8 h-8 rounded-xl bg-blue-600 text-white font-bold text-xs flex items-center justify-center border border-blue-400">
-                    JS
+                    US
                 </div>
                 <div class="text-left hidden md:block text-xs">
-                    <div id="user-display-name" class="font-bold text-white leading-none">João Silva</div>
-                    <div id="user-display-email" class="text-[10px] text-slate-400 leading-tight mt-0.5">joao.silva@empresa.com.br</div>
+                    <div id="user-display-name" class="font-bold text-white leading-none">Usuário</div>
+                    <div id="user-display-email" class="text-[10px] text-slate-400 leading-tight mt-0.5"></div>
                 </div>
                 <button onclick="logout()" class="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-800 transition-colors" title="Sair / Trocar Perfil">
                     <i class="fa-solid fa-power-off text-sm"></i>
@@ -715,13 +680,9 @@
                         </div>
 
                         <div>
-                            <label class="block font-semibold text-slate-400 mb-1">Técnico Responsável</label>
+                            <label class="block font-semibold text-slate-400 mb-1">Técnico / Administrador Responsável</label>
                             <select id="prop-technician" onchange="updateTicketProperties()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:border-amber-500 outline-none">
                                 <option value="Não Atribuído">-- Não Atribuído --</option>
-                                <option value="Gabriel Torres (N2)">Gabriel Torres (N2 - Você)</option>
-                                <option value="Paulo Lima (Admin)">Paulo Lima (Admin)</option>
-                                <option value="Ana Paula (Segurança)">Ana Paula (Segurança)</option>
-                                <option value="Carlos Eduardo (N3 DB)">Carlos Eduardo (N3 DB)</option>
                             </select>
                         </div>
 
@@ -795,50 +756,7 @@
             RESOLVIDO: "O incidente reportado foi corrigido e testado com sucesso pela nossa equipe de TI. O chamado está marcado como RESOLVIDO."
         };
 
-        const DEFAULT_DEMO_TICKETS = [
-            {
-                id: "#TK-2026-9041",
-                name: "João Silva",
-                email: "joao.silva@empresa.com.br",
-                company: "Grupo Rocha & Lima",
-                category: "Sistema Financeiro & ERP",
-                urgency: "Crítica",
-                subject: "Falha de comunicação na emissão de lote NF-e no ERP",
-                description: "Ao tentar emitir o lote de notas fiscais de vendas do dia, o sistema retorna timeout HTTP 504 no servidor SEFAZ.",
-                status: "Em Atendimento",
-                date: "07/11/2026 09:30",
-                sla: "30 Minutos",
-                technician: "Gabriel Torres (N2)",
-                asset: "SRV-DB-PROD-01 (Servidor SQL)",
-                timeSpent: 1.5,
-                solution: "",
-                timeline: [
-                    { sender: "Solicitante", name: "João Silva", text: "Chamado urgente registrado via portal.", time: "07/11/2026 09:30", internal: false },
-                    { sender: "Técnico", name: "Gabriel Torres (N2)", text: "Analisando porta de conexões do Banco de Dados SQL.", time: "07/11/2026 09:45", internal: true }
-                ]
-            },
-            {
-                id: "#TK-2026-8104",
-                name: "João Silva",
-                email: "joao.silva@empresa.com.br",
-                company: "Grupo Rocha & Lima",
-                category: "Gestão de Acessos & Reset de Senha",
-                urgency: "Média",
-                subject: "Reset de senha e desbloqueio no Active Directory",
-                description: "Usuário bloqueado após 3 tentativas de digitação de senha incorreta.",
-                status: "Resolvido",
-                date: "06/11/2026 14:15",
-                sla: "2 Horas",
-                technician: "Ana Paula (Segurança)",
-                asset: "Nenhum",
-                timeSpent: 0.5,
-                solution: "Senha redefinida e credencial temporária enviada por SMS.",
-                timeline: [
-                    { sender: "Solicitante", name: "João Silva", text: "Aguardando desbloqueio.", time: "06/11/2026 14:15", internal: false },
-                    { sender: "Técnico", name: "Ana Paula (Segurança)", text: "Senha desbloqueada.", time: "06/11/2026 14:30", internal: false }
-                ]
-            }
-        ];
+        const DEFAULT_DEMO_TICKETS = [];
 
         function getNexusAuthHeaders() {
             const headers = { 'Content-Type': 'application/json' };
@@ -870,6 +788,28 @@
         function isNexusAdmin() {
             const u = getNexusSessionUser();
             return Boolean(u && (u.role === 'Administrador' || u.role === 'admin' || u.isAdmin === true));
+        }
+
+        // Converte os dados cadastrados no Sistema Financeiro para o perfil correspondente no GLPI:
+        // - Usuário comum -> role: 'user' (Abrir e consultar seus chamados)
+        // - Administrador -> role: 'tech' (Tratar, atribuir e resolver chamados)
+        function buildGlpiUserFromNexus(userObj) {
+            if (!userObj || !userObj.email) return null;
+            const isAdmin = Boolean(
+                userObj.role === 'Administrador' ||
+                userObj.role === 'admin' ||
+                userObj.isAdmin === true
+            );
+            return {
+                id: userObj.id || null,
+                name: userObj.name || userObj.email.split('@')[0],
+                email: userObj.email,
+                phone: userObj.phone || userObj.telefone || '',
+                cpf: userObj.cpf || '',
+                profileRole: isAdmin ? 'Administrador' : (userObj.role || 'Usuário'),
+                role: isAdmin ? 'tech' : 'user',
+                isAdmin: isAdmin
+            };
         }
 
         function formatDateBr(isoOrDate) {
@@ -912,7 +852,7 @@
                 protocol: o.protocol,
                 id: String(proto).startsWith('#') ? String(proto) : '#' + String(proto),
                 name: o.client_name || 'Solicitante',
-                email: o.client_email || 'cliente@empresa.com.br',
+                email: o.client_email || '',
                 company: o.canal_atendimento || 'Matriz Corporativa',
                 category: o.service_type || 'Sistema Financeiro & ERP',
                 urgency: o.priority === 'Urgente' ? 'Crítica' : (o.priority === 'Normal' ? 'Média' : (o.priority || 'Média')),
@@ -940,34 +880,40 @@
                 if (backBtn) backBtn.classList.add('hidden');
             }
 
-            await loadTickets();
-
-            // Se aberto dentro do Perfil Admin (?mode=tech), verifica se o usuário é Administrador no Sistema Financeiro
+            // Se aberto dentro do Perfil Admin (?mode=tech), puxa os dados do Administrador logado no Sistema Financeiro
             if (mode === 'tech') {
                 const nexusUser = getNexusSessionUser();
-                if (nexusUser && nexusUser.role === 'Administrador') {
-                    currentUser = {
-                        id: nexusUser.id,
-                        name: nexusUser.name,
-                        email: nexusUser.email,
-                        role: "tech",
-                        isAdmin: true
-                    };
+                const glpiUser = buildGlpiUserFromNexus(nexusUser);
+                if (glpiUser && glpiUser.isAdmin) {
+                    currentUser = glpiUser;
                     localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
+                    await loadTickets();
                     showAppView();
                     if (params.get('tab') === 'queue') {
                         navTech('queue');
                     }
                     return;
                 } else {
+                    await loadTickets();
                     showLoginView();
                     return;
                 }
             }
 
-            // Se aberto pelo botão "Abrir Chamado GLPI" na tela de login (?entry=login), exibe a tela inicial de login
+            // Se aberto pelo botão "Abrir Chamado GLPI" na tela de login (?entry=login), exibe a tela de login limpa
             if (entry === 'login') {
+                await loadTickets();
                 showLoginView();
+                return;
+            }
+
+            // Se já houver sessão no GLPI ou no Sistema Financeiro, puxa automaticamente os dados cadastrados
+            const nexusUser = getNexusSessionUser();
+            if (nexusUser && nexusUser.email) {
+                currentUser = buildGlpiUserFromNexus(nexusUser);
+                localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
+                await loadTickets();
+                showAppView();
                 return;
             }
 
@@ -975,22 +921,17 @@
             if (savedSession) {
                 try {
                     const parsed = JSON.parse(savedSession);
-                    const nexusUser = getNexusSessionUser();
-                    const adminAllowed = Boolean((parsed && parsed.isAdmin) && (!nexusUser || nexusUser.role === 'Administrador'));
-                    currentUser = {
-                        id: parsed.id || (nexusUser && nexusUser.id) || null,
-                        name: parsed.name || (nexusUser && nexusUser.name) || 'Usuário',
-                        email: parsed.email || (nexusUser && nexusUser.email) || '',
-                        role: (parsed.role === 'tech' && adminAllowed) ? 'tech' : 'user',
-                        isAdmin: adminAllowed
-                    };
-                    showAppView();
-                } catch(e) {
-                    showLoginView();
-                }
-            } else {
-                showLoginView();
+                    if (parsed && parsed.email) {
+                        currentUser = buildGlpiUserFromNexus(parsed);
+                        await loadTickets();
+                        showAppView();
+                        return;
+                    }
+                } catch(e) {}
             }
+
+            await loadTickets();
+            showLoginView();
         };
 
         function closeGlpiOrReturn() {
@@ -1007,7 +948,12 @@
             const stored = localStorage.getItem('enterprise_service_desk_tickets');
             let localList = [];
             if (stored) {
-                try { localList = JSON.parse(stored) || []; } catch(e) { localList = []; }
+                try {
+                    localList = (JSON.parse(stored) || []).filter(t => {
+                        const cleanId = String(t && t.id || '').replace(/^#/, '');
+                        return cleanId !== 'TK-2026-9041' && cleanId !== 'TK-2026-8104';
+                    });
+                } catch(e) { localList = []; }
             }
 
             // Busca chamados reais do servidor (SQL Server / local_ordens_servico.json)
@@ -1034,13 +980,7 @@
             serverTickets.forEach(t => mergedMap.set(t.id.replace(/^#/, ''), t));
             localList.forEach(t => {
                 const cleanKey = String(t.id || '').replace(/^#/, '');
-                if (!mergedMap.has(cleanKey)) {
-                    mergedMap.set(cleanKey, t);
-                }
-            });
-            DEFAULT_DEMO_TICKETS.forEach(t => {
-                const cleanKey = String(t.id || '').replace(/^#/, '');
-                if (!mergedMap.has(cleanKey)) {
+                if (cleanKey && !mergedMap.has(cleanKey)) {
                     mergedMap.set(cleanKey, t);
                 }
             });
@@ -1098,76 +1038,17 @@
             }
         }
 
-        // AUTH & PROFILE SWITCHING (INTEGRADO COM POST /api/login DO SISTEMA FINANCEIRO)
-        async function loginAs(role) {
-            setLoginError('');
-            const nexusUser = getNexusSessionUser();
-
-            if (role === 'tech') {
-                // Perfil Técnico é exclusivo para Administradores do Sistema Financeiro
-                if (!nexusUser || nexusUser.role !== 'Administrador') {
-                    const btnTech = document.getElementById('btn-quick-tech');
-                    if (btnTech) btnTech.classList.add('hidden');
-                    showToast('O Perfil Técnico é restrito ao Administrador.', 'warning');
-                    return;
-                }
-                currentUser = {
-                    id: nexusUser.id,
-                    name: nexusUser.name,
-                    email: nexusUser.email,
-                    role: 'tech',
-                    isAdmin: true
-                };
-                localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
-                await loadTickets();
-                showToast(`Autenticado como Administrador: ${currentUser.name}`, 'success');
-                showAppView();
-                return;
-            }
-
-            // role === 'user' (Perfil Solicitante):
-            // 1. Se o usuário já estiver logado no Sistema Financeiro no navegador, entra direto com sua conta
-            if (nexusUser && nexusUser.email) {
-                const adminFlag = (nexusUser.role === 'Administrador');
-                currentUser = {
-                    id: nexusUser.id,
-                    name: nexusUser.name || nexusUser.email.split('@')[0],
-                    email: nexusUser.email,
-                    role: 'user',
-                    isAdmin: adminFlag
-                };
-                localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
-                await loadTickets();
-                showToast(`Autenticado como ${currentUser.name}`, 'success');
-                showAppView();
-                return;
-            }
-
-            // 2. Se preencheu e-mail e senha na tela, autentica via /api/login no modo Solicitante
-            const emailInput = document.getElementById('login-email');
-            const passInput = document.getElementById('login-password');
-            if (emailInput && passInput && emailInput.value.trim() && passInput.value) {
-                await authenticateWithFinancialSystem(emailInput.value.trim(), passInput.value, 'user');
-                return;
-            }
-
-            // 3. Caso contrário, solicita que informe o mesmo e-mail e senha do Sistema Financeiro
-            if (emailInput && !emailInput.value.trim()) {
-                emailInput.focus();
-            } else if (passInput) {
-                passInput.focus();
-            }
-            setLoginError('Informe abaixo seu e-mail e senha do Sistema Financeiro para entrar.');
-            showToast('Digite seu e-mail e senha do Sistema Financeiro.', 'info');
-        }
-
-        async function authenticateWithFinancialSystem(email, password, preferredRole = null) {
+        // AUTENTICAÇÃO DIRETA COM O SISTEMA FINANCEIRO (POST /api/login)
+        // Puxa automaticamente todos os dados cadastrados (nome, e-mail, telefone, CPF e perfil)
+        // - Perfil de Usuário -> Direciona para Abrir Chamados e Meus Chamados
+        // - Perfil de Administrador -> Direciona para Tratar Chamados (Console Técnico ITSM)
+        async function authenticateWithFinancialSystem(email, password) {
             setLoginError('');
             const submitBtn = document.getElementById('btn-submit-login');
             const originalHtml = submitBtn ? submitBtn.innerHTML : '';
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Autenticando...';
+                submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Carregando dados do Sistema Financeiro...';
             }
 
             try {
@@ -1185,7 +1066,7 @@
                     return;
                 }
 
-                // Sincroniza sessão com o Sistema Financeiro
+                // Sincroniza sessão e dados do usuário cadastrado no Sistema Financeiro
                 if (data.token) {
                     localStorage.setItem('nexus_token', data.token);
                     localStorage.setItem('nexus_auth_token', data.token);
@@ -1193,23 +1074,18 @@
                 localStorage.setItem('nexus_session', JSON.stringify({ email: data.user.email || email, id: data.user.id || 1 }));
                 localStorage.setItem('nexus_cached_user', JSON.stringify(data.user));
 
-                const isAdmin = (data.user.role === 'Administrador' || data.user.role === 'admin' || data.user.isAdmin === true);
-                // Usuários comuns entram SEMPRE no perfil 'user' (Solicitante).
-                // Administradores entram no perfil 'tech' por padrão (ou 'user' se clicaram em Perfil Solicitante).
-                const targetRole = isAdmin ? (preferredRole || 'tech') : 'user';
-
-                currentUser = {
-                    id: data.user.id,
-                    name: data.user.name || email.split('@')[0],
-                    email: data.user.email || email,
-                    role: targetRole,
-                    isAdmin: isAdmin
-                };
-
+                currentUser = buildGlpiUserFromNexus(data.user);
                 localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
+
                 await loadTickets();
-                showToast(`Bem-vindo(a), ${currentUser.name}!`, 'success');
+                const msgPerfil = currentUser.isAdmin
+                    ? `Bem-vindo(a), ${currentUser.name} (Administrador - Tratar Chamados)`
+                    : `Bem-vindo(a), ${currentUser.name} (Abrir e Consultar Chamados)`;
+                showToast(msgPerfil, 'success');
                 showAppView();
+                if (currentUser.isAdmin) {
+                    navTech('queue');
+                }
             } catch (err) {
                 setLoginError('Erro de comunicação com o servidor de autenticação.');
                 showToast('Falha ao conectar ao servidor.', 'warning');
@@ -1226,7 +1102,7 @@
             const email = (document.getElementById('login-email').value || '').trim();
             const password = document.getElementById('login-password').value || '';
             if (!email || !password) {
-                setLoginError('Preencha o e-mail e a senha do Sistema Financeiro.');
+                setLoginError('Preencha o e-mail e a senha cadastrados no Sistema Financeiro.');
                 return;
             }
             await authenticateWithFinancialSystem(email, password);
@@ -1252,7 +1128,7 @@
             localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
             toggleProfileMenu(true);
             await loadTickets();
-            showToast(`Perfil alterado para ${role === 'tech' ? 'CONSOLE TÉCNICO' : 'SOLICITANTE'}`, 'warning');
+            showToast(`Modo alterado para ${role === 'tech' ? 'TRATAR CHAMADOS (ADMIN)' : 'ABRIR CHAMADOS (USUÁRIO)'}`, 'warning');
             showAppView();
         }
 
@@ -1269,22 +1145,24 @@
             document.getElementById('app-wrapper').classList.add('hidden');
             setLoginError('');
 
-            // O botão "Perfil Técnico (Suporte / Admin)" só aparece na tela de login se a sessão ativa for de um Administrador
-            const btnQuickTech = document.getElementById('btn-quick-tech');
-            if (btnQuickTech) {
-                if (isNexusAdmin()) {
-                    btnQuickTech.classList.remove('hidden');
-                } else {
-                    btnQuickTech.classList.add('hidden');
-                }
-            }
-
-            // Preenche automaticamente o e-mail caso o usuário já tenha sessão ou e-mail salvo no Sistema Financeiro
+            // Preenche automaticamente o e-mail caso o usuário já tenha e-mail salvo no Sistema Financeiro
             const emailInput = document.getElementById('login-email');
             if (emailInput && !emailInput.value) {
                 const nexusUser = getNexusSessionUser();
                 const savedEmail = (nexusUser && nexusUser.email) || localStorage.getItem('nexus_saved_email') || '';
                 if (savedEmail) emailInput.value = savedEmail;
+            }
+        }
+
+        function ensureAdminInTechSelect() {
+            const techSelect = document.getElementById('prop-technician');
+            if (!techSelect || !currentUser || !currentUser.name) return;
+            const adminName = currentUser.name;
+            if (!Array.from(techSelect.options).some(opt => opt.value === adminName)) {
+                const opt = document.createElement('option');
+                opt.value = adminName;
+                opt.textContent = `${adminName} (Administrador)`;
+                techSelect.appendChild(opt);
             }
         }
 
@@ -1304,22 +1182,31 @@
             document.getElementById('app-header').classList.remove('hidden');
             document.getElementById('app-wrapper').classList.remove('hidden');
 
-            // Exibe o seletor de alternância de perfil (Solicitante <-> Técnico) APENAS para Administradores
+            // Exibe o seletor de alternância APENAS para Administradores
             const switcherWrap = document.getElementById('profile-switcher-wrap');
             const switcherDivider = document.getElementById('profile-switcher-divider');
             if (currentUser.isAdmin) {
                 if (switcherWrap) switcherWrap.classList.remove('hidden');
                 if (switcherDivider) switcherDivider.classList.remove('hidden');
+                ensureAdminInTechSelect();
             } else {
                 if (switcherWrap) switcherWrap.classList.add('hidden');
                 if (switcherDivider) switcherDivider.classList.add('hidden');
             }
 
+            // Preenche cabeçalho e formulários com os dados reais cadastrados no Sistema Financeiro
             document.getElementById('user-display-name').innerText = currentUser.name;
             document.getElementById('user-display-email').innerText = currentUser.email;
-            document.getElementById('user-avatar-box').innerText = currentUser.name.substring(0,2).toUpperCase();
-            document.getElementById('header-role-badge').innerText = currentUser.role === 'tech' ? 'CONSOLE TÉCNICO' : 'SOLICITANTE';
-            document.getElementById('profile-active-label').innerText = currentUser.role === 'tech' ? 'TÉCNICO' : 'SOLICITANTE';
+            document.getElementById('user-avatar-box').innerText = (currentUser.name || 'US').substring(0,2).toUpperCase();
+            document.getElementById('header-role-badge').innerText = currentUser.role === 'tech'
+                ? 'ADMINISTRADOR • TRATAR CHAMADOS'
+                : 'USUÁRIO • ABRIR CHAMADOS';
+            document.getElementById('profile-active-label').innerText = currentUser.role === 'tech' ? 'TRATAR CHAMADOS' : 'ABRIR CHAMADOS';
+
+            const reqNameInput = document.getElementById('form-req-name');
+            const reqEmailInput = document.getElementById('form-req-email');
+            if (reqNameInput) reqNameInput.value = currentUser.name || '';
+            if (reqEmailInput) reqEmailInput.value = currentUser.email || '';
 
             if (currentUser.role === 'user') {
                 document.getElementById('nav-group-user').classList.remove('hidden');
@@ -1443,7 +1330,7 @@
             let protocolId = `#TK-2026-${Math.floor(1000 + Math.random() * 9000)}`;
             let dbId = null;
 
-            // Persiste em tempo real no servidor SQL Server + local_ordens_servico.json via POST /api/ordens
+            // Persiste em tempo real no servidor SQL Server + local_ordens_servico.json via POST /api/ordens com os dados cadastrados no Sistema Financeiro
             try {
                 const res = await fetch('/api/ordens', {
                     method: 'POST',
@@ -1451,6 +1338,8 @@
                     body: JSON.stringify({
                         client_name: reqName,
                         client_email: reqEmail,
+                        client_phone: (currentUser && currentUser.phone) || '',
+                        client_cpf: (currentUser && currentUser.cpf) || '',
                         service_type: category,
                         priority: urgency,
                         title: subject,
@@ -1672,7 +1561,7 @@
 
             const t = ticketsList[activeTicketIndex];
             const senderLabel = (currentUser && currentUser.role === 'user') ? "Solicitante" : "Técnico";
-            const senderName = currentUser ? currentUser.name : "Gabriel Torres (N2)";
+            const senderName = currentUser ? currentUser.name : "Administrador";
 
             t.timeline.push({
                 sender: senderLabel,
@@ -1715,7 +1604,7 @@
 
         async function takeCurrentTicket() {
             if (activeTicketIndex === null) return;
-            const techName = currentUser ? currentUser.name : "Gabriel Torres (N2)";
+            const techName = currentUser ? currentUser.name : "Administrador";
             const techSelect = document.getElementById('prop-technician');
             if (!Array.from(techSelect.options).some(opt => opt.value === techName)) {
                 const opt = document.createElement('option');
@@ -1746,7 +1635,7 @@
 
             t.timeline.push({
                 sender: "Técnico",
-                name: currentUser ? currentUser.name : "Gabriel Torres (N2)",
+                name: currentUser ? currentUser.name : "Administrador",
                 text: `[SOLUÇÃO APLICADA]: ${sol}`,
                 time: dateStr,
                 internal: false
@@ -1766,7 +1655,7 @@
                 showToast("Selecione ao menos um chamado na lista.", "warning");
                 return;
             }
-            const techName = currentUser ? currentUser.name : "Gabriel Torres (N2)";
+            const techName = currentUser ? currentUser.name : "Administrador";
             for (const cb of selected) {
                 const id = cb.getAttribute('data-id');
                 const t = ticketsList.find(x => x.id === id);
