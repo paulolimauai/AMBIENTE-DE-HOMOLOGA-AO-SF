@@ -318,6 +318,33 @@ html.user-logged-in #mobileDrawer #mobileDrawerLogoutBtn .ic { width: auto !impo
   html.user-logged-in .topheader #logoutBtn,
   html.user-logged-in .topheader #mobileMenuToggle { min-width: 44px !important; min-height: 44px !important; }
 }
+
+/* =====================================================================================
+   5b. Cabeçalho: botão de tamanho de visualização ("Auto (100%)")
+   O frontend-polish.css trava todo .icon-btn do cabeçalho em 36px com !important: o rótulo quebrava em duas
+   linhas e o ícone da lupa era espremido a 0px de largura. Aqui o botão volta a ter a largura do conteúdo.
+   No celular (<= 640px) o server.js já o reduz a um botão só com o ícone, então a regra não vale lá.
+   ===================================================================================== */
+@media (min-width: 641px) {
+  html.user-logged-in .topheader-row .scale-selector-wrap #scaleMenuBtn {
+    width: auto !important; min-width: 40px !important; padding: 0 14px !important;
+    gap: 7px !important; white-space: nowrap !important; flex: none !important;
+  }
+  html.user-logged-in .topheader-row .scale-selector-wrap #scaleMenuBtn svg { flex: none !important; width: 15px !important; height: 15px !important; }
+  html.user-logged-in .topheader-row .scale-selector-wrap #scaleMenuBtn #currentScaleLabel { white-space: nowrap !important; line-height: 1 !important; }
+}
+
+/* =====================================================================================
+   5c. Minha Conta: alinhamento do card de plano e dos rótulos
+   - A classe .panel do app força flex-direction: column; o card de plano foi desenhado em linha (ícone + título à
+     esquerda, botão à direita) e ficava com o título centralizado e o botão sozinho numa segunda linha.
+     No celular (<= 720px) ele continua empilhado, como as regras da seção 6 esperam.
+   - Rótulos com selo ("E-mail cadastrado" + "Login da conta") saíam colados; ganham um respiro.
+   ===================================================================================== */
+@media (min-width: 721px) {
+  html.user-logged-in #pageContent .subscription-overview { flex-direction: row !important; }
+}
+html.user-logged-in #pageContent label[style*="justify-content:space-between"] > span + span { margin-left: 10px !important; }
 }
 
 /* =====================================================================================
