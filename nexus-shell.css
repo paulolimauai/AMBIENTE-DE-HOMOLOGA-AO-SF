@@ -1,0 +1,672 @@
+/* Nexus - casca do aplicativo (menu lateral, barra inferior e gaveta do celular) e ajustes de tela/zoom.
+
+   Como este arquivo vence as regras antigas:
+   - ele é carregado ANTES do frontend-polish.css, então a layer "nx-shell" é a primeira declarada;
+   - em declarações !important, a layer declarada primeiro vence qualquer outra (layer ou não), sem guerra de especificidade;
+   - por isso tudo aqui é !important, MAS nunca se define "display" de botões/seções que o JavaScript esconde por perfil
+     (usuário x administrador): o display deles continua vindo das regras antigas e do style inline.
+   Só vale com o usuário logado (html.user-logged-in); a tela de login não é afetada. O app é sempre escuro (modo claro removido). */
+
+@layer nx-shell {
+
+/* =====================================================================================
+   0. Tokens
+   ===================================================================================== */
+html.user-logged-in {
+  --nx-sh-ink: #EEF3FA;
+  --nx-sh-ink-2: #BAC6D9;
+  --nx-sh-muted: #96A4BA;
+  --nx-sh-line: rgba(255, 255, 255, .09);
+  --nx-sh-wash: rgba(255, 255, 255, .065);
+  --nx-sh-acc: var(--nx-o1, 250, 189, 46);   /* r, g, b da paleta escolhida pelo usuário */
+  --nx-sh-acc-2: var(--nx-o2, 250, 134, 46);
+  --nx-bar-h: 62px;
+}
+
+/* =====================================================================================
+   1. Tela e zoom
+   O app aplica "zoom" no body (110%-150% em monitores grandes), mas 100vh NÃO acompanha o zoom:
+   a barra lateral passava da tela (rodapé sumia) e a página ganhava rolagem em branco.
+   --app-zoom é o zoom efetivo (1 quando não há zoom).
+   ===================================================================================== */
+html.user-logged-in body,
+html.user-logged-in #appMain {
+  min-height: calc(100vh / var(--app-zoom, 1)) !important;
+}
+@supports (min-height: 100dvh) {
+  html.user-logged-in body,
+  html.user-logged-in #appMain { min-height: calc(100dvh / var(--app-zoom, 1)) !important; }
+}
+/* A barra lateral é presa pelo topo e pela base (não por uma altura em vh) */
+html.user-logged-in #menu.sidebar-menu { height: auto !important; bottom: 0 !important; }
+
+/* =====================================================================================
+   2. Menu lateral (computador e tablet largo)
+   ===================================================================================== */
+/* (sem "display": no celular o menu lateral é escondido pelas regras antigas e não pode reaparecer aqui) */
+html.user-logged-in #menu.sidebar-menu {
+  flex-direction: column !important;
+  padding: 12px 12px 10px !important;
+  gap: 0 !important;
+  background:
+    radial-gradient(130% 34% at 0% 0%, rgba(var(--nx-sh-acc), .13), transparent 72%),
+    linear-gradient(180deg, rgba(9, 13, 22, .86), rgba(5, 8, 14, .93)) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  border: 0 !important;
+  border-right: 1px solid var(--nx-sh-line) !important;
+  box-shadow: 18px 0 44px -28px rgba(0, 0, 0, .75) !important;
+}
+
+/* Lista rolável: rola por dentro, com esmaecido no fim (o rodapé da conta nunca é coberto) */
+html.user-logged-in #menu .sidebar-scroll {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  padding: 0 2px 20px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, .20) transparent !important;
+  -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 20px), transparent) !important;
+  mask-image: linear-gradient(180deg, #000 calc(100% - 20px), transparent) !important;
+}
+html.user-logged-in #menu .sidebar-scroll::-webkit-scrollbar { width: 6px !important; }
+html.user-logged-in #menu .sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .18) !important; border-radius: 99px !important; }
+
+/* Título de seção: à esquerda, com fio fino até o fim (sem o "traço - TÍTULO - traço" centralizado) */
+html.user-logged-in #menu .menu-section-header {
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 16px 10px 6px !important;
+}
+html.user-logged-in #menu .menu-section-header:first-of-type { padding-top: 6px !important; }
+html.user-logged-in #menu .menu-section-header::before,
+html.user-logged-in #menu .menu-section-header::after { display: none !important; }
+html.user-logged-in #menu .menu-section-title {
+  flex: 0 0 auto !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .13em !important;
+  text-transform: uppercase !important;
+  color: var(--nx-sh-muted) !important;
+  white-space: nowrap !important;
+}
+html.user-logged-in #menu .menu-section-line {
+  flex: 1 1 auto !important;
+  height: 1px !important;
+  min-width: 8px !important;
+  background: linear-gradient(90deg, rgba(255, 255, 255, .11), rgba(255, 255, 255, 0)) !important;
+}
+
+/* Item de menu: ícone em coluna fixa à esquerda e rótulo alinhado à esquerda (antes cada item era centralizado e os ícones "zigue-zagueavam") */
+html.user-logged-in #menu button.menu-btn-user,
+html.user-logged-in #menu button.menu-btn-admin {
+  position: relative !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  width: 100% !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: none !important;
+  margin: 1px 0 !important;
+  padding: 0 10px 0 8px !important;
+  border: 1px solid transparent !important;
+  border-radius: 12px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--nx-sh-ink-2) !important;
+  text-align: left !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+  cursor: pointer !important;
+  transition: background-color .16s ease, border-color .16s ease, color .16s ease !important;
+}
+html.user-logged-in #menu button.menu-btn-admin { height: 50px !important; min-height: 50px !important; }
+
+html.user-logged-in #menu button.menu-btn-user .ic,
+html.user-logged-in #menu button.menu-btn-admin .ic {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 30px !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  margin: 0 !important;
+  border-radius: 9px !important;
+  background: rgba(255, 255, 255, .05) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  box-shadow: none !important;
+  color: var(--nx-sh-ink-2) !important;
+  transition: background-color .16s ease, border-color .16s ease, color .16s ease !important;
+}
+html.user-logged-in #menu button.menu-btn-user .ic svg,
+html.user-logged-in #menu button.menu-btn-admin .ic svg { width: 16px !important; height: 16px !important; }
+html.user-logged-in #menu button.menu-btn-user .label,
+html.user-logged-in #menu button.menu-btn-admin .label {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+  margin: 0 !important;
+  text-align: left !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+html.user-logged-in #menu button.menu-btn-user:hover,
+html.user-logged-in #menu button.menu-btn-admin:hover { background: var(--nx-sh-wash) !important; color: #fff !important; }
+html.user-logged-in #menu button.menu-btn-user:hover .ic,
+html.user-logged-in #menu button.menu-btn-admin:hover .ic { background: rgba(255, 255, 255, .10) !important; color: #fff !important; }
+
+/* Item ativo: fundo e ícone na cor da paleta + barra de acento à esquerda */
+html.user-logged-in #menu button.menu-btn-user.active,
+html.user-logged-in #menu button.menu-btn-admin.active {
+  background: linear-gradient(90deg, rgba(var(--nx-sh-acc), .22), rgba(var(--nx-sh-acc), .06)) !important;
+  border-color: rgba(var(--nx-sh-acc), .34) !important;
+  color: #fff !important;
+}
+html.user-logged-in #menu button.menu-btn-user.active .ic,
+html.user-logged-in #menu button.menu-btn-admin.active .ic {
+  background: rgba(var(--nx-sh-acc), .24) !important;
+  border-color: rgba(var(--nx-sh-acc), .5) !important;
+  color: rgb(var(--nx-sh-acc)) !important;
+}
+html.user-logged-in #menu button.menu-btn-user::before,
+html.user-logged-in #menu button.menu-btn-admin::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 9px auto 9px -1px !important;
+  width: 3px !important;
+  height: auto !important;
+  border-radius: 0 3px 3px 0 !important;
+  background: rgb(var(--nx-sh-acc)) !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+  transform: scaleY(.5) !important;
+  transition: opacity .16s ease, transform .16s ease !important;
+}
+html.user-logged-in #menu button.menu-btn-user.active::before,
+html.user-logged-in #menu button.menu-btn-admin.active::before { opacity: 1 !important; transform: none !important; }
+html.user-logged-in #menu button:focus-visible,
+html.user-logged-in #mobileBottomBar button:focus-visible,
+html.user-logged-in #mobileDrawer button:focus-visible { outline: 2px solid rgba(var(--nx-sh-acc), .95) !important; outline-offset: 2px !important; }
+
+/* Itens do administrador: título + subtítulo e contador à direita */
+html.user-logged-in #menu button.menu-btn-admin .admin-menu-field-body {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  gap: 2px !important;
+  text-align: left !important;
+}
+html.user-logged-in #menu button.menu-btn-admin .admin-menu-field-body .label { width: 100% !important; line-height: 1.2 !important; }
+html.user-logged-in #menu button.menu-btn-admin .sub-label {
+  display: block !important;
+  width: 100% !important;
+  text-align: left !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  color: var(--nx-sh-muted) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+html.user-logged-in #menu button.menu-btn-admin .admin-menu-count-pill {
+  margin-left: auto !important;
+  min-width: 22px !important;
+  height: 20px !important;
+  line-height: 18px !important;
+  padding: 0 7px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  border-radius: 99px !important;
+  color: rgb(var(--nx-sh-acc)) !important;
+  background: rgba(var(--nx-sh-acc), .14) !important;
+  border: 1px solid rgba(var(--nx-sh-acc), .32) !important;
+}
+html.user-logged-in #menu .admin-sidebar-summary-card {
+  margin: 12px 0 0 !important;
+  padding: 12px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, .04) !important;
+  border: 1px solid var(--nx-sh-line) !important;
+  box-shadow: none !important;
+}
+
+/* Rodapé: cartão da conta e botão de recolher, compactos */
+html.user-logged-in #menu .sidebar-account-footer {
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  padding: 10px 0 0 !important;
+  border-top: 1px solid var(--nx-sh-line) !important;
+}
+html.user-logged-in #menu .sidebar-account-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 8px 10px 8px 8px !important;
+  border-radius: 13px !important;
+  background: rgba(255, 255, 255, .045) !important;
+  border: 1px solid var(--nx-sh-line) !important;
+  box-shadow: none !important;
+  text-align: left !important;
+  color: var(--nx-sh-ink) !important;
+  cursor: pointer !important;
+  transition: background-color .16s ease, border-color .16s ease !important;
+}
+html.user-logged-in #menu .sidebar-account-link:hover { background: var(--nx-sh-wash) !important; border-color: rgba(255, 255, 255, .16) !important; }
+html.user-logged-in #menu .sidebar-account-icon {
+  display: inline-grid !important;
+  place-items: center !important;
+  flex: 0 0 34px !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  color: #1B1306 !important;
+  background: linear-gradient(135deg, rgb(var(--nx-sh-acc)), rgb(var(--nx-sh-acc-2))) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .10) !important;
+}
+html.user-logged-in #menu .sidebar-account-icon img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
+html.user-logged-in #menu .sidebar-account-copy {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 1px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  text-align: left !important;
+}
+html.user-logged-in #menu .sidebar-account-copy strong {
+  max-width: 100% !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+html.user-logged-in #menu .sidebar-account-copy small {
+  max-width: 100% !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--nx-sh-muted) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+html.user-logged-in #menu .sidebar-account-arrow { flex: none !important; width: 16px !important; height: 16px !important; color: var(--nx-sh-muted) !important; }
+
+html.user-logged-in #menu .sidebar-footer { flex: 0 0 auto !important; margin: 0 !important; padding: 8px 0 0 !important; }
+html.user-logged-in #menu .sidebar-toggle-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 10px !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  border: 1px solid var(--nx-sh-line) !important;
+  box-shadow: none !important;
+  color: var(--nx-sh-muted) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: background-color .16s ease, color .16s ease, border-color .16s ease !important;
+}
+html.user-logged-in #menu .sidebar-toggle-btn:hover { background: var(--nx-sh-wash) !important; color: #fff !important; border-color: rgba(255, 255, 255, .18) !important; }
+html.user-logged-in #menu .sidebar-toggle-btn .toggle-icon-wrap { background: transparent !important; box-shadow: none !important; border: 0 !important; }
+
+/* Menu recolhido (trilho só com ícones) */
+html.user-logged-in.sidebar-collapsed #menu.sidebar-menu { padding: 12px 8px 10px !important; }
+html.user-logged-in.sidebar-collapsed #menu .sidebar-scroll { padding: 0 !important; align-items: center !important; }
+html.user-logged-in.sidebar-collapsed #menu .menu-section-title,
+html.user-logged-in.sidebar-collapsed #menu button .label,
+html.user-logged-in.sidebar-collapsed #menu .admin-menu-field-body,
+html.user-logged-in.sidebar-collapsed #menu .admin-menu-count-pill,
+html.user-logged-in.sidebar-collapsed #menu .sidebar-account-copy,
+html.user-logged-in.sidebar-collapsed #menu .sidebar-account-arrow,
+html.user-logged-in.sidebar-collapsed #menu .toggle-label { display: none !important; }
+html.user-logged-in.sidebar-collapsed #menu .menu-section-header { width: 100% !important; padding: 10px 6px 4px !important; }
+html.user-logged-in.sidebar-collapsed #menu button.menu-btn-user,
+html.user-logged-in.sidebar-collapsed #menu button.menu-btn-admin {
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  margin: 2px auto !important;
+  padding: 0 !important;
+  justify-content: center !important;
+}
+html.user-logged-in.sidebar-collapsed #menu button.menu-btn-user .ic,
+html.user-logged-in.sidebar-collapsed #menu button.menu-btn-admin .ic { flex: 0 0 34px !important; width: 34px !important; height: 34px !important; min-width: 34px !important; min-height: 34px !important; }
+html.user-logged-in.sidebar-collapsed #menu .sidebar-account-link { justify-content: center !important; padding: 6px !important; background: transparent !important; border-color: transparent !important; }
+html.user-logged-in.sidebar-collapsed #menu .sidebar-toggle-btn { width: 44px !important; margin: 0 auto !important; padding: 0 !important; }
+
+/* Telas baixas (notebooks 1280x720, tablets deitados): menu mais denso para a lista caber e o rodapé nunca cobrir itens */
+@media (min-width: 861px) and (max-height: 820px) {
+  html.user-logged-in #menu.sidebar-menu { padding-top: 8px !important; }
+  html.user-logged-in #menu .menu-section-header { padding: 11px 10px 4px !important; }
+  html.user-logged-in #menu button.menu-btn-user { height: 36px !important; min-height: 36px !important; }
+  html.user-logged-in #menu button.menu-btn-admin { height: 46px !important; min-height: 46px !important; }
+  html.user-logged-in #menu button.menu-btn-user .ic,
+  html.user-logged-in #menu button.menu-btn-admin .ic { flex-basis: 27px !important; width: 27px !important; height: 27px !important; min-width: 27px !important; min-height: 27px !important; }
+  html.user-logged-in #menu .sidebar-account-link { padding: 6px 8px 6px 6px !important; }
+  html.user-logged-in #menu .sidebar-account-icon { flex-basis: 30px !important; width: 30px !important; height: 30px !important; }
+  html.user-logged-in #menu .sidebar-toggle-btn { height: 30px !important; min-height: 30px !important; }
+}
+@media (min-width: 861px) and (max-height: 640px) {
+  html.user-logged-in #menu .sidebar-account-copy small { display: none !important; }
+  html.user-logged-in #menu .menu-section-header { padding: 8px 10px 3px !important; }
+  html.user-logged-in #menu button.menu-btn-user { height: 33px !important; min-height: 33px !important; }
+}
+
+/* =====================================================================================
+   3. Barra inferior (celular e tablet em pé)
+   ===================================================================================== */
+html.user-logged-in #mobileBottomBar {
+  height: calc(var(--nx-bar-h) + env(safe-area-inset-bottom, 0px)) !important;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)) !important;
+  gap: 4px !important;
+  background: linear-gradient(180deg, rgba(10, 14, 24, .84), rgba(5, 8, 14, .95)) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
+  backdrop-filter: blur(22px) saturate(160%) !important;
+  border: 0 !important;
+  border-top: 1px solid var(--nx-sh-line) !important;
+  box-shadow: 0 -14px 34px -22px rgba(0, 0, 0, .8) !important;
+}
+html.user-logged-in #mobileBottomBar .mobile-bottom-btn {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  min-height: 48px !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  padding: 4px 2px !important;
+  border: 0 !important;
+  border-radius: 14px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--nx-sh-muted) !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+  transition: background-color .16s ease, color .16s ease !important;
+}
+html.user-logged-in #mobileBottomBar .mobile-bottom-btn .ic svg { width: 22px !important; height: 22px !important; }
+html.user-logged-in #mobileBottomBar .mobile-bottom-btn.active {
+  color: #fff !important;
+  background: rgba(var(--nx-sh-acc), .16) !important;
+}
+html.user-logged-in #mobileBottomBar .mobile-bottom-btn.active .ic { color: rgb(var(--nx-sh-acc)) !important; }
+/* O conteúdo termina acima da barra (com a área segura de iPhone) */
+@media (max-width: 860px) {
+  html.user-logged-in main.main { padding-bottom: calc(var(--nx-bar-h) + env(safe-area-inset-bottom, 0px) + 22px) !important; }
+}
+
+/* =====================================================================================
+   4. Gaveta do celular: cobre cabeçalho e barra inferior, tem usuário, lista compacta e "Sair" sempre visível
+   ===================================================================================== */
+html.user-logged-in #mobileDrawerOverlay {
+  z-index: 100000 !important;
+  background: rgba(2, 4, 10, .66) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
+  backdrop-filter: blur(3px) !important;
+}
+html.user-logged-in #mobileDrawer {
+  z-index: 100001 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  height: auto !important;
+  width: min(88vw, 340px) !important;
+  max-width: none !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(140% 30% at 0% 0%, rgba(var(--nx-sh-acc), .14), transparent 70%),
+    linear-gradient(180deg, rgba(10, 14, 24, .975), rgba(5, 8, 14, .985)) !important;
+  border: 0 !important;
+  border-right: 1px solid var(--nx-sh-line) !important;
+  box-shadow: 28px 0 70px -24px rgba(0, 0, 0, .85) !important;
+  transform: translateX(-105%) !important;
+  visibility: hidden !important;
+  transition: transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .28s !important;
+}
+html.user-logged-in #mobileDrawer.open { transform: none !important; visibility: visible !important; transition: transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s !important; }
+html:has(#mobileDrawer.open), html:has(#mobileDrawer.open) body { overflow: hidden !important; }
+
+html.user-logged-in #mobileDrawer .mobile-drawer-head {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  margin: 0 !important;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 12px !important;
+  border: 0 !important;
+}
+html.user-logged-in #mobileDrawer #closeMobileDrawer {
+  position: static !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, .07) !important;
+  border: 1px solid var(--nx-sh-line) !important;
+  color: var(--nx-sh-ink) !important;
+  cursor: pointer !important;
+}
+html.user-logged-in #mobileDrawer .mobile-drawer-user {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 0 16px 6px !important;
+  padding: 10px 12px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, .05) !important;
+  border: 1px solid var(--nx-sh-line) !important;
+}
+html.user-logged-in #mobileDrawer .mobile-drawer-avatar {
+  display: inline-grid !important;
+  place-items: center !important;
+  flex: 0 0 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #1B1306 !important;
+  background: linear-gradient(135deg, rgb(var(--nx-sh-acc)), rgb(var(--nx-sh-acc-2))) !important;
+}
+html.user-logged-in #mobileDrawer .mobile-drawer-avatar img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
+html.user-logged-in #mobileDrawer .mobile-drawer-user-copy { display: flex !important; flex-direction: column !important; min-width: 0 !important; gap: 1px !important; }
+html.user-logged-in #mobileDrawer .mobile-drawer-user-copy strong { font-size: 14px !important; font-weight: 700 !important; color: #fff !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+html.user-logged-in #mobileDrawer .mobile-drawer-user-copy small { font-size: 12px !important; font-weight: 600 !important; color: var(--nx-sh-muted) !important; }
+
+html.user-logged-in #mobileDrawer .mobile-drawer-nav {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  padding: 2px 12px 12px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+/* Marca ao lado do logo (as regras antigas escondiam o texto no celular) */
+html.user-logged-in #mobileDrawer .brand { display: flex !important; align-items: center !important; gap: 12px !important; }
+html.user-logged-in #mobileDrawer .brand .name { display: flex !important; flex-direction: column !important; align-items: flex-start !important; justify-content: center !important; gap: 2px !important; width: auto !important; }
+html.user-logged-in #mobileDrawer .brand-title { display: block !important; font-size: 17px !important; font-weight: 800 !important; letter-spacing: .22em !important; color: #fff !important; line-height: 1 !important; }
+html.user-logged-in #mobileDrawer .brand-sub { display: block !important; font-size: 9px !important; font-weight: 700 !important; letter-spacing: .16em !important; color: var(--nx-sh-muted) !important; line-height: 1 !important; }
+/* A lista rola por baixo de um esmaecido (o último item nunca "morre" seco na borda do rodapé) */
+html.user-logged-in #mobileDrawer .mobile-drawer-nav {
+  -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 22px), transparent) !important;
+  mask-image: linear-gradient(180deg, #000 calc(100% - 22px), transparent) !important;
+  padding-bottom: 24px !important;
+}
+html.user-logged-in #mobileDrawer .mobile-drawer-section-title {
+  justify-content: flex-start !important;
+  margin: 0 !important;
+  padding: 16px 8px 6px !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .13em !important;
+  text-transform: uppercase !important;
+  text-align: left !important;
+  color: var(--nx-sh-muted) !important;
+  background: none !important;
+  border: 0 !important;
+}
+html.user-logged-in #mobileDrawer .mobile-drawer-nav button.menu-btn-user,
+html.user-logged-in #mobileDrawer .mobile-drawer-nav button.menu-btn-admin {
+  position: relative !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  margin: 1px 0 !important;
+  padding: 0 12px 0 8px !important;
+  border: 1px solid transparent !important;
+  border-radius: 13px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--nx-sh-ink-2) !important;
+  text-align: left !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+}
+html.user-logged-in #mobileDrawer .mobile-drawer-nav button .ic {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 34px !important;
+  width: 34px !important;
+  height: 34px !important;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, .05) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  box-shadow: none !important;
+  color: var(--nx-sh-ink-2) !important;
+}
+html.user-logged-in #mobileDrawer .mobile-drawer-nav button .label { flex: 1 1 auto !important; min-width: 0 !important; text-align: left !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; color: inherit !important; }
+html.user-logged-in #mobileDrawer .mobile-drawer-nav button:active { background: var(--nx-sh-wash) !important; }
+html.user-logged-in #mobileDrawer .mobile-drawer-nav button.active {
+  background: linear-gradient(90deg, rgba(var(--nx-sh-acc), .22), rgba(var(--nx-sh-acc), .06)) !important;
+  border-color: rgba(var(--nx-sh-acc), .34) !important;
+  color: #fff !important;
+}
+html.user-logged-in #mobileDrawer .mobile-drawer-nav button.active .ic {
+  background: rgba(var(--nx-sh-acc), .24) !important;
+  border-color: rgba(var(--nx-sh-acc), .5) !important;
+  color: rgb(var(--nx-sh-acc)) !important;
+}
+
+html.user-logged-in #mobileDrawer .mobile-drawer-foot {
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+  border-top: 1px solid var(--nx-sh-line) !important;
+  width: 100% !important;
+}
+html.user-logged-in #mobileDrawer #mobileDrawerLogoutBtn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  height: 46px !important;
+  margin: 0 !important;
+  border-radius: 13px !important;
+  background: rgba(239, 68, 68, .14) !important;
+  border: 1px solid rgba(248, 113, 113, .38) !important;
+  color: #FECACA !important;
+  font-size: 14.5px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+html.user-logged-in #mobileDrawer #mobileDrawerLogoutBtn .ic { width: auto !important; height: auto !important; background: none !important; border: 0 !important; }
+
+/* =====================================================================================
+   5. Alvos de toque e leitura em aparelhos de toque
+   ===================================================================================== */
+@media (pointer: coarse) {
+  html.user-logged-in #menu button.menu-btn-user { height: 44px !important; min-height: 44px !important; }
+  html.user-logged-in #menu button.menu-btn-admin { height: 54px !important; min-height: 54px !important; }
+  html.user-logged-in #menu .sidebar-toggle-btn { height: 40px !important; min-height: 40px !important; }
+  html.user-logged-in .topheader .icon-btn,
+  html.user-logged-in .topheader #logoutBtn,
+  html.user-logged-in .topheader #mobileMenuToggle { min-width: 44px !important; min-height: 44px !important; }
+}
+
+/* =====================================================================================
+   6. Telas internas em celular e tablet em pé: nada fica cortado pela borda do cartão
+   (achados pela varredura de todas as telas em 320-768px)
+   ===================================================================================== */
+@media (max-width: 860px) {
+  /* Tabelas largas (ex.: Análises) rolam na horizontal dentro do painel em vez de serem cortadas */
+  html.user-logged-in #pageContent .table-panel { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+  html.user-logged-in #pageContent .table-panel table { min-width: 460px; }
+}
+@media (max-width: 720px) {
+  /* Minha Conta > Plano & Assinatura: a regra antiga somava width:100% + margin-left:68px (estourava) e o selo não quebrava de linha */
+  html.user-logged-in #pageContent .subscription-overview > div:first-child { flex-wrap: wrap !important; min-width: 0 !important; width: 100% !important; }
+  html.user-logged-in #pageContent .subscription-overview > div:first-child > div:last-child { flex: 1 1 0 !important; min-width: 0 !important; }
+  html.user-logged-in #pageContent .subscription-overview > div:first-child > div:last-child > div:first-child { flex-wrap: wrap !important; }
+  html.user-logged-in #pageContent .subscription-overview > div:last-child { width: 100% !important; margin-left: 0 !important; flex-wrap: wrap !important; }
+  html.user-logged-in #pageContent .subscription-overview > div:last-child button { flex: 1 1 auto !important; }
+}
+/* Etiquetas dos cartões de resumo: no mínimo 10,5px para leitura */
+html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.user-logged-in #mobileDrawer,
+  html.user-logged-in #mobileDrawer.open { transition: none !important; }
+  html.user-logged-in #menu button,
+  html.user-logged-in #menu button::before { transition: none !important; }
+}
+
+} /* fim da layer nx-shell */

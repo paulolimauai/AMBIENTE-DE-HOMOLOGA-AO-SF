@@ -1783,7 +1783,15 @@ const htmlContent = `<!DOCTYPE html>
     localStorage.setItem('nexus_tone_version', 'dark_v1');
     var isLight = false;
     document.documentElement.classList.remove('light');
-    if (localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
+    // Menu recolhido: preferência salva; sem preferência, tablets e janelas de 861 a 1100px abrem com o trilho de ícones (sobra área para o conteúdo)
+    window.__nxSidebarCollapsed = function() {
+      var p = null;
+      try { p = localStorage.getItem('nexus_sidebar_collapsed'); } catch (e) {}
+      if (p === 'true') return true;
+      if (p === 'false') return false;
+      return window.innerWidth > 860 && window.innerWidth <= 1100;
+    };
+    if (window.__nxSidebarCollapsed()) {
       document.documentElement.classList.add('sidebar-collapsed');
     }
     // Encaminha SEMPRE para a tela de login oficial (/login.html), sem exibir o login embutido antigo
@@ -1950,7 +1958,7 @@ const htmlContent = `<!DOCTYPE html>
     if (sc === 'auto') {
       if (dev === 'mobile' || dev === 'tablet') sn = 1.0;
       else if (dev === 'laptop') sn = (sh <= 640 || sw <= 1180) ? 0.95 : 1.0;
-      else if (dev === '4k') sn = (sw >= 3400) ? 1.20 : 1.10;
+      else if (dev === '4k') sn = (sw >= 3400) ? ((sh >= 1900) ? 1.50 : 1.20) : 1.10;
       else if (dev === 'ultrawide') sn = 1.05;
       else sn = 1.0;
     } else {
@@ -1961,7 +1969,10 @@ const htmlContent = `<!DOCTYPE html>
     document.write('<style id="critical-fouc-shield">html, body { scroll-behavior: auto !important; background-color:' + bgCol + ' !important; transition:none !important; }' + (loggedIn ? 'html #authPage{display:none !important;}html #appMain{display:flex !important;}' : 'html #appMain{display:none !important;}html #authPage{display:flex !important;}') + ' #serverAuthNexusCard, .auth-card-nexus, #authNexusCard, .auth-container, #authPage, #loginBox, #registerBox, #forgotBox { animation: none !important; transform: none !important; transition: none !important; }</style>');
     var isMobileOrTablet = (dev === 'mobile' || dev === 'tablet' || isTouch || w <= 1024 || sn === 1.0);
     var zoomRule = isMobileOrTablet ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' : ('@media screen { body { zoom: ' + sn + ' !important; } }');
-    document.write('<style id="nexus-scale-override">' + zoomRule + ' :root { --app-zoom: ' + sn + '; }</style>');
+    // --app-zoom é o zoom EFETIVO (1 quando o zoom não é aplicado): o CSS usa para compensar o 100vh, que não acompanha o zoom do body
+    var effZoom = isMobileOrTablet ? 1 : sn;
+    document.documentElement.style.setProperty('--app-zoom', effZoom);
+    document.write('<style id="nexus-scale-override">' + zoomRule + ' :root { --app-zoom: ' + effZoom + '; }</style>');
   } catch(e){}
 })();
 </script>
@@ -14240,6 +14251,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
+<link rel="stylesheet" href="/nexus-shell.css?v=20261107-1" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-2" />
 <script src="/dashboard-financeiro.js?v=20261107-2"></script>
@@ -15044,7 +15056,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       // Modo claro removido: sempre escuro
       var isLight = false;
       document.body.classList.remove('light');
-      if (localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
+      if (window.__nxSidebarCollapsed ? window.__nxSidebarCollapsed() : localStorage.getItem('nexus_sidebar_collapsed') === 'true') {
         document.body.classList.add('sidebar-collapsed');
       }
       var miniBtn = document.getElementById('miniThemeBtn');
@@ -15091,7 +15103,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
   <!-- Drawer Mobile Slide-out -->
   <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
-  <div class="mobile-drawer" id="mobileDrawer">
+  <div class="mobile-drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="Menu de navegação">
     <div class="mobile-drawer-head">
       <div class="brand">
         <div class="logo">
@@ -15123,41 +15135,45 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <span class="brand-sub">FINANCEIRO HUB</span>
         </div>
       </div>
-      <button class="close-x" id="closeMobileDrawer" style="position:static; padding:4px;">✕</button>
+      <button type="button" class="close-x" id="closeMobileDrawer" aria-label="Fechar menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
-    <nav class="mobile-drawer-nav" id="mobileDrawerMenu">
+    <div class="mobile-drawer-user">
+      <span class="mobile-drawer-avatar" id="drawerAccountAvatar">NX</span>
+      <span class="mobile-drawer-user-copy"><strong id="drawerAccountName">Minha conta</strong><small id="drawerAccountPlan"></small></span>
+    </div>
+    <nav class="mobile-drawer-nav" id="mobileDrawerMenu" aria-label="Navegação principal">
       <!-- Seção: Visão -->
-      <div class="mobile-drawer-section-title menu-section-visao">Visão</div>
-      <button data-page="dashboard" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span> Dashboard</button>
-      <button data-page="transacoes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span> Transações</button>
-      <button data-page="cartoes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span> Cartões</button>
+      <div class="mobile-drawer-section-title menu-section-visao">Visão geral</div>
+      <button data-page="dashboard" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><span class="label">Visão geral</span></button>
+      <button data-page="transacoes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span><span class="label">Movimentações</span></button>
+      <button data-page="cartoes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span><span class="label">Contas e cartões</span></button>
       
       <!-- Seção: Planejamento -->
       <div class="mobile-drawer-section-title menu-section-planejamento">Planejamento</div>
-      <button data-page="orcamentos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span> Orçamentos</button>
-      <button data-page="metas" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span> Metas</button>
-      <button data-page="relatorios" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span> Relatórios</button>
+      <button data-page="orcamentos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span><span class="label">Orçamentos</span></button>
+      <button data-page="metas" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span><span class="label">Metas financeiras</span></button>
+      <button data-page="relatorios" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 20h18"/></svg></span><span class="label">Análises</span></button>
       
       <!-- Seção: Ferramentas -->
       <div class="mobile-drawer-section-title menu-section-ferramentas">Ferramentas</div>
-      <button data-page="recorrentes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span> Recorrentes</button>
-      <button data-page="importar" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Importar</button>
-      <button data-page="anexos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span> Anexos</button>
+      <button data-page="recorrentes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span><span class="label">Contas recorrentes</span></button>
+      <button data-page="importar" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span class="label">Importar extrato</span></button>
+      <button data-page="anexos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span class="label">Comprovantes</span></button>
       
       <!-- Seção: Minha Conta -->
-      <div class="mobile-drawer-section-title menu-section-minha-conta">Minha Conta</div>
-      <button data-page="config" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Minha Conta</button>
+      <div class="mobile-drawer-section-title menu-section-minha-conta">Preferências</div>
+      <button data-page="config" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="label">Minha Conta</span></button>
       
       <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
-      <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Administração</div>
-      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Usuários Cadastrados</button>
-      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span> Ordens de Serviço</button>
-      <button data-page="pagamentos" id="mobileDrawerPagamentosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Pagamentos & 2ª Via Boleto</button>
-      <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Logs do Sistema</button>
+      <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Painel Administrativo</div>
+      <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Cadastros & Contas</span></button>
+      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="label">Ordens de Serviço</span></button>
+      <button data-page="pagamentos" id="mobileDrawerPagamentosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span class="label">Pagamentos & Boletos</span></button>
+      <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="label">Auditoria & Logs</span></button>
     </nav>
 
     <!-- Botão de Sair no Rodapé do Mobile Drawer -->
-    <div style="margin-top:auto; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); width:100%;">
+    <div class="mobile-drawer-foot">
       <button type="button" id="mobileDrawerLogoutBtn" class="mobile-drawer-logout-btn" title="Encerrar Sessão com Segurança">
         <span class="ic">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -29879,19 +29895,42 @@ window.addEventListener('hashchange', ()=>{
 });
 
 /* ==================== Eventos Globais ==================== */
+// Cartão do usuário da gaveta: espelha o do rodapé do menu lateral (atualizado por updateHeaderUser)
+function syncDrawerAccount(){
+  try {
+    [['sidebarAccountName', 'drawerAccountName'], ['sidebarAccountPlan', 'drawerAccountPlan']].forEach(function(p){
+      const from = document.getElementById(p[0]); const to = document.getElementById(p[1]);
+      if (from && to) to.textContent = from.textContent;
+    });
+    const fromAv = document.getElementById('sidebarAccountAvatar'); const toAv = document.getElementById('drawerAccountAvatar');
+    if (fromAv && toAv) toAv.innerHTML = fromAv.innerHTML;
+  } catch(e){}
+}
+let drawerReturnFocus = null;
 function toggleMobileDrawer(open){
   const drawer = document.getElementById('mobileDrawer');
   const overlay = document.getElementById('mobileDrawerOverlay');
   if(!drawer || !overlay) return;
   if(open === undefined) open = !drawer.classList.contains('open');
   if(open){
+    syncDrawerAccount();
+    drawerReturnFocus = document.activeElement;
     overlay.classList.add('show');
     drawer.classList.add('open');
+    const closeBtn = document.getElementById('closeMobileDrawer');
+    if (closeBtn) setTimeout(function(){ try { closeBtn.focus({ preventScroll: true }); } catch(e){} }, 60);
   } else {
     overlay.classList.remove('show');
     drawer.classList.remove('open');
+    if (drawerReturnFocus && drawerReturnFocus.focus) { try { drawerReturnFocus.focus({ preventScroll: true }); } catch(e){} }
+    drawerReturnFocus = null;
   }
 }
+document.addEventListener('keydown', function(e){
+  if (e.key !== 'Escape') return;
+  const d = document.getElementById('mobileDrawer');
+  if (d && d.classList.contains('open')) toggleMobileDrawer(false);
+});
 const mobileToggle = document.getElementById('mobileMenuToggle');
 if(mobileToggle) mobileToggle.onclick = ()=> toggleMobileDrawer(true);
 const closeDrawer = document.getElementById('closeMobileDrawer');
@@ -29943,9 +29982,16 @@ document.querySelectorAll('#sidebarCollapseBtn, #sidebarFooterCollapseBtn, .side
   });
 });
 try {
-  const savedCollapsed = localStorage.getItem('nexus_sidebar_collapsed') === 'true';
-  document.body.classList.toggle('sidebar-collapsed', savedCollapsed);
-  document.documentElement.classList.toggle('sidebar-collapsed', savedCollapsed);
+  const aplicarMenuRecolhido = function() {
+    const recolhido = window.__nxSidebarCollapsed ? window.__nxSidebarCollapsed() : localStorage.getItem('nexus_sidebar_collapsed') === 'true';
+    document.body.classList.toggle('sidebar-collapsed', recolhido);
+    document.documentElement.classList.toggle('sidebar-collapsed', recolhido);
+  };
+  aplicarMenuRecolhido();
+  // Sem preferência salva, acompanha a largura da janela (girar o tablet, redimensionar)
+  window.addEventListener('resize', function() {
+    try { if (localStorage.getItem('nexus_sidebar_collapsed') === null) aplicarMenuRecolhido(); } catch(err) {}
+  });
 } catch(err) {}
 
 const mobileBottomBar = document.getElementById('mobileBottomBar');
@@ -30182,6 +30228,8 @@ function getAutoDisplayScale(w, h, devType) {
     return { scaleNum: 1.0, effectiveScale: '100%' };
   }
   if (devType === '4k') {
+    // 3840x2160 lógico (4K a 100% do Windows): interface bem maior; ultrawide 3440x1440 e telas já escaladas pelo sistema seguem como antes
+    if (sw >= 3400 && sh >= 1900) return { scaleNum: 1.50, effectiveScale: '150%' };
     if (sw >= 3400) return { scaleNum: 1.20, effectiveScale: '120%' };
     return { scaleNum: 1.10, effectiveScale: '110%' };
   }
@@ -30233,9 +30281,9 @@ function applyDisplayScale(scaleVal) {
   var zoomRule = isMobileScale 
     ? 'html, body { zoom: normal !important; -webkit-overflow-scrolling: touch; }' 
     : ('@media screen { body { zoom: ' + scaleNum + ' !important; } }');
-  scaleStyle.textContent = zoomRule + ' :root { --app-zoom: ' + scaleNum + '; }';
+  scaleStyle.textContent = zoomRule + ' :root { --app-zoom: ' + (isMobileScale ? 1 : scaleNum) + '; }';
 
-  document.documentElement.style.setProperty('--app-zoom', scaleNum);
+  document.documentElement.style.setProperty('--app-zoom', isMobileScale ? 1 : scaleNum);
   if (document.body) {
     if (isMobileScale) {
       document.body.style.removeProperty('zoom');
@@ -34911,6 +34959,7 @@ const server = http.createServer(async (req, res) => {
   };
   const STATIC_EXACT_FILES = {
     '/frontend-polish.css': 'text/css',
+    '/nexus-shell.css': 'text/css',
     '/dashboard-financeiro.css': 'text/css',
     '/dashboard-financeiro.js': 'application/javascript; charset=utf-8'
   };
