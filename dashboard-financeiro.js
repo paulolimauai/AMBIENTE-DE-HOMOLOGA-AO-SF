@@ -970,6 +970,24 @@
         ctx.lineWidth = 1; ctx.strokeStyle = chart.options.plugins.fdCruz && chart.options.plugins.fdCruz.cor || 'rgba(148,163,184,.5)';
         ctx.stroke(); ctx.restore();
       }
+    },
+    // Escala automática (zoom do body em 2K/4K/5K): o gráfico tem o tamanho em pixels CSS, mas a posição do mouse/toque chegava em pixels visuais,
+    // então o ponto sob o ponteiro ficava deslocado pelo fator do zoom (a 150%, o meio do gráfico mostrava o dia 22 em vez do 14).
+    // Aqui a posição é refeita dividindo pela razão visual/CSS do canvas; a 100% a razão é 1 e nada muda.
+    zoom: {
+      id: 'fdZoom',
+      beforeEvent(chart, args) {
+        const e = args.event, n = e && e.native, cv = chart.canvas;
+        if (!n || !cv || !cv.getBoundingClientRect || !cv.clientWidth || !cv.clientHeight) return;
+        const src = (n.touches && n.touches[0]) || (n.changedTouches && n.changedTouches[0]) || n;
+        if (typeof src.clientX !== 'number' || typeof src.clientY !== 'number') return;
+        const r = cv.getBoundingClientRect();
+        const kx = r.width / cv.clientWidth, ky = r.height / cv.clientHeight;
+        if (Math.abs(kx - 1) < 0.01 && Math.abs(ky - 1) < 0.01) return;
+        e.x = (src.clientX - r.left) / kx;
+        e.y = (src.clientY - r.top) / ky;
+        if (typeof chart.isPointInArea === 'function') args.inChartArea = chart.isPointInArea(e);
+      }
     }
   };
 
@@ -1088,6 +1106,7 @@
     try {
       if (Chart.defaults && Chart.defaults.font) Chart.defaults.font.family = "'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif";
       const cfg = estado.visao === 'mensal' ? configMensal(m, t) : estado.visao === 'diario' ? configDiario(m, t) : configSaldo(m, t);
+      cfg.plugins = (cfg.plugins || []).concat([plugins.zoom]);
       estado.grafico = new Chart(canvas, cfg);
     } catch (e) {
       if (typeof console !== 'undefined') console.warn('Dashboard: falha ao desenhar o gráfico', e);

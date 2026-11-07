@@ -335,6 +335,10 @@ body.light .fd-root .fd-selo-medio, html.light .fd-root .fd-selo-medio { color: 
 
 /* Gráfico */
 .fd-grafico-caixa { position: relative; flex: 1 1 auto; min-height: 220px; }
+/* Escala automática (zoom do body em 2K/4K/5K): o Chart.js mede o contêiner em pixels VISUAIS e dimensiona o canvas com esse número; num contêiner de
+   altura automática o canvas crescia ×zoom² (333px a 100% → 749px a 150%) e empurrava a página. Com o canvas fora do fluxo, a altura vem só do layout
+   (linha do grid) e escala junto com o zoom, como o resto da tela. A 100% nada muda. */
+.fd-grafico-caixa > canvas { position: absolute; left: 0; top: 0; width: 100% !important; height: 100% !important; }
 .fd-grafico-caixa[hidden], .fd-tabela-caixa[hidden] { display: none; }
 .fd-tabela-caixa { flex: 1 1 auto; min-height: 220px; max-height: 300px; overflow: auto; border-radius: 12px; border: 1px solid var(--fd-line); }
 .fd-tabela { width: 100%; border-collapse: collapse; font-size: 11.5px; }
