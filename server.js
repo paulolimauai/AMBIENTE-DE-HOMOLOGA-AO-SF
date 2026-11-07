@@ -25594,41 +25594,19 @@ window.selecionarCategoriaRapidaOs = function(type, priority, defaultTitle, defa
   }
 };
 
-window.closeGlpiFullModal = function() {
-  const fullOv = document.getElementById('glpiFullOverlayHost');
-  if (fullOv) {
-    fullOv.style.display = 'none';
-    const ifr = document.getElementById('glpiFullIframeHost');
-    if (ifr) ifr.src = 'about:blank';
-  }
-  if (typeof syncOrdensWithServer === 'function') {
-    syncOrdensWithServer().then(() => { if (typeof render === 'function') render(); }).catch(() => {});
-  }
-};
-
-window.loadAdminOrders = function() {
-  if (typeof syncOrdensWithServer === 'function') {
-    syncOrdensWithServer().then(() => { if (typeof render === 'function' && currentPage === 'ordens' && window.currentOsTabFilter !== 'glpi_console') render(); }).catch(() => {});
-  }
-};
-
-// Abertura e Consulta de O.S. GLPI (Público na Tela de Login e Portal do Usuário)
+// Abertura e Consulta de O.S. GLPI em Nova Aba (Sem sair do Sistema Financeiro)
 window.openNovaOrdemModal = function(preselectedTypeOrTab) {
-  let fullOv = document.getElementById('glpiFullOverlayHost');
-  if (!fullOv) {
-    fullOv = document.createElement('div');
-    fullOv.id = 'glpiFullOverlayHost';
-    fullOv.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#020617;display:none;width:100vw;height:100vh;';
-    fullOv.innerHTML = '<iframe id="glpiFullIframeHost" src="about:blank" style="width:100%;height:100%;border:0;display:block;" title="GLPI 10 Enterprise ITSM"></iframe>';
-    document.body.appendChild(fullOv);
-  }
-  const ifr = document.getElementById('glpiFullIframeHost');
-  if (ifr) {
-    const modeQuery = (preselectedTypeOrTab === 'tech') ? 'mode=tech&tab=queue' : 'entry=login';
-    ifr.src = '/glpi.html?' + modeQuery + '&t=' + Date.now();
-  }
-  fullOv.style.display = 'block';
+  const modeQuery = (preselectedTypeOrTab === 'tech') ? 'mode=tech&tab=queue' : 'entry=login';
+  window.open('/glpi.html?' + modeQuery, '_blank', 'noopener,noreferrer');
 };
+
+window.addEventListener('storage', function(ev) {
+  if (ev && ev.key === 'enterprise_service_desk_tickets') {
+    if (typeof syncOrdensWithServer === 'function') {
+      syncOrdensWithServer().then(() => { if (typeof render === 'function' && currentPage === 'ordens') render(); }).catch(() => {});
+    }
+  }
+});
 
 window.executarConsultaOrdens = async function(e) {
   if (e && e.preventDefault) e.preventDefault();
