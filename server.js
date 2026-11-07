@@ -1783,13 +1783,14 @@ const htmlContent = `<!DOCTYPE html>
     localStorage.setItem('nexus_tone_version', 'dark_v1');
     var isLight = false;
     document.documentElement.classList.remove('light');
-    // Menu recolhido: preferência salva; sem preferência, tablets e janelas de 861 a 1100px abrem com o trilho de ícones (sobra área para o conteúdo)
+    // Menu recolhido: só pela preferência salva pelo usuário (botão "Recolher Menu")
     window.__nxSidebarCollapsed = function() {
       var p = null;
       try { p = localStorage.getItem('nexus_sidebar_collapsed'); } catch (e) {}
       if (p === 'true') return true;
       if (p === 'false') return false;
-      return window.innerWidth > 860 && window.innerWidth <= 1100;
+      // Sem recolhimento automático: o menu abre expandido, como sempre foi, até o usuário recolher
+      return false;
     };
     if (window.__nxSidebarCollapsed()) {
       document.documentElement.classList.add('sidebar-collapsed');
@@ -14251,7 +14252,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261107-2" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261107-3" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-2" />
 <script src="/dashboard-financeiro.js?v=20261107-2"></script>
