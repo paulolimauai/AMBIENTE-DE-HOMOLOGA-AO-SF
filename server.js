@@ -409,6 +409,7 @@ const RATE_LIMIT_RULES = {
   'GET /api/cpf/consultar': { key: 'cpf', max: 30, windowMs: 10 * 60 * 1000 },
   'GET /api/cpf': { key: 'cpf', max: 30, windowMs: 10 * 60 * 1000 },
   'POST /api/ordens': { key: 'os-open', max: 15, windowMs: 60 * 60 * 1000 },
+  'POST /api/ordens/acao': { key: 'os-acao', max: 60, windowMs: 10 * 60 * 1000 },
   'GET /api/ordens/consultar': { key: 'os-consult', max: 40, windowMs: 10 * 60 * 1000 },
   'POST /api/ordens/consultar': { key: 'os-consult', max: 40, windowMs: 10 * 60 * 1000 }
 };
@@ -32324,6 +32325,32 @@ async function buscarOrdemPorReferencia(referencia) {
   }
 }
 
+// Grava no SQL Server o estado atual de um chamado já salvo no arquivo local (se o banco falhar, o arquivo local mantém tudo)
+async function atualizarOrdemNoBanco(ordem, agoraIso) {
+  if (!pool) return;
+  try {
+    await pool.query(
+      `UPDATE ordens_servico
+       SET status = $1, admin_notes = $2, priority = $3, service_type = $4,
+           tecnico_responsavel = $5, assumido_em = $6, canal_atendimento = $7,
+           sla = $8, asset = $9, time_spent = $10, solution = $11, timeline = $12,
+           concluido_em = $13, updated_at = $14
+       WHERE id = $15 OR UPPER(protocol) = $16`,
+      [
+        ordem.status, ordem.admin_notes || '', ordem.priority, ordem.service_type,
+        ordem.tecnico_responsavel || null, ordem.assumido_em || null, ordem.canal_atendimento || 'Portal Web',
+        ordem.sla || Atendimento.calcularSlaPorPrioridade(ordem.priority), ordem.asset || 'Nenhum', Number(ordem.time_spent) || 0,
+        ordem.solution || '', Array.isArray(ordem.timeline) ? JSON.stringify(ordem.timeline) : null,
+        ordem.concluido_em || null, agoraIso,
+        idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase()
+      ]
+    );
+    console.log(`[BANCO] O.S. GLPI #${ordem.protocol} atualizada com sucesso no SQL Server.`);
+  } catch (err) {
+    console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server, mantido localmente:', err.message);
+  }
+}
+
 // Consulta pública: só correspondência exata (protocolo, e-mail, telefone ou CPF), no banco e no arquivo local
 async function consultarOrdensPublico(consulta) {
   const locais = getLocalOrdens().filter((o) => Atendimento.ordemCorresponde(o, consulta));
@@ -35555,7 +35582,20 @@ const server = http.createServer(async (req, res) => {
     if (!leitura.ok) return sendJson(res, corsHeaders, leitura.status, { success: false, message: leitura.mensagem });
 
     const admin = getAuthenticatedAdmin(req);
-    const validacao = Atendimento.validarAbertura(leitura.dados, { admin: Boolean(admin), isEmail: isStrictEmail });
+    // Quem abre o chamado já logado (não administrador) é identificado pela CONTA, não pelo que veio no formulário:
+    // assim o chamado sempre aparece em "Meus Chamados" dessa conta e ninguém abre em nome de outro e-mail.
+    let corpoDoChamado = leitura.dados;
+    const contaLogada = admin ? null : getAuthenticatedUser(req);
+    if (contaLogada) {
+      corpoDoChamado = {
+        ...corpoDoChamado,
+        client_name: contaLogada.name || corpoDoChamado.client_name,
+        client_email: contaLogada.email,
+        client_phone: corpoDoChamado.client_phone || contaLogada.phone || contaLogada.telefone || '',
+        client_cpf: corpoDoChamado.client_cpf || contaLogada.cpf || ''
+      };
+    }
+    const validacao = Atendimento.validarAbertura(corpoDoChamado, { admin: Boolean(admin), isEmail: isStrictEmail });
     if (!validacao.ok) {
       return sendJson(res, corsHeaders, 400, { success: false, message: validacao.mensagem, errors: validacao.erros });
     }
@@ -35668,14 +35708,14 @@ const server = http.createServer(async (req, res) => {
     if (!achada) return sendJson(res, corsHeaders, 404, { success: false, message: 'Chamado não encontrado.' });
 
     const agoraIso = new Date().toISOString();
-    const resultado = Atendimento.aplicarAtualizacao(achada.todas[achada.indice], payload, { agoraIso });
+    const ator = atorDaRequisicao(req);
+    const resultado = Atendimento.aplicarAtualizacao(achada.todas[achada.indice], payload, { agoraIso, ator: ator.nome });
     if (!resultado.ok) return sendJson(res, corsHeaders, 400, { success: false, message: resultado.mensagem });
 
     const ordem = resultado.ordem;
     achada.todas[achada.indice] = ordem;
     saveLocalOrdens(achada.todas);
 
-    const ator = atorDaRequisicao(req);
     recordSystemLog(ator.nome, ator.email, 'Atualização de O.S.', 'Ordem de Serviço',
       'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Prioridade: ' + ordem.priority + ')' +
       (ordem.tecnico_responsavel ? ' (Técnico: ' + ordem.tecnico_responsavel + ')' : '') +
@@ -35697,31 +35737,63 @@ const server = http.createServer(async (req, res) => {
       updated_at: agoraIso
     });
 
-    if (pool) {
-      try {
-        await pool.query(
-          `UPDATE ordens_servico
-           SET status = $1, admin_notes = $2, priority = $3, service_type = $4,
-               tecnico_responsavel = $5, assumido_em = $6, canal_atendimento = $7,
-               sla = $8, asset = $9, time_spent = $10, solution = $11, timeline = $12,
-               concluido_em = $13, updated_at = $14
-           WHERE id = $15 OR UPPER(protocol) = $16`,
-          [
-            ordem.status, ordem.admin_notes || '', ordem.priority, ordem.service_type,
-            ordem.tecnico_responsavel || null, ordem.assumido_em || null, ordem.canal_atendimento || 'Portal Web',
-            ordem.sla || Atendimento.calcularSlaPorPrioridade(ordem.priority), ordem.asset || 'Nenhum', Number(ordem.time_spent) || 0,
-            ordem.solution || '', Array.isArray(ordem.timeline) ? JSON.stringify(ordem.timeline) : null,
-            ordem.concluido_em || null, agoraIso,
-            idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase()
-          ]
-        );
-        console.log(`[BANCO] O.S. GLPI #${ordem.protocol} atualizada com sucesso no SQL Server.`);
-      } catch (err) {
-        console.warn('[AVISO BD O.S.] Erro ao atualizar no SQL Server, mantido localmente:', err.message);
-      }
-    }
+    await atualizarOrdemNoBanco(ordem, agoraIso);
 
     return sendJson(res, corsHeaders, 200, { success: true, ordem });
+  }
+
+  // Lista do próprio solicitante (qualquer pessoa logada): título, andamento e conversa pública dos chamados abertos com o
+  // e-mail da conta. Nunca traz o parecer interno, as notas privadas da equipe nem dados de outros clientes.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/ordens/minhas') {
+    const conta = getAuthenticatedUser(req);
+    if (!conta) return sendJson(res, corsHeaders, 401, { success: false, message: 'Entre na sua conta para ver os seus chamados.', ordens: [] });
+    const email = String(conta.email || '').toLowerCase().trim();
+    const encontradas = await consultarOrdensPublico({ tipo: 'email', valor: email });
+    const ordens = encontradas.map((o) => Atendimento.visaoSolicitante(o));
+    return sendJson(res, corsHeaders, 200, { success: true, count: ordens.length, ordens });
+  }
+
+  // Ação do solicitante no próprio chamado: responder, reabrir (até 7 dias depois de resolvido) ou cancelar (antes de alguém assumir)
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/ordens/acao') {
+    const conta = getAuthenticatedUser(req);
+    if (!conta) return sendJson(res, corsHeaders, 401, { success: false, message: 'Entre na sua conta para responder o chamado.' });
+    const leitura = await lerCorpoJson(req);
+    if (!leitura.ok) return sendJson(res, corsHeaders, leitura.status, { success: false, message: leitura.mensagem });
+    const payload = leitura.dados;
+
+    const referencia = String(payload.protocol || payload.id || '').trim();
+    if (!referencia) return sendJson(res, corsHeaders, 400, { success: false, message: 'Informe o protocolo do chamado.' });
+    const achada = await buscarOrdemPorReferencia(referencia);
+    const meuEmail = String(conta.email || '').toLowerCase().trim();
+    // Chamado de outra pessoa responde igual a "não existe": não revela que o protocolo é válido
+    if (!achada || String(achada.todas[achada.indice].client_email || '').toLowerCase().trim() !== meuEmail) {
+      return sendJson(res, corsHeaders, 404, { success: false, message: 'Chamado não encontrado.' });
+    }
+
+    const agoraIso = new Date().toISOString();
+    const resultado = Atendimento.aplicarAcaoSolicitante(achada.todas[achada.indice], payload, { agoraIso });
+    if (!resultado.ok) return sendJson(res, corsHeaders, resultado.codigo || 400, { success: false, message: resultado.mensagem });
+
+    const ordem = resultado.ordem;
+    if (resultado.mudancas.length) {
+      achada.todas[achada.indice] = ordem;
+      saveLocalOrdens(achada.todas);
+      recordSystemLog(conta.name || meuEmail, meuEmail, 'Ação do solicitante em O.S.', 'Ordem de Serviço',
+        'O.S. #' + ordem.protocol + ' — ' + resultado.mudancas.join('; '));
+      broadcastEvent('order_updated', {
+        id: ordem.id,
+        protocol: ordem.protocol,
+        status: ordem.status,
+        priority: ordem.priority,
+        service_type: ordem.service_type,
+        tecnico_responsavel: ordem.tecnico_responsavel,
+        sla: ordem.sla,
+        client_reply: true,
+        updated_at: agoraIso
+      });
+      await atualizarOrdemNoBanco(ordem, agoraIso);
+    }
+    return sendJson(res, corsHeaders, 200, { success: true, ordem: Atendimento.visaoSolicitante(ordem) });
   }
 
   // Rota GET para Listar Técnicos Credenciados (Admin & Suporte - com Proteção Total de Dados)
