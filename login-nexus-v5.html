@@ -1902,7 +1902,7 @@
                 '<div class="osmodal-field">' +
                   '<label>Compromisso de SLA GLPI</label>' +
                   '<div id="os-sla-box" style="height:40px;padding:0 12px;border-radius:10px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#fde68a;">' +
-                    '<span>⏱️ Meta SLA:</span><strong id="os-sla-preview" style="color:#fbbf24;font-family:monospace;font-size:13px;">2 Horas</strong>' +
+                    '<span>⏱️ Meta SLA:</span><strong id="os-sla-preview" style="color:#fbbf24;font-family:monospace;font-size:13px;">24 Horas</strong>' +
                   '</div>' +
                 '</div>' +
               '</div>' +
@@ -1958,12 +1958,13 @@
     $('#osmodal-cancel', ov).addEventListener('click', close);
     ov.addEventListener('mousedown', e => { if (e.target === ov) close(); });
 
+    // Política de SLA: Crítica 30 min, Alta 1 h, Média 24 h (corridas), Baixa 5 dias úteis (mesma regra do atendimento.js)
     const computeSlaFromPrio = (prio) => {
       const p = String(prio || '').toLowerCase();
       if (p === 'crítica' || p === 'critica' || p === 'urgente') return '30 Minutos';
       if (p === 'alta') return '1 Hora';
-      if (p === 'baixa') return '8 Horas';
-      return '2 Horas';
+      if (p === 'baixa') return '5 Dias Úteis';
+      return '24 Horas';
     };
 
     const updateSlaBanner = () => {
