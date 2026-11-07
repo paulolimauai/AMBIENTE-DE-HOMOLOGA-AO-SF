@@ -351,6 +351,107 @@ html.user-logged-in #pageContent label[style*="justify-content:space-between"] >
 /* Etiquetas dos cartões de resumo: no mínimo 10,5px para leitura */
 html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
 
+/* =====================================================================================
+   7. Aviso "Sessão Autenticada com Sucesso" (#executiveWelcomeToast)
+   Antes era vidro quase transparente (84%) de 420px com texto de 12-14px: o painel aparecia por trás e o texto sumia.
+   Agora: cartão praticamente opaco, mais largo, texto maior e contraste alto (>= 10:1), faixa verde de destaque à
+   esquerda, selo do ícone sólido e rodapé separado por um fio. As regras antigas ficam no server.js e no
+   frontend-polish.css; esta layer vence as duas.
+   ===================================================================================== */
+.executive-welcome-toast {
+  top: 76px !important;
+  right: 24px !important;
+  width: min(500px, calc(100vw - 32px)) !important;
+  max-width: 500px !important;
+  padding: 22px 24px 27px 28px !important;
+  border: 1px solid rgba(52, 211, 153, .55) !important;
+  border-radius: 20px !important;
+  background:
+    radial-gradient(300px 170px at 0% 0%, rgba(16, 185, 129, .20), transparent 72%),
+    linear-gradient(160deg, rgba(17, 31, 54, .985) 0%, rgba(9, 17, 30, .985) 100%) !important;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, .55),
+    0 34px 80px -14px rgba(0, 0, 0, .90),
+    0 0 52px rgba(16, 185, 129, .26),
+    inset 0 1px 0 rgba(255, 255, 255, .16) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(150%) !important;
+  backdrop-filter: blur(18px) saturate(150%) !important;
+}
+.executive-welcome-toast:hover { border-color: rgba(110, 231, 183, .80) !important; }
+/* Faixa de destaque verde na borda esquerda (substitui o fio de luz do topo) */
+.executive-welcome-toast::before {
+  display: block !important;
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; bottom: 0 !important; left: 0 !important; right: auto !important;
+  width: 5px !important; height: auto !important;
+  background: linear-gradient(180deg, #6EE7B7 0%, #10B981 55%, #38BDF8 100%) !important;
+  pointer-events: none !important;
+}
+.executive-welcome-toast .toast-content-box { align-items: flex-start !important; gap: 18px !important; }
+.executive-welcome-toast .toast-icon-wrap {
+  width: 58px !important; height: 58px !important; border-radius: 17px !important;
+  background: linear-gradient(145deg, #34D399 0%, #059669 100%) !important;
+  border: 1px solid rgba(167, 243, 208, .70) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 12px 28px -6px rgba(16, 185, 129, .60), inset 0 1px 0 rgba(255, 255, 255, .40) !important;
+}
+.executive-welcome-toast .toast-icon-wrap svg { width: 30px !important; height: 30px !important; filter: drop-shadow(0 1px 2px rgba(0, 60, 40, .45)) !important; }
+.executive-welcome-toast .toast-icon-wrap::before { border-radius: 17px !important; border-color: rgba(110, 231, 183, .75) !important; }
+.executive-welcome-toast .toast-top-row { margin-bottom: 11px !important; align-items: center !important; }
+.executive-welcome-toast .toast-top-meta { gap: 12px !important; }
+.executive-welcome-toast .toast-badge {
+  padding: 6px 12px !important; gap: 6px !important;
+  font-size: 11px !important; font-weight: 800 !important; letter-spacing: .08em !important;
+  color: #A7F3D0 !important;
+  background: rgba(16, 185, 129, .20) !important;
+  border: 1px solid rgba(52, 211, 153, .55) !important;
+}
+.executive-welcome-toast .toast-badge svg { width: 13px !important; height: 13px !important; }
+.executive-welcome-toast .toast-time { gap: 7px !important; font-size: 13px !important; font-weight: 600 !important; color: #D3DCEA !important; }
+.executive-welcome-toast .toast-live-dot { width: 8px !important; height: 8px !important; }
+.executive-welcome-toast .toast-title {
+  margin: 0 0 7px !important;
+  font-size: 20px !important; font-weight: 800 !important; line-height: 1.25 !important; letter-spacing: -.02em !important;
+  color: #FFFFFF !important;
+}
+.executive-welcome-toast .toast-desc { font-size: 14.5px !important; line-height: 1.55 !important; color: #CBD5E1 !important; }
+.executive-welcome-toast .toast-desc strong { color: #FFFFFF !important; font-weight: 700 !important; }
+.executive-welcome-toast .toast-footer {
+  gap: 8px !important; margin-top: 16px !important; padding-top: 15px !important;
+  border-top: 1px solid rgba(255, 255, 255, .12) !important;
+}
+.executive-welcome-toast .toast-chip {
+  gap: 7px !important; padding: 7px 12px 7px 10px !important;
+  font-size: 12.5px !important; font-weight: 600 !important; color: #E2E8F0 !important;
+  background: rgba(255, 255, 255, .08) !important;
+  border: 1px solid rgba(255, 255, 255, .17) !important;
+}
+.executive-welcome-toast .toast-chip svg { width: 14px !important; height: 14px !important; color: #6EE7B7 !important; }
+.executive-welcome-toast .toast-close-btn {
+  width: 34px !important; height: 34px !important; border-radius: 10px !important;
+  color: #D3DCEA !important;
+  background: rgba(255, 255, 255, .08) !important;
+  border: 1px solid rgba(255, 255, 255, .18) !important;
+}
+.executive-welcome-toast .toast-close-btn svg { width: 15px !important; height: 15px !important; }
+.executive-welcome-toast .toast-close-btn:hover { color: #FFFFFF !important; background: rgba(255, 255, 255, .17) !important; border-color: rgba(255, 255, 255, .34) !important; }
+.executive-welcome-toast .toast-progress-track { height: 4px !important; background: rgba(255, 255, 255, .08) !important; }
+.executive-welcome-toast .toast-progress-bar { box-shadow: 0 0 12px rgba(52, 211, 153, .65) !important; }
+@media (max-width: 560px) {
+  .executive-welcome-toast {
+    top: 64px !important; right: 10px !important; left: 10px !important;
+    width: auto !important; max-width: none !important;
+    padding: 16px 16px 21px 20px !important; border-radius: 18px !important;
+  }
+  .executive-welcome-toast .toast-content-box { gap: 13px !important; }
+  .executive-welcome-toast .toast-icon-wrap { width: 46px !important; height: 46px !important; border-radius: 14px !important; }
+  .executive-welcome-toast .toast-icon-wrap svg { width: 24px !important; height: 24px !important; }
+  .executive-welcome-toast .toast-title { font-size: 17px !important; }
+  .executive-welcome-toast .toast-desc { font-size: 13.5px !important; }
+  .executive-welcome-toast .toast-chip { font-size: 12px !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.user-logged-in #mobileDrawer,
   html.user-logged-in #mobileDrawer.open { transition: none !important; }
