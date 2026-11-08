@@ -271,6 +271,14 @@ html.user-logged-in #mobileDrawer .mobile-drawer-nav button .ic {
   color: var(--nx-sh-ink-2) !important;
 }
 html.user-logged-in #mobileDrawer .mobile-drawer-nav button .label { flex: 1 1 auto !important; min-width: 0 !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; color: inherit !important; }
+/* Celulares estreitos: a gaveta encolhe (88% da tela) e o recuo simétrico de 54px deixava "Planejamento Orçamentário" (201px) cortado com reticências.
+   O recuo passa a ser só do lado do ícone (50px) e o rótulo se centraliza no espaço que sobra; em <= 339px o texto desce para 14px (cabe em 320px). */
+@media (max-width: 389px) {
+  html.user-logged-in #mobileDrawer .mobile-drawer-nav button.menu-btn-user { padding: 0 12px 0 50px !important; }
+}
+@media (max-width: 339px) {
+  html.user-logged-in #mobileDrawer .mobile-drawer-nav button.menu-btn-user { font-size: 14px !important; }
+}
 html.user-logged-in #mobileDrawer .mobile-drawer-nav button:active { background: var(--nx-sh-wash) !important; }
 html.user-logged-in #mobileDrawer .mobile-drawer-nav button.active {
   background: linear-gradient(180deg, rgba(var(--nx-sh-acc), .27), rgba(var(--nx-sh-acc), .13)) !important;
