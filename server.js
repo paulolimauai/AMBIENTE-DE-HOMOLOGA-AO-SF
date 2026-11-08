@@ -1873,6 +1873,7 @@ const htmlContent = `<!DOCTYPE html>
     // Paleta de cores do fundo: mesmas paletas da tela de login (/login.html) e mesma chave de armazenamento (nexus:cores)
     window.__nxPalette = (function() {
       var KEY = 'nexus:cores';
+      var DEFAULT_ID = 'ouro';
       var PALETAS = [
         { id: 'multicolor', nome: 'Multicolor', h: [265, 335, 190, 45] },
         { id: 'aurora', nome: 'Aurora', h: [250, 320, 190, 280] },
@@ -1885,7 +1886,7 @@ const htmlContent = `<!DOCTYPE html>
         { id: 'carmesim', nome: 'Carmesim', h: [352, 20, 285, 320] },
         { id: 'neon', nome: 'Neon', h: [85, 150, 195, 50] }
       ];
-      var state = { id: 'multicolor' };
+      var state = { id: DEFAULT_ID };
       function hslToRgb(h, s, l) {
         s /= 100; l /= 100;
         var k = function(n) { return (n + h / 30) % 12; };
@@ -1893,7 +1894,7 @@ const htmlContent = `<!DOCTYPE html>
         var f = function(n) { return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); };
         return [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))];
       }
-      function hexToHue(value) {
+      function hexToHsl(value) {
         var n = parseInt(value.slice(1), 16);
         var r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
         var max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min, hue = 0;
@@ -1903,34 +1904,40 @@ const htmlContent = `<!DOCTYPE html>
           else hue = (r - g) / d + 4;
           hue = Math.round(hue * 60 + 360) % 360;
         }
-        return hue;
+        var lightness = (max + min) / 2;
+        var saturation = d ? d / (1 - Math.abs(2 * lightness - 1)) : 0;
+        return { h: hue, s: Math.round(saturation * 100) };
       }
-      function paint(hues, id) {
+      function paint(hues, id, sat) {
         var root = document.documentElement;
-        for (var i = 0; i < 4; i++) root.style.setProperty('--nx-o' + (i + 1), hslToRgb(hues[i], 95, 58).join(', '));
+        var s = Math.max(70, Math.min(100, sat == null ? 95 : sat));
+        for (var i = 0; i < 4; i++) root.style.setProperty('--nx-o' + (i + 1), hslToRgb(hues[i], s, 58).join(', '));
         root.setAttribute('data-nx-palette', id);
       }
       function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
-      function choose(id) {
-        var p = PALETAS.filter(function(x) { return x.id === id; })[0] || PALETAS[0];
+      function choose(id, skipSave) {
+        var p = PALETAS.filter(function(x) { return x.id === id; })[0] || PALETAS.filter(function(x) { return x.id === DEFAULT_ID; })[0] || PALETAS[0];
         state = { id: p.id };
-        paint(p.h, p.id);
-        save();
+        paint(p.h, p.id, 95);
+        if (!skipSave) save();
       }
-      function chooseCustom(hex) {
+      function chooseCustom(hex, skipSave) {
         if (!/^#[0-9a-f]{6}$/i.test(hex || '')) return;
-        var h = hexToHue(hex);
+        var hs = hexToHsl(hex);
+        var h = hs.h;
         state = { id: 'custom', hex: hex };
-        paint([h, (h + 60) % 360, (h + 300) % 360, (h + 150) % 360], 'custom');
-        save();
+        paint([h, (h + 60) % 360, (h + 300) % 360, (h + 150) % 360], 'custom', hs.s);
+        if (!skipSave) save();
       }
       function load() {
         var saved = null;
         try { saved = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
         if (saved && saved.id === 'custom' && /^#[0-9a-f]{6}$/i.test(saved.hex || '')) {
-          chooseCustom(saved.hex);
+          chooseCustom(saved.hex, true);
+        } else if (saved && saved.id) {
+          choose(saved.id, true);
         } else {
-          choose(saved && saved.id);
+          choose(DEFAULT_ID, true);
         }
       }
       return { PALETAS: PALETAS, choose: choose, chooseCustom: chooseCustom, load: load, current: function() { return state; } };
@@ -14026,7 +14033,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261108-2" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261108-5" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
@@ -14653,7 +14660,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </button>
       <button data-page="cartoes" class="menu-btn-user" title="Cartões de Crédito & Débito">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
-        <span class="label">Contas e cartões</span>
+        <span class="label">Contas e Cartões</span>
       </button>
 
       <!-- Seção: Planejamento Financeiro -->
@@ -14685,10 +14692,10 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       </button>
       <button data-page="importar" class="menu-btn-user" title="Importação de Extratos OFX e CSV">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
-        <span class="label">Importar extrato</span>
+        <span class="label">Importar Extrato</span>
       </button>
       <button data-page="anexos" class="menu-btn-user" title="Gestão de Documentos">
-        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></span>
         <span class="label">Gestão de Documentos</span>
       </button>
       <!-- "Ordem de Serviço" é exclusiva do perfil Administrador (botão #menuOrdensBtn no Painel Administrativo). Usuário comum abre chamado pela tela de login. -->
@@ -14924,7 +14931,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <div class="mobile-drawer-section-title menu-section-visao">Visão Geral</div>
       <button data-page="dashboard" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span><span class="label">Dashboard Financeiro</span></button>
       <button data-page="transacoes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10h14l-4-4"/><path d="M17 14H3l4 4"/><circle cx="7" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg></span><span class="label">Transações</span></button>
-      <button data-page="cartoes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span><span class="label">Contas e cartões</span></button>
+      <button data-page="cartoes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h3"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg></span><span class="label">Contas e Cartões</span></button>
       
       <!-- Seção: Planejamento -->
       <div class="mobile-drawer-section-title menu-section-planejamento">Planejamento</div>
@@ -14935,8 +14942,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Seção: Ferramentas -->
       <div class="mobile-drawer-section-title menu-section-ferramentas">Ferramentas</div>
       <button data-page="recorrentes" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8"/><path d="M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/></svg></span><span class="label">Despesas Fixas</span></button>
-      <button data-page="importar" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span class="label">Importar extrato</span></button>
-      <button data-page="anexos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span><span class="label">Gestão de Documentos</span></button>
+      <button data-page="importar" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span class="label">Importar Extrato</span></button>
+      <button data-page="anexos" class="menu-btn-user"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg></span><span class="label">Gestão de Documentos</span></button>
       
       <!-- Seção: Minha Conta -->
       <div class="mobile-drawer-section-title menu-section-minha-conta">Preferências</div>
@@ -17617,6 +17624,7 @@ function armExecutiveWelcomeToast(ms) {
 }
 
 function showExecutiveWelcomeToast(msg, subMsg) {
+  try { if (window.__nxPalette && typeof window.__nxPalette.load === 'function') window.__nxPalette.load(); } catch (e) {}
   var stageEl = document.getElementById('executiveWelcomeStage');
   if (!stageEl) {
     stageEl = document.createElement('div');
@@ -17624,8 +17632,17 @@ function showExecutiveWelcomeToast(msg, subMsg) {
     stageEl.className = 'sg-welcome-stage';
     document.body.appendChild(stageEl);
     stageEl.addEventListener('mousedown', function (ev) {
-      if (ev.target === stageEl) hideExecutiveWelcomeToast();
+      if (ev.target === stageEl || ev.target.closest('.bg')) hideExecutiveWelcomeToast();
     });
+  }
+
+  var bgEl = stageEl.querySelector('.bg');
+  if (!bgEl) {
+    bgEl = document.createElement('div');
+    bgEl.className = 'bg';
+    bgEl.setAttribute('aria-hidden', 'true');
+    bgEl.innerHTML = '<i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i><i class="beam b1"></i><i class="beam b2"></i><i class="flute"></i><i class="grid"></i><i class="grain"></i><i class="vig"></i>';
+    stageEl.insertBefore(bgEl, stageEl.firstChild);
   }
 
   var toastEl = document.getElementById('executiveWelcomeToast');
@@ -17679,7 +17696,7 @@ function showExecutiveWelcomeToast(msg, subMsg) {
         '</div>' +
         '<div class="sg-auth-cell">' +
           '<span class="sg-auth-lbl">' + sgGlyph('check') + '<span>Status do Login</span></span>' +
-          '<strong class="sg-auth-val sg-auth-val-ok">Autenticado com Sucesso</strong>' +
+          '<strong class="sg-auth-val sg-auth-val-ok">✓ Login Efetuado com Sucesso</strong>' +
           '<small class="sg-auth-sub">Credenciais validadas no servidor</small>' +
         '</div>' +
         '<div class="sg-auth-cell">' +
@@ -17744,14 +17761,25 @@ function showExecutiveWelcomeToast(msg, subMsg) {
   armExecutiveWelcomeToast(WELCOME_TOAST_MS);
 }
 
-// Despedida em vidro: cobre a tela com o fundo de luz e uma placa central enquanto os dados são salvos; depois chama onDone
-// (ir para o login). kind: 'logout' (saída pelo botão) ou 'timeout' (expirou por inatividade).
-// savePromise (opcional) é a gravação dos dados: a placa só segue quando ela termina (no máximo 2,5 s além do tempo mínimo).
-function showSessionFarewell(kind, name, savePromise, onDone) {
+// Despedida em vidro: cobre a tela com o fundo de luz (na mesma cor escolhida pelo usuário) e uma placa central enquanto os dados são salvos;
+// depois chama onDone (ir para o login). kind: 'logout' (saída pelo botão) ou 'timeout' (expirou por inatividade).
+function showSessionFarewell(kind, userOrName, savePromise, onDone) {
+  try { if (window.__nxPalette && typeof window.__nxPalette.load === 'function') window.__nxPalette.load(); } catch (e) {}
   var old = document.getElementById('nexusSessionFarewell');
   if (old) old.remove();
   var timeout = kind === 'timeout';
-  var first = formatToastDisplayName(name).split(' ')[0];
+  var rawName = typeof userOrName === 'object' && userOrName ? userOrName.name : userOrName;
+  var rawEmail = typeof userOrName === 'object' && userOrName && userOrName.email ? userOrName.email : (currentUser && currentUser.email ? currentUser.email : 'Sessão desconectada');
+  var rawRole = typeof userOrName === 'object' && userOrName && userOrName.role ? userOrName.role : (currentUser && currentUser.role ? currentUser.role : 'Usuário');
+  var fullName = escapeToastHtml(formatToastDisplayName(rawName));
+  var first = formatToastDisplayName(rawName).split(' ')[0];
+  var userEmail = escapeToastHtml(rawEmail);
+  var isMasterAdmin = rawRole === 'Administrador';
+  var badgeHtml = isMasterAdmin
+    ? sgGlyph('star') + '<span>Administrador Master</span>'
+    : sgGlyph('user') + '<span>Conta Verificada</span>';
+  var nowTime = sgNowLabel();
+  var nowDate = sgDateLabel();
 
   var stage = document.createElement('div');
   stage.id = 'nexusSessionFarewell';
@@ -17759,29 +17787,65 @@ function showSessionFarewell(kind, name, savePromise, onDone) {
   stage.setAttribute('data-kind', timeout ? 'timeout' : 'logout');
   stage.setAttribute('role', 'alertdialog');
   stage.setAttribute('aria-live', 'assertive');
-  stage.setAttribute('aria-label', timeout ? 'Sessão encerrada por inatividade' : 'Sessão encerrada');
+  stage.setAttribute('aria-label', timeout ? 'Sessão encerrada por inatividade' : 'Sessão encerrada com sucesso');
 
-  var title = timeout ? 'Sessão encerrada por inatividade' : 'Até logo, ' + escapeToastHtml(first) + '!';
+  var statusLabel = timeout ? 'Sessão Expirada por Inatividade' : 'Logout Efetuado com Sucesso';
+  var kickerLabel = timeout ? 'Proteção Automática • Nexus Financeiro Hub' : 'Desconexão Segura • Nexus Financeiro Hub';
+  var title = timeout ? 'Sessão Encerrada por Inatividade' : 'Até logo, ' + escapeToastHtml(first) + '!';
   var text = timeout
-    ? 'Por segurança, desconectamos a sua conta depois de um tempo sem atividade. Entre novamente para continuar de onde parou.'
-    : 'Sua sessão foi encerrada com segurança. Para voltar ao painel, basta entrar de novo com o seu e-mail e senha.';
+    ? 'Por segurança, desconectamos a conta de <strong>' + fullName + '</strong> após período sem atividade. Seus dados foram preservados e estão protegidos.'
+    : 'A sessão de <strong>' + fullName + '</strong> foi encerrada com segurança. Todos os seus lançamentos e preferências visuais foram preservados.';
 
   stage.innerHTML =
     '<div class="bg" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i><i class="beam b1"></i><i class="beam b2"></i><i class="flute"></i><i class="grid"></i><i class="grain"></i><i class="vig"></i></div>' +
     '<div class="sg sg-plaque" data-kind="' + (timeout ? 'timeout' : 'logout') + '">' +
       sgFx() +
       '<div class="sg-in">' +
-        '<div class="sg-plate">' + (timeout ? SG_SVG.clock : SG_SVG.lock) + '</div>' +
-        '<div class="sg-top"><div class="sg-meta"><span class="sg-badge">' + sgGlyph(timeout ? 'clock' : 'out') + '<span>' + (timeout ? 'Sessão expirada' : 'Sessão encerrada') + '</span></span></div></div>' +
-        '<h3 class="sg-title">' + title + '</h3>' +
-        '<p class="sg-text">' + text + '</p>' +
-        '<div class="sg-chips">' +
-          (savePromise ? sgChip('save', 'Salvando dados...', 'sgSaveChip') : sgChip('check', 'Dados salvos', 'sgSaveChip')) +
-          sgChip('lock', timeout ? 'Conta protegida' : 'Sessão protegida') +
-          sgChip('clock', 'Saída às ' + sgNowLabel()) +
+        '<div class="sg-top">' +
+          '<div class="sg-meta">' +
+            '<span class="sg-status-pill"><span class="sg-dot"></span><span>' + statusLabel + '</span></span>' +
+            '<span class="sg-badge">' + badgeHtml + '</span>' +
+          '</div>' +
+          '<button type="button" class="sg-x" title="Ir para o login" aria-label="Fechar e ir para o login">' + sgGlyph('x') + '</button>' +
         '</div>' +
-        '<button type="button" class="sg-go">' + sgGlyph('out') + '<span>Ir para o login</span></button>' +
-        '<div class="sg-wait">Redirecionando automaticamente...</div>' +
+        '<div class="sg-hero-row">' +
+          '<div class="sg-plate">' + (timeout ? SG_SVG.clock : SG_SVG.lock) + '</div>' +
+          '<div class="sg-main">' +
+            '<span class="sg-kicker">' + kickerLabel + '</span>' +
+            '<h4 class="sg-title">' + title + '</h4>' +
+            '<p class="sg-text">' + text + '</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="sg-auth-grid">' +
+          '<div class="sg-auth-cell">' +
+            '<span class="sg-auth-lbl">' + sgGlyph('user') + '<span>Titular da Sessão</span></span>' +
+            '<strong class="sg-auth-val">' + fullName + '</strong>' +
+            '<small class="sg-auth-sub">' + userEmail + '</small>' +
+          '</div>' +
+          '<div class="sg-auth-cell">' +
+            '<span class="sg-auth-lbl">' + sgGlyph('save') + '<span>Sincronia de Dados</span></span>' +
+            '<strong class="sg-auth-val sg-auth-val-ok" id="sgSaveVal">' + (savePromise ? 'Sincronizando dados...' : '✓ Dados Salvos com Sucesso') + '</strong>' +
+            '<small class="sg-auth-sub">Backup criptografado concluído</small>' +
+          '</div>' +
+          '<div class="sg-auth-cell">' +
+            '<span class="sg-auth-lbl">' + sgGlyph('clock') + '<span>Horário do Logout</span></span>' +
+            '<strong class="sg-auth-val">' + nowDate + ' às ' + nowTime + '</strong>' +
+            '<small class="sg-auth-sub">Horário Oficial de Brasília (BRT)</small>' +
+          '</div>' +
+          '<div class="sg-auth-cell">' +
+            '<span class="sg-auth-lbl">' + sgGlyph('lock') + '<span>Segurança &amp; Tema</span></span>' +
+            '<strong class="sg-auth-val">Credenciais Protegidas</strong>' +
+            '<small class="sg-auth-sub">Token encerrado • Cor preservada</small>' +
+          '</div>' +
+        '</div>' +
+        '<div class="sg-footer-row">' +
+          '<div class="sg-chips">' +
+            (savePromise ? sgChip('save', 'Salvando dados...', 'sgSaveChip') : sgChip('check', 'Dados salvos', 'sgSaveChip')) +
+            sgChip('lock', timeout ? 'Conta protegida' : 'Sessão encerrada') +
+            sgChip('clock', 'Saída às ' + nowTime) +
+          '</div>' +
+          '<button type="button" class="sg-enter-btn sg-go">' + sgGlyph('out') + '<span>Voltar ao Login</span></button>' +
+        '</div>' +
       '</div>' +
       '<div class="sg-bar"><i></i></div>' +
     '</div>';
@@ -17806,12 +17870,16 @@ function showSessionFarewell(kind, name, savePromise, onDone) {
   }
   document.addEventListener('keydown', onKey, true);
   stage.querySelector('.sg-go').addEventListener('click', finish);
+  var closeBtn = stage.querySelector('.sg-x');
+  if (closeBtn) closeBtn.addEventListener('click', finish);
   stage.addEventListener('mousedown', function (ev) { if (ev.target === stage || ev.target.closest('.bg')) finish(); });
 
   if (savePromise) {
     Promise.resolve(savePromise).then(function () {
       var chip = document.getElementById('sgSaveChip');
       if (chip) chip.innerHTML = sgGlyph('check') + '<span>Dados salvos</span>';
+      var valEl = document.getElementById('sgSaveVal');
+      if (valEl) valEl.textContent = '✓ Dados Salvos com Sucesso';
       saveDone = true;
       tryFinish();
     });
@@ -19739,7 +19807,7 @@ window.handleAppLogout = async (isTimeout = false) => {
 
   // A gravação dos dados começa ANTES de zerar o estado (ela lê as variáveis na hora da chamada)
   let savePromise = null;
-  const farewellName = currentUser ? currentUser.name : '';
+  const farewellUser = currentUser ? { name: currentUser.name || '', email: currentUser.email || '', role: currentUser.role || 'Usuário' } : null;
   try {
     if (currentUser && typeof saveUserData === 'function') {
       savePromise = Promise.resolve(saveUserData()).catch(() => {});
@@ -19749,9 +19817,9 @@ window.handleAppLogout = async (isTimeout = false) => {
   // Despedida em vidro (só quando havia alguém logado): a placa cobre a tela enquanto os dados são salvos e depois leva ao login.
   // Sem ela (ou se falhar), oculta o app na hora e navega, como antes: evita piscar o login embutido antigo.
   let farewellShown = false;
-  if (farewellName && typeof showSessionFarewell === 'function') {
+  if (farewellUser && farewellUser.name && typeof showSessionFarewell === 'function') {
     try {
-      showSessionFarewell(isTimeout === true ? 'timeout' : 'logout', farewellName, savePromise, () => window.__goToLogin());
+      showSessionFarewell(isTimeout === true ? 'timeout' : 'logout', farewellUser, savePromise, () => window.__goToLogin());
       farewellShown = true;
     } catch(e){}
   }
