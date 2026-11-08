@@ -269,15 +269,37 @@ html.user-logged-in #mobileDrawer .mobile-drawer-avatar {
   border-radius: 50% !important;
   overflow: hidden !important;
   font-size: 14px !important;
-  font-weight: 800 !important;
-  color: #1B1306 !important;
-  background: linear-gradient(135deg, rgb(var(--nx-sh-acc)), rgb(var(--nx-sh-acc-2))) !important;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, .14) !important;
+  font-weight: 700 !important;
+  letter-spacing: .03em !important;
+  /* mesmo avatar do menu lateral (seção 2b): fundo escuro e calmo, anel na cor da paleta e iniciais claras */
+  color: #F1F5F9 !important;
+  background: linear-gradient(150deg, #24324D 0%, #131C30 100%) !important;
+  border: 1px solid rgba(var(--nx-sh-acc), .5) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .09), 0 0 0 3px rgba(var(--nx-sh-acc), .08) !important;
 }
 html.user-logged-in #mobileDrawer .mobile-drawer-avatar img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }
 html.user-logged-in #mobileDrawer .mobile-drawer-user-copy { display: flex !important; flex-direction: column !important; align-items: center !important; flex: 1 1 auto !important; min-width: 0 !important; gap: 1px !important; text-align: center !important; }
 html.user-logged-in #mobileDrawer .mobile-drawer-user-copy strong { max-width: 100% !important; font-size: 15px !important; font-weight: 700 !important; color: #fff !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
-html.user-logged-in #mobileDrawer .mobile-drawer-user-copy small { font-size: 12.5px !important; font-weight: 700 !important; color: #34D399 !important; }
+/* Plano em badge discreta (igual à do menu lateral); sem texto (antes do syncDrawerAccount) a badge some, sem "pílula vazia" */
+html.user-logged-in #mobileDrawer .mobile-drawer-user-copy small {
+  display: inline-flex !important;
+  align-items: center !important;
+  max-width: 100% !important;
+  margin-top: 3px !important;
+  padding: 1px 9px !important;
+  border: 1px solid rgba(110, 231, 183, .26) !important;
+  border-radius: 999px !important;
+  background: rgba(16, 185, 129, .12) !important;
+  color: #A7F0D1 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: .02em !important;
+  line-height: 1.4 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+html.user-logged-in #mobileDrawer .mobile-drawer-user-copy small:empty { display: none !important; }
 
 html.user-logged-in #mobileDrawer .mobile-drawer-nav {
   flex: 1 1 auto !important;
