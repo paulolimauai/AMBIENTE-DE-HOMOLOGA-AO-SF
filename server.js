@@ -14026,7 +14026,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261107-9" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261108-1" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
@@ -14643,13 +14643,13 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="menu-section-title">Visão Geral</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="dashboard" class="menu-btn-user" title="Dashboard Financeiro Geral">
+      <button data-page="dashboard" class="menu-btn-user" title="Dashboard Financeiro">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg></span>
-        <span class="label">Visão geral</span>
+        <span class="label">Dashboard Financeiro</span>
       </button>
-      <button data-page="transacoes" class="menu-btn-user" title="Extrato de Transações & Movimentações">
+      <button data-page="transacoes" class="menu-btn-user" title="Extrato de Transações">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></span>
-        <span class="label">Movimentações</span>
+        <span class="label">Transações</span>
       </button>
       <button data-page="cartoes" class="menu-btn-user" title="Cartões de Crédito & Débito">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
@@ -14661,17 +14661,17 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="menu-section-title">Planejamento</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="orcamentos" class="menu-btn-user" title="Planejamento de Orçamentos">
+      <button data-page="orcamentos" class="menu-btn-user" title="Planejamento Orçamentário">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span>
-        <span class="label">Orçamentos</span>
+        <span class="label">Planejamento Orçamentário</span>
       </button>
-      <button data-page="metas" class="menu-btn-user" title="Metas & Objetivos Financeiros">
+      <button data-page="metas" class="menu-btn-user" title="Planejamento de Metas">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></span>
-        <span class="label">Metas financeiras</span>
+        <span class="label">Planejamento de Metas</span>
       </button>
-      <button data-page="relatorios" class="menu-btn-user" title="Relatórios Analíticos & Gráficos">
+      <button data-page="relatorios" class="menu-btn-user" title="Relatórios e Insights">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
-        <span class="label">Análises</span>
+        <span class="label">Relatórios e Insights</span>
       </button>
 
       <!-- Seção: Ferramentas & Fluxos -->
@@ -14679,7 +14679,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="menu-section-title">Ferramentas</span>
         <span class="menu-section-line"></span>
       </div>
-      <button data-page="recorrentes" class="menu-btn-user" title="Despesas & Assinaturas Recorrentes">
+      <button data-page="recorrentes" class="menu-btn-user" title="Despesas Fixas">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
         <span class="label">Contas recorrentes</span>
       </button>
@@ -17279,7 +17279,6 @@ window.handleMandatoryPasswordSubmit = async function(e) {
     currentPage = nexusResolvePage('', nexusIsAdminUser(currentUser));
 
     await loadUserData();
-    showLoginSuccessPopup('Senha definitiva configurada! Acessando sistema...');
     setTimeout(() => {
       document.getElementById('authPage').classList.remove('show');
       document.getElementById('authPage').style.display = 'none';
@@ -17287,6 +17286,9 @@ window.handleMandatoryPasswordSubmit = async function(e) {
       document.getElementById('appMain').style.display = 'flex';
       render();
       if (typeof window.initTrialAndSubscription === 'function') { window.initTrialAndSubscription(); }
+      const uName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
+      const greet = getGreetingTime().text;
+      showExecutiveWelcomeToast('Login Efetuado com Sucesso', greet + ', <strong>' + uName + '</strong>! Senha definitiva configurada e sessão autenticada com segurança.');
     }, 150);
 
   } catch(err) {
@@ -17491,13 +17493,15 @@ window.handleLoginSubmit = async function(e) {
     currentPage = nexusResolvePage('', nexusIsAdminUser(currentUser));
 
     await loadUserData();
-    showLoginSuccessPopup('Redirecionando para o seu sistema...');
     setTimeout(() => {
       document.getElementById('authPage').classList.remove('show');
       document.getElementById('authPage').style.display = 'none';
       document.getElementById('appMain').classList.add('show');
       document.getElementById('appMain').style.display = 'flex';
       render();
+      const uName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
+      const greet = getGreetingTime().text;
+      showExecutiveWelcomeToast('Login Efetuado com Sucesso', greet + ', <strong>' + uName + '</strong>! Seu login foi efetuado com sucesso e seu ambiente financeiro está sincronizado e protegido.');
     }, 40);
     return;
   }
@@ -17588,6 +17592,10 @@ function sgNowLabel() {
   return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 }
 
+function sgDateLabel() {
+  return new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
 // Cena de luz dentro da placa (orbes, vidro canelado, grão e a camada que garante o contraste do texto)
 function sgFx() {
   return '<span class="sg-fx" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="flute"></i><i class="grain"></i><i class="shade"></i></span>';
@@ -17595,7 +17603,9 @@ function sgFx() {
 
 function hideExecutiveWelcomeToast() {
   var el = document.getElementById('executiveWelcomeToast');
+  var stageEl = document.getElementById('executiveWelcomeStage');
   if (el) el.classList.remove('show', 'paused');
+  if (stageEl) stageEl.classList.remove('show');
   clearTimeout(__welcomeToastTimer);
 }
 
@@ -17607,35 +17617,90 @@ function armExecutiveWelcomeToast(ms) {
 }
 
 function showExecutiveWelcomeToast(msg, subMsg) {
+  var stageEl = document.getElementById('executiveWelcomeStage');
+  if (!stageEl) {
+    stageEl = document.createElement('div');
+    stageEl.id = 'executiveWelcomeStage';
+    stageEl.className = 'sg-welcome-stage';
+    document.body.appendChild(stageEl);
+    stageEl.addEventListener('mousedown', function (ev) {
+      if (ev.target === stageEl) hideExecutiveWelcomeToast();
+    });
+  }
+
   var toastEl = document.getElementById('executiveWelcomeToast');
   if (!toastEl) {
     toastEl = document.createElement('div');
     toastEl.id = 'executiveWelcomeToast';
-    toastEl.setAttribute('role', 'status');
+    toastEl.setAttribute('role', 'dialog');
+    toastEl.setAttribute('aria-modal', 'true');
     toastEl.setAttribute('aria-live', 'polite');
-    document.body.appendChild(toastEl);
   }
-  toastEl.className = 'sg sg-toast';
+  if (toastEl.parentElement !== stageEl) {
+    stageEl.appendChild(toastEl);
+  }
+  toastEl.className = 'sg sg-toast sg-toast-centered';
   toastEl.setAttribute('data-kind', 'login');
+
   var userName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
+  var userEmail = escapeToastHtml(currentUser && currentUser.email ? currentUser.email : 'Sessão autenticada');
   var userRole = currentUser ? (currentUser.role || 'Usuário') : 'Usuário';
-  var badgeHtml = userRole === 'Administrador'
+  var isMasterAdmin = userRole === 'Administrador';
+  var roleDisplay = isMasterAdmin ? 'Administrador Master' : 'Titular • Conta Verificada';
+  var badgeHtml = isMasterAdmin
     ? sgGlyph('star') + '<span>Administrador Master</span>'
     : sgGlyph('user') + '<span>Conta Verificada</span>';
+  var nowTime = sgNowLabel();
+  var nowDate = sgDateLabel();
 
   toastEl.innerHTML =
     sgFx() +
     '<div class="sg-in">' +
-      '<div class="sg-plate">' + SG_SVG.shield + '</div>' +
-      '<div class="sg-main">' +
-        '<div class="sg-top">' +
-          '<div class="sg-meta"><span class="sg-badge">' + badgeHtml + '</span><span class="sg-state"><span class="sg-dot"></span>Sessão ativa</span></div>' +
-          '<button type="button" class="sg-x" title="Fechar" aria-label="Fechar notificação">' + sgGlyph('x') + '</button>' +
+      '<div class="sg-top">' +
+        '<div class="sg-meta">' +
+          '<span class="sg-status-pill"><span class="sg-dot"></span><span>Login Efetuado com Sucesso</span></span>' +
+          '<span class="sg-badge">' + badgeHtml + '</span>' +
         '</div>' +
-        '<h4 class="sg-title">' + (msg || 'Sessão Autenticada com Sucesso') + '</h4>' +
-        '<p class="sg-text">' + (subMsg || ('Ambiente financeiro sincronizado e protegido para <strong>' + userName + '</strong>.')) + '</p>' +
+        '<button type="button" class="sg-x" title="Fechar" aria-label="Fechar confirmação de login">' + sgGlyph('x') + '</button>' +
       '</div>' +
-      '<div class="sg-chips">' + sgChip('lock', 'Conexão segura') + sgChip('sync', 'Dados sincronizados') + sgChip('clock', 'Acesso às ' + sgNowLabel()) + '</div>' +
+      '<div class="sg-hero-row">' +
+        '<div class="sg-plate">' + SG_SVG.shield + '</div>' +
+        '<div class="sg-main">' +
+          '<span class="sg-kicker">Autenticação Validada • Nexus Financeiro Hub</span>' +
+          '<h4 class="sg-title">' + (msg || 'Login Efetuado com Sucesso') + '</h4>' +
+          '<p class="sg-text">' + (subMsg || ('Bem-vindo(a), <strong>' + userName + '</strong>! Seu login foi efetuado com sucesso e seu ambiente financeiro está sincronizado e protegido.')) + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sg-auth-grid">' +
+        '<div class="sg-auth-cell">' +
+          '<span class="sg-auth-lbl">' + sgGlyph('user') + '<span>Titular Autenticado</span></span>' +
+          '<strong class="sg-auth-val">' + userName + '</strong>' +
+          '<small class="sg-auth-sub">' + userEmail + '</small>' +
+        '</div>' +
+        '<div class="sg-auth-cell">' +
+          '<span class="sg-auth-lbl">' + sgGlyph('check') + '<span>Status do Login</span></span>' +
+          '<strong class="sg-auth-val sg-auth-val-ok">Autenticado com Sucesso</strong>' +
+          '<small class="sg-auth-sub">Credenciais validadas no servidor</small>' +
+        '</div>' +
+        '<div class="sg-auth-cell">' +
+          '<span class="sg-auth-lbl">' + sgGlyph('clock') + '<span>Registro de Acesso</span></span>' +
+          '<strong class="sg-auth-val">' + nowDate + ' às ' + nowTime + '</strong>' +
+          '<small class="sg-auth-sub">Horário Oficial de Brasília (BRT)</small>' +
+        '</div>' +
+        '<div class="sg-auth-cell">' +
+          '<span class="sg-auth-lbl">' + sgGlyph('lock') + '<span>Nível &amp; Segurança</span></span>' +
+          '<strong class="sg-auth-val">' + escapeToastHtml(roleDisplay) + '</strong>' +
+          '<small class="sg-auth-sub">Criptografia TLS • Dados Sincronizados</small>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sg-footer-row">' +
+        '<div class="sg-chips">' +
+          sgChip('lock', 'Conexão segura') +
+          sgChip('sync', 'Dados sincronizados') +
+          sgChip('clock', 'Acesso às ' + nowTime) +
+        '</div>' +
+        '<button type="button" class="sg-enter-btn">' + sgGlyph('check') + '<span>Acessar Painel</span></button>' +
+      '</div>' +
     '</div>' +
     '<div class="sg-bar"><i></i></div>';
 
@@ -17643,6 +17708,8 @@ function showExecutiveWelcomeToast(msg, subMsg) {
 
   var closeBtn = toastEl.querySelector('.sg-x');
   if (closeBtn) closeBtn.addEventListener('click', hideExecutiveWelcomeToast);
+  var enterBtn = toastEl.querySelector('.sg-enter-btn');
+  if (enterBtn) enterBtn.addEventListener('click', hideExecutiveWelcomeToast);
 
   // Pausa a contagem (e a barra de tempo) enquanto o mouse estiver sobre o aviso
   toastEl.onmouseenter = function () {
@@ -17660,14 +17727,18 @@ function showExecutiveWelcomeToast(msg, subMsg) {
   if (!window.__welcomeToastEscBound) {
     window.__welcomeToastEscBound = true;
     document.addEventListener('keydown', function (ev) {
-      if (ev.key === 'Escape') hideExecutiveWelcomeToast();
+      if (ev.key === 'Escape' || (ev.key === 'Enter' && toastEl && toastEl.classList.contains('show'))) {
+        hideExecutiveWelcomeToast();
+      }
     });
   }
 
-  // Reinicia as animações de entrada a cada exibição
+  // Reinicia as animações de entrada a cada exibição (centralizado na tela)
+  stageEl.classList.remove('show');
   toastEl.classList.remove('show', 'paused');
   void toastEl.offsetWidth;
   requestAnimationFrame(function () {
+    stageEl.classList.add('show');
     toastEl.classList.add('show');
   });
   armExecutiveWelcomeToast(WELCOME_TOAST_MS);
@@ -31294,7 +31365,7 @@ window.applyPostLoginBg = function(theme) {
         setTimeout(() => {
           const uName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
           const greet = getGreetingTime().text;
-          showExecutiveWelcomeToast('Sessão Autenticada com Sucesso', greet + ', <strong>' + uName + '</strong>! Seu ambiente financeiro foi sincronizado e está protegido.');
+          showExecutiveWelcomeToast('Login Efetuado com Sucesso', greet + ', <strong>' + uName + '</strong>! Seu login foi efetuado com sucesso e seu ambiente financeiro está sincronizado e protegido.');
         }, 350);
       }
     } catch(e){}
