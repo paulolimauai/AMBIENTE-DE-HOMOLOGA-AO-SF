@@ -42,10 +42,101 @@ html.user-logged-in #menu.sidebar-menu { height: auto !important; bottom: 0 !imp
 
 /* =====================================================================================
    2. Menu lateral (computador e tablet largo)
-   O visual do menu lateral é o ORIGINAL (regras do server.js e do frontend-polish.css): a pedido do usuário ele voltou a
-   ser exatamente como era antes das 06:00 de 07/11/2026 (commit 8ad92a8). Aqui NÃO há regra visual do menu lateral;
-   só valem as correções que não mudam a aparência: altura presa por top+bottom e min-height compensado pelo zoom (seção 1).
+   A identidade do menu lateral é a ORIGINAL (regras do server.js e do frontend-polish.css; o usuário pediu em 07/11/2026 o
+   visual de antes das 06:00, commit 8ad92a8): fundo da paleta, títulos entre dois fios, item ativo com barra de acento.
+   A seção 2b (pedido de 08/11/2026) só refina: largura, títulos iguais, ícones numa coluna única, plano em badge e avatar.
    ===================================================================================== */
+
+/* =====================================================================================
+   2b. Menu lateral - refinamento (08/11/2026)
+   Só no menu EXPANDIDO (o recolhido em trilho de ícones e a gaveta do celular não mudam). Não há "display" nas regras de
+   itens (o JS esconde itens de admin por perfil). O menu do administrador (.menu-btn-admin) tem layout próprio e não entra aqui.
+   ===================================================================================== */
+/* Largura: um pouco maior para caber "Planejamento Orçamentário" sem apertar (antes clamp(272px, 22vw, 320px): +8px no mínimo, +24px no máximo); o conteúdo
+   (.main) usa a mesma variável no frontend-polish.css, então acompanha sozinho. */
+html.user-logged-in { --nx-sidebar-w: clamp(280px, 23vw, 344px) !important; }
+
+@media (min-width: 861px) {
+  /* Títulos de seção: um único padrão (tamanho, espaçamento, cor neutra e discreta) para todas as seções, inclusive a do admin */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .menu-section-title {
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: .14em !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    color: #BAC7DA !important;   /* cinza-azulado neutro; no pior pixel (brilho dourado do topo) dá >= 4,5:1 */
+    opacity: 1 !important;
+  }
+
+  /* Itens: o ícone fica sempre na mesma coluna (mesmo X no item ativo e nos inativos) e o rótulo começa sempre na mesma linha.
+     Antes o rótulo era centralizado e o ícone o acompanhava, em zigue-zague. */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu button.menu-btn-user {
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    padding-inline: 14px 14px !important;
+    text-align: left !important;
+  }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu button.menu-btn-user .ic {
+    flex: 0 0 30px !important;
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+    margin: 0 !important;
+  }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu button.menu-btn-user .label {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Rodapé do perfil: nome e plano alinhados à esquerda, ao lado do avatar */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-copy {
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    text-align: left !important;
+  }
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu .sidebar-account-copy strong {
+    max-width: 100% !important;
+    text-align: left !important;
+    line-height: 1.15 !important;
+  }
+  /* Plano: badge discreta (antes era só texto verde neon). A cor segue verde = "plano em dia", mas num tom suave sobre fundo translúcido. */
+  html.user-logged-in:not(.sidebar-collapsed) body:not(.sidebar-collapsed) #menu #sidebarAccountPlan {
+    display: inline-flex !important;
+    align-items: center !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1px 8px !important;
+    border: 1px solid rgba(110, 231, 183, .26) !important;
+    border-radius: 999px !important;
+    background: rgba(16, 185, 129, .12) !important;
+    color: #A7F0D1 !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: .02em !important;
+    line-height: 1.35 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+
+/* Avatar do rodapé (também no menu recolhido): fundo escuro e calmo com anel na cor da paleta e iniciais claras
+   (antes: degradê laranja com texto branco, contraste baixo). Foto de perfil continua preenchendo o círculo. */
+html.user-logged-in #menu .sidebar-account-icon {
+  background: linear-gradient(150deg, #24324D 0%, #131C30 100%) !important;
+  border: 1px solid rgba(var(--nx-sh-acc), .5) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .09), 0 0 0 3px rgba(var(--nx-sh-acc), .08) !important;
+  color: #F1F5F9 !important;
+  font-weight: 700 !important;
+  letter-spacing: .03em !important;
+  text-shadow: none !important;
+}
 /* Foco visível por teclado na barra inferior e na gaveta do celular */
 html.user-logged-in #mobileBottomBar button:focus-visible,
 html.user-logged-in #mobileDrawer button:focus-visible { outline: 2px solid rgba(var(--nx-sh-acc), .95) !important; outline-offset: 2px !important; }
@@ -368,9 +459,10 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
    - O HTML é gerado por showExecutiveWelcomeToast() (login) e showSessionFarewell() (logout), em server.js.
    ===================================================================================== */
 .sg {
-  --sg: 52, 211, 153;     /* destaque (r, g, b) */
-  --sg-2: 56, 189, 248;   /* segunda luz da cena */
-  --sg-3: 139, 92, 246;   /* terceira luz da cena */
+  --sg: var(--nx-o1, 250, 189, 46);     /* cor principal escolhida pelo usuário */
+  --sg-2: var(--nx-o2, 250, 134, 46);   /* segunda luz da paleta escolhida */
+  --sg-3: var(--nx-o3, 250, 216, 46);   /* terceira luz da paleta escolhida */
+  --sg-4: var(--nx-o4, 250, 80, 46);    /* quarta luz da paleta escolhida */
   --sg-ms: 8000ms;
   position: fixed !important;
   isolation: isolate !important;
@@ -383,7 +475,7 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   background:
     radial-gradient(120% 90% at 0% 0%, rgba(255, 255, 255, .17), transparent 58%),
     linear-gradient(145deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .035) 48%, rgba(255, 255, 255, .085)),
-    rgba(7, 12, 28, .56) !important;
+    rgba(7, 12, 28, .62) !important;
   -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(.62) !important;
   backdrop-filter: blur(36px) saturate(200%) brightness(.62) !important;
   box-shadow:
@@ -397,8 +489,14 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   pointer-events: none;
   transition: transform .6s cubic-bezier(.16, 1, .3, 1), opacity .4s ease;
 }
-.sg[data-kind="logout"] { --sg: 129, 140, 248; --sg-2: 56, 189, 248; --sg-3: 192, 132, 252; }
-.sg[data-kind="timeout"] { --sg: 251, 191, 36; --sg-2: 251, 113, 133; --sg-3: 249, 115, 22; }
+.sg[data-kind="login"],
+.sg[data-kind="logout"],
+.sg[data-kind="timeout"] {
+  --sg: var(--nx-o1, 250, 189, 46);
+  --sg-2: var(--nx-o2, 250, 134, 46);
+  --sg-3: var(--nx-o3, 250, 216, 46);
+  --sg-4: var(--nx-o4, 250, 80, 46);
+}
 
 /* Borda de luz em degradê (mesma linguagem da placa de login) */
 .sg::after {
@@ -447,9 +545,9 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
 .sg-status-pill {
   display: inline-flex !important; align-items: center !important; gap: 8px !important; padding: 6px 13px !important; border-radius: 999px !important;
   font-size: 11px !important; font-weight: 800 !important; letter-spacing: .08em !important; text-transform: uppercase !important; line-height: 1 !important;
-  color: #ECFDF5 !important; border: 1px solid rgba(52, 211, 153, .75) !important;
-  background: linear-gradient(135deg, rgba(16, 185, 129, .28), rgba(6, 78, 59, .55)) !important;
-  box-shadow: 0 4px 16px -4px rgba(16, 185, 129, .45), inset 0 1px 0 rgba(255, 255, 255, .25) !important;
+  color: #fff !important; border: 1px solid rgba(var(--sg), .8) !important;
+  background: linear-gradient(rgba(4, 9, 22, .56), rgba(4, 9, 22, .56)), linear-gradient(135deg, rgba(var(--sg), .42), rgba(var(--sg-2), .34)) !important;
+  box-shadow: 0 4px 16px -4px rgba(var(--sg), .5), inset 0 1px 0 rgba(255, 255, 255, .28) !important;
 }
 .sg-badge {
   display: inline-flex !important; align-items: center !important; gap: 6px !important; padding: 6px 12px !important; border-radius: 999px !important;
@@ -458,7 +556,7 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   background: rgba(15, 23, 42, .58) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14) !important;
 }
-.sg-badge svg { width: 13px !important; height: 13px !important; flex: none !important; color: rgb(var(--sg)) !important; }
+.sg-badge svg { width: 13px !important; height: 13px !important; flex: none !important; color: rgb(var(--sg)) !important; filter: brightness(1.3) !important; }
 .sg-state { display: inline-flex !important; align-items: center !important; gap: 7px !important; font-size: 13px !important; font-weight: 600 !important; color: #E6ECF6 !important; }
 .sg-dot { position: relative !important; width: 8px !important; height: 8px !important; border-radius: 50% !important; background: rgb(var(--sg)) !important; box-shadow: 0 0 10px rgb(var(--sg)) !important; }
 .sg-dot::after { content: "" !important; position: absolute !important; inset: 0 !important; border-radius: 50% !important; background: rgb(var(--sg)) !important; animation: sgPulse 1.9s ease-out infinite; }
@@ -471,13 +569,13 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
 .sg-x:hover { color: #fff !important; background: rgba(255, 255, 255, .2) !important; border-color: rgba(255, 255, 255, .4) !important; }
 .sg-x:focus-visible, .sg-go:focus-visible, .sg-enter-btn:focus-visible { outline: 2px solid rgba(var(--sg), 1) !important; outline-offset: 2px !important; }
 .sg-x svg { width: 15px !important; height: 15px !important; }
-.sg-hero-row { display: grid !important; grid-template-columns: auto minmax(0, 1fr) !important; gap: 18px !important; align-items: center !important; }
-.sg-kicker { display: block !important; font-size: 10.5px !important; font-weight: 800 !important; letter-spacing: .12em !important; text-transform: uppercase !important; color: #6EE7B7 !important; margin-bottom: 4px !important; }
+.sg-hero-row { display: grid !important; grid-template-columns: auto minmax(0, 1fr) !important; gap: 18px !important; align-items: center !important; text-align: left !important; }
+.sg-kicker { display: block !important; font-size: 10.5px !important; font-weight: 800 !important; letter-spacing: .12em !important; text-transform: uppercase !important; color: rgb(var(--sg)) !important; filter: brightness(1.35) !important; margin-bottom: 4px !important; }
 .sg-title { margin: 0 0 6px !important; font-size: 23px !important; font-weight: 800 !important; letter-spacing: -.025em !important; line-height: 1.2 !important; color: #fff !important; text-shadow: 0 2px 16px rgba(0, 0, 0, .4) !important; }
 .sg-text { margin: 0 !important; font-size: 14px !important; line-height: 1.55 !important; color: #DDE5F1 !important; }
 .sg-text strong { color: #fff !important; font-weight: 700 !important; }
 
-/* Painel executivo de detalhes da sessão autenticada */
+/* Painel executivo de detalhes da sessão autenticada / encerrada */
 .sg-auth-grid {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -485,8 +583,9 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   padding: 13px !important;
   border-radius: 18px !important;
   background: rgba(4, 9, 22, .48) !important;
-  border: 1px solid rgba(255, 255, 255, .14) !important;
+  border: 1px solid rgba(var(--sg), .28) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08) !important;
+  text-align: left !important;
 }
 .sg-auth-cell {
   display: flex !important;
@@ -496,7 +595,7 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   padding: 10px 12px !important;
   border-radius: 13px !important;
   background: rgba(255, 255, 255, .045) !important;
-  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border: 1px solid rgba(255, 255, 255, .09) !important;
 }
 .sg-auth-lbl {
   display: inline-flex !important;
@@ -508,7 +607,7 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   text-transform: uppercase !important;
   color: #94A3B8 !important;
 }
-.sg-auth-lbl svg { width: 12px !important; height: 12px !important; color: rgb(var(--sg)) !important; flex: none !important; }
+.sg-auth-lbl svg { width: 12px !important; height: 12px !important; color: rgb(var(--sg)) !important; filter: brightness(1.3) !important; flex: none !important; }
 .sg-auth-val {
   font-size: 13.5px !important;
   font-weight: 700 !important;
@@ -517,7 +616,7 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
-.sg-auth-val-ok { color: #34D399 !important; }
+.sg-auth-val-ok { color: rgb(var(--sg)) !important; filter: brightness(1.35) !important; }
 .sg-auth-sub {
   font-size: 11.5px !important;
   font-weight: 500 !important;
@@ -535,6 +634,7 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   gap: 12px !important;
   padding-top: 14px !important;
   border-top: 1px solid rgba(255, 255, 255, .14) !important;
+  width: 100% !important;
 }
 .sg-chips { display: flex !important; flex-wrap: wrap !important; gap: 7px !important; margin: 0 !important; padding: 0 !important; border: 0 !important; }
 .sg-main { min-width: 0 !important; }
@@ -545,25 +645,31 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
 }
 .sg-chip svg { width: 13px !important; height: 13px !important; flex: none !important; color: rgb(var(--sg)) !important; filter: brightness(1.45) saturate(1.1) !important; }
 .sg-chip time, .sg-chip .mono { font-variant-numeric: tabular-nums !important; }
-.sg-enter-btn {
+.sg-enter-btn,
+.sg-go {
+  margin: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 7px !important;
-  padding: 9px 18px !important;
-  border-radius: 12px !important;
-  font-size: 12.5px !important;
+  gap: 8px !important;
+  padding: 10px 20px !important;
+  border-radius: 13px !important;
+  font-size: 13px !important;
   font-weight: 800 !important;
   letter-spacing: .02em !important;
-  color: #022C22 !important;
-  background: linear-gradient(135deg, #6EE7B7 0%, #34D399 55%, #10B981 100%) !important;
-  border: 1px solid rgba(255, 255, 255, .65) !important;
-  box-shadow: 0 10px 24px -8px rgba(16, 185, 129, .8), inset 0 1px 0 rgba(255, 255, 255, .65) !important;
+  line-height: 1 !important;
+  color: #fff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .45) !important;
+  background: linear-gradient(rgba(8, 12, 28, .38), rgba(8, 12, 28, .38)), linear-gradient(135deg, rgba(var(--sg), .96), rgba(var(--sg-2), .88)) !important;
+  border: 1px solid rgba(255, 255, 255, .58) !important;
+  box-shadow: 0 12px 26px -8px rgba(var(--sg), .85), inset 0 1px 0 rgba(255, 255, 255, .5) !important;
   cursor: pointer !important;
   transition: transform .16s ease, filter .16s ease !important;
 }
-.sg-enter-btn:hover { transform: translateY(-1px) !important; filter: brightness(1.06) !important; }
-.sg-enter-btn svg { width: 14px !important; height: 14px !important; stroke-width: 2.8 !important; }
+.sg-enter-btn:hover,
+.sg-go:hover { transform: translateY(-1px) !important; filter: brightness(1.1) !important; }
+.sg-enter-btn svg,
+.sg-go svg { width: 15px !important; height: 15px !important; stroke-width: 2.5 !important; }
 
 /* Selo do ícone: vidro colorido com anel que pulsa e o "check" que se desenha */
 .sg-plate {
@@ -588,38 +694,89 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
 .sg.paused .sg-bar i { animation-play-state: paused; }
 @keyframes sgFill { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
-/* ---- Palco centralizado de confirmação de Login (no meio da tela) ---- */
+/* ---- Palcos centralizados de Login (.sg-welcome-stage) e Logout (.sg-stage) ---- */
+/* Ambos usam a EXATA cor escolhida pelo usuário (--nx-o1..4) e aparecem centralizados no meio da tela */
+.sg-welcome-stage,
+.sg-stage {
+  --sg: var(--nx-o1, 250, 189, 46);
+  --sg-2: var(--nx-o2, 250, 134, 46);
+  --sg-3: var(--nx-o3, 250, 216, 46);
+  --sg-4: var(--nx-o4, 250, 80, 46);
+  position: fixed !important; top: 0 !important; left: 0 !important; right: auto !important; bottom: auto !important; box-sizing: border-box !important;
+  width: calc(100vw / var(--app-zoom, 1)) !important; height: calc(100vh / var(--app-zoom, 1)) !important;
+  z-index: 2147483000 !important; display: grid !important; place-items: center !important; padding: 24px !important; overflow: hidden !important;
+  opacity: 0; pointer-events: none; transition: opacity .35s ease !important;
+}
 .sg-welcome-stage {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  box-sizing: border-box !important;
-  width: calc(100vw / var(--app-zoom, 1)) !important;
-  height: calc(100vh / var(--app-zoom, 1)) !important;
   z-index: 2147482500 !important;
-  display: grid !important;
-  place-items: center !important;
-  padding: 24px !important;
   background:
-    radial-gradient(65% 55% at 50% 50%, rgba(16, 185, 129, .16) 0%, transparent 70%),
-    rgba(3, 7, 18, .66) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
-  backdrop-filter: blur(12px) saturate(150%) !important;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .32s ease !important;
+    radial-gradient(90% 70% at 50% -10%, rgba(var(--sg), .20), transparent 62%),
+    radial-gradient(90% 70% at 50% 110%, rgba(var(--sg-2), .18), transparent 62%),
+    rgba(4, 7, 16, .74) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
 }
+.sg-stage {
+  background:
+    radial-gradient(110% 80% at 50% -12%, rgba(var(--sg), .20), transparent 62%),
+    radial-gradient(100% 80% at 50% 112%, rgba(var(--sg-2), .22), transparent 62%),
+    #05070f !important;
+}
+.sg-stage[data-kind="timeout"] {
+  --sg: var(--nx-o1, 250, 189, 46);
+  --sg-2: var(--nx-o2, 250, 134, 46);
+  --sg-3: var(--nx-o3, 250, 216, 46);
+}
+.sg-welcome-stage.show,
+.sg-stage.show { opacity: 1 !important; pointer-events: auto !important; }
 @supports (height: 100dvh) {
-  .sg-welcome-stage { height: calc(100dvh / var(--app-zoom, 1)) !important; }
+  .sg-welcome-stage,
+  .sg-stage { height: calc(100dvh / var(--app-zoom, 1)) !important; }
 }
-.sg-welcome-stage.show {
-  opacity: 1 !important;
-  pointer-events: auto !important;
+html.nexus-farewell, html.nexus-farewell body { overflow: hidden !important; background: #05070f !important; }
+.sg-welcome-stage .bg,
+.sg-stage .bg { position: absolute !important; inset: 0 !important; overflow: hidden !important; pointer-events: none !important; }
+.sg-welcome-stage .bg i,
+.sg-stage .bg i { position: absolute !important; display: block !important; }
+.sg-welcome-stage .orb,
+.sg-stage .orb { border-radius: 50% !important; filter: blur(clamp(56px, 4.7vmax, 210px)) !important; }
+.sg-welcome-stage .o1,
+.sg-stage .o1 { width: 46vmax; height: 46vmax; left: -8%; top: -22%; background: rgb(var(--sg)); opacity: .52; animation: sgDrift1 26s ease-in-out infinite alternate; }
+.sg-welcome-stage .o2,
+.sg-stage .o2 { width: 48vmax; height: 48vmax; right: -8%; bottom: -28%; background: rgb(var(--sg-2)); opacity: .56; animation: sgDrift2 30s ease-in-out infinite alternate; }
+.sg-welcome-stage .o3,
+.sg-stage .o3 { width: 30vmax; height: 30vmax; right: 26%; top: -10%; background: rgb(var(--sg-3)); opacity: .40; }
+.sg-welcome-stage .o4,
+.sg-stage .o4 { width: 26vmax; height: 26vmax; left: 20%; bottom: -16%; background: rgb(var(--sg-4)); opacity: .32; animation: sgDrift1 34s ease-in-out infinite alternate-reverse; }
+@keyframes sgDrift1 { to { transform: translate(7vmax, 4.5vmax); } }
+@keyframes sgDrift2 { to { transform: translate(-7vmax, -4vmax); } }
+.sg-welcome-stage .beam,
+.sg-stage .beam { width: 6vmax; height: 160vh; top: -30vh; transform: rotate(28deg); filter: blur(clamp(18px, 1.8vmax, 80px)) !important; }
+.sg-welcome-stage .b1,
+.sg-stage .b1 { left: 16%; background: linear-gradient(rgba(var(--sg-2), 0), rgba(var(--sg-2), .34) 50%, rgba(var(--sg-2), 0)); }
+.sg-welcome-stage .b2,
+.sg-stage .b2 { right: 12%; background: linear-gradient(rgba(var(--sg), 0), rgba(var(--sg), .3) 50%, rgba(var(--sg), 0)); }
+.sg-welcome-stage .flute,
+.sg-stage .flute {
+  inset: 0; opacity: .4; backdrop-filter: blur(4px) saturate(140%); -webkit-backdrop-filter: blur(4px) saturate(140%);
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .1) 0, rgba(255, 255, 255, .02) .38vmax, rgba(0, 0, 0, .2) .76vmax, rgba(255, 255, 255, .07) 1.1vmax);
+  -webkit-mask-image: linear-gradient(90deg, #000 0, rgba(0, 0, 0, .35) 12%, transparent 26%, transparent 74%, rgba(0, 0, 0, .35) 88%, #000 100%);
+  mask-image: linear-gradient(90deg, #000 0, rgba(0, 0, 0, .35) 12%, transparent 26%, transparent 74%, rgba(0, 0, 0, .35) 88%, #000 100%);
 }
+.sg-welcome-stage .grid,
+.sg-stage .grid {
+  inset: 0; opacity: .9;
+  background-image: linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
+  background-size: 3.4vmax 3.4vmax; background-position: center;
+  -webkit-mask-image: radial-gradient(ellipse 95% 85% at 50% 48%, #000 0, transparent 78%); mask-image: radial-gradient(ellipse 95% 85% at 50% 48%, #000 0, transparent 78%);
+}
+.sg-welcome-stage .grain,
+.sg-stage .grain { inset: 0; mix-blend-mode: overlay; opacity: .5; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.2'/></svg>"); }
+.sg-welcome-stage .vig,
+.sg-stage .vig { inset: 0; background: radial-gradient(ellipse at 50% 46%, transparent 50%, rgba(0, 0, 0, .6) 100%); }
 
-.sg-toast {
+.sg-toast,
+.sg-plaque {
   position: relative !important;
   top: auto !important;
   right: auto !important;
@@ -627,91 +784,31 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   left: auto !important;
   margin: auto !important;
   z-index: 2 !important;
-  width: min(610px, calc((100vw / var(--app-zoom, 1)) - 32px)) !important;
+  width: min(620px, calc((100vw / var(--app-zoom, 1)) - 32px)) !important;
   transform: translate3d(0, 24px, 0) scale(.96);
 }
-.sg-toast.show { opacity: 1 !important; pointer-events: auto !important; transform: translate3d(0, 0, 0) scale(1) !important; }
-.sg-toast:hover { box-shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 26px 56px -14px rgba(0, 0, 0, .62), 0 60px 120px -28px rgba(0, 0, 0, .7), 0 0 110px -12px rgba(var(--sg), .6), inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(255, 255, 255, .06) !important; }
-
-/* ---- Saída: tela cheia com fundo de luz nítido (4K) e a placa de vidro no centro ---- */
-.sg-stage {
-  /* Tamanho pela JANELA (vw/vh não acompanham o zoom do body; --app-zoom é o zoom efetivo): cobre a tela inteira em qualquer escala */
-  position: fixed !important; top: 0 !important; left: 0 !important; right: auto !important; bottom: auto !important; box-sizing: border-box !important;
-  width: calc(100vw / var(--app-zoom, 1)) !important; height: calc(100vh / var(--app-zoom, 1)) !important;
-  z-index: 2147483000 !important; display: grid !important; place-items: center !important; padding: 24px !important; overflow: hidden !important;
-  background:
-    radial-gradient(110% 80% at 50% -12%, rgba(var(--sg), .16), transparent 62%),
-    radial-gradient(100% 80% at 50% 112%, rgba(var(--sg-2), .2), transparent 62%),
-    #05070f !important;
-  opacity: 0; transition: opacity .35s ease;
-  --sg: 129, 140, 248; --sg-2: 56, 189, 248; --sg-3: 192, 132, 252;
-}
-.sg-stage[data-kind="timeout"] { --sg: 251, 191, 36; --sg-2: 251, 113, 133; --sg-3: 249, 115, 22; }
-.sg-stage.show { opacity: 1; }
-@supports (height: 100dvh) { .sg-stage { height: calc(100dvh / var(--app-zoom, 1)) !important; } }
-html.nexus-farewell, html.nexus-farewell body { overflow: hidden !important; background: #05070f !important; }
-.sg-stage .bg { position: absolute !important; inset: 0 !important; overflow: hidden !important; pointer-events: none !important; }
-.sg-stage .bg i { position: absolute !important; display: block !important; }
-.sg-stage .orb { border-radius: 50% !important; filter: blur(clamp(56px, 4.7vmax, 210px)) !important; }
-.sg-stage .o1 { width: 46vmax; height: 46vmax; left: -8%; top: -22%; background: rgb(var(--sg)); opacity: .55; animation: sgDrift1 26s ease-in-out infinite alternate; }
-.sg-stage .o2 { width: 48vmax; height: 48vmax; right: -8%; bottom: -28%; background: rgb(var(--sg-2)); opacity: .6; animation: sgDrift2 30s ease-in-out infinite alternate; }
-.sg-stage .o3 { width: 30vmax; height: 30vmax; right: 26%; top: -10%; background: rgb(var(--sg-3)); opacity: .42; }
-.sg-stage .o4 { width: 26vmax; height: 26vmax; left: 20%; bottom: -16%; background: rgb(var(--sg)); opacity: .3; animation: sgDrift1 34s ease-in-out infinite alternate-reverse; }
-@keyframes sgDrift1 { to { transform: translate(7vmax, 4.5vmax); } }
-@keyframes sgDrift2 { to { transform: translate(-7vmax, -4vmax); } }
-.sg-stage .beam { width: 6vmax; height: 160vh; top: -30vh; transform: rotate(28deg); filter: blur(clamp(18px, 1.8vmax, 80px)) !important; }
-.sg-stage .b1 { left: 16%; background: linear-gradient(rgba(var(--sg-2), 0), rgba(var(--sg-2), .34) 50%, rgba(var(--sg-2), 0)); }
-.sg-stage .b2 { right: 12%; background: linear-gradient(rgba(var(--sg), 0), rgba(var(--sg), .3) 50%, rgba(var(--sg), 0)); }
-.sg-stage .flute {
-  inset: 0; opacity: .4; backdrop-filter: blur(4px) saturate(140%); -webkit-backdrop-filter: blur(4px) saturate(140%);
-  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .1) 0, rgba(255, 255, 255, .02) .38vmax, rgba(0, 0, 0, .2) .76vmax, rgba(255, 255, 255, .07) 1.1vmax);
-  -webkit-mask-image: linear-gradient(90deg, #000 0, rgba(0, 0, 0, .35) 12%, transparent 26%, transparent 74%, rgba(0, 0, 0, .35) 88%, #000 100%);
-  mask-image: linear-gradient(90deg, #000 0, rgba(0, 0, 0, .35) 12%, transparent 26%, transparent 74%, rgba(0, 0, 0, .35) 88%, #000 100%);
-}
-.sg-stage .grid {
-  inset: 0; opacity: .9;
-  background-image: linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
-  background-size: 3.4vmax 3.4vmax; background-position: center;
-  -webkit-mask-image: radial-gradient(ellipse 95% 85% at 50% 48%, #000 0, transparent 78%); mask-image: radial-gradient(ellipse 95% 85% at 50% 48%, #000 0, transparent 78%);
-}
-.sg-stage .grain { inset: 0; mix-blend-mode: overlay; opacity: .5; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.2'/></svg>"); }
-.sg-stage .vig { inset: 0; background: radial-gradient(ellipse at 50% 46%, transparent 50%, rgba(0, 0, 0, .6) 100%); }
-.sg-plaque { position: relative !important; width: min(560px, calc(100vw - 32px)) !important; transform: translate3d(0, 22px, 0) scale(.97); }
-.sg-plaque.show { opacity: 1; pointer-events: auto; transform: none; }
-.sg-plaque .sg-in { display: grid !important; grid-template-columns: 1fr !important; justify-items: center !important; text-align: center !important; gap: 0 !important; padding: 34px 34px 38px !important; }
-.sg-plaque .sg-plate { width: 76px !important; height: 76px !important; border-radius: 25px !important; margin-bottom: 20px !important; }
-.sg-plaque .sg-plate svg { width: 38px !important; height: 38px !important; }
-.sg-plaque .sg-top { justify-content: center !important; margin-bottom: 14px !important; }
-.sg-plaque .sg-title { font-size: 27px !important; margin-bottom: 9px !important; }
-.sg-plaque .sg-text { max-width: 420px !important; font-size: 15px !important; }
-.sg-plaque .sg-chips { justify-content: center !important; width: 100% !important; margin-top: 20px !important; padding-top: 16px !important; border-top: 1px solid rgba(255, 255, 255, .15) !important; }
-.sg-go {
-  margin-top: 20px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 9px !important; padding: 12px 22px !important; border-radius: 14px !important;
-  font-size: 13.5px !important; font-weight: 800 !important; line-height: 1 !important; cursor: pointer !important; color: #fff !important;
-  background: linear-gradient(rgba(10, 14, 50, .5), rgba(10, 14, 50, .5)), linear-gradient(145deg, rgba(var(--sg), .95), rgba(var(--sg), .7)) !important; border: 1px solid rgba(255, 255, 255, .5) !important;
-  box-shadow: 0 14px 28px -10px rgba(var(--sg), .85), inset 0 1px 0 rgba(255, 255, 255, .45) !important; transition: transform .18s ease, filter .18s ease !important;
-}
-/* Âmbar é claro demais para texto branco: o botão da inatividade usa texto escuro */
-.sg[data-kind="timeout"] .sg-go { color: #1c1300 !important; background: linear-gradient(145deg, #fde68a, #f59e0b 60%, #d97706) !important; border-color: rgba(255, 255, 255, .6) !important; }
-.sg-go:hover { transform: translateY(-1px) !important; filter: brightness(1.1) !important; }
-.sg-go svg { width: 15px !important; height: 15px !important; }
+.sg-toast.show,
+.sg-plaque.show { opacity: 1 !important; pointer-events: auto !important; transform: translate3d(0, 0, 0) scale(1) !important; }
+.sg-toast:hover,
+.sg-plaque:hover { box-shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 26px 56px -14px rgba(0, 0, 0, .62), 0 60px 120px -28px rgba(0, 0, 0, .7), 0 0 110px -12px rgba(var(--sg), .6), inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(255, 255, 255, .06) !important; }
 .sg-wait { margin-top: 14px !important; font-size: 12px !important; font-weight: 600 !important; color: #C9D3E4 !important; letter-spacing: .01em !important; }
 
 @media (max-width: 560px) {
-  .sg-welcome-stage { padding: 14px !important; }
-  .sg-toast { top: auto !important; right: auto !important; left: auto !important; width: 100% !important; border-radius: 22px !important; }
+  .sg-welcome-stage,
+  .sg-stage { padding: 14px !important; }
+  .sg-toast,
+  .sg-plaque { top: auto !important; right: auto !important; left: auto !important; width: 100% !important; border-radius: 22px !important; }
   .sg-in { gap: 14px !important; padding: 20px 18px 24px !important; }
   .sg-hero-row { gap: 14px !important; }
   .sg-auth-grid { grid-template-columns: 1fr !important; gap: 8px !important; padding: 10px !important; }
   .sg-footer-row { flex-direction: column !important; align-items: stretch !important; }
-  .sg-enter-btn { width: 100% !important; }
+  .sg-enter-btn,
+  .sg-go { width: 100% !important; }
   .sg-plate { width: 52px !important; height: 52px !important; border-radius: 17px !important; }
   .sg-plate svg { width: 26px !important; height: 26px !important; }
   .sg-title { font-size: 19px !important; }
   .sg-text { font-size: 13.5px !important; }
   .sg-chip { font-size: 11.5px !important; }
-  .sg-plaque .sg-in { padding: 26px 20px 30px !important; }
-  .sg-plaque .sg-title { font-size: 22px !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sg, .sg-stage { transition: opacity .2s ease !important; transform: none !important; }
