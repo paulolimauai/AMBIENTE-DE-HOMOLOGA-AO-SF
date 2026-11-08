@@ -17,3 +17,7 @@ images/SITE/
 
 # Fotos de perfil enviadas pelos usuários (dados pessoais gerados em execução)
 local_avatars.json
+
+# Arquivos temporários da gravação atômica dos JSON de dados e arquivos ilegíveis guardados de lado
+*.tmp
+*.corrupt-*

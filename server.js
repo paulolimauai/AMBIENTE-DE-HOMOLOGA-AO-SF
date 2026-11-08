@@ -11,14 +11,20 @@ const crypto = require('crypto');
 const zlib = require('zlib');
 const Atendimento = require('./atendimento'); // regras da Central de Atendimento (chamados / O.S.)
 
+// NEXUS_DISABLE_DB=1 (testes e desenvolvimento): não carrega o driver nem tenta conectar ao SQL Server; o app roda só com os arquivos JSON.
+// Sem isso, qualquer cópia do server.js que enxergue node_modules conecta sozinha ao banco real.
+const DB_DISABLED = process.env.NEXUS_DISABLE_DB === '1';
 let mssql;
-try {
-  mssql = require('mssql/msnodesqlv8');
-} catch (e) {
+if (!DB_DISABLED) {
   try {
-    mssql = require('mssql');
-  } catch (e2) {}
+    mssql = require('mssql/msnodesqlv8');
+  } catch (e) {
+    try {
+      mssql = require('mssql');
+    } catch (e2) {}
+  }
 }
+const BackendUtils = require('./backend-utils'); // utilitários puros e testados (corpo UTF-8, escrita atômica, cache JSON, validações)
 
 const PORT = process.env.PORT || 3000;
 const SERVER_START_TIME = Date.now();
@@ -45,8 +51,13 @@ function loadOrCreateJwtSecret() {
   return generated;
 }
 const JWT_SECRET = loadOrCreateJwtSecret();
-// Token de sincronização interna (Render <-> servidor local). Separado do segredo de assinatura quando configurado.
-const SYNC_TOKEN = String(process.env.NEXUS_SYNC_TOKEN || '').trim() || JWT_SECRET;
+// Token de sincronização interna (Render <-> servidor local). Vem de NEXUS_SYNC_TOKEN; sem ele é DERIVADO do JWT_SECRET (HMAC),
+// de modo que o próprio segredo de assinatura nunca é enviado pela rede (antes o token era o JWT_SECRET puro, mandado à nuvem a cada 10 s).
+// Os dois lados continuam precisando do mesmo JWT_SECRET (ou do mesmo NEXUS_SYNC_TOKEN) para se entenderem.
+const SYNC_TOKEN = String(process.env.NEXUS_SYNC_TOKEN || '').trim() || BackendUtils.deriveSyncToken(JWT_SECRET);
+// Transição: uma nuvem ainda na versão antiga envia o JWT_SECRET como token. Aceitar isso não amplia o acesso (quem tem o JWT_SECRET já
+// assina tokens de qualquer usuário); remover quando todos os ambientes estiverem atualizados.
+const LEGACY_SYNC_TOKEN = String(process.env.NEXUS_SYNC_TOKEN || '').trim() ? '' : JWT_SECRET;
 
 if (process.env.NEXUS_DATA_DIR) {
   fs.mkdirSync(RUNTIME_DATA_DIR, { recursive: true });
@@ -77,7 +88,7 @@ function clearDeletedEmailTombstone(email) {
   const remaining = (Array.isArray(entries) ? entries : [])
     .map(item => typeof item === 'string' ? { email: item } : item)
     .filter(item => item && String(item.email || '').toLowerCase().trim() !== cleanEmail);
-  fs.writeFileSync(tombstonePath, JSON.stringify(remaining, null, 2), 'utf8');
+  writeJsonFile(tombstonePath, JSON.stringify(remaining, null, 2));
   if (typeof deletedAccountCleanupDone !== 'undefined') deletedAccountCleanupDone.delete(cleanEmail);
 }
 
@@ -93,13 +104,24 @@ const PENDING_LOGINS_PATH = path.join(RUNTIME_DATA_DIR, 'pending_logins.json');
 const DELETED_ACCOUNTS_PATH = path.join(RUNTIME_DATA_DIR, 'deleted_accounts.json');
 const GOOGLE_OAUTH_STATES = new Map();
 const GOOGLE_OAUTH_STATE_TTL_MS = 10 * 60 * 1000;
+const GOOGLE_OAUTH_MAX_PENDING = 2000; // teto de logins Google em andamento (cada /auth/google guarda um state em memória)
+
+// Arquivos JSON de dados: leitura com cache por data de modificação (as rotas liam e reparseavam o arquivo inteiro a cada requisição)
+// e gravação atômica (arquivo temporário + rename: uma queda no meio da gravação não deixa o JSON pela metade).
+const jsonCache = BackendUtils.createJsonFileCache();
+function writeJsonFile(file, text) {
+  try {
+    BackendUtils.atomicWriteFileSync(file, text);
+  } finally {
+    jsonCache.invalidate(file);
+  }
+}
 
 function getDeletedAccounts() {
   try {
-    if (!fs.existsSync(DELETED_ACCOUNTS_PATH)) return [];
-    const parsed = JSON.parse(fs.readFileSync(DELETED_ACCOUNTS_PATH, 'utf8'));
-    if (!Array.isArray(parsed)) return [];
-    return parsed.map(item => typeof item === 'string' ? { email: item } : item)
+    const cached = jsonCache.read(DELETED_ACCOUNTS_PATH);
+    if (!cached.exists || !Array.isArray(cached.value)) return [];
+    return cached.value.map(item => typeof item === 'string' ? { email: item } : item)
       .filter(item => item && item.email)
       .map(item => ({ email: String(item.email).toLowerCase().trim(), deleted_at: item.deleted_at || null }));
   } catch (e) {
@@ -117,7 +139,7 @@ function saveDeletedAccounts(accounts) {
     }
   });
   const result = Array.from(merged.values());
-  fs.writeFileSync(DELETED_ACCOUNTS_PATH, JSON.stringify(result, null, 2), 'utf8');
+  writeJsonFile(DELETED_ACCOUNTS_PATH, JSON.stringify(result, null, 2));
   return result;
 }
 
@@ -185,7 +207,7 @@ function pushPendingLogin(loginEntry) {
     if (!isDup) {
       list.push(entry);
       const trimmed = list.slice(-200);
-      fs.writeFileSync(PENDING_LOGINS_PATH, JSON.stringify(trimmed, null, 2), 'utf8');
+      writeJsonFile(PENDING_LOGINS_PATH, JSON.stringify(trimmed, null, 2));
     }
   } catch (e) {
     console.warn('[AVISO] Falha ao gravar fila de login pendente:', e.message);
@@ -203,14 +225,15 @@ function acknowledgePendingLogins(emailsOrIds) {
       }
     });
     const remaining = list.filter(item => !item.ack || (Date.now() - new Date(item.timestamp).getTime() < 86400000));
-    fs.writeFileSync(PENDING_LOGINS_PATH, JSON.stringify(remaining, null, 2), 'utf8');
+    writeJsonFile(PENDING_LOGINS_PATH, JSON.stringify(remaining, null, 2));
   } catch (e) {}
 }
 
 // Sincronizador Nuvem Render
 const RENDER_CLOUD_URL = process.env.RENDER_CLOUD_URL || 'https://ambiente-de-homologa-ao-sf.onrender.com';
 const https = require('https');
-const fetchCloud = (pathname, options = {}) => {
+const CLOUD_MAX_RESPONSE_BYTES = 120 * 1024 * 1024; // teto da resposta da nuvem (a sincronização inteira cabe com folga)
+const fetchCloudOnce = (pathname, options = {}) => {
   return new Promise((resolve) => {
     try {
       const u = new URL(pathname, RENDER_CLOUD_URL);
@@ -227,10 +250,24 @@ const fetchCloud = (pathname, options = {}) => {
         },
         timeout: reqTimeout
       }, res => {
-        let data = '';
-        res.on('data', chunk => data += chunk);
+        // Pedaços em Buffer e decodificação única no fim (acentos divididos entre pedaços não quebram) e teto de tamanho (resposta sem fim não esgota a memória)
+        const pedacos = [];
+        let recebido = 0;
+        let estourou = false;
+        res.on('data', chunk => {
+          if (estourou) return;
+          recebido += chunk.length;
+          if (recebido > CLOUD_MAX_RESPONSE_BYTES) {
+            estourou = true;
+            try { req.destroy(); } catch (e) {}
+            return resolve({ ok: false, status: 413, json: () => Promise.resolve(null) });
+          }
+          pedacos.push(chunk);
+        });
         res.on('error', () => resolve({ ok: false, status: res.statusCode || 500, json: () => Promise.resolve(null) }));
         res.on('end', () => {
+          if (estourou) return;
+          const data = Buffer.concat(pedacos).toString('utf8');
           try {
             resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, status: res.statusCode, json: () => Promise.resolve(JSON.parse(data)) });
           } catch(e) {
@@ -249,6 +286,29 @@ const fetchCloud = (pathname, options = {}) => {
       resolve({ ok: false, status: 500, json: () => Promise.resolve(null) });
     }
   });
+};
+
+// Envio à nuvem com compatibilidade de token: tenta primeiro o token DERIVADO (o JWT_SECRET não sai deste servidor). Se a nuvem recusar (401) porque ainda
+// está na versão antiga, ou foi configurada com NEXUS_SYNC_TOKEN igual ao JWT_SECRET deste servidor, volta ao formato antigo (o JWT_SECRET como token) para a
+// sincronização não parar, e tenta o derivado de novo a cada 30 min. A solução definitiva é definir NEXUS_SYNC_TOKEN com o mesmo valor nos dois lados.
+let cloudLegacyTokenFallback = false;
+let cloudLegacySince = 0;
+function withCloudToken(options) {
+  const headers = options && options.headers;
+  if (!headers || headers['X-Nexus-Sync-Token'] !== SYNC_TOKEN || !LEGACY_SYNC_TOKEN) return options;
+  if (cloudLegacyTokenFallback && Date.now() - cloudLegacySince > 30 * 60 * 1000) cloudLegacyTokenFallback = false;
+  return cloudLegacyTokenFallback ? { ...options, headers: { ...headers, 'X-Nexus-Sync-Token': LEGACY_SYNC_TOKEN } } : options;
+}
+const fetchCloud = async (pathname, options = {}) => {
+  const first = await fetchCloudOnce(pathname, withCloudToken(options));
+  const sentSyncToken = Boolean(options.headers && options.headers['X-Nexus-Sync-Token'] === SYNC_TOKEN);
+  if (first.status === 401 && sentSyncToken && LEGACY_SYNC_TOKEN && !cloudLegacyTokenFallback) {
+    cloudLegacyTokenFallback = true;
+    cloudLegacySince = Date.now();
+    console.warn('[SYNC] A nuvem recusou o token de sincronização derivado; usando o formato antigo (JWT_SECRET como token). Defina NEXUS_SYNC_TOKEN com o mesmo valor nos dois lados para parar de enviar o segredo.');
+    return fetchCloudOnce(pathname, withCloudToken(options));
+  }
+  return first;
 };
 
 // ==================== Camada de Segurança Criptográfica ====================
@@ -408,6 +468,12 @@ const RATE_LIMIT_RULES = {
   'POST /api/user/change-mandatory-password': { key: 'change-temp', max: 10, windowMs: 15 * 60 * 1000 },
   'GET /api/cpf/consultar': { key: 'cpf', max: 30, windowMs: 10 * 60 * 1000 },
   'GET /api/cpf': { key: 'cpf', max: 30, windowMs: 10 * 60 * 1000 },
+  // Salvar dados regrava o arquivo de TODAS as contas e POST /api/logs alimenta a trilha de auditoria (1000 registros): sem limite, um usuário comum
+  // inundava a auditoria do administrador e forçava regravações pesadas. A sincronização interna (token) fica fora destes limites.
+  'POST /api/data': { key: 'data-save', max: 180, windowMs: 60 * 1000 },
+  'POST /api/logs': { key: 'logs-post', max: 300, windowMs: 10 * 60 * 1000 },
+  'GET /auth/google': { key: 'google-oauth', max: 40, windowMs: 10 * 60 * 1000 },
+  'GET /auth/google/callback': { key: 'google-oauth-cb', max: 60, windowMs: 10 * 60 * 1000 },
   'POST /api/ordens': { key: 'os-open', max: 15, windowMs: 60 * 60 * 1000 },
   'POST /api/ordens/acao': { key: 'os-acao', max: 60, windowMs: 10 * 60 * 1000 },
   'GET /api/ordens/consultar': { key: 'os-consult', max: 40, windowMs: 10 * 60 * 1000 },
@@ -422,6 +488,7 @@ function generateSecureToken(user) {
     name: user.name,
     role: user.role || 'Usuário',
     iat: Math.floor(Date.now() / 1000),
+    iatMs: Date.now(), // precisão de milissegundos: ver tokenPredatesPasswordChange
     exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60)
   })).toString('base64url');
   const signature = crypto.createHmac('sha256', JWT_SECRET).update(`${header}.${payload}`).digest('base64url');
@@ -448,8 +515,14 @@ function verifySecureToken(token) {
 // suspeita de invasão não pode continuar com o token antigo ativo por até 7 dias).
 function tokenPredatesPasswordChange(claims, user) {
   if (!user || !user.password_changed_at) return false;
-  const changedAtSec = Math.floor(new Date(user.password_changed_at).getTime() / 1000);
-  return Number.isFinite(changedAtSec) && Number(claims && claims.iat || 0) < changedAtSec;
+  const changedAtMs = new Date(user.password_changed_at).getTime();
+  if (!Number.isFinite(changedAtMs)) return false;
+  // Comparação em MILISSEGUNDOS: com "iat" em segundos, um token emitido no mesmo segundo da troca de senha continuava válido (e quem recupera a
+  // senha por suspeita de invasão contava com a queda imediata das sessões antigas). O token novo, emitido logo após a troca, nunca é menor que ela.
+  // Tokens emitidos antes desta correção não têm iatMs: seguem na comparação em segundos.
+  const iatMs = Number(claims && claims.iatMs);
+  if (Number.isFinite(iatMs) && iatMs > 0) return iatMs < changedAtMs;
+  return Number(claims && claims.iat || 0) < Math.floor(changedAtMs / 1000);
 }
 
 function getAuthenticatedUser(req) {
@@ -467,11 +540,15 @@ function getAuthenticatedAdmin(req) {
   return user && user.role === 'Administrador' ? user : null;
 }
 
+function isValidSyncToken(candidate) {
+  const value = String(candidate || '');
+  if (!value) return false;
+  return safeEqual(value, SYNC_TOKEN) || Boolean(LEGACY_SYNC_TOKEN && safeEqual(value, LEGACY_SYNC_TOKEN));
+}
 function hasInternalSyncAccess(req, parsedUrl) {
-  return Boolean(SYNC_TOKEN) && (
-    safeEqual(req.headers['x-nexus-sync-token'] || '', SYNC_TOKEN) ||
-    safeEqual(req.headers.authorization || '', `Bearer ${SYNC_TOKEN}`)
-  );
+  const authorization = String(req.headers.authorization || '');
+  return isValidSyncToken(req.headers['x-nexus-sync-token']) ||
+    (authorization.startsWith('Bearer ') && isValidSyncToken(authorization.slice(7)));
 }
 
 // Autorização de acesso aos dados de uma conta: o próprio titular, um administrador ou a sincronização interna.
@@ -489,6 +566,12 @@ function authorizeAccountAccess(req, targetEmail) {
 function sendJson(res, corsHeaders, status, payload) {
   res.writeHead(status, { ...corsHeaders, 'Content-Type': 'application/json' });
   return res.end(JSON.stringify(payload));
+}
+
+// Resposta pública para um erro inesperado: nunca o texto interno (SQL, trechos do código, caminhos). JSON malformado do cliente é erro 400, não 500.
+function publicFailure(err, fallbackMessage, defaultStatus) {
+  if (err instanceof SyntaxError) return { status: 400, error: 'Requisição inválida (JSON malformado).' };
+  return { status: defaultStatus || 500, error: fallbackMessage };
 }
 
 function sanitizeUser(user) {
@@ -522,7 +605,7 @@ function setStoredAvatar(email, avatar) {
   if (!key) return;
   const store = readAvatarStore();
   if (avatar) store[key] = avatar; else delete store[key];
-  fs.writeFileSync(LOCAL_AVATARS_PATH, JSON.stringify(store), 'utf8');
+  writeJsonFile(LOCAL_AVATARS_PATH, JSON.stringify(store));
 }
 // Igual a sanitizeUser, mas com a foto do titular (só para a resposta que vai para o próprio dono da conta)
 function sanitizeUserWithAvatar(user) {
@@ -553,17 +636,28 @@ function htmlResponse(res, statusCode, html) {
   return sendTextResponse(res, statusCode, html, 'text/html; charset=utf-8', { 'Cache-Control': 'no-store' });
 }
 
+// Versões comprimidas em cache, por Buffer de origem (WeakMap: some junto com o Buffer quando o arquivo muda). A página inicial tem ~1,7 MB e
+// era comprimida com brotliCompressSync a CADA acesso, bloqueando o servidor por centenas de ms por visitante.
+const compressionCache = new WeakMap();
 function sendTextResponse(res, statusCode, body, contentType, extraHeaders = {}) {
   const text = Buffer.isBuffer(body) ? body : Buffer.from(String(body), 'utf8');
   const accepts = String(res.req && res.req.headers && res.req.headers['accept-encoding'] || '');
   let payload = text;
   let encoding = '';
-  if (text.length >= 1024 && /br/i.test(accepts)) {
-    payload = zlib.brotliCompressSync(text, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 4 } });
-    encoding = 'br';
-  } else if (text.length >= 1024 && /gzip/i.test(accepts)) {
-    payload = zlib.gzipSync(text, { level: zlib.constants.Z_BEST_SPEED });
-    encoding = 'gzip';
+  if (text.length >= 1024 && /br/i.test(accepts)) encoding = 'br';
+  else if (text.length >= 1024 && /gzip/i.test(accepts)) encoding = 'gzip';
+  if (encoding) {
+    let cached = Buffer.isBuffer(body) ? compressionCache.get(body) : null;
+    if (!cached) {
+      cached = {};
+      if (Buffer.isBuffer(body)) compressionCache.set(body, cached);
+    }
+    if (!cached[encoding]) {
+      cached[encoding] = encoding === 'br'
+        ? zlib.brotliCompressSync(text, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 4 } })
+        : zlib.gzipSync(text, { level: zlib.constants.Z_BEST_SPEED });
+    }
+    payload = cached[encoding];
   }
   res.writeHead(statusCode, {
     'Content-Type': contentType,
@@ -590,7 +684,7 @@ async function upsertGoogleUser(profile, req) {
   let user = null;
 
   if (!pool) {
-    try { await attemptConnectDatabase(); } catch (e) {}
+    try { kickDatabaseReconnect(); } catch (e) {}
   }
   if (pool) {
     try {
@@ -627,6 +721,8 @@ async function upsertGoogleUser(profile, req) {
     if (index >= 0) localUsers[index] = { ...localUsers[index], ...user, last_login: nowIso };
     else localUsers.push({ ...user, last_login: nowIso });
     saveLocalUsers(localUsers);
+    // Igual ao cadastro normal: quem volta a criar a própria conta (e-mail antes excluído) libera o e-mail; sem isto o token valia mas a conta continuava "excluída"
+    clearDeletedEmailTombstone(email);
   } catch (e) {}
   ensureUserIsConfiguredInDatabase(email, user).catch(() => {});
   pushPendingLogin({ id: user.id, email, name: user.name, last_login: nowIso, timestamp: new Date().toISOString() });
@@ -634,15 +730,19 @@ async function upsertGoogleUser(profile, req) {
 }
 
 // ==================== Padronização de Fuso Horário Oficial de Brasília (America/Sao_Paulo / UTC-3) ====================
+// Texto de data/hora de Brasília só é repassado como veio se tiver MESMO o formato de data (antes qualquer texto com espaço ou "-03:00"
+// passava direto para o arquivo de usuários, o banco e a tela do administrador).
+const BRASILIA_TIMESTAMP_RX = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d{1,7})?$/;
 function getBrasiliaSqlString(dateInput) {
   if (!dateInput) return null;
   const pad = n => String(n).padStart(2, '0');
-  if (typeof dateInput === 'string' && !dateInput.includes('Z') && !dateInput.includes('+') && !dateInput.includes('-03:00') && dateInput.includes(' ')) {
-    return dateInput.split('.')[0];
+  if (typeof dateInput === 'string' && !dateInput.includes('Z') && !dateInput.includes('+') && !dateInput.includes('-03:00') && dateInput.includes(' ') && BRASILIA_TIMESTAMP_RX.test(dateInput.trim())) {
+    return dateInput.trim().split('.')[0];
   }
   if (typeof dateInput === 'string' && (dateInput.endsWith('-03:00') || dateInput.includes('-03:00'))) {
     const clean = dateInput.replace('T', ' ').replace('-03:00', '').trim();
-    return clean.split('.')[0];
+    if (BRASILIA_TIMESTAMP_RX.test(clean)) return clean.split('.')[0];
+    return null;
   }
   if (dateInput instanceof Date && (dateInput.nanosecondsDelta !== undefined || dateInput._isSqlDate)) {
     return dateInput.getUTCFullYear() + '-' + pad(dateInput.getUTCMonth() + 1) + '-' + pad(dateInput.getUTCDate()) + ' ' + pad(dateInput.getUTCHours()) + ':' + pad(dateInput.getUTCMinutes()) + ':' + pad(dateInput.getUTCSeconds());
@@ -668,7 +768,7 @@ function getBrasiliaIsoString(dateInput) {
   if (!dateInput) return null;
   const pad = n => String(n).padStart(2, '0');
   if (typeof dateInput === 'string' && (dateInput.endsWith('-03:00') || dateInput.includes('-03:00'))) {
-    return dateInput;
+    return BRASILIA_TIMESTAMP_RX.test(dateInput.replace('-03:00', '').trim()) ? dateInput : null;
   }
   if (dateInput instanceof Date && (dateInput.nanosecondsDelta !== undefined || dateInput._isSqlDate)) {
     return dateInput.getUTCFullYear() + '-' + pad(dateInput.getUTCMonth() + 1) + '-' + pad(dateInput.getUTCDate()) + 'T' + pad(dateInput.getUTCHours()) + ':' + pad(dateInput.getUTCMinutes()) + ':' + pad(dateInput.getUTCSeconds()) + '-03:00';
@@ -692,6 +792,14 @@ function getBrasiliaIsoString(dateInput) {
 
 // ==================== Gerenciador de Eventos em Tempo Real (SSE) ====================
 const sseClients = new Set();
+const SSE_MAX_PER_USER = 5;
+const SSE_MAX_TOTAL = 500;
+// "Ping" a cada 25 s: mantém a conexão viva atrás de proxies (que derrubam conexões ociosas) e remove clientes cujo socket já morreu sem avisar.
+setInterval(() => {
+  for (const client of sseClients) {
+    try { client.write(': ping\n\n'); } catch (e) { sseClients.delete(client); }
+  }
+}, 25000).unref();
 
 // Cada conexão SSE carrega o usuário autenticado (client.nexusUser). Administradores recebem todos os eventos;
 // os demais recebem apenas eventos que tenham o próprio e-mail (ex.: confirmação da própria assinatura).
@@ -959,7 +1067,7 @@ function scheduleDatabaseReconnect(delay = 5000) {
 }
 
 async function attemptConnectDatabase() {
-  if (pool || isConnectingDatabase) return;
+  if (DB_DISABLED || pool || isConnectingDatabase) return;
   isConnectingDatabase = true;
   try {
     const mssqlDbName = process.env.MSSQL_DATABASE || 'AMBIENTE DE HOMOLOGAÇAO SF';
@@ -1052,6 +1160,13 @@ async function attemptConnectDatabase() {
   }
 }
 
+// Dispara a (re)conexão ao banco em segundo plano. As rotas NÃO esperam por ela: com o banco fora, cada tentativa testa até 20 combinações de
+// driver/host (4 s cada) e o pedido do usuário (login, cadastro, recuperação de senha) ficava preso por dezenas de segundos. Sem banco o pedido
+// segue com o espelho local, como já fazia quando outra tentativa estava em andamento.
+function kickDatabaseReconnect() {
+  attemptConnectDatabase().catch(() => {});
+}
+
 async function initDatabase() {
   await attemptConnectDatabase();
 }
@@ -1099,8 +1214,8 @@ function saveCpfRegistryEntry(cleanCpf, data) {
       updated_at: new Date().toISOString()
     };
     const jsonStr = JSON.stringify(reg, null, 2);
-    fs.writeFileSync(CPF_REGISTRY_PATH, jsonStr, 'utf8');
-    try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
+    writeJsonFile(CPF_REGISTRY_PATH, jsonStr);
+    try { writeJsonFile(CPF_REGISTRY_BACKUP_PATH, jsonStr); } catch(e){}
 
     // Persistência direta no Microsoft SQL Server (tabela cpf_registry)
     if (pool) {
@@ -1137,13 +1252,34 @@ function saveCpfRegistryEntry(cleanCpf, data) {
   } catch(e){}
 }
 
-function getLocalAllFinancialData() {
+// Dados financeiros de todas as contas (local_database_data.json). A leitura usa cache por data de modificação; o objeto em cache é
+// COMPARTILHADO, então as funções abaixo devolvem cópias (rasa para a lista de contas, profunda para uma conta) e quem altera
+// dados deve passar por saveLocalData.
+function readAllLocalFinancial() {
   try {
-    if (fs.existsSync(LOCAL_DATA_PATH)) {
-      return JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
-    }
-  } catch(e){}
+    const main = jsonCache.read(LOCAL_DATA_PATH);
+    if (main.exists) return (main.value && typeof main.value === 'object' && !Array.isArray(main.value)) ? main.value : {};
+  } catch (e) {
+    // Arquivo principal ilegível (ex.: queda de energia no meio de uma gravação antiga): guarda-o de lado e usa o backup. Antes o próximo
+    // salvamento recomeçava de {} e sobrescrevia os dados de TODOS os usuários com os de uma conta só.
+    quarantineCorruptFile(LOCAL_DATA_PATH, e);
+  }
+  try {
+    const backup = jsonCache.read(LOCAL_DATA_BACKUP_PATH);
+    if (backup.exists) return (backup.value && typeof backup.value === 'object' && !Array.isArray(backup.value)) ? backup.value : {};
+  } catch (be) {}
   return {};
+}
+function quarantineCorruptFile(file, err) {
+  try {
+    const dest = file + '.corrupt-' + Date.now();
+    fs.renameSync(file, dest);
+    jsonCache.invalidate(file);
+    console.error('[DADOS] ' + path.basename(file) + ' estava ilegível (' + (err && err.message) + '). Guardado como ' + path.basename(dest) + '; o backup passa a ser usado.');
+  } catch (e) {}
+}
+function getLocalAllFinancialData() {
+  return { ...readAllLocalFinancial() };
 }
 
 // ==================== Camada de Persistência Relacional SQL Server (Transações, Contas e Categorias) ====================
@@ -1165,8 +1301,10 @@ async function syncUserTransactionsToTable(userEmail, transactionsList) {
       const txId = (t.id !== undefined && t.id !== null && !isNaN(parseInt(t.id))) ? parseInt(t.id) : (i + 1);
       validTxIds.push(txId);
 
+      // A linha é identificada pelo tx_id. A busca pela tripla (descrição + data + valor) só vale para linhas antigas SEM tx_id: antes valia para todas
+      // e duas despesas iguais no mesmo dia (dois cafés de 5,00) casavam com a mesma linha e uma sobrescrevia a outra.
       await pool.query(`
-        IF EXISTS (SELECT 1 FROM transacoes WHERE LOWER(user_email) = LOWER($1) AND ((tx_id IS NOT NULL AND tx_id = $2) OR (descricao = $3 AND data_transacao = $4 AND valor = $5)))
+        IF EXISTS (SELECT 1 FROM transacoes WHERE LOWER(user_email) = LOWER($1) AND (tx_id = $2 OR (tx_id IS NULL AND descricao = $3 AND data_transacao = $4 AND valor = $5)))
         BEGIN
           UPDATE transacoes SET
             tx_id = COALESCE($2, tx_id),
@@ -1178,7 +1316,7 @@ async function syncUserTransactionsToTable(userEmail, transactionsList) {
             conta = $8,
             status = $9,
             updated_at = GETDATE()
-          WHERE LOWER(user_email) = LOWER($1) AND ((tx_id IS NOT NULL AND tx_id = $2) OR (descricao = $3 AND data_transacao = $4 AND valor = $5));
+          WHERE LOWER(user_email) = LOWER($1) AND (tx_id = $2 OR (tx_id IS NULL AND descricao = $3 AND data_transacao = $4 AND valor = $5));
         END
         ELSE
         BEGIN
@@ -1262,7 +1400,7 @@ async function syncUserCategoriesToTable(userEmail, categoriesList) {
       const cType = c.type || 'despesa';
       const cIcon = c.icon || null;
       const cColor = c.color || null;
-      validCatNames.push(cName.toLowerCase().replace(/'/g, "''"));
+      validCatNames.push(cName.toLowerCase());
 
       await pool.query(`
         IF NOT EXISTS (SELECT 1 FROM categorias WHERE LOWER(user_email) = LOWER($1) AND LOWER(nome) = LOWER($2))
@@ -1282,10 +1420,13 @@ async function syncUserCategoriesToTable(userEmail, categoriesList) {
     }
 
     if (validCatNames.length > 0) {
-      const nameListStr = validCatNames.map(n => `'${n}'`).join(',');
+      // Nomes como PARÂMETROS (NVARCHAR). Antes iam embutidos no SQL como literais '...' (VARCHAR): nomes com acento ("Alimentação") viravam
+      // "Alimenta??o", nunca casavam e a categoria era apagada e recriada a cada sincronização.
+      const names = Array.from(new Set(validCatNames)).slice(0, 1500); // SQL Server aceita até 2100 parâmetros por consulta
+      const placeholders = names.map((_, i) => '$' + (i + 2)).join(',');
       await pool.query(
-        `DELETE FROM categorias WHERE LOWER(user_email) = LOWER($1) AND LOWER(nome) NOT IN (${nameListStr})`,
-        [cleanEmail]
+        `DELETE FROM categorias WHERE LOWER(user_email) = LOWER($1) AND LOWER(nome) NOT IN (${placeholders})`,
+        [cleanEmail, ...names]
       ).catch(() => {});
     } else {
       await pool.query('DELETE FROM categorias WHERE LOWER(user_email) = LOWER($1)', [cleanEmail]).catch(() => {});
@@ -1294,6 +1435,16 @@ async function syncUserCategoriesToTable(userEmail, categoriesList) {
     console.warn('[BANCO CATEGORIAS] Erro ao sincronizar categorias:', err.message);
   }
 }
+
+// Gravação relacional (transacoes, contas_bancarias, categorias) em segundo plano a cada salvamento de dados. Cada salvamento disparava, em paralelo e sem limite,
+// uma consulta por lançamento: salvamentos em sequência rápida (autosave) empilhavam milhares de consultas no SQL Server. Agora é uma fila por conta: se chegam
+// vários salvamentos enquanto um está sendo gravado, só o ÚLTIMO estado é gravado em seguida (o estado completo está em dados_financeiros de qualquer forma).
+const relationalSyncRunner = BackendUtils.createLatestWinsRunner(async (email, data) => {
+  if (!pool || !data) return;
+  await syncUserTransactionsToTable(email, Array.isArray(data.transactions) ? data.transactions : []);
+  await syncUserAccountsToTable(email, Array.isArray(data.accounts) ? data.accounts : []);
+  await syncUserCategoriesToTable(email, Array.isArray(data.categories) ? data.categories : []);
+});
 
 async function setupDatabaseTablesAndSync() {
   if (!pool) return;
@@ -1541,7 +1692,7 @@ async function setupDatabaseTablesAndSync() {
     } catch(autoTrialMigrateErr) {}
     const res = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
     if (res.rows) {
-      saveLocalUsers(res.rows, true);
+      saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), res.rows), true);
       console.log(`[BANCO] ${res.rows.length} usuário(s) carregados soberanamente do banco de dados SQL Server.`);
     }
   } catch(syncErr) {
@@ -1822,8 +1973,8 @@ async function setupDatabaseTablesAndSync() {
         }
       });
       const jsonStr = JSON.stringify(mergedRegistry, null, 2);
-      fs.writeFileSync(CPF_REGISTRY_PATH, jsonStr, 'utf8');
-      try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
+      writeJsonFile(CPF_REGISTRY_PATH, jsonStr);
+      try { writeJsonFile(CPF_REGISTRY_BACKUP_PATH, jsonStr); } catch(e){}
       console.log(`[BANCO] ${Object.keys(mergedRegistry).length} registros de CPF consolidados e sincronizados no banco SQL interno e cache local.`);
     }
   } catch(syncCpfErr) {
@@ -32034,27 +32185,48 @@ window.applyPostLoginBg = function(theme) {
 
 // Persistência resiliente de Logs em Arquivo Local + Banco de Dados
 
-function getFileLogs() {
+// Logs em arquivo: ficam em memória e são gravados com atraso. Antes cada log (e cada salvamento de dados gera um) lia e reescrevia de forma
+// síncrona até 1000 registros em JSON indentado, travando o servidor. No pior caso perde-se ~1 s de logs se o processo cair (o SQL Server também recebe o log).
+let fileLogsMemory = null;
+let fileLogsFlushTimer = null;
+function loadFileLogs() {
+  if (fileLogsMemory) return fileLogsMemory;
+  let list = [];
   try {
     if (fs.existsSync(LOGS_FILE_PATH)) {
-      const data = fs.readFileSync(LOGS_FILE_PATH, 'utf8');
-      return JSON.parse(data) || [];
+      const parsed = JSON.parse(fs.readFileSync(LOGS_FILE_PATH, 'utf8'));
+      if (Array.isArray(parsed)) list = parsed;
     }
   } catch (e) {
-    console.error('Erro ao ler system_logs.json:', e);
+    console.error('Erro ao ler system_logs.json:', e.message);
   }
-  return [];
+  fileLogsMemory = list;
+  return list;
 }
-
-function saveFileLogEntry(entry) {
+function flushFileLogsNow() {
+  if (fileLogsFlushTimer) { clearTimeout(fileLogsFlushTimer); fileLogsFlushTimer = null; }
+  if (!fileLogsMemory) return;
   try {
-    const list = getFileLogs();
-    list.unshift(entry);
-    if (list.length > 1000) list.pop();
-    fs.writeFileSync(LOGS_FILE_PATH, JSON.stringify(list, null, 2), 'utf8');
+    writeJsonFile(LOGS_FILE_PATH, JSON.stringify(fileLogsMemory, null, 2));
   } catch (e) {
-    console.error('Erro ao escrever system_logs.json:', e);
+    console.error('Erro ao escrever system_logs.json:', e.message);
   }
+}
+function getFileLogs() {
+  return loadFileLogs().slice();
+}
+function saveFileLogEntry(entry) {
+  const list = loadFileLogs();
+  list.unshift(entry);
+  if (list.length > 1000) list.length = 1000;
+  if (!fileLogsFlushTimer) {
+    fileLogsFlushTimer = setTimeout(flushFileLogsNow, 750);
+    if (fileLogsFlushTimer.unref) fileLogsFlushTimer.unref();
+  }
+}
+function replaceFileLogs(list) {
+  fileLogsMemory = Array.isArray(list) ? list.slice(0, 1000) : [];
+  flushFileLogsNow();
 }
 
 function recordSystemLog(userName, userEmail, action, entity, details) {
@@ -32088,19 +32260,20 @@ function recordSystemLog(userName, userEmail, action, entity, details) {
 function getLocalUsers() {
   let fileUsers = [];
   try {
-    if (fs.existsSync(LOCAL_USERS_PATH)) {
-      const content = fs.readFileSync(LOCAL_USERS_PATH, 'utf8');
-      fileUsers = JSON.parse(content) || [];
-    } else if (fs.existsSync(LOCAL_USERS_BACKUP_PATH)) {
-      const content = fs.readFileSync(LOCAL_USERS_BACKUP_PATH, 'utf8');
-      fileUsers = JSON.parse(content) || [];
+    // Cache por data de modificação: getAuthenticatedUser chama isto em TODA requisição autenticada. O valor em cache é compartilhado:
+    // abaixo cada usuário é copiado (spread), então quem recebe a lista pode alterar à vontade antes de salvar.
+    const main = jsonCache.read(LOCAL_USERS_PATH);
+    if (main.exists) {
+      fileUsers = main.value || [];
+    } else {
+      const backup = jsonCache.read(LOCAL_USERS_BACKUP_PATH);
+      if (backup.exists) fileUsers = backup.value || [];
     }
   } catch (e) {
-    if (fs.existsSync(LOCAL_USERS_BACKUP_PATH)) {
-      try {
-        fileUsers = JSON.parse(fs.readFileSync(LOCAL_USERS_BACKUP_PATH, 'utf8')) || [];
-      } catch (be) {}
-    }
+    try {
+      const backup = jsonCache.read(LOCAL_USERS_BACKUP_PATH);
+      if (backup.exists) fileUsers = backup.value || [];
+    } catch (be) {}
   }
 
   const rawList = Array.isArray(fileUsers) ? fileUsers : [];
@@ -32128,9 +32301,14 @@ function saveLocalUsers(users, overwrite = false) {
       return copy;
     });
     const jsonContent = JSON.stringify(listToSave, null, 2);
-    fs.writeFileSync(LOCAL_USERS_PATH, jsonContent, 'utf8');
+    // Sem mudança real não regrava (GET /api/users com banco conectado e a sincronização salvavam a mesma lista a cada chamada, nos dois arquivos)
     try {
-      fs.writeFileSync(LOCAL_USERS_BACKUP_PATH, jsonContent, 'utf8');
+      const current = jsonCache.read(LOCAL_USERS_PATH);
+      if (current.exists && JSON.stringify(current.value, null, 2) === jsonContent) return;
+    } catch (readErr) { /* arquivo ilegível: segue e regrava */ }
+    writeJsonFile(LOCAL_USERS_PATH, jsonContent);
+    try {
+      writeJsonFile(LOCAL_USERS_BACKUP_PATH, jsonContent);
     } catch (bErr) {}
   } catch (e) {
     console.error('Erro ao salvar local_users.json:', e);
@@ -32144,8 +32322,8 @@ function removeLocalUser(email) {
     const filtered = current.filter(u => (u.email || '').toLowerCase().trim() !== clean);
     try { setStoredAvatar(clean, ''); } catch (avatarErr) {}
     const jsonStr = JSON.stringify(filtered, null, 2);
-    fs.writeFileSync(LOCAL_USERS_PATH, jsonStr, 'utf8');
-    try { fs.writeFileSync(LOCAL_USERS_BACKUP_PATH, jsonStr, 'utf8'); } catch(e){}
+    writeJsonFile(LOCAL_USERS_PATH, jsonStr);
+    try { writeJsonFile(LOCAL_USERS_BACKUP_PATH, jsonStr); } catch(e){}
 
     // Limpar de local_database_data.json
     try {
@@ -32153,8 +32331,9 @@ function removeLocalUser(email) {
         const allData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
         if (allData[clean]) {
           delete allData[clean];
-          fs.writeFileSync(LOCAL_DATA_PATH, JSON.stringify(allData, null, 2), 'utf8');
-          try { fs.writeFileSync(LOCAL_DATA_BACKUP_PATH, JSON.stringify(allData, null, 2), 'utf8'); } catch(be){}
+          const allDataJson = JSON.stringify(allData, null, 2);
+          writeJsonFile(LOCAL_DATA_PATH, allDataJson);
+          try { writeJsonFile(LOCAL_DATA_BACKUP_PATH, allDataJson); } catch(be){}
         }
       }
     } catch (e) {}
@@ -32166,8 +32345,8 @@ function removeLocalUser(email) {
         if (record && String(record.email || '').toLowerCase().trim() === clean) delete registry[cpf];
       }
       const registryJson = JSON.stringify(registry, null, 2);
-      fs.writeFileSync(CPF_REGISTRY_PATH, registryJson, 'utf8');
-      try { fs.writeFileSync(CPF_REGISTRY_BACKUP_PATH, registryJson, 'utf8'); } catch(e){}
+      writeJsonFile(CPF_REGISTRY_PATH, registryJson);
+      try { writeJsonFile(CPF_REGISTRY_BACKUP_PATH, registryJson); } catch(e){}
     } catch (e) {}
 
     try {
@@ -32176,13 +32355,13 @@ function removeLocalUser(email) {
 
     try {
       const logs = getFileLogs().filter(log => !JSON.stringify(log || {}).toLowerCase().includes(clean));
-      fs.writeFileSync(LOGS_FILE_PATH, JSON.stringify(logs, null, 2), 'utf8');
+      replaceFileLogs(logs);
     } catch (e) {}
 
     try {
       const pending = fs.existsSync(PENDING_LOGINS_PATH) ? JSON.parse(fs.readFileSync(PENDING_LOGINS_PATH, 'utf8')) : [];
       const filteredPending = (Array.isArray(pending) ? pending : []).filter(item => String(item.email || '').toLowerCase().trim() !== clean);
-      fs.writeFileSync(PENDING_LOGINS_PATH, JSON.stringify(filteredPending, null, 2), 'utf8');
+      writeJsonFile(PENDING_LOGINS_PATH, JSON.stringify(filteredPending, null, 2));
     } catch (e) {}
 
     return filtered;
@@ -32205,7 +32384,7 @@ function getLocalOrdens() {
 
 function saveLocalOrdens(ordens) {
   try {
-    fs.writeFileSync(LOCAL_ORDENS_PATH, JSON.stringify(ordens, null, 2), 'utf8');
+    writeJsonFile(LOCAL_ORDENS_PATH, JSON.stringify(ordens, null, 2));
   } catch (e) {
     console.error('Erro ao salvar local_ordens_servico.json:', e);
   }
@@ -32414,7 +32593,7 @@ function getLocalTecnicos() {
 
 function saveLocalTecnicos(tecnicos) {
   try {
-    fs.writeFileSync(LOCAL_TECNICOS_PATH, JSON.stringify(tecnicos, null, 2), 'utf8');
+    writeJsonFile(LOCAL_TECNICOS_PATH, JSON.stringify(tecnicos, null, 2));
   } catch (e) {
     console.error('Erro ao salvar local_tecnicos.json:', e);
   }
@@ -32537,34 +32716,22 @@ async function ensureUserIsConfiguredInDatabase(cleanEmail, userMeta = {}) {
 
 function getLocalData(email) {
   try {
-    let allData = null;
-    if (fs.existsSync(LOCAL_DATA_PATH)) {
-      allData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
-    } else if (fs.existsSync(LOCAL_DATA_BACKUP_PATH)) {
-      allData = JSON.parse(fs.readFileSync(LOCAL_DATA_BACKUP_PATH, 'utf8')) || {};
-    }
-    if (allData && allData[email.toLowerCase().trim()]) return allData[email.toLowerCase().trim()];
+    const found = readAllLocalFinancial()[String(email || '').toLowerCase().trim()];
+    return found ? structuredClone(found) : null;
   } catch (e) {
-    if (fs.existsSync(LOCAL_DATA_BACKUP_PATH)) {
-      try {
-        const allData = JSON.parse(fs.readFileSync(LOCAL_DATA_BACKUP_PATH, 'utf8')) || {};
-        return allData[email.toLowerCase().trim()] || null;
-      } catch (be) {}
-    }
+    return null;
   }
-  return null;
 }
 
 function saveLocalData(email, data) {
   try {
-    let allData = {};
-    if (fs.existsSync(LOCAL_DATA_PATH)) {
-      try { allData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {}; } catch(e){}
-    }
-    allData[email.toLowerCase().trim()] = data;
-    const jsonStr = JSON.stringify(allData, null, 2);
-    fs.writeFileSync(LOCAL_DATA_PATH, jsonStr, 'utf8');
-    try { fs.writeFileSync(LOCAL_DATA_BACKUP_PATH, jsonStr, 'utf8'); } catch(be){}
+    const key = String(email || '').toLowerCase().trim();
+    const current = readAllLocalFinancial();
+    // Nada mudou: não reescreve o arquivo de TODAS as contas (nem o backup). GET /api/data e a sincronização salvavam o mesmo conteúdo a cada chamada.
+    if (current[key] !== undefined && JSON.stringify(current[key]) === JSON.stringify(data)) return;
+    const jsonStr = JSON.stringify({ ...current, [key]: data }, null, 2);
+    writeJsonFile(LOCAL_DATA_PATH, jsonStr);
+    try { writeJsonFile(LOCAL_DATA_BACKUP_PATH, jsonStr); } catch(be){}
   } catch (e) {
     console.error('Erro ao salvar local_database_data.json:', e);
   }
@@ -32596,7 +32763,8 @@ function mergeFinancialData(serverData, localData) {
 
 // Servidor HTTP de Alta Performance e Resiliência
 const fileCache = new Map();
-const server = http.createServer(async (req, res) => {
+const htmlBufferCache = new Map(); // 'root' | 'plain' -> Buffer da página principal
+async function handleNexusRequest(req, res) {
   let parsedUrl;
   try {
     const fullUrl = new URL(req.url, 'http://' + (req.headers.host || 'localhost:3000'));
@@ -32654,8 +32822,29 @@ const server = http.createServer(async (req, res) => {
   // ouvintes 'data' dos handlers (não muda o fluxo da requisição).
   let receivedBodyBytes = 0;
   let bodyLimitHit = false;
+  // Erro inesperado numa rota: responde 500 genérico. Sem isto, uma exceção dentro de um handler assíncrono só virava "rejeição tratada" no log
+  // (process.on('unhandledRejection')) e o navegador ficava esperando a resposta até estourar o tempo.
+  const failRequest = (err) => {
+    console.error('[HTTP] Erro não tratado em ' + req.method + ' ' + parsedUrl.pathname + ':', (err && err.stack) || err);
+    try {
+      if (!res.headersSent) {
+        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Erro interno no servidor.' }));
+      } else if (!res.writableEnded) {
+        res.end();
+      }
+    } catch (e) {}
+  };
+  req.__nxFail = failRequest;
   const originalReqOn = req.on.bind(req);
   req.on = function (eventName, listener) {
+    if (eventName === 'end' && typeof listener === 'function') {
+      return originalReqOn('end', function () {
+        let outcome;
+        try { outcome = listener.apply(this, arguments); } catch (err) { return failRequest(err); }
+        if (outcome && typeof outcome.catch === 'function') outcome.catch(failRequest);
+      });
+    }
     if (eventName !== 'data' || typeof listener !== 'function') return originalReqOn(eventName, listener);
     return originalReqOn('data', function (chunk) {
       receivedBodyBytes += chunk.length;
@@ -32680,7 +32869,7 @@ const server = http.createServer(async (req, res) => {
     return sendJson(res, corsHeaders, 413, { success: false, error: 'Requisição grande demais.' });
   }
   const rateRule = RATE_LIMIT_RULES[req.method + ' ' + parsedUrl.pathname];
-  if (rateRule) {
+  if (rateRule && !hasInternalSyncAccess(req)) {
     const verdict = checkRateLimit(rateRule.key + ':' + getClientIp(req), rateRule.max, rateRule.windowMs);
     if (verdict.limited) {
       res.writeHead(429, { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': String(verdict.retryAfterSeconds) });
@@ -32698,6 +32887,8 @@ const server = http.createServer(async (req, res) => {
     const state = crypto.randomBytes(32).toString('hex');
     GOOGLE_OAUTH_STATES.set(state, { createdAt: Date.now(), redirectUri: config.redirectUri });
     for (const [key, value] of GOOGLE_OAUTH_STATES) if (Date.now() - value.createdAt > GOOGLE_OAUTH_STATE_TTL_MS) GOOGLE_OAUTH_STATES.delete(key);
+    // Teto de logins em andamento: cada chamada guarda um state em memória e a rota é pública (o mais antigo sai primeiro)
+    while (GOOGLE_OAUTH_STATES.size > GOOGLE_OAUTH_MAX_PENDING) GOOGLE_OAUTH_STATES.delete(GOOGLE_OAUTH_STATES.keys().next().value);
     const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
     authUrl.searchParams.set('client_id', config.clientId);
     authUrl.searchParams.set('redirect_uri', config.redirectUri);
@@ -32775,6 +32966,16 @@ const server = http.createServer(async (req, res) => {
     if (!sseUser) {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória.' });
     }
+    // Teto de conexões abertas (cada uma fica pendurada para sempre): sem limite, um usuário comum abria milhares e esgotava memória e descritores.
+    // 429 encerra o EventSource sem reconexão automática (regra do navegador), então não gera laço de tentativas.
+    const sseEmail = String(sseUser.email || '').toLowerCase().trim();
+    let sseOwnConnections = 0;
+    for (const openClient of sseClients) {
+      if (openClient.nexusUser && String(openClient.nexusUser.email || '').toLowerCase().trim() === sseEmail) sseOwnConnections++;
+    }
+    if (sseOwnConnections >= SSE_MAX_PER_USER || sseClients.size >= SSE_MAX_TOTAL) {
+      return sendJson(res, corsHeaders, 429, { success: false, error: 'Muitas conexões de eventos abertas para esta conta. Feche outras abas e tente de novo.' });
+    }
     res.nexusUser = sseUser;
     res.writeHead(200, {
       ...corsHeaders,
@@ -32786,9 +32987,10 @@ const server = http.createServer(async (req, res) => {
     res.write(`event: connected\ndata: ${JSON.stringify({ message: 'Canal de eventos em tempo real conectado com sucesso', time: new Date().toISOString() })}\n\n`);
     sseClients.add(res);
 
-    req.on('close', () => {
-      sseClients.delete(res);
-    });
+    const dropSseClient = () => { sseClients.delete(res); };
+    req.on('close', dropSseClient);
+    res.on('close', dropSseClient);
+    res.on('error', dropSseClient);
     return;
   }
 
@@ -32805,12 +33007,7 @@ const server = http.createServer(async (req, res) => {
       const localTecnicos = getLocalTecnicos();
       const localCpfRegistry = getCpfRegistry();
       
-      let allFinancialData = {};
-      try {
-        if (fs.existsSync(LOCAL_DATA_PATH)) {
-          allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
-        }
-      } catch(e){}
+      const allFinancialData = getLocalAllFinancialData();
 
       const backupPayload = {
         backup_version: '1.0',
@@ -32831,8 +33028,9 @@ const server = http.createServer(async (req, res) => {
       });
       return res.end(JSON.stringify(backupPayload, null, 2));
     } catch(bErr) {
-      res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ error: bErr.message }));
+      const failure = publicFailure(bErr, 'Não foi possível gerar o backup.', 500);
+      res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: failure.error }));
     }
   }
 
@@ -32843,16 +33041,14 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify({ error: 'Acesso de sincronização interna obrigatório.' }));
     }
     try {
-      let allFinancialData = {};
-      if (fs.existsSync(LOCAL_DATA_PATH)) {
-        allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
-      }
+      const allFinancialData = getLocalAllFinancialData();
       getDeletedAccounts().forEach(item => delete allFinancialData[item.email]);
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify(allFinancialData));
     } catch(finErr) {
-      res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ error: finErr.message }));
+      const failure = publicFailure(finErr, 'Não foi possível ler os dados para sincronização.', 500);
+      res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: failure.error }));
     }
   }
 
@@ -32864,12 +33060,7 @@ const server = http.createServer(async (req, res) => {
     }
     try {
       const rawUsers = getLocalUsers().filter(user => !isAccountDeleted(user.email));
-      let allFinancialData = {};
-      try {
-        if (fs.existsSync(LOCAL_DATA_PATH)) {
-          allFinancialData = JSON.parse(fs.readFileSync(LOCAL_DATA_PATH, 'utf8')) || {};
-        }
-      } catch(e){}
+      const allFinancialData = getLocalAllFinancialData();
       getDeletedAccounts().forEach(item => delete allFinancialData[item.email]);
       const localOrdens = getLocalOrdens();
       const localTecnicos = getLocalTecnicos();
@@ -32886,15 +33077,16 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
       return res.end(JSON.stringify(payload));
     } catch(sErr) {
-      res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ error: sErr.message }));
+      const failure = publicFailure(sErr, 'Não foi possível ler os dados para sincronização.', 500);
+      res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({ error: failure.error }));
     }
   }
 
   // Rota POST para Notificação Imediata de Último Login (Garante atualização instantânea no SQL Server)
   if (req.method === 'POST' && (parsedUrl.pathname === '/api/user/login-ping' || parsedUrl.pathname === '/api/users/login-ping')) {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body || '{}');
@@ -32910,8 +33102,10 @@ const server = http.createServer(async (req, res) => {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'E-mail ou ID de usuário obrigatório' }));
         }
-        const brasiliaSqlTime = getBrasiliaSqlString(parsed.last_login) || getBrasiliaSqlString(new Date());
-        const nowIso = getBrasiliaIsoString(parsed.last_login) || getBrasiliaIsoString(new Date());
+        // A hora do login é a do SERVIDOR. O valor enviado pelo cliente (parsed.last_login) era gravado como veio: qualquer texto com
+        // "-03:00" (inclusive HTML) ia para local_users.json e aparecia no painel do administrador, e o cliente podia forjar a data do último acesso.
+        const brasiliaSqlTime = getBrasiliaSqlString(new Date());
+        const nowIso = getBrasiliaIsoString(new Date());
         const pingIp = getClientIp(req);
         let targetUser = null;
         if (pool) {
@@ -32959,8 +33153,9 @@ const server = http.createServer(async (req, res) => {
           brasiliaSqlTime: brasiliaSqlTime
         }));
       } catch (err) {
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: err.message }));
+        const failure = publicFailure(err, 'Não foi possível registrar o acesso.', 500);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -32969,7 +33164,7 @@ const server = http.createServer(async (req, res) => {
   // Rota POST para Login de Usuário (com Verificação Criptográfica e Upgrade Seguro de Hash)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/login') {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
@@ -32981,6 +33176,11 @@ const server = http.createServer(async (req, res) => {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'E-mail e senha são obrigatórios' }));
         }
+        // O scrypt processa a senha inteira: um corpo de megabytes no campo senha virava trabalho de CPU à toa (e travava o servidor, que usa scryptSync)
+        if (password.length > 1024 || email.length > 254) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, errorType: 'invalid_password', error: 'E-mail ou senha com tamanho inválido.' }));
+        }
 
         const cleanEmail = email.toLowerCase().trim();
         // Bloqueio temporário da conta após falhas consecutivas (proteção contra adivinhação de senha)
@@ -32991,7 +33191,7 @@ const server = http.createServer(async (req, res) => {
         }
         let user = null;
         if (!pool) {
-          await attemptConnectDatabase();
+          kickDatabaseReconnect();
         }
 
         if (pool) {
@@ -33138,8 +33338,9 @@ const server = http.createServer(async (req, res) => {
         }));
       } catch (err) {
         console.error('Erro no endpoint de login:', err);
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: 'Falha no servidor durante a autenticação.' }));
+        const failure = publicFailure(err, 'Falha no servidor durante a autenticação.');
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -33285,53 +33486,10 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
-    // 5. Fonte 5: Base Cadastral Oficial da Receita Federal (Geração Determinística e Persistente)
-    const FIRST_NAMES_M = ['Gabriel', 'Lucas', 'Matheus', 'Rodrigo', 'Bruno', 'Leonardo', 'Thiago', 'Felipe', 'Rafael', 'Diego', 'Guilherme', 'Gustavo', 'Eduardo', 'Marcelo', 'Alexandre', 'Carlos', 'Andre', 'Fernando', 'Marcos', 'Vinicius'];
-    const FIRST_NAMES_F = ['Camila', 'Juliana', 'Beatriz', 'Mariana', 'Larissa', 'Fernanda', 'Aline', 'Patricia', 'Renata', 'Carolina', 'Amanda', 'Vanessa', 'Bruna', 'Daniela', 'Jessica', 'Tatiane', 'Priscila', 'Leticia', 'Helena', 'Isabela'];
-    const SURNAMES = ['Silva', 'Santos', 'Oliveira', 'Souza', 'Rodrigues', 'Ferreira', 'Alves', 'Pereira', 'Lima', 'Gomes', 'Costa', 'Ribeiro', 'Martins', 'Carvalho', 'Almeida', 'Lopes', 'Soares', 'Fernandes', 'Vieira', 'Barbosa', 'Rocha', 'Dias', 'Nascimento', 'Andrade', 'Moreira', 'Cardoso', 'Freitas', 'Melo', 'Teixeira', 'Ramos'];
-
-    const seed = parseInt(cleanCpf.slice(0, 8), 10) || 12345678;
-    const isFemale = (seed % 2 === 0);
-    const firstNames = isFemale ? FIRST_NAMES_F : FIRST_NAMES_M;
-    const fn = firstNames[seed % firstNames.length];
-    const sn1 = SURNAMES[(seed * 7) % SURNAMES.length];
-    const sn2 = SURNAMES[(seed * 13 + 3) % SURNAMES.length];
-    const nomeOficial = fn + ' ' + (sn1 !== sn2 ? sn1 + ' ' + sn2 : sn1 + ' de Oliveira');
-
-    const birthYear = 1970 + (seed % 32); // 1970 a 2002 (adultos +18 anos)
-    const birthMonth = String(1 + (seed % 12)).padStart(2, '0');
-    const birthDay = String(1 + (seed % 28)).padStart(2, '0');
-    const dataNascimentoOficial = birthDay + '/' + birthMonth + '/' + birthYear;
-
-    const dddsPorRegiao = {
-      '1': ['61', '62', '64', '65', '67', '63'],
-      '2': ['68', '96', '92', '91', '69', '95'],
-      '3': ['85', '98', '86'],
-      '4': ['82', '83', '81', '84'],
-      '5': ['71', '79'],
-      '6': ['31', '34', '35', '37'],
-      '7': ['27', '21', '22', '24'],
-      '8': ['11', '19', '12', '16', '13'],
-      '9': ['41', '48', '47', '49'],
-      '0': ['51', '54', '55']
-    };
-    const regDdds = dddsPorRegiao[regiaoDigit] || ['62'];
-    const ddd = regDdds[seed % regDdds.length];
-    const p1 = '9' + String(1000 + (seed % 9000));
-    const p2 = String(1000 + ((seed * 3) % 9000));
-    const telefoneOficial = '(' + ddd + ') ' + p1 + '-' + p2;
-
-    const fallbackEntry = {
-      nome: nomeOficial,
-      data_nascimento: dataNascimentoOficial,
-      phone: telefoneOficial,
-      email_associado: null,
-      situacao: 'REGULAR',
-      regiao_fiscal: regiaoFiscalDesc,
-      origem: 'Receita Federal do Brasil (Base Cadastral Oficial)'
-    };
-    saveCpfRegistryEntry(cleanCpf, fallbackEntry);
-    return fallbackEntry;
+    // Nenhuma fonte real conhece este CPF. Antes a "Fonte 5" INVENTAVA nome, nascimento e telefone a partir dos dígitos do CPF, apresentava
+    // como "Receita Federal do Brasil (Base Cadastral Oficial)" e ainda gravava o dado falso no cadastro (arquivo, SQL Server e nuvem).
+    // Dado que não existe não é devolvido nem gravado.
+    return null;
   }
 
   // Rota GET para Consulta e Validação de CPF na Receita Federal do Brasil
@@ -33368,6 +33526,10 @@ const server = http.createServer(async (req, res) => {
     (async () => {
       try {
         const dadosRfb = await consultarDadosReceitaFederal(cleanCpf);
+        if (!dadosRfb) {
+          res.writeHead(404, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, valid: true, cpf: formattedCpf, code: 'CPF_NAO_ENCONTRADO', error: 'CPF válido, mas sem cadastro em nenhuma base consultada.' }));
+        }
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({
           success: true,
@@ -33394,7 +33556,7 @@ const server = http.createServer(async (req, res) => {
   // Rota POST para Abertura de Conta de Usuário (Padrão Financeiro / Fintech)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/register') {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
@@ -33409,13 +33571,16 @@ const server = http.createServer(async (req, res) => {
         const phone = parsed.phone || parsed.telefone || parsed.celular || null;
         const terms_accepted = parsed.terms_accepted === true;
         const truthful_declaration = parsed.truthful_declaration === true;
+        // Registro repassado pelo servidor local (com o token de sincronização) chega com a senha JÁ em hash: a senha em texto puro
+        // nunca mais trafega entre os servidores (antes ia em texto puro para a nuvem, que ainda por cima recusava o pedido por faltar a declaração).
+        const syncPasswordHash = (hasInternalSyncAccess(req) && typeof parsed.password_hash === 'string' && /^scrypt:[a-f0-9]{32}:[a-f0-9]{128}$/.test(parsed.password_hash)) ? parsed.password_hash : '';
 
         if (!terms_accepted || !truthful_declaration) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Marque os dois campos de confirmação para concluir o cadastro.' }));
         }
 
-        if (!name || !email || !password || !cleanCpf) {
+        if (!name || !email || (!password && !syncPasswordHash) || !cleanCpf) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Nome completo, CPF, e-mail e senha são obrigatórios.', errorType: 'required_fields' }));
         }
@@ -33439,9 +33604,26 @@ const server = http.createServer(async (req, res) => {
           return res.end(JSON.stringify({ success: false, error: 'CPF inválido. Confira os 11 dígitos informados.', errorType: 'invalid_cpf', code: 'INVALID_CPF' }));
         }
 
-        if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/\d/.test(password) || !/[@#$%!?*&._-]/.test(password)) {
+        if (!syncPasswordHash && (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/\d/.test(password) || !/[@#$%!?*&._-]/.test(password))) {
           res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'A senha deve ter 8+ caracteres, maiúscula, minúscula, número e símbolo.', errorType: 'weak_password' }));
+        }
+        if (password.length > BackendUtils.PASSWORD_MAX_LENGTH) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'A senha pode ter no máximo ' + BackendUtils.PASSWORD_MAX_LENGTH + ' caracteres.', errorType: 'weak_password' }));
+        }
+
+        // Celular e nascimento (opcionais) entram só se tiverem formato válido; antes qualquer texto era gravado (o banco recusa mais de 25/20
+        // caracteres e o cadastro seguia só no arquivo local, e o texto aparece no painel do administrador).
+        const birthCheck = BackendUtils.normalizeBirthDateInput(birth_date);
+        if (!birthCheck.ok) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Data de nascimento inválida.', errorType: 'invalid_birth_format' }));
+        }
+        const phoneCheck = BackendUtils.normalizePhoneInput(phone);
+        if (!phoneCheck.ok) {
+          res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ success: false, error: 'Informe o celular com DDD (10 ou 11 dígitos).', errorType: 'invalid_phone' }));
         }
 
         const localUsersBeforeRegister = getLocalUsers();
@@ -33458,23 +33640,24 @@ const server = http.createServer(async (req, res) => {
 
         if (!pool) {
           try {
-            await attemptConnectDatabase();
+            kickDatabaseReconnect();
           } catch (connErr) {}
         }
 
-        const secureHashedPassword = hashPassword(password);
+        const secureHashedPassword = syncPasswordHash || hashPassword(password);
         let newUserId = Date.now();
         // CPF sempre ajustado sem pontos (apenas números de 11 dígitos para o banco de dados)
-        const cleanBirthDate = birth_date ? String(birth_date).trim() : null;
-        const cleanPhone = phone ? String(phone).trim() : null;
+        const cleanBirthDate = birthCheck.value;
+        const cleanPhone = phoneCheck.value;
         const termsAcceptedVal = terms_accepted !== false;
 
         const ua = (req.headers && req.headers['user-agent']) ? req.headers['user-agent'] : '';
         const isMobileUA = /mobile|android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua);
-        const deviceTypeVal = (parsed.device_type || parsed.device || (isMobileUA ? 'Mobile' : 'Computador')).trim();
+        const deviceTypeVal = BackendUtils.sanitizeDeviceType(parsed.device_type || parsed.device, isMobileUA ? 'Mobile' : 'Computador');
         const clientIp = getClientIp(req);
 
         // 1. Gravação direta no SQL Server (quando executado no ambiente com conexão direta ao banco)
+        let createdInDatabase = false;
         if (pool) {
           try {
             const existingUserRes = await pool.query('SELECT TOP 1 id, email, cpf FROM usuarios WHERE LOWER(email) = LOWER($1) OR cpf = $2', [cleanEmail, cleanCpf]);
@@ -33491,6 +33674,7 @@ const server = http.createServer(async (req, res) => {
                 [name.trim(), cleanEmail, secureHashedPassword, 'Usuário', cleanCpf, cleanPhone, cleanBirthDate, termsAcceptedVal ? 1 : 0, deviceTypeVal, clientIp]
               );
               if (insertRes.rows && insertRes.rows[0]) newUserId = insertRes.rows[0].id;
+              createdInDatabase = true;
             }
 
             // Garante auto-configuração completa de contas, categorias e dados financeiros no SQL Server
@@ -33506,10 +33690,16 @@ const server = http.createServer(async (req, res) => {
             // Atualiza cache local instantaneamente com o espelho do SQL Server
             const allUsersRes = await pool.query('SELECT id, name, email, password, role, active, created_at, last_login, cpf, phone, birth_date, terms_accepted, device_type, must_change_password, trial_started_at, subscription_plan, subscription_status, subscription_expires_at, subscription_method, subscription_payment_id FROM usuarios ORDER BY id ASC');
             if (allUsersRes.rows) {
-              saveLocalUsers(allUsersRes.rows, true);
+              saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), allUsersRes.rows), true);
             }
             console.log(`⚡ [SQL SERVER CADASTRO DIRETO] Usuário ${cleanEmail} gravado e configurado com sucesso no SQL Server (Dispositivo: ${deviceTypeVal}, IP: ${clientIp || 'local'})!`);
           } catch (dbInsertErr) {
+            // Dois cadastros simultâneos do mesmo e-mail/CPF: o segundo bate na chave única do banco. Antes o erro era só registrado e o servidor
+            // seguia criando a conta local (com a senha do segundo) e devolvendo "sucesso" com token para uma conta que não existe no banco.
+            if (BackendUtils.isUniqueViolation(dbInsertErr)) {
+              res.writeHead(409, { ...corsHeaders, 'Content-Type': 'application/json' });
+              return res.end(JSON.stringify({ success: false, error: 'Este e-mail ou CPF já possui cadastro.', errorType: 'email_exists' }));
+            }
             console.error('[ERRO BD CADASTRO] Falha ao persistir no SQL Server:', dbInsertErr.message);
           }
         } else {
@@ -33517,10 +33707,26 @@ const server = http.createServer(async (req, res) => {
           saveLocalData(cleanEmail, getDefaultConfiguredFinancialData());
         }
 
+        // Última conferência, SÍNCRONA (nenhum await daqui até a gravação local): outro cadastro igual pode ter sido concluído enquanto este esperava
+        // o banco. Sem isso o segundo sobrescrevia a conta do primeiro (senha e CPF) no arquivo local.
+        if (!createdInDatabase) {
+          const usersNow = getLocalUsers();
+          if (usersNow.some(u => u && String(u.email || '').toLowerCase().trim() === cleanEmail)) {
+            res.writeHead(409, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, error: 'Este e-mail já possui cadastro.', errorType: 'email_exists' }));
+          }
+          if (usersNow.some(u => u && String(u.cpf || '').replace(/\D/g, '') === cleanCpf)) {
+            res.writeHead(409, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, error: 'Este CPF já possui cadastro.', errorType: 'cpf_exists' }));
+          }
+        }
+
+        // Repasse à nuvem: só o HASH da senha, com o token de sincronização (antes a senha em texto puro ia sem declaração de veracidade e era recusada)
         if (!process.env.RENDER) {
           fetchCloud('/api/register', {
             method: 'POST',
-            body: JSON.stringify({ name: name.trim(), email: cleanEmail, password, cpf: cleanCpf, phone: cleanPhone, birth_date: cleanBirthDate, terms_accepted: termsAcceptedVal, device_type: deviceTypeVal })
+            headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
+            body: JSON.stringify({ name: name.trim(), email: cleanEmail, password_hash: secureHashedPassword, cpf: cleanCpf, phone: cleanPhone, birth_date: cleanBirthDate, terms_accepted: termsAcceptedVal, truthful_declaration: true, device_type: deviceTypeVal })
           }).catch(() => {});
         }
 
@@ -33607,8 +33813,9 @@ const server = http.createServer(async (req, res) => {
         }));
       } catch (err) {
         console.error('Erro no endpoint de cadastro financeiro:', err);
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: 'Falha no servidor durante a abertura de conta: ' + err.message }));
+        const failure = publicFailure(err, 'Falha no servidor durante a abertura de conta. Tente novamente.');
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -33617,7 +33824,7 @@ const server = http.createServer(async (req, res) => {
   // Rota POST para Confirmação de Dados Cadastrais e Geração de Senha Temporária
   if (req.method === 'POST' && (parsedUrl.pathname === '/api/send-password' || parsedUrl.pathname === '/api/auth/verify-and-reset' || parsedUrl.pathname === '/api/forgot-password')) {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body || '{}');
@@ -33659,7 +33866,7 @@ const server = http.createServer(async (req, res) => {
         let user = null;
         let ambiguous = false;
         if (!pool) {
-          await attemptConnectDatabase();
+          kickDatabaseReconnect();
         }
         if (pool) {
           try {
@@ -33798,7 +34005,7 @@ const server = http.createServer(async (req, res) => {
   // Rota POST para Troca Obrigatória de Senha Temporária (Primeiro Acesso)
   if (req.method === 'POST' && (parsedUrl.pathname === '/api/auth/change-temp-password' || parsedUrl.pathname === '/api/user/change-mandatory-password')) {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body || '{}');
@@ -33840,7 +34047,7 @@ const server = http.createServer(async (req, res) => {
 
         let user = null;
         if (!pool) {
-          await attemptConnectDatabase();
+          kickDatabaseReconnect();
         }
         if (pool) {
           try {
@@ -33949,7 +34156,9 @@ const server = http.createServer(async (req, res) => {
             if (copy.created_at) copy.created_at = getBrasiliaIsoString(copy.created_at);
             return copy;
           });
-          saveLocalUsers(rows, true);
+          // Para quem não é a sincronização interna a consulta NÃO traz a coluna password: gravar essas linhas direto no espelho apagava a senha
+          // de TODOS os usuários do arquivo (o login sem banco deixava de funcionar) e a marca password_changed_at (sessões revogadas voltavam a valer).
+          saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), rows), true);
           const sanitized = shapeUsersForViewer(rows);
           res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
           res.end(JSON.stringify(sanitized));
@@ -33981,7 +34190,7 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify(getDeletedAccounts()));
     }
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body || '{}');
@@ -34020,7 +34229,7 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Não autorizado' });
     }
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', () => {
       try {
         const parsed = JSON.parse(body || '{}');
@@ -34029,8 +34238,9 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true }));
       } catch (err) {
-        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: err.message }));
+        const failure = publicFailure(err, 'Requisição inválida.', 400);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -34039,13 +34249,15 @@ const server = http.createServer(async (req, res) => {
   // Rota POST de Reset Total do Banco de Dados para Iniciar do Zero (ID 1)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/database/reset') {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         let authOk = false;
+        let confirmed = false;
         try {
           const parsed = JSON.parse(body || '{}');
-          if (safeEqual(parsed.sync_secret || '', SYNC_TOKEN)) authOk = true;
+          if (isValidSyncToken(parsed.sync_secret)) authOk = true;
+          confirmed = parsed.confirm === 'RESETAR-TUDO';
         } catch(e){}
         if (hasInternalSyncAccess(req)) {
           authOk = true;
@@ -34055,6 +34267,13 @@ const server = http.createServer(async (req, res) => {
           res.writeHead(401, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ error: 'Não autorizado para reset' }));
         }
+        // Operação destrutiva (apaga usuários, dados financeiros, chamados e o cadastro de CPF): quem tinha o token de sincronização zerava tudo com um
+        // POST. Agora fica desligada por padrão; só roda com NEXUS_ALLOW_DB_RESET=true no ambiente E a confirmação explícita no corpo.
+        if (process.env.NEXUS_ALLOW_DB_RESET !== 'true' || !confirmed) {
+          res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ error: 'Reset total desativado neste ambiente.' }));
+        }
+        recordSystemLog('Sistema', 'sistema@nexus.com', 'Reset Total', 'Banco de Dados', 'Reset total solicitado e confirmado (NEXUS_ALLOW_DB_RESET ativo).');
 
         if (pool) {
           const resetStatements = [
@@ -34107,8 +34326,9 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, message: 'Banco de dados reiniciado com sucesso do zero (ID 1)' }));
       } catch(err) {
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: err.message }));
+        const failure = publicFailure(err, 'Não foi possível concluir o reset.', 500);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: failure.error }));
       }
     });
     return;
@@ -34125,7 +34345,7 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Sessão inválida. Entre novamente.' });
     }
     let body = '';
-    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('data', chunk => { body += BackendUtils.decodeBodyChunk(req, chunk); });
     req.on('end', async () => {
       const fail = (status, error, field) => sendJson(res, corsHeaders, status, { success: false, error, field });
       try {
@@ -34211,7 +34431,7 @@ const server = http.createServer(async (req, res) => {
         if (parsed.newPassword !== undefined && String(parsed.newPassword) !== '') {
           const currentPassword = String(parsed.currentPassword || '');
           const newPassword = String(parsed.newPassword);
-          if (!pool) { try { await attemptConnectDatabase(); } catch (connErr) {} }
+          if (!pool) { try { kickDatabaseReconnect(); } catch (connErr) {} }
           let storedHash = selfUser.password;
           if (pool) {
             try {
@@ -34236,7 +34456,7 @@ const server = http.createServer(async (req, res) => {
           return sendJson(res, corsHeaders, 200, { success: true, changed: [], user: sanitizeUserWithAvatar(selfUser) });
         }
 
-        if (!pool) { try { await attemptConnectDatabase(); } catch (connErr) {} }
+        if (!pool) { try { kickDatabaseReconnect(); } catch (connErr) {} }
         if (pool) {
           try {
             const sets = [];
@@ -34252,7 +34472,10 @@ const server = http.createServer(async (req, res) => {
               await pool.query(`UPDATE usuarios SET ${sets.join(', ')} WHERE LOWER(email) = LOWER($${params.length})`, params);
             }
           } catch (dbErr) {
+            // Com o banco conectado ele é a fonte da verdade (o login lê a senha dele): se a gravação falhou NÃO se pode dizer "salvo" e mudar só o
+            // arquivo local, senão a senha nova valia no espelho e a antiga no banco (o usuário ficava sem conseguir entrar com nenhuma das duas).
             console.warn('[AVISO BD] Falha ao atualizar o cadastro no SQL Server:', dbErr.message);
+            return fail(503, 'Não foi possível salvar agora (banco de dados indisponível). Nada foi alterado; tente novamente em instantes.');
           }
         }
 
@@ -34293,7 +34516,7 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify({ success: false, error: 'Autenticação administrativa obrigatória.' }));
     }
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
@@ -34389,7 +34612,7 @@ const server = http.createServer(async (req, res) => {
         recordSystemLog('Sistema', 'cadastro@nexusfinanceiro.com', 'Sincronização', 'Usuários', 'Sincronização de usuários salva com sucesso');
 
         if (!pool) {
-          await attemptConnectDatabase();
+          kickDatabaseReconnect();
         }
 
         if (pool) {
@@ -34451,7 +34674,7 @@ const server = http.createServer(async (req, res) => {
                 if (c.trial_started_at) c.trial_started_at = getBrasiliaIsoString(c.trial_started_at);
                 return c;
               });
-              saveLocalUsers(formattedRows, true);
+              saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), formattedRows), true);
             }
           } catch(dbErr) {
             console.error('[ERRO BD POST /api/users]:', dbErr.message);
@@ -34462,8 +34685,9 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ success: true }));
       } catch (e) {
         console.error('Erro ao salvar usuários:', e);
-        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: e.message }));
+        const failure = publicFailure(e, 'Não foi possível salvar os usuários. Confira o formato enviado.', 400);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -34547,7 +34771,7 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação obrigatória.' });
     }
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', () => {
       try {
         let parsed = {};
@@ -34653,7 +34877,7 @@ const server = http.createServer(async (req, res) => {
   // Rota POST para salvar dados financeiros do Usuário no banco
   if (req.method === 'POST' && parsedUrl.pathname === '/api/data') {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', () => {
       let payload;
       try {
@@ -34707,9 +34931,7 @@ const server = http.createServer(async (req, res) => {
         });
 
         // Persistência relacional imediata no SQL Server (tabelas transacoes, contas_bancarias, categorias)
-        syncUserTransactionsToTable(cleanEmail, Array.isArray(dataToSave.transactions) ? dataToSave.transactions : []).catch(() => {});
-        syncUserAccountsToTable(cleanEmail, Array.isArray(dataToSave.accounts) ? dataToSave.accounts : []).catch(() => {});
-        syncUserCategoriesToTable(cleanEmail, Array.isArray(dataToSave.categories) ? dataToSave.categories : []).catch(() => {});
+        relationalSyncRunner(cleanEmail, dataToSave);
       }
 
       res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
@@ -34897,7 +35119,7 @@ const server = http.createServer(async (req, res) => {
   // Rota POST para Administrador Conceder Tempo Grátis (Qualquer duração ou vitalício)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/admin-grant-time') {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
@@ -34919,6 +35141,14 @@ const server = http.createServer(async (req, res) => {
         if (!isAuthorized) {
           res.writeHead(403, { ...corsHeaders, 'Content-Type': 'application/json' });
           return res.end(JSON.stringify({ success: false, error: 'Apenas administradores podem conceder tempo gratuito' }));
+        }
+        // Duração dentro de um limite razoável (10 anos): valores absurdos geravam data inválida (subscription_expires_at nulo) com a conta marcada como "ativa"
+        if (!isLifetime) {
+          const requestedMinutes = (durationMinutes > 0 ? durationMinutes : 0) + (customDays > 0 ? customDays * 24 * 60 : 0);
+          if (!Number.isFinite(requestedMinutes) || requestedMinutes > 10 * 365 * 24 * 60) {
+            res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ success: false, error: 'Duração inválida: o máximo é 10 anos (use "vitalício" para acesso sem prazo).' }));
+          }
         }
 
         let targetUser = localUsers.find(u => u && u.email && u.email.toLowerCase() === targetEmail);
@@ -35014,8 +35244,9 @@ const server = http.createServer(async (req, res) => {
           expires_at: expiresIso
         }));
       } catch(err) {
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: 'Erro ao conceder tempo: ' + err.message }));
+        const failure = publicFailure(err, 'Não foi possível conceder o tempo agora.', 500);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -35029,7 +35260,7 @@ const server = http.createServer(async (req, res) => {
       return res.end(JSON.stringify({ success: false, error: 'Entre na sua conta para solicitar um pagamento.' }));
     }
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
@@ -35207,8 +35438,9 @@ const server = http.createServer(async (req, res) => {
           }));
         }
       } catch(e) {
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: 'Erro ao processar assinatura: ' + e.message }));
+        const failure = publicFailure(e, 'Não foi possível processar a assinatura agora.', 500);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -35217,7 +35449,7 @@ const server = http.createServer(async (req, res) => {
   // Rota POST para o Administrador Confirmar / Reconhecer Pagamento Não Reconhecido e Desbloquear Assinatura do Usuário
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/confirm-payment') {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
@@ -35368,8 +35600,9 @@ const server = http.createServer(async (req, res) => {
           expires_at: expiresIso
         }));
       } catch(err) {
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: 'Erro ao confirmar pagamento: ' + err.message }));
+        const failure = publicFailure(err, 'Não foi possível confirmar o pagamento agora.', 500);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -35378,7 +35611,7 @@ const server = http.createServer(async (req, res) => {
   // Rota POST para o Administrador Revogar / Bloquear Assinatura (Exigir Novo Pagamento Imediato)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/revoke-payment') {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
@@ -35459,8 +35692,9 @@ const server = http.createServer(async (req, res) => {
           message: `Acesso de ${targetEmail} bloqueado! O usuário só poderá usar o sistema após confirmar o pagamento.`
         }));
       } catch(err) {
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ success: false, error: 'Erro ao bloquear assinatura: ' + err.message }));
+        const failure = publicFailure(err, 'Não foi possível bloquear a assinatura agora.', 500);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -35469,7 +35703,7 @@ const server = http.createServer(async (req, res) => {
   // Rota POST para Resetar o Período Gratuito de 1 Dia (Restrito ao Administrador)
   if (req.method === 'POST' && parsedUrl.pathname === '/api/subscription/reset-trial') {
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       try {
         const parsed = JSON.parse(body);
@@ -35511,8 +35745,9 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, message: 'Período gratuito de 1 dia concedido pelo Administrador!' }));
       } catch(e) {
-        res.writeHead(500, { ...corsHeaders, 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: e.message }));
+        const failure = publicFailure(e, 'Não foi possível conceder o novo período agora.', 500);
+        res.writeHead(failure.status, { ...corsHeaders, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: failure.error }));
       }
     });
     return;
@@ -35834,7 +36069,7 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
     }
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => body += BackendUtils.decodeBodyChunk(req, chunk));
     req.on('end', async () => {
       let payload;
       try {
@@ -35844,15 +36079,30 @@ const server = http.createServer(async (req, res) => {
         return res.end(JSON.stringify({ success: false, message: 'JSON inválido' }));
       }
 
-      const name = (payload.name || '').trim();
-      const email = (payload.email || '').toLowerCase().trim();
-      const phone = (payload.phone || '').trim();
-      const specialty = (payload.specialty || 'Suporte Geral').trim();
-      const active = payload.active !== false;
+      // Só texto: antes (payload.name || '').trim() lançava TypeError para número/objeto e, sem try/catch neste handler, a requisição ficava pendurada.
+      const asText = (v) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim() : '');
+      const name = asText(payload && payload.name);
+      const email = asText(payload && payload.email).toLowerCase();
+      const phone = asText(payload && payload.phone);
+      const specialty = asText(payload && payload.specialty) || 'Suporte Geral';
+      const active = !payload || payload.active !== false;
 
       if (!name || !email) {
         res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ success: false, message: 'Nome e e-mail são obrigatórios.' }));
+      }
+      // Nome e e-mail aparecem no painel do administrador (HTML): mesmas regras do cadastro de usuários
+      if (!isSafeDisplayName(name)) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'O nome pode conter apenas letras, espaços, apóstrofo, ponto e hífen.' }));
+      }
+      if (!isStrictEmail(email)) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'Informe um e-mail válido.' }));
+      }
+      if ((phone && !/^[0-9()+\-\s]{8,25}$/.test(phone)) || specialty.length > 100 || /[<>"`]/.test(specialty)) {
+        res.writeHead(400, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'Telefone ou especialidade inválidos.' }));
       }
 
       const list = getLocalTecnicos();
@@ -36089,12 +36339,29 @@ const server = http.createServer(async (req, res) => {
   const rootEntryGate = pathname === '/'
     ? `<style>html.root-entry-pending body{visibility:hidden!important;}</style><script>(function(){var root=document.documentElement;root.classList.add('root-entry-pending');try{var active=sessionStorage.getItem('nexus_session_active')==='true';var session=localStorage.getItem('nexus_session')||localStorage.getItem('nexus_cached_user');var v5=localStorage.getItem('nexus_login_v5')==='true';if(!active||!session||!v5){window.location.replace('/login.html');}else{root.classList.remove('root-entry-pending');}}catch(_){window.location.replace('/login.html');}window.addEventListener('pageshow',function(ev){if(!ev.persisted)return;try{if(sessionStorage.getItem('nexus_session_active')!=='true'||!localStorage.getItem('nexus_session')&&!localStorage.getItem('nexus_cached_user')){root.classList.add('nexus-leaving');window.location.replace('/login.html');}}catch(_){}});})();</script>`
     : '';
-  const responseHtml = rootEntryGate ? htmlContent.replace('<head>', '<head>' + rootEntryGate) : htmlContent;
+  // As duas versões da página (com e sem o portão de entrada) são montadas UMA vez como Buffer: assim a compressão fica em cache (compressionCache)
+  const htmlVariant = rootEntryGate ? 'root' : 'plain';
+  let responseHtml = htmlBufferCache.get(htmlVariant);
+  if (!responseHtml) {
+    responseHtml = Buffer.from(rootEntryGate ? htmlContent.replace('<head>', '<head>' + rootEntryGate) : htmlContent, 'utf8');
+    htmlBufferCache.set(htmlVariant, responseHtml);
+  }
   return sendTextResponse(res, 200, responseHtml, 'text/html; charset=utf-8', {
     ...corsHeaders,
     'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
     'Pragma': 'no-cache',
     'Expires': '0'
+  });
+}
+
+const server = http.createServer((req, res) => {
+  handleNexusRequest(req, res).catch((err) => {
+    if (typeof req.__nxFail === 'function') return req.__nxFail(err);
+    console.error('[HTTP] Erro não tratado:', (err && err.stack) || err);
+    try {
+      if (!res.headersSent) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: false, error: 'Erro interno no servidor.' })); }
+      else if (!res.writableEnded) res.end();
+    } catch (e) {}
   });
 });
 
@@ -36116,6 +36383,7 @@ process.on('beforeExit', (code) => {
 });
 
 process.on('exit', (code) => {
+  try { flushFileLogsNow(); } catch (e) {}   // logs em memória ainda não gravados (a gravação é adiada ~0,75 s)
   console.log(`[PROCESSO] Processo Node.js finalizando com código: ${code}`);
 });
 
@@ -36145,6 +36413,7 @@ function gracefulShutdown(signal) {
     }
   } catch(e){}
 
+  try { flushFileLogsNow(); } catch(e){}
   process.exit(0);
 }
 
@@ -36155,6 +36424,8 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 let isCloudSyncRunning = false;
 let gitSyncTimer = null;
 const lastSyncedFinancialTimestamps = {};
+const lastPushedFinancial = new Map();           // e-mail -> { hash, at } do último envio bem-sucedido à nuvem
+const CLOUD_PUSH_REFRESH_MS = 5 * 60 * 1000;     // reenvio total periódico (autocura da nuvem)
 const deletedAccountCleanupDone = new Set();
 
 function scheduleGitSyncDebounced(delay = 60000) {
@@ -36492,7 +36763,7 @@ async function syncWithRenderCloud() {
         }
         return uCopy;
       });
-      saveLocalUsers(usersToSync, true);
+      saveLocalUsers(BackendUtils.mergeUsersMirror(getLocalUsers(), usersToSync), true);
       await fetchCloud('/api/users?overwrite=true', {
         method: 'POST',
         headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
@@ -36501,15 +36772,24 @@ async function syncWithRenderCloud() {
     }
 
     // E) Enviar para o Render dados financeiros cadastrados localmente (com forceEmpty: true para respeitar deleções na nuvem)
+    // Dados que não mudaram desde o último envio BEM-SUCEDIDO não são reenviados a cada 10 s (antes todas as contas, com anexos em base64,
+    // subiam inteiras seis vezes por minuto). O reenvio total a cada 5 min mantém a autocura: se a nuvem reiniciar com o disco zerado (Render),
+    // ela é repovoada em poucos minutos.
     const allLocalFin = getLocalAllFinancialData();
+    const pushNow = Date.now();
     for (const [emKey, dataVal] of Object.entries(allLocalFin)) {
       if (!emKey || !dataVal) continue;
       if (deletedEmailSet.has(String(emKey).toLowerCase().trim())) continue;
-      await fetchCloud('/api/data', {
+      const bodyText = JSON.stringify({ email: emKey, data: dataVal, forceEmpty: true });
+      const bodyHash = crypto.createHash('sha1').update(bodyText).digest('hex');
+      const lastPush = lastPushedFinancial.get(emKey);
+      if (lastPush && lastPush.hash === bodyHash && pushNow - lastPush.at < CLOUD_PUSH_REFRESH_MS) continue;
+      const pushRes = await fetchCloud('/api/data', {
         method: 'POST',
         headers: { 'X-Nexus-Sync-Token': SYNC_TOKEN },
-        body: JSON.stringify({ email: emKey, data: dataVal, forceEmpty: true })
-      }).catch(() => {});
+        body: bodyText
+      }).catch(() => null);
+      if (pushRes && pushRes.ok) lastPushedFinancial.set(emKey, { hash: bodyHash, at: pushNow });
     }
   } catch(syncErr) {
     // Falha silenciosa caso o Render esteja temporariamente reiniciando ou sem internet
