@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node --check server.js && node --check atendimento.js && node --check dashboard-financeiro.js && node --check importacao.js && node --check transacoes.js && node --test atendimento.test.js dashboard-financeiro.test.js importacao.test.js transacoes.test.js",
+    "test": "node --check server.js && node --check atendimento.js && node --check dashboard-financeiro.js && node --check importacao.js && node --check transacoes.js && node --check backend-utils.js && node --test atendimento.test.js dashboard-financeiro.test.js importacao.test.js transacoes.test.js backend-utils.test.js backend.integration.test.js",
     "watch": "node watch-diff.js",
     "watch:diff": "node watch-diff.js",
     "auto:sync": "node auto-sync.js",
