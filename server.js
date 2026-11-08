@@ -14037,6 +14037,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
+<link rel="stylesheet" href="/transacoes.css?v=20261108-2" />
+<script src="/transacoes.js?v=20261108-2"></script>
 <script src="/importacao.js?v=20261107-1"></script>
 </head>
 <body>
@@ -21081,10 +21083,44 @@ function txStatsCardsHTML(list){
   const saldo = receitas - despesas;
   const pendentes = list.filter(t=>t.status==='Pendente').length;
   const qtd = (n, um, varios) => n + ' ' + (n === 1 ? um : varios);
+  // "Vencido" = pendente com data anterior a hoje (regra única no módulo transacoes.js)
+  const vencidos = window.NexusTx ? list.filter(t => NexusTx.statusInfo(t, NexusTx.hojeISO()).chave === 'overdue').length : 0;
   return txKpiHTML('in', 'Receitas', fmt(receitas), qtd(entradas.length, 'lançamento de entrada', 'lançamentos de entrada'), 'up') +
     txKpiHTML('out', 'Despesas', fmt(despesas), qtd(saidas.length, 'lançamento de saída', 'lançamentos de saída'), 'down') +
     txKpiHTML(saldo < 0 ? 'neg' : 'bal', 'Saldo do período', fmt(saldo), 'Receitas − despesas', 'swap') +
-    txKpiHTML('count', 'Lançamentos', String(list.length), pendentes ? qtd(pendentes, 'pendente', 'pendentes') : 'Nenhum pendente', 'list');
+    txKpiHTML('count', 'Lançamentos', String(list.length), pendentes ? qtd(pendentes, 'pendente', 'pendentes') + (vencidos ? ' · ' + qtd(vencidos, 'vencido', 'vencidos') : '') : 'Nenhum pendente', 'list');
+}
+
+/* Tela Transações (módulo transacoes.js): o módulo não conhece variáveis do app, tudo chega por este contexto */
+function txContexto(){
+  return {
+    fmt: fmt,
+    parseVal: parseInputValue,
+    fmtData: formatDateBR,
+    catColor: catColor,
+    contaIcone: txAccountIcon,
+    // Método de pagamento só quando é conhecido (antes toda despesa sem pista era rotulada "Boleto")
+    metodo: function(t){
+      const doCartao = ((t.cat || '').toLowerCase().indexOf('cartão') >= 0) || ((t.acc || '').toLowerCase().indexOf('cartão') >= 0);
+      return t.paymentMethod || detectPaymentMethodFromName(t.desc) || (doCartao ? 'Cartão de Crédito' : '');
+    },
+    acao: function(nome){
+      if (nome === 'new') openModal(null);
+      else if (nome === 'all-dates') window.clearAllTxFilters(true);
+      else if (nome === 'clear') window.clearAllTxFilters(false);
+    }
+  };
+}
+function txExtras(filtrado){
+  const v = function(id){ const e = document.getElementById(id); return e ? e.value : ''; };
+  return {
+    filtrado: !!filtrado,
+    // Quando os filtros ou o período mudam, a lista volta a mostrar só a primeira página
+    assinatura: [v('txSearch'), v('txFiltroTipo'), v('txFiltroCat'), v('txFiltroStatus'), v('txFiltroConta'), currentPeriod.year, currentPeriod.month].join('|'),
+    carregando: (typeof isDataLoading !== 'undefined' && !!isDataLoading),
+    totalGeral: Array.isArray(transactions) ? transactions.length : 0,
+    periodo: periodLabel()
+  };
 }
 function despesasPorCategoria(list=transactions){
   const map = {};
@@ -21317,7 +21353,11 @@ function refreshTxTable(){
   }
   if(fTipo && fTipo.value) list = list.filter(t=>t.type===fTipo.value);
   if(fCat && fCat.value) list = list.filter(t=>t.cat===fCat.value);
-  if(fStatus && fStatus.value) list = list.filter(t=>t.status===fStatus.value);
+  if(fStatus && fStatus.value) {
+    // "Vencido" não é um status gravado: é Pendente com data anterior a hoje
+    if (fStatus.value === 'Vencido') list = list.filter(t => window.NexusTx && NexusTx.statusInfo(t, NexusTx.hojeISO()).chave === 'overdue');
+    else list = list.filter(t=>t.status===fStatus.value);
+  }
   if(fConta && fConta.value) {
     const targetAcc = accounts.find(a => a.name === fConta.value);
     if (targetAcc) {
@@ -21328,8 +21368,12 @@ function refreshTxTable(){
     }
   }
 
-  list.sort((a,b)=>b.date.localeCompare(a.date));
-  tableWrap.innerHTML = transactionsTable(list, true);
+  if (window.NexusTx) {
+    NexusTx.atualizar(tableWrap, list, txExtras(hasFilterActive), txContexto());
+  } else {
+    list.sort((a,b)=>b.date.localeCompare(a.date));
+    tableWrap.innerHTML = transactionsTable(list, true);
+  }
   const statsRow = document.getElementById('txStatsRow'); if(statsRow) statsRow.innerHTML = txStatsCardsHTML(list);
   document.querySelectorAll('[data-edit]').forEach(el => {
     el.onclick = (e) => {
@@ -22933,18 +22977,19 @@ function pageTransacoes(){
     <div class="tx-kpis" id="txStatsRow">\${txStatsCardsHTML(periodTx)}</div>
 
     <div class="table-panel tx-panel">
-      <div class="tx-toolbar">
+      <div class="tx-toolbar"><div class="txp-filters">
         <div class="tx-search">
           \${txIcon('search', 16)}
           <input id="txSearch" type="search" name="tx_filter_query_safe" autocomplete="one-time-code" data-lpignore="true" data-form-type="other" data-1p-ignore="true" spellcheck="false" placeholder="Buscar por descrição ou valor" aria-label="Buscar transações">
         </div>
+        <div class="txp-seg" role="group" aria-label="Filtrar por tipo"><button type="button" data-txtipo="" class="is-on" aria-pressed="true">Todos</button><button type="button" data-txtipo="in" aria-pressed="false">Receitas</button><button type="button" data-txtipo="out" aria-pressed="false">Despesas</button></div>
+        <select id="txFiltroTipo" class="txp-hidden" tabindex="-1" aria-hidden="true"><option value="">Todos os tipos</option><option value="in">Receitas</option><option value="out">Despesas</option></select>
         <select id="txFiltroConta" class="tx-select" aria-label="Filtrar por conta ou cartão"><option value="">Todas as contas</option>\${accOptsHTML}</select>
-        <select id="txFiltroTipo" class="tx-select" aria-label="Filtrar por tipo"><option value="">Todos os tipos</option><option value="in">Receitas</option><option value="out">Despesas</option></select>
         <select id="txFiltroCat" class="tx-select" aria-label="Filtrar por categoria"><option value="">Todas as categorias</option>\${catOptionsHTML(null, null, true)}</select>
-        <select id="txFiltroStatus" class="tx-select" aria-label="Filtrar por status"><option value="">Todos os status</option><option>Pago</option><option>Recebido</option><option>Pendente</option></select>
+        <select id="txFiltroStatus" class="tx-select" aria-label="Filtrar por status"><option value="">Todos os status</option><option>Pago</option><option>Recebido</option><option>Pendente</option><option>Vencido</option></select>
         <button type="button" id="btnResetTxFilters" class="btn-ghost tx-reset" title="Limpar filtros ativos" style="display:none;">\${txIcon('close', 14)}<span>Limpar filtros</span></button>
-      </div>
-      <div id="txTableWrap">\${transactionsTable(periodTx.slice().sort((a,b)=>b.date.localeCompare(a.date)), true)}</div>
+      </div></div>
+      <div id="txTableWrap">\${window.NexusTx ? NexusTx.html(periodTx, txExtras(false), txContexto()) : transactionsTable(periodTx.slice().sort((a,b)=>b.date.localeCompare(a.date)), true)}</div>
     </div>
   </div>\`;
 }
@@ -35990,7 +36035,9 @@ const server = http.createServer(async (req, res) => {
     '/nexus-shell.css': 'text/css',
     '/dashboard-financeiro.css': 'text/css',
     '/dashboard-financeiro.js': 'application/javascript; charset=utf-8',
-    '/importacao.js': 'application/javascript; charset=utf-8'
+    '/importacao.js': 'application/javascript; charset=utf-8',
+    '/transacoes.css': 'text/css',
+    '/transacoes.js': 'application/javascript; charset=utf-8'
   };
   let staticFile = null;
   if (STATIC_EXACT_FILES[pathname]) {

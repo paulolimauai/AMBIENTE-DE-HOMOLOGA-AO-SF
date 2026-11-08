@@ -1,0 +1,172 @@
+/* Transações - tabela, filtro de tipo, rodapé e estados vazios (marcação gerada por transacoes.js).
+   Tudo dentro de @layer com !important: o app tem regras globais antigas de table/th/td/button (inclusive "td:last-child { text-align:right }")
+   e o !important de uma layer vence o !important de regras fora de layer. Só elementos .txp-* são tocados; o painel, a barra de ferramentas,
+   os selects e os KPIs continuam sendo os de frontend-polish.css (layer nx-transactions), de onde vêm os tokens --tx-* e --nx-*.
+   A tabela não tem altura própria: o painel cresce e encolhe com a quantidade de lançamentos. */
+@layer nx-txp {
+
+/* ---------- Tabela ---------- */
+.txp-wrap { display: block !important; }
+.txp-scroll { overflow-x: auto !important; border: 1px solid var(--nx-line, rgba(148, 163, 184, .17)) !important; border-radius: 14px !important; background: rgba(255, 255, 255, .012) !important; }
+.txp-table { width: 100% !important; min-width: 0 !important; border-collapse: separate !important; border-spacing: 0 !important; font-size: 13.5px !important; }  /* min-width: 0 anula "#pageContent table { min-width: 620px }" do celular */
+.txp-sr, .txp-table caption { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; border: 0 !important; }
+
+.txp-table thead th { padding: 0 !important; text-align: left !important; font-size: 11.5px !important; font-weight: 650 !important; letter-spacing: .06em !important; text-transform: uppercase !important; white-space: nowrap !important; color: var(--nx-muted, #8ea3bb) !important; background: var(--tx-thead, rgba(255, 255, 255, .04)) !important; border: 0 !important; border-bottom: 1px solid var(--nx-line, rgba(148, 163, 184, .17)) !important; }
+.txp-table thead th.txp-c-val { text-align: right !important; }
+.txp-table thead th.txp-c-act { text-align: center !important; }
+.txp-th-plain { display: block !important; padding: 12px 16px !important; }
+.txp-sort { appearance: none !important; -webkit-appearance: none !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; width: 100% !important; min-height: 0 !important; margin: 0 !important; padding: 12px 16px !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; color: inherit !important; font: inherit !important; letter-spacing: inherit !important; text-transform: inherit !important; text-align: inherit !important; cursor: pointer !important; transition: color .12s ease !important; }
+.txp-c-val .txp-sort { justify-content: flex-end !important; }
+.txp-sort .txp-ic { flex: 0 0 auto !important; opacity: .38 !important; transition: opacity .12s ease !important; }
+.txp-sort:hover { color: var(--nx-text, #edf5ff) !important; }
+.txp-sort:hover .txp-ic { opacity: .85 !important; }
+.txp-sort.is-on { color: var(--nx-text, #edf5ff) !important; }
+.txp-sort.is-on .txp-ic { opacity: 1 !important; color: rgb(var(--nx-o1, 250, 189, 46)) !important; }
+.txp-sort:focus-visible, .txp-more:focus-visible, .txp-export:focus-visible, .txp-status:focus-visible, .txp-act:focus-visible, .txp-seg button:focus-visible { outline: 2px solid rgba(var(--nx-o1, 250, 189, 46), .9) !important; outline-offset: -2px !important; }
+.txp-table tbody tr:focus { outline: none !important; }
+
+.txp-table tbody td { padding: 13px 16px !important; vertical-align: middle !important; text-align: left !important; font-size: 13.5px !important; font-weight: 400 !important; white-space: nowrap !important; color: var(--nx-text, #edf5ff) !important; background: transparent !important; border: 0 !important; border-top: 1px solid rgba(148, 163, 184, .08) !important; transition: background-color .12s ease !important; }
+.txp-table tbody tr:first-child td { border-top: 0 !important; }
+.txp-table tbody tr.txp-day-start:not(:first-child) td { border-top-color: rgba(148, 163, 184, .24) !important; }
+.txp-table tbody tr:hover td { background: var(--tx-row-hover, rgba(255, 255, 255, .045)) !important; }
+.txp-table tbody tr.is-overdue td:first-child { box-shadow: inset 3px 0 0 var(--tx-out, #fb7185) !important; }
+
+/* Colunas: só a descrição se estica; as outras ficam do tamanho do conteúdo (sem "buracos" entre colunas) */
+.txp-table .txp-c-date { width: 1% !important; min-width: 128px !important; }
+.txp-d { color: var(--nx-text, #edf5ff) !important; font-weight: 500 !important; font-variant-numeric: tabular-nums !important; }
+.txp-w { display: block !important; margin-top: 2px !important; font-size: 11.5px !important; font-weight: 500 !important; letter-spacing: .02em !important; text-transform: capitalize !important; color: var(--nx-faint, #60758e) !important; }
+.txp-w b { font-weight: 650 !important; text-transform: none !important; color: rgb(var(--nx-o1, 250, 189, 46)) !important; }
+.txp-table .txp-c-desc { width: 100% !important; min-width: 220px !important; max-width: 0 !important; }
+.txp-desc { display: inline-block !important; max-width: min(100%, 46ch) !important; overflow: hidden !important; text-overflow: ellipsis !important; vertical-align: middle !important; font-weight: 600 !important; color: var(--nx-text, #edf5ff) !important; }
+.txp-chip { display: inline-block !important; margin-left: 8px !important; padding: 2px 8px !important; border: 1px solid var(--nx-line, rgba(148, 163, 184, .17)) !important; border-radius: 6px !important; font-size: 11px !important; font-weight: 600 !important; line-height: 1.4 !important; vertical-align: middle !important; color: var(--nx-muted, #8ea3bb) !important; }
+.txp-cat { display: inline-flex !important; align-items: center !important; gap: 8px !important; font-weight: 500 !important; }
+.txp-cat i { flex: 0 0 auto !important; width: 8px !important; height: 8px !important; border-radius: 50% !important; }
+.txp-acc { display: inline-flex !important; align-items: center !important; gap: 8px !important; color: var(--nx-muted, #8ea3bb) !important; }
+.txp-acc span { color: inherit !important; }
+.txp-table tbody td.txp-c-val { text-align: right !important; font-size: 14px !important; font-weight: 700 !important; font-variant-numeric: tabular-nums !important; }
+.txp-in { color: var(--tx-in, #34d399) !important; }
+.txp-out { color: var(--tx-out, #fb7185) !important; }
+.txp-table tbody td.txp-c-act, .txp-table thead th.txp-c-act { width: 1% !important; text-align: center !important; }
+
+/* Status: pílula clicável (alterna Pendente <-> Pago/Recebido). "Vencido" é pendente com data passada. */
+.txp-status { display: inline-flex !important; align-items: center !important; gap: 7px !important; height: 26px !important; min-height: 0 !important; margin: 0 !important; padding: 0 11px !important; border: 1px solid transparent !important; border-radius: 999px !important; font-size: 12px !important; font-weight: 600 !important; line-height: 1 !important; white-space: nowrap !important; cursor: pointer !important; box-shadow: none !important; transition: filter .12s ease !important; }
+.txp-status i { flex: 0 0 auto !important; width: 6px !important; height: 6px !important; border-radius: 50% !important; background: currentColor !important; }
+.txp-status:hover { filter: brightness(1.14) !important; }
+.txp-status.is-done { color: var(--tx-in, #34d399) !important; border-color: rgba(52, 211, 153, .4) !important; background: rgba(52, 211, 153, .1) !important; }
+.txp-status.is-pending { color: var(--tx-warn, #f3bf64) !important; border-color: rgba(243, 191, 100, .4) !important; background: rgba(243, 191, 100, .1) !important; }
+.txp-status.is-overdue { color: var(--tx-out, #fb7185) !important; border-color: rgba(251, 113, 133, .45) !important; background: rgba(251, 113, 133, .12) !important; }
+
+/* Ações da linha */
+.txp-acts { display: flex !important; align-items: center !important; justify-content: center !important; gap: 4px !important; }
+.txp-act { display: inline-grid !important; place-items: center !important; width: 32px !important; height: 32px !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important; border: 1px solid transparent !important; border-radius: 9px !important; background: transparent !important; box-shadow: none !important; color: var(--nx-muted, #8ea3bb) !important; cursor: pointer !important; transition: color .12s ease, background-color .12s ease, border-color .12s ease !important; }
+.txp-act:hover { color: var(--nx-text, #edf5ff) !important; border-color: var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; background: var(--tx-control-hover, rgba(255, 255, 255, .09)) !important; }
+.txp-act-del:hover { color: var(--tx-out, #fb7185) !important; border-color: rgba(251, 113, 133, .4) !important; background: rgba(251, 113, 133, .1) !important; }
+
+/* Largura do painel (e não da janela): o menu lateral aberto ou recolhido muda o espaço da tabela.
+   >= 1040px tabela completa | 800-1039px a conta/cartão desce para baixo da categoria | < 800px cada lançamento vira um cartão.
+   Sem suporte a container queries o navegador mostra a tabela completa com rolagem horizontal (nada some). */
+.txp-wrap { container-type: inline-size !important; container-name: txp !important; }
+.txp-sub { display: none !important; }
+
+/* Com a tabela em formato de tabela, a data só aparece na primeira linha de cada dia (as demais ficam só para leitores de tela) */
+@container txp (min-width: 800px) {
+  .txp-table tbody tr.txp-cont .txp-c-date > * { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; }
+}
+
+/* Painel médio (notebook): menos respiro lateral e a conta/cartão sob a categoria */
+@container txp (max-width: 1039px) {
+  .txp-table .txp-c-acc { display: none !important; }
+  .txp-sub { display: flex !important; align-items: center !important; gap: 6px !important; margin-top: 3px !important; font-size: 12px !important; font-weight: 500 !important; color: var(--nx-muted, #8ea3bb) !important; }
+  .txp-sub span { color: inherit !important; }
+  .txp-sort, .txp-th-plain { padding-left: 12px !important; padding-right: 12px !important; }
+  .txp-table tbody td { padding-left: 12px !important; padding-right: 12px !important; }
+  .txp-table .txp-c-date { min-width: 112px !important; }
+  .txp-table .txp-c-desc { min-width: 150px !important; }
+}
+
+/* ---------- Rodapé da lista ---------- */
+.txp-foot { display: flex !important; flex-wrap: wrap !important; align-items: center !important; gap: 8px 12px !important; padding: 14px 2px 0 !important; }
+.txp-foot-info { margin: 0 !important; font-size: 12.5px !important; color: var(--nx-muted, #8ea3bb) !important; }
+.txp-foot-info strong { font-weight: 650 !important; color: var(--nx-text, #edf5ff) !important; }
+.txp-foot-chip { display: inline-flex !important; align-items: center !important; height: 22px !important; padding: 0 9px !important; border: 1px solid rgba(243, 191, 100, .38) !important; border-radius: 999px !important; background: rgba(243, 191, 100, .1) !important; font-size: 11.5px !important; font-weight: 600 !important; color: var(--tx-warn, #f3bf64) !important; }
+.txp-foot-chip.is-overdue { border-color: rgba(251, 113, 133, .42) !important; background: rgba(251, 113, 133, .11) !important; color: var(--tx-out, #fb7185) !important; }
+.txp-foot-gap { flex: 1 1 auto !important; }
+.txp-more, .txp-export { display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 36px !important; min-height: 0 !important; margin: 0 !important; padding: 0 15px !important; border: 1px solid var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-radius: 10px !important; background: var(--tx-control, rgba(255, 255, 255, .05)) !important; box-shadow: none !important; color: var(--nx-text, #edf5ff) !important; font-size: 12.5px !important; font-weight: 600 !important; line-height: 1 !important; white-space: nowrap !important; cursor: pointer !important; transform: none !important; transition: background-color .12s ease, border-color .12s ease !important; }
+.txp-more:hover, .txp-export:hover { background: var(--tx-control-hover, rgba(255, 255, 255, .09)) !important; transform: none !important; }
+.txp-more { border-color: rgba(var(--nx-o1, 250, 189, 46), .5) !important; }
+
+/* ---------- Barra de filtros: grade própria (as regras flex antigas da .tx-toolbar não deixavam encaixar o filtro de tipo) ---------- */
+.tx-toolbar { container-type: inline-size !important; container-name: txbar !important; }
+.txp-filters { flex: 1 1 100% !important; display: grid !important; align-items: center !important; gap: 10px !important; min-width: 0 !important; grid-template-columns: minmax(190px, 1.25fr) auto repeat(3, minmax(140px, 1fr)) auto !important; grid-template-areas: "search seg conta cat status reset" !important; }
+.txp-filters .tx-search { grid-area: search !important; min-width: 0 !important; }
+.txp-filters .txp-seg { grid-area: seg !important; }
+.txp-filters #txFiltroConta { grid-area: conta !important; }
+.txp-filters #txFiltroCat { grid-area: cat !important; }
+.txp-filters #txFiltroStatus { grid-area: status !important; }
+.txp-filters #btnResetTxFilters { grid-area: reset !important; }
+.txp-filters .tx-select { min-width: 0 !important; width: 100% !important; }
+@container txbar (max-width: 1119px) {
+  .txp-filters { grid-template-columns: repeat(3, minmax(0, 1fr)) auto !important; grid-template-areas: "search search search seg" "conta cat status reset" !important; }
+}
+@container txbar (max-width: 619px) {
+  .txp-filters { grid-template-columns: minmax(0, 1fr) !important; grid-template-areas: "search" "seg" "conta" "cat" "status" "reset" !important; }
+}
+
+/* ---------- Filtro de tipo (Todos / Receitas / Despesas) ---------- */
+.txp-seg { display: inline-flex !important; flex: 0 0 auto !important; align-items: center !important; gap: 2px !important; height: 42px !important; padding: 3px !important; border: 1px solid var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-radius: 11px !important; background: var(--tx-control, rgba(255, 255, 255, .05)) !important; }
+.txp-seg button { height: 34px !important; min-height: 0 !important; margin: 0 !important; padding: 0 14px !important; border: 0 !important; border-radius: 8px !important; background: transparent !important; box-shadow: none !important; color: var(--nx-muted, #8ea3bb) !important; font-size: 13px !important; font-weight: 600 !important; line-height: 1 !important; white-space: nowrap !important; cursor: pointer !important; transform: none !important; transition: background-color .12s ease, color .12s ease !important; }
+.txp-seg button:hover { color: var(--nx-text, #edf5ff) !important; background: var(--tx-control-hover, rgba(255, 255, 255, .09)) !important; }
+.txp-seg button.is-on { color: var(--nx-text, #edf5ff) !important; background: rgba(var(--nx-o1, 250, 189, 46), .2) !important; box-shadow: inset 0 0 0 1px rgba(var(--nx-o1, 250, 189, 46), .5) !important; }
+.txp-seg button.is-on[data-txtipo="in"] { color: var(--tx-in, #34d399) !important; background: rgba(52, 211, 153, .13) !important; box-shadow: inset 0 0 0 1px rgba(52, 211, 153, .42) !important; }
+.txp-seg button.is-on[data-txtipo="out"] { color: var(--tx-out, #fb7185) !important; background: rgba(251, 113, 133, .13) !important; box-shadow: inset 0 0 0 1px rgba(251, 113, 133, .42) !important; }
+/* O <select id="txFiltroTipo"> continua no DOM (o app lê o valor dele), só não aparece */
+.txp-hidden { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; opacity: 0 !important; pointer-events: none !important; border: 0 !important; }
+
+/* ---------- Estados vazios (do tamanho do conteúdo, sem caixa gigante) ---------- */
+.txp-empty { display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; padding: 34px 22px 36px !important; border: 1px dashed var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-radius: 14px !important; background: transparent !important; }
+.txp-empty-ic { display: grid !important; place-items: center !important; width: 52px !important; height: 52px !important; margin: 0 0 14px !important; border: 1px solid var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-radius: 15px !important; color: var(--nx-green, #5ee0ae) !important; background: rgba(94, 224, 174, .1) !important; }
+.txp-empty h3 { margin: 0 0 6px !important; font-size: 16px !important; font-weight: 700 !important; letter-spacing: -.01em !important; color: var(--nx-text, #edf5ff) !important; }
+.txp-empty p { max-width: 460px !important; margin: 0 0 18px !important; font-size: 13.5px !important; font-weight: 400 !important; line-height: 1.55 !important; color: var(--nx-muted, #8ea3bb) !important; }
+.txp-empty p strong { font-weight: 600 !important; color: var(--nx-text, #edf5ff) !important; }
+.txp-empty-acts { display: flex !important; flex-wrap: wrap !important; align-items: center !important; justify-content: center !important; gap: 10px !important; }
+.txp-spinner { width: 26px !important; height: 26px !important; margin: 0 0 14px !important; border: 3px solid var(--nx-line-strong, rgba(148, 163, 184, .28)) !important; border-top-color: var(--nx-green, #5ee0ae) !important; border-radius: 50% !important; animation: tx-spin .8s linear infinite !important; }
+
+/* ---------- Painel estreito (celular e tablet em pé): cada lançamento vira um cartão ---------- */
+@container txp (max-width: 799px) {
+  .txp-scroll { overflow: visible !important; border: 0 !important; background: transparent !important; }
+  .txp-table, .txp-table tbody { display: block !important; }
+  .txp-table thead { display: none !important; }
+  .txp-table tbody tr { display: grid !important; grid-template-columns: minmax(0, 1fr) auto !important; grid-template-areas: "date status" "desc val" "cat act" "acc act" !important; gap: 4px 12px !important; margin: 0 0 10px !important; padding: 12px 14px !important; border: 1px solid var(--tx-divider, rgba(148, 163, 184, .14)) !important; border-radius: 14px !important; background: rgba(255, 255, 255, .02) !important; }
+  .txp-table tbody tr.is-overdue { border-color: rgba(251, 113, 133, .4) !important; }
+  .txp-table tbody tr.is-overdue td:first-child { box-shadow: none !important; }
+  /* [class*] sobe a especificidade para vencer as larguras mínimas/máximas das colunas da tabela */
+  .txp-table tbody td[class*="txp-c-"] { display: block !important; min-width: 0 !important; width: auto !important; max-width: none !important; padding: 0 !important; border: 0 !important; background: transparent !important; white-space: normal !important; }
+  .txp-table tbody tr:hover td { background: transparent !important; }
+  .txp-table tbody td.txp-c-date { grid-area: date !important; align-self: center !important; }
+  .txp-c-date .txp-d, .txp-c-date .txp-w { display: inline !important; }
+  .txp-c-date .txp-w { margin: 0 0 0 8px !important; }
+  .txp-table tbody td.txp-c-status { grid-area: status !important; justify-self: end !important; }
+  .txp-table tbody td.txp-c-desc { grid-area: desc !important; font-size: 15px !important; }
+  .txp-desc { display: inline !important; max-width: 100% !important; white-space: normal !important; overflow-wrap: anywhere !important; }
+  .txp-status { height: 30px !important; }
+  .txp-act { width: 40px !important; height: 40px !important; }
+  .txp-table tbody td.txp-c-val { grid-area: val !important; align-self: center !important; font-size: 15px !important; }
+  .txp-table tbody td.txp-c-cat { grid-area: cat !important; font-size: 13px !important; }
+  .txp-sub { display: none !important; }
+  .txp-table tbody td.txp-c-acc { grid-area: acc !important; font-size: 12.5px !important; }
+  .txp-table tbody td.txp-c-act { grid-area: act !important; align-self: center !important; }
+  .txp-foot { padding: 4px 2px 0 !important; }
+  .txp-foot-gap { flex-basis: 100% !important; height: 0 !important; }
+  .txp-more, .txp-export { flex: 1 1 calc(50% - 6px) !important; }
+}
+/* Filtro de tipo ocupa a linha toda no celular (mesmo ponto de quebra da barra de ferramentas) */
+@media (max-width: 760px) {
+  .txp-seg { width: 100% !important; }
+  .txp-seg button { flex: 1 1 0 !important; padding: 0 8px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .txp-table tbody td, .txp-status, .txp-act, .txp-sort, .txp-seg button { transition: none !important; }
+  .txp-spinner { animation-duration: 2s !important; }
+}
+}
