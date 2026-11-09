@@ -14184,7 +14184,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261108-6" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261109-1" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
@@ -17448,7 +17448,7 @@ window.handleMandatoryPasswordSubmit = async function(e) {
       if (typeof window.initTrialAndSubscription === 'function') { window.initTrialAndSubscription(); }
       const uName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
       const greet = getGreetingTime().text;
-      showExecutiveWelcomeToast('Login Efetuado com Sucesso', greet + ', <strong>' + uName + '</strong>! Senha definitiva configurada e sessão autenticada com segurança.');
+      showExecutiveWelcomeToast('Sessão autenticada', greet + ', <strong>' + uName + '</strong>! Senha definitiva configurada. Seu ambiente financeiro está sincronizado e protegido.');
     }, 150);
 
   } catch(err) {
@@ -17661,7 +17661,7 @@ window.handleLoginSubmit = async function(e) {
       render();
       const uName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
       const greet = getGreetingTime().text;
-      showExecutiveWelcomeToast('Login Efetuado com Sucesso', greet + ', <strong>' + uName + '</strong>! Seu login foi efetuado com sucesso e seu ambiente financeiro está sincronizado e protegido.');
+      showExecutiveWelcomeToast('Sessão autenticada', greet + ', <strong>' + uName + '</strong>! Seu ambiente financeiro está sincronizado e protegido.');
     }, 40);
     return;
   }
@@ -17812,64 +17812,34 @@ function showExecutiveWelcomeToast(msg, subMsg) {
   toastEl.className = 'sg sg-toast sg-toast-centered';
   toastEl.setAttribute('data-kind', 'login');
 
+  // Versão compacta: situação, título, uma frase e três selos. O nome só aparece na frase de boas-vindas.
   var userName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
-  var userEmail = escapeToastHtml(currentUser && currentUser.email ? currentUser.email : 'Sessão autenticada');
   var userRole = currentUser ? (currentUser.role || 'Usuário') : 'Usuário';
   var isMasterAdmin = userRole === 'Administrador';
-  var roleDisplay = isMasterAdmin ? 'Administrador Master' : 'Titular • Conta Verificada';
   var badgeHtml = isMasterAdmin
     ? sgGlyph('star') + '<span>Administrador Master</span>'
-    : sgGlyph('user') + '<span>Conta Verificada</span>';
+    : sgGlyph('user') + '<span>Conta verificada</span>';
   var nowTime = sgNowLabel();
-  var nowDate = sgDateLabel();
 
   toastEl.innerHTML =
     sgFx() +
     '<div class="sg-in">' +
-      '<div class="sg-top">' +
-        '<div class="sg-meta">' +
-          '<span class="sg-status-pill"><span class="sg-dot"></span><span>Login Efetuado com Sucesso</span></span>' +
-          '<span class="sg-badge">' + badgeHtml + '</span>' +
-        '</div>' +
-        '<button type="button" class="sg-x" title="Fechar" aria-label="Fechar confirmação de login">' + sgGlyph('x') + '</button>' +
-      '</div>' +
+      '<button type="button" class="sg-x" title="Fechar" aria-label="Fechar confirmação de login">' + sgGlyph('x') + '</button>' +
       '<div class="sg-hero-row">' +
         '<div class="sg-plate">' + SG_SVG.shield + '</div>' +
         '<div class="sg-main">' +
-          '<span class="sg-kicker">Autenticação Validada • Nexus Financeiro Hub</span>' +
-          '<h4 class="sg-title">' + (msg || 'Login Efetuado com Sucesso') + '</h4>' +
-          '<p class="sg-text">' + (subMsg || ('Bem-vindo(a), <strong>' + userName + '</strong>! Seu login foi efetuado com sucesso e seu ambiente financeiro está sincronizado e protegido.')) + '</p>' +
+          '<div class="sg-meta">' +
+            '<span class="sg-status-pill">' + badgeHtml + '</span>' +
+            '<span class="sg-state"><span class="sg-dot"></span><span>Sessão ativa</span></span>' +
+          '</div>' +
+          '<h4 class="sg-title">' + (msg || 'Sessão autenticada') + '</h4>' +
+          '<p class="sg-text">' + (subMsg || ('Bem-vindo(a), <strong>' + userName + '</strong>! Seu ambiente financeiro está sincronizado e protegido.')) + '</p>' +
         '</div>' +
       '</div>' +
-      '<div class="sg-auth-grid">' +
-        '<div class="sg-auth-cell">' +
-          '<span class="sg-auth-lbl">' + sgGlyph('user') + '<span>Titular Autenticado</span></span>' +
-          '<strong class="sg-auth-val">' + userName + '</strong>' +
-          '<small class="sg-auth-sub">' + userEmail + '</small>' +
-        '</div>' +
-        '<div class="sg-auth-cell">' +
-          '<span class="sg-auth-lbl">' + sgGlyph('check') + '<span>Status do Login</span></span>' +
-          '<strong class="sg-auth-val sg-auth-val-ok">✓ Login Efetuado com Sucesso</strong>' +
-          '<small class="sg-auth-sub">Credenciais validadas no servidor</small>' +
-        '</div>' +
-        '<div class="sg-auth-cell">' +
-          '<span class="sg-auth-lbl">' + sgGlyph('clock') + '<span>Registro de Acesso</span></span>' +
-          '<strong class="sg-auth-val">' + nowDate + ' às ' + nowTime + '</strong>' +
-          '<small class="sg-auth-sub">Horário Oficial de Brasília (BRT)</small>' +
-        '</div>' +
-        '<div class="sg-auth-cell">' +
-          '<span class="sg-auth-lbl">' + sgGlyph('lock') + '<span>Nível &amp; Segurança</span></span>' +
-          '<strong class="sg-auth-val">' + escapeToastHtml(roleDisplay) + '</strong>' +
-          '<small class="sg-auth-sub">Criptografia TLS • Dados Sincronizados</small>' +
-        '</div>' +
-      '</div>' +
-      '<div class="sg-footer-row">' +
-        '<div class="sg-chips">' +
-          sgChip('lock', 'Conexão segura') +
-          sgChip('sync', 'Dados sincronizados') +
-          sgChip('clock', 'Acesso às ' + nowTime) +
-        '</div>' +
-        '<button type="button" class="sg-enter-btn">' + sgGlyph('check') + '<span>Acessar Painel</span></button>' +
+      '<div class="sg-chips">' +
+        sgChip('lock', 'Conexão segura') +
+        sgChip('sync', 'Dados sincronizados') +
+        sgChip('clock', 'Acesso às ' + nowTime) +
       '</div>' +
     '</div>' +
     '<div class="sg-bar"><i></i></div>';
@@ -17878,8 +17848,6 @@ function showExecutiveWelcomeToast(msg, subMsg) {
 
   var closeBtn = toastEl.querySelector('.sg-x');
   if (closeBtn) closeBtn.addEventListener('click', hideExecutiveWelcomeToast);
-  var enterBtn = toastEl.querySelector('.sg-enter-btn');
-  if (enterBtn) enterBtn.addEventListener('click', hideExecutiveWelcomeToast);
 
   // Pausa a contagem (e a barra de tempo) enquanto o mouse estiver sobre o aviso
   toastEl.onmouseenter = function () {
@@ -17922,17 +17890,8 @@ function showSessionFarewell(kind, userOrName, savePromise, onDone) {
   if (old) old.remove();
   var timeout = kind === 'timeout';
   var rawName = typeof userOrName === 'object' && userOrName ? userOrName.name : userOrName;
-  var rawEmail = typeof userOrName === 'object' && userOrName && userOrName.email ? userOrName.email : (currentUser && currentUser.email ? currentUser.email : 'Sessão desconectada');
-  var rawRole = typeof userOrName === 'object' && userOrName && userOrName.role ? userOrName.role : (currentUser && currentUser.role ? currentUser.role : 'Usuário');
-  var fullName = escapeToastHtml(formatToastDisplayName(rawName));
   var first = formatToastDisplayName(rawName).split(' ')[0];
-  var userEmail = escapeToastHtml(rawEmail);
-  var isMasterAdmin = rawRole === 'Administrador';
-  var badgeHtml = isMasterAdmin
-    ? sgGlyph('star') + '<span>Administrador Master</span>'
-    : sgGlyph('user') + '<span>Conta Verificada</span>';
   var nowTime = sgNowLabel();
-  var nowDate = sgDateLabel();
 
   var stage = document.createElement('div');
   stage.id = 'nexusSessionFarewell';
@@ -17942,62 +17901,33 @@ function showSessionFarewell(kind, userOrName, savePromise, onDone) {
   stage.setAttribute('aria-live', 'assertive');
   stage.setAttribute('aria-label', timeout ? 'Sessão encerrada por inatividade' : 'Sessão encerrada com sucesso');
 
-  var statusLabel = timeout ? 'Sessão Expirada por Inatividade' : 'Logout Efetuado com Sucesso';
-  var kickerLabel = timeout ? 'Proteção Automática • Nexus Financeiro Hub' : 'Desconexão Segura • Nexus Financeiro Hub';
-  var title = timeout ? 'Sessão Encerrada por Inatividade' : 'Até logo, ' + escapeToastHtml(first) + '!';
+  // Versão compacta: situação, título, uma frase e três selos (o estado dos dados é o primeiro selo e muda para "Dados salvos").
+  var statusLabel = timeout ? 'Sessão expirada' : 'Sessão encerrada';
+  var title = timeout ? 'Sessão encerrada por inatividade' : 'Até logo, ' + escapeToastHtml(first) + '!';
   var text = timeout
-    ? 'Por segurança, desconectamos a conta de <strong>' + fullName + '</strong> após período sem atividade. Seus dados foram preservados e estão protegidos.'
-    : 'A sessão de <strong>' + fullName + '</strong> foi encerrada com segurança. Todos os seus lançamentos e preferências visuais foram preservados.';
+    ? 'Por segurança, desconectamos sua conta após um período sem atividade. Seus dados foram preservados e estão protegidos.'
+    : 'Sua sessão foi encerrada com segurança e seus dados foram preservados.';
 
   stage.innerHTML =
     '<div class="bg" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i><i class="beam b1"></i><i class="beam b2"></i><i class="flute"></i><i class="grid"></i><i class="grain"></i><i class="vig"></i></div>' +
     '<div class="sg sg-plaque" data-kind="' + (timeout ? 'timeout' : 'logout') + '">' +
       sgFx() +
       '<div class="sg-in">' +
-        '<div class="sg-top">' +
-          '<div class="sg-meta">' +
-            '<span class="sg-status-pill"><span class="sg-dot"></span><span>' + statusLabel + '</span></span>' +
-            '<span class="sg-badge">' + badgeHtml + '</span>' +
-          '</div>' +
-          '<button type="button" class="sg-x" title="Ir para o login" aria-label="Fechar e ir para o login">' + sgGlyph('x') + '</button>' +
-        '</div>' +
+        '<button type="button" class="sg-x" title="Ir para o login" aria-label="Fechar e ir para o login">' + sgGlyph('x') + '</button>' +
         '<div class="sg-hero-row">' +
           '<div class="sg-plate">' + (timeout ? SG_SVG.clock : SG_SVG.lock) + '</div>' +
           '<div class="sg-main">' +
-            '<span class="sg-kicker">' + kickerLabel + '</span>' +
+            '<div class="sg-meta">' +
+              '<span class="sg-status-pill">' + sgGlyph(timeout ? 'clock' : 'lock') + '<span>' + statusLabel + '</span></span>' +
+            '</div>' +
             '<h4 class="sg-title">' + title + '</h4>' +
             '<p class="sg-text">' + text + '</p>' +
           '</div>' +
         '</div>' +
-        '<div class="sg-auth-grid">' +
-          '<div class="sg-auth-cell">' +
-            '<span class="sg-auth-lbl">' + sgGlyph('user') + '<span>Titular da Sessão</span></span>' +
-            '<strong class="sg-auth-val">' + fullName + '</strong>' +
-            '<small class="sg-auth-sub">' + userEmail + '</small>' +
-          '</div>' +
-          '<div class="sg-auth-cell">' +
-            '<span class="sg-auth-lbl">' + sgGlyph('save') + '<span>Sincronia de Dados</span></span>' +
-            '<strong class="sg-auth-val sg-auth-val-ok" id="sgSaveVal">' + (savePromise ? 'Sincronizando dados...' : '✓ Dados Salvos com Sucesso') + '</strong>' +
-            '<small class="sg-auth-sub">Backup criptografado concluído</small>' +
-          '</div>' +
-          '<div class="sg-auth-cell">' +
-            '<span class="sg-auth-lbl">' + sgGlyph('clock') + '<span>Horário do Logout</span></span>' +
-            '<strong class="sg-auth-val">' + nowDate + ' às ' + nowTime + '</strong>' +
-            '<small class="sg-auth-sub">Horário Oficial de Brasília (BRT)</small>' +
-          '</div>' +
-          '<div class="sg-auth-cell">' +
-            '<span class="sg-auth-lbl">' + sgGlyph('lock') + '<span>Segurança &amp; Tema</span></span>' +
-            '<strong class="sg-auth-val">Credenciais Protegidas</strong>' +
-            '<small class="sg-auth-sub">Token encerrado • Cor preservada</small>' +
-          '</div>' +
-        '</div>' +
-        '<div class="sg-footer-row">' +
-          '<div class="sg-chips">' +
-            (savePromise ? sgChip('save', 'Salvando dados...', 'sgSaveChip') : sgChip('check', 'Dados salvos', 'sgSaveChip')) +
-            sgChip('lock', timeout ? 'Conta protegida' : 'Sessão encerrada') +
-            sgChip('clock', 'Saída às ' + nowTime) +
-          '</div>' +
-          '<button type="button" class="sg-enter-btn sg-go">' + sgGlyph('out') + '<span>Voltar ao Login</span></button>' +
+        '<div class="sg-chips">' +
+          (savePromise ? sgChip('save', 'Salvando dados...', 'sgSaveChip') : sgChip('check', 'Dados salvos', 'sgSaveChip')) +
+          sgChip('lock', 'Conta protegida') +
+          sgChip('clock', 'Saída às ' + nowTime) +
         '</div>' +
       '</div>' +
       '<div class="sg-bar"><i></i></div>' +
@@ -18022,7 +17952,6 @@ function showSessionFarewell(kind, userOrName, savePromise, onDone) {
     if (ev.key === 'Escape' || ev.key === 'Enter') { ev.preventDefault(); finish(); }
   }
   document.addEventListener('keydown', onKey, true);
-  stage.querySelector('.sg-go').addEventListener('click', finish);
   var closeBtn = stage.querySelector('.sg-x');
   if (closeBtn) closeBtn.addEventListener('click', finish);
   stage.addEventListener('mousedown', function (ev) { if (ev.target === stage || ev.target.closest('.bg')) finish(); });
@@ -18031,8 +17960,6 @@ function showSessionFarewell(kind, userOrName, savePromise, onDone) {
     Promise.resolve(savePromise).then(function () {
       var chip = document.getElementById('sgSaveChip');
       if (chip) chip.innerHTML = sgGlyph('check') + '<span>Dados salvos</span>';
-      var valEl = document.getElementById('sgSaveVal');
-      if (valEl) valEl.textContent = '✓ Dados Salvos com Sucesso';
       saveDone = true;
       tryFinish();
     });
@@ -18044,8 +17971,8 @@ function showSessionFarewell(kind, userOrName, savePromise, onDone) {
     requestAnimationFrame(function () {
       stage.classList.add('show');
       plaque.classList.add('show');
-      var go = stage.querySelector('.sg-go');
-      if (go) { try { go.focus(); } catch (e) {} }
+      plaque.setAttribute('tabindex', '-1');
+      try { plaque.focus({ preventScroll: true }); } catch (e) {}
     });
   });
 }
@@ -31629,7 +31556,7 @@ window.applyPostLoginBg = function(theme) {
         setTimeout(() => {
           const uName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
           const greet = getGreetingTime().text;
-          showExecutiveWelcomeToast('Login Efetuado com Sucesso', greet + ', <strong>' + uName + '</strong>! Seu login foi efetuado com sucesso e seu ambiente financeiro está sincronizado e protegido.');
+          showExecutiveWelcomeToast('Sessão autenticada', greet + ', <strong>' + uName + '</strong>! Seu ambiente financeiro está sincronizado e protegido.');
         }, 350);
       }
     } catch(e){}
