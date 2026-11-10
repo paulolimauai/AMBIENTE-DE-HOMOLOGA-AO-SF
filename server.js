@@ -14184,7 +14184,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261109-1" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261109-2" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
@@ -17967,14 +17967,12 @@ function showSessionFarewell(kind, userOrName, savePromise, onDone) {
   }
   setTimeout(function () { minDone = true; tryFinish(); }, FAREWELL_MS);
 
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () {
-      stage.classList.add('show');
-      plaque.classList.add('show');
-      plaque.setAttribute('tabindex', '-1');
-      try { plaque.focus({ preventScroll: true }); } catch (e) {}
-    });
-  });
+  // Aparece NA HORA (reflow garante o estado inicial da animação): esperar dois quadros deixava o login embutido antigo à mostra durante o logout
+  void stage.offsetWidth;
+  stage.classList.add('show');
+  plaque.classList.add('show');
+  plaque.setAttribute('tabindex', '-1');
+  try { plaque.focus({ preventScroll: true }); } catch (e) {}
 }
 
 function showLoginSuccessPopup(msg){

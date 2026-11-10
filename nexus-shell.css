@@ -663,6 +663,9 @@ html.user-logged-in #pageContent .kpi-tag { font-size: 10.5px !important; }
   .sg-stage { height: calc(100dvh / var(--app-zoom, 1)) !important; }
 }
 html.nexus-farewell, html.nexus-farewell body { overflow: hidden !important; background: #05070f !important; }
+/* Durante a despedida o login EMBUTIDO antigo (#authPage) nunca aparece: o logout remove a marca "user-logged-in" na hora e ele ficava à mostra
+   por baixo do fade da placa. O login de verdade é /login.html, para onde a despedida leva ao terminar. */
+html.nexus-farewell #authPage { display: none !important; }
 .sg-welcome-stage .bg,
 .sg-stage .bg { position: absolute !important; inset: 0 !important; overflow: hidden !important; pointer-events: none !important; }
 .sg-welcome-stage .bg i,
