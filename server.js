@@ -14190,7 +14190,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261110-1" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261110-2" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
@@ -14208,6 +14208,8 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     var isLight = false;
     document.body.classList.remove('light');
     document.documentElement.classList.remove('light');
+<link rel="stylesheet" href="/administracao.css?v=20261110-9" />
+<script src="/administracao.js?v=20261110-9"></script>
     document.addEventListener('DOMContentLoaded', function() {
       var icon = document.getElementById('authThemeIcon');
       if (icon) {
@@ -15424,6 +15426,12 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Perfil / Nível</label>
         <select id="userAdminRole" onchange="updateUserAdminRoleHint()" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
           <option value="Usuário">Usuário (Padrão)</option>
+      <div class="field" style="margin-bottom:0;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Data de nascimento</label>
+        <input id="userAdminBirth" type="date" max="2100-12-31" style="height:35px; border-radius:9px; font-size:12.5px; padding:0 10px; color-scheme:dark;">
+      </div>
+      <div style="margin-bottom:0; align-self:end; font-size:10.5px; line-height:1.35; color:var(--text-dim);">Com e-mail ou CPF, o nascimento confirma a identidade na recuperação de senha.</div>
+
           <option value="Administrador">Administrador (Nexus + GLPI)</option>
         </select>
       </div>
@@ -15524,6 +15532,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 </div>
 
 <!-- Modal Abrir Nova Ordem de Serviço GLPI 10 (Público / Tela de Login -> Recebido Diretamente pelo Admin) -->
+      <button type="button" class="btn-ghost" onclick="admGerarSenhaNoModal()" title="Preenche o campo com uma senha forte e a mostra para você anotar" style="margin-top:6px; height:30px; padding:0 10px; border-radius:8px; font-size:11px; font-weight:700;">🔑 Gerar senha forte</button>
 <div class="overlay" id="overlayNovaOrdem" onclick="if(event.target===this) closeNovaOrdemModal()">
   <div class="modal" style="max-width:640px; border-radius:28px; border:1.5px solid rgba(255,255,255,0.16); border-top:1.5px solid rgba(255,255,255,0.42); border-left:1.5px solid rgba(255,255,255,0.22); background:linear-gradient(145deg, rgba(30,41,65,0.75) 0%, rgba(15,23,42,0.92) 45%, rgba(8,12,26,0.98) 100%); backdrop-filter:blur(40px) saturate(210%); -webkit-backdrop-filter:blur(40px) saturate(210%); box-shadow:0 35px 90px rgba(0,0,0,0.95), 0 0 55px rgba(245, 158, 11, 0.18), inset 0 1.5px 2px rgba(255,255,255,0.38); position:relative; overflow:hidden;">
     <button class="close-x" type="button" onclick="closeNovaOrdemModal()">✕</button>
@@ -24836,7 +24845,212 @@ function pageUsuarios(){
     if (u && u.email) userMap.set(u.email.toLowerCase(), u);
   });
   const users = Array.from(userMap.values());
+/* ==================== Administração: ligação com o módulo administracao.js (menus no topo + Cadastros & Contas) ====================
+   O módulo não conhece variáveis do app: tudo chega por admContexto() e pelas ações abaixo. Se o script não carregar, a tela antiga
+   (pageUsuariosLegado) continua funcionando. */
+function admMinusculo(v){ return String(v || '').toLowerCase().trim(); }
+function admEhAdmin(){ return !!(currentUser && currentUser.role === 'Administrador' && !isViewingOtherUser); }
 
+function admContagens(){
+  const lista = Array.isArray(registeredUsers) ? registeredUsers : [];
+  return {
+    usuarios: lista.length,
+    pagamentos: lista.filter(function(u){ return u && u.role !== 'Administrador' && (nexusPagamentoAguardando(u) || u.subscription_status === 'expired'); }).length,
+    logs: Array.isArray(systemLogs) ? systemLogs.length : 0
+  };
+}
+function admEventosDe(email){
+  const k = admMinusculo(email);
+  return (Array.isArray(systemLogs) ? systemLogs : []).filter(function(l){
+    return l && (admMinusculo(l.user_email) === k || String(l.details || '').toLowerCase().indexOf(k) >= 0);
+  }).slice(0, 8);
+}
+let admLogsEm = 0;
+function admCarregarEventos(){
+  if (Date.now() - admLogsEm < 30000) return Promise.resolve();
+  admLogsEm = Date.now();
+  return loadSystemLogs().catch(function(){});
+}
+// Uso real de cada conta (movimentações, contas, orçamentos, metas) vindo do servidor: o navegador do administrador não tem os dados dos outros
+async function admCarregarUso(){
+  try {
+    const res = await fetch(window.location.origin + '/api/admin/usage');
+    if (!res.ok) return null;
+    const d = await res.json();
+    return d && d.usage ? d.usage : null;
+  } catch(e) { return null; }
+}
+async function admSincronizar(){
+  window._lastUsersSyncTime = Date.now();
+  await syncUsersWithServer();
+  showToast('Cadastros sincronizados com o servidor.');
+  render();
+}
+
+// Perfil: Administrador (Nexus + GLPI) ou Usuário. Nunca a própria conta; sempre sobra o administrador logado.
+async function admMudarPerfil(email, perfil){
+  await syncUsersWithServer();
+  if(!admEhAdmin()) return false;
+  if(perfil !== 'Administrador' && perfil !== 'Usuário') return false;
+  const alvo = admMinusculo(email);
+  if(alvo === admMinusculo(currentUser.email)){ showToast('Você não pode alterar o próprio perfil por aqui.'); return false; }
+  const u = registeredUsers.find(function(x){ return x && admMinusculo(x.email) === alvo; });
+  if(!u) return false;
+  if(u.role === perfil) return true;
+  const antes = { role: u.role, subscription_status: u.subscription_status, subscription_plan: u.subscription_plan };
+  u.role = perfil;
+  if(perfil === 'Administrador'){ u.subscription_status = 'active'; u.subscription_plan = 'administrador_ilimitado'; }
+  const salvou = await saveUsersToServer();
+  if(!salvou){
+    u.role = antes.role; u.subscription_status = antes.subscription_status; u.subscription_plan = antes.subscription_plan;
+    saveToStorage('nexus_users', registeredUsers);
+    showToast('⚠️ O servidor não aceitou a alteração do perfil.');
+    await syncUsersWithServer();
+    render();
+    return false;
+  }
+  showToast(u.name + ' agora é ' + (perfil === 'Administrador' ? 'administrador (Nexus + GLPI).' : 'usuário comum.'));
+  logActivity('Alteração de Função', 'Usuário / Permissões', 'Administrador alterou a função do usuário ' + u.email + ' (' + u.name + ') de ' + antes.role + ' para ' + perfil);
+  await syncUsersWithServer();
+  render();
+  return true;
+}
+
+// Senha nova forte para a conta; o servidor grava o hash e derruba as sessões abertas dela. Devolve a senha UMA vez (não fica no navegador).
+async function admRedefinirSenha(email){
+  await syncUsersWithServer();
+  if(!admEhAdmin() || !window.NexusAdm) return null;
+  const alvo = admMinusculo(email);
+  if(alvo === admMinusculo(currentUser.email)){ showToast('Para trocar a sua senha use a sua conta.'); return null; }
+  const u = registeredUsers.find(function(x){ return x && admMinusculo(x.email) === alvo; });
+  if(!u) return null;
+  const nova = NexusAdm.gerarSenha(14);
+  u.password = nova;
+  const salvou = await saveUsersToServer();
+  delete u.password;
+  saveToStorage('nexus_users', registeredUsers);
+  if(!salvou){ showToast('⚠️ O servidor não aceitou a nova senha.'); return null; }
+  logActivity('Redefinição de senha', 'Usuário', 'Administrador redefiniu a senha de ' + u.email + ' (' + u.name + ')');
+  await syncUsersWithServer();
+  render();
+  return nova;
+}
+
+// Ativar/bloquear várias contas de uma vez (a própria conta é sempre ignorada)
+async function admDefinirAtivos(emails, ativo){
+  await syncUsersWithServer();
+  if(!admEhAdmin()) return false;
+  const eu = admMinusculo(currentUser.email);
+  const mudou = [];
+  let ignoradas = 0;
+  (emails || []).forEach(function(e){
+    const k = admMinusculo(e);
+    const u = registeredUsers.find(function(x){ return x && admMinusculo(x.email) === k; });
+    if(!u || k === eu){ ignoradas++; return; }
+    if((u.active !== false) === !!ativo) return;
+    mudou.push([u, u.active]);
+    u.active = !!ativo;
+  });
+  if(!mudou.length){ showToast('Nenhuma conta precisava mudar.'); return true; }
+  const salvou = await saveUsersToServer();
+  if(!salvou){
+    mudou.forEach(function(p){ p[0].active = p[1]; });
+    saveToStorage('nexus_users', registeredUsers);
+    showToast('⚠️ O servidor não aceitou a alteração das contas.');
+    await syncUsersWithServer();
+    render();
+    return false;
+  }
+  showToast(mudou.length + (mudou.length === 1 ? ' conta ' : ' contas ') + (ativo ? 'ativada(s)' : 'bloqueada(s)') + (ignoradas ? ' · ' + ignoradas + ' ignorada(s)' : '') + '.');
+  logActivity('Edição', 'Usuário', 'Administrador ' + (ativo ? 'ativou' : 'bloqueou') + ' ' + mudou.length + ' conta(s) em lote');
+  render();
+  return true;
+}
+
+// Exclusão em lote (a confirmação já foi feita pelo módulo)
+async function admExcluirVarios(emails){
+  if(!admEhAdmin()) return false;
+  const eu = admMinusculo(currentUser.email);
+  const token = loadFromStorage('nexus_token', '') || '';
+  let excluidos = 0;
+  const lista = (emails || []).map(admMinusculo).filter(function(k){ return k && k !== eu; });
+  for(const k of lista){
+    try {
+      const resp = await fetch(window.location.origin + '/api/users?email=' + encodeURIComponent(k), { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+      const corpo = await resp.json().catch(function(){ return {}; });
+      if(resp.ok && corpo.success){
+        registeredUsers = registeredUsers.filter(function(x){ return admMinusculo(x && x.email) !== k; });
+        excluidos++;
+      }
+    } catch(e) {}
+  }
+  saveToStorage('nexus_users', registeredUsers);
+  await syncUsersWithServer();
+  logActivity('Exclusão', 'Usuário', 'Administrador excluiu ' + excluidos + ' cadastro(s) em lote');
+  showToast(excluidos === lista.length ? excluidos + ' cadastro(s) excluído(s).' : excluidos + ' de ' + lista.length + ' cadastro(s) excluído(s); os demais foram preservados.');
+  render();
+  return true;
+}
+
+function admContexto(){
+  if(!window.__admLogsPedido){
+    window.__admLogsPedido = true;
+    admCarregarEventos().then(function(){ if(window.NexusAdm) NexusAdm.atualizarAbas(); });
+  }
+  return {
+    agora: Date.now(),
+    usuarios: Array.isArray(registeredUsers) ? registeredUsers : [],
+    eu: currentUser ? { email: currentUser.email, nome: currentUser.name } : null,
+    sincronizadoEm: window._lastUsersSyncTime || 0,
+    contagens: admContagens(),
+    eventos: admEventosDe,
+    carregarEventos: admCarregarEventos,
+    irPara: function(pagina){ navigate(pagina); },
+    toast: showToast,
+    acoes: {
+      carregarUso: admCarregarUso,
+      novo: function(){ openAdminCreateUserModal(); },
+      editar: function(email){ openUserAdminModal(email); },
+      espelho: function(email){ viewUserData(email); },
+      excluir: function(email){ return deleteUserAdmin(email); },
+      alternarAtivo: function(email){ return toggleUserActive(email); },
+      segundaVia: function(r){ window.abrirSegundaViaBoletoParaUsuario(r.email, r.nome, r.cpf, r.tel); },
+      liberarPagamento: function(r){ return window.adminConfirmUserPayment(r.email, String(r.plano || '').toLowerCase() === 'anual' ? 'anual' : 'mensal', r.metodo || 'pix'); },
+      bloquearPagamento: function(email){ return window.adminRevokeUserPayment(email); },
+      sincronizar: admSincronizar,
+      mudarPerfil: admMudarPerfil,
+      redefinirSenha: admRedefinirSenha,
+      definirAtivos: admDefinirAtivos,
+      excluirVarios: admExcluirVarios
+    }
+  };
+}
+// Menus no topo (Cadastros & Contas | Pagamentos & Boletos | Auditoria & Logs) em volta de cada página do administrador
+function admEnvolver(pagina, corpo){
+  if(!window.NexusAdm || !admEhAdmin()) return corpo;
+  return NexusAdm.shell(pagina, corpo, admContexto);
+}
+function admGerarSenhaNoModal(){
+  const campo = document.getElementById('userAdminPassword');
+  if(!campo || !window.NexusAdm) return;
+  campo.value = NexusAdm.gerarSenha(14);
+  campo.type = 'text';
+  showToast('Senha forte gerada. Anote antes de salvar.');
+}
+
+// Cabeçalho + cartões de resumo das telas Pagamentos e Auditoria (se o módulo não carregou, cai num cabeçalho simples)
+function admTopoPagina(icone, titulo, subtitulo, acoesHtml, kpis){
+  if(window.NexusAdm) return NexusAdm.cabecalhoHTML({ icone: icone, titulo: titulo, subtitulo: subtitulo, acoes: acoesHtml }) + NexusAdm.kpisFixosHTML(kpis || []);
+  return '<div class="page-head admin-page-head"><div><h1>' + txEsc(titulo) + '</h1><p>' + txEsc(subtitulo) + '</p></div><div class="admin-head-actions">' + acoesHtml + '</div></div>';
+}
+
+
+  if(!window.NexusAdm || !admEhAdmin()) return pageUsuariosLegado();
+  if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
+  return admEnvolver('usuarios', NexusAdm.html(admContexto));
+}
+
+function pageUsuariosLegado(){
   const totalUsers = users.length;
   const adminCount = users.filter(u => u.role === 'Administrador').length;
   const activeCount = users.filter(u => u.active !== false).length;
@@ -25223,7 +25437,8 @@ function filterLogsTable() {
   if (wrap) wrap.innerHTML = renderLogsTable(filtered);
 }
 
-function pagePagamentos(){
+function pagePagamentos(){ return admEnvolver('pagamentos', pagePagamentosCorpo()); }
+function pagePagamentosCorpo(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   if (!isAdmin || isViewingOtherUser) {
     return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área é exclusiva para administradores.</p></div>\`;
@@ -25320,12 +25535,11 @@ function pagePagamentos(){
     </div>\`;
   }
 
-  return \`<div class="page-head admin-page-head"><div><h1><span class="admin-head-icon">💳</span>Pagamentos & Boletos</h1><p>Confirme pagamentos recebidos, acompanhe acessos vencidos e prepare a segunda via de cobrança.</p></div><div class="admin-head-actions"><button class="btn-ghost" onclick="Promise.all([syncUsersWithServer(),syncOrdensWithServer()]).then(render)">Atualizar dados</button></div></div>
-  <div class="kpis admin-kpis-row">
-    <div class="kpi"><div class="row1"><span>Aguardando confirmação</span><span class="ic">⏳</span></div><div class="val">\${pendingUsers.length}</div><div class="sub">Pagamentos informados</div></div>
-    <div class="kpi"><div class="row1"><span>Acessos expirados</span><span class="ic">🔒</span></div><div class="val">\${expiredUsers.length}</div><div class="sub">Precisam de pagamento</div></div>
-    <div class="kpi"><div class="row1"><span>Assinaturas ativas</span><span class="ic">✓</span></div><div class="val">\${activeUsers.length}</div><div class="sub">Clientes liberados</div></div>
-  </div>
+  return \`\${admTopoPagina('cartao', 'Pagamentos & Boletos', 'Confirme pagamentos recebidos, acompanhe acessos vencidos e prepare a segunda via de cobrança.',
+    '<button type="button" class="adm-btn" onclick="Promise.all([syncUsersWithServer(),syncOrdensWithServer()]).then(render)">Atualizar dados</button>',
+    [{ n: pendingUsers.length, rotulo: 'Aguardando confirmação', sub: 'Pagamentos informados', cor: 'info' },
+     { n: expiredUsers.length, rotulo: 'Acessos expirados', sub: 'Precisam de pagamento', cor: 'ruim' },
+     { n: activeUsers.length, rotulo: 'Assinaturas ativas', sub: 'Clientes liberados', cor: 'ok' }])}
   <div class="admin-toolbar-panel" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('pendentes')">Pagamentos pendentes</button>
     <button class="btn-ghost" onclick="window.setPagamentosActiveTab('expirados')">Acessos expirados</button>
@@ -25388,7 +25602,8 @@ window.sendAdminPaymentNoticeWhatsApp = function() {
   window.open('https://wa.me/55' + phone.slice(-11) + '?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
 };
 
-function pageLogs(){
+function pageLogs(){ return admEnvolver('logs', pageLogsCorpo()); }
+function pageLogsCorpo(){
   const isAdmin = currentUser && currentUser.role === 'Administrador';
   if(!isAdmin || isViewingOtherUser){
     return \`<div class="placeholder"><div class="big">🔒</div><h3>Acesso restrito</h3><p>Esta área de logs é exclusiva para administradores.</p></div>\`;
@@ -25403,43 +25618,12 @@ function pageLogs(){
   if (typeof updateAdminSidebarBadges === 'function') setTimeout(updateAdminSidebarBadges, 0);
 
   return \`
-  <div class="page-head admin-page-head">
-    <div>
-      <h1>
-        <span class="admin-head-icon">🛡️</span>
-        Auditoria & Logs do Sistema
-      </h1>
-      <p>
-        Histórico completo de auditoria com rastreabilidade de acessos, logins e alterações de cadastros.
-      </p>
-    </div>
-    <div class="admin-head-actions">
-      <button class="btn-ghost" onclick="loadSystemLogs().then(render)" style="display:inline-flex; align-items:center; gap:5px; font-weight:700;">🔄 Atualizar Logs</button>
-    </div>
-  </div>
-
-  <div class="kpis admin-kpis-row">
-    <div class="kpi">
-      <div class="row1"><span>Total de Registros</span><span class="ic" style="background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.32); color:#38BDF8;">📋</span></div>
-      <div class="val" style="color:var(--text);">\${countTotal}</div>
-      <div class="sub" style="color:#38BDF8;">Eventos registrados</div>
-    </div>
-    <div class="kpi">
-      <div class="row1"><span>Criações / Cadastros</span><span class="ic" style="background:rgba(16, 185, 129,0.14); border:1px solid rgba(16, 185, 129,0.32); color:#10B981;">➕</span></div>
-      <div class="val" style="color:#10B981;">\${countCriacao}</div>
-      <div class="sub" style="color:#34D399;">Novos registros</div>
-    </div>
-    <div class="kpi">
-      <div class="row1"><span>Edições / Ajustes</span><span class="ic" style="background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.32); color:#FBBF24;">✎</span></div>
-      <div class="val" style="color:#FBBF24;">\${countEdicao}</div>
-      <div class="sub" style="color:#FDE68A;">Registros alterados</div>
-    </div>
-    <div class="kpi">
-      <div class="row1"><span>Exclusões</span><span class="ic" style="background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.32); color:#F87171;">🗑</span></div>
-      <div class="val" style="color:#F87171;">\${countExclusao}</div>
-      <div class="sub" style="color:#FCA5A5;">Registros removidos</div>
-    </div>
-  </div>
+  \${admTopoPagina('doc', 'Auditoria & Logs do Sistema', 'Histórico completo de auditoria com rastreabilidade de acessos, logins e alterações de cadastros.',
+    '<button type="button" class="adm-btn" onclick="loadSystemLogs().then(render)">Atualizar logs</button>',
+    [{ n: countTotal, rotulo: 'Total de registros', sub: 'Eventos registrados', cor: 'info' },
+     { n: countCriacao, rotulo: 'Criações / cadastros', sub: 'Novos registros', cor: 'ok' },
+     { n: countEdicao, rotulo: 'Edições / ajustes', sub: 'Registros alterados', cor: 'aviso' },
+     { n: countExclusao, rotulo: 'Exclusões', sub: 'Registros removidos', cor: 'ruim' }])}
 
   <div class="admin-toolbar-panel">
     <div style="position:relative; flex:1.5; min-width:220px;">
@@ -29596,6 +29780,7 @@ async function openAdminCreateUserModal(){
 // Texto de apoio do campo "Perfil / Nível": o que cada perfil libera no Nexus e no GLPI
 function updateUserAdminRoleHint(){
   const sel = document.getElementById('userAdminRole');
+  const birthNovo = document.getElementById('userAdminBirth'); if(birthNovo) birthNovo.value = '';
   const hint = document.getElementById('userAdminRoleHint');
   if(!sel || !hint) return;
   const adm = sel.value === 'Administrador';
@@ -29671,6 +29856,9 @@ async function openUserAdminModal(email){
 
   const activeSelect = document.getElementById('userAdminActive');
   if(activeSelect) activeSelect.value = (u.active !== false) ? 'true' : 'false';
+  const birthInput = document.getElementById('userAdminBirth');
+  if(birthInput) birthInput.value = window.NexusAdm ? NexusAdm.nascimentoISO(u.birth_date || u.birthDate) : '';
+
 
   const passInput = document.getElementById('userAdminPassword');
   if(passInput) {
@@ -29710,6 +29898,9 @@ async function saveUserAdmin(){
       return;
     }
     // Mesma regra do servidor: e-mail fora do padrão era descartado em silêncio e a tela dizia "cadastrado com sucesso"
+  // Nascimento fica gravado como DD/MM/AAAA (formato dos cadastros e da recuperação de senha); o campo de data entrega AAAA-MM-DD. Vazio nunca apaga.
+  const birthIso = (document.getElementById('userAdminBirth')?.value || '').trim();
+  const birthBr = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(birthIso) ? birthIso.slice(8, 10) + '/' + birthIso.slice(5, 7) + '/' + birthIso.slice(0, 4) : '';
     const emailValido = new RegExp('^[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,190}[.][A-Za-z]{2,24}$').test(rawEmail) && rawEmail.indexOf('..') < 0 && rawEmail.length <= 254;
     if(!emailValido){
       showToast('Informe um e-mail válido (ex.: nome@dominio.com)');
@@ -29737,6 +29928,7 @@ async function saveUserAdmin(){
     try { localStorage.removeItem('nexus_data_' + rawEmail.toLowerCase().trim()); } catch(e) {}
     registeredUsers.push(newUser);
     const salvouNovo = await saveUsersToServer();
+      birth_date: birthBr || null,
     delete newUser.admin_create;
     if(!salvouNovo){
       // o servidor não aceitou: desfaz a inclusão local para a lista não mostrar um cadastro que não existe
@@ -29790,6 +29982,7 @@ async function saveUserAdmin(){
     const newKey = 'nexus_data_' + rawEmail.toLowerCase();
     const existingData = loadFromStorage(oldKey, null);
     if(existingData){
+  if(birthBr) u.birth_date = birthBr;
       saveToStorage(newKey, existingData);
       localStorage.removeItem(oldKey);
     }
@@ -30264,6 +30457,8 @@ function attachPageEvents(){
     };
   });
   document.querySelectorAll('[data-del]').forEach(el => {
+  // Administração (administracao.js): depois de cada desenho da página refaz a gaveta de detalhes e busca o uso real das contas
+  if (window.NexusAdm) { try { NexusAdm.aoRenderizar(); } catch(eAdm) {} }
     el.onclick = (e) => {
       if (e) { e.preventDefault(); e.stopPropagation(); }
       const attr = el.getAttribute('data-del');
@@ -34496,6 +34691,31 @@ async function handleNexusRequest(req, res) {
           if (u && u.email && isStrictEmail(String(u.email).trim().toLowerCase()) && !isAccountDeleted(u.email)) {
             acceptedUsers++;
             const emailKey = u.email.toLowerCase().trim();
+  // Uso real de cada conta para a tela Cadastros & Contas do administrador: só contagens (nunca valores, descrições nem saldos)
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/admin/usage') {
+    if (!getAuthenticatedAdmin(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, error: 'Autenticação de administrador obrigatória.' });
+    }
+    const usage = {};
+    try {
+      const todos = readAllLocalFinancial() || {};
+      Object.keys(todos).forEach(email => {
+        const d = todos[email] || {};
+        const movs = Array.isArray(d.transactions) ? d.transactions : [];
+        let ultimaMov = null;
+        movs.forEach(t => { if (t && t.date && (!ultimaMov || String(t.date) > ultimaMov)) ultimaMov = String(t.date); });
+        usage[String(email).toLowerCase().trim()] = {
+          mov: movs.length,
+          contas: Array.isArray(d.accounts) ? d.accounts.length : 0,
+          orc: Array.isArray(d.budgets) ? d.budgets.length : 0,
+          metas: Array.isArray(d.goals) ? d.goals.length : 0,
+          ultimaMov
+        };
+      });
+    } catch (e) {}
+    return sendJson(res, corsHeaders, 200, { success: true, usage });
+  }
+
             const existing = existingMap.get(emailKey) || userMap.get(emailKey);
             let finalPassword = existing ? existing.password : '';
             if (u.password && typeof u.password === 'string' && u.password.trim() !== '') {
@@ -36235,7 +36455,9 @@ async function handleNexusRequest(req, res) {
     '/dashboard-financeiro.js': 'application/javascript; charset=utf-8',
     '/importacao.js': 'application/javascript; charset=utf-8',
     '/transacoes.css': 'text/css',
-    '/transacoes.js': 'application/javascript; charset=utf-8'
+    '/transacoes.js': 'application/javascript; charset=utf-8',
+    '/administracao.css': 'text/css',
+    '/administracao.js': 'application/javascript; charset=utf-8'
   };
   let staticFile = null;
   if (STATIC_EXACT_FILES[pathname]) {
