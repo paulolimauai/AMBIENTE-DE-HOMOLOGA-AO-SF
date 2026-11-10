@@ -2161,6 +2161,12 @@ const htmlContent = `<!DOCTYPE html>
       if (uObj && uObj.role === 'Administrador') {
         document.documentElement.classList.add('is-admin');
       }
+      // Tamanho dos ícones da barra superior do administrador (normal | grande | extra): preferência do navegador, padrão "grande"
+      try {
+        var topIc = localStorage.getItem('nexus_top_icons');
+        if (topIc !== 'normal' && topIc !== 'extra') topIc = 'grande';
+        document.documentElement.setAttribute('data-top-ic', topIc);
+      } catch (eTopIc) {}
       var vu = localStorage.getItem('nexus_viewing_user');
       if (vu && uObj && uObj.role === 'Administrador') {
         document.documentElement.classList.add('has-view-mode-banner');
@@ -14184,7 +14190,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261109-3" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261110-1" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
@@ -14756,6 +14762,15 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
             <button class="scale-opt-btn" data-scale="150%">🔍 150% (Extra Grande · 4K)</button>
             <button class="scale-opt-btn" data-scale="175%">🔍 175% (4K em tela grande)</button>
             <button class="scale-opt-btn" data-scale="200%">🔍 200% (5K / TV)</button>
+            <!-- Só no perfil Administrador: tamanho dos ícones da barra de cima (a regra de tamanho está na seção 8 do nexus-shell.css) -->
+            <div class="nx-topic-sec" id="nxTopIconSec">
+              <div class="nx-topic-lbl">Ícones da barra superior</div>
+              <div class="nx-topic-row" role="group" aria-label="Tamanho dos ícones da barra superior">
+                <button type="button" class="nx-topic-btn" data-top-ic="normal" aria-pressed="false">Normal</button>
+                <button type="button" class="nx-topic-btn" data-top-ic="grande" aria-pressed="true">Grande</button>
+                <button type="button" class="nx-topic-btn" data-top-ic="extra" aria-pressed="false">Extra</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -14876,14 +14891,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         </span>
         <span class="admin-menu-count-pill" id="menuUsersCountBadge">0</span>
       </button>
-      <button data-page="ordens" id="menuOrdensBtn" class="menu-btn-admin" style="display:none;" title="Console GLPI 10 ITSM — Recepção & Tratamento de Chamados">
-        <span class="ic" style="background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(234,88,12,0.2));color:#FBBF24;font-weight:900;border-radius:8px;">G</span>
-        <span class="admin-menu-field-body">
-          <span class="label">Central GLPI &amp; O.S.</span>
-          <span class="sub-label">Console ITSM, Chamados Login &amp; Fila</span>
-        </span>
-        <span id="osBadgeCount" style="display:none;">0</span>
-      </button>
+      <!-- "Central GLPI & O.S." saiu do Painel Administrativo (pedido de 10/11/2026): o atendimento de chamados é feito no GLPI (/glpi.html) por quem tem perfil Administrador -->
       <button data-page="pagamentos" id="menuPagamentosBtn" class="menu-btn-admin" style="display:none;" title="Pagamentos (Pix, Cartão, Boleto), Liberação & 2ª Via de Boleto">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><path d="M6 15h4"/><path d="M14 15h4"/></svg></span>
         <span class="admin-menu-field-body">
@@ -14900,26 +14908,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
         <span class="admin-menu-count-pill" id="menuLogsCountBadge">0</span>
       </button>
 
-      <div class="admin-sidebar-summary-card" id="adminSidebarSummaryCard" style="display:none;">
-        <div class="admin-sidebar-summary-head">
-          <span class="admin-sidebar-summary-title">GOVERNANÇA ATIVA</span>
-          <span class="admin-sidebar-summary-dot"></span>
-        </div>
-        <div class="admin-sidebar-summary-metrics">
-          <div class="admin-sidebar-metric">
-            <span class="m-lbl">Contas</span>
-            <strong class="m-val" id="adminSideStatUsers">0</strong>
-          </div>
-          <div class="admin-sidebar-metric">
-            <span class="m-lbl">O.S. Fila</span>
-            <strong class="m-val" id="adminSideStatOs">0</strong>
-          </div>
-          <div class="admin-sidebar-metric">
-            <span class="m-lbl">Técnicos</span>
-            <strong class="m-val" id="adminSideStatTechs">0</strong>
-          </div>
-        </div>
-      </div>
+      <!-- O cartão "Governança ativa" (Contas / O.S. Fila / Técnicos) foi retirado do menu do administrador (pedido de 10/11/2026) -->
 
     </div>
 
@@ -14968,10 +14957,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
     <button type="button" data-page="usuarios" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Usuários">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
       <span>Usuários</span>
-    </button>
-    <button type="button" data-page="ordens" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Ordens de Serviço">
-      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span>
-      <span>Ordens</span>
     </button>
     <button type="button" data-page="pagamentos" class="mobile-bottom-btn mobile-btn-admin" style="display:none;" title="Pagamentos & 2ª Via de Boleto">
       <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
@@ -15105,7 +15090,6 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
       <!-- Seção Administrativa Móvel (Exclusiva Administrador) -->
       <div class="mobile-drawer-section-title menu-section-admin" style="display:none;">Painel Administrativo</div>
       <button data-page="usuarios" id="mobileDrawerUsuariosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="label">Cadastros & Contas</span></button>
-      <button data-page="ordens" id="mobileDrawerOrdensBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="label">Ordens de Serviço</span></button>
       <button data-page="pagamentos" id="mobileDrawerPagamentosBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><span class="label">Pagamentos & Boletos</span></button>
       <button data-page="logs" id="mobileDrawerLogsBtn" class="menu-btn-admin" style="display:none;"><span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span><span class="label">Auditoria & Logs</span></button>
     </nav>
@@ -15438,9 +15422,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 
       <div class="field" style="margin-bottom:0;">
         <label style="font-size:11px; font-weight:700; color:var(--text-dim); margin-bottom:3px; display:block;">Perfil / Nível</label>
-        <select id="userAdminRole" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
+        <select id="userAdminRole" onchange="updateUserAdminRoleHint()" style="height:35px; border-radius:9px; font-size:12px; font-weight:700; padding:0 8px;">
           <option value="Usuário">Usuário (Padrão)</option>
-          <option value="Administrador">Administrador (Total)</option>
+          <option value="Administrador">Administrador (Nexus + GLPI)</option>
         </select>
       </div>
 
@@ -15451,6 +15435,9 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
           <option value="false">🚫 Desativada (Bloqueada)</option>
         </select>
       </div>
+
+      <!-- Explica o que cada perfil libera: o administrador cadastrado aqui entra no Nexus (painel administrativo) e no GLPI (atendimento) com o mesmo e-mail e senha -->
+      <div id="userAdminRoleHint" style="grid-column:1 / -1; margin:0; padding:7px 10px; border-radius:9px; font-size:11px; line-height:1.4; color:var(--text-dim); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);"></div>
     </div>
 
     <!-- Seção Executiva de Confirmação de Pagamento Não Reconhecido, Modalidades e 2ª Via de Boleto -->
@@ -20687,7 +20674,7 @@ function pd(day){ return pdCustom(currentPeriod.year, currentPeriod.month, day);
 
 // Perfis de acesso: cada papel enxerga SOMENTE as suas páginas. Menu lateral, gaveta mobile, barra inferior,
 // hash da URL, página salva no navegador e render() usam esta mesma fonte (a primeira página é o destino padrão).
-const NEXUS_ADMIN_PAGES = ['usuarios', 'ordens', 'pagamentos', 'logs'];
+const NEXUS_ADMIN_PAGES = ['usuarios', 'pagamentos', 'logs'];
 const NEXUS_USER_PAGES = ['dashboard', 'transacoes', 'cartoes', 'orcamentos', 'metas', 'relatorios', 'recorrentes', 'importar', 'anexos', 'config'];
 function nexusIsAdminUser(u) { return !!(u && u.role === 'Administrador'); }
 // Pagamento informado e ainda sem confirmação do financeiro. Com o teste esgotado o acesso fica "pending_payment"; mas quem informa o Pix
@@ -29598,11 +29585,25 @@ async function openAdminCreateUserModal(){
   }
   document.getElementById('userAdminName').value = '';
   document.getElementById('userAdminRole').value = 'Usuário';
+  updateUserAdminRoleHint();
   document.getElementById('userAdminPassword').value = '';
   document.getElementById('userAdminPassword').type = 'password';
   bindPasswordToggle('userAdminPassword', 'userAdminPasswordToggle');
   if (typeof updateAdminModalBadge === 'function') updateAdminModalBadge('');
   document.getElementById('overlayUserAdmin').classList.add('show');
+}
+
+// Texto de apoio do campo "Perfil / Nível": o que cada perfil libera no Nexus e no GLPI
+function updateUserAdminRoleHint(){
+  const sel = document.getElementById('userAdminRole');
+  const hint = document.getElementById('userAdminRoleHint');
+  if(!sel || !hint) return;
+  const adm = sel.value === 'Administrador';
+  hint.innerHTML = adm
+    ? '<strong style="color:#FBBF24;">👑 Administrador:</strong> administra o Nexus (cadastros, pagamentos, auditoria) e atende os chamados no GLPI. Entra nos dois com o mesmo e-mail e senha, com acesso ilimitado.'
+    : '<strong style="color:#34D399;">Usuário:</strong> usa o Nexus Financeiro e abre chamados no GLPI.';
+  hint.style.borderColor = adm ? 'rgba(245,158,11,0.4)' : 'rgba(255,255,255,0.1)';
+  hint.style.background = adm ? 'rgba(245,158,11,0.08)' : 'rgba(255,255,255,0.04)';
 }
 
 // Máscaras globais para campos de auditoria e suporte
@@ -29666,6 +29667,7 @@ async function openUserAdminModal(email){
 
   const roleSelect = document.getElementById('userAdminRole');
   if(roleSelect) roleSelect.value = u.role || 'Usuário';
+  updateUserAdminRoleHint();
 
   const activeSelect = document.getElementById('userAdminActive');
   if(activeSelect) activeSelect.value = (u.active !== false) ? 'true' : 'false';
@@ -31282,6 +31284,27 @@ if (scaleMenuBtn && scaleDropdown) {
     if (scaleDropdown) scaleDropdown.style.display = 'none';
   });
 }
+
+// Tamanho dos ícones da barra superior (perfil Administrador): normal | grande | extra. A lista fica aberta para comparar os tamanhos.
+window.applyTopIconSize = function(size, persist) {
+  const v = (size === 'normal' || size === 'extra') ? size : 'grande';
+  document.documentElement.setAttribute('data-top-ic', v);
+  if (persist) { try { localStorage.setItem('nexus_top_icons', v); } catch (e) {} }
+  document.querySelectorAll('.nx-topic-btn').forEach(function(b) {
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-top-ic') === v));
+  });
+};
+(function initTopIconSize() {
+  let saved = 'grande';
+  try { saved = localStorage.getItem('nexus_top_icons') || 'grande'; } catch (e) {}
+  window.applyTopIconSize(saved, false);
+  document.querySelectorAll('.nx-topic-btn').forEach(function(b) {
+    b.addEventListener('click', function(e) {
+      e.stopPropagation();
+      window.applyTopIconSize(b.getAttribute('data-top-ic'), true);
+    });
+  });
+})();
 
 // ==================== Gerenciador de Cor de Fundo do Pós-Login (Padrão: Preto Puro Obsidian) ====================
 window.applyPostLoginBg = function(theme) {
