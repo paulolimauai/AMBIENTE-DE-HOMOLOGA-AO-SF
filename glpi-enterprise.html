@@ -20,6 +20,24 @@
         r.setAttribute('data-mode', claro ? 'light' : 'dark');
         r.setAttribute('data-bg', /^[a-z]+$/.test(b) ? b : 'vidro');
     })();
+    /* Retomada de sessão sem "sair e voltar": quando há uma sessão para restaurar (F5, voltar, aba reaberta), a tela de login NÃO pode
+       aparecer enquanto o app confirma os dados no servidor. Marca data-boot="restore": o CSS esconde o login e mostra só o aviso
+       "Retomando sua sessão". showAppView()/showLoginView() tiram a marca; o prazo de 12 s evita tela presa se o servidor não responder.
+       Mesma regra do window.onload: ?entry=login aberto pelo botão (navegação nova) e "Sair" manual continuam mostrando o login. */
+    (function () {
+        try {
+            var h = document.documentElement, q = new URLSearchParams(location.search), entrada = q.get('entry');
+            var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || null;
+            var recarga = !!nav && (nav.type === 'reload' || nav.type === 'back_forward');
+            var saiu = false, tem = false;
+            try { saiu = sessionStorage.getItem('glpi_manual_logout') === '1'; } catch (e) {}
+            try { tem = !!(localStorage.getItem('nexus_session') || localStorage.getItem('nexus_cached_user') || localStorage.getItem('glpi_10_session')); } catch (e) {}
+            if (tem && !saiu && !(entrada === 'login' && !recarga)) {
+                h.setAttribute('data-boot', 'restore');
+                setTimeout(function () { h.removeAttribute('data-boot'); }, 12000);
+            }
+        } catch (e) {}
+    })();
     </script>
 
     <style>
@@ -1322,6 +1340,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .pick em { font-size: .75rem; }
         .user-name { font-size: .8125rem; }
         .user-email { font-size: .75rem; }
+
+        /* Retomada de sessão (F5): sem tela de login piscando; o aviso só aparece se a retomada demorar mais que ~0,2 s */
+        html[data-boot="restore"] #view-login { display: none !important; }
+        .boot { position: fixed; inset: 0; z-index: 60; display: none; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; pointer-events: none; }
+        html[data-boot="restore"] .boot { display: flex; opacity: 0; animation: bootIn .3s ease .2s forwards; }
+        .boot .lg-logo { margin-bottom: .6rem; }
+        .boot-ln { display: inline-flex; align-items: center; gap: .7rem; font-size: .9375rem; font-weight: 600; color: var(--ink-2); }
+        .boot-ring { width: 1.15rem; height: 1.15rem; border-radius: 50%; border: .18rem solid rgba(var(--lt), .22); border-top-color: var(--brand); animation: spin .9s linear infinite; }
+        @keyframes bootIn { to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -1398,6 +1425,12 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
     <!-- Avisos -->
     <div id="toast-container" class="toasts" aria-live="polite"></div>
+
+    <!-- Retomando a sessão (só aparece com data-boot="restore" no <html>): no lugar do login que piscava antes do app -->
+    <div id="boot-splash" class="boot" role="status" aria-live="polite">
+        <div class="lg-logo"><div class="mark" aria-hidden="true">G</div><div>GLPI <small>Service Desk</small></div></div>
+        <div class="boot-ln"><span class="boot-ring" aria-hidden="true"></span><span>Retomando a sua sessão…</span></div>
+    </div>
 
     <!-- 1. TELA DE ACESSO: mesmo cartão de vidro do login do Nexus Financeiro (e-mail e senha do Sistema Financeiro) -->
     <div id="view-login" class="login-wrap">
@@ -3159,6 +3192,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         function showLoginView() {
+            document.documentElement.removeAttribute('data-boot');
             stopSync();
             document.body.classList.remove('in-app');
             $('view-login').classList.remove('hidden');
@@ -3201,6 +3235,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
             }
 
+            document.documentElement.removeAttribute('data-boot');
             $('view-login').classList.add('hidden');
             $('app-header').classList.remove('hidden');
             $('app-wrapper').classList.remove('hidden');
