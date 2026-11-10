@@ -1570,6 +1570,50 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         .proto-big b { font-size: 1.15rem; }
         .success-grid > div { padding: .5rem .7rem; }
         .success-next { padding: .7rem .9rem; }
+
+        /* Cadastro de Técnicos e Filas: filas em coluna estreita à esquerda e técnicos à direita (telas largas); cartões e janelas compactos */
+        .teams-layout { display: grid; gap: 1.1rem; align-items: start; }
+        .teams-col { display: grid; gap: .55rem; align-content: start; min-width: 0; }
+        @container (min-width: 70rem) {
+            .teams-layout { grid-template-columns: 23rem minmax(0, 1fr); }
+            .teams-col .team-grid { grid-template-columns: minmax(0, 1fr); }
+        }
+        .team-h { font-size: .95rem; }
+        .team-h small { font-size: .8rem; }
+        .team-grid { gap: .7rem; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
+        .qcard { gap: .55rem; padding: .85rem 1rem; border-radius: 1.05rem; }
+        .qc-head h4 { font-size: .95rem; }
+        .qc-head p { margin-top: .15rem; font-size: .78rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .qc-stats { gap: .4rem; }
+        .qc-stats div { padding: .3rem .4rem; border-radius: .6rem; }
+        .qc-stats b { font-size: 1rem; }
+        .qc-list { gap: .3rem; }
+        .qc-list .lbl2 { font-size: .6875rem; }
+        .chipx { padding: .06rem .55rem; }
+        .qc-acts { gap: .4rem; padding-top: .6rem; }
+        .teams-layout .panel { padding: .85rem 1rem; }
+        .teams-layout .panel-head h3 { font-size: .95rem; }
+        .teams-layout .panel-head p { font-size: .78rem; }
+        .teams-layout .tbl th { padding: .6rem .8rem; }
+        .teams-layout .tbl td { padding: .55rem .8rem; }
+
+        .modal-sm { max-width: 36rem; }
+        .modal-sm .modal-head { padding: .7rem 1.1rem; }
+        .modal-sm .mh-ico { width: 2rem; height: 2rem; border-radius: .65rem; font-size: .9rem; }
+        .modal-sm .mh-title { font-size: 1rem; }
+        .modal-sm .mh-sub { font-size: .75rem; }
+        .modal-sm .modal-body { padding: 1rem 1.1rem 1.1rem; gap: .7rem; }
+        .modal-sm .field label { margin-bottom: .3rem; font-size: .78rem; }
+        .modal-sm .input { height: var(--ctl-sm); padding: 0 .8rem; border-radius: .7rem; font-size: .84rem; }
+        .modal-sm .form-grid { gap: .7rem; }
+        .modal-sm .modal-foot { padding-top: .7rem; }
+        .chk-grid { grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr)); gap: .35rem; max-height: 10.5rem; }
+        .chk { gap: .5rem; padding: .38rem .6rem; }
+        @media (max-width: 767px) {
+            .modal-sm .input { height: var(--ctl); }
+            /* "Cadastro de Técnicos e Filas" é um nome longo: na barra inferior quebra em duas linhas */
+            .tb-nav .nav-item .nv-t { white-space: normal; line-height: 1.15; text-align: center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        }
     </style>
 </head>
 <body>
@@ -1728,11 +1772,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 <a href="#" onclick="navTech('queue'); return false;" id="tech-nav-queue" class="tech-nav-item nav-item tech">
                     <i class="fa-solid fa-list-check"></i><span class="nv-t">Fila de Chamados</span><span id="sidebar-tech-queue-count" class="count amber">0</span>
                 </a>
-                <a href="#" onclick="navTech('unassigned'); return false;" id="tech-nav-unassigned" class="tech-nav-item nav-item tech">
-                    <i class="fa-solid fa-inbox"></i><span class="nv-t">Sem Técnico</span><span id="sidebar-tech-unassigned-count" class="count">0</span>
-                </a>
                 <a href="#" onclick="navTech('teams'); return false;" id="tech-nav-teams" class="tech-nav-item nav-item tech">
-                    <i class="fa-solid fa-people-group"></i><span class="nv-t">Filas &amp; Técnicos</span>
+                    <i class="fa-solid fa-people-group"></i><span class="nv-t">Cadastro de Técnicos e Filas</span>
                 </a>
             </div>
         </nav>
@@ -1989,9 +2030,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <p>Visão consolidada do Service Desk: volume de chamados, severidades e prazos de SLA em tempo real.</p>
                             </div>
                             <div class="ph-actions">
-                                <button type="button" onclick="navTech('unassigned')" class="btn btn-ghost">
-                                    <i class="fa-solid fa-inbox c-amber"></i> Sem Técnico
-                                </button>
                                 <button type="button" onclick="navTech('queue')" class="btn btn-amber">
                                     <i class="fa-solid fa-list-check"></i> Fila de Chamados
                                 </button>
@@ -2181,9 +2219,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <div id="tech-subview-teams" class="stack hidden">
                         <div class="page-head">
                             <div>
-                                <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Filas &amp; Técnicos</span></div>
-                                <h2>Filas &amp; Técnicos</h2>
-                                <p>Cada fila reúne os técnicos que atendem certos tipos de chamado. O chamado entra na fila da sua categoria e só os técnicos dela aparecem na primeira escolha.</p>
+                                <div class="crumbs"><i class="fa-solid fa-house"></i> ITSM Operations <i class="fa-solid fa-chevron-right"></i> <span class="here">Cadastro de Técnicos e Filas</span></div>
+                                <h2>Cadastro de Técnicos e Filas</h2>
+                                <p>Cada fila reúne os técnicos que atendem certos tipos de chamado. O chamado entra na fila da sua categoria.</p>
                             </div>
                             <div class="ph-actions">
                                 <button type="button" onclick="openTechModal()" class="btn btn-ghost"><i class="fa-solid fa-user-plus c-amber"></i> Cadastrar técnico</button>
@@ -2191,31 +2229,34 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             </div>
                         </div>
 
-                        <div class="team-h"><i class="fa-solid fa-layer-group c-amber"></i> Filas de atendimento <small id="teams-queues-count"></small></div>
-                        <div id="teams-queues" class="team-grid"><!-- JS --></div>
+                        <div class="teams-layout">
+                            <section class="teams-col" aria-label="Filas de atendimento">
+                                <div class="team-h"><i class="fa-solid fa-layer-group c-amber"></i> Filas de atendimento <small id="teams-queues-count"></small></div>
+                                <div id="teams-queues" class="team-grid"><!-- JS --></div>
+                            </section>
 
-                        <div class="glass panel">
-                            <div class="panel-head">
-                                <div>
-                                    <h3><i class="fa-solid fa-user-gear c-amber"></i> Técnicos</h3>
-                                    <p>Quem atende os chamados. Administradores ativos do Nexus atendem automaticamente e também podem ser colocados em uma fila.</p>
+                            <div class="glass panel">
+                                <div class="panel-head">
+                                    <div>
+                                        <h3><i class="fa-solid fa-user-gear c-amber"></i> Técnicos</h3>
+                                        <p>Quem atende os chamados. Administradores ativos do Nexus atendem automaticamente e podem ser colocados em uma fila.</p>
+                                    </div>
                                 </div>
-                                <button type="button" onclick="openTechModal()" class="btn btn-ghost btn-sm"><i class="fa-solid fa-user-plus"></i> Cadastrar técnico</button>
-                            </div>
-                            <div class="table-wrap">
-                                <table class="tbl" style="min-width:40rem;">
-                                    <thead>
-                                        <tr>
-                                            <th>Técnico</th>
-                                            <th>Especialidade</th>
-                                            <th>Filas</th>
-                                            <th>Abertos</th>
-                                            <th>Situação</th>
-                                            <th class="ta-r">Ação</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="teams-techs-tbody"><!-- JS --></tbody>
-                                </table>
+                                <div class="table-wrap">
+                                    <table class="tbl" style="min-width:38rem;">
+                                        <thead>
+                                            <tr>
+                                                <th>Técnico</th>
+                                                <th>Especialidade</th>
+                                                <th>Filas</th>
+                                                <th>Abertos</th>
+                                                <th>Situação</th>
+                                                <th class="ta-r">Ação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="teams-techs-tbody"><!-- JS --></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3890,17 +3931,14 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 // Atualiza o cadastro (outra pessoa pode ter mexido) sem travar a tela
                 loadTechnicians().then(() => { if (!teams.classList.contains('hidden')) renderTeams(); });
             } else {
-                const unassigned = tab === 'unassigned';
-                setActiveNav('.tech-nav-item', unassigned ? 'tech-nav-unassigned' : 'tech-nav-queue');
+                setActiveNav('.tech-nav-item', 'tech-nav-queue');
                 queue.classList.remove('hidden');
                 dash.classList.add('hidden');
                 teams.classList.add('hidden');
-                queueQuick = unassigned ? 'unassigned' : 'open';
-                $('tech-queue-title').innerText = unassigned ? 'Chamados sem Técnico' : 'Fila de Chamados';
-                $('tech-queue-crumb').innerText = unassigned ? 'Sem Técnico (Novos)' : 'Fila de Chamados';
-                $('tech-queue-sub').innerText = unassigned
-                    ? 'Chamados abertos aguardando um técnico: assuma para iniciar o atendimento e o relógio do SLA.'
-                    : 'Novo, Pendente, Atendimento atribuído, Resolvido e Fechado: filtre, assuma e atenda direto da lista. A fila atualiza sozinha a cada 20 segundos.';
+                queueQuick = 'open';
+                $('tech-queue-title').innerText = 'Fila de Chamados';
+                $('tech-queue-crumb').innerText = 'Fila de Chamados';
+                $('tech-queue-sub').innerText = 'Novo, Pendente, Atendimento atribuído, Resolvido e Fechado: filtre, assuma e atenda direto da lista. A fila atualiza sozinha a cada 20 segundos.';
                 renderTechQueue();
             }
             scrollMainTop();
@@ -4579,8 +4617,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const resSub = $('kpi-tech-resolved-sub');
             if (resSub) { const nf = ticketsList.filter((t) => t.status === 'Fechado').length; resSub.innerText = nf ? nf + ' já fechado(s)' : 'Solução entregue'; }
             $('sidebar-tech-queue-count').innerText = open.length;
-            $('sidebar-tech-unassigned-count').innerText = unassignedCount;
-            $('sidebar-tech-unassigned-count').classList.toggle('amber', unassignedCount > 0);
 
             renderPriorityTickets();
             renderQueueChips();
