@@ -14184,7 +14184,7 @@ html[data-theme="light"] nav.menu.sidebar-menu .menu-btn-user:not(.active) .ic {
 #authPage #loginSubmitBtn:hover, #authPage #regSubmitBtn:hover, #authPage #btnSendPassword:hover { background: #047857 !important; }
 .sidebar-search { display: none !important; }
 </style>
-<link rel="stylesheet" href="/nexus-shell.css?v=20261109-2" />
+<link rel="stylesheet" href="/nexus-shell.css?v=20261109-3" />
 <link rel="stylesheet" href="/frontend-polish.css?v=20261103-orcamentos" />
 <link rel="stylesheet" href="/dashboard-financeiro.css?v=20261107-4" />
 <script src="/dashboard-financeiro.js?v=20261107-4"></script>
@@ -17702,8 +17702,8 @@ function getFormattedToday() {
   return weekDays[d.getDay()] + ', ' + d.getDate() + ' de ' + months[d.getMonth()] + ' de ' + d.getFullYear();
 }
 
-var WELCOME_TOAST_MS = 8000;
-var FAREWELL_MS = 3000;
+var WELCOME_TOAST_MS = 2600;   // aviso de login: aparece e some rápido (some sozinho; X, Esc, Enter e clique fora fecham antes)
+var FAREWELL_MS = 1600;        // despedida: tempo mínimo na tela; se os dados ainda estão sendo salvos, espera a gravação terminar
 var __welcomeToastTimer = null;
 var __welcomeToastRemaining = WELCOME_TOAST_MS;
 var __welcomeToastStartedAt = 0;
@@ -31555,7 +31555,7 @@ window.applyPostLoginBg = function(theme) {
           const uName = escapeToastHtml(formatToastDisplayName(currentUser ? currentUser.name : ''));
           const greet = getGreetingTime().text;
           showExecutiveWelcomeToast('Sessão autenticada', greet + ', <strong>' + uName + '</strong>! Seu ambiente financeiro está sincronizado e protegido.');
-        }, 350);
+        }, 120);
       }
     } catch(e){}
   }
