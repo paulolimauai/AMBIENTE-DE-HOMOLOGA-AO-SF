@@ -65,7 +65,7 @@ if (process.env.NEXUS_DATA_DIR) {
     'local_users.json', 'local_users.backup.json',
     'local_database_data.json', 'local_database_data.backup.json',
     'cpf_registry.json', 'cpf_registry.backup.json',
-    'deleted_accounts.json', 'local_ordens_servico.json', 'local_tecnicos.json',
+    'deleted_accounts.json', 'local_ordens_servico.json', 'local_tecnicos.json', 'local_filas.json',
     'pending_logins.json', 'system_logs.json'
   ];
   for (const fileName of runtimeJsonFiles) {
@@ -100,6 +100,7 @@ const LOCAL_USERS_PATH = path.join(RUNTIME_DATA_DIR, 'local_users.json');
 const LOCAL_USERS_BACKUP_PATH = path.join(RUNTIME_DATA_DIR, 'local_users.backup.json');
 const LOCAL_ORDENS_PATH = path.join(RUNTIME_DATA_DIR, 'local_ordens_servico.json');
 const LOCAL_TECNICOS_PATH = path.join(RUNTIME_DATA_DIR, 'local_tecnicos.json');
+const LOCAL_FILAS_PATH = path.join(RUNTIME_DATA_DIR, 'local_filas.json');
 const PENDING_LOGINS_PATH = path.join(RUNTIME_DATA_DIR, 'pending_logins.json');
 const DELETED_ACCOUNTS_PATH = path.join(RUNTIME_DATA_DIR, 'deleted_accounts.json');
 const GOOGLE_OAUTH_STATES = new Map();
@@ -1665,6 +1666,14 @@ async function setupDatabaseTablesAndSync() {
       BEGIN
         ALTER TABLE ordens_servico ADD timeline NVARCHAR(MAX) NULL;
       END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'ticket_type')
+      BEGIN
+        ALTER TABLE ordens_servico ADD ticket_type NVARCHAR(30) NULL;
+      END;
+      IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ordens_servico') AND name = 'fila')
+      BEGIN
+        ALTER TABLE ordens_servico ADD fila NVARCHAR(100) NULL;
+      END;
     END;
 
     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'tecnicos_suporte')
@@ -1804,8 +1813,9 @@ async function setupDatabaseTablesAndSync() {
     const localOrdensFile = path.join(RUNTIME_DATA_DIR, 'local_ordens_servico.json');
     if (fs.existsSync(localOrdensFile)) {
       const localOrdens = JSON.parse(fs.readFileSync(localOrdensFile, 'utf8')) || [];
-      for (const ord of localOrdens) {
-        if (!ord || !ord.protocol) continue;
+      for (const bruta of localOrdens) {
+        if (!bruta || !bruta.protocol) continue;
+        const ord = Atendimento.normalizarOrdem(bruta); // status, severidade e tipo já nos nomes atuais
         const existOrd = await pool.query('SELECT id FROM ordens_servico WHERE protocol = $1', [ord.protocol]);
         if (existOrd.rows.length === 0) {
           await pool.query(
@@ -1814,20 +1824,20 @@ async function setupDatabaseTablesAndSync() {
                service_type, priority, title, description, status,
                admin_notes, tecnico_responsavel, assumido_em, canal_atendimento,
                sla, asset, time_spent, solution, timeline,
-               concluido_em, created_at, updated_at
+               concluido_em, created_at, updated_at, ticket_type, fila
              )
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)`,
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)`,
             [
               ord.protocol,
               ord.client_name,
               ord.client_email,
               ord.client_phone || null,
               ord.client_cpf || null,
-              ord.service_type || 'Melhoria no Sistema',
-              ord.priority || 'Normal',
+              ord.service_type || 'Outros',
+              ord.priority || 'Média',
               ord.title || 'OS',
               ord.description || '',
-              ord.status || 'Pendente',
+              ord.status || 'Novo',
               ord.admin_notes || '',
               ord.tecnico_responsavel || null,
               ord.assumido_em || null,
@@ -1839,7 +1849,9 @@ async function setupDatabaseTablesAndSync() {
               Array.isArray(ord.timeline) ? JSON.stringify(ord.timeline) : null,
               ord.concluido_em || null,
               ord.created_at || new Date().toISOString(),
-              ord.updated_at || new Date().toISOString()
+              ord.updated_at || new Date().toISOString(),
+              ord.ticket_type || 'Requisição',
+              ord.fila || null
             ]
           );
         }
@@ -1853,7 +1865,7 @@ async function setupDatabaseTablesAndSync() {
         service_type, priority, title, description, status, admin_notes,
         tecnico_responsavel, assumido_em, canal_atendimento,
         sla, asset, time_spent, solution, timeline,
-        concluido_em, created_at, updated_at
+        concluido_em, created_at, updated_at, ticket_type, fila
       FROM ordens_servico
       ORDER BY id DESC
     `);
@@ -25790,8 +25802,8 @@ window.consultarProtocoloRecente = function() {
 // Política de SLA: Crítica 30 min, Alta 1 h, Média 24 h (corridas), Baixa 5 dias úteis (mesma regra do atendimento.js)
 window.calcularSlaPorPrioridadeFront = function(priority) {
   const p = String(priority || '').toLowerCase();
-  if (p.includes('crít') || p.includes('crit') || p.includes('urg')) return '30 Minutos';
-  if (p.includes('alt')) return '1 Hora';
+  if (p.includes('crít') || p.includes('crit') || p.includes('urg')) return '4 Horas';
+  if (p.includes('alt')) return '8 Horas';
   if (p.includes('baix')) return '5 Dias Úteis';
   return '24 Horas';
 };
@@ -32534,7 +32546,7 @@ function saveLocalOrdens(ordens) {
 }
 
 // ==================== Central de Atendimento: apoio das rotas de chamados (as regras ficam em atendimento.js) ====================
-const ORDEM_COLUNAS_SQL = 'id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, sla, asset, time_spent, solution, timeline, concluido_em, created_at, updated_at';
+const ORDEM_COLUNAS_SQL = 'id, protocol, client_name, client_email, client_phone, client_cpf, service_type, priority, title, description, status, admin_notes, tecnico_responsavel, assumido_em, canal_atendimento, sla, asset, time_spent, solution, timeline, concluido_em, created_at, updated_at, ticket_type, fila';
 const ATENDIMENTO_LIMITE_CORPO_BYTES = 64 * 1024;
 const ATENDIMENTO_LIMITE_LISTA = 500;
 
@@ -32648,14 +32660,15 @@ async function atualizarOrdemNoBanco(ordem, agoraIso) {
        SET status = $1, admin_notes = $2, priority = $3, service_type = $4,
            tecnico_responsavel = $5, assumido_em = $6, canal_atendimento = $7,
            sla = $8, asset = $9, time_spent = $10, solution = $11, timeline = $12,
-           concluido_em = $13, updated_at = $14
-       WHERE id = $15 OR UPPER(protocol) = $16`,
+           concluido_em = $13, updated_at = $14, ticket_type = $15, fila = $16
+       WHERE id = $17 OR UPPER(protocol) = $18`,
       [
         ordem.status, ordem.admin_notes || '', ordem.priority, ordem.service_type,
         ordem.tecnico_responsavel || null, ordem.assumido_em || null, ordem.canal_atendimento || 'Portal Web',
         ordem.sla || Atendimento.calcularSlaPorPrioridade(ordem.priority), ordem.asset || 'Nenhum', Number(ordem.time_spent) || 0,
         ordem.solution || '', Array.isArray(ordem.timeline) ? JSON.stringify(ordem.timeline) : null,
         ordem.concluido_em || null, agoraIso,
+        ordem.ticket_type || 'Requisição', ordem.fila || null,
         idNumericoDeOrdem(ordem.id), String(ordem.protocol).toUpperCase()
       ]
     );
@@ -32717,6 +32730,31 @@ async function consultarOrdensAmplo(termo) {
     }
   }
   return Atendimento.mesclarOrdens(doBanco, locais).slice(0, 50);
+}
+
+// Filas de atendimento (ex.: "Suporte Técnico N2"): arquivo local; na primeira leitura nasce com a fila inicial.
+// Cada fila: { id, nome, descricao, categorias[], tecnicos[] (e-mails), ativa }. As regras ficam em atendimento.js.
+function getLocalFilas() {
+  try {
+    if (fs.existsSync(LOCAL_FILAS_PATH)) {
+      const lista = JSON.parse(fs.readFileSync(LOCAL_FILAS_PATH, 'utf8'));
+      if (Array.isArray(lista)) return lista;
+    }
+  } catch (e) {
+    console.error('Erro ao ler local_filas.json:', e);
+    return [];
+  }
+  const iniciais = Atendimento.filasIniciais();
+  saveLocalFilas(iniciais);
+  return iniciais;
+}
+
+function saveLocalFilas(filas) {
+  try {
+    writeJsonFile(LOCAL_FILAS_PATH, JSON.stringify(filas, null, 2));
+  } catch (e) {
+    console.error('Erro ao salvar local_filas.json:', e);
+  }
 }
 
 function getLocalTecnicos() {
@@ -35713,7 +35751,7 @@ async function handleNexusRequest(req, res) {
 
             localOrdens.forEach(o => {
               const matchById = osId && String(o.id) === String(osId);
-              const matchByEmailPayment = !osId && o.client_email && o.client_email.toLowerCase() === targetEmail && (o.status || '').toLowerCase() !== 'concluído' && (
+              const matchByEmailPayment = !osId && o.client_email && o.client_email.toLowerCase() === targetEmail && !Atendimento.statusEncerrado(o.status) && (
                 (o.service_type || '').toLowerCase().includes('pag') ||
                 (o.service_type || '').toLowerCase().includes('boleto') ||
                 (o.title || '').toLowerCase().includes('pag') ||
@@ -35721,7 +35759,7 @@ async function handleNexusRequest(req, res) {
                 (o.title || '').toLowerCase().includes('boleto')
               );
               if (matchById || matchByEmailPayment) {
-                o.status = 'Concluído';
+                o.status = 'Resolvido';
                 o.tecnico_responsavel = o.tecnico_responsavel || (adminUser.name || 'Administrador');
                 o.concluido_em = nowIsoOs;
                 o.updated_at = nowIsoOs;
@@ -35729,7 +35767,7 @@ async function handleNexusRequest(req, res) {
                 updatedAnyOs = true;
                 if (pool) {
                   pool.query(
-                    `UPDATE ordens_servico SET status = 'Concluído', tecnico_responsavel = $1, admin_notes = $2, concluido_em = GETDATE(), updated_at = GETDATE() WHERE id = $3`,
+                    `UPDATE ordens_servico SET status = 'Resolvido', tecnico_responsavel = $1, admin_notes = $2, concluido_em = GETDATE(), updated_at = GETDATE() WHERE id = $3`,
                     [o.tecnico_responsavel, o.admin_notes, o.id]
                   ).catch(()=>{});
                 }
@@ -35990,7 +36028,7 @@ async function handleNexusRequest(req, res) {
         client_cpf: corpoDoChamado.client_cpf || contaLogada.cpf || ''
       };
     }
-    const validacao = Atendimento.validarAbertura(corpoDoChamado, { admin: Boolean(admin), isEmail: isStrictEmail });
+    const validacao = Atendimento.validarAbertura(corpoDoChamado, { admin: Boolean(admin), isEmail: isStrictEmail, filas: getLocalFilas() });
     if (!validacao.ok) {
       return sendJson(res, corsHeaders, 400, { success: false, message: validacao.mensagem, errors: validacao.erros });
     }
@@ -36031,6 +36069,8 @@ async function handleNexusRequest(req, res) {
       client_email: novaOrdem.client_email,
       client_phone: novaOrdem.client_phone,
       service_type: novaOrdem.service_type,
+      ticket_type: novaOrdem.ticket_type,
+      fila: novaOrdem.fila,
       priority: novaOrdem.priority,
       title: novaOrdem.title,
       canal_atendimento: novaOrdem.canal_atendimento,
@@ -36047,10 +36087,10 @@ async function handleNexusRequest(req, res) {
              service_type, priority, title, description, status,
              admin_notes, tecnico_responsavel, assumido_em, canal_atendimento,
              sla, asset, time_spent, solution, timeline,
-             concluido_em, created_at, updated_at
+             concluido_em, created_at, updated_at, ticket_type, fila
            )
            OUTPUT INSERTED.id
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)`,
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)`,
           [
             novaOrdem.protocol, novaOrdem.client_name, novaOrdem.client_email,
             novaOrdem.client_phone || null, novaOrdem.client_cpf || null,
@@ -36059,7 +36099,8 @@ async function handleNexusRequest(req, res) {
             novaOrdem.canal_atendimento || 'Portal Web',
             novaOrdem.sla || Atendimento.calcularSlaPorPrioridade(novaOrdem.priority), novaOrdem.asset || 'Nenhum', Number(novaOrdem.time_spent) || 0,
             novaOrdem.solution || '', Array.isArray(novaOrdem.timeline) ? JSON.stringify(novaOrdem.timeline) : null,
-            novaOrdem.concluido_em || null, novaOrdem.created_at, novaOrdem.updated_at
+            novaOrdem.concluido_em || null, novaOrdem.created_at, novaOrdem.updated_at,
+            novaOrdem.ticket_type || 'Requisição', novaOrdem.fila || null
           ]
         );
         const idDoBanco = gravado && gravado.rows && gravado.rows[0] ? gravado.rows[0].id : null;
@@ -36104,7 +36145,7 @@ async function handleNexusRequest(req, res) {
 
     const agoraIso = new Date().toISOString();
     const ator = atorDaRequisicao(req);
-    const resultado = Atendimento.aplicarAtualizacao(achada.todas[achada.indice], payload, { agoraIso, ator: ator.nome });
+    const resultado = Atendimento.aplicarAtualizacao(achada.todas[achada.indice], payload, { agoraIso, ator: ator.nome, filas: getLocalFilas() });
     if (!resultado.ok) return sendJson(res, corsHeaders, 400, { success: false, message: resultado.mensagem });
 
     const ordem = resultado.ordem;
@@ -36112,8 +36153,9 @@ async function handleNexusRequest(req, res) {
     saveLocalOrdens(achada.todas);
 
     recordSystemLog(ator.nome, ator.email, 'Atualização de O.S.', 'Ordem de Serviço',
-      'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Prioridade: ' + ordem.priority + ')' +
+      'Atualizou O.S. #' + ordem.protocol + ' para status: ' + ordem.status + ' (Severidade: ' + ordem.priority + ')' +
       (ordem.tecnico_responsavel ? ' (Técnico: ' + ordem.tecnico_responsavel + ')' : '') +
+      (ordem.fila ? ' (Fila: ' + ordem.fila + ')' : '') +
       (resultado.mudancas.length ? ' — ' + resultado.mudancas.join('; ') : ''));
 
     broadcastEvent('order_updated', {
@@ -36122,6 +36164,8 @@ async function handleNexusRequest(req, res) {
       status: ordem.status,
       priority: ordem.priority,
       service_type: ordem.service_type,
+      ticket_type: ordem.ticket_type,
+      fila: ordem.fila,
       tecnico_responsavel: ordem.tecnico_responsavel,
       sla: ordem.sla,
       asset: ordem.asset,
@@ -36227,6 +36271,12 @@ async function handleNexusRequest(req, res) {
         console.warn('[AVISO BD TECNICOS GET] Fallback para arquivo local:', err.message);
       }
     }
+    // Cada técnico traz as filas em que atende (a participação fica guardada na própria fila, pelo e-mail)
+    const filasCadastradas = getLocalFilas();
+    tecnicos = tecnicos.map((t) => ({
+      ...t,
+      filas: filasCadastradas.filter((f) => Array.isArray(f.tecnicos) && f.tecnicos.includes(String(t.email || '').toLowerCase().trim())).map((f) => f.id)
+    }));
     res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({ success: true, tecnicos: tecnicos }));
   }
@@ -36275,10 +36325,18 @@ async function handleNexusRequest(req, res) {
 
       const list = getLocalTecnicos();
       let targetTec = null;
+      let emailAnterior = null;
+
+      // O e-mail identifica o técnico (no banco e nas filas): dois cadastros não podem usar o mesmo
+      if (list.some(t => String(t.email || '').toLowerCase().trim() === email && String(t.id) !== String(payload.id || ''))) {
+        res.writeHead(409, { ...corsHeaders, 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ success: false, message: 'Já existe um técnico cadastrado com esse e-mail.' }));
+      }
 
       if (payload.id) {
         targetTec = list.find(t => String(t.id) === String(payload.id));
         if (targetTec) {
+          emailAnterior = String(targetTec.email || '').toLowerCase().trim();
           targetTec.name = name;
           targetTec.email = email;
           targetTec.phone = phone;
@@ -36302,7 +36360,23 @@ async function handleNexusRequest(req, res) {
       }
 
       saveLocalTecnicos(list);
-      recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', payload.id ? 'Edição de Técnico' : 'Cadastro de Técnico', 'Técnicos', 'Técnico: ' + name + ' (' + specialty + ')');
+
+      // Filas em que o técnico atende (ids): a participação é guardada na fila, pelo e-mail. Se o e-mail mudou, a fila acompanha.
+      const filasAtuais = getLocalFilas();
+      const idsPedidos = Array.isArray(payload.filas) ? payload.filas.map((f) => String(f)) : null;
+      let filasMudaram = false;
+      for (const f of filasAtuais) {
+        let membros = Array.isArray(f.tecnicos) ? [...f.tecnicos] : [];
+        if (emailAnterior && emailAnterior !== email) membros = membros.map((e) => (e === emailAnterior ? email : e));
+        const deve = idsPedidos ? idsPedidos.includes(String(f.id)) : membros.includes(email);
+        if (deve && !membros.includes(email)) membros.push(email);
+        if (!deve) membros = membros.filter((e) => e !== email);
+        if (JSON.stringify(membros) !== JSON.stringify(f.tecnicos || [])) { f.tecnicos = membros; filasMudaram = true; }
+      }
+      if (filasMudaram) saveLocalFilas(filasAtuais);
+      targetTec.filas = filasAtuais.filter((f) => (f.tecnicos || []).includes(email)).map((f) => f.id);
+
+      recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', payload.id ? 'Edição de Técnico' : 'Cadastro de Técnico', 'Técnicos', 'Técnico: ' + name + ' (' + specialty + ')' + (targetTec.filas.length ? ' — filas: ' + targetTec.filas.join(', ') : ''));
 
       if (pool) {
         try {
@@ -36346,6 +36420,20 @@ async function handleNexusRequest(req, res) {
     const updated = list.filter(t => String(t.id) !== String(idToDelete));
     saveLocalTecnicos(updated);
 
+    // Quem sai do cadastro deixa também as filas em que atendia
+    if (target && target.email) {
+      const emailRemovido = String(target.email).toLowerCase().trim();
+      const filasAtuais = getLocalFilas();
+      let mudou = false;
+      for (const f of filasAtuais) {
+        if (Array.isArray(f.tecnicos) && f.tecnicos.includes(emailRemovido)) {
+          f.tecnicos = f.tecnicos.filter((e) => e !== emailRemovido);
+          mudou = true;
+        }
+      }
+      if (mudou) saveLocalFilas(filasAtuais);
+    }
+
     recordSystemLog('Administrador', 'admin@nexusfinanceiro.com', 'Exclusão de Técnico', 'Técnicos', 'Excluiu técnico: ' + (target ? target.name : idToDelete));
 
     if (pool && target) {
@@ -36358,6 +36446,71 @@ async function handleNexusRequest(req, res) {
 
     res.writeHead(200, { ...corsHeaders, 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({ success: true }));
+  }
+
+  // Filas de atendimento (ex.: "Suporte Técnico N2"): só administradores. Cada fila tem categorias que caem nela e os
+  // técnicos (e-mails) que a atendem; o chamado guarda o NOME da fila.
+  if (req.method === 'GET' && parsedUrl.pathname === '/api/filas') {
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
+    }
+    return sendJson(res, corsHeaders, 200, { success: true, filas: getLocalFilas(), categorias: Atendimento.CATEGORIAS });
+  }
+
+  if (req.method === 'POST' && parsedUrl.pathname === '/api/filas') {
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
+    }
+    const leitura = await lerCorpoJson(req, 16 * 1024);
+    if (!leitura.ok) return sendJson(res, corsHeaders, leitura.status, { success: false, message: leitura.mensagem });
+
+    const filas = getLocalFilas();
+    const validacao = Atendimento.validarFila(leitura.dados, { existentes: filas, emailValido: isStrictEmail });
+    if (!validacao.ok) return sendJson(res, corsHeaders, 400, { success: false, message: validacao.mensagem, errors: validacao.erros });
+
+    const { fila, anterior } = validacao;
+    const posicao = anterior ? filas.findIndex((f) => f.id === anterior.id) : -1;
+    if (posicao === -1) filas.push(fila); else filas[posicao] = fila;
+    saveLocalFilas(filas);
+
+    // Renomear a fila leva junto os chamados que a usam (eles guardam o nome)
+    if (anterior && anterior.nome !== fila.nome) {
+      const ordens = getLocalOrdens();
+      let renomeadas = 0;
+      for (const o of ordens) { if (o && o.fila === anterior.nome) { o.fila = fila.nome; renomeadas++; } }
+      if (renomeadas) saveLocalOrdens(ordens);
+      if (pool) {
+        try { await pool.query('UPDATE ordens_servico SET fila = $1 WHERE fila = $2', [fila.nome, anterior.nome]); }
+        catch (err) { console.warn('[AVISO BD FILAS] Não foi possível renomear a fila nos chamados do SQL Server:', err.message); }
+      }
+    }
+
+    const ator = atorDaRequisicao(req);
+    recordSystemLog(ator.nome, ator.email, anterior ? 'Edição de Fila' : 'Criação de Fila', 'Filas de Atendimento',
+      'Fila "' + fila.nome + '" — técnicos: ' + fila.tecnicos.length + ' — categorias: ' + (fila.categorias.join(', ') || 'nenhuma') + (fila.ativa ? '' : ' (desativada)'));
+    broadcastEvent('filas_updated', { fila: { id: fila.id, nome: fila.nome } });
+    return sendJson(res, corsHeaders, 200, { success: true, fila, filas });
+  }
+
+  if (req.method === 'DELETE' && parsedUrl.pathname === '/api/filas') {
+    if (!getAuthenticatedAdmin(req) && !hasInternalSyncAccess(req)) {
+      return sendJson(res, corsHeaders, 401, { success: false, message: 'Autenticação de administrador obrigatória.' });
+    }
+    const id = String(parsedUrl.query.id || '').trim();
+    const filas = getLocalFilas();
+    const alvo = filas.find((f) => String(f.id) === id);
+    if (!alvo) return sendJson(res, corsHeaders, 404, { success: false, message: 'Fila não encontrada.' });
+    // Não apaga uma fila que ainda tem chamado em aberto: o chamado ficaria com uma fila que não existe mais
+    const abertos = (await carregarOrdens()).filter((o) => o.fila === alvo.nome && !Atendimento.statusEncerrado(o.status));
+    if (abertos.length) {
+      return sendJson(res, corsHeaders, 409, { success: false, message: 'A fila tem ' + abertos.length + ' chamado(s) em aberto. Transfira-os para outra fila ou desative a fila em vez de excluir.' });
+    }
+    const restantes = filas.filter((f) => String(f.id) !== id);
+    saveLocalFilas(restantes);
+    const ator = atorDaRequisicao(req);
+    recordSystemLog(ator.nome, ator.email, 'Exclusão de Fila', 'Filas de Atendimento', 'Excluiu a fila "' + alvo.nome + '"');
+    broadcastEvent('filas_updated', { deleted_id: id });
+    return sendJson(res, corsHeaders, 200, { success: true, filas: restantes });
   }
 
   // Exclusão de chamado (administrador). Aceita id ou protocolo; responde 404 se não existir em lugar nenhum.

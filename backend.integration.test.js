@@ -68,7 +68,8 @@ test.before(async () => {
     { id: 2, name: 'Ana Teste', email: 'ana@teste.nexus', password: hashPwd('Ana@12345'), role: 'Usuário', active: true, cpf: '52998224725', phone: null, birth_date: '17/05/1990', terms_accepted: true, device_type: 'Computador', trial_started_at: '2026-11-08T10:00:00-03:00', subscription_status: 'trial' },
     { id: 3, name: 'Bia Teste', email: 'bia@teste.nexus', password: hashPwd('Bia@12345'), role: 'Usuário', active: true, cpf: '39053344705', phone: null, birth_date: '02/02/1992', terms_accepted: true, device_type: 'Computador', trial_started_at: '2026-11-08T10:00:00-03:00', subscription_status: 'trial' }
   ];
-  const seed = { 'local_users.json': usuarios, 'local_users.backup.json': usuarios, 'deleted_accounts.json': [], 'local_database_data.json': {}, 'local_database_data.backup.json': {}, 'cpf_registry.json': {}, 'cpf_registry.backup.json': {}, 'local_ordens_servico.json': [], 'local_tecnicos.json': [], 'pending_logins.json': [], 'system_logs.json': [] };
+  // local_filas.json também é semeado: sem isso o servidor copiaria o arquivo REAL de filas do projeto para a pasta de teste
+  const seed = { 'local_users.json': usuarios, 'local_users.backup.json': usuarios, 'deleted_accounts.json': [], 'local_database_data.json': {}, 'local_database_data.backup.json': {}, 'cpf_registry.json': {}, 'cpf_registry.backup.json': {}, 'local_ordens_servico.json': [], 'local_tecnicos.json': [], 'local_filas.json': require('./atendimento').filasIniciais(), 'pending_logins.json': [], 'system_logs.json': [] };
   for (const [nome, conteudo] of Object.entries(seed)) fs.writeFileSync(path.join(pasta, nome), JSON.stringify(conteudo, null, 2));
   porta = await portaLivre();
   const env = { ...process.env, PORT: String(porta), NEXUS_DATA_DIR: pasta, NEXUS_DISABLE_DB: '1', JWT_SECRET, NEXUS_SYNC_TOKEN: SYNC_TOKEN, RENDER_CLOUD_URL: 'https://127.0.0.1:9', TRUST_PROXY: '1' };
@@ -220,6 +221,97 @@ test('técnicos: nome e e-mail validados', async () => {
   assert.equal(ok.status, 200, ok.texto);
 });
 
+test('fila de chamados: filas e técnicos, requisição/incidente, SLA 4 h e ciclo Novo -> Atendimento atribuído -> Resolvido -> Fechado', async () => {
+  const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
+  const ana = (await login('ana@teste.nexus', 'Ana@12345')).token;
+
+  // filas: só administrador; a fila "Suporte Técnico N2" já existe
+  assert.equal((await api('GET', '/api/filas')).status, 401);
+  assert.equal((await api('GET', '/api/filas', { token: ana })).status, 401);
+  const lista = await api('GET', '/api/filas', { token: admin });
+  assert.equal(lista.status, 200, lista.texto);
+  const n2 = lista.json.filas.find((f) => f.nome === 'Suporte Técnico N2');
+  assert.ok(n2, 'a fila inicial não existe');
+  assert.deepEqual(n2.categorias, ['Atendimento Técnico', 'Falhas/Bugs/Correções']);
+
+  // cadastrar técnico já escolhendo a fila; e-mail repetido é recusado
+  const tec = await api('POST', '/api/tecnicos', { token: admin, body: { name: 'Carla Nunes', email: 'carla@teste.nexus', specialty: 'Suporte N2', filas: [n2.id] } });
+  assert.equal(tec.status, 200, tec.texto);
+  assert.deepEqual(tec.json.tecnico.filas, [n2.id]);
+  const repetido = await api('POST', '/api/tecnicos', { token: admin, body: { name: 'Outra Pessoa', email: 'CARLA@teste.nexus' } });
+  assert.equal(repetido.status, 409, repetido.texto);
+  const depois = await api('GET', '/api/filas', { token: admin });
+  assert.deepEqual(depois.json.filas.find((f) => f.id === n2.id).tecnicos, ['carla@teste.nexus']);
+  assert.deepEqual((await api('GET', '/api/tecnicos', { token: admin })).json.tecnicos.find((t) => t.email === 'carla@teste.nexus').filas, [n2.id]);
+
+  // criar outra fila: nome repetido, categoria inventada e usuário comum são recusados
+  const nova = await api('POST', '/api/filas', { token: admin, body: { nome: 'Financeiro N1', descricao: 'Faturas e boletos', categorias: ['2ª Via de fatura'], tecnicos: ['carla@teste.nexus'] } });
+  assert.equal(nova.status, 200, nova.texto);
+  assert.equal(nova.json.fila.id, 'financeiro-n1');
+  assert.equal((await api('POST', '/api/filas', { token: admin, body: { nome: 'financeiro n1' } })).status, 400);
+  assert.equal((await api('POST', '/api/filas', { token: admin, body: { nome: 'Fila Boba', categorias: ['Inventada'] } })).status, 400);
+  assert.equal((await api('POST', '/api/filas', { token: ana, body: { nome: 'Fila da Ana' } })).status, 401);
+
+  // o usuário abre um INCIDENTE crítico de falha: cai na fila N2, SLA de 4 horas, status "Novo"
+  const aberto = await api('POST', '/api/ordens', { token: ana, body: {
+    service_type: 'Falhas/Bugs/Correções', ticket_type: 'Incidente', priority: 'Crítica',
+    title: 'Erro ao gerar boleto', description: 'O sistema mostra tela branca ao gerar o boleto do mês.', canal_atendimento: 'Central GLPI'
+  } });
+  assert.equal(aberto.status, 200, aberto.texto);
+  const protocolo = aberto.json.protocol;
+  assert.equal(aberto.json.ordem.status, 'Novo');
+  assert.equal(aberto.json.ordem.sla, '4 Horas');
+  assert.equal(aberto.json.ordem.ticket_type, 'Incidente');
+  assert.equal(aberto.json.ordem.fila, 'Suporte Técnico N2');
+  // uma requisição comum (2ª via) cai na outra fila e sem escolha de tipo vale o sugerido
+  const segunda = await api('POST', '/api/ordens', { token: ana, body: { service_type: '2ª Via de fatura', priority: 'Baixa', title: 'Preciso da 2ª via', description: 'Perdi o boleto de outubro e preciso de outro.' } });
+  assert.equal(segunda.status, 200, segunda.texto);
+  assert.equal(segunda.json.ordem.ticket_type, 'Requisição');
+  assert.equal(segunda.json.ordem.fila, 'Financeiro N1');
+  assert.equal(segunda.json.ordem.sla, '5 Dias Úteis');
+  // tipo e severidade inválidos
+  assert.equal((await api('POST', '/api/ordens', { token: ana, body: { ticket_type: 'Reclamação', title: 'Teste', description: 'Descrição longa o bastante.' } })).status, 400);
+  assert.equal((await api('POST', '/api/ordens', { token: ana, body: { priority: 'Imediata', title: 'Teste', description: 'Descrição longa o bastante.' } })).status, 400);
+
+  // atendimento: atribuir técnico tira de "Novo"; fila inventada é recusada; resolver e fechar
+  const atribuir = await api('POST', '/api/ordens/update', { token: admin, body: { protocol: protocolo, tecnico_responsavel: 'Carla Nunes' } });
+  assert.equal(atribuir.status, 200, atribuir.texto);
+  assert.equal(atribuir.json.ordem.status, 'Atendimento atribuído');
+  assert.equal((await api('POST', '/api/ordens/update', { token: admin, body: { protocol: protocolo, fila: 'Fila Inexistente' } })).status, 400);
+  const pendente = await api('POST', '/api/ordens/update', { token: admin, body: { protocol: protocolo, status: 'Pendente' } });
+  assert.equal(pendente.json.ordem.status, 'Pendente');
+  const resp = await api('POST', '/api/ordens/acao', { token: ana, body: { protocol: protocolo, acao: 'responder', texto: 'Segue um print da tela.' } });
+  assert.equal(resp.status, 200, resp.texto);
+  assert.equal(resp.json.ordem.status, 'Atendimento atribuído');
+  const resolvido = await api('POST', '/api/ordens/update', { token: admin, body: { protocol: protocolo, status: 'Resolvido', solution: 'Corrigido o gerador de boletos.' } });
+  assert.equal(resolvido.json.ordem.status, 'Resolvido');
+  const fechado = await api('POST', '/api/ordens/update', { token: admin, body: { protocol: protocolo, status: 'Fechado' } });
+  assert.equal(fechado.json.ordem.status, 'Fechado');
+  assert.equal((await api('POST', '/api/ordens/acao', { token: ana, body: { protocol: protocolo, acao: 'reabrir', texto: 'Voltou a dar erro' } })).status, 409);
+  const minhas = await api('GET', '/api/ordens/minhas', { token: ana });
+  const minha = minhas.json.ordens.find((o) => o.protocol === protocolo);
+  assert.equal(minha.status, 'Fechado');
+  assert.equal(minha.pode_responder, false);
+  assert.ok(!JSON.stringify(minha).includes('admin_notes'));
+
+  // o usuário cancela a 2ª via antes de alguém assumir: fica Fechada
+  const cancelada = await api('POST', '/api/ordens/acao', { token: ana, body: { protocol: segunda.json.protocol, acao: 'cancelar' } });
+  assert.equal(cancelada.status, 200, cancelada.texto);
+  assert.equal(cancelada.json.ordem.status, 'Fechado');
+
+  // excluir fila: com chamado em aberto não pode; sem chamado em aberto pode; excluir o técnico tira ele das filas
+  assert.equal((await api('POST', '/api/ordens/acao', { token: ana, body: { protocol: segunda.json.protocol, acao: 'responder', texto: 'x y' } })).status, 409);
+  const reaberta = await api('POST', '/api/ordens', { token: ana, body: { service_type: '2ª Via de fatura', title: 'Outra 2ª via', description: 'Preciso de mais uma segunda via do boleto.' } });
+  assert.equal(reaberta.json.ordem.fila, 'Financeiro N1');
+  const recusada = await api('DELETE', '/api/filas?id=financeiro-n1', { token: admin });
+  assert.equal(recusada.status, 409, recusada.texto);
+  await api('POST', '/api/ordens/acao', { token: ana, body: { protocol: reaberta.json.protocol, acao: 'cancelar' } });
+  assert.equal((await api('DELETE', '/api/filas?id=financeiro-n1', { token: admin })).status, 200);
+  assert.equal((await api('DELETE', '/api/filas?id=nao-existe', { token: admin })).status, 404);
+  assert.equal((await api('DELETE', '/api/tecnicos?id=' + tec.json.tecnico.id, { token: admin })).status, 200);
+  assert.deepEqual((await api('GET', '/api/filas', { token: admin })).json.filas.find((f) => f.id === n2.id).tecnicos, []);
+});
+
 test('concessão de tempo pelo admin: duração absurda é recusada', async () => {
   const admin = (await login('admin@teste.nexus', 'Admin@12345')).token;
   const r = await api('POST', '/api/subscription/admin-grant-time', { token: admin, body: { admin_email: 'admin@teste.nexus', target_email: 'ana@teste.nexus', duration_days: 99999999 } });
@@ -264,7 +356,7 @@ test('o arquivo de usuários continua íntegro (JSON válido e sem arquivos temp
 
 test('sem NEXUS_SYNC_TOKEN o token é derivado do segredo; o próprio segredo só vale na transição e lixo nunca vale', async () => {
   const pasta2 = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-int2-'));
-  for (const [nome, conteudo] of Object.entries({ 'local_users.json': [], 'local_users.backup.json': [], 'deleted_accounts.json': [], 'local_database_data.json': {}, 'local_database_data.backup.json': {}, 'cpf_registry.json': {}, 'cpf_registry.backup.json': {}, 'local_ordens_servico.json': [], 'local_tecnicos.json': [], 'pending_logins.json': [], 'system_logs.json': [] })) fs.writeFileSync(path.join(pasta2, nome), JSON.stringify(conteudo));
+  for (const [nome, conteudo] of Object.entries({ 'local_users.json': [], 'local_users.backup.json': [], 'deleted_accounts.json': [], 'local_database_data.json': {}, 'local_database_data.backup.json': {}, 'cpf_registry.json': {}, 'cpf_registry.backup.json': {}, 'local_ordens_servico.json': [], 'local_tecnicos.json': [], 'local_filas.json': [], 'pending_logins.json': [], 'system_logs.json': [] })) fs.writeFileSync(path.join(pasta2, nome), JSON.stringify(conteudo));
   const porta2 = await portaLivre();
   const env = { ...process.env, PORT: String(porta2), NEXUS_DATA_DIR: pasta2, NEXUS_DISABLE_DB: '1', JWT_SECRET, RENDER_CLOUD_URL: 'https://127.0.0.1:9', TRUST_PROXY: '1' };
   delete env.RENDER; delete env.IS_RENDER; delete env.NEXUS_SYNC_TOKEN;
