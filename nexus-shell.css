@@ -824,4 +824,16 @@ html.user-logged-in .scale-dropdown .nx-topic-btn {
 html.user-logged-in .scale-dropdown .nx-topic-btn[aria-pressed="true"] { background: rgba(var(--nx-sh-acc), .2) !important; border-color: rgba(var(--nx-sh-acc), .65) !important; color: #fff !important; }
 html.user-logged-in .scale-dropdown .nx-topic-btn:focus-visible { outline: 2px solid rgb(var(--nx-sh-acc)) !important; outline-offset: 2px !important; }
 
+/* =====================================================================================
+   9. Administrador: menus no topo (pedido de 10/11/2026)
+   O administrador tem só três telas (Cadastros & Contas, Pagamentos & Boletos, Auditoria & Logs); em vez do menu lateral elas viram abas
+   no topo da própria página (desenhadas pelo administracao.js). Só no computador/tablet largo (>= 861px): no celular continuam a barra
+   inferior e a gaveta. Só liga quando o módulo carregou (html.adm-topo) e fora do modo espelho (o admin vendo a conta de um usuário precisa do menu dele).
+   ===================================================================================== */
+@media (min-width: 861px) {
+  html.user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) #menu { display: none !important; }
+  html.user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) .main { margin-left: 0 !important; width: 100% !important; max-width: none !important; }
+  html.user-logged-in.is-admin.adm-topo body:not(.has-view-mode-banner) #pageContent { max-width: 2200px !important; }
+}
+
 } /* fim da layer nx-shell */
