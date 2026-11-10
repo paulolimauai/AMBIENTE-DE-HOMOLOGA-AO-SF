@@ -2886,7 +2886,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             syncBusy = true;
             const btn = $('btn-refresh-queue');
             if (btn) btn.querySelector('i').classList.add('spin');
-            const result = await loadTickets({ silent: true });
+            const result = await loadTicketsConfirmandoSessao({ silent: true });
             syncBusy = false;
             if (btn) btn.querySelector('i').classList.remove('spin');
             if (result === 'auth') { handleAuthExpired(); return; }
@@ -2953,11 +2953,19 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 return;
             }
 
-            // Aberto pelo botão "Abrir Chamado GLPI" na tela de login (?entry=login): tela de login limpa
-            if (entry === 'login') {
+            // Aberto pelo botão "Abrir Chamado GLPI" na tela de login (?entry=login): tela de login limpa.
+            // Só vale para quem CHEGOU pelo botão: ao atualizar a página (F5) ou voltar, quem já tem sessão continua logado
+            // (antes o ?entry=login ficava preso no endereço e cada F5 pedia o login de novo).
+            let atualizouPagina = false;
+            try {
+                const nav = performance.getEntriesByType('navigation')[0];
+                atualizouPagina = Boolean(nav) && (nav.type === 'reload' || nav.type === 'back_forward');
+            } catch (e) {}
+            if (entry === 'login' && !atualizouPagina) {
                 showLoginView();
                 return;
             }
+            if (entry === 'login') limparEntradaDoEndereco();
 
             // "Sair" nesta aba não deve entrar de novo sozinho ao recarregar
             let manualLogout = false;
@@ -2985,9 +2993,30 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             showLoginView();
         };
 
+        // Tira o ?entry=login do endereço depois que a pessoa entrou: sem isso, cada F5 voltaria à tela de login
+        function limparEntradaDoEndereco() {
+            try {
+                const u = new URL(window.location.href);
+                if (!u.searchParams.has('entry')) return;
+                u.searchParams.delete('entry');
+                window.history.replaceState(null, '', u.pathname + u.search + u.hash);
+            } catch (e) {}
+        }
+
+        // Um 401 isolado (servidor reiniciando, resposta que se perdeu) não pode encerrar a sessão: confirma uma segunda vez antes
+        async function loadTicketsConfirmandoSessao(opts) {
+            let result = await loadTickets(opts);
+            if (result === 'auth') {
+                await new Promise((resolve) => setTimeout(resolve, 1500));
+                result = await loadTickets(opts);
+            }
+            return result;
+        }
+
         // Carrega os dados do perfil e abre o sistema; se a sessão do Financeiro expirou, volta ao login com aviso
         async function enterApp(tab) {
-            const result = await loadTickets({ silent: false });
+            limparEntradaDoEndereco();
+            const result = await loadTicketsConfirmandoSessao({ silent: false });
             if (result === 'auth') {
                 logout(true);
                 return;
@@ -3052,6 +3081,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                 currentUser = buildGlpiUserFromNexus(data.user);
                 localStorage.setItem('glpi_10_session', JSON.stringify(currentUser));
+                limparEntradaDoEndereco();
 
                 const result = await loadTickets({ silent: false });
                 if (result === 'auth') { setLoginError('Não foi possível validar a sua sessão. Entre novamente.'); return; }
@@ -3083,7 +3113,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         function logout(expired) {
             stopSync();
             localStorage.removeItem('glpi_10_session');
-            try { if (new URLSearchParams(window.location.search).get('embedded') !== '1') sessionStorage.setItem('glpi_manual_logout', '1'); } catch (e) {}
+            // Só o "Sair" feito pela pessoa trava a entrada automática desta aba; sessão expirada não trava (o F5 tenta de novo)
+            try { if (expired !== true && new URLSearchParams(window.location.search).get('embedded') !== '1') sessionStorage.setItem('glpi_manual_logout', '1'); } catch (e) {}
             currentUser = null;
             ticketsList = [];
             snapshot = new Map();
