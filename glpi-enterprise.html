@@ -291,7 +291,6 @@
             box-shadow: 0 10px 30px -16px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 255, 255, .22);
         }
         .topbar-l, .topbar-r { display: flex; align-items: center; gap: 1rem; min-width: 0; }
-        .menu-btn { display: none; }
         .tb-brand { display: flex; align-items: center; gap: .8rem; min-width: 0; }
         .tb-title { display: flex; align-items: center; gap: .6rem; font-size: .9375rem; font-weight: 800; letter-spacing: -.01em; }
         .tb-sub { font-size: .6875rem; color: var(--muted); }
@@ -317,19 +316,7 @@
 
         /* ---------- Estrutura ---------- */
         .shell { position: relative; z-index: 1; flex: 1; min-height: 0; display: flex; }
-        .sidebar {
-            width: 17rem; flex: none; display: flex; flex-direction: column; justify-content: space-between;
-            background: linear-gradient(180deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .02)), rgba(var(--dk), .72);
-            border-right: 1px solid var(--line);
-            backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%);
-            box-shadow: 12px 0 40px -24px rgba(0, 0, 0, .7), inset -1px 0 0 rgba(255, 255, 255, .05);
-            transition: transform .3s cubic-bezier(.2, .7, .2, 1);
-        }
-        .sb-scroll { flex: 1; min-height: 0; padding: 1.25rem 1rem 1rem; display: grid; gap: 1.4rem; align-content: start; overflow-y: auto; }
         .nav-group { display: grid; gap: .25rem; }
-        .nav-label { display: flex; align-items: center; gap: .6rem; padding: 0 .75rem; margin-bottom: .4rem; font-size: .625rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
-        .nav-label::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
-        .nav-cta { width: 100%; height: 2.75rem; margin-bottom: 1.1rem; border-radius: .9rem; }
         .nav-item {
             --n: var(--blue-rgb);
             position: relative; display: flex; align-items: center; justify-content: space-between; gap: .6rem;
@@ -346,9 +333,6 @@
         .nav-item.is-active { color: var(--white); font-weight: 700; background: linear-gradient(90deg, rgba(var(--n), .26), rgba(var(--n), .06) 85%); border-color: rgba(var(--n), .38); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14); }
         .nav-item.is-active::before { content: ""; position: absolute; left: -1rem; top: 24%; bottom: 24%; width: .22rem; border-radius: 0 .25rem .25rem 0; background: rgb(var(--n)); box-shadow: 0 0 .9rem rgba(var(--n), .95); }
         .nav-item.is-active i { color: var(--white); background: linear-gradient(145deg, rgba(var(--n), .8), rgba(var(--n), .38)); border-color: rgba(var(--n), .75); box-shadow: 0 6px 14px -6px rgba(var(--n), .9), inset 0 1px 0 rgba(255, 255, 255, .3); }
-        .sb-card { padding: .95rem 1rem; border-radius: 1rem; background: linear-gradient(145deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .02)), rgba(var(--dk), .42); border: 1px solid var(--line-soft); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1); }
-        .sb-card-t { display: flex; align-items: center; gap: .5rem; margin-bottom: .6rem; font-size: .625rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-        .sb-card-t i { color: var(--t-amber); }
         .sla-list { display: grid; }
         .sla-list li { --s: var(--slate-rgb); display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .3rem 0; font-size: .72rem; color: var(--ink-2); }
         .sla-list li + li { border-top: 1px dashed var(--line-soft); }
@@ -357,10 +341,6 @@
         .sla-list b { font-family: var(--font-mono); font-size: .68rem; font-weight: 700; color: var(--white); white-space: nowrap; }
         .count { padding: .1rem .55rem; border-radius: 99px; font-family: var(--font-mono); font-size: .625rem; font-weight: 700; color: var(--ink-2); background: rgba(var(--lt), .1); border: 1px solid rgba(var(--lt), .12); }
         .count.amber { color: var(--t-amber); background: rgba(var(--amber-rgb), .16); border-color: rgba(var(--amber-rgb), .32); }
-        .sb-foot { padding: .9rem 1.2rem; display: flex; align-items: center; justify-content: space-between; font-size: .6875rem; color: var(--muted); border-top: 1px solid var(--line-soft); background: rgba(var(--dk), .35); }
-        .sb-foot .on { display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-mono); font-weight: 600; color: var(--t-green); }
-        .sb-foot .on::before { content: ""; width: .45rem; height: .45rem; border-radius: 50%; background: #34d399; box-shadow: 0 0 .6rem rgba(52, 211, 153, .9); }
-        .scrim { display: none; }
 
         .main { flex: 1; min-width: 0; overflow-y: auto; padding: 1.75rem 2rem 2rem; }
         .page { max-width: 112rem; margin: 0 auto; container-type: inline-size; }
@@ -709,10 +689,6 @@
         .reply-foot .btns { display: inline-flex; flex-wrap: wrap; gap: .5rem; margin-left: auto; }
         .reply-foot .kb { font-size: .625rem; color: var(--faint); }
         .reply-foot .kb kbd { padding: .05rem .3rem; border-radius: .3rem; font-family: var(--font-mono); font-size: .5625rem; color: var(--ink-2); background: rgba(var(--lt), .1); border: 1px solid var(--line); }
-        .help-card { display: grid; gap: .45rem; }
-        .help-card li { display: flex; gap: .55rem; font-size: .6875rem; line-height: 1.5; color: var(--ink-2); }
-        .help-card li i { margin-top: .2rem; font-size: .6rem; color: var(--t-amber); }
-        .help-card kbd { padding: .02rem .3rem; border-radius: .3rem; font-family: var(--font-mono); font-size: .5625rem; color: var(--white); background: rgba(var(--lt), .12); border: 1px solid var(--line); }
         @container (max-width: 62rem) { .req-card { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         @media (max-width: 899px) {
             .req-card { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -778,13 +754,6 @@
         @keyframes toastin { from { opacity: 0; transform: translateY(.8rem) scale(.97); } }
 
         /* ---------- Responsivo ---------- */
-        @media (max-width: 1023px) {
-            .menu-btn { display: inline-grid; place-items: center; }
-            .sidebar { position: absolute; top: 0; bottom: 0; left: 0; z-index: 35; transform: translateX(-102%); width: min(17rem, 86vw); }
-            .sidebar.is-open { transform: none; }
-            .scrim { display: block; position: absolute; inset: 0; z-index: 34; background: rgba(var(--dk), .6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .25s; }
-            .scrim.is-on { opacity: 1; pointer-events: auto; }
-        }
         @media (max-width: 899px) {
             .ws-body { display: block; overflow-y: auto; }
             .ws-left { border-right: 0; }
@@ -1073,6 +1042,181 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         :root[data-mode="light"] .scrim { background: rgba(30, 40, 90, .35); }
         :root[data-mode="light"] .nav-item:hover, :root[data-mode="light"] .btn-ghost:hover { color: var(--white); }
         :root[data-mode="light"] ::-webkit-scrollbar-thumb { background: rgba(20, 30, 80, .28); background-clip: padding-box; }
+
+        /* =====================================================================
+           Interface do GLPI: menu no topo, abertura guiada, gaveta de atendimento
+           ===================================================================== */
+        .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+        /* ---------- Barra superior: marca | menu do perfil | ações ---------- */
+        .topbar { gap: 1.2rem; }
+        .tb-brand { flex: none; display: flex; align-items: center; gap: .75rem; min-width: 0; }
+        .tb-brand-t { display: grid; gap: .2rem; min-width: 0; }
+        .tb-brand-t .badge { width: fit-content; font-size: .56rem; padding: .03rem .5rem; }
+        .tb-nav { flex: 1 1 auto; min-width: 0; display: flex; justify-content: center; }
+        .tb-nav .nav-group { display: flex; align-items: center; gap: .25rem; padding: .25rem; border-radius: 1rem; background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
+        .tb-nav .nav-item {
+            --n: var(--acc-rgb);
+            position: relative; display: inline-flex; align-items: center; gap: .55rem; min-height: 2.4rem; padding: 0 1rem; border-radius: .78rem;
+            font-size: .8rem; font-weight: 700; white-space: nowrap; color: var(--ink-2); background: transparent; border: 1px solid transparent; box-shadow: none;
+        }
+        .tb-nav .nav-item::before { display: none; }
+        .tb-nav .nav-item i { width: auto; height: auto; flex: none; display: inline-block; background: none; border: 0; box-shadow: none; font-size: .85rem; color: var(--faint); }
+        .tb-nav .nav-item:hover { background: rgba(var(--lt), .08); color: var(--white); }
+        .tb-nav .nav-item:hover i { color: var(--acc-l); border: 0; }
+        .tb-nav .nav-item.is-active { color: var(--on-brand); background: linear-gradient(180deg, var(--brand), var(--brand-d)); border-color: transparent; box-shadow: 0 8px 20px -10px rgba(var(--acc-rgb), .8), inset 0 1px 0 rgba(255, 255, 255, .28); }
+        .tb-nav .nav-item.is-active i { color: inherit; background: none; border: 0; box-shadow: none; }
+        .tb-nav .count { margin-left: .1rem; }
+        .tb-nav .nav-item.is-active .count { color: var(--on-brand); background: rgba(0, 0, 0, .2); border-color: transparent; }
+        .topbar-r { flex: none; display: flex; align-items: center; gap: .7rem; min-width: 0; }
+        .tb-new { height: 2.5rem; padding: 0 1.05rem; }
+        .user-wrap { position: relative; }
+        .user-btn { display: flex; align-items: center; gap: .6rem; padding: .2rem .55rem .2rem .25rem; border-radius: .95rem; border: 1px solid transparent; color: var(--ink); transition: background .2s, border-color .2s; }
+        .user-btn:hover, .user-btn[aria-expanded="true"] { background: rgba(var(--lt), .08); border-color: var(--line-soft); }
+        .user-btn .user-meta { text-align: left; }
+        @media (min-width: 1280px) { .user-btn .user-meta { display: grid; } }
+        .user-chev { font-size: .6rem; color: var(--faint); }
+        .um { width: 16rem; }
+        .um-id { display: grid; gap: .1rem; padding: .55rem .75rem .7rem; margin-bottom: .3rem; border-bottom: 1px solid var(--line-soft); }
+        .um-id b { font-size: .85rem; color: var(--white); }
+        .um-id span { font-size: .72rem; color: var(--muted); overflow-wrap: anywhere; }
+        .um-id em { margin-top: .25rem; font: 700 .62rem var(--font-mono); font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--acc-l); }
+
+        @media (max-width: 1279px) { .user-chev { display: none; } }
+        @media (max-width: 1139px) {
+            .tb-title { display: none; }
+            .tb-new span { display: none; }
+            .tb-new { width: 2.5rem; padding: 0; }
+            .tb-nav .nav-item:not(.is-active) .nv-t { display: none; }
+            .tb-nav .nav-item { padding: 0 .8rem; }
+        }
+
+        /* Celular e tablet em pé: o menu vira uma barra inferior (como um aplicativo) e "Novo Chamado" um botão flutuante */
+        @media (max-width: 767px) {
+            .topbar { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(var(--dk), .92); }
+            .tb-brand-t .badge { display: none; }
+            .tb-title { display: block; font-size: .9rem; }
+            .tb-nav {
+                position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; justify-content: stretch;
+                padding: .4rem .6rem calc(.4rem + env(safe-area-inset-bottom, 0px));
+                background: rgba(var(--dk), .94); border-top: 1px solid var(--line);
+                -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+                box-shadow: 0 -14px 34px -18px rgba(0, 0, 0, .55);
+            }
+            .tb-nav .nav-group { width: 100%; gap: .3rem; padding: 0; background: none; border: 0; }
+            .tb-nav .nav-item, .tb-nav .nav-item:not(.is-active) .nv-t { display: inline-flex; }
+            .tb-nav .nav-item { flex: 1 1 0; min-width: 0; flex-direction: column; justify-content: center; gap: .15rem; min-height: 3.5rem; padding: .3rem .2rem; font-size: .66rem; border-radius: .95rem; }
+            .tb-nav .nav-item .nv-t { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+            .tb-nav .nav-item i { font-size: 1.05rem; }
+            .tb-nav .count { position: absolute; top: .2rem; left: calc(50% + .45rem); margin: 0; padding: 0 .38rem; font-size: .56rem; }
+            .tb-new { position: fixed; right: 1rem; bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); z-index: 46; width: 3.5rem; height: 3.5rem; padding: 0; border-radius: 50%; box-shadow: 0 16px 34px -10px rgba(var(--acc-rgb), .85), inset 0 1px 0 rgba(255, 255, 255, .3); }
+            .tb-new i { font-size: 1.25rem; }
+            .main { padding-bottom: 9rem; }
+            .toasts { bottom: 5.6rem; }
+        }
+
+        @media (max-width: 479px) { .tb-title { display: none; } }
+
+        /* ---------- Catálogo: resumo dos meus chamados e prazos ---------- */
+        .hero h2 { max-width: 42rem; }
+        .usum { display: grid; gap: .8rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        @container (min-width: 46rem) { .usum { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        .usum-t {
+            --k: var(--acc-rgb); --kl: var(--acc-l);
+            display: flex; align-items: center; gap: .85rem; text-align: left; padding: .9rem 1rem; border-radius: 1.1rem; cursor: pointer;
+            background: var(--glass-fill); border: 1px solid var(--line); box-shadow: var(--glass-shadow);
+            -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+            transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+        .usum-t:hover { transform: translateY(-2px); border-color: rgba(var(--k), .55); }
+        .usum-t > i { flex: none; width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: .85rem; font-size: 1rem; color: var(--kl); background: linear-gradient(145deg, rgba(var(--k), .26), rgba(var(--k), .07)); border: 1px solid rgba(var(--k), .4); }
+        .usum-t b { display: block; font-family: var(--font-mono); font-size: 1.6rem; font-weight: 700; line-height: 1; color: var(--white); }
+        .usum-t small { display: block; margin-top: .3rem; font-size: .72rem; font-weight: 700; color: var(--muted); }
+        .usum-t.amber { --k: var(--amber-rgb); --kl: var(--t-amber); }
+        .usum-t.green { --k: var(--green-rgb); --kl: var(--t-green); }
+        .usum-t.slate { --k: var(--slate-rgb); --kl: var(--t-slate); }
+        .usum-t.is-hot { border-color: rgba(var(--amber-rgb), .6); box-shadow: 0 0 36px -14px rgba(var(--amber-rgb), .7), var(--glass-shadow); }
+        .sla-strip { display: flex; align-items: center; justify-content: space-between; gap: 1rem 1.5rem; flex-wrap: wrap; padding: 1rem 1.3rem; }
+        .ss-t { display: flex; align-items: center; gap: .8rem; }
+        .ss-t > i { flex: none; width: 2.4rem; height: 2.4rem; display: grid; place-items: center; border-radius: .8rem; color: var(--t-green); background: rgba(var(--green-rgb), .14); border: 1px solid rgba(var(--green-rgb), .36); }
+        .ss-t b { display: block; font-size: .9rem; color: var(--white); }
+        .ss-t small { display: block; font-size: .72rem; color: var(--muted); }
+        .ss-list { display: flex; flex-wrap: wrap; gap: .5rem; }
+        .ss-list li { --s: var(--slate-rgb); display: inline-flex; align-items: center; gap: .55rem; padding: .4rem .8rem; border-radius: 99px; font-size: .75rem; font-weight: 700; color: var(--ink-2); background: rgba(var(--s), .12); border: 1px solid rgba(var(--s), .38); }
+        .ss-list li::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: rgb(var(--s)); box-shadow: 0 0 .5rem rgba(var(--s), .8); }
+        .ss-list li b { font-family: var(--font-mono); font-size: .72rem; color: var(--white); }
+
+        /* ---------- Abertura de chamado: escolha guiada + painel do pedido ---------- */
+        .modal-form { max-width: 62rem; }
+        .fsplit { display: grid; gap: 1.4rem; grid-template-columns: minmax(0, 1fr); align-items: start; }
+        @media (min-width: 900px) { .fsplit { grid-template-columns: minmax(0, 1fr) 19.5rem; } .fs-side { position: sticky; top: 0; } }
+        .fs-main { display: grid; gap: 1.4rem; align-content: start; min-width: 0; }
+        .fs-side { display: grid; gap: .9rem; align-content: start; min-width: 0; }
+        .fsplit .modal-foot { grid-column: 1 / -1; }
+        .fs-who .input { height: 2.4rem; font-size: .78rem; }
+        .fs-step { display: grid; gap: .8rem; }
+        .fs-h { display: flex; align-items: center; gap: .6rem; font-size: .92rem; font-weight: 800; letter-spacing: -.005em; color: var(--white); }
+        .fs-h .n { flex: none; width: 1.55rem; height: 1.55rem; display: grid; place-items: center; border-radius: 50%; font: 800 .72rem var(--font-mono); color: var(--on-brand); background: linear-gradient(145deg, var(--brand), var(--brand-d)); }
+        .picks { display: grid; gap: .6rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        @media (min-width: 1100px) { .picks.urg { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        .pick {
+            --p: var(--acc-rgb); --tc: var(--white);
+            display: flex; align-items: flex-start; gap: .75rem; text-align: left; padding: .8rem .9rem; border-radius: .95rem; cursor: pointer;
+            color: var(--ink-2); background: rgba(var(--lt), .05); border: 1px solid var(--line);
+            transition: border-color .18s, background .18s, box-shadow .18s, transform .18s;
+        }
+        .pick:hover { border-color: rgba(var(--p), .55); background: rgba(var(--p), .08); }
+        .pick > i { flex: none; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: .7rem; font-size: .9rem; color: var(--acc-l); background: rgba(var(--p), .14); border: 1px solid rgba(var(--p), .34); }
+        .pick b { display: block; font-size: .8rem; font-weight: 800; line-height: 1.25; color: var(--tc); }
+        .pick small { display: block; margin-top: .15rem; font-size: .68rem; line-height: 1.4; color: var(--muted); }
+        .pick em { display: block; margin-top: .4rem; font: 700 .68rem var(--font-mono); font-style: normal; color: var(--tc); }
+        .pick.is-on { border-color: rgba(var(--p), .9); background: linear-gradient(145deg, rgba(var(--p), .22), rgba(var(--p), .06)); box-shadow: 0 0 0 .2rem rgba(var(--p), .16), inset 0 1px 0 rgba(255, 255, 255, .14); }
+        .picks.urg .pick { flex-direction: column; gap: .1rem; }
+        .pick.u-critica { --p: var(--rose-rgb); --tc: var(--t-rose); }
+        .pick.u-alta { --p: var(--orange-rgb); --tc: var(--t-orange); }
+        .pick.u-media { --p: var(--sky-rgb); --tc: var(--t-sky); }
+        .pick.u-baixa { --p: var(--slate-rgb); --tc: var(--t-slate); }
+        .fs-card { padding: 1rem 1.1rem; border-radius: 1rem; background: rgba(var(--dk), .4); border: 1px solid var(--line-soft); }
+        .fs-card-t { display: flex; align-items: center; gap: .5rem; margin-bottom: .7rem; font-size: .65rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+        .fs-check { display: grid; gap: .55rem; }
+        .fs-check li { display: grid; grid-template-columns: 1.2rem minmax(0, 1fr) auto; align-items: center; gap: .55rem; font-size: .75rem; color: var(--muted); }
+        .fs-check li i { width: 1.2rem; height: 1.2rem; display: grid; place-items: center; border-radius: 50%; font-size: .55rem; color: transparent; border: 1px solid var(--line); transition: background .2s, color .2s; }
+        .fs-check li.is-ok { color: var(--ink-2); }
+        .fs-check li.is-ok i { color: var(--on-brand); background: linear-gradient(145deg, var(--brand), var(--brand-d)); border-color: transparent; }
+        .fs-check li b { max-width: 9.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .7rem; font-weight: 700; color: var(--white); }
+        .success-next { width: 100%; display: grid; gap: .6rem; text-align: left; padding: .9rem 1.1rem; border-radius: 1rem; background: rgba(var(--dk), .4); border: 1px solid var(--line-soft); }
+        .success-next b { font-size: .65rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+        .success-next ol { display: grid; gap: .5rem; counter-reset: passo; }
+        .success-next li { display: flex; align-items: flex-start; gap: .65rem; font-size: .75rem; line-height: 1.5; color: var(--ink-2); counter-increment: passo; }
+        .success-next li::before { content: counter(passo); flex: none; width: 1.3rem; height: 1.3rem; display: grid; place-items: center; border-radius: 50%; font: 800 .65rem var(--font-mono); color: var(--on-brand); background: linear-gradient(145deg, var(--brand), var(--brand-d)); }
+
+        /* ---------- Atendimento: o chamado abre em uma gaveta à direita e a fila continua visível ---------- */
+        .ws-nav { display: inline-flex; align-items: center; gap: .15rem; padding: .15rem; border-radius: .85rem; background: rgba(var(--lt), .06); border: 1px solid var(--line-soft); }
+        .ws-nav .btn-icon { width: 2rem; height: 2rem; border-radius: .65rem; }
+        .ws-nav .btn-icon:disabled { opacity: .35; cursor: default; }
+        .ws-pos { min-width: 3.4rem; text-align: center; font-size: .68rem; font-weight: 600; color: var(--muted); }
+        .tbl tbody tr.is-sel { background: rgba(var(--acc-rgb), .12); }
+        .tbl tbody tr.is-sel td:first-child { box-shadow: inset 3px 0 0 var(--brand); }
+        .toolbar { z-index: 5; }
+        .kbd-wrap { position: relative; }
+        .kbd-wrap .menu-pop { right: 0; width: 23rem; }
+        .sc-list span { white-space: nowrap; }
+        .sc-list { display: grid; gap: .1rem; padding: .2rem .3rem .4rem; }
+        .sc-list div { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .4rem .5rem; border-radius: .6rem; font-size: .75rem; color: var(--ink-2); }
+        .sc-list kbd { padding: .05rem .4rem; border-radius: .35rem; font-family: var(--font-mono); font-size: .65rem; color: var(--white); background: rgba(var(--lt), .1); border: 1px solid var(--line); }
+        @keyframes drawerin { from { transform: translateX(3.5rem); opacity: 0; } }
+        @media (min-width: 1100px) {
+            /* A lista continua visível e clicável ao lado: clicar em outra linha troca o chamado da gaveta */
+            /* sem a animação de opacidade do overlay (ela o torna "raiz do desfoque" e a gaveta deixaria de desfocar o que está atrás) */
+            #modal-tech-workspace.overlay { animation: none; justify-content: flex-end; align-items: stretch; padding: 0; pointer-events: none; background: linear-gradient(90deg, rgba(var(--dk), .08), rgba(var(--dk), .42)); -webkit-backdrop-filter: none; backdrop-filter: none; }
+            #modal-tech-workspace .modal-ws { pointer-events: auto; max-width: min(66rem, 78vw); height: 100vh; height: 100dvh; max-height: none; border-radius: 1.75rem 0 0 1.75rem; animation: drawerin .35s cubic-bezier(.2, .7, .2, 1) both; }
+        }
+        :root[data-mode="light"] #modal-tech-workspace.overlay { background: linear-gradient(90deg, rgba(30, 40, 90, .04), rgba(30, 40, 90, .3)); }
+        .kpi[onclick] { cursor: pointer; transition: transform .2s ease, border-color .2s ease; }
+        .kpi[onclick]:hover { transform: translateY(-3px); border-color: rgba(var(--k), .6); }
+        .kpi[onclick]:focus-visible { outline: 2px solid rgba(var(--k), .9); outline-offset: 2px; }
+        @media (max-width: 899px) { .kbd-wrap { display: none; } }
+        @media (max-width: 767px) { .ws-nav { display: none; } }
     </style>
 </head>
 <body>
@@ -1196,26 +1340,46 @@ html[data-bg="vidro"] .l-glass{opacity:1}
     </div>
 
 
-    <!-- 2. BARRA SUPERIOR -->
+    <!-- 2. BARRA SUPERIOR: marca, menu de navegação (muda conforme o perfil), ações e usuário -->
     <header id="app-header" class="topbar hidden">
-        <div class="topbar-l">
-            <button type="button" onclick="toggleSidebar()" class="btn btn-icon menu-btn" aria-label="Abrir menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-
-            <div class="tb-brand">
-                <div class="mark sm">G</div>
-                <div>
-                    <div class="tb-title">
-                        <span>GLPI 10 ITSM</span>
-                        <span id="header-role-badge" class="badge b-blue caps">Solicitante</span>
-                    </div>
-                    <p class="tb-sub">Central de Serviços &amp; Atendimento Técnico</p>
-                </div>
+        <div class="tb-brand">
+            <div class="mark sm" aria-hidden="true">G</div>
+            <div class="tb-brand-t">
+                <div class="tb-title"><span>GLPI Service Desk</span></div>
+                <span id="header-role-badge" class="badge b-blue caps">Solicitante</span>
             </div>
         </div>
 
+        <nav class="tb-nav" aria-label="Menu principal">
+            <!-- Perfil usuário: abrir e acompanhar chamados -->
+            <div id="nav-group-user" class="nav-group">
+                <a href="#" onclick="navUser('catalog'); return false;" id="user-nav-catalog" class="user-nav-item nav-item is-active">
+                    <i class="fa-solid fa-cubes"></i><span class="nv-t">Catálogo</span>
+                </a>
+                <a href="#" onclick="navUser('my-tickets'); return false;" id="user-nav-tickets" class="user-nav-item nav-item">
+                    <i class="fa-solid fa-ticket"></i><span class="nv-t">Meus Chamados</span><span id="sidebar-user-ticket-count" class="count">0</span>
+                </a>
+            </div>
+
+            <!-- Perfil administrador: atender chamados -->
+            <div id="nav-group-tech" class="nav-group hidden">
+                <a href="#" onclick="navTech('dashboard'); return false;" id="tech-nav-dash" class="tech-nav-item nav-item tech is-active">
+                    <i class="fa-solid fa-chart-pie"></i><span class="nv-t">Dashboard</span>
+                </a>
+                <a href="#" onclick="navTech('queue'); return false;" id="tech-nav-queue" class="tech-nav-item nav-item tech">
+                    <i class="fa-solid fa-list-check"></i><span class="nv-t">Fila de Chamados</span><span id="sidebar-tech-queue-count" class="count amber">0</span>
+                </a>
+                <a href="#" onclick="navTech('unassigned'); return false;" id="tech-nav-unassigned" class="tech-nav-item nav-item tech">
+                    <i class="fa-solid fa-inbox"></i><span class="nv-t">Sem Técnico</span><span id="sidebar-tech-unassigned-count" class="count">0</span>
+                </a>
+            </div>
+        </nav>
+
         <div class="topbar-r">
+            <button type="button" id="tb-new" onclick="openFormModal()" class="btn btn-blue tb-new" title="Abrir um novo chamado">
+                <i class="fa-solid fa-circle-plus"></i><span>Novo Chamado</span>
+            </button>
+
             <!-- Alternador de modo (visível APENAS para Admin: tratar chamados ou abrir chamados) -->
             <div id="profile-switcher-wrap" class="profile-switch hidden">
                 <button type="button" onclick="toggleProfileMenu()" class="btn btn-ghost btn-sm">
@@ -1234,15 +1398,23 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             <div id="profile-switcher-divider" class="tb-sep hidden"></div>
 
-            <div class="user-box">
-                <div id="user-avatar-box" class="avatar">US</div>
-                <div class="user-meta">
-                    <div id="user-display-name" class="user-name">Usuário</div>
-                    <div id="user-display-email" class="user-email"></div>
-                </div>
-                <button type="button" onclick="logout()" class="btn btn-icon danger" title="Sair / Trocar Perfil" aria-label="Sair">
-                    <i class="fa-solid fa-power-off"></i>
+            <div class="user-wrap">
+                <button type="button" class="user-btn" onclick="toggleUserMenu()" aria-haspopup="true" aria-label="Menu da conta">
+                    <span id="user-avatar-box" class="avatar">US</span>
+                    <span class="user-meta">
+                        <span id="user-display-name" class="user-name">Usuário</span>
+                        <span id="user-display-email" class="user-email"></span>
+                    </span>
+                    <i class="fa-solid fa-chevron-down user-chev"></i>
                 </button>
+                <div id="user-menu" class="hidden menu-pop um">
+                    <div class="um-id">
+                        <b id="um-name">Usuário</b>
+                        <span id="um-email"></span>
+                        <em id="um-role"></em>
+                    </div>
+                    <button type="button" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Sair do GLPI</button>
+                </div>
             </div>
         </div>
     </header>
@@ -1250,79 +1422,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
     <!-- 3. ÁREA PRINCIPAL: MENU LATERAL + CONTEÚDO -->
     <div id="app-wrapper" class="shell hidden">
-
-        <div id="sidebar-scrim" class="scrim" onclick="toggleSidebar(false)"></div>
-
-        <aside id="app-sidebar" class="sidebar">
-            <div class="sb-scroll">
-
-                <!-- Navegação do cliente -->
-                <nav id="nav-group-user" class="nav-group">
-                    <button type="button" onclick="openFormModal(); toggleSidebar(false);" class="btn btn-blue nav-cta">
-                        <i class="fa-solid fa-circle-plus"></i> Novo Chamado
-                    </button>
-                    <div class="nav-label">Central do Cliente</div>
-                    <a href="#" onclick="navUser('catalog'); return false;" id="user-nav-catalog" class="user-nav-item nav-item is-active">
-                        <span><i class="fa-solid fa-cubes"></i> Catálogo de Serviços</span>
-                    </a>
-                    <a href="#" onclick="navUser('my-tickets'); return false;" id="user-nav-tickets" class="user-nav-item nav-item">
-                        <span><i class="fa-solid fa-ticket"></i> Meus Chamados</span>
-                        <span id="sidebar-user-ticket-count" class="count">0</span>
-                    </a>
-                </nav>
-
-                <!-- Navegação ITSM técnica -->
-                <nav id="nav-group-tech" class="nav-group hidden">
-                    <div class="nav-label">ITSM Operations Console</div>
-                    <a href="#" onclick="navTech('dashboard'); return false;" id="tech-nav-dash" class="tech-nav-item nav-item tech is-active">
-                        <span><i class="fa-solid fa-chart-pie"></i> Dashboard Executivo</span>
-                    </a>
-                    <a href="#" onclick="navTech('queue'); return false;" id="tech-nav-queue" class="tech-nav-item nav-item tech">
-                        <span><i class="fa-solid fa-list-check"></i> Fila de Chamados</span>
-                        <span id="sidebar-tech-queue-count" class="count amber">0</span>
-                    </a>
-                    <a href="#" onclick="navTech('unassigned'); return false;" id="tech-nav-unassigned" class="tech-nav-item nav-item tech">
-                        <span><i class="fa-solid fa-inbox"></i> Sem Técnico (Novos)</span>
-                        <span id="sidebar-tech-unassigned-count" class="count">0</span>
-                    </a>
-                </nav>
-
-                <!-- Dicas rápidas -->
-                <div id="help-user" class="sb-card help-card">
-                    <div class="sb-card-t"><i class="fa-solid fa-lightbulb"></i> Atendimento mais rápido</div>
-                    <ul>
-                        <li><i class="fa-solid fa-check"></i>Cole a mensagem de erro exata</li>
-                        <li><i class="fa-solid fa-check"></i>Diga desde quando acontece</li>
-                        <li><i class="fa-solid fa-check"></i>Informe quantas pessoas são afetadas</li>
-                    </ul>
-                </div>
-                <div id="help-tech" class="sb-card help-card hidden">
-                    <div class="sb-card-t"><i class="fa-solid fa-keyboard"></i> Atalhos do atendimento</div>
-                    <ul>
-                        <li><i class="fa-solid fa-check"></i><span><kbd>Ctrl</kbd>+<kbd>Enter</kbd> registra a resposta</span></li>
-                        <li><i class="fa-solid fa-check"></i><span><kbd>Esc</kbd> fecha a janela</span></li>
-                        <li><i class="fa-solid fa-check"></i>Clique na linha para abrir o chamado</li>
-                    </ul>
-                </div>
-
-                <!-- Política de SLA (mesma regra gravada no chamado) -->
-                <div class="sb-card">
-                    <div class="sb-card-t"><i class="fa-solid fa-stopwatch"></i> Prazos de atendimento</div>
-                    <ul class="sla-list">
-                        <li style="--s: var(--rose-rgb);"><span>Crítica</span><b>30 min</b></li>
-                        <li style="--s: var(--orange-rgb);"><span>Alta</span><b>1 hora</b></li>
-                        <li style="--s: var(--sky-rgb);"><span>Média</span><b>24 horas</b></li>
-                        <li style="--s: var(--slate-rgb);"><span>Baixa</span><b>5 dias úteis</b></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="sb-foot">
-                <span>GLPI 10 Enterprise</span>
-                <span class="on">Online</span>
-            </div>
-        </aside>
-
         <main class="main">
             <div class="page">
 
@@ -1333,13 +1432,15 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div class="glass hero">
                             <div style="position:relative;">
                                 <span class="hero-tag"><i class="fa-solid fa-headset"></i> Central de Suporte &amp; Autoatendimento</span>
-                                <h2>Qual serviço você precisa hoje?</h2>
-                                <p>Abra solicitações técnicas com preenchimento guiado e acompanhamento em tempo real.</p>
+                                <h2 id="user-greeting">Como podemos ajudar?</h2>
+                                <p>Escolha o serviço, descreva o problema e acompanhe cada resposta em tempo real. Seus chamados ficam sempre em "Meus Chamados".</p>
                             </div>
                             <button type="button" onclick="openFormModal()" class="btn btn-blue btn-lg">
                                 <i class="fa-solid fa-circle-plus"></i> Abrir Solicitação Geral
                             </button>
                         </div>
+
+                        <div id="user-summary" class="usum" aria-label="Resumo dos seus chamados"></div>
 
                         <div id="user-attention" class="attention hidden" role="status"></div>
 
@@ -1379,6 +1480,17 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 </div>
                                 <div class="svc-foot"><span>Solicitar Projeto</span><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
+                        </div>
+
+                        <!-- Prazos de atendimento (a mesma regra gravada no chamado) -->
+                        <div class="glass sla-strip">
+                            <div class="ss-t"><i class="fa-solid fa-stopwatch"></i><div><b>Prazos de atendimento</b><small>O prazo começa a contar quando o chamado é aberto</small></div></div>
+                            <ul class="ss-list">
+                                <li style="--s: var(--rose-rgb);">Crítica <b>30 min</b></li>
+                                <li style="--s: var(--orange-rgb);">Alta <b>1 hora</b></li>
+                                <li style="--s: var(--sky-rgb);">Média <b>24 horas</b></li>
+                                <li style="--s: var(--slate-rgb);">Baixa <b>5 dias úteis</b></li>
+                            </ul>
                         </div>
 
                         <!-- Últimos chamados do solicitante (a lista completa fica em "Meus Chamados") -->
@@ -1485,35 +1597,35 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         </div>
 
                         <div class="kpis">
-                            <div class="glass kpi slate">
+                            <div class="glass kpi slate" onclick="goQueue('all')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                                 <div class="kpi-label">Total na Base</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-layer-group"></i></div>
                                 <div id="kpi-tech-total" class="kpi-value">0</div>
                                 <div class="kpi-sub">Todos na base</div>
                             </div>
 
-                            <div class="glass kpi amber">
+                            <div class="glass kpi amber" onclick="goQueue('unassigned')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                                 <div class="kpi-label">Sem Atribuição</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-inbox"></i></div>
                                 <div id="kpi-tech-unassigned" class="kpi-value">0</div>
                                 <div class="kpi-sub">Aguardando N1/N2</div>
                             </div>
 
-                            <div class="glass kpi">
+                            <div class="glass kpi" onclick="goQueue('progress')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                                 <div class="kpi-label">Em Atendimento</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-gears"></i></div>
                                 <div id="kpi-tech-progress" class="kpi-value">0</div>
                                 <div class="kpi-sub">Com analistas</div>
                             </div>
 
-                            <div class="glass kpi rose">
+                            <div class="glass kpi rose" onclick="goQueue('open','Crítica')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                                 <div class="kpi-label"><span class="pulse-dot"></span> Críticos</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-triangle-exclamation"></i></div>
                                 <div id="kpi-tech-critical" class="kpi-value">0</div>
                                 <div id="kpi-tech-critical-sub" class="kpi-sub">SLA prioritário</div>
                             </div>
 
-                            <div class="glass kpi green">
+                            <div class="glass kpi green" onclick="goQueue('closed')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                                 <div class="kpi-label">Resolvidos</div>
                                 <div class="kpi-ico"><i class="fa-solid fa-circle-check"></i></div>
                                 <div id="kpi-tech-resolved" class="kpi-value">0</div>
@@ -1608,6 +1720,20 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                     </select>
                                 </div>
 
+                                <div class="kbd-wrap">
+                                    <button type="button" onclick="toggleShortcuts()" class="btn btn-ghost btn-icon" title="Atalhos do atendimento" aria-label="Atalhos do atendimento"><i class="fa-regular fa-keyboard"></i></button>
+                                    <div id="shortcuts-pop" class="menu-pop hidden">
+                                        <div class="mp-head">Atalhos do atendimento</div>
+                                        <div class="sc-list">
+                                            <div><span>Buscar na fila</span><kbd>/</kbd></div>
+                                            <div><span>Abrir o chamado</span><kbd>clique na linha</kbd></div>
+                                            <div><span>Chamado anterior / próximo</span><span><kbd>[</kbd> <kbd>]</kbd></span></div>
+                                            <div><span>Anterior / próximo (digitando)</span><span><kbd>Alt</kbd> + <kbd>↑</kbd><kbd>↓</kbd></span></div>
+                                            <div><span>Registrar a resposta</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span></div>
+                                            <div><span>Fechar a gaveta</span><kbd>Esc</kbd></div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <button type="button" onclick="assignBulkToMe()" class="btn btn-ghost">
                                     <i class="fa-solid fa-hand-holding-hand c-amber"></i> Assumir Selecionados
                                 </button>
@@ -1645,7 +1771,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
     </div>
 
 
-    <!-- JANELA A: ABERTURA DE CHAMADO PELO CLIENTE (formulário guiado + tela de confirmação com o protocolo) -->
+    <!-- JANELA A: ABERTURA DE CHAMADO PELO CLIENTE (escolha guiada em 3 passos + painel do pedido + confirmação com o protocolo) -->
     <div id="modal-form" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-form-title">
         <div class="slab modal modal-form">
             <div class="modal-head">
@@ -1661,79 +1787,114 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 </button>
             </div>
 
-            <form id="form-ticket" onsubmit="handleCreateTicket(event)" class="modal-body" novalidate>
-                <div id="form-banner" class="notice rose hidden" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><div id="form-banner-text"></div></div>
+            <form id="form-ticket" onsubmit="handleCreateTicket(event)" class="modal-body fsplit" novalidate>
+                <div class="fs-main">
+                    <div id="form-banner" class="notice rose hidden" role="alert"><i class="fa-solid fa-triangle-exclamation"></i><div id="form-banner-text"></div></div>
 
-                <div class="form-grid cols-2">
-                    <div class="field">
-                        <label for="form-req-name"><i class="fa-solid fa-lock lk"></i>Solicitante</label>
-                        <input type="text" id="form-req-name" readonly class="input">
+                    <div class="form-grid cols-2 fs-who">
+                        <div class="field">
+                            <label for="form-req-name"><i class="fa-solid fa-lock lk"></i>Solicitante</label>
+                            <input type="text" id="form-req-name" readonly class="input">
+                        </div>
+                        <div class="field">
+                            <label for="form-req-email"><i class="fa-solid fa-lock lk"></i>E-mail da conta</label>
+                            <input type="email" id="form-req-email" readonly class="input">
+                        </div>
                     </div>
-                    <div class="field">
-                        <label for="form-req-email"><i class="fa-solid fa-lock lk"></i>E-mail da conta</label>
-                        <input type="email" id="form-req-email" readonly class="input">
-                    </div>
-                </div>
 
-                <div class="form-grid cols-2">
-                    <div class="field">
-                        <label for="form-category">Categoria do Incidente *</label>
-                        <select id="form-category" onchange="onFormCategoryChange()" class="select focus-blue">
+                    <section class="fs-step">
+                        <h4 class="fs-h"><span class="n">1</span> O que você precisa?</h4>
+                        <div class="picks cat" role="radiogroup" aria-label="Categoria do chamado">
+                            <button type="button" class="pick" role="radio" data-cat="Sistema Financeiro & ERP" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-file-invoice-dollar"></i><span><b>Sistema Financeiro &amp; ERP</b><small>NF-e, boletos, faturamento</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Gestão de Acessos & Reset de Senha" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-key"></i><span><b>Acessos &amp; Reset de Senha</b><small>Bloqueio, MFA, perfis</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Suporte Técnico & Infraestrutura" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-server"></i><span><b>Falhas &amp; Infraestrutura</b><small>Quedas, VPN, lentidão</small></span>
+                            </button>
+                            <button type="button" class="pick" role="radio" data-cat="Projetos & Melhorias" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i><span><b>Projetos &amp; Melhorias</b><small>Relatórios, ajustes, API</small></span>
+                            </button>
+                        </div>
+                        <select id="form-category" onchange="onFormCategoryChange()" class="sr-only" tabindex="-1" aria-hidden="true">
                             <option value="Sistema Financeiro & ERP">Sistema Financeiro &amp; ERP</option>
                             <option value="Gestão de Acessos & Reset de Senha">Gestão de Acessos &amp; Reset de Senha</option>
                             <option value="Suporte Técnico & Infraestrutura">Suporte Técnico &amp; Infraestrutura</option>
                             <option value="Projetos & Melhorias">Projetos &amp; Melhorias</option>
                         </select>
-                    </div>
+                    </section>
 
-                    <div class="field">
-                        <label for="form-urgency">Impacto / Urgência *</label>
-                        <select id="form-urgency" onchange="calculateSLA()" class="select focus-blue">
+                    <section class="fs-step">
+                        <h4 class="fs-h"><span class="n">2</span> Qual o impacto?</h4>
+                        <div class="picks urg" role="radiogroup" aria-label="Impacto e urgência">
+                            <button type="button" class="pick u-baixa" role="radio" data-urg="Baixa" onclick="pickUrgency(this.dataset.urg)"><b>Baixa</b><small>Dúvida ou operação normal</small><em>5 dias úteis</em></button>
+                            <button type="button" class="pick u-media" role="radio" data-urg="Média" onclick="pickUrgency(this.dataset.urg)"><b>Média</b><small>Impacto parcial, dá para contornar</small><em>24 horas</em></button>
+                            <button type="button" class="pick u-alta" role="radio" data-urg="Alta" onclick="pickUrgency(this.dataset.urg)"><b>Alta</b><small>Impacto relevante no setor</small><em>1 hora</em></button>
+                            <button type="button" class="pick u-critica" role="radio" data-urg="Crítica" onclick="pickUrgency(this.dataset.urg)"><b>Crítica</b><small>Parada total de sistema</small><em>30 minutos</em></button>
+                        </div>
+                        <select id="form-urgency" onchange="calculateSLA()" class="sr-only" tabindex="-1" aria-hidden="true">
                             <option value="Baixa">Baixa · dúvida ou operação normal</option>
                             <option value="Média" selected>Média · impacto parcial, dá para contornar</option>
                             <option value="Alta">Alta · impacto relevante no setor</option>
                             <option value="Crítica">Crítica · parada total de sistema</option>
                         </select>
-                    </div>
-                </div>
+                    </section>
 
-                <div id="form-tips" class="cat-tips"></div>
-
-                <div class="field">
-                    <label for="form-subject">Assunto *</label>
-                    <input type="text" id="form-subject" maxlength="200" autocomplete="off" oninput="onFormInput()" class="input focus-blue" placeholder="Ex: Lentidão ao emitir relatórios de faturamento">
-                    <div class="field-foot"><p id="err-subject" class="field-err hidden"></p><span id="cnt-subject" class="counter">0/200</span></div>
-                </div>
-
-                <div class="field">
-                    <label for="form-desc">Descrição detalhada *</label>
-                    <textarea id="form-desc" rows="5" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
-                    <div class="field-foot"><p id="err-desc" class="field-err hidden"></p><span id="cnt-desc" class="counter">mínimo de 10 caracteres</span></div>
-                </div>
-
-                <div class="field">
-                    <label for="form-req-phone">Telefone para contato <span class="opt">(opcional)</span></label>
-                    <input type="tel" id="form-req-phone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="(62) 99999-9999" oninput="maskPhoneInput(this)" class="input focus-blue">
-                    <div class="field-foot"><p id="err-phone" class="field-err hidden"></p></div>
-                </div>
-
-                <div class="sla-box">
-                    <div class="sla-l">
-                        <i class="fa-solid fa-stopwatch"></i>
-                        <div>
-                            <span>Compromisso SLA Estimado</span>
-                            <small id="form-sla-due"></small>
+                    <section class="fs-step">
+                        <h4 class="fs-h"><span class="n">3</span> Conte o que está acontecendo</h4>
+                        <div class="field">
+                            <label for="form-subject">Assunto *</label>
+                            <input type="text" id="form-subject" maxlength="200" autocomplete="off" oninput="onFormInput()" class="input focus-blue" placeholder="Ex: Lentidão ao emitir relatórios de faturamento">
+                            <div class="field-foot"><p id="err-subject" class="field-err hidden"></p><span id="cnt-subject" class="counter">0/200</span></div>
                         </div>
-                    </div>
-                    <b id="form-sla-preview">24 Horas</b>
+
+                        <div class="field">
+                            <label for="form-desc">Descrição detalhada *</label>
+                            <textarea id="form-desc" rows="5" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
+                            <div class="field-foot"><p id="err-desc" class="field-err hidden"></p><span id="cnt-desc" class="counter">mínimo de 10 caracteres</span></div>
+                        </div>
+
+                        <div class="field">
+                            <label for="form-req-phone">Telefone para contato <span class="opt">(opcional)</span></label>
+                            <input type="tel" id="form-req-phone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="(62) 99999-9999" oninput="maskPhoneInput(this)" class="input focus-blue">
+                            <div class="field-foot"><p id="err-phone" class="field-err hidden"></p></div>
+                        </div>
+                    </section>
                 </div>
 
-                <div class="sla-policy" aria-label="Prazos de atendimento por urgência">
-                    <div class="sla-chip" data-urgency="Crítica" style="--s: var(--rose-rgb);">Crítica<b>30 min</b></div>
-                    <div class="sla-chip" data-urgency="Alta" style="--s: var(--orange-rgb);">Alta<b>1 hora</b></div>
-                    <div class="sla-chip is-on" data-urgency="Média" style="--s: var(--sky-rgb);">Média<b>24 horas</b></div>
-                    <div class="sla-chip" data-urgency="Baixa" style="--s: var(--slate-rgb);">Baixa<b>5 dias úteis</b></div>
-                </div>
+                <aside class="fs-side" aria-label="Resumo do pedido">
+                    <div class="fs-card">
+                        <div class="fs-card-t"><i class="fa-solid fa-list-check"></i> Seu pedido</div>
+                        <ul class="fs-check" id="form-check">
+                            <li data-k="cat"><i class="fa-solid fa-check"></i><span>Categoria</span><b></b></li>
+                            <li data-k="urg"><i class="fa-solid fa-check"></i><span>Urgência</span><b></b></li>
+                            <li data-k="subj"><i class="fa-solid fa-check"></i><span>Assunto</span><b></b></li>
+                            <li data-k="desc"><i class="fa-solid fa-check"></i><span>Descrição</span><b></b></li>
+                        </ul>
+                    </div>
+
+                    <div class="sla-box">
+                        <div class="sla-l">
+                            <i class="fa-solid fa-stopwatch"></i>
+                            <div>
+                                <span>Compromisso SLA Estimado</span>
+                                <small id="form-sla-due"></small>
+                            </div>
+                        </div>
+                        <b id="form-sla-preview">24 Horas</b>
+                    </div>
+
+                    <div id="form-tips" class="cat-tips"></div>
+
+                    <div class="sla-policy" aria-label="Prazos de atendimento por urgência">
+                        <div class="sla-chip" data-urgency="Crítica" style="--s: var(--rose-rgb);">Crítica<b>30 min</b></div>
+                        <div class="sla-chip" data-urgency="Alta" style="--s: var(--orange-rgb);">Alta<b>1 hora</b></div>
+                        <div class="sla-chip is-on" data-urgency="Média" style="--s: var(--sky-rgb);">Média<b>24 horas</b></div>
+                        <div class="sla-chip" data-urgency="Baixa" style="--s: var(--slate-rgb);">Baixa<b>5 dias úteis</b></div>
+                    </div>
+                </aside>
 
                 <div class="modal-foot">
                     <span class="hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> envia</span>
@@ -1760,6 +1921,14 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div><small>Categoria</small><span id="success-cat">—</span></div>
                         <div><small>Urgência</small><span id="success-urg">—</span></div>
                         <div><small>Previsão de atendimento</small><span id="success-sla">—</span></div>
+                    </div>
+                    <div class="success-next">
+                        <b>O que acontece agora</b>
+                        <ol>
+                            <li>A equipe de TI recebe o chamado e confere a urgência.</li>
+                            <li>Um técnico assume e começa o atendimento dentro do prazo de SLA.</li>
+                            <li>Você é avisado aqui, em "Meus Chamados", a cada resposta ou mudança de status.</li>
+                        </ol>
                     </div>
                     <div class="success-actions">
                         <button type="button" onclick="viewCreatedTicket()" class="btn btn-blue"><i class="fa-solid fa-eye"></i> Ver meu chamado</button>
@@ -1867,6 +2036,11 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 </div>
 
                 <div class="mh-actions" style="display:flex; align-items:center; gap:.7rem;">
+                    <div class="ws-nav" role="group" aria-label="Navegar entre os chamados da fila">
+                        <button type="button" id="btn-ws-prev" onclick="navigateWorkspace(-1)" class="btn btn-icon" title="Chamado anterior ( [  ou  Alt + ↑ )" aria-label="Chamado anterior"><i class="fa-solid fa-chevron-up"></i></button>
+                        <span id="ws-pos" class="ws-pos mono"></span>
+                        <button type="button" id="btn-ws-next" onclick="navigateWorkspace(1)" class="btn btn-icon" title="Próximo chamado ( ]  ou  Alt + ↓ )" aria-label="Próximo chamado"><i class="fa-solid fa-chevron-down"></i></button>
+                    </div>
                     <button type="button" id="btn-take-ticket" onclick="takeCurrentTicket()" class="btn btn-amber btn-sm">
                         <i class="fa-solid fa-user-plus"></i> Assumir Chamado
                     </button>
@@ -2904,9 +3078,13 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('user-display-name').innerText = currentUser.name;
             $('user-display-email').innerText = currentUser.email;
             $('user-avatar-box').innerText = initials(currentUser.name);
-            $('header-role-badge').innerText = currentUser.role === 'tech' ? 'ADMINISTRADOR • TRATAR CHAMADOS' : 'USUÁRIO • ABRIR CHAMADOS';
+            $('header-role-badge').innerText = currentUser.role === 'tech' ? 'ADMINISTRADOR • ATENDIMENTO' : 'USUÁRIO • SOLICITAÇÃO';
             $('profile-active-label').innerText = currentUser.role === 'tech' ? 'TRATAR CHAMADOS' : 'ABRIR CHAMADOS';
             const glassIsTech = currentUser.role === 'tech';
+            const newBtn = $('tb-new');
+            if (newBtn) newBtn.classList.toggle('hidden', glassIsTech);
+            const greet = $('user-greeting');
+            if (greet) greet.textContent = 'Olá, ' + firstName(currentUser.name) + '! Como podemos ajudar?';
             $('user-avatar-box').classList.toggle('tech', glassIsTech);
             const glassBadge = $('header-role-badge');
             glassBadge.classList.toggle('b-amber', glassIsTech);
@@ -2915,10 +3093,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             $('form-req-name').value = currentUser.name || '';
             $('form-req-email').value = currentUser.email || '';
 
-            const helpUser = $('help-user');
-            const helpTech = $('help-tech');
-            if (helpUser) helpUser.classList.toggle('hidden', glassIsTech);
-            if (helpTech) helpTech.classList.toggle('hidden', !glassIsTech);
 
             if (currentUser.role === 'user') {
                 $('nav-group-user').classList.remove('hidden');
@@ -3004,7 +3178,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             const el = $(id);
             if (!el) return;
             el.classList.add('hidden');
-            if (id === 'modal-tech-workspace') activeProtocol = null;
+            if (id === 'modal-tech-workspace') { activeProtocol = null; markActiveRow(); }
             if (id === 'modal-my-ticket') myProtocol = null;
             const back = modalReturnFocus[id];
             if (back && document.contains(back) && typeof back.focus === 'function') { try { back.focus(); } catch (e) {} }
@@ -3105,7 +3279,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (category) $('form-category').value = category;
             onFormCategoryChange();
             onFormInput(true);
-            openModal('modal-form', '#form-subject');
+            openModal('modal-form', '#modal-form .pick.is-on');
         }
 
         function onFormCategoryChange() {
@@ -3118,6 +3292,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         function onFormInput(silent) {
+            syncFormPickers();
             const subject = $('form-subject').value;
             const desc = $('form-desc').value.trim();
             $('cnt-subject').textContent = subject.length + '/200';
@@ -3149,6 +3324,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (dueEl) dueEl.textContent = due ? 'Previsão de atendimento até ' + fmtDue(due) : '';
 
             document.querySelectorAll('.sla-chip').forEach((chip) => chip.classList.toggle('is-on', chip.dataset.urgency === urgency));
+            syncFormPickers();
             saveDraft();
         }
 
@@ -3270,7 +3446,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 <td class="mono strong c-blue c-id">${escapeHtml(t.id)}</td>
                 <td class="t-cell">
                     <div class="t-title">${escapeHtml(t.subject)}${waiting ? '<span class="t-flag you"><i class="fa-solid fa-reply"></i> Responder</span>' : ''}</div>
-                    <div class="t-sub">${escapeHtml(t.category)}</div>
+                    <div class="t-sub">${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>Atualizado ' + relTime(t.updatedAt || t.createdAt) : ''}</div>
                 </td>
                 <td class="c-muted nw c-date">${escapeHtml(t.date)}</td>
                 <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
@@ -3313,6 +3489,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
             const userTickets = tabs[userTab].filter((t) => !searchVal || t.protocol.toLowerCase().includes(searchVal) || t.subject.toLowerCase().includes(searchVal));
 
+            renderUserSummary(mine, waitingList);
             const countEl = $('sidebar-user-ticket-count');
             const openCount = mine.filter(isOpenTicket).length;
             countEl.innerText = openCount;
@@ -3586,7 +3763,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <td class="mono strong c-amber c-id">${escapeHtml(t.id)}</td>
                     <td class="t-cell">
                         <div class="t-title">${escapeHtml(t.subject)}${reply}</div>
-                        <div class="t-sub"><i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}</div>
+                        <div class="t-sub"><i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>' + relTime(t.updatedAt || t.createdAt) : ''}</div>
                     </td>
                     <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
                     <td class="c-sla">${slaCell(t)}</td>
@@ -3649,6 +3826,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 return ((rank[a.urgency] ?? 9) - (rank[b.urgency] ?? 9)) || (slaDueMs(a) - slaDueMs(b));
             });
 
+            queueOrder = filtered.map((t) => t.protocol);
+            updateWsNav();
             const countEl = $('tech-queue-count');
             countEl.innerText = filtered.length;
             $('tech-queue-count-label').innerText = filtered.length === ticketsList.length ? 'chamados' : 'de ' + ticketsList.length + ' chamados';
@@ -3667,7 +3846,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             filtered.forEach((t) => {
                 const row = techRowHtml(t, true);
                 const tr = document.createElement('tr');
-                tr.className = row.cls;
+                tr.className = row.cls + (t.protocol === activeProtocol ? ' is-sel' : '');
                 tr.dataset.p = t.protocol;
                 tr.innerHTML = row.html;
                 tbody.appendChild(tr);
@@ -3711,7 +3890,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <td class="mono strong c-amber c-id">${escapeHtml(t.id)}</td>
                     <td class="t-cell">
                         <div class="t-title">${escapeHtml(t.subject)}</div>
-                        <div class="t-sub"><i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}</div>
+                        <div class="t-sub"><i class="fa-solid fa-user"></i>${escapeHtml(t.name)}<span class="sep">•</span>${escapeHtml(t.category)}${relTime(t.updatedAt || t.createdAt) ? '<span class="sep">•</span>' + relTime(t.updatedAt || t.createdAt) : ''}</div>
                     </td>
                     <td class="c-urg">${getUrgencyBadge(t.urgency)}</td>
                     <td class="c-sla">${slaCell(t)}</td>
@@ -3725,6 +3904,143 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 body.appendChild(tr);
             });
         }
+
+        // ============================== MENU SUPERIOR, RESUMO, ABERTURA GUIADA E ATALHOS ==============================
+        function toggleUserMenu(forceClose) {
+            const menu = $('user-menu');
+            if (!menu) return;
+            if (forceClose === true) { menu.classList.add('hidden'); return; }
+            if (currentUser) {
+                $('um-name').textContent = currentUser.name || '';
+                $('um-email').textContent = currentUser.email || '';
+                $('um-role').textContent = isTechMode() ? 'Administrador • atendimento' : (currentUser.isAdmin ? 'Administrador • solicitação' : 'Usuário • solicitação');
+            }
+            toggleProfileMenu(true);
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleShortcuts() {
+            const pop = $('shortcuts-pop');
+            if (pop) pop.classList.toggle('hidden');
+        }
+
+        // Clicar fora fecha os menus abertos
+        document.addEventListener('click', (ev) => {
+            if (!ev.target.closest('.user-wrap')) toggleUserMenu(true);
+            if (!ev.target.closest('.profile-switch')) toggleProfileMenu(true);
+            if (!ev.target.closest('.kbd-wrap')) { const pop = $('shortcuts-pop'); if (pop) pop.classList.add('hidden'); }
+        });
+
+        // Resumo dos meus chamados (catálogo): cada cartão abre "Meus Chamados" já filtrado
+        function goMine(tab) {
+            userTab = tab;
+            navUser('my-tickets');
+        }
+
+        function renderUserSummary(mine, waitingList) {
+            const box = $('user-summary');
+            if (!box) return;
+            const doing = mine.filter((t) => isOpenTicket(t) && t.status !== 'Pendente Cliente').length;
+            const done = mine.filter((t) => t.status === 'Resolvido').length;
+            const tile = (cls, icon, n, label, tab, hot) =>
+                `<button type="button" class="usum-t ${cls}${hot ? ' is-hot' : ''}" onclick="goMine('${tab}')"><i class="fa-solid ${icon}"></i><span><b>${n}</b><small>${label}</small></span></button>`;
+            box.innerHTML = tile('', 'fa-gears', doing, 'Em andamento', 'open', false)
+                + tile('amber', 'fa-reply', waitingList.length, 'Aguardando você', 'waiting', waitingList.length > 0)
+                + tile('green', 'fa-circle-check', done, 'Resolvidos', 'closed', false)
+                + tile('slate', 'fa-ticket', mine.length, 'Todos os chamados', 'all', false);
+        }
+
+        // Dashboard: cada indicador abre a fila já filtrada
+        function goQueue(key, urgency) {
+            navTech('queue');
+            $('tech-filter-urgency').value = urgency || 'ALL';
+            setQueueQuick(key);
+        }
+
+        // Abertura guiada: os cartões de categoria e urgência controlam os mesmos campos de antes (que continuam na tela, ocultos)
+        function pickCategory(value) {
+            $('form-category').value = value;
+            onFormCategoryChange();
+        }
+
+        function pickUrgency(value) {
+            $('form-urgency').value = value;
+            calculateSLA();
+        }
+
+        function syncFormPickers() {
+            if (!$('form-category')) return;
+            const cat = $('form-category').value;
+            const urg = $('form-urgency').value;
+            document.querySelectorAll('#modal-form .pick[data-cat]').forEach((b) => {
+                const on = b.dataset.cat === cat;
+                b.classList.toggle('is-on', on);
+                b.setAttribute('aria-checked', String(on));
+            });
+            document.querySelectorAll('#modal-form .pick[data-urg]').forEach((b) => {
+                const on = b.dataset.urg === urg;
+                b.classList.toggle('is-on', on);
+                b.setAttribute('aria-checked', String(on));
+            });
+            const mark = (key, ok, text) => {
+                const li = document.querySelector('#form-check li[data-k="' + key + '"]');
+                if (!li) return;
+                li.classList.toggle('is-ok', ok);
+                const b = li.querySelector('b');
+                if (b) b.textContent = text || '';
+            };
+            mark('cat', !!cat, shortLabel(cat, 24));
+            mark('urg', !!urg, urg);
+            mark('subj', ($('form-subject').value || '').trim().length >= 3, '');
+            mark('desc', ($('form-desc').value || '').trim().length >= 10, '');
+        }
+
+        // Atendimento: ir para o chamado anterior/seguinte da fila sem fechar a gaveta
+        let queueOrder = [];
+
+        function updateWsNav() {
+            const prev = $('btn-ws-prev');
+            const next = $('btn-ws-next');
+            const pos = $('ws-pos');
+            if (!prev || !next || !pos) return;
+            const i = queueOrder.indexOf(activeProtocol);
+            prev.disabled = i <= 0;
+            next.disabled = i < 0 || i >= queueOrder.length - 1;
+            pos.textContent = i >= 0 ? (i + 1) + ' de ' + queueOrder.length : '';
+        }
+
+        function navigateWorkspace(delta) {
+            const i = queueOrder.indexOf(activeProtocol);
+            const j = i + delta;
+            if (i < 0 || j < 0 || j >= queueOrder.length) return;
+            openTechWorkspace(queueOrder[j]);
+            const row = document.querySelector('#tech-queue-tbody tr[data-p="' + queueOrder[j] + '"]');
+            if (row && row.scrollIntoView) row.scrollIntoView({ block: 'nearest' });
+        }
+
+        function markActiveRow() {
+            document.querySelectorAll('#tech-queue-tbody tr[data-p]').forEach((tr) => tr.classList.toggle('is-sel', tr.dataset.p === activeProtocol));
+        }
+
+        // Atalhos: "/" busca na fila; "[" e "]" (ou Alt + setas) trocam de chamado na gaveta
+        document.addEventListener('keydown', (ev) => {
+            if (ev.ctrlKey || ev.metaKey) return;
+            const wsOpen = $('modal-tech-workspace') && !$('modal-tech-workspace').classList.contains('hidden');
+            if (ev.altKey && wsOpen && (ev.key === 'ArrowDown' || ev.key === 'ArrowUp')) {
+                navigateWorkspace(ev.key === 'ArrowDown' ? 1 : -1);
+                ev.preventDefault();
+                return;
+            }
+            if (ev.altKey) return;
+            const tag = (ev.target && ev.target.tagName) || '';
+            if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag) || (ev.target && ev.target.isContentEditable)) return;
+            if (wsOpen && ev.key === ']') { navigateWorkspace(1); ev.preventDefault(); }
+            else if (wsOpen && ev.key === '[') { navigateWorkspace(-1); ev.preventDefault(); }
+            else if (ev.key === '/' && isTechMode() && !$('tech-subview-queue').classList.contains('hidden') && !document.querySelector('.overlay:not(.hidden)')) {
+                $('tech-queue-search').focus();
+                ev.preventDefault();
+            }
+        });
 
         // ============================== ADMINISTRADOR: ATENDIMENTO ==============================
         function setSaveState(kind, msg) {
@@ -3770,6 +4086,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             activeProtocol = protocol;
             renderWorkspace(true);
             openModal('modal-tech-workspace', '#workspace-reply-text');
+            markActiveRow();
+            updateWsNav();
         }
 
         function renderWorkspace(full) {
@@ -3825,6 +4143,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             }
             const waitBtn = $('btn-reply-wait');
             if (waitBtn) waitBtn.classList.toggle('hidden', techReplyMode !== 'public' || closed);
+            updateWsNav();
         }
 
         function setTechReplyMode(mode) {
@@ -4201,11 +4520,8 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
 
         function toggleSidebar(force) {
-            const sidebar = document.getElementById('app-sidebar');
-            const scrim = document.getElementById('sidebar-scrim');
-            const open = typeof force === 'boolean' ? force : !sidebar.classList.contains('is-open');
-            sidebar.classList.toggle('is-open', open);
-            scrim.classList.toggle('is-on', open);
+            // O menu agora fica no topo (barra inferior no celular): aqui só se fecha o menu da conta
+            toggleUserMenu(true);
         }
 
         // ---- Apoio visual (vidro): navegação ativa, linha vazia, rótulos de gráfico e atalho Esc ----
