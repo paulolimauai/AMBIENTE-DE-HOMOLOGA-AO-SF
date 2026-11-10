@@ -1423,6 +1423,153 @@ html[data-bg="vidro"] .l-glass{opacity:1}
         }
         @media (max-width: 767px) { .picks.typ { grid-template-columns: 1fr; } .team-grid { grid-template-columns: 1fr; } }
         @media (max-width: 380px) { .stepper { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: .8rem; } .step::before { display: none; } }
+
+        /* =====================================================================
+           Escala compacta (10/11): logo maior; catálogo, formulário de abertura e controles em tamanho menor.
+           Os textos de apoio continuam com 12 px ou mais.
+           ===================================================================== */
+        :root { --ctl: 2.5rem; --ctl-sm: 2.125rem; --ctl-lg: 2.75rem; }
+
+        /* Logo: marca maior e "GLPI" em destaque, com o perfil logo abaixo */
+        .topbar { height: 4.25rem; }
+        body.in-app .cfg { top: .75rem; }
+        .mark.brand { width: 2.75rem; height: 2.75rem; border-radius: .9rem; font-size: 1.7rem; }
+        .tb-brand { gap: .8rem; }
+        .tb-brand-t { gap: .22rem; }
+        .tb-brand .tb-title { display: flex; align-items: baseline; gap: .45rem; font-size: 1.35rem; line-height: 1; letter-spacing: -.02em; }
+        .tb-brand .tb-title b { font-weight: 800; letter-spacing: 0; color: var(--white); }
+        .tb-brand .tb-title span { display: inline; font-size: 1.02rem; font-weight: 600; letter-spacing: -.01em; color: var(--ink-2); }
+        .tb-brand-t .badge { font-size: .7rem; letter-spacing: .09em; padding: .08rem .6rem; }
+        @media (min-width: 768px) and (max-width: 1139px) { .tb-brand .tb-title span { display: none; } }
+        @media (max-width: 767px) {
+            .tb-brand .tb-title { font-size: 1.2rem; }
+            .tb-brand .tb-title span { font-size: .9rem; }
+            .mark.brand { width: 2.5rem; height: 2.5rem; border-radius: .8rem; font-size: 1.5rem; }
+        }
+        @media (max-width: 479px) { .tb-brand .tb-title span { display: none; } }
+
+        /* Páginas: espaçamentos e títulos um degrau menores */
+        @media (min-width: 768px) { .main { padding: 1.25rem 1.5rem 1.5rem; } }
+        .stack { gap: 1.1rem; }
+        .page-head h2 { font-size: clamp(1.5rem, 2vw, 1.85rem); }
+        .page-head p { margin-top: .3rem; font-size: .875rem; }
+        .panel { padding: 1rem 1.15rem; gap: .85rem; }
+        .panel-head { padding-bottom: .8rem; }
+        .kpi { padding: .9rem 1rem; }
+        .kpi-value { margin-top: .35rem; font-size: 1.9rem; }
+        .kpi-ico { width: 2.1rem; height: 2.1rem; }
+        .tbl th { padding: .75rem .9rem; }
+        .tbl td { padding: .7rem .9rem; }
+
+        /* Catálogo: abertura enxuta, resumo e prazos menores, cartões de serviço compactos */
+        .hero { padding: 1rem 1.3rem; border-radius: 1.25rem; gap: .8rem 1.2rem; }
+        .hero::before { width: 16rem; height: 16rem; top: -9rem; right: -4rem; }
+        .hero-tag { margin-bottom: .45rem; padding: .18rem .65rem; font-size: .75rem; }
+        .hero h2 { font-size: clamp(1.3rem, 2vw, 1.65rem); }
+        .hero p { margin-top: .25rem; max-width: 32rem; font-size: .84rem; }
+        .hero-acts { gap: .5rem; }
+        .usum { gap: .6rem; }
+        .usum-t { padding: .55rem .8rem; gap: .65rem; border-radius: .95rem; }
+        .usum-t > i { width: 2.1rem; height: 2.1rem; font-size: .85rem; border-radius: .7rem; }
+        .usum-t b { font-size: 1.3rem; }
+        .usum-t small { margin-top: .15rem; font-size: .75rem; }
+        .attention { padding: .7rem 1rem; border-radius: .95rem; }
+        .attention i.big { width: 2.1rem; height: 2.1rem; }
+        .sla-strip { padding: .55rem 1rem; }
+        .ss-t > i { width: 2rem; height: 2rem; border-radius: .65rem; }
+        .ss-t b { font-size: .875rem; }
+        .ss-t small { font-size: .75rem; }
+        .ss-list li { padding: .22rem .7rem; font-size: .78rem; }
+
+        .cat-bar { display: flex; align-items: center; justify-content: space-between; gap: .6rem 1rem; flex-wrap: wrap; padding: 0 .1rem; }
+        .cat-h { display: flex; align-items: baseline; gap: .5rem; font-size: 1rem; font-weight: 800; color: var(--white); text-shadow: 0 1px 10px rgba(0, 0, 0, .55); }
+        .cat-h i { align-self: center; font-size: .9rem; color: var(--acc-l); }
+        .cat-h small { font-size: .8125rem; font-weight: 500; color: var(--ink-2); }
+        .cat-tools { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+        .cat-tools .input-icon { flex: none; width: 14.5rem; min-width: 0; }
+        .cat-tools .input { height: var(--ctl-sm); font-size: .84rem; }
+        .cat-tools .fchip { height: var(--ctl-sm); padding: 0 .85rem; font-size: .78rem; }
+        .cat-empty { padding: 1.1rem; text-align: center; font-size: .875rem; color: var(--ink-2); }
+        .cat-empty i { margin-right: .4rem; color: var(--faint); }
+
+        /* no máximo 5 colunas (10 serviços = 2 linhas certinhas em telas largas); em telas menores cada cartão tem 15rem no mínimo */
+        .svc-grid { grid-template-columns: repeat(auto-fill, minmax(max(15rem, calc((100% - 2.8rem) / 5)), 1fr)); gap: .7rem; }
+        .svc, .svc.glass {
+            display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "ico body" "foot foot";
+            align-items: start; justify-content: stretch; gap: .45rem .7rem; padding: .75rem .85rem; border-radius: 1.05rem;
+        }
+        .svc-ico { grid-area: ico; width: 2.25rem; height: 2.25rem; margin: 0; border-radius: .7rem; font-size: .95rem; }
+        .svc-body { grid-area: body; min-width: 0; }
+        .svc h4 { font-size: .9rem; line-height: 1.25; }
+        .svc p { margin-top: .15rem; font-size: .78rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .svc-foot { grid-area: foot; display: flex; align-items: center; justify-content: space-between; padding-top: .45rem; }
+        .svc-tag { margin: 0; padding: .02rem .5rem; font-size: .6875rem; }
+        .svc:hover { transform: translateY(-2px); }
+
+        /* Abertura de chamado (Abrir Requisição, Reportar Incidente...): janela, passos, cartões e campos mais compactos */
+        #modal-form.overlay { padding: .75rem; }
+        .modal-form { max-width: 58rem; }
+        .modal-form .modal-head { padding: .7rem 1.1rem; }
+        .modal-form .mh-ico { width: 2rem; height: 2rem; border-radius: .65rem; font-size: .9rem; }
+        .modal-form .mh-title { font-size: 1rem; }
+        .modal-form .mh-sub { font-size: .75rem; }
+        .modal-form .modal-body { padding: 1rem 1.1rem; gap: .7rem; }
+        .modal-form .modal-foot { bottom: -1rem; margin: .1rem -1.1rem -1rem; padding: .65rem 1.1rem; }
+        .fsplit { gap: .9rem 1.1rem; }
+        @media (min-width: 900px) { .fsplit { grid-template-columns: minmax(0, 1fr) 17rem; } }
+        .fs-main { gap: .85rem; }
+        .fs-side { gap: .65rem; }
+        .fs-step { gap: .5rem; }
+        .fs-h { gap: .5rem; font-size: .875rem; }
+        .fs-h .n { width: 1.3rem; height: 1.3rem; font-size: .72rem; }
+        .fs-who .input { height: 2rem; padding: 0 .75rem; font-size: .8125rem; }
+        .modal-form .field label { margin-bottom: .3rem; font-size: .78rem; }
+        .modal-form .input { height: var(--ctl-sm); padding: 0 .8rem; border-radius: .7rem; font-size: .84rem; }
+        .modal-form .textarea { min-height: 5rem; padding: .5rem .8rem; border-radius: .7rem; font-size: .84rem; line-height: 1.5; }
+        .modal-form .field-foot { min-height: 1rem; margin-top: .25rem; }
+        .modal-form .counter, .modal-form .field-err { font-size: .72rem; }
+        .modal-form .form-grid { gap: .7rem; }
+        @media (max-width: 767px) { .modal-form .input { height: var(--ctl); } }
+
+        .picks { gap: .4rem; }
+        .pick { position: relative; gap: .6rem; padding: .5rem .65rem; border-radius: .8rem; }
+        .pick > i { width: 1.85rem; height: 1.85rem; border-radius: .6rem; font-size: .82rem; }
+        .pick b { font-size: .8125rem; }
+        .pick small { margin-top: .1rem; font-size: .72rem; line-height: 1.35; }
+        .pick em { margin-top: .25rem; font-size: .72rem; }
+        .picks.typ { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .picks.cat { grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr)); }
+        /* o texto de apoio da categoria fica só para leitores de tela e no balão (title): o cartão fica de uma linha */
+        .picks.cat .pick small { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+        .picks.cat .pick[data-cat="Outros"] { grid-column: 1 / -1; }
+        .picks.urg { grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
+        .picks.urg .pick { padding: .45rem .6rem; }
+        @media (max-width: 767px) { .picks.typ { grid-template-columns: 1fr; } }
+
+        .fs-card { padding: .7rem .85rem; border-radius: .85rem; }
+        .fs-card-t { margin-bottom: .5rem; font-size: .7rem; }
+        .fs-check { gap: .4rem; }
+        .fs-check li { font-size: .78rem; }
+        .fs-check li > span { white-space: nowrap; }
+        .fs-check li b { max-width: 8rem; font-size: .78rem; }
+        .sla-box { padding: .55rem .75rem; border-radius: .75rem; }
+        .sla-box .sla-l > i { width: 1.8rem; height: 1.8rem; font-size: .78rem; }
+        .sla-box .sla-l span { font-size: .78rem; }
+        .sla-box b { font-size: .92rem; }
+        .cat-tips { padding: .5rem .7rem; font-size: .75rem; }
+        .sla-chip { padding: .3rem .3rem; font-size: .72rem; }
+        .sla-chip b { font-size: .72rem; }
+
+        .pick > span { min-width: 0; }
+        .pick b { overflow-wrap: anywhere; }
+        .toolbar-l .input-icon { flex: 1 1 13rem; min-width: 11rem; }
+        .sla-box .sla-l small { font-size: .75rem; }
+        .success-panel { gap: .8rem; padding: .5rem .3rem .2rem; }
+        .success-panel h4 { font-size: 1.4rem; }
+        .proto-big { padding: .5rem .6rem .5rem 1rem; }
+        .proto-big b { font-size: 1.15rem; }
+        .success-grid > div { padding: .5rem .7rem; }
+        .success-next { padding: .7rem .9rem; }
     </style>
 </head>
 <body>
@@ -1555,9 +1702,9 @@ html[data-bg="vidro"] .l-glass{opacity:1}
     <!-- 2. BARRA SUPERIOR: marca, menu de navegação (muda conforme o perfil), ações e usuário -->
     <header id="app-header" class="topbar hidden">
         <div class="tb-brand">
-            <div class="mark sm" aria-hidden="true">G</div>
+            <div class="mark sm brand" aria-hidden="true">G</div>
             <div class="tb-brand-t">
-                <div class="tb-title"><span>GLPI Service Desk</span></div>
+                <div class="tb-title"><b>GLPI</b><span>Service Desk</span></div>
                 <span id="header-role-badge" class="badge b-blue caps">Solicitante</span>
             </div>
         </div>
@@ -1648,13 +1795,13 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                             <div style="position:relative;">
                                 <span class="hero-tag"><i class="fa-solid fa-headset"></i> Central de Suporte &amp; Autoatendimento</span>
                                 <h2 id="user-greeting">Como podemos ajudar?</h2>
-                                <p>Escolha o serviço, descreva o problema e acompanhe cada resposta em tempo real. Seus chamados ficam sempre em "Meus Chamados".</p>
+                                <p>Escolha o serviço, descreva o que precisa e acompanhe cada resposta em "Meus Chamados".</p>
                             </div>
                             <div class="hero-acts">
-                                <button type="button" onclick="openFormModal('', 'Requisição')" class="btn btn-blue btn-lg">
+                                <button type="button" onclick="openFormModal('', 'Requisição')" class="btn btn-blue">
                                     <i class="fa-solid fa-hand-holding-hand"></i> Abrir Requisição
                                 </button>
-                                <button type="button" onclick="openFormModal('', 'Incidente')" class="btn btn-ghost btn-lg">
+                                <button type="button" onclick="openFormModal('', 'Incidente')" class="btn btn-ghost">
                                     <i class="fa-solid fa-triangle-exclamation c-amber"></i> Reportar Incidente
                                 </button>
                             </div>
@@ -1664,107 +1811,78 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                         <div id="user-attention" class="attention hidden" role="status"></div>
 
-                        <div class="svc-grid">
-                            <div class="glass svc" role="button" tabindex="0" data-cat="Reset de senha" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-key"></i></div>
-                                    <h4>Reset de senha</h4>
-                                    <p>Esqueci a senha ou o link de recuperação não chega.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
+                        <div class="cat-bar">
+                            <div class="cat-h"><i class="fa-solid fa-cubes"></i> Serviços <small id="cat-count"></small></div>
+                            <div class="cat-tools">
+                                <div id="cat-chips" class="fchips blue" role="group" aria-label="Filtrar serviços por tipo"></div>
+                                <div class="input-icon">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="search" id="cat-search" oninput="renderCatalogFilter()" placeholder="Buscar serviço..." autocomplete="off" class="input focus-blue" aria-label="Buscar serviço">
                                 </div>
-                                <div class="svc-foot"><span>Pedir reset</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc amber" role="button" tabindex="0" data-cat="Pagamento não reconhecido" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-                                    <h4>Pagamento não reconhecido</h4>
-                                    <p>Paguei e o plano ou o acesso não foi liberado.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span>
-                                </div>
-                                <div class="svc-foot"><span>Informar pagamento</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc sky" role="button" tabindex="0" data-cat="Desbloqueio de usuário" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-user-lock"></i></div>
-                                    <h4>Desbloqueio de usuário</h4>
-                                    <p>Conta bloqueada por tentativas ou por segurança.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
-                                </div>
-                                <div class="svc-foot"><span>Pedir desbloqueio</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc blue" role="button" tabindex="0" data-cat="Conta/Login" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-right-to-bracket"></i></div>
-                                    <h4>Conta / Login</h4>
-                                    <p>Não consigo entrar, erro de e-mail, senha ou perfil.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span>
-                                </div>
-                                <div class="svc-foot"><span>Reportar problema</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc purple" role="button" tabindex="0" data-cat="Dados Cadastrais" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-id-card"></i></div>
-                                    <h4>Dados cadastrais</h4>
-                                    <p>Corrigir nome, CPF, telefone ou e-mail da conta.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
-                                </div>
-                                <div class="svc-foot"><span>Pedir correção</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc" role="button" tabindex="0" data-cat="Liberação de degustação" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-gift"></i></div>
-                                    <h4>Liberação de degustação</h4>
-                                    <p>Quero testar o plano completo por alguns dias.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
-                                </div>
-                                <div class="svc-foot"><span>Pedir liberação</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc orange" role="button" tabindex="0" data-cat="2ª Via de fatura" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-receipt"></i></div>
-                                    <h4>2ª via de fatura</h4>
-                                    <p>Preciso de outra via do boleto ou da fatura.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
-                                </div>
-                                <div class="svc-foot"><span>Pedir 2ª via</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc rose" role="button" tabindex="0" data-cat="Atendimento Técnico" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-headset"></i></div>
-                                    <h4>Atendimento técnico</h4>
-                                    <p>Preciso de ajuda de um técnico com o sistema.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span>
-                                </div>
-                                <div class="svc-foot"><span>Chamar um técnico</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc rose" role="button" tabindex="0" data-cat="Falhas/Bugs/Correções" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-bug"></i></div>
-                                    <h4>Falhas, bugs e correções</h4>
-                                    <p>Algo travou, deu erro ou mostra um valor errado.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span>
-                                </div>
-                                <div class="svc-foot"><span>Reportar erro</span><i class="fa-solid fa-arrow-right"></i></div>
-                            </div>
-
-                            <div class="glass svc slate" role="button" tabindex="0" data-cat="Outros" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
-                                <div>
-                                    <div class="svc-ico"><i class="fa-solid fa-circle-question"></i></div>
-                                    <h4>Outros assuntos</h4>
-                                    <p>Dúvidas, sugestões e o que não está na lista.</p>
-                                    <span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span>
-                                </div>
-                                <div class="svc-foot"><span>Falar com a equipe</span><i class="fa-solid fa-arrow-right"></i></div>
                             </div>
                         </div>
+                        <div class="svc-grid">
+                            <div class="glass svc" role="button" tabindex="0" data-cat="Reset de senha" data-type="Requisição" title="Pedir reset" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-key"></i></div>
+                                <div class="svc-body"><h4>Reset de senha</h4><p>Esqueci a senha ou o link de recuperação não chega.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc amber" role="button" tabindex="0" data-cat="Pagamento não reconhecido" data-type="Incidente" title="Informar pagamento" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                                <div class="svc-body"><h4>Pagamento não reconhecido</h4><p>Paguei e o plano ou o acesso não foi liberado.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc sky" role="button" tabindex="0" data-cat="Desbloqueio de usuário" data-type="Requisição" title="Pedir desbloqueio" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-user-lock"></i></div>
+                                <div class="svc-body"><h4>Desbloqueio de usuário</h4><p>Conta bloqueada por tentativas ou por segurança.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc blue" role="button" tabindex="0" data-cat="Conta/Login" data-type="Incidente" title="Reportar problema" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-right-to-bracket"></i></div>
+                                <div class="svc-body"><h4>Conta / Login</h4><p>Não consigo entrar: e-mail, senha ou perfil.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc purple" role="button" tabindex="0" data-cat="Dados Cadastrais" data-type="Requisição" title="Pedir correção" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-id-card"></i></div>
+                                <div class="svc-body"><h4>Dados cadastrais</h4><p>Corrigir nome, CPF, telefone ou e-mail da conta.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc" role="button" tabindex="0" data-cat="Liberação de degustação" data-type="Requisição" title="Pedir liberação" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-gift"></i></div>
+                                <div class="svc-body"><h4>Liberação de degustação</h4><p>Quero testar o plano completo por alguns dias.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc orange" role="button" tabindex="0" data-cat="2ª Via de fatura" data-type="Requisição" title="Pedir 2ª via" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-receipt"></i></div>
+                                <div class="svc-body"><h4>2ª via de fatura</h4><p>Preciso de outra via do boleto ou da fatura.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc rose" role="button" tabindex="0" data-cat="Atendimento Técnico" data-type="Incidente" title="Chamar um técnico" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-headset"></i></div>
+                                <div class="svc-body"><h4>Atendimento técnico</h4><p>Preciso de ajuda de um técnico com o sistema.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc rose" role="button" tabindex="0" data-cat="Falhas/Bugs/Correções" data-type="Incidente" title="Reportar erro" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-bug"></i></div>
+                                <div class="svc-body"><h4>Falhas, bugs e correções</h4><p>Algo travou, deu erro ou mostra um valor errado.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-triangle-exclamation"></i> Incidente</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+
+                            <div class="glass svc slate" role="button" tabindex="0" data-cat="Outros" data-type="Requisição" title="Falar com a equipe" onclick="openFormModal(this.dataset.cat)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
+                                <div class="svc-ico"><i class="fa-solid fa-circle-question"></i></div>
+                                <div class="svc-body"><h4>Outros assuntos</h4><p>Dúvidas, sugestões e o que não está na lista.</p></div>
+                                <div class="svc-foot"><span class="svc-tag"><i class="fa-solid fa-hand-holding-hand"></i> Requisição</span><i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                        <p id="cat-empty" class="cat-empty hidden"><i class="fa-regular fa-folder-open"></i> Nenhum serviço encontrado. Limpe a busca ou escolha "Todos".</p>
 
                         <!-- Prazos de atendimento (a mesma regra gravada no chamado) -->
                         <div class="glass sla-strip">
@@ -1985,7 +2103,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                                 <div class="toolbar-l">
                                     <div class="input-icon">
                                         <i class="fa-solid fa-magnifying-glass"></i>
-                                        <input type="text" id="tech-queue-search" oninput="renderTechQueue()" placeholder="Buscar por protocolo, solicitante, e-mail, título, técnico ou fila..." class="input">
+                                        <input type="text" id="tech-queue-search" oninput="renderTechQueue()" placeholder="Buscar chamado..." title="Busca por protocolo, solicitante, e-mail, título, técnico ou fila" class="input">
                                     </div>
 
                                     <select id="tech-filter-urgency" onchange="renderTechQueue()" class="select select-sm" aria-label="Filtrar por severidade">
@@ -2159,34 +2277,34 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     <section class="fs-step">
                         <h4 class="fs-h"><span class="n">2</span> Sobre o que é?</h4>
                         <div class="picks cat" role="radiogroup" aria-label="Categoria do chamado">
-                            <button type="button" class="pick" role="radio" data-cat="Reset de senha" onclick="pickCategory(this.dataset.cat)">
+                            <button type="button" class="pick" role="radio" data-cat="Reset de senha" title="Esqueci a senha" onclick="pickCategory(this.dataset.cat)">
                                 <i class="fa-solid fa-key"></i><span><b>Reset de senha</b><small>Esqueci a senha</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="Pagamento não reconhecido" onclick="pickCategory(this.dataset.cat)">
+                            <button type="button" class="pick" role="radio" data-cat="Pagamento não reconhecido" title="Paguei e não liberou" onclick="pickCategory(this.dataset.cat)">
                                 <i class="fa-solid fa-file-invoice-dollar"></i><span><b>Pagamento não reconhecido</b><small>Paguei e não liberou</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="Desbloqueio de usuário" onclick="pickCategory(this.dataset.cat)">
+                            <button type="button" class="pick" role="radio" data-cat="Desbloqueio de usuário" title="Conta bloqueada" onclick="pickCategory(this.dataset.cat)">
                                 <i class="fa-solid fa-user-lock"></i><span><b>Desbloqueio de usuário</b><small>Conta bloqueada</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="Conta/Login" onclick="pickCategory(this.dataset.cat)">
+                            <button type="button" class="pick" role="radio" data-cat="Conta/Login" title="Não consigo entrar" onclick="pickCategory(this.dataset.cat)">
                                 <i class="fa-solid fa-right-to-bracket"></i><span><b>Conta/Login</b><small>Não consigo entrar</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="Dados Cadastrais" onclick="pickCategory(this.dataset.cat)">
+                            <button type="button" class="pick" role="radio" data-cat="Dados Cadastrais" title="Nome, CPF, telefone" onclick="pickCategory(this.dataset.cat)">
                                 <i class="fa-solid fa-id-card"></i><span><b>Dados Cadastrais</b><small>Nome, CPF, telefone</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="Liberação de degustação" onclick="pickCategory(this.dataset.cat)">
+                            <button type="button" class="pick" role="radio" data-cat="Liberação de degustação" title="Testar o plano completo" onclick="pickCategory(this.dataset.cat)">
                                 <i class="fa-solid fa-gift"></i><span><b>Liberação de degustação</b><small>Testar o plano completo</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="2ª Via de fatura" onclick="pickCategory(this.dataset.cat)">
+                            <button type="button" class="pick" role="radio" data-cat="2ª Via de fatura" title="Boleto ou fatura" onclick="pickCategory(this.dataset.cat)">
                                 <i class="fa-solid fa-receipt"></i><span><b>2ª Via de fatura</b><small>Boleto ou fatura</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="Atendimento Técnico" onclick="pickCategory(this.dataset.cat)">
+                            <button type="button" class="pick" role="radio" data-cat="Atendimento Técnico" title="Falar com um técnico" onclick="pickCategory(this.dataset.cat)">
                                 <i class="fa-solid fa-headset"></i><span><b>Atendimento Técnico</b><small>Falar com um técnico</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="Falhas/Bugs/Correções" onclick="pickCategory(this.dataset.cat)">
-                                <i class="fa-solid fa-bug"></i><span><b>Falhas/Bugs/Correções</b><small>Erro, travamento, valor errado</small></span>
+                            <button type="button" class="pick" role="radio" data-cat="Falhas/Bugs/Correções" title="Erro, travamento, valor errado" onclick="pickCategory(this.dataset.cat)">
+                                <i class="fa-solid fa-bug"></i><span><b>Falhas/<wbr>Bugs/<wbr>Correções</b><small>Erro, travamento, valor errado</small></span>
                             </button>
-                            <button type="button" class="pick" role="radio" data-cat="Outros" onclick="pickCategory(this.dataset.cat)">
+                            <button type="button" class="pick" role="radio" data-cat="Outros" title="Dúvidas e sugestões" onclick="pickCategory(this.dataset.cat)">
                                 <i class="fa-solid fa-circle-question"></i><span><b>Outros</b><small>Dúvidas e sugestões</small></span>
                             </button>
                         </div>
@@ -2230,7 +2348,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
 
                         <div class="field">
                             <label for="form-desc">Descrição detalhada *</label>
-                            <textarea id="form-desc" rows="5" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
+                            <textarea id="form-desc" rows="4" maxlength="5000" oninput="onFormInput()" class="textarea focus-blue" placeholder="Por favor informe mensagens de erro, telas afetadas e passos para reproduzir..."></textarea>
                             <div class="field-foot"><p id="err-desc" class="field-err hidden"></p><span id="cnt-desc" class="counter">mínimo de 10 caracteres</span></div>
                         </div>
 
@@ -2258,7 +2376,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                         <div class="sla-l">
                             <i class="fa-solid fa-stopwatch"></i>
                             <div>
-                                <span>Compromisso SLA Estimado</span>
+                                <span>SLA estimado</span>
                                 <small id="form-sla-due"></small>
                             </div>
                         </div>
@@ -2266,13 +2384,6 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                     </div>
 
                     <div id="form-tips" class="cat-tips"></div>
-
-                    <div class="sla-policy" aria-label="Prazos de atendimento por severidade">
-                        <div class="sla-chip" data-urgency="Crítica" style="--s: var(--rose-rgb);">Crítica<b>4 horas</b></div>
-                        <div class="sla-chip" data-urgency="Alta" style="--s: var(--orange-rgb);">Alta<b>8 horas</b></div>
-                        <div class="sla-chip is-on" data-urgency="Média" style="--s: var(--sky-rgb);">Média<b>24 horas</b></div>
-                        <div class="sla-chip" data-urgency="Baixa" style="--s: var(--slate-rgb);">Baixa<b>5 dias úteis</b></div>
-                    </div>
                 </aside>
 
                 <div class="modal-foot">
@@ -3748,6 +3859,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
                 setActiveNav('.user-nav-item', 'user-nav-catalog');
                 catalog.classList.remove('hidden');
                 tickets.classList.add('hidden');
+                renderCatalogFilter();
                 renderUserTickets();
             } else {
                 setActiveNav('.user-nav-item', 'user-nav-tickets');
@@ -3975,7 +4087,7 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             // Previsão de atendimento a partir de agora (dias úteis pulam sábado e domingo)
             const due = slaDueDate(new Date(), sla);
             const dueEl = $('form-sla-due');
-            if (dueEl) dueEl.textContent = due ? 'Previsão de atendimento até ' + fmtDue(due) : '';
+            if (dueEl) dueEl.textContent = due ? 'Até ' + fmtDue(due) : '';
 
             document.querySelectorAll('.sla-chip').forEach((chip) => chip.classList.toggle('is-on', chip.dataset.urgency === urgency));
             syncFormPickers();
@@ -4597,6 +4709,30 @@ html[data-bg="vidro"] .l-glass{opacity:1}
             if (!ev.target.closest('.profile-switch')) toggleProfileMenu(true);
             if (!ev.target.closest('.kbd-wrap')) { const pop = $('shortcuts-pop'); if (pop) pop.classList.add('hidden'); }
         });
+
+        // Catálogo: filtro por tipo (requisição / incidente) e busca pelo nome ou pela descrição do serviço
+        let catFilter = 'ALL';
+        function setCatFilter(f) { catFilter = f; renderCatalogFilter(); }
+
+        function renderCatalogFilter() {
+            const search = $('cat-search');
+            const grid = document.querySelector('#user-section-catalog .svc-grid');
+            if (!search || !grid) return;
+            const q = (search.value || '').toLowerCase().trim();
+            const cards = Array.from(grid.querySelectorAll('.svc'));
+            const count = (type) => cards.filter((c) => type === 'ALL' || c.dataset.type === type).length;
+            let shown = 0;
+            cards.forEach((c) => {
+                const text = (c.textContent + ' ' + (c.dataset.cat || '') + ' ' + (c.title || '')).toLowerCase();
+                const ok = (catFilter === 'ALL' || c.dataset.type === catFilter) && (!q || text.includes(q));
+                c.classList.toggle('hidden', !ok);
+                if (ok) shown++;
+            });
+            $('cat-chips').innerHTML = [['ALL', 'Todos'], ['Requisição', 'Requisições'], ['Incidente', 'Incidentes']].map(([k, label]) =>
+                `<button type="button" class="fchip${catFilter === k ? ' is-on' : ''}" onclick="setCatFilter('${k}')" aria-pressed="${catFilter === k}">${label}<b>${count(k)}</b></button>`).join('');
+            $('cat-count').textContent = shown === cards.length ? '· ' + shown + ' disponíveis' : '· ' + shown + ' de ' + cards.length;
+            $('cat-empty').classList.toggle('hidden', shown > 0);
+        }
 
         // Resumo dos meus chamados (catálogo): cada cartão abre "Meus Chamados" já filtrado
         function goMine(tab) {
